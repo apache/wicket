@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import org.apache.wicket.protocol.ws.api.event.WebSocketAbortedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
+import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -56,6 +58,12 @@ public abstract class WebSocketResource implements IResource
 			ConnectedMessage message = connectedPayload.getMessage();
 			onConnect(message);
 		}
+        else if (payload instanceof WebSocketAbortedPayload)
+        {
+            WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload) payload;
+            AbortedMessage message = abortedPayload.getMessage();
+            onAbort(message);
+        }
 		else if (payload instanceof WebSocketClosedPayload)
 		{
 			WebSocketClosedPayload connectedPayload = (WebSocketClosedPayload) payload;
@@ -93,6 +101,16 @@ public abstract class WebSocketResource implements IResource
 	protected void onConnect(ConnectedMessage message)
 	{
 	}
+
+    /**
+     * A callback method called when the server has aborted the connection
+     *
+     * @param message
+     *          the aborted message with the info about the server
+     */
+    protected void onAbort(AbortedMessage message)
+    {
+    }
 
 	/**
 	 * A callback method called when a WebSocket client has closed the connection
