@@ -29,12 +29,14 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.protocol.ws.api.event.WebSocketAbortedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
+import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -76,6 +78,20 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 */
 	static final int NO_PAGE_ID = -1;
 
+    /**
+     * 1008 indicates that an endpoint is terminating the connection because it has received a message that violates its policy. This is a generic status code
+     * that can be returned when there is no other more suitable status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the
+     * policy.
+     * <p>
+     * See <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455, Section 7.4.1 Defined Status Codes</a>.
+     */
+    static final int POLICY_VIOLATION = 1008;
+
+    /**
+     * Explanatory text for the client to explain why the connection is getting aborted
+     */
+    static final String ORIGIN_MISMATCH = "Origin mismatch";
+
 	private final WebRequest webRequest;
 	private final int pageId;
 	private final String resourceName;
@@ -84,6 +100,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	private final String sessionId;
 	private final WebSocketSettings webSocketSettings;
 	private final IWebSocketConnectionRegistry connectionRegistry;
+    private final IWebSocketConnectionFilter connectionFilter;
+    private final HttpServletRequest servletRequest;
 
 	/**
 	 * Constructor.
@@ -117,13 +135,17 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.baseUrl = Url.parse(baseUrl);
 
 		WicketFilter wicketFilter = application.getWicketFilter();
-		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request), wicketFilter.getFilterPath());
+		this.servletRequest = new ServletRequestCopy(request);
+
+		this.webRequest = new WebSocketRequest(servletRequest, wicketFilter.getFilterPath());
 
 		this.application = Args.notNull(application, "application");
 
 		this.webSocketSettings = WebSocketSettings.Holder.get(application);
 
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
+
+        this.connectionFilter = new WebSocketConnectionOriginFilter(webSocketSettings);
 	}
 
 	@Override
@@ -139,20 +161,25 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		broadcastMessage(binaryMessage);
 	}
 
-	/**
-	 * A helper that registers the opened connection in the application-level
-	 * registry.
-	 *
-	 * @param connection
-	 *      the web socket connection to use to communicate with the client
-	 * @see #onOpen(Object)
-	 */
-	protected final void onConnect(final IWebSocketConnection connection)
-	{
-		IKey key = getRegistryKey();
-		connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
-		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
-	}
+    /**
+     * A helper that registers the opened connection in the application-level registry.
+     *
+     * @param connection
+     *            the web socket connection to use to communicate with the client
+     * @see #onOpen(Object)
+     */
+    protected final void onConnect(final IWebSocketConnection connection) {
+        IKey key = getRegistryKey();
+        try {
+            connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
+            connectionFilter.doFilter(servletRequest);
+            broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
+        } catch (ConnectionRejectedException e) {
+            broadcastMessage(new AbortedMessage(getApplication(), getSessionId(), key));
+            connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
+            connection.close(POLICY_VIOLATION, ORIGIN_MISMATCH);
+        }
+    }
 
 	@Override
 	public void onClose(int closeCode, String message)
@@ -315,6 +342,9 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		else if (message instanceof ClosedMessage)
 		{
 			payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
+		}
+		else if (message instanceof AbortedMessage) {
+			payload = new WebSocketAbortedPayload((AbortedMessage) message, handler);
 		}
 		else if (message instanceof IWebSocketPushMessage)
 		{

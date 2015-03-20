@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.ws;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.apache.wicket.Application;
@@ -87,6 +90,16 @@ public class WebSocketSettings
 	private IWebSocketConnectionRegistry connectionRegistry = new SimpleWebSocketConnectionRegistry();
 
 	/**
+	 * The whitelist of allowed domains where the client can connect to the application from
+	 */
+    private final List<String> allowedDomains = new ArrayList<String>();
+
+    /**
+     * Flag which indicates whether connection filtering should be active or not
+     */
+    private boolean protectionNeeded = false;
+
+	/**
 	 * Set the executor for processing websocket push messages broadcasted to all sessions.
 	 * Default executor does all the processing in the caller thread. Using a proper thread pool is adviced
 	 * for applications that send push events from ajax calls to avoid page level deadlocks.
@@ -154,6 +167,57 @@ public class WebSocketSettings
 	{
 		return sendPayloadExecutor;
 	}
+
+    /**
+     * Flag that controls whether hijacking protection should be turned on or not
+     *
+     * @param protectionNeeded
+     *            True if protection needed
+     */
+    public void setHijackingProtectionEnabled(boolean protectionNeeded) {
+        this.protectionNeeded = protectionNeeded;
+    }
+
+    /**
+     * Flag that shows whether hijacking protection is turned on or not
+     *
+     * @param protectionNeeded
+     *            True if protection turned on
+     */
+    public boolean isHijackingProtectionEnabled() {
+        return this.protectionNeeded;
+    }
+
+    /**
+     * The list of whitelisted domains which are allowed to initiate a websocket connection. This
+     * list will be eventually used by the
+     * {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter} to abort potentially
+     * unsafe connections. Example domain names might be:
+     *
+     * <pre>
+     *      http://www.example.com
+     *      http://ww2.example.com
+     * </pre>
+     *
+     * @param domains
+     *            The collection of domains
+     */
+    public void setAllowedDomains(Collection<String> domains) {
+        this.allowedDomains.addAll(domains);
+    }
+
+    /**
+     * The list of whitelisted domains which are allowed to initiate a websocket connection. This
+     * list will be eventually used by the
+     * {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter} to abort potentially
+     * unsafe connections
+     *
+     * @param domains
+     *            The collection of domains if or an empty list when no domains were added
+     */
+    public List<String> getAllowedDomains() {
+        return this.allowedDomains;
+    }
 
 	/**
 	 * A factory method for the {@link org.apache.wicket.request.http.WebResponse}

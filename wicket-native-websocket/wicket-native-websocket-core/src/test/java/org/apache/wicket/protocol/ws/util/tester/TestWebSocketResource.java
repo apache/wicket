@@ -22,6 +22,7 @@ import org.apache.wicket.util.string.Strings;
 import org.junit.Assert;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketResource;
+import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
@@ -37,6 +38,7 @@ public class TestWebSocketResource extends WebSocketResource
 
 	static final AtomicBoolean ON_CONNECT_CALLED = new AtomicBoolean(false);
 	static final AtomicBoolean ON_CLOSE_CALLED = new AtomicBoolean(false);
+	static final AtomicBoolean ON_ABORT_CALLED = new AtomicBoolean(false);
 
 	private final String expectedMessage;
 
@@ -75,6 +77,12 @@ public class TestWebSocketResource extends WebSocketResource
 		ON_CLOSE_CALLED.set(true);
 		super.onClose(message);
 	}
+
+    @Override
+    protected void onAbort(AbortedMessage message) {
+        ON_ABORT_CALLED.set(true);
+        super.onAbort(message);
+    }
 
 	@Override
 	protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
