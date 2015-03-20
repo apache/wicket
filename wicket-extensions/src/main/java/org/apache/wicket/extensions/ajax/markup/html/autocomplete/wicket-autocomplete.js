@@ -365,8 +365,8 @@
 			attrs.sh = attrs.sh || [];
 			attrs.sh.push(successHandler);
 				
-			attrs.ep = attrs.ep || {};
-			attrs.ep[cfg.parameterName] = currentInput;
+			attrs.ep = attrs.ep || [];
+			attrs.ep.push({'name' : cfg.parameterName, 'value' : currentInput});
 				
 			Wicket.Ajax.ajax(attrs);
 		}
