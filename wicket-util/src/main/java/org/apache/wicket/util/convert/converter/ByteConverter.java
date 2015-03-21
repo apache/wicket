@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.convert.converter;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.IConverter;
@@ -31,6 +32,9 @@ public class ByteConverter extends AbstractIntegerConverter<Byte>
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final BigDecimal MIN_VALUE = new BigDecimal(Byte.MIN_VALUE);
+	private static final BigDecimal MAX_VALUE = new BigDecimal(Byte.MAX_VALUE);
+
 	/**
 	 * The singleton instance for a byte converter
 	 */
@@ -42,7 +46,7 @@ public class ByteConverter extends AbstractIntegerConverter<Byte>
 	@Override
 	public Byte convertToObject(final String value, final Locale locale)
 	{
-		final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE, locale);
+		final BigDecimal number = parse(value, MIN_VALUE, MAX_VALUE, locale);
 
 		if (number == null)
 		{

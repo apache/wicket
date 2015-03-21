@@ -17,6 +17,7 @@
 package org.apache.wicket.util.convert.converters;
 
 import java.math.BigDecimal;
+import java.text.ChoiceFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -184,6 +185,16 @@ public final class ConvertersTest extends Assert
 		{
 			// this is correct
 		}
+
+		try
+		{
+			converter.convertToObject("1" + Double.MAX_VALUE, Locale.US);
+			fail("Conversion should have thrown an exception");
+		}
+		catch (ConversionException e)
+		{
+			// This is correct
+		}
 	}
 
 	/**
@@ -213,6 +224,17 @@ public final class ConvertersTest extends Assert
 		catch (ConversionException e)
 		{
 			// this is correct
+		}
+
+
+		try
+		{
+			converter.convertToObject("1" + Float.MAX_VALUE, Locale.US);
+			fail("Conversion should have thrown an exception");
+		}
+		catch (ConversionException e)
+		{
+			// This is correct
 		}
 	}
 
@@ -245,9 +267,20 @@ public final class ConvertersTest extends Assert
 		{
 			// This is correct
 		}
+
 		try
 		{
-			converter.convertToObject("" + ((long)Integer.MAX_VALUE + 1), Locale.US);
+			converter.convertToObject("1.0", Locale.US);
+			fail("Conversion should have thrown an exception");
+		}
+		catch (ConversionException e)
+		{
+			// This is correct
+		}
+
+		try
+		{
+			converter.convertToObject("1" + Integer.MAX_VALUE, Locale.US);
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)
@@ -286,7 +319,35 @@ public final class ConvertersTest extends Assert
 		}
 		try
 		{
-			converter.convertToObject("" + Long.MAX_VALUE + "0", Locale.US);
+			converter.convertToObject("1" + Long.MAX_VALUE, Locale.US);
+			fail("Conversion should have thrown an exception");
+		}
+		catch (ConversionException e)
+		{
+			// This is correct
+		}
+
+		try
+		{
+			// WICKET-5853 assert that the compared number is out of range of Long
+			final String biggerThanLong = "9223372036854776833";
+			assertEquals(1,
+					new BigDecimal(biggerThanLong).compareTo(BigDecimal.valueOf(Long.MAX_VALUE)));
+			converter.convertToObject(biggerThanLong, Locale.US);
+			fail("Conversion should have thrown an exception");
+		}
+		catch (ConversionException e)
+		{
+			// This is correct
+		}
+
+		try
+		{
+			// WICKET-5853 assert that the compared number is out of range of Long
+			final String biggerThanLong = "9223372036854776832";
+			assertEquals(1,
+					new BigDecimal(biggerThanLong).compareTo(BigDecimal.valueOf(Long.MAX_VALUE)));
+			converter.convertToObject(biggerThanLong, Locale.US);
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)
@@ -323,6 +384,7 @@ public final class ConvertersTest extends Assert
 		{
 			// This is correct
 		}
+
 		try
 		{
 			converter.convertToObject("" + (Short.MAX_VALUE + 1), Locale.US);
@@ -428,6 +490,7 @@ public final class ConvertersTest extends Assert
 		{
 			// this is correct
 		}
+
 		try
 		{
 			converter.convertToObject("5/1/11whatever", Locale.US);
@@ -441,16 +504,46 @@ public final class ConvertersTest extends Assert
 
 	/**
 	 * See WICKET-2878 and
-	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal
-	 * .html#BigDecimal%28double%29
+	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
 	 */
 	@Test
-	public void bigDecimalsDoubles()
+	public void bigDecimalConverter()
 	{
 		BigDecimal bd = new BigDecimalConverter().convertToObject("0.1", Locale.US);
-		assertTrue(bd.doubleValue() == 0.1d);
+		assertEquals(new BigDecimal("0.1"), bd);
 
 		bd = new BigDecimalConverter().convertToObject("0,1", Locale.GERMAN);
-		assertTrue(bd.doubleValue() == 0.1d);
+		assertEquals(new BigDecimal("0.1"), bd);
+
+		String max = "1" + Double.MAX_VALUE;
+		bd = new BigDecimalConverter().convertToObject(max, Locale.US);
+		assertEquals(new BigDecimal(max), bd);
+	}
+
+	@Test
+	public void customFormat()
+	{
+		IntegerConverter converter = new IntegerConverter()
+		{
+			protected NumberFormat newNumberFormat(Locale locale)
+			{
+				return new ChoiceFormat(new double[] { 1, 2, 3 }, new String[] { "one", "two",
+						"three" });
+			}
+		};
+
+		Integer integer = converter.convertToObject("two", Locale.US);
+
+		assertEquals(new Integer(2), integer);
+
+		try
+		{
+			converter.convertToObject("four", Locale.US);
+			fail("Conversion should have thrown an exception");
+		}
+		catch (ConversionException e)
+		{
+			// this is correct
+		}
 	}
 }

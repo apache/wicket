@@ -44,33 +44,6 @@ public class BigDecimalConverter extends AbstractDecimalConverter<BigDecimal>
 			return null;
 		}
 
-		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
-
-		if (number instanceof BigDecimal)
-		{
-			return (BigDecimal)number;
-		}
-		else if (number instanceof Double)
-		{
-			// See link why the String is preferred for doubles
-			// http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
-			return new BigDecimal(Double.toString(number.doubleValue()));
-		}
-		else if (number instanceof Long)
-		{
-			return new BigDecimal(number.longValue());
-		}
-		else if (number instanceof Float)
-		{
-			return new BigDecimal(number.floatValue());
-		}
-		else if (number instanceof Integer)
-		{
-			return new BigDecimal(number.intValue());
-		}
-		else
-		{
-			return new BigDecimal(value);
-		}
+		return parse(value, null, null, locale);
 	}
 }

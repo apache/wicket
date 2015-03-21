@@ -24,8 +24,10 @@ import java.util.Locale;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  * @author Al Maw
+ * 
+ * @deprecated use an {@link IntegerConverter} with suitable format string instead
  */
-public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter<Integer>
+public class ZeroPaddingIntegerConverter extends IntegerConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,30 +59,5 @@ public class ZeroPaddingIntegerConverter extends AbstractIntegerConverter<Intege
 		}
 
 		return result;
-	}
-
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
-	 */
-	@Override
-	public Integer convertToObject(final String value, final Locale locale)
-	{
-		final Number number = parse(value, Integer.MIN_VALUE, Integer.MAX_VALUE, locale);
-
-		if (number == null)
-		{
-			return null;
-		}
-
-		return number.intValue();
-	}
-
-	/**
-	 * @see org.apache.wicket.util.convert.converter.AbstractConverter#getTargetType()
-	 */
-	@Override
-	protected Class<Integer> getTargetType()
-	{
-		return Integer.class;
 	}
 }

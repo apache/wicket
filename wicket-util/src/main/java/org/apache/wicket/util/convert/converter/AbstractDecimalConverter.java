@@ -16,14 +16,11 @@
  */
 package org.apache.wicket.util.convert.converter;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Base class for all number converters.
+ * Base class for all converters of decimal numbers.
  * 
  * @author Jonathan Locke
  * @param <N>
@@ -32,25 +29,6 @@ public abstract class AbstractDecimalConverter<N extends Number> extends Abstrac
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The date format to use */
-	private final Map<Locale, NumberFormat> numberFormats = new ConcurrentHashMap<>();
-
-	/**
-	 * @param locale
-	 * @return Returns the numberFormat.
-	 */
-	@Override
-	public NumberFormat getNumberFormat(final Locale locale)
-	{
-		NumberFormat numberFormat = numberFormats.get(locale);
-		if (numberFormat == null)
-		{
-			numberFormat = newNumberFormat(locale);
-			setNumberFormat(locale, numberFormat);
-		}
-		return (NumberFormat)numberFormat.clone();
-	}
-
 	/**
 	 * Creates a new {@link NumberFormat} for the given locale. The instance is later cached and is
 	 * accessible through {@link #getNumberFormat(Locale)}
@@ -58,24 +36,9 @@ public abstract class AbstractDecimalConverter<N extends Number> extends Abstrac
 	 * @param locale
 	 * @return number format
 	 */
+	@Override
 	protected NumberFormat newNumberFormat(final Locale locale)
 	{
 		return NumberFormat.getInstance(locale);
-	}
-
-	/**
-	 * @param locale
-	 *            The Locale that was used for this NumberFormat
-	 * @param numberFormat
-	 *            The numberFormat to set.
-	 */
-	public final void setNumberFormat(final Locale locale, final NumberFormat numberFormat)
-	{
-		if (numberFormat instanceof DecimalFormat)
-		{
-			((DecimalFormat)numberFormat).setParseBigDecimal(true);
-		}
-
-		numberFormats.put(locale, numberFormat);
 	}
 }

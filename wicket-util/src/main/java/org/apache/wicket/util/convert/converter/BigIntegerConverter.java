@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.convert.converter;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Locale;
 
@@ -44,23 +45,13 @@ public class BigIntegerConverter extends AbstractIntegerConverter<BigInteger>
 			return null;
 		}
 
-		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
+		final BigDecimal number = parse(value, null, null, locale);
 
-		if (number instanceof BigInteger)
+		if (number == null)
 		{
-			return (BigInteger)number;
+			return null;
 		}
-		else if (number instanceof Long)
-		{
-			return BigInteger.valueOf(number.longValue());
-		}
-		else if (number instanceof Integer)
-		{
-			return BigInteger.valueOf(number.intValue());
-		}
-		else
-		{
-			return new BigInteger(value);
-		}
+
+		return new BigInteger(number.toString());
 	}
 }

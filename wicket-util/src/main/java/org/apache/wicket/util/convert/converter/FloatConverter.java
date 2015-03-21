@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.convert.converter;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.IConverter;
@@ -31,6 +32,11 @@ public class FloatConverter extends AbstractDecimalConverter<Float>
 {
 	private static final long serialVersionUID = 1L;
 
+	// Float.MIN is the smallest nonzero positive number, not the largest
+	// negative number
+	private static final BigDecimal MIN_VALUE = new BigDecimal(-Float.MAX_VALUE);
+	private static final BigDecimal MAX_VALUE = new BigDecimal(Float.MAX_VALUE);
+
 	/**
 	 * The singleton instance for a float converter
 	 */
@@ -42,7 +48,7 @@ public class FloatConverter extends AbstractDecimalConverter<Float>
 	@Override
 	public Float convertToObject(final String value, final Locale locale)
 	{
-		final Number number = parse(value, -Float.MAX_VALUE, Float.MAX_VALUE, locale);
+		final BigDecimal number = parse(value, MIN_VALUE, MAX_VALUE, locale);
 
 		if (number == null)
 		{
