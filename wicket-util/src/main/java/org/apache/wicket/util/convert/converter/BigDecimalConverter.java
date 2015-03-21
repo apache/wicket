@@ -39,11 +39,6 @@ public class BigDecimalConverter extends AbstractDecimalConverter<BigDecimal>
 	@Override
 	public BigDecimal convertToObject(final String value, final Locale locale)
 	{
-		if (Strings.isEmpty(value))
-		{
-			return null;
-		}
-
 		return parse(value, null, null, locale);
 	}
 }

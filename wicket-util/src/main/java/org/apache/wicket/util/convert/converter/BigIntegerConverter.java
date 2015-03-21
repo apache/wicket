@@ -40,11 +40,6 @@ public class BigIntegerConverter extends AbstractIntegerConverter<BigInteger>
 	@Override
 	public BigInteger convertToObject(final String value, final Locale locale)
 	{
-		if (Strings.isEmpty(value))
-		{
-			return null;
-		}
-
 		final BigDecimal number = parse(value, null, null, locale);
 
 		if (number == null)
@@ -52,6 +47,6 @@ public class BigIntegerConverter extends AbstractIntegerConverter<BigInteger>
 			return null;
 		}
 
-		return new BigInteger(number.toString());
+		return number.toBigInteger();
 	}
 }
