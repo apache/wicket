@@ -1103,6 +1103,37 @@ jQuery(document).ready(function() {
 			jQuery('#'+ attrs.c).triggerHandler("nestedFormSubmit");
 		});
 
+
+		/**
+		 * Tests that submitting a of multipart form calls failure and complete handlers
+		 * when the server is not reachable.
+		 */
+		asyncTest('Submit multipart form (server down).', function () {
+
+			expect(6);
+
+			var attrs = {
+				f:  "multipartForm", // the id of the form to submit
+				mp: true,  // multipart
+				u:  "http://non-existing.tld/some.xml", // emulate server down by using non-existing address
+				e:  "multipartFormSubmitEvent", // the event
+				c:  "multipartFormSubmit", // the component that submits the form
+				m:  "POST", // submit method,
+				rt: 100, // 100ms request timeout
+				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
+				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
+				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
+				fh: [ function(attrs) { start(); ok(true, "Failure handler executed"); } ],
+				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#'+ attrs.c).triggerHandler("multipartFormSubmitEvent");
+		});
+
 		/**
 		 * Tests that a huge response with more than 1000 evaluations is properly executed.
 		 * FunctionsExecuter can execute at most 1000 functions in one go, the rest are executed

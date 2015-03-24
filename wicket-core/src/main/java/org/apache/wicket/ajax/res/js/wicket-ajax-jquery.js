@@ -911,9 +911,40 @@
 			this._executeHandlers(attrs.ah, attrs);
 			we.publish(topic.AJAX_CALL_AFTER, attrs);
 
+			// a step to execute in both successful and erroneous completion
+			context.endStep = jQuery.proxy(function(notify) {
+				// remove the iframe and button elements
+				setTimeout(function() {
+					jQuery('#'+iframe.id + '-btn').remove();
+					jQuery(iframe).remove();
+				}, 0);
+
+				var attrs = context.attrs;
+				if (attrs.i) {
+					// hide the indicator
+					Wicket.DOM.hideIncrementally(attrs.i);
+				}
+
+				this._executeHandlers(attrs.coh, attrs, null, null);
+				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
+
+				this.done();
+				return FunctionsExecuter.DONE;
+			}, this);
+
+			// an error handler that is used when the connection to the server fails for any reason
+			context.errorHandle = setTimeout(jQuery.proxy(function() {
+				this.failure(context, null, "No XML response in the IFrame document", "Failure");
+
+				context.steps.push(context.endStep);
+				var executer = new FunctionsExecuter(context.steps);
+				executer.start();
+			}, this), attrs.rt || 5000);
+
 			// install handler to deal with the ajax response
 			// ... we add the onload event after form submit because chrome fires it prematurely
 			we.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), context);
+
 
 			// handled, restore state and return true
 			form.action = originalFormAction;
@@ -934,6 +965,8 @@
 			var context = event.data,
 				iframe = event.target,
 				envelope;
+
+			clearTimeout(context.errorHandle);
 
 			// stop the event
 			event.stopPropagation();
@@ -959,26 +992,7 @@
 				this.loadedCallback(envelope, context);
 			}
 
-			context.steps.push(jQuery.proxy(function(notify) {
-				// remove the iframe and button elements
-				setTimeout(function() {
-					jQuery('#'+iframe.id + '-btn').remove();
-					jQuery(iframe).remove();
-				}, 0);
-
-				var attrs = context.attrs;
-				if (attrs.i) {
-					// hide the indicator
-					Wicket.DOM.hideIncrementally(attrs.i);
-				}
-
-				this._executeHandlers(attrs.coh, attrs, null, null);
-				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
-
-				this.done();
-				return FunctionsExecuter.DONE;
-			}, this));
-
+			context.steps.push(context.endStep);
 			var executer = new FunctionsExecuter(context.steps);
 			executer.start();
 		},
