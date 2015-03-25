@@ -269,7 +269,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				String displayValue = getDefaultModelObjectAsString();
 				if (renderer != null)
 				{
-					Object displayObject = renderer.getDisplayValue((T)getDefaultModelObject());
+					Object displayObject = renderer.getDisplayValue(getModelObject());
 					Class<?> objectClass = (displayObject == null ? null : displayObject.getClass());
 
 					if ((objectClass != null) && (objectClass != String.class))
