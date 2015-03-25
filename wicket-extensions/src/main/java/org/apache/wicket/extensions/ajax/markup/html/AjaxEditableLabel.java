@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.io.Serializable;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -73,7 +74,7 @@ import org.apache.wicket.validation.IValidator;
  * @param <T>
  */
 // TODO wonder if it makes sense to refactor this into a formcomponentpanel
-public class AjaxEditableLabel<T> extends Panel
+public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -260,6 +261,32 @@ public class AjaxEditableLabel<T> extends Panel
 		getLabel().setDefaultModel(model);
 		getEditor().setDefaultModel(model);
 		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
+
+	@Override
+	public void setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+	}
+
+	@Override
+	public void setModelObject(T object)
+	{
+		setDefaultModelObject(object);
 	}
 
 	/**
@@ -589,14 +616,13 @@ public class AjaxEditableLabel<T> extends Panel
 	/**
 	 * @return Gets the parent model in case no explicit model was specified.
 	 */
-	@SuppressWarnings("unchecked")
 	private IModel<T> getParentModel()
 	{
 		// the #getModel() call below will resolve and assign any inheritable
 		// model this component can use. Set that directly to the label and
 		// editor so that those components work like this enclosing panel
 		// does not exist (must have that e.g. with CompoundPropertyModels)
-		IModel<T> m = (IModel<T>)getDefaultModel();
+		IModel<T> m = getModel();
 
 		// check that a model was found
 		if (m == null)
