@@ -29,7 +29,7 @@ import org.apache.wicket.request.http.WebResponse;
 public class BufferedWebResponseTest extends WicketTestCase
 {
 	enum TestAction {
-		SET_HEADER, WRITE_RESPONSE
+		SET_CONTENT_LENGTH, WRITE_RESPONSE, DISABLE_CACHING
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class BufferedWebResponseTest extends WicketTestCase
 			@Override
 			public void setContentLength(long length)
 			{
-				actionsSequence.add(TestAction.SET_HEADER);
+				actionsSequence.add(TestAction.SET_CONTENT_LENGTH);
 			}
 
 			@Override
@@ -53,12 +53,22 @@ public class BufferedWebResponseTest extends WicketTestCase
 			{
 				actionsSequence.add(TestAction.WRITE_RESPONSE);
 			}
+
+			/**
+			 * WICKET-5863
+			 */
+			@Override
+			public void disableCaching() {
+				actionsSequence.add(TestAction.DISABLE_CACHING);
+			}
 		};
 		BufferedWebResponse response = new BufferedWebResponse(originalResponse);
 		response.setText("some text");
 		response.setContentLength(9);
+		response.disableCaching();
 		response.writeTo(originalResponse);
-		assertEquals(0, actionsSequence.indexOf(TestAction.SET_HEADER));
-		assertEquals(1, actionsSequence.indexOf(TestAction.WRITE_RESPONSE));
+		assertEquals(0, actionsSequence.indexOf(TestAction.SET_CONTENT_LENGTH));
+		assertEquals(1, actionsSequence.indexOf(TestAction.DISABLE_CACHING));
+		assertEquals(2, actionsSequence.indexOf(TestAction.WRITE_RESPONSE));
 	}
 }
