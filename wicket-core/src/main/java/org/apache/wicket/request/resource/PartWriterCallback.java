@@ -14,29 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.media;
+package org.apache.wicket.request.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.util.io.Streams;
-import org.apache.wicket.util.resource.IResourceStream;
 
 /**
- * Used to read a part of the package resource stream and write it to the output stream of the
- * response.
+ * Used to read a part of an input stream and writes it to the output stream of the response taken
+ * from attributes of the writeData method.
  *
  * @author Tobias Soloschenko
  *
  */
 public class PartWriterCallback extends WriteCallback
 {
-	private final IResourceStream resourceStream;
+	private final InputStream inputStream;
+
+	private final Long contentLength;
 
 	private final Long startbyte;
 
@@ -44,16 +44,19 @@ public class PartWriterCallback extends WriteCallback
 
 	private int bufferSize;
 
+
 	/**
 	 * Creates a part writer callback.<br>
 	 * <br>
-	 * Reads a part of the given resource stream. If the startbyte parameter is not null the
-	 * number of bytes are skipped till the stream is read. If the endbyte is not null the stream is
-	 * read till endbyte, else to the end of the whole stream. If startbyte and endbyte is null the
-	 * whole stream is read.
+	 * Reads a part of the given input stream. If the startbyte parameter is not null the number of
+	 * bytes are skipped till the stream is read. If the endbyte is not null the stream is read till
+	 * endbyte, else to the end of the whole stream. If startbyte and endbyte is null the whole
+	 * stream is read.
 	 *
-	 * @param resourceStream
-	 *            the resource stream to read
+	 * @param inputStream
+	 *            the input stream to be read
+	 * @param the
+	 *            content length
 	 * @param startbyte
 	 *            the start position to read from (if not null the number of bytes are skipped till
 	 *            the stream is read)
@@ -61,10 +64,11 @@ public class PartWriterCallback extends WriteCallback
 	 *            the end position to read to (if not null the stream is going to be read till
 	 *            endbyte, else to the end of the whole stream)
 	 */
-	public PartWriterCallback(IResourceStream resourceStream, Long startbyte,
+	public PartWriterCallback(InputStream inputStream, Long contentLength, Long startbyte,
 		Long endbyte)
 	{
-		this.resourceStream = resourceStream;
+		this.inputStream = inputStream;
+		this.contentLength = contentLength;
 		this.startbyte = startbyte;
 		this.endbyte = endbyte;
 	}
@@ -74,13 +78,14 @@ public class PartWriterCallback extends WriteCallback
 	 *
 	 * @param attributes
 	 *            the attributes to get the output stream of the response
+	 * @throws IOException
+	 *             if something went wrong while writing the data to the output stream
 	 */
 	@Override
 	public void writeData(Attributes attributes) throws IOException
 	{
 		try
 		{
-			InputStream inputStream = resourceStream.getInputStream();
 			OutputStream outputStream = attributes.getResponse().getOutputStream();
 			byte[] buffer = new byte[getBufferSize()];
 
@@ -94,9 +99,9 @@ public class PartWriterCallback extends WriteCallback
 				}
 
 				// If there are no end bytes given read the whole stream till the end
-				if (endbyte == null)
+				if (endbyte == null || Long.valueOf(-1).equals(endbyte))
 				{
-					endbyte = resourceStream.length().bytes();
+					endbyte = contentLength;
 				}
 
 				long totalBytes = 0;
@@ -131,11 +136,6 @@ public class PartWriterCallback extends WriteCallback
 			// org.apache.catalina.connector.ClientAbortException)
 			// we ignore this case
 		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException(
-				"A problem occurred while writing the buffer to the output stream.", e);
-		}
 	}
 
 	/**
@@ -148,7 +148,6 @@ public class PartWriterCallback extends WriteCallback
 	 *            the new array size.
 	 * @return A new array with the same contents.
 	 */
-	@SuppressWarnings("rawtypes")
 	private static byte[] resizeArray(byte[] oldArray, int newSize)
 	{
 		int oldSize = oldArray.length;

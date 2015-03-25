@@ -31,8 +31,8 @@ public class MediaTagsTestPage extends WebPage
 	{
 		PageParameters pageParameters = new PageParameters();
 		pageParameters.set("test", "test");
-		Audio audio = new Audio("audio", new MediaStreamingResourceReference(
-			MediaTagsTestPage.class, "dummyAudio.mp3"), pageParameters);
+		Audio audio = new Audio("audio", new PackageResourceReference(MediaTagsTestPage.class,
+			"dummyAudio.mp3"), pageParameters);
 		audio.setAutoplay(true);
 		audio.setControls(true);
 		audio.setCrossOrigin(Cors.USER_CREDENTIALS);
@@ -42,8 +42,8 @@ public class MediaTagsTestPage extends WebPage
 		audio.setEndTime("10");
 		add(audio);
 
-		Video video = new Video("video", new MediaStreamingResourceReference(
-			MediaTagsTestPage.class, "dummyVideo.m4a"));
+		Video video = new Video("video", new PackageResourceReference(MediaTagsTestPage.class,
+			"dummyVideo.m4a"));
 		PageParameters pageParameters2 = new PageParameters();
 		pageParameters2.add("test2", "test2");
 		video.setPoster(new PackageResourceReference(MediaTagsTestPage.class, "dummyPoster.jpg"),

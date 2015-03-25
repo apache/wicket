@@ -21,6 +21,9 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResource;
+import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.util.resource.IResourceStream;
 
 /**
  * The source of an audio or a video media component
@@ -38,7 +41,7 @@ public class Source extends WebMarkupContainer
 
 	private String media;
 
-	private final MediaStreamingResourceReference mediaStreamingResourceReference;
+	private final PackageResourceReference resourceReference;
 
 	private final PageParameters pageParameters;
 
@@ -54,28 +57,28 @@ public class Source extends WebMarkupContainer
 		this(id, model, null, null, null);
 	}
 
-	public Source(String id, MediaStreamingResourceReference mediaStreamingResourceReference)
+	public Source(String id, PackageResourceReference resourceReference)
 	{
-		this(id, null, null, null, mediaStreamingResourceReference);
+		this(id, null, null, null, resourceReference);
 	}
 
 	public Source(String id, IModel<?> model,
-		MediaStreamingResourceReference mediaStreamingResourceReference)
+		PackageResourceReference resourceReference)
 	{
-		this(id, model, null, null, mediaStreamingResourceReference);
+		this(id, model, null, null, resourceReference);
 	}
 
-	public Source(String id, MediaStreamingResourceReference mediaStreamingResourceReference,
+	public Source(String id, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		this(id, null, null, pageParameters, mediaStreamingResourceReference);
+		this(id, null, null, pageParameters, resourceReference);
 	}
 
 	public Source(String id, IModel<?> model,
-		MediaStreamingResourceReference mediaStreamingResourceReference,
+		PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		this(id, model, null, pageParameters, mediaStreamingResourceReference);
+		this(id, model, null, pageParameters, resourceReference);
 	}
 
 	public Source(String id, String url)
@@ -89,12 +92,12 @@ public class Source extends WebMarkupContainer
 	}
 
 	private Source(String id, IModel<?> model, String url, PageParameters pageParameters,
-	               MediaStreamingResourceReference mediaStreamingResourceReference)
+	               PackageResourceReference resourceReference)
 	{
 		super(id, model);
 		this.url = url;
 		this.pageParameters = pageParameters;
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
+		this.resourceReference = resourceReference;
 	}
 
 	@Override
@@ -103,9 +106,9 @@ public class Source extends WebMarkupContainer
 		checkComponentTag(tag, "source");
 		super.onComponentTag(tag);
 
-		if (mediaStreamingResourceReference != null)
+		if (resourceReference != null)
 		{
-			CharSequence url = RequestCycle.get().urlFor(mediaStreamingResourceReference, pageParameters);
+			CharSequence url = RequestCycle.get().urlFor(resourceReference, pageParameters);
 			tag.put("src", url);
 		} else if (url != null)
 		{
@@ -118,9 +121,12 @@ public class Source extends WebMarkupContainer
 			{
 				tag.put("type", type);
 			}
-			else if (mediaStreamingResourceReference != null)
+			else if (resourceReference != null)
 			{
-				tag.put("type", mediaStreamingResourceReference.getType());
+				PackageResource resource = resourceReference.getResource();
+				IResourceStream resourceStream = resource.getResourceStream();
+				String contentType = resourceStream.getContentType();
+				tag.put("type", contentType);
 			}
 		}
 

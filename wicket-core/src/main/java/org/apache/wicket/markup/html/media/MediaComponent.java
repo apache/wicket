@@ -23,6 +23,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * The media component is used to provide basic functionality to the video and audio component. The
@@ -100,7 +101,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 	private final PageParameters pageParameters;
 
-	private final MediaStreamingResourceReference mediaStreamingResourceReference;
+	private final PackageResourceReference resourceReference;
 
 	private final String url;
 
@@ -133,31 +134,31 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 *
 	 * @param id
 	 *            The component id
-	 * @param mediaStreamingResourceReference
+	 * @param resourceReference
 	 */
-	public MediaComponent(String id, MediaStreamingResourceReference mediaStreamingResourceReference)
+	public MediaComponent(String id, PackageResourceReference resourceReference)
 	{
-		this(id, null, null, null, mediaStreamingResourceReference);
+		this(id, null, null, null, resourceReference);
 	}
 
 	public MediaComponent(String id, IModel<?> model,
-		MediaStreamingResourceReference mediaStreamingResourceReference)
+		PackageResourceReference resourceReference)
 	{
-		this(id, model, null, null, mediaStreamingResourceReference);
+		this(id, model, null, null, resourceReference);
 	}
 
 	public MediaComponent(String id,
-		MediaStreamingResourceReference mediaStreamingResourceReference,
+		PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		this(id, null, null, pageParameters, mediaStreamingResourceReference);
+		this(id, null, null, pageParameters, resourceReference);
 	}
 
 	public MediaComponent(String id, IModel<?> model,
-		MediaStreamingResourceReference mediaStreamingResourceReference,
+		PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		this(id, model, null, pageParameters, mediaStreamingResourceReference);
+		this(id, model, null, pageParameters, resourceReference);
 	}
 
 	public MediaComponent(String id, String url)
@@ -176,12 +177,12 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	private MediaComponent(String id, IModel<?> model, String url, PageParameters pageParameters,
-		MediaStreamingResourceReference mediaStreamingResourceReference)
+		PackageResourceReference resourceReference)
 	{
 		super(id, model);
 		this.url = url;
 		this.pageParameters = pageParameters;
-		this.mediaStreamingResourceReference = mediaStreamingResourceReference;
+		this.resourceReference = resourceReference;
 	}
 
 	@Override
@@ -197,10 +198,10 @@ public abstract class MediaComponent extends WebMarkupContainer
 			timeManagement += "#t=" + startTime + (endTime != null ? "," + endTime : "");
 		}
 
-		if (mediaStreamingResourceReference != null)
+		if (resourceReference != null)
 		{
 			CharSequence urlToMediaReference = RequestCycle.get().urlFor(
-				mediaStreamingResourceReference, pageParameters);
+					resourceReference, pageParameters);
 			tag.put("src", urlToMediaReference + timeManagement);
 		}
 		else if (url != null)

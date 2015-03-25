@@ -97,6 +97,32 @@ public abstract class WebResponse extends Response
 	public abstract void setContentType(final String mimeType);
 
 	/**
+	 * Sets the content range of the response. If no content range is set the client assumes the
+	 * whole content. Please note that if the content range is set, the content length, the status
+	 * code and the accept range must be set right, too.
+	 *
+	 * @param contentRange
+	 *            the content range
+	 */
+	public void setContentRange(final String contentRange)
+	{
+		setHeader("Content-Range", contentRange);
+	}
+
+
+	/**
+	 * Sets the accept range (e.g. bytes)
+	 *
+	 * @param acceptRange
+	 *            the accept range header information
+	 */
+	public void setAcceptRange(final String acceptRange)
+	{
+		setHeader("Accept-Range", acceptRange);
+
+	}
+
+	/**
 	 * Set the contents last modified time, if appropriate in the subclass.
 	 * 
 	 * @param time
@@ -138,19 +164,18 @@ public abstract class WebResponse extends Response
 	}
 
 	/**
-	 * <a href="http://greenbytes.de/tech/tc2231/">Encodes</a> the value of the filename
-	 * used in "Content-Disposition" response header
+	 * <a href="http://greenbytes.de/tech/tc2231/">Encodes</a> the value of the filename used in
+	 * "Content-Disposition" response header
 	 *
 	 * @param filename
-	 *          the non-encoded file name
+	 *            the non-encoded file name
 	 * @return encoded filename
 	 */
 	private String encodeDispositionHeaderValue(final String filename)
 	{
-		return 	(Strings.isEmpty(filename) ?
-						"" :
-						String.format("; filename=\"%1$s\"; filename*=UTF-8''%1$s",
-								UrlEncoder.PATH_INSTANCE.encode(filename, "UTF-8")));
+		return (Strings.isEmpty(filename) ? "" : String.format(
+			"; filename=\"%1$s\"; filename*=UTF-8''%1$s",
+			UrlEncoder.PATH_INSTANCE.encode(filename, "UTF-8")));
 	}
 
 	/**
@@ -213,9 +238,9 @@ public abstract class WebResponse extends Response
 
 	/**
 	 * Make this response cacheable
-	 * <p/> 
-	 * when trying to enable caching for web pages check this out: 
-	 * <a href="https://issues.apache.org/jira/browse/WICKET-4357">WICKET-4357</a>
+	 * <p/>
+	 * when trying to enable caching for web pages check this out: <a
+	 * href="https://issues.apache.org/jira/browse/WICKET-4357">WICKET-4357</a>
 	 * 
 	 * @param duration
 	 *            maximum duration before the response must be invalidated by any caches. It should
@@ -223,7 +248,7 @@ public abstract class WebResponse extends Response
 	 *            href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">RFC-2616</a>.
 	 * @param scope
 	 *            controls which caches are allowed to cache the response
-	 *            
+	 *
 	 * @see WebResponse#MAX_CACHE_DURATION
 	 */
 	public void enableCaching(Duration duration, final WebResponse.CacheScope scope)
@@ -248,7 +273,7 @@ public abstract class WebResponse extends Response
 
 		// Set cache scope
 		setHeader("Cache-Control", scope.cacheControl);
-		
+
 		// Set maximum age for caching in seconds (rounded)
 		addHeader("Cache-Control", "max-age=" + Math.round(duration.seconds()));
 
@@ -266,7 +291,8 @@ public abstract class WebResponse extends Response
 	 * href="http://palisade.plynt.com/issues/2008Jul/cache-control-attributes">here</a> or in <a
 	 * href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html">RFC-2616</a>.
 	 */
-	public static enum CacheScope {
+	public static enum CacheScope
+	{
 		/**
 		 * use all caches (private + public)
 		 * <p/>

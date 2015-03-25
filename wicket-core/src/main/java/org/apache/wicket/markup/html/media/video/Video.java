@@ -18,10 +18,10 @@ package org.apache.wicket.markup.html.media.video;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.media.MediaComponent;
-import org.apache.wicket.markup.html.media.MediaStreamingResourceReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -52,28 +52,28 @@ public class Video extends MediaComponent
 		super(id, model);
 	}
 
-	public Video(String id, MediaStreamingResourceReference mediaStreamingResourceReference)
+	public Video(String id, PackageResourceReference resourceReference)
 	{
-		super(id, mediaStreamingResourceReference);
+		super(id, resourceReference);
 	}
 
 	public Video(String id, IModel<?> model,
-		MediaStreamingResourceReference mediaStreamingResourceReference)
+		PackageResourceReference resourceReference)
 	{
-		super(id, model, mediaStreamingResourceReference);
+		super(id, model, resourceReference);
 	}
 
-	public Video(String id, MediaStreamingResourceReference mediaStreamingResourceReference,
+	public Video(String id, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		super(id, mediaStreamingResourceReference, pageParameters);
+		super(id, resourceReference, pageParameters);
 	}
 
 	public Video(String id, IModel<?> model,
-		MediaStreamingResourceReference mediaStreamingResourceReference,
+		PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		super(id, model, mediaStreamingResourceReference, pageParameters);
+		super(id, model, resourceReference, pageParameters);
 	}
 
 	public Video(String id, String url)
