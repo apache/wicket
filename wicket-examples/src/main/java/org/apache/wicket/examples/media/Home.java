@@ -21,7 +21,6 @@ import java.util.UUID;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.media.MediaStreamingResourceReference;
 import org.apache.wicket.markup.html.media.Source;
 import org.apache.wicket.markup.html.media.video.Video;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -50,7 +49,7 @@ public final class Home extends WicketExamplePage
 	{
 		// Internal video with several options
 
-		Video video1 = new Video("video1", new MediaStreamingResourceReference(Home.class,
+		Video video1 = new Video("video1", new PackageResourceReference(Home.class,
 			"video.mp4"));
 		video1.setAutoplay(false);
 		video1.setControls(true);
@@ -65,7 +64,7 @@ public final class Home extends WicketExamplePage
 		Video video2 = new Video("video2");
 		video2.setPoster(new PackageResourceReference(Home.class, "novideo.gif"));
 
-		Source source2 = new Source("source2", new MediaStreamingResourceReference(Home.class,
+		Source source2 = new Source("source2", new PackageResourceReference(Home.class,
 			"video.mp4"));
 		// Need to be set to true to show the type
 		source2.setDisplayType(true);
@@ -86,7 +85,7 @@ public final class Home extends WicketExamplePage
 
 		/*
 		 * // video with track
-		 * Video video4 = new Video("video4", new MediaStreamingResourceReference(Home.class, "dummyVideo.m4a"));
+		 * Video video4 = new Video("video4", new PackageResourceReference(Home.class, "dummyVideo.m4a"));
 		 * 
 		 * // source tag 
 		 * Source source4 = new Source("source4", "http://www.mytestpage.xc/video.m4a");

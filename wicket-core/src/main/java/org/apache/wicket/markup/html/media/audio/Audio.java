@@ -18,9 +18,9 @@ package org.apache.wicket.markup.html.media.audio;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.media.MediaComponent;
-import org.apache.wicket.markup.html.media.MediaStreamingResourceReference;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * An audio media component to playback audio files.
@@ -42,28 +42,28 @@ public class Audio extends MediaComponent
 		super(id, model);
 	}
 
-	public Audio(String id, MediaStreamingResourceReference mediaStreamingResourceReference)
+	public Audio(String id, PackageResourceReference resourceReference)
 	{
-		super(id, mediaStreamingResourceReference);
+		super(id, resourceReference);
 	}
 
 	public Audio(String id, IModel<?> model,
-		MediaStreamingResourceReference mediaStreamingResourceReference)
+		PackageResourceReference resourceReference)
 	{
-		super(id, model, mediaStreamingResourceReference);
+		super(id, model, resourceReference);
 	}
 
-	public Audio(String id, MediaStreamingResourceReference mediaStreamingResourceReference,
+	public Audio(String id, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		super(id, mediaStreamingResourceReference, pageParameters);
+		super(id, resourceReference, pageParameters);
 	}
 
 	public Audio(String id, IModel<?> model,
-		MediaStreamingResourceReference mediaStreamingResourceReference,
+		PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
-		super(id, model, mediaStreamingResourceReference, pageParameters);
+		super(id, model, resourceReference, pageParameters);
 	}
 
 	public Audio(String id, String url)

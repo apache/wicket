@@ -136,15 +136,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * controls whether {@link org.apache.wicket.request.resource.caching.IResourceCachingStrategy}
 	 * should be applied to resource
 	 */
-	
 	private boolean cachingEnabled = true;
-	
+
 	/**
 	 * text encoding (may be null) - only makes sense for character-based resources
 	 */
-	
 	private String textEncoding = null;
-	
+
 	/**
 	 * Hidden constructor.
 	 * 
@@ -189,7 +187,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		{
 			return Session.get().getLocale();
 		}
-		
+
 		return locale;
 	}
 
@@ -199,7 +197,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		{
 			return Session.get().getStyle();
 		}
-		
+
 		return style;
 	}
 
@@ -216,7 +214,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	/**
 	 * get text encoding (intented for character-based resources)
-	 
+	 * 
 	 * @return custom encoding or {@code null} to use default
 	 */
 	public String getTextEncoding()
@@ -288,7 +286,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		if (resourceStream == null)
 		{
 			return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND,
-					"Unable to find resource");
+						"Unable to find resource");
 		}
 
 		// add Last-Modified header (to support HEAD requests and If-Modified-Since)
@@ -307,27 +305,28 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 			// set Content-Type (may be null)
 			resourceResponse.setContentType(contentType);
-			
+
 			// set content encoding (may be null)
 			resourceResponse.setTextEncoding(getTextEncoding());
 
+			// supports accept range
+			resourceResponse.setAcceptRange(ContentRangeType.BYTES);
+
 			try
 			{
-				// read resource data
-				final byte[] bytes = IOUtils.toByteArray(resourceStream.getInputStream());
+				// read resource data to get the content length
+				long contentLength = IOUtils.toByteArray(resourceStream.getInputStream()).length;
 
 				// send Content-Length header
-				resourceResponse.setContentLength(bytes.length);
+				resourceResponse.setContentLength(contentLength);
+
+				// get content range information
+				Long startbyte = RequestCycle.get().getMetaData(CONTENT_RANGE_STARTBYTE);
+				Long endbyte = RequestCycle.get().getMetaData(CONTENT_RANGE_ENDBYTE);
 
 				// send response body with resource data
-				resourceResponse.setWriteCallback(new WriteCallback()
-				{
-					@Override
-					public void writeData(Attributes attributes)
-					{
-						attributes.getResponse().write(bytes);
-					}
-				});
+				resourceResponse.setWriteCallback(new PartWriterCallback(
+					resourceStream.getInputStream(), contentLength, startbyte, endbyte));
 			}
 			catch (IOException e)
 			{
@@ -408,7 +407,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	{
 		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
 	}
-	
+
 	/**
 	 * locate resource stream for current resource
 	 * 
@@ -421,7 +420,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	/**
 	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to compress the
-	 *         resource.
+	 *          resource.
 	 */
 	public boolean getCompress()
 	{
@@ -466,8 +465,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		if (accept(realPath) == false)
 		{
 			throw new PackageResourceBlockedException(
-					"Access denied to (static) package resource " + absolutePath +
-						". See IPackageResourceGuard");
+							"Access denied to (static) package resource " + absolutePath +
+									". See IPackageResourceGuard");
 		}
 
 		if (resourceStream != null)
@@ -478,11 +477,12 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * An IResourceStream that processes the input stream of the original
-	 * IResourceStream
+	 * An IResourceStream that processes the input stream of the original IResourceStream
 	 */
 	private class ProcessingResourceStream extends ResourceStreamWrapper
 	{
+		private static final long serialVersionUID = 1L;
+
 		private ProcessingResourceStream(IResourceStream delegate)
 		{
 			super(delegate);
@@ -496,10 +496,12 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			try
 			{
 				bytes = IOUtils.toByteArray(inputStream);
-			} catch (IOException iox)
+			}
+			catch (IOException iox)
 			{
 				throw new WicketRuntimeException(iox);
-			} finally
+			}
+			finally
 			{
 				IOUtils.closeQuietly(this);
 			}
@@ -523,8 +525,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	/**
 	 * Checks whether access is granted for this resource.
 	 *
-	 * By default IPackageResourceGuard is used to check the permissions but
-	 * the resource itself can also make the check.
+	 * By default IPackageResourceGuard is used to check the permissions but the resource itself can
+	 * also make the check.
 	 *
 	 * @param path
 	 *            resource path
@@ -548,7 +550,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 */
 	public static boolean exists(final ResourceReference.Key key)
 	{
-		return exists(key.getScopeClass(), key.getName(), key.getLocale(), key.getStyle(), key.getVariation());
+		return exists(key.getScopeClass(), key.getName(), key.getLocale(), key.getStyle(),
+			key.getVariation());
 	}
 
 	/**
@@ -622,15 +625,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		
+
 		PackageResource other = (PackageResource)obj;
-		
-		return Objects.equals(absolutePath, other.absolutePath)
-			&& Objects.equals(locale, other.locale)
-			&& Objects.equals(path, other.path)
-			&& Objects.equals(scopeName, other.scopeName)
-			&& Objects.equals(style, other.style)
-			&& Objects.equals(variation, other.variation);
+
+		return Objects.equals(absolutePath, other.absolutePath) &&
+			Objects.equals(locale, other.locale) && Objects.equals(path, other.path) &&
+			Objects.equals(scopeName, other.scopeName) && Objects.equals(style, other.style) &&
+			Objects.equals(variation, other.variation);
 	}
 
 	String getParentFolderPlaceholder()
@@ -675,12 +676,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				return false;
 
 			CacheKey cacheKey = (CacheKey)o;
-			
-			return Objects.equals(locale, cacheKey.locale)
-				&& Objects.equals(path, cacheKey.path)
-				&& Objects.equals(scopeName, cacheKey.scopeName)
-				&& Objects.equals(style, cacheKey.style)
-				&& Objects.equals(variation, cacheKey.variation);
+
+			return Objects.equals(locale, cacheKey.locale) && Objects.equals(path, cacheKey.path) &&
+				Objects.equals(scopeName, cacheKey.scopeName) &&
+				Objects.equals(style, cacheKey.style) &&
+				Objects.equals(variation, cacheKey.variation);
 		}
 
 		@Override

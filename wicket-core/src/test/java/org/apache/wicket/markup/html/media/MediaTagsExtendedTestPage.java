@@ -29,24 +29,25 @@ public class MediaTagsExtendedTestPage extends WebPage
 
 	public MediaTagsExtendedTestPage()
 	{
-		Video video = new Video("video", new MediaStreamingResourceReference(
-			MediaTagsTestPage.class, "dummyVideo.m4a"));
-		
+		Video video = new Video("video", new PackageResourceReference(MediaTagsTestPage.class,
+			"dummyVideo.m4a"));
+
 		// source tag
-		Source source = new Source("source","http://www.mytestpage.xc/video.m4a");
+		Source source = new Source("source", "http://www.mytestpage.xc/video.m4a");
 		source.setMedia("screen and (device-width:500px)");
 		source.setType("video/mp4");
 		source.setDisplayType(true);
 		video.add(source);
-		
+
 		// tack tag
-		Track track = new Track("track", new PackageResourceReference(MediaTagsTestPage.class,"dummySubtitles.vtt"));
+		Track track = new Track("track", new PackageResourceReference(MediaTagsTestPage.class,
+			"dummySubtitles.vtt"));
 		track.setKind(Kind.SUBTITLES);
 		track.setLabel("Subtitles of video");
 		track.setSrclang(Locale.GERMANY);
 		track.setDefaultTrack(true);
 		video.add(track);
-		
+
 		add(video);
 	}
 
