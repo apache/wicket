@@ -367,6 +367,15 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 	}
 
+	private static class DisableCachingAction extends MetaDataAction
+	{
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.disableCaching();;
+		}
+	}
+
 	private static class SendErrorAction extends Action
 	{
 		private final int sc;
@@ -463,6 +472,11 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	public void addHeader(String name, String value)
 	{
 		actions.add(new AddHeaderAction(name, value));
+	}
+
+	@Override
+	public void disableCaching() {
+		actions.add(new DisableCachingAction());
 	}
 
 	@Override
