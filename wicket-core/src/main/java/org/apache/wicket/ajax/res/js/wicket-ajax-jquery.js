@@ -933,13 +933,18 @@
 			}, this);
 
 			// an error handler that is used when the connection to the server fails for any reason
-			context.errorHandle = setTimeout(jQuery.proxy(function() {
-				this.failure(context, null, "No XML response in the IFrame document", "Failure");
+			if (attrs.rt) {
+				context.errorHandle = setTimeout(jQuery.proxy(function () {
+					this.failure(context, null, "No XML response in the IFrame document", "Failure");
 
-				context.steps.push(context.endStep);
-				var executer = new FunctionsExecuter(context.steps);
-				executer.start();
-			}, this), attrs.rt || 5000);
+					context.steps.push(context.endStep);
+					var executer = new FunctionsExecuter(context.steps);
+					executer.start();
+				}, this), attrs.rt);
+			} else {
+				Wicket.Log.info("Submitting a multipart form without a timeout. " +
+					"Use AjaxRequestAttributes.setRequestTimeout(duration) if need to handle connection timeouts.");
+			}
 
 			// install handler to deal with the ajax response
 			// ... we add the onload event after form submit because chrome fires it prematurely
@@ -966,7 +971,9 @@
 				iframe = event.target,
 				envelope;
 
-			clearTimeout(context.errorHandle);
+			if (!isUndef(context.errorHandle)) {
+				clearTimeout(context.errorHandle);
+			}
 
 			// stop the event
 			event.stopPropagation();
