@@ -104,22 +104,31 @@ public class PartWriterCallback extends WriteCallback
 					endbyte = contentLength;
 				}
 
-				long totalBytes = 0;
-				int actualReadBytes;
+				// The read bytes in the current buffer
+				int readBytes;
 
-				while ((actualReadBytes = inputStream.read(buffer)) != -1)
+				// The total bytes read
+				long totalBytes = 0;
+
+				while ((readBytes = inputStream.read(buffer)) != -1)
 				{
-					totalBytes = totalBytes + buffer.length;
-					long lowerBuffer = endbyte - totalBytes;
-					if (lowerBuffer <= 0)
+					totalBytes += readBytes;
+
+					// Check if the end byte is reached
+					if (endbyte - totalBytes < 0)
 					{
-						buffer = resizeArray(buffer, actualReadBytes);
-						outputStream.write(buffer);
+						// calculate the bytes left to be read in the current buffer
+						// can be casted to int, because the the previous chunks are
+						// subtracted - so it can't exceed buffer size
+						int leftBytesToBeRead = (int)(totalBytes - startbyte) -
+							(int)(totalBytes - endbyte);
+						outputStream.write(buffer, 0, leftBytesToBeRead);
 						break;
 					}
 					else
 					{
-						outputStream.write(buffer);
+						// If the end byte is not reached read the full buffer
+						outputStream.write(buffer, 0, readBytes);
 					}
 				}
 			}
@@ -136,28 +145,6 @@ public class PartWriterCallback extends WriteCallback
 			// org.apache.catalina.connector.ClientAbortException)
 			// we ignore this case
 		}
-	}
-
-	/**
-	 * Reallocates an array with a new size, and copies the contents of the old array to the new
-	 * array.
-	 * 
-	 * @param oldArray
-	 *            the old array, to be reallocated.
-	 * @param newSize
-	 *            the new array size.
-	 * @return A new array with the same contents.
-	 */
-	private static byte[] resizeArray(byte[] oldArray, int newSize)
-	{
-		int oldSize = oldArray.length;
-		byte[] newArray = new byte[newSize];
-		int minLength = Math.min(oldSize, newSize);
-		if (minLength > 0)
-		{
-			System.arraycopy(oldArray, 0, newArray, 0, minLength);
-		}
-		return newArray;
 	}
 
 	/**
