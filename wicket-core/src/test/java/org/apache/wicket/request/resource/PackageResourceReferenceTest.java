@@ -20,6 +20,11 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
+import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.AbstractResource.ContentRangeType;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
 import org.apache.wicket.response.ByteArrayResponse;
@@ -237,4 +242,62 @@ public class PackageResourceReferenceTest extends WicketTestCase
 		final CssPackageResource alreadyMinifiedResource = alreadyMinified.getResource();
 		Assert.assertFalse("Already minified resource should got its compress flag set to false", alreadyMinifiedResource.getCompress());
 	}
+
+	/**
+	 * See WICKET-5819 - Media tags
+	 */
+	@Test
+	public void testContentRange()
+	{
+		// Test range
+		Assert.assertEquals("resource", makeRangeRequest("bytes=0-8"));
+		Assert.assertEquals("ource", makeRangeRequest("bytes=3-8"));
+		Assert.assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=0-"));
+		Assert.assertEquals("var_style_en.txt", makeRangeRequest("bytes=9-"));
+		Assert.assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-"));
+		Assert.assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-25"));
+	}
+
+	private String makeRangeRequest(String range)
+	{
+		ResourceReference reference = new PackageResourceReference(scope, "resource.txt",
+			locales[1], styles[1], variations[1]);
+
+		ByteArrayResponse byteResponse = new ByteArrayResponse();
+
+		Request request = tester.getRequestCycle().getRequest();
+		MockHttpServletRequest mockHttpServletRequest = (MockHttpServletRequest)request.getContainerRequest();
+		mockHttpServletRequest.setHeader("range", range);
+		Attributes mockAttributes = new Attributes(request, byteResponse);
+		reference.getResource().respond(mockAttributes);
+		return new String(byteResponse.getBytes());
+	}
+
+	/**
+	 * See WICKET-5819 - Media tags
+	 */
+	@Test
+	public void testContentRangeHeaders()
+	{
+		// Test header fields
+		ResourceReference reference = new PackageResourceReference(scope, "resource.txt",
+			locales[1], styles[1], variations[1]);
+		Request request = tester.getRequestCycle().getRequest();
+		Response response = tester.getRequestCycle().getResponse();
+		MockHttpServletResponse mockHttpServletResponse = (MockHttpServletResponse)response.getContainerResponse();
+		Attributes mockAttributes = new Attributes(request, response);
+		reference.getResource().respond(mockAttributes);
+		Assert.assertEquals(ContentRangeType.BYTES.getTypeName(),
+			mockHttpServletResponse.getHeader("Accept-Range"));
+		// For normal: If a resource supports content range no content is delivered
+		// if no "Range" header is given, but we have to deliver it, because
+		// other resources then media should get the content. (e.g. CSS, JS, etc.) Browsers
+		// detecting media requests and automatically add the "Range" header for
+		// partial content and they don't make an initial request to detect if a media
+		// resource supports Content-Range (by the Accept-Range header)
+		Assert.assertEquals("resource_var_style_en.txt",
+			new String(mockHttpServletResponse.getBinaryContent()));
+	}
+
+
 }
