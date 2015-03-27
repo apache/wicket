@@ -385,7 +385,10 @@ public class WicketFilter implements Filter
 				application = applicationFactory.createApplication(this);
 			}
 
-			application.setName(filterConfig.getFilterName());
+			if (application.getName() == null)
+			{
+				application.setName(filterConfig.getFilterName());
+			}
 			application.setWicketFilter(this);
 
 			// Allow the filterPath to be preset via setFilterPath()
