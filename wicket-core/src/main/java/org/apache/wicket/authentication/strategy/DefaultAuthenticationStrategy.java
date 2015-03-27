@@ -40,6 +40,9 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	/** The cookie name to store the username and password */
 	protected final String cookieKey;
 
+	/** The key to use for encrypting/decrypting the cookie value  */
+	protected final String encryptionKey;
+
 	/** The separator used to concatenate the username and password */
 	protected final String VALUE_SEPARATOR = "-sep-";
 
@@ -49,7 +52,6 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	/** Use to encrypt cookie values for username and password. */
 	private ICrypt crypt;
 
-
 	/**
 	 * Constructor
 	 * 
@@ -58,7 +60,22 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	 */
 	public DefaultAuthenticationStrategy(final String cookieKey)
 	{
+		this(cookieKey, defaultEncryptionKey(cookieKey));
+	}
+
+	private static String defaultEncryptionKey(String cookieKey)
+	{
+		if (Application.exists())
+		{
+			return Application.get().getName();
+		}
+		return cookieKey;
+	}
+
+	public DefaultAuthenticationStrategy(final String cookieKey, final String encryptionKey)
+	{
 		this.cookieKey = Args.notEmpty(cookieKey, "cookieKey");
+		this.encryptionKey = Args.notEmpty(encryptionKey, "encryptionKey");
 	}
 
 	/**
@@ -71,7 +88,6 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 		if (cookieUtils == null)
 		{
 			CookieDefaults settings = new CookieDefaults();
-			settings.setHttpOnly(true);
 			cookieUtils = new CookieUtils(settings);
 		}
 		return cookieUtils;
@@ -84,13 +100,6 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	{
 		if (crypt == null)
 		{
-			String encryptionKey;
-			if (Application.exists())
-			{
-				encryptionKey = Application.get().getName();
-			} else {
-				encryptionKey = "LoggedIn";
-			}
 			CachingSunJceCryptFactory cryptFactory = new CachingSunJceCryptFactory(encryptionKey);
 			crypt = cryptFactory.newCrypt();
 		}
