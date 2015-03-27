@@ -18,7 +18,9 @@ package org.apache.wicket.authentication.strategy;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.authentication.IAuthenticationStrategy;
+import org.apache.wicket.util.cookies.CookieDefaults;
 import org.apache.wicket.util.cookies.CookieUtils;
+import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
@@ -68,7 +70,9 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	{
 		if (cookieUtils == null)
 		{
-			cookieUtils = new CookieUtils();
+			CookieDefaults settings = new CookieDefaults();
+			settings.setHttpOnly(true);
+			cookieUtils = new CookieUtils(settings);
 		}
 		return cookieUtils;
 	}
@@ -80,14 +84,19 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 	{
 		if (crypt == null)
 		{
-			crypt = Application.get().getSecuritySettings().getCryptFactory().newCrypt();
+			String encryptionKey;
+			if (Application.exists())
+			{
+				encryptionKey = Application.get().getName();
+			} else {
+				encryptionKey = "LoggedIn";
+			}
+			CachingSunJceCryptFactory cryptFactory = new CachingSunJceCryptFactory(encryptionKey);
+			crypt = cryptFactory.newCrypt();
 		}
 		return crypt;
 	}
 
-	/**
-	 * @see org.apache.wicket.authentication.IAuthenticationStrategy#load()
-	 */
 	@Override
 	public String[] load()
 	{
@@ -139,10 +148,6 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.authentication.IAuthenticationStrategy#save(java.lang.String,
-	 *      java.lang.String...)
-	 */
 	@Override
 	public void save(final String credential, final String... extraCredentials)
 	{
@@ -171,9 +176,6 @@ public class DefaultAuthenticationStrategy implements IAuthenticationStrategy
 		return value.toString();
 	}
 
-	/**
-	 * @see org.apache.wicket.authentication.IAuthenticationStrategy#remove()
-	 */
 	@Override
 	public void remove()
 	{
