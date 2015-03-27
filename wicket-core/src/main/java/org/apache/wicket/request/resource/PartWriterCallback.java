@@ -20,28 +20,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.commons.io.input.BoundedInputStream;
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
 import org.apache.wicket.request.resource.IResource.Attributes;
+import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Used to read a part of an input stream and writes it to the output stream of the response taken
- * from attributes of the writeData method.
+ * from attributes in {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)}  method.
  * 
  * @author Tobias Soloschenko
- *
  */
 public class PartWriterCallback extends WriteCallback
 {
+	/**
+	 * The input stream to read from
+	 */
 	private final InputStream inputStream;
 
+	/**
+	 * The total length to read if {@link #endbyte} is not specified
+	 */
 	private final Long contentLength;
 
-	private final Long startbyte;
+	/**
+	 * The byte to start reading from. If omitted then the input stream will be read
+	 * from its beginning
+	 */
+	private Long startbyte;
 
+	/**
+	 * The end byte to read from the {@link #inputStream}.
+	 * If omitted then the input stream will be read till its end
+	 */
 	private Long endbyte;
 
+	/**
+	 * The size of the buffer that is used for the copying of the data
+	 */
 	private int bufferSize;
 
 
@@ -51,12 +70,12 @@ public class PartWriterCallback extends WriteCallback
 	 * Reads a part of the given input stream. If the startbyte parameter is not null the number of
 	 * bytes are skipped till the stream is read. If the endbyte is not null the stream is read till
 	 * endbyte, else to the end of the whole stream. If startbyte and endbyte is null the whole
-	 * stream is read.
+	 * stream is copied.
 	 * 
 	 * @param inputStream
-	 *            the input stream to be read
-	 * @param the
-	 *            content length
+	 *            the input stream to read from
+	 * @param contentLength
+	 *            content length of the input stream. Ignored if <em>endByte</em> is specified
 	 * @param startbyte
 	 *            the start position to read from (if not null the number of bytes are skipped till
 	 *            the stream is read)
@@ -68,7 +87,7 @@ public class PartWriterCallback extends WriteCallback
 		Long endbyte)
 	{
 		this.inputStream = inputStream;
-		this.contentLength = contentLength;
+		this.contentLength = Args.notNull(contentLength, "contentLength");
 		this.startbyte = startbyte;
 		this.endbyte = endbyte;
 	}
@@ -97,6 +116,12 @@ public class PartWriterCallback extends WriteCallback
 				{
 					inputStream.skip(startbyte);
 				}
+				else
+				{
+					// If no start byte has been given set it to 0
+					// which means no bytes has been skipped
+					startbyte = 0L;
+				}
 
 				// If there are no end bytes given read the whole stream till the end
 				if (endbyte == null || Long.valueOf(-1).equals(endbyte))
@@ -104,36 +129,34 @@ public class PartWriterCallback extends WriteCallback
 					endbyte = contentLength;
 				}
 
-				// The read bytes in the current buffer
-				int readBytes;
-
-				// The total bytes read
-				long totalBytes = 0;
-
-				while ((readBytes = inputStream.read(buffer)) != -1)
+				BoundedInputStream boundedInputStream = null;
+				try
 				{
-					totalBytes += readBytes;
+					// Stream is going to be read from the starting point next to the skipped bytes
+					// till the end byte computed by the range between startbyte / endbyte
+					boundedInputStream = new BoundedInputStream(inputStream, endbyte - startbyte);
 
-					// Check if the end byte is reached
-					if (endbyte - totalBytes < 0)
+					// The original input stream is going to be closed by the end of the request
+					// so set propagate close to false
+					boundedInputStream.setPropagateClose(false);
+
+					// The read bytes in the current buffer
+					int readBytes;
+
+					while ((readBytes = boundedInputStream.read(buffer)) != -1)
 					{
-						// calculate the bytes left to be read in the current buffer
-						// can be casted to int, because the the previous chunks are
-						// subtracted - so it can't exceed buffer size
-						int leftBytesToBeRead = (int)(totalBytes - startbyte) -
-							(int)(totalBytes - endbyte);
-						outputStream.write(buffer, 0, leftBytesToBeRead);
-						break;
-					}
-					else
-					{
-						// If the end byte is not reached read the full buffer
 						outputStream.write(buffer, 0, readBytes);
 					}
+				}
+				finally
+				{
+					IOUtils.closeQuietly(boundedInputStream);
 				}
 			}
 			else
 			{
+				// No range has been given so copy the content
+				// from input stream to the output stream
 				Streams.copy(inputStream, outputStream, getBufferSize());
 			}
 		}
