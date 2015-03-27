@@ -331,6 +331,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 	protected Url encryptRequestListenerParameter(final Url url)
 	{
 		Url encryptedUrl = new Url(url);
+		boolean encrypted = false;
 
 		for (Iterator<Url.QueryParameter> it = encryptedUrl.getQueryParameters().iterator(); it.hasNext();)
 		{
@@ -343,11 +344,19 @@ public class CryptoMapper implements IRequestMapperDelegate
 				Url.QueryParameter encryptedParameter
 					= new Url.QueryParameter(ENCRYPTED_PAGE_COMPONENT_INFO_PARAMETER, encryptedParameterValue);
 				encryptedUrl.getQueryParameters().add(0, encryptedParameter);
+				encrypted = true;
 				break;
 			}
 		}
 
-		return encryptedUrl;
+		if (encrypted)
+		{
+			return encryptedUrl;
+		}
+		else
+		{
+			return url;
+		}
 	}
 
 	/**
