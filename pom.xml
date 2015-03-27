@@ -124,7 +124,7 @@
 		<maven.javadoc.version>2.10.2</maven.javadoc.version>
 		<maven.surefire.version>2.18</maven.surefire.version>
 		<mockito.version>1.10.16</mockito.version>
-		<slf4j.version>1.7.10</slf4j.version>
+		<slf4j.version>1.7.12</slf4j.version>
 		<hamcrest.version>1.3</hamcrest.version>
 	</properties>
 	<dependencyManagement>
@@ -666,7 +666,7 @@
 					<inherited>true</inherited>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.2</version>
+					<version>3.3</version>
 					<configuration>
 						<source>${mvn.build.java.version}</source>
 						<target>${mvn.build.java.version}</target>
