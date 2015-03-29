@@ -1,0 +1,59 @@
+/*
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Color.
+//
+////////////////////////////////////////////////////////////////////////////////
+*/
+
+h1, h2, #main a, #main .project strong, .local .local-title .toggle a, #table-of-content a strong {
+    color: #E8590A!important;
+}
+
+
+/*
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Background Color.
+//
+////////////////////////////////////////////////////////////////////////////////
+*/
+
+
+#navigation .selected a {
+    background: #E8590A!important;
+}
+
+#navigation a:hover {
+    background: #777777!important;
+}
+
+#navigation .selected a:hover, #navigation .active .button {
+    background: #E8590A!important;
+}
+
+#table-of-content a {
+	border-right-color: #E8590A!important;
+}
+
+/*
+////////////////////////////////////////////////////////////////////////////////
+//
+//  Background Image.
+//
+////////////////////////////////////////////////////////////////////////////////
+*/
+
+.wiki-table th, #navigation {
+    background: #F17A2F!important;
+}
+
+#navigation .separator {
+    background: none!important;
+}
+
+@media print
+  {
+   #col2 {display:none!important;}
+  }
+

@@ -74,7 +74,9 @@ You will find the source code here:
 	    |-- wicket-request
 	    |-- wicket-spring
 	    |-- wicket-util
+	    |-- wicket-user-guide
 	    `-- wicket-velocity
+	    
 
 Here is a list of projects in this distribution and what they do.
 
@@ -114,6 +116,7 @@ Here is a list of projects in this distribution and what they do.
    handlers and so on;
  - wicket-util: the util project for wicket
  - wicket-velocity: components for velocity templating
+ - wicket-user-guide: the user guide of wicket
 
 Getting started
 ---------------

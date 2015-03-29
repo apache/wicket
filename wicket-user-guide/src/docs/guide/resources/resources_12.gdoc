@@ -1,0 +1,33 @@
+
+
+Resources can be added to a global registry in order to share them at application-level. Shared resources are identified by an application-scoped key and they can be easily retrieved at a later time using reference class @SharedResourceReference@. The global registry can be accessed with @Application@'s method @getSharedResources@. In the following excerpt of code (taken again from project @CustomResourceMounting@) we register an instance of our custom RSS feeds producer as application-shared resource:
+
+{code}
+  //init application's method
+  @Override
+  public void init(){
+    RSSProducerResource rssResource = new RSSProducerResource();
+    // ...
+    getSharedResources().add("globalRSSProducer", rssResource);    
+  }
+{code}
+
+Now to use an application-shared resource we can simply retrieve it using class @SharedResourceReference@ and providing the key previously used to register the resource:
+
+{code}
+add(new ResourceLink("globalRssLink", new SharedResourceReference("globalRSSProducer")));
+{code}
+
+The URL generated for application shared resources follows the same pattern seen for package resources:
+
+@./wicket/resource/org.apache.wicket.Application/globalRSSProducer@
+
+The last segment of the URL is the key of the resource while the previous segment contains the scope of the resource. For application-scoped resources the scope is always the fully qualified name of class @Application@. This should not be surprising since global resources are visible at application level (i.e. the scope is the application).
+
+{note}
+Package resources are also application-shared resources but they don't need to be explicitly registered.
+{note}
+
+{note}
+Remember that we can get the URL of a resource reference using method @urlFor(ResourceReference resourceRef, PageParameters params )@ available with both class @RequestCycle@ and class @Component@.
+{note}

@@ -1,0 +1,103 @@
+Some web developers prefer to put their <script> tags at the end of page body instead of inside the <head> tags:
+
+{code:html}
+
+<html>
+
+<head>
+//no <script> tag here...
+</head>
+
+<body>
+...
+<script>
+//one or more <script> tags at the end of the body
+</script> 
+</body>
+</html>
+
+{code}
+
+
+In Wicket we can achieve this result providing a custom @IHeaderResponseDecorator@ to a our application and using Wicket tag <wicket:container/> to indicate where we want to render our scripts inside the page. Interface @IHeaderResponseDecorator@ defines method @IHeaderResponse decorate(IHeaderResponse response)@ which allows to decorate or add funtionalities to Wicket @IHeaderResponse@. Our custom @IHeaderResponseDecorator@ can be registered in the application with method @setHeaderResponseDecorator@. Anytime Wicket creates an instance of @IHeaderResponse@, it will call the registered @IHeaderResponseDecorator@ to decorate the header response.
+
+In the example project @ScriptInsideBody@ we can find a custom @IHeaderResponseDecorator@ that renders CSS into the usual <head> tag and put JavaScricpt header items into a specific container (tag <wicket:container/>)
+Wicket already comes with class @JavaScriptFilteredIntoFooterHeaderResponse@ which wraps a @IHeaderResponse@ and renders in a given container all the instances of @JavaScriptHeaderItem@.
+The following code is taken from the Application class of the project:
+
+{code}
+
+    //...
+    @Override
+    public void init()
+    {
+       setHeaderResponseDecorator(new JavaScriptToBucketResponseDecorator("footer-container"));
+    }
+	
+     /**
+     * Decorates an original IHeaderResponse and renders all javascript items
+     * (JavaScriptHeaderItem), to a specific container in the page.
+     */
+    static class JavaScriptToBucketResponseDecorator implements IHeaderResponseDecorator 
+    {
+
+        private String bucketName;
+
+        public JavaScriptToBucketResponseDecorator(String bucketName) {
+            this.bucketName = bucketName;
+        }
+
+        @Override
+        public IHeaderResponse decorate(IHeaderResponse response) {
+            return new JavaScriptFilteredIntoFooterHeaderResponse(response, bucketName);
+        }
+
+    }
+{code}
+
+As you can see in the code above the "bucket" that will contain JavaScript tags is called @"footer-container"@. To make a use of it the developer have to add a special component called @HeaderResponseContainer@ in his page:
+
+{code}
+add(new HeaderResponseContainer("someId", "filterName"));
+{code}
+
+Please note that @HeaderResponseContainer@'s needs also a name for the corresponding header response's filter. The markup of our page will look like this:
+
+{code:html}
+
+<html>
+
+<header>
+//no <script> tag here...
+</header>
+
+<body>
+<!-- here we will have our JavaScript tags -->
+<wicket:container wicket:id="someId"/> 
+</body>
+</html>
+
+{code}
+
+The code of the home page is the following:
+
+{code}
+   public HomePage(final PageParameters parameters) {
+        super(parameters);
+
+        add(new HeaderResponseContainer("footer-container", "footer-container"));
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(getClass(),
+                "javasciptLibrary.js")));
+
+        response.render(OnEventHeaderItem.forScript("'logo'", "click", "alert('Clicked me!')"));
+    }
+{code}
+
+Looking at the code above you can note that our page adds two script to the header section: the first is an instance of @JavaScriptHeaderItem@ and will be rendered in the @HeaderResponseContainer@ while the second will follow the usual behavior and will be rendered inside <head> tag.
+
+
+

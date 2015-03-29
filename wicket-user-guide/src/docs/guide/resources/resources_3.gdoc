@@ -1,0 +1,156 @@
+
+
+With HTML we use to include static resources in our pages using tags like <script>, <link> or <img>. This is what we have done so far writing our custom panels and pages. However, when we work with a component-oriented framework like Wicket, this classic approach becomes inadequate because it makes custom components hardly reusable. This happens when a component depends on a big number of resources. In such a case, if somebody wanted to use our custom component in his application, he would be forced to know which resources it depends on and make them available.
+
+To solve this problem Wicket allows us to place static resource files into component package (like we do with markup and properties files) and load them from component code.
+
+These kinds of resources are called package resources (a CSS and a JavaScript file in this screenshot):  
+
+!package-resources.png!
+
+With package resources custom components become independent and self-contained and client code can use them without worrying about their dependencies.
+
+To load package resources Wicket provides class @org.apache.wicket.request.resource.PackageResourceReference@. 
+
+To identify a package resource we need to specify a class inside the target package and the name of the desired resource (most of the times this will be a file name). 
+
+In the following example taken from project ImageAsPackageRes, CustomPanel loads a picture file available as package resource and it displays it in a <img> tag using the built-in component @org.apache.wicket.markup.html.image.Image@: 
+
+*HTML:*
+{code:html}
+<html>
+<head>...</head>
+<body>
+<wicket:panel>
+	Package resource image: <img wicket:id="packageResPicture"/>
+</wicket:panel>
+</body>
+</html>
+{code}
+
+*Jave Code:*
+{code}
+public class CustomPanel extends Panel {
+
+	public CustomPanel(String id) {
+		super(id);
+		PackageResourceReference resourceReference = 
+	            new PackageResourceReference(getClass(), "calendar.jpg");
+		add(new Image("packageResPicture", resourceReference));
+	}
+}
+{code}
+
+Wicket will take care of generating a valid URL for file calendar.jpg. URLs for package resources have the following structure:
+
+@<path to application root>/wicket/resource/<fully qualified classname>/<resource file name>-<ver-<id>>(.file extension)@
+
+In our example the URL for our picture file calendar.jpg is the following:
+
+@./wicket/resource/org.wicketTutorial.CustomPanel/calendar-ver-1297887542000.jpg@
+
+The first part of the URL is the relative path to the application root. In our example our page is already at the application's root so we have only a single-dotted segment. The next two segments, wicket and resource, are respectively the namespace and the identifier for resources seen in paragraph 8.6.4. 
+
+The fourth segment is the fully qualified name of the class used to locate the resource and it is the scope of the package resource. In the last segment of the URL we can find the name of the resource (the file name).
+
+As you can see Wicket has automatically appended to the file name a version identifier (ver-1297887542000). When Wicket runs in DEVELOPMENT mode this identifier contains the timestamp in millisecond indicating the last time the resource file was modified. This can be useful when we are developing our application and resource files are frequently modified. Appending the timestamp to the original name we are sure that our browser will use always the last version of the file and not an old, out of date, cached version. 
+
+When instead Wicket is running in DEPLOYMENT mode, the version identifier will contain the MD5 digest of the file instead of the timestamp. The digest is computed only the first time the resource is requested. This perfectly makes sense as static resources don't change so often when our application runs into production environment and when this appends the application is redeployed. 
+
+{note}
+Package resources can be localized following the same rules seen for resource bundles and markup files:
+
+!package-resource-localization.png!
+
+In the example illustrated in the picture above, if we try to retrieve package resource calendar.jpg when the current locale is set to French, the actual file returned will be calendar_fr.jpg.
+{note}
+
+h3. Responsive images - multiple resource references use in one component
+
+Since Wicket 7.0.0 the build-in component @org.apache.wicket.markup.html.image.Image@ allows you to add several ResourceReferences via varargs and to provide sizes for each image so that the browser is able to pick the best image source.
+
+*HTML:*
+{code:html}
+...
+	Package resource image: <img wicket:id="packageResPicture"/>
+...
+{code}
+
+*Java Code:*
+{code}
+...
+		Image image = new Image("packageResPicture", 
+			new PackageResourceReference(getClass(),"small.jpg"), 
+			new PackageResourceReference(getClass(), "large.jpg"),
+			new PackageResourceReference(getClass(), "medium.jpg"),
+			new PackageResourceReference(getClass(), "small.jpg"));
+		image.setXValues("1024w", "640w", "320w");
+		image.setSizes("(min-width: 36em) 33.3vw", "100vw");
+
+		this.add(image);
+...
+{code}
+
+The component @org.apache.wicket.markup.html.image.Picture@ is used to provide a fallback image @org.apache.wicket.markup.html.image.Image@ and several source components @org.apache.wicket.markup.html.image.Source@ which gives a developer the control as to when and if those images are presented to the user.
+
+*HTML:*
+{code:html}
+...
+	<picture wicket:id="picture">
+  		<source wicket:id="big" />
+  		<source wicket:id="small" />
+  		<img wicket:id="fallback" />
+	</picture>
+...
+{code}
+
+*Java Code:*
+{code}
+...
+		Picture picture = new Picture("picture");
+
+		Source big = new Source("big", new PackageResourceReference(getClass(), "big.jpg"), new PackageResourceReference(getClass(), "big-hd.jpg");
+		big.setXValues("1x","2x");
+		big.setMedia("(min-width: 40em)");
+		picture.add(big);	
+
+		Source small = new Source("small", new PackageResourceReference(getClass(), "small.jpg"), new PackageResourceReference(getClass(), "small-hd.jpg");
+		small.setXValues("1x","2x");
+		picture.add(small);
+
+		Image image = new Image("fallback", new PackageResourceReference(getClass(), "fallback.jpg"));
+		picture.add(image);
+
+		this.add(picture);
+...
+{code}
+
+h3. Media tags - specialized resource references
+
+Since Wicket 7.0.0 there is a very specialized form of a ResourceReference - the MediaStreamingResourceReference which is used for videos / audio tags. This ResourceReference supports the Range / Content-Range http headers. The Range header allows the client to only request a specific byte range of the resource. The server provides the Content-Range and tells the client which bytes are going to be send.
+
+*HTML:*
+{code:html}
+...
+	 <video wicket:id="video" />
+...
+{code}
+
+*Java Code:*
+{code}
+...
+	Video video = new Video("video", new MediaStreamingResourceReference(getClass(),"video.mp4"));
+...
+{code}
+
+h3. Using package resources with tag <wicket:link>
+
+In paragraph 8.3 we have used tag <wicket:link> to automatically create links to bookmarkable pages. The same technique can be used also for package resources in order to use them directly from markup file. Let's assume for example that we have a picture file called icon.png placed in the same package of the current page. Under these conditions we can display the picture file using the following markup fragment:
+
+{code:html}
+<wicket:link>
+   <img src="icon.png"/>
+</wicket:link>
+{code}
+
+In the example above Wicket will populate the attribute src with the URL corresponding to the package resource icon.png. <wicket:link> supports also tag <link> for CSS files and tag <script> for JavaScript files.

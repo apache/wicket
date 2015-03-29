@@ -1,0 +1,46 @@
+
+
+As pointed out in the note at page 9, Wicket can be started in two modes, DEVELOPMENT and DEPLOYMENT. When we are in DEVELOPMENT mode Wicket warns us at application startup with the following message:
+
+{code}
+********************************************************************
+*** WARNING: Wicket is running in DEVELOPMENT mode.              ***
+***                               ^^^^^^^^^^^                    ***
+*** Do NOT deploy to your live server(s) without changing this.  ***
+*** See Application#getConfigurationType() for more information. ***
+********************************************************************
+{code}
+
+As we can read Wicket itself discourages us from using DEVELOPMENT mode into production environment. The running mode of our application can be configured in three different ways. The first one is adding a filter parameter inside deployment descriptor web.xml:
+
+{code:html}
+<filter>      
+	<filter-name>wicket.MyApp</filter-name>
+	<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+	<init-param>
+		<param-name>applicationClassName</param-name>
+		<param-value>org.wicketTutorial.WicketApplication</param-value>
+	</init-param>
+	<init-param>
+            <param-name>configuration</param-name>
+            <param-value>deployment</param-value>
+	</init-param>
+</filter>
+{code}
+
+The additional parameter is written in bold. The same parameter can be also expressed as context parameter:
+
+{code:html}
+<context-param>
+    <param-name>configuration</param-name>
+    <param-value>deployment</param-value>
+</context-param>
+{code}
+
+The third way to set the running mode is using system property wicket.configuration. This parameter can be specified in the command line that starts up the server:
+
+{code}
+java -Dwicket.configuration=deployment ...
+{code}
+
+Remember that system properties overwrite other settings, so they are ideal to ensure that on production machine the running mode will be always set to DEPLOYMENT. 

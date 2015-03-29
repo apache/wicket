@@ -1,0 +1,50 @@
+
+
+Since Wicket uses plain HTML markup files as templates, we can place an anchor to an external page directly inside the markup file. When we need to dynamically generate external anchors, we can use link component @org.apache.wicket.markup.html.link.ExternalLink@. In order to build an external link we must specify the value of the href attribute using a model or a plain string. In the next snippet, given an instance of Person, we generate a Google search query for its full name:
+
+Html:
+
+{code:html}
+<a wicket:id="externalSite">Search me on Google!</a>
+{code}
+
+Java code:
+
+{code}
+Person person = new Person("John", "Smith"); 
+String fullName = person.getFullName();
+//Space characters must be replaced by character '+'
+String googleQuery = "http://www.google.com/search?q=" + fullName.replace(" ", "+");
+add(new ExternalLink("externalSite", googleQuery));
+{code}
+
+Generated anchor:
+
+{code:html}
+<a href="http://www.google.com/search?q=John+Smith">Search me on Google!</a>
+{code}
+
+If we need to specify a dynamic value for the text inside the anchor, we can pass it as an additional constructor parameter:
+
+Html:
+
+{code:html}
+<a wicket:id="externalSite">Label goes here...</a>
+{code}
+
+Java code:
+
+{code}
+Person person = new Person("John", "Smith"); 
+String fullName = person.getFullName();
+String googleQuery = "http://www.google.com/search?q=" + fullName.replace(" ", "+");
+String linkLabel = "Search '" + fullName + "' on Google.";
+
+add(new ExternalLink("externalSite", googleQuery, linkLabel));
+{code}
+
+Generated anchor:
+
+{code:html}
+<a href="http://www.google.com/search?q=John+Smith">Search 'John Smith' on Google.</a>
+{code}

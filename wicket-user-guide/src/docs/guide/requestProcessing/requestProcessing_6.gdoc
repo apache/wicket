@@ -1,0 +1,5 @@
+
+
+In this chapter we had a look at how Wicket internally handles a web request. Even if most of the time  we won't need to customize this internal process, knowing how it works is essential to use the framework at 100%.
+
+Entities like Application and Session will come in handy again when we will tackle the topic of security in chapter 20.

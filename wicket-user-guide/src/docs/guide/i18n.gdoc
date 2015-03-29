@@ -1,0 +1,1 @@
+In chapter 10 we have seen how the topic of localization is involved in the generation of feedback messages and we had a first contact with resource bundles. In this chapter we will continue to explore the localization support provided by Wicket and we will learn how to build pages and components ready to be localized in different languages.

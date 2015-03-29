@@ -1,0 +1,14 @@
+
+
+ In this chapter we have seen the components and the mechanisms that allow us to implement security policies in our Wicket-based applications. Wicket comes with an out of the box support for both authorization and authentication.
+
+The central element of authorization mechanism is the interface @IAuthorizationStrategy@ which decouples our components from any detail about security strategy. The implementations of this interface must decide if a user is allowed to instantiate a given page or component and if she/he can perform a given action on it. 
+
+Wicket natively supports role-based authorizations with strategies @MetaDataRoleAuthorizationStrategy@ and @AnnotationsRoleAuthorizationStrategy@. The difference between these two strategies is that the first offers a programmatic approach for role handling while the second promotes a declarative approach using built-in annotations. 
+
+After having explored how Wicket internally implements authentication and authorization, in the last part of the chapter we have learnt how to configure our applications to support HTTPS and how to specify which pages must be served over this protocol.
+
+In the last paragraph we have seen how Wicket protects package resources with a guard entity that allows us to decide which package resources can be accessed from users.
+
+
+
