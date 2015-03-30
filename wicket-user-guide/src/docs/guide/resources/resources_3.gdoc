@@ -125,23 +125,23 @@ The component @org.apache.wicket.markup.html.image.Picture@ is used to provide a
 ...
 {code}
 
-h3. Media tags - specialized resource references
+h3. Media tags - resource references with content range support
 
-Since Wicket 7.0.0 there is a very specialized form of a ResourceReference - the MediaStreamingResourceReference which is used for videos / audio tags. This ResourceReference supports the Range / Content-Range http headers. The Range header allows the client to only request a specific byte range of the resource. The server provides the Content-Range and tells the client which bytes are going to be send.
+Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support "Range" HTTP header for the request and "Content-Range" / "Accept-Range" HTTP headers for the response, which are used for videos / audio tags. The "Range" header allows the client to only request a specific byte range of the resource. The server provides the "Content-Range" and tells the client which bytes are going to be send.
 
 *HTML:*
 {code:html}
 ...
-	 <video wicket:id="video" />
+     <video wicket:id="video" />
 ...
 {code}
 
 *Java Code:*
 {code}
 ...
-	Video video = new Video("video", new MediaStreamingResourceReference(getClass(),"video.mp4"));
+    Video video = new Video("video", new PackageResourceReference(getClass(),"video.mp4"));
 ...
-{code}
+{code} 
 
 h3. Using package resources with tag <wicket:link>
 
