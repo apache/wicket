@@ -8,3 +8,4 @@ velocity.log
 *.iml
 *~
 nb-configuration.xml
+**/.DS_Store
