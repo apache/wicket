@@ -2,29 +2,22 @@ You can contribute to this guide by following these steps:
 
 * The guide uses Grails GDoc to generate the final HTML/PDF so you should consult with its [syntax|http://grails.org/WikiSyntax].
 
-* Checkout Apache Wicket's [site|https://svn.apache.org/repos/asf/wicket/common/site/trunk/_site/] 
+* Clone Apache Wicket's GIT repository [site|https://github.com/apache/wicket.git] 
 {code}
-svn checkout https://svn.apache.org/repos/asf/wicket/common/site/trunk/_site/
-{code}
-
-* Edit the _.gdoc_ files in __site/guide/guide/src/docs/guide_ folder 
-
-* To preview your changes you should have [Grails|http://grails.org/] installed.
-** Download it from [here|http://grails.org/download]. 
-*Note*: Download version *2.2.4*. Newer versions are not supported at the moment.
-** Install it by following these [instructions|http://grails.org/doc/latest/guide/gettingStarted.html#requirements]
-
-* Navigate to __site/guide/guide_ folder and execute
-{code}
-grails doc
+git clone https://github.com/apache/wicket.git
 {code}
 
-* To preview your changes open __site/guide/index.html_ in a browser
+* Edit the _.gdoc_ files in _wicket/wicket-user-guide/src/docs/guide_ folder 
 
-* Create a patch with 
-{code}
-svn diff > my.patch
-{code}
-and attach it to a ticket in Apache Wicket's [JIRA|https://issues.apache.org/jira/browse/WICKET]
+* To preview your changes run "mvn clean package -P guide" in the _wicket/wicket-user-guide_ folder (in eclipse use a run configuration)
+
+* Navigate to _wicket/wicket-user-guide/target/doc_ and open one of the following files a browser / pdf viewer:
+** _index.html_ (multi page version)
+** _guide/single.html_ (single page version)
+** _guide/single.pdf_ (single page pdf version)
+
+* Create a ticket in Apache Wicket's [JIRA|https://issues.apache.org/jira/browse/WICKET]
+
+* *Commit and push the changes* to your forked Apacke Wicket's GIT repository and *create a pull request* on github
 
 *Thank you!*
