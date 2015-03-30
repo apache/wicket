@@ -29,6 +29,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  *
  * @author Tobias Soloschenko
  * @author Andrew Lombardi
+ * @since 7.0.0
  */
 public class Video extends MediaComponent
 {

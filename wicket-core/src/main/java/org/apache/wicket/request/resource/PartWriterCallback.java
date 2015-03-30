@@ -33,6 +33,7 @@ import org.apache.wicket.util.lang.Args;
  * from attributes in {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)}  method.
  *
  * @author Tobias Soloschenko
+ * @since 7.0.0
  */
 public class PartWriterCallback extends WriteCallback
 {

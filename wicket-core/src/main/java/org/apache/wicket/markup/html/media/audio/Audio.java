@@ -27,6 +27,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  *
  * @author Tobias Soloschenko
  * @author Andrew Lombardi
+ * @since 7.0.0
  */
 public class Audio extends MediaComponent
 {

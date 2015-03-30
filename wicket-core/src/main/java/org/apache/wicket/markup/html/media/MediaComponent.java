@@ -32,6 +32,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  *
  * @author Tobias Soloschenko
  * @author Andrew Lombardi
+ * @since 7.0.0
  */
 public abstract class MediaComponent extends WebMarkupContainer
 {

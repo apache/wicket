@@ -30,6 +30,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  *
  * @author Tobias Soloschenko
  * @author Andrew Lombardi
+ * @since 7.0.0
  */
 public class Source extends WebMarkupContainer
 {

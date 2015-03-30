@@ -30,6 +30,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * media component
  *
  * @author Tobias Soloschenko
+ * @since 7.0.0
  */
 public class Track extends WebMarkupContainer
 {
