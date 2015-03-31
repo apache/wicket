@@ -28,7 +28,11 @@
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
 	<properties>
+		<!-- Encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Project Versions -->
 		<jetty.version>7.6.15.v20140411</jetty.version>
 		<jetty9.version>9.0.6.v20130930</jetty9.version>
 		<spring.version>3.0.7.RELEASE</spring.version>
@@ -36,6 +40,7 @@
 		<maven.surefire.version>2.12.2</maven.surefire.version>
 	</properties>
 	<modules>
+		<!-- wicket-eclipse-settings is separate released -->
 		<module>wicket</module>
 		<module>wicket-core</module>
 		<module>wicket-util</module>
@@ -199,6 +204,11 @@
 	</mailingLists>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-eclipse-settings</artifactId>
+				<version>1</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
@@ -666,7 +676,20 @@
 					<version>2.9</version>
 					<configuration>
 						<downloadSources>true</downloadSources>
+						<additionalConfig>
+							<file>
+								<name>.settings/org.eclipse.jdt.core.prefs</name>
+								<location>/org.eclipse.jdt.core.prefs</location>
+							</file>
+						</additionalConfig>
 					</configuration>
+				    <dependencies>
+				        <dependency>
+				            <groupId>org.apache.wicket</groupId>
+				            <artifactId>wicket-eclipse-settings</artifactId>
+				            <version>1</version>
+				        </dependency>
+				    </dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
