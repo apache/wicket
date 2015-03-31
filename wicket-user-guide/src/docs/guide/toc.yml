@@ -99,6 +99,13 @@ repeaters:
   repeaters_3: The RefreshingView Component
   repeaters_4: Pageable repeaters 
   repeaters_5: Summary
+componentQueueing:
+  title: Component queueing
+  componentQueueing_1: Markup hierarchy and code
+  componentQueueing_2: Improved auto components
+  componentQueueing_3: When are components dequeued?
+  componentQueueing_4: Restrictions of queueing
+  componentQueueing_5: Summary
 i18n:
   title: Internationalization with Wicket
   i18n_1: Localization
