@@ -116,8 +116,8 @@
 				var wb = Wicket.Browser;
 				if (wb._isIE11 === null) {
 					var userAgent = window.navigator.userAgent;
-					var isTrident = userAgent.indexOf("Trident");
-					var is11 = userAgent.indexOf("rv:11");
+					var isTrident = userAgent.indexOf("Trident") > -1;
+					var is11 = userAgent.indexOf("rv:11") > -1;
 					wb._isIE11 = isTrident && is11;
 				}
 				return wb._isIE11;
