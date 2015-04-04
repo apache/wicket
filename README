@@ -63,6 +63,7 @@ You will find the source code here:
 	    |-- wicket-core
 	    |-- wicket-datetime
 	    |-- wicket-devutils
+	    |-- wicket-eclipse-settings
 	    |-- wicket-examples
 	    |-- wicket-experimental
 	    |-- wicket-extensions
@@ -105,15 +106,15 @@ Here is a list of projects in this distribution and what they do.
  - wicket-cdi: the context and dependency injection of the jee standard for wicket;
  - wicket-cdi-1.1: the context and dependency injection of the jee standard 1.1
    for wicket;
- - wicket-datetime: date time components based on joda time;
  - wicket-devutils: some utils to help debugging wicket;
  - wicket-experimental: experimental implementations for wicket;
  - wicket-native-websocket: wicket's native web sockets integration 
    for several servers;
  - wicket-request: lightweight project which contains all classes dealing with request
    handlers and so on;
- - wicket-util: the util project for wicket
- - wicket-velocity: components for velocity templating
+ - wicket-util: the util project for wicket;
+ - wicket-eclipse-settings: specifies Eclipse settings for a uniform development environment.
+   Most notably the formatting rules;
 
 Getting started
 ---------------
