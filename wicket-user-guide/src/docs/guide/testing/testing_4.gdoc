@@ -1,0 +1,10 @@
+
+
+With a component-oriented framework we can test our pages and components as we use to do with any other Java entity. Wicket offers a complete support for writing testing code, offering built-in tools to test nearly all the elements that build up our applications (pages, containers, links, behaviors, etc...).
+
+The main entity discussed in this chapter has been class @WicketTester@ which can be used to write unit tests and acceptance tests for our application, but we have also seen how to test forms with @FormTester@ and how to inspect markup with @TagTester@.
+
+In addition to learning how to use the utility classes provided by Wicket for testing, we have also experienced the innovative approach of Wicket to web testing that allows to test components in isolation without the need of running our tests with a web server and depending only on JUnit as testing framework.
+
+
+

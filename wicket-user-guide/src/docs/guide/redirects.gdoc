@@ -1,0 +1,75 @@
+Quite a few teams have already got stuck into the following problem when working with wicket forms in a clustered environment while having 2 (or more) tomcat server with enabled session replication running.
+
+In case of invalid data being submitted with a form instance for example, it seemed like according error messages wouldn’t be presented when the same form page gets displayed again. Sometimes! And sometimes they would! One of those nightmares of rather deterministic programmer’s life. This so called Lost In Redirection problem, even if it looks like a wicket bug at first, is rather a result of a default setting in wicket regarding the processing of form submissions in general. In order to prevent another wide known problem of double form submissions, Wicket uses a so called REDIRECT_TO_BUFFER strategy for dealing with rendering a page after web form’s processing (@see IRequestCycleSettings#RenderStrategy).
+
+What does the default RenderStrategy actually do?
+
+Both logical parts of a single HTTP request, an action and a render part get processed within the same request, but instead of streaming the render result to the browser directly, the result is cached on the server first.
+
+!lost-in-redirection-mockup.png!
+
+Wicket will create an according BufferedHttpServletResponse instance that will be used to cache the resulting HttpServletResponse within the WebApplication.
+
+!lost-in-redirection-mockup2.png!
+
+After the buffered response is cached the HTTP status code of 302 get’s provided back to the browser resulting in an additional GET request to the redirect URL (which Wicket sets to the URL of the Form itself). There is a special handling code for this case in the WicketFilter instance that then looks up a Map of buffered responses within the WebApplication accordingly. If an appropriate already cached response for the current request is found, it get’s streamed back to the browser immediately. No additional form processing happens now. The following is a code snippet taken from WicketFilter:
+
+{code}
+// Are we using REDIRECT_TO_BUFFER?
+if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
+{
+    // Try to see if there is a redirect stored
+    // try get an existing session
+    ISessionStore sessionStore = webApplication.getSessionStore();
+    String sessionId = sessionStore.getSessionId(request, false);
+    if (sessionId != null)
+    {
+        BufferedHttpServletResponse bufferedResponse = null;
+        String queryString = servletRequest.getQueryString();
+        // look for buffered response
+        if (!Strings.isEmpty(queryString))
+        {
+            bufferedResponse = webApplication.popBufferedResponse(sessionId,
+                queryString);
+        }
+        else
+        {
+            bufferedResponse = webApplication.popBufferedResponse(sessionId,
+                relativePath);
+        }
+        // if a buffered response was found
+        if (bufferedResponse != null)
+        {
+            bufferedResponse.writeTo(servletResponse);
+            // redirect responses are ignored for the request
+            // logger...
+            return true;
+        }
+    }
+}
+{code}
+
+So what happens in case you have 2 server running your application with session replication and load balancing turned on while using the default RenderStrategy described above?
+
+Since a Map of buffered responses is cached within a WebApplication instance that does not get replicated between the nodes obviously, a redirect request that is suppose to pick up the previously cached response (having possibly form violation messages inside) potentially get’s directed to the second node in your cluster by the load balancer. The second node does not have any responses already prepared and cached for your user. The node therefore handles the request as a completely new request for the same form page and displays a fresh new form page instance to the user accordingly.
+
+!lost-in-redirection-mockup3.png!
+
+Unfortunately, there is currently no ideal solution to the problem described above. The default RenderStrategy used by Apache Wicket simply does not work well in a fully clustered environment with load balancing and session replication turned on. One possibility is to change the default render strategy for your application to a so called ONE_PASS_RENDER RenderStrategy which is the more suitable option to use when you want to do sophisticated (non-sticky session) clustering. This is easily done in the init method of your own subclass of Wicket’s WebApplication :
+
+{code}
+@Override
+protected void init() {
+    getRequestCycleSettings().setRenderStrategy(
+        IRequestCycleSettings.ONE_PASS_RENDER);
+}
+{code}
+
+ONE_PASS_RENDER RenderStrategy does not solve the double submit problem though! So this way you’d only be trading one problem for another one actually.
+
+You could of course turn on the session stickiness between your load balancer (apache server) and your tomcat server additionally to the session replication which would be the preferred solution in my opinion.
+
+!lost-in-redirection-mockup4.png!
+
+Session replication would still provide you with failover in case one of the tomcat server dies for whatever reason and sticky sessions would ensure that the Lost In Redirection problem does not occur any more.
+

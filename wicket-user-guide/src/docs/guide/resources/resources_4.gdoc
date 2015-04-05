@@ -1,0 +1,32 @@
+
+
+Wicket comes with interface @org.apache.wicket.markup.html.IHeaderContributor@ which allows components and behaviors (which will be introduced later in paragraph 15.1) to contribute to the header section of their page. The only method defined in this interface is @renderHead(IHeaderResponse response)@ where @IHeaderResponse@ is an interface which defines method @render(HeaderItem item)@ to write static resources or free-form text into the header section of the page. 
+
+Header entries are instances of abstract class @org.apache.wicket.markup.head.HeaderItem@. Wicket provides a set of built-in implementations of this class suited for the most common types of resources. With the exception of @PriorityHeaderItem@, every implementation of @HeaderItem@ is an abstract factory class:
+
+* *CssHeaderItem:* represents a CSS resource. Factory methods provided by this class are @forReference@ which takes in input a resource reference, @forUrl@ which creates an CSS item from a given URL and @forCSS@ which takes in input an arbitrary CSS string and an optional id value to identify the resource.
+* *JavaScriptHeaderItem:* represents a JavaScript resource. Just like @CssHeaderItem@ it provides factory methods @forReference@ and @forUrl@ along with method @forScript@ which takes in input an arbitrary string representing the script and an optional id value to identify the resource. Method @forReference@ also supports boolean parameter @defer@ which renders the namesake attribute in the script tag (@defer@ attribute indicates that our script must be execute only after the page has loaded).
+* *OnDomReadyHeaderItem:* it adds JavaScript code that will be executed after the DOM has been built, but before external files (such as picture, CSS, etc...) have been loaded. The class provides a factory method @forScript@ which takes in input an arbitrary string representing the script to execute.
+* *OnEventHeaderItem:* the JavaScript code added with this class is executed when a specific JavaScript event is triggered on a given DOM element. The factory method is @forScript(String target, String event, CharSequence javaScript)@, where target is the id of a DOM element (or the element itself), event is the event that must trigger our code and javaScript is  the code to execute.
+* *OnLoadHeaderItem:* the JavaScript code added with this class is executed after the whole page is loaded, external files included. The factory method is @forScript(CharSequence javaScript)@.
+* *PriorityHeaderItem:* it wraps another header item and ensures that it will have the priority over the other items during rendering phase.
+* *StringHeaderItem:* with this class we can add an arbitrary text to the header section. Factory method is @forString(CharSequence string)@.
+* *MetaDataHeaderItem:* starting from version 6.17.0, Wicket provides this class to handle meta informations such as <meta> tags or [canonical link element|http://en.wikipedia.org/wiki/Canonical_link_element]. The available factory methods are @forLinkTag@ and @forMetaTag@ which can be used to create respectively a <link> tag or a <meta> one. We can add tag attribute to an existing instance of @MetaDataHeaderItem@ with method @addTagAttribute(String attributeName, Object attributeValue)@. See JavaDoc for further details on this class.
+* *HtmlImportHeaderItem:* introduced in Wicket 6.19.0, provides a HTML5 functionality to include other wicket pages (other html files) into the current generated. Factory methods provided by this class are @forImportLinkTag@ which takes the page class or the url of the page / html to be included.
+
+
+In the following example our custom component loads a CSS file as a package resource (placed in the same package) and it adds it to header section. 
+
+{code}
+public class MyComponent extends Component{
+
+  @Override
+  public void renderHead(IHeaderResponse response) {
+      PackageResourceReference cssFile = 
+                            new PackageResourceReference(this.getClass(), "style.css");
+    CssHeaderItem cssItem = CssHeaderItem.forReference(cssFile);
+  
+    response.render(cssItem);
+  }
+}
+{code}

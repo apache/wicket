@@ -1,0 +1,78 @@
+
+
+In chapter 6 we have seen how Wicket pages can be divided into two categories: stateful and stateless. Pages that are stateless don't need to be stored in the user session and they should be used  when we don't need to save any user data in the user session (for example in the public area of a site).
+
+Besides saving resources on server-side, stateless pages can be adopted to improve user experience and to avoid security weaknesses. A typical situation where a stateless page can bring these benefits is when we have to implement a login page. 
+
+For this kind of page we might encounter two potential problems if we chose to use a stateful page. The first problem occurs when the user tries to login without a valid session assigned to him. This could happen if the user leaves the login page opened for a period of time bigger than the session's timeout and then he decides to log in. Under these conditions the user will be redirected to a 'Page expired' error page, which is not exactly a nice thing for user experience.
+
+The second problem occurs when a malicious user or a web crawler program attempts to login into our web application, generating a huge number of page versions and consequently increasing the size of the user session.
+
+To avoid these kinds of problems we should build a stateless login page which does not depend on a user session. Wicket provides a special version of the Form component called StatelessForm which is stateless by default (i.e its method getStatelessHint() returns true), hence it's an ideal solution when we want to build a stateless page with a form. A possible implementation of our login form is the following (example project StatelessLoginForm):
+
+*HTML:*
+
+{code:html}
+<html>
+   <head>
+      <meta charset="utf-8" />
+   </head>
+   <body>
+      <div>Session is <b wicket:id="sessionType"></b></div>
+      <br/>
+      <div>Type 'user' as correct credentials</div>
+      <form wicket:id="form">
+         <fieldset>
+            Username: <input type="text" wicket:id="username"/> <br/>
+            Password: <input type="password" wicket:id="password"/><br/>
+            <input type="submit"/>
+         </fieldset>
+      </form>
+      <br/>
+      <div wicket:id="feedbackPanel"></div>
+   </body>
+</html>
+{code}
+
+*Java code:*
+
+{code}
+public class HomePage extends WebPage {
+    private Label sessionType;
+    private String password;
+    private String username;
+    
+    public HomePage(final PageParameters parameters) {
+       StatelessForm form = new StatelessForm("form"){
+         @Override
+         protected void onSubmit() {
+            //sign in if username and password are “user”
+            if("user".equals(username) && username.equals(password))
+               info("Username and password are correct!");
+            else
+               error("Wrong username or password");
+         }
+      };
+      
+      form.add(new PasswordTextField("password"));
+      form.add(new TextField("username"));      
+      
+      add(form.setDefaultModel(new CompoundPropertyModel(this)));
+      
+      add(sessionType = new Label("sessionType", Model.of("")));
+      add(new FeedbackPanel("feedbackPanel"));
+    }
+    
+    @Override
+    protected void onBeforeRender() {
+       super.onBeforeRender();
+       
+       if(getSession().isTemporary())
+          sessionType.setDefaultModelObject("temporary");
+       else
+          sessionType.setDefaultModelObject("permanent");
+    }
+}
+{code}
+
+Label sessionType shows if current session is temporary or not and is set inside onBeforeRender(): if our page is really stateless the session will be always temporary. We have also inserted a feedback panel in the home page that shows if the credentials are correct. This was done to make the example form more interactive.

@@ -1,0 +1,3 @@
+Many Wicket newbies are initially scared by its approach to web development because they have the impression that the component-oriented nature of the framework prevents them from having direct control over the generated markup. This is due to the fact that many developers come from other server-side technologies like JSP where we physically implement the logic that controls how the final HTML is generated.
+
+This chapter will prevent you from having any initial misleading feeling about Wicket showing you how to control and manipulate the generated HTML with the built-in tools shipped with the framework.

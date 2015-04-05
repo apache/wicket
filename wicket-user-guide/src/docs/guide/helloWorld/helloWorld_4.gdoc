@@ -1,0 +1,52 @@
+The basic form of interaction offered by web applications is to navigate through pages using links. In HTML a link is basically a pointer to another resource that most of the time is another page. Wicket implements links with component @org.apache.wicket.markup.html.link.Link@, but due to the component-oriented nature of the framework, this component is quite different from classic HTML links.  
+Following the analogy with GUI frameworks, we can consider Wicket link as a “click” event handler: its purpose is to perform some actions (on server side!) when the user clicks on it.
+
+That said, you shouldn't be surprised to find an abstract method called @onClick()@ inside the @Link@ class. In the following example we have a page with a @Link@ containing an empty implementation of @onClick@:
+
+{code}
+public class HomePage extends WebPage {
+	public HomePage(){
+		add(new Link("id"){
+			@Override
+			public void onClick() {
+				//link code goes here
+		    }			
+		});
+	}
+}		
+{code}
+
+By default after @onClick@ has been executed, Wicket will send back to the current page to the client web browser. If we want to navigate to another page we must use method @setResponsePage@ of class @Component@:
+
+{code}
+public class HomePage extends WebPage {
+	public HomePage(){
+		add(new Link("id"){
+			@Override
+			public void onClick() {			   
+                         //we redirect browser to another page.
+                         setResponsePage(AnotherPage.class);
+			}			
+		});
+	}
+}
+{code}
+
+In the example above we used a version of @setResponsePage@ which takes as input the class of the target page. In this way a new instance of @AnotherPage@ will be created each time we click on the link. The other version of @setResponsePage@ takes in input a page instance instead of a page class:
+
+{code}
+@Override
+public void onClick() {			   
+	//we redirect browser to another page.
+	AnotherPage anotherPage = new AnotherPage();
+	setResponsePage(anotherPage);
+}
+{code}
+
+The difference between using the first version of @setResponsePage@ rather than the second one will be illustrated in [chapter 8|guide:versioningCaching], when we will introduce the topic of stateful and stateless pages. For now, we can consider them as equivalent. 
+
+Wicket comes with a rich set of link components suited for every need (links to static URL, Ajax-enhanced links, links to a file to download, links to external pages and so on). We will see them in [chapter 10|guide:urls].
+
+{note}
+We can specify the content of a link (i.e. the text of the picture inside it) with its method @setBody@. This method takes in input a generic Wicket model, which will be the topic of [chapter 11|guide:modelsforms].
+{note}
