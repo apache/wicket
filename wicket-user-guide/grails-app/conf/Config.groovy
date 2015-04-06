@@ -93,7 +93,7 @@ log4j = {
 // documentation configuration
 
 grails.doc.title = "Apache Wicket User Guide"
-grails.doc.version = "7.0"
+grails.doc.version = "7.x"
 grails.doc.subtitle = "Free Online Guide for Apache Wicket framework"
 grails.doc.authors = "Andrea Del Bene, Martin Grigorov, Carsten Hufe, Christian Kroemer, Daniel Bartl, Paul Borș, Tobias Soloschenko, Igor Vaynberg"
 grails.doc.images = new File("src/docs/img")
