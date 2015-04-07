@@ -203,6 +203,7 @@ public class WebSocketSettings
      *            The collection of domains
      */
     public void setAllowedDomains(Collection<String> domains) {
+	this.allowedDomains.clear();
         this.allowedDomains.addAll(domains);
     }
 

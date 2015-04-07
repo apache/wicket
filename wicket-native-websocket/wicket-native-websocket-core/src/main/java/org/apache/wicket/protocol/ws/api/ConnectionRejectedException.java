@@ -18,4 +18,21 @@ package org.apache.wicket.protocol.ws.api;
 
 public class ConnectionRejectedException extends RuntimeException {
 
+	private static final long serialVersionUID = 4552012810343573564L;
+
+	private final int code;
+	private final String reason;
+
+    public ConnectionRejectedException(int code, String reason) {
+		this.code = code;
+		this.reason = reason;
+    }
+
+	public int getCode() {
+		return code;
+	}
+
+	public String getReason() {
+		return reason;
+	}
 }

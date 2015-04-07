@@ -66,8 +66,7 @@ public class WebSocketTesterProcessorTest extends Assert {
     @Before
     public void before() {
         tester = new WicketTester(application);
-        WebApplication webApplication = tester.getApplication();
-        webApplication.getWicketFilter().setFilterPath("");
+        application.getWicketFilter().setFilterPath("");
     }
 
     @After

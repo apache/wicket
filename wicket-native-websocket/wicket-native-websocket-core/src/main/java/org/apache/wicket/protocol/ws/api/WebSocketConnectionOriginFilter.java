@@ -24,7 +24,31 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.protocol.ws.WebSocketSettings;
 
+/**
+ * This filter will reject those requests which contain 'Origin' header that does not match the origin of the
+ * application host. This kind of extended security might be necessary if the application needs to enforce the
+ * Same Origin Policy which is not provided by the HTML5 WebSocket protocol.
+ *
+ * @see <a href="http://www.christian-schneider.net/CrossSiteWebSocketHijacking.html">http://www.christian-schneider.net/CrossSiteWebSocketHijacking.html</a>
+ *
+ * @author Gergely Nagy
+ *
+ */
 public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilter {
+
+    /**
+     * 1008 indicates that an endpoint is terminating the connection because it has received a message that violates its policy. This is a generic status code
+     * that can be returned when there is no other more suitable status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the
+     * policy.
+     * <p>
+     * See <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455, Section 7.4.1 Defined Status Codes</a>.
+     */
+    public static final int POLICY_VIOLATION = 1008;
+
+    /**
+     * Explanatory text for the client to explain why the connection is getting aborted
+     */
+    public static final String ORIGIN_MISMATCH = "Origin mismatch";
 
     private final WebSocketSettings webSocketSettings;
 
@@ -37,7 +61,7 @@ public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilt
         if (webSocketSettings.isHijackingProtectionEnabled()) {
             String oUrl = getOriginUrl(servletRequest);
             if (invalid(oUrl))
-                throw new ConnectionRejectedException();
+                throw new ConnectionRejectedException(POLICY_VIOLATION, ORIGIN_MISMATCH);
         }
     }
 

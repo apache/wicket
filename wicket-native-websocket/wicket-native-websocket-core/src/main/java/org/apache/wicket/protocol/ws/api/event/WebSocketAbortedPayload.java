@@ -20,7 +20,7 @@ import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 
 /**
- * * Payload for event broadcasting when the server aborted a WebSocket connection
+ * Payload for event broadcasting when the server aborted a WebSocket connection
  *
  * @since 7.0.0-M5
  */

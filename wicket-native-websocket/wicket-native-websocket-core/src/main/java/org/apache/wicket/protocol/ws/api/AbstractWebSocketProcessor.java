@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
@@ -78,20 +80,6 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 */
 	static final int NO_PAGE_ID = -1;
 
-    /**
-     * 1008 indicates that an endpoint is terminating the connection because it has received a message that violates its policy. This is a generic status code
-     * that can be returned when there is no other more suitable status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the
-     * policy.
-     * <p>
-     * See <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455, Section 7.4.1 Defined Status Codes</a>.
-     */
-    static final int POLICY_VIOLATION = 1008;
-
-    /**
-     * Explanatory text for the client to explain why the connection is getting aborted
-     */
-    static final String ORIGIN_MISMATCH = "Origin mismatch";
-
 	private final WebRequest webRequest;
 	private final int pageId;
 	private final String resourceName;
@@ -100,7 +88,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	private final String sessionId;
 	private final WebSocketSettings webSocketSettings;
 	private final IWebSocketConnectionRegistry connectionRegistry;
-    private final IWebSocketConnectionFilter connectionFilter;
+    private final WebSocketConnectionFilterCollection connectionFilters;
     private final HttpServletRequest servletRequest;
 
 	/**
@@ -145,7 +133,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 
-        this.connectionFilter = new WebSocketConnectionOriginFilter(webSocketSettings);
+        this.connectionFilters = new WebSocketConnectionFilterCollection();
+        connectionFilters.add(new WebSocketConnectionOriginFilter(webSocketSettings));
 	}
 
 	@Override
@@ -172,12 +161,12 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
         IKey key = getRegistryKey();
         try {
             connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
-            connectionFilter.doFilter(servletRequest);
+            connectionFilters.doFilter(servletRequest);
             broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
         } catch (ConnectionRejectedException e) {
             broadcastMessage(new AbortedMessage(getApplication(), getSessionId(), key));
             connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
-            connection.close(POLICY_VIOLATION, ORIGIN_MISMATCH);
+            connection.close(e.getCode(), e.getReason());
         }
     }
 
