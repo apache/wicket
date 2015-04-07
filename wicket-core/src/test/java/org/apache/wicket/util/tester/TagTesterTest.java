@@ -17,9 +17,9 @@
 package org.apache.wicket.util.tester;
 
 import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,6 +34,22 @@ public class TagTesterTest extends Assert
 
 	private static final String AJAX_MARKUP_1 = "<?xml version='1.0' encoding='UTF-8'?>" +
 			"<ajax-response><component id='comp1'><![CDATA[<div class='cls' id='compId'></div>]]></component></ajax-response>";
+
+	// WICKET-5874
+	private static final String NON_CLOSED_INPUT = "<p><input wicket:id=\"wicketId\" type=\"text\"></p>";
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5874
+	 */
+	@Test
+	public void getTagTestedForNonClosedTag()
+	{
+		TagTester tester = TagTester.createTagByAttribute(NON_CLOSED_INPUT, "wicket:id", "wicketId");
+		assertThat(tester, is(notNullValue()));
+
+		String type = tester.getAttribute("type");
+		assertThat(type, is(equalTo("text")));
+	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5137
