@@ -656,9 +656,6 @@ public abstract class AbstractResource implements IResource
 					webResponse.addHeader(name, value);
 				}
 			}
-
-			// 6. Flush the response
-			flushResponseAfterHeaders(webResponse);
 		}
 	}
 
@@ -699,7 +696,9 @@ public abstract class AbstractResource implements IResource
 		 *            request attributes
 		 * @param stream
 		 *            input stream
+		 * @deprecated Not used since 6.20.0. Removed in 7.0.0
 		 */
+		@Deprecated
 		protected final void writeStream(Attributes attributes, InputStream stream) throws IOException
 		{
 			final Response response = attributes.getResponse();
