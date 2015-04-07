@@ -152,7 +152,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	 */
 	public static MetaDataHeaderItem forImportLinkTag(Class<? extends Page> pageClass)
 	{
-		return forImportLinkTag(Model.of(RequestCycle.get().urlFor(pageClass, null).toString()));
+		return forImportLinkTag(pageClass, null);
 	}
 
 	/**
@@ -167,8 +167,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	public static MetaDataHeaderItem forImportLinkTag(Class<? extends Page> pageClass,
 		PageParameters pageParameters)
 	{
-		return forImportLinkTag(Model.of(RequestCycle.get().urlFor(pageClass, 
-			pageParameters).toString()));
+		return forImportLinkTag(pageClass, pageParameters, false);
 	}
 	
 	/**
@@ -185,12 +184,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	public static MetaDataHeaderItem forImportLinkTag(Class<? extends Page> pageClass,
 		PageParameters pageParameters, boolean async)
 	{
-		MetaDataHeaderItem linkTag = forImportLinkTag(Model.of(RequestCycle.get().urlFor(pageClass, 
-			pageParameters).toString()));
-		
-		addAsyncAttribute(linkTag, async);
-		
-		return linkTag;
+		return forImportLinkTag(pageClass, pageParameters, (String)null, async);
 	}
 	
 	/**
@@ -243,8 +237,7 @@ public class HtmlImportHeaderItem extends MetaDataHeaderItem
 	public static MetaDataHeaderItem forImportLinkTag(Class<? extends Page> pageClass,
 		PageParameters pageParameters, IModel<String> media)
 	{
-		return forLinkTag(Model.of("import"),
-			Model.of(RequestCycle.get().urlFor(pageClass, pageParameters).toString()), media);
+		return forImportLinkTag(pageClass, pageParameters, media, false);
 	}
 	
 	/**
