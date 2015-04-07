@@ -1,6 +1,6 @@
 
 
-Wicket loads application's resources delegating this task to a resource locator represented by interface @org.apache.wicket.core.util.resource.locator.IResourceStreamLocator@. To retrieve or modify the current resource locator we can use the getter and setter methods defined by setting interface @IResourceSettings@:
+Wicket loads application's resources delegating this task to a resource locator represented by interface @org.apache.wicket.core.util.resource.locator.IResourceStreamLocator@. To retrieve or modify the current resource locator we can use the getter and setter methods defined by setting class @ResourceSettings@:
 
 {code}
   //init application's method
@@ -34,7 +34,7 @@ public void init()
 }
 {code}
 
-Method getResourceFinders() defined by setting interface IResourceSettings returns the list of  resource finders defined in our application. The constructor of WebApplicationPath takes in input also an instance of standard interface javax.servlet.ServletContext which can be retrieved with WebApplication's method getServletContext().
+Method getResourceFinders() defined by setting class ResourceSettings returns the list of  resource finders defined in our application. The constructor of WebApplicationPath takes in input also an instance of standard interface javax.servlet.ServletContext which can be retrieved with WebApplication's method getServletContext().
 
 {note}
 By default, if resource files can not be found inside application classpath, Wicket will search for them inside “resources” folder. You may have noted this folder in the previous picture. It is placed next to the folder “java” containing our source files:

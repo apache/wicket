@@ -64,7 +64,7 @@ The code that copies the uploaded file to the temporary directory is inside the 
 Form component can limit the size for uploaded files using its setMaxSize(size) method. In the example we have set this limit to 100 kb to prevent users from uploading files bigger than this size.
 
 {note}
-The maximum size for uploaded files can also be set at application's level using the setDefaultMaximumUploadSize(Bytes maxSize) method of the IApplicationSettings interface:
+The maximum size for uploaded files can also be set at application's level using the setDefaultMaximumUploadSize(Bytes maxSize) method of class ApplicationSettings:
 
 {code}
 @Override

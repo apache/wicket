@@ -33,7 +33,7 @@ This interface defines two methods:
 
 Inside @IAuthorizationStrategy@ we can also find a default implementation of the interface (called ALLOW_ALL) that allows everyone to instantiate every component and perform every possible action on it. This is the default strategy adopted by class @Application@.
 
-To change the authorization strategy in use we must register the desired implementation into security settings (interface @ISecuritySettings@) during initialization phase with method setAuthorization Strategy:
+To change the authorization strategy in use we must register the desired implementation into security settings (class @SecuritySettings@) during initialization phase with method setAuthorization Strategy:
 
 {code}
   //Application class code... 
@@ -206,7 +206,7 @@ Now if we run the project and we try to access to @AdminOnlyPage@ from the home 
 
 !authorization-access-denied.png!
 
-The access-denied page can be customized using method @setAccessDeniedPage(Class<? extends Page>)@ of setting interface @IApplicationSettings@:
+The access-denied page can be customized using method @setAccessDeniedPage(Class<? extends Page>)@ of setting class @ApplicationSettings@:
 
 {code}
    //Application class code...
@@ -248,7 +248,7 @@ h3. Catching an unauthorized component instantiation
 
 Interface IUnauthorizedComponentInstantiationListener (in package @org.apache.wicket.authorization@) is provided to give the chance to handle the case in which a user tries to instantiate a component without having the permissions to do it. The method defined inside this interface is @onUnauthorizedInstantiation(Component)@ and it is executed whenever a user attempts to execute an unauthorized instantiation.
 
-This listener must be registered into application's security settings with method setUnauthorized @ComponentInstantiationListener@ defined by setting interface @ISecuritySettings@. In the following code snippet we register a listener that redirect user to a warning page if he tries to do a not-allowed instantiation:
+This listener must be registered into application's security settings with method @setUnauthorizedComponentInstantiationListener@ defined by setting class @SecuritySettings@. In the following code snippet we register a listener that redirect user to a warning page if he tries to do a not-allowed instantiation:
 
 {code}
 public class WicketApplication extends AuthenticatedWebApplication{   

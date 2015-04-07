@@ -1,6 +1,6 @@
 Quite a few teams have already got stuck into the following problem when working with wicket forms in a clustered environment while having 2 (or more) tomcat server with enabled session replication running.
 
-In case of invalid data being submitted with a form instance for example, it seemed like according error messages wouldn’t be presented when the same form page gets displayed again. Sometimes! And sometimes they would! One of those nightmares of rather deterministic programmer’s life. This so called Lost In Redirection problem, even if it looks like a wicket bug at first, is rather a result of a default setting in wicket regarding the processing of form submissions in general. In order to prevent another wide known problem of double form submissions, Wicket uses a so called REDIRECT_TO_BUFFER strategy for dealing with rendering a page after web form’s processing (@see IRequestCycleSettings#RenderStrategy).
+In case of invalid data being submitted with a form instance for example, it seemed like according error messages wouldn’t be presented when the same form page gets displayed again. Sometimes! And sometimes they would! One of those nightmares of rather deterministic programmer’s life. This so called Lost In Redirection problem, even if it looks like a wicket bug at first, is rather a result of a default setting in wicket regarding the processing of form submissions in general. In order to prevent another wide known problem of double form submissions, Wicket uses a so called REDIRECT_TO_BUFFER strategy for dealing with rendering a page after web form’s processing (@see RequestCycleSettings#RenderStrategy).
 
 What does the default RenderStrategy actually do?
 
@@ -16,7 +16,7 @@ After the buffered response is cached the HTTP status code of 302 get’s provid
 
 {code}
 // Are we using REDIRECT_TO_BUFFER?
-if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
+if (webApplication.getRequestCycleSettings().getRenderStrategy() == RequestCycleSettings.REDIRECT_TO_BUFFER)
 {
     // Try to see if there is a redirect stored
     // try get an existing session
@@ -61,7 +61,7 @@ Unfortunately, there is currently no ideal solution to the problem described abo
 @Override
 protected void init() {
     getRequestCycleSettings().setRenderStrategy(
-        IRequestCycleSettings.ONE_PASS_RENDER);
+        RequestCycleSettings.ONE_PASS_RENDER);
 }
 {code}
 

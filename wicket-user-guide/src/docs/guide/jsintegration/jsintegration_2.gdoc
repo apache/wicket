@@ -98,7 +98,7 @@ public void renderHead(IHeaderResponse response) {
 	if(!isEnabledInHierarchy())
 		return;
 	//add bundled JQuery
-	IJavaScriptLibrarySettings javaScriptSettings =          
+	JavaScriptLibrarySettings javaScriptSettings =          
                       getApplication().getJavaScriptLibrarySettings();
 	response.render(JavaScriptHeaderItem.
 			forReference(javaScriptSettings.getJQueryReference()));
@@ -122,7 +122,7 @@ public void renderHead(IHeaderResponse response) {
 
 If component is disabled the calendar icon must be hidden and no datepicker must be displayed. That's why @renderHeader@ is skipped if component is not enabled.
 
-To get a reference to the bundled JQuery library we used the JavaScript setting interface @IJavaScriptLibrarySettings@ and its method @getJQueryReference@.
+To get a reference to the bundled JQuery library we used the JavaScript setting class @JavaScriptLibrarySettings@ and its method @getJQueryReference@.
 
 In the last part of @renderHeader@ we build the string to invoke function @initJQDatepicker@ using the values obtained inside onInitialize. Unfortunately the date format used by JQuery UI is different from the one adopted in Java so we have to convert it before building the JavaScript code. This init script is rendered into header section using a @OnLoadHeaderItem@ to ensure that it will be executed after all the other scripts have been loaded.
 

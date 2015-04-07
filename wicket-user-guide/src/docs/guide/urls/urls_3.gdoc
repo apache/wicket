@@ -52,7 +52,7 @@ Please note that any link to the current page (aka self link) is disabled. For e
 <span><em>HomePage</em></span>
 {code}
 
-The markup used to render disabled links can be customized using the markup settings (interface IMarkupSettings) available in the application class:
+The markup used to render disabled links can be customized using the markup settings (class org.apache.wicket.settings.MarkupSettings) available in the application class:
 
 {code}
 @Override

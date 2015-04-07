@@ -17,7 +17,7 @@ The default implementation for this interface is class @org.apache.wicket.util.c
 For better security it is recommended to install Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction [Policy Files|http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html] for your version of JDK/JRE and use stronger algorithms. See this [example|https://github.com/apache/wicket/blob/42ce1faa57d3617ccaa443045537306fabf4d71a/wicket-util/src/test/java/org/apache/wicket/util/crypt/UnlimitedStrengthJurisdictionPolicyTest.java#L67] of a custom @ICrypt@ implementation for inspiration.
 {note}
 
-By using @CryptoMapper(IRequestMapper wrappedMapper, Application application)@ constructor the mapper will use the configured @org.apache.wicket.util.crypt.ICryptFactory@ from @org.apache.wicket.settings.ISecuritySettings#getCryptFactory()@. To use a stronger cryptography mechanism there are the following options:
+By using @CryptoMapper(IRequestMapper wrappedMapper, Application application)@ constructor the mapper will use the configured @org.apache.wicket.util.crypt.ICryptFactory@ from @org.apache.wicket.settings.SecuritySettings#getCryptFactory()@. To use a stronger cryptography mechanism there are the following options:
 
 * The first option is to use constructor @CryptoMapper(IRequestMapper wrappedMapper, IProvider<ICrypt> cryptProvider)@ and give it an implementation of @org.apache.wicket.util.IProvider@ that returns a custom @org.apache.wicket.util.crypt.ICrypt@. 
 
@@ -32,7 +32,7 @@ public interface IProvider<T>
 }
 {code}
 
-* The second option is to register a cipher factory at application level with method @setCryptFactory(ICryptFactory cryptFactory)@ of interface @ISecuritySettings@:
+* The second option is to register a cipher factory at application level with method @setCryptFactory(ICryptFactory cryptFactory)@ of class @SecuritySettings@:
 
 {code}
 @Override

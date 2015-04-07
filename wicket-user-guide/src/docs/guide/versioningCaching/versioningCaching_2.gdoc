@@ -70,9 +70,9 @@ If for any reason we need to switch off versioning for a given page, we can call
 
 h3. Pluggable serialization
 
-Starting from version 1.5 it is possible to choose which implementation of Java serialization will be used by Wicket to store page versions. Wicket serializes pages using an implementation of interface @org.apache.wicket.serialize.ISerializer@. The default implementation is @org.apache.wicket.serialize.java.JavaSerializer@ and it uses the standard Java serialization mechanism based on classes ObjectOutputStream and ObjectInputStream. However on Internet we can find other interesting serialization libraries like [Kryo|https://github.com/EsotericSoftware/kryo] or [Fast|http://ruedigermoeller.github.io/fast-serialization/] which perform faster then the standard implementation. The serializer in use can be customized with the setSerializer(ISerializer) method defined by setting interface @org.apache.wicket.settings.IFrameworkSettings@. 
+Starting from version 1.5 it is possible to choose which implementation of Java serialization will be used by Wicket to store page versions. Wicket serializes pages using an implementation of interface @org.apache.wicket.serialize.ISerializer@. The default implementation is @org.apache.wicket.serialize.java.JavaSerializer@ and it uses the standard Java serialization mechanism based on classes ObjectOutputStream and ObjectInputStream. However on Internet we can find other interesting serialization libraries like [Kryo|https://github.com/EsotericSoftware/kryo] or [Fast|http://ruedigermoeller.github.io/fast-serialization/] which perform faster then the standard implementation. The serializer in use can be customized with the setSerializer(ISerializer) method defined by setting class @org.apache.wicket.settings.FrameworkSettings@. 
 
-We can access this interface inside the method init of the class Application using the getFrameworkSettings() method :
+We can access this class inside the method @init@ of the class Application using the getFrameworkSettings() method :
 
 {code}
 @Override
@@ -93,7 +93,7 @@ The following picture is an overview of these two caching levels:
 
 !wicket-cache.png!
 
-The session-scoped cache is faster then the other memory levels but it contains only the pages used to serve the last request. Wicket allows us to set the maximum amount of memory allowed for the application-scoped cache and for the page store file. Both parameters can be configured via setting interface @org.apache.wicket.settings.IStoreSettings@. 
+The session-scoped cache is faster then the other memory levels but it contains only the pages used to serve the last request. Wicket allows us to set the maximum amount of memory allowed for the application-scoped cache and for the page store file. Both parameters can be configured via setting class @org.apache.wicket.settings.StoreSettings@. 
 
 This interface provides the setMaxSizePerSession(Bytes bytes) method to set the size for page store file. The Bytes parameter is the maximum size allowed for this file:
 
@@ -124,7 +124,7 @@ Page instances are not kept in the user session forever. They can be discarded w
 
 !page-expired.png!
 
-This error page can be customized with the setPageExpiredErrorPage method of the @org.apache.wicket.settings.IApplicationSettings@ interface:
+This error page can be customized with the @setPageExpiredErrorPage@ method of class @org.apache.wicket.settings.ApplicationSettings@:
 
 {code}
 @Override

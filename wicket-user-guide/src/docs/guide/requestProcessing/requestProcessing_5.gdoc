@@ -10,11 +10,11 @@ We can also manually set if Wicket should display the exception with @ExceptionE
 
 {code}
 //show default developer page
-getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_EXCEPTION_PAGE );
+getExceptionSettings().setUnexpectedExceptionDisplay( ExceptionSettings.SHOW_EXCEPTION_PAGE );
 //show internal error page
-getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
+getExceptionSettings().setUnexpectedExceptionDisplay( ExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
 //show no exception page when an unexpected exception is thrown
-getExceptionSettings().setUnexpectedExceptionDisplay( IExceptionSettings.SHOW_NO_EXCEPTION_PAGE );
+getExceptionSettings().setUnexpectedExceptionDisplay( ExceptionSettings.SHOW_NO_EXCEPTION_PAGE );
 {code}
 
 Developers can also decide to use a custom exception mapper instead of @DefaultExceptionMapper@. To do this we must override @Application@'s method @getExceptionMapperProvider@:
@@ -31,5 +31,5 @@ The method returns an instance of @org.apache.wicket.util.IProvider@ that should
 
 h3. Ajax requests
 
-To control the behavior in Ajax requests the application may use @org.apache.wicket.settings.IExceptionSettings#  setAjaxErrorHandlingStrategy(IExceptionSettings.AjaxErrorStrategy)@. By default if an error occurs during the 
-processing of an Ajax request Wicket will render the configured error page. By configuring @org.apache.wicket.settings.IExceptionSettings.  AjaxErrorStrategy#INVOKE_FAILURE_HANDLER@ as the default strategy the application will call the JavaScript @onFailure@ callback(s) instead.
+To control the behavior in Ajax requests the application may use @org.apache.wicket.settings.ExceptionSettings#  setAjaxErrorHandlingStrategy(ExceptionSettings.AjaxErrorStrategy)@. By default if an error occurs during the 
+processing of an Ajax request Wicket will render the configured error page. By configuring @org.apache.wicket.settings.ExceptionSettings.  AjaxErrorStrategy#INVOKE_FAILURE_HANDLER@ as the default strategy the application will call the JavaScript @onFailure@ callback(s) instead.
