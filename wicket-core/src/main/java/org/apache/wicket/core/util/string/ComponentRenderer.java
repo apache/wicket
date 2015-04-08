@@ -93,7 +93,7 @@ public class ComponentRenderer
 				RenderPage page = new RenderPage(component);
 				page.internalInitialize();
 			}
-			
+
 			component.render();
 		}
 		finally
