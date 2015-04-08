@@ -94,10 +94,13 @@ public class ComponentRenderer
 		{
 			requestCycle.setResponse(tempResponse);
 
-			// add the component to a dummy page just for the rendering
-			RenderPage page = new RenderPage(component);
-			page.internalInitialize();
-
+			if (component.getParent() == null)
+			{
+				// add the component to a dummy page just for the rendering
+				RenderPage page = new RenderPage(component);
+				page.internalInitialize();
+			}
+			
 			component.render();
 		}
 		finally
