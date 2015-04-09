@@ -1,6 +1,6 @@
 
 
-Class @ResourceReference@ allows to specify the resources it depends on overriding method @getDependencies()@. The method returns an iterator over the set of @HeaderItems@ that must be rendered before the resource referenced by @ResourceReference@ can be used. This can be really helpful when our resources are JavaScript or CSS libraries that in turn depend on other libraries.
+Class @ResourceReference@ allows to specify the resources it depends on overriding method @getDependencies()@. The method returns a list of @HeaderItem@s that must be rendered before the resource referenced by @ResourceReference@ can be used. This can be really helpful when our resources are JavaScript or CSS libraries that in turn depend on other libraries.
 
 For example we can use this method to ensure that a custom reference to JQueryUI library will find JQuery already loaded in the page: 
 
@@ -10,7 +10,7 @@ Url jqueyuiUrl = Url.parse("https://ajax.googleapis.com/ajax/libs/jqueryui/" +
 		
 UrlResourceReference jqueryuiRef = new UrlResourceReference(jqueyuiUrl){
 	@Override
-	public Iterable<? extends HeaderItem> getDependencies() {
+	public List<HeaderItem> getDependencies() {
 		Application application = Application.get();
 		ResourceReference jqueryRef = application.getJavaScriptLibrarySettings(). 
                                              getJQueryReference();
