@@ -5,7 +5,7 @@ git clone https://github.com/bitstorm/Wicket-tutorial-examples.git
 {code}
 
 {note}
-If you are using Wicket 6.x remeber to switch to branch @wicket-6.x@
+If you are using Wicket 6.x remember to switch to branch @wicket-6.x@
 {note}
 
 If you aren't used to Git, you can simply download the whole source as a zip archive:
