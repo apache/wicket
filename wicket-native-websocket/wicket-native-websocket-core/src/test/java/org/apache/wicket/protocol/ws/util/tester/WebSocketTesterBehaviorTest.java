@@ -137,7 +137,7 @@ public class WebSocketTesterBehaviorTest extends Assert
 		webSocketTester.broadcast(tester.getApplication(), tester.getHttpSession().getId(),
 				new PageIdKey(page.getPageId()), broadcastMessage);
 
-		assertEquals(true, messageReceived.get());
+		assertTrue(messageReceived.get());
 		webSocketTester.destroy();
 	}
 

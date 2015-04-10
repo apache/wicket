@@ -18,21 +18,37 @@ package org.apache.wicket.protocol.ws.api.message;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
+import org.apache.wicket.util.lang.Args;
 
 /**
- * A {@link IWebSocketMessage message} sent when the web socket connection is aborted.
- *
- * @since 7.0.0-M5
+ * A base message for all messages with information about the client
  */
-public class AbortedMessage extends AbstractClientMessage
+public abstract class AbstractClientMessage implements IWebSocketMessage
 {
-	public AbortedMessage(Application application, String sessionId, IKey key)
+	private final Application application;
+	private final String sessionId;
+	private final IKey key;
+
+	public AbstractClientMessage(Application application, String sessionId, IKey key)
 	{
-		super(application, sessionId, key);
+		this.application = Args.notNull(application, "application");
+		this.sessionId = Args.notNull(sessionId, "sessionId");
+		this.key = Args.notNull(key, "key");
 	}
 
-	@Override
-	public final String toString() {
-		return "The server aborted the client connection";
+	public Application getApplication()
+	{
+		return application;
 	}
+
+	public String getSessionId()
+	{
+		return sessionId;
+	}
+
+	public IKey getKey()
+	{
+		return key;
+	}
+
 }

@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * This filter will reject those requests which contain 'Origin' header that does not match the origin of the
@@ -32,57 +33,104 @@ import org.apache.wicket.protocol.ws.WebSocketSettings;
  * @see <a href="http://www.christian-schneider.net/CrossSiteWebSocketHijacking.html">http://www.christian-schneider.net/CrossSiteWebSocketHijacking.html</a>
  *
  * @author Gergely Nagy
- *
  */
-public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilter {
+public class WebSocketConnectionOriginFilter implements IWebSocketConnectionFilter
+{
 
-    /**
-     * 1008 indicates that an endpoint is terminating the connection because it has received a message that violates its policy. This is a generic status code
-     * that can be returned when there is no other more suitable status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the
-     * policy.
-     * <p>
-     * See <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455, Section 7.4.1 Defined Status Codes</a>.
-     */
-    public static final int POLICY_VIOLATION = 1008;
+	/**
+	 * Error code 1008 indicates that an endpoint is terminating the connection because it has received a message that
+     * violates its policy. This is a generic status code that can be returned when there is no other more suitable
+     * status code (e.g., 1003 or 1009) or if there is a need to hide specific details about the policy.
+	 * <p>
+	 * See <a href="https://tools.ietf.org/html/rfc6455#section-7.4.1">RFC 6455, Section 7.4.1 Defined Status Codes</a>.
+	 */
+	public static final int POLICY_VIOLATION_ERROR_CODE = 1008;
 
-    /**
-     * Explanatory text for the client to explain why the connection is getting aborted
-     */
-    public static final String ORIGIN_MISMATCH = "Origin mismatch";
+	/**
+	 * Explanatory text for the client to explain why the connection is getting aborted
+	 */
+	public static final String ORIGIN_MISMATCH = "Origin mismatch";
 
-    private final WebSocketSettings webSocketSettings;
+	private final List<String> allowedDomains;
 
-    public WebSocketConnectionOriginFilter(WebSocketSettings webSocketSettings) {
-        this.webSocketSettings = webSocketSettings;
-    }
+	public WebSocketConnectionOriginFilter(final List<String> allowedDomains)
+	{
+		this.allowedDomains = Args.notNull(allowedDomains, "allowedDomains");
+	}
 
-    @Override
-    public void doFilter(HttpServletRequest servletRequest) {
-        if (webSocketSettings.isHijackingProtectionEnabled()) {
-            String oUrl = getOriginUrl(servletRequest);
-            if (invalid(oUrl))
-                throw new ConnectionRejectedException(POLICY_VIOLATION, ORIGIN_MISMATCH);
-        }
-    }
+	@Override
+	public ConnectionRejected doFilter(HttpServletRequest servletRequest)
+	{
+		if (allowedDomains != null && !allowedDomains.isEmpty())
+		{
+			String oUrl = getOriginUrl(servletRequest);
+			if (invalid(oUrl, allowedDomains))
+			{
+				return new ConnectionRejected(POLICY_VIOLATION_ERROR_CODE, ORIGIN_MISMATCH);
+			}
+		}
 
-    private boolean invalid(String oUrl) {
-        if (originMismatch(oUrl))
-            return true;
-        if (oUrl == null || "".equals(oUrl))
-            return true;
-        return false;
-    }
+		return null;
+	}
 
-    private boolean originMismatch(String oUrl) {
-        List<String> allowedDomains = webSocketSettings.getAllowedDomains();
-        return !allowedDomains.contains(oUrl);
-    }
+	/**
+	 * The list of whitelisted domains which are allowed to initiate a websocket connection. This
+	 * list will be eventually used by the
+	 * {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter} to abort potentially
+	 * unsafe connections. Example domain names might be:
+	 *
+	 * <pre>
+	 *      http://www.example.com
+	 *      http://ww2.example.com
+	 * </pre>
+	 *
+	 * @param domains
+	 *            The collection of domains
+	 */
+	public void setAllowedDomains(Iterable<String> domains) {
+		this.allowedDomains.clear();
+		if (domains != null)
+		{
+			for (String domain : domains)
+			{
+				this.allowedDomains.add(domain);
+			}
+		}
+	}
 
-    private String getOriginUrl(HttpServletRequest servletRequest) {
-        ArrayList<String> origins = Collections.list(servletRequest.getHeaders("Origin"));
-        if (origins.size() != 1)
-            return null;
-        return origins.get(0);
-    }
+	/**
+	 * The list of whitelisted domains which are allowed to initiate a websocket connection. This
+	 * list will be eventually used by the
+	 * {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter} to abort potentially
+	 * unsafe connections
+	 */
+	public List<String> getAllowedDomains()
+	{
+		return allowedDomains;
+	}
 
+	private boolean invalid(String oUrl, List<String> allowedDomains)
+	{
+		return Strings.isEmpty(oUrl) || !allowedDomains.contains(oUrl);
+	}
+
+	private String getOriginUrl(final HttpServletRequest servletRequest)
+	{
+		Enumeration<String> originHeaderValues = servletRequest.getHeaders("Origin");
+		List<String> origins;
+		if (originHeaderValues != null)
+		{
+			origins = Collections.list(originHeaderValues);
+		}
+		else
+		{
+			origins = Collections.emptyList();
+		}
+
+		if (origins.size() != 1)
+		{
+			return null;
+		}
+		return origins.get(0);
+	}
 }

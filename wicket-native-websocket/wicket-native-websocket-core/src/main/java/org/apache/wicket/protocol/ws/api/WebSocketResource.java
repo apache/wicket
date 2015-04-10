@@ -64,12 +64,12 @@ public abstract class WebSocketResource implements IResource
 			ClosedMessage message = connectedPayload.getMessage();
 			onClose(message);
 		}
-        else if (payload instanceof WebSocketAbortedPayload)
-        {
-            WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload) payload;
-            AbortedMessage message = abortedPayload.getMessage();
-            onAbort(message);
-        }
+		else if (payload instanceof WebSocketAbortedPayload)
+		{
+			WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload) payload;
+			AbortedMessage message = abortedPayload.getMessage();
+			onAbort(message);
+		}
 		else if (payload instanceof WebSocketPushPayload)
 		{
 			WebSocketPushPayload pushPayload = (WebSocketPushPayload) payload;

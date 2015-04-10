@@ -23,8 +23,8 @@ import javax.servlet.http.HttpServletRequest;
  * One example might be when the connection 'Origin' header does not match the origin of the
  * application host
  *
+ * @see WebSocketConnectionFilterCollection
  * @author Gergely Nagy
- *
  */
 public interface IWebSocketConnectionFilter {
 
@@ -34,5 +34,5 @@ public interface IWebSocketConnectionFilter {
      * @param servletRequest
      *            The servlet request holding the request headers
      */
-    public void doFilter(HttpServletRequest servletRequest);
+    ConnectionRejected doFilter(HttpServletRequest servletRequest);
 }

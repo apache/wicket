@@ -78,11 +78,11 @@ public class TestWebSocketResource extends WebSocketResource
 		super.onClose(message);
 	}
 
-    @Override
-    protected void onAbort(AbortedMessage message) {
-        ON_ABORT_CALLED.set(true);
-        super.onAbort(message);
-    }
+	@Override
+	protected void onAbort(AbortedMessage message) {
+		ON_ABORT_CALLED.set(true);
+		super.onAbort(message);
+	}
 
 	@Override
 	protected void onMessage(WebSocketRequestHandler handler, TextMessage message)

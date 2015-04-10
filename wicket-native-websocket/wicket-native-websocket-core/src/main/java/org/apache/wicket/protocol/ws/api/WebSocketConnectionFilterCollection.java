@@ -16,19 +16,27 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 
-public class WebSocketConnectionFilterCollection extends
-		FilterCollection<IWebSocketConnectionFilter> implements
-		IWebSocketConnectionFilter {
-
-	private static final long serialVersionUID = 3953951891780895469L;
+public class WebSocketConnectionFilterCollection extends ArrayList<IWebSocketConnectionFilter>
+		implements IWebSocketConnectionFilter
+{
+	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void doFilter(HttpServletRequest servletRequest) {
-		for (IWebSocketConnectionFilter filter : this) {
-			filter.doFilter(servletRequest);
+	public ConnectionRejected doFilter(final HttpServletRequest servletRequest)
+	{
+		for (IWebSocketConnectionFilter filter : this)
+		{
+			ConnectionRejected connectionRejected = filter.doFilter(servletRequest);
+			if (connectionRejected != null)
+			{
+				return connectionRejected;
+			}
 		}
+		return null;
 	}
 
 }

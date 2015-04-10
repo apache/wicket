@@ -16,15 +16,14 @@
  */
 package org.apache.wicket.protocol.ws;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter;
+import org.apache.wicket.protocol.ws.api.WebSocketConnectionFilterCollection;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
@@ -45,7 +44,7 @@ public class WebSocketSettings
 	};
 
 	/**
-	 * Holds this IWebSocketSettings in the Application's metadata.
+	 * Holds this WebSocketSettings in the Application's metadata.
 	 * This way wicket-core module doesn't have reference to wicket-native-websocket.
 	 */
 	public static final class Holder
@@ -90,14 +89,9 @@ public class WebSocketSettings
 	private IWebSocketConnectionRegistry connectionRegistry = new SimpleWebSocketConnectionRegistry();
 
 	/**
-	 * The whitelist of allowed domains where the client can connect to the application from
+	 * A filter that may reject an incoming connection
 	 */
-    private final List<String> allowedDomains = new ArrayList<String>();
-
-    /**
-     * Flag which indicates whether connection filtering should be active or not
-     */
-    private boolean protectionNeeded = false;
+	private IWebSocketConnectionFilter connectionFilter;
 
 	/**
 	 * Set the executor for processing websocket push messages broadcasted to all sessions.
@@ -115,26 +109,33 @@ public class WebSocketSettings
 	}
 
 	/**
-	 * The executor for processing websocket push messages broadcasted to all sessions.
-	 *
-	 * @return
-	 *            The executor used for processing push messages.
+	 * @return the executor for processing websocket push messages broadcasted to all sessions.
+	 */
+	public Executor getWebSocketPushMessageExecutor()
+	{
+		return webSocketPushMessageExecutor;
+	}
+
+	/**
+	 * @return The registry that tracks all currently connected WebSocket clients
 	 */
 	public IWebSocketConnectionRegistry getConnectionRegistry()
 	{
 		return connectionRegistry;
 	}
 
+	/**
+	 * Sets the connection registry
+	 *
+	 * @param connectionRegistry
+	 *              The registry that tracks all currently connected WebSocket clients
+	 * @return {@code this}, for method chaining
+	 */
 	public WebSocketSettings setConnectionRegistry(IWebSocketConnectionRegistry connectionRegistry)
 	{
 		Args.notNull(connectionRegistry, "connectionRegistry");
 		this.connectionRegistry = connectionRegistry;
 		return this;
-	}
-
-	public Executor getWebSocketPushMessageExecutor()
-	{
-		return webSocketPushMessageExecutor;
 	}
 
 	/**
@@ -165,60 +166,27 @@ public class WebSocketSettings
 	 */
 	public Executor getSendPayloadExecutor()
 	{
-		return sendPayloadExecutor;
+	return sendPayloadExecutor;
 	}
 
-    /**
-     * Flag that controls whether hijacking protection should be turned on or not
-     *
-     * @param protectionNeeded
-     *            True if protection needed
-     */
-    public void setHijackingProtectionEnabled(boolean protectionNeeded) {
-        this.protectionNeeded = protectionNeeded;
-    }
+	/**
+	 * Sets the filter for checking the incoming connections
+	 * @param connectionFilter
+	 *              the filter for checking the incoming connections
+	 * @see WebSocketConnectionFilterCollection
+	 */
+	public void setConnectionFilter(IWebSocketConnectionFilter connectionFilter)
+	{
+		this.connectionFilter = connectionFilter;
+	}
 
-    /**
-     * Flag that shows whether hijacking protection is turned on or not
-     *
-     * @param protectionNeeded
-     *            True if protection turned on
-     */
-    public boolean isHijackingProtectionEnabled() {
-        return this.protectionNeeded;
-    }
-
-    /**
-     * The list of whitelisted domains which are allowed to initiate a websocket connection. This
-     * list will be eventually used by the
-     * {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter} to abort potentially
-     * unsafe connections. Example domain names might be:
-     *
-     * <pre>
-     *      http://www.example.com
-     *      http://ww2.example.com
-     * </pre>
-     *
-     * @param domains
-     *            The collection of domains
-     */
-    public void setAllowedDomains(Collection<String> domains) {
-	this.allowedDomains.clear();
-        this.allowedDomains.addAll(domains);
-    }
-
-    /**
-     * The list of whitelisted domains which are allowed to initiate a websocket connection. This
-     * list will be eventually used by the
-     * {@link org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter} to abort potentially
-     * unsafe connections
-     *
-     * @param domains
-     *            The collection of domains if or an empty list when no domains were added
-     */
-    public List<String> getAllowedDomains() {
-        return this.allowedDomains;
-    }
+	/**
+	 * @return the filter for checking the incoming connections
+	 * @see WebSocketConnectionFilterCollection
+	 */
+	public IWebSocketConnectionFilter getConnectionFilter() {
+		return this.connectionFilter;
+	}
 
 	/**
 	 * A factory method for the {@link org.apache.wicket.request.http.WebResponse}

@@ -58,7 +58,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final HttpSessionCopy httpSession;
 	private final StringBuffer requestURL;
 	private final Map<String, Object> attributes = new HashMap<>();
-	private final Map<String, String> headers = new HashMap<>();
+	private final Map<String, Enumeration<String>> headers = new HashMap<>();
 	private final Map<String, String[]> parameters = new HashMap<>();
 	private final String method;
 	private final String serverName;
@@ -81,7 +81,8 @@ public class ServletRequestCopy implements HttpServletRequest
 		Enumeration<String> e = request.getHeaderNames();
 		while (e != null && e.hasMoreElements()) {
 			s = e.nextElement();
-			headers.put(s, request.getHeader(s));
+			Enumeration<String> headerValues = request.getHeaders(s);
+			this.headers.put(s, headerValues);
 		}
 
 		e = request.getAttributeNames();
@@ -154,27 +155,20 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
-	public String getHeader(String name) {
-		return headers.get(name);
+	public String getHeader(String name)
+	{
+		Enumeration<String> values = headers.get(name);
+		if (values != null && values.hasMoreElements())
+		{
+			return values.nextElement();
+		}
+		return null;
 	}
 
 	@Override
-	public Enumeration<String> getHeaders(final String name) {
-		return new Enumeration<String>() {
-
-			boolean hasNext = true;
-
-			@Override
-			public boolean hasMoreElements() {
-				return hasNext && headers.get(name) != null;
-			}
-
-			@Override
-			public String nextElement() {
-				hasNext = false;
-				return headers.get(name);
-			}
-		};
+	public Enumeration<String> getHeaders(final String name)
+	{
+		return headers.get(name);
 	}
 
 	@Override

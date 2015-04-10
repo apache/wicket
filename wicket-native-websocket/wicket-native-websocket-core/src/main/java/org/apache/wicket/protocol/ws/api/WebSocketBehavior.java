@@ -79,12 +79,12 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 				ClosedMessage message = closedPayload.getMessage();
 				onClose(message);
 			}
-            else if (wsPayload instanceof WebSocketAbortedPayload)
-            {
-                WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload) wsPayload;
-                AbortedMessage message = abortedPayload.getMessage();
-                onAbort(message);
-            }
+			else if (wsPayload instanceof WebSocketAbortedPayload)
+			{
+				WebSocketAbortedPayload abortedPayload = (WebSocketAbortedPayload) wsPayload;
+				AbortedMessage message = abortedPayload.getMessage();
+				onAbort(message);
+			}
 			else if (wsPayload instanceof WebSocketPushPayload)
 			{
 				WebSocketPushPayload pushPayload = (WebSocketPushPayload) wsPayload;
@@ -133,7 +133,7 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
      * A callback method called when the server has aborted the connection
      *
      * @param message
-     *          the aborted message with the info about the server
+     *          the aborted message with the info about the client
      */
     protected void onAbort(AbortedMessage message) {
     }

@@ -18,7 +18,6 @@ package org.apache.wicket.protocol.ws.api.message;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * A {@link IWebSocketMessage message} when a client creates web socket
@@ -26,32 +25,11 @@ import org.apache.wicket.util.lang.Args;
  *
  * @since 6.0
  */
-public class ConnectedMessage implements IWebSocketMessage
+public class ConnectedMessage extends AbstractClientMessage
 {
-	private final Application application;
-	private final String sessionId;
-	private final IKey key;
-
 	public ConnectedMessage(Application application, String sessionId, IKey key)
 	{
-		this.application = Args.notNull(application, "application");
-		this.sessionId = Args.notNull(sessionId, "sessionId");
-		this.key = Args.notNull(key, "key");
-	}
-
-	public Application getApplication()
-	{
-		return application;
-	}
-
-	public String getSessionId()
-	{
-		return sessionId;
-	}
-
-	public IKey getKey()
-	{
-		return key;
+		super(application, sessionId, key);
 	}
 
 	@Override

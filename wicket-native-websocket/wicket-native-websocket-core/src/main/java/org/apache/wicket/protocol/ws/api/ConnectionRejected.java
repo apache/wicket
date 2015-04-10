@@ -16,14 +16,24 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-public class ConnectionRejectedException extends RuntimeException {
-
-	private static final long serialVersionUID = 4552012810343573564L;
-
+/**
+ * A class used by {@link IWebSocketConnectionFilter}s when they need to reject a connection
+ */
+public class ConnectionRejected
+{
 	private final int code;
 	private final String reason;
 
-    public ConnectionRejectedException(int code, String reason) {
+	/**
+	 * Constructor
+	 *
+	 * @param code
+	 *              The error code
+	 * @param reason
+	 *              The reason to reject the connection
+	 */
+    public ConnectionRejected(int code, String reason)
+    {
 		this.code = code;
 		this.reason = reason;
     }

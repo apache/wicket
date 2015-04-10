@@ -24,19 +24,18 @@ import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
  *
  * @since 7.0.0-M5
  */
-public class WebSocketAbortedPayload extends WebSocketPayload<AbortedMessage> {
+public class WebSocketAbortedPayload extends WebSocketPayload<AbortedMessage>
+{
+	private final AbortedMessage message;
 
-    private final AbortedMessage message;
+	public WebSocketAbortedPayload(AbortedMessage message, WebSocketRequestHandler handler) {
+		super(handler);
 
-    public WebSocketAbortedPayload(AbortedMessage message, WebSocketRequestHandler handler) {
-        super(handler);
+		this.message = message;
+	}
 
-        this.message = message;
-    }
-
-    @Override
-    public AbortedMessage getMessage() {
-        return message;
-    }
-
+	@Override
+	public AbortedMessage getMessage() {
+		return message;
+	}
 }

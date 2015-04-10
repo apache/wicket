@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
@@ -88,8 +86,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	private final String sessionId;
 	private final WebSocketSettings webSocketSettings;
 	private final IWebSocketConnectionRegistry connectionRegistry;
-    private final WebSocketConnectionFilterCollection connectionFilters;
-    private final HttpServletRequest servletRequest;
+	private final IWebSocketConnectionFilter connectionFilter;
+	private final HttpServletRequest servletRequest;
 
 	/**
 	 * Constructor.
@@ -133,8 +131,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 
-        this.connectionFilters = new WebSocketConnectionFilterCollection();
-        connectionFilters.add(new WebSocketConnectionOriginFilter(webSocketSettings));
+		this.connectionFilter = webSocketSettings.getConnectionFilter();
 	}
 
 	@Override
@@ -150,25 +147,31 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		broadcastMessage(binaryMessage);
 	}
 
-    /**
-     * A helper that registers the opened connection in the application-level registry.
-     *
-     * @param connection
-     *            the web socket connection to use to communicate with the client
-     * @see #onOpen(Object)
-     */
-    protected final void onConnect(final IWebSocketConnection connection) {
-        IKey key = getRegistryKey();
-        try {
-            connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
-            connectionFilters.doFilter(servletRequest);
-            broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
-        } catch (ConnectionRejectedException e) {
-            broadcastMessage(new AbortedMessage(getApplication(), getSessionId(), key));
-            connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
-            connection.close(e.getCode(), e.getReason());
-        }
-    }
+	/**
+	 * A helper that registers the opened connection in the application-level registry.
+	 *
+	 * @param connection
+	 *            the web socket connection to use to communicate with the client
+	 * @see #onOpen(Object)
+	 */
+	protected final void onConnect(final IWebSocketConnection connection) {
+		IKey key = getRegistryKey();
+		connectionRegistry.setConnection(getApplication(), getSessionId(), key, connection);
+
+		if (connectionFilter != null)
+		{
+			ConnectionRejected connectionRejected = connectionFilter.doFilter(servletRequest);
+			if (connectionRejected != null)
+			{
+				broadcastMessage(new AbortedMessage(getApplication(), getSessionId(), key));
+				connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
+				connection.close(connectionRejected.getCode(), connectionRejected.getReason());
+				return;
+			}
+		}
+
+		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
+	}
 
 	@Override
 	public void onClose(int closeCode, String message)
@@ -332,7 +335,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		{
 			payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
 		}
-		else if (message instanceof AbortedMessage) {
+		else if (message instanceof AbortedMessage)
+		{
 			payload = new WebSocketAbortedPayload((AbortedMessage) message, handler);
 		}
 		else if (message instanceof IWebSocketPushMessage)
