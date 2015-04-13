@@ -101,6 +101,8 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+				//prevent the default form submit
+				attributes.setPreventDefault(true);
 				AjaxSubmitLink.this.updateAjaxAttributes(attributes);
 			}
 
