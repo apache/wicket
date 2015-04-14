@@ -255,6 +255,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * Gets the amOrPm model object of the drop down choice.
 	 * 
 	 * @return amOrPm
+	 * 
+	 * @deprecated valid during rendering only
 	 */
 	public final AM_PM getAmOrPm()
 	{
@@ -266,6 +268,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * ignored.
 	 * 
 	 * @return date
+	 * 
+	 * @deprecated valid during rendering only
 	 */
 	public final Date getDate()
 	{
@@ -276,6 +280,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * Gets the hours model object for the TextField
 	 * 
 	 * @return hours
+	 * 
+	 * @deprecated valid during rendering only
 	 */
 	public final Integer getHours()
 	{
@@ -286,6 +292,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * Gets the minutes model object for the TextField
 	 * 
 	 * @return minutes
+	 * 
+	 * @deprecated valid during rendering only
 	 */
 	public final Integer getMinutes()
 	{
