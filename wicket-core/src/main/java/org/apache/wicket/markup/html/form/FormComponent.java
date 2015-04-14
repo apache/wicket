@@ -1620,7 +1620,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		Collection<S> collection = formComponent.getModelObject();
 		if (collection == null)
 		{
-			collection = new ArrayList<S>(convertedInput);
+			collection = wrapToModifiableList(convertedInput);
 			formComponent.setModelObject(collection);
 		}
 		else
@@ -1645,8 +1645,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 					logger.debug("An error occurred while trying to modify the collection attached to "
 							+ formComponent, unmodifiable);
 				}
-
-				collection = new ArrayList<S>(convertedInput);
+				collection = wrapToModifiableList(convertedInput);
 			}
 			
 			try
@@ -1670,4 +1669,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			formComponent.modelChanged();
 		}
 	}
+
+	private static <S> ArrayList<S> wrapToModifiableList(Collection<S> collection)
+	{
+		return new ArrayList<S>(collection == null ? Collections.<S>emptyList() : collection);
+	}
+
 }

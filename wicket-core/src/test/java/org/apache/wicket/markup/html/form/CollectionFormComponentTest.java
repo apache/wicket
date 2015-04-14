@@ -24,7 +24,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -43,7 +45,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = null;
-			
+
 			public Collection<String> getStrings()
 			{
 				return internal;
@@ -52,7 +54,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 			public void setStrings(Collection<String> strings)
 			{
 				this.internal = strings;
-				
+
 				setCalled.set(true);
 			}
 		};
@@ -71,7 +73,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = null;
-			
+
 			public Collection<String> getStrings()
 			{
 				return internal;
@@ -91,7 +93,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = new ArrayList<String>();
-			
+
 			public Collection<String> getStrings()
 			{
 				return internal;
@@ -100,7 +102,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 			public void setStrings(Collection<String> strings)
 			{
 				this.internal = strings;
-				
+
 				setCalled.set(true);
 			}
 		};
@@ -119,7 +121,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = new ArrayList<String>();
-			
+
 			public Collection<String> getStrings()
 			{
 				return internal;
@@ -129,7 +131,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 		Choice choice = new Choice(object);
 		choice.setConvertedInput(Arrays.asList("A", "B"));
 		FormComponent.updateCollectionModel(choice);
-		
+
 		assertEquals("[A, B]", choice.getDefaultModelObjectAsString());
 	}
 
@@ -144,7 +146,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = new ArrayList<String>();
-			
+
 			public Collection<String> getStrings()
 			{
 				return Collections.unmodifiableCollection(internal);
@@ -153,7 +155,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 			public void setStrings(Collection<String> strings)
 			{
 				this.internal = strings;
-				
+
 				setCalled.set(true);
 			}
 		};
@@ -172,7 +174,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 		Object object = new Object()
 		{
 			private Collection<String> internal = new ArrayList<String>();
-			
+
 			public Collection<String> getStrings()
 			{
 				return Collections.unmodifiableCollection(internal);
@@ -184,6 +186,52 @@ public class CollectionFormComponentTest extends WicketTestCase
 		FormComponent.updateCollectionModel(choice);
 	}
 
+	@Test
+	public void getUnmodifiableInCaseOfNoConvertedInput()
+	{
+		LoadableDetachableModel<Collection<String>> model = new LoadableDetachableModel<Collection<String>>()
+		{
+
+			@Override
+			protected Collection<String> load()
+			{
+				return Collections.unmodifiableList(Arrays.asList("1", "2"));
+			}
+
+		};
+		FormComponent<Collection<String>> formComponent = new FormComponent<Collection<String>>(
+			"formComponent", model)
+		{
+
+		};
+		formComponent.setConvertedInput(null);
+		FormComponent.updateCollectionModel(formComponent);
+		Assert.assertTrue(formComponent.getModelObject().isEmpty());
+	}
+
+	@Test
+	public void getModelCollectionIsNullInCaseOfNoConvertedInput()
+	{
+		LoadableDetachableModel<Collection<String>> model = new LoadableDetachableModel<Collection<String>>()
+		{
+
+			@Override
+			protected Collection<String> load()
+			{
+				return null;
+			}
+
+		};
+		FormComponent<Collection<String>> formComponent = new FormComponent<Collection<String>>(
+				"formComponent", model)
+		{
+
+		};
+		formComponent.setConvertedInput(null);
+		FormComponent.updateCollectionModel(formComponent);
+		Assert.assertTrue(formComponent.getModelObject().isEmpty());
+	}
+
 	private class Choice extends FormComponent<Collection<String>>
 	{
 
@@ -192,4 +240,5 @@ public class CollectionFormComponentTest extends WicketTestCase
 			super("choice", new PropertyModel(object, "strings"));
 		}
 	}
+
 }
