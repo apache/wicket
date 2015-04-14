@@ -101,8 +101,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
-				//prevent the default form submit
-				attributes.setPreventDefault(true);
 				AjaxSubmitLink.this.updateAjaxAttributes(attributes);
 			}
 
@@ -147,16 +145,24 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 		if (isEnabledInHierarchy())
 		{
-			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
-				|| tag.getName().equalsIgnoreCase("area"))
+			String tagName = tag.getName();
+			
+			if (tagName.equalsIgnoreCase("a") || tagName.equalsIgnoreCase("link")
+				|| tagName.equalsIgnoreCase("area"))
 			{
 				// disable any href attr in markup
 				tag.put("href", "javascript:;");
 			}
-			else if (tag.getName().equalsIgnoreCase("button"))
+			else if (tagName.equalsIgnoreCase("button"))
 			{
 				// WICKET-5597 prevent default submit
 				tag.put("type", "button");
+			}
+			else if (tagName.equalsIgnoreCase("input") &&
+				"submit".equalsIgnoreCase(tag.getAttribute("type")))
+			{
+				// WICKET-5879 prevent default submit
+				tag.getAttributes().put("type", "button");
 			}
 		}
 		else
