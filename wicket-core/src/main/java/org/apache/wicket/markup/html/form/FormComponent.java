@@ -1616,6 +1616,9 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	public static <S> void updateCollectionModel(FormComponent<Collection<S>> formComponent)
 	{
 		Collection<S> convertedInput = formComponent.getConvertedInput();
+		if (convertedInput == null) {
+			convertedInput = Collections.emptyList();
+		}
 
 		Collection<S> collection = formComponent.getModelObject();
 		if (collection == null)
@@ -1632,10 +1635,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			try
 			{
 				collection.clear();
-				if (convertedInput != null)
-				{
-					collection.addAll(convertedInput);
-				}
+				collection.addAll(convertedInput);
 				modified = true;
 			}
 			catch (UnsupportedOperationException unmodifiable)
@@ -1645,7 +1645,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 					logger.debug("An error occurred while trying to modify the collection attached to "
 							+ formComponent, unmodifiable);
 				}
-
 				collection = new ArrayList<S>(convertedInput);
 			}
 			
