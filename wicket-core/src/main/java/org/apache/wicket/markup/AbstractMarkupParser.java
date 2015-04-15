@@ -57,6 +57,8 @@ public abstract class AbstractMarkupParser
 	public static final Pattern CONDITIONAL_COMMENT_OPENING = Pattern.compile("(s?)^[^>]*?<!--\\[if.*?\\]>(-->)?(<!.*?-->)?");
 
 	private static final Pattern PRE_BLOCK = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
+	private static final Pattern SPACE_OR_TAB_PATTERN = Pattern.compile("[ \\t]+");
+	private static final Pattern NEW_LINE_PATTERN = Pattern.compile("( ?[\\r\\n] ?)+");
 
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
@@ -380,8 +382,8 @@ public abstract class AbstractMarkupParser
 			boolean matched = m.find();
 			String nonPre = matched ? rawMarkup.substring(lastend, m.start())
 				: rawMarkup.substring(lastend);
-			nonPre = nonPre.replaceAll("[ \\t]+", " ");
-			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
+			nonPre = SPACE_OR_TAB_PATTERN.matcher(nonPre).replaceAll(" ");
+			nonPre = NEW_LINE_PATTERN.matcher(nonPre).replaceAll("\n");
 
 			// Don't create a StringBuilder if we don't actually need one.
 			// This optimizes the trivial common case where there is no <pre>
