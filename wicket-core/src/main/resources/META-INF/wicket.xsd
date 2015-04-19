@@ -88,7 +88,7 @@
 		</attributeGroup>
 	</redefine>
 
-	<attribute name="for" type="wicket:notEmptyToken">
+	<attribute name="for">
 		<annotation>
 			<documentation>Can be used in HTML <![CDATA[<label]]> element to automatically link it
 				to a form element. The value of this attribute must have the same value of
@@ -96,7 +96,7 @@
 			</documentation>
 		</annotation>
 		<simpleType>
-			<restriction base="wicket:token">
+			<restriction base="wicket:notEmptyToken">
 				<pattern value="([^:]+(:[^:]+)*)?" />
 			</restriction>
 		</simpleType>
