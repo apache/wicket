@@ -83,7 +83,7 @@
 
 	<redefine schemaLocation="http://www.w3.org/MarkUp/SCHEMA/xhtml-basic10.xsd">
 		<attributeGroup name="xhtml.label.attlist">
-			<attributeGroup ref="xhtml.label:attlist"/>
+			<attributeGroup ref="xhtml.label.attlist"/>
 			<attribute ref="wicket:for"/>
 		</attributeGroup>
 	</redefine>
