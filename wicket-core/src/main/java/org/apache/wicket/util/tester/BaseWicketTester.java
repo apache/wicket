@@ -122,6 +122,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
+import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
@@ -455,13 +456,14 @@ public class BaseWicketTester
 	 * @param filter
 	 *            filter used to cleanup messages, accepted messages will be removed
 	 */
-	private void cleanupFeedbackMessages(IFeedbackMessageFilter filter)
+	protected void cleanupFeedbackMessages(IFeedbackMessageFilter filter)
 	{
-		application.getApplicationSettings().setFeedbackMessageCleanupFilter(filter);
+		IApplicationSettings applicationSettings = application.getApplicationSettings();
+		IFeedbackMessageFilter old = applicationSettings.getFeedbackMessageCleanupFilter();
+		applicationSettings.setFeedbackMessageCleanupFilter(filter);
 		getLastRenderedPage().detach();
 		getSession().detach();
-		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
-			IFeedbackMessageFilter.NONE);
+		applicationSettings.setFeedbackMessageCleanupFilter(old);
 	}
 
 	/**
