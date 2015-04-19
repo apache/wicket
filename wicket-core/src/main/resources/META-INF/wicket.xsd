@@ -68,7 +68,7 @@
 			</documentation>
 		</annotation>
 		<simpleType>
-			<restriction base="wicket:token">
+			<restriction base="wicket:notEmptyToken">
 				<pattern value="([^:]+(:[^:]+)*)?" />
 			</restriction>
 		</simpleType>
