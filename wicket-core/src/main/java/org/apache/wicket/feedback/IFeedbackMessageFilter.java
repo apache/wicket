@@ -28,7 +28,7 @@ public interface IFeedbackMessageFilter extends IClusterable
 	/**
 	 * Filter that returns simply all available messages.
 	 */
-	public static final IFeedbackMessageFilter ALL = new IFeedbackMessageFilter()
+	IFeedbackMessageFilter ALL = new IFeedbackMessageFilter()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -42,7 +42,7 @@ public interface IFeedbackMessageFilter extends IClusterable
 	/**
 	 * Filter that does not match any message
 	 */
-	public static final IFeedbackMessageFilter NONE = new IFeedbackMessageFilter()
+	IFeedbackMessageFilter NONE = new IFeedbackMessageFilter()
 	{
 		private static final long serialVersionUID = 1L;
 

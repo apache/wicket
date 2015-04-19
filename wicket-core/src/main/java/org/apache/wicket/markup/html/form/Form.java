@@ -1145,7 +1145,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			@Override
 			public void component(final Component component, final IVisit<Boolean> visit)
 			{
-				if (component.hasErrorMessage())
+				if (component.isVisibleInHierarchy() && component.isEnabledInHierarchy() && component.hasErrorMessage())
 				{
 					visit.stop(true);
 				}
