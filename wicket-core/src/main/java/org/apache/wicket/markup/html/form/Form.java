@@ -895,11 +895,23 @@ public class Form<T> extends WebMarkupContainer
 	 * 
 	 * @return Whether this form wants to be submitted too if a nested form is submitted.
 	 */
-	public boolean wantSubmitOnNestedFormSubmit()
+	// TODO wicket-7 migration guide: changed from public to protected
+	protected boolean wantSubmitOnNestedFormSubmit()
 	{
 		return false;
 	}
 
+	/**
+	 * Whether this *nested* form wants to be submitted when parent form is submitted. By default,
+	 * this is true, so when a parent form is submitted, the nested form is also submitted. If this
+	 * method is overridden to return false, it will not be validated, processed nor submitted.
+	 * 
+	 * @return {@code true} by default
+	 */
+	protected boolean wantSubmitOnParentFormSubmit()
+	{
+		return true;
+	}
 
 	/**
 	 * Process the form. Though you can override this method to provide your own algorithm, it is
@@ -1011,7 +1023,8 @@ public class Form<T> extends WebMarkupContainer
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				Form<?> form = (Form<?>)component;
-				if (form.isEnabledInHierarchy() && isVisibleInHierarchy())
+				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy() &&
+					form.wantSubmitOnParentFormSubmit())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
 					return;
@@ -1280,7 +1293,7 @@ public class Form<T> extends WebMarkupContainer
 			@Override
 			public void component(Form<?> form, IVisit<Void> visit)
 			{
-				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
+				if (form.isSubmitted())
 				{
 					forms.add(form);
 				}
@@ -1525,7 +1538,7 @@ public class Form<T> extends WebMarkupContainer
 			@Override
 			public void component(final Form<?> form, final IVisit<Void> visit)
 			{
-				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
+				if (form.isSubmitted())
 				{
 					form.internalMarkFormComponentsValid();
 				}
@@ -1692,7 +1705,7 @@ public class Form<T> extends WebMarkupContainer
 		super.onComponentTagBody(markupStream, openTag);
 	}
 
-	/*
+	/**
 	 * Writes the markup for the hidden input field and default button field if applicable to the
 	 * current response.
 	 */
@@ -1829,10 +1842,9 @@ public class Form<T> extends WebMarkupContainer
 			@Override
 			public void component(final Form<?> form, final IVisit<Void> visit)
 			{
-				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
+				if (form.isSubmitted())
 				{
 					form.internalUpdateFormComponentModels();
-
 				}
 				else
 				{
@@ -1891,11 +1903,11 @@ public class Form<T> extends WebMarkupContainer
 		visitChildren(Form.class, new IVisitor<Form<?>, Void>()
 		{
 			@Override
-			public void component(Form<?> nestedForm, IVisit<Void> visit)
+			public void component(Form<?> form, IVisit<Void> visit)
 			{
-				if (nestedForm.isEnabledInHierarchy() && nestedForm.isVisibleInHierarchy())
+				if (form.isSubmitted())
 				{
-					nestedForm.onValidateModelObjects();
+					form.onValidateModelObjects();
 				}
 				else
 				{
@@ -2037,7 +2049,7 @@ public class Form<T> extends WebMarkupContainer
 					return;
 				}
 
-				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
+				if (form.isSubmitted())
 				{
 					form.validateComponents();
 					form.validateFormValidators();
@@ -2046,7 +2058,6 @@ public class Form<T> extends WebMarkupContainer
 			}
 		}, new ClassVisitFilter(Form.class));
 	}
-
 
 	/**
 	 * Allows to customize input names of form components inside this form.
