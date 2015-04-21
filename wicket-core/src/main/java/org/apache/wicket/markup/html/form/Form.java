@@ -144,8 +144,10 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
-	IGenericComponent<T>
+public class Form<T> extends WebMarkupContainer
+	implements
+		IFormSubmitListener,
+		IGenericComponent<T>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
 
@@ -221,8 +223,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 					{
 						if (form.isEnabledInHierarchy())
 						{
-							if (component.isVisibleInHierarchy()
-								&& component.isEnabledInHierarchy())
+							if (component.isVisibleInHierarchy() &&
+								component.isEnabledInHierarchy())
 							{
 								((IFormModelUpdateListener)component).updateModel();
 							}
@@ -445,8 +447,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 					{
 						String name = submittingComponent.getInputName();
 						IRequestParameters parameters = getRequest().getRequestParameters();
-						if ((!parameters.getParameterValue(name).isNull())
-							|| !parameters.getParameterValue(name + ".x").isNull())
+						if ((!parameters.getParameterValue(name).isNull()) ||
+							!parameters.getParameterValue(name + ".x").isNull())
 						{
 							visit.stop(submittingComponent);
 						}
@@ -536,9 +538,12 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		}
 
 		Form<?> root = getRootForm();
-		return new AppendingStringBuffer("document.getElementById('")
-			.append(root.getHiddenFieldId()).append("').value='").append(url)
-			.append("';document.getElementById('").append(root.getMarkupId())
+		return new AppendingStringBuffer("document.getElementById('").append(
+			root.getHiddenFieldId())
+			.append("').value='")
+			.append(url)
+			.append("';document.getElementById('")
+			.append(root.getMarkupId())
 			.append("').submit();");
 	}
 
@@ -582,9 +587,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 	/**
 	 * Gets maximum size for each file of an upload.
+	 * 
 	 * @return
 	 */
-	public Bytes getFileMaxSize() {
+	public Bytes getFileMaxSize()
+	{
 		return fileMaxSize;
 	}
 
@@ -682,8 +689,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
 		{
 			String desiredMethod = getMethod();
-			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest())
-				.getMethod();
+			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
 			if (!actualMethod.equalsIgnoreCase(desiredMethod))
 			{
 				MethodMismatchResponse response = onMethodMismatch();
@@ -694,8 +700,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 					case CONTINUE :
 						break;
 					default :
-						throw new IllegalStateException("Invalid "
-							+ MethodMismatchResponse.class.getName() + " value: " + response);
+						throw new IllegalStateException("Invalid " +
+							MethodMismatchResponse.class.getName() + " value: " + response);
 				}
 			}
 		}
@@ -735,7 +741,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			String url = getRequest().getRequestParameters().getParameterValue(getHiddenFieldId())
+			String url = getRequest().getRequestParameters()
+				.getParameterValue(getHiddenFieldId())
 				.toString();
 			if (!Strings.isEmpty(url))
 			{
@@ -750,8 +757,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 					if (submitter instanceof IFormSubmittingComponent)
 					{
-						IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent) submitter;
-						Component component = (Component) submitter;
+						IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
+						Component component = (Component)submitter;
 
 						if (!component.isVisibleInHierarchy())
 						{
@@ -904,8 +911,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * 
 	 * @param submittingComponent
 	 *            component responsible for submitting the form, or <code>null</code> if none (eg
-	 *            the form has been submitted via the enter key or javascript calling
-	 *            form.submit())
+	 *            the form has been submitted via the enter key or javascript calling form.submit())
 	 * 
 	 * @see #delegateSubmit(IFormSubmitter) for an easy way to process submitting component in the
 	 *      default manner
@@ -1057,9 +1063,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 	/**
 	 * Sets maximum size of each file in upload request.
+	 * 
 	 * @param fileMaxSize
 	 */
-	public void setFileMaxSize(Bytes fileMaxSize) {
+	public void setFileMaxSize(Bytes fileMaxSize)
+	{
 		this.fileMaxSize = fileMaxSize;
 	}
 
@@ -1145,7 +1153,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			@Override
 			public void component(final Component component, final IVisit<Boolean> visit)
 			{
-				if (component.isVisibleInHierarchy() && component.isEnabledInHierarchy() && component.hasErrorMessage())
+				if (component.isVisibleInHierarchy() && component.isEnabledInHierarchy() &&
+					component.hasErrorMessage())
 				{
 					visit.stop(true);
 				}
@@ -1223,8 +1232,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
-		buffer
-			.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
+		buffer.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
 		// close div
@@ -1401,7 +1409,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			try
 			{
 				ServletWebRequest request = (ServletWebRequest)getRequest();
-				final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(getMaxSize(), getPage().getId());
+				final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(
+					getMaxSize(), getPage().getId());
 				multipartWebRequest.setFileMaxSize(getFileMaxSize());
 				multipartWebRequest.parseFileParts();
 
@@ -1684,7 +1693,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	}
 
 	/*
-	 * Writes the markup for the hidden input field and default button field if applicable to the current response.
+	 * Writes the markup for the hidden input field and default button field if applicable to the
+	 * current response.
 	 */
 	public final void writeHiddenFields()
 	{
@@ -1716,8 +1726,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		if (defaultSubmittingComponent instanceof Component)
 		{
 			final Component submittingComponent = (Component)defaultSubmittingComponent;
-			if (submittingComponent.isVisibleInHierarchy()
-					&& submittingComponent.isEnabledInHierarchy())
+			if (submittingComponent.isVisibleInHierarchy() &&
+				submittingComponent.isEnabledInHierarchy())
 			{
 				appendDefaultButtonField();
 			}
@@ -1735,8 +1745,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		{
 			String[] pair = Strings.split(param, '=');
 
-			buffer.append("<input type=\"hidden\" name=\"").append(recode(pair[0]))
-				.append("\" value=\"").append(pair.length > 1 ? recode(pair[1]) : "")
+			buffer.append("<input type=\"hidden\" name=\"")
+				.append(recode(pair[0]))
+				.append("\" value=\"")
+				.append(pair.length > 1 ? recode(pair[1]) : "")
 				.append("\" />");
 		}
 	}
@@ -1870,8 +1882,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	}
 
 	/**
-	 * Calls {@linkplain #onValidateModelObjects()} on this form and all
-	 * nested forms that are visible and enabled
+	 * Calls {@linkplain #onValidateModelObjects()} on this form and all nested forms that are
+	 * visible and enabled
 	 */
 	private void internalOnValidateModelObjects()
 	{
@@ -1975,10 +1987,10 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 				{
 					if (log.isWarnEnabled())
 					{
-						log.warn("IFormValidator in form `"
-							+ getPageRelativePath()
-							+ "` depends on a component that has been removed from the page or is no longer visible. "
-							+ "Offending component id `" + dependent.getId() + "`.");
+						log.warn("IFormValidator in form `" +
+							getPageRelativePath() +
+							"` depends on a component that has been removed from the page or is no longer visible. " +
+							"Offending component id `" + dependent.getId() + "`.");
 					}
 					validate = false;
 					break;
@@ -2090,10 +2102,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			// register some metadata so we can later properly handle multipart ajax posts for
 			// embedded forms
 			registerJavaScriptNamespaces(response);
-			response
-				.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId()
-					+ "\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId()
-					+ ".metadata"));
+			response.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId() +
+				"\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId() + ".metadata"));
 		}
 	}
 
@@ -2104,11 +2114,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 */
 	protected void registerJavaScriptNamespaces(IHeaderResponse response)
 	{
-		response
-			.render(JavaScriptHeaderItem
-				.forScript(
-					"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
-					Form.class.getName()));
+		response.render(JavaScriptHeaderItem.forScript(
+			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
+			Form.class.getName()));
 	}
 
 	/**
@@ -2127,8 +2135,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		{
 			inputName.prepend(id);
 			c = c.getParent();
-			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm())
-				|| c instanceof Page)
+			if (c == null || (c instanceof Form<?> && ((Form<?>)c).isRootForm()) ||
+				c instanceof Page)
 			{
 				break;
 			}
@@ -2138,9 +2146,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 		/*
 		 * Certain input names causes problems with JavaScript. If the input name would cause a
-		 * problem, we create a replacement unique name by prefixing the name with a path that
-		 * would otherwise never be used (blank id in path).
-		 *
+		 * problem, we create a replacement unique name by prefixing the name with a path that would
+		 * otherwise never be used (blank id in path).
+		 * 
 		 * Input names must start with [A-Za-z] according to HTML 4.01 spec. HTML 5 allows almost
 		 * anything.
 		 */
@@ -2160,8 +2168,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * 
 	 * @author igor
 	 */
-	public static enum MethodMismatchResponse
-	{
+	public static enum MethodMismatchResponse {
 		/**
 		 * Continue processing.
 		 */
