@@ -6,6 +6,13 @@
 	xsi:schemaLocation="http://www.w3.org/1999/xhtml http://www.w3.org/MarkUp/SCHEMA/xhtml-basic10.xsd"
 	elementFormDefault="qualified"
 	version="6.19.0">
+	
+	<redefine schemaLocation="http://www.w3.org/MarkUp/SCHEMA/xhtml-basic10.xsd">
+		<attributeGroup name="xhtml.label.attlist">
+			<attributeGroup ref="xhtml.label.attlist"/>
+			<attribute ref="wicket:for"/>
+		</attributeGroup>
+	</redefine>
 
 	<!-- types -->
 
@@ -80,13 +87,6 @@
 				you want to add a component.</documentation>
 		</annotation>
 	</attribute>
-
-	<redefine schemaLocation="http://www.w3.org/MarkUp/SCHEMA/xhtml-basic10.xsd">
-		<attributeGroup name="xhtml.label.attlist">
-			<attributeGroup ref="xhtml.label.attlist"/>
-			<attribute ref="wicket:for"/>
-		</attributeGroup>
-	</redefine>
 
 	<attribute name="for">
 		<annotation>
