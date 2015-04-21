@@ -147,19 +147,24 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	public boolean isResourceAuthorized(IResource resource, PageParameters pageParameters)
 	{
 		Class<? extends IResource> resourceClass = resource.getClass();
-		return checkResource(resourceClass.getAnnotation(AuthorizeResource.class)) || checkResource(
+		boolean allowedByResourceItself = isResourceAnnotationSatisfied(
+				resourceClass.getAnnotation(AuthorizeResource.class));
+		boolean allowedByPackage = isResourceAnnotationSatisfied(
 				resourceClass.getPackage().getAnnotation(AuthorizeResource.class));
+		return allowedByResourceItself && allowedByPackage;
 	}
 
-	private boolean checkResource(AuthorizeResource annotation)
+	private boolean isResourceAnnotationSatisfied(AuthorizeResource annotation)
 	{
 		if (annotation != null)
 		{
+			// we have an annotation => we must check for the required roles
 			return hasAny(new Roles(annotation.value()));
 		}
 		else
 		{
-			return false;
+			// no annotation => no required roles => this resource can be accessed
+			return true;
 		}
 	}
 }

@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -26,6 +23,9 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.request.resource.IResource;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link AnnotationsRoleAuthorizationStrategy}
@@ -139,7 +139,7 @@ public class AnnotationsRoleAuthorizationStrategyTest
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 				roles("role1"));
-		IResource resource = Mockito.mock(TestResource.class);
+		IResource resource = Mockito.mock(RestrictedResource.class);
 		assertTrue(strategy.isResourceAuthorized(resource, null));
 	}
 
@@ -148,8 +148,23 @@ public class AnnotationsRoleAuthorizationStrategyTest
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
 				roles("role2"));
-		IResource resource = Mockito.mock(TestResource.class);
+		IResource resource = Mockito.mock(RestrictedResource.class);
 		assertFalse(strategy.isResourceAuthorized(resource, null));
+	}
+
+	@Test
+	public void allowsUnprotectedResourceWithRole() throws Exception {
+		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
+				roles("role2"));
+		IResource resource = Mockito.mock(UnrestrictedResource.class);
+		assertTrue(strategy.isResourceAuthorized(resource, null));
+	}
+	
+	@Test
+	public void allowsUnprotectedResourceWithoutRole() throws Exception {
+		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(roles());
+		IResource resource = Mockito.mock(UnrestrictedResource.class);
+		assertTrue(strategy.isResourceAuthorized(resource, null));
 	}
 
 	@AuthorizeInstantiation({"role1"})
@@ -191,7 +206,7 @@ public class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@AuthorizeResource("role1")
-	private static class TestResource implements IResource
+	private static class RestrictedResource implements IResource
 	{
 		/**
 		 * Renders this resource to response using the provided attributes.
@@ -201,6 +216,13 @@ public class AnnotationsRoleAuthorizationStrategyTest
 		@Override
 		public void respond(Attributes attributes)
 		{
+			; // NOOP
+		}
+	}
+
+	private static class UnrestrictedResource implements IResource {
+		@Override
+		public void respond(Attributes attributes) {
 			; // NOOP
 		}
 	}
