@@ -1,0 +1,1 @@
+Before going ahead with more advanced topics, we will see how to maintain a consistent layout across our site using Wicket and its component-oriented features. Probably this is not the most interesting use we can get out of Wicket, but it is surely the simplest one so it's the best way to get our hands dirty with some code.

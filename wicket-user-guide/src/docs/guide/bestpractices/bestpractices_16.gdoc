@@ -1,0 +1,5 @@
+
+
+It is a widespread opinion that Wicket has a bad documentation. This argument is just partly correct. There are a lot of code samples and snippets which can be used as code templates. Furthermore, there is a big community that answers complex questions very quickly. In Wicket it is very hard to document everything, because nearly everything is extensible and replaceable. If a component is not completely suitable, you will extend or replace it. Working with Wicket means permanently navigating through code. For example, just consider validators. How can I find all navigators that exist? Open the interface @IValidator@ (Eclipse: Ctrl + Shift + T) and then open the type hierachy (Crtl + T). Now we can see all the validators existing in Wicket and our project.
+
+!validator-type-hierachy.png!

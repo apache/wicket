@@ -1,0 +1,209 @@
+
+
+Having structured URLs in our site is a basic requirement if we want to build an efficient SEO1 strategy, but it also contributes to improve user experience with more intuitive URLs. Wicket provides two different ways to control URL generation. The first (and simplest) is to “mount” one or more pages to an arbitrary path, while a more powerful technique is to use custom implementations of IMapperContext and IPageParametersEncoder interfaces. In the next paragraphs we will learn both of these two techniques.
+
+h3. Mounting a single page
+
+With Wicket we can mount a page to a given path in much the same way as we map a servlet filer to a desired path inside file web.xml (see page 9). Using mountPage(String path, Class <T> pageClass) method of the WepApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the "/pageMount" path:
+
+{code}
+@Override
+public void init()
+{
+	super.init();
+	mountPage("/pageMount", MountedPage.class);
+	//Other initialization code...
+}
+{code}
+
+The path provided to mountPage will be used to generate the URL for any page of the specified class:
+
+{code}
+//it will return "/pageMount"
+RequestCycle.get().urlFor(MountedPage.class);
+{code}
+
+Under the hood the mountPage method mounts an instance of the request mapper @org.apache.wicket.request.mapper.MountedMapper@ configured for the given path:
+
+{code}
+public final <T extends Page> void mountPage(final String path,final Class<T> pageClass) {
+	mount(new MountedMapper(path, pageClass));
+}
+{code}
+
+Request mappers and the Application's method mount have been introduced in the previous chapter (paragraph 9.3).
+
+h3. Using parameter placeholders with mounted pages
+
+The path specified for mounted pages can contain dynamic segments which are populated with the values of the named parameters used to build the page. These segments are declared using special segments called parameter placeholders. Consider the path used in the following example:
+
+{code}
+mountPage("/pageMount/${foo}/otherSegm", MountedPageWithPlaceholder.class);
+{code}
+
+The path used above is composed by three segments: the first and the last are fixed while the second will be replaced by the value of the named parameter foo that must be provided when the page  MountedPageWithPlaceholder is instantiated:
+
+Java code:
+
+{code}
+PageParameters pageParameters = new PageParameters();
+pageParameters.add("foo", "foo");
+				
+setResponsePage(MountedPageWithPlaceholder.class, pageParameters)
+{code}
+
+Generated URL:
+
+{code:html}
+<Application path>/pageMount/foo/otherSegm
+{code}
+
+On the contrary if we manually insert an URL like '<web app path>/pageMount/bar/otherSegm', we can read value 'bar' retrieving the named parameter foo inside our page.
+
+Place holders can be declared as optional using the '#' character in place of '$':
+
+{code}
+mountPage("/pageMount/#{foo}/otherSegm", MountedPageOptionalPlaceholder.class);
+{code}
+
+If the named parameter for an optional placeholder is missing, the corresponding segment is removed from the final URL:
+
+Java code:
+
+{code}
+PageParameters pageParameters = new PageParameters();
+setResponsePage(MountedPageWithPlaceholder.class, pageParameters);
+{code}
+
+Generated URL:
+
+{code:html}
+<Application path>/pageMount/otherSegm
+{code}
+
+h3. Mounting a package
+
+In addition to mounting a single page, Wicket allows to mount all of the pages inside a package to a given path. Method mountPackage(String path, Class<T> pageClass) of class WepApplication will mount every page inside pageClass's package to the specified path.
+
+The resulting URL for package-mounted pages will have the following structure:
+
+{code:html}
+<Application path>/mountedPath/<PageClassName>[optional query string]
+{code}
+
+For example in the MountedPagesExample project we have mounted all pages inside the subpackage org.tutorialWicket.subPackage with this line of code:
+
+{code}
+mountPackage("/mountPackage", StatefulPackageMount.class);
+{code}
+
+StatefulPackageMount is one of the pages placed into the desired package and its URL will be:
+
+{code:html}
+<Application path>/mountPackage/StatefulPackageMount?1
+{code}
+
+Similarly to what is done by the mountPage method, the implementation of the mountPackage method mounts an instance of @org.apache.wicket.request.mapper.PackageMapper@ to the given path.
+
+h3. Providing custom mapper context to request mappers
+
+Interface @org.apache.wicket.request.mapper.IMapperContext@ is used by request mappers to create new page instances and to retrieve static URL segments used to build and parse page URLs. Here is the list of these segments:
+
+* Namespace: it's the first URL segment of non-mounted pages. By default its value is wicket.
+* Identifier for non-bookmarkable URLs: it's the segment that identifies non bookmarkable pages. By default its value is page.
+* Identifier for bookmarkable URLs: it's the segment that identifies bookmarkable pages. By default its value is bookmarkable (as we have seen before in paragraph 8.1.1).
+* Identifier for resources: it's the segment that identifies Wicket resources. Its default value is resources. The topic of resource management will be covered in chapter 13.
+
+IMapperContext provides a getter method for any segment listed above. By default Wicket uses class @org.apache.wicket.DefaultMapperContext@ as mapper context.
+
+Project CustomMapperContext is an example of customization of mapper context where we use index as identifier for non-bookmarkable pages and staticURL as identifier for bookmarkable pages. In this project, instead of implementing our mapper context from scratch, we used DefaultMapperContext as base class overriding just the two methods we need to achieve the desired result (getBookmarkableIdentifier() and getPageIdentifier()).  The final implementation is the following:
+
+{code}
+public class CustomMapperContext extends DefaultMapperContext{
+
+	@Override
+	public String getBookmarkableIdentifier() {
+		return "staticURL";
+	}
+
+	@Override
+	public String getPageIdentifier() {
+		return "index";
+	}
+}
+{code}
+
+Now to use a custom mapper context in our application we must override the newMapperContext() method declared in the Application class and make it return our custom implementation of IMapperContext:
+
+{code}
+@Override
+protected IMapperContext newMapperContext() {
+	return new CustomMapperContext();
+}
+{code}
+
+h3. Controlling how page parameters are encoded with IPageParametersEncoder
+
+Some request mappers (like MountedMapper and PackageMapper) can delegate page parameters encoding/decoding to interface @org.apache.wicket.request.mapper.parameter.IPage ParametersEncoder@. This entity exposes two methods: encodePageParameters() and decodePageParameters(): the first  one is invoked to encode page parameters into an URL while the second one extracts parameters from the URL.
+
+Wicket comes with a built-in implementation of this interface which encodes named page parameters as URL segments using the following pattern: /paramName1/paramValue1/paramName2/param Value2...
+
+This built-in encoder is @org.apache.wicket.request.mapper.parameter.UrlPathPageParametersEncoder@ class. In the @PageParametersEncoderExample@ project we have manually mounted a @MountedMapper@ that takes as input also an @UrlPathPageParametersEncoder@:
+
+{code}
+@Override
+public void init() {
+	super.init();
+	mount(new MountedMapper("/mountedPath", MountedPage.class, new UrlPathPageParametersEncoder()));
+}
+{code}
+
+The home page of the project contains just a link to the MountedPage web page. The code of the link and the resulting page URL are:
+
+Link code:
+
+{code}
+add(new Link("mountedPage") {
+
+	@Override
+	public void onClick() {
+		
+		PageParameters pageParameters = new PageParameters();
+		pageParameters.add("foo", "foo");
+		pageParameters.add("bar", "bar");
+			
+		setResponsePage(MountedPage.class, pageParameters);
+	}
+});
+{code}
+
+Generated URL:
+
+{code:html}
+<Application path>/mountedPath/foo/foo/bar/bar?1
+{code}
+
+h3. Encrypting page URLs
+
+Sometimes URLs are a double–edged sword for our site because they can expose too many details about the internal structure of our web application making it more vulnerable to malicious users.
+
+To avoid this kind of security threat we can use the @CryptoMapper@ request mapper which wraps an existing mapper and encrypts the original URL producing a single encrypted segment:
+
+!url-encrypted.png!
+
+Typically, @CryptoMapper@ is registered into a Wicket application as the root request mapper wrapping the default one:
+
+{code}
+@Override
+public void init() {
+	super.init();
+	setRootRequestMapper(new CryptoMapper(getRootRequestMapper(), this)); 
+	//pages and resources must be mounted after we have set CryptoMapper
+	mountPage("/foo/", HomePage.class);
+{code}
+
+As pointed out in the code above, pages and resources must be mounted after having set @CryptoMapper@ as root mapper, otherwise the mounted paths will not work.
+
+{warning}
+By default @CryptoMapper@ encrypts page URLs with a cipher that might not be strong enough for production environment. Paragraph 21.4 will provide a more detailed description of how Wicket encrypts page URLs and we will see how to use stronger ciphers.
+{warning}

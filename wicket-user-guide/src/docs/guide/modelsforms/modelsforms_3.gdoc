@@ -1,0 +1,185 @@
+
+
+Web applications use HTML forms to collect user input and send it to the server. Wicket provides @org.apache.wicket.markup.html.form.Form@ class to handle web forms. This component must be bound to <form> tag. The following snippet shows how to create a very basic Wicket form in a page:
+
+Html:
+
+{code:html}
+<form wicket:id="form">
+    <input type="submit" value="submit"/>
+</form>
+{code}
+
+
+Java code:
+
+{code}
+Form form = new Form("form"){
+    @Override
+    protected void onSubmit() {
+    	System.out.println("Form submitted.");
+    }
+};
+add(form);
+{code}
+
+Method onSubmit is called whenever a form has been submitted and it can be overridden to perform custom actions. Please note that a Wicket form can be submitted using a standard HTML submit button which is not mapped to any component (i.e. it does not have a wicket:id attribute). 
+In the next chapter we will continue to explore Wicket forms and we will see how to submit forms using special components which implement interface @org.apache.wicket.markup.html.form.IFormSubmitter@.
+
+h3. Form and models
+
+A form should contain some input fields (like text fields, check boxes, radio buttons, drop-down lists, text areas, etc.) to interact with users. Wicket provides an abstraction for all these kinds of elements with component org.apache.wicket.markup.html.form.FormComponent:
+
+!uml-form-component.png!
+
+The purpose of FormComponent is to store the corresponding user input into its model when the form is submitted. The form is responsible for mapping input values to the corresponding components, avoiding us the burden of manually synchronizing models with input fields and vice versa.
+
+h3. Login form
+
+As first example of interaction between the form and its models, we will build a classic login form which asks for username and password (project LoginForm).
+
+{warning}
+The topic of security will be discussed later in chapter 20. The following form is for example purposes only and is not suited for a real application.
+If you need to use a login form you should consider to use component @org.apache.wicket.authroles.authentication.panel.SignInPanel@ shipped with Wicket.
+{warning}
+
+This form needs two text fields, one of which must be a password field. We should also use a label to display the result of login process1. For the sake of simplicity, the login logic is all inside onSubmit and is quite trivial.
+
+The following is a possible implementation of our form:
+
+{code}
+public class LoginForm extends Form {
+	
+	private TextField usernameField;
+	private PasswordTextField passwordField;
+	private Label loginStatus;
+		
+	public LoginForm(String id) {
+		super(id);
+			
+		usernameField = new TextField("username", Model.of(""));
+		passwordField = new PasswordTextField("password", Model.of(""));			
+		loginStatus = new Label("loginStatus", Model.of(""));
+			
+		add(usernameField);
+		add(passwordField);
+		add(loginStatus);
+	}
+
+	public final void onSubmit() {
+		String username = (String)usernameField.getDefaultModelObject();
+		String password = (String)passwordField.getDefaultModelObject();
+
+		if(username.equals("test") && password.equals("test"))
+			loginStatus.setDefaultModelObject("Congratulations!");
+		else
+			loginStatus.setDefaultModelObject("Wrong username or password!");			
+	}
+}
+{code}
+
+Inside form's constructor we build the three components used in the form and we assign them a model containing an empty string:
+
+{code}
+usernameField = new TextField("username", Model.of(""));
+passwordField = new PasswordTextField("password", Model.of(""));			
+loginStatus = new Label("loginStatus", Model.of(""));
+{code}
+
+If we don't provide a model to a form component, we will get the following exception on form submission:
+
+{code}
+java.lang.IllegalStateException: Attempt to set model object on null model of component: 
+{code}
+
+Component TextField corresponds to the standard text field, without any particular behavior or restriction on the allowed values. We must bind this component to the <input> tag with the attribute type set to "text". PasswordTextField is a subtype of TextFiled and it must be used with an <input> tag with the attribute type set to"password". For security reasons component PasswordTextField cleans its value at each request, so it wil be always empty after the form has been rendered. By default PasswordTextField fields are required, meaning that if we left them empty, the form won't be submitted (i.e. onSubmit won't be called). Class FormComponent provides method setRequired(boolean required) to change this behavior. Inside onSubmit, to get/set model objects we have used shortcut methods setDefaultModelObject and getDefaultModelObject. Both methods are defined in class Component (see class diagram from Illustration 9.1).
+
+The following are the possible markup and code for the login page:
+
+Html:
+
+{code:html}
+<html>
+	<head>
+  		<title>Login page</title>
+	</head>
+	<body>
+		<form id="loginForm" method="get" wicket:id="loginForm">
+  			<fieldset>
+    			<legend style="color: #F90">Login</legend>
+    				<p wicket:id="loginStatus"></p>
+    				<span>Username: </span><input wicket:id="username" type="text" id="username" /><br/>
+    				<span>Password: </span><input wicket:id="password" type="password" id="password" />
+    				<p>
+    					<input type="submit" name="Login" value="Login"/>
+    				</p>
+  	   	    </fieldset>
+		</form>
+	</body>
+</html>
+{code}
+
+Java code:
+
+{code}
+public class HomePage extends WebPage {
+ 
+   public HomePage(final PageParameters parameters) {
+		
+		super(parameters);
+    	add(new LoginForm("loginForm"));
+
+    }
+}
+{code}
+
+The example shows how Wicket form components can be used to store user input inside their model. However we can dramatically improve the form code using CompoundPropertyModel and its ability to access the properties of its model object. The revisited code is the following (the LoginFormRevisited project):
+
+{code}
+public class LoginForm extends Form{
+		
+		private String username;
+		private String password;
+		private String loginStatus;
+		
+		public LoginForm(String id) {
+			super(id);			
+			setDefaultModel(new CompoundPropertyModel(this));
+			
+			add(new TextField("username"));
+			add(new PasswordTextField("password"));
+			add(new Label("loginStatus"));
+		}
+
+		public final void onSubmit() {			
+			if(username.equals("test") && password.equals("test"))
+				loginStatus = "Congratulations!";
+			else
+				loginStatus = "Wrong username or password !";			
+		}
+	}
+{code}
+
+In this version the form itself is used as model object for its CompoundPropertyModel. This allows children components to have direct access to form fields and use them as backing objects, without explicitly creating a model for themselves.
+
+{note}
+Keep in mind that when CompoundPropertyModel is inherited, it does not consider the ids of traversed containers for the final property expression, but it will always use the id of the visited child. To understand this potential pitfall, let's consider the following initialization code of a page:
+
+{code}
+//Create a person named 'John Smith'
+Person person = new Person("John", "Smith");
+//Create a person named 'Jill Smith'
+Person spouse = new Person("Jill", "Smith");
+//Set Jill as John's spouse
+person.setSpouse(spouse);
+
+setDefaultModel(new CompoundPropertyModel(person));
+WebMarkupContainer spouse = new WebMarkupContainer("spouse");
+Label name;
+spouse.add(name = new Label("name"));
+
+add(spouse);
+{code}
+
+The value displayed by label "name" will be "John" and not the spouse's name  "Jill" as you may expect. In this example the label doesn't own a model, so it must search up its container hierarchy for an inheritable model. However, its container (WebMarkup Container with id 'spouse') doesn't own a model, hence the request for a model is forwarded to the parent container, which in this case is the page. In the end the label inherits CompoundPropertyModel from page but only its own id is used for the property expression. The containers in between are never taken into account for the final property expression.
+{note}

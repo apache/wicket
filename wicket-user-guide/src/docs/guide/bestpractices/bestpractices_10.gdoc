@@ -1,0 +1,62 @@
+
+
+Do not pass entire components or pages to constructors of other components.
+
+*Listing 12:*
+
+{code}
+// Bad solution
+public class SettingsPage extends Page {
+    public SettingsPage (IModel<Settings> settingsModel, final Webpage backToPage) {
+        Form<?> form = new Form("form");
+        // add components
+        form.add(new SubmitButton("changeSettings") {
+            public void onSubmit() {
+               // do something
+               setResponsePage(backToPage);
+            }
+        });
+        add(form);
+    }
+}
+{code}
+
+The @SettingsPage@ expects the page which should be displayed after a successful submit to be passed to its constructor. This solution works, but is very bad practice. You need to know during the instanciation of @SettingsPage@ where you want to redirect the user. This requires a predetermined order of instanciation. It is better to order the instanciation based on business logic (e.g. the order in the HTML template). Furthermore, you need an unnecessary instance of the next success page which might never be displayed. The solution is once again the Hollywood principle. For this you create an abstract method or a hook:
+
+*Listing 13:*
+
+{code}
+// Good solution
+public class SettingsPage extends Page {
+    public SettingsPage (IModel<Settings> settingsModel) {
+        Form<?> form = new Form("form");
+        // add components
+        form.add(new SubmitButton("changeSettings") {
+            public void onSubmit() {
+               // do something
+               onSettingsChanged();
+            }
+         });
+         add(form);
+    }
+
+    // hook
+    protected void onSettingsChanged() {
+    }
+
+// The usage of the new component
+Link<Void> settings = new Link<Void>("settings") {
+    public void onClick() {
+        setResponsePage(new SettingsPage(settingsModel) {
+            @Override
+            protected void onSettingsChanged() {
+               // reference to the current page
+               setResponsePage(this);
+            }
+        });
+    }
+}
+add(settings);
+{code}
+
+This solution has more code, but it is more flexible and reuseable. We can see there is an event @onSettingsChanged()@ and this event is called after a successful change. Furthermore, there is the possibility to execute additional code besides setting the next page. For example, you can display messages or persist information.

@@ -1,0 +1,41 @@
+
+
+Wicket internally uses an entity called package resource guard to protect package resources from external access. This entity is an implementation of interface @org.apache.wicket.markup.html.IPackageResourceGuard@. 
+
+By default Wicket applications use as package resource guard class @SecurePackageResourceGuard@, which allows to access only to the following file extensions (grouped by type):
+
+{table}
+File | Extensions
+*JavaScript files* |.js
+*CSS files* |.css
+*HTML pages* |.html
+*Textual files* |.txt
+*Flash files* |.swf
+*Picture files* |.png, .jpg, .jpeg, .gif, .ico, .cur, .bmp, .svg
+*Web font files* |.eot, .ttf, .woff
+{table}
+
+To modify the set of allowed files formats we can add one or more patterns with method @addPattern(String)@. The rules to write a pattern are the following:
+
+* patterns start with either a "+" or a "-". In the first case the pattern will add one or more file to the set while starting a pattern with a “-” we exclude all the files matching the given pattern. For example pattern “-web.xml” excludes all web.xml files in all directories.
+* wildcard character “\*” is supported as placeholder for zero or more characters. For example  pattern “+\*.mp4” adds all the mp4 files inside all directories.
+* subdirectories are supported as well. For example pattern “+documents/\*.pdf” adds all pdf files under “documents” directory. Character “\*” can be used with directories to specify a nesting level. For example “+documents/\*/\*.pdf” adds all pdf files placed one level below “documents” directory.
+* a double wildcard character “\*\*” indicates zero or more subdirectories. For example pattern “+documents/\*\*/\*.pdf” adds all pdf files placed inside “documents” directory or inside any of its subdirectories.
+
+Patterns that allow to access to every file with a given extensions (such as “+\*.pdf”) should be always avoided in favour of more restrictive expressions that contain a directory structure:
+
+{code}
+//Application class code...
+@Override
+public void init()   
+{
+      IPackageResourceGuard packageResourceGuard = application.getResourceSettings() 
+                                                   .getPackageResourceGuard();
+      if (packageResourceGuard instanceof SecurePackageResourceGuard)
+      {
+         SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
+         //Allow to access only to pdf files placed in the “public” directory.
+         guard.addPattern("+public/*.pdf");
+      }
+}
+{code}

@@ -1,0 +1,37 @@
+In web applications, it's quite common to have one or more root context folders containing css/js files. These resources are normally referenced with an absolute path inside link/script tags:
+
+{code:html}
+<script src="/misc/js/jscript.js"></script>
+<link type="text/css" rel="stylesheet" href="/misc/css/themes/style.css" />
+{code}
+
+To handle this kind of resources from code we can use resource reference class @org.apache.wicket.request.resource.ContextRelativeResourceReference@. To build a new instance of this class we must specify the root context path of the resource we want to use:
+
+{code}
+ContextRelativeResourceReference resource = new ContextRelativeResourceReference("/misc/js/jscript.js"); 
+{code}
+
+By default when our application runs in DEPLOYMENT mode @ContextRelativeResourceReference@ will automatically load the minified version of the specified resource using 'min' as postfix. In the example above it will load '/misc/js/jscript.min.js'. We can force  @ContextRelativeResourceReference@ to always use the not-minified resource passing an additional flag to class constructor:
+
+{code}
+//it will always use '/misc/js/jscript.js'
+ContextRelativeResourceReference resource = new ContextRelativeResourceReference("/misc/js/jscript.js", false); 
+{code}
+
+The minified postfix can be customized with an optional string parameter:
+
+{code}
+//it will use '/misc/js/jscript.minified.js' in DEPLOYMENT mode
+ContextRelativeResourceReference resource = new ContextRelativeResourceReference("/misc/js/jscript.js", "minified"); 
+{code}
+
+@ContextRelativeResourceReference@ is usually used with the header item classes we have seen before in this chapter to create entries for the page header section.
+
+h3. Picture files
+
+For picture files Wicket provides a specific component with class @org.apache.wicket.markup.html.image.ContextImage@ which is meant to be used with tag <img>
+
+{code}
+//build the component specifying its id and picture's context path
+ContextImage image = new ContextImage("myPicture", "/misc/imgs/mypic.png"); 
+{code}

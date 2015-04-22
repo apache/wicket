@@ -1,0 +1,67 @@
+
+
+Components that inherit from @AbstractChoice@ (such as @DropDownChoice@, @CheckBoxMultipleChoice@ and @RadioChoice@) must override method @localizeDisplayValues@ and make it return true to localize the values displayed for their choices. By default this method return false so values are displayed as they are. Once localization is activated we can use display values as key for our localized string resources. In project LocalizedChoicesExample we have a drop-down list that displays four colors (green, red, blue, and yellow) which are localized in three languages (English, German and Italian). The current locale can be changed with another drop-down menu (in a similar fashion to project @LocalizedGreetings@). The code of the home page and the relative bundles are the following:
+
+Java code:
+
+{code}
+public HomePage(final PageParameters parameters) {
+	super(parameters);
+
+	List<Locale> locales = Arrays.asList(Locale.ENGLISH, Locale.ITALIAN, Locale.GERMAN);
+	List<String> colors = Arrays.asList("green", "red", "blue", "yellow");
+		
+	final DropDownChoice<Locale> changeLocale = new DropDownChoice<Locale>("changeLocale", 
+                                                    new Model<Locale>(), locales);
+		
+	StatelessForm form = new StatelessForm("form"){
+		@Override
+		protected void onSubmit() {
+			Session.get().setLocale(changeLocale.getModelObject());
+		}
+	};		
+		
+	DropDownChoice<String> selectColor = new DropDownChoice<String>("selectColor", new 
+                                                            Model<String>(), colors){
+		@Override
+		protected boolean localizeDisplayValues() {
+			return true;
+		}
+	};
+		
+	form.add(selectColor);
+	add(form.add(changeLocale));
+    }
+{code}
+
+Default bundle (English):
+
+{code}
+selectColor.null=Select a color
+green=Green
+red=Red
+blue=Blue
+yellow=Yellow
+{code}
+
+German bundle:
+
+{code}
+selectColor.null=Wahlen sie eine farbe
+green=Grun
+red=Rot
+blue=Blau
+yellow=Gelb
+{code}
+
+Italian bundle:
+
+{code}
+selectColor.null=Scegli un colore
+green=Verde
+red=Rosso
+blue=Blu
+yellow=Giallo
+{code}
+
+Along with the localized versions of colors names, in the bundles above we can also find a custom value for the placeholder text (“Chose one ”) used for null value. The resource key for this resource is 'null' or '<component id>.null' if we want to make it component-specific.

@@ -1,0 +1,92 @@
+
+
+Class @org.apache.wicket.request.cycle.RequestCycle@ is the entity in charge of serving a web request. Our application class creates a new @RequestCycle@ on every request with its method @createRequestCycle(request, response)@. 
+
+Method @createRequestCycle@ is declared as final, so we can't override it to return a custom subclass of @RequestCycle@. Instead, we must build a request cycle provider implementing interface @org.apache.wicket.IRequestCycleProvider@, and then we must tell our application class to use it via the @setRequestCycleProvider@ method.
+
+The current running request cycle can be retrieved at any time by calling its static method @RequestCycle.get()@. Strictly speaking this method returns the request cycle associated with the current (or local) thread, which is the thread that is serving the current request. A similar @get()@ method is also implemented in classes @org.apache.wicket.Application@ (as we have seen in paragraph 2.2.2) and @org.apache.wicket.Session@ in order to get the application and the session in use by the current thread.
+
+{note}
+The implementation of the get method takes advantage of the standard class @java.lang.ThreadLocal@. See its JavaDoc for an introduction to local-thread variables.
+{note}
+
+Class @org.apache.wicket.Component@ provides the @getRequestCycle()@ method which is a convenience method that internally invokes @RequestCycle.get()@:
+
+{code}
+public final RequestCycle getRequestCycle() {
+	return RequestCycle.get();
+}
+{code}
+
+h3. RequestCycle and request processing
+
+{note}
+This paragraph will provide just the basic informations about what happens behind the scenes of request processing. When you work with Wicket it's unlikely to have a need for customizing this process, so we won't cover this topic in detail.
+{note}
+
+In order to process a request, @RequestCycle@ delegates the task to another entity which implements interface @org.apache.wicket.request.IRequestHandler@. There are different implementations of this interface, each suited for a particular type of requested resource (a page to render, an AJAX request, an URL to an external page, etc.). 
+
+To resolve the right handler for a given HTTP request, the @RequestCycle@ uses a set of objects implementing the @org.apache.wicket.request.IRequestMapper@ interface. The mapping interface defines the @getCompatibilityScore(Request request)@ method which returns a score indicating how compatible the request mapper is for the current request. @RequestCycle@ will choose the mapper with the highest score and it will call its @mapRequest(Request request)@ method to get the proper handler for the given request. Once @RequestCycle@ has resolved a request handler, it invokes its method @respond(IRequestCycle requestCycle)@ to start request processing.
+
+The following sequence diagram recaps how a request handler is resolved by the @RequestCycle@:
+
+!request-cycle-handler.png!
+
+Developers can create additional implementations of IRequestMapper and add them to their application via the mount(IRequestMapper mapper) method of the WebApplication class. In paragraph 10.6 we will see how Wicket uses this method to add built-in mappers for mounted pages.
+
+h3. Generating URL with the urlFor and mapUrlFor methods
+
+The RequestCycle is also responsible for generating the URL value (as CharSequence) for the following entities:
+
+* a page class, via the @urlFor(Class<C> pageClass, PageParameters parameters)@ method 
+* an IRequestHandler via the @urlFor(IRequestHandler handler)@ method 
+* a ResourceReference via the @urlFor(ResourceReference reference, PageParameters params)@ method (resource entities will be introduced in chapter 13). 
+
+The overloaded @urlFor@ method from above also has a corresponding version that returns an instance of @org.apache.wicket.request.Url@ instead of a @CharSequence@. This version has the prefix 'map' in its name (i.e. it has @mapUrlFor@ as full name).
+
+h3. Method setResponsePage
+
+The @RequestCycle@ class contains the implementation of the @setResponsePage@ method we use to redirect a user to a specific page (see paragraph 2.4). The namesake method of class @org.apache.wicket.Component@ is just a convenience method that internally invokes the actual implementation on current request cycle:
+
+{code}
+public final void setResponsePage(final Page page) {
+	getRequestCycle().setResponsePage(page);
+}
+{code}
+
+h3. RequestCycle's hook methods and listeners
+
+The RequestCycle comes with some hook methods which can be overridden to perform custom actions when request handling reaches a specific stage. These methods are:
+* *onBeginRequest():* called when the RequestCycle is about to start handling the request. 
+* *onEndRequest():* called when the RequestCycle has finished to handle the request
+* *onDetach():* called after the request handling has completed and the RequestCycle is about to be detached from its thread. The default implementation of this method invokes detach() on the current session (the Session class will be shortly discussed in paragraph 9.4).
+
+Methods onBeforeRequest and onEndRequest can be used if we need to execute custom actions before and after business code is executed, such as opening a Hibernate/JPA session and closing it when code has terminated. 
+
+A more flexible way to interact with the request processing is to use the listener interface @org.apache.wicket.request.cycle.IRequestCycleListener@. In addition to the three methods already seen for RequestCycle, this interface offers further hooks into request processing:
+* *onBeginRequest(RequestCycle cycle):* (see the description above)
+* *onEndRequest(RequestCycle cycle):* (see the description above)
+* *onDetach(RequestCycle cycle):* (see the description above)
+* *onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler):* called when an IRequestHandler has been resolved.
+* *onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler):* called when an IRequestHandler has been scheduled for execution.
+* *onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler):* called when an IRequestHandler has been executed.
+* *onException(RequestCycle cycle, Exception ex):* called when an exception has been thrown during request processing.
+* *onExceptionRequestHandlerResolved(RequestCycle rc, IRequestHandler rh, Exception ex):* called when an IRequestHandler has been resolved and will be used to handle an exception. 
+* *onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url):* called when an URL has been generated for an IRequestHandler object.
+
+To use the request cycle listeners we must add them to our application which in turn will pass them to the new @RequestCycle@'s instances created with @createRequestCycle@ method:
+
+{code}
+@Override
+public void init() {
+
+	super.init();
+
+	IRequestCycleListener myListener;
+	//listener initialization...
+	getRequestCycleListeners().add(myListener)		
+}
+{code}
+
+The @getRequestCycleListeners@ method returns an instance of class @org.apache.wicket.request.cycle.RequestCycleListenerCollection@. This class is a sort of typed collection for @IRequestCycleListener@ and it also implements the "Composite pattern":http://en.wikipedia.org/wiki/Composite_pattern .
+
