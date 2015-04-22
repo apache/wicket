@@ -1,0 +1,137 @@
+
+
+Our new component will extend the a built-in text field @org.apache.wicket.extensions.markup.html.form.DateTextField@ which already uses a java.util.Date as model object and already performs conversion and validation for input values. Since the component must be self-contained, we must ensure that the JavaScript libraries it relies on (JQuery and JQuery UI) will be always available. 
+
+Starting from version 6.0 Wicket has adopted JQuery as backing JavaScript library so we can use the  version bundled with Wicket for our custom datepicker. 
+
+To make JQuery UI available we should instead go to its official site, download the required artifacts and use them as package resources of our component. 
+
+h3. Component package resources
+
+JQuery UI needs the following static resources in order to work properly:
+
+* *jquery-ui.min.js*: the minified version of the library.
+* *jquery-ui.css*: the CSS containing the style used by JQuery UI widgets.
+* *jquery-ui-i18n.min.js*: the minified JavaScript containing the built-in support for localization.
+* *Folder 'images'*: the folder containing picture files used by JQuery UI widgets.
+
+In the following picture we can see these package resources with our component class (named JQueryDateField):
+
+!datepicker-package-resources.png!
+
+Along with the four static resources listed above, we can find also file calendar.jpg, which is the calendar icon used to open the pop up calendar, and file JQDatePicker.js which contains the following custom JavaScript code that binds our component to a JQuery UI datepicker:
+
+{code:javascript}
+function initJQDatepicker(inputId, countryIsoCode, dateFormat,  calendarIcon) {
+	var localizedArray = $.datepicker.regional[countryIsoCode];
+	localizedArray['buttonImage'] = calendarIcon;
+	localizedArray['dateFormat'] = dateFormat;
+	initCalendar(localizedArray);
+	$("#" + inputId).datepicker(localizedArray);	
+};
+
+function initCalendar(localizedArray){
+	 localizedArray['changeMonth']= true;
+	 localizedArray['changeYear']= true;
+	 localizedArray['showOn'] = 'button';
+	 localizedArray['buttonImageOnly'] = true;
+};
+{code}
+
+Function initJQDatepicker takes in input the following parameters:
+
+* *inputId*: the id of the HTML text field corresponding to our custom component instance.
+* *countryIsoCode*: a two-letter low-case ISO language code. It can contain also the two-letter upper-case ISO country code separated with a minus sign (for example en-GB)
+* *dateFormat*: the date format to use for parsing and displaying date values.
+* *calendarIcon*: the relative URL of the icon used as calendar icon.
+
+As we will see in the next paragraphs, its up to our component to generate this parameters and invoke the initJQDatepicker function.
+
+Function initCalendar is a simple utility function that sets the initialization array for datepicker widget. For more details on JQuery UI datepicker usage see the documentation at http://jqueryui.com/ datepicker.
+
+h3. Initialization code
+
+The initialization code for our component is contained inside its method onInitialize and is the following:
+
+{code}
+@Override
+protected void onInitialize() {
+	super.onInitialize();
+	setOutputMarkupId(true);
+
+	datePattern =  new ResourceModel("jqueryDateField.shortDatePattern", "mm/dd/yy")
+                                          .getObject();		
+	countryIsoCode = new ResourceModel("jqueryDateField.countryIsoCode", "en-GB")                                                             
+                                          .getObject();
+
+	PackageResourceReference resourceReference = 
+                            new PackageResourceReference(getClass(), "calendar.jpg");
+		
+	urlForIcon = urlFor(resourceReference, new PageParameters());
+	dateConverter = new PatternDateConverter(datePattern, false);	
+}	
+	
+@Override
+public <Date> IConverter<Date> getConverter(Class<Date> type) {
+	return (IConverter<Date>) dateConverter;
+}
+{code}
+
+The first thing to do inside onInitialize is to ensure that our component will have a markup id for its related text field. This is done invoking setOutputMarkupId(true). 
+
+Next, JQueryDateField tries to retrieve the date format and the ISO language code that must be used as initialization parameters. This is done using class @ResourceModel@ which searches for a given resource in the available bundles. If no value is found for date format or for ISO language code, default values will be used ('mm/dd/yy' and 'en-GB'). 
+
+To generate the relative URL for calendar icon, we load it as package resource reference and then we use @Component@'s method urlFor to get the URL value (we have seen this method in paragraph 7.3.2).
+
+The last configuration instruction executed inside onInitialize is the instantiation of the custom converter used by our component. This converter is an instance of the built-in class @org.apache.wicket.datetime.PatternDateConvert@ and must use the previously retrieved date format to perform conversion operations. Now to tell our component to use this converter we must return it overriding @FormComponent@'s method @getConverter@. 
+
+h3. Header contributor code
+
+The rest of the code of our custom component is inside method @renderHeader@, which is responsible for adding to page header the bundled JQuery library, the three files from JQuery UI distribution, the custom file JQDatePicker.js and the invocation of function @initJQDatepicker@:
+
+{code}
+@Override
+public void renderHead(IHeaderResponse response) {
+	super.renderHead(response);
+		
+	//if component is disabled we don't have to load the JQueryUI datepicker
+	if(!isEnabledInHierarchy())
+		return;
+	//add bundled JQuery
+	JavaScriptLibrarySettings javaScriptSettings =          
+                      getApplication().getJavaScriptLibrarySettings();
+	response.render(JavaScriptHeaderItem.
+			forReference(javaScriptSettings.getJQueryReference()));
+	//add package resources
+	response.render(JavaScriptHeaderItem.
+	      forReference(new PackageResourceReference(getClass(), "jquery-ui.min.js")));
+	response.render(JavaScriptHeaderItem.
+	      forReference(new PackageResourceReference(getClass(), "jquery-ui-i18n.min.js")));
+	response.render(CssHeaderItem.
+	      forReference(new PackageResourceReference(getClass(), "jquery-ui.css")));
+	//add custom file JQDatePicker.js. Reference JQDatePickerRef is a static field
+	response.render(JavaScriptHeaderItem.forReference(JQDatePickerRef));
+		
+	//add the init script for datepicker
+	String jqueryDateFormat = datePattern.replace("yyyy", "yy").toLowerCase();
+	String initScript = ";initJQDatepicker('" + getMarkupId() + "', '" + countryIsoCode +
+                            "', '" + jqueryDateFormat + "', " + "'" + urlForIcon +"');";
+	response.render(OnLoadHeaderItem.forScript(initScript));
+}
+{code}
+
+If component is disabled the calendar icon must be hidden and no datepicker must be displayed. That's why @renderHeader@ is skipped if component is not enabled.
+
+To get a reference to the bundled JQuery library we used the JavaScript setting class @JavaScriptLibrarySettings@ and its method @getJQueryReference@.
+
+In the last part of @renderHeader@ we build the string to invoke function @initJQDatepicker@ using the values obtained inside onInitialize. Unfortunately the date format used by JQuery UI is different from the one adopted in Java so we have to convert it before building the JavaScript code. This init script is rendered into header section using a @OnLoadHeaderItem@ to ensure that it will be executed after all the other scripts have been loaded.
+
+{note}
+If we add more than one instance of our custom component to a single page, static resources are rendered to the header section just once. Wicket automatically checks if a static resource is already referenced by a page and if so, it will not render it again.
+
+This does not apply to the init script which is dynamically generated and is rendered for every instance of the component.
+{note}
+
+{warning}
+Our datepicker is not ready yet to be used with AJAX. In chapter 16 we will see how to modify it to make it AJAX-compatible.
+{warning}

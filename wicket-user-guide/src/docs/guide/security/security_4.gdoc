@@ -1,0 +1,54 @@
+In chapter [10.6|guide:urls_6] we have seen how to encrypt URLs using @CryptoMapper@ request mapper. To encrypt/decrypt page URLs @CryptoMapper@ uses an instance of @org.apache.wicket.util.crypt.ICrypt@ interface:
+
+{code}
+public interface ICrypt
+{
+	String encryptUrlSafe(final String plainText);
+
+	String decryptUrlSafe(final String encryptedText);
+
+	...
+}
+{code}
+
+The default implementation for this interface is class @org.apache.wicket.util.crypt.SunJceCrypt@. It provides password-based cryptography using @PBEWithMD5AndDES@ algorithm coming with the standard security providers in the Java Runtime Environment.
+
+{note}
+For better security it is recommended to install Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction [Policy Files|http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html] for your version of JDK/JRE and use stronger algorithms. See this [example|https://github.com/apache/wicket/blob/42ce1faa57d3617ccaa443045537306fabf4d71a/wicket-util/src/test/java/org/apache/wicket/util/crypt/UnlimitedStrengthJurisdictionPolicyTest.java#L67] of a custom @ICrypt@ implementation for inspiration.
+{note}
+
+By using @CryptoMapper(IRequestMapper wrappedMapper, Application application)@ constructor the mapper will use the configured @org.apache.wicket.util.crypt.ICryptFactory@ from @org.apache.wicket.settings.SecuritySettings#getCryptFactory()@. To use a stronger cryptography mechanism there are the following options:
+
+* The first option is to use constructor @CryptoMapper(IRequestMapper wrappedMapper, IProvider<ICrypt> cryptProvider)@ and give it an implementation of @org.apache.wicket.util.IProvider@ that returns a custom @org.apache.wicket.util.crypt.ICrypt@. 
+
+{note}
+@org.apache.wicket.util.IProvider@ is a single-method interface that acts as object supplier:
+{note}
+
+{code}
+public interface IProvider<T>
+{
+	T get();
+}
+{code}
+
+* The second option is to register a cipher factory at application level with method @setCryptFactory(ICryptFactory cryptFactory)@ of class @SecuritySettings@:
+
+{code}
+@Override
+public void init() {
+	super.init();
+	getSecuritySettings().setCryptFactory(new SomeCryptFactory());
+	setRootRequestMapper(new CryptoMapper(getRootRequestMapper(), this));
+}
+{code}
+
+
+Since version 6.19.0 Wicket uses @org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory@ as a default factory for @ICrypt@ objects. This factory generates a unique key for each user that is stored in her HTTP 
+session. This way it helps to protect the application against [CSRF|https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)] attacks - the <form> action url will be encrypted in such way that it will be unique
+for each user of the application. The url itself serves as [encrypted token|https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet#Encrypted_Token_Pattern].
+
+{warning}
+@org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory@ binds the http session if it is not already bound! If the application needs to run in stateless mode then the application will have to provide a custom 
+implementation of @ICryptFactory@ that stores the user specific keys by other means.
+{warning}

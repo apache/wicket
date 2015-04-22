@@ -1,0 +1,106 @@
+
+
+A common practice in web development is to pass data to a page using query string parameters (like ?paramName1=paramValu1&paramName2=paramValue2...). Wicket offers a more flexible and object oriented way to do this with models (we will see them in the next chapter). However, even if we are using Wicket, we still need to use query string parameters to exchange data with other Internet-based services. Consider for example a classic confirmation page which is linked inside an email to let users confirm important actions like password changing or the subscription to a mailing list. This kind of page usually expects to receive a query string parameter containing the id of the action to confirm.
+
+Query string parameters can also be referred to as named parameters. In Wicket they are handled with class @org.apache.wicket.request.mapper.parameter.PageParameters@. Since named parameters are basically name-value pairs, PageParameters works in much the same way as Java Map providing two methods to create/modify a parameter (add(String name, Object value) and set(String name, Object value)),  one method to remove an existing parameter (remove(String name)) and one to retrieve the value of a given parameter (get(String name)) . Here is a snippet to illustrate the usage of PageParameters:
+
+{code}
+PageParameters pageParameters = new PageParameters(); 
+//add a couple of parameters
+pageParameters.add("name", "John");
+pageParameters.add("age", 28);
+//retrieve the value of 'age' parameter
+pageParameters.get("age");
+{code}
+
+Now that we have seen how to work with page parameters, let's see how to use them with our pages.
+
+h3. PageParameters and bookmarkable pages
+
+Base class Page comes with a constructor which takes as input a PageParameters instance. If we use this superclass constructor in our page, PageParameters will be used to build the page URL and it can be retrieved at a later time with the Page's getPageParameters() method.
+
+In the following example taken from the PageParametersExample project we have a home page with a link to a second page that uses a version of setResponsePage method that takes as input also a PageParameters to build the target page (named PageWithParameters). The code for the link and for the target page is the following:
+
+Link code:
+
+{code}
+add(new Link("pageWithIndexParam") {
+
+	@Override
+	public void onClick() {
+		
+		PageParameters pageParameters = new PageParameters();
+		pageParameters.add("foo", "foo");
+		pageParameters.add("bar", "bar");
+				
+		setResponsePage(PageWithParameters.class, pageParameters);
+	}
+			
+});
+{code}
+
+Target page code:
+
+{code}
+public class PageWithParameters extends WebPage {
+	//Override superclass constructor
+	public PageWithParameters(PageParameters parameters) {
+		super(parameters);
+	}
+ }
+{code}
+
+The code is quite straightforward and it’s more interesting to look at the URL generated for the target page:
+
+{code:html}
+<app root>/PageParametersExample/wicket/bookmarkable/
+		org.wicketTutorial.PageWithParameters?foo=foo&bar=bar
+{code}
+
+At first glance the URL above could seem a little weird, except for the last part which contains the two named parameters used to build the target page.
+
+The reason for this “strange” URL is that, as we explained in paragraph 8.3, when a page is instantiated using a constructor with no argument or using a constructor that accepts only a PageParameters, Wicket will try to generate a static URL for it, with no session-relative informations. This kind of URL is called bookmarkable because it can be saved by the users as a bookmark and accessed at a later time.
+
+A bookmarkable URL is composed by a fixed prefix (which by default is bookmarkable) and the qualified name of the page class (org.wicketTutorial.PageWithParameters in our example). Segment wicket is another fixed prefix added by default during URL generation. In paragraph 10.6 we will see how to customize fixed prefixes with a custom implementation of IMapperContext interface.
+
+h3. Indexed parameters
+
+Besides named parameters, Wicket also supports indexed parameters. These kinds of parameters are rendered as URL segments placed before named parameters. Let's consider for example the following URL:
+
+{code:html}
+<application path>/foo/bar?1&baz=baz
+{code}
+
+The URL above contains two indexed parameters (foo and bar) and a query string consisting of the page id and a named parameter (baz). Just like named parameters also indexed parameters are handled by the PageParameters class. The methods provided by PageParameters for indexed parameters are set(int index, Object object) (to add/modify a parameter), remove(int index)(to remove a parameter) and get(int index) (to read a parameter).
+
+As their name suggests, indexed parameters are identified by a numeric index and they are rendered following the order in which they have been added to the PageParameters. The following is an example of indexed parameters:
+
+{code}
+PageParameters pageParameters = new PageParameters(); 
+//add a couple of parameters
+pageParameters.set(0, "foo");
+pageParameters.set(1, "bar");
+//retrieve the value of the second parameter ("bar")
+pageParameters.get(1);
+{code}
+
+Project PageParametersExample comes also with a link to a page with both indexed parameters and a named parameter:
+
+{code}
+add(new Link("pageWithNamedIndexParam") {
+
+	@Override
+ 	public void onClick() {
+				
+		PageParameters pageParameters = new PageParameters();
+		pageParameters.set(0, "foo");
+		pageParameters.set(1, "bar");
+		pageParameters.add("baz", "baz");
+				
+		setResponsePage(PageWithParameters.class, pageParameters);
+	}
+			
+});
+{code}
+
+The URL generated for the linked page (PageWithParameters) is the one seen at the beginning of the paragraph.

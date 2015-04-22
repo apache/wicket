@@ -1,0 +1,7 @@
+Each of the modules provide a specialization of @org.apache.wicket.protocol.http.WicketFilter@ that registers implementation specific endpoint when an HTTP request is [upgraded|http://en.wikipedia.org/wiki/WebSocket#WebSocket_protocol_handshake] to WebSocket one. Later Wicket uses this endpoint to write data back to the browser and read data sent by it. 
+
+WebSockets communication can be used in a Wicket page by using @org.apache.wicket.protocol.ws.api.WebSocketBehavior@ or in a IResource by exteding @org.apache.wicket.protocol.ws.api.WebSocketResource@.
+When a client is connected it is being registered in a application scoped registry using as a key the application name, the client http session id, and the id of the page or the resource name that registered it. Later when the server needs to push a message it can use this registry to filter out which clients need to receive the message.
+
+When a message is received from the client Wicket wraps it in @IWebSocketMessage@ and calls WebSocketBehavior#*onMessage()* or WebSocketResource#*onMessage()* where the application logic can react on it.
+The server can push plain text and binary data to the client, but it can also add components for re-render, prepend/append JavaScript as it can do with [Ajax|guide:ajax].

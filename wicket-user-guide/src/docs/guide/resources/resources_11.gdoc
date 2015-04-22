@@ -1,0 +1,37 @@
+
+
+Just like pages also resources can be mounted to a specific path. Class @WebApplication@ provides method @mountResource@ which is almost identical to @mountPage@ seen in paragraph 8.6.1:
+
+{code}
+@Override
+public void init() {
+  super.init();
+  //resource mounted to path /foo/bar
+  ResourceReference resourceReference = new ResourceReference("rssProducer"){
+     RSSReaderResource rssResource = new RSSReaderResource();
+     @Override
+     public IResource getResource() {
+	return rssResource;
+  }};
+  mountResource("/foo/bar", resourceReference);
+}
+{code}
+
+With the configuration above (taken from project @CustomResourceMounting@) every request to /foo/bar will be served by the custom resource built in the previous paragraph. 
+
+Parameter placeholders are supported as well:
+
+{code}
+@Override
+public void init() {
+  super.init();
+  //resource mounted to path /foo with a required indexed parameter
+  ResourceReference resourceReference = new ResourceReference("rssProducer"){
+     RSSReaderResource rssResource = new RSSReaderResource();
+     @Override
+     public IResource getResource() {
+	return rssResource;
+  }};
+  mountResource("/bar/${baz}", resourceReference);
+}
+{code}

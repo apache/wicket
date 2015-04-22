@@ -1,0 +1,45 @@
+
+
+With class @org.apache.wicket.behavior.Behavior@ Wicket provides a very flexible mechanism to share common features across different components and to enrich existing components with further functionalities. As the class name suggests, @Behavior@ adds a generic behavior to a component modifying its markup and/or contributing to the header section of the page (@Behavior@ implements the interface @IHeaderContributor@).
+
+One or more behaviors can be added to a component with @Component@'s method @add(Behavior...)@, while to remove a behavior we must use method @remove(Behavior)@.
+
+Here is a partial list of methods defined inside class @Behavior@ along with a brief description of what they do:
+
+* *beforeRender(Component component)*: called when a component is about to be rendered. 
+* *afterRender(Component component)*: called after a component has been rendered. 
+* *onComponentTag(Component component, ComponentTag tag)*: called when component tag is being rendered.
+* *getStatelessHint(Component component)*: returns if a behavior is stateless or not.
+* *bind(Component component)*: called after a behavior has been added to a component.
+* *unbind(Component component)*: called when a behavior has been removed from a component.
+* *detach(Component component)*: overriding this method a behavior can detach its state before being serialized.
+* *isEnabled(Component component)*: tells if the current behavior is enabled for a given component. When a behavior is disabled it will be simply ignored and not executed.
+* *isTemporary(Component component)*: tells component if the current behavior is temporary. A temporary behavior is discarded at the end of the current request (i.e it's executed only once). 
+* *onConfigure(Component component)*: called right after the owner component has been configured.
+* *onRemove(Component component)*: called when the owner component has been removed from its container.
+* *renderHead(Component component, IHeaderResponse response)*: overriding this method behaviors can render resources to the header section of the page. 
+
+For example the following behavior prepends a red asterisk to the tag of a form component if this one  is required:
+
+{code}
+public class RedAsteriskBehavior extends Behavior {
+
+  @Override
+  public void beforeRender(Component component) {
+      Response response = component.getResponse();
+      StringBuffer asterisktHtml = new StringBuffer(200);
+      
+      if(componet instanceof FormComponent 
+            && ((FormComponent)component).isRequired()){
+        asteriskHtml.append(" <b style=\"color:red;font-size:medium\">*</b>");
+      }  
+      response.write(asteriskHtml);
+  }
+}
+{code}
+
+Since method @beforeRender@ is called before the coupled component is rendered, we can use it to prepend custom markup to component tag. This can be done writing our markup directly to the current  Response object, as we did in the example above.
+
+Please note that we could achieve the same result overriding component method @onBeforeRender@. However using a behavior we can easily reuse our custom code with any other kind of component without modifying its source code. As general best practice we should always consider to implement a new functionality using a behavior if it can be shared among different kinds of component.
+
+Behaviors play also a strategic role in the built-in AJAX support provided by Wicket, as we will see in the next chapter. 

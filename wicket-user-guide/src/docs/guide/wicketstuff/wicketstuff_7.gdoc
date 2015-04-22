@@ -1,0 +1,4 @@
+Wicket makes working with AJAX easy and pleasant with its component-oriented abstraction. However as side effect, AJAX components and behaviors make their hosting page stateful. This can be quite annoying if we are working on a page that must be stateless (for example a login page). 
+In this case an obvious solution would be to roll out our own stateless components/behaviors, but Wicketstuff alredy offers such kind of artifacts with @stateless@ module. Here you can find the stateless version of the basic AJAX componets and behaviors shiped with Wicket, like @StatelessAjaxSubmitLink@, @StatelessAjaxFallbackLink@, @StatelessAjaxEventBehavior@, @StatelessAjaxFormSubmitBehavior@ etc...
+A short introduction to this module can be found on its "home page":https://github.com/wicketstuff/core/tree/master/jdk-1.7-parent/stateless-parent .
+

@@ -1,0 +1,64 @@
+The need of ensuring a consistent layout across our pages unveiled a serious limit of the HTML: the inability to apply inheritance to web pages and their markup. Wouldn't be great if we could write our layout once in a page and then inherit it in the other pages of our application? 
+One of the goals of Wicket is to overcome this kind of limit.
+
+h3. Markup inheritance
+
+As we have seen in the previous chapter, Wicket pages are pure Java classes, so we can easily write a page which is a subclass of another parent page. But in Wicket inheritance is not limited to the classic object-oriented code inheritance. When a class subclasses a @WebPage@ it also inherits the HTML file of the parent class. This type of inheritance is called markup inheritance.
+To better illustrate this concept let's consider the following example where we have a page class called @GenericSitePage@ with the corresponding HTML file GenericSitePage.html. Now let's create a specific page called @OrderCheckOutPage@ where users can check out their orders on our web site. This class extends @GenericSitePage@ but we don't provide it with any corresponding HTML file.
+In this scenario @OrderCheckOutPage@ will use GenericSitePage.html as markup file:
+
+!markup-inheritance.png!
+
+Markup inheritance comes in handy for page layout management as it helps us avoid the burden of checking that each page conforms to the site layout. However to fully take advantage of markup inheritance we must first learn how to use another important component of the framework that supports this feature: the panel.
+
+{warning}
+If no markup is found (nor directly assigned to the class, neither inherited from an ancestor) a @MarkupNotFoundException@ is thrown.
+{warning}
+
+h3. Panel class
+
+Class @org.apache.wicket.markup.html.panel.Panel@ is a special component which lets us reuse GUI code and HTML markup across different pages and different web applications. It shares a common ancestor class with WebPage class, which is @org.apache.wicket.MarkupContainer@:
+
+!page-panel-hierarchy.png!
+
+_Illustration: Hierarchy of WebPage and Panel classes_
+
+Subclasses of @MarkupContainer@ can contain children components that can be added with method @add(Component...)@ (seen in [chapter 3.3|guide:whyLearn_3]). @MarkupContainer@ implements a full set of methods to manage children components. The basic operations we can do on them are:
+
+* add one or more children components (with method @add@).
+* remove a specific child component (with method @remove@).
+* retrieve a specific child component with method @get(String)@. The string parameter is the id of the component or its relative path if the component is nested inside other @MarkupContainer@s. This path is a colon-separated string containing also the ids of the intermediate containers traversed to get to the child component. To illustrate an example of component path, let's consider the code of the following page:
+
+{code}
+MyPanel myPanel = new MyPanel ("innerContainer");
+add(myPanel);
+{code}
+
+Component @MyPanel@ is a custom panel containing only a label having @"name"@ as id. Under those conditions we could retrieve this label from the container page using the following path expression:
+
+{code}
+Label name = (Label)get("innerContainer:name");
+{code}
+
+* replace a specific child component with a new component having the same id (with method @replace@).
+* iterate thought children components with the iterator returned by method @iterator@ or using visitor pattern1 with methods @visitChildren@.
+
+Both @Panel@ and @WebPage@ have their own associated markup file which is used to render the corresponding component. If such file is not provided, Wicket will apply markup inheritance looking for a markup file through their ancestor classes. When a panel is attached to a container, the content of its markup file is inserted into its related tag.
+
+While panels and pages have much in common, there are some notable differences between these two components that we should keep in mind. The main difference between them is that pages can be rendered as standalone entities while panels must be placed inside a page to be rendered. Another important difference is the content of their markup file: for both @WebPage@ and @Panel@ this is a standard HTML file, but @Panel@ uses a special tag to indicate which part of the whole file will be considered as markup source. This tag is @<wicket:panel>@. A markup file for a panel will typically look like this:
+
+{code:html}
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+...
+</head>
+<body>
+   <wicket:panel>
+      <!-- Your markup goes here -->
+       </wicket:panel>
+</body>
+</html>
+{code}
+
+The HTML outside tag @<wicket:panel>@ will be removed during rendering phase. The space outside this tag can be used by both web developers and web designers to place some mock HTML to show how the final panel should look like.

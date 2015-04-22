@@ -75,7 +75,9 @@ You will find the source code here:
 	    |-- wicket-request
 	    |-- wicket-spring
 	    |-- wicket-util
+	    |-- wicket-user-guide
 	    `-- wicket-velocity
+	    
 
 Here is a list of projects in this distribution and what they do.
 
@@ -115,6 +117,7 @@ Here is a list of projects in this distribution and what they do.
  - wicket-util: the util project for wicket;
  - wicket-eclipse-settings: specifies Eclipse settings for a uniform development environment.
    Most notably the formatting rules;
+ - wicket-user-guide: the user guide of wicket
 
 Getting started
 ---------------

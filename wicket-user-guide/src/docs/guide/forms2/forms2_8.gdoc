@@ -1,0 +1,81 @@
+
+
+Wicket supports file uploading with the FileUploadField component which must be used with the <input> tag whose type attribute must be set to "file". In order to send a file on form submission we must enable multipart mode calling MultiPart(true)on our form.
+
+In the next example (project UploadSingleFile) we will see a form which allows users to upload a file into the temporary directory of the server (path /tmp on Unix/Linux systems):
+
+*HTML:*
+
+{code:html}
+<html>
+	<head>
+	</head>
+	<body>
+	<h1>Upload your file here!</h1>
+	<form wicket:id="form">
+		<input type="file" wicket:id="fileUploadField"/> 
+		<input type="submit" value="Upload"/>
+	</form>
+	<div wicket:id="feedbackPanel">
+	</div>
+	</body>
+</html>
+{code}
+
+*Java code:*
+
+{code}
+public class HomePage extends WebPage {
+   private FileUploadField fileUploadField;
+
+    public HomePage(final PageParameters parameters) {
+    	fileUploadField = new FileUploadField("fileUploadField");
+    	
+    	Form form = new Form("form"){
+    		@Override
+    		protected void onSubmit() {
+    		  super.onSubmit();
+    			 
+    		  FileUpload fileUpload = fileUploadField.getFileUpload();
+    			
+    		    try {
+			File file = new File(System.getProperty("java.io.tmpdir") + "/" +
+    						fileUpload.getClientFileName());
+    				
+			    fileUpload.writeTo(file);
+		        } catch (IOException e) {
+			   e.printStackTrace();
+			 }
+    		}
+    	};	
+	
+	form.setMultiPart(true);
+	//set a limit for uploaded file's size
+	form.setMaxSize(Bytes.kilobytes(100));
+	form.add(fileUploadField);
+	add(new FeedbackPanel("feedbackPanel"));
+	add(form);
+    }
+}
+{code}
+
+The code that copies the uploaded file to the temporary directory is inside the onSubmit method of the Form class. The uploaded file is handled with an instance of class FileUpload returned by the  getFileUpload() method of the FileUploadField class. This class provides a set of methods to perform some common tasks like getting the name of the uploaded file (getClientFileName()), coping the file into a directory (writeTo(destinationFile)), calculating file digest (getDigest (digestAlgorithm)) and so on.
+
+Form component can limit the size for uploaded files using its setMaxSize(size) method. In the example we have set this limit to 100 kb to prevent users from uploading files bigger than this size.
+
+{note}
+The maximum size for uploaded files can also be set at application's level using the setDefaultMaximumUploadSize(Bytes maxSize) method of class ApplicationSettings:
+
+{code}
+@Override
+public void init()
+{
+ getApplicationSettings().setDefaultMaximumUploadSize(Bytes.kilobytes(100));  
+}
+{code}
+{note}
+
+h3. Upload multiple files
+
+If we need to upload multiple files at once and our clients support HTML5, we can still use FileUploadField adding attribute "multiple" to its tag. If we can not rely on HTML5, we can use the MultiFileUploadField component which allows the user to upload an arbitrary number of files using a JavaScript-based solution.
+An example showing how to use this component can be found in Wicket module wicket-examples in file MultiUploadPage.java. The live example is hosted at "http://www.wicket-library.com/wicket-examples-6.0.x/upload/multi":http://www.wicket-library.com/wicket-examples-6.0.x/upload/multi .

@@ -1,0 +1,6 @@
+
+
+In this brief chapter we have seen how custom components can be integrated with [DHTML|http://en.wikipedia.org/wiki/Dynamic_HTML] technologies. To do so we have used most of what we have learnt in this guide. Now we are able to build complex components with a rich user experience. However this is not enough yet to develop "Web 2.0":http://en.wikipedia.org/wiki/Web_2.0 applications. We still have to cover a fundamental technology like AJAX and some other Wicket-related topics that will help us building our application in more modular and efficient way.
+
+
+
