@@ -156,4 +156,15 @@ public class CreditCardValidatorTest extends Assert
 		CreditCardValidator validator = new CreditCardValidator();
 		assertEquals(CreditCard.VISA, validator.determineCardId("4111111111111111"));
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5891
+	 */
+	@Test
+	public void isChinaUnionPay()
+	{
+		CreditCardValidator validator = new CreditCardValidator();
+		CreditCard creditCard = validator.determineCardId("6222601010012578692");
+		assertEquals(CreditCard.CHINA_UNIONPAY, creditCard);
+	}
 }
