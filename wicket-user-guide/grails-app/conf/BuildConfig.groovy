@@ -64,4 +64,4 @@ grails.project.dependency.resolution = {
     }
 }
 
-grails.project.docs.output.dir = 'target/doc/'
+grails.project.docs.output.dir = 'target/guide/6.x'
