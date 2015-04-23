@@ -321,7 +321,7 @@ public class CreditCardValidator implements IValidator<String>
 		if ((creditCardNumber.length() >= 16 && creditCardNumber.length() <= 19) &&
 			(creditCardNumber.startsWith("622")))
 		{
-			int firstDigits = Integer.parseInt(creditCardNumber.substring(0, 5));
+			int firstDigits = Integer.parseInt(creditCardNumber.substring(0, 6));
 			if (firstDigits >= 622126 && firstDigits <= 622925)
 			{
 				return CreditCard.CHINA_UNIONPAY;
