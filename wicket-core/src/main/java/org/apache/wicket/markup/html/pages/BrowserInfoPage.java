@@ -117,7 +117,7 @@ public class BrowserInfoPage extends WebPage
 		add(browserInfoForm);
 	}
 	
-	private class ContinueLink extends Link<ClientProperties> {
+	private static class ContinueLink extends Link<ClientProperties> {
 		public ContinueLink(String id, IModel<ClientProperties> properties)
 		{
 			super(id, properties);
