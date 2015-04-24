@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
@@ -38,11 +37,6 @@ public class WebSession extends Session
 	{
 		return (WebSession)Session.get();
 	}
-
-	private static final MetaDataKey<Boolean> BROWSER_WAS_POLLED_KEY = new MetaDataKey<Boolean>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
 
 	/**
 	 * Constructor. Note that {@link RequestCycle} is not available until this constructor returns.
@@ -91,24 +85,13 @@ public class WebSession extends Session
 		if (clientInfo == null)
 		{
 			RequestCycle requestCycle = RequestCycle.get();
+			clientInfo = new WebClientInfo(requestCycle);
 
 			if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
 			{
-				if (getMetaData(BROWSER_WAS_POLLED_KEY) == null)
-				{
-					// we haven't done the redirect yet; record that we will be
-					// doing that now and redirect
-					setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
-
-					WebPage browserInfoPage = newBrowserInfoPage();
-					throw new RestartResponseAtInterceptPageException(browserInfoPage);
-				}
-				// if we get here, the redirect already has been done; clear
-				// the meta data entry; we don't need it any longer is the client
-				// info object will be cached too
-				setMetaData(BROWSER_WAS_POLLED_KEY, null);
+				WebPage browserInfoPage = newBrowserInfoPage();
+				throw new RestartResponseAtInterceptPageException(browserInfoPage);
 			}
-			clientInfo = new WebClientInfo(requestCycle);
 		}
 		return (WebClientInfo)clientInfo;
 	}

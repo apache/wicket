@@ -20,29 +20,26 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * <p>
  * This page uses a form post right after the page has loaded in the browser, using JavaScript or
  * alternative means to detect and pass on settings to the embedded form. The form submit method
  * updates this session's {@link org.apache.wicket.core.request.ClientInfo} object and then redirects to
  * the original location as was passed in as a URL argument in the constructor.
- * </p>
+ * <p>
+ * If JavaScript is not enabled in the browser, a "refresh" meta-header will initiate a get on this page to
+ * continue with the original destination. As a fallback the user can click a link to do the same. 
  * <p>
  * This page is being used by the default implementation of {@link org.apache.wicket.Session#getClientInfo()},
  * which in turn uses
  * {@link org.apache.wicket.settings.RequestCycleSettings#getGatherExtendedBrowserInfo() a setting} to
  * determine whether this page should be redirected to (it does when it is true).
- * </p>
  * 
  * @author Eelco Hillenius
  */
@@ -53,28 +50,11 @@ public class BrowserInfoPage extends WebPage
 	private BrowserInfoForm browserInfoForm;
 
 	/**
-	 * Bookmarkable constructor. This is not for normal framework client use. It will be called
-	 * whenever JavaScript is not supported, and the browser info page's meta refresh fires to this
-	 * page. Prior to this, the other constructor should already have been called.
+	 * Bookmarkable constructor.
 	 */
 	public BrowserInfoPage()
 	{
 		initComps();
-		RequestCycle requestCycle = getRequestCycle();
-		WebSession session = (WebSession)getSession();
-		WebClientInfo clientInfo = session.getClientInfo();
-		if (clientInfo == null)
-		{
-			clientInfo = new WebClientInfo(requestCycle);
-			getSession().setClientInfo(clientInfo);
-		}
-		else
-		{
-			ClientProperties properties = clientInfo.getProperties();
-			properties.setNavigatorJavaEnabled(false);
-		}
-
-		continueToOriginalDestination();
 	}
 
 	@Override
@@ -97,20 +77,10 @@ public class BrowserInfoPage extends WebPage
 	 */
 	private void initComps()
 	{
+		final ContinueLink link = new ContinueLink("link");
+		add(link);
+
 		WebComponent meta = new WebComponent("meta");
-
-		final IModel<String> urlModel = new LoadableDetachableModel<String>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected String load()
-			{
-				CharSequence url = urlFor(BrowserInfoPage.class, null);
-				return url.toString();
-			}
-		};
-
 		meta.add(AttributeModifier.replace("content", new AbstractReadOnlyModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
@@ -118,14 +88,10 @@ public class BrowserInfoPage extends WebPage
 			@Override
 			public String getObject()
 			{
-				return "0; url=" + urlModel.getObject();
+				return "0; url=" + link.getURL();
 			}
-
 		}));
 		add(meta);
-		WebMarkupContainer link = new WebMarkupContainer("link");
-		link.add(AttributeModifier.replace("href", urlModel));
-		add(link);
 
 		IModel<ClientProperties> properties = new AbstractReadOnlyModel<ClientProperties>()
 		{
@@ -148,4 +114,23 @@ public class BrowserInfoPage extends WebPage
 		};
 		add(browserInfoForm);
 	}
+	
+	private class ContinueLink extends Link<Void> {
+		public ContinueLink(String id)
+		{
+			super(id);
+		}
+
+		@Override
+		public CharSequence getURL()
+		{
+			return super.getURL();
+		}
+		
+		@Override
+		public void onClick()
+		{
+			continueToOriginalDestination();
+		}
+	};
 }
