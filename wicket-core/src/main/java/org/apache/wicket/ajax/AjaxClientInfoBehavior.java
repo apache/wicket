@@ -84,6 +84,8 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 		Session.get().setClientInfo(clientInfo);
 
 		ClientProperties properties = clientInfo.getProperties();
+		properties.setJavaScriptEnabled(true);
+
 		properties.setNavigatorAppCodeName(navigatorAppCodeName);
 		properties.setNavigatorAppName(navigatorAppName);
 		properties.setNavigatorAppVersion(navigatorAppVersion);

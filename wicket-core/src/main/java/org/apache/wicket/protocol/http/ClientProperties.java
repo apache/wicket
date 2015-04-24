@@ -85,6 +85,8 @@ public class ClientProperties implements IClusterable
 
 	private String hostname;
 
+	private boolean javaScriptEnabled;
+
 	/**
 	 * @return The browser height at the time it was measured
 	 */
@@ -349,6 +351,15 @@ public class ClientProperties implements IClusterable
 	public String getUtcOffset()
 	{
 		return utcOffset;
+	}
+
+	/**
+	 * Flag indicating support of JavaScript in the browser.
+	 * 
+	 * @return True if JavaScript is enabled
+	 */
+	public boolean isJavaScriptEnabled() {
+		return javaScriptEnabled;
 	}
 
 	/**
@@ -720,6 +731,14 @@ public class ClientProperties implements IClusterable
 	public void setUtcOffset(String utcOffset)
 	{
 		this.utcOffset = utcOffset;
+	}
+
+	/**
+	 * @param javaScriptEnabled
+	 *            is JavaScript supported in the browser
+	 */
+	public void setJavaScriptEnabled(boolean javaScriptEnabled) {
+		this.javaScriptEnabled = javaScriptEnabled;
 	}
 
 	@Override

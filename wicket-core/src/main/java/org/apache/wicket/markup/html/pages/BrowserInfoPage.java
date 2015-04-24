@@ -77,7 +77,16 @@ public class BrowserInfoPage extends WebPage
 	 */
 	private void initComps()
 	{
-		final ContinueLink link = new ContinueLink("link");
+		IModel<ClientProperties> properties = new AbstractReadOnlyModel<ClientProperties>()
+		{
+			@Override
+			public ClientProperties getObject()
+			{
+				return WebSession.get().getClientInfo().getProperties();
+			}
+		};
+
+		final ContinueLink link = new ContinueLink("link", properties);
 		add(link);
 
 		WebComponent meta = new WebComponent("meta");
@@ -93,15 +102,6 @@ public class BrowserInfoPage extends WebPage
 		}));
 		add(meta);
 
-		IModel<ClientProperties> properties = new AbstractReadOnlyModel<ClientProperties>()
-		{
-			@Override
-			public ClientProperties getObject()
-			{
-				return WebSession.get().getClientInfo().getProperties();
-			}
-		};
-
 		browserInfoForm = new BrowserInfoForm("postback", properties)
 		{
 			private static final long serialVersionUID = 1L;
@@ -109,16 +109,18 @@ public class BrowserInfoPage extends WebPage
 			@Override
 			protected void afterSubmit()
 			{
+				getModelObject().setJavaScriptEnabled(true);
+
 				continueToOriginalDestination();
 			}
 		};
 		add(browserInfoForm);
 	}
 	
-	private class ContinueLink extends Link<Void> {
-		public ContinueLink(String id)
+	private class ContinueLink extends Link<ClientProperties> {
+		public ContinueLink(String id, IModel<ClientProperties> properties)
 		{
-			super(id);
+			super(id, properties);
 		}
 
 		@Override
@@ -130,6 +132,8 @@ public class BrowserInfoPage extends WebPage
 		@Override
 		public void onClick()
 		{
+			getModelObject().setJavaScriptEnabled(false);
+
 			continueToOriginalDestination();
 		}
 	};
