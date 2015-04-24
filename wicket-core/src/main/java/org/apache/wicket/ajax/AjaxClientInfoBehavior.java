@@ -88,8 +88,8 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 		properties.setNavigatorAppCodeName(navigatorAppCodeName);
 		properties.setNavigatorAppName(navigatorAppName);
 		properties.setNavigatorAppVersion(navigatorAppVersion);
-		properties.setCookiesEnabled(navigatorCookieEnabled);
-		properties.setJavaEnabled(navigatorJavaEnabled);
+		properties.setNavigatorCookieEnabled(navigatorCookieEnabled);
+		properties.setNavigatorJavaEnabled(navigatorJavaEnabled);
 		properties.setNavigatorLanguage(navigatorLanguage);
 		properties.setNavigatorPlatform(navigatorPlatform);
 		properties.setNavigatorUserAgent(navigatorUserAgent);

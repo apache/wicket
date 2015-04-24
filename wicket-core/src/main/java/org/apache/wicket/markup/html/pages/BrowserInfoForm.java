@@ -16,18 +16,17 @@
  */
 package org.apache.wicket.markup.html.pages;
 
+import java.util.Locale;
+
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Form for posting JavaScript properties.
@@ -39,7 +38,7 @@ public class BrowserInfoForm extends Panel
 	/**
 	 * The special form that submits the client/browser info
 	 */
-	private final Form<? extends ClientPropertiesBean> form;
+	private final Form<ClientProperties> form;
 
 	/**
 	 * Constructor.
@@ -47,11 +46,11 @@ public class BrowserInfoForm extends Panel
 	 * @param id
 	 *            component id
 	 */
-	public BrowserInfoForm(String id)
+	public BrowserInfoForm(String id, IModel<ClientProperties> properties)
 	{
 		super(id);
 
-		this.form = createForm("postback");
+		this.form = createForm("postback", properties);
 		form.setOutputMarkupId(true);
 		add(form);
 	}
@@ -63,50 +62,35 @@ public class BrowserInfoForm extends Panel
 	 *      the id for the Form component
 	 * @return the Form that will submit the data
 	 */
-	protected Form<? extends ClientPropertiesBean> createForm(String componentId)
+	protected Form<ClientProperties> createForm(String componentId, IModel<ClientProperties> properties)
 	{
-		Form<ClientPropertiesBean> form = new Form<ClientPropertiesBean>(componentId,
-				new CompoundPropertyModel<ClientPropertiesBean>(new ClientPropertiesBean()))
+		Form<ClientProperties> form = new Form<ClientProperties>(componentId,
+				new CompoundPropertyModel<ClientProperties>(properties))
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			protected void onSubmit()
 			{
-				ClientPropertiesBean propertiesBean = getModelObject();
-
-				RequestCycle requestCycle = getRequestCycle();
-				WebSession session = getWebSession();
-				WebClientInfo clientInfo = session.getClientInfo();
-
-				if (clientInfo == null)
-				{
-					clientInfo = new WebClientInfo(requestCycle);
-					getSession().setClientInfo(clientInfo);
-				}
-
-				ClientProperties properties = clientInfo.getProperties();
-				propertiesBean.merge(properties);
-
 				afterSubmit();
 			}
 		};
-		form.add(new TextField<String>("navigatorAppName"));
-		form.add(new TextField<String>("navigatorAppVersion"));
-		form.add(new TextField<String>("navigatorAppCodeName"));
-		form.add(new TextField<Boolean>("navigatorCookieEnabled"));
-		form.add(new TextField<Boolean>("navigatorJavaEnabled"));
-		form.add(new TextField<String>("navigatorLanguage"));
-		form.add(new TextField<String>("navigatorPlatform"));
-		form.add(new TextField<String>("navigatorUserAgent"));
-		form.add(new TextField<String>("screenWidth"));
-		form.add(new TextField<String>("screenHeight"));
-		form.add(new TextField<String>("screenColorDepth"));
-		form.add(new TextField<String>("utcOffset"));
-		form.add(new TextField<String>("utcDSTOffset"));
-		form.add(new TextField<String>("browserWidth"));
-		form.add(new TextField<String>("browserHeight"));
-		form.add(new TextField<String>("hostname"));
+		form.add(new ReadOnlyTextField<String>("navigatorAppName"));
+		form.add(new ReadOnlyTextField<String>("navigatorAppVersion"));
+		form.add(new ReadOnlyTextField<String>("navigatorAppCodeName"));
+		form.add(new ReadOnlyTextField<Boolean>("navigatorCookieEnabled"));
+		form.add(new ReadOnlyTextField<Boolean>("navigatorJavaEnabled"));
+		form.add(new ReadOnlyTextField<String>("navigatorLanguage"));
+		form.add(new ReadOnlyTextField<String>("navigatorPlatform"));
+		form.add(new ReadOnlyTextField<String>("navigatorUserAgent"));
+		form.add(new ReadOnlyTextField<String>("screenWidth"));
+		form.add(new ReadOnlyTextField<String>("screenHeight"));
+		form.add(new ReadOnlyTextField<String>("screenColorDepth"));
+		form.add(new ReadOnlyTextField<String>("utcOffset"));
+		form.add(new ReadOnlyTextField<String>("utcDSTOffset"));
+		form.add(new ReadOnlyTextField<String>("browserWidth"));
+		form.add(new ReadOnlyTextField<String>("browserHeight"));
+		form.add(new ReadOnlyTextField<String>("hostname"));
 		return form;
 	}
 
@@ -130,403 +114,24 @@ public class BrowserInfoForm extends Panel
 	{
 		return form.getMarkupId();
 	}
+	
+	private static final class ReadOnlyTextField<T> extends TextField<T> {
 
-	/**
-	 * Holds properties of the client.
-	 */
-	public static class ClientPropertiesBean implements IClusterable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private String navigatorAppCodeName;
-		private String navigatorAppName;
-		private String navigatorAppVersion;
-		private Boolean navigatorCookieEnabled = Boolean.FALSE;
-		private Boolean navigatorJavaEnabled = Boolean.FALSE;
-		private String navigatorLanguage;
-		private String navigatorPlatform;
-		private String navigatorUserAgent;
-		private String screenColorDepth;
-		private String screenHeight;
-		private String screenWidth;
-		private String utcOffset;
-		private String utcDSTOffset;
-		private String browserWidth;
-		private String browserHeight;
-		private String hostname;
-
-		/**
-		 * Gets browserHeight.
-		 * 
-		 * @return browserHeight
-		 */
-		public String getBrowserHeight()
+		public ReadOnlyTextField(String id)
 		{
-			return browserHeight;
+			super(id);
 		}
 
-		/**
-		 * Gets browserWidth.
-		 * 
-		 * @return browserWidth
-		 */
-		public String getBrowserWidth()
+		@Override
+		protected String getModelValue()
 		{
-			return browserWidth;
+			return "";
 		}
-
-		/**
-		 * Gets navigatorAppCodeName.
-		 * 
-		 * @return navigatorAppCodeName
-		 */
-		public String getNavigatorAppCodeName()
+		
+		@Override
+		public Locale getLocale()
 		{
-			return navigatorAppCodeName;
+			return Locale.ENGLISH;
 		}
-
-		/**
-		 * Gets navigatorAppName.
-		 * 
-		 * @return navigatorAppName
-		 */
-		public String getNavigatorAppName()
-		{
-			return navigatorAppName;
-		}
-
-		/**
-		 * Gets navigatorAppVersion.
-		 * 
-		 * @return navigatorAppVersion
-		 */
-		public String getNavigatorAppVersion()
-		{
-			return navigatorAppVersion;
-		}
-
-		/**
-		 * Gets navigatorCookieEnabled.
-		 * 
-		 * @return navigatorCookieEnabled
-		 */
-		public Boolean getNavigatorCookieEnabled()
-		{
-			return navigatorCookieEnabled;
-		}
-
-		/**
-		 * Gets navigatorJavaEnabled.
-		 * 
-		 * @return navigatorJavaEnabled
-		 */
-		public Boolean getNavigatorJavaEnabled()
-		{
-			return navigatorJavaEnabled;
-		}
-
-		/**
-		 * Gets navigatorLanguage.
-		 * 
-		 * @return navigatorLanguage
-		 */
-		public String getNavigatorLanguage()
-		{
-			return navigatorLanguage;
-		}
-
-		/**
-		 * Gets navigatorPlatform.
-		 * 
-		 * @return navigatorPlatform
-		 */
-		public String getNavigatorPlatform()
-		{
-			return navigatorPlatform;
-		}
-
-		/**
-		 * Gets navigatorUserAgent.
-		 * 
-		 * @return navigatorUserAgent
-		 */
-		public String getNavigatorUserAgent()
-		{
-			return navigatorUserAgent;
-		}
-
-		/**
-		 * Gets screenColorDepth.
-		 * 
-		 * @return screenColorDepth
-		 */
-		public String getScreenColorDepth()
-		{
-			return screenColorDepth;
-		}
-
-		/**
-		 * Gets screenHeight.
-		 * 
-		 * @return screenHeight
-		 */
-		public String getScreenHeight()
-		{
-			return screenHeight;
-		}
-
-		/**
-		 * Gets screenWidth.
-		 * 
-		 * @return screenWidth
-		 */
-		public String getScreenWidth()
-		{
-			return screenWidth;
-		}
-
-		/**
-		 * Gets utcOffset.
-		 * 
-		 * @return utcOffset
-		 */
-		public String getUtcOffset()
-		{
-			return utcOffset;
-		}
-
-		/**
-		 * Gets utcDSTOffset.
-		 * 
-		 * @return utcOffset
-		 */
-		public String getUtcDSTOffset()
-		{
-			return utcDSTOffset;
-		}
-
-		/**
-		 * Merge this with the given properties object.
-		 * 
-		 * @param properties
-		 *            the properties object to merge with
-		 */
-		public void merge(ClientProperties properties)
-		{
-			properties.setNavigatorAppName(navigatorAppName);
-			properties.setNavigatorAppVersion(navigatorAppVersion);
-			properties.setNavigatorAppCodeName(navigatorAppCodeName);
-			properties.setCookiesEnabled((navigatorCookieEnabled != null) ? navigatorCookieEnabled
-				: false);
-			properties.setJavaEnabled((navigatorJavaEnabled != null) ? navigatorJavaEnabled : false);
-			properties.setNavigatorLanguage(navigatorLanguage);
-			properties.setNavigatorPlatform(navigatorPlatform);
-			properties.setNavigatorUserAgent(navigatorUserAgent);
-			properties.setScreenWidth(getInt(screenWidth));
-			properties.setScreenHeight(getInt(screenHeight));
-			properties.setBrowserWidth(getInt(browserWidth));
-			properties.setBrowserHeight(getInt(browserHeight));
-			properties.setScreenColorDepth(getInt(screenColorDepth));
-			properties.setUtcOffset(utcOffset);
-			properties.setUtcDSTOffset(utcDSTOffset);
-			properties.setHostname(hostname);
-		}
-
-		/**
-		 * Sets browserHeight.
-		 * 
-		 * @param browserHeight
-		 *            browserHeight
-		 */
-		public void setBrowserHeight(String browserHeight)
-		{
-			this.browserHeight = browserHeight;
-		}
-
-		/**
-		 * Sets browserWidth.
-		 * 
-		 * @param browserWidth
-		 *            browserWidth
-		 */
-		public void setBrowserWidth(String browserWidth)
-		{
-			this.browserWidth = browserWidth;
-		}
-
-		/**
-		 * Sets navigatorAppCodeName.
-		 * 
-		 * @param navigatorAppCodeName
-		 *            navigatorAppCodeName
-		 */
-		public void setNavigatorAppCodeName(String navigatorAppCodeName)
-		{
-			this.navigatorAppCodeName = navigatorAppCodeName;
-		}
-
-		/**
-		 * Sets navigatorAppName.
-		 * 
-		 * @param navigatorAppName
-		 *            navigatorAppName
-		 */
-		public void setNavigatorAppName(String navigatorAppName)
-		{
-			this.navigatorAppName = navigatorAppName;
-		}
-
-		/**
-		 * Sets navigatorAppVersion.
-		 * 
-		 * @param navigatorAppVersion
-		 *            navigatorAppVersion
-		 */
-		public void setNavigatorAppVersion(String navigatorAppVersion)
-		{
-			this.navigatorAppVersion = navigatorAppVersion;
-		}
-
-		/**
-		 * Sets navigatorCookieEnabled.
-		 * 
-		 * @param navigatorCookieEnabled
-		 *            navigatorCookieEnabled
-		 */
-		public void setNavigatorCookieEnabled(Boolean navigatorCookieEnabled)
-		{
-			this.navigatorCookieEnabled = navigatorCookieEnabled;
-		}
-
-		/**
-		 * Sets navigatorJavaEnabled.
-		 * 
-		 * @param navigatorJavaEnabled
-		 *            navigatorJavaEnabled
-		 */
-		public void setNavigatorJavaEnabled(Boolean navigatorJavaEnabled)
-		{
-			this.navigatorJavaEnabled = navigatorJavaEnabled;
-		}
-
-		/**
-		 * Sets navigatorLanguage.
-		 * 
-		 * @param navigatorLanguage
-		 *            navigatorLanguage
-		 */
-		public void setNavigatorLanguage(String navigatorLanguage)
-		{
-			this.navigatorLanguage = navigatorLanguage;
-		}
-
-		/**
-		 * Sets navigatorPlatform.
-		 * 
-		 * @param navigatorPlatform
-		 *            navigatorPlatform
-		 */
-		public void setNavigatorPlatform(String navigatorPlatform)
-		{
-			this.navigatorPlatform = navigatorPlatform;
-		}
-
-		/**
-		 * Sets navigatorUserAgent.
-		 * 
-		 * @param navigatorUserAgent
-		 *            navigatorUserAgent
-		 */
-		public void setNavigatorUserAgent(String navigatorUserAgent)
-		{
-			this.navigatorUserAgent = navigatorUserAgent;
-		}
-
-		/**
-		 * Sets screenColorDepth.
-		 * 
-		 * @param screenColorDepth
-		 *            screenColorDepth
-		 */
-		public void setScreenColorDepth(String screenColorDepth)
-		{
-			this.screenColorDepth = screenColorDepth;
-		}
-
-		/**
-		 * Sets screenHeight.
-		 * 
-		 * @param screenHeight
-		 *            screenHeight
-		 */
-		public void setScreenHeight(String screenHeight)
-		{
-			this.screenHeight = screenHeight;
-		}
-
-		/**
-		 * Sets screenWidth.
-		 * 
-		 * @param screenWidth
-		 *            screenWidth
-		 */
-		public void setScreenWidth(String screenWidth)
-		{
-			this.screenWidth = screenWidth;
-		}
-
-		/**
-		 * @param hostname
-		 *            the hostname shown in the browser.
-		 */
-		public void setHostname(String hostname)
-		{
-			this.hostname = hostname;
-		}
-
-		/**
-		 * @return The clients hostname shown in the browser
-		 */
-		public String getHostname()
-		{
-			return hostname;
-		}
-
-		/**
-		 * Sets utcOffset.
-		 * 
-		 * @param utcOffset
-		 *            utcOffset
-		 */
-		public void setUtcOffset(String utcOffset)
-		{
-			this.utcOffset = utcOffset;
-		}
-
-		/**
-		 * Sets utcDSTOffset.
-		 * 
-		 * @param utcDSTOffset
-		 *            utcDSTOffset
-		 */
-		public void setUtcDSTOffset(String utcDSTOffset)
-		{
-			this.utcDSTOffset = utcDSTOffset;
-		}
-
-		private int getInt(String value)
-		{
-			int intValue = -1;
-			try
-			{
-				intValue = Integer.parseInt(value);
-			}
-			catch (NumberFormatException e)
-			{
-				// Do nothing
-			}
-			return intValue;
-		}
-
 	}
 }

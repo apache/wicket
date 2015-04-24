@@ -71,7 +71,7 @@ public class BrowserInfoPage extends WebPage
 		else
 		{
 			ClientProperties properties = clientInfo.getProperties();
-			properties.setJavaEnabled(false);
+			properties.setNavigatorJavaEnabled(false);
 		}
 
 		continueToOriginalDestination();
@@ -127,7 +127,16 @@ public class BrowserInfoPage extends WebPage
 		link.add(AttributeModifier.replace("href", urlModel));
 		add(link);
 
-		browserInfoForm = new BrowserInfoForm("postback")
+		IModel<ClientProperties> properties = new AbstractReadOnlyModel<ClientProperties>()
+		{
+			@Override
+			public ClientProperties getObject()
+			{
+				return WebSession.get().getClientInfo().getProperties();
+			}
+		};
+
+		browserInfoForm = new BrowserInfoForm("postback", properties)
 		{
 			private static final long serialVersionUID = 1L;
 

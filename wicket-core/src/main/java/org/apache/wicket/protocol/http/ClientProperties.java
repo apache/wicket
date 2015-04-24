@@ -65,8 +65,8 @@ public class ClientProperties implements IClusterable
 	private int browserVersionMajor = -1;
 	private int browserVersionMinor = -1;
 	private int browserWidth = -1;
-	private boolean cookiesEnabled;
-	private boolean javaEnabled;
+	private boolean navigatorCookieEnabled;
+	private boolean navigatorJavaEnabled;
 	private String navigatorAppCodeName;
 	private String navigatorAppName;
 	private String navigatorAppVersion;
@@ -424,26 +424,42 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
+	 * @deprecated use {@link #isNavigatorCookieEnabled()} instead
+	 */
+	public boolean isCookiesEnabled()
+	{
+		return isNavigatorCookieEnabled();
+	}
+
+	/**
+	 * @deprecated use {@link #isNavigatorJavaEnabled()} instead
+	 */
+	public boolean isJavaEnabled()
+	{
+		return isNavigatorJavaEnabled();
+	}
+
+	/**
 	 * 
 	 * 
 	 * @return The client's navigator.cookieEnabled property.
 	 */
-	public boolean isCookiesEnabled()
+	public boolean isNavigatorCookieEnabled()
 	{
-		if (!cookiesEnabled && RequestCycle.get() != null)
+		if (!navigatorCookieEnabled && RequestCycle.get() != null)
 		{
 			Collection<Cookie> cookies = ((WebRequest)RequestCycle.get().getRequest()).getCookies();
-			cookiesEnabled = cookies != null && cookies.size() > 0;
+			navigatorCookieEnabled = cookies != null && cookies.size() > 0;
 		}
-		return cookiesEnabled;
+		return navigatorCookieEnabled;
 	}
 
 	/**
 	 * @return The client's navigator.javaEnabled property.
 	 */
-	public boolean isJavaEnabled()
+	public boolean isNavigatorJavaEnabled()
 	{
-		return javaEnabled;
+		return navigatorJavaEnabled;
 	}
 
 	/**
@@ -565,18 +581,18 @@ public class ClientProperties implements IClusterable
 	 * @param cookiesEnabled
 	 *            The client's navigator.cookieEnabled property.
 	 */
-	public void setCookiesEnabled(boolean cookiesEnabled)
+	public void setNavigatorCookieEnabled(boolean cookiesEnabled)
 	{
-		this.cookiesEnabled = cookiesEnabled;
+		this.navigatorCookieEnabled = cookiesEnabled;
 	}
 
 	/**
 	 * @param navigatorJavaEnabled
 	 *            The client's navigator.javaEnabled property.
 	 */
-	public void setJavaEnabled(boolean navigatorJavaEnabled)
+	public void setNavigatorJavaEnabled(boolean navigatorJavaEnabled)
 	{
-		javaEnabled = navigatorJavaEnabled;
+		this.navigatorJavaEnabled = navigatorJavaEnabled;
 	}
 
 	/**
