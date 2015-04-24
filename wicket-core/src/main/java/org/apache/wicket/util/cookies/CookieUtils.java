@@ -333,7 +333,7 @@ public class CookieUtils
 	 */
 	private WebResponse getWebResponse()
 	{
-		return (WebResponse)RequestCycle.get().getResponse();
+		return (WebResponse)RequestCycle.get().getOriginalResponse();
 	}
 
 	/**
