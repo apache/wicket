@@ -26,7 +26,6 @@ import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -130,7 +129,6 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	{
 		super.renderHead(component, response);
 
-		response.render(JavaScriptHeaderItem.forReference(
-				new JavaScriptResourceReference(BrowserInfoForm.class, "wicket-browser-info.js")));
+		response.render(JavaScriptHeaderItem.forReference(BrowserInfoForm.JS));
 	}
 }

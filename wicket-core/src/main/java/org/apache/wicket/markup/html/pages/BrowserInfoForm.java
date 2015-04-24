@@ -27,6 +27,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Form for posting JavaScript properties.
@@ -34,6 +35,8 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 public class BrowserInfoForm extends Panel
 {
 	private static final long serialVersionUID = 1L;
+	
+	public static final ResourceReference JS = new JavaScriptResourceReference(BrowserInfoForm.class, "wicket-browser-info.js");
 
 	/**
 	 * The special form that submits the client/browser info
@@ -103,8 +106,7 @@ public class BrowserInfoForm extends Panel
 	{
 		super.renderHead(response);
 
-		response.render(JavaScriptHeaderItem.forReference(
-				new JavaScriptResourceReference(BrowserInfoForm.class, "wicket-browser-info.js")));
+		response.render(JavaScriptHeaderItem.forReference(JS));
 	}
 
 	/**
