@@ -1,6 +1,6 @@
 
 
-WicketStuff is an umbrella project that gathers different Wicket-related projects developed and maintained by the community. The project is hosted on GitHub at "https://github.com/wicketstuff/core":https://github.com/wicketstuff/core. Every module is structured as a parent Maven project containing the actual project that implements the new functionality and an example project that illustrates how to use it in our code. The resulting directory structure of each module is the following:
+WicketStuff is an umbrella project that gathers different Wicket-related projects developed and maintained by the community. The project is hosted on GitHub at "https://github.com/wicketstuff/core":https://github.com/wicketstuff/core . Every module is structured as a parent Maven project containing the actual project that implements the new functionality and an example project that illustrates how to use it in our code. The resulting directory structure of each module is the following:
 
 {code}
 \<module name>-parent
