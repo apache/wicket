@@ -145,8 +145,10 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
-	IGenericComponent<T>
+public class Form<T> extends WebMarkupContainer
+	implements
+		IFormSubmitListener,
+		IGenericComponent<T>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
 
@@ -598,9 +600,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 	/**
 	 * Gets maximum size for each file of an upload.
+	 * 
 	 * @return
 	 */
-	public Bytes getFileMaxSize() {
+	public Bytes getFileMaxSize()
+	{
 		return fileMaxSize;
 	}
 
@@ -900,8 +904,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * 
 	 * @param submittingComponent
 	 *            component responsible for submitting the form, or <code>null</code> if none (eg
-	 *            the form has been submitted via the enter key or javascript calling
-	 *            form.submit())
+	 *            the form has been submitted via the enter key or javascript calling form.submit())
 	 * 
 	 * @see #delegateSubmit(IFormSubmitter) for an easy way to process submitting component in the
 	 *      default manner
@@ -1053,9 +1056,11 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 	/**
 	 * Sets maximum size of each file in upload request.
+	 * 
 	 * @param fileMaxSize
 	 */
-	public void setFileMaxSize(Bytes fileMaxSize) {
+	public void setFileMaxSize(Bytes fileMaxSize)
+	{
 		this.fileMaxSize = fileMaxSize;
 	}
 
@@ -1141,7 +1146,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			@Override
 			public void component(final Component component, final IVisit<Boolean> visit)
 			{
-				if (component.isVisibleInHierarchy() && component.isEnabledInHierarchy() && component.hasErrorMessage())
+				if (component.isVisibleInHierarchy() && component.isEnabledInHierarchy() &&
+					component.hasErrorMessage())
 				{
 					visit.stop(true);
 				}
@@ -1403,7 +1409,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 			try
 			{
 				ServletWebRequest request = (ServletWebRequest)getRequest();
-				final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(getMaxSize(), getPage().getId());
+				final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(
+					getMaxSize(), getPage().getId());
 				multipartWebRequest.setFileMaxSize(getFileMaxSize());
 				multipartWebRequest.parseFileParts();
 
@@ -1444,7 +1451,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 		{
 			// Resource key should be <form-id>.uploadTooLarge to
 			// override default message
-			String msg = getString(getId() + '.' + UPLOAD_TOO_LARGE_RESOURCE_KEY, Model.ofMap(model));
+			String msg = getString(getId() + '.' + UPLOAD_TOO_LARGE_RESOURCE_KEY,
+				Model.ofMap(model));
 			error(msg);
 		}
 		else if (e instanceof FileUploadBase.FileSizeLimitExceededException)
@@ -1872,8 +1880,8 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	}
 
 	/**
-	 * Calls {@linkplain #onValidateModelObjects()} on this form and all
-	 * nested forms that are visible and enabled
+	 * Calls {@linkplain #onValidateModelObjects()} on this form and all nested forms that are
+	 * visible and enabled
 	 */
 	private void internalOnValidateModelObjects()
 	{
@@ -2136,9 +2144,9 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 
 		/*
 		 * Certain input names causes problems with JavaScript. If the input name would cause a
-		 * problem, we create a replacement unique name by prefixing the name with a path that
-		 * would otherwise never be used (blank id in path).
-		 *
+		 * problem, we create a replacement unique name by prefixing the name with a path that would
+		 * otherwise never be used (blank id in path).
+		 * 
 		 * Input names must start with [A-Za-z] according to HTML 4.01 spec. HTML 5 allows almost
 		 * anything.
 		 */
@@ -2158,8 +2166,7 @@ public class Form<T> extends WebMarkupContainer implements IFormSubmitListener,
 	 * 
 	 * @author igor
 	 */
-	public static enum MethodMismatchResponse
-	{
+	public static enum MethodMismatchResponse {
 		/**
 		 * Continue processing.
 		 */
