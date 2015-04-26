@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.markup.html.pages;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This page uses a form post right after the page has loaded in the browser, using JavaScript or
@@ -46,6 +48,8 @@ import org.apache.wicket.protocol.http.WebSession;
 public class BrowserInfoPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final Logger log = LoggerFactory.getLogger(BrowserInfoPage.class);
 
 	private BrowserInfoForm browserInfoForm;
 
@@ -86,21 +90,17 @@ public class BrowserInfoPage extends WebPage
 			}
 		};
 
-		final ContinueLink link = new ContinueLink("link", properties);
-		add(link);
+		// hide the formerly used meta-tag from markup
+		// TODO remove in Wicket 8
+		add(new WebMarkupContainer("meta") {
+			protected void onAfterRender() {
+				super.onAfterRender();
 
-		WebComponent meta = new WebComponent("meta");
-		meta.add(AttributeModifier.replace("content", new AbstractReadOnlyModel<String>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getObject()
-			{
-				return "0; url=" + link.getURL();
+				log.warn("remove the meta tag with wicket:id=\"meta\" from the markup of your BrowserInfoPage subclass");
 			}
-		}));
-		add(meta);
+		}.setVisible(false));
+
+		add(new ContinueLink("link", properties));
 
 		browserInfoForm = new BrowserInfoForm("postback", properties)
 		{
@@ -112,21 +112,27 @@ public class BrowserInfoPage extends WebPage
 				getModelObject().setJavaScriptEnabled(true);
 
 				continueToOriginalDestination();
+
+				// switch to home page if no original destination was intercepted
+				setResponsePage(getApplication().getHomePage());
 			}
 		};
 		add(browserInfoForm);
 	}
 	
 	private static class ContinueLink extends Link<ClientProperties> {
+
 		public ContinueLink(String id, IModel<ClientProperties> properties)
 		{
 			super(id, properties);
 		}
 
 		@Override
-		public CharSequence getURL()
+		public void renderHead(IHeaderResponse response)
 		{
-			return super.getURL();
+			String content = "0; url=" + getURL();
+
+			response.render(new MetaDataHeaderItem(MetaDataHeaderItem.META_TAG).addTagAttribute("http-equiv", "refresh").addTagAttribute("content", content));
 		}
 		
 		@Override
@@ -135,6 +141,9 @@ public class BrowserInfoPage extends WebPage
 			getModelObject().setJavaScriptEnabled(false);
 
 			continueToOriginalDestination();
+
+			// switch to home page if no original destination was intercepted
+			setResponsePage(getApplication().getHomePage());
 		}
 	};
 }
