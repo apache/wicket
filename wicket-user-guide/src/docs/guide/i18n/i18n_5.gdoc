@@ -4,7 +4,7 @@ Internationalization is another good chance to taste the power of models. Wicket
 
 h3. ResourceModel
 
-Model @org.apache.wicket.model.ResourceModel@ acts just like the read-only model we have implemented in paragraph 12.3.4. It simply retrieves a string resource corresponding to a given key:
+Model @org.apache.wicket.model.ResourceModel@ acts just like the read-only model we have implemented in [paragraph 14.3|guide:i18n_3]. It simply retrieves a string resource corresponding to a given key:
 
 {code}
 //build a ResourceModel for key 'greetingMessage'

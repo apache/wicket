@@ -1,6 +1,6 @@
 
 
-Just like pages also resources can be mounted to a specific path. Class @WebApplication@ provides method @mountResource@ which is almost identical to @mountPage@ seen in paragraph 8.6.1:
+Just like pages also resources can be mounted to a specific path. Class @WebApplication@ provides method @mountResource@ which is almost identical to @mountPage@ seen in [paragraph 10.6.1|guide:urls_6]:
 
 {code}
 @Override

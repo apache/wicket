@@ -47,8 +47,8 @@ yellow=Yellow
 German bundle:
 
 {code}
-selectColor.null=Wahlen sie eine farbe
-green=Grun
+selectColor.null=Wählen Sie eine Farbe
+green=Grün
 red=Rot
 blue=Blau
 yellow=Gelb
@@ -64,4 +64,4 @@ blue=Blu
 yellow=Giallo
 {code}
 
-Along with the localized versions of colors names, in the bundles above we can also find a custom value for the placeholder text (“Chose one ”) used for null value. The resource key for this resource is 'null' or '<component id>.null' if we want to make it component-specific.
+Along with the localized versions of colors names, in the bundles above we can also find a custom value for the placeholder text (“Select a color ”) used for null value. The resource key for this resource is 'null' or '<component id>.null' if we want to make it component-specific.

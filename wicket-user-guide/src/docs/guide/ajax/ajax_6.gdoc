@@ -152,7 +152,7 @@ Global AJAX call events are handled with JavaScript. We can register a callback 
 
 The callback function takes in input the following parameters:  attrs, jqXHR, textStatus, jqEvent and errorThrown. The first three parameters are the same seen before with @IAjaxCallListener@ while jqEvent is an event internally fired by Wicket. The last parameter errorThrown indicates if an error has occurred during the AJAX call. 
 
-To see a basic example of use of a global AJAX call listener, let's go back to our custom datepicker created in chapter 14. When we built it we didn't think about a possible use of the component with AJAX.  When a complex component like our datepicker is refreshed via AJAX, the following two side effects can occur: 
+To see a basic example of use of a global AJAX call listener, let's go back to our custom datepicker created in [chapter 16|guide:jsintegration]. When we built it we didn't think about a possible use of the component with AJAX.  When a complex component like our datepicker is refreshed via AJAX, the following two side effects can occur: 
 
 * After been refreshed, the component loses every JavaScript handler set on it. This is not a problem for our datepicker as it sets a new JQuery datepicker every time is rendered (inside method renderHead).
 * The markup previously created with JavaScript is not removed. For our datepicker this means that the icon used to open the calendar won't be removed while a new one will be added each time the component is refreshed.

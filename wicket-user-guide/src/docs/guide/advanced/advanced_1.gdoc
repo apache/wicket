@@ -29,7 +29,7 @@ public class RedAsteriskBehavior extends Behavior {
       Response response = component.getResponse();
       StringBuffer asterisktHtml = new StringBuffer(200);
       
-      if(componet instanceof FormComponent 
+      if(component instanceof FormComponent 
             && ((FormComponent)component).isRequired()){
         asteriskHtml.append(" <b style=\"color:red;font-size:medium\">*</b>");
       }  

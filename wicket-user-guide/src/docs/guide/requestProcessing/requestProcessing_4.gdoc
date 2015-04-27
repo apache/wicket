@@ -32,7 +32,7 @@ The Session class handles session attributes in much the same way as the standar
 * *getAttribute(String name):* returns the value of the attribute identified by the given name, or null if the name does not correspond to any attribute.
 * *removeAttribute(String name):* removes the attribute identified by the given name.
 
-By default class WebSession will use the underlying http session to store attributes. Wicket will automatically add a prefix to the name of the attributes. This prefix is returned by the WebApplication's method getSessionAttributePrefix().
+By default class WebSession will use the underlying HTTP session to store attributes. Wicket will automatically add a prefix to the name of the attributes. This prefix is returned by the WebApplication's method getSessionAttributePrefix().
 
 h3. Accessing to the HTTP session
 

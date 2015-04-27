@@ -1,6 +1,6 @@
 
 
-As pointed out in the note at page 9, Wicket can be started in two modes, DEVELOPMENT and DEPLOYMENT. When we are in DEVELOPMENT mode Wicket warns us at application startup with the following message:
+As pointed out in the note in [paragraph 4.2|guide:helloWorld_2], Wicket can be started in two modes, DEVELOPMENT and DEPLOYMENT. When we are in DEVELOPMENT mode Wicket warns us at application startup with the following message:
 
 {code}
 ********************************************************************
@@ -11,7 +11,7 @@ As pointed out in the note at page 9, Wicket can be started in two modes, DEVELO
 ********************************************************************
 {code}
 
-As we can read Wicket itself discourages us from using DEVELOPMENT mode into production environment. The running mode of our application can be configured in three different ways. The first one is adding a filter parameter inside deployment descriptor web.xml:
+As we can read Wicket itself discourages us from using DEVELOPMENT mode into production environment. The running mode of our application can be configured in four different ways. The first one is adding a filter parameter inside deployment descriptor web.xml:
 
 {code:html}
 <filter>      
@@ -41,6 +41,12 @@ The third way to set the running mode is using system property wicket.configurat
 
 {code}
 java -Dwicket.configuration=deployment ...
+{code}
+
+The last option is to set it in your Java code (e.g. in the init-method of your WebApplication):
+
+{code}
+setConfigurationType(RuntimeConfigurationType.DEPLOYMENT);
 {code}
 
 Remember that system properties overwrite other settings, so they are ideal to ensure that on production machine the running mode will be always set to DEPLOYMENT. 

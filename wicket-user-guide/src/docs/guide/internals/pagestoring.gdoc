@@ -45,7 +45,10 @@ To disable it use: @org.apache.wicket.settings.StoreSettings.setAsynchronous(fal
 
 h3. DebugDiskDataStore
 
-Wicket provides an extension of @DiskDataStore@ that can be used to browse the content of the 'data' files created by @DiskDataStore@. This debug enabled @DiskDataStore@ is automatically setup when wicket-devutils.jar is in the classpath.
+Wicket provides an extension of @DiskDataStore@ that can be used to browse the content of the 'data' files created by @DiskDataStore@. This extension can be found in wicket-devutils.jar and needs to be enabled in the @init@-method of your application via 
+{code}
+ DebugDiskDataStore.register(this);
+{code}
 The debug information can be seen at http://host:port/context/wicket/internal/debug/diskDataStore
 
 h3. HttpSessionDataStore
@@ -72,3 +75,16 @@ MyApp#init()
 }
 {code}
 
+h3. DebugBar
+
+Further insights which can be valueable during debugging can be retrieved using the @org.apache.wicket.devutils.debugbar.DebugBar@ from wicket-devutils.jar. It's a panel which you simply add:
+
+Java: 
+{code}
+add(new DebugBar("debug"));
+{code}
+
+HTML:
+{code}
+<span wicket:id="debug"/>
+{code}

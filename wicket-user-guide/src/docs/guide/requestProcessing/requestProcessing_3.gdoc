@@ -4,7 +4,7 @@ Class @org.apache.wicket.request.cycle.RequestCycle@ is the entity in charge of 
 
 Method @createRequestCycle@ is declared as final, so we can't override it to return a custom subclass of @RequestCycle@. Instead, we must build a request cycle provider implementing interface @org.apache.wicket.IRequestCycleProvider@, and then we must tell our application class to use it via the @setRequestCycleProvider@ method.
 
-The current running request cycle can be retrieved at any time by calling its static method @RequestCycle.get()@. Strictly speaking this method returns the request cycle associated with the current (or local) thread, which is the thread that is serving the current request. A similar @get()@ method is also implemented in classes @org.apache.wicket.Application@ (as we have seen in paragraph 2.2.2) and @org.apache.wicket.Session@ in order to get the application and the session in use by the current thread.
+The current running request cycle can be retrieved at any time by calling its static method @RequestCycle.get()@. Strictly speaking this method returns the request cycle associated with the current (or local) thread, which is the thread that is serving the current request. A similar @get()@ method is also implemented in classes @org.apache.wicket.Application@ (as we have seen in [paragraph 4.2.2|guide:helloWorld_2]) and @org.apache.wicket.Session@ in order to get the application and the session in use by the current thread.
 
 {note}
 The implementation of the get method takes advantage of the standard class @java.lang.ThreadLocal@. See its JavaDoc for an introduction to local-thread variables.
@@ -40,13 +40,13 @@ The RequestCycle is also responsible for generating the URL value (as CharSequen
 
 * a page class, via the @urlFor(Class<C> pageClass, PageParameters parameters)@ method 
 * an IRequestHandler via the @urlFor(IRequestHandler handler)@ method 
-* a ResourceReference via the @urlFor(ResourceReference reference, PageParameters params)@ method (resource entities will be introduced in chapter 13). 
+* a ResourceReference via the @urlFor(ResourceReference reference, PageParameters params)@ method (resource entities will be introduced in [chapter 15|guide:resources]). 
 
 The overloaded @urlFor@ method from above also has a corresponding version that returns an instance of @org.apache.wicket.request.Url@ instead of a @CharSequence@. This version has the prefix 'map' in its name (i.e. it has @mapUrlFor@ as full name).
 
 h3. Method setResponsePage
 
-The @RequestCycle@ class contains the implementation of the @setResponsePage@ method we use to redirect a user to a specific page (see paragraph 2.4). The namesake method of class @org.apache.wicket.Component@ is just a convenience method that internally invokes the actual implementation on current request cycle:
+The @RequestCycle@ class contains the implementation of the @setResponsePage@ method we use to redirect a user to a specific page (see [paragraph 4.4|guide:helloWorld_4]). The namesake method of class @org.apache.wicket.Component@ is just a convenience method that internally invokes the actual implementation on current request cycle:
 
 {code}
 public final void setResponsePage(final Page page) {

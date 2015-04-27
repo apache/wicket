@@ -2,7 +2,7 @@
 
 Wicket distribution comes with a number of built-in AJAX components ready to be used. Some of them are the ajaxified version of common components like links and buttons, while others are AJAX-specific components. 
 
-AJAX components are not different from any other component seen so far and they don't require any additional configuration to be used. As we will shortly see, switching from a classic link or button to the ajaxified version is just a matter of appending “Ajax” to the component class name.
+AJAX components are not different from any other component seen so far and they don't require any additional configuration to be used. As we will shortly see, switching from a classic link or button to the ajaxified version is just a matter of prepending “Ajax” to the component class name.
 
 This paragraph provides an overview of what we can find in Wicket to start writing AJAX-enhanced web applications.
 
@@ -18,7 +18,7 @@ Building an entire site using AJAX can be risky as some clients may not support 
 
 h3. AJAX Checkbox
 
-Class @org.apache.wicket.ajax.markup.html.form.AjaxCheckBox@ is a checkbox component that updates its model via AJAX when user changes its value. Its AJAX callback method is @onUpdate(AjaxRequestTarget target)@. The component extends standard checkbox component @CheckBox@ adding an @AjaxFormComponentUpdatingBehavior@ to itself (we will see this behavior later in paragraph 16.3.3).
+Class @org.apache.wicket.ajax.markup.html.form.AjaxCheckBox@ is a checkbox component that updates its model via AJAX when user changes its value. Its AJAX callback method is @onUpdate(AjaxRequestTarget target)@. The component extends standard checkbox component @CheckBox@ adding an @AjaxFormComponentUpdatingBehavior@ to itself (we will see this behavior later in [paragraph 18.3.3|guide:ajax_3]).
 
 h3. AJAX editable labels
 

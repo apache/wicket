@@ -1,6 +1,6 @@
 
 
-Wicket comes with interface @org.apache.wicket.markup.html.IHeaderContributor@ which allows components and behaviors (which will be introduced later in paragraph 15.1) to contribute to the header section of their page. The only method defined in this interface is @renderHead(IHeaderResponse response)@ where @IHeaderResponse@ is an interface which defines method @render(HeaderItem item)@ to write static resources or free-form text into the header section of the page. 
+Wicket comes with interface @org.apache.wicket.markup.html.IHeaderContributor@ which allows components and behaviors (which will be introduced later in [paragraph 17.1|guide:advanced_1]) to contribute to the header section of their page. The only method defined in this interface is @renderHead(IHeaderResponse response)@ where @IHeaderResponse@ is an interface which defines method @render(HeaderItem item)@ to write static resources or free-form text into the header section of the page. 
 
 Header entries are instances of abstract class @org.apache.wicket.markup.head.HeaderItem@. Wicket provides a set of built-in implementations of this class suited for the most common types of resources. With the exception of @PriorityHeaderItem@, every implementation of @HeaderItem@ is an abstract factory class:
 

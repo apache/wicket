@@ -81,7 +81,7 @@ The first thing to do inside onInitialize is to ensure that our component will h
 
 Next, JQueryDateField tries to retrieve the date format and the ISO language code that must be used as initialization parameters. This is done using class @ResourceModel@ which searches for a given resource in the available bundles. If no value is found for date format or for ISO language code, default values will be used ('mm/dd/yy' and 'en-GB'). 
 
-To generate the relative URL for calendar icon, we load it as package resource reference and then we use @Component@'s method urlFor to get the URL value (we have seen this method in paragraph 7.3.2).
+To generate the relative URL for calendar icon, we load it as package resource reference and then we use @Component@'s method urlFor to get the URL value (we have seen this method in [paragraph 9.3.2|guide:requestProcessing_3]).
 
 The last configuration instruction executed inside onInitialize is the instantiation of the custom converter used by our component. This converter is an instance of the built-in class @org.apache.wicket.datetime.PatternDateConvert@ and must use the previously retrieved date format to perform conversion operations. Now to tell our component to use this converter we must return it overriding @FormComponent@'s method @getConverter@. 
 
@@ -133,5 +133,5 @@ This does not apply to the init script which is dynamically generated and is ren
 {note}
 
 {warning}
-Our datepicker is not ready yet to be used with AJAX. In chapter 16 we will see how to modify it to make it AJAX-compatible.
+Our datepicker is not ready yet to be used with AJAX. In [chapter 18|guide:ajax] we will see how to modify it to make it AJAX-compatible.
 {warning}
