@@ -7,8 +7,8 @@ velocity.log
 *.idea/
 *.iml
 *~
-node_modules/
 release.properties
-testing/wicket-js-tests/node/
+**/node/
+**/node_modules/
 nb-configuration.xml
 .DS_Store
