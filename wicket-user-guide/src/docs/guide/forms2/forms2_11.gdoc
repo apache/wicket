@@ -4,7 +4,7 @@ In this paragraph we will see which components can be used to handle HTML radio 
 
 !choice-form-screenshot.png!
 
-A check box can be used as single component to set a boolean property. For this purpose Wicket provides the @org.apache.wicket.markup.html.form.CheckBox@ component which must be attached to <input type="checkbox".../> tag. In the next example (project SingleCheckBox) we will consider a form similar to the one used in paragraph 9.5 to edit a Person object, but with an additional checkbox to let the user decide if she wants to subscribe to our mailing list or not. The form uses the following bean as backing object:
+A check box can be used as single component to set a boolean property. For this purpose Wicket provides the @org.apache.wicket.markup.html.form.CheckBox@ component which must be attached to <input type="checkbox".../> tag. In the next example (project SingleCheckBox) we will consider a form similar to the one used in [paragraph 11.5|guide:modelsforms_5] to edit a Person object, but with an additional checkbox to let the user decide if she wants to subscribe to our mailing list or not. The form uses the following bean as backing object:
 
 {code}
 public class RegistrationInfo implements Serializable {
@@ -113,7 +113,7 @@ This component can be attached to a <div> tag or to a <span> tag. No specific co
 
 By default CheckBoxMultipleChoice inserts a <br/> tag as suffix after each option. We can configure both the suffix and the prefix used by the component with the setPrefix and setSuffix methods.
 
-When our options are more complex objects than simple strings, we can render them using an IChoiceRender, as we did for DropDownChoice in paragraph 9.4:
+When our options are more complex objects than simple strings, we can render them using an IChoiceRender, as we did for DropDownChoice in [paragraph 11.5|guide:modelsforms_5]:
 
 *HTML:*
 

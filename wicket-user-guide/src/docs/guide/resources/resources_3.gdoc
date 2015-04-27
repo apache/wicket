@@ -49,7 +49,7 @@ In our example the URL for our picture file calendar.jpg is the following:
 
 @./wicket/resource/org.wicketTutorial.CustomPanel/calendar-ver-1297887542000.jpg@
 
-The first part of the URL is the relative path to the application root. In our example our page is already at the application's root so we have only a single-dotted segment. The next two segments, wicket and resource, are respectively the namespace and the identifier for resources seen in paragraph 8.6.4. 
+The first part of the URL is the relative path to the application root. In our example our page is already at the application's root so we have only a single-dotted segment. The next two segments, wicket and resource, are respectively the namespace and the identifier for resources seen in [paragraph 10.6.4|guide:urls_6]. 
 
 The fourth segment is the fully qualified name of the class used to locate the resource and it is the scope of the package resource. In the last segment of the URL we can find the name of the resource (the file name).
 
@@ -68,7 +68,7 @@ In the example illustrated in the picture above, if we try to retrieve package r
 
 h3. Using package resources with tag <wicket:link>
 
-In paragraph 8.3 we have used tag <wicket:link> to automatically create links to bookmarkable pages. The same technique can be used also for package resources in order to use them directly from markup file. Let's assume for example that we have a picture file called icon.png placed in the same package of the current page. Under these conditions we can display the picture file using the following markup fragment:
+In [paragraph 10.3|guide:urls_3] we have used tag <wicket:link> to automatically create links to bookmarkable pages. The same technique can be used also for package resources in order to use them directly from markup file. Let's assume for example that we have a picture file called icon.png placed in the same package of the current page. Under these conditions we can display the picture file using the following markup fragment:
 
 {code:html}
 <wicket:link>

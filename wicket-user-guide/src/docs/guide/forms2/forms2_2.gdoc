@@ -1,6 +1,6 @@
 
 
-A basic example of a validation rule is to make a field required. In paragraph 9.3.2 we have already seen how this can be done calling setRequired(true) on a field. However, to set a validation rule on a FormComponent we must add the corresponding validator to it.
+A basic example of a validation rule is to make a field required. In [paragraph 11.3|guide:modelsforms_3] we have already seen how this can be done calling setRequired(true) on a field. However, to set a validation rule on a FormComponent we must add the corresponding validator to it.
 
 A validator is an implementation of the @org.apache.wicket.validation.IValidator@ interface and the @FormComponent@ has a version of method add which takes as input a reference of this interface. 
 
@@ -11,7 +11,7 @@ TextField email = new TextField("email");
 email.add(EmailAddressValidator.getInstance());
 {code}
 
-Wicket comes with a set of built-in validators that should suit most of our needs. We will see them in paragraph 10.2.3.
+Wicket comes with a set of built-in validators that should suit most of our needs. We will see them later in this chapter.
 
 h3. Feedback messages and localization
 
@@ -24,10 +24,10 @@ Wicket generates a feedback message for each field that doesn't satisfy one of i
 The entire infrastructure of feedback messages is built on top of the Java internationalization (I18N) support and it uses "resource bundles":http://docs.oracle.com/javase/tutorial/i18n/resbundle/index.html to store messages.
 
 {note}
-The topics of internationalization will be covered in chapter 12. For now we will give just few notions needed to understand the examples from this chapter.
+The topics of internationalization will be covered in [chapter 14|guide:i18n]. For now we will give just few notions needed to understand the examples from this chapter.
 {note}
 
-By default resource bundles are stored into properties files but we can easily configure other sources as described later in paragraph 12.4.5. 
+By default resource bundles are stored into properties files but we can easily configure other sources as described later in [paragraph 14.2|guide:i18n_2]. 
 
 Default feedback messages (like the one above for required fields) are stored in the file Application. properties placed inside Wicket the org.apache.wicket package. Opening this file we can find the key and the localized value of the message:
 
@@ -40,7 +40,7 @@ We can note the key (Required in our case) and the label parameter written in th
 By default FormComponent provides 3 parameters for feedback message: input (the value that failed validation), label and name (this later is the id of the component).
 
 {warning}
-Remember that component model is updated with the user input only if validation succeeds! As a consequence, we can't retrieve the wrong value inserted for a field from its model. Instead, we should use getValue() method of FormComponent class. (This method will be introduced in the example used in paragraph 10.2.5)
+Remember that component model is updated with the user input only if validation succeeds! As a consequence, we can't retrieve the wrong value inserted for a field from its model. Instead, we should use getValue() method of FormComponent class. (This method will be introduced in the example used later in this chapter)
 {warning}
 
 h3. Displaying feedback messages and filtering them
@@ -65,7 +65,7 @@ Error messages can be filtered using three built-in filters:
 
 * *ComponentFeedbackMessageFilter*: shows only messages coming from a specific component.
 * *ContainerFeedbackMessageFilter*: shows only messages coming from a specific container or from any of its children components.
-* *ErrorLevelFeedbackMessageFilter*: shows only messages with a level of severity equals or greater than a given lower bound. Class FeedbackMessage defines a set of static constants to express different levels of severity: DEBUG, ERROR, WARNING, INFO, SUCCESS, etc.... Levels of severity for feedback messages are discussed in paragraph 10.2.6.
+* *ErrorLevelFeedbackMessageFilter*: shows only messages with a level of severity equals or greater than a given lower bound. Class FeedbackMessage defines a set of static constants to express different levels of severity: DEBUG, ERROR, WARNING, INFO, SUCCESS, etc.... Levels of severity for feedback messages are discussed later in this chapter.
 
 These filters are intended to be used when there are more than one feedback panel (or more than one form) in the same page. We can pass a filter to a feedback panel via its constructor or using the setFilter method. Custom filters can be created implementing the IFeedbackMessageFilter interface. An example of custom filter is illustrated later in this paragraph.
 

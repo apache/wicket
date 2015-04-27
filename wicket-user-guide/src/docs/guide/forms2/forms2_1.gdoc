@@ -1,6 +1,6 @@
 
 
-In paragraph 9.3 we have seen a very basic usage of the Form component and we didn't pay much attention to what happens behind the scenes of form submission. In Wicket when we submit a form we trigger the following steps on server side:
+In [paragraph 11.3|guide:modelsforms_3] we have seen a very basic usage of the Form component and we didn't pay much attention to what happens behind the scenes of form submission. In Wicket when we submit a form we trigger the following steps on server side:
 
 # Form validation: user input is checked to see if it satisfies the validation rules set on the form. If validation fails, step number 2 is skipped and the form should display a feedback message to explain to user what went wrong. During this step input values (which are simple strings sent with a web request) are converted into Java objects. In the next paragraphs we will explore the infrastructures provided by Wicket for the three sub-tasks involved with form validation, which are: conversion of user input into objects, validation of user input, and visualization of feedback messages.
 # Updating of models: if validation succeeds, the form updates the model of its children components with the converted values obtained in the previous step.
@@ -12,4 +12,4 @@ Please note that the model of form components is updated only if no validation e
 
 Without going into too much detail, we can say that the first two steps of form processing correspond to the invocation of one or more Form's internal methods (which are declared protected and final). Some examples of these methods are validate(), which is invoked during validation step, and updateFormComponentModels(), which is used at the step that updates the form field models.
 
-The whole form processing is started invoking public method process(IFormSubmitter) (Later in paragraph 10.4 we will introduce interface IFormSubmitter). 
+The whole form processing is started invoking public method process(IFormSubmitter) (Later in [paragraph 12.5|guide:forms2_5] we will introduce interface IFormSubmitter). 

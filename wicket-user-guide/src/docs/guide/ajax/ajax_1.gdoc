@@ -28,7 +28,7 @@ new AjaxLink("ajaxLink"){
 };
 {code}
 
-Components can be refreshed via Ajax only if they have rendered a markup id for their related tag. As a consequence, we must remember to set a valid id value on every component we want to add to @AjaxRequestTarget@. This can be done using one of the two methods seen in paragraph 4.3:
+Components can be refreshed via Ajax only if they have rendered a markup id for their related tag. As a consequence, we must remember to set a valid id value on every component we want to add to @AjaxRequestTarget@. This can be done using one of the two methods seen in [paragraph 6.3|guide:keepControl_3]:
 
 {code}
 final Label label = new Label("labelComponent", "Initial value.");

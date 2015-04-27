@@ -78,13 +78,13 @@ Validator's resource bundles have the lowest priority in the lookup algorithm. T
 
 h3. Extending the default lookup algorithm
 
-Wicket implements the default lookup algorithm using the strategy pattern1. The concrete strategies are abstracted with the interface @org.apache.wicket.resource.loader.IStringResourceLoader@. By default Wicket uses the following implementations of @IStringResourceLoader@ (sorted by execution order):
+Wicket implements the default lookup algorithm using the strategy pattern. The concrete strategies are abstracted with the interface @org.apache.wicket.resource.loader.IStringResourceLoader@. By default Wicket uses the following implementations of @IStringResourceLoader@ (sorted by execution order):
 
 # *ComponentStringResourceLoader:* implements most of the default algorithm. It searches for a given resource across bundles from the container hierarchy, from class hierarchy and from the given component.
 # *PackageStringResourceLoader:* searches into package bundles.
 # *ClassStringResourceLoader:* searches into bundles of a given class. By default the target class is the application class.
 # *ValidatorStringResourceLoader:* searches for resources into validator's bundles. A list of validators is provided by the form component that failed validation.
-# *InitializerStringResourceLoader:* this resource allows internationalization to interact with the initialization mechanism of the framework that will be illustrated in paragraph 15.4.
+# *InitializerStringResourceLoader:* this resource allows internationalization to interact with the initialization mechanism of the framework that will be illustrated in [paragraph 17.3|guide:advanced_3].
 
 Developer can customize lookup algorithm removing default resource loaders or adding custom implementations to the list of the resource loaders in use. This task can be accomplished using method getStringResourceLoaders of setting interface @org.apache.wicket.settings.IResourceSettings@:
 

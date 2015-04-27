@@ -82,7 +82,7 @@ public class RegExpPatternConverter implements IConverter<Pattern> {
 }
 {code}
 
-Methods declared by interface IConverter take as input a Locale parameter in order to deal with locale-sensitive data and conversions. We will learn more about locales and internationalization in chapter 12.
+Methods declared by interface IConverter take as input a Locale parameter in order to deal with locale-sensitive data and conversions. We will learn more about locales and internationalization in [paragraph 14|guide:i18n].
 
 Once we have implemented our custom converter, we must override method newConverterLocator() inside our application class and tell it to add our new converter to the default set:
 

@@ -1,10 +1,10 @@
 
 
-Having structured URLs in our site is a basic requirement if we want to build an efficient SEO1 strategy, but it also contributes to improve user experience with more intuitive URLs. Wicket provides two different ways to control URL generation. The first (and simplest) is to “mount” one or more pages to an arbitrary path, while a more powerful technique is to use custom implementations of IMapperContext and IPageParametersEncoder interfaces. In the next paragraphs we will learn both of these two techniques.
+Having structured URLs in our site is a basic requirement if we want to build an efficient SEO strategy, but it also contributes to improve user experience with more intuitive URLs. Wicket provides two different ways to control URL generation. The first (and simplest) is to “mount” one or more pages to an arbitrary path, while a more powerful technique is to use custom implementations of IMapperContext and IPageParametersEncoder interfaces. In the next paragraphs we will learn both of these two techniques.
 
 h3. Mounting a single page
 
-With Wicket we can mount a page to a given path in much the same way as we map a servlet filer to a desired path inside file web.xml (see page 9). Using mountPage(String path, Class <T> pageClass) method of the WepApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the "/pageMount" path:
+With Wicket we can mount a page to a given path in much the same way as we map a servlet filter to a desired path inside file web.xml (see [paragraph 4.2|guide:helloWorld_2]). Using mountPage(String path, Class <T> pageClass) method of the WepApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the "/pageMount" path:
 
 {code}
 @Override
@@ -31,7 +31,7 @@ public final <T extends Page> void mountPage(final String path,final Class<T> pa
 }
 {code}
 
-Request mappers and the Application's method mount have been introduced in the previous chapter (paragraph 9.3).
+Request mappers and the Application's method mount have been introduced in the previous chapter ([paragraph 9.3|guide:requestProcessing_3]).
 
 h3. Using parameter placeholders with mounted pages
 
@@ -111,8 +111,8 @@ Interface @org.apache.wicket.request.mapper.IMapperContext@ is used by request m
 
 * Namespace: it's the first URL segment of non-mounted pages. By default its value is wicket.
 * Identifier for non-bookmarkable URLs: it's the segment that identifies non bookmarkable pages. By default its value is page.
-* Identifier for bookmarkable URLs: it's the segment that identifies bookmarkable pages. By default its value is bookmarkable (as we have seen before in paragraph 8.1.1).
-* Identifier for resources: it's the segment that identifies Wicket resources. Its default value is resources. The topic of resource management will be covered in chapter 13.
+* Identifier for bookmarkable URLs: it's the segment that identifies bookmarkable pages. By default its value is bookmarkable (as we have seen before in [paragraph 10.1.1|guide:urls_1]).
+* Identifier for resources: it's the segment that identifies Wicket resources. Its default value is resources. The topic of resource management will be covered in [chapter 15|guide:resources].
 
 IMapperContext provides a getter method for any segment listed above. By default Wicket uses class @org.apache.wicket.DefaultMapperContext@ as mapper context.
 

@@ -8,7 +8,7 @@ Another requirement is a good Internet connection (a flat ADSL is enough) becaus
 
 h3. From Maven to our IDE
 
-Wicket project and its dependencies are managed using Maven1. This tool is very useful also when we want to create a new project based on Wicket from scratch. With a couple of shell commands we can generate a new project properly configured and ready to be imported into our favourite IDE.
+Wicket project and its dependencies are managed using Maven. This tool is very useful also when we want to create a new project based on Wicket from scratch. With a couple of shell commands we can generate a new project properly configured and ready to be imported into our favourite IDE.
 The main step to create such a project is to run the command which generates project's structure and its artifacts. If we are not familiar with Maven or we simply don't want to type this command by hand, we can use the utility form on Wicket site at "http://wicket.apache.org/start/quickstart.html":http://wicket.apache.org/start/quickstart.html :
 
 !quickstart-webpage.png!
@@ -118,7 +118,7 @@ h3. Speeding up development with plugins.
 Now that we have our project loaded into our IDE we could start coding our components directly by hand. However it would be a shame to not leverage the free and good Wicket plugins available for our IDE. The following is a brief overview of the most widely used plugins for each of the three main IDEs considered so far.
 
 *NetBeans*
-NetBeans offers Wicket support thought 'NetBeans Plugin for Wicket' hosted at "http://java.net/projects/nbwicketsupport/":http://java.net/projects/nbwicketsupport/ . This plugin is released under CDDL-1.0 license. 
+NetBeans offers Wicket support through 'NetBeans Plugin for Wicket' hosted at "http://plugins.netbeans.org/plugin/3586/wicket-1-4-support":http://plugins.netbeans.org/plugin/3586/wicket-1-4-support . This plugin is released under CDDL-1.0 license. 
 You can  find a nice introduction guide to this plugin at "http://netbeans.org/kb/docs/web/quickstart-webapps-wicket.html":http://netbeans.org/kb/docs/web/quickstart-webapps-wicket.html .
 
 *Intellj IDEA*

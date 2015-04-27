@@ -49,7 +49,7 @@ If we press the back button the page version previously rendered (and serialized
 For more details about page storing you can take a look at paragraph "Page storing" from chapter "Wicket Internals". The content of this paragraph is from wiki page https://cwiki.apache.org/confluence/display/WICKET/Page+Storage. 
 {note}
 
-As we have stated at the beginning of this chapter, page versions are stored using Java serialization, therefore every object referenced inside a page must be serializable. In paragraph 9.6 we will see how to overcome this limit and work with non-serializable objects in our components using detachable Wicket models.
+As we have stated at the beginning of this chapter, page versions are stored using Java serialization, therefore every object referenced inside a page must be serializable. In [paragraph 11.6|guide:modelsforms_6] we will see how to overcome this limit and work with non-serializable objects in our components using detachable Wicket models.
 
 h3. Using a specific page version with PageReference
 
@@ -62,7 +62,7 @@ PageReference pageReference = new PageReference(3);
 Page page = pageReference.getPage();
 {code}
 
-To get the related page instance we must use method getPage.
+To get the related page instance we must use the method getPage.
 
 h3. Turning off page versioning
 
@@ -136,4 +136,4 @@ public void init()
 }
 {code}
 
-The page class provided as custom error page must have a public constructor with no argument or a constructor that takes as input a single PageParameters argument (the page must be bookmarkable as described in paragraph 8.1.1).
+The page class provided as custom error page must have a public constructor with no argument or a constructor that takes as input a single PageParameters argument (the page must be bookmarkable as described in [paragraph 10.1.1|guide:urls_1]).
