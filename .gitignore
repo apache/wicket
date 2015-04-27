@@ -9,3 +9,4 @@ velocity.log
 *~
 nb-configuration.xml
 .DS_Store
+**/node/
