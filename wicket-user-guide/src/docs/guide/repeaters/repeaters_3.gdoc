@@ -26,8 +26,8 @@ public HomePage(final PageParameters parameters) {
    //define the list of models to use
    final List<IModel<Person>> persons = new ArrayList<IModel<Person>>();
 		
-   persons.add(Model.of(new Person("John", "Smith")); 
-   persons.add(Model.of(new Person("Dan", "Wong"));
+   persons.add(Model.of(new Person("John", "Smith"))); 
+   persons.add(Model.of(new Person("Dan", "Wong")));
 
    add(new RefreshingView<Person>("persons") {
 	@Override
