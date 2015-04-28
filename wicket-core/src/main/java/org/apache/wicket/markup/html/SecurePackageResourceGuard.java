@@ -125,6 +125,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.eot");
 		addPattern("+*.ttf");
 		addPattern("+*.woff");
+		addPattern("+*.woff2");
 
 	}
 
