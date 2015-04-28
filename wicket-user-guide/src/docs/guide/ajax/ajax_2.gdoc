@@ -18,7 +18,7 @@ Building an entire site using AJAX can be risky as some clients may not support 
 
 h3. AJAX Checkbox
 
-Class @org.apache.wicket.ajax.markup.html.form.AjaxCheckBox@ is a checkbox component that updates its model via AJAX when user changes its value. Its AJAX callback method is @onUpdate(AjaxRequestTarget target)@. The component extends standard checkbox component @CheckBox@ adding an @AjaxFormComponentUpdatingBehavior@ to itself (we will see this behavior later in [paragraph 18.3.3|guide:ajax_3]).
+Class @org.apache.wicket.ajax.markup.html.form.AjaxCheckBox@ is a checkbox component that updates its model via AJAX when user changes its value. Its AJAX callback method is @onUpdate(AjaxRequestTarget target)@. The component extends standard checkbox component @CheckBox@ adding an @AjaxFormComponentUpdatingBehavior@ to itself (we will see this behavior later in [paragraph 19.3.3|guide:ajax_3]).
 
 h3. AJAX editable labels
 

@@ -70,7 +70,7 @@ By default @SimplePageAuthorizationStrategy@ checks for permissions only on page
 
 h3. Role-based strategies
 
-At the end of [paragraph 21.1|guide:security_1] we have introduced AbstractAuthenticatedWebSession's method getRoles which is provided to support role-based authorization returning the set of roles granted to the current user.
+At the end of [paragraph 22.1|guide:security_1] we have introduced AbstractAuthenticatedWebSession's method getRoles which is provided to support role-based authorization returning the set of roles granted to the current user.
 
 In Wicket roles are simple strings like “BASIC_USER” or “ADMIN” (they don't need to be capitalized) and they are handled with class @org.apache.wicket.authroles.authorization.strategies.role.Roles@. This class extends standard HashSet collection adding some functionalities to check whether the set contains one or more roles. Class @Roles@ already defines roles Roles.USER and Roles.ADMIN.
 
@@ -116,7 +116,7 @@ Roles can be adopted to apply security restrictions on our pages and components.
 The difference between these two strategies is that @MetaDataRoleAuthorizationStrategy@ handles role-based authorizations with Wicket metadata while @AnnotationsRoleAuthorizationStrategy@ uses Java annotations.
 
 {note}
-Application class @AuthenticatedWebApplication@ already sets @MetaDataRoleAuthorizationStrategy@ and @AnnotationsRoleAuthorizationStrategy@ as its own authorization strategies (it uses a compound strategy as we will see in [paragraph 21.2|guide:security_2]).
+Application class @AuthenticatedWebApplication@ already sets @MetaDataRoleAuthorizationStrategy@ and @AnnotationsRoleAuthorizationStrategy@ as its own authorization strategies (it uses a compound strategy as we will see in [paragraph 22.2|guide:security_2]).
 
 The code that we will see in the next examples is for illustrative purpose only. If our application class inherits from @AuthenticatedWebApplication@ we won't need to configure anything to use these two strategies.
 {note}

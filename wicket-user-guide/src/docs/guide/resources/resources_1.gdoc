@@ -6,4 +6,4 @@ Resources can be static or dynamic. Static resources don't entail any computatio
 
 An example of dynamic resource is the built-in class CaptchaImageResource in package @org.apache.wicket.extensions.markup.html.captcha@ which generates a captcha image each time is rendered. 
 
-As we will see in [paragraph 15.10|guide:resources_10], developers can build custom resources extending base class @org.apache.wicket.request.resource.AbstractResource@.
+As we will see in [paragraph 16.10|guide:resources_10], developers can build custom resources extending base class @org.apache.wicket.request.resource.AbstractResource@.

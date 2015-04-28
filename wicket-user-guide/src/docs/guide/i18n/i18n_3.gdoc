@@ -84,7 +84,7 @@ Wicket implements the default lookup algorithm using the strategy pattern. The c
 # *PackageStringResourceLoader:* searches into package bundles.
 # *ClassStringResourceLoader:* searches into bundles of a given class. By default the target class is the application class.
 # *ValidatorStringResourceLoader:* searches for resources into validator's bundles. A list of validators is provided by the form component that failed validation.
-# *InitializerStringResourceLoader:* this resource allows internationalization to interact with the initialization mechanism of the framework that will be illustrated in [paragraph 17.3|guide:advanced_3].
+# *InitializerStringResourceLoader:* this resource allows internationalization to interact with the initialization mechanism of the framework that will be illustrated in [paragraph 18.3|guide:advanced_3].
 
 Developer can customize lookup algorithm removing default resource loaders or adding custom implementations to the list of the resource loaders in use. This task can be accomplished using method getStringResourceLoaders of setting class @org.apache.wicket.settings.ResourceSettings@:
 

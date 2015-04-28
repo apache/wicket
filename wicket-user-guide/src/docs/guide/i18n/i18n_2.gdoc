@@ -60,7 +60,7 @@ To use XML bundles in Wicket we don't need to put in place any additional config
 
 h3. Reading bundles from code
 
-Class Component makes reading bundles very easy with method getString(String key). This method searches for a resource with the given key looking into the resource bundles visited by the lookup algorithm illustrated in [paragraph 14.3|guide:i18n_3]. For example if we have a greeting message with key greetingMessage in our application's resource  bundle, we can read it from our component code with this instruction:
+Class Component makes reading bundles very easy with method getString(String key). This method searches for a resource with the given key looking into the resource bundles visited by the lookup algorithm illustrated in [paragraph 15.3|guide:i18n_3]. For example if we have a greeting message with key greetingMessage in our application's resource  bundle, we can read it from our component code with this instruction:
 
 {code}
 getString("greetingMessage");
@@ -91,7 +91,7 @@ AbstractReadOnlyModel<String> model = new AbstractReadOnlyModel<String>() {
 add(new Label("greetingMessage", model));
 {code}
 
-Class @org.apache.wicket.model.AbstractReadOnlyModel@ is a convenience class for implementing read-only models. In this project we have implemented a custom read-only model for illustrative purposes only because Wicket already provides built-in models for the same task. We will see them in paragraph [paragraph 14.5|guide:i18n_5].
+Class @org.apache.wicket.model.AbstractReadOnlyModel@ is a convenience class for implementing read-only models. In this project we have implemented a custom read-only model for illustrative purposes only because Wicket already provides built-in models for the same task. We will see them in paragraph [paragraph 15.5|guide:i18n_5].
 
 The rest of the code of the home page builds the stateless form and the drop-down menu used to change the locale.
 

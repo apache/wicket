@@ -27,7 +27,7 @@ The entire infrastructure of feedback messages is built on top of the Java inter
 The topics of internationalization will be covered in [chapter 14|guide:i18n]. For now we will give just few notions needed to understand the examples from this chapter.
 {note}
 
-By default resource bundles are stored into properties files but we can easily configure other sources as described later in [paragraph 14.2|guide:i18n_2]. 
+By default resource bundles are stored into properties files but we can easily configure other sources as described later in [paragraph 15.2|guide:i18n_2]. 
 
 Default feedback messages (like the one above for required fields) are stored in the file Application. properties placed inside Wicket the org.apache.wicket package. Opening this file we can find the key and the localized value of the message:
 
