@@ -133,5 +133,5 @@ This does not apply to the init script which is dynamically generated and is ren
 {note}
 
 {warning}
-Our datepicker is not ready yet to be used with AJAX. In [chapter 18|guide:ajax] we will see how to modify it to make it AJAX-compatible.
+Our datepicker is not ready yet to be used with AJAX. In [chapter 19|guide:ajax] we will see how to modify it to make it AJAX-compatible.
 {warning}

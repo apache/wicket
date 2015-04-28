@@ -1,4 +1,4 @@
-To modify tag attributes we can use class @org.apache.wicket.AttributeModifier@. This class extends @org.apache.wicket.behavior.Behavior@ and can be added to any component via the @Component@'s @add@ method. Class @Behavior@ is used to expand component functionalities and it can also modify component markup. We will see this class in detail later in [chapter 17.1|guide:advanced_1].
+To modify tag attributes we can use class @org.apache.wicket.AttributeModifier@. This class extends @org.apache.wicket.behavior.Behavior@ and can be added to any component via the @Component@'s @add@ method. Class @Behavior@ is used to expand component functionalities and it can also modify component markup. We will see this class in detail later in [chapter 19.1|guide:advanced_1].
 
 As first example of attribute manipulation let's consider a @Label@ component bound to the following markup:
 

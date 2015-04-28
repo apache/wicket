@@ -102,7 +102,7 @@ public class HomePage extends WebPage {
 
 Just like we do with @onInitialize@, if we decide to override @onComponentTag@ we must remember to call the same method of the super class because also this class may also customize the tag. Overriding @onComponentTag@ is perfectly fine if we have to customize the tag of a specific component, but if we wanted to reuse the code across different components we should consider to use a behavior in place of this hook method.
 
-We have already seen in [chapter 6.2|guide:keepControl_2] how to use behavior @AttributeModifier@ to manipulate the tag's attribute. In [chapter 17.1|guide:advanced_1] we will see that base class @Behavior@ offers also a callback method named @onComponentTag(ComponentTag, Component)@ that can be used in place of the hook method @onComponentTag(ComponentTag)@.
+We have already seen in [chapter 6.2|guide:keepControl_2] how to use behavior @AttributeModifier@ to manipulate the tag's attribute. In [chapter 19.1|guide:advanced_1] we will see that base class @Behavior@ offers also a callback method named @onComponentTag(ComponentTag, Component)@ that can be used in place of the hook method @onComponentTag(ComponentTag)@.
 
 h3. Methods onComponentTagBody
 

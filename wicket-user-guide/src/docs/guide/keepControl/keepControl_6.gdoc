@@ -34,5 +34,5 @@ The content of the @<wicket:head>@ tag is added to the header section once per c
 {note}
 
 {warning}
-The @<wicket:head>@ tag is ideal if we want to define small in-line blocks of CSS or JavaScript. However Wicket provides also a more sophisticated technique to let components contribute to header section with in-line blocks and resource files like CSS or JavaScript files. We will see this technique later in [chapter 15|guide:resources].
+The @<wicket:head>@ tag is ideal if we want to define small in-line blocks of CSS or JavaScript. However Wicket provides also a more sophisticated technique to let components contribute to header section with in-line blocks and resource files like CSS or JavaScript files. We will see this technique later in [chapter 16|guide:resources].
 {warning}

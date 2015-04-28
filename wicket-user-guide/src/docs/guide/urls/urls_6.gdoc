@@ -112,7 +112,7 @@ Interface @org.apache.wicket.request.mapper.IMapperContext@ is used by request m
 * Namespace: it's the first URL segment of non-mounted pages. By default its value is wicket.
 * Identifier for non-bookmarkable URLs: it's the segment that identifies non bookmarkable pages. By default its value is page.
 * Identifier for bookmarkable URLs: it's the segment that identifies bookmarkable pages. By default its value is bookmarkable (as we have seen before in [paragraph 10.1.1|guide:urls_1]).
-* Identifier for resources: it's the segment that identifies Wicket resources. Its default value is resources. The topic of resource management will be covered in [chapter 15|guide:resources].
+* Identifier for resources: it's the segment that identifies Wicket resources. Its default value is resources. The topic of resource management will be covered in [chapter 16|guide:resources].
 
 IMapperContext provides a getter method for any segment listed above. By default Wicket uses class @org.apache.wicket.DefaultMapperContext@ as mapper context.
 

@@ -40,7 +40,7 @@ The RequestCycle is also responsible for generating the URL value (as CharSequen
 
 * a page class, via the @urlFor(Class<C> pageClass, PageParameters parameters)@ method 
 * an IRequestHandler via the @urlFor(IRequestHandler handler)@ method 
-* a ResourceReference via the @urlFor(ResourceReference reference, PageParameters params)@ method (resource entities will be introduced in [chapter 16|guide:resources]). 
+* a ResourceReference via the @urlFor(ResourceReference reference, PageParameters params)@ method (resource entities will be introduced in [chapter 19|guide:resources]). 
 
 The overloaded @urlFor@ method from above also has a corresponding version that returns an instance of @org.apache.wicket.request.Url@ instead of a @CharSequence@. This version has the prefix 'map' in its name (i.e. it has @mapUrlFor@ as full name).
 

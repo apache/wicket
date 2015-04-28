@@ -39,7 +39,7 @@ h3. Login form
 As first example of interaction between the form and its models, we will build a classic login form which asks for username and password (project LoginForm).
 
 {warning}
-The topic of security will be discussed later in chapter 20. The following form is for example purposes only and is not suited for a real application.
+The topic of security will be discussed later in chapter 22. The following form is for example purposes only and is not suited for a real application.
 If you need to use a login form you should consider to use component @org.apache.wicket.authroles.authentication.panel.SignInPanel@ shipped with Wicket.
 {warning}
 

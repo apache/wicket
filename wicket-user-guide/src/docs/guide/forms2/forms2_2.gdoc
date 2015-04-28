@@ -24,7 +24,7 @@ Wicket generates a feedback message for each field that doesn't satisfy one of i
 The entire infrastructure of feedback messages is built on top of the Java internationalization (I18N) support and it uses "resource bundles":http://docs.oracle.com/javase/tutorial/i18n/resbundle/index.html to store messages.
 
 {note}
-The topics of internationalization will be covered in [chapter 14|guide:i18n]. For now we will give just few notions needed to understand the examples from this chapter.
+The topics of internationalization will be covered in [chapter 15|guide:i18n]. For now we will give just few notions needed to understand the examples from this chapter.
 {note}
 
 By default resource bundles are stored into properties files but we can easily configure other sources as described later in [paragraph 15.2|guide:i18n_2]. 
