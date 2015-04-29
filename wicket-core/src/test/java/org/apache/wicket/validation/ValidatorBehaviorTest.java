@@ -44,7 +44,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 	 * Tests validators are treated as behaviors
 	 */
 	@Test
-	public void testActAsBehavior()
+	public void actAsBehavior()
 	{
 		TestPage page = new TestPage();
 
@@ -87,7 +87,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 	 * Tests validators are treated as validators
 	 */
 	@Test
-	public void testActAsValidator()
+	public void actAsValidator()
 	{
 		TestPage page = new TestPage();
 
