@@ -59,6 +59,28 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		assertFalse(tester.getLastResponseAsString().contains("foo=\"bar\""));
 	}
 
+
+	/**
+	 * Tests that disabled validators are not used
+	 * https://issues.apache.org/jira/browse/WICKET-5897
+	 */
+	@Test
+	public void disabledValidator()
+	{
+		TestPage page = new TestPage();
+		page.name.add(new DisabledValidator());
+
+		tester.startPage(page);
+		assertTrue(page.name.isValid());
+
+		FormTester ft = tester.newFormTester("form");
+		ft.setValue("name", "22");
+		ft.submit();
+
+		assertTrue(page.name.isValid());
+	}
+
+
 	/**
 	 * Tests validators are treated as validators
 	 */
@@ -167,9 +189,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 				error.setMessage("MINIMUM");
 				validatable.error(error);
 			}
-
 		}
-
 	}
 
 	/**
@@ -196,6 +216,25 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		{
 			return new StringResourceStream(
 				"<form wicket:id='form'><input wicket:id='name' type='text'/></form>");
+		}
+	}
+
+	public static class DisabledValidator extends Behavior implements IValidator<String>
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void validate(IValidatable<String> validatable)
+		{
+			ValidationError error = new ValidationError();
+			error.setMessage("validate() method should not be executed");
+			validatable.error(error);
+		}
+
+		@Override
+		public boolean isEnabled(Component component)
+		{
+			return false;
 		}
 	}
 }

@@ -1502,6 +1502,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		{
 			for (Behavior behavior : getBehaviors())
 			{
+				if (isBehaviorAccepted(behavior) == false)
+				{
+					continue;
+				}
+
 				validator = null;
 				if (behavior instanceof ValidatorAdapter)
 				{
