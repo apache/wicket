@@ -1913,6 +1913,26 @@ public class BaseWicketTester
 			}
 		}
 		/*
+		 * If the link is an instanceof IAjaxLink, it is not one of the
+		 * special cases marked above, so we treat it as an AjaxLink.
+		 */
+		else if (linkComponent instanceof IAjaxLink) 
+		{
+			// If it's not ajax we fail
+			if (isAjax == false)
+			{
+				fail("Link " + path + "is an AjaxLink and will " +
+					"not be invoked when AJAX (javascript) is disabled.");
+			}
+
+			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
+				linkComponent, "click");
+			for (AjaxEventBehavior behavior : behaviors)
+			{
+				executeBehavior(behavior);
+			}
+		}
+		/*
 		 * If the link is a submitlink then we pretend to have clicked it
 		 */
 		else if (linkComponent instanceof SubmitLink)
