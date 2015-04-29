@@ -34,7 +34,7 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 	/**
 	 * jQuery ver. 1.x - works on modern browsers and IE 6/7/8
 	 */
-	public static final String VERSION_1 = "jquery/jquery-1.11.2.js";
+	public static final String VERSION_1 = "jquery/jquery-1.11.3.js";
 
 	private static final JQueryResourceReference INSTANCE = new JQueryResourceReference();
 

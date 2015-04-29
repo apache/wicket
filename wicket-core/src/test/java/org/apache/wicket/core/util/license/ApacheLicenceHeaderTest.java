@@ -39,7 +39,6 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 		 */
 		htmlIgnore.add("src/main/java/org/apache/wicket/util/diff");
 		htmlIgnore.add("src/main/java/org/apache/wicket/markup/html/pages");
-		htmlIgnore.add("src/main/java/org/apache/wicket/ajax/res/js/jquery");
 
 		// the licence header breaks the tests in IE
 		htmlIgnore.add("src/test/js/all.html");
