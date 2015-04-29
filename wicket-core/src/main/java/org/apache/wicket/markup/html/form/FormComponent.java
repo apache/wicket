@@ -1498,10 +1498,15 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 
 		boolean isNull = getConvertedInput() == null;
 
-		IValidator<T> validator = null;
+		IValidator<T> validator;
 
 		for (Behavior behavior : getBehaviors())
 		{
+			if (isBehaviorAccepted(behavior) == false)
+			{
+				continue;
+			}
+
 			validator = null;
 			if (behavior instanceof ValidatorAdapter)
 			{
