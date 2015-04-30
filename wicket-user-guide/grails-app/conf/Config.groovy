@@ -99,8 +99,8 @@ grails.doc.subtitle = "Free Online Guide for Apache Wicket framework"
 grails.doc.authors = "Andrea Del Bene, Martin Grigorov, Carsten Hufe, Christian Kroemer, Daniel Bartl, Paul Borș, Tobias Soloschenko, Igor Vaynberg , Joachim Rohde"
 grails.doc.images = new File("${basePath}/src/docs/img")
 grails.doc.css = new File("${basePath}/src/docs/css")
-grails.doc.logo = """<a href="/" target="_blank"><img height="80px" src="http://wicket.apache.org/guide/img/apache-wicket.png"/></a>"""
-grails.doc.sponsorLogo = """<a href="http://www.apache.org/" target="_blank"><img height="60px" src="http://wicket.apache.org/guide/img/asf_logo.gif"/></a>"""
+grails.doc.logo = """<a href="/" target="_blank"><img height="80px" src="http://ci.apache.org/projects/wicket/guide/7.x/img/apache-wicket.png"/></a>"""
+grails.doc.sponsorLogo = """<a href="http://www.apache.org/" target="_blank"><img height="60px" src="http://ci.apache.org/projects/wicket/guide/7.x/img/asf_logo.gif"/></a>"""
 grails.doc.copyright="""
 Copyright &copy; 2013-2015 — <a href="http://www.apache.org/" target="_blank">The Apache Software Foundation</a> 
                       — <b style="color:#E8590A !important;">(Generated on: """ + (new Date()).format('yyyy-MM-dd') + """)</b>
