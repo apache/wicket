@@ -18,7 +18,6 @@ package org.apache.wicket.queueing.transparentresolvers;
 
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -69,7 +68,7 @@ public class TestWicket5898
 	 * that might need rewriting.
 	 */
 	@Test
-	@Ignore("This test fails, should be enabled to trigger WICKET-5898")
+	//@Ignore("This test fails, should be enabled to trigger WICKET-5898")
 	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow()
 	{
 		tester.startPage(Wicket5898Page.class);
@@ -89,7 +88,7 @@ public class TestWicket5898
 	 * outer TWMC.
 	 */
 	@Test
-	@Ignore("This test fails, should be enabled to trigger WICKET-5898")
+	//@Ignore("This test fails, should be enabled to trigger WICKET-5898")
 	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow2()
 	{
 		tester.startPage(Wicket5898Page2.class);
