@@ -60,19 +60,17 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	private ISpringContextLocator springContextLocator;
 
 	private Boolean singletonCache = null;
-	
+
 	/**
 	 * Resolvable type for field to inject
 	 */
 	private ResolvableType fieldResolvableType;
-	
+
 	/**
 	 * If the field to inject is a list this is the resolvable type of its elements
 	 */
 	private ResolvableType fieldElementsResolvableType;
-	
-	private String fieldName;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -129,7 +127,6 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		
 		if (beanField != null)
 		{
-			fieldName = beanField.getName();
 			fieldResolvableType = ResolvableType.forField(beanField);
 			fieldElementsResolvableType = extractElementGeneric(fieldResolvableType);
 		}
