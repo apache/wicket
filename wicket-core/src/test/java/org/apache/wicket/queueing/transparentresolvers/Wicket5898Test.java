@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.queueing.transparentresolvers;
 
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
+import org.apache.wicket.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -31,19 +30,8 @@ import org.junit.Test;
  * {@code WebMarkupContainer} is significant in triggering this bug. Removing the {@code group} or
  * the {@code src} attribute lets the test pass.
  */
-public class TestWicket5898
+public class Wicket5898Test extends WicketTestCase
 {
-	private WicketTester tester;
-
-	/**
-	 * Sets up the tester.
-	 */
-	@Before
-	public void setUp()
-	{
-		tester = new WicketTester();
-	}
-
 	/**
 	 * This test should pass, it is just here to validate that the page renders initially, and using
 	 * a normal, non-AJAX request cycle.
@@ -68,7 +56,6 @@ public class TestWicket5898
 	 * that might need rewriting.
 	 */
 	@Test
-	//@Ignore("This test fails, should be enabled to trigger WICKET-5898")
 	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow()
 	{
 		tester.startPage(Wicket5898Page.class);
@@ -88,7 +75,6 @@ public class TestWicket5898
 	 * outer TWMC.
 	 */
 	@Test
-	//@Ignore("This test fails, should be enabled to trigger WICKET-5898")
 	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow2()
 	{
 		tester.startPage(Wicket5898Page2.class);
