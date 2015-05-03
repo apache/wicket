@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.queueing.transparentresolvers;
+package org.apache.wicket.markup.html;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -27,14 +27,14 @@ import org.apache.wicket.markup.html.basic.Label;
  * A test page for triggering a StackOverflowError when updating a component inside a
  * {@link TransparentWebMarkupContainer} using AJAX.
  */
-public class Wicket5898Page extends WebPage
+public class SingleNestedTransparentContainerPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor
 	 */
-	public Wicket5898Page()
+	public SingleNestedTransparentContainerPage()
 	{
 		final Label label = new Label("label", "Label");
 		label.setOutputMarkupId(true);
