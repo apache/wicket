@@ -62,3 +62,35 @@ Repeaters component that have @org.apache.wicket.markup.repeater.AbstractRepeate
 
 If we want to refresh their markup via AJAX we must add one of their parent containers to the @AjaxRequestTarget@.
 {warning}
+
+The standard implementation of @AjaxRequestTarget@ used by Wicket is class @org.apache.wicket.ajax.AjaxRequestHandler@. To create new instances of @AjaxRequestTarget@ a Wicket application uses the provider object registered with method @setAjaxRequestTargetProvider@:
+
+{code}
+setAjaxRequestTargetProvider(
+		IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
+{code}
+
+The provider is an implementation of interface @org.apache.wicket.util.IContextProvider@, hence to use custom implementations of @AjaxRequestTarget@ we must register a custom provider that returns the desired implementation: 
+
+{code}
+private static class MyCustomAjaxRequestTargetProvider implements
+		IContextProvider<AjaxRequestTarget, Page>
+	{
+		@Override
+		public AjaxRequestTarget get(Page page)
+		{
+			return new MyCustomAjaxRequestTarget();
+		}
+	}
+{code}
+
+{note}
+During request handling @AjaxRequestHandler@ sends an event to its application to notify the entire component hierarchy of the current page:
+
+{code}
+   //'page' is the associated Page instance
+   page.send(app, Broadcast.BREADTH, this);
+{code}
+
+The payload of the event is the @AjaxRequestHandler@ itself.
+{note}
