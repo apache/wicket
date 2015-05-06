@@ -60,6 +60,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
@@ -1854,6 +1855,16 @@ public class BaseWicketTester
 
 			submitAjaxFormSubmitBehavior(link,
 				(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "click"));
+		}
+		// if the link is an IAjaxLink, use it (do check if AJAX is expected)
+		else if (linkComponent instanceof IAjaxLink && isAjax)
+		{
+			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
+				linkComponent, "click");
+			for (AjaxEventBehavior behavior : behaviors)
+			{
+				executeBehavior(behavior);
+			}
 		}
 		/*
 		 * If the link is a submitlink then we pretend to have clicked it
