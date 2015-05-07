@@ -31,6 +31,7 @@ import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -129,8 +130,8 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		wicketTester.clickLink("link", true);
 		wicketTester.destroy();
 	}
-	
-	
+
+
 	/**
 	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
 	 * TransparentWebMarkupContainers is updated. This particular test case is caused by Wicket's
@@ -168,7 +169,27 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		tester.clickLink("link", true);
 		tester.assertComponentOnAjaxResponse("label");
 	}
-	
+
+	/**
+	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
+	 * TransparentWebMarkupContainers is updated. This particular test case is caused by having two
+	 * TransparentWebMarkupContainers nested, and where a TWMC exist inside a sibling web markup
+	 * container and trying to update a label that was added to the outer TWMC.
+	 */
+	@Test
+	@Ignore("Fails with WICKET-5898")
+	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow3()
+	{
+		tester.startPage(DoubleNestedTransparentContainerWithSiblingTransparentContainerPage.class);
+
+		// the page renders normally using normal web requests
+		tester.assertRenderedPage(DoubleNestedTransparentContainerWithSiblingTransparentContainerPage.class);
+
+		// without WICKET-5898 fixed the statement below causes a StackOverflowError
+		tester.clickLink("link", true);
+		tester.assertComponentOnAjaxResponse("label");
+	}
+
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
