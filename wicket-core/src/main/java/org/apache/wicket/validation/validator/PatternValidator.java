@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.validation.validator;
 
+import java.util.Collections;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -58,6 +59,9 @@ public class PatternValidator implements IValidator<String>
 
 	/** whether to exclude matching input **/
 	private boolean reverse = false;
+
+	/** the message key used to build the error message **/
+	private String errorKey;
 
 	/**
 	 * Constructor that accepts a <code>String</code> regular expression pattern.
@@ -129,6 +133,28 @@ public class PatternValidator implements IValidator<String>
 	}
 
 	/**
+	 * Gets the error message key.
+	 * 
+	 * @return the error message key
+	 */
+	public String getErrorKey()
+	{
+		return errorKey;
+	}
+
+	/**
+	 * If set, this message key is used to build the error message.
+	 * 
+	 * @param errorKey
+	 * @return itself
+	 */
+	public PatternValidator setErrorKey(String errorKey)
+	{
+		this.errorKey = errorKey;
+		return this;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -150,6 +176,10 @@ public class PatternValidator implements IValidator<String>
 		if (pattern.matcher(validatable.getValue()).matches() == reverse)
 		{
 			ValidationError error = new ValidationError(this);
+			if (errorKey != null)
+			{
+				error.setKeys(Collections.singletonList(errorKey));
+			}
 			error.setVariable("pattern", pattern.pattern());
 			validatable.error(decorate(error, validatable));
 		}
