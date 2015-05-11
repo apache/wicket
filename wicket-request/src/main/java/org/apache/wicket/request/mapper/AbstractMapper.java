@@ -112,7 +112,8 @@ public abstract class AbstractMapper implements IRequestMapper
 				for (int i = 0; i < segments.length; ++i)
 				{
 					if ((segments[i].equals(urlSegments.get(i)) == false) &&
-						(getPlaceholder(segments[i]) == null))
+						(getPlaceholder(segments[i]) == null && 
+						 getOptionalPlaceholder(segments[i]) == null))
 					{
 						return false;
 					}
