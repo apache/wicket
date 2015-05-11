@@ -100,29 +100,43 @@ public abstract class AbstractMapper implements IRequestMapper
 		{
 			return false;
 		}
-		else
+
+		List<String> urlSegments = url.getSegments();
+		
+		for (int i = 0; i < segments.length; ++i)
 		{
-			List<String> urlSegments = url.getSegments();
-			if (urlSegments.size() < segments.length)
+			if (!segments[i].equals(safeSegmentGetter(urlSegments, i , "")) &&
+				(getPlaceholder(segments[i]) == null && 
+				 getOptionalPlaceholder(segments[i]) == null))
 			{
 				return false;
 			}
-			else
-			{
-				for (int i = 0; i < segments.length; ++i)
-				{
-					if ((segments[i].equals(urlSegments.get(i)) == false) &&
-						(getPlaceholder(segments[i]) == null && 
-						 getOptionalPlaceholder(segments[i]) == null))
-					{
-						return false;
-					}
-				}
-			}
 		}
+			
 		return true;
 	}
-
+	
+	/**
+	 * Utility method to safely get an element from a list of String.
+	 * If the specified index is bigger than the size of the list
+	 * the default value is returned.
+	 * 
+	 * @param segments
+	 * @param index
+	 * @param defaultValue
+	 * @return the element at the specified position or the default value if the list size is smaller.
+	 * 
+	 */
+	protected String safeSegmentGetter(List<String> segments, int index, String defaultValue)
+	{
+		if (index < segments.size())
+		{
+			return segments.get(index);
+		}
+		
+		return defaultValue;
+	}
+	
 	/**
 	 * Extracts {@link PageParameters} from the URL using the given {@link IPageParametersEncoder} .
 	 * 
