@@ -915,7 +915,10 @@ public class MountedMapperTest extends AbstractMapperTest
 		final int optCompatScore = optionalParameter.getCompatibilityScore(request);
 		final int requiredOptCompatScore = requiredOptionalParam.getCompatibilityScore(request);
 
+		assertTrue("exactMount mapper must be eligible to handle the request", exactCompatScore > 0);
+		assertTrue("requiredParam mapper must be eligible to handle the request", requiredParamScore > 0);
 		assertTrue("optionalParameter mapper must be eligible to handle the request", optCompatScore > 0);
+		assertTrue("requiredOptionalParam mapper must be eligible to handle the request", requiredOptCompatScore > 0);
 		
 		assertTrue("exactCompatScore should have greater compatibility score than required one"
 			+ " got exact = " + exactCompatScore + " and required= " + requiredParamScore,
