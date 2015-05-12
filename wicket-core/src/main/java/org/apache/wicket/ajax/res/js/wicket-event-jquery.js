@@ -315,6 +315,7 @@
 			Topic: {
 				DOM_NODE_REMOVING      : '/dom/node/removing',
 				DOM_NODE_ADDED         : '/dom/node/added',
+				AJAX_CALL_INIT         : '/ajax/call/init',
 				AJAX_CALL_BEFORE       : '/ajax/call/before',
 				AJAX_CALL_PRECONDITION : '/ajax/call/precondition',
 				AJAX_CALL_BEFORE_SEND  : '/ajax/call/beforeSend',

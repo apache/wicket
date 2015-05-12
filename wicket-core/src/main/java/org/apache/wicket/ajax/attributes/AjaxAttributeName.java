@@ -174,6 +174,13 @@ public enum AjaxAttributeName {
 	BEFORE_HANDLER("bh"),
 
 	/**
+	 * init handler (ih)
+	 * 
+	 * @see AjaxCallListener#getInitHandler(org.apache.wicket.Component)
+	 */
+	INIT_HANDLER("ih"),
+
+	/**
 	 * the indicator id, if any found (i)
 	 * 
 	 * @see AbstractDefaultAjaxBehavior#findIndicatorId()
