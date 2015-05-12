@@ -21,7 +21,6 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,10 +96,7 @@ public final class DefaultMarkupSourcingStrategy extends AbstractMarkupSourcingS
 			return markup;
 		}
 		
-		if(!(child instanceof IComponentResolver)) 
-		{
-			markup = searchMarkupInTransparentResolvers(container, child);
-		}
+		markup = searchMarkupInTransparentResolvers(container, child);
 		
 		return markup;
 	}
