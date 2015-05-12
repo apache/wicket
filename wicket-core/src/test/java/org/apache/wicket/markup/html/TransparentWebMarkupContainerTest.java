@@ -31,6 +31,7 @@ import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -182,6 +183,47 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 
 		// the page renders normally using normal web requests
 		tester.assertRenderedPage(DoubleNestedTransparentContainerWithSiblingTransparentContainerPage.class);
+
+		// without WICKET-5898 fixed the statement below causes a StackOverflowError
+		tester.clickLink("link", true);
+		tester.assertComponentOnAjaxResponse("label");
+	}
+
+	/**
+	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
+	 * TransparentWebMarkupContainers is updated. This particular test case is caused by having
+	 * introduce automatic transparent containers inside some link components due to a
+	 * {@code <img src="">} tag inside the link tags, and trying to update a label that was added to
+	 * the outer TWMC.
+	 */
+	@Test
+	@Ignore("Fails due to WICKET-5898")
+	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow4()
+	{
+		tester.startPage(TransparentContainerWithAutoTransparentContainerPage.class);
+
+		// the page renders normally using normal web requests
+		tester.assertRenderedPage(TransparentContainerWithAutoTransparentContainerPage.class);
+
+		// without WICKET-5898 fixed the statement below causes a StackOverflowError
+		tester.clickLink("link", true);
+		tester.assertComponentOnAjaxResponse("label");
+	}
+
+	/**
+	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
+	 * TransparentWebMarkupContainers is updated. This particular test case is caused by having
+	 * manually added transparent containers inside some link components, and trying to update a
+	 * label that was added to the outer TWMC.
+	 */
+	@Test
+	@Ignore("Fails due to WICKET-5898")
+	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow5()
+	{
+		tester.startPage(TransparentContainerWithManualTransparentContainerPage.class);
+
+		// the page renders normally using normal web requests
+		tester.assertRenderedPage(TransparentContainerWithManualTransparentContainerPage.class);
 
 		// without WICKET-5898 fixed the statement below causes a StackOverflowError
 		tester.clickLink("link", true);
