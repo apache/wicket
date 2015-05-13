@@ -450,6 +450,7 @@ jQuery(document).ready(function() {
 						ok(attributes.sc === undefined, 'submitting component');
 						ok(attributes.i === undefined, 'indicator');
 						ok(attributes.pre === undefined, 'preconditions');
+						ok(attributes.ih === undefined, 'init handlers');
 						ok(attributes.bh === undefined, 'before handlers');
 						ok(attributes.ah === undefined, 'after handler');
 						ok(attributes.sh === undefined, 'success handlers');

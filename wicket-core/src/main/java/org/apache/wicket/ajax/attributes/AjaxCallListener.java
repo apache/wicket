@@ -28,6 +28,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeaderContributor
 {
+	private StringBuilder init;
 	private StringBuilder success;
 	private StringBuilder failure;
 	private StringBuilder before;
@@ -35,6 +36,27 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	private StringBuilder after;
 	private StringBuilder complete;
 	private StringBuilder precondition;
+
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getInitHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 * 
+	 * @param init
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 */
+	public AjaxCallListener onInit(final CharSequence init)
+	{
+		if (Strings.isEmpty(init) == false)
+		{
+			if (this.init == null)
+			{
+				this.init = new StringBuilder();
+			}
+			this.init.append(init);
+		}
+		return this;
+	}
 
 	/**
 	 * Sets the JavaScript code that will be returned by {@link #getBeforeHandler(Component)}.
@@ -193,6 +215,12 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	public CharSequence getFailureHandler(Component component)
 	{
 		return failure;
+	}
+
+	@Override
+	public CharSequence getInitHandler(Component component)
+	{
+		return init;
 	}
 
 	@Override

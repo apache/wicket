@@ -1946,6 +1946,9 @@
 							attributes.event.extraData = data;
 						}
 
+						call._executeHandlers(attributes.ih, attributes);
+						Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_INIT, attributes);
+
 						var throttlingSettings = attributes.tr;
 						if (throttlingSettings) {
 							var postponeTimerOnUpdate = throttlingSettings.p || false;
