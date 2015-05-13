@@ -430,7 +430,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('verify default attributes.', function () {
 
-			expect(23);
+			expect(24);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
