@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import java.util.Iterator;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
@@ -26,8 +28,6 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Implements boilerplate as needed by many markup sourcing strategies.
@@ -55,53 +55,58 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 	 * 
 	 * @param container
 	 *            the parent container.
+	 * @param
+	 * 		  containerMarkup
+	 * 			  the markup of the container.           
 	 * @param child
 	 *            The component to find the markup for.
 	 * @return the markup fragment for the child, or {@code null}.
 	 */
-	protected IMarkupFragment searchMarkupInTransparentResolvers(final MarkupContainer container,
-		final Component child)
+	protected IMarkupFragment searchMarkupInTransparentResolvers(MarkupContainer container,
+		IMarkupFragment containerMarkup, Component child)
 	{
-		return container.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer, IMarkupFragment>()
+		IMarkupFragment childMarkupFound = null;
+		Iterator<Component> siblingsIterator = container.iterator();
+		
+		while (siblingsIterator.hasNext() && childMarkupFound == null)
 		{
-			@Override
-			public void component(MarkupContainer resolvingContainer, IVisit<IMarkupFragment> visit)
+			Component sibling = siblingsIterator.next();
+			
+			if(sibling == child || !sibling.isVisible())
 			{
-				//prevents possible searching loops
-				if (child == resolvingContainer) 
-				{
-					visit.dontGoDeeper();
-					return;
-				}
-				
-				if (resolvingContainer instanceof IComponentResolver)
-				{
-					visit.dontGoDeeper();
-
-					IMarkupFragment childMarkup = resolvingContainer.getMarkup(child);
-
-					if (childMarkup != null && childMarkup.size() > 0)
-					{
-						IComponentResolver componentResolver = (IComponentResolver)resolvingContainer;
-
-						MarkupStream stream = new MarkupStream(childMarkup);
-
-						ComponentTag tag = stream.getTag();
-
-						Component resolvedComponent = resolvingContainer.get(tag.getId());
-						if (resolvedComponent == null)
-						{
-							resolvedComponent = componentResolver.resolve(resolvingContainer, stream, tag);
-						}
-
-						if (child == resolvedComponent)
-						{
-							visit.stop(childMarkup);
-						}
-					}
-				}				
+				continue;
 			}
-		});
+			
+			IMarkupFragment siblingMarkup = containerMarkup.find(sibling.getId());
+			
+			if (siblingMarkup != null && sibling instanceof MarkupContainer)
+			{
+				IMarkupFragment childMarkup  = siblingMarkup.find(child.getId());
+				
+				if (childMarkup != null && sibling instanceof IComponentResolver)
+				{
+					IComponentResolver componentResolver = (IComponentResolver)sibling;
+					MarkupStream stream = new MarkupStream(childMarkup);
+					ComponentTag tag = stream.getTag();
+					
+					Component resolvedComponent = sibling.get(tag.getId());
+					if (resolvedComponent == null)
+					{
+						resolvedComponent = componentResolver.resolve((MarkupContainer)sibling, stream, tag);
+					}
+					
+					if (child == resolvedComponent)
+					{
+						childMarkupFound = childMarkup;
+					}
+				}
+				else 
+				{
+					childMarkupFound = searchMarkupInTransparentResolvers((MarkupContainer)sibling, siblingMarkup, child);
+				}
+			}
+		}
+		return childMarkupFound;
 	}
 
 	/**

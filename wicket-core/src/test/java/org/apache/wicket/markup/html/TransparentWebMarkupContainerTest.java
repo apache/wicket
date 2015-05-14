@@ -31,7 +31,6 @@ import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -177,7 +176,6 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * container and trying to update a label that was added to the outer TWMC.
 	 */
 	@Test
-	@Ignore("Fails due to WICKET-5898")
 	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow3()
 	{
 		tester.startPage(DoubleNestedTransparentContainerWithSiblingTransparentContainerPage.class);
@@ -198,7 +196,6 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * the outer TWMC.
 	 */
 	@Test
-	@Ignore("Fails due to WICKET-5898")
 	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow4()
 	{
 		tester.startPage(TransparentContainerWithAutoTransparentContainerPage.class);
@@ -218,7 +215,6 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * label that was added to the outer TWMC.
 	 */
 	@Test
-	@Ignore("Fails due to WICKET-5898")
 	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow5()
 	{
 		tester.startPage(TransparentContainerWithManualTransparentContainerPage.class);
