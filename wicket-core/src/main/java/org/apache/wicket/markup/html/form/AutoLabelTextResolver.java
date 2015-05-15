@@ -196,7 +196,7 @@ public class AutoLabelTextResolver implements IComponentResolver
 					String text = labeled.getString(resourceKey);
 					if (!Strings.isEmpty(text))
 					{
-						return new StringResourceModel(resourceKey, labeled, null);
+						return new StringResourceModel(resourceKey, labeled);
 					}
 				}
 			}
