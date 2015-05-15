@@ -43,8 +43,8 @@
 	</licenses>
 	<properties>
 		<wicket.version>7.0.0-SNAPSHOT</wicket.version>
-		<jetty9.version>9.2.9.v20150224</jetty9.version>
-		<log4j.version>2.2</log4j.version>
+		<jetty9.version>9.2.10.v20150310</jetty9.version>
+		<log4j.version>2.3</log4j.version>
 		<junit.version>4.12</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
