@@ -26,6 +26,7 @@ import org.apache.wicket.Localizer;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
 import org.apache.wicket.resource.loader.ComponentStringResourceLoader;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -185,20 +186,20 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The wrapped model. */
-	private final IModel<?> model;
-
-	/** Optional parameters. */
-	private final Object[] parameters;
+	/** The key of message to get. */
+	private final String resourceKey;
 
 	/** The relative component used for lookups. */
 	private final Component component;
 
-	/** The key of message to get. */
-	private final String resourceKey;
+	/** The wrapped model. */
+	private IModel<?> model;
+
+	/** Optional parameters. */
+	private Object[] parameters;
 
 	/** The default value of the message. */
-	private final IModel<String> defaultValue;
+	private IModel<String> defaultValue;
 
 	@Override
 	public IWrapModel<String> wrapOnAssignment(Component component)
@@ -275,11 +276,6 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * not be obtained from resource bundles that are held relative to a particular component or
 	 * page. However, for application that use only global resources then this parameter may be
 	 * null.
-	 * <p>
-	 * The model parameter is also optional and only needs to be supplied if value substitutions are
-	 * to take place on either the resource key or the actual resource strings.
-	 * <p>
-	 * The parameters parameter is also optional and is used for substitutions.
 	 * 
 	 * @param resourceKey
 	 *            The resource key for this string resource
@@ -287,13 +283,14 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 *            The component that the resource is relative to
 	 * @param model
 	 *            The model to use for property substitutions
-	 * @param parameters
-	 *            The parameters to substitute using a Java MessageFormat object
 	 */
-	public StringResourceModel(final String resourceKey, final Component component,
-		final IModel<?> model, final Object... parameters)
+	public StringResourceModel(final String resourceKey, final Component component, IModel<?> model)
 	{
-		this(resourceKey, component, model, null, parameters);
+		Args.notNull(resourceKey, "resource key");
+
+		this.resourceKey = resourceKey;
+		this.component = component;
+		this.model = model;
 	}
 
 	/**
@@ -303,81 +300,66 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * not be obtained from resource bundles that are held relative to a particular component or
 	 * page. However, for application that use only global resources then this parameter may be
 	 * null.
-	 * <p>
-	 * The model parameter is also optional and only needs to be supplied if value substitutions are
-	 * to take place on either the resource key or the actual resource strings.
-	 * <p>
-	 * The parameters parameter is also optional and is used for substitutions.
 	 * 
 	 * @param resourceKey
 	 *            The resource key for this string resource
 	 * @param component
 	 *            The component that the resource is relative to
-	 * @param model
-	 *            The model to use for property substitutions
+	 */
+	public StringResourceModel(final String resourceKey, final Component component)
+	{
+		this(resourceKey, component, null);
+	}
+
+	/**
+	 * Creates a new string resource model using the supplied parameter.
+	 *
+	 * @param resourceKey
+	 *            The resource key for this string resource
+	 */
+	public StringResourceModel(final String resourceKey)
+	{
+		this(resourceKey, null, null);
+	}
+
+	/**
+	 * Sets the default value if the resource key is not found.
+	 *
 	 * @param defaultValue
 	 *            The default value if the resource key is not found.
-	 * @param parameters
-	 *            The parameters to substitute using a Java MessageFormat object
+	 * @return this for chaining
 	 */
-	public StringResourceModel(final String resourceKey, final Component component,
-		final IModel<?> model, final IModel<String> defaultValue, final Object... parameters)
+	public StringResourceModel setDefaultValue(final IModel<String> defaultValue)
 	{
-		if (resourceKey == null)
-		{
-			throw new IllegalArgumentException("Resource key must not be null");
-		}
-		this.resourceKey = resourceKey;
-		this.component = component;
-		this.model = model;
 		this.defaultValue = defaultValue;
+		return this;
+	}
+
+	/**
+	 * Sets the model used for property substitutions.
+	 * 
+	 * @param model
+	 *            The model to use for property substitutions
+	 * @return this for chaining
+	 */
+	public StringResourceModel setModel(final IModel<?> model)
+	{
+		this.model = model;
+		return this;
+	}
+
+	/**
+	 * Sets the parameters used for substitution.
+	 * 
+	 * @param parameters
+	 *           The parameters to substitute using a Java MessageFormat object
+	 * @return this for chaining
+	 */
+	public StringResourceModel setParameters(Object... parameters)
+	{
 		this.parameters = parameters;
+		return this;
 	}
-
-	/**
-	 * Creates a new string resource model using the supplied parameters.
-	 * <p>
-	 * The model parameter is also optional and only needs to be supplied if value substitutions are
-	 * to take place on either the resource key or the actual resource strings.
-	 * <p>
-	 * The parameters parameter is also optional and is used for substitutions.
-	 * 
-	 * @param resourceKey
-	 *            The resource key for this string resource
-	 * @param model
-	 *            The model to use for property substitutions
-	 * @param parameters
-	 *            The parameters to substitute using a Java MessageFormat object
-	 */
-	public StringResourceModel(final String resourceKey, final IModel<?> model,
-		final Object... parameters)
-	{
-		this(resourceKey, null, model, null, parameters);
-	}
-
-	/**
-	 * Creates a new string resource model using the supplied parameters.
-	 * <p>
-	 * The model parameter is also optional and only needs to be supplied if value substitutions are
-	 * to take place on either the resource key or the actual resource strings.
-	 * <p>
-	 * The parameters parameter is also optional and is used for substitutions.
-	 * 
-	 * @param resourceKey
-	 *            The resource key for this string resource
-	 * @param model
-	 *            The model to use for property substitutions
-	 * @param parameters
-	 *            The parameters to substitute using a Java MessageFormat object
-	 * @param defaultValue
-	 *            The default value if the resource key is not found.
-	 */
-	public StringResourceModel(final String resourceKey, final IModel<?> model,
-		final IModel<String> defaultValue, final Object... parameters)
-	{
-		this(resourceKey, null, model, defaultValue, parameters);
-	}
-
 
 	/**
 	 * Gets the localizer that is being used by this string resource model.

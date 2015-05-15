@@ -121,7 +121,7 @@ public class PropertiesResolverTest extends Assert
 
 		private String lookup(String key, Component anchor)
 		{
-			return new StringResourceModel(key, anchor, null, (String)null).getString();
+			return new StringResourceModel(key, anchor).getString();
 		}
 	}
 

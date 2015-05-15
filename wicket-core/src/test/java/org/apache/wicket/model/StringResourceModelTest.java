@@ -21,7 +21,6 @@ import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
@@ -58,7 +57,7 @@ public class StringResourceModelTest extends WicketTestCase
 	@Test
 	public void getSimpleResource()
 	{
-		StringResourceModel model = new StringResourceModel("simple.text", page, null);
+		StringResourceModel model = new StringResourceModel("simple.text", page);
 		assertEquals("Text should be as expected", "Simple text", model.getString());
 		assertEquals("Text should be as expected", "Simple text", model.getObject());
 	}
@@ -68,13 +67,13 @@ public class StringResourceModelTest extends WicketTestCase
 	public void getWrappedOnAssignmentResource()
 	{
 		Label label1 = new Label("resourceModelWithComponent", new StringResourceModel(
-			"wrappedOnAssignment.text", page, null));
+			"wrappedOnAssignment.text", page));
 		page.add(label1);
 		assertEquals("Text should be as expected", "Non-wrapped text",
 			label1.getDefaultModelObject());
 
 		Label label2 = new Label("resourceModelWithoutComponent", new StringResourceModel(
-			"wrappedOnAssignment.text", (Component)null, null));
+			"wrappedOnAssignment.text"));
 		page.add(label2);
 		assertEquals("Text should be as expected", "Wrapped text",
 			label2.getDefaultModelObject());
@@ -84,15 +83,14 @@ public class StringResourceModelTest extends WicketTestCase
 	@Test(expected = IllegalArgumentException.class)
 	public void nullResourceKey()
 	{
-		new StringResourceModel(null, page, null);
+		new StringResourceModel(null, page);
 	}
 
 	/** */
 	@Test
 	public void getSimpleResourceWithKeySubstitution()
 	{
-		StringResourceModel model = new StringResourceModel("weather.${currentStatus}", page,
-			wsModel);
+		StringResourceModel model = new StringResourceModel("weather.${currentStatus}", page, wsModel);
 		assertEquals("Text should be as expected", "It's sunny, wear sunscreen",
 			model.getString());
 		ws.setCurrentStatus("raining");
@@ -110,8 +108,7 @@ public class StringResourceModelTest extends WicketTestCase
 		// German uses comma (,) as decimal separator
 		Session.get().setLocale(Locale.GERMAN);
 
-		StringResourceModel model = new StringResourceModel("weather.${currentTemperature}", page,
-			wsModel);
+		StringResourceModel model = new StringResourceModel("weather.${currentTemperature}", page, wsModel);
 		assertEquals("Text should be as expected", "Twenty-five dot seven",
 			model.getString());
 	}
@@ -137,9 +134,9 @@ public class StringResourceModelTest extends WicketTestCase
 	@Test
 	public void substitutedPropertyAndParameterResource()
 	{
-		StringResourceModel model = new StringResourceModel("weather.mixed", page, wsModel,
-			new PropertyModel<Double>(wsModel, "currentTemperature"), new PropertyModel<String>(
-				wsModel, "units"));
+		StringResourceModel model = new StringResourceModel("weather.mixed", page).setModel(wsModel)
+			.setParameters(new PropertyModel<Double>(wsModel, "currentTemperature"),
+				new PropertyModel<String>(wsModel, "units"));
 		MessageFormat format = new MessageFormat(
 			"Weather station \"Europe''s main weather station\" reports that the temperature is {0} {1}",
 			tester.getSession().getLocale());
@@ -162,9 +159,10 @@ public class StringResourceModelTest extends WicketTestCase
 		MessageFormat format = new MessageFormat(
 			"The report for {0,date,medium}, shows the temperature as {2,number,###.##} {3} and the weather to be {1}",
 			page.getLocale());
-		StringResourceModel model = new StringResourceModel("weather.detail", page, wsModel,
-			cal.getTime(), "${currentStatus}", new PropertyModel<Double>(wsModel,
-				"currentTemperature"), new PropertyModel<String>(wsModel, "units"));
+		StringResourceModel model = new StringResourceModel("weather.detail", page).setModel(wsModel)
+			.setParameters(cal.getTime(), "${currentStatus}",
+				new PropertyModel<Double>(wsModel, "currentTemperature"),
+				new PropertyModel<String>(wsModel, "units"));
 		String expected = format.format(new Object[] { cal.getTime(), "sunny", 25.7, "\u00B0C" });
 		assertEquals("Text should be as expected", expected, model.getString());
 		ws.setCurrentStatus("raining");
@@ -178,7 +176,7 @@ public class StringResourceModelTest extends WicketTestCase
 	public void substitutionParametersResourceWithSingleQuote()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
-		StringResourceModel model = new StringResourceModel("with.quote", page, null, 10, 20);
+		StringResourceModel model = new StringResourceModel("with.quote", page).setParameters(10, 20);
 		assertEquals("2010.00", model.getString());
 	}
 
@@ -188,12 +186,11 @@ public class StringResourceModelTest extends WicketTestCase
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 
-		StringResourceModel model = new StringResourceModel("with.quote.and.no.substitution", page,
-			null, (Object[])null);
+		StringResourceModel model = new StringResourceModel("with.quote.and.no.substitution", page);
 		assertEquals("Let's play in the rain!", model.getString());
 
-		model = new StringResourceModel("with.quote.substitution", page, null,
-			new Object[] { "rain!" });
+		model = new StringResourceModel("with.quote.substitution", page)
+			.setParameters(new Object[] { "rain!" });
 		assertEquals("Let's play in the rain!", model.getString());
 	}
 
@@ -201,7 +198,7 @@ public class StringResourceModelTest extends WicketTestCase
 	@Test(expected = UnsupportedOperationException.class)
 	public void setObject()
 	{
-		StringResourceModel model = new StringResourceModel("simple.text", page, null);
+		StringResourceModel model = new StringResourceModel("simple.text", page);
 		model.setObject("Some value");
 	}
 
@@ -255,7 +252,7 @@ public class StringResourceModelTest extends WicketTestCase
 
 		nullOnDetachModel.setObject(ws);
 		Label label2 = new Label("resourceModelWithoutComponent", new StringResourceModel(
-			"wrappedOnAssignment.text", nullOnDetachModel));
+			"wrappedOnAssignment.text").setModel(nullOnDetachModel));
 		page.add(label2);
 		label2.getDefaultModelObject();
 		label2.detach();
@@ -268,7 +265,7 @@ public class StringResourceModelTest extends WicketTestCase
 	@Test
 	public void detachEvenNotAttached() {
 		Wicket5176Model wrappedModel = new Wicket5176Model();
-		StringResourceModel stringResourceModel = new StringResourceModel("test", (Component) null, wrappedModel);
+		StringResourceModel stringResourceModel = new StringResourceModel("test").setModel(wrappedModel);
 		assertFalse(stringResourceModel.isAttached());
 		assertTrue(wrappedModel.isAttached());
 		stringResourceModel.detach();
