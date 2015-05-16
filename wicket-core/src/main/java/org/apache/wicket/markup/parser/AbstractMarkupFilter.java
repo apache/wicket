@@ -43,13 +43,13 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
-	
+
 	/** A key for a request-relative counter (see {@link #getRequestUniqueId()}) **/
 	private final static MetaDataKey<AtomicInteger> REQUEST_COUNTER_KEY = new MetaDataKey<AtomicInteger>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
-		
+
 	/**
 	 * Construct.
 	 */
@@ -194,7 +194,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 		}
 		return wicketNamespace;
 	}
-	
+
 	/**
 	 * Returns an id using a request-relative counter. This can be
 	 * useful for autocomponent tags that need to get a tag id.
