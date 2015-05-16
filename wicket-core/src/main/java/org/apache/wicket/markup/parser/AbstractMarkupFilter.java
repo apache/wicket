@@ -52,6 +52,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	/** A key for a request-relative counter (see {@link #getRequestUniqueId()}) **/
 	private final static MetaDataKey<AtomicLong> REQUEST_COUNTER_KEY = new MetaDataKey<AtomicLong>()
 	{
+		private static final long serialVersionUID = 1L;
 	};
 		
 	/**
@@ -201,7 +202,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	
 	/**
 	 * Returns an id using a request-relative counter. This can be
-	 * useful for autocomponent tags that needs to get tag id.
+	 * useful for autocomponent tags that need to get a tag id.
 	 * 
 	 * @return
 	 * 		the request-relative id
