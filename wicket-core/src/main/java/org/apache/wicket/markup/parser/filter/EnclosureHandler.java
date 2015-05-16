@@ -19,7 +19,6 @@ package org.apache.wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -73,14 +72,6 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	/** Stack of <wicket:enclosure> tags */
 	private Deque<ComponentTag> stack;
 
-	/**
-	 * Used to assign unique ids to enclosures
-	 * 
-	 * TODO queueing: there has to be a better way of doing this, perhaps some merged-markup-unique
-	 * counter
-	 */
-	private static final AtomicLong index = new AtomicLong();
-
 	/** The id of the first wicket tag inside the enclosure */
 	private String childId;
 
@@ -109,7 +100,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 			// If open tag, than put the tag onto the stack
 			if (tag.isOpen())
 			{
-				tag.setId(tag.getId() + index.getAndIncrement());
+				tag.setId(tag.getId() + getRequestUniqueId());
 				tag.setModified(true);
 				tag.setAutoComponentFactory(FACTORY);
 

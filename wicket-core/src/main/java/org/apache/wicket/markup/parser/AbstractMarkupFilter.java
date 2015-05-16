@@ -17,7 +17,9 @@
 package org.apache.wicket.markup.parser;
 
 import java.text.ParseException;
+import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.HtmlSpecialTag;
 import org.apache.wicket.markup.Markup;
@@ -25,6 +27,7 @@ import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +48,12 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
-
+	
+	/** A key for a request-relative counter (see {@link #getRequestUniqueId()}) **/
+	private final static MetaDataKey<AtomicLong> REQUEST_COUNTER_KEY = new MetaDataKey<AtomicLong>()
+	{
+	};
+		
 	/**
 	 * Construct.
 	 */
@@ -189,5 +197,26 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 			wicketNamespace = markupResourceStream.getWicketNamespace();
 		}
 		return wicketNamespace;
+	}
+	
+	/**
+	 * Returns an id using a request-relative counter. This can be
+	 * useful for autocomponent tags that needs to get tag id.
+	 * 
+	 * @return
+	 * 		the request-relative id
+	 */
+	protected long getRequestUniqueId()
+	{
+		AtomicLong counter = RequestCycle.get().getMetaData(REQUEST_COUNTER_KEY);
+		
+		if (counter == null)
+		{
+			counter = new AtomicLong();
+			
+			RequestCycle.get().setMetaData(REQUEST_COUNTER_KEY, counter);
+		}
+		
+		return counter.getAndIncrement();
 	}
 }

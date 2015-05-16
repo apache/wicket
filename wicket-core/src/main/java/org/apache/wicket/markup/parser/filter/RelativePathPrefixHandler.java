@@ -18,7 +18,6 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 import java.util.Iterator;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -109,14 +108,6 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		}
 	};
 
-	
-	/** 
-	 * https://issues.apache.org/jira/browse/WICKET-5724
-	 * 
-	 * Unique index to generate new tag ids.
-	 * */
-	private final AtomicInteger componentIndex = new AtomicInteger();
-
 	/**
 	 * Constructor for the IComponentResolver role.
 	 */
@@ -164,7 +155,7 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 				if (tag.getId() == null)
 				{
 					tag.setId(getWicketRelativePathPrefix(null)
-						+ componentIndex.getAndIncrement());
+						+ getRequestUniqueId());
 					tag.setAutoComponentTag(true);
 				}
 
