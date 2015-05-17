@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.parser;
 
 import java.text.ParseException;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.markup.ComponentTag;
@@ -28,8 +28,6 @@ import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -40,9 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractMarkupFilter implements IMarkupFilter
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(AbstractMarkupFilter.class);
-
 	/** The markup created by reading the markup file */
 	private final MarkupResourceStream markupResourceStream;
 
@@ -50,7 +45,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	private IMarkupFilter parent;
 	
 	/** A key for a request-relative counter (see {@link #getRequestUniqueId()}) **/
-	private final static MetaDataKey<AtomicLong> REQUEST_COUNTER_KEY = new MetaDataKey<AtomicLong>()
+	private final static MetaDataKey<AtomicInteger> REQUEST_COUNTER_KEY = new MetaDataKey<AtomicInteger>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -207,15 +202,16 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * @return
 	 * 		the request-relative id
 	 */
-	protected long getRequestUniqueId()
+	protected int getRequestUniqueId()
 	{
-		AtomicLong counter = RequestCycle.get().getMetaData(REQUEST_COUNTER_KEY);
+		RequestCycle requestCycle = RequestCycle.get();
+		AtomicInteger counter = requestCycle.getMetaData(REQUEST_COUNTER_KEY);
 		
 		if (counter == null)
 		{
-			counter = new AtomicLong();
+			counter = new AtomicInteger();
 			
-			RequestCycle.get().setMetaData(REQUEST_COUNTER_KEY, counter);
+			requestCycle.setMetaData(REQUEST_COUNTER_KEY, counter);
 		}
 		
 		return counter.getAndIncrement();
