@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.autocomponent;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupCache;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.junit.Test;
 
 /*
@@ -32,7 +33,7 @@ public class AutocomponetsGenerationTest extends WicketTestCase
 	{
 		AutoComponentsPage autoComponentsPage = new AutoComponentsPage();
 		tester.startPage(autoComponentsPage);
-		
+
 		int childrenNumber = tester.getLastRenderedPage().size();
 		
 		//clean markup cache and render the same page instance again
@@ -43,7 +44,5 @@ public class AutocomponetsGenerationTest extends WicketTestCase
 		
 		//the number of child components must not have been changed
 		assertEquals(childrenNumber, tester.getLastRenderedPage().size());
-		
 	}
-
 }

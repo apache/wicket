@@ -20,9 +20,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Simple application that demonstrates the mock http application code (and checks that it is
@@ -32,8 +29,6 @@ import org.slf4j.LoggerFactory;
  */
 public class HeaderSectionTest extends WicketTestCase
 {
-	private static final Logger log = LoggerFactory.getLogger(HeaderSectionTest.class);
-
 	/**
 	 * @throws Exception
 	 */
@@ -222,7 +217,7 @@ public class HeaderSectionTest extends WicketTestCase
 	{
 		executeTest(HeaderSectionPage_20.class, "HeaderSectionPageExpectedResult_20.html");
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5908
 	 */

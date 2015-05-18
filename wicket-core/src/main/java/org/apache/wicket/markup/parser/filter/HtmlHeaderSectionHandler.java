@@ -62,7 +62,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 
 	/** True if &lt;/head&gt; has been found already */
 	private boolean foundClosingHead = false;
-	
+
 	/** True if &lt;/wicket:header-items&gt; has been found already */
 	private boolean foundHeaderItemsTag = false;
 

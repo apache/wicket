@@ -21,9 +21,8 @@ import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * Page containing only autocomponents (header, enclosures, img tags, etc...)
- * 
- * @author andrea del bene
  *
+ * @author andrea del bene
  */
 public class AutoComponentsPage extends WebPage
 {

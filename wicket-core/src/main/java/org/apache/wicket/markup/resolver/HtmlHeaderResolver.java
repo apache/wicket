@@ -172,7 +172,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 		{
 			htmlHeaderContainer = newHtmlHeaderContainer(id);
 		}
-		
+
 		return htmlHeaderContainer;
 	}
 
