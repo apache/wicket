@@ -18,6 +18,7 @@ package org.apache.wicket.markup.parser.filter;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.markup.MarkupException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,5 +221,14 @@ public class HeaderSectionTest extends WicketTestCase
 	public void renderHomePage_20() throws Exception
 	{
 		executeTest(HeaderSectionPage_20.class, "HeaderSectionPageExpectedResult_20.html");
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5908
+	 */
+	@Test(expected = MarkupException.class)
+	public void doubleHeadTagPage()
+	{
+		tester.startPage(DoubleHeadTagPage.class);
 	}
 }

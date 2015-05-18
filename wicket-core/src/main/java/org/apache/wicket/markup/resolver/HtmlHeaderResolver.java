@@ -66,8 +66,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 		{
 			// Create a special header component which will gather additional
 			// input the <head> from 'contributors'.
-			return newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
-				page.getAutoIndex(), tag);
+			return newHtmlHeaderContainer(tag.getId(), tag);
 		}
 		else if ((tag instanceof WicketTag) && ((WicketTag)tag).isHeadTag())
 		{
@@ -100,8 +99,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				{
 					// Create a special header component which will gather
 					// additional input the <head> from 'contributors'.
-					header = newHtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID +
-						page.getAutoIndex(), tag);
+					header = newHtmlHeaderContainer(tag.getId(), tag);
 					header.add(new WicketHeadContainer());
 					return header;
 				}
@@ -174,6 +172,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 		{
 			htmlHeaderContainer = newHtmlHeaderContainer(id);
 		}
+		
 		return htmlHeaderContainer;
 	}
 
