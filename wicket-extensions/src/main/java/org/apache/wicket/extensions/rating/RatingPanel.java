@@ -362,12 +362,12 @@ public abstract class RatingPanel extends Panel
 		if (nrOfVotes == null)
 		{
 			Object[] parameters = new Object[] { rating };
-			model = new StringResourceModel("rating.simple", this, null, parameters);
+			model = new StringResourceModel("rating.simple", this).setParameters(parameters);
 		}
 		else
 		{
 			Object[] parameters = new Object[] { rating, nrOfVotes };
-			model = new StringResourceModel("rating.complete", this, null, parameters);
+			model = new StringResourceModel("rating.complete", this).setParameters(parameters);
 		}
 		return new Label(id, model);
 	}
