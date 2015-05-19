@@ -21,15 +21,19 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
 import net.sf.cglib.core.DefaultNamingPolicy;
 import net.sf.cglib.core.Predicate;
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.CallbackFilter;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import net.sf.cglib.proxy.NoOp;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
@@ -111,6 +115,9 @@ public class LazyInitProxyFactory
 		Float.class, double.class, Double.class, char.class, Character.class, boolean.class,
 		Boolean.class);
 
+	private static final int CGLIB_CALLBACK_NO_OVERRIDE = 0;
+	private static final int CGLIB_CALLBACK_HANDLER = 1;
+
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
 	 * provided locator upon first method invocation.
@@ -159,12 +166,17 @@ public class LazyInitProxyFactory
 		{
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
+			Callback[] callbacks = new Callback[2];
+			callbacks[CGLIB_CALLBACK_NO_OVERRIDE] = new SerializableNoOpCallback();
+			callbacks[CGLIB_CALLBACK_HANDLER] = handler;
+
 			Enhancer e = new Enhancer();
 			e.setClassLoader(resolveClassLoader());
 			e.setInterfaces(new Class[] { Serializable.class, ILazyInitProxy.class,
 					IWriteReplace.class });
 			e.setSuperclass(type);
-			e.setCallback(handler);
+			e.setCallbackFilter(new NoOpForProtectedMethodsCGLibCallbackFilter());
+			e.setCallbacks(callbacks);
 			e.setNamingPolicy(WicketNamingPolicy.INSTANCE);
 
 			return e.create();
@@ -252,7 +264,7 @@ public class LazyInitProxyFactory
 
 	/**
 	 * Method interceptor for proxies representing concrete object not backed by an interface. These
-	 * proxies are representing by cglib proxies.
+	 * proxies are represented by cglib proxies.
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
@@ -345,6 +357,43 @@ public class LazyInitProxyFactory
 		public Object writeReplace() throws ObjectStreamException
 		{
 			return new ProxyReplacement(typeName, locator);
+		}
+	}
+
+	/**
+	 * Serializable implementation of the NoOp callback.
+	 */
+	public static class SerializableNoOpCallback implements NoOp, Serializable
+	{
+		private static final long serialVersionUID = 1L;
+	}
+
+	/**
+	 * CGLib callback filter which does not intercept protected methods.
+	 * 
+	 * Protected methods need to be called with invokeSuper() instead of invoke().
+	 * When invoke() is called on a protected method, it throws an "IllegalArgumentException:
+	 * Protected method" exception.
+	 * That being said, we do not need to intercept the protected methods so this callback filter
+	 * is designed to use a NoOp callback for protected methods.
+	 * 
+	 * @see <a href="http://comments.gmane.org/gmane.comp.java.cglib.devel/720">Discussion about
+	 * this very issue in Spring AOP</a>
+	 * @see <a href="https://github.com/wicketstuff/core/wiki/SpringReference">The WicketStuff
+	 * SpringReference project which worked around this issue</a>
+	 */
+	private static class NoOpForProtectedMethodsCGLibCallbackFilter implements CallbackFilter
+	{
+		@Override
+		public int accept(Method method) {
+			if (Modifier.isProtected(method.getModifiers()))
+			{
+				return CGLIB_CALLBACK_NO_OVERRIDE;
+			}
+			else
+			{
+				return CGLIB_CALLBACK_HANDLER;
+			}
 		}
 	}
 
