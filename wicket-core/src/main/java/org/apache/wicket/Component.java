@@ -928,7 +928,7 @@ public abstract class Component
 		finally
 		{
 			// this flag must always be set to false.
-			setFlag(FLAG_RENDERING, false);
+			markRendering(false);
 		}
 	}
 
