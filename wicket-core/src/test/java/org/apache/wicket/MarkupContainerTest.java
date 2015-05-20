@@ -118,6 +118,24 @@ public class MarkupContainerTest extends WicketTestCase
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5911
+	 */
+	@Test
+	public void rerenderAfterRenderFailure()
+	{
+		FirstRenderFailsPage page = new FirstRenderFailsPage();
+		try {
+			tester.startPage(page);
+		} catch (WicketRuntimeException expected) {
+		}
+
+		tester.startPage(page);
+
+		// rendering flags where properly reset, so second rendering works properly
+		assertEquals(2, page.beforeRenderCalls);
+	}
+
+	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4012
 	 */
 	@Test
@@ -182,6 +200,40 @@ public class MarkupContainerTest extends WicketTestCase
 		{
 			return new StringResourceStream(
 				"<html><body><div wicket:id='a1'><div wicket:id='a2'><div wicket:id='a3'></div></div></div></body></html>");
+		}
+	}
+
+	private static class FirstRenderFailsPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private boolean firstRender = true;
+
+		private int beforeRenderCalls = 0;
+
+		private FirstRenderFailsPage()
+		{
+
+			WebMarkupContainer a1 = new WebMarkupContainer("a1") {
+				@Override
+				protected void onBeforeRender() {
+					super.onBeforeRender();
+
+					beforeRenderCalls++;
+
+					if (firstRender) {
+						firstRender = false;
+						throw new WicketRuntimeException();
+					}
+				}
+			};
+			add(a1);
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(
+				"<html><body><div wicket:id='a1'></div></body></html>");
 		}
 	}
 }
