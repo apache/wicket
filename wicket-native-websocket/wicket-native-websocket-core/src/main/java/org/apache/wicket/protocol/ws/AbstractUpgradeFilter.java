@@ -56,17 +56,17 @@ public class AbstractUpgradeFilter extends WicketFilter
 		{
 			res = true;
 		}
-		else if (!requestCycle.processRequestAndDetach() && !httpServletResponse.isCommitted())
+		else if (requestCycle.processRequestAndDetach() || httpServletResponse.isCommitted())
+		{
+			webResponse.flush();
+		}
+		else
 		{
 			if (chain != null)
 			{
 				chain.doFilter(httpServletRequest, httpServletResponse);
 			}
 			res = false;
-		}
-		else
-		{
-			webResponse.flush();
 		}
 
 		return res;
