@@ -256,17 +256,17 @@ public class WicketFilter implements Filter
 		// Assume we are able to handle the request
 		boolean res = true;
 
-		if (!requestCycle.processRequestAndDetach())
+		if (requestCycle.processRequestAndDetach())
+		{
+			webResponse.flush();
+		}
+		else
 		{
 			if (chain != null)
 			{
 				chain.doFilter(httpServletRequest, httpServletResponse);
 			}
 			res = false;
-		}
-		else
-		{
-			webResponse.flush();
 		}
 		return res;
 	}
