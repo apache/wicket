@@ -695,7 +695,7 @@
 				complete: function (jqXHR, textStatus) {
 
 					context.steps.push(jQuery.proxy(function (notify) {
-						if (attrs.i) {
+						if (attrs.i && context.isRedirecting !== true) {
 							Wicket.DOM.hideIncrementally(attrs.i);
 						}
 
@@ -766,6 +766,7 @@
 
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
 					if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
+						context.isRedirecting = true;
 						window.location = redirectUrl;
 					}
 					else {
@@ -790,6 +791,7 @@
 							calculatedRedirect = window.location.protocol + "//" + window.location.host + calculatedRedirect;
 						}
 
+						context.isRedirecting = true;
 						window.location = calculatedRedirect;
 					}
 				}
@@ -920,7 +922,7 @@
 				}, 0);
 
 				var attrs = context.attrs;
-				if (attrs.i) {
+				if (attrs.i && context.isRedirecting !== true) {
 					// hide the indicator
 					Wicket.DOM.hideIncrementally(attrs.i);
 				}
@@ -1238,6 +1240,7 @@
 		processRedirect: function (context, node) {
 			var text = Wicket.DOM.text(node);
 			Wicket.Log.info("Redirecting to: " + text);
+			context.isRedirecting = true;
 			window.location = text;
 		},
 
