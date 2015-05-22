@@ -315,7 +315,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			try
 			{
 				// read resource data to get the content length
-				long contentLength = IOUtils.toByteArray(resourceStream.getInputStream()).length;
+				InputStream inputStream = resourceStream.getInputStream();
+				byte[] bytes = IOUtils.toByteArray(inputStream);
+				long contentLength = bytes.length;
 
 				// send Content-Length header
 				resourceResponse.setContentLength(contentLength);
@@ -326,7 +328,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 				// send response body with resource data
 				resourceResponse.setWriteCallback(new PartWriterCallback(
-					resourceStream.getInputStream(), contentLength, startbyte, endbyte));
+						new ByteArrayInputStream(bytes), contentLength, startbyte, endbyte));
 			}
 			catch (IOException e)
 			{
