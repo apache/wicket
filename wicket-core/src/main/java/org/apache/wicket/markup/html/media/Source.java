@@ -48,52 +48,122 @@ public class Source extends WebMarkupContainer
 
 	private final String url;
 
+	/**
+	 * Creates a source
+	 * 
+	 * @param id
+	 *            the component id
+	 */
 	public Source(String id)
 	{
 		this(id, null, null, null, null);
 	}
 
+	/**
+	 * Creates a source
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 */
 	public Source(String id, IModel<?> model)
 	{
 		this(id, model, null, null, null);
 	}
 
+	/**
+	 * Creates a source
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param resourceReference
+	 *            the resource reference to provide the source data
+	 */
 	public Source(String id, PackageResourceReference resourceReference)
 	{
 		this(id, null, null, null, resourceReference);
 	}
 
-	public Source(String id, IModel<?> model,
-		PackageResourceReference resourceReference)
+	/**
+	 * Creates a source
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the resource reference to provide the source data
+	 */
+	public Source(String id, IModel<?> model, PackageResourceReference resourceReference)
 	{
 		this(id, model, null, null, resourceReference);
 	}
 
+	/**
+	 * Creates a source
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param pageParameters
+	 *            the the page parameters applied to the source URL
+	 * @param resourceReference
+	 *            the resource reference to provide the source data
+	 */
 	public Source(String id, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, null, null, pageParameters, resourceReference);
 	}
 
-	public Source(String id, IModel<?> model,
-		PackageResourceReference resourceReference,
+	/**
+	 * Creates a source
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the resource reference to provide the source data
+	 * @param pageParameters
+	 *            the the page parameters applied to the source URL
+	 */
+	public Source(String id, IModel<?> model, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, model, null, pageParameters, resourceReference);
 	}
 
+	/**
+	 * Creates a source
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param url
+	 *            an external URL to provide the source information
+	 */
 	public Source(String id, String url)
 	{
 		this(id, null, url, null, null);
 	}
 
+	/**
+	 * Creates a source
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param url
+	 *            an external URL to provide the source information
+	 */
 	public Source(String id, IModel<?> model, String url)
 	{
 		this(id, model, url, null, null);
 	}
 
 	private Source(String id, IModel<?> model, String url, PageParameters pageParameters,
-	               PackageResourceReference resourceReference)
+		PackageResourceReference resourceReference)
 	{
 		super(id, model);
 		this.url = url;
@@ -111,7 +181,8 @@ public class Source extends WebMarkupContainer
 		{
 			CharSequence url = RequestCycle.get().urlFor(resourceReference, pageParameters);
 			tag.put("src", url);
-		} else if (url != null)
+		}
+		else if (url != null)
 		{
 			tag.put("src", url);
 		}

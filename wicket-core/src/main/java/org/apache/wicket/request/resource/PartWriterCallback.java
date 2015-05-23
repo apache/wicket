@@ -30,7 +30,8 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * Used to read a part of an input stream and writes it to the output stream of the response taken
- * from attributes in {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)}  method.
+ * from attributes in {@link #writeData(org.apache.wicket.request.resource.IResource.Attributes)}
+ * method.
  *
  * @author Tobias Soloschenko
  * @since 7.0.0
@@ -48,14 +49,14 @@ public class PartWriterCallback extends WriteCallback
 	private final Long contentLength;
 
 	/**
-	 * The byte to start reading from. If omitted then the input stream will be read
-	 * from its beginning
+	 * The byte to start reading from. If omitted then the input stream will be read from its
+	 * beginning
 	 */
 	private Long startbyte;
 
 	/**
-	 * The end byte to read from the {@link #inputStream}.
-	 * If omitted then the input stream will be read till its end
+	 * The end byte to read from the {@link #inputStream}. If omitted then the input stream will be
+	 * read till its end
 	 */
 	private Long endbyte;
 
@@ -63,6 +64,11 @@ public class PartWriterCallback extends WriteCallback
 	 * The size of the buffer that is used for the copying of the data
 	 */
 	private int bufferSize;
+
+	/**
+	 * If the given input stream is going to be closed
+	 */
+	private boolean close = false;
 
 
 	/**
@@ -169,6 +175,10 @@ public class PartWriterCallback extends WriteCallback
 			// org.apache.catalina.connector.ClientAbortException)
 			// we ignore this case
 		}
+		if (close)
+		{
+			IOUtils.close(inputStream);
+		}
 	}
 
 	/**
@@ -186,10 +196,36 @@ public class PartWriterCallback extends WriteCallback
 	 *
 	 * @param bufferSize
 	 *            the buffer size used to send the data to the client
+	 * @return the part writer callback
 	 */
-	public void setBufferSize(int bufferSize)
+	public PartWriterCallback setBufferSize(int bufferSize)
 	{
 		this.bufferSize = bufferSize;
+		return this;
+	}
+
+	/**
+	 * If the given input stream is going to be closed
+	 * 
+	 * @return if the given input stream is going to be closed
+	 */
+	public boolean isClose()
+	{
+		return close;
+	}
+
+	/**
+	 * If set true the given input stream is going to be closed
+	 * 
+	 * @param close
+	 *            if the given input stream is going to be closed
+	 * @return the part writer callback
+	 */
+	public PartWriterCallback setClose(boolean close)
+	{
+		this.close = close;
+		return this;
+
 	}
 
 }

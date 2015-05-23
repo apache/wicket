@@ -39,10 +39,27 @@ public class Track extends WebMarkupContainer
 	/**
 	 * To be used for the kind attribute
 	 */
-	public enum Kind
-	{
-		SUBTITLES("subtitles"), CAPTIONS("captions"), DESCRIPTIONS("descriptions"), CHAPTERS(
-			"chapters"), METADATA("metadata");
+	public enum Kind {
+		/**
+		 * the track is used for subtitles
+		 */
+		SUBTITLES("subtitles"),
+		/**
+		 * the track is used for captions
+		 */
+		CAPTIONS("captions"),
+		/**
+		 * the track is used for descriptions
+		 */
+		DESCRIPTIONS("descriptions"),
+		/**
+		 * the track is used for chapters
+		 */
+		CHAPTERS("chapters"),
+		/**
+		 * the track is used to provide metadata
+		 */
+		METADATA("metadata");
 
 		private String realName;
 
@@ -51,6 +68,11 @@ public class Track extends WebMarkupContainer
 			this.realName = realName;
 		}
 
+		/**
+		 * The real name of the kind
+		 * 
+		 * @return the real name
+		 */
 		public String getRealName()
 		{
 			return realName;
@@ -71,42 +93,114 @@ public class Track extends WebMarkupContainer
 
 	private final PageParameters pageParameters;
 
+	/**
+	 * Creates a track
+	 * 
+	 * @param id
+	 *            the component id
+	 */
 	public Track(String id)
 	{
 		this(id, null, null, null, null);
 	}
 
+	/**
+	 * Creates a track
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 */
 	public Track(String id, IModel<?> model)
 	{
 		this(id, model, null, null, null);
 	}
 
+	/**
+	 * Creates a track
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param resourceReference
+	 *            the resource reference to provide track information - like .vtt
+	 */
 	public Track(String id, ResourceReference resourceReference)
 	{
 		this(id, null, null, null, resourceReference);
 	}
 
+	/**
+	 * Creates a track
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the resource reference to provide track information - like .vtt
+	 */
 	public Track(String id, IModel<?> model, ResourceReference resourceReference)
 	{
 		this(id, model, null, null, resourceReference);
 	}
 
+	/**
+	 * Creates a track
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param resourceReference
+	 *            the resource reference to provide track information - like .vtt
+	 * @param pageParameters
+	 *            the page parameters applied to the track URL
+	 */
 	public Track(String id, ResourceReference resourceReference, PageParameters pageParameters)
 	{
 		this(id, null, null, pageParameters, resourceReference);
 	}
 
+	/**
+	 * Creates a track
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the resource reference to provide track information - like .vtt
+	 * @param pageParameters
+	 *            the page parameters applied to the track URL
+	 */
 	public Track(String id, IModel<?> model, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, model, null, pageParameters, resourceReference);
 	}
 
+	/**
+	 * Creates a track
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param url
+	 *            an external URL to provide the track information
+	 */
 	public Track(String id, String url)
 	{
 		this(id, null, url, null, null);
 	}
 
+	/**
+	 * Creates a track
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param url
+	 *            an external URL to provide the track information
+	 */
 	public Track(String id, IModel<?> model, String url)
 	{
 		this(id, model, url, null, null);

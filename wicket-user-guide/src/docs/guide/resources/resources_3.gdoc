@@ -129,6 +129,8 @@ h3. Media tags - resource references with content range support
 
 Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support "Range" HTTP header for the request and "Content-Range" / "Accept-Range" HTTP headers for the response, which are used for videos / audio tags. The "Range" header allows the client to only request a specific byte range of the resource. The server provides the "Content-Range" and tells the client which bytes are going to be send.
 
+If you want the resource not to be load into memory apply readBuffered(false) - this way the stream is written directly to the response. (@org.apache.wicket.resource.ITextResourceCompressor@ will not be applied if readBuffered is set to false)
+
 *HTML:*
 {code:html}
 ...
@@ -139,7 +141,7 @@ Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support 
 *Java Code:*
 {code}
 ...
-    Video video = new Video("video", new PackageResourceReference(getClass(),"video.mp4"));
+    Video video = new Video("video", new PackageResourceReference(getClass(),"video.mp4").readBuffered(false));
 ...
 {code} 
 

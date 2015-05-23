@@ -43,9 +43,19 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 *
 	 * @see {@link #setCrossOrigin(Cors)}
 	 */
-	public enum Cors
-	{
-		ANONYMOUS("anonymous"), USER_CREDENTIALS("user-credentials"), NO_CORS("");
+	public enum Cors {
+		/**
+		 * no authentication required
+		 */
+		ANONYMOUS("anonymous"),
+		/**
+		 * user credentials required
+		 */
+		USER_CREDENTIALS("user-credentials"),
+		/**
+		 * no cross origin
+		 */
+		NO_CORS("");
 
 		private final String realName;
 
@@ -54,6 +64,11 @@ public abstract class MediaComponent extends WebMarkupContainer
 			this.realName = realName;
 		}
 
+		/**
+		 * Gets the real name for the cors option
+		 * 
+		 * @return the real name
+		 */
 		public String getRealName()
 		{
 			return realName;
@@ -65,17 +80,32 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 *
 	 * @see {@link #setPreload(Preload)}
 	 */
-	public enum Preload
-	{
-		NONE("none"), METADATA("metadata"), AUTO("auto");
+	public enum Preload {
+		/**
+		 * preloads nothing
+		 */
+		NONE("none"),
+		/**
+		 * preloads only meta data like first picture, etc.
+		 */
+		METADATA("metadata"),
+		/**
+		 * auto detection what is going to be preload
+		 */
+		AUTO("auto");
 
-		public final String realName;
+		private final String realName;
 
 		private Preload(String realname)
 		{
 			realName = realname;
 		}
 
+		/**
+		 * Gets the real name for the preload option
+		 * 
+		 * @return the real name
+		 */
 		public String getRealName()
 		{
 			return realName;
@@ -131,47 +161,107 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	/**
-	 * Constructor.
+	 * Creates a media component
 	 *
 	 * @param id
 	 *            The component id
 	 * @param resourceReference
+	 *            the package resource reference of the media file
 	 */
 	public MediaComponent(String id, PackageResourceReference resourceReference)
 	{
 		this(id, null, null, null, resourceReference);
 	}
 
-	public MediaComponent(String id, IModel<?> model,
-		PackageResourceReference resourceReference)
+	/**
+	 * Creates a media component
+	 *
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the package resource reference of the media file
+	 */
+	public MediaComponent(String id, IModel<?> model, PackageResourceReference resourceReference)
 	{
 		this(id, model, null, null, resourceReference);
 	}
 
-	public MediaComponent(String id,
-		PackageResourceReference resourceReference,
+	/**
+	 * Creates a media component
+	 *
+	 * @param id
+	 *            The component id
+	 * @param resourceReference
+	 *            the package resource reference of the media file
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the media URL
+	 */
+	public MediaComponent(String id, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, null, null, pageParameters, resourceReference);
 	}
 
-	public MediaComponent(String id, IModel<?> model,
-		PackageResourceReference resourceReference,
+	/**
+	 * Creates a media component
+	 *
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the package resource reference of the media file
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the media URL
+	 */
+	public MediaComponent(String id, IModel<?> model, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, model, null, pageParameters, resourceReference);
 	}
 
+	/**
+	 * Creates a media component
+	 *
+	 * @param id
+	 *            The component id
+	 * @param url
+	 *            an external URL to be used for the media component
+	 */
 	public MediaComponent(String id, String url)
 	{
 		this(id, null, url, null, null);
 	}
 
+	/**
+	 * Creates a media component
+	 *
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            the internally used model
+	 * @param url
+	 *            an external URL to be used for the media component
+	 */
 	public MediaComponent(String id, IModel<?> model, String url)
 	{
 		this(id, model, url, null, null);
 	}
 
+	/**
+	 * Creates a media component
+	 *
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            the internally used model
+	 * @param url
+	 *            an external URL to be used for the media component
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the media URL
+	 */
 	public MediaComponent(String id, IModel<?> model, String url, PageParameters pageParameters)
 	{
 		this(id, model, url, pageParameters, null);
@@ -201,8 +291,8 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 		if (resourceReference != null)
 		{
-			CharSequence urlToMediaReference = RequestCycle.get().urlFor(
-					resourceReference, pageParameters);
+			CharSequence urlToMediaReference = RequestCycle.get().urlFor(resourceReference,
+				pageParameters);
 			tag.put("src", urlToMediaReference + timeManagement);
 		}
 		else if (url != null)

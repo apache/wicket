@@ -69,6 +69,7 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  * @author Matej Knopp
+ * @author Tobias Soloschenko
  */
 public class PackageResource extends AbstractResource implements IStaticCacheableResource
 {
@@ -79,7 +80,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	/**
 	 * Exception thrown when the creation of a package resource is not allowed.
 	 */
-	public static final class PackageResourceBlockedException extends WicketRuntimeException implements IWicketInternalException
+	public static final class PackageResourceBlockedException extends WicketRuntimeException
+		implements
+			IWicketInternalException
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -126,9 +129,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private final String variation;
 
 	/**
-	 * A flag indicating whether {@code ITextResourceCompressor} can be used to compress this resource.
-	 * Default is {@code false} because this resource may be used for binary data (e.g. an image).
-	 * Specializations of this class should change this flag appropriately.
+	 * A flag indicating whether {@code ITextResourceCompressor} can be used to compress this
+	 * resource. Default is {@code false} because this resource may be used for binary data (e.g. an
+	 * image). Specializations of this class should change this flag appropriately.
 	 */
 	private boolean compress = false;
 
@@ -142,6 +145,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * text encoding (may be null) - only makes sense for character-based resources
 	 */
 	private String textEncoding = null;
+
+	/**
+	 * Reads the resource buffered - the content is copied into memory
+	 */
+	private boolean readBuffered = true;
 
 	/**
 	 * Hidden constructor.
@@ -201,12 +209,23 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return style;
 	}
 
+	/**
+	 * Returns true if the caching for this resource is enabled
+	 * 
+	 * @return if the caching is enabled
+	 */
 	@Override
 	public boolean isCachingEnabled()
 	{
 		return cachingEnabled;
 	}
 
+	/**
+	 * Sets the caching for this resource to be enabled
+	 * 
+	 * @param enabled
+	 *            if the cacheing should be enabled
+	 */
 	public void setCachingEnabled(final boolean enabled)
 	{
 		this.cachingEnabled = enabled;
@@ -286,7 +305,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		if (resourceStream == null)
 		{
 			return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND,
-						"Unable to find resource");
+				"Unable to find resource");
 		}
 
 		// add Last-Modified header (to support HEAD requests and If-Modified-Since)
@@ -316,19 +335,31 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			{
 				// read resource data to get the content length
 				InputStream inputStream = resourceStream.getInputStream();
-				byte[] bytes = IOUtils.toByteArray(inputStream);
-				long contentLength = bytes.length;
 
+				byte[] bytes = null;
 				// send Content-Length header
-				resourceResponse.setContentLength(contentLength);
+				if (readBuffered)
+				{
+					bytes = IOUtils.toByteArray(inputStream);
+					resourceResponse.setContentLength(new Long(bytes.length));
+				}
+				else
+				{
+					resourceResponse.setContentLength(resourceStream.length().bytes());
+				}
 
 				// get content range information
 				Long startbyte = RequestCycle.get().getMetaData(CONTENT_RANGE_STARTBYTE);
 				Long endbyte = RequestCycle.get().getMetaData(CONTENT_RANGE_ENDBYTE);
 
 				// send response body with resource data
-				resourceResponse.setWriteCallback(new PartWriterCallback(
-						new ByteArrayInputStream(bytes), contentLength, startbyte, endbyte));
+				PartWriterCallback partWriterCallback = new PartWriterCallback(bytes != null
+					? new ByteArrayInputStream(bytes) : inputStream,
+					resourceResponse.getContentLength(), startbyte, endbyte);
+
+				// If read buffered is set to false ensure the part writer callback is going to
+				// close the input stream
+				resourceResponse.setWriteCallback(partWriterCallback.setClose(!readBuffered));
 			}
 			catch (IOException e)
 			{
@@ -342,9 +373,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			}
 			finally
 			{
+
 				try
 				{
-					resourceStream.close();
+					if (readBuffered)
+					{
+						IOUtils.close(resourceStream);
+					}
 				}
 				catch (IOException e)
 				{
@@ -421,8 +456,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	}
 
 	/**
-	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to compress the
-	 *          resource.
+	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to
+	 *         compress the resource.
 	 */
 	public boolean getCompress()
 	{
@@ -441,9 +476,10 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private IResourceStream internalGetResourceStream(final String style, final Locale locale)
 	{
 		IResourceStreamLocator resourceStreamLocator = Application.get()
-				.getResourceSettings()
-				.getResourceStreamLocator();
-		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath, style, variation, locale, null, false);
+			.getResourceSettings()
+			.getResourceStreamLocator();
+		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath,
+			style, variation, locale, null, false);
 
 		String realPath = absolutePath;
 		if (resourceStream instanceof IFixedLocationResourceStream)
@@ -467,8 +503,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		if (accept(realPath) == false)
 		{
 			throw new PackageResourceBlockedException(
-							"Access denied to (static) package resource " + absolutePath +
-									". See IPackageResourceGuard");
+				"Access denied to (static) package resource " + absolutePath +
+					". See IPackageResourceGuard");
 		}
 
 		if (resourceStream != null)
@@ -493,19 +529,23 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		@Override
 		public InputStream getInputStream() throws ResourceStreamNotFoundException
 		{
-			byte[] bytes;
+			byte[] bytes = null;
 			InputStream inputStream = super.getInputStream();
-			try
+
+			if (readBuffered)
 			{
-				bytes = IOUtils.toByteArray(inputStream);
-			}
-			catch (IOException iox)
-			{
-				throw new WicketRuntimeException(iox);
-			}
-			finally
-			{
-				IOUtils.closeQuietly(this);
+				try
+				{
+					bytes = IOUtils.toByteArray(inputStream);
+				}
+				catch (IOException iox)
+				{
+					throw new WicketRuntimeException(iox);
+				}
+				finally
+				{
+					IOUtils.closeQuietly(this);
+				}
 			}
 
 			RequestCycle cycle = RequestCycle.get();
@@ -519,8 +559,15 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				// use empty request and response in case of non-http thread. WICKET-5532
 				attributes = new Attributes(new MockWebRequest(Url.parse("")), new StringResponse());
 			}
-			byte[] processedBytes = processResponse(attributes, bytes);
-			return new ByteArrayInputStream(processedBytes);
+			if (bytes != null)
+			{
+				byte[] processedBytes = processResponse(attributes, bytes);
+				return new ByteArrayInputStream(processedBytes);
+			}
+			else
+			{
+				return inputStream;
+			}
 		}
 	}
 
@@ -709,5 +756,24 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			sb.append('}');
 			return sb.toString();
 		}
+	}
+
+	/**
+	 * If the package resource should be read buffered.<br>
+	 * <br>
+	 * WARNING - if the stream is not read buffered compressors will not work, because they require
+	 * the whole content to be read into memory.<br>
+	 * ({@link org.apache.wicket.javascript.IJavaScriptCompressor}, <br>
+	 * {@link org.apache.wicket.css.ICssCompressor}, <br>
+	 * {@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
+	 * 
+	 * @param readBuffered
+	 *            if the package resource should be read buffered
+	 * @return the current package resource
+	 */
+	public PackageResource readBuffered(boolean readBuffered)
+	{
+		this.readBuffered = readBuffered;
+		return this;
 	}
 }

@@ -59,17 +59,33 @@ public class Image extends WebComponent implements IResourceListener
 	 * @see {@link #setCrossOrigin(Cors)}
 	 */
 	public enum Cors {
+		/**
+		 * no authentication required
+		 */
 		ANONYMOUS("anonymous"),
+		/**
+		 * user credentials required
+		 */
 		USE_CREDENTIALS("user-credentials"),
+		/**
+		 * no cross origin
+		 */
 		NO_CORS("");
 
 		private final String realName;
 
-		private Cors(String realName) {
+		private Cors(String realName)
+		{
 			this.realName = realName;
 		}
 
-		public String getRealName() {
+		/**
+		 * Gets the real name for the cors option
+		 * 
+		 * @return the real name
+		 */
+		public String getRealName()
+		{
 			return realName;
 		}
 	}
@@ -247,8 +263,11 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @param resourceReference
 	 *            The resource reference to set.
+	 * @param parameters
+	 *            the parameters to be applied to the localized image resource
 	 */
-	public void setImageResourceReference(final ResourceReference resourceReference, final PageParameters parameters)
+	public void setImageResourceReference(final ResourceReference resourceReference,
+		final PageParameters parameters)
 	{
 		if (localizedImageResource != null)
 		{
@@ -385,7 +404,8 @@ public class Image extends WebComponent implements IResourceListener
 		buildSizesAttribute(tag);
 
 		Cors crossOrigin = getCrossOrigin();
-		if (crossOrigin != null && Cors.NO_CORS != crossOrigin) {
+		if (crossOrigin != null && Cors.NO_CORS != crossOrigin)
+		{
 			tag.put("crossOrigin", crossOrigin.getRealName());
 		}
 	}
@@ -414,9 +434,8 @@ public class Image extends WebComponent implements IResourceListener
 			// If there are xValues set process them in the applied order to the srcset attribute.
 			if (xValues != null)
 			{
-				xValue = xValues.size() > srcSetPosition &&
-					xValues.get(srcSetPosition) != null ? " " +
-					xValues.get(srcSetPosition) : "";
+				xValue = xValues.size() > srcSetPosition && xValues.get(srcSetPosition) != null
+					? " " + xValues.get(srcSetPosition) : "";
 			}
 			tag.put("srcset", (srcset != null ? srcset + ", " : "") + tag.getAttribute("src") +
 				xValue);
@@ -561,7 +580,8 @@ public class Image extends WebComponent implements IResourceListener
 	 *
 	 * @return the cross origins settings
 	 */
-	public Cors getCrossOrigin() {
+	public Cors getCrossOrigin()
+	{
 		return crossOrigin;
 	}
 
@@ -569,17 +589,21 @@ public class Image extends WebComponent implements IResourceListener
 	 * Sets the cross origin settings<br>
 	 * <br>
 	 *
-	 * <b>ANONYMOUS</b>: Cross-origin CORS requests for the element will not have the credentials flag set.<br>
+	 * <b>ANONYMOUS</b>: Cross-origin CORS requests for the element will not have the credentials
+	 * flag set.<br>
 	 * <br>
-	 * <b>USE_CREDENTIALS</b>: Cross-origin CORS requests for the element will have the credentials flag set.<br>
+	 * <b>USE_CREDENTIALS</b>: Cross-origin CORS requests for the element will have the credentials
+	 * flag set.<br>
 	 * <br>
-	 * <b>no_cores</b>: The empty string is also a valid keyword, and maps to the Anonymous state. The attribute's invalid value default is the
-	 * Anonymous state. The missing value default, used when the attribute is omitted, is the No CORS state
+	 * <b>NO_CORS</b>: The empty string is also a valid keyword, and maps to the Anonymous state.
+	 * The attribute's invalid value default is the Anonymous state. The missing value default, used
+	 * when the attribute is omitted, is the No CORS state
 	 *
 	 * @param crossOrigin
 	 *            the cross origins settings to set
 	 */
-	public void setCrossOrigin(Cors crossOrigin) {
+	public void setCrossOrigin(Cors crossOrigin)
+	{
 		this.crossOrigin = crossOrigin;
 	}
 

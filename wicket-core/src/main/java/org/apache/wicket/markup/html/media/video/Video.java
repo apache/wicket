@@ -43,55 +43,147 @@ public class Video extends MediaComponent
 
 	private PageParameters posterPageParameters;
 
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 */
 	public Video(String id)
 	{
 		super(id);
 	}
 
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 */
 	public Video(String id, IModel<?> model)
 	{
 		super(id, model);
 	}
 
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param resourceReference
+	 *            the package resource reference of the video file
+	 */
 	public Video(String id, PackageResourceReference resourceReference)
 	{
 		super(id, resourceReference);
 	}
 
-	public Video(String id, IModel<?> model,
-		PackageResourceReference resourceReference)
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the package resource reference of the video file
+	 */
+	public Video(String id, IModel<?> model, PackageResourceReference resourceReference)
 	{
 		super(id, model, resourceReference);
 	}
 
+	/**
+	 * Creates a media component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param resourceReference
+	 *            the package resource reference of the video file
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the video URL
+	 */
 	public Video(String id, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		super(id, resourceReference, pageParameters);
 	}
 
-	public Video(String id, IModel<?> model,
-		PackageResourceReference resourceReference,
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the package resource reference of the video file
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the video URL
+	 */
+	public Video(String id, IModel<?> model, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		super(id, model, resourceReference, pageParameters);
 	}
 
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param url
+	 *            an external URL to be used for the video component
+	 */
 	public Video(String id, String url)
 	{
 		super(id, url);
 	}
 
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param url
+	 *            an external URL to be used for the video component
+	 */
 	public Video(String id, IModel<?> model, String url)
 	{
 		super(id, model, url);
 	}
 
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param url
+	 *            an external URL to be used for the video component
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the video URL
+	 */
 	public Video(String id, String url, PageParameters pageParameters)
 	{
 		super(id, null, url, pageParameters);
 	}
 
+	/**
+	 * Creates a video component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param url
+	 *            an external URL to be used for the video component
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the video URL
+	 */
 	public Video(String id, IModel<?> model, String url, PageParameters pageParameters)
 	{
 		super(id, model, url, pageParameters);

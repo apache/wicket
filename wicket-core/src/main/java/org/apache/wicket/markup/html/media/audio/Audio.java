@@ -33,55 +33,147 @@ public class Audio extends MediaComponent
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 */
 	public Audio(String id)
 	{
 		super(id);
 	}
 
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 */
 	public Audio(String id, IModel<?> model)
 	{
 		super(id, model);
 	}
 
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param resourceReference
+	 *            the package resource reference of the audio file
+	 */
 	public Audio(String id, PackageResourceReference resourceReference)
 	{
 		super(id, resourceReference);
 	}
 
-	public Audio(String id, IModel<?> model,
-		PackageResourceReference resourceReference)
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the package resource reference of the audio file
+	 */
+	public Audio(String id, IModel<?> model, PackageResourceReference resourceReference)
 	{
 		super(id, model, resourceReference);
 	}
 
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param resourceReference
+	 *            the package resource reference of the audio file
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the audio URL
+	 */
 	public Audio(String id, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		super(id, resourceReference, pageParameters);
 	}
 
-	public Audio(String id, IModel<?> model,
-		PackageResourceReference resourceReference,
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param resourceReference
+	 *            the package resource reference of the audio file
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the audio URL
+	 */
+	public Audio(String id, IModel<?> model, PackageResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		super(id, model, resourceReference, pageParameters);
 	}
 
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param url
+	 *            an external URL to be used for the audio component
+	 */
 	public Audio(String id, String url)
 	{
 		super(id, url);
 	}
 
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param url
+	 *            an external URL to be used for the audio component
+	 */
 	public Audio(String id, IModel<?> model, String url)
 	{
 		super(id, model, url);
 	}
 
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param url
+	 *            an external URL to be used for the audio component
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the audio URL
+	 */
 	public Audio(String id, String url, PageParameters pageParameters)
 	{
 		super(id, null, url, pageParameters);
 	}
 
+	/**
+	 * Creates an audio component
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the internally used model
+	 * @param url
+	 *            an external URL to be used for the audio component
+	 * @param pageParameters
+	 *            the page parameters to be used to be prepended to the audio URL
+	 */
 	public Audio(String id, IModel<?> model, String url, PageParameters pageParameters)
 	{
 		super(id, model, url, pageParameters);

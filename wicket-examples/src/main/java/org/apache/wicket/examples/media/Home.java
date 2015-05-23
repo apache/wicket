@@ -50,7 +50,7 @@ public final class Home extends WicketExamplePage
 		// Internal video with several options
 
 		Video video1 = new Video("video1", new PackageResourceReference(Home.class,
-			"video.mp4"));
+			"video1.mp4").readBuffered(false));
 		video1.setAutoplay(false);
 		video1.setControls(true);
 		video1.setLooping(false);
@@ -65,7 +65,7 @@ public final class Home extends WicketExamplePage
 		video2.setPoster(new PackageResourceReference(Home.class, "novideo.gif"));
 
 		Source source2 = new Source("source2", new PackageResourceReference(Home.class,
-			"video.mp4"));
+			"video2.mp4"));
 		// Need to be set to true to show the type
 		source2.setDisplayType(true);
 		// the default type is the mime type of the image with no codec information
