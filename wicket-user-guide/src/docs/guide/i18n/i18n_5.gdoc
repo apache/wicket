@@ -70,14 +70,16 @@ Order order = new Order(new Date(), ORDER_STATUS.IN_PROGRESS);
 add(new Label("orderStatus", new StringResourceModel("orderStatus.${status.code}", Model.of(order))));
 {code}
 
-As we can see in the code above also the key contains a property expression (${status.code}) which makes its value dynamic. In this way the state of an object (an Order in our example) can determinate which resource will be loaded by StringResourceModel. If we don't use properties expressions we can provide a null value as model and in this case StringResourceModel will behave exactly as a ResourceModel. StringResourceModel supports also the same parameter substitution used by standard class java.text.MessageFormat. Parameters can be generic objects but if we use a model as parameter, StringResourceModel will use the data object inside it as actual value (it will call getObject on the model). Parameters are passed to constructor as a vararg argument. Here is an example of usage of parameter substitution:
+As we can see in the code above also the key contains a property expression (${status.code}) which makes its value dynamic. In this way the state of an object (an Order in our example) can determinate which resource will be loaded by StringResourceModel. If we don't use properties expressions we can provide a null value as model and in this case StringResourceModel will behave exactly as a ResourceModel. StringResourceModel supports also the same parameter substitution used by standard class @java.text.MessageFormat@. 
+
+Parameters can be generic objects but if we use a model as parameter, StringResourceModel will use the data object inside it as actual value (it will call getObject on the model). Parameters are passed as a vararg argument with method @setParameters(Object... parameters)@. Here is an example of usage of parameter substitution:
 
 Java code:
 
 {code}
 PropertyModel propertyModel = new PropertyModel<Order>(order, "orderDate");
 //build a string model with two parameters: a property model and an integer value
-StringResourceModel srm = new StringResourceModel("orderStatus.delay", null, propertyModel, 3);
+StringResourceModel srm = new StringResourceModel("orderStatus.delay").setParameters(propertyModel, 3);
 {code}
 
 Bundle:
@@ -89,5 +91,12 @@ orderStatus.delay=Your order submitted on ${0} has been delayed by {1} days.
 One further parameter we can specify when we build a StringResourceModel is the component that must be used by the lookup algorithm. Normally this parameter is not relevant, but if we need to use a particular bundle owned by a component not considered by the algorithm, we can specify this component as second parameter. If we pass all possible parameters to StringResourceModel's constructor we obtain something like this: 
 
 {code}
-new StringResourceModel("myKey", myComponent, myModel, param1, param2, param3,...);
+new StringResourceModel("myKey", myComponent, myModel);
 {code}
+
+Default value is supported as well, both as string model or as string value:
+
+{code}
+new StringResourceModel("myKey", myComponent, myModel).setDefaultValue("default");
+{code}
+

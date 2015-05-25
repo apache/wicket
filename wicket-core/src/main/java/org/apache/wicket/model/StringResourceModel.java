@@ -62,7 +62,7 @@ import org.apache.wicket.util.string.Strings;
  * expressions. Where property expressions are present they will all be evaluated relative to this
  * model object. If there are no property expressions present then this model parameter may be
  * <code>null</code>
- * <li><b>parameters </b>- The parameters parameter allows an array of objects to be passed for
+ * <li><b>parameters </b>- This parameter allows an array of objects to be passed for
  * substitution on the found string resource (see below) using a standard
  * <code>java.text.MessageFormat</code> object. Each parameter may be an ordinary Object, in which
  * case it will be processed by the standard formatting rules associated with
@@ -70,7 +70,8 @@ import org.apache.wicket.util.string.Strings;
  * <code>IModel</code> in which case the <code>getObject()</code> method will be applied prior to
  * the parameter being passed to the <code>java.text.MessageFormat</code>. This allows such features
  * dynamic parameters that are obtained using a <code>PropertyModel</code> object or even nested
- * string resource models.
+ * string resource models. Unlike the other parameters listed above this one can not be provided 
+ * as constructor parameter but rather using method {@link #setParameters(Object...)}.
  * </ul>
  * As well as the supplied parameters, the found string resource can contain formatting information.
  * It may contain property expressions in which case these are evaluated using the model object
@@ -78,6 +79,22 @@ import org.apache.wicket.util.string.Strings;
  * <code>java.text.MessageFormat</code> style markup for replacement of parameters. Where a string
  * resource contains both types of formatting information then the property expression will be
  * applied first.
+ * <p>
+ * <b>Example Bean </b>
+ * <p>
+ * In the next examples we will use the following class as bundle model:
+ * <pre>
+ * public class WeatherStation implements Serializable
+ *  {
+ *    private final String name = "Europe's main weather station";
+ *
+ *    private String currentStatus = "sunny";
+ *
+ *    private double currentTemperature = 25.7;
+ *
+ *    private String units = "\u00B0C";
+ *  }
+ * </pre>
  * <p>
  * <b>Example 1 </b>
  * <p>
@@ -88,7 +105,7 @@ import org.apache.wicket.util.string.Strings;
  * {
  *    public MyPage(final PageParameters parameters)
  *    {
- *        add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
+ *        add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this)));
  *    }
  * }
  * </pre>
@@ -155,14 +172,13 @@ import org.apache.wicket.util.string.Strings;
  *         WeatherStation ws = new WeatherStation();
  *         IModel&lt;WeatherStation&gt; model = new Model&lt;WeatherStation&gt;(ws);
  *         add(new Label(&quot;weatherMessage&quot;,
- *             new StringResourceModel(
- *                 &quot;weather.detail&quot;, this, model,
- *                     new Object[]
- *                     {
+ *             new StringResourceModel(&quot;weather.detail&quot;, this)
+ *                     .setParameters(
  *                         new Date(),
  *                         new PropertyModel&lt;?&gt;(model, &quot;currentStatus&quot;),
  *                         new PropertyModel&lt;?&gt;(model, &quot;currentTemperature&quot;),
  *                         new PropertyModel&lt;?&gt;(model, &quot;units&quot;)
+ *                      )
  *         }));
  *     }
  * }
