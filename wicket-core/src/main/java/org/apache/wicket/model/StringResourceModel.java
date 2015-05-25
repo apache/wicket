@@ -284,7 +284,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	 * @param model
 	 *            The model to use for property substitutions
 	 */
-	public StringResourceModel(final String resourceKey, final Component component, IModel<?> model)
+	public StringResourceModel(final String resourceKey, final Component component, final IModel<?> model)
 	{
 		Args.notNull(resourceKey, "resource key");
 
@@ -310,7 +310,20 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 		this(resourceKey, component, null);
 	}
-
+	
+	/**
+	 * Creates a new string resource model using the supplied parameter.
+	 *
+	 * @param resourceKey
+	 *            The resource key for this string resource
+	 * @param model
+	 *            The model to use for property substitutions           
+	 */
+	public StringResourceModel(final String resourceKey, final IModel<?> model)
+	{
+		this(resourceKey, null, model);
+	}
+	
 	/**
 	 * Creates a new string resource model using the supplied parameter.
 	 *
@@ -333,6 +346,18 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 	{
 		this.defaultValue = defaultValue;
 		return this;
+	}
+	
+	/**
+	 * Sets the default value if the resource key is not found.
+	 *
+	 * @param defaultValue
+	 *            The default value as string if the resource key is not found.
+	 * @return this for chaining
+	 */
+	public StringResourceModel setDefaultValue(final String defaultValue)
+	{
+		return setDefaultValue(Model.of(defaultValue));
 	}
 
 	/**
