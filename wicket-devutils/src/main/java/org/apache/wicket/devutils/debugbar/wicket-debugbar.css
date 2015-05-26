@@ -22,6 +22,12 @@
 	top: 0;
 	padding: 0px 10px 0px 5px;
 }
+
+#wicketDebugBar.bottom {
+    top: auto;
+    bottom: 0px;
+}
+
 #wicketDebugBar img {
 	margin: 4px 10px -3px 0px;
 	height: 16px;
@@ -31,6 +37,7 @@
 #wicketDebugBarRemove img {
 	margin-left: 10px;
 	margin-right: 0px;
+	cursor: pointer;
 }
 #wicketDebugBar .contributor a {
 	margin-right: 10px;
@@ -55,4 +62,8 @@
 .wicketDebugBar {
 	background-color: #DDDDDD;
 	opacity: 0.8;
+}
+
+#wicketDebugBarCollapse {
+	cursor: pointer;
 }

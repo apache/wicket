@@ -26,5 +26,45 @@ function wicketDebugBarToggleVisibility(elemID) {
 	var elem = document.getElementById(elemID);
 	var vis  = elem.style.display != 'none';
 	elem.style.display = (vis ? 'none' : '');
+    // alter the state cookie so we can initialize it properly on domReady
+	wicketDebugBarSetExpandedCookie(vis ? 'collapsed' : 'expanded')
 }
 
+function wicketDebugBarSetExpandedCookie(value) {
+	document.cookie =  "wicketDebugBarState=" + window.escape(value);
+}
+
+function wicketDebugBarGetExpandedCookie() {
+	var name = 'wicketDebugBarState';
+	if (document.cookie.length > 0) {
+		var start = document.cookie.indexOf (name + "=");
+		if (start !== -1) {
+			start = start + name.length + 1;
+			var end = document.cookie.indexOf(";", start);
+			if (end === -1) {
+				end = document.cookie.length;
+			}
+			return window.unescape(document.cookie.substring(start,end));
+		} else {
+			return null;
+		}
+	} else {
+		return null;
+	}
+}
+
+function wicketDebugBarCheckState() {
+	var state = wicketDebugBarGetExpandedCookie();
+    // state cookie has not been set. determine state and set it
+	if (state === null) {
+		var isVisible = $('#wicketDebugBarContents').is(':visible');
+		wicketDebugBarSetExpandedCookie(isVisible ? 'expanded' : 'collapsed');
+    // set state of debug bar according to cookie
+	} else {
+		if (state === 'expanded') {
+			$('#wicketDebugBarContents').css('display', 'inherit');
+		} else {
+			$('#wicketDebugBarContents').css('display', 'none');
+		}
+	}
+}
