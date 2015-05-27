@@ -85,7 +85,6 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
-import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.ICompoundRequestMapper;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
@@ -169,6 +168,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	private static final String PROPERTIES_FILE_EXTENSION = ".properties";
+
+	private static final String META_INF_WICKET_PATH = File.pathSeparatorChar + "META-INF" + File.pathSeparatorChar + "wicket" + File.pathSeparatorChar;
 
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
@@ -553,7 +554,7 @@ public abstract class Application implements UnboundListener, IEventSink
 					public boolean accept(File file)
 					{
 						String fileName = file.getAbsolutePath();
-						return fileName.contains("/META-INF/wicket/") && fileName.endsWith(PROPERTIES_FILE_EXTENSION);
+						return fileName.contains(META_INF_WICKET_PATH) && fileName.endsWith(PROPERTIES_FILE_EXTENSION);
 					}
 				});
 				for (File wicketPropertiesFile : files)
