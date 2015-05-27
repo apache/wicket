@@ -27,6 +27,7 @@ import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -119,6 +120,17 @@ public class DebugBar extends DevUtilsPanel
 		add(contentSection("content", initiallyExpanded));
 	}
 
+
+	/**
+	 * Positions the DebugBar at the bottom of the page
+	 * @return
+	 */
+	public DebugBar positionBottom()
+	{
+		add(AttributeModifier.append("class", "bottom"));
+		return this;
+	}
+
 	private Component contentSection(final String id, boolean initiallyExpanded)
 	{
 		WebMarkupContainer section = new WebMarkupContainer(id);
@@ -169,6 +181,7 @@ public class DebugBar extends DevUtilsPanel
 			"wicket-debugbar.css")));
 		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
 			DebugBar.class, "wicket-debugbar.js")));
+		response.render(OnDomReadyHeaderItem.forScript("wicketDebugBarCheckState()"));
 	}
 
 	/**

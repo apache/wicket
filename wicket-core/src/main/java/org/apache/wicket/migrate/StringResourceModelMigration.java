@@ -37,7 +37,6 @@ import org.apache.wicket.model.StringResourceModel;
  * </pre>
  *
  * and then use your IDE's <i>Inline Method</i> refactoring support to use the new fluent API.
- * 
  * @since 7.0.0
  */
 public class StringResourceModelMigration
@@ -45,10 +44,8 @@ public class StringResourceModelMigration
 	/**
 	 * @deprecated use 'inline method' to get rid of the deprecation warning and complete the
 	 *             migration to Wicket 7 API.
-	 */
-	/*
 	 * Original JavaDoc:
-	 * 
+	 *
 	 * Creates a new string resource model using the supplied parameters. <p> The relative component
 	 * parameter should generally be supplied, as without it resources can not be obtained from
 	 * resource bundles that are held relative to a particular component or page. However, for
