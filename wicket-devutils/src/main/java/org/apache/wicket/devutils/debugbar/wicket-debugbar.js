@@ -62,7 +62,7 @@ function wicketDebugBarCheckState() {
     // set state of debug bar according to cookie
 	} else {
 		if (state === 'expanded') {
-			$('#wicketDebugBarContents').css('display', 'inherit');
+			$('#wicketDebugBarContents').css('display', '');
 		} else {
 			$('#wicketDebugBarContents').css('display', 'none');
 		}
