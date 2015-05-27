@@ -129,7 +129,7 @@ public class ZipResourceStream extends AbstractResourceStream
 		String[] files = dir.list();
 
 		int BUFFER = 2048;
-		BufferedInputStream origin = null;
+		BufferedInputStream origin;
 		byte data[] = new byte[BUFFER];
 
 		for (String file : files)
@@ -141,7 +141,7 @@ public class ZipResourceStream extends AbstractResourceStream
 			File f = new File(dir, file);
 			if (f.isDirectory())
 			{
-				if (recursive == true)
+				if (recursive)
 				{
 					zipDir(f, out, path + f.getName() + "/", recursive);
 				}
