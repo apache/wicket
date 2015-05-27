@@ -219,7 +219,7 @@ public class UrlResourceStream extends AbstractResourceStream
 		}
 		catch (IOException e)
 		{
-			log.warn("getLastModified for " + url + " failed: " + e.getMessage());
+			log.warn("getLastModified() for '{}' failed: {}", url, e.getMessage());
 
 			// allow modification watcher to detect the problem
 			return null;
