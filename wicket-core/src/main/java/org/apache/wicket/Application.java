@@ -169,7 +169,10 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	private static final String PROPERTIES_FILE_EXTENSION = ".properties";
 
-	private static final String META_INF_WICKET_PATH = File.pathSeparatorChar + "META-INF" + File.pathSeparatorChar + "wicket" + File.pathSeparatorChar;
+	/**
+	 * The path to look for Wicket specific properties file(s)
+	 */
+	private static final String META_INF_WICKET_PATH = File.separatorChar+ "META-INF" + File.separatorChar + "wicket" + File.separatorChar;
 
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
