@@ -727,8 +727,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (child.getParent() != this)
 		{
-			// Add to map
-			final Component replaced = put(child);
+			// Get the child component to replace
+			final Component replaced = children_get(child.getId());
 
 			// Look up to make sure it was already in the map
 			if (replaced == null)
@@ -737,7 +737,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					exceptionMessage("Cannot replace a component which has not been added: id='" +
 						child.getId() + "', component=" + child));
 			}
-
+			
+			// Add to map
+			put(child);
+			
 			// first remove the component.
 			removedComponent(replaced);
 
