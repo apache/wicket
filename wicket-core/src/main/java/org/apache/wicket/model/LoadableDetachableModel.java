@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Model that makes working with detachable models a breeze. LoadableDetachableModel holds a
- * temporary, transient model object, that is set when {@link #getObject()} is called by
- * calling abstract method 'load', and that will be reset/ set to null on {@link #detach()}.
+ * temporary, transient model object, that is set when {@link #getObject()} is called by calling
+ * abstract method 'load', and that will be reset/ set to null on {@link #detach()}.
  * 
  * A usage example:
  * 
@@ -60,8 +60,40 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	/** Logger. */
 	private static final Logger log = LoggerFactory.getLogger(LoadableDetachableModel.class);
 
+	private enum AttachingState 
+	{
+		DETACHED(false, false),
+		ATTACHING(true, false), 
+		ATTACHED(true, true);
+
+		private boolean attaching;
+		private boolean attached;
+
+		private AttachingState(boolean attaching, boolean attached)
+		{
+			this.attached = attached;
+			this.attaching = attaching;
+		}
+		
+		public boolean isAttached() 
+		{
+			return attached;
+		}
+
+		public boolean isAttaching() 
+		{
+			return attaching;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return name().toLowerCase();
+		}
+	}
+
 	/** keeps track of whether this model is attached or detached */
-	private transient boolean attached = false;
+	private transient AttachingState attached = AttachingState.DETACHED;
 
 	/** temporary, transient object. */
 	private transient T transientModelObject;
@@ -83,7 +115,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	public LoadableDetachableModel(T object)
 	{
 		this.transientModelObject = object;
-		attached = true;
+		attached = AttachingState.ATTACHED;
 	}
 
 	/**
@@ -92,7 +124,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	@Override
 	public void detach()
 	{
-		if (attached)
+		if (attached == AttachingState.ATTACHED)
 		{
 			try
 			{
@@ -100,7 +132,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 			}
 			finally
 			{
-				attached = false;
+				attached = AttachingState.DETACHED;
 				transientModelObject = null;
 
 				log.debug("removed transient object for {}, requestCycle {}", this,
@@ -115,8 +147,11 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	@Override
 	public final T getObject()
 	{
-		if (!attached)
+		if (attached == AttachingState.DETACHED)
 		{
+			// prevent infinite attachment loops
+			attached = AttachingState.ATTACHING;
+
 			transientModelObject = load();
 
 			if (log.isDebugEnabled())
@@ -125,7 +160,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 					", requestCycle " + RequestCycle.get());
 			}
 
-			attached = true;
+			attached = AttachingState.ATTACHED;
 			onAttach();
 		}
 		return transientModelObject;
@@ -138,7 +173,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	 */
 	public final boolean isAttached()
 	{
-		return attached;
+		return attached.isAttached();
 	}
 
 	/**
@@ -147,9 +182,12 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	@Override
 	public String toString()
 	{
-	 StringBuilder sb = new StringBuilder(super.toString());
-		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
-			this.transientModelObject).append("]");
+		StringBuilder sb = new StringBuilder(super.toString());
+		sb.append(":attached=")
+			.append(isAttached())
+			.append(":tempModelObject=[")
+			.append(this.transientModelObject)
+			.append("]");
 		return sb.toString();
 	}
 
@@ -187,8 +225,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	@Override
 	public void setObject(final T object)
 	{
-		attached = true;
+		attached = AttachingState.ATTACHED;
 		transientModelObject = object;
 	}
-
 }
