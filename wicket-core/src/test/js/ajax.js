@@ -1288,5 +1288,59 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
+		asyncTest('Do not hide the indicator if redirecting.', function () {
+
+			expect(2);
+
+			var oldRedirect = Wicket.Ajax.redirect;
+			Wicket.Ajax.redirect = function() {};
+
+			var attrs = {
+				u: 'data/ajax/redirectAjaxResponse.xml',
+				e: 'event1',
+				i: 'ajaxIndicator',
+				sh: [function(attrs, jqXHR, data, textStatus) {
+					var indicatorEl = Wicket.$(attrs.i);
+					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+				}],
+				coh: [function(attrs, jqXHR, textStatus) {
+					var indicatorEl = Wicket.$(attrs.i);
+					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+					Wicket.Ajax.redirect = oldRedirect;
+					start();
+				}]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+		});
+
+		asyncTest('Do hide the indicator if not redirecting.', function () {
+
+			expect(2);
+
+			var attrs = {
+				u: 'data/ajax/emptyAjaxResponse.xml',
+				e: 'event1',
+				i: 'ajaxIndicator',
+				sh: [function(attrs, jqXHR, data, textStatus) {
+					var indicatorEl = Wicket.$(attrs.i);
+					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+				}],
+				coh: [function(attrs, jqXHR, textStatus) {
+					var indicatorEl = Wicket.$(attrs.i);
+					equal("0", indicatorEl.getAttribute("showIncrementallyCount"));
+					start();
+				}]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+		});
+
 	}
 });
