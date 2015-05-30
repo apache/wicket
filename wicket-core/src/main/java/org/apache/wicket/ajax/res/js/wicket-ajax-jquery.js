@@ -767,7 +767,7 @@
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
 					if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
 						context.isRedirecting = true;
-						window.location = redirectUrl;
+						Wicket.Ajax.redirect(redirectUrl);
 					}
 					else {
 						var urlDepth = 0;
@@ -792,7 +792,7 @@
 						}
 
 						context.isRedirecting = true;
-						window.location = calculatedRedirect;
+						Wicket.Ajax.redirect(calculatedRedirect);
 					}
 				}
 				else {
@@ -1245,7 +1245,7 @@
 			var text = Wicket.DOM.text(node);
 			Wicket.Log.info("Redirecting to: " + text);
 			context.isRedirecting = true;
-			window.location = text;
+			Wicket.Ajax.redirect(text);
 		},
 
 		// mark the focused component so that we know if it has been replaced by response
@@ -1976,6 +1976,15 @@
 			process: function(data) {
 				var call = new Wicket.Ajax.Call();
 				call.process(data);
+			},
+
+			/**
+			 * An abstraction over native window.location.replace() to be able to suppress it for unit tests
+			 *
+			 * @param url The url to redirect to
+			 */
+			redirect: function(url) {
+				window.location = url;
 			}
 		},
 
