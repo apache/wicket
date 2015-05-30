@@ -169,6 +169,15 @@
 		  <param-value>org.apache.wicket.examples.media.VideosApplication</param-value>
 		</init-param>
 	</filter>
+	
+	<filter>
+		<filter-name>ExtendedFormApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.extendedform.ExtendedFormApplication</param-value>
+		</init-param>
+	</filter>
 
 	<filter>
 		<filter-name>LibraryApplication</filter-name>
@@ -555,6 +564,13 @@
 	<filter-mapping>
 		<filter-name>VideosApplication</filter-name>
 		<url-pattern>/videos/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+	
+		<filter-mapping>
+		<filter-name>ExtendedFormApplication</filter-name>
+		<url-pattern>/extendedForm/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
