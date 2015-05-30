@@ -126,7 +126,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	@Override
 	public final T getObject()
 	{
-		if (state == InternalState.DETACHED)
+		if (state == null || state == InternalState.DETACHED)
 		{
 			// prevent infinite attachment loops
 			state = InternalState.ATTACHING;
