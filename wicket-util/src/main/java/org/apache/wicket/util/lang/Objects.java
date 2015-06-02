@@ -772,4 +772,9 @@ public final class Objects
 	private Objects()
 	{
 	}
+
+	public static <T> T defaultIfNull(T originalObj, T defaultObj)
+	{
+		return originalObj != null ? originalObj : defaultObj;
+	}
 }

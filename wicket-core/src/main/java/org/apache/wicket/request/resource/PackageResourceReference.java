@@ -22,7 +22,11 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceUtils;
@@ -119,21 +123,27 @@ public class PackageResourceReference extends ResourceReference
 		final String extension = getExtension();
 
 		final PackageResource resource;
+		
+		final Url url = RequestCycle.get().getRequest().getUrl();
+		final UrlAttributes urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 
 		if (CSS_EXTENSION.equals(extension))
 		{
-			resource = new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation()).readBuffered(readBuffered);
+			resource = new CssPackageResource(getScope(), getName(), Objects.defaultIfNull(getLocale(), urlAttributes.getLocale()), 
+				Objects.defaultIfNull(getStyle(), urlAttributes.getStyle()),
+				Objects.defaultIfNull(getVariation(), urlAttributes.getVariation())).readBuffered(readBuffered);
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
-			resource = new JavaScriptPackageResource(getScope(), getName(), getLocale(),
-				getStyle(), getVariation()).readBuffered(readBuffered);
+			resource = new JavaScriptPackageResource(getScope(), getName(), Objects.defaultIfNull(getLocale(), urlAttributes.getLocale()), 
+				Objects.defaultIfNull(getStyle(), urlAttributes.getStyle()),
+				Objects.defaultIfNull(getVariation(), urlAttributes.getVariation())).readBuffered(readBuffered);
 		}
 		else
 		{
-			resource = new PackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation()).readBuffered(readBuffered);
+			resource = new PackageResource(getScope(), getName(), Objects.defaultIfNull(getLocale(), urlAttributes.getLocale()), 
+				Objects.defaultIfNull(getStyle(), urlAttributes.getStyle()),
+				Objects.defaultIfNull(getVariation(), urlAttributes.getVariation())).readBuffered(readBuffered);
 		}
 
 		removeCompressFlagIfUnnecessary(resource);

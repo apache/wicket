@@ -19,11 +19,16 @@ package org.apache.wicket.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Utilities for resources.
@@ -33,9 +38,129 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 public class ResourceUtil
 {
 
-	private ResourceUtil()
+	public static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(String attributes)
 	{
-		// no-op
+		Locale locale = null;
+		String style = null;
+		String variation = null;
+	
+		if (Strings.isEmpty(attributes) == false)
+		{
+			String split[] = Strings.split(attributes, '-');
+			locale = parseLocale(split[0]);
+			if (split.length == 2)
+			{
+				style = Strings.notEmpty(unescapeAttributesSeparator(split[1]), null);
+			}
+			else if (split.length == 3)
+			{
+				style = Strings.notEmpty(unescapeAttributesSeparator(split[1]), null);
+				variation = Strings.notEmpty(unescapeAttributesSeparator(split[2]), null);
+			}
+		}
+		return new ResourceReference.UrlAttributes(locale, style, variation);
+	}
+
+	public static ResourceReference.UrlAttributes decodeResourceReferenceAttributes(Url url)
+	{
+		Args.notNull(url, "url");
+	
+		if (url.getQueryParameters().size() > 0)
+		{
+			Url.QueryParameter param = url.getQueryParameters().get(0);
+			if (Strings.isEmpty(param.getValue()))
+			{
+				return decodeResourceReferenceAttributes(param.getName());
+			}
+		}
+		return new ResourceReference.UrlAttributes(null, null, null);
+	}
+
+	public static String encodeResourceReferenceAttributes(ResourceReference.UrlAttributes attributes)
+	{
+		if (attributes == null ||
+			(attributes.getLocale() == null && attributes.getStyle() == null && attributes.getVariation() == null))
+		{
+			return null;
+		}
+		else
+		{
+			StringBuilder res = new StringBuilder(32);
+			if (attributes.getLocale() != null)
+			{
+				res.append(attributes.getLocale());
+			}
+			boolean styleEmpty = Strings.isEmpty(attributes.getStyle());
+			if (!styleEmpty)
+			{
+				res.append('-');
+				res.append(escapeAttributesSeparator(attributes.getStyle()));
+			}
+			if (!Strings.isEmpty(attributes.getVariation()))
+			{
+				if (styleEmpty)
+				{
+					res.append("--");
+				}
+				else
+				{
+					res.append('-');
+				}
+				res.append(escapeAttributesSeparator(attributes.getVariation()));
+			}
+			return res.toString();
+		}
+	}
+
+	public static void encodeResourceReferenceAttributes(Url url, ResourceReference reference)
+	{
+		String encoded = encodeResourceReferenceAttributes(reference.getUrlAttributes());
+		if (!Strings.isEmpty(encoded))
+		{
+			url.getQueryParameters().add(new Url.QueryParameter(encoded, ""));
+		}
+	}
+
+	/**
+	 * Escapes any occurrences of <em>-</em> character in the style and variation
+	 * attributes with <em>~</em>. Any occurrence of <em>~</em> is encoded as <em>~~</em>.
+	 *
+	 * @param attribute
+	 *      the attribute to escape
+	 * @return the attribute with escaped separator character
+	 */
+	public static CharSequence escapeAttributesSeparator(String attribute)
+	{
+		CharSequence tmp = Strings.replaceAll(attribute, "~", "~~");
+		return Strings.replaceAll(tmp, "-", "~");
+	}
+
+	public static Locale parseLocale(String locale)
+	{
+		if (Strings.isEmpty(locale))
+		{
+			return null;
+		}
+		else
+		{
+			String parts[] = locale.toLowerCase().split("_", 3);
+			if (parts.length == 1)
+			{
+				return new Locale(parts[0]);
+			}
+			else if (parts.length == 2)
+			{
+				return new Locale(parts[0], parts[1]);
+			}
+			else if (parts.length == 3)
+			{
+				return new Locale(parts[0], parts[1], parts[2]);
+			}
+			else
+			{
+				return null;
+			}
+		}
 	}
 
 	/**
@@ -90,5 +215,24 @@ public class ResourceUtil
 		{
 			throw new WicketRuntimeException("failed to locate stream from " + resourceStream, e);
 		}
+	}
+
+	/**
+	 * Reverts the escaping applied by {@linkplain #escapeAttributesSeparator(String)} - unescapes
+	 * occurrences of <em>~</em> character in the style and variation attributes with <em>-</em>.
+	 *
+	 * @param attribute
+	 *      the attribute to unescape
+	 * @return the attribute with escaped separator character
+	 */
+	public static String unescapeAttributesSeparator(String attribute)
+	{
+		String tmp = attribute.replaceAll("(\\w)~(\\w)", "$1-$2");
+		return Strings.replaceAll(tmp, "~~", "~").toString();
+	}
+
+	private ResourceUtil()
+	{
+		// no-op
 	}
 }

@@ -1562,4 +1562,16 @@ public final class Strings
 					String.format("Cannot convert '%s' to enum constant of type '%s'.", value, enumClass), e);
 		}
 	}
+
+	public static String notEmpty(String originalString, String normalizedValue)
+	{
+		if (isEmpty(originalString))
+		{
+			return normalizedValue;
+		}
+		else
+		{
+			return originalString;
+		}
+	}
 }
