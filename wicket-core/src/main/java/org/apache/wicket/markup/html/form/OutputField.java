@@ -31,213 +31,255 @@ import org.apache.wicket.model.IModel;
 /**
  * Creates an output field for a form
  * 
+ * @param <T>
+ *            the type of the output field
  * @author Tobias Soloschenko
  *
  */
-public class OutputField<T> extends FormComponent<T> {
-    private static final long serialVersionUID = 1L;
-
-    private Form<?> form;
-
-    private FormComponent<?>[] dependentFormComponents;
-
-    private OutputDefaultAjaxBehavior outputDefaultAjaxBehavior;
-
-    private String inputScript;
-
-    private class OutputDefaultAjaxBehavior extends AbstractDefaultAjaxBehavior {
-
+public class OutputField<T> extends FormComponent<T>
+{
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Applies the output value to the dynamic extra parameters
-	 */
-	@Override
-	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
-	    super.updateAjaxAttributes(attributes);
-	    attributes.getDynamicExtraParameters().add("return { value : " + getMarkupId() + "_value() }");
+	private Form<?> form;
+
+	private FormComponent<?>[] dependentFormComponents;
+
+	private OutputDefaultAjaxBehavior outputDefaultAjaxBehavior;
+
+	private String inputScript;
+
+	private class OutputDefaultAjaxBehavior extends AbstractDefaultAjaxBehavior
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Applies the output value to the dynamic extra parameters
+		 */
+		@Override
+		protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+		{
+			super.updateAjaxAttributes(attributes);
+			attributes.getDynamicExtraParameters().add(
+				"return { value : " + getMarkupId() + "_value() }");
+		}
+
+		/**
+		 * Updates the model value
+		 */
+		@Override
+		protected void respond(AjaxRequestTarget target)
+		{
+			String modelObject = getRequest().getRequestParameters()
+				.getParameterValue("value")
+				.toString();
+			target.add(getComponent().setDefaultModelObject(modelObject));
+			updated(target);
+		}
 	}
 
 	/**
-	 * Updates the model value
+	 * Creates an output field for the given ids with the given model
+	 * 
+	 * @param id
+	 *            the id of the output field
+	 * @param model
+	 *            the model of the output field
+	 * @param forIds
+	 *            the ids of the fields used in for attribute
+	 */
+	public OutputField(String id, IModel<T> model)
+	{
+		super(id, model);
+		add(outputDefaultAjaxBehavior = new OutputDefaultAjaxBehavior());
+		setOutputMarkupId(true);
+
+	}
+
+	/**
+	 * Replace the content with the default model object
 	 */
 	@Override
-	protected void respond(AjaxRequestTarget target) {
-	    String modelObject = getRequest().getRequestParameters().getParameterValue("value").toString();
-	    target.add(getComponent().setDefaultModelObject(modelObject));
-	    updated(target);
-	}
-    }
-
-    /**
-     * Creates an output field for the given ids with the given model
-     * 
-     * @param id
-     *            the id of the output field
-     * @param model
-     *            the model of the output field
-     * @param forIds
-     *            the ids of the fields used in for attribute
-     */
-    public OutputField(String id, IModel<T> model) {
-	super(id, model);
-	add(outputDefaultAjaxBehavior = new OutputDefaultAjaxBehavior());
-	setOutputMarkupId(true);
-
-    }
-
-    /**
-     * Replace the content with the default model object
-     */
-    @Override
-    public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
-	replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
-    }
-
-    @Override
-    protected void onComponentTag(ComponentTag tag) {
-	super.onComponentTag(tag);
-
-	// Must be attached to an output tag
-	checkComponentTag(tag, "output");
-
-	// Check if the required components have been set
-	checkDependentFormComponents(dependentFormComponents);
-	if (form == null) {
-	    throw new WicketRuntimeException("Please provide a form to the output field");
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	{
+		replaceComponentTagBody(markupStream, openTag, getDefaultModelObjectAsString());
 	}
 
-	tag.put("name", getInputName());
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
 
-	String ids = "";
-	for (FormComponent<?> dependendFormComponent : this.dependentFormComponents) {
-	    ids += dependendFormComponent.getMarkupId() + " ";
-	}
-	int lastIndexOf = ids.lastIndexOf(" ");
-	if (lastIndexOf != -1) {
-	    ids = ids.substring(0, lastIndexOf);
-	}
+		// Must be attached to an output tag
+		checkComponentTag(tag, "output");
 
-	tag.put("for", ids);
+		// Check if the required components have been set
+		checkDependentFormComponents(dependentFormComponents);
 
-	if (form != null) {
-	    tag.put("form", form.getMarkupId());
-	}
-    }
+		// Gets the form
+		Form<?> form = getForm();
 
-    /**
-     * Gets the form the output field belongs to
-     * 
-     * @return the form
-     */
-    public Form<?> getForm() {
-	return form;
-    }
+		if (form == null)
+		{
+			throw new WicketRuntimeException("Please provide a form to the output field");
+		}
 
-    /**
-     * Sets the form the output field belongs to
-     * 
-     * @param form
-     *            the form
-     */
-    public void setForm(Form<?> form) {
-	if (form != null) {
-	    form.setOutputMarkupId(true);
-	    form.setOutputMarkupPlaceholderTag(true);
-	    this.form = form;
-	}
-    }
+		tag.put("name", getInputName());
 
-    /**
-     * Gets a list of dependentFormComponents the output tag belongs to
-     * 
-     * @return a list of dependentFormComponents the output tag belogs to
-     */
-    public FormComponent<?>[] getDependentFormComponents() {
-	return dependentFormComponents;
-    }
+		String ids = "";
+		for (FormComponent<?> dependendFormComponent : this.dependentFormComponents)
+		{
+			ids += dependendFormComponent.getMarkupId() + " ";
+		}
+		int lastIndexOf = ids.lastIndexOf(" ");
+		if (lastIndexOf != -1)
+		{
+			ids = ids.substring(0, lastIndexOf);
+		}
 
-    /**
-     * Sets a list of dependentFormComponents the output tag belongs to
-     * 
-     * @param dependentFormComponents
-     *            a list of dependentFormComponents the output tags belongs to
-     */
-    public void setDependentFormComponents(FormComponent<?>... dependentFormComponents) {
+		tag.put("for", ids);
 
-	checkDependentFormComponents(dependentFormComponents);
-
-	for (FormComponent<?> dependentFormComponent : dependentFormComponents) {
-	    dependentFormComponent.setOutputMarkupId(true);
-	    dependentFormComponent.setOutputMarkupPlaceholderTag(true);
-	}
-	this.dependentFormComponents = dependentFormComponents;
-    }
-
-    /**
-     * Gets the input script of the output field
-     * 
-     * @return the input script of the output field
-     */
-    public String getInputScript() {
-
-	checkDependentFormComponents(dependentFormComponents);
-
-	ArrayList<String> markupIds = new ArrayList<String>();
-	markupIds.add(this.getMarkupId());
-	for (FormComponent<?> dependentFormComponent : dependentFormComponents) {
-	    markupIds.add(dependentFormComponent.getMarkupId());
+		if (form != null)
+		{
+			tag.put("form", form.getMarkupId());
+		}
 	}
 
-	return String.format(inputScript, markupIds.toArray());
-    }
-
-    /**
-     * Sets the input script of the output field
-     * 
-     * @param inputScript
-     *            the input script of the output field
-     */
-    public void setInputScript(String inputScript) {
-	// Assign the calculated value of the input script to the output field
-	this.inputScript = "%s.value=" + inputScript;
-    }
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-	super.renderHead(response);
-
-	String element = "document.getElementById('" + getMarkupId() + "')";
-
-	response.render(OnDomReadyHeaderItem.forScript("window." + getMarkupId() + "_value = function(){ return "
-		+ element + ".value;}"));
-
-	response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s').on('change', function() { %s });",
-		getForm().getMarkupId(), outputDefaultAjaxBehavior.getCallbackScript())));
-
-	response.render(OnDomReadyHeaderItem.forScript(String.format("$('#%s').on('input', function() { %s });",
-		getForm().getMarkupId(), getInputScript())));
-    }
-
-    /**
-     * Checks if required dependent form components has been set
-     * 
-     * @param dependentFormComponents
-     *            the form components to be checked
-     */
-    private void checkDependentFormComponents(FormComponent<?>... dependentFormComponents) {
-	if (dependentFormComponents == null || dependentFormComponents.length == 0) {
-	    throw new WicketRuntimeException("Please apply a not empty list of dependent form components!");
+	/**
+	 * Gets the form the output field belongs to
+	 * 
+	 * @return the form
+	 */
+	public Form<?> getForm()
+	{
+		if (this.form != null)
+		{
+			return this.form;
+		}
+		else
+		{
+			return super.getForm();
+		}
 	}
-    }
 
-    /**
-     * This method can be overridden and is invoked when ever the output field
-     * has been updated
-     * 
-     * @param target
-     *            the ajax request target if the output field has been updated
-     */
-    protected void updated(AjaxRequestTarget target) {
-    }
+	/**
+	 * Sets the form the output field belongs to
+	 * 
+	 * @param form
+	 *            the form
+	 */
+	public void setForm(Form<?> form)
+	{
+		if (form != null)
+		{
+			form.setOutputMarkupId(true);
+			form.setOutputMarkupPlaceholderTag(true);
+			this.form = form;
+		}
+	}
+
+	/**
+	 * Gets a list of dependentFormComponents the output tag belongs to
+	 * 
+	 * @return a list of dependentFormComponents the output tag belogs to
+	 */
+	public FormComponent<?>[] getDependentFormComponents()
+	{
+		return dependentFormComponents;
+	}
+
+	/**
+	 * Sets a list of dependentFormComponents the output tag belongs to
+	 * 
+	 * @param dependentFormComponents
+	 *            a list of dependentFormComponents the output tags belongs to
+	 */
+	public void setDependentFormComponents(FormComponent<?>... dependentFormComponents)
+	{
+
+		checkDependentFormComponents(dependentFormComponents);
+
+		for (FormComponent<?> dependentFormComponent : dependentFormComponents)
+		{
+			dependentFormComponent.setOutputMarkupId(true);
+			dependentFormComponent.setOutputMarkupPlaceholderTag(true);
+		}
+		this.dependentFormComponents = dependentFormComponents;
+	}
+
+	/**
+	 * Gets the input script of the output field
+	 * 
+	 * @return the input script of the output field
+	 */
+	public String getInputScript()
+	{
+
+		checkDependentFormComponents(dependentFormComponents);
+
+		ArrayList<String> markupIds = new ArrayList<String>();
+		markupIds.add(this.getMarkupId());
+		for (FormComponent<?> dependentFormComponent : dependentFormComponents)
+		{
+			markupIds.add(dependentFormComponent.getMarkupId());
+		}
+
+		return String.format(inputScript, markupIds.toArray());
+	}
+
+	/**
+	 * Sets the input script of the output field
+	 * 
+	 * @param inputScript
+	 *            the input script of the output field
+	 */
+	public void setInputScript(String inputScript)
+	{
+		// Assign the calculated value of the input script to the output field
+		this.inputScript = "%s.value=" + inputScript;
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+
+		String element = "document.getElementById('" + getMarkupId() + "')";
+
+		response.render(OnDomReadyHeaderItem.forScript("window." + getMarkupId() +
+			"_value = function(){ return " + element + ".value;}"));
+
+		Form<?> form = getForm();
+		response.render(OnDomReadyHeaderItem.forScript(String.format(
+			"$('#%s').on('change', function() { %s });", form.getMarkupId(),
+			outputDefaultAjaxBehavior.getCallbackScript())));
+
+		response.render(OnDomReadyHeaderItem.forScript(String.format(
+			"$('#%s').on('input', function() { %s });", form.getMarkupId(), getInputScript())));
+	}
+
+	/**
+	 * Checks if required dependent form components has been set
+	 * 
+	 * @param dependentFormComponents
+	 *            the form components to be checked
+	 */
+	private void checkDependentFormComponents(FormComponent<?>... dependentFormComponents)
+	{
+		if (dependentFormComponents == null || dependentFormComponents.length == 0)
+		{
+			throw new WicketRuntimeException(
+				"Please apply a not empty list of dependent form components!");
+		}
+	}
+
+	/**
+	 * This method can be overridden and is invoked when ever the output field has been updated
+	 * 
+	 * @param target
+	 *            the ajax request target if the output field has been updated
+	 */
+	protected void updated(AjaxRequestTarget target)
+	{
+	}
 }
