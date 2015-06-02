@@ -31,6 +31,7 @@ import org.junit.Test;
 /**
  * Tests the states of a LoadableDetachableModel
  */
+@SuppressWarnings("javadoc")
 public class LoadableDetachableModelTest extends WicketTestCase
 {
 	/**
