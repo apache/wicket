@@ -46,7 +46,7 @@ import org.apache.wicket.util.value.IValueMap;
  * HTML:
  * 
  * <pre>
- *    &lt;span style=&quot;vertical=align: top;&quot; wicket:id=&quot;site&quot;&gt;
+ *    &lt;span style=&quot;vertical-align: top;&quot; wicket:id=&quot;site&quot;&gt;
  *   	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
  *   	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
  *    &lt;/span&gt;
@@ -55,7 +55,7 @@ import org.apache.wicket.util.value.IValueMap;
  * </p>
  * 
  * <p>
- * You can can extend this class and override method wantOnSelectionChangedNotifications() to force
+ * You can extend this class and override method wantOnSelectionChangedNotifications() to force
  * server roundtrips on each selection change.
  * </p>
  * 
