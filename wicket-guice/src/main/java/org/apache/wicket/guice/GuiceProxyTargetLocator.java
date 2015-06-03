@@ -20,13 +20,16 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
+import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.util.lang.Objects;
 
 class GuiceProxyTargetLocator implements IProxyTargetLocator
 {
@@ -40,6 +43,8 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 
 	private final String fieldName;
 
+	private Boolean isSingletonCache = null;
+
 	public GuiceProxyTargetLocator(final Field field, final Annotation bindingAnnotation,
 		final boolean optional)
 	{
@@ -52,36 +57,9 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 	@Override
 	public Object locateProxyTarget()
 	{
-		final GuiceInjectorHolder holder = Application.get().getMetaData(
-			GuiceInjectorHolder.INJECTOR_KEY);
+		Injector injector = getInjector();
 
-		final Type type;
-		try
-		{
-			Class<?> clazz = WicketObjects.resolveClass(className);
-			final Field field = clazz.getDeclaredField(fieldName);
-			type = field.getGenericType();
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("Error accessing member: " + fieldName +
-				" of class: " + className, e);
-		}
-
-		// using TypeLiteral to retrieve the key gives us automatic support for
-		// Providers and other injectable TypeLiterals
-		final Key<?> key;
-
-		if (bindingAnnotation == null)
-		{
-			key = Key.get(TypeLiteral.get(type));
-		}
-		else
-		{
-			key = Key.get(TypeLiteral.get(type), bindingAnnotation);
-		}
-
-		Injector injector = holder.getInjector();
+		final Key<?> key = newGuiceKey();
 
 		// if the Inject annotation is marked optional and no binding is found
 		// then skip this injection (WICKET-2241)
@@ -104,4 +82,80 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 
 		return injector.getInstance(key);
 	}
+
+	private Key<?> newGuiceKey()
+	{
+		final Type type;
+		try
+		{
+			Class<?> clazz = WicketObjects.resolveClass(className);
+			final Field field = clazz.getDeclaredField(fieldName);
+			type = field.getGenericType();
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Error accessing member: " + fieldName +
+				" of class: " + className, e);
+		}
+
+		// using TypeLiteral to retrieve the key gives us automatic support for
+		// Providers and other injectable TypeLiterals
+		if (bindingAnnotation == null)
+		{
+			return Key.get(TypeLiteral.get(type));
+		}
+		else
+		{
+			return Key.get(TypeLiteral.get(type), bindingAnnotation);
+		}
+	}
+
+	public boolean isSingletonScope()
+	{
+		if (isSingletonCache == null)
+		{
+			try
+			{
+				isSingletonCache = Scopes.isSingleton(getInjector().getBinding(newGuiceKey()));
+			}
+			catch (ConfigurationException ex)
+			{
+				// No binding, if optional can pretend this is null singleton
+				if (optional)
+					isSingletonCache = true;
+				else
+					throw ex;
+			}
+		}
+		return isSingletonCache;
+	}
+
+	private Injector getInjector()
+	{
+		final GuiceInjectorHolder holder = Application.get().getMetaData(
+			GuiceInjectorHolder.INJECTOR_KEY);
+
+		return holder.getInjector();
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (!(o instanceof GuiceProxyTargetLocator))
+			return false;
+		GuiceProxyTargetLocator that = (GuiceProxyTargetLocator) o;
+		return Objects.equal(optional, that.optional) &&
+				Objects.equal(bindingAnnotation, that.bindingAnnotation) &&
+				Objects.equal(className, that.className) &&
+				Objects.equal(fieldName, that.fieldName);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(bindingAnnotation, optional, className, fieldName);
+	}
+
 }
