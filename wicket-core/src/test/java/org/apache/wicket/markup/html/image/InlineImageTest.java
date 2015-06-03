@@ -17,35 +17,19 @@
 package org.apache.wicket.markup.html.image;
 
 
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
+import org.apache.wicket.WicketTestCase;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 
-public class InlineImageTest
+public class InlineImageTest extends WicketTestCase
 {
-
-	private WicketTester wicketTester;
-
-	@Before
-	public void setup()
-	{
-		wicketTester = new WicketTester();
-	}
-
-	@After
-	public void tearDown()
-	{
-		wicketTester.destroy();
-	}
 
 	@Test
 	public void inlineImageTest()
 	{
-		wicketTester.startPage(InlineImageTestPage.class);
-		String lastResponseAsString = wicketTester.getLastResponse().getDocument();
+		tester.startPage(InlineImageTestPage.class);
+		String lastResponseAsString = tester.getLastResponse().getDocument();
 		Assert.assertTrue(
 			"inline image is in html",
 			lastResponseAsString.contains("<img wicket:id=\"inlineimage\" src=\"data:image/gif;base64,R0lGODlhQAHwAPf8AAAAAAwMDAsNABUZABUXBRIS"));
