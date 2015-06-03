@@ -23,6 +23,7 @@ import java.util.Random;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.image.InlineImage;
 import org.apache.wicket.markup.html.image.Picture;
 import org.apache.wicket.markup.html.image.Source;
 import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
@@ -126,6 +127,8 @@ public final class Home extends WicketExamplePage
 			"Image2_small.gif"));
 		picture.add(image3);
 		this.add(picture);
+		
+		add(new InlineImage("inline", new PackageResourceReference(getClass(),"image2.gif")));
 	}
 
 	/**

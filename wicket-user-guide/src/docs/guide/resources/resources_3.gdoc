@@ -125,6 +125,18 @@ The component @org.apache.wicket.markup.html.image.Picture@ is used to provide a
 ...
 {code}
 
+h3. Inline Image - embedded resource reference content
+
+In some components like in the inline image resource references are going to be translated to other representations like base64 content.
+
+*Java Code:*
+{code}
+...
+		add(new InlineImage("inline", new PackageResourceReference(getClass(),"image2.gif")));
+...
+{code}
+
+
 h3. Media tags - resource references with content range support
 
 Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support "Range" HTTP header for the request and "Content-Range" / "Accept-Range" HTTP headers for the response, which are used for videos / audio tags. The "Range" header allows the client to only request a specific byte range of the resource. The server provides the "Content-Range" and tells the client which bytes are going to be send.
