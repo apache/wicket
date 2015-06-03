@@ -1,0 +1,22 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <title>Wicket Examples - Extended HTML5 form processing</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+	<div wicket:id="mainNavigation"></div>
+	This form is add the value of the first field to the value of the second field.
+	<form wicket:id="form1">
+		<input wicket:id="number1" type="text" />
+		<input wicket:id="number2" type="text" />
+		<output wicket:id="output1" />
+	</form>
+	
+	This form shows the output of the range slider directly
+	<form wicket:id="form2">
+		<input wicket:id="range" type="range" /> <output wicket:id="output2">0</output> / 100
+		<input wicket:id="submit" type="submit" value="submit"/>
+	</form>
+	<label wicket:id="value"></label>
+</body>
+</html>
