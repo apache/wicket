@@ -62,7 +62,7 @@ public class HomePage extends WicketExamplePage
 			@Override
 			public void renderHead(Component component, IHeaderResponse response)
 			{
-				response.render(OnDomReadyHeaderItem.forScript("$('#" +
+				response.render(OnDomReadyHeaderItem.forScript("jQuery('#" +
 					jsPlaceholder.getMarkupId() +
 					"').html('the ondomready script ran').css('border-color', 'green');"));
 			}

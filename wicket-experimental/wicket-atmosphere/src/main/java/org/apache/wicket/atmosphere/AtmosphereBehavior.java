@@ -225,7 +225,7 @@ public class AtmosphereBehavior extends AbstractAjaxBehavior
 			response.render(JavaScriptHeaderItem.forReference(JQueryWicketAtmosphereResourceReference.get()));
 			JSONObject options = findEventBus().getParameters().toJSON();
 			options.put("url", getCallbackUrl());
-			response.render(OnDomReadyHeaderItem.forScript("$('#" + component.getMarkupId() +
+			response.render(OnDomReadyHeaderItem.forScript("jQuery('#" + component.getMarkupId() +
 					"').wicketAtmosphere(" + options.toString() + ")"));
 		}
 		catch (JSONException e)

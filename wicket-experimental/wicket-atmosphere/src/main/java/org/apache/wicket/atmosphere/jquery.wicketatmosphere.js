@@ -18,7 +18,7 @@
 ;(function($) {
 	'use strict';
 
-	jQuery.fn.wicketAtmosphere = function(params) {
+	$.fn.wicketAtmosphere = function(params) {
 		var callbackAdded = false;
 
 		// jquery.atmosphere.response
