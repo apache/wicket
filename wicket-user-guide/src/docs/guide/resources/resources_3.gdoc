@@ -65,6 +65,16 @@ Package resources can be localized following the same rules seen for resource bu
 In the example illustrated in the picture above, if we try to retrieve package resource calendar.jpg when the current locale is set to French, the actual file returned will be calendar_fr.jpg.
 {note}
 
+h3. Inline Image - embedded resource reference content
+
+In some components like in the inline image resource references are going to be translated to other representations like base64 content.
+
+*Java Code:*
+{code}
+...
+		add(new InlineImage("inline", new PackageResourceReference(getClass(),"image2.gif")));
+...
+{code}
 
 h3. Using package resources with tag <wicket:link>
 

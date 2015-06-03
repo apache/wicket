@@ -23,6 +23,7 @@ import java.util.Random;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.image.InlineImage;
 import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.markup.html.image.resource.RenderedDynamicImageResource;
@@ -93,6 +94,8 @@ public final class Home extends WicketExamplePage
 		// image loaded as resource via model.
 		add(new Image("imageModelResource", new Model<CircleDynamicImageResource>(
 			new CircleDynamicImageResource(100, 100))));
+		
+		add(new InlineImage("inline", new PackageResourceReference(getClass(),"image2.gif")));
 
 	}
 

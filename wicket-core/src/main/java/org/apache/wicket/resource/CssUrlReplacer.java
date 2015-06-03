@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.resource;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,10 +24,7 @@ import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.util.crypt.Base64;
-import org.apache.wicket.util.io.IOUtils;
-import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.image.ImageUtil;
 
 /**
  * This compressor is used to replace URLs within CSS files with URLs created from
@@ -97,7 +92,7 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 						cssUrlCopy.toString().replace("?" + EMBED_BASE64, ""));
 					try
 					{
-						processedUrl = createBase64EncodedImage(imageReference);
+						processedUrl = ImageUtil.createBase64EncodedImage(imageReference, true);
 					}
 					catch (Exception e)
 					{
@@ -118,35 +113,6 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 		}
 		matcher.appendTail(output);
 		return output.toString();
-	}
-
-	/**
-	 * Creates a base64 encoded image string based on the given image reference
-	 * 
-	 * @param imageReference
-	 *            the image reference to create the base64 encoded image string of
-	 * @return the base64 encoded image string
-	 * @throws ResourceStreamNotFoundException
-	 *             if the resource couldn't be found
-	 * @throws IOException
-	 *             if the stream couldn't be read
-	 */
-	private CharSequence createBase64EncodedImage(PackageResourceReference imageReference)
-		throws ResourceStreamNotFoundException, IOException
-	{
-		IResourceStream resourceStream = imageReference.getResource().getResourceStream();
-		InputStream inputStream = resourceStream.getInputStream();
-		try
-		{
-			byte[] bytes = IOUtils.toByteArray(inputStream);
-			String base64EncodedImage = Base64.encodeBase64String(bytes);
-			return "data:" + resourceStream.getContentType() + ";base64," +
-				base64EncodedImage.replaceAll("\\s", "");
-		}
-		finally
-		{
-			IOUtils.closeQuietly(inputStream);
-		}
 	}
 
 	@Override
