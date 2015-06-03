@@ -98,6 +98,7 @@ public abstract class AbstractInjectorTest extends Assert
 
 				binder.bind(String.class).annotatedWith(new Jsr330Named("named1")).toInstance("NAMED_1");
 				binder.bind(String.class).annotatedWith(new Jsr330Named("named2")).toInstance("NAMED_2");
+				binder.bind(EvilTestService.class).toInstance(new EvilTestService("evil123", 5));
 		   }
 
 		});
@@ -150,6 +151,7 @@ public abstract class AbstractInjectorTest extends Assert
 
 		assertEquals("NAMED_1", component.getNamed1());
 		assertEquals("NAMED_2", component.getNamed2());
+		assertEquals("evil123", component.getEvilId());
 	}
 
 	/**

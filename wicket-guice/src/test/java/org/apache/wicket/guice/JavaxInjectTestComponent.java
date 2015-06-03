@@ -58,6 +58,9 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 
 	private final JavaxInjectTestNoComponent noComponent;
 
+	@Inject
+	private EvilTestService evilTestService;
+
 	/**
 	 * Construct.
 	 * 
@@ -152,4 +155,9 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 		return noComponent.getString();
 	}
 
+	@Override
+	public String getEvilId()
+	{
+		return evilTestService.getId();
+	}
 }

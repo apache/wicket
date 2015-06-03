@@ -16,28 +16,21 @@
  */
 package org.apache.wicket.guice;
 
-import java.util.Map;
+import com.google.inject.Inject;
 
-import com.google.inject.Provider;
-
-public interface TestComponentInterface
+// No default ctor or interface
+public class EvilTestService
 {
+    private final String id;
 
-	ITestService getInjectedField();
+    @Inject
+    public EvilTestService(String id, Integer value)
+    {
+        this.id = id;
+    }
 
-	String getInjectedOptionalField();
-
-	String getNamed1();
-
-	String getNamed2();
-
-	ITestService getInjectedFieldRed();
-
-	ITestService getInjectedFieldBlue();
-
-	Provider<ITestService> getInjectedFieldProvider();
-
-	Map<String, String> getInjectedTypeLiteralField();
-
-	String getEvilId();
+    public String getId()
+    {
+        return id;
+    }
 }
