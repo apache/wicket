@@ -95,7 +95,7 @@ public final class Home extends WicketExamplePage
 		add(new Image("imageModelResource", new Model<CircleDynamicImageResource>(
 			new CircleDynamicImageResource(100, 100))));
 		
-		add(new InlineImage("inline", new PackageResourceReference(getClass(),"image2.gif")));
+		add(new InlineImage("inline", new PackageResourceReference(getClass(),"Image2.gif")));
 
 	}
 
