@@ -79,7 +79,7 @@ EOF
 
 # set -e
 
-export JAVA_HOME=`/usr/libexec/java_home -v1.6`
+#export JAVA_HOME=`/usr/libexec/java_home -v1.6`
 
 echo "
 Apache Wicket Release script

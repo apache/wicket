@@ -36,6 +36,8 @@
 		<jetty.version>7.6.15.v20140411</jetty.version>
 		<jetty9.version>9.0.6.v20130930</jetty9.version>
 		<spring.version>3.0.7.RELEASE</spring.version>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 		<maven.javadoc.version>2.9.1</maven.javadoc.version>
 		<maven.surefire.version>2.12.2</maven.surefire.version>
 		<!-- do not increase the version - wicket-user-guide requires 2.2.4 -->
@@ -80,6 +82,10 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
 						<inherited>true</inherited>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-toolchains-plugin</artifactId>
 					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -667,8 +673,6 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>2.5.1</version>
 					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
 						<optimize>true</optimize>
 						<debug>true</debug>
 					</configuration>
@@ -707,6 +711,25 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-toolchains-plugin</artifactId>
+					<version>1.1</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>toolchain</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<toolchains>
+							<jdk>
+								<version>${maven.compiler.source}</version>
+							</jdk>
+						</toolchains>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
