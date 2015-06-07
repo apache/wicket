@@ -177,7 +177,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * A white list of accepted origins (host names/domain names) presented as
 	 * &lt;domainname&gt;.&lt;TLD&gt;. The domain part can contain subdomains.
 	 */
-	private Collection<String> acceptedOrigins = new ArrayList<>();
+	private Collection<String> acceptedOrigins = new ArrayList<String>();
 
 	/**
 	 * Sets the action when no Origin header is present in the request. Default {@code ALLOW}.
@@ -732,7 +732,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 		onAborted(request, origin, page);
 		log.info(
 			"Possible CSRF attack, request URL: {}, Origin: {}, action: aborted with error {} {}",
-			request.getRequestURL(), origin, errorCode, errorMessage);
+			new Object[] { request.getRequestURL(), origin, errorCode, errorMessage });
 		throw new AbortWithHttpErrorCodeException(errorCode, errorMessage);
 	}
 
