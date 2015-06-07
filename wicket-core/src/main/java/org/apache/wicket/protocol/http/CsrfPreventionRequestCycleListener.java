@@ -162,7 +162,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	private CsrfAction conflictingOriginAction = CsrfAction.ABORT;
 
 	/**
-	 * The error code to report when the action to take for a CSRF request is {@code ERROR}. Default
+	 * The error code to report when the action to take for a CSRF request is {@link CsrfAction#ABORT}. Default
 	 * {@code 400 BAD REQUEST}.
 	 */
 	private int errorCode = javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
