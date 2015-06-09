@@ -53,6 +53,7 @@ Release Notes - Wicket - Version 6.20.0
     * [WICKET-5894] - Support *.woff2 webfonts in SecurePackageResourceGuard as well
     * [WICKET-5901] - Leaving veil when ajax processing ends with redirect
     * [WICKET-5905] - allow listening to Ajax calls before scheduling
+    * [WICKET-5921] - Provide a default implementation of IModelComparator that always returns false
 
 ** New Feature
 
