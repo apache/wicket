@@ -36,7 +36,6 @@ EOF
 
 function getJdkToolchain {
 	xmllint ~/.m2/toolchains.xml --xpath "/toolchains/toolchain[provides/version/text() = '1.6']/configuration/jdkHome/text()"
-EOF
 }
 
 # set -e
