@@ -34,6 +34,18 @@ import org.apache.wicket.util.io.IClusterable;
 public interface IModelComparator extends IClusterable
 {
 	/**
+	 * A model comparator that always returns false
+	 */
+	IModelComparator ALWAYS_FALSE = new IModelComparator()
+	{
+		@Override
+		public boolean compare(Component component, Object newObject)
+		{
+			return false;
+		}
+	};
+
+	/**
 	 * @param component
 	 *            The component which received the new object
 	 * @param newObject
