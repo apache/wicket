@@ -16,6 +16,8 @@
 
 log=/tmp/wicketrelease.out
 
+rm $log
+
 function fail {
 	echo "$1"
 	if [ -f $log ] ; then
@@ -25,55 +27,15 @@ function fail {
 	exit
 }
 
-function setup_gpg {
-
-	if [ "$agentcount" -ne 1 ]; then
-		echo "Found gpg-agent running, killing all agents"
-		killall gpg-agent
-	fi
-
-	echo ""
-	echo "You are asked twice for your passphrase, one for scripting purposes, and one "
-	echo "for gpg-agent using pinentry such that gpg and git are able to sign things."
-	echo ""
-	echo "Enter your GPG passphrase (input will be hidden) \c"
-	stty_orig=`stty -g` 
-	stty -echo 
-	read passphrase
-	stty $stty_orig
-
-	# test the GPGP passphrase to fail-fast:
-	echo "$passphrase" | gpg --passphrase-fd 0 --armor --output pom.xml.asc --detach-sig pom.xml
-	gpg --verify pom.xml.asc
-	if [ $? -ne 0 ]; then
-	        echo "It appears that you fat-fingered your GPG passphrase"
-			rm pom.xml.asc
-	        exit $?
-	fi
-	rm pom.xml.asc
-
-	echo "Starting new gpg-agent"
-	eval $(gpg-agent --daemon --pinentry-program $(which pinentry))
-	if [ $? -ne 0 ] ; then
-		fail "ERROR: Unable to start gpg-agent"
-	fi
-	gpg --armor --detach-sign --use-agent --sign pom.xml >& $log
-	if [ $? -ne 0 ] ; then
-		fail "ERROR: Unable to run gpg properly"
-	fi
-
-	gpg --verify pom.xml.asc >& $log
-	if [ $? -ne 0 ]; then
-		rm pom.xml.asc
-	    fail "It appears that you fat-fingered your GPG passphrase"
-	fi
-	rm pom.xml.asc
-}
-
 function getVersion {
 	cat << EOF | xmllint --noent --shell pom.xml | grep content | cut -f2 -d=
 setns pom=http://maven.apache.org/POM/4.0.0
 xpath /pom:project/pom:version/text()
+EOF
+}
+
+function getJdkToolchain {
+	xmllint ~/.m2/toolchains.xml --xpath "/toolchains/toolchain[provides/version/text() = '1.6']/configuration/jdkHome/text()"
 EOF
 }
 
@@ -92,10 +54,30 @@ operating systems, and you can bet it won't work on Windows...
 REQUIREMENTS:
 
  - a pure JDK 6 environment, JDK 7 or newer won't cut it
- - Maven 3.0.4 (older releases are b0rked, just don't bother)
+ - Maven 3.3.0 (older releases are b0rked, just don't bother)
  - gpg, gpg-agent and pinentry for signing
+"
 
-Current Java version is: $(java -version 2>&1 | tail -n 2 | head -n 1)
+if [ ! -f ~/.m2/toolchains.xml ] ; then
+	fail "
+Maven will load the JDK 6 environment from the toolchain specified in 
+~/.m2/toolchains.xml
+
+You don't have a toolchains.xml file in your .m2 folder. Please specify your
+JDK's in the toolchains.xml file.
+"
+fi
+
+grep -q "<version>1.6</version>" ~/.m2/toolchains.xml
+
+if [ $? -ne 0 ] ; then
+	fail "
+Your ~/.m2/toolchains.xml file doesn't provide a JDK 1.6 toolchain.
+"
+fi
+
+echo "Java version for running Maven is: $(java -version 2>&1 | tail -n 2 | head -n 1)
+Java used to compile (from toolchain) is: $(getJdkToolchain)
 "
 
 agentcount=`ps aux|grep gpg-agent|wc -l`
@@ -126,8 +108,6 @@ read
 
 branch="build/wicket-$version"
 tag="wicket-$version"
-
-# setup_gpg
 
 echo "Ensuring we are starting from wicket-6.x"
 # otherwise we can't remove a previous release branch that failed
