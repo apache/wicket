@@ -118,6 +118,14 @@ Use build-changelog.sh to add the release notes to the changelog.
 "
 fi
 
+git status --porcelain CHANGELOG-$major_version.x | grep -q "M"
+if [ $? -eq 0 ] ; then
+	fail "You have changes in your workspace that have not been committed.
+
+$(git status)
+"
+fi
+
 log=$(pwd)/release.out
 
 if [ -f $log ] ; then
