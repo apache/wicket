@@ -14,105 +14,141 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-log=/tmp/wicketrelease.out
-
 function fail {
 	echo "$1"
-	if [ -f $log ] ; then
-		echo ""
-		cat $log
-	fi
-	exit
+	exit 1
 }
 
-function setup_gpg {
-	gpg --armor --detach-sign --use-agent --sign pom.xml >& $log
-	if [ $? -ne 0 ] ; then
-		fail "ERROR: Unable to run gpg properly"
-	fi
-
-	gpg --verify pom.xml.asc >& $log
-	if [ $? -ne 0 ]; then
-		rm pom.xml.asc
-	    fail "It appears that you fat-fingered your GPG passphrase"
-	fi
-	rm pom.xml.asc
+function getJavaVersionFromPom {
+	cat << EOF | xmllint --noent --shell pom.xml | grep content | cut -f2 -d=
+setns pom=http://maven.apache.org/POM/4.0.0
+xpath /pom:project/pom:properties/pom:maven.compiler.source/text()
+EOF
 }
 
-function getVersion {
+function getProjectVersionFromPom {
 	cat << EOF | xmllint --noent --shell pom.xml | grep content | cut -f2 -d=
 setns pom=http://maven.apache.org/POM/4.0.0
 xpath /pom:project/pom:version/text()
 EOF
 }
 
+function getJdkToolchain {
+	xmllint ~/.m2/toolchains.xml --xpath "/toolchains/toolchain[provides/version/text() = '$JAVA_VERSION']/configuration/jdkHome/text()"
+}
+
 # set -e
 
-echo "Apache Wicket Release script"
-echo "----------------------------"
-echo "Building a release for Apache Wicket."
-echo ""
-echo "This script assumes you are running on OS X, it hasn't been tested on any other"
-echo "operating systems, and you can bet it won't work on Windows..."
-echo ""
-echo "REQUIREMENTS:"
-echo ""
-echo " - a pure JDK 6 environment, JDK 7 or newer won't cut it"
-echo " - Maven 3.0.4 (older releases are b0rked, just don't bother)"
-echo " - gpg, gpg-agent and pinentry for signing"
-echo ""
+# the branch on which the code base lives for this version (master is
+# always current development version)
+GIT_BRANCH=master
+
+JAVA_VERSION=$(getJavaVersionFromPom)
+
+echo "
+Apache Wicket Release script
+----------------------------
+Building a release for Apache Wicket.
+
+This script assumes you are running on OS X, it hasn't been tested on any other
+operating systems, and you can bet it won't work on Windows...
+
+REQUIREMENTS:
+
+ - A Java version $JAVA_VERSION configured through the Maven toolchain
+ - Maven 3.3.0 (older releases are b0rked, just don't bother)
+ - gpg, gpg-agent and pinentry for signing
+"
+
+if [ ! -f ~/.m2/toolchains.xml ] ; then
+	fail "
+Maven will load the Java $JAVA_VERSION environment from the toolchain specified in 
+~/.m2/toolchains.xml
+
+You don't have a toolchains.xml file in your .m2 folder. Please specify your
+JDK's in the toolchains.xml file.
+"
+fi
+
+grep -q "<version>$JAVA_VERSION</version>" ~/.m2/toolchains.xml
+
+if [ $? -ne 0 ] ; then
+	fail "
+Your ~/.m2/toolchains.xml file doesn't provide a Java $JAVA_VERSION toolchain.
+"
+fi
+
+echo "Java version for running Maven is: $(java -version 2>&1 | tail -n 2 | head -n 1)
+Java used to compile (from toolchain) is: $(getJdkToolchain)
+"
 
 agentcount=`ps aux|grep gpg-agent|wc -l`
 
-current_version=$(getVersion)
-major_version=$(expr $current_version : '\(.*\)\..*\..*\-SNAPSHOT')
-minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-SNAPSHOT')
-bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-SNAPSHOT')
-version="$major_version.$minor_version.0"
-echo "This script will release version: Apache Wicket $version"
-echo ""
-echo "Press enter to continue or CTRL-C to abort \c"
-read 
+if [ ! -z "$1" ] ; then
+	current_version="$1"
+	major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
+	minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
+	bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
+	milestone_version=$(expr $current_version : '.*\..*-M\(.*\)')
+	version="$major_version.$minor_version.0-M$milestone_version"
+	next_version="$major_version.0.0-SNAPSHOT"
+	previous_version="$major_version.0.0-SNAPSHOT"
+else
+	current_version=$(getProjectVersionFromPom)
+	major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
+	minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
+	bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
+	version="$major_version.$minor_version.0"
+	next_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
+	previous_minor_version=$(expr $minor_version - 1)
+	if [ $previous_minor_version -lt 0 ] ; then
+		previous_version="$major_version.0.0-SNAPSHOT"
+	else
+		previous_version="$major_version.$(expr $minor_version - 1).0"
+	fi
+fi
+
+# Check if the changelog has the issues this release
+
+grep -q "$version\$" CHANGELOG-$major_version.x
+if [ $? -ne 0 ] ; then
+	fail "You have forgotten to add the closed tickets for Wicket $version to the CHANGELOG-$major_version.x file
+
+Use build-changelog.sh to add the release notes to the changelog.
+"
+fi
+
+log=$(pwd)/release.out
+
+if [ -f $log ] ; then
+    rm $log
+fi
 
 branch="build/wicket-$version"
 tag="wicket-$version"
 
-if [ "$agentcount" -ne 1 ]; then
-	echo "Found gpg-agent running, killing all agents"
-	killall gpg-agent
-fi
+echo "# Release configuration for Wicket-$version
+scm.tag=${tag}
+" > release.properties
 
-echo ""
-echo "You are asked twice for your passphrase, one for scripting purposes, and one "
-echo "for gpg-agent using pinentry such that gpg and git are able to sign things."
-echo ""
-echo "Enter your GPG passphrase (input will be hidden) \c"
-stty_orig=`stty -g` 
-stty -echo 
-read passphrase
-stty $stty_orig
+./build-versions.py $version $next_version >> release.properties
 
-# test the GPGP passphrase to fail-fast:
-echo "$passphrase" | gpg --passphrase-fd 0 --armor --output pom.xml.asc --detach-sig pom.xml
-gpg --verify pom.xml.asc
-if [ $? -ne 0 ]; then
-        echo "It appears that you fat-fingered your GPG passphrase"
-		rm pom.xml.asc
-        exit $?
-fi
-rm pom.xml.asc
+echo "Contents of the release properties generated for Maven:
+-------------------------------------------------------------------------------
+$(cat ./release.properties)
+-------------------------------------------------------------------------------
 
-echo "Starting new gpg-agent"
-eval $(gpg-agent --daemon --pinentry-program $(which pinentry))
-if [ $? -ne 0 ] ; then
-	fail "ERROR: Unable to start gpg-agent"
-fi
+Writing detailed log to $log
 
-setup_gpg
+This script will release version: Apache Wicket $version and continue
+development with $next_version
 
-echo "Ensuring we are starting from master"
+Press enter to continue or CTRL-C to abort \c"
+read 
+
+echo "Ensuring we are starting from wicket-$major_version.x"
 # otherwise we can't remove a previous release branch that failed
-git checkout master
+git checkout $GIT_BRANCH
 
 echo "Cleaning up any release artifacts that might linger"
 mvn -q release:clean
@@ -131,20 +167,20 @@ git checkout -b $branch
 echo "Creating notice file."
 
 NOTICE=NOTICE
-> $NOTICE 
-echo "Apache Wicket" >> $NOTICE
-echo "Copyright 2006-$(date +%Y) The Apache Software Foundation" >> $NOTICE
-echo "" >> $NOTICE
-echo "This product includes software developed at" >> $NOTICE
-echo "The Apache Software Foundation (http://www.apache.org/)." >> $NOTICE
-echo "" >> $NOTICE
-echo "This is an aggregated NOTICE file for the Apache Wicket projects included" >> $NOTICE
-echo "in this distribution." >> $NOTICE
-echo "" >> $NOTICE
-echo "NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE" >> $NOTICE
-echo "    NOTICE FILE OF THE CORRESPONDING PROJECT. THE RELEASE PROCEDURE WILL" >> $NOTICE
-echo "    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE." >> $NOTICE
-echo "" >> $NOTICE
+
+echo "Apache Wicket
+Copyright 2006-$(date +%Y) The Apache Software Foundation
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+This is an aggregated NOTICE file for the Apache Wicket projects included
+in this distribution.
+
+NB: DO NOT ADD LICENSES/NOTICES/ATTRIBUTIONS TO THIS FILE, BUT IN THE
+    NOTICE FILE OF THE CORRESPONDING PROJECT. THE RELEASE PROCEDURE WILL
+    AUTOMATICALLY INCLUDE THE NOTICE IN THIS FILE.
+" > $NOTICE
 
 # next concatenate all NOTICE files from sub projects to the root file
 for i in `find . -name "NOTICE" -not -regex ".*/target/.*" -not -regex "./NOTICE"`
@@ -168,7 +204,7 @@ mvn -q clean -Pall
 
 # package and assemble the release
 echo "Prepare the release"
-mvn --batch-mode release:prepare -DpreparationGoals="clean" -Dtag=$tag
+mvn --batch-mode release:prepare -l $log -DpreparationGoals="clean" -Dtag=$tag -Papache-release,release
 if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:prepare was not successful"
 fi
@@ -183,10 +219,16 @@ fi
 #git tag --sign --force --message "Signed release tag for Apache Wicket $version" $tag >> $log
 
 echo "Performing the release using Maven"
-mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag
+mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag -Papache-release,release
 if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:perform was not successful"
 fi
+
+# Determine the staging repository and close it after deploying the release to the staging area
+stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-list -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https | grep -v "CLOSED" | grep -Eo "(orgapachewicket-\d+)";)
+
+echo "Closing staging repository with id $stagingrepoid"
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
 
 echo "Create and sign the source tarballs"
 
@@ -224,7 +266,7 @@ gpg --print-md SHA1 dist/binaries/apache-wicket-$version-bin.zip > dist/binaries
 gpg --print-md MD5  dist/binaries/apache-wicket-$version-bin.zip > dist/binaries/apache-wicket-$version-bin.zip.md5
 popd
 
-echo "Uploading release"
+echo "Uploading release to dist.apache.org"
 pushd target/dist
 svn mkdir https://dist.apache.org/repos/dist/dev/wicket/$version -m "Create $version release staging area"
 svn co --force --depth=empty https://dist.apache.org/repos/dist/dev/wicket/$version .
@@ -233,49 +275,165 @@ svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
-echo ""
-echo "The release has been created. It is up to you to check if the release is up"
-echo "to par, and perform the following commands yourself when you start the vote"
-echo "to enable future development during the vote and after."
-echo ""
-echo "You can find the distribution in target/dist"
-echo ""
-echo "    cd target/dist"
-echo ""
-echo "To verify all signatures:"
-echo ""
-echo "    find . -name \"*.asc\" -exec gpg --verify {} \; "
-echo ""
-echo "To push the release branch to ASF git servers"
-echo ""
-echo "    git push origin $branch:refs/heads/$branch"
-echo ""
+echo "========================================================================
 
-echo "To move the release from staging to the mirrors:"
-echo ""
-echo "    svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\""
-echo ""
+The signatures for the source release artefacts:
 
-echo "To sign the release tag issue the following three commands: "
-echo ""
-echo "    git checkout $tag"
-echo "    git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log"
-echo "    git checkout $branch"
-echo ""
+" > /tmp/release-$version-sigs.txt
+
+pushd target/dist > /dev/null
+for i in apache-wicket*{zip,tar.gz}
+do
+	echo "Signature for $i:
+
+$(cat $i.asc)
+" >> /tmp/release-$version-sigs.txt
+done
+popd > /dev/null
+
+echo "========================================================================
+
+CHANGELOG for $version:
+" >> /tmp/release-$version-sigs.txt
+
+awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-6.x >> /tmp/release-$version-sigs.txt
+
+
+echo "Generating Vote email"
+
+echo "This is a vote to release Apache Wicket $version
+
+Please download the source distributions found in our staging area
+linked below.
+
+I have included the signatures for both the source archives. This vote
+lasts for 72 hours minimum.
+
+[ ] Yes, release Apache Wicket $version
+[ ] No, don't release Apache Wicket $version, because ...
+
+Distributions, changelog, keys and signatures can be found at:
+
+    https://dist.apache.org/repos/dist/dev/wicket/$version
+
+Staging repository:
+
+    https://repository.apache.org/content/repositories/$stagingrepoid/
+
+The binaries are available in the above link, as are a staging
+repository for Maven. Typically the vote is on the source, but should
+you find a problem with one of the binaries, please let me know, I can
+re-roll them some way or the other.
+
+" > release-vote.txt
+
+cat /tmp/release-$version-sigs.txt >> release-vote.txt
+
+echo "The Apache Wicket PMC is proud to announce Apache Wicket $version!
+
+This release marks another minor release of Wicket $major_version. We
+use semantic versioning for the development of Wicket, and as such no
+API breaks are present breaks are present in this release compared to
+$major_version.0.0.
+
+New and noteworthy
+------------------
+
+<OPTIONAL>
+
+Using this release
+------------------
+
+With Apache Maven update your dependency to (and don't forget to
+update any other dependencies on Wicket projects to the same version):
+
+<dependency>
+    <groupId>org.apache.wicket</groupId>
+    <artifactId>wicket-core</artifactId>
+    <version>$version</version>
+</dependency>
+
+Or download and build the distribution yourself, or use our
+convenience binary package
+
+ * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
+ * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
+
+Upgrading from earlier versions
+-------------------------------
+
+If you upgrade from $major_version.y.z this release is a drop in replacement. If
+you come from a version prior to $major_version.0.0, please read our Wicket $major_version
+migration guide found at
+
+ * http://s.apache.org/wicket${major_version}migrate
+
+Have fun!
+
+— The Wicket team
+
+" > release-announce.txt
+
+cat /tmp/release-$version-sigs.txt >> release-announce.txt
+
+# Done with the tasks, now print out the next things the release manager
+# needs to do
 
 mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
-next_dev_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
+mvn_version_to_replace2="$major_version.$minor_version.0-SNAPSHOT"
 
-echo "To renumber the next development iteration $next_dev_version:"
-echo ""
-echo "    git checkout master"
-echo "    mvn release:update-versions --batch-mode"
-echo "    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;"
-# do the same for the original snapshot version, as our maven release
-# plugin friend doesn't do that for us in the dependency management section
-mvn_version_to_replace="$major_version.$minor_version.0-SNAPSHOT"
-echo "    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_dev_version/g\" {} \\;"
-echo "    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`"
-echo "    git commit -m \"Start next development version\""
-echo "    git push"
-echo ""
+echo "
+The release has been created. It is up to you to check if the release is up
+to par, and perform the following commands yourself when you start the vote
+to enable future development during the vote and after.
+
+A vote email has been generated in release-vote.txt, you can copy/paste it using:
+
+    cat release-vote.txt | pbcopy
+
+You can find the distribution in target/dist
+
+    cd target/dist
+
+To verify all signatures:
+
+    find . -name \"*.asc\" -exec gpg --verify {} \; 
+
+To push the release branch to ASF git servers
+
+    git push origin $branch:refs/heads/$branch
+
+To move the release from staging to the mirrors:
+
+    svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\"
+
+Remove previous version $previous_version from the mirrors
+
+    svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\"
+
+To sign the release tag issue the following three commands: 
+
+    git checkout $tag
+    git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log
+    git checkout $branch
+
+To renumber the next development iteration $next_version:
+
+    git checkout $GIT_BRANCH
+    mvn release:update-versions --batch-mode
+    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
+    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
+    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
+    git commit -m \"Start next development version\"
+    git push
+
+To release the Maven artefacts:
+
+	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has passed\"
+
+Or in case of a failed vote, to drop the staging repository:
+
+	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
+" > release.txt
+
+cat release.txt
