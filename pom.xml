@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.apache</groupId>
 		<artifactId>apache</artifactId>
-		<version>14</version>
+		<version>17</version>
 	</parent>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
@@ -118,9 +118,14 @@
 		<!-- Encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
+
+		<maven.compiler.optimize>true</maven.compiler.optimize>
+		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+
 		<!-- Project Versions -->
-		<mvn.build.java.version>1.7</mvn.build.java.version>
 		<jacoco.version>0.7.4.201502262128</jacoco.version>
 		<jetty.version>8.1.17.v20150415</jetty.version>
 		<jetty9.version>9.0.7.v20131107</jetty9.version>
@@ -682,19 +687,10 @@
 					<version>2.3</version>
 				</plugin>
 				<plugin>
-					<inherited>true</inherited>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.3</version>
-					<configuration>
-						<source>${mvn.build.java.version}</source>
-						<target>${mvn.build.java.version}</target>
-						<compilerVersion>${mvn.build.java.version}</compilerVersion>
-						<encoding>${project.build.sourceEncoding}</encoding>
-						<showWarnings>true</showWarnings>
-						<optimize>true</optimize>
-						<debug>true</debug>
-					</configuration>
+					<inherited>true</inherited>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
