@@ -6,14 +6,14 @@
 #
 # Usage:
 #
-#     release-milestone.py <release-version> <dev-version>
+#     build-versions.py <release-version> <dev-version>
 #
-# This will generate a release.properties file that will release the 
+# This will generate a release.properties file that will release the
 # release-version, and will continue development on dev-version.
 #
 # Example:
 #
-#    release-milestone.py 7.0.0-M1 7.0.0-SNAPSHOT
+#    build-milestone.py 7.0.0-M1 7.0.0-SNAPSHOT
 #
 
 import sys
@@ -34,7 +34,7 @@ devVersions = []
 def addVersions(groupId, module):
     relVersions.append("project.rel." + groupId + "\\:" + module + "=" + relVersion)
     devVersions.append("project.dev." + groupId + "\\:" + module + "=" + devVersion)
-    
+
 def getModulesFromParent(parentPomFile):
     pom = parse(parentPomFile)
 

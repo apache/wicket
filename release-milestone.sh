@@ -23,51 +23,6 @@ function fail {
 	exit
 }
 
-function setup_gpg {
-
-	if [ "$agentcount" -ne 1 ]; then
-		echo "Found gpg-agent running, killing all agents"
-		killall gpg-agent
-	fi
-
-	echo ""
-	echo "You are asked twice for your passphrase, one for scripting purposes, and one "
-	echo "for gpg-agent using pinentry such that gpg and git are able to sign things."
-	echo ""
-	echo "Enter your GPG passphrase (input will be hidden) \c"
-	stty_orig=`stty -g` 
-	stty -echo 
-	read passphrase
-	stty $stty_orig
-
-	# test the GPGP passphrase to fail-fast:
-	echo "$passphrase" | gpg --passphrase-fd 0 --armor --output pom.xml.asc --detach-sig pom.xml
-	gpg --verify pom.xml.asc
-	if [ $? -ne 0 ]; then
-	        echo "It appears that you fat-fingered your GPG passphrase"
-			rm pom.xml.asc
-	        exit $?
-	fi
-	rm pom.xml.asc
-
-	echo "Starting new gpg-agent"
-	eval $(gpg-agent --daemon --pinentry-program $(which pinentry))
-	if [ $? -ne 0 ] ; then
-		fail "ERROR: Unable to start gpg-agent"
-	fi
-	gpg --armor --detach-sign --use-agent --sign pom.xml >& $log
-	if [ $? -ne 0 ] ; then
-		fail "ERROR: Unable to run gpg properly"
-	fi
-
-	gpg --verify pom.xml.asc >& $log
-	if [ $? -ne 0 ]; then
-		rm pom.xml.asc
-	    fail "It appears that you fat-fingered your GPG passphrase"
-	fi
-	rm pom.xml.asc
-}
-
 function getVersion {
 	cat << EOF | xmllint --noent --shell pom.xml | grep content | cut -f2 -d=
 setns pom=http://maven.apache.org/POM/4.0.0
@@ -154,7 +109,7 @@ echo "# Release configuration for Wicket-$version
 scm.tag=${tag}
 " > release.properties
 
-./release-milestone.py $version 7.0.0-SNAPSHOT >> release.properties
+./build-versions.py $version 7.0.0-SNAPSHOT >> release.properties
 
 cat ./release.properties
 
