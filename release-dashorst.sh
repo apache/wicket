@@ -299,13 +299,16 @@ $(cat $i.asc)
 done
 popd > /dev/null
 
-echo "========================================================================
+	echo "========================================================================
 
 CHANGELOG for $version:
 " >> /tmp/release-$version-sigs.txt
 
-awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-6.x >> /tmp/release-$version-sigs.txt
-
+if [ -f "/tmp/release-notes-$version.txt" ] ; then
+	tail -n +4 /tmp/release-notes-$version.txt >> /tmp/release-$version-sigs.txt
+else
+	awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-$major_version.x >> /tmp/release-$version-sigs.txt
+fi
 
 echo "Generating Vote email"
 
