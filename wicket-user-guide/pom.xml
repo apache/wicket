@@ -30,39 +30,6 @@
 	<description>
 		Provides the user guide of wicket
 	</description>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.grails</groupId>
-			<artifactId>grails-dependencies</artifactId>
-			<version>${grails.version}</version>
-			<type>pom</type>
-			<exclusions>
-				<exclusion>
-					<artifactId>log4j</artifactId>
-					<groupId>log4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>grails-plugin-log4j</artifactId>
-					<groupId>org.grails</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.grails</groupId>
-			<artifactId>grails-docs</artifactId>
-			<version>${grails.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
-	</dependencies>
-
 	<repositories>
 		<repository>
 			<id>grails</id>
@@ -75,6 +42,50 @@
 			<url>http://repo.grails.org/grails/plugins</url>
 		</repository>
 	</repositories>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.grails</groupId>
+				<artifactId>grails-dependencies</artifactId>
+				<version>${grails.version}</version>
+				<type>pom</type>
+				<exclusions>
+					<exclusion>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.grails</groupId>
+						<artifactId>grails-plugin-log4j</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.grails</groupId>
+				<artifactId>grails-docs</artifactId>
+				<version>${grails.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.grails</groupId>
+			<artifactId>grails-dependencies</artifactId>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>org.grails</groupId>
+			<artifactId>grails-docs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -84,11 +95,11 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
+				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
+				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -103,18 +114,18 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<configuration>
-						<!-- Just documentation, no sources -->
-						<skipSource>true</skipSource>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<configuration>
 						<!-- Just documentation, no sources -->
 						<skip>true</skip>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<configuration>
+						<!-- Just documentation, no sources -->
+						<skipSource>true</skipSource>
 					</configuration>
 				</plugin>
 			</plugins>
