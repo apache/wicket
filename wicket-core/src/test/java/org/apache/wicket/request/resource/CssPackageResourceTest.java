@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.util.Locale;
+
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.markup.html.PackageResourceTest;
@@ -109,6 +111,7 @@ public class CssPackageResourceTest extends WicketTestCase
 		CssPackageResource resource = new CssPackageResource(PackageResourceTest.class,
 			"packaged1.txt", null, null, null);
 
+		tester.getSession().setLocale(Locale.ROOT);
 		tester.getApplication().getResourceSettings().setCssCompressor(null);
 		tester.startResource(resource);
 		assertEquals("TEST", tester.getLastResponseAsString());

@@ -37,6 +37,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
+import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -202,6 +203,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 		// add caching information
 		addCachingDecoration(url, parameters);
 
+		ResourceUtil.encodeResourceReferenceAttributes(url, resourceReference);
 		// create url
 		return encodePageParameters(url, parameters, parametersEncoder);
 	}
