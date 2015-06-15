@@ -126,6 +126,9 @@ $(git status)
 "
 fi
 
+echo "Cleaning up any release artifacts that might linger"
+mvn -q release:clean
+
 log=$(pwd)/release.out
 
 if [ -f $log ] ; then
@@ -157,9 +160,6 @@ read
 echo "Ensuring we are starting from wicket-$major_version.x"
 # otherwise we can't remove a previous release branch that failed
 git checkout $GIT_BRANCH
-
-echo "Cleaning up any release artifacts that might linger"
-mvn -q release:clean
 
 echo "Removing previous release tag $tag (if exists)"
 oldtag=`git tag -l |grep -e "$tag"|wc -l`
