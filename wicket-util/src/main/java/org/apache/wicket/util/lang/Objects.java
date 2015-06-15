@@ -767,9 +767,25 @@ public final class Objects
 	}
 
 	/**
+	 * Returns the original object if this one is != null. If the original object is null
+	 * the default one is returned. The default object has no restriction, it might be itself null.
+	 * 
+	 * @param originalObj
+	 * 			the original object
+	 * @param defaultObj
+	 * 			the default object
+	 * @return the original object if not null, the default one otherwise.
+	 */
+	public static <T> T defaultIfNull(T originalObj, T defaultObj)
+	{
+		return originalObj != null ? originalObj : defaultObj;
+	}
+	
+	/**
 	 * Instantiation not allowed
 	 */
 	private Objects()
 	{
 	}
+
 }

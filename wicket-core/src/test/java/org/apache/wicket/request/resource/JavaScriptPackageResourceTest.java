@@ -18,6 +18,7 @@ package org.apache.wicket.request.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
@@ -122,7 +123,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 		tester.startResource(resource);
 		assertEquals(RESOURCE_COMPRESSED, tester.getLastResponseAsString());
 		InputStream cacheableStream = resource.getCacheableResourceStream().getInputStream();
-		InputStream stream = resource.getResourceStream().getInputStream();
+		InputStream stream = resource.getCacheableResourceStream().getInputStream();
 		assertEquals(IOUtils.toString(cacheableStream), IOUtils.toString(stream));
 	}
 
@@ -149,7 +150,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 	{
 		JavaScriptPackageResource resource = new JavaScriptPackageResource(
 			PackageResourceTest.class, "packaged1.txt", null, null, null);
-
+		tester.getSession().setLocale(Locale.ROOT);
 		tester.getApplication().getResourceSettings().setJavaScriptCompressor(null);
 		tester.startResource(resource);
 		assertEquals("TEST", tester.getLastResponseAsString());
