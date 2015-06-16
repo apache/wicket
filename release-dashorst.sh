@@ -38,6 +38,7 @@ function getJdkToolchain {
 }
 
 # set -e
+# set -x
 
 # the branch on which the code base lives for this version (master is
 # always current development version)
@@ -84,21 +85,41 @@ Java used to compile (from toolchain) is: $(getJdkToolchain)
 
 agentcount=`ps aux|grep gpg-agent|wc -l`
 
-if [ ! -z "$1" ] ; then
-	current_version="$1"
-	major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
-	minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
-	bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
-	milestone_version=$(expr $current_version : '.*\..*-M\(.*\)')
-	version="$major_version.$minor_version.0-M$milestone_version"
+current_version=$(getProjectVersionFromPom)
+major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
+minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
+bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
+version="$major_version.$minor_version.0"
+
+default_version="$version"
+
+version=
+
+while [[ ! $version =~ ^[0-9]+\.[0-9]+\.[0-9]+(-M[0-9]+)?$ ]]
+do
+	read -p "Version to release (default is $default_version): " -e t1
+	if [ -n "$t1" ]
+	then
+	  version="$t1"
+	else
+	  version="$default_version"
+	fi
+done
+
+# recalculate the version coordinates for the current release
+major_version=$(expr $version : '\(.*\)\..*\..*')
+minor_version=$(expr $version : '.*\.\(.*\)\..*')
+bugfix_version=$(expr $version : '.*\..*\.\(.*\)')
+
+if [[ $version =~ .+-M[0-9]+ ]]
+then
+	milestone_version=$(expr $version : '.*\..*-M\(.*\)')
+fi
+
+if [ ! -z "$milestone_version" ] ; then
 	next_version="$major_version.0.0-SNAPSHOT"
 	previous_version="$major_version.0.0-SNAPSHOT"
 else
-	current_version=$(getProjectVersionFromPom)
-	major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
-	minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
-	bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
-	version="$major_version.$minor_version.0"
 	next_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
 	previous_minor_version=$(expr $minor_version - 1)
 	if [ $previous_minor_version -lt 0 ] ; then
