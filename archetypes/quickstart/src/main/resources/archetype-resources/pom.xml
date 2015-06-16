@@ -42,7 +42,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>7.0.0-SNAPSHOT</wicket.version>
+		<wicket.version>7.0.0-M6</wicket.version>
 		<jetty9.version>9.2.11.v20150529</jetty9.version>
 		<log4j.version>2.3</log4j.version>
 		<junit.version>4.12</junit.version>
