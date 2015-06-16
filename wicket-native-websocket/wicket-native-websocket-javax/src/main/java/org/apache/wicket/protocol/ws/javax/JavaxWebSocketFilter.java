@@ -16,21 +16,32 @@
  */
 package org.apache.wicket.protocol.ws.javax;
 
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
+import org.apache.wicket.util.string.Strings;
+
 import java.util.Enumeration;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.wicket.protocol.http.WicketFilter;
-import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
-import org.apache.wicket.util.string.Strings;
-
 /**
  * An upgrade filter that setups javax.websocket
  */
 public class JavaxWebSocketFilter extends AbstractUpgradeFilter
 {
+	public JavaxWebSocketFilter()
+	{
+		super();
+	}
+
+	public JavaxWebSocketFilter(WebApplication application)
+	{
+		super(application);
+	}
+
 	@Override
 	public void init(final boolean isServlet, final FilterConfig filterConfig) throws ServletException
 	{
