@@ -44,6 +44,7 @@ public class AbstractRequestLoggerTest extends WicketTestCase
 		logger.addRequest(requestData());
 		assertEquals(1, logger.getRequests().size());
 		assertEquals("0", logger.getRequests().get(0).getRequestedUrl());
+		assertEquals("0value", logger.getRequests().get(0).getUserData("someKey"));
 		
 		logger.addRequest(requestData());
 		assertEquals(2, logger.getRequests().size());
@@ -80,7 +81,8 @@ public class AbstractRequestLoggerTest extends WicketTestCase
 	
 	private RequestData requestData() {
 		RequestData data = new RequestData();
-		
+
+		data.addUserData("someKey", "" + counter + "value");
 		data.setRequestedUrl("" + counter++);
 
 		return data;
