@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.protocol.ws.tomcat7;
 
+import org.apache.catalina.connector.RequestFacade;
+import org.apache.catalina.util.Base64;
+import org.apache.tomcat.util.buf.B2CConverter;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,12 +31,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.catalina.connector.RequestFacade;
-import org.apache.catalina.util.Base64;
-import org.apache.tomcat.util.buf.B2CConverter;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
 
 /**
  * An upgrade filter that uses code borrowed from Tomcat's WebSocketServlet
@@ -46,6 +46,16 @@ public class Tomcat7WebSocketFilter extends AbstractUpgradeFilter
 
 	private MessageDigest sha1Helper;
 
+
+	public Tomcat7WebSocketFilter()
+	{
+		super();
+	}
+
+	public Tomcat7WebSocketFilter(WebApplication application)
+	{
+		super(application);
+	}
 
 	@Override
 	public void init(final boolean isServlet, final FilterConfig filterConfig)
