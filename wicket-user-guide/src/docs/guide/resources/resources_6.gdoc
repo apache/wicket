@@ -22,4 +22,10 @@ UrlResourceReference jqueryuiRef = new UrlResourceReference(jqueyuiUrl){
 
 Please note that in the code above we have built a resource reference using a URL to the desired library instead of a package resource holding the physical file.
 
+{note}
+Wicket already provides base class @org.apache.wicket.resource.JQueryPluginResourceReference@ for those JavaScript resources that depend on JQuery. This class uses the JQuery version bundled with Wicket.
+{note}
+
+{note}
 The same method @getDependencies()@ is defined also for class @HeaderItem@.
+{note}
