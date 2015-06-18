@@ -19,6 +19,7 @@ package org.apache.wicket;
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

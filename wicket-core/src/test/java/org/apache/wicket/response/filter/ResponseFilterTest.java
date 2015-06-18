@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.apache.wicket.MockPageWithLink;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -28,6 +27,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.tester.DummyHomePage;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.After;
 import org.junit.Test;
 

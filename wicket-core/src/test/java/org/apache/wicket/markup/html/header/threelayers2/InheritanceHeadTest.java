@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.header.threelayers2;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

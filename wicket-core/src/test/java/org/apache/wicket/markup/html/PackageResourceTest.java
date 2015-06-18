@@ -20,13 +20,13 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.SharedResources;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.JavaScriptPackageResource;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Packages;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

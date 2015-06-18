@@ -18,12 +18,12 @@ package org.apache.wicket.markup.html.list;
 
 import java.util.Locale;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
 import org.apache.wicket.util.tester.DiffUtil;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

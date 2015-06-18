@@ -18,9 +18,9 @@ package org.apache.wicket.protocol.http;
 
 import java.util.ArrayList;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

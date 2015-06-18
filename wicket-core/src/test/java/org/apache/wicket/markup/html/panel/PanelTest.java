@@ -18,10 +18,10 @@ package org.apache.wicket.markup.html.panel;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupNotFoundException;
 import org.apache.wicket.markup.html.markupId.MyPanel;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

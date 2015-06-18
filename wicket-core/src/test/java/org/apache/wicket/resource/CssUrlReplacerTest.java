@@ -19,7 +19,6 @@ package org.apache.wicket.resource;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.image.ImageTest;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -27,6 +26,7 @@ import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCac
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 public class CssUrlReplacerTest extends WicketTestCase

@@ -21,11 +21,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.resource.locator.ExtensionResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.LocaleResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.StyleAndVariationResourceNameIterator;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

@@ -19,11 +19,11 @@ package org.apache.wicket.markup.html.form;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

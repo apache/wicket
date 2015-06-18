@@ -17,9 +17,9 @@
 package org.apache.wicket.markup;
 
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.parser.filter.HtmlProblemFinder;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

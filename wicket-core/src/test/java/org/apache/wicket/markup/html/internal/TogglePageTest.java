@@ -19,10 +19,10 @@ package org.apache.wicket.markup.html.internal;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

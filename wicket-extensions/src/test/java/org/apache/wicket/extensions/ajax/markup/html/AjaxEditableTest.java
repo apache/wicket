@@ -21,7 +21,6 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import java.util.Arrays;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -30,6 +29,7 @@ import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

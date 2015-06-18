@@ -19,10 +19,10 @@ package org.apache.wicket.markup.html.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

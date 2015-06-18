@@ -24,7 +24,6 @@ import org.apache.wicket.MockPage;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -37,6 +36,7 @@ import org.apache.wicket.core.request.mapper.TestMapperContext;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

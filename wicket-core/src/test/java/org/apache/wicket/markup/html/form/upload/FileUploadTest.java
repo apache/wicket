@@ -24,12 +24,12 @@ import java.util.List;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.io.FileCleaningTracker;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

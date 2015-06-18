@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.resource.DummyApplication;
 import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.tester.BaseWicketTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
