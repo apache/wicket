@@ -17,9 +17,9 @@
 package org.apache.wicket.core.util.objects.checker;
 
 import org.apache.wicket.TestPage_1;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

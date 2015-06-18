@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

@@ -21,7 +21,7 @@ import static org.apache.wicket.ajax.attributes.CallbackParameter.converted;
 import static org.apache.wicket.ajax.attributes.CallbackParameter.explicit;
 import static org.apache.wicket.ajax.attributes.CallbackParameter.resolved;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

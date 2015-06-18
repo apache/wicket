@@ -23,9 +23,9 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 

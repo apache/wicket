@@ -21,12 +21,12 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.serialize.java.JavaSerializer;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 public class SessionCheckerTest extends WicketTestCase

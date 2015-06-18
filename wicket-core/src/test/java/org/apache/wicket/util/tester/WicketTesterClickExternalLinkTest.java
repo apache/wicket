@@ -17,7 +17,6 @@
 package org.apache.wicket.util.tester;
 
 import org.apache.wicket.MockPageWithLink;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.junit.Test;
 

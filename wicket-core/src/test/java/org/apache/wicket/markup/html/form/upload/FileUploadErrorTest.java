@@ -19,9 +19,9 @@ package org.apache.wicket.markup.html.form.upload;
 import java.util.Locale;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

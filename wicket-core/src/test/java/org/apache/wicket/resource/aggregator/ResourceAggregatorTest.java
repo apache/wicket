@@ -23,12 +23,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.PriorityHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

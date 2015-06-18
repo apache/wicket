@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.resolver.inparent;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.resolver.inparent.base.BasePage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

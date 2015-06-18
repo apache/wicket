@@ -27,6 +27,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.settings.ExceptionSettings;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

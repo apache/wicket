@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -43,6 +42,7 @@ import org.apache.wicket.queueing.nestedpanels.InnerPanel;
 import org.apache.wicket.queueing.nestedpanels.OuterPanel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 

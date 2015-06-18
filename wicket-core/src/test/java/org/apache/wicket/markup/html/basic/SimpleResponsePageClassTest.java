@@ -18,8 +18,8 @@ package org.apache.wicket.markup.html.basic;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

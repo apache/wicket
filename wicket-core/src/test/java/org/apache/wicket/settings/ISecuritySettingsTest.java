@@ -17,7 +17,6 @@
 package org.apache.wicket.settings;
 
 import org.apache.wicket.MockPageWithLink;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.mapper.CryptoMapper;
@@ -30,6 +29,7 @@ import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.flow.RedirectToUrlException;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 

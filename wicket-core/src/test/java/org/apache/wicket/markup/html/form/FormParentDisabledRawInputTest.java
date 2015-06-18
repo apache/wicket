@@ -17,10 +17,10 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.junit.Test;
 

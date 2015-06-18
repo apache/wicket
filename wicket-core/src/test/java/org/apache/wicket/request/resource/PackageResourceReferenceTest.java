@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.Request;
@@ -31,6 +30,7 @@ import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -19,7 +19,7 @@ package org.apache.wicket.examples.hangman;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.wicket.examples.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

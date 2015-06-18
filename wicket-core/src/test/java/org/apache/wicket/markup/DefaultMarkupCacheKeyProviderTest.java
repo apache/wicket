@@ -18,8 +18,8 @@ package org.apache.wicket.markup;
 
 import java.util.Locale;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

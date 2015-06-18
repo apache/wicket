@@ -18,7 +18,6 @@ package org.apache.wicket.dontstoreunrendered;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.mock.MockPageManager;
@@ -26,6 +25,7 @@ import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;

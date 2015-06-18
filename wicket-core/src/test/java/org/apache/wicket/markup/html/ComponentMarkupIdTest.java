@@ -17,12 +17,11 @@
 package org.apache.wicket.markup.html;
 
 import org.junit.Assert;
-
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

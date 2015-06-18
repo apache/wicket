@@ -21,7 +21,6 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.markup.html.border.Border;
@@ -31,6 +30,7 @@ import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;

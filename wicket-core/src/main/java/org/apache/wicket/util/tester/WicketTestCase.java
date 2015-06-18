@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket;
+package org.apache.wicket.util.tester;
 
 import java.io.IOException;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.Page;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markupFragments.MyPage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.tester.DiffUtil;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -65,7 +65,7 @@ public abstract class WicketTestCase extends Assert
 	/**
 	 * In case you need to subclass WicketTester and want to be independent on possible changes in
 	 * setUp().
-	 * 
+	 *
 	 * @param app
 	 * @return WIcketTester
 	 */
@@ -75,7 +75,7 @@ public abstract class WicketTestCase extends Assert
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@After
 	public void commonAfter()
@@ -86,9 +86,9 @@ public abstract class WicketTestCase extends Assert
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
-	 * 
+	 *
 	 * @param <T>
-	 * 
+	 *
 	 * @param pageClass
 	 * @param filename
 	 * @throws Exception
@@ -102,7 +102,7 @@ public abstract class WicketTestCase extends Assert
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
-	 * 
+	 *
 	 * @param page
 	 * @param filename
 	 * @throws Exception
@@ -115,9 +115,9 @@ public abstract class WicketTestCase extends Assert
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
-	 * 
+	 *
 	 * @param <T>
-	 * 
+	 *
 	 * @param pageClass
 	 * @param parameters
 	 * @param filename
@@ -130,7 +130,7 @@ public abstract class WicketTestCase extends Assert
 	}
 
 	/**
-	 * 
+	 *
 	 * @param component
 	 * @param filename
 	 * @throws Exception
@@ -142,7 +142,7 @@ public abstract class WicketTestCase extends Assert
 	}
 
 	/**
-	 * 
+	 *
 	 * @param behavior
 	 * @param filename
 	 * @throws Exception
@@ -156,7 +156,7 @@ public abstract class WicketTestCase extends Assert
 	/**
 	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or
 	 * null if not set
-	 * 
+	 *
 	 * @return path with a trailing slash
 	 */
 	public String getBasedir()
@@ -166,21 +166,22 @@ public abstract class WicketTestCase extends Assert
 
 	/**
 	 * Compare the markup provided with the file content
-	 * 
+	 *
 	 * @param markup
 	 * @param filename
+	 * @param scopeClass
 	 * @throws IOException
 	 */
-	public final void compareMarkupWithFile(IMarkupFragment markup, String filename)
+	public final void compareMarkupWithFile(IMarkupFragment markup, String filename, Class<?> scopeClass)
 		throws IOException
 	{
 		String doc = markup.toString(true);
-		DiffUtil.validatePage(doc, MyPage.class, filename, true);
+		DiffUtil.validatePage(doc, scopeClass, filename, true);
 	}
 
 	/**
 	 * Compare the markup provided with the String
-	 * 
+	 *
 	 * @param markup
 	 * @param testMarkup
 	 * @throws IOException
