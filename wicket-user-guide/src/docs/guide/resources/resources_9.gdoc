@@ -2,7 +2,7 @@ Starting from version 6.15.0 we can specify where header contributors must be re
 
 {code:html}
 <head>
-  <meta chartset="UTF-8"/>
+  <meta charset="UTF-8"/>
   <wicket:header-items/>
   <script src="my-monkey-patch-of-wicket-ajax.js"></script>
 </head>
