@@ -54,6 +54,11 @@
 		<param-value>classpath:applicationContext.xml</param-value>
 	</context-param>
 
+	<context-param>
+		<param-name>velocityPropertiesFolder</param-name>
+		<param-value>/META-INF/</param-value>
+	</context-param>
+
 	<filter>
 		<filter-name>HomePageApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
