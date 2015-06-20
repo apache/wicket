@@ -341,7 +341,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				if (readBuffered)
 				{
 					bytes = IOUtils.toByteArray(inputStream);
-					resourceResponse.setContentLength(new Long(bytes.length));
+					resourceResponse.setContentLength(bytes.length);
 				}
 				else
 				{
