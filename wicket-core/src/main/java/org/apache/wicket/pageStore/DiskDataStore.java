@@ -486,12 +486,12 @@ public class DiskDataStore implements IDataStore
 		private void cleanup(final File sessionFolder)
 		{
 			File high = sessionFolder.getParentFile();
-			if (high.list().length == 0)
+			if (high != null && high.list().length == 0)
 			{
 				if (Files.removeFolder(high))
 				{
 					File low = high.getParentFile();
-					if (low.list().length == 0)
+					if (low != null && low.list().length == 0)
 					{
 						Files.removeFolder(low);
 					}
