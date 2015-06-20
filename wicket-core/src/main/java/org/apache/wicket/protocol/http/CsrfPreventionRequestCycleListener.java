@@ -120,7 +120,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * The action to perform when a missing or conflicting Origin header is detected.
 	 */
-	public static enum CsrfAction {
+	public enum CsrfAction {
 		/** Aborts the request and throws an exception when a CSRF request is detected. */
 		ABORT {
 			@Override
@@ -157,7 +157,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	private CsrfAction noOriginAction = CsrfAction.ALLOW;
 
 	/**
-	 * Action to perform when a conflicing Origin header is found.
+	 * Action to perform when a conflicting Origin header is found.
 	 */
 	private CsrfAction conflictingOriginAction = CsrfAction.ABORT;
 
