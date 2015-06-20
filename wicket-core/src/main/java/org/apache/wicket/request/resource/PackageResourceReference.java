@@ -126,22 +126,28 @@ public class PackageResourceReference extends ResourceReference
 		final Url url = RequestCycle.get().getRequest().getUrl();
 		//resource attributes (locale, style, variation) might be encoded in the URL
 		final UrlAttributes urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
+		final String currentVariation = getCurrentVariation(urlAttributes);
+		final String currentStyle = getCurrentStyle(urlAttributes);
+		final Locale currentLocale = getCurrentLocale(urlAttributes);
+		final Class<?> scope = getScope();
+		final String name = getName();
 
 		if (CSS_EXTENSION.equals(extension))
 		{
-			resource = new CssPackageResource(getScope(), getName(), getCurrentLocale(urlAttributes),
-				getCurrentStyle(urlAttributes), getCurrentVariation(urlAttributes)).readBuffered(readBuffered);
+			resource = new CssPackageResource(scope, name, currentLocale,
+					currentStyle, currentVariation);
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
-			resource = new JavaScriptPackageResource(getScope(), getName(), getCurrentLocale(urlAttributes),
-				getCurrentStyle(urlAttributes), getCurrentVariation(urlAttributes)).readBuffered(readBuffered);
+			resource = new JavaScriptPackageResource(scope, name, currentLocale,
+					currentStyle, currentVariation);
 		}
 		else
 		{
-			resource = new PackageResource(getScope(), getName(), getCurrentLocale(urlAttributes),
-				getCurrentStyle(urlAttributes), getCurrentVariation(urlAttributes)).readBuffered(readBuffered);
+			resource = new PackageResource(scope, name, currentLocale,
+					currentStyle, currentVariation);
 		}
+		resource.readBuffered(readBuffered);
 
 		removeCompressFlagIfUnnecessary(resource);
 
