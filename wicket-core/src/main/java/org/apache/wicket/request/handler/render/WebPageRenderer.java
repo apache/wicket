@@ -123,7 +123,7 @@ public class WebPageRenderer extends PageRenderer
 			requestCycle.setResponse(response);
 			requestablePage.renderPage();
 
-			if (scheduled == null && requestCycle.getRequestHandlerScheduledAfterCurrent() != null)
+			if (requestCycle.getRequestHandlerScheduledAfterCurrent() != null)
 			{
 				// This is a special case.
 				// During page render another request handler got scheduled and will want to
