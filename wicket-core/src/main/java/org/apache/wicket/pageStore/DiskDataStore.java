@@ -567,7 +567,12 @@ public class DiskDataStore implements IDataStore
 	 */
 	private String createPathFrom(final String sessionId)
 	{
-		int hash = Math.abs(sessionId.hashCode());
+		int sessionIdHashCode = sessionId.hashCode();
+		if (sessionIdHashCode == Integer.MIN_VALUE) {
+			// Math.abs(MIN_VALUE) == MIN_VALUE, so avoid it
+			sessionIdHashCode += 1;
+		}
+		int hash = Math.abs(sessionIdHashCode);
 		String low = String.valueOf(hash % 9973);
 		String high = String.valueOf((hash / 9973) % 9973);
 		StringBuilder bs = new StringBuilder(sessionId.length() + 10);
