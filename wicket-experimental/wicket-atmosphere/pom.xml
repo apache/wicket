@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-atmosphere</artifactId>
-	<version>0.22-SNAPSHOT</version>
+	<version>0.23-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Wicket-Atmosphere</name>
 	<description>Wicket-Atmosphere provides integration of the Atmosphere Framework in Wicket.</description>
