@@ -1680,9 +1680,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 			// Add files
 			if (uploadedFiles != null)
 			{
-				for (String fieldName : uploadedFiles.keySet())
+				for (Map.Entry<String, List<UploadedFile>> entry : uploadedFiles.entrySet())
 				{
-					List<UploadedFile> files = uploadedFiles.get(fieldName);
+					String fieldName = entry.getKey();
+					List<UploadedFile> files = entry.getValue();
 
 					for (UploadedFile uf : files)
 					{

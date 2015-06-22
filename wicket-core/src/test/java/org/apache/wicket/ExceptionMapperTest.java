@@ -27,6 +27,7 @@ import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Exceptions;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Ignore;
 
 /**

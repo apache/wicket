@@ -23,7 +23,6 @@ import java.util.Locale;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;

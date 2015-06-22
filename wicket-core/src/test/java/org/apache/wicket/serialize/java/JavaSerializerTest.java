@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.IObjectChecker;
 import org.apache.wicket.core.util.objects.checker.NotDetachedModelChecker;
@@ -36,6 +35,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

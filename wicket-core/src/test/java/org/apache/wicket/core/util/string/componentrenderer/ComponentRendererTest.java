@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.core.util.string.componentrenderer;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.string.ComponentRenderer;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

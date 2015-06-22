@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
 import org.junit.Test;

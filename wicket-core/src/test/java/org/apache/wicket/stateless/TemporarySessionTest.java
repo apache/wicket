@@ -18,12 +18,12 @@ package org.apache.wicket.stateless;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

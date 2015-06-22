@@ -299,7 +299,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	{
 		final ResourceResponse resourceResponse = new ResourceResponse();
 
-		final IResourceStream resourceStream = getResourceStream();
+		final IResourceStream resourceStream = getCacheableResourceStream();
 
 		// bail out if resource stream could not be found
 		if (resourceStream == null)
@@ -341,7 +341,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				if (readBuffered)
 				{
 					bytes = IOUtils.toByteArray(inputStream);
-					resourceResponse.setContentLength(new Long(bytes.length));
+					resourceResponse.setContentLength(bytes.length);
 				}
 				else
 				{
@@ -431,29 +431,29 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 
 	/**
-	 * be aware that method takes the current wicket session's locale and style into account when
-	 * locating the stream.
+	 * Locate resource stream for current resource. Be aware that method takes the current wicket session's 
+	 * locale and style into account when locating the stream.
 	 *
-	 * @return resource stream
+	 * @return resource stream or <code>null</code> if not found
 	 *
 	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
-	 * @see #getResourceStream()
 	 */
 	@Override
 	public IResourceStream getCacheableResourceStream()
 	{
 		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
 	}
-
+	
 	/**
 	 * locate resource stream for current resource
 	 * 
 	 * @return resource stream or <code>null</code> if not found
+	 * @deprecated use {@link #getCacheableResourceStream} instead.
 	 */
 	public IResourceStream getResourceStream()
 	{
-		return internalGetResourceStream(style, locale);
-	}
+		return getCacheableResourceStream();
+ 	}
 
 	/**
 	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to

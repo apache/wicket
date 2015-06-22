@@ -17,11 +17,11 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

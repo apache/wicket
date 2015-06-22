@@ -1485,7 +1485,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param provider
 	 */
-	public synchronized final Application setPageManagerProvider(final IPageManagerProvider provider)
+	public final Application setPageManagerProvider(final IPageManagerProvider provider)
 	{
 		pageManagerProvider = provider;
 		return this;

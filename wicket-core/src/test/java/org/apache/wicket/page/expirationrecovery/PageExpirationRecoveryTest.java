@@ -19,11 +19,11 @@ package org.apache.wicket.page.expirationrecovery;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.PageSettings;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

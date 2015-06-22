@@ -16,13 +16,7 @@
  */
 package org.apache.wicket.protocol.ws.jetty9;
 
-import java.io.IOException;
-
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
 import org.eclipse.jetty.websocket.api.UpgradeRequest;
 import org.eclipse.jetty.websocket.api.UpgradeResponse;
@@ -32,6 +26,13 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * An upgrade filter that uses Jetty9's WebSocketServerFactory to decide whether to upgrade or not.
  */
@@ -40,6 +41,16 @@ public class Jetty9WebSocketFilter extends AbstractUpgradeFilter
 	private static final Logger LOG = LoggerFactory.getLogger(Jetty9WebSocketFilter.class);
 
 	private WebSocketServerFactory _webSocketFactory;
+
+	public Jetty9WebSocketFilter()
+	{
+		super();
+	}
+
+	public Jetty9WebSocketFilter(WebApplication application)
+	{
+		super(application);
+	}
 
 	@Override
 	public void init(final boolean isServlet, final FilterConfig filterConfig)

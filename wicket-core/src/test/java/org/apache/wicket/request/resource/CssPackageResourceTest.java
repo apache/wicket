@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.request.resource;
 
-import org.apache.wicket.WicketTestCase;
+import java.util.Locale;
+
 import org.apache.wicket.css.ICssCompressor;
 import org.apache.wicket.markup.html.PackageResourceTest;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -108,7 +110,8 @@ public class CssPackageResourceTest extends WicketTestCase
 	{
 		CssPackageResource resource = new CssPackageResource(PackageResourceTest.class,
 			"packaged1.txt", null, null, null);
-
+		
+		tester.getSession().setLocale(Locale.ROOT);
 		tester.getApplication().getResourceSettings().setCssCompressor(null);
 		tester.startResource(resource);
 		assertEquals("TEST", tester.getLastResponseAsString());

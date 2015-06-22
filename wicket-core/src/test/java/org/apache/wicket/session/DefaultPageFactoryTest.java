@@ -18,11 +18,11 @@ package org.apache.wicket.session;
 
 import org.apache.wicket.IPageFactory;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.flow.ResetResponseException;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

@@ -19,11 +19,11 @@ package org.apache.wicket.util.iterator;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

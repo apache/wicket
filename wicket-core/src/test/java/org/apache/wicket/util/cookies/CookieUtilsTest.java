@@ -27,9 +27,9 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

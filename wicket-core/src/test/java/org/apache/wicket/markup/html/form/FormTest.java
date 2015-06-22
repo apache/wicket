@@ -18,13 +18,13 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPageParametersAware;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.visit.IVisitor;
 import org.junit.Before;
 import org.junit.Test;

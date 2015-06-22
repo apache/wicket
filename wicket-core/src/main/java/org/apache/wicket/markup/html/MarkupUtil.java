@@ -46,12 +46,6 @@ public class MarkupUtil
 		Args.notNull(container, "container");
 
 		Page page = container.getPage();
-		if (page == null)
-		{
-			throw new WicketRuntimeException("Component not attached to Page. Component: " +
-				container.toString());
-		}
-
 
 		final boolean rtn[] = new boolean[] { true };
 		page.visitChildren(MarkupContainer.class, new IVisitor<MarkupContainer, Void>()

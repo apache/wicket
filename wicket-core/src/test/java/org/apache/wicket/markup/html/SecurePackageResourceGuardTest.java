@@ -17,8 +17,8 @@
 package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.lang.Packages;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

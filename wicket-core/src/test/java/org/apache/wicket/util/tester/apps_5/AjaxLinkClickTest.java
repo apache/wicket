@@ -17,10 +17,10 @@
 package org.apache.wicket.util.tester.apps_5;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

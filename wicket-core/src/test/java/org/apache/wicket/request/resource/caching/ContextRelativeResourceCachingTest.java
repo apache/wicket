@@ -21,7 +21,6 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -31,6 +30,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.request.resource.caching.version.StaticResourceVersion;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

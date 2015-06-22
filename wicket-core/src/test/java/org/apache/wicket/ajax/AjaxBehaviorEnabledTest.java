@@ -18,13 +18,13 @@ package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;

@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.html.form.encryption;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.NoCrypt;
 import org.apache.wicket.util.crypt.SunJceCrypt;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

@@ -20,8 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.apps_1.Book;
 import org.junit.Before;
 import org.junit.Test;

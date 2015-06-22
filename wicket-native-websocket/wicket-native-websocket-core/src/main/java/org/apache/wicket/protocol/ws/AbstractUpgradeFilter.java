@@ -16,6 +16,13 @@
  */
 package org.apache.wicket.protocol.ws;
 
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.WicketFilter;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.string.Strings;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -26,12 +33,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.ThreadContext;
-import org.apache.wicket.protocol.http.WicketFilter;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.util.string.Strings;
-
 /**
  * An extension of WicketFilter that is used to check whether
  * the processed HttpServletRequest needs to upgrade its protocol
@@ -41,6 +42,16 @@ import org.apache.wicket.util.string.Strings;
  */
 public class AbstractUpgradeFilter extends WicketFilter
 {
+	public AbstractUpgradeFilter()
+	{
+		super();
+	}
+
+	public AbstractUpgradeFilter(WebApplication application)
+	{
+		super(application);
+	}
+
 	protected boolean processRequestCycle(final RequestCycle requestCycle, final WebResponse webResponse,
 			final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse,
 			final FilterChain chain)

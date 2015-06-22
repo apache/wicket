@@ -18,13 +18,13 @@ package org.apache.wicket.markup.head.filter;
 
 import java.util.Collections;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.DiffUtil;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

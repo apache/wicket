@@ -19,7 +19,7 @@ package org.apache.wicket.request.resource;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

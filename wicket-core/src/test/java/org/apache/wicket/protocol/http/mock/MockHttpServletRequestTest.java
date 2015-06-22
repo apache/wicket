@@ -20,8 +20,8 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 import org.mockito.Mockito;

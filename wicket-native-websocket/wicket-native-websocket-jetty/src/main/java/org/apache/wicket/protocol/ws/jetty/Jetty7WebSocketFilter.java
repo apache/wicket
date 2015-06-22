@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.protocol.ws.jetty;
 
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
+import org.eclipse.jetty.websocket.WebSocket;
+import org.eclipse.jetty.websocket.WebSocketFactory;
+
 import java.io.IOException;
 
 import javax.servlet.FilterConfig;
@@ -23,16 +28,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.websocket.WebSocket;
-import org.eclipse.jetty.websocket.WebSocketFactory;
-import org.apache.wicket.protocol.ws.AbstractUpgradeFilter;
-
 /**
  * An upgrade filter that uses Jetty's WebSocketFactory to decide whether to upgrade or not.
  */
 public class Jetty7WebSocketFilter extends AbstractUpgradeFilter implements WebSocketFactory.Acceptor
 {
 	private WebSocketFactory _webSocketFactory;
+
+	public Jetty7WebSocketFilter()
+	{
+		super();
+	}
+
+	public Jetty7WebSocketFilter(WebApplication application)
+	{
+		super(application);
+	}
 
 	@Override
 	public void init(final boolean isServlet, final FilterConfig filterConfig)

@@ -18,10 +18,10 @@ package org.apache.wicket.markup.html.form.validation.innerfeedback;
 
 import java.util.Locale;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

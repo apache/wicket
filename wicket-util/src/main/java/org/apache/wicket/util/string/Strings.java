@@ -1562,4 +1562,19 @@ public final class Strings
 					String.format("Cannot convert '%s' to enum constant of type '%s'.", value, enumClass), e);
 		}
 	}
+
+	/**
+	 * Returns the original string if this one is not empty (i.e. {@link #isEmpty(CharSequence)} returns false), 
+	 * otherwise the default one is returned. The default string might be itself an empty one.
+	 * 
+	 * @param originalString
+	 * 				the original sting value
+	 * @param defaultValue
+	 * 				the default string to return if the original is empty
+	 * @return 	the original string value if not empty, the default one otherwise
+	 */
+	public static String defaultIfEmpty(String originalString, String defaultValue)
+	{
+		return isEmpty(originalString) ? defaultValue : originalString;		
+	}
 }

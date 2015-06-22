@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.html.autocomponent;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /*

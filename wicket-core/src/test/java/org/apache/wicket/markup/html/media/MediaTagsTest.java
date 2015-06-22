@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.markup.html.media;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.TagTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 public class MediaTagsTest extends WicketTestCase

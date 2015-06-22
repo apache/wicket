@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket;
+package org.apache.wicket.util.tester;
 
 import java.io.IOException;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.Page;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.IMarkupFragment;
-import org.apache.wicket.markupFragments.MyPage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.tester.DiffUtil;
-import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -169,13 +169,14 @@ public abstract class WicketTestCase extends Assert
 	 * 
 	 * @param markup
 	 * @param filename
+	 * @param scopeClass
 	 * @throws IOException
 	 */
-	public final void compareMarkupWithFile(IMarkupFragment markup, String filename)
+	public final void compareMarkupWithFile(IMarkupFragment markup, String filename, Class<?> scopeClass)
 		throws IOException
 	{
 		String doc = markup.toString(true);
-		DiffUtil.validatePage(doc, MyPage.class, filename, true);
+		DiffUtil.validatePage(doc, scopeClass, filename, true);
 	}
 
 	/**

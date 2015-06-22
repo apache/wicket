@@ -33,6 +33,7 @@ import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
+import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
@@ -124,7 +125,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 				name.append(segment);
 			}
 
-			ResourceReference.UrlAttributes attributes = getResourceReferenceAttributes(url);
+			ResourceReference.UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 
 			Class<?> scope = resolveClass(className);
 
@@ -212,7 +213,8 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 				// need to remove indexed parameters otherwise the URL won't be able to decode
 				parameters.clearIndexed();
 			}
-			encodeResourceReferenceAttributes(url, reference);
+			
+			ResourceUtil.encodeResourceReferenceAttributes(url, reference);
 
 			StringTokenizer tokens = new StringTokenizer(reference.getName(), "/");
 

@@ -85,6 +85,13 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	private RequestData[] requestWindow;
 
 	/**
+	 * A special object used as a lock before accessing {@linkplain #requestWindow}.
+	 * Needed because {@linkplain #requestWindow} is being reassigned in some cases,
+	 * e.g. {@link #resizeBuffer()}
+	 */
+	private final Object requestWindowLock = new Object();
+
+	/**
 	 * Cursor pointing to the current writable location in the buffer. Points to the first empty
 	 * slot or if the buffer has been filled completely to the oldest request in the buffer.
 	 */
@@ -109,7 +116,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	{
 		int requestsWindowSize = getRequestsWindowSize();
 		requestWindow = new RequestData[requestsWindowSize];
-		liveSessions = new ConcurrentHashMap<String, SessionData>();
+		liveSessions = new ConcurrentHashMap<>();
 	}
 
 	@Override
@@ -142,7 +149,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	@Override
 	public List<RequestData> getRequests()
 	{
-		synchronized (requestWindow)
+		synchronized (requestWindowLock)
 		{
 			RequestData[] result = new RequestData[hasBufferRolledOver() ? requestWindow.length
 				: indexInWindow];
@@ -242,7 +249,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 
 			addRequest(requestdata);
 
-			SessionData sessiondata = null;
+			SessionData sessiondata;
 			if (sessionId != null)
 			{
 				sessiondata = liveSessions.get(sessionId);
@@ -289,7 +296,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			requestCycle.setMetaData(SESSION_DATA, sessionData);
 	}
 
-	protected RequestData getCurrentRequest()
+	public RequestData getCurrentRequest()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		RequestData rd = requestCycle.getMetaData(REQUEST_DATA);
@@ -335,7 +342,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 		// ensure the buffer has the proper installed length
 		resizeBuffer();
 
-		synchronized (requestWindow)
+		synchronized (requestWindowLock)
 		{
 			// if the requestWindow is a zero-length array, nothing gets stored
 			if (requestWindow.length == 0)
@@ -366,19 +373,16 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 
 	private int getWindowSize()
 	{
-		synchronized (requestWindow)
-		{
-			if (requestWindow[requestWindow.length - 1] == null)
-				return indexInWindow;
-			else
-				return requestWindow.length;
-		}
+		if (requestWindow[requestWindow.length - 1] == null)
+			return indexInWindow;
+		else
+			return requestWindow.length;
 	}
 
 	@Override
 	public long getAverageRequestTime()
 	{
-		synchronized (requestWindow)
+		synchronized (requestWindowLock)
 		{
 			int windowSize = getWindowSize();
 			if (windowSize == 0)
@@ -390,7 +394,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	@Override
 	public long getRequestsPerMinute()
 	{
-		synchronized (requestWindow)
+		synchronized (requestWindowLock)
 		{
 			int windowSize = getWindowSize();
 			if (windowSize == 0)
@@ -439,7 +443,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			return;
 
 		RequestData[] newRequestWindow = new RequestData[newCapacity];
-		synchronized (requestWindow)
+		synchronized (requestWindowLock)
 		{
 			int oldCapacity = requestWindow.length;
 			int oldNumberOfElements = hasBufferRolledOver() ? oldCapacity : indexInWindow;

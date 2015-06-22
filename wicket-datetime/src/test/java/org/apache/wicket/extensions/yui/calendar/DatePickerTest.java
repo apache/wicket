@@ -25,17 +25,18 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField.AM_PM;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,15 +52,16 @@ public class DatePickerTest extends WicketTestCase
 	private TimeZone defaultTz = TimeZone.getDefault();
 
 	/**
-	 * @see org.apache.wicket.WicketTestCase#tearDown()
+	 * @see org.apache.wicket.util.tester.WicketTestCase#tearDown()
 	 */
 	@Override
-	protected void tearDown() throws Exception
+	@After
+	public void commonAfter()
 	{
 		TimeZone.setDefault(defaultTz);
 		DateTimeZone.setDefault(DateTimeZone.forTimeZone(defaultTz));
 
-		super.tearDown();
+		super.commonAfter();
 	}
 
 	/**

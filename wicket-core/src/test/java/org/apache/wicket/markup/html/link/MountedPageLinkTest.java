@@ -19,11 +19,11 @@ package org.apache.wicket.markup.html.link;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.request.mapper.PageInstanceMapper;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -18,8 +18,8 @@ package org.apache.wicket.markup.html.internal.headeritems;
 
 import static org.hamcrest.number.OrderingComparison.lessThan;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.MarkupException;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
