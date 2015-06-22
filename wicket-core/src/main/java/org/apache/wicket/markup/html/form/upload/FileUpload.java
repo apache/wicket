@@ -227,7 +227,7 @@ public class FileUpload implements IClusterable
 	 * 
 	 * @param file
 	 *            The file
-	 * @throws IOException
+	 * @throws Exception
 	 */
 	public void writeTo(final File file) throws Exception
 	{
@@ -244,7 +244,7 @@ public class FileUpload implements IClusterable
 	 * @since 1.2
 	 * 
 	 * @return temporary file containing the contents of the uploaded file
-	 * @throws IOException
+	 * @throws Exception
 	 */
 	public final File writeToTempFile() throws Exception
 	{
