@@ -1,0 +1,173 @@
+            
+Let's go back to our layout example. In  <<guide:layout_1,chapter 5.1>>
+ we have divided our layout in common areas that must be part of every page. Now we will build a reusable template page for our web application combining pages and panels. The code examples are from project MarkupInheritanceExample.
+
+=== Panels and layout areas
+
+First, let's build a custom panel for each layout area (except for 'content' area). For example given the  header area
+
+image::header-area.png[]
+
+we can build a panel called 'HeaderPanel' with a related markup file called HeaderPanel.html containing the HTML for this area:
+
+[source,html]
+----
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+...
+</head>
+<body>
+   <wicket:panel>
+      <table width="100%" style="border: 0px none;">
+      <tbody>
+    <tr>
+    <td>
+       <img alt="Jug4Tenda" src="wicketLayout_files/logo_jug4tenda.gif">
+     </td>
+      <td>
+    <h1>Gestione Anagrafica</h1>
+   </td>   
+      </tr>
+      </tbody>
+      </table>   
+   </wicket:panel>
+</body>
+<html>
+----
+
+The class for this panel simply extends base class 'Panel':
+
+[source,java]
+----
+package helloWorld.layoutTenda;
+
+import org.apache.wicket.markup.html.panel.Panel;
+
+public class HeaderPanel extends Panel {
+
+	public HeaderPanel(String id) {
+		super(id);		
+	}
+}
+----
+
+For each layout area we will build a panel like the one above that holds the appropriate HTML markup. In the end we will have the following set of panels:
+
+* HeaderPanel 
+* FooterPanel
+* MenuPanel
+
+Content area will change from page to page, so we don't need a reusable panel for it.
+
+=== Template page
+
+Now we can build a generic template page using our brand new panels. Its markup is quite straightforward :
+
+[source,html]
+----
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+...
+<!--Include CSS-->
+...
+</head>
+<body>
+<div id="header" wicket:id="headerPanel">header</div>
+<div id="body">
+	<div id="menu" wicket:id="menuPanel">menu</div>
+	<div id="content" wicket:id="contentComponent">content</div>
+</div>
+<div id="footer" wicket:id="footerPanel">footer</div>
+</body>
+</html>
+----
+
+The HTML code for this page implements the generic left-menu layout of our site. You can note the 4 '<div>' tags used as containers for the corresponding areas.
+The page class contains the code to physically assemble the page and panels:
+
+[source,java]
+----
+package helloWorld.layoutTenda;
+
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
+
+public class JugTemplate extends WebPage {
+	public static final String CONTENT_ID = "contentComponent";
+
+	private Component headerPanel;
+	private Component menuPanel;
+	private Component footerPanel;
+ 
+              public JugTemplate(){
+		add(headerPanel = new HeaderPanel("headerPanel"));
+		add(menuPanel = new MenuPanel("menuPanel"));
+		add(footerPanel = new FooterPanel("footerPanel"));
+		add(new Label(CONTENT_ID, "Put your content here"));
+	}
+              
+             //getters for layout areas
+       //... 
+}
+----
+
+Done! Our template page is ready to be used. Now all the pages of our site will be subclasses of this parent page and they will inherit the layout and the HTML markup. They will only substitute the 'Label' inserted as content area with their custom content.
+
+=== Final example
+
+As final example we will build the login page for our site. We will call it 'SimpleLoginPage'. First, we need a panel containing the login form. This will be the content area of our page. We will call it 'LoginPanel' and the markup is the following:
+
+[source,html]
+----
+<html>
+<head>
+</head>
+<body>
+   <wicket:panel>
+    <div style="margin: auto; width: 40%;">
+       <form  id="loginForm" method="get">
+         <fieldset id="login" class="center">
+            <legend >Login</legend>               
+            <span >Username: </span><input type="text" id="username"/><br/>                                                                  
+            <span >Password: </span><input type="password" id="password" />
+            <p>
+               <input type="submit" name="login" value="login"/>
+            </p>
+         </fieldset>
+      </form>
+    </div>   
+   </wicket:panel>
+</body>
+</html>
+----
+
+The class for this panel just extends 'Panel' class so we won't see the relative code. The form of this panel is for illustrative purpose only. We will see how to work with Wicket forms in chapters  <<guide:modelsforms,11>>
+ and  <<guide:forms2,12>>
+. Since this is a login page we don't want it to display the left menu area. That's not a big deal as 'Component' class exposes a method called 'setVisible' which sets whether the component and its children should be displayed. 
+
+The resulting Java code for the login page is the following:
+
+[source,java]
+----
+package helloWorld.layoutTenda;
+import helloWorld.LoginPanel;
+import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.event.IEventSink;
+
+public class SimpleLoginPage extends JugTemplate {
+	public SimpleLoginPage(){
+		super();		
+		replace(new LoginPanel(CONTENT_ID));
+		getMenuPanel().setVisible(false);
+	}
+}
+----
+
+Obviously this page doesn't come with a related markup file. You can see the final page in the following picture:
+
+image::final-login-page.png[]
+
+

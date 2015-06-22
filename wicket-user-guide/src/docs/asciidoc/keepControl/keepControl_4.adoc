@@ -1,0 +1,29 @@
+            
+Create custom panels is a great way to handle complex user interfaces. However, sometimes we may need to create a panel which is used only by a specific page and only for a specific task. 
+
+In situations like these component 'org.apache.wicket.markup.html.WebMarkupContainer' is better suited than custom panels because it can be directly attached to a tag in the parent markup without needing a corresponding html file (hence it is less reusable). Let's consider for example the main page of a mail service where users can see a list of received mails. Suppose that this page shows a notification box where user can see if new messages have arrived. This box must be hidden if there are no messages to display and it would be nice if we could handle it as if it was a Wicket component.
+
+Suppose also that this information box is a '<div>' tag like this inside the page:
+
+[source,html]
+----
+<div wicket:id="informationBox">
+   //here's the body
+   You've got <span wicket:id="messagesNumber"></span> new messages.
+</div>
+----
+
+Under those conditions we can consider using a 'WebMarkupContainer' component rather than implementing a new panel. The code needed to handle the information box inside the page could be the following:
+
+[source,java]
+----
+//Page initialization code
+WebMarkupContainer informationBox = new WebMarkupContainer ("informationBox");
+informationBox.add(new Label("messagesNumber", messagesNumber));
+add(informationBox);
+
+//If there are no new messages, hide informationBox
+informationBox.setVisible(false);
+----
+
+As you can see in the snippet above we can handle our information box from Java code as we do with any other Wicket component.

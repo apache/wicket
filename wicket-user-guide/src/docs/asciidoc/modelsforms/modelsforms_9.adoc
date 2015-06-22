@@ -1,0 +1,5 @@
+            
+
+
+Models are at the core of Wicket and they are the basic ingredient needed to taste the real power of the framework. In this chapter we have seen how to use models to bring data to our components without littering their code with technical details about their persistence strategy.
+We have also introduced Wicket forms as complementary topic. With forms and models we are able to bring our applications to life allowing them to interact with users. But what we have seen in this chapter about Wicket forms is just the tip of the iceberg. That's why the next chapter is entirely dedicated to them.

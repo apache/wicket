@@ -1,0 +1,135 @@
+            
+* *Classpath dependency*
+
+Depending on the web container that is used the application has to add a dependency to either:
+
+- for Jetty 9.0.x
+[source,java]
+----
+<dependency>
+  <groupId>org.apache.wicket</groupId>
+  <artifactId>wicket-native-websocket-jetty9</artifactId>
+  <version>...</version>
+</dependency>
+----
+
+- for Jetty 7.x and 8.x
+[source,java]
+----
+<dependency>
+  <groupId>org.apache.wicket</groupId>
+  <artifactId>wicket-native-websocket-jetty</artifactId>
+  <version>...</version>
+</dependency>
+----
+
+- for Tomcat 7.0.27+ (the old, non-JSR356 implementation)
+[source,java]
+----
+<dependency>
+  <groupId>org.apache.wicket</groupId>
+  <artifactId>wicket-native-websocket-tomcat</artifactId>
+  <version>...</version>
+</dependency>
+----
+
+- for JSR356 complaint implementations (at the moment are supported: Tomcat 8.0+, Tomcat 7.0.47+, Jetty 9.1.0+ and JBoss Wildfly 8.0.0+)
+[source,java]
+----
+<dependency>
+  <groupId>org.apache.wicket</groupId>
+  <artifactId>wicket-native-websocket-javax</artifactId>
+  <version>...</version>
+</dependency>
+----
+
+NOTE: All web containers providing JSR356 implementation are built with Java 7. This is the reason why 'wicket-native-websocket-javax' module is available only with Wicket 7.x. If your application runs with JRE 7.x then you can
+use 'wicket-native-websocket-javax' together with the latest version of Wicket 6.x. Beware that the API/implementation of 'wicket-native-websocket-javax' may change before Wicket 7.0.0 is released!
+
+NOTE: The examples above show snippets for Maven's pom.xml but the application can use any other dependency management tool like http://www.gradle.org/[Gradle]
+
+* *web.xml*
+
+In 'WEB-INF/web.xml' replace the usage of *WicketFilter* with any of the following depending on the web container that is used:
+
+For Jetty 9.0.x:
+[source,java]
+----
+<filter-class>org.apache.wicket.protocol.ws.jetty9.Jetty9WebSocketFilter</filter-class>
+----
+
+For Jetty 7.5+ and 8.x:
+[source,java]
+----
+<filter-class>org.apache.wicket.protocol.ws.jetty7.Jetty7WebSocketFilter</filter-class>
+----
+
+For Tomcat 7.0.27+ (old implementation):
+[source,java]
+----
+<filter-class>org.apache.wicket.protocol.ws.tomcat7.Tomcat7WebSocketFilter</filter-class>
+----
+
+For JSR356 complaint web containers (at the moment: Tomcat 7.0.47+, Tomcat 8.x and Jetty 9.1.x):
+[source,java]
+----
+<filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
+----
+
+
+
+* *WebSocketBehavior*
+
+'org.apache.wicket.protocol.ws.api.WebSocketBehavior' is similar to Wicket Ajax behaviors that you may have used.
+Add WebSocketBehavior to the page (or to any component in the page) that will use web socket communication:
+
+[source,java]
+----
+public class MyPage extends WebPage {
+ 
+  public MyPage()
+  {
+    add(new WebSocketBehavior() {
+      @Override
+      protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
+      {
+        String msg = message.getText();
+        // do something with msg
+      }
+    });
+  }
+}
+----
+
+Use 'message.getText()' to read the message sent by the client and use 'handler.push(String)' to push a text message to the connected client. Additionally you can use 'handler.add(Component...)' to add Wicket components for re-render, 'handler1.prependJavaScript(CharSequence)' and 'handler1.appendJavaScript(CharSequence)' as you do with 'AjaxRequestTarget'.
+
+* *WebSocketResource*
+
+Wicket allows one thread at a time to use a page instance to simplify the usage of the pages in multithreaded enviroment. When a WebSocket message is sent to a page Wicket needs to acquire the lock to that page to be able to pass the 'IWebSocketMessage' to the 'WebSocketBehavior'. This may be problematic when the application needs to send many messages from the client to the server.
+For this reason Wicket provides 'WebSocketResource' - an IResource implemetation that provides the same APIs as 'WebSocketBehavior'. The benefit is that there is no need of synchronization as with the pages and the drawback is that 'WebSocketRequesthandler1.add(Component...)' method cannot be used because there is no access to the components in an 'IResource'.
+
+To register such WebSocket resource add such line to 'YourApplication1.init()' method:
+[source,java]
+----
+getSharedResources().add("someName", new MyWebSocketResource());
+----
+
+and 
+[source,java]
+----
+  page.add(new BaseWebSocketBehavior("someName"));
+----
+to any page. This will prepare the JavaScript connection for you.
+
+* *WebSocket connection registry*
+
+To push data to one or more clients the application can use the 'IWebSocketConnectionRegistry' to find all registered connections and send data to all/any of them:
+
+[source,java]
+----
+Application application = Application.get(applicationName);
+WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
+IWebSocketConnectionRegistry webSocketConnectionRegistry = webSocketSettings.getConnectionRegistry();
+IWebSocketConnection connection = webSocketConnectionRegistry.getConnection(application, sessionId, key);
+----
+

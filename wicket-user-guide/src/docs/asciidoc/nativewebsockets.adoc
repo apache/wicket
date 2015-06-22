@@ -1,0 +1,10 @@
+            
+http://en.wikipedia.org/wiki/WebSocket[WebSockets]
+This means that once the browser establish a web socket connection to the server the server can push data back to the browser without the browser explicitly asking again and again whether there is something new for it.
+
+Wicket Native WebSockets modules provide functionality to integrate with the non-standard APIs provided by different web containers (like http://tomcat.apache.org/[Apache Tomcat]
+
+WARNING: Native WebSocket works only when both the browser and the web containers support WebSocket technology. There are no plans to add support to fallback to long-polling, streaming or any other technology that simulates two way communication. Use it only if you really know that you will run your application in an environment that supports WebSockets.
+Currently supported web containers are Jetty 7.5+ , Tomcat 7.0.27+ and JBoss WildFly 8.0.0+.
+Supported browsers can be found at http://caniuse.com/#search=websocket[caniuse.com]
+

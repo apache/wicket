@@ -1,0 +1,13 @@
+            
+
+
+Spring (and Guice) users can use standard "JSR-330":http://jcp.org/en/jsr/detail?id=330 annotations to wire their dependencies. This will make their code more interoperable with other containers that support this standard:
+
+[source,java]
+----
+  //inject a bean specifying its name with JSR-330 annotations
+  @Inject 
+  @Named("anotherName")
+  private EnterpriseMessage enterpriseMessage;
+----
+

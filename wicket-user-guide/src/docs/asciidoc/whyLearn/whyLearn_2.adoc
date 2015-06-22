@@ -1,0 +1,16 @@
+            
+Component oriented frameworks differ from classic web frameworks in that they build a model of requested page on the server side and the HTML sent back to the client is generated according to this model. You can think of the model as if it was an “inverse” JavaScript DOM, meaning that:
+
+1. is built on server-side
+1. is built before HTML is sent to client
+1. HTML code is generated using this model and not vice versa.
+
+  image::requesthandling-general.png[]
+
+  _General schema of page request handling for a component oriented framework_
+
+With this kind of framework our web pages and their HTML components (forms, input controls, links, etc...), are pure class instances.
+Since pages are class instances they live inside the JVM heap and we can handle them as we do with any other Java class.
+This approach is very similar to what GUI frameworks (like Swing or SWT) do with desktop windows and their components. Wicket and the other component oriented frameworks bring to web development the same kind of abstraction that GUI frameworks offer when we build a desktop application. Most of those kind of frameworks hide the details of the HTTP protocol and naturally solve the problem of its stateless nature.
+
+

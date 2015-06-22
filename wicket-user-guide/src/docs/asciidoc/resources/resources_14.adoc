@@ -1,0 +1,76 @@
+            
+
+
+Introduced in Wicket 6.20.0 / Wicket 7.0.0 there is a default way to be used in which the output of all CssHeaderItems / JavaScriptHeaderItems is modified before they are cached and delivered to the client. You can add a so called Compressor by receiving the resource settings and invoke 1.setJavaScriptCompressor(...) / 1.setJavaScriptCompressor(...). If you want to add several Compressors use 'org.apache.wicket.resource.CompositeCssCompressor' or 'org.apache.wicket.resource.CompositeJavaScriptCompressor'
+
+*Java Code:*
+[source,java]
+----
+...
+    public class WicketApplication extends WebApplication
+    {
+        @Override
+        public Class<? extends WebPage> getHomePage()
+        {
+            return HomePage.class;
+        }
+    
+        @Override
+        public void init()
+        {
+            super.init();
+            getResourceSettings().setCssCompressor(new CssUrlReplacer());
+        }
+    }
+...
+----
+
+In the previous example you see that a 'org.apache.wicket.resource.CssUrlReplacer' is added which does not compress the content, but replaces all urls in CSS files and applies a Wicket representation for them by automatically wrapping them into PackageResourceReferences. Here is an example where you can see what Wicket does with the url representation.
+
+HomePage (in package my/company/):
+*Java Code:*
+[source,java]
+----
+...
+response.render(CssReferenceHeaderItem.forReference(new PackageResourceReference(HomePage.class, "res/css/mycss.css")));
+...
+----
+
+mycss.css (in package my/company/res/css/):
+*CSS:*
+[source,java]
+----
+...
+body{
+    background-image:url('../images/some.png');
+}
+...
+----
+
+some.png (in package my/company/res/images/):
+<blob>
+
+Output of mycss.css:
+*CSS:*
+[source,java]
+----
+...
+body{
+    background-image:url('../images/some-ver-1425904170000.png');
+}
+...
+----
+
+If you add a url which looks like this background-image:url('../images/some.png?embedBase64'); Wicket is going to embed the complete image as base64 string with its corresponding mime type into the css file. It looks like the following code block demonstrates.
+
+Output of mycss.css:
+*CSS:*
+[source,java]
+----
+...
+body{
+    background-image: url(data:image/png;base64,R0lGODlh1wATAX....);
+}
+...
+----
+

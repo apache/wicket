@@ -1,0 +1,4 @@
+            
+AJAX has become a must-have for nearly all kinds of web application. This technology does not only help to achieve a better user experience but it also allows to improve the bandwidth performance of web applications. Using AJAX usually means writing tons of JavaScript code to handle asynchronous requests and to update user interface, but with Wicket we can leave all this boilerplate code to the framework and we don't even need to write a single line of JavaScript to start using AJAX.
+
+In this chapter we will learn how to leverage the AJAX support provided by Wicket to make our applications fully "Web 2.0":http://en.wikipedia.org/wiki/Web_2.0 compliant.

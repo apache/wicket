@@ -1,0 +1,50 @@
+            
+
+
+Wicket makes it very easy to build stateful pages, but sometimes we might want to use an “old school” stateless page that doesn't keep memory of its state in the user session. For example consider the public area of a site or a login page: in those cases a stateful page would be a waste of resources or even a security threat, as we will see in paragraph  <<guide:forms2_10,paragraph 12.10>>
+. 
+
+In Wicket a page can be stateless only if it satisfies the following requirements:
+
+1. it has been instantiated by Wicket (i.e. we don't create it with operator new) using a constructor with no argument or a constructor that takes as input a single PageParameters argument (class PageParameters will be covered in  <<guide:urls_1,chapter 10.1>>
+).
+1. All its children components (and behaviors) are in turn stateless, which means that their method isStateless must return true.
+
+The first requirement implies that, rather than creating a page by hand, we should rely on Wicket's capability of resolving page instances, like we do when we use method setResponsePage(Class page).
+
+In order to comply with the second requirement it could be helpful to check if all children components of a page are stateless. To do this we can leverage method visitChildren and the visitor pattern to iterate over components and test if their method isStateless actually returns true:
+
+[source,java]
+----
+@Override
+protected void onInitialize() {
+		super.onInitialize();
+		
+		visitChildren(new IVisitor<Component, Void>() {
+			@Override
+			public void component(Component component, IVisit<Void> arg1) {
+				if(!component.isStateless())
+		  			System.out.println("Component " + component.getId() + " is not stateless");
+			}
+		});
+	}
+----
+
+Alternatively, we could use the 'StatelessComponent' utility annotation along with the 'StatelessChecker' class (they are both in package 'org.apache.wicket.devutils.stateless'). 'StatelessChecker' will throw an 'IllegalArgumentException' if a component annotated with 'StatelessComponent' doesn't respect the requirements for being stateless. To use 'StatelessComponent' annotation we must first add the 'StatelessChecker' to our application as a component render listener:
+
+[source,java]
+----
+@Override
+public void init()
+{
+	super.init();
+	getComponentPostOnBeforeRenderListeners().add(new StatelessChecker());
+}
+----
+
+NOTE: Most of the Wicket's built-in components are stateful, hence they can not be used with a stateless page. However some of them have also a stateless version which can be adopted when we need to keep a page stateless. In the rest of the guide we will point out when a built-in component comes also with a stateless version.
+
+A page can be also explicitly declared as stateless setting the appropriate flag to true with the setStatelessHint(true) method. This method will not prevent us from violating the requirements for a stateless page, but if we do so we will get the following warning log message:
+
+WARNING: Page '<page class>' is not stateless because of component with path '<component path>'
+

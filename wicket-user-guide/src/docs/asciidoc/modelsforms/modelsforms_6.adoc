@@ -1,0 +1,81 @@
+            
+
+
+In chapter 6 we have seen how Wicket uses serialization to store page instances. When an object is serialized, all its referenced objects are recursively serialized. For a page this means that all its children components, their related models as well as the model objects inside them will be serialized. 
+For model objects this could be a serious issue for (at least) two main reasons:
+
+1. The model object could be a very large instance, hence serialization would become very expensive in terms of time and memory.
+1. We simply may not be able to use a serializable object as model object. In paragraphs 1.4 and 9.2 we stated that Wicket allows us to use a POJO as backing object, but "POJOs":http://en.wikipedia.org/wiki/Plain_Old_Java_Object1.Definition are ordinary objects with no prespecified interface, annotation or superclass, hence they are not required to implement the standard Serializable interface.
+
+To cope with these problems IModel extends another interface called IDetachable.
+
+image::detachable-models.png[]
+
+This interface provides a method called detach() which is invoked by Wicket at the end of web request processing when data model is no more needed but before serialization occurs. Overriding this method we can clean any reference to data object keeping just the information needed to retrieve it later (for example the id of the table row where our data are stored). In this way we can avoid the serialization of the object wrapped into the model overcoming both the problem with non-serializable objects and the one with large data objects.
+
+Since IModel inherits from IDetachable, every model of Wicket is “detachable”, although not all of them implement a detaching policy (like the Model class). 
+Usually detaching operations are strictly dependent on the persistence technology adopted for model objects (like a relational db, a NoSQL db, a queue, etc), so it's not unusual to write a custom detachable model suited for the persistence technology chosen for a given project. To ease this task Wicket provides abstract model LoadableDetachableModel. This class internally holds a transient reference to a model object which is initialized the first time getObject()is called to precess a request. The concrete data loading is delegated to abstract method T load(). The reference to a model object is automatically set to null at the end of the request by the detach() method.
+
+The following class diagram summarizes the methods defined inside LoadableDetachableModel.
+
+image::loadable-detachable-model.png[]
+
+onDetach and onAttach can be overridden in order to obtain further control over the detaching procedure.
+
+Now as example of a possible use of LoadableDetachableModel, we will build a model designed to work with entities managed via "JPA.":http://en.wikipedia.org/wiki/Java_Persistence_API To understand the following code a basic knowledge of JPA is required even if we won't go into the detail of this standard.
+
+WARNING: The following model is provided for example purposes only and is not intended to be used in production environment. Important aspects such as transaction management are not taken into account and you should rework the code before considering to use it.
+
+[source,java]
+----
+public class JpaLoadableModel<T> extends LoadableDetachableModel<T> {
+  
+  private EntityManagerFactory entityManagerFactory;
+  private Class<T> entityClass;
+  private Serializable identifier;
+  private List<Object> constructorParams;
+  
+  public JpaLoadableModel(EntityManagerFactory entityManagerFactory, T entity) {
+     
+	super();
+     
+	PersistenceUnitUtil util = entityManagerFactory.getPersistenceUnitUtil();
+	      
+		this.entityManagerFactory = entityManagerFactory;
+	    this.entityClass = (Class<T>) entity.getClass();
+	    this.identifier = (Serializable) util.getIdentifier(entity);
+
+	    setObject(entity);
+	}
+
+	@Override
+	protected T load() {
+	   T entity = null;
+
+	   if(identifier != null) {  
+	       EntityManager entityManager = entityManagerFactory.createEntityManager();
+	       entity = entityManager.find(entityClass, identifier);
+	     }
+	     return entity;
+	   }
+
+	@Override
+	protected void onDetach() {
+	   super.onDetach();
+
+	     T entity = getObject();
+	     PersistenceUnitUtil persistenceUtil = entityManagerFactory.getPersistenceUnitUtil();
+
+	     if(entity == null) return;
+
+	     identifier = (Serializable) persistenceUtil.getIdentifier(entity);    
+	  }
+	}
+----
+
+The constructor of the model takes as input two parameters: an implementation of the JPA interface  javax.persistence.EntityManagerFactory to manage JPA entities and the entity that must be handled by this model. Inside its constructor the model saves the class of the entity and its id (which could be null if the entity has not been persisted yet). These two informations are required to retrieve the entity at a later time and are used by the load method.
+
+onDetach is responsible for updating the entity id before detachment occurs. The id can change the first time an entity is persisted (JPA generates a new id and assigns it to the entity). Please note that this model is not responsible for saving any changes occurred to the entity object before it is detached. If we don't want to loose these changes we must explicitly persist the entity before the detaching phase occurs.
+
+WARNING: Since the model of this example holds a reference to the EntityManager Factory, the implementation in use must be serializable.
+

@@ -1,0 +1,2 @@
+            
+In this chapter we will learn some advanced topics which have not been covered yet in the previous chapters but which are nonetheless essential to make the most of Wicket and to build sophisticated web applications.

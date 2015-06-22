@@ -1,0 +1,9 @@
+            
+
+
+AJAX is another example of how Wicket can simplify web technologies providing a good component and object oriented abstraction of them. 
+
+In this chapter we have seen how to take advantage of the AJAX support provided by Wicket to write AJAX-enhanced applications. Most of the chapter has been dedicated to the built-in components and behaviors that let us adopt AJAX without almost any effort. 
+
+In the final part of the chapter we have seen how Wicket physically implements an AJAX call on client side using AJAX request attributes. Then, we have learnt how to use call listeners to execute custom JavaScript during AJAX request lifecycle.
+

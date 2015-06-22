@@ -1,0 +1,18 @@
+            
+Starting from version 6.15.0 we can specify where header contributors must be rendered inside <head> tag using the placeholder tag '<wicket:header-items/>': 
+
+[source,html]
+----
+<head>
+  <meta chartset="UTF-8"/>
+  <wicket:header-items/>
+  <script src="my-monkey-patch-of-wicket-ajax.js"></script>
+</head>
+----
+
+With the code above all header contributions done by using IHeaderResponse in your Java code or the special '<wicket:head>' tag will be put between the <meta> and <script> elements, i.e. in the place of '<wicket:header-items/>'.
+
+This way you can make sure that some header item is always before or after the header items managed by Wicket.
+
+'<wicket:header-items/>' can be used only in the page's <head> element and there could be at most one instance of it.
+

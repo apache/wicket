@@ -1,0 +1,19 @@
+            
+
+
+In this chapter we have introduced some advanced topics we didn't have the chance to cover yet. We have started talking about behaviors and we have seen how they can be used to enrich existing components (promoting a component-oriented approach). Behaviors are also fundamental to work with AJAX in Wicket, as we will see in the next chapter.
+
+After behaviors we have learnt how to generate callback URLs to execute a custom method on server side defined inside a specific callback interface.
+
+The third topic of the chapter has been the event infrastructure provided in Wicket for inter-component communication which brings to our components a desktop-like event-driven architecture.
+
+Then, we have introduced a new entity called initializer which can be used to configure resources and component in a modular and self-contained way.
+
+We have also looked at Wicket support for JMX and we have seen how to use this technology for monitoring and managing our running applications.
+
+Finally we have introduced a new technique to generate the markup of a component from its Java code.
+
+
+
+
+

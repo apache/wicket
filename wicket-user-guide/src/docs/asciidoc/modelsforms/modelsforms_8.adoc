@@ -1,0 +1,24 @@
+            
+
+
+Like many people new to Wicket, you may need a little time to fully understand the power and the advantages of using models. Taking your first steps with Wicket you may be tempted to pass row objects to your components instead of using models:
+
+[source,java]
+----
+/**
+ * 
+ * NOT TO DO: passing row objects to components instead of using models!
+ *
+ */
+public class CustomComponent extends Component{
+	private FooBean fooBean;
+
+	public CustomComponent(String id, FooBean fooBean) {
+		super(id);
+		this.fooBean = fooBean;
+	}
+	//...some other ugly code :)...
+}
+----
+
+That's a bad practice and you must avoid it. Using models we do not only decouple our components from the data source, but we can also relay on them (if they are dynamic) to work with the most up-to-date version of our model object. If we decide to bypass models we lose all these advantages and we force model objects to be serialized.

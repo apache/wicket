@@ -1,0 +1,12 @@
+            
+
+
+In Wicket a resource is an entity that can interact with the current request and response and It must implement interface 'org.apache.wicket.request.resource.IResource'. This interface defines just method respond(IResource.Attributes attributes) where the nested class IResource. Attributes provides access to request, response and page parameters objects.
+
+Resources can be static or dynamic. Static resources don't entail any computational effort to be generated and they generally correspond to a resource on the filesystem. On the contrary dynamic resources are generated on the fly when they are requested, following a specific logic coded inside them. 
+
+An example of dynamic resource is the built-in class CaptchaImageResource in package 'org.apache.wicket.extensions.markup.html.captcha' which generates a captcha image each time is rendered. 
+
+As we will see in  <<guide:resources_10,paragraph 16.10>>
+, developers can build custom resources extending base class 'org.apache.wicket.request.resource.AbstractResource'.
+

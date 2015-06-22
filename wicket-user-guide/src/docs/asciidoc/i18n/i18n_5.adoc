@@ -1,0 +1,115 @@
+            
+
+
+Internationalization is another good chance to taste the power of models. Wicket provides two built-in models to better integrate our components with string resources: they are ResourceModel and StringResourceModel.
+
+=== ResourceModel
+
+Model 'org.apache.wicket.model.ResourceModel' acts just like the read-only model we have implemented in  <<guide:i18n_3,paragraph 15.3>>
+. It simply retrieves a string resource corresponding to a given key:
+
+[source,java]
+----
+//build a ResourceModel for key 'greetingMessage'
+new ResourceModel("greetingMessage");
+----
+
+We can also specify a default value to use if the requested resource is not found:
+
+[source,java]
+----
+//build a ResourceModel with a default value
+new ResourceModel("notExistingResource", "Resource not found.");
+----
+
+=== StringResourceModel
+
+Model 'org.apache.wicket.model.StringResourceModel' allows to work with complex and dynamic string resources containing parameters and property expressions. The basic constructor of this model takes in input a resource key and another model. This further model can be used by both the key and the related resource to specify dynamic values with property expressions. For example let's say that we are working on an e-commerce site which has a page where users can see an overview of their orders. To handle the state of user's orders we will use the following bean and enum (the code is from project StringResourceModelExample):
+
+Bean:
+
+[source,java]
+----
+public class Order implements Serializable {
+	
+	private Date orderDate;
+	private ORDER_STATUS status;
+	
+	public Order(Date orderDate, ORDER_STATUS status) {
+		super();
+		this.orderDate = orderDate;
+		this.status = status;
+	}
+	//Getters and setters for private fields
+}	
+----
+
+Enum:
+
+[source,java]
+----
+public enum ORDER_STATUS {
+
+	PAYMENT_ACCEPTED(0),
+	IN_PROGRESS(1),
+	SHIPPING(2),
+	DELIVERED(3);
+	
+	private int code;
+	//Getters and setters for private fields	
+}
+----
+
+Now what we want to do in this page is to print a simple label which displays the status of an order and the date on  which the order has been submitted. All the informations about the order will be passed to a StringResourceModel with a model containing the bean Order. The bundle in use contains the following key/value pairs:
+
+[source,java]
+----
+orderStatus.0=Your payment submitted on ${orderDate} has been accepted.
+orderStatus.1=Your order submitted on ${orderDate} is in progress.
+orderStatus.2=Your order submitted on ${orderDate} has been shipped.
+orderStatus.3=Your order submitted on ${orderDate} has been delivered.
+----
+
+The values above contain a property expression (${orderDate}) that will be evaluated on the data object of the model. The same technique can be applied to the resource key in order to load the right resource according to the state of the order:
+
+[source,java]
+----
+Order order = new Order(new Date(), ORDER_STATUS.IN_PROGRESS);
+add(new Label("orderStatus", new StringResourceModel("orderStatus.${status.code}", Model.of(order))));
+----
+
+As we can see in the code above also the key contains a property expression (${status.code}) which makes its value dynamic. In this way the state of an object (an Order in our example) can determinate which resource will be loaded by StringResourceModel. If we don't use properties expressions we can provide a null value as model and in this case StringResourceModel will behave exactly as a ResourceModel. StringResourceModel supports also the same parameter substitution used by standard class 'java.text.MessageFormat'. 
+
+Parameters can be generic objects but if we use a model as parameter, StringResourceModel will use the data object inside it as actual value (it will call getObject on the model). Parameters are passed as a vararg argument with method 'setParameters(Object... parameters)'. Here is an example of usage of parameter substitution:
+
+Java code:
+
+[source,java]
+----
+PropertyModel propertyModel = new PropertyModel<Order>(order, "orderDate");
+//build a string model with two parameters: a property model and an integer value
+StringResourceModel srm = new StringResourceModel("orderStatus.delay").setParameters(propertyModel, 3);
+----
+
+Bundle:
+
+[source,java]
+----
+orderStatus.delay=Your order submitted on ${0} has been delayed by {1} days.
+----
+
+One further parameter we can specify when we build a StringResourceModel is the component that must be used by the lookup algorithm. Normally this parameter is not relevant, but if we need to use a particular bundle owned by a component not considered by the algorithm, we can specify this component as second parameter. If we pass all possible parameters to StringResourceModel's constructor we obtain something like this: 
+
+[source,java]
+----
+new StringResourceModel("myKey", myComponent, myModel);
+----
+
+Default value is supported as well, both as string model or as string value:
+
+[source,java]
+----
+new StringResourceModel("myKey", myComponent, myModel).setDefaultValue("default");
+----
+
+

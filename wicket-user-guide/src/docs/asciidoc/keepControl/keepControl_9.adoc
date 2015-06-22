@@ -1,0 +1,39 @@
+            
+Our data are rarely displayed alone without a caption or other graphic elements that make clear the meaning of their value. For example:
+
+[source,html]
+----
+<label>Total amount: </label><span wicket:id="totalAmount"></span>
+----
+
+Wicket comes with a nice utility tag called '<wicket:enclosure>' that automatically hides those decorating elements if the related data value is not visible. All we have to do is to put the involved markup inside this tag. Applying '<wicket:enclosure>' to the previous example we get the following markup:
+
+[source,html]
+----
+<wicket:enclosure> 
+    <label>Total amount: </label><span wicket:id="totalAmount"></span>
+</wicket:enclosure>
+----
+
+Now if component 'totalAmount' is not visible, its description ('Total amount:') will be automatically hidden. If we have more than a Wicket component inside '<wicket:enclosure>' we can use 'child' attribute to specify which component will control the overall visibility:
+
+[source,html]
+----
+<wicket:enclosure child="totalAmount"> 
+    <label>Total amount: </label><span wicket:id="totalAmount"></span><br/>
+	<label>Expected delivery date: </label><span wicket:id="delivDate"></span>
+</wicket:enclosure>
+----
+
+'child' attribute supports also nested components with a colon-separated path: 
+
+[source,html]
+----
+<wicket:enclosure child="totalAmountContainer:totalAmount"> 
+    <div wicket:id="totalAmountContainer">
+		<label>Total amount: </label><span wicket:id="totalAmount"></span>
+    </div>
+    <label>Expected delivery date: </label><span wicket:id="delivDate"></span>
+</wicket:enclosure>
+----
+

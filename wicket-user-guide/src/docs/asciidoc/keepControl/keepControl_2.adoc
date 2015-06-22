@@ -1,0 +1,39 @@
+            
+To modify tag attributes we can use class 'org.apache.wicket.AttributeModifier'. This class extends 'org.apache.wicket.behavior.Behavior' and can be added to any component via the 'Component''s 'add' method. Class 'Behavior' is used to expand component functionalities and it can also modify component markup. We will see this class in detail later in  <<guide:advanced_1,chapter 19.1>>
+.
+
+As first example of attribute manipulation let's consider a 'Label' component bound to the following markup:
+
+[source,html]
+----
+<span wicket:id="simpleLabel"></span>
+----
+
+Suppose we want to add some style to label content making it red and bolded. We can add to the label an 'AttributeModifier' which creates the tag attribute 'style' with value '"color:red;font-weight:bold"':
+
+[source,java]
+----
+label.add(new AttributeModifier("style", "color:red;font-weight:bold"));
+----
+
+If attribute 'style' already exists in the original markup, it will be replaced with the value specified by 'AttributeModifier'. If we don't want to overwrite the existing value of an attribute we can use subclass 'AttributeAppender' which will append its value to the existing one:
+
+[source,java]
+----
+label.add(new AttributeAppender("style", "color:red;font-weight:bold"));
+----
+
+We can also create attribute modifiers using factory methods provided by class 'AttributeModifier' and it's also possible to prepend a given value to an existing attribute:
+
+[source,java]
+----
+//replaces existing value with the given one
+label.add(AttributeModifier.replace("style", "color:red;font-weight:bold"));
+
+//appends the given value to the existing one
+label.add(AttributeModifier.append("style", "color:red;font-weight:bold"));
+
+//prepends the given value to the existing one
+label.add(AttributeModifier.prepend("style", "color:red;font-weight:bold"));
+----
+

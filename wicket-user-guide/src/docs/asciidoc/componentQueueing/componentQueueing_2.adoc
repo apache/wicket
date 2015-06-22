@@ -1,0 +1,27 @@
+            
+Auto components, such as Enclosure, are a very useful feature of Wicket, but they have always been a pain to implement and use.
+
+Suppose we have:
+
+[source,xml]
+----
+<wicket:enclosure childId="first">
+    <input wicket:id="first" type="text"/>
+    <input wicket:id="last" type="text"/>
+</wicket:enclosure>
+----
+
+Together with:
+
+[source,java]
+----
+add(new TextField("first").setRequired(true).setVisible(false));
+add(new TextField("last").setRequired(true));
+----
+
+When developing auto components the biggest pain point is in figuring out who the children of the auto component are. In the markup above the enclosure is a parent of the text fields, but in Java it would be a sibling because auto components do not modify the java-side hierarchy. So when the Enclosure is looking for its children it has to parse the markup to figure out what they are. This is not a trivial task.
+
+Because auto components do not insert themselves properly into the Java hierarchy they are also hard for users to use. For example, the documentation of Enclosure does not recommend it to be used to wrap form components like we have above. When the page renders the enclosure will be hidden because 'first' component is not visible. However, when we submit the form, 'last' component will raise a required error. This is because 'last' is not made a child of the hidden enclosure and therefore does not know its hidden — so it will try to process its input and raise the error.
+
+Had we used 'queue' instead of 'add' in the code above, everything would work as expected. As part of Queueing implementation Wicket will properly insert auto components into the Java hierarchy. Furthermore, auto components will remain in the hierarchy instead of being added before render and removed afterwords. This is a big improvement because developers will no longer have to parse markup to find the children components — since children will be added to the enclosure by the dequeueing. Likewise, user restrictions are removed as well; the code above would work as expected.
+

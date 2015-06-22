@@ -1,0 +1,101 @@
+            
+Component 'org.apache.wicket.markup.html.border.Border' is a special purpose container created to enclose its tag body with its related markup. Just like panels and pages, borders also have their own markup file which is defined following the same rules seen for panels and pages. In this file '<wicket:border>' tag is used to indicate which part of the content is to be considered as border markup:
+
+[source,html]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+    <!--  everything above <wicket:border> tag will be discarded...-->
+    <wicket:border>
+	 <div>
+	    foo<br />
+    <wicket:body/><br />
+           buz <br />
+
+  </div>
+    </wicket:border>
+    <!--  everything below </wicket:border> tag will be discarded...-->
+</body>
+</html>
+----
+
+The '<wicket:body/>' tag used in the example above is used to indicate where the body of the tag will be placed inside border markup. Now if we attached this border to the following tag
+
+[source,html]
+----
+<span wicket:id="myBorder">
+  bar
+</span>
+----
+
+we would obtain the following resulting HTML:
+
+[source,html]
+----
+<span wicket:id="myBorder">
+	<div>
+  		foo<br />
+  		bar<br />
+  		buz <br />
+	</div>
+</span>
+----
+
+'Border' can also contain children components which can be placed either inside its markup file or inside its corresponding HTML tag. In the first case children must be added to the border component with method 'addToBorder(Component...)', while in the second case we must use the 'add(Component...)' method.
+
+The following example illustrates both use cases:
+
+Border class:
+
+[source,java]
+----
+public class MyBorder extends Border {
+
+	public MyBorder(String id) {
+		super(id);		
+	}
+
+}
+----
+
+Border Markup:
+
+[source,html]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+    <wicket:border>
+	 <div>
+	    <div wicket:id="childMarkup"></div>
+    <wicket:body/><br />
+         </div>
+    </wicket:border>
+</body>
+</html>
+----
+
+Border tag:
+
+[source,html]
+----
+<div wicket:id="myBorder">
+  <span wicket:id="childTag"></span>
+</div>
+----
+
+Initialization code for border:
+
+[source,java]
+----
+MyBorder myBorder = new MyBorder("myBorder");
+	    
+myBorder.addToBorder(new Label("childMarkup", "Child inside markup."));
+myBorder.add(new Label("childTag", "Child inside tag."));
+	    
+add(myBorder);
+----
+

@@ -1,0 +1,70 @@
+            
+
+
+The factory pattern is useful, but nevertheless not suitable for Wicket components.
+
+*Listing 15:*
+
+[source,java]
+----
+public class CmsFactory {
+   public Label getCmsLabel(String markupId, final String url) {
+       IModel<String> fragment = new AbstractReadOnlyModel<String>() {
+          @Override
+          public String getObject() {
+             return loadSomeContent(url);
+          }
+       };
+       Label result = new Label(markupId, fragment);
+       result.setRenderBodyOnly(true);
+       result.setEscapeModelStrings(false);
+       return result;
+   }
+
+   public String loadContent(String url) {
+      // load some content
+   }
+}
+
+// create the component within the page:
+public class MyPage extends WebPage {
+   @SpringBean
+   CmsFactory cmsFactory;
+
+   public MyPage() {
+      add(cmsFactory.getCmsLabel("id", "http://url.to.load.from"));
+   }
+}
+----
+
+This approach for adding a label from the 'CmsFactory' to a page seems to be okay at first glance, but it comes with some disadvantages. There is no possibility to use inheritance anymore. Furthermore, there is no possibility to override 'isVisible()' and 'isEnabled()'. The factory could also be a Spring service which instanciates the component. A better solution is to create a 'CmsLabel'.
+
+*Listing 16:*
+
+[source,java]
+----
+public class CmsLabel extends Label {
+   @SpringBean
+   CmsResource cmsResource;
+   public CmsLabel(String id, IModel<String> urlModel) {
+      super(id, urlModel);
+      IModel<String> fragment = new AbstractReadOnlyModel<String>(){
+         @Override
+         public String getObject() {
+            return cmsResource.loadSomeContent(urlModel.getObject());
+         }
+      };
+      setRenderBodyOnly(true);
+      setEscapeModelStrings(false);
+   }
+}
+
+// create the component within a page
+public class MyPage extends WebPage {
+   public MyPage() {
+      add(new CmsLabel("id", Model.of("http://url.to.load.from")));
+   }
+}
+----
+
+The label in listing 16 is clearly encapsulated in a component without using a factory. Now you can easily create inline implementations and override 'isVisible()' or other stuff. Naturally, you might claim "I need a factory to initialize some values in the component, e.g. a Spring service.". For this you can create a implementation of 'IComponentInstantiationListener'. This listener gets called on the super-constructor of every component. The most popular implementation of this interface is the 'SpringComponentInjector' which injects Spring beans in components when the fields are annotated with '\'SpringBean'. You can easliy write and add your own implementation of 'IComponentInstantiationListener'. So there is no reason for using a factory anymore. More information about the instanciation listener is located in Wicket's JavaDoc.

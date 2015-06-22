@@ -1,0 +1,68 @@
+            
+
+
+Model is essentially a "facade":http://en.wikipedia.org/wiki/Facade_pattern interface which allows components to access and modify their data without knowing any detail about how they are managed or persisted. Every component has at most one related model, while a model can be shared among different components. In Wicket a model is any implementation of the interface 'org.apache.wicket.model.IModel':
+
+image::uml-imodel.png[]
+
+The IModel interface defines just the methods needed to get and set a data object (getObject() and setObject()), decoupling components from concrete details about the persistence strategy adopted for data. In addition, the level of indirection introduced by models allows access data object only when it is really needed (for example during the rendering phase) and not earlier when it may not be ready to be used.
+
+Any component can get/set its model as well as its data object using the 4 public shortcut methods listed in the class diagram above. The two methods onModelChanged() and onModelChanging() are triggered by Wicket each time a model is modified: the first one is called after the model has been changed, the second one just before the change occurs. In the examples seen so far we have worked with Label component using its constructor which takes as input two string parameters, the component id and the text to display:
+
+[source,java]
+----
+add(new Label("helloMessage", "Hello WicketWorld!"));
+----
+
+This constructor internally builds a model which wraps the second string parameter. That's why we didn't mention label model in the previous examples. Here is the code of this constructor:
+
+[source,java]
+----
+public Label(final String id, String label) {
+	this(id, new Model<String>(label));
+}
+----
+
+Class 'org.apache.wicket.model.Model' is a basic implementation of 'IModel'. It can wrap any object that implements the interface java.io.Serializable. The reason of this constraint over data object is that this model is stored in the web session, and we know from chapter 6 that data are stored into session using serialization.
+
+NOTE: In general, Wicket models support a detaching capability that allows us to work also with non-serializable objects as data model. We will see the detaching mechanism later in this chapter.
+
+Just like any other Wicket components, Label provides a constructor that takes as input the component id and the model to use with the component. Using this constructor the previous example becomes:
+
+[source,java]
+----
+add(new Label("helloMessage", new Model<String>("Hello WicketWorld!")));
+----
+
+NOTE: The Model class comes with a bunch of factory methods that makes it easier to build new model instances. For example the of(T object) method creates a new instance of Model which wraps any Object instance inside it. So instead of writing
+	
+	new Model<String>("Hello WicketWorld!")
+
+we can write
+	
+	Model.of("Hello WicketWorld!")
+
+If the data object is a List, a Map or a Set we can use similar methods called ofList, ofMap and ofSet.   
+From now on we will use these factory methods in our examples.
+
+It's quite clear that if our Label must display a static text it doesn't make much sense to build a model by hand like we did in the last code example.
+However is not unusual to have a Label that must display a dynamic value, like the input provided by a user or a value read from a database. Wicket models are designed to solve these kinds of problems.
+
+Let's say we need a label to display the current time stamp each time a page is rendered. We can implement a custom model which returns a new Date instance when the getObject() method is called:
+
+[source,java]
+----
+IModel timeStampModel = new Model<String>(){
+	@Override
+	public String getObject() {
+		return new Date().toString();
+	}
+};
+
+add(new Label("timeStamp", timeStampModel));
+----
+
+Even if sometimes writing a custom model could be a good choice to solve a specific problem, Wicket already provides a set of IModel implementations which should fit most of our needs. In the next paragraph we will see a couple of models that allow us to easily integrate JavaBeans with our web applications and in particular with our forms.
+
+NOTE: By default the class Component escapes HTML sensitive characters (like '<', '>' or '&') from the textual representation of its model object. The term 'escape' means that these characters will be replaced with their corresponding HTML "entity":http://en.wikipedia.org/wiki/Character_entity_reference (for example '<' becomes '&lt; '). This is done for security reasons as a malicious user could attempt to inject markup or JavaScript into our pages. If we want to display the raw content stored inside a model, we can tell the Component class not to escape characters by calling the setEscapeModelStrings(false) method.
+

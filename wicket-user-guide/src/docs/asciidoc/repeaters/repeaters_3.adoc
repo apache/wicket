@@ -1,0 +1,53 @@
+            
+
+
+Component 'org.apache.wicket.markup.repeater.RefreshingView' is a subclass of  RepeatingView that comes with a customizable rendering strategy for its children components.
+
+RefreshingView defines abstract methods populateItem(Item) and getItemModels(). The first method is similar to the namesake method seen for ListView, but it takes in input an instance of class 'org.apache.wicket.markup.repeater.Item' which is a subclass of 'ListItem'. RefreshingView is designed to display a collection of models containing the actual items. An iterator over these models is returned by the other abstract method getItemModels.
+
+The following code is a version of the previous example that uses 'RefreshingView' in place of 'ListView':
+
+*HTML:*
+[source,html]
+----
+...
+	<body>
+		<div id="bd" style="display: table;">
+			<div wicket:id="persons" style="display: table-row;">
+				<div style="display: table-cell;"><b>Full name: </b></div>
+				<div wicket:id="fullName" style="display: table-cell;"></div>
+			</div>
+		</div>
+	</body>
+...
+----
+
+*Java Code (Page Constructor):*
+[source,java]
+----
+public HomePage(final PageParameters parameters) {
+   //define the list of models to use
+   final List<IModel<Person>> persons = new ArrayList<IModel<Person>>();
+		
+   persons.add(Model.of(new Person("John", "Smith"))); 
+   persons.add(Model.of(new Person("Dan", "Wong")));
+
+   add(new RefreshingView<Person>("persons") {
+	@Override
+	protected void populateItem(Item<Person> item) {
+	   item.add(new Label("fullName", new PropertyModel(item.getModel(), "fullName")));
+	}
+
+@Override
+	protected Iterator<IModel<Person>> getItemModels() {
+	   return persons.iterator();
+}			
+   });
+}
+----
+
+=== Item reuse strategy
+
+Similar to 'ListView', the default behavior of the 'RefreshingView' is to replace its children with new instances every time is rendered. The strategy that decides if and how children components must be refreshed is returned by method 'getItemReuseStrategy'. This strategy is an implementation of interface IItemReuseStrategy. The default implementation used by 'RefreshingView' is class 'DefaultItemReuseStrategy' but Wicket provides also strategy 'ReuseIfModelsEqualStrategy' which reuses an item if its model has been returned by the iterator obtained with method 'getItemModels'. 
+
+To set a custom strategy we must use method 'setItemReuseStrategy'.

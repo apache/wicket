@@ -1,0 +1,2 @@
+            
+Just like applets and servlets, also Wicket components follow a lifecycle during their existence. In this chapter we will analyze each stage of this cycle and we will learn how to make the most of the hook methods that are triggered when a component moves from one stage to another.

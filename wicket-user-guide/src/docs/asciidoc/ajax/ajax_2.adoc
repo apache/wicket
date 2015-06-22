@@ -1,0 +1,356 @@
+            
+
+
+Wicket distribution comes with a number of built-in AJAX components ready to be used. Some of them are the ajaxified version of common components like links and buttons, while others are AJAX-specific components. 
+
+AJAX components are not different from any other component seen so far and they don't require any additional configuration to be used. As we will shortly see, switching from a classic link or button to the ajaxified version is just a matter of prepending “Ajax” to the component class name.
+
+This paragraph provides an overview of what we can find in Wicket to start writing AJAX-enhanced web applications.
+
+=== Links and buttons
+
+In the previous paragraph we have already introduced component AjaxLink. Wicket provides also the ajaxified versions of submitting components SubmitLink and Button which are simply called AjaxSubmitLink and AjaxButton. These components come with a version of methods onSubmit, onError and onAfterSubmit that takes in input also an instance of 'AjaxRequestTarget'. 
+
+Both components are in package 'org.apache.wicket.ajax.markup.html.form'.
+
+=== Fallback components
+
+Building an entire site using AJAX can be risky as some clients may not support this technology. In order to provide an usable version of our site also to these clients, we can use components 'AjaxFallbackLink' and 'AjaxFallbackButton' which are able to automatically degrade to a standard link or to a standard button if client doesn't support AJAX.
+
+=== AJAX Checkbox
+
+Class 'org.apache.wicket.ajax.markup.html.form.AjaxCheckBox' is a checkbox component that updates its model via AJAX when user changes its value. Its AJAX callback method is 'onUpdate(AjaxRequestTarget target)'. The component extends standard checkbox component 'CheckBox' adding an 'AjaxFormComponentUpdatingBehavior' to itself (we will see this behavior later in  <<guide:ajax_3,paragraph 19.3.3>>
+).
+
+=== AJAX editable labels
+
+An editable label is a special label that can be edited by the user when she/he clicks on it. Wicket ships three different implementations for this component (all inside package 'org.apache.wicket.extensions.ajax.markup.html'):
+
+* *AjaxEditableLabel*: it's a basic version of editable label. User can edit the content of the label with a text field. This is also the base class for the other two editable labels.
+* *AjaxEditableMultiLineLabel*: this label supports multi-line values and uses a text area as editor component. 
+* *AjaxEditableChoiceLabel*: this label uses a drop-down menu to edit its value.
+
+Base component AjaxEditableLabel exposes the following set of AJAX-aware methods that can be overriden:
+
+* *onEdit(AjaxRequestTarget target)*: called when user clicks on component. The default implementation shows the component used to edit the value of the label.  
+* *onSubmit(AjaxRequestTarget target)*: called when the value has been successfully updated with the new input.
+* *onError(AjaxRequestTarget target)*: called when the new inserted input has failed validation.
+* *onCancel(AjaxRequestTarget target)*: called when user has exited from editing mode pressing escape key. The default implementation brings back the label to its initial state hiding the editor component.  
+
+Wicket module wicket-examples contains page class 'EditableLabelPage.java' which shows all these three components together. You can see this page in action at "http://www.wicket-library.com/wicket-examples-6.0.x/ajax/editable-label":http://www.wicket-library.com/wicket-examples-6.0.x/ajax/editable-label :
+
+image::edit-label-example-screenshot.png[]
+
+=== Autocomplete text field
+
+On Internet we can find many examples of text fields that display a list of suggestions (or options) while the user types a text inside them. This feature is known as autocomplete functionality. 
+
+Wicket offers an out-of-the-box implementation of an autocomplete text field with component 'org.apache.wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField'. 
+
+When using AutoCompleteTextField we are required to implement its abstract method getChoices(String input) where the input parameter is the current input of the component. This method returns an iterator over the suggestions that will be displayed as a drop-down menu:
+
+image::autocomplete-example-screenshot.png[]
+
+Suggestions are rendered using a render which implements interface 'IAutoCompleteRenderer'. The default implementation simply calls toString() on each suggestion object. If we need to work with a custom render we can specify it via component constructor.
+
+AutoCompleteTextField supports a wide range of settings that are passed to its constructor with class 'AutoCompleteSettings'.
+
+One of the most interesting parameter we can specify for 'AutoCompleteTextField' is the throttle delay which is the amount of time (in milliseconds) that must elapse between a change of input value and the transmission of a new Ajax request to display suggestions. This parameter can be set with method 'setThrottleDelay(int)':
+
+[source,java]
+----
+AutoCompleteSettings settings = new AutoCompleteSettings();
+//set throttle to 400 ms: component will wait 400ms before displaying the options		
+settings.setThrottleDelay(400);
+//...		
+AutoCompleteTextField field = new AutoCompleteTextField<T>("field", model) {
+
+	@Override
+	protected Iterator getChoices(String arg0) {
+		//return an iterator over the options 
+	}
+};
+----
+
+Wicket module wicket-examples contains page class 'AutoCompletePagePage.java' which shows an example of autocomplete text field. The running example is available at "http://www.wicket-library.com/wicket-examples-6.0.x/ajax/autocomplete":http://www.wicket-library.com/wicket-examples-6.0.x/ajax/autocomplete .
+
+=== Modal window
+
+Class 'org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow' is an implementation of a "modal window":http://en.wikipedia.org/wiki/Modal_window based on AJAX:
+
+image::modal-window-example-screenshot.png[]
+
+The content of a modal window can be either another component or a page. In the first case the id of the  component used as content must be retrieved with method getContentId(). 
+
+If instead we want to use a page as window content, we must implement the inner interface 'ModalWindow.PageCreator' and pass it to method 'setPageCreator'. The page used as content will be embedded in a <iframe> tag.
+
+To display a modal window we must call its method 'show(AjaxRequestTarget target)'. This is  usually done inside the AJAX callback method of another component (like an 'AjaxLink'). The following markup and code are taken from project 'BasicModalWindowExample' and illustrate a basic usage of a modal window:
+
+*HTML:*
+[source,html]
+----
+<body>
+	<h2>Modal Windod example</h2>
+	<a wicket:id="openWindow">Open the window!</a>
+	<div wicket:id="modalWindow"></div>
+</body>
+----
+
+*Java Code:*
+[source,java]
+----
+public HomePage(final PageParameters parameters) {
+   	super(parameters);
+   	final ModalWindow modalWindow = new ModalWindow("modalWindow");
+   	Label label = new Label(modalWindow.getContentId(), "I'm a modal window!");
+    	
+   	modalWindow.setContent(label);
+   	modalWindow.setTitle("Modal window");
+    	
+   	add(modalWindow);
+   	add(new AjaxLink("openWindow") {
+	  @Override
+	  public void onClick(AjaxRequestTarget target) {
+		modalWindow.show(target);				
+	  }    		
+	});
+}
+----
+
+Just like any other component also 'ModalWindow' must be added to a markup tag, like we did in our example using a <div> tag. Wicket will automatically hide this tag in the final markup appending the style value display:none. 
+The component provides different setter methods to customize the appearance of the window:
+
+* *setTitle(String)*: specifies the title of the window
+* *setResizable(boolean)*: by default the window is resizeable. If we need to make its size fixed we can use this method to turn off this feature.
+* *setInitialWidth(int) and setInitialHeight(int)*: set the initial dimensions of the window.
+* *setMinimalWidth(int) and setMinimalHeight(int)*: specify the minimal dimensions of the window.
+* *setCookieName(String)*: this method can be used to specify the name of the cookie used on  client side to store size and position of the window when it is closed. The component will use this cookie to restore these two parameters the next time the window will be opened. If no cookie name is provided, the component will not remember its last position and size.
+* *setCssClassName(String)*: specifies the CSS class used for the window. 
+* *setAutoSize(boolean)*: when this flag is set to true the window will automatically adjust its size to fit content width and height. By default it is false.
+
+The modal window can be closed from code using its method 'close(AjaxRequestTarget target)'. The currently opened window can be closed also with the following JavaScript instruction:
+
+[source,java]
+----
+Wicket.Window.get().close();
+----
+
+'ModalWindow' gives the opportunity to perform custom actions when window is closing. Inner interface 'ModalWindow.WindowClosedCallback' can be implemented and passed to window's method 'setWindowClosedCallback' to specify the callback that must be executed after window has been closed:
+
+[source,java]
+----
+modalWindow.setWindowClosedCallback(new ModalWindow.WindowClosedCallback() {
+
+	@Override
+	public void onClose(AjaxRequestTarget target) {
+	  //custom code...
+	}			
+});
+----
+
+=== Tree repeaters
+
+Class 'org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree' is the base class of another family of repeaters called tree repeaters and designed to display a data hierarchy as a tree, resembling the behavior and the look & feel of desktop tree components. A classic example of tree component on desktop is the tree used by nearly all file managers to navigate file system:
+
+image::file-system-trees.png[]
+
+Because of their highly interactive nature, tree repeaters are implemented as AJAX components,  meaning that they are updated via AJAX when we expand or collapse their nodes. 
+
+The basic implementation of a tree repeater shipped with Wicket is component 'NestedTree'. In order to use a tree repeater we must provide an implementation of interface 'ITreeProvider' which is in charge of returning the nodes that compose the tree.  
+
+Wicket comes with a built-in implementation of ITreeProvider called TreeModelProvider that works with the same tree model and nodes used by Swing component 'javax.swing.JTree'. These Swing entities should be familiar to you if you have previously worked with the old tree repeaters (components 'Tree' and 'TreeTable') that have been deprecated with Wicket 6 and that are strongly dependent on Swing-based model and nodes. 'TreeModelProvider' can be used to migrate your code to the new tree repeaters. 
+
+In the next example (project 'CheckBoxAjaxTree') we will build a tree that displays some of the main cities of three European countries: Italy, Germany and France. The cities are sub-nodes of a main node representing the relative county. The nodes of the final tree will be also selectable with a checkbox control. The whole tree will have the classic look & feel of Windows XP. This is how our tree will look like:
+
+image::AJAX-tree-repeater.png[]
+
+We will start to explore the code of this example from the home page. The first portion of code we will see is where we build the nodes and the 'TreeModelProvider' for the three. As tree node we will use Swing class 'javax.swing.tree.DefaultMutableTreeNode':
+
+[source,java]
+----
+public class HomePage extends WebPage {
+    public HomePage(final PageParameters parameters) {
+     super(parameters);
+     DefaultMutableTreeNode root = new DefaultMutableTreeNode("Cities of Europe");
+      
+     addNodes(addNodes(root, "Italy"), "Rome", "Venice", "Milan", "Florence");
+     addNodes(addNodes(root, "Germany"),"Stuttgart","Munich", "Berlin","Dusseldorf", "Dresden");
+     addNodes(addNodes(root, "France"), "Paris","Toulouse", "Strasbourg","Bordeaux", "Lyon");
+      
+     DefaultTreeModel treeModel = new DefaultTreeModel(root);
+     TreeModelProvider<DefaultMutableTreeNode> modelProvider = new 
+                            TreeModelProvider<DefaultMutableTreeNode>( treeModel ){
+       @Override
+       public IModel<DefaultMutableTreeNode> model(DefaultMutableTreeNode object){
+          return Model.of(object);
+       }
+     };
+     //To be continued...
+----
+
+Nodes have been built using simple strings as data objects and invoking custom utility method addNodes which converts string parameters into children nodes for a given parent node. Once we have our tree of 'DefaultMutableTreeNodes' we can build the Swing tree model ('DefaultTreeModel') that will be the backing object for a 'TreeModelProvider'. This provider wraps each node in a model invoking its abstract method model. In our example we have used a simple 'Model' as wrapper model.
+
+Scrolling down the code we can see how the tree component is instantiated and configured before being added to the home page:
+
+[source,java]
+----
+//Continued from previous snippet...
+ NestedTree<DefaultMutableTreeNode> tree = new NestedTree<DefaultMutableTreeNode>("tree", 
+                                                      modelProvider)
+  {
+
+   @Override
+   protected Component newContentComponent(String id, IModel<DefaultMutableTreeNode>model)
+   {
+     return new CheckedFolder<DefaultMutableTreeNode>(id, this, model);
+   }
+  };
+  //select Windows theme
+  tree.add(new WindowsTheme());
+  
+  add(tree);
+  }
+  //implementation of addNodes
+  //...
+}
+----
+
+To use tree repeaters we must implement their abstract method 'newContentComponent' which is called internally by base class 'AbstractTree' when a new node must be built. As content component we have used built-in class 'CheckedFolder' which combines a 'Folder' component with a 'CheckBox' form control. 
+
+The final step before adding the tree to its page is to apply a theme to it. Wicket comes with two behaviors, WindowsTheme and HumanTheme, which correspond to the classic Windows XP theme and to the Human theme from Ubuntu.
+
+Our checkable tree is finished but our work is not over yet because the component doesn't offer many functionalities as it is. Unfortunately neither NestedTree nor CheckedFolder provide a means for collecting checked nodes and returning them to client code. It's up to us to implement a way to keep track of checked nodes.
+
+Another nice feature we would like to implement for our tree is the following user-friendly behavior that should occur when a user checks/unchecks a node:
+
+* When a node is checked also all its children nodes (if any) must be checked. We must also ensure that all the ancestors of the checked node (root included) are checked, otherwise we would get an inconsistent selection.
+* When a node is unchecked also all its children nodes (if any) must be unchecked and we must also ensure that ancestors get unchecked if they have no more checked children.
+
+The first goal (keeping track of checked node) can be accomplished building a custom version of 'CheckedFolder' that uses a shared Java Set to store checked node and to verify if its node has been  checked. This kind of solution requires a custom model for checkbox component in order to reflect its checked status when its container node is rendered. This model must implement typed interface 'IModel<Boolean>' and must be returned by 'CheckedFolder''s method 'newCheckBoxModel'.
+
+For the second goal (auto select/unselect children and ancestor nodes) we can use 'CheckedFolder''s callback method onUpdate(AjaxRequestTarget) that is invoked after a checkbox is clicked and its value has been updated. Overriding this method we can handle user click adding/removing nodes to/from the Java Set.
+
+Following this implementation plan we can start coding our custom 'CheckedFolder' (named 'AutocheckedFolder'): 
+
+[source,java]
+----
+public class AutocheckedFolder<T> extends CheckedFolder<T> {
+
+   private ITreeProvider<T> treeProvider;
+   private IModel<Set<T>> checkedNodes;
+   private IModel<Boolean> checkboxModel;
+   
+   public AutocheckedFolder(String id, AbstractTree<T> tree, 
+                        IModel<T> model, IModel<Set<T>> checkedNodes) {
+      super(id, tree, model);   
+      this.treeProvider = tree.getProvider();
+      this.checkedNodes = checkedNodes;            
+   }
+   
+   @Override
+   protected IModel<Boolean> newCheckBoxModel(IModel<T> model) {
+      checkboxModel =  new CheckModel();
+      return checkboxModel;
+   }
+   
+   @Override
+   protected void onUpdate(AjaxRequestTarget target) {
+      super.onUpdate(target);
+      T node = getModelObject();
+      boolean nodeChecked = checkboxModel.getObject();
+      
+      addRemoveSubNodes(node, nodeChecked);            
+      addRemoveAncestorNodes(node, nodeChecked);            
+   }
+
+  class CheckModel extends AbstractCheckBoxModel{
+      @Override
+      public boolean isSelected() {
+         return checkedNodes.getObject().contains(getModelObject());
+      }
+
+      @Override
+      public void select() {
+         checkedNodes.getObject().add(getModelObject());
+      }
+
+      @Override
+      public void unselect() {
+         checkedNodes.getObject().remove(getModelObject());
+      }				
+  }
+}
+----
+
+The constructor of this new component takes in input a further parameter which is the set containing checked nodes. 
+
+Class CheckModel is the custom model we have implemented for checkbox control. As base class for this model we have used 'AbstractCheckBoxModel' which is provided to implement custom models for checkbox controls. 
+
+Methods 'addRemoveSubNodes' and 'addRemoveAncestorNodes' are called to automatically add/remove children and ancestor nodes to/from the current Set. Their implementation is mainly focused on the navigation of tree nodes and it heavily depends on the internal implementation of the tree, so we won't dwell on their code.
+
+Now we are just one step away from completing our tree as we still have to find a way to update the checked status of both children and ancestors nodes on client side. Although we could easily accomplish this task by simply refreshing the whole tree via AJAX, we would like to find a better and more performant solution for this task. 
+
+When we modify the checked status of a node we don't expand/collapse any node of the three so we can simply update the desired checkboxes rather than updating the entire tree component. This alternative approach could lead to a more responsive interface and to a strong reduction of bandwidth consumption. 
+
+With the help of JQuery we can code a couple of JavaScript functions that can be used to check/ uncheck all the children and ancestors of a given node. Then, we can append these functions to the current 'AjaxRequest' at the end of method onUpdate:
+
+[source,java]
+----
+   @Override
+   protected void onUpdate(AjaxRequestTarget target) {
+      super.onUpdate(target);
+      T node = getModelObject();
+      boolean nodeChecked = checkboxModel.getObject();
+      
+      addRemoveSubNodes(node, nodeChecked);            
+      addRemoveAncestorNodes(node, nodeChecked);    
+      updateNodeOnClientSide(target, nodeChecked);		
+   }
+
+   protected void updateNodeOnClientSide(AjaxRequestTarget target,
+			boolean nodeChecked) {
+      target.appendJavaScript(";CheckAncestorsAndChildren.checkChildren('" + getMarkupId() + 
+                              "'," + nodeChecked + ");");
+		
+      target.appendJavaScript(";CheckAncestorsAndChildren.checkAncestors('" + getMarkupId() + 
+                              "'," + nodeChecked + ");");
+   }
+----
+
+The JavaScript code can be found inside file autocheckedFolder.js which is added to the header section as package resource:
+
+[source,java]
+----
+@Override
+public void renderHead(IHeaderResponse response) {
+	PackageResourceReference scriptFile = new PackageResourceReference(this.getClass(), 
+                                                      "autocheckedFolder.js");
+	response.render(JavaScriptHeaderItem.forReference(scriptFile));
+}
+----
+
+=== Working with hidden components
+
+When a component is not visible its markup and the related id attribute are not rendered in the final page, hence it can not be updated via AJAX. To overcome this problem we must use Component's method 'setOutputMarkupPlaceholderTag(true)' which has the effect of rendering a hidden <span> tag containing the markup id of the hidden component: 
+
+[source,java]
+----
+final Label label = new Label("labelComponent", "Initial value.");
+//make label invisible
+label.setVisible(false);
+//ensure that label will leave a placeholder for its markup id
+label.setOutputMarkupPlaceholderTag(true);
+add(label);
+//...
+new AjaxLink("ajaxLink"){
+	@Override
+	public void onClick(AjaxRequestTarget target) {
+	    //turn label to visible
+	    label.setVisible(true);
+	    target.add(label);
+	}  	
+};
+----
+
+Please note that in the code above we didn't invoked method 'setOutputMarkupId(true)' as 'setOutputMarkupPlaceholderTag' already does it internally.
+

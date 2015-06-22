@@ -1,0 +1,3 @@
+            
+
+Wicket applies inheritance also to HTML markup making layout management much easier and less error-prone. Defining a master template page to use as base class for the other pages is a great way to build a consistent layout and use it across all the pages on the web site. During the chapter we have also introduced the 'Panel' component, a very important Wicket class that is primarily designed to let us divide our pages in smaller and reusable UI components.

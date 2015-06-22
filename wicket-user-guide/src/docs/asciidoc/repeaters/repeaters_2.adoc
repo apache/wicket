@@ -1,0 +1,51 @@
+            
+
+
+As its name suggests, component 'org.apache.wicket.markup.html.list.ListView' is designed to display a given list of objects which can be provided as a standard Java List or as a model containing the concrete List. ListView iterates over the list and creates a child component of type 'org.apache.wicket.markup.html.list.ListItem' for every encountered item. 
+
+Unlike RepeatingView this component is intended to be used with complex markup fragments containing nested components. 
+
+To generate its children, ListView calls its abstract method populateItem(ListItem<T> item) for each item in the list, so we must provide an implementation of this method to tell the component how to create its children components. In the following example we use a ListView to display a list of Person objects:
+
+*HTML:*
+[source,html]
+----
+...
+	<body>
+		<div id="bd" style="display: table;">
+			<div wicket:id="persons" style="display: table-row;">
+				<div style="display: table-cell;"><b>Full name: </b></div>
+				<div wicket:id="fullName" style="display: table-cell;"></div>
+			</div>
+		</div>
+	</body>
+...
+----
+
+*Java Code (Page Constructor):*
+[source,java]
+----
+public HomePage(final PageParameters parameters) {
+	   List<Person> persons = Arrays.asList(new Person("John", "Smith"), 
+                                        new Person("Dan", "Wong"));
+		
+   add(new ListView<Person>("persons", persons) {
+	@Override
+	protected void populateItem(ListItem<Person> item) {
+	   item.add(new Label("fullName", new PropertyModel(item.getModel(), "fullName")));
+	}			
+   });
+}
+----
+
+*Screenshot of generated page:*
+
+image::simple-listview-screenshot.png[]
+
+In this example we have displayed the full name of two Person's instances. The most interesting part of the code is the implementation of method populateItem where parameter item is the current child component created by ListView and its model contains the corresponding element of the list. Please note that inside populateItem we must add nested components to the 'item' object and not directly to the 'ListView'.
+
+=== ListView and Form
+
+By default 'ListView' replaces its children components with new instances every time is rendered. Unfortunately this behavior is a problem if 'ListView' is inside a form and it contains form components. The problem is caused by the fact that children components are replaced by new ones before form is rendered, hence they can't keep their input value if validation fails and, furthermore, their feedback messages can not be displayed.
+
+To avoid this kind of problem we can force 'ListView' to reuse its children components using its method setReuseItems and passing true as parameter. If for any reason we need to refresh children components after we have invoked setReuseItems(true), we can use MarkupContainer's method 'removeAll()' to force 'ListView' to rebuild them.

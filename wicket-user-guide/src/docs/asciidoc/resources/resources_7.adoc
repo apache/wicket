@@ -1,0 +1,26 @@
+            
+One of the best practices to make our web application faster and reduce its latency is to reduce the number of requests to the server to load page resources like JavaScript or CSS files. To achieve this goal some JavaScript-based build tools (like Grunt) allow to merge multiple files used in a page into a single file that can be loaded in a single request. Wicket provides class 'org.apache.wicket.ResourceBundles' to aggregate multiple resource references into a single one. A resource bundle can be declared during application initialization listing all the resources that compose it:
+
+[source,java]
+----
+@Override
+public void init() {
+  super.init();
+
+  getResourceBundles().addJavaScriptBundle(WicketApplication.class,
+                "jqueryUiJs",
+                jqueryJsReference,
+                jqueryUiJsReference);
+ 
+  getResourceBundles().addCssBundle(WicketApplication.class,
+                 "jqueryUiCss",
+                jqueryCssReference,
+                jqueryUiCssReference);
+ 
+}
+----
+
+To declare a new resource bundle we need to provide a _scope_ class ('WicketApplication.class' in our example) and an unique name. Now, when one of the resources included in the bundle is requested, the entire bundle is rendered instead.
+
+NOTE: A specific resource reference can not be shared among different resource bundles (i.e. it can be part of only one bundle).
+

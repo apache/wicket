@@ -1,0 +1,4 @@
+            
+Security is one of the most important non-functional requirements we must implement in our applications. This is particularly true for enterprise applications as they usually support multiple concurrent users, and therefore they need to have an access control policy.
+
+In this chapter we will explore the security infrastructure provided by Wicket and we will learn how to use it to implement authentication and authorizations in our web applications.

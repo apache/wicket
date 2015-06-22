@@ -1,0 +1,4 @@
+            
+So far to build component hierarchy we have explicitly added each component and container in accordance with the corresponding markup. This necessary step can involve repetitive and boring code which must be change every time we decide to change markup hierarchy. 
+Component queueing is a new feature in Wicket 7 that solves this problem allowing Wicket to build component hierarchy in Java automatically making your code simpler and more maintainable. This chapter should serve as a short introduction to what Component Queueing is and what problems it is trying to solve.
+

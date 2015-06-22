@@ -1,0 +1,60 @@
+            
+
+
+As pointed out in the note in  <<guide:helloWorld_2,paragraph 4.2>>
+, Wicket can be started in two modes, DEVELOPMENT and DEPLOYMENT. When we are in DEVELOPMENT mode Wicket warns us at application startup with the following message:
+
+[source,java]
+----
+********************************************************************
+*** WARNING: Wicket is running in DEVELOPMENT mode.              ***
+***                               ^^^^^^^^^^^                    ***
+*** Do NOT deploy to your live server(s) without changing this.  ***
+*** See Application#getConfigurationType() for more information. ***
+********************************************************************
+----
+
+As we can read Wicket itself discourages us from using DEVELOPMENT mode into production environment. The running mode of our application can be configured in four different ways. The first one is adding a filter parameter inside deployment descriptor web.xml:
+
+[source,html]
+----
+<filter>      
+	<filter-name>wicket.MyApp</filter-name>
+	<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+	<init-param>
+		<param-name>applicationClassName</param-name>
+		<param-value>org.wicketTutorial.WicketApplication</param-value>
+	</init-param>
+	<init-param>
+            <param-name>configuration</param-name>
+            <param-value>deployment</param-value>
+	</init-param>
+</filter>
+----
+
+The additional parameter is written in bold. The same parameter can be also expressed as context parameter:
+
+[source,html]
+----
+<context-param>
+    <param-name>configuration</param-name>
+    <param-value>deployment</param-value>
+</context-param>
+----
+
+The third way to set the running mode is using system property wicket.configuration. This parameter can be specified in the command line that starts up the server:
+
+[source,java]
+----
+java -Dwicket.configuration=deployment ...
+----
+
+The last option is to set it in your Java code (e.g. in the init-method of your WebApplication):
+
+[source,java]
+----
+setConfigurationType(RuntimeConfigurationType.DEPLOYMENT);
+----
+
+Remember that system properties overwrite other settings, so they are ideal to ensure that on production machine the running mode will be always set to DEPLOYMENT. 
+

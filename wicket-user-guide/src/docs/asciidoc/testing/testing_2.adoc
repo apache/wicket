@@ -1,0 +1,107 @@
+            
+
+
+Wicket provides utility class FormTester that is expressly designed to test Wicket forms. A new FormTester is returned by 'WicketTester''s method 'newFormTester(String, boolean)' which takes in input the page-relative path of the form we want to test and a boolean flag indicating if its form components must be filled with a blank string:
+
+[source,java]
+----
+//...
+//create a new form tester without filling its form components with a blank string
+FormTester formTester = tester.newFormTester("form", false);
+//...
+----
+
+'FormTester' can simulate form submission with method submit which takes in input as optional parameter the submitting component to use instead of the default one:
+
+[source,java]
+----
+//...
+//create a new form tester without filling its form components with a blank string
+FormTester formTester = tester.newFormTester("form", false);
+//submit form with default submitter
+formTester.submit();
+//...
+//submit form using inner component 'button' as alternate button
+formTester.submit("button");
+----
+
+If we want to submit a form with an external link component we can use method 'submitLink(String path, boolean pageRelative)' specifying the path to the link.
+
+In the next paragraphs we will see how to use 'WicketTester' and 'FormTester' to interact with a form and with its children components.
+
+=== Setting form components input
+
+The purpose of a HTML form is to collect user input. 'FormTester' comes with the following set of methods that simulate input insertion into form's fields:
+
+* *setValue(String path, String value)*: inserts the given textual value into the specified component. It can be used with components 'TextField' and 'TextArea'. A version of this method that accepts a component instance instead of its path is also available.
+* *setValue(String checkboxId, boolean value)*: sets the value of a given 'CheckBox' component.
+* *setFile(String formComponentId, File file, String contentType)*: sets a 'File' object on a 'FileUploadField' component.
+* *select(String formComponentId, int index)*: selects an option among a list of possible options owned by a component. It supports components that are subclasses of 'AbstractChoice' along with 'RadioGroup' and 'CheckGroup'. 
+* *selectMultiple(String formComponentId, int <<>>
+ indexes)*: selects all the options corresponding to the given array of indexes. It can be used with multiple-choice components like 'CheckGroup' or 'ListMultipleChoice'.
+
+'setValue' is used inside method 'insertUsernamePassword' to set the username and password fields of the form used in project 'StatelessLoginForm':
+
+[source,java]
+----
+protected void insertUsernamePassword(String username, String password) {
+	//start and render the test page
+	tester.startPage(HomePage.class);
+	FormTester formTester = tester.newFormTester("form");
+	//set credentials
+	formTester.setValue("username", username);
+	formTester.setValue("password", password);		
+	//submit form
+	formTester.submit();
+}
+----
+
+=== Testing feedback messages
+
+To check if a page contains one or more expected feedback messages we can use the following methods provided by 'WicketTester':
+
+* *assertFeedback(String path, String... messages)*: asserts that a given panel contains the specified messages
+* *assertInfoMessages(String... expectedInfoMessages)*: asserts that the expected info messages are rendered in the page.
+* *assertErrorMessages(String... expectedErrorMessages)*: asserts that the expected error messages are rendered in the page.
+
+'assertInfoMessages' and 'assertErrorMessages' are used in the test case from project 'StatelessLoginForm' to check that form generates a feedback message in accordance with the login result:
+
+
+[source,java]
+----
+@Test
+public void testMessageForSuccessfulLogin(){
+	inserUsernamePassword("user", "user");	
+	tester.assertInfoMessages("Username and password are correct!");
+}	
+	
+@Test
+public void testMessageForFailedLogin (){
+	inserUsernamePassword("wrongCredential", "wrongCredential");		
+	tester.assertErrorMessages("Wrong username or password");
+}
+----
+
+=== Testing models
+
+Component model can be tested as well. With method 'assertModelValue' we can test if a specific component has the expected data object inside its model.
+
+This method has been used in the test case of project 'ModelChainingExample' to check if the form and the drop-down menu share the same data object:
+
+[source,java]
+----
+@Test
+public void testFormSelectSameModelObject(){
+	PersonListDetails personListDetails = new PersonListDetails();
+	DropDownChoice dropDownChoice = (DropDownChoice) personListDetails.get("persons");
+	List choices = dropDownChoice.getChoices();
+	//select the second option of the drop-down menu
+	dropDownChoice.setModelObject(choices.get(1));
+	
+	//start and render the test page
+	tester.startPage(personListDetails);		
+	//assert that form has the same data object used by drop-down menu
+	tester.assertModelValue("form", dropDownChoice.getModelObject());
+}
+----
+

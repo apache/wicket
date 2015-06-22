@@ -1,0 +1,7 @@
+            
+Software development is a challenging activity and developers must keep their skills up-to-date with new technologies.
+
+But before starting to learn the last “coolest” framework we should always ask ourself if it is the right tool for us and how it can improve our everyday job.
+Java's ecosystem is already full of many well-known web frameworks, so why should we spend our time learning Wicket?
+
+This chapter will show you how Wicket is different from other web frameworks you may know and it will explain also how it can improve your life as web developer.

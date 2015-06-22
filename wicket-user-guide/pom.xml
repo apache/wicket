@@ -15,8 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket</groupId>
@@ -133,6 +132,121 @@
 	</build>
 
 	<profiles>
+		<profile>
+			<id>asciidoctor</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+		        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		        <asciidoctor.maven.plugin.version>1.5.2.1</asciidoctor.maven.plugin.version>
+		        <jruby.version>1.7.20.1</jruby.version>
+		    </properties>
+			<build>
+				<defaultGoal>generate-sources</defaultGoal>
+				<plugins>
+					<plugin>
+					<groupId>org.asciidoctor</groupId>
+	                <artifactId>asciidoctor-maven-plugin</artifactId>
+	                <version>${asciidoctor.maven.plugin.version}</version>
+	                <dependencies>
+	                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+	                    <dependency>
+	                        <groupId>org.jruby</groupId>
+	                        <artifactId>jruby-complete</artifactId>
+	                        <version>${jruby.version}</version>
+	                    </dependency>
+	                    <!-- Uncomment the following element to override the version of AsciidoctorJ -->
+	                    <!--
+	                    <dependency>
+	                        <groupId>org.asciidoctor</groupId>
+	                        <artifactId>asciidoctorj</artifactId>
+	                        <version>1.5.3-SNAPSHOT</version>
+	                    </dependency>
+	                    -->
+	                </dependencies>
+	                <configuration>
+	                    <sourceDirectory>src/docs/asciidoc</sourceDirectory>
+	                    <!-- If you set baseDir to ${project.basedir}, top-level includes are resolved relative to the project root -->
+	                    <!--
+	                    <baseDir>${project.basedir}</baseDir>
+	                    -->
+	                    <!-- Attributes common to all output formats -->
+	                    <attributes>
+	                        <endpoint-url>http://example.org</endpoint-url>
+	                        <sourcedir>${project.build.sourceDirectory}</sourcedir>
+	                        <project-version>${project.version}</project-version>
+	                    </attributes>
+	                </configuration>
+	                <executions>
+	                    <execution>
+	                        <id>asciidoc-to-html</id>
+	                        <phase>generate-resources</phase>
+	                        <goals>
+	                            <goal>process-asciidoc</goal>
+	                        </goals>
+	                        <configuration>
+	                            <backend>html5</backend>
+								<doctype>book</doctype>
+								<preserveDirectories>true</preserveDirectories>
+	                            <sourceHighlighter>coderay</sourceHighlighter>
+	                            <!--
+	                            Scenarios for linking vs embedding assets:
+	                            Link to both stylesheets and images::
+	                              - don't set embedAssets option
+	                              - set linkcss attribute to true
+	                              - set imagesdir attribute to path relative to AsciiDoc source file
+	                              <attributes>
+	                                  <linkcss>true</linkcss>
+	                                  <imagesdir>./images</imagesdir>
+	                              </attributes>
+	                            Embed stylesheets and images::
+
+	                              - set embedAssets option to true
+	                              - don't set linkcss attribute
+	                              - set imagesdir attribute to path relative to project root
+	                              <embedAssets>true</embedAssets>
+	                              <attributes>
+	                                  <imagesdir>src/docs/asciidoc/images</imagesdir>
+	                              </attributes>
+	                            Link to stylesheets but embed images::
+
+	                              - set embedAssets option to true
+	                              - set linkcss attribute to true
+	                              - set imagesdir attribute to path relative to project root
+	                              <embedAssets>true</embedAssets>
+	                              <attributes>
+	                                  <linkcss>true</linkcss>
+	                                  <imagesdir>src/docs/asciidoc/images</imagesdir>
+	                              </attributes>
+	                            Embed stylesheets but link images (default)::
+
+	                              - don't set embedAssets option
+	                              - don't set linkcss attribute
+	                              - set imagesdir attribute to path relative to AsciiDoc source file
+	                              <attributes>
+	                                  <imagesdir>./images</imagesdir>
+	                              </attributes>
+	                            IMPORTANT: When you enable image embedding, you must qualify the path the the imagesdir, as shown above.
+	                            -->
+	                            <attributes>
+	                                <imagesdir>./images</imagesdir>
+	                                <toc>left</toc>
+	                                <icons>font</icons>
+	                                <sectanchors>true</sectanchors>
+	                                <!-- set the idprefix to blank -->
+	                                <idprefix/>
+	                                <idseparator>-</idseparator>
+	                                <docinfo1>true</docinfo1>
+	                            </attributes>
+	                        </configuration>
+	                    </execution>
+	                </executions>
+				</plugin>
+			</plugins>
+			</build>
+		</profile>
+
 		<profile>
 			<id>guide</id>
 			<activation>

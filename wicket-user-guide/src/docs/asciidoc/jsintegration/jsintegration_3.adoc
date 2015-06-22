@@ -1,0 +1,8 @@
+            
+
+
+In this brief chapter we have seen how custom components can be integrated with http://en.wikipedia.org/wiki/Dynamic_HTML[DHTML]
+
+
+
+
