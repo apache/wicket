@@ -74,6 +74,7 @@ public interface AjaxRequestTarget extends IPageRequestHandler, ILoggableRequest
 		 *            the behavior the attributes are updated for
 		 * @param attributes
 		 *            The attributes for the Ajax behavior
+		 * @since 7.0.0
 		 */
 		void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes);
 	}
