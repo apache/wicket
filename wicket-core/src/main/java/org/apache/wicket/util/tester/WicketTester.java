@@ -221,7 +221,7 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Creates a <code>WicketTester</code> to help unit testing. Constructor to keep compatibility.
+	 * Creates a <code>WicketTester</code> to help unit testing.
 	 * 
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object

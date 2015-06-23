@@ -254,7 +254,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Creates a <code>WicketTester</code>. Constructor to keep compatibility.
+	 * Creates a <code>WicketTester</code>.
 	 * 
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
