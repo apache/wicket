@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.wicketWar.model;
+package org.apache.wicket.arquillian.testing.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -99,6 +99,11 @@ public class Contact implements Serializable {
         } else if (!email.equals(other.email))
             return false;
         return true;
+    }
+    
+    @Override
+    public String toString() {
+    	return "Name: " + name + " / E-mail: " + email;
     }
     
 }

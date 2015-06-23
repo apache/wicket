@@ -14,18 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.wicketWar.pages;
+package org.apache.wicket.arquillian.testing.pages;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
+import org.apache.wicket.arquillian.testing.dao.ContactDao;
+import org.apache.wicket.arquillian.testing.model.Contact;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.jboss.as.quickstarts.wicketWar.dao.ContactDao;
-import org.jboss.as.quickstarts.wicketWar.model.Contact;
 
 /**
  * Dynamic behavior for the ListContact page

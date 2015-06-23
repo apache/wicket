@@ -13,7 +13,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-	<display-name>WildFly Quickstart: Wicket TEST WAR</display-name>
+	<display-name>Wicket Arquillian WildFly Quickstart: Wicket TEST WAR</display-name>
 
 	<!-- Enable Wicket -->
 	<filter>
@@ -22,7 +22,7 @@
 		<init-param>
 			<!-- Specify the "entry point" for Wicket to configure itself from -->
 			<param-name>applicationClassName</param-name>
-			<param-value>org.jboss.as.quickstarts.wicketWar.TestWicketJavaEEApplication</param-value>
+			<param-value>org.apache.wicket.arquillian.testing.TestWicketJavaEEApplication</param-value>
 		</init-param>
 	</filter>
 

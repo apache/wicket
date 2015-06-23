@@ -14,17 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.wicketWar.util;
+package org.apache.wicket.arquillian.testing.util;
 
 import java.net.URL;
 
 import javax.servlet.ServletContext;
 
-import org.apache.wicket.util.file.IResourcePath;
+import org.apache.wicket.core.util.resource.UrlResourceStream;
+import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.util.resource.UrlResourceStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -32,11 +30,12 @@ import org.slf4j.LoggerFactory;
  * paths to the web application's servlet context.
  * 
  * @author Johan Compagner
+ * 
+ * @author felipecalmeida
+ * 		Modified to look inside servletContext and same package as Application.
  */
-public final class ResourceWebApplicationPath implements IResourcePath
+public final class ResourceWebApplicationPath implements IResourceFinder
 {
-	private final static Logger log = LoggerFactory.getLogger(ResourceWebApplicationPath.class);
-
 	private static final String WEB_INF = "WEB-INF/";
 
 	/** The web apps servlet context */
@@ -89,10 +88,5 @@ public final class ResourceWebApplicationPath implements IResourcePath
 	public String toString()
 	{
 		return "[webapppath: " + basePath + "]";
-	}
-
-	@Override
-	public void add(String folder) {
-		// DO NOTHING.
 	}
 }

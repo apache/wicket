@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.wicketWar.dao;
+package org.apache.wicket.arquillian.testing.dao;
 
 import java.util.List;
 
 import javax.ejb.Local;
 
-import org.jboss.as.quickstarts.wicketWar.model.Contact;
+import org.apache.wicket.arquillian.testing.model.Contact;
 
 /**
  *

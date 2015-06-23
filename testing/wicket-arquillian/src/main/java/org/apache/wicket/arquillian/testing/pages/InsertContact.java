@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.as.quickstarts.wicketWar.pages;
+package org.apache.wicket.arquillian.testing.pages;
 
 import javax.inject.Inject;
 
+import org.apache.wicket.arquillian.testing.dao.ContactDao;
+import org.apache.wicket.arquillian.testing.model.Contact;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
-import org.jboss.as.quickstarts.wicketWar.dao.ContactDao;
-import org.jboss.as.quickstarts.wicketWar.model.Contact;
 
 /**
  *

@@ -15,11 +15,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-    version="2.5">
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-    <display-name>WildFly Quickstart: Wicket WAR</display-name>
+    <display-name>Wicket Arquillian WildFly Quickstart: Wicket WAR</display-name>
 
     <!-- Enable Wicket -->
     <filter>
@@ -29,7 +29,7 @@
             <!-- Specify the "entry point" for Wicket to configure itself 
                 from -->
             <param-name>applicationClassName</param-name>
-            <param-value>org.jboss.as.quickstarts.wicketWar.WicketJavaEEApplication</param-value>
+            <param-value>org.apache.wicket.arquillian.testing.WicketJavaEEApplication</param-value>
         </init-param>
     </filter>
 
