@@ -132,8 +132,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	{
 		super(id);
 
-		Args.notEmpty(columns, "columns");
-
+		Args.notNull(columns, "columns");
 
 		this.columns = columns;
 		this.caption = new Caption("caption", getCaptionModel());
