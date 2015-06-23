@@ -71,7 +71,7 @@ public class WicketJavaEEApplication extends WebApplication {
      */
     protected void initResourceFinder() {
     	getResourceSettings().getResourceFinders().add(new ResourceWebApplicationPath(WicketJavaEEApplication.class.getPackage().getName(), getServletContext()));
-	}
+    }
 
     
 }
