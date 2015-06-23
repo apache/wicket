@@ -40,7 +40,8 @@ public final class ResourceWebApplicationPath implements IResourceFinder
 
 	/** The web apps servlet context */
 	private final ServletContext servletContext;
-
+	
+	/** basePath of the project org/apache/wicket/arquillian/testing **/
 	private String basePath;
 
 	/**
