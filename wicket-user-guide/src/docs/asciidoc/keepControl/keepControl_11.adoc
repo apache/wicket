@@ -1,4 +1,4 @@
-            
+
 
 
 In this chapter we have seen the tools provided by Wicket to gain complete control over the generated HTML. However we didn't see yet how we can repeat a portion of HTML with Wicket. With classic server-side technologies like PHP or JSP we use loops (like 'while' or 'for') inside our pages to achieve this result. 

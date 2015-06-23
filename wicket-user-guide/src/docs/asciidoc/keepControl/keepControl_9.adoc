@@ -1,4 +1,4 @@
-            
+
 Our data are rarely displayed alone without a caption or other graphic elements that make clear the meaning of their value. For example:
 
 [source,html]

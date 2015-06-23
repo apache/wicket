@@ -1,4 +1,4 @@
-            
+
 
 
 Resources can be added to a global registry in order to share them at application-level. Shared resources are identified by an application-scoped key and they can be easily retrieved at a later time using reference class 'SharedResourceReference'. The global registry can be accessed with 'Application''s method 'getSharedResources'. In the following excerpt of code (taken again from project 'CustomResourceMounting') we register an instance of our custom RSS feeds producer as application-shared resource:

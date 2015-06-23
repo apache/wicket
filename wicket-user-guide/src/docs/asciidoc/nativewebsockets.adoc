@@ -1,4 +1,4 @@
-            
+
 http://en.wikipedia.org/wiki/WebSocket[WebSockets]
 This means that once the browser establish a web socket connection to the server the server can push data back to the browser without the browser explicitly asking again and again whether there is something new for it.
 

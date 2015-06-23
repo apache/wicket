@@ -1,4 +1,4 @@
-            
+
 A common task for web applications is to display a set of items. The most typical scenario where we need such kind of visualization is when we have to display some kind of search result. With the old template-based technologies (like JSP) we used to accomplish this task using classic for or while loops:
 
 [source,html]

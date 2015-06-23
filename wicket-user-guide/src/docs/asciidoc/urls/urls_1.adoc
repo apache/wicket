@@ -1,4 +1,4 @@
-            
+
 
 
 A common practice in web development is to pass data to a page using query string parameters (like ?paramName1=paramValu1&paramName2=paramValue2...). Wicket offers a more flexible and object oriented way to do this with models (we will see them in the next chapter). However, even if we are using Wicket, we still need to use query string parameters to exchange data with other Internet-based services. Consider for example a classic confirmation page which is linked inside an email to let users confirm important actions like password changing or the subscription to a mailing list. This kind of page usually expects to receive a query string parameter containing the id of the action to confirm.

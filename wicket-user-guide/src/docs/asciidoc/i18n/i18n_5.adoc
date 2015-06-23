@@ -1,4 +1,4 @@
-            
+
 
 
 Internationalization is another good chance to taste the power of models. Wicket provides two built-in models to better integrate our components with string resources: they are ResourceModel and StringResourceModel.

@@ -1,4 +1,4 @@
-            
+
 Let's go back to our layout example. In  <<guide:layout_1,chapter 5.1>>
  we have divided our layout in common areas that must be part of every page. Now we will build a reusable template page for our web application combining pages and panels. The code examples are from project MarkupInheritanceExample.
 
@@ -6,7 +6,7 @@ Let's go back to our layout example. In  <<guide:layout_1,chapter 5.1>>
 
 First, let's build a custom panel for each layout area (except for 'content' area). For example given the  header area
 
-image::header-area.png[]
+image::../img/header-area.png[]
 
 we can build a panel called 'HeaderPanel' with a related markup file called HeaderPanel.html containing the HTML for this area:
 
@@ -168,6 +168,6 @@ public class SimpleLoginPage extends JugTemplate {
 
 Obviously this page doesn't come with a related markup file. You can see the final page in the following picture:
 
-image::final-login-page.png[]
+image::../img/final-login-page.png[]
 
 

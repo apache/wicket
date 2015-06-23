@@ -1,4 +1,4 @@
-            
+
 This stage is triggered each time a component is rendered by Wicket, typically when its page is requested or when it is refreshed via AJAX.
 
 === Method onConfigure

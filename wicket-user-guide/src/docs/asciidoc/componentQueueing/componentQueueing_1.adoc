@@ -1,4 +1,4 @@
-            
+
 With Wicket as developers we use to define the hierarchy of components in the markup templates:
 
 [source,html]

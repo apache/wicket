@@ -1,4 +1,4 @@
-            
+
 
 
 In order to get the Wicket framework up to speed when your server is up and running, you usually configure a 'WicketFilter' instance in your web application deployment descriptor file ('web.xml') while passing it a single init parameter called 'applicationClassName' that points to your main implementation class extending 'org.apache.wicket.protocol.http.WebApplication' where all of your application-wide settings and initialization requirements are dealt with:

@@ -1,4 +1,4 @@
-            
+
 
 
 If we need to inject dependencies with Spring we can use listener 'org.apache.wicket.spring.injection.annot.SpringComponentInjector' provided by module wicket-spring.

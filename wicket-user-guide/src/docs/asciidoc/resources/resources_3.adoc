@@ -1,4 +1,4 @@
-            
+
 
 
 With HTML we use to include static resources in our pages using tags like <script>, <link> or <img>. This is what we have done so far writing our custom panels and pages. However, when we work with a component-oriented framework like Wicket, this classic approach becomes inadequate because it makes custom components hardly reusable. This happens when a component depends on a big number of resources. In such a case, if somebody wanted to use our custom component in his application, he would be forced to know which resources it depends on and make them available.
@@ -7,7 +7,7 @@ To solve this problem Wicket allows us to place static resource files into compo
 
 These kinds of resources are called package resources (a CSS and a JavaScript file in this screenshot):  
 
-image::package-resources.png[]
+image::../img/package-resources.png[]
 
 With package resources custom components become independent and self-contained and client code can use them without worrying about their dependencies.
 
@@ -63,7 +63,7 @@ When instead Wicket is running in DEPLOYMENT mode, the version identifier will c
 
 NOTE: Package resources can be localized following the same rules seen for resource bundles and markup files:
 
-image::package-resource-localization.png[]
+image::../img/package-resource-localization.png[]
 
 In the example illustrated in the picture above, if we try to retrieve package resource calendar.jpg when the current locale is set to French, the actual file returned will be calendar_fr.jpg.
 
@@ -146,7 +146,7 @@ In some components like in the inline image resource references are going to be 
 
 === Media tags - resource references with content range support
 
-Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support  [Range] TTP header for the request and  [Content-Range]   [Accept-Range] TTP headers for the response, which are used for videos / audio tags. The  [Range] eader allows the client to only request a specific byte range of the resource. The server provides the  [Content-Range] nd tells the client which bytes are going to be send.
+Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support  [Range] HTTP header for the request and  [Content-Range] /  [Accept-Range] HTTP headers for the response, which are used for videos / audio tags. The  [Range] header allows the client to only request a specific byte range of the resource. The server provides the  [Content-Range] and tells the client which bytes are going to be send.
 
 If you want the resource not to be load into memory apply readBuffered(false) - this way the stream is written directly to the response. ('org.apache.wicket.resource.ITextResourceCompressor' will not be applied if readBuffered is set to false)
 

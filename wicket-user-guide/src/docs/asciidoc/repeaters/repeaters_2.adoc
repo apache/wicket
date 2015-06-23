@@ -1,4 +1,4 @@
-            
+
 
 
 As its name suggests, component 'org.apache.wicket.markup.html.list.ListView' is designed to display a given list of objects which can be provided as a standard Java List or as a model containing the concrete List. ListView iterates over the list and creates a child component of type 'org.apache.wicket.markup.html.list.ListItem' for every encountered item. 
@@ -40,7 +40,7 @@ public HomePage(final PageParameters parameters) {
 
 *Screenshot of generated page:*
 
-image::simple-listview-screenshot.png[]
+image::../img/simple-listview-screenshot.png[]
 
 In this example we have displayed the full name of two Person's instances. The most interesting part of the code is the implementation of method populateItem where parameter item is the current child component created by ListView and its model contains the corresponding element of the list. Please note that inside populateItem we must add nested components to the 'item' object and not directly to the 'ListView'.
 

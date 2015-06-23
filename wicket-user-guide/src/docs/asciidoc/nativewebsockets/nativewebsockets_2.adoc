@@ -1,4 +1,4 @@
-            
+
 * *Classpath dependency*
 
 Depending on the web container that is used the application has to add a dependency to either:

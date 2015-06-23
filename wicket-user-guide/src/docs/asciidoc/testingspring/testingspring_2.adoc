@@ -1,7 +1,7 @@
-            
 
 
-One of the main features of Apache Wicket framework is the ability to easily write and run plain unit tests for your Pages and all other kinds of Components that even include the verification of the rendering process itself by using JUnit framework and the WicketTester API only. When using Spring framework for application configuration together with Wicket, as we do, you can even use the same tools to easily write and run full blown integration tests for your web application as well. All you have to do is use  ring's[] estContext ttp://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/testing.html#testcontext-framework[] ramework additionally to configure and run your JUnit based integration tests. The Spring Framework provides a set of Spring specific annotations that you can use in your integration tests in conjunction with the TestContext framework itself in order to easily configure an according ApplicationContext instance for your tests as well as for appropriate transaction management before, during and after your test execution. Following code snippet represents a simple JUnit 4 based test case using Spring's specific annotations in order to initialize an ApplicationContext instance prior to executing the test itself:
+
+One of the main features of Apache Wicket framework is the ability to easily write and run plain unit tests for your Pages and all other kinds of Components that even include the verification of the rendering process itself by using JUnit framework and the WicketTester API only. When using Spring framework for application configuration together with Wicket, as we do, you can even use the same tools to easily write and run full blown integration tests for your web application as well. All you have to do is use  http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/testing.html#testcontext-framework[Spring's TestContext] framework additionally to configure and run your JUnit based integration tests. The Spring Framework provides a set of Spring specific annotations that you can use in your integration tests in conjunction with the TestContext framework itself in order to easily configure an according ApplicationContext instance for your tests as well as for appropriate transaction management before, during and after your test execution. Following code snippet represents a simple JUnit 4 based test case using Spring's specific annotations in order to initialize an ApplicationContext instance prior to executing the test itself:
 
 [source,java]
 ----
@@ -63,7 +63,7 @@ java.lang.IllegalStateException: No WebApplicationContext found: no ContextLoade
 
 As you can see above, the Exception gets raised during the initialization of the 'WicketTester' instance even before the actual test method gets executed. Even though we have applied rather cool and simple annotation based test configuration already described and passed in perfectly well prepared ApplicationContext instance to the WicketTester instance in the constructor, somewhere down the rabbit hole someone complained that no WebApplicationContext instance could have been found which seems to be required in order to initialize the WicketTester properly.
 
-image::description-of-illegalstate.jpg[]
+image::../img/description-of-illegalstate.jpg[]
 
 The problem that we run against here is due to the fact that SpringComponentInjector during its own initialization is trying to get hold of an according Spring's ApplicationContext instance that would normally be there in a runtime environment but does not find any since we are running in a test environment currently. SpringComponentInjector delegates to Spring's own WebApplicationContextUtils class to retrieve the instance of ApplicationContext out of the ServletContext which is perfectly fine for a runtime environment but is unfortunately failing in a test environment:
 
@@ -105,7 +105,7 @@ public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx,
 }
 ----
 
-In order to use this constructor instead of the one we used previously, we now obviously need to get hold of the 'ApplicationContext' instance on our own in our 'MyWebApplication' implementation. The easiest way to do this is to use Spring's own concept of  fecycle[] allbacks ttp://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/beans.html#beans-factory-aware[] rovided to the beans managed by the Spring container. Since our 'MyWebApplication' is also a bean managed by the Spring container at runtime (enabled by the classpath scanning and '\'Component' annotation on a type level), we can declare it to implement 'ApplicationContextAware' interface which ensures that it gets provided with the 'ApplicationContext' instance that it runs in by the Spring container itself during startup.
+In order to use this constructor instead of the one we used previously, we now obviously need to get hold of the 'ApplicationContext' instance on our own in our 'MyWebApplication' implementation. The easiest way to do this is to use Spring's own concept of  http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/beans.html#beans-factory-aware[lifecycle callbacks] provided to the beans managed by the Spring container. Since our 'MyWebApplication' is also a bean managed by the Spring container at runtime (enabled by the classpath scanning and '\'Component' annotation on a type level), we can declare it to implement 'ApplicationContextAware' interface which ensures that it gets provided with the 'ApplicationContext' instance that it runs in by the Spring container itself during startup.
 
 [source,java]
 ----
@@ -135,5 +135,5 @@ public class MyWebApplication extends WebApplication implements ApplicationConte
 
 For additional clarification of how 'MyWebApplication' now relates to both Wicket and Spring framework here is an according class diagram:
 
-image::mywebapp-class-diagramm.jpg[]
+image::../img/mywebapp-class-diagramm.jpg[]
 

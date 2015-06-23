@@ -1,4 +1,4 @@
-            
+
 In this chapter we have seen the basic elements that compose a Wicket application. We have started preparing the configuration artifacts needed for our applications. As promised in  <<guide:helloWorld_4,chapter 2.4>>
 , we needed to put in place just a minimal amount of XML with an application class and a home page. 
 Then we have continued our “first contact” with Wicket learning how to build a simple page with a label component as child. This example page has shown us how Wicket maps components to HTML tags and how it uses both of them to generate the final HTML markup. 

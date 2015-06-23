@@ -1,4 +1,4 @@
-            
+
 Panel's markup can also contain HTML tags which must go inside header section of the final page, like tags '<script>' or '<style>'. To tell Wicket to put these tags inside page '<head>', we must surround them with the '<wicket:head>' tag.
 
 Considering the markup of a generic panel, we can use '<wicket:head>' tag in this way:

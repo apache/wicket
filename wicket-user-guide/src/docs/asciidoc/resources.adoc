@@ -1,4 +1,4 @@
-            
+
 One of the biggest challenge for a web framework is to offer an efficient and consistent mechanism to handle internal resources such as CSS/JavaScript files, picture files, pdf and so on. Resources can be static (like an icon used across the site) or dynamic (they can be generated on the fly) and they can be made available to users as a download or as a simple URL.
 
 In  <<guide:keepControl_6,paragraph 6.6>>

@@ -1,4 +1,4 @@
-            
+
 
 
 Class 'ResourceReference' allows to specify the resources it depends on overriding method 'getDependencies()'. The method returns a list of 'HeaderItem's that must be rendered before the resource referenced by 'ResourceReference' can be used. This can be really helpful when our resources are JavaScript or CSS libraries that in turn depend on other libraries.

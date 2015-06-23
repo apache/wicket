@@ -1,5 +1,5 @@
-            
-Wicket is available as a binary package on the main site  http://wicket.apache.org[http://wicket.apache.org]  Inside this archive we can find the distribution jars of the framework. Each jar corresponds to a sub-module of the framework. The following table reports these modules along with a short description of their purpose and with the related dependencies:
+
+Wicket is available as a binary package on the main site  http://wicket.apache.org[http://wicket.apache.org] . Inside this archive we can find the distribution jars of the framework. Each jar corresponds to a sub-module of the framework. The following table reports these modules along with a short description of their purpose and with the related dependencies:
 
 |===
  *Module'sname* | *Description* | *Dependencies*

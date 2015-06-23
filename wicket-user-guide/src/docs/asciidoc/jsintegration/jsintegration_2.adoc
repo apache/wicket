@@ -1,4 +1,4 @@
-            
+
 
 
 Our new component will extend the a built-in text field 'org.apache.wicket.extensions.markup.html.form.DateTextField' which already uses a java.util.Date as model object and already performs conversion and validation for input values. Since the component must be self-contained, we must ensure that the JavaScript libraries it relies on (JQuery and JQuery UI) will be always available. 
@@ -18,7 +18,7 @@ JQuery UI needs the following static resources in order to work properly:
 
 In the following picture we can see these package resources with our component class (named JQueryDateField):
 
-image::datepicker-package-resources.png[]
+image::../img/datepicker-package-resources.png[]
 
 Along with the four static resources listed above, we can find also file calendar.jpg, which is the calendar icon used to open the pop up calendar, and file JQDatePicker.js which contains the following custom JavaScript code that binds our component to a JQuery UI datepicker:
 

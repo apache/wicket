@@ -1,4 +1,4 @@
-            
+
 
 
 This stage is triggered when a component is removed from its container hierarchy. The only hook method for this phase is 'onRemove()'. If our component still holds some resources needed during rendering phase, we can override this method to release them.

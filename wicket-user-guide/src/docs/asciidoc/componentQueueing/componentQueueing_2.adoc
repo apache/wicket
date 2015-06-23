@@ -1,4 +1,4 @@
-            
+
 Auto components, such as Enclosure, are a very useful feature of Wicket, but they have always been a pain to implement and use.
 
 Suppose we have:

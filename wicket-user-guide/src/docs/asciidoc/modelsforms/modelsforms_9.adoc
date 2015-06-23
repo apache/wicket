@@ -1,4 +1,4 @@
-            
+
 
 
 Models are at the core of Wicket and they are the basic ingredient needed to taste the real power of the framework. In this chapter we have seen how to use models to bring data to our components without littering their code with technical details about their persistence strategy.

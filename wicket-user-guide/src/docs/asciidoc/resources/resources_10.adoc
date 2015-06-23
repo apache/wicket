@@ -1,4 +1,4 @@
-            
+
 
 
 In Wicket the best way to add dynamic functionalities to our application (such as csv export, a pdf generated on the fly, etc...) is implementing a custom resource. In this paragraph as example of custom resource we will build a basic RSS feeds generator which can be used to publish feeds on our site (project CustomResourceMounting). Instead of generating a RSS feed by hand we will use Rome framework and its utility classes. 

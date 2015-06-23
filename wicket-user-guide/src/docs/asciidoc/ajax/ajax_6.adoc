@@ -1,4 +1,4 @@
-            
+
 
 
 Displaying an activity indicator is a nice way to notify user that an AJAX request is already running, but sometimes is not enough. In some situations we may need to completely disable a component during AJAX request processing, for example when we want to avoid that impatient users submit a form multiple times. In this paragraph we will see how to accomplish this goal building a custom and reusable 'IAjaxCallListener'. The code used in this example is from project 'CustomAjaxListenerExample'.
@@ -11,13 +11,13 @@ When a component is disabled it must be clear to user that an AJAX request is ru
 
 The final result will look like this:
 
-image::custom-ajax-call-listener.png[]
+image::../img/custom-ajax-call-listener.png[]
 
 === How to implement the listener
 
 The listener will implement methods 'getBeforeHandler' and 'getAfterHandler': the first will return the code needed to place an overlay <div> on the desired component while the second must remove this overlay when the AJAX call has completed.
 
-To move and resize the overlay area we will use another module from  ueryUI[] ibrary ttp://jqueryui.com/position/[] hat allows us to position DOM elements on our page relative to another element.
+To move and resize the overlay area we will use another module from  http://jqueryui.com/position/[JQueryUI library] that allows us to position DOM elements on our page relative to another element.
 
 So our listener will depend on four static resources: the JQuery library, the position module of JQuery UI, the custom code used to move the overlay <div> and the picture used as activity indicator. Except for the activity indicator, all these resources must be added to page header section in order to be used. 
 

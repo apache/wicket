@@ -1,4 +1,4 @@
-            
+
 
 
 Bookmarkable pages can be linked directly inside markup files without writing any Java code. Using <wicket:link> tag we ask Wicket to automatically add bookmarkable links for the anchors wrapped inside it. Here is an example of usage of <wicket:link> tag taken from the home page of the project BookmarkablePageAutoLink:

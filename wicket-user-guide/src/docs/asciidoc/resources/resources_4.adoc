@@ -1,4 +1,4 @@
-            
+
 
 
 Wicket comes with interface 'org.apache.wicket.markup.html.IHeaderContributor' which allows components and behaviors (which will be introduced later in  <<guide:advanced_1,paragraph 18.1>>

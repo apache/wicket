@@ -1,4 +1,4 @@
-            
+
 
 
 Class 'org.apache.wicket.request.cycle.RequestCycle' is the entity in charge of serving a web request. Our application class creates a new 'RequestCycle' on every request with its method 'createRequestCycle(request, response)'. 
@@ -29,7 +29,7 @@ To resolve the right handler for a given HTTP request, the 'RequestCycle' uses a
 
 The following sequence diagram recaps how a request handler is resolved by the 'RequestCycle':
 
-image::request-cycle-handler.png[]
+image::../img/request-cycle-handler.png[]
 
 Developers can create additional implementations of IRequestMapper and add them to their application via the mount(IRequestMapper mapper) method of the WebApplication class. In paragraph 10.6 we will see how Wicket uses this method to add built-in mappers for mounted pages.
 
@@ -91,6 +91,6 @@ public void init() {
 }
 ----
 
-The 'getRequestCycleListeners' method returns an instance of class 'org.apache.wicket.request.cycle.RequestCycleListenerCollection'. This class is a sort of typed collection for 'IRequestCycleListener' and it also implements the  mposite[guide:helloWorld_4] wikipedia.org/wiki/Composite_pattern .
+The 'getRequestCycleListeners' method returns an instance of class 'org.apache.wicket.request.cycle.RequestCycleListenerCollection'. This class is a sort of typed collection for 'IRequestCycleListener' and it also implements the  http://en.wikipedia.org/wiki/Composite_pattern[Composite pattern] .
 
 

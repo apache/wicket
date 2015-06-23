@@ -1,4 +1,4 @@
-            
+
 In chapter  <<guide:urls_6,10.6>>
  we have seen how to encrypt URLs using 'CryptoMapper' request mapper. To encrypt/decrypt page URLs 'CryptoMapper' uses an instance of 'org.apache.wicket.util.crypt.ICrypt' interface:
 

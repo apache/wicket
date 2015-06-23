@@ -1,4 +1,4 @@
-            
+
 
 
 Having structured URLs in our site is a basic requirement if we want to build an efficient SEO strategy, but it also contributes to improve user experience with more intuitive URLs. Wicket provides two different ways to control URL generation. The first (and simplest) is to “mount” one or more pages to an arbitrary path, while a more powerful technique is to use custom implementations of IMapperContext and IPageParametersEncoder interfaces. In the next paragraphs we will learn both of these two techniques.
@@ -6,7 +6,7 @@ Having structured URLs in our site is a basic requirement if we want to build an
 === Mounting a single page
 
 With Wicket we can mount a page to a given path in much the same way as we map a servlet filter to a desired path inside file web.xml (see  <<guide:helloWorld_2,paragraph 4.2>>
-). Using mountPage(String path, Class <T> pageClass) method of the WepApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the  [/pageMount] ath:
+). Using mountPage(String path, Class <T> pageClass) method of the WepApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the  [/pageMount] path:
 
 [source,java]
 ----
@@ -211,7 +211,7 @@ Sometimes URLs are a double–edged sword for our site because they can expose t
 
 To avoid this kind of security threat we can use the 'CryptoMapper' request mapper which wraps an existing mapper and encrypts the original URL producing a single encrypted segment:
 
-image::url-encrypted.png[]
+image::../img/url-encrypted.png[]
 
 Typically, 'CryptoMapper' is registered into a Wicket application as the root request mapper wrapping the default one:
 

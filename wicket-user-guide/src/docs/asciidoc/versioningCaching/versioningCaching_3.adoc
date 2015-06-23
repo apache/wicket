@@ -1,4 +1,4 @@
-            
+
 
 
 Wicket makes it very easy to build stateful pages, but sometimes we might want to use an “old school” stateless page that doesn't keep memory of its state in the user session. For example consider the public area of a site or a login page: in those cases a stateful page would be a waste of resources or even a security threat, as we will see in paragraph  <<guide:forms2_10,paragraph 12.10>>

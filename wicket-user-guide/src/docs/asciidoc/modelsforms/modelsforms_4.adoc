@@ -1,4 +1,4 @@
-            
+
 
 
 Class 'org.apache.wicket.markup.html.form.DropDownChoice' is the form component needed to display a list of possible options as a drop-down list where users can select one of the proposed options. This component must be used with <select> tag:
@@ -23,7 +23,7 @@ form.add(new DropDownChoice<String>("fruits", new Model(), fruits));
 
 Screenshot of generated page:
 
-image::dropdown-choice.png[]
+image::../img/dropdown-choice.png[]
 
 In addition to the component id, in order to build a DropDownChoice we need to provide to its constructor two further parameters:
 

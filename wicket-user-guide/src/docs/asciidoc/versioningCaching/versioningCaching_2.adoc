@@ -1,4 +1,4 @@
-            
+
 
 
 Stateful pages are versioned in order to support browser's back button: when this button is pressed Wicket must respond by rendering the same page instance previously used. 
@@ -7,7 +7,7 @@ A new page version is created when a stateful page is requested for the first ti
 
 In the final example of the previous chapter (project LifeCycleStages), you may have noticed the number appended at the end of URL. This number is the page id we are talking about:
 
-image::page-id.png[]
+image::../img/page-id.png[]
 
 In this chapter we will use a revised version of this example project where the component hierarchy is modified inside the Link's onClick()method. This is necessary because Wicket creates a new page version only if the page is modified before its method onBeforeRender() is invoked. The code of the new home page is the following:
 
@@ -41,13 +41,13 @@ public class HomePage extends WebPage
 
 Now if we run the new example (project LifeCycleStagesRevisited) and we click on the “Reload” button, a new page version is created and the page id is increased by one:
 
-image::reload-page.png[]
+image::../img/reload-page.png[]
 
 If we press the back button the page version previously rendered (and serialized) will be retrieved (i.e. deserialized) and it will be used again to respond to our request (and page id is decremented):
 
-image::browser-back.png[]
+image::../img/browser-back.png[]
 
-NOTE: For more details about page storing you can take a look at paragraph  ge[] toring [] rom chapter  cket[] nternals [] he content of this paragraph is from wiki page https://cwiki.apache.org/confluence/display/WICKET/Page+Storage. 
+NOTE: For more details about page storing you can take a look at paragraph  [Page storing] from chapter  [Wicket Internals] The content of this paragraph is from wiki page https://cwiki.apache.org/confluence/display/WICKET/Page+Storage. 
 
 As we have stated at the beginning of this chapter, page versions are stored using Java serialization, therefore every object referenced inside a page must be serializable. In  <<guide:modelsforms_6,paragraph 11.6>>
  we will see how to overcome this limit and work with non-serializable objects in our components using detachable Wicket models.
@@ -94,7 +94,7 @@ By default Wicket persists versions of pages into a session-relative file on dis
 
 The following picture is an overview of these two caching levels:
 
-image::wicket-cache.png[]
+image::../img/wicket-cache.png[]
 
 The session-scoped cache is faster then the other memory levels but it contains only the pages used to serve the last request. Wicket allows us to set the maximum amount of memory allowed for the application-scoped cache and for the page store file. Both parameters can be configured via setting class 'org.apache.wicket.settings.StoreSettings'. 
 
@@ -127,7 +127,7 @@ public void init()
 
 Page instances are not kept in the user session forever. They can be discarded when the limit set with the setMaxSizePerSession method is reached or (more often) when user session expires. When we ask Wicket for a page id corresponding to a page instance removed from the session, we bump into a  PageExpiredException and we get the following default error page:
 
-image::page-expired.png[]
+image::../img/page-expired.png[]
 
 This error page can be customized with the 'setPageExpiredErrorPage' method of class 'org.apache.wicket.settings.ApplicationSettings':
 

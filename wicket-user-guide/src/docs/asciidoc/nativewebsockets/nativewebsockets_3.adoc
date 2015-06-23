@@ -1,4 +1,4 @@
-            
+
 By adding a '(Base)WebSocketBehavior' to your component(s) Wicket will contribute 'wicket-websocket-jquery.js' library which provides some helper functions to write your client side code. There is a default websocket connection per Wicket Page opened for you which you can use like:
 [source,java]
 ----

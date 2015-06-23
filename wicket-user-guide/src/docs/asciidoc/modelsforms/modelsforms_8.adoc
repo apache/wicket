@@ -1,4 +1,4 @@
-            
+
 
 
 Like many people new to Wicket, you may need a little time to fully understand the power and the advantages of using models. Taking your first steps with Wicket you may be tempted to pass row objects to your components instead of using models:

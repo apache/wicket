@@ -1,4 +1,4 @@
-            
+
 
 
 For end-users a datepicker is one of the most appreciated widget. It allows to simply edit a date value with the help of a user-friendly pop-up calendar. That's why nearly all UI frameworks provide a version of this widget. 
@@ -7,7 +7,7 @@ Popular JavaScript libraries like YUI and JQuery come with a ready-to-use datepi
 
 As both JQuery and its child project JQueryUI have gained a huge popularity in the last years, it's quite interesting to see how to integrate them in Wicket building a custom component. In this chapter we will create a custom datepicker based on the corresponding widget from JQueryUI project:
 
-image::datepicker-screenshot.png[]
+image::../img/datepicker-screenshot.png[]
 
 WARNING: On Internet you can find different libraries that already offer a strong integration between Wicket and JQuery. The goal of this chapter is to see how to integrate Wicket with a JavaScript framework building a simple homemade datepicker which is not intended to provide every feature of the original JavaScript widget.
 

@@ -1,4 +1,4 @@
-            
+
 
 
 Just like pages also resources can be mounted to a specific path. Class 'WebApplication' provides method 'mountResource' which is almost identical to 'mountPage' seen in  <<guide:urls_6,paragraph 10.6.1>>

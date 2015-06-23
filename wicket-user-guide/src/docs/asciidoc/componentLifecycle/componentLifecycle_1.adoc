@@ -1,4 +1,4 @@
-            
+
 
 
 During its life a Wicket component goes through three basic stages:
@@ -9,7 +9,7 @@ During its life a Wicket component goes through three basic stages:
 
 The following picture shows the state diagram of component lifecycle:
 
-image::component-lifecycle.png[]
+image::../img/component-lifecycle.png[]
 
 Once a component has been removed it can be added again to a container, but the initialization stage won't be executed again.
 

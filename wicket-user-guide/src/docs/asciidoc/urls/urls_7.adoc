@@ -1,4 +1,4 @@
-            
+
 
 
 Links and URLs are not trivial topics as they may seem and in Wicket they are strictly interconnected. Developers must choose the right trade-off between producing structured URLs and avoiding to make them verbose and vulnerable.

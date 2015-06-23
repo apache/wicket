@@ -1,4 +1,4 @@
-            
+
 With Wicket we can apply markup inheritance using another approach based on the tag '<wicket:child>'. This tag is used inside the parent's markup to define where the children pages/panels can “inject” their custom markup extending the markup inherited from the parent component. 
 An example of a parent page using the tag '<wicket:child>' is the following:
 

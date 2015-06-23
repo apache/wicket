@@ -1,4 +1,4 @@
-            
+
 
 
 Web applications use HTML forms to collect user input and send it to the server. Wicket provides 'org.apache.wicket.markup.html.form.Form' class to handle web forms. This component must be bound to <form> tag. The following snippet shows how to create a very basic Wicket form in a page:
@@ -33,7 +33,7 @@ In the next chapter we will continue to explore Wicket forms and we will see how
 
 A form should contain some input fields (like text fields, check boxes, radio buttons, drop-down lists, text areas, etc.) to interact with users. Wicket provides an abstraction for all these kinds of elements with component org.apache.wicket.markup.html.form.FormComponent:
 
-image::uml-form-component.png[]
+image::../img/uml-form-component.png[]
 
 The purpose of FormComponent is to store the corresponding user input into its model when the form is submitted. The form is responsible for mapping input values to the corresponding components, avoiding us the burden of manually synchronizing models with input fields and vice versa.
 
@@ -96,7 +96,7 @@ If we don't provide a model to a form component, we will get the following excep
 java.lang.IllegalStateException: Attempt to set model object on null model of component: 
 ----
 
-Component TextField corresponds to the standard text field, without any particular behavior or restriction on the allowed values. We must bind this component to the <input> tag with the attribute type set to  [text] asswordTextField is a subtype of TextFiled and it must be used with an <input> tag with the attribute type set to [password] or security reasons component PasswordTextField cleans its value at each request, so it wil be always empty after the form has been rendered. By default PasswordTextField fields are required, meaning that if we left them empty, the form won't be submitted (i.e. onSubmit won't be called). Class FormComponent provides method setRequired(boolean required) to change this behavior. Inside onSubmit, to get/set model objects we have used shortcut methods setDefaultModelObject and getDefaultModelObject. Both methods are defined in class Component (see class diagram from Illustration 9.1).
+Component TextField corresponds to the standard text field, without any particular behavior or restriction on the allowed values. We must bind this component to the <input> tag with the attribute type set to  [text] PasswordTextField is a subtype of TextFiled and it must be used with an <input> tag with the attribute type set to [password] For security reasons component PasswordTextField cleans its value at each request, so it wil be always empty after the form has been rendered. By default PasswordTextField fields are required, meaning that if we left them empty, the form won't be submitted (i.e. onSubmit won't be called). Class FormComponent provides method setRequired(boolean required) to change this behavior. Inside onSubmit, to get/set model objects we have used shortcut methods setDefaultModelObject and getDefaultModelObject. Both methods are defined in class Component (see class diagram from Illustration 9.1).
 
 The following are the possible markup and code for the login page:
 
@@ -188,5 +188,5 @@ spouse.add(name = new Label("name"));
 add(spouse);
 ----
 
-The value displayed by label  [name] ill be  [John] nd not the spouse's name   [Jill] s you may expect. In this example the label doesn't own a model, so it must search up its container hierarchy for an inheritable model. However, its container (WebMarkup Container with id 'spouse') doesn't own a model, hence the request for a model is forwarded to the parent container, which in this case is the page. In the end the label inherits CompoundPropertyModel from page but only its own id is used for the property expression. The containers in between are never taken into account for the final property expression.
+The value displayed by label  [name] will be  [John] and not the spouse's name   [Jill] as you may expect. In this example the label doesn't own a model, so it must search up its container hierarchy for an inheritable model. However, its container (WebMarkup Container with id 'spouse') doesn't own a model, hence the request for a model is forwarded to the parent container, which in this case is the page. In the end the label inherits CompoundPropertyModel from page but only its own id is used for the property expression. The containers in between are never taken into account for the final property expression.
 

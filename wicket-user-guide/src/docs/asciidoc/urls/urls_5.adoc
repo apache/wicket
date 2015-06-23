@@ -1,4 +1,4 @@
-            
+
 
 
 Component Link has a stateful nature, hence it cannot be used with stateless pages. To use links with these kinds of pages Wicket provides the convenience 'org.apache.wicket.markup.html.link.StatelessLink' component which is basically a subtype of Link with the stateless hint set to true. 

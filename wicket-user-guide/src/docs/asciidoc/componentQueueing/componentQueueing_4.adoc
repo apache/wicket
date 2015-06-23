@@ -1,4 +1,4 @@
-            
+
 === Ancestors
 
 Suppose on a user profile panel we have the following code:

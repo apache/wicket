@@ -1,4 +1,4 @@
-            
+
 
 
 Component 'org.apache.wicket.markup.repeater.RepeatingView' is a container which renders its children components using the tag it is bound to. It can contain an arbitrary number of children elements and we can obtain a new valid id for a new child calling its method newChildId(). This component is particularly suited when we have to repeat a simple markup fragment, for example when we want to display some items as a HTML list:

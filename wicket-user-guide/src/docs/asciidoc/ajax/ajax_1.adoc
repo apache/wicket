@@ -1,4 +1,4 @@
-            
+
 
 
 Wicket support for AJAX is implemented in file wicket-ajax-jquery.js which makes complete transparent to Java code any detail about AJAX communication. 

@@ -1,4 +1,4 @@
-            
+
 
 
 Wicket loads application's resources delegating this task to a resource locator represented by interface 'org.apache.wicket.core.util.resource.locator.IResourceStreamLocator'. To retrieve or modify the current resource locator we can use the getter and setter methods defined by setting class 'ResourceSettings':
@@ -23,7 +23,7 @@ To customize resource loading we can add further resource finders to our applica
 
 Project CustomFolder4MarkupExample uses 'WebApplicationPath' to load the markup file and the resource bundle for its home page from a custom folder. The folder is called markupFolder and it is placed in the root path of the webapp. The following picture illustrates the file structure of the project:
 
-image::package-structure-custom-folder.png[]
+image::../img/package-structure-custom-folder.png[]
 
 As we can see in the picture above, we must preserve the package structure also in the custom folder used as resource container. The code used inside application class to configure  WebApplicationPath is the following:
 
@@ -41,7 +41,7 @@ Method getResourceFinders() defined by setting class ResourceSettings returns th
 
 NOTE: By default, if resource files can not be found inside application classpath, Wicket will search for them inside “resources” folder. You may have noted this folder in the previous picture. It is placed next to the folder “java” containing our source files:
 
-image::package-structure-resource-folder.png[]
+image::../img/package-structure-resource-folder.png[]
 
 This folder can be used to store resource files without writing any configuration code.
 

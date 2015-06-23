@@ -1,8 +1,8 @@
-            
+
 Wicket allows us to design our web pages in terms of components and containers, just like AWT does with desktop windows. 
 Both frameworks share the same component-based architecture: in AWT we have a 'Windows' instance which represents the physical windows containing GUI components (like text fields, radio buttons, drawing areas, etc...), in Wicket we have a 'WebPage' instance which represents the physical web page containing HTML components (pictures, buttons, forms, etc... ) .
 
-image::uml-component.png[]
+image::../img/uml-component.png[]
 
 In both frameworks we find a base class for GUI components called 'Component'. Wicket pages can be composed (and usually are) by many components, just like AWT windows are composed by Swing/AWT components. Both frameworks promote the reuse of presentation code and GUI elements building custom components. Even if Wicket already comes with a rich set of ready-to-use components, building custom components is a common practice when working with this framework. We'll learn more about custom components in the next chapters.
 

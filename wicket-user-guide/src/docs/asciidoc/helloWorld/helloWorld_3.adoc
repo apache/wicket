@@ -1,4 +1,4 @@
-            
+
 
 
 To complete our first Wicket application we must explore the home page class that is returned by the 'Application''s method 'getHomePage()' seen above. 
@@ -6,7 +6,7 @@ In Wicket a web page is a subclass of 'org.apache.wicket.WebPage'. This subclass
 
 By default this HTML file must have the same name of the related page class and must be in the same package:
 
-image::samepackage.png[]
+image::../img/samepackage.png[]
 
 _Illustration :Page class and its related HTML file_
 

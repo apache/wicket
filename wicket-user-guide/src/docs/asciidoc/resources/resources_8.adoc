@@ -1,4 +1,4 @@
-            
+
 Some web developers prefer to put their <script> tags at the end of page body instead of inside the <head> tags:
 
 [source,html]
@@ -58,7 +58,7 @@ The following code is taken from the Application class of the project:
     }
 ----
 
-As you can see in the code above the  [bucket] hat will contain JavaScript tags is called ' .[footer-container] o make a use of it the developer have to add a special component called 'HeaderResponseContainer' in his page:
+As you can see in the code above the  [bucket] that will contain JavaScript tags is called ' .[footer-container] To make a use of it the developer have to add a special component called 'HeaderResponseContainer' in his page:
 
 [source,java]
 ----

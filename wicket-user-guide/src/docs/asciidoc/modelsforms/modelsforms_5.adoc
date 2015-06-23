@@ -1,11 +1,11 @@
-            
 
 
-Models that implement the interface 'org.apache.wicket.model.IChainingModel' can be used to build a chain of models. These kinds of models are able to recognize whether their model object is itself an implementation of IModel and if so, they will call getObject on the wrapped model and the returned value will be the actual model object. In this way we can combine the action of an arbitrary number of models, making exactly a chain of models. Chaining models allows to combine different data persistence strategies, similarly to what we do with chains of  O[] treams. ttp://java.sun.com/developer/technicalArticles/Streams/ProgIOStreams[] o see model chaining in action we will build a page that implements the List/Detail View pattern, where we have a drop-down list of Person objects and a form to display and edit the data of the current selected Person.
+
+Models that implement the interface 'org.apache.wicket.model.IChainingModel' can be used to build a chain of models. These kinds of models are able to recognize whether their model object is itself an implementation of IModel and if so, they will call getObject on the wrapped model and the returned value will be the actual model object. In this way we can combine the action of an arbitrary number of models, making exactly a chain of models. Chaining models allows to combine different data persistence strategies, similarly to what we do with chains of  http://java.sun.com/developer/technicalArticles/Streams/ProgIOStreams[I/O streams.] To see model chaining in action we will build a page that implements the List/Detail View pattern, where we have a drop-down list of Person objects and a form to display and edit the data of the current selected Person.
 
 The example page will look like this:
 
-image::model-chaining.png[]
+image::../img/model-chaining.png[]
 
 What we want to do in this example is to chain the model of the DropDownChoice (which contains the selected Person) with the model of the Form. In this way the Form will work with the selected Person as backing object. The DropDownChoice component can be configured to automatically update its model each time we change the selected item on the client side. All we have to do is to override method wantOnSelectionChangedNotifications to make it return true. In practice, when this method returns true, DropDownChoice will submit its value every time JavaScript event onChange occurs, and its model will be consequently updated. To leverage this functionality, DropDownChoice doesn't need to be inside a form.
 

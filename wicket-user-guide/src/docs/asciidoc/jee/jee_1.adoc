@@ -1,4 +1,4 @@
-            
+
 
 
 WicketStuff provides a module called wicketstuff-javaee-inject that contains component instantiation listener 'JavaEEComponentInjector'. If we register this listener in our application we can use standard EJB annotations to inject dependencies into our Wicket components.
@@ -52,5 +52,5 @@ public class HomePage extends WebPage {
 
 That is all. We can point the browser to the home page of the project and see the greeting message injected into the page:
 
-image::EjbInjectionExample.png[]
+image::../img/EjbInjectionExample.png[]
 

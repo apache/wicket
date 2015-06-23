@@ -1,4 +1,4 @@
-            
+
 
 
 In addition to specific components, Wicket offers also a set of built in AJAX behaviors that can be used to easily add AJAX functionalities to existing components. As we will see in this paragraph AJAX behaviors can be used also to ajaxify components that weren't initially designed to work with this technology. All the following behaviors are inside package 'org.apache.wicket.ajax'. 

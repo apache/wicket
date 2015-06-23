@@ -1,4 +1,4 @@
-            
+
 
 
 Sometimes our custom components may need to use more than a single model to work properly. In such a case we must manually detach the additional models used by our components. In order to do this we can overwrite the Component's onDetach method that is called at the end of the current request. The following is the generic code of a component that uses two models:

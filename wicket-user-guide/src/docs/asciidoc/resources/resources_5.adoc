@@ -1,4 +1,4 @@
-            
+
 In web applications, it's quite common to have one or more root context folders containing css/js files. These resources are normally referenced with an absolute path inside link/script tags:
 
 [source,html]

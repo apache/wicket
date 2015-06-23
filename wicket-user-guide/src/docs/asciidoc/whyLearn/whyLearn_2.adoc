@@ -1,11 +1,11 @@
-            
+
 Component oriented frameworks differ from classic web frameworks in that they build a model of requested page on the server side and the HTML sent back to the client is generated according to this model. You can think of the model as if it was an “inverse” JavaScript DOM, meaning that:
 
 1. is built on server-side
 1. is built before HTML is sent to client
 1. HTML code is generated using this model and not vice versa.
 
-  image::requesthandling-general.png[]
+  image::../img/requesthandling-general.png[]
 
   _General schema of page request handling for a component oriented framework_
 

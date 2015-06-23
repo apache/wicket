@@ -1,7 +1,7 @@
-            
 
 
-Wicket supports file uploading with the FileUploadField component which must be used with the <input> tag whose type attribute must be set to  [file] n order to send a file on form submission we must enable multipart mode calling MultiPart(true)on our form.
+
+Wicket supports file uploading with the FileUploadField component which must be used with the <input> tag whose type attribute must be set to  [file] In order to send a file on form submission we must enable multipart mode calling MultiPart(true)on our form.
 
 In the next example (project UploadSingleFile) we will see a form which allows users to upload a file into the temporary directory of the server (path /tmp on Unix/Linux systems):
 
@@ -79,6 +79,6 @@ public void init()
 
 === Upload multiple files
 
-If we need to upload multiple files at once and our clients support HTML5, we can still use FileUploadField adding attribute  [multiple] o its tag. If we can not rely on HTML5, we can use the MultiFileUploadField component which allows the user to upload an arbitrary number of files using a JavaScript-based solution.
-An example showing how to use this component can be found in Wicket module wicket-examples in file MultiUploadPage.java. The live example is hosted at  http://www.wicket-library.com/wicket-examples-6.0.x/upload/multi[http://www.wicket-library.com/wicket-examples-6.0.x/upload/multi] 
+If we need to upload multiple files at once and our clients support HTML5, we can still use FileUploadField adding attribute  [multiple] to its tag. If we can not rely on HTML5, we can use the MultiFileUploadField component which allows the user to upload an arbitrary number of files using a JavaScript-based solution.
+An example showing how to use this component can be found in Wicket module wicket-examples in file MultiUploadPage.java. The live example is hosted at  http://www.wicket-library.com/wicket-examples-6.0.x/upload/multi[http://www.wicket-library.com/wicket-examples-6.0.x/upload/multi] .
 

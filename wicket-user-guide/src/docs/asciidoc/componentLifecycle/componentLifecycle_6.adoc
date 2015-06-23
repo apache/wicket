@@ -1,4 +1,4 @@
-            
+
 
 
 In this chapter we have seen which stages compose the lifecycle of Wicket components and which hook methods they provide. Overriding these methods we can dynamically modify the component hierarchy and we can enrich the behavior of our custom components.

@@ -1,4 +1,4 @@
-            
+
 
 
 With Wicket it's quite easy to build a callback URL that executes a specific method on server side. This method must be defined in a functional interface (i.e. an an interface that defines just one method) that inherits from built-in 'org.apache.wicket.IRequestListener' and it must be a void method with no parameters in input:
@@ -100,7 +100,7 @@ Static field 'IBehaviorListener.INTERFACE' is the implementation of 'RequestList
 
 The home page of project 'CallbackURLExample' contains a 'DropDownChoice' and a 'RadioChoice' which use our custom behavior. There are also two labels to display the content of the models of the two components:
 
-image::CallbackURLExample-screenshot.png[]
+image::../img/CallbackURLExample-screenshot.png[]
 
 NOTE: Implementing interface 'IBehaviorListener' makes a behavior stateful because its callback URL is specific for a given instance of component.
 
@@ -172,5 +172,5 @@ public void onEvent(IEvent event) {
 
 Project 'InterComponetsEventsExample' provides a concrete example of sending an event to a component (named 'container in the middle') using all the available broadcast methods:
 
-image::InterComponentsEventsExample-screenshot.png[]
+image::../img/InterComponentsEventsExample-screenshot.png[]
 

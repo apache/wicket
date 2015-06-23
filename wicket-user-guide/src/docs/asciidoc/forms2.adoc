@@ -1,4 +1,4 @@
-            
+
 In the previous chapter we have only scratched the surface of Wicket forms. The Form component was not only designed to collect user input but also to extend the semantic of the classic HTML forms with new features. 
 
 One of such features is the ability to work with nested forms (they will be discussed in  <<guide:forms2_6,paragraph 12.6>>

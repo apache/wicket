@@ -1,4 +1,4 @@
-            
+
 One of the best practices to make our web application faster and reduce its latency is to reduce the number of requests to the server to load page resources like JavaScript or CSS files. To achieve this goal some JavaScript-based build tools (like Grunt) allow to merge multiple files used in a page into a single file that can be loaded in a single request. Wicket provides class 'org.apache.wicket.ResourceBundles' to aggregate multiple resource references into a single one. A resource bundle can be declared during application initialization listing all the resources that compose it:
 
 [source,java]

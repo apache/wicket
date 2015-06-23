@@ -1,4 +1,4 @@
-            
+
 
 
  In this chapter we have seen the components and the mechanisms that allow us to implement security policies in our Wicket-based applications. Wicket comes with an out of the box support for both authorization and authentication.

@@ -1,4 +1,4 @@
-            
+
 
 
 A basic example of a validation rule is to make a field required. In  <<guide:modelsforms_3,paragraph 11.3>>
@@ -6,7 +6,7 @@ A basic example of a validation rule is to make a field required. In  <<guide:mo
 
 A validator is an implementation of the 'org.apache.wicket.validation.IValidator' interface and the 'FormComponent' has a version of method add which takes as input a reference of this interface. 
 
-For example if we want to use a text field to insert an email address, we could use the built-in validator  EmailAddressValidator to ensure that the inserted input will respect the email format  http://en.wikipedia.org/wiki/Email_address[local-part@domain] 
+For example if we want to use a text field to insert an email address, we could use the built-in validator  EmailAddressValidator to ensure that the inserted input will respect the email format  http://en.wikipedia.org/wiki/Email_address[local-part@domain] :
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ Wicket generates a feedback message for each field that doesn't satisfy one of i
 
 <label> is the value of the label model set on a FormComponent with method setLabel(IModel <String> model). If such model is not provided, component id will be used as the default value.
 
-The entire infrastructure of feedback messages is built on top of the Java internationalization (I18N) support and it uses  source[local-part@domain] cs.oracle.com/javase/tutorial/i18n/resbundle/index.html to store messages.
+The entire infrastructure of feedback messages is built on top of the Java internationalization (I18N) support and it uses  http://docs.oracle.com/javase/tutorial/i18n/resbundle/index.html[resource bundles] to store messages.
 
 NOTE: The topics of internationalization will be covered in  <<guide:i18n,chapter 15>>
 . For now we will give just few notions needed to understand the examples from this chapter.
@@ -36,7 +36,7 @@ Default feedback messages (like the one above for required fields) are stored in
 
 'Required=Field '$\{label\}' is required.'
 
-We can note the key (Required in our case) and the label parameter written in the  pression[guide:i18n_2] p://en.wikipedia.org/wiki/Expression_Language (${label}). Scrolling down this file we can also find the message used by the Email AddressValidator:
+We can note the key (Required in our case) and the label parameter written in the  http://en.wikipedia.org/wiki/Expression_Language[expression language] (${label}). Scrolling down this file we can also find the message used by the Email AddressValidator:
 
 'EmailAddressValidator=The value of '${label}' is not a valid email address.'
 
@@ -57,9 +57,9 @@ To display feedback messages we must use component 'org.apache.wicket.markup.htm
 </ul>
 ----
 
-CSS classes  [feedbackPanel] nd  [feedbackPanelERROR] an be used in order to customize the style of the message list:
+CSS classes  [feedbackPanel] and  [feedbackPanelERROR] can be used in order to customize the style of the message list:
 
-image::feedback-panel-style.png[]
+image::../img/feedback-panel-style.png[]
 
 The component can be freely placed inside the page and we can set the maximum amount of displayed messages with the setMaxMessages() method.
 
@@ -135,7 +135,7 @@ To accept only string values consisting of exactly n characters, we must use met
 
 ==== CreditCardValidator
 
-Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American Express [feedbackPanelERROR] sa” or “Diners Club”). 
+Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American Express ["MasterCard] , “Visa” or “Diners Club”). 
 
 *Message:*
 
@@ -157,13 +157,13 @@ If we don't like the default validation feedback messages, we can override them 
 
 As we will see in the next chapter, Wicket searches for custom properties files in various positions inside the application's class path, but for now we will consider just the properties file placed next to our application class. The name of this file must be equal to the name of our application class:
 
-image::custom-properties-file.png[]
+image::../img/custom-properties-file.png[]
 
 The example project OverrideMailMessage overrides email validator's message with a new one which also reports the value that failed validation:
 
 'EmailAddressValidator=The value '${input}' inserted for field '${label}' is not a valid email address.'
 
-image::validation-error-message.png[]
+image::../img/validation-error-message.png[]
 
 === Creating custom validators
 

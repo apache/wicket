@@ -1,10 +1,10 @@
-            
+
 
 
 As we have seen in  <<guide:forms2_2,paragraph 12.2>>
 , the infrastructure of feedback messages is built on top of Java internationalization (i18n) support, so it should not be surprising that the same infrastructure is used also for localization purpose. However, while so far we have used only the <ApplicationClassName>.properties file to store our custom messages, in this chapter we will see that also pages, components, validators and even Java packages can have their own resource bundles. This allows us to split bundles into multiple files keeping them close to where they are used. But before diving into the details of internationalization with Wicket, it's worthwhile to quickly review how i18n works under Java, see what classes are involved and how they are integrated into Wicket.
 
-NOTE: Providing a full description of Java support for i18n is clearly out of the scope of this document. If you need more informations about this topic you can find them in the JavaDocs and in the official  8n[guide:forms2_2] //docs.oracle.com/javase/tutorial/i18n/index.html .
+NOTE: Providing a full description of Java support for i18n is clearly out of the scope of this document. If you need more informations about this topic you can find them in the JavaDocs and in the official  http://docs.oracle.com/javase/tutorial/i18n/index.html[i18n tutorial] .
 
 === Class Locale and ResourceBundle
 

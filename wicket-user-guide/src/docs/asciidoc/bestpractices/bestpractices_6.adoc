@@ -1,4 +1,4 @@
-            
+
 
 
 Always use models - period! Do not pass raw objects directly to components. Instances of pages and components can exist for several requests. If you use raw objects, you cannot replace them later. An example is an entity which gets loaded at each request within a 'LoadableDetachableModel'. The entity manager creates a new object reference, but the page would keep the obsolete instance. Always pass 'IModel' in the constructor of your components:

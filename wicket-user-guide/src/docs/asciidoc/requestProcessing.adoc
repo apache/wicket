@@ -1,4 +1,4 @@
-            
+
 Although Wicket was born to provide a reliable and comprehensive object oriented abstraction for web development, sometimes we might need to work directly with “raw” web entities such as user session, web request, query parameters, and so on. For example this is necessary if we want to store an arbitrary parameter in the user session. 
 
 Wicket provides wrapper classes that allow us to easily access to web entities without the burden of using the low-level APIs of Java Servlet Specification. However it will always be possible to access standard classes (like HttpSession, HttpServletRequest, etc...) that lay under our Wicket application.

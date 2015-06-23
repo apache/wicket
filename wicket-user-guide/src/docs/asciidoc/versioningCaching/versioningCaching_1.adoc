@@ -1,4 +1,4 @@
-            
+
 
 
 Wicket pages can be divided into two categories: stateful and stateless pages. Stateful pages are those which rely on user session to store their internal state and to keep track of user interaction.

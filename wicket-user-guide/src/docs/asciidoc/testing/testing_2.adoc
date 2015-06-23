@@ -1,4 +1,4 @@
-            
+
 
 
 Wicket provides utility class FormTester that is expressly designed to test Wicket forms. A new FormTester is returned by 'WicketTester''s method 'newFormTester(String, boolean)' which takes in input the page-relative path of the form we want to test and a boolean flag indicating if its form components must be filled with a blank string:

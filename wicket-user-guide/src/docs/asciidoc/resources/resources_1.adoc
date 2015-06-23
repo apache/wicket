@@ -1,4 +1,4 @@
-            
+
 
 
 In Wicket a resource is an entity that can interact with the current request and response and It must implement interface 'org.apache.wicket.request.resource.IResource'. This interface defines just method respond(IResource.Attributes attributes) where the nested class IResource. Attributes provides access to request, response and page parameters objects.

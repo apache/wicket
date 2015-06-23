@@ -1,2 +1,2 @@
-            
-It's time to put into practice what we have learnt so far in this guide. To do this we will build a custom date component consisting of a text field to edit a date value and a fancy calendar icon to open a JavaScript datepicker. This chapter will also illustrate an example of integration of Wicket with a JavaScript library like  http://jquery.com/[JQuery] nd its child project  uery[JQuery] p://jqueryui.com/ .
+
+It's time to put into practice what we have learnt so far in this guide. To do this we will build a custom date component consisting of a text field to edit a date value and a fancy calendar icon to open a JavaScript datepicker. This chapter will also illustrate an example of integration of Wicket with a JavaScript library like  http://jquery.com/[JQuery] and its child project  http://jqueryui.com/[JQuery UI] .

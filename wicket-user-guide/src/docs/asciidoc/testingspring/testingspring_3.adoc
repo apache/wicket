@@ -1,4 +1,4 @@
-            
+
 
 
 With the configuration outlined above, no additional modifications are required to the test itself. It's going to turn green now. This way you can use exactly the same Spring context configuration that you'd use in your runtime environment for running your JUnit based integration tests as well.

@@ -1,4 +1,4 @@
-            
+
 
 
 One of the things we must take care of when we use AJAX is to notify user when an AJAX request is already in progress. This is usually done displaying an animated picture as activity indicator while the AJAX request is running. 

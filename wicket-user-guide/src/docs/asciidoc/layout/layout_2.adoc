@@ -1,4 +1,4 @@
-            
+
 The need of ensuring a consistent layout across our pages unveiled a serious limit of the HTML: the inability to apply inheritance to web pages and their markup. Wouldn't be great if we could write our layout once in a page and then inherit it in the other pages of our application? 
 One of the goals of Wicket is to overcome this kind of limit.
 
@@ -8,7 +8,7 @@ As we have seen in the previous chapter, Wicket pages are pure Java classes, so 
 To better illustrate this concept let's consider the following example where we have a page class called 'GenericSitePage' with the corresponding HTML file GenericSitePage.html. Now let's create a specific page called 'OrderCheckOutPage' where users can check out their orders on our web site. This class extends 'GenericSitePage' but we don't provide it with any corresponding HTML file.
 In this scenario 'OrderCheckOutPage' will use GenericSitePage.html as markup file:
 
-image::markup-inheritance.png[]
+image::../img/markup-inheritance.png[]
 
 Markup inheritance comes in handy for page layout management as it helps us avoid the burden of checking that each page conforms to the site layout. However to fully take advantage of markup inheritance we must first learn how to use another important component of the framework that supports this feature: the panel.
 
@@ -18,7 +18,7 @@ WARNING: If no markup is found (nor directly assigned to the class, neither inhe
 
 Class 'org.apache.wicket.markup.html.panel.Panel' is a special component which lets us reuse GUI code and HTML markup across different pages and different web applications. It shares a common ancestor class with WebPage class, which is 'org.apache.wicket.MarkupContainer':
 
-image::page-panel-hierarchy.png[]
+image::../img/page-panel-hierarchy.png[]
 
 _Illustration: Hierarchy of WebPage and Panel classes_
 
@@ -35,7 +35,7 @@ MyPanel myPanel = new MyPanel ("innerContainer");
 add(myPanel);
 ----
 
-Component 'MyPanel' is a custom panel containing only a label having ' [name] s id. Under those conditions we could retrieve this label from the container page using the following path expression:
+Component 'MyPanel' is a custom panel containing only a label having ' [name] as id. Under those conditions we could retrieve this label from the container page using the following path expression:
 
 [source,java]
 ----

@@ -1,4 +1,4 @@
-            
+
 
 
 Some components or resources may need to be configured before being used in our applications. While so far we used Application's init method to initialize these kinds of entities, Wicket offers a more flexible and modular way to configure our classes. 

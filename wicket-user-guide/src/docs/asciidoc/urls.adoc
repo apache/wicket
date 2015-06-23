@@ -1,4 +1,4 @@
-            
+
 Up to now we used component Link to move from a page to another and we have seen that it is quiet similar to a “click” event handler (see  <<guide:helloWorld_4,paragraph 4.4>>
 ). 
 

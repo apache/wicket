@@ -1,4 +1,4 @@
-            
+
 
 
 Working with Wicket we will rarely need to worry about conversion between input values (which are strings because the underlying HTTP protocol) and Java types because in most cases the default conversion mechanism will be smart enough to infer the type of the model object and perform the proper conversion. However, sometimes we may need to work under the hood of this mechanism to make it properly work or to perform custom conversions. That's why this paragraph will illustrate how to control input value conversion.
@@ -66,7 +66,7 @@ To illustrate how to implement custom converters and use them in our application
 
 The first text field will have an instance of class java.util.regex.Pattern as model object. The final page will look like this (the code of this example is from the CustomConverter project):
 
-image::regex-form.png[]
+image::../img/regex-form.png[]
 
 The conversion between Pattern and String is quite straightforward. The code of our custom converter is the following:
 

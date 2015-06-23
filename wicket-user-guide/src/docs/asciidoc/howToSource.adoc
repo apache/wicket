@@ -1,5 +1,5 @@
-            
-Most of the code you will find in this document is available as a  t[] epository ttps://github.com/bitstorm/Wicket-tutorial-examples[] nd is licensed under the ASF 2.0. To get a local copy of the repository you can run the clone command from shell:
+
+Most of the code you will find in this document is available as a  https://github.com/bitstorm/Wicket-tutorial-examples[Git repository] and is licensed under the ASF 2.0. To get a local copy of the repository you can run the clone command from shell:
 
 [source,java]
 ----
@@ -8,10 +8,10 @@ git clone https://github.com/bitstorm/Wicket-tutorial-examples.git
 
 If you aren't used to Git, you can simply download the whole source as a zip archive:
 
-image::gitRepo.png[]
+image::../img/gitRepo.png[]
 
 The repository contains a multi-module Maven project. Every subproject is contained in the relative folder of the repository:
 
-image::gitMavenPrj.png[]
+image::../img/gitMavenPrj.png[]
 
 When the example code is used in the document, you will find the name of the subproject it belongs to. If you don't have any experience with Maven, you can read Appendix A where you can learn the basic commands needed to work with the example projects and to import them into your favourite IDE (NetBeans, IDEA or Eclipse).
