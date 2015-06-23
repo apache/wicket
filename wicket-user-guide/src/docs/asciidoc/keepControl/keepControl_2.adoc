@@ -9,7 +9,7 @@ As first example of attribute manipulation let's consider a 'Label' component bo
 <span wicket:id="simpleLabel"></span>
 ----
 
-Suppose we want to add some style to label content making it red and bolded. We can add to the label an 'AttributeModifier' which creates the tag attribute 'style' with value '"color:red;font-weight:bold"':
+Suppose we want to add some style to label content making it red and bolded. We can add to the label an 'AttributeModifier' which creates the tag attribute 'style' with value ' [color:red;font-weight:bold] :
 
 [source,java]
 ----

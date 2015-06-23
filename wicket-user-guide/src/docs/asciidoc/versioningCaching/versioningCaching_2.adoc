@@ -47,7 +47,7 @@ If we press the back button the page version previously rendered (and serialized
 
 image::browser-back.png[]
 
-NOTE: For more details about page storing you can take a look at paragraph "Page storing" from chapter "Wicket Internals". The content of this paragraph is from wiki page https://cwiki.apache.org/confluence/display/WICKET/Page+Storage. 
+NOTE: For more details about page storing you can take a look at paragraph  ge[] toring [] rom chapter  cket[] nternals [] he content of this paragraph is from wiki page https://cwiki.apache.org/confluence/display/WICKET/Page+Storage. 
 
 As we have stated at the beginning of this chapter, page versions are stored using Java serialization, therefore every object referenced inside a page must be serializable. In  <<guide:modelsforms_6,paragraph 11.6>>
  we will see how to overcome this limit and work with non-serializable objects in our components using detachable Wicket models.

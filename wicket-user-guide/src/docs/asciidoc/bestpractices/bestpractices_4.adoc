@@ -16,4 +16,4 @@ else {
 }
 ----
 
-Instead of constructing 'LoginBoxPanel' conditionally, it is recommended to always add the panel  and control the visibility by overriding 'isVisible()'. So the component 'LoginBoxPanel' is responsible for displaying itself. We move the responsibility into the same component which executes the login. Brilliant! Cleanly encapsulated business logic. There is no decision from outside, the component handles all the logic. You can see another example in "Implement visibilities of components correctly".
+Instead of constructing 'LoginBoxPanel' conditionally, it is recommended to always add the panel  and control the visibility by overriding 'isVisible()'. So the component 'LoginBoxPanel' is responsible for displaying itself. We move the responsibility into the same component which executes the login. Brilliant! Cleanly encapsulated business logic. There is no decision from outside, the component handles all the logic. You can see another example in  plement[] isibilities of components correctly plement[] 

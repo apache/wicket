@@ -39,7 +39,7 @@ Variation's value contributes to the final full name of the bundle and is placed
 
 === Using UTF-8 for resource bundles
 
-Java uses the standard character set "ISO 8859-11":http://en.wikipedia.org/wiki/ISO/IEC_8859-1 to encode text files like properties files. Unfortunately ISO 8859-1 does not support most of the extra-European languages like Chinese or Japanese. The only way to use properties files with such languages is to use escaped "Unicode":http://en.wikipedia.org/wiki/List_of_Unicode_characters characters, but this leads to not human-readable files. For example if we wanted to write the word 'website' in simplified Chinese (the ideograms are 网站) we should write the Unicode characters '\u7F51\u7AD9'.
+Java uses the standard character set  O[] 859-11 ttp://en.wikipedia.org/wiki/ISO/IEC_8859-1[] o encode text files like properties files. Unfortunately ISO 8859-1 does not support most of the extra-European languages like Chinese or Japanese. The only way to use properties files with such languages is to use escaped  http://en.wikipedia.org/wiki/List_of_Unicode_characters[Unicode] haracters, but this leads to not human-readable files. For example if we wanted to write the word 'website' in simplified Chinese (the ideograms are 网站) we should write the Unicode characters '\u7F51\u7AD9'.
 For this reason ISO 8859-11 is being replaced with another Unicode-compliant character encoding called UTF-8. Text files created with this encoding can contain Unicode symbols in plain format.
 Wicket provides a useful convention to use properties file encoded with UTF-8. We just have to add prefix '.utf8.' to file extension (i.e. '.utf8.properties').
 
@@ -47,7 +47,7 @@ NOTE: If you want to use UTF-8 with your text files, make sure that your editor/
 
 === Using XML files as resource bundles
 
-Starting from version 1.5, Java introduced the support for XML files as resource bundles. XML files are generally encoded with character sets UTF-8 or UTF-16 which support every symbol of the Unicode standard. In order to be a valid resource bundle the XML file must conform to the DTD available at "http://www.oracle.com/webfolder/technetwork/jsc/dtd/properties.dtd":http://www.oracle.com/webfolder/technetwork/jsc/dtd/properties.dtd .
+Starting from version 1.5, Java introduced the support for XML files as resource bundles. XML files are generally encoded with character sets UTF-8 or UTF-16 which support every symbol of the Unicode standard. In order to be a valid resource bundle the XML file must conform to the DTD available at  http://www.oracle.com/webfolder/technetwork/jsc/dtd/properties.dtd[http://www.oracle.com/webfolder/technetwork/jsc/dtd/properties.dtd] 
 
 Here is an example of XML resource bundle taken from project LocalizedGreetings (file WicketApplication_zh.properties.xml) containing the translation in simplified Chinese of the greeting message “Welcome to the website!”:
 

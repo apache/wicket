@@ -11,7 +11,7 @@ git clone https://github.com/apache/wicket.git
 
 * Edit the _.gdoc_ files in _wicket/wicket-user-guide/src/docs/guide_ folder 
 
-* To preview your changes run "mvn clean package -P guide" in the _wicket/wicket-user-guide_ folder (in eclipse use a run configuration)
+* To preview your changes run  n[https://github.com/apache/wicket.git] t/wicket-user-guide_ folder (in eclipse use a run configuration)
 
 * Navigate to _wicket/wicket-user-guide/target/guide/7.x_ and open one of the following files a browser / pdf viewer:
 ** _index.html_ (multi page version)

@@ -5,7 +5,7 @@ In chapter 6 we have seen how Wicket uses serialization to store page instances.
 For model objects this could be a serious issue for (at least) two main reasons:
 
 1. The model object could be a very large instance, hence serialization would become very expensive in terms of time and memory.
-1. We simply may not be able to use a serializable object as model object. In paragraphs 1.4 and 9.2 we stated that Wicket allows us to use a POJO as backing object, but "POJOs":http://en.wikipedia.org/wiki/Plain_Old_Java_Object1.Definition are ordinary objects with no prespecified interface, annotation or superclass, hence they are not required to implement the standard Serializable interface.
+1. We simply may not be able to use a serializable object as model object. In paragraphs 1.4 and 9.2 we stated that Wicket allows us to use a POJO as backing object, but  http://en.wikipedia.org/wiki/Plain_Old_Java_Object#Definition[POJOs] re ordinary objects with no prespecified interface, annotation or superclass, hence they are not required to implement the standard Serializable interface.
 
 To cope with these problems IModel extends another interface called IDetachable.
 
@@ -22,7 +22,7 @@ image::loadable-detachable-model.png[]
 
 onDetach and onAttach can be overridden in order to obtain further control over the detaching procedure.
 
-Now as example of a possible use of LoadableDetachableModel, we will build a model designed to work with entities managed via "JPA.":http://en.wikipedia.org/wiki/Java_Persistence_API To understand the following code a basic knowledge of JPA is required even if we won't go into the detail of this standard.
+Now as example of a possible use of LoadableDetachableModel, we will build a model designed to work with entities managed via  http://en.wikipedia.org/wiki/Java_Persistence_API[JPA.] o understand the following code a basic knowledge of JPA is required even if we won't go into the detail of this standard.
 
 WARNING: The following model is provided for example purposes only and is not intended to be used in production environment. Important aspects such as transaction management are not taken into account and you should rework the code before considering to use it.
 

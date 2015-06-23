@@ -12,7 +12,7 @@ DataGrid supports also editable cells and row selection:
 
 image::inmethod-grid2.png[]
 
-The following snippet illustrate how to use DataGrid and is taken from wiki page "https://github.com/wicketstuff/core/wiki/InMethodGrid":https://github.com/wicketstuff/core/wiki/InMethodGrid : 
+The following snippet illustrate how to use DataGrid and is taken from wiki page  https://github.com/wicketstuff/core/wiki/InMethodGrid[https://github.com/wicketstuff/core/wiki/InMethodGrid]  
 
 *HTML:*
 
@@ -40,6 +40,6 @@ add(grid);
 
 In the code above we have used convenience class DefaultDataGrid that is a subclass of DataGrid and it already comes with a navigation toolbar.
 
-The example pages are under package com.inmethod.grid.examples.pages in the example project which is hosted at "http://www.wicket-library.com/inmethod-grid/data-grid/simple":http://www.wicket-library.com/inmethod-grid/data-grid/simple .
+The example pages are under package com.inmethod.grid.examples.pages in the example project which is hosted at  http://www.wicket-library.com/inmethod-grid/data-grid/simple[http://www.wicket-library.com/inmethod-grid/data-grid/simple] 
 
 

@@ -6,7 +6,7 @@ Having structured URLs in our site is a basic requirement if we want to build an
 === Mounting a single page
 
 With Wicket we can mount a page to a given path in much the same way as we map a servlet filter to a desired path inside file web.xml (see  <<guide:helloWorld_2,paragraph 4.2>>
-). Using mountPage(String path, Class <T> pageClass) method of the WepApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the "/pageMount" path:
+). Using mountPage(String path, Class <T> pageClass) method of the WepApplication class we tell Wicket to respond with a new instance of pageClass whenever a user navigates to the given path. In the application class of the project MountedPagesExample we mount MountedPage to the  [/pageMount] ath:
 
 [source,java]
 ----

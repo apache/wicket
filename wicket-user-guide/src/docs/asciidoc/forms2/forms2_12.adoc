@@ -1,7 +1,7 @@
             
 
 
-Checkboxes work well when we have a small amount of options to display, but they quickly become chaotic as the number of options increases. To overcome this limit we can use the <select> tag switching it to multiple-choice mode with attribute multiple="multiple":
+Checkboxes work well when we have a small amount of options to display, but they quickly become chaotic as the number of options increases. To overcome this limit we can use the <select> tag switching it to multiple-choice mode with attribute multiple= [multiple] 
 
 image::list-multiple-choices.png[]
 
@@ -31,7 +31,8 @@ form.add(new ListMultipleChoice("fruits", new ListModel<String>(new ArrayList<St
 
 image::list-multiple-choices2.png[]
 
-This component must be bound to a <select> tag but the attribute multiple="multiple" is not required as it will automatically be added by the component. 
+This component must be bound to a <select> tag but the attribute multiple= [":
+multiple] ot required as it will automatically be added by the component. 
 
 The number of visible rows can be set with the setMaxRows(int maxRows) method.
 

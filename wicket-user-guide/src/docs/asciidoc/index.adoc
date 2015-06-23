@@ -1,5 +1,10 @@
+:icons: font
+
+:source-highlighter: pygments
             
 :sectnums:
+
+:toc: right
 
 == Introduction
 

@@ -6,7 +6,7 @@ A basic example of a validation rule is to make a field required. In  <<guide:mo
 
 A validator is an implementation of the 'org.apache.wicket.validation.IValidator' interface and the 'FormComponent' has a version of method add which takes as input a reference of this interface. 
 
-For example if we want to use a text field to insert an email address, we could use the built-in validator  EmailAddressValidator to ensure that the inserted input will respect the email format "local-part'domain":http://en.wikipedia.org/wiki/Email_address :
+For example if we want to use a text field to insert an email address, we could use the built-in validator  EmailAddressValidator to ensure that the inserted input will respect the email format  http://en.wikipedia.org/wiki/Email_address[local-part@domain] 
 
 [source,java]
 ----
@@ -24,7 +24,7 @@ Wicket generates a feedback message for each field that doesn't satisfy one of i
 
 <label> is the value of the label model set on a FormComponent with method setLabel(IModel <String> model). If such model is not provided, component id will be used as the default value.
 
-The entire infrastructure of feedback messages is built on top of the Java internationalization (I18N) support and it uses "resource bundles":http://docs.oracle.com/javase/tutorial/i18n/resbundle/index.html to store messages.
+The entire infrastructure of feedback messages is built on top of the Java internationalization (I18N) support and it uses  source[local-part@domain] cs.oracle.com/javase/tutorial/i18n/resbundle/index.html to store messages.
 
 NOTE: The topics of internationalization will be covered in  <<guide:i18n,chapter 15>>
 . For now we will give just few notions needed to understand the examples from this chapter.
@@ -36,7 +36,7 @@ Default feedback messages (like the one above for required fields) are stored in
 
 'Required=Field '$\{label\}' is required.'
 
-We can note the key (Required in our case) and the label parameter written in the "expression language":http://en.wikipedia.org/wiki/Expression_Language (${label}). Scrolling down this file we can also find the message used by the Email AddressValidator:
+We can note the key (Required in our case) and the label parameter written in the  pression[guide:i18n_2] p://en.wikipedia.org/wiki/Expression_Language (${label}). Scrolling down this file we can also find the message used by the Email AddressValidator:
 
 'EmailAddressValidator=The value of '${label}' is not a valid email address.'
 
@@ -57,7 +57,7 @@ To display feedback messages we must use component 'org.apache.wicket.markup.htm
 </ul>
 ----
 
-CSS classes "feedbackPanel" and "feedbackPanelERROR" can be used in order to customize the style of the message list:
+CSS classes  [feedbackPanel] nd  [feedbackPanelERROR] an be used in order to customize the style of the message list:
 
 image::feedback-panel-style.png[]
 
@@ -135,7 +135,7 @@ To accept only string values consisting of exactly n characters, we must use met
 
 ==== CreditCardValidator
 
-Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American Express", "MasterCard", “Visa” or “Diners Club”). 
+Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American Express [feedbackPanelERROR] sa” or “Diners Club”). 
 
 *Message:*
 

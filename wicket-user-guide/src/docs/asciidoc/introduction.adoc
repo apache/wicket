@@ -2,16 +2,17 @@
 Wicket has been around since 2004 and it has been an Apache project since 2007. During these years it has proved to be a solid and valuable solution for building enterprise web applications.
 
 Wicket core developers have done a wonderful job with this framework and they continue to improve it release after release.
-However Wicket never provided a freely available documentation and even if you can find on Internet many live examples and many technical articles on it (most of them at "Wicket Library":http://www.wicket-library.com/ and at "Wicket in Action":http://wicketinaction.com ), the lack of an organized and freely available documentation has always been a sore point for this framework.
+However Wicket never provided a freely available documentation and even if you can find on Internet many live examples and many technical articles on it (most of them at  cket[] ibrary ttp://www.wicket-library.com/[] nd at  cket[] n Action ttp://wicketinaction.com[] , the lack of an organized and freely available documentation has always been a sore point for this framework.
 
 That's quite an issue because many other popular frameworks (like Spring, Hibernate or Struts) offer a vast and very good documentation which substantially contributed to their success.
 
 This document is not intended to be a complete reference for Wicket but it simply aims to be a straightforward introduction to the framework that should significantly reduce its learning curve. What you will find here reflects my experience with Wicket and it's strictly focused on the framework.
-The various Wicket-related topics are gradually introduced using pragmatic examples of code that you can find in "the according repository on Github.":https://github.com/bitstorm/Wicket-tutorial-examples
+The various Wicket-related topics are gradually introduced using pragmatic examples of code that you can find in  e[] ccording repository on Github. e[] s://github.com/bitstorm/Wicket-tutorial-examples
 
 However remember that Wicket is a vast and powerful tool, so you should feel confident with the topics exposed in this document before starting to code your real applications!
 
-For those who need further documentation on Wicket, there are "many good books":http://wicket.apache.org/learn/books/ available for this framework.
+For those who need further documentation on Wicket, there are  ttps://github.com/bitstorm/Wicket-tutorial-examples
+many[] able for this framework.
 
 Hope you'll find this guide helpful. Have fun with Wicket!
 
@@ -21,6 +22,6 @@ Hope you'll find this guide helpful. Have fun with Wicket!
 
 *PPS*: although I've tried to do my best working on this tutorial, this document is a work in progress and may contain errors and/or omissions. That's why any feedback of any kind is REALLY appreciated!
 
-Project started by "image::comsysto-logo.png[]
-
+Project started by  ttps://github.com/bitstorm/Wicket-tutorial-examples
+many[!comsysto-logo.png!] 
 

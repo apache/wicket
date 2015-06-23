@@ -37,7 +37,7 @@ Base component AjaxEditableLabel exposes the following set of AJAX-aware methods
 * *onError(AjaxRequestTarget target)*: called when the new inserted input has failed validation.
 * *onCancel(AjaxRequestTarget target)*: called when user has exited from editing mode pressing escape key. The default implementation brings back the label to its initial state hiding the editor component.  
 
-Wicket module wicket-examples contains page class 'EditableLabelPage.java' which shows all these three components together. You can see this page in action at "http://www.wicket-library.com/wicket-examples-6.0.x/ajax/editable-label":http://www.wicket-library.com/wicket-examples-6.0.x/ajax/editable-label :
+Wicket module wicket-examples contains page class 'EditableLabelPage.java' which shows all these three components together. You can see this page in action at  http://www.wicket-library.com/wicket-examples-6.0.x/ajax/editable-label[http://www.wicket-library.com/wicket-examples-6.0.x/ajax/editable-label] 
 
 image::edit-label-example-screenshot.png[]
 
@@ -72,12 +72,11 @@ AutoCompleteTextField field = new AutoCompleteTextField<T>("field", model) {
 };
 ----
 
-Wicket module wicket-examples contains page class 'AutoCompletePagePage.java' which shows an example of autocomplete text field. The running example is available at "http://www.wicket-library.com/wicket-examples-6.0.x/ajax/autocomplete":http://www.wicket-library.com/wicket-examples-6.0.x/ajax/autocomplete .
+Wicket module wicket-examples contains page class 'AutoCompletePagePage.java' which shows an example of autocomplete text field. The running example is available at  http://www.wicket-library.com/wicket-examples-6.0.x/ajax/autocomplete[http://www.wicket-library.com/wicket-examples-6.0.x/ajax/autocomplete] 
 
 === Modal window
 
-Class 'org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow' is an implementation of a "modal window":http://en.wikipedia.org/wiki/Modal_window based on AJAX:
-
+Class 'org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow' is an implementation of a  dal[http://www.wicket-library.com/wicket-examples-6.0.x/ajax/autocomplete] 
 image::modal-window-example-screenshot.png[]
 
 The content of a modal window can be either another component or a page. In the first case the id of the  component used as content must be retrieved with method getContentId(). 

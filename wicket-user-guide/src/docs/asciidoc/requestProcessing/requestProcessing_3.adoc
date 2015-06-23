@@ -91,6 +91,6 @@ public void init() {
 }
 ----
 
-The 'getRequestCycleListeners' method returns an instance of class 'org.apache.wicket.request.cycle.RequestCycleListenerCollection'. This class is a sort of typed collection for 'IRequestCycleListener' and it also implements the "Composite pattern":http://en.wikipedia.org/wiki/Composite_pattern .
+The 'getRequestCycleListeners' method returns an instance of class 'org.apache.wicket.request.cycle.RequestCycleListenerCollection'. This class is a sort of typed collection for 'IRequestCycleListener' and it also implements the  mposite[guide:helloWorld_4] wikipedia.org/wiki/Composite_pattern .
 
 

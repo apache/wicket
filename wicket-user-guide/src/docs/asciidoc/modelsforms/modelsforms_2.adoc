@@ -53,7 +53,7 @@ Person person = new Person();
 Label label = new Label("name", new PropertyModel(person, "name"));
 ----
 
-PropertyModel has just one constructor with two parameters: the model object (person in our example) and the name of the property we want to read/write ("name" in our example). This last parameter is called property expression. Internally, methods getObject/setObject use property expression to get/set property's value. To resolve class properties PropertyModel uses class 'org.apache.wicket.util.lang.Property' Resolver which can access any kind of property, private fields included.
+PropertyModel has just one constructor with two parameters: the model object (person in our example) and the name of the property we want to read/write ( [name] n our example). This last parameter is called property expression. Internally, methods getObject/setObject use property expression to get/set property's value. To resolve class properties PropertyModel uses class 'org.apache.wicket.util.lang.Property' Resolver which can access any kind of property, private fields included.
 
 Just like the Java language, property expressions support dotted notation to select sub properties. So if we want to display the name of the Person's spouse we can write:
 
@@ -110,7 +110,7 @@ add(new Label("email"));
 add(new Label("spouse.name"));
 ----
 
-CompoundPropertyModel can save us a lot of boring coding if we choose the id of components according to properties name. However it's also possible to use this type of model even if the id of a component does not correspond to a valid property expression. The method bind(String property) allows to create a property model from a given CompoundPropertyModel using the provided parameter as property expression. For example if we want to display the spouse's name in a label having "xyz" as id, we can write the following code:
+CompoundPropertyModel can save us a lot of boring coding if we choose the id of components according to properties name. However it's also possible to use this type of model even if the id of a component does not correspond to a valid property expression. The method bind(String property) allows to create a property model from a given CompoundPropertyModel using the provided parameter as property expression. For example if we want to display the spouse's name in a label having  [xyz] s id, we can write the following code:
 
 [source,java]
 ----

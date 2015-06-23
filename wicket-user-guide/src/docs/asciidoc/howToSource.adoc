@@ -1,5 +1,5 @@
             
-Most of the code you will find in this document is available as a "Git repository":https://github.com/bitstorm/Wicket-tutorial-examples and is licensed under the ASF 2.0. To get a local copy of the repository you can run the clone command from shell:
+Most of the code you will find in this document is available as a  t[] epository ttps://github.com/bitstorm/Wicket-tutorial-examples[] nd is licensed under the ASF 2.0. To get a local copy of the repository you can run the clone command from shell:
 
 [source,java]
 ----

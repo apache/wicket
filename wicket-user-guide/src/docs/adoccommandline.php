@@ -265,6 +265,20 @@
 									}
 							}
 						}
+						if($codeactive==0){
+							if($gdoc[$i]=="\""){
+								for($i2=1;$i2<200;$i2++){
+									if($gdoc[$i+$i2]=="\""){$linkname = $tempvar; $tempvar= "";}
+									if($gdoc[$i+$i2]==" "){$linkadress = $tempvar; $tempvar=""; break;}
+									$tempvar = $tempvar . $gdoc[$i+$i2];
+								}
+								$linkadresslength=strlen($linkadress);
+								$linknamelength=strlen($linkname);
+								echo " " . substr($linkadress, 2, $linkadresslength-2) . "[" . $linkname . "] ";
+								$i = $i + $linkadresslength + $linknamelength + 3;
+							}
+						}
+						
 						if($echo==0){
 							echo $gdoc[$i];
 						}

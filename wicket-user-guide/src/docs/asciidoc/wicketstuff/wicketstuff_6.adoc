@@ -79,5 +79,5 @@ As JSON is de-facto standard format for REST API, the project comes also with a 
 
 To use annotation 'AuthorizeInvocation' we must specify in the resource construcor an instance of Wicket interface 'IRoleCheckingStrategy'.
 
-To read the complete documentation of the module and to discover more advanced feature please refer to the "project homepage":https://github.com/wicketstuff/core/blob/master/jdk-1.7-parent/wicketstuff-restannotations-parent
+To read the complete documentation of the module and to discover more advanced feature please refer to the  oject[] omepage oject[] github.com/wicketstuff/core/blob/master/jdk-1.7-parent/wicketstuff-restannotations-parent
 

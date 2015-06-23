@@ -17,7 +17,7 @@ image::custom-ajax-call-listener.png[]
 
 The listener will implement methods 'getBeforeHandler' and 'getAfterHandler': the first will return the code needed to place an overlay <div> on the desired component while the second must remove this overlay when the AJAX call has completed.
 
-To move and resize the overlay area we will use another module from "JQueryUI library":http://jqueryui.com/position/ that allows us to position DOM elements on our page relative to another element.
+To move and resize the overlay area we will use another module from  ueryUI[] ibrary ttp://jqueryui.com/position/[] hat allows us to position DOM elements on our page relative to another element.
 
 So our listener will depend on four static resources: the JQuery library, the position module of JQuery UI, the custom code used to move the overlay <div> and the picture used as activity indicator. Except for the activity indicator, all these resources must be added to page header section in order to be used. 
 

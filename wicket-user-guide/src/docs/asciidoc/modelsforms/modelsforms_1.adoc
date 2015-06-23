@@ -1,7 +1,7 @@
             
 
 
-Model is essentially a "facade":http://en.wikipedia.org/wiki/Facade_pattern interface which allows components to access and modify their data without knowing any detail about how they are managed or persisted. Every component has at most one related model, while a model can be shared among different components. In Wicket a model is any implementation of the interface 'org.apache.wicket.model.IModel':
+Model is essentially a  http://en.wikipedia.org/wiki/Facade_pattern[facade] nterface which allows components to access and modify their data without knowing any detail about how they are managed or persisted. Every component has at most one related model, while a model can be shared among different components. In Wicket a model is any implementation of the interface 'org.apache.wicket.model.IModel':
 
 image::uml-imodel.png[]
 
@@ -36,12 +36,10 @@ add(new Label("helloMessage", new Model<String>("Hello WicketWorld!")));
 
 NOTE: The Model class comes with a bunch of factory methods that makes it easier to build new model instances. For example the of(T object) method creates a new instance of Model which wraps any Object instance inside it. So instead of writing
 	
-	new Model<String>("Hello WicketWorld!")
-
+	new Model<String>( llo[facade] orld! llo[facade] 
 we can write
 	
-	Model.of("Hello WicketWorld!")
-
+	Model.of( Hello[facade] ld! Hello[facade] 
 If the data object is a List, a Map or a Set we can use similar methods called ofList, ofMap and ofSet.   
 From now on we will use these factory methods in our examples.
 
@@ -64,5 +62,6 @@ add(new Label("timeStamp", timeStampModel));
 
 Even if sometimes writing a custom model could be a good choice to solve a specific problem, Wicket already provides a set of IModel implementations which should fit most of our needs. In the next paragraph we will see a couple of models that allow us to easily integrate JavaBeans with our web applications and in particular with our forms.
 
-NOTE: By default the class Component escapes HTML sensitive characters (like '<', '>' or '&') from the textual representation of its model object. The term 'escape' means that these characters will be replaced with their corresponding HTML "entity":http://en.wikipedia.org/wiki/Character_entity_reference (for example '<' becomes '&lt; '). This is done for security reasons as a malicious user could attempt to inject markup or JavaScript into our pages. If we want to display the raw content stored inside a model, we can tell the Component class not to escape characters by calling the setEscapeModelStrings(false) method.
+NOTE: By default the class Component escapes HTML sensitive characters (like '<', '>' or '&') from the textual representation of its model object. The term 'escape' means that these characters will be replaced with their corresponding HTML  http://en.wikipedia.org/wiki/Character_entity_reference[)
+entity] r example '<' becomes '&lt; '). This is done for security reasons as a malicious user could attempt to inject markup or JavaScript into our pages. If we want to display the raw content stored inside a model, we can tell the Component class not to escape characters by calling the setEscapeModelStrings(false) method.
 

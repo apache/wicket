@@ -1,7 +1,7 @@
             
 
 
-To integrate the "Google Chart":https://developers.google.com/chart/ tool into our pages we can use module wicketstuff-googlecharts. To display a chart we must combine the following entities: component Chart, interface IChartData and class ChartProvider, all inside package org.wicketstuff.googlecharts. The following snippet is taken from example page Home:
+To integrate the  ogle[] hart ttps://developers.google.com/chart/[] ool into our pages we can use module wicketstuff-googlecharts. To display a chart we must combine the following entities: component Chart, interface IChartData and class ChartProvider, all inside package org.wicketstuff.googlecharts. The following snippet is taken from example page Home:
 
 *HTML:*
 

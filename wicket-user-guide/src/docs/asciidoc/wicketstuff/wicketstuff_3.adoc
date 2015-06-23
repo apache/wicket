@@ -1,7 +1,7 @@
             
 
 
-Module wicketstuff-gmap3 integrates "Google Maps":http://maps.google.com service with Wicket providing component org.wicketstuff.gmap.GMap. If we want to embed Google Maps into one of our pages we just need to add component GMap inside the page. The following snippet is taken from example page SimplePage:
+Module wicketstuff-gmap3 integrates  ogle[] aps ttp://maps.google.com[] ervice with Wicket providing component org.wicketstuff.gmap.GMap. If we want to embed Google Maps into one of our pages we just need to add component GMap inside the page. The following snippet is taken from example page SimplePage:
 
 *HTML:*
 
@@ -32,4 +32,4 @@ public class SimplePage extends WicketExamplePage
 }
 ----
 
-The component defines a number of setters to customize its behavior and appearance. More info can be found on wiki page "https://github.com/wicketstuff/core/wiki/Gmap3":https://github.com/wicketstuff/core/wiki/Gmap3 .
+The component defines a number of setters to customize its behavior and appearance. More info can be found on wiki page  https://github.com/wicketstuff/core/wiki/Gmap3[https://github.com/wicketstuff/core/wiki/Gmap3] 

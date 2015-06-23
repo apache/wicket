@@ -35,7 +35,7 @@ MyPanel myPanel = new MyPanel ("innerContainer");
 add(myPanel);
 ----
 
-Component 'MyPanel' is a custom panel containing only a label having '"name"' as id. Under those conditions we could retrieve this label from the container page using the following path expression:
+Component 'MyPanel' is a custom panel containing only a label having ' [name] s id. Under those conditions we could retrieve this label from the container page using the following path expression:
 
 [source,java]
 ----

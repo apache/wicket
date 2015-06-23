@@ -12,7 +12,7 @@ A typical scenario in which we may need to implement a custom FormComponentPanel
 
 To illustrate this possible scenario, let's consider a form where a user can insert a  temperature that will be recorded after being converted to Kelvin degrees (see the example project CustomForm ComponentPanel).
 
-The Kelvin scale is wildly adopted among the scientific community and it is one of the seven base units of the "International System of Units":http://en.wikipedia.org/wiki/International_System_of_Units , so it makes perfect sense to store temperatures expressed with this unit of measurement.
+The Kelvin scale is wildly adopted among the scientific community and it is one of the seven base units of the  ternational[guide:layout_2] ":http://en.wikipedia.org/wiki/International_System_of_Units , so it makes perfect sense to store temperatures expressed with this unit of measurement.
 
 However, in our everyday life we still use other temperature scales like Celsius or Fahrenheit, so it would be nice to have a component which internally works with Kelvin degrees and automatically applies conversion between Kelvin temperature scale and the one adopted by the user. 
 
