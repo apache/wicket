@@ -19,30 +19,26 @@ package org.apache.wicket.guice;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.concurrent.ConcurrentMap;
 
 import javax.inject.Qualifier;
 
 import org.apache.wicket.injection.IFieldValueFactory;
+import org.apache.wicket.proxy.IProxyTargetLocator;
 import org.apache.wicket.proxy.LazyInitProxyFactory;
 
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
-import org.apache.wicket.util.lang.Generics;
 
 /**
- * 
+ *
  */
 public class GuiceFieldValueFactory implements IFieldValueFactory
 {
-	private final ConcurrentMap<GuiceProxyTargetLocator, Object> cache = Generics.newConcurrentHashMap();
-	private static final Object NULL_SENTINEL = new Object();
-
 	private final boolean wrapInProxies;
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param wrapInProxies
 	 */
 	GuiceFieldValueFactory(final boolean wrapInProxies)
@@ -68,34 +64,15 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 				{
 					boolean optional = injectAnnotation != null && injectAnnotation.optional();
 					Annotation bindingAnnotation = findBindingAnnotation(field.getAnnotations());
-					final GuiceProxyTargetLocator locator = new GuiceProxyTargetLocator(field, bindingAnnotation, optional);
+					final IProxyTargetLocator locator = new GuiceProxyTargetLocator(field, bindingAnnotation, optional);
 
-					Object cachedValue = cache.get(locator);
-					if (cachedValue != null)
+					if (wrapInProxies)
 					{
-						return cachedValue;
-					}
-
-					target = locator.locateProxyTarget();
-					if (target == null)
-					{
-						// Optional without a binding, return null
+						target = LazyInitProxyFactory.createProxy(field.getType(), locator);
 					}
 					else
 					{
-						if (wrapInProxies)
-						{
-							target = LazyInitProxyFactory.createProxy(field.getType(), locator);
-						}
-					}
-
-					if (locator.isSingletonScope())
-					{
-						Object tmpTarget = cache.putIfAbsent(locator, target == null ? NULL_SENTINEL : target);
-						if (tmpTarget != null)
-						{
-							target = tmpTarget;
-						}
+						target = locator.locateProxyTarget();
 					}
 
 					if (!field.isAccessible())
@@ -106,13 +83,13 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 				catch (MoreThanOneBindingException e)
 				{
 					throw new RuntimeException(
-						"Can't have more than one BindingAnnotation on field " + field.getName() +
-							" of class " + fieldOwner.getClass().getName());
+							"Can't have more than one BindingAnnotation on field " + field.getName() +
+									" of class " + fieldOwner.getClass().getName());
 				}
 			}
 		}
 
-		return target == NULL_SENTINEL ? null : target;
+		return target;
 	}
 
 	/**
@@ -125,13 +102,13 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	}
 
 	/**
-	 * 
+	 *
 	 * @param annotations
 	 * @return Annotation
 	 * @throws MoreThanOneBindingException
 	 */
 	private Annotation findBindingAnnotation(final Annotation[] annotations)
-		throws MoreThanOneBindingException
+			throws MoreThanOneBindingException
 	{
 		Annotation bindingAnnotation = null;
 
@@ -139,7 +116,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		for (Annotation annotation : annotations)
 		{
 			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null ||
-				annotation.annotationType().getAnnotation(Qualifier.class) != null)
+					annotation.annotationType().getAnnotation(Qualifier.class) != null)
 			{
 				if (bindingAnnotation != null)
 				{
@@ -152,7 +129,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static class MoreThanOneBindingException extends Exception
 	{
