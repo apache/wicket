@@ -1,7 +1,7 @@
 
 
 
-Class 'ResourceReference' allows to specify the resources it depends on overriding method 'getDependencies()'. The method returns a list of 'HeaderItem's that must be rendered before the resource referenced by 'ResourceReference' can be used. This can be really helpful when our resources are JavaScript or CSS libraries that in turn depend on other libraries.
+Class _ResourceReference_ allows to specify the resources it depends on overriding method _getDependencies()_. The method returns a list of _HeaderItem_s that must be rendered before the resource referenced by _ResourceReference_ can be used. This can be really helpful when our resources are JavaScript or CSS libraries that in turn depend on other libraries.
 
 For example we can use this method to ensure that a custom reference to JQueryUI library will find JQuery already loaded in the page: 
 
@@ -24,5 +24,5 @@ UrlResourceReference jqueryuiRef = new UrlResourceReference(jqueyuiUrl){
 
 Please note that in the code above we have built a resource reference using a URL to the desired library instead of a package resource holding the physical file.
 
-The same method 'getDependencies()' is defined also for class 'HeaderItem'.
+The same method _getDependencies()_ is defined also for class _HeaderItem_.
 

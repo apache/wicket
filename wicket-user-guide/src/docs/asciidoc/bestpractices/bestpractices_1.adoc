@@ -1,7 +1,7 @@
 
 
 
-A component should be self-contained. The user of a component should neither have to know nor care about its internal structure. She should just be familiar with its external interfaces and its documentation in order to be able to use it. This means in detail: Every component that extends Wicket's own Panel type (thus is a Panel itself) must provide its own HTML template. In contrast, when a component extends the classes 'WebMarkupContainer' or 'Form', there is no HTML template. This implies that you should add components through composition in 'WebMarkupContainer' or 'Form'.
+A component should be self-contained. The user of a component should neither have to know nor care about its internal structure. She should just be familiar with its external interfaces and its documentation in order to be able to use it. This means in detail: Every component that extends Wicket's own Panel type (thus is a Panel itself) must provide its own HTML template. In contrast, when a component extends the classes _WebMarkupContainer_ or _Form_, there is no HTML template. This implies that you should add components through composition in _WebMarkupContainer_ or _Form_.
 
 *Listing 1:*
 
@@ -19,7 +19,7 @@ public class RegistrationForm extends Form<Registration> {
 }
 ----
 
-This snippet is an example for a poor component. The user of the 'RegistrationForm' must know the internal structure of the markup and component in order to use it.
+This snippet is an example for a poor component. The user of the _RegistrationForm_ must know the internal structure of the markup and component in order to use it.
 
 *Listing 2:*
 
@@ -54,7 +54,7 @@ public class RegistrationPage extends Page {
 </html>
 ----
 
-The code above shows the usage of the poor component in the 'RegistrationPage'. You can see that the input fields 'firstname', 'lastname' and 'username' get used, even though these components are not added explicitly to the 'RegistrationPage'. Avoid this, because other developers cannot directly see that the components were added in 'RegistrationPage' class.
+The code above shows the usage of the poor component in the _RegistrationPage_. You can see that the input fields _firstname_, _lastname_ and _username_ get used, even though these components are not added explicitly to the _RegistrationPage_. Avoid this, because other developers cannot directly see that the components were added in _RegistrationPage_ class.
 
 *Listing 3:*
 
@@ -90,9 +90,9 @@ public class RegistrationInputPanel extends Panel{
 </html>
 ----
 
-Now we have a properly encapsulated input component which provides its own markup. Furthermore you can see the correct usage of a Wicket 'Form'. The components get added by calling 'form.add(Component)' on the instance variable. On the other hand, it is allowed to add behaviours and validators over inheritance, because those do not have markup ids which must be bound.
+Now we have a properly encapsulated input component which provides its own markup. Furthermore you can see the correct usage of a Wicket _Form_. The components get added by calling _form.add(Component)_ on the instance variable. On the other hand, it is allowed to add behaviours and validators over inheritance, because those do not have markup ids which must be bound.
 
-With that, the usage of 'RegistrationInputPanel' is much more intuitive. There is no markup of other embedded components present anymore, just markup of components which get directly added. The 'RegistrationPage' provides its own form that delegates the submit to all Wicket nested forms which are contained in the component tree.
+With that, the usage of _RegistrationInputPanel_ is much more intuitive. There is no markup of other embedded components present anymore, just markup of components which get directly added. The _RegistrationPage_ provides its own form that delegates the submit to all Wicket nested forms which are contained in the component tree.
 
 *Listing 4:*
 

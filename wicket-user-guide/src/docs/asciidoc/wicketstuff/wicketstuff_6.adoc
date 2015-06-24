@@ -4,8 +4,8 @@ REST-based API are becoming more and more popular around the web and the number 
 Wicket is well-known for its capability of transparently handling the state of web applications on server side, but it can be also easily adopted to create RESTful services.
 WicketStuff module for REST provides a special resource class and a set of annotations to implement REST APIs/services in much the same way as we do it with Spring MVC or with the standard JAX-RS.
 
-The module provides class 'AbstractRestResource' as generic abstract class to implement a Wicket resource that handles the request and the response using a particular data format (XML, JSON, etc...).
-Subclassing 'AbstractRestResource' we can create custom resources and map their pubblic methods to a given subpath with annotation 'MethodMapping'. The following snippet is taken from resource 'PersonsRestResource' inside module ''restannotations-examples'':
+The module provides class _AbstractRestResource_ as generic abstract class to implement a Wicket resource that handles the request and the response using a particular data format (XML, JSON, etc...).
+Subclassing _AbstractRestResource_ we can create custom resources and map their pubblic methods to a given subpath with annotation _MethodMapping_. The following snippet is taken from resource _PersonsRestResource_ inside module _'restannotations-examples'_:
 
 [source,java]
 ----
@@ -26,9 +26,9 @@ Subclassing 'AbstractRestResource' we can create custom resources and map their 
     }
 ----
 
-'MethodMapping' requires to specify the subpath we want to map the method to. In addition we can specify also the HTTP method that must be used to invoke the method via REST (GET, POST, DELETE, PATCH, etc...). This value can be specified with enum class 'HttpMethod' and is GET by default. 
-In the code above we can see annotation 'RequestBody' which is used to extract the value of a method parameter from the request body (method createPerson).
-To write/read objects to response/from request, 'AbstractRestResource' uses an implementation of interface 'IWebSerialDeserial' which defines the following methods: 
+_MethodMapping_ requires to specify the subpath we want to map the method to. In addition we can specify also the HTTP method that must be used to invoke the method via REST (GET, POST, DELETE, PATCH, etc...). This value can be specified with enum class _HttpMethod_ and is GET by default. 
+In the code above we can see annotation _RequestBody_ which is used to extract the value of a method parameter from the request body (method createPerson).
+To write/read objects to response/from request, _AbstractRestResource_ uses an implementation of interface _IWebSerialDeserial_ which defines the following methods: 
 
 [source,java]
 ----
@@ -43,7 +43,7 @@ To write/read objects to response/from request, 'AbstractRestResource' uses an i
     }
 ----
 
-To convert segments value (which are strings) to parameters type, 'AbstractRestResource' uses the standard Wicket mechanism based on the application converter locator:
+To convert segments value (which are strings) to parameters type, _AbstractRestResource_ uses the standard Wicket mechanism based on the application converter locator:
 
 [source,java]
 ----
@@ -54,7 +54,7 @@ To convert segments value (which are strings) to parameters type, 'AbstractRestR
     return converter.convertToObject(value, Session.get().getLocale());
 ----
 
-In order to promote the principle of convention over configuration, we don't need to use any annotation to map method parameters to path parameters if they are declared in the same order. If we need to manually bind method parameters to path parameters we can use annotation 'PathParam'.
+In order to promote the principle of convention over configuration, we don't need to use any annotation to map method parameters to path parameters if they are declared in the same order. If we need to manually bind method parameters to path parameters we can use annotation _PathParam_.
 
 [source,java]
 ----
@@ -64,9 +64,9 @@ In order to promote the principle of convention over configuration, we don't nee
     }
 ----
 
-As JSON is de-facto standard format for REST API, the project comes also with a ready-to-use resource ('GsonRestResource') and a serial/deserial ('GsonSerialDeserial') that work with JSON format (both inside module ''restannotations-json''). These classes use Gson as JSON library.
+As JSON is de-facto standard format for REST API, the project comes also with a ready-to-use resource (_GsonRestResource_) and a serial/deserial (_GsonSerialDeserial_) that work with JSON format (both inside module _'restannotations-json'_). These classes use Gson as JSON library.
 
-'AbstractRestResource' supports role-based authorizations for mapped method with annotation 'AuthorizeInvocation':
+_AbstractRestResource_ supports role-based authorizations for mapped method with annotation _AuthorizeInvocation_:
 
 [source,java]
 ----
@@ -77,6 +77,6 @@ As JSON is de-facto standard format for REST API, the project comes also with a 
     }
 ----
 
-To use annotation 'AuthorizeInvocation' we must specify in the resource construcor an instance of Wicket interface 'IRoleCheckingStrategy'.
+To use annotation _AuthorizeInvocation_ we must specify in the resource construcor an instance of Wicket interface _IRoleCheckingStrategy_.
 
 To read the complete documentation of the module and to discover more advanced feature please refer to the  https://github.com/wicketstuff/core/blob/master/jdk-1.7-parent/wicketstuff-restannotations-parent[project homepage] 

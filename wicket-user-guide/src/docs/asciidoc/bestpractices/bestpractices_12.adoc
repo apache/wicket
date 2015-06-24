@@ -37,7 +37,7 @@ public class MyPage extends WebPage {
 }
 ----
 
-This approach for adding a label from the 'CmsFactory' to a page seems to be okay at first glance, but it comes with some disadvantages. There is no possibility to use inheritance anymore. Furthermore, there is no possibility to override 'isVisible()' and 'isEnabled()'. The factory could also be a Spring service which instanciates the component. A better solution is to create a 'CmsLabel'.
+This approach for adding a label from the _CmsFactory_ to a page seems to be okay at first glance, but it comes with some disadvantages. There is no possibility to use inheritance anymore. Furthermore, there is no possibility to override _isVisible()_ and _isEnabled()_. The factory could also be a Spring service which instanciates the component. A better solution is to create a _CmsLabel_.
 
 *Listing 16:*
 
@@ -67,4 +67,4 @@ public class MyPage extends WebPage {
 }
 ----
 
-The label in listing 16 is clearly encapsulated in a component without using a factory. Now you can easily create inline implementations and override 'isVisible()' or other stuff. Naturally, you might claim  [I need a factory to initialize some values in the component, e.g. a Spring service.] For this you can create a implementation of 'IComponentInstantiationListener'. This listener gets called on the super-constructor of every component. The most popular implementation of this interface is the 'SpringComponentInjector' which injects Spring beans in components when the fields are annotated with '\'SpringBean'. You can easliy write and add your own implementation of 'IComponentInstantiationListener'. So there is no reason for using a factory anymore. More information about the instanciation listener is located in Wicket's JavaDoc.
+The label in listing 16 is clearly encapsulated in a component without using a factory. Now you can easily create inline implementations and override _isVisible()_ or other stuff. Naturally, you might claim  [I need a factory to initialize some values in the component, e.g. a Spring service.] For this you can create a implementation of _IComponentInstantiationListener_. This listener gets called on the super-constructor of every component. The most popular implementation of this interface is the _SpringComponentInjector_ which injects Spring beans in components when the fields are annotated with _\_SpringBean_. You can easliy write and add your own implementation of _IComponentInstantiationListener_. So there is no reason for using a factory anymore. More information about the instanciation listener is located in Wicket's JavaDoc.

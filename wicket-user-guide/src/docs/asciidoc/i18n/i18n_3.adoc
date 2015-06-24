@@ -67,7 +67,7 @@ With the code and the bundle above, the label inside the form will display the v
 
 === Package bundles
 
-If no one of the previous steps can find a resource for the given key, the algorithm will look for package bundles. These bundles have 'wicket-package' as base name and they can be placed in one of the package of our application:
+If no one of the previous steps can find a resource for the given key, the algorithm will look for package bundles. These bundles have _wicket-package_ as base name and they can be placed in one of the package of our application:
 
 image::../img/package-bundles.png[]
 
@@ -83,16 +83,15 @@ Validator's resource bundles have the lowest priority in the lookup algorithm. T
 
 === Extending the default lookup algorithm
 
-Wicket implements the default lookup algorithm using the strategy pattern. The concrete strategies are abstracted with the interface 'org.apache.wicket.resource.loader.IStringResourceLoader'. By default Wicket uses the following implementations of 'IStringResourceLoader' (sorted by execution order):
+Wicket implements the default lookup algorithm using the strategy pattern. The concrete strategies are abstracted with the interface _org.apache.wicket.resource.loader.IStringResourceLoader_. By default Wicket uses the following implementations of _IStringResourceLoader_ (sorted by execution order):
 
 1. *ComponentStringResourceLoader:* implements most of the default algorithm. It searches for a given resource across bundles from the container hierarchy, from class hierarchy and from the given component.
 1. *PackageStringResourceLoader:* searches into package bundles.
 1. *ClassStringResourceLoader:* searches into bundles of a given class. By default the target class is the application class.
 1. *ValidatorStringResourceLoader:* searches for resources into validator's bundles. A list of validators is provided by the form component that failed validation.
-1. *InitializerStringResourceLoader:* this resource allows internationalization to interact with the initialization mechanism of the framework that will be illustrated in  <<guide:advanced_3,paragraph 18.3>>
-.
+1. *InitializerStringResourceLoader:* this resource allows internationalization to interact with the initialization mechanism of the framework that will be illustrated in <<advanced.adoc#initializers,paragraph 18.3>>.
 
-Developer can customize lookup algorithm removing default resource loaders or adding custom implementations to the list of the resource loaders in use. This task can be accomplished using method getStringResourceLoaders of setting class 'org.apache.wicket.settings.ResourceSettings':
+Developer can customize lookup algorithm removing default resource loaders or adding custom implementations to the list of the resource loaders in use. This task can be accomplished using method getStringResourceLoaders of setting class _org.apache.wicket.settings.ResourceSettings_:
 
 [source,java]
 ----

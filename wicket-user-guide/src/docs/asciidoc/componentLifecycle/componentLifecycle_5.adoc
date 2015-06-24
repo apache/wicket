@@ -1,8 +1,8 @@
 
 
 
-This stage is triggered when a component is removed from its container hierarchy. The only hook method for this phase is 'onRemove()'. If our component still holds some resources needed during rendering phase, we can override this method to release them.
+This stage is triggered when a component is removed from its container hierarchy. The only hook method for this phase is _onRemove()_. If our component still holds some resources needed during rendering phase, we can override this method to release them.
 
-Once a component has been removed we are free to add it again to the same container or to a different one. Starting from version 6.18.0 Wicket added a further hook method called 'onReAdd()' which is triggered every time a previously removed component is re-added to a cointainer.
-Please note that while 'onInitialize' is called only the very first time a component is added, 'onReAdd' is called every time it is re-added after having been removed.
+Once a component has been removed we are free to add it again to the same container or to a different one. Starting from version 6.18.0 Wicket added a further hook method called _onReAdd()_ which is triggered every time a previously removed component is re-added to a cointainer.
+Please note that while _onInitialize_ is called only the very first time a component is added, _onReAdd_ is called every time it is re-added after having been removed.
 

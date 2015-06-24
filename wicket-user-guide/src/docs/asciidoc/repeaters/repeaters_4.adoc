@@ -3,8 +3,7 @@
 
 Wicket offers a number of components that should be used when we have to display a big number of  items (for example the results of a select SQL query). 
 
-All these components implement interface 'org.apache.wicket.markup.html.navigation.paging.IPageable' and use interface 'IDataProvider' (placed in package 'org.apache.wicket.markup.repeater.data') as data source. This interface is designed to support data paging. We will see an example of data paging later in  <<guide:repeaters_4,paragraph 13.4.2>>
-. 
+All these components implement interface _org.apache.wicket.markup.html.navigation.paging.IPageable_ and use interface _IDataProvider_ (placed in package _org.apache.wicket.markup.repeater.data_) as data source. This interface is designed to support data paging. We will see an example of data paging later in <<repeaters.adoc#pageable-repeaters,paragraph 13.4.2>>. 
 
 The methods defined by IDataProvider are the following:
 * iterator(long first, long count): returns an iterator over a subset of the entire dataset. The subset starts from the item at position first and includes all the next count items (i.e. it's the closed interval  <<first,first+count>>
@@ -16,7 +15,7 @@ Wicket already provides implementations of IDataProvider to work with a List as 
 
 === Component DataView
 
-Class 'org.apache.wicket.markup.repeater.data.DataView' is the simplest pageable repeater shipped with Wicket. DataView comes with abstract method populateItem(Item) that must be implemented to configure children components. In the following example we use a DataView to display a list of Person objects in a HTML table:
+Class _org.apache.wicket.markup.repeater.data.DataView_ is the simplest pageable repeater shipped with Wicket. DataView comes with abstract method populateItem(Item) that must be implemented to configure children components. In the following example we use a DataView to display a list of Person objects in a HTML table:
 
 *HTML:*
 [source,html]
@@ -61,7 +60,7 @@ In the next paragraph we will see a similar example that adds support for data p
 
 === Data paging
 
-To enable data paging on a pageable repeater, we must first set the number of items to display per page with method setItemsPerPage(long items). Then, we must attach the repeater to panel PagingNavigator (placed in package 'org.apache.wicket.markup.html.navigation.paging') which is responsible for rendering a navigation bar containing the links illustrated in the following picture:
+To enable data paging on a pageable repeater, we must first set the number of items to display per page with method setItemsPerPage(long items). Then, we must attach the repeater to panel PagingNavigator (placed in package _org.apache.wicket.markup.html.navigation.paging_) which is responsible for rendering a navigation bar containing the links illustrated in the following picture:
 
 image::../img/paging-navigator.png[]
 

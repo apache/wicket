@@ -1,6 +1,5 @@
 
-Let's go back to our layout example. In  <<guide:layout_1,chapter 5.1>>
- we have divided our layout in common areas that must be part of every page. Now we will build a reusable template page for our web application combining pages and panels. The code examples are from project MarkupInheritanceExample.
+Let's go back to our layout example. In <<layout.adoc#header-footer-left-menu-content-etc,chapter 5.1>> we have divided our layout in common areas that must be part of every page. Now we will build a reusable template page for our web application combining pages and panels. The code examples are from project MarkupInheritanceExample.
 
 === Panels and layout areas
 
@@ -8,7 +7,7 @@ First, let's build a custom panel for each layout area (except for 'content' are
 
 image::../img/header-area.png[]
 
-we can build a panel called 'HeaderPanel' with a related markup file called HeaderPanel.html containing the HTML for this area:
+we can build a panel called _HeaderPanel_ with a related markup file called HeaderPanel.html containing the HTML for this area:
 
 [source,html]
 ----
@@ -36,7 +35,7 @@ we can build a panel called 'HeaderPanel' with a related markup file called Head
 <html>
 ----
 
-The class for this panel simply extends base class 'Panel':
+The class for this panel simply extends base class _Panel_:
 
 [source,java]
 ----
@@ -84,7 +83,7 @@ Now we can build a generic template page using our brand new panels. Its markup 
 </html>
 ----
 
-The HTML code for this page implements the generic left-menu layout of our site. You can note the 4 '<div>' tags used as containers for the corresponding areas.
+The HTML code for this page implements the generic left-menu layout of our site. You can note the 4 _<div>_ tags used as containers for the corresponding areas.
 The page class contains the code to physically assemble the page and panels:
 
 [source,java]
@@ -114,11 +113,11 @@ public class JugTemplate extends WebPage {
 }
 ----
 
-Done! Our template page is ready to be used. Now all the pages of our site will be subclasses of this parent page and they will inherit the layout and the HTML markup. They will only substitute the 'Label' inserted as content area with their custom content.
+Done! Our template page is ready to be used. Now all the pages of our site will be subclasses of this parent page and they will inherit the layout and the HTML markup. They will only substitute the _Label_ inserted as content area with their custom content.
 
 === Final example
 
-As final example we will build the login page for our site. We will call it 'SimpleLoginPage'. First, we need a panel containing the login form. This will be the content area of our page. We will call it 'LoginPanel' and the markup is the following:
+As final example we will build the login page for our site. We will call it _SimpleLoginPage_. First, we need a panel containing the login form. This will be the content area of our page. We will call it _LoginPanel_ and the markup is the following:
 
 [source,html]
 ----
@@ -144,9 +143,9 @@ As final example we will build the login page for our site. We will call it 'Sim
 </html>
 ----
 
-The class for this panel just extends 'Panel' class so we won't see the relative code. The form of this panel is for illustrative purpose only. We will see how to work with Wicket forms in chapters  <<guide:modelsforms,11>>
- and  <<guide:forms2,12>>
-. Since this is a login page we don't want it to display the left menu area. That's not a big deal as 'Component' class exposes a method called 'setVisible' which sets whether the component and its children should be displayed. 
+The class for this panel just extends _Panel_ class so we won't see the relative code. The form of this panel is for illustrative purpose only. We will see how to work with Wicket forms in chapters 
+<<wicket-models-and-forms,11>> and 
+<<wicket-forms-in-detail,12>>. Since this is a login page we don't want it to display the left menu area. That's not a big deal as _Component_ class exposes a method called _setVisible_ which sets whether the component and its children should be displayed. 
 
 The resulting Java code for the login page is the following:
 

@@ -1,6 +1,6 @@
 
-With Wicket we can apply markup inheritance using another approach based on the tag '<wicket:child>'. This tag is used inside the parent's markup to define where the children pages/panels can “inject” their custom markup extending the markup inherited from the parent component. 
-An example of a parent page using the tag '<wicket:child>' is the following:
+With Wicket we can apply markup inheritance using another approach based on the tag _<wicket:child>_. This tag is used inside the parent's markup to define where the children pages/panels can “inject” their custom markup extending the markup inherited from the parent component. 
+An example of a parent page using the tag _<wicket:child>_ is the following:
 
 [source,html]
 ----
@@ -15,7 +15,7 @@ An example of a parent page using the tag '<wicket:child>' is the following:
 </html>
 ----
 
-The markup of a child page/panel must be placed inside the tag '<wicket:extend>'. Only the markup inside '<wicket:extend>' will be included in final markup. Here is an example of child page markup:
+The markup of a child page/panel must be placed inside the tag _<wicket:extend>_. Only the markup inside _<wicket:extend>_ will be included in final markup. Here is an example of child page markup:
 
 [source,java]
 ----
@@ -52,7 +52,7 @@ Considering the two pages seen above, the final markup generated for child page 
 
 === Our example revisited
 
-Applying '<wicket:child>' tag to our layout example, we obtain the following markup for the main template page:
+Applying _<wicket:child>_ tag to our layout example, we obtain the following markup for the main template page:
 
 [source,html]
 ----
@@ -71,7 +71,7 @@ Applying '<wicket:child>' tag to our layout example, we obtain the following mar
 </html>
 ----
 
-We have replaced the '<div>' tag of the content area with the tag '<wicket:child>'. Going forward with our example we can build a login page creating class 'SimpleLoginPage' which extends the 'JugTemplate' page, but with a related markup file like this:
+We have replaced the _<div>_ tag of the content area with the tag _<wicket:child>_. Going forward with our example we can build a login page creating class _SimpleLoginPage_ which extends the _JugTemplate_ page, but with a related markup file like this:
 
 [source,html]
 ----

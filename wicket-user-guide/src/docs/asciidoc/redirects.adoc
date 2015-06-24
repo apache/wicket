@@ -1,7 +1,7 @@
 
 Quite a few teams have already got stuck into the following problem when working with wicket forms in a clustered environment while having 2 (or more) tomcat server with enabled session replication running.
 
-In case of invalid data being submitted with a form instance for example, it seemed like according error messages wouldn’t be presented when the same form page gets displayed again. Sometimes! And sometimes they would! One of those nightmares of rather deterministic programmer’s life. This so called Lost In Redirection problem, even if it looks like a wicket bug at first, is rather a result of a default setting in wicket regarding the processing of form submissions in general. In order to prevent another wide known problem of double form submissions, Wicket uses a so called REDIRECT_TO_BUFFER strategy for dealing with rendering a page after web form’s processing ('see RequestCycleSettings1.RenderStrategy).
+In case of invalid data being submitted with a form instance for example, it seemed like according error messages wouldn’t be presented when the same form page gets displayed again. Sometimes! And sometimes they would! One of those nightmares of rather deterministic programmer’s life. This so called Lost In Redirection problem, even if it looks like a wicket bug at first, is rather a result of a default setting in wicket regarding the processing of form submissions in general. In order to prevent another wide known problem of double form submissions, Wicket uses a so called REDIRECT_TO_BUFFER strategy for dealing with rendering a page after web form’s processing (_see RequestCycleSettings1.RenderStrategy).
 
 What does the default RenderStrategy actually do?
 

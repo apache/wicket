@@ -1,7 +1,7 @@
 
 
 
-Our new component will extend the a built-in text field 'org.apache.wicket.extensions.markup.html.form.DateTextField' which already uses a java.util.Date as model object and already performs conversion and validation for input values. Since the component must be self-contained, we must ensure that the JavaScript libraries it relies on (JQuery and JQuery UI) will be always available. 
+Our new component will extend the a built-in text field _org.apache.wicket.extensions.markup.html.form.DateTextField_ which already uses a java.util.Date as model object and already performs conversion and validation for input values. Since the component must be self-contained, we must ensure that the JavaScript libraries it relies on (JQuery and JQuery UI) will be always available. 
 
 Starting from version 6.0 Wicket has adopted JQuery as backing JavaScript library so we can use the  version bundled with Wicket for our custom datepicker. 
 
@@ -82,16 +82,15 @@ public <Date> IConverter<Date> getConverter(Class<Date> type) {
 
 The first thing to do inside onInitialize is to ensure that our component will have a markup id for its related text field. This is done invoking setOutputMarkupId(true). 
 
-Next, JQueryDateField tries to retrieve the date format and the ISO language code that must be used as initialization parameters. This is done using class 'ResourceModel' which searches for a given resource in the available bundles. If no value is found for date format or for ISO language code, default values will be used ('mm/dd/yy' and 'en-GB'). 
+Next, JQueryDateField tries to retrieve the date format and the ISO language code that must be used as initialization parameters. This is done using class _ResourceModel_ which searches for a given resource in the available bundles. If no value is found for date format or for ISO language code, default values will be used ('mm/dd/yy' and 'en-GB'). 
 
-To generate the relative URL for calendar icon, we load it as package resource reference and then we use 'Component''s method urlFor to get the URL value (we have seen this method in  <<guide:requestProcessing_3,paragraph 9.3.2>>
-).
+To generate the relative URL for calendar icon, we load it as package resource reference and then we use _Component_'s method urlFor to get the URL value (we have seen this method in <<requestProcessing.adoc#the-director-of-request-processing-requestcycle,paragraph 9.3.2>>).
 
-The last configuration instruction executed inside onInitialize is the instantiation of the custom converter used by our component. This converter is an instance of the built-in class 'org.apache.wicket.datetime.PatternDateConvert' and must use the previously retrieved date format to perform conversion operations. Now to tell our component to use this converter we must return it overriding 'FormComponent''s method 'getConverter'. 
+The last configuration instruction executed inside onInitialize is the instantiation of the custom converter used by our component. This converter is an instance of the built-in class _org.apache.wicket.datetime.PatternDateConvert_ and must use the previously retrieved date format to perform conversion operations. Now to tell our component to use this converter we must return it overriding _FormComponent_'s method _getConverter_. 
 
 === Header contributor code
 
-The rest of the code of our custom component is inside method 'renderHeader', which is responsible for adding to page header the bundled JQuery library, the three files from JQuery UI distribution, the custom file JQDatePicker.js and the invocation of function 'initJQDatepicker':
+The rest of the code of our custom component is inside method _renderHeader_, which is responsible for adding to page header the bundled JQuery library, the three files from JQuery UI distribution, the custom file JQDatePicker.js and the invocation of function _initJQDatepicker_:
 
 [source,java]
 ----
@@ -125,16 +124,16 @@ public void renderHead(IHeaderResponse response) {
 }
 ----
 
-If component is disabled the calendar icon must be hidden and no datepicker must be displayed. That's why 'renderHeader' is skipped if component is not enabled.
+If component is disabled the calendar icon must be hidden and no datepicker must be displayed. That's why _renderHeader_ is skipped if component is not enabled.
 
-To get a reference to the bundled JQuery library we used the JavaScript setting class 'JavaScriptLibrarySettings' and its method 'getJQueryReference'.
+To get a reference to the bundled JQuery library we used the JavaScript setting class _JavaScriptLibrarySettings_ and its method _getJQueryReference_.
 
-In the last part of 'renderHeader' we build the string to invoke function 'initJQDatepicker' using the values obtained inside onInitialize. Unfortunately the date format used by JQuery UI is different from the one adopted in Java so we have to convert it before building the JavaScript code. This init script is rendered into header section using a 'OnLoadHeaderItem' to ensure that it will be executed after all the other scripts have been loaded.
+In the last part of _renderHeader_ we build the string to invoke function _initJQDatepicker_ using the values obtained inside onInitialize. Unfortunately the date format used by JQuery UI is different from the one adopted in Java so we have to convert it before building the JavaScript code. This init script is rendered into header section using a _OnLoadHeaderItem_ to ensure that it will be executed after all the other scripts have been loaded.
 
 NOTE: If we add more than one instance of our custom component to a single page, static resources are rendered to the header section just once. Wicket automatically checks if a static resource is already referenced by a page and if so, it will not render it again.
 
 This does not apply to the init script which is dynamically generated and is rendered for every instance of the component.
 
-WARNING: Our datepicker is not ready yet to be used with AJAX. In  <<guide:ajax,chapter 19>>
- we will see how to modify it to make it AJAX-compatible.
+WARNING: Our datepicker is not ready yet to be used with AJAX. In 
+<<working-with-ajax,chapter 19>> we will see how to modify it to make it AJAX-compatible.
 

@@ -1,7 +1,7 @@
 
 
 
-Components that inherit from 'AbstractChoice' (such as 'DropDownChoice', 'CheckBoxMultipleChoice' and 'RadioChoice') must override method 'localizeDisplayValues' and make it return true to localize the values displayed for their choices. By default this method return false so values are displayed as they are. Once localization is activated we can use display values as key for our localized string resources. In project LocalizedChoicesExample we have a drop-down list that displays four colors (green, red, blue, and yellow) which are localized in three languages (English, German and Italian). The current locale can be changed with another drop-down menu (in a similar fashion to project 'LocalizedGreetings'). The code of the home page and the relative bundles are the following:
+Components that inherit from _AbstractChoice_ (such as _DropDownChoice_, _CheckBoxMultipleChoice_ and _RadioChoice_) must override method _localizeDisplayValues_ and make it return true to localize the values displayed for their choices. By default this method return false so values are displayed as they are. Once localization is activated we can use display values as key for our localized string resources. In project LocalizedChoicesExample we have a drop-down list that displays four colors (green, red, blue, and yellow) which are localized in three languages (English, German and Italian). The current locale can be changed with another drop-down menu (in a similar fashion to project _LocalizedGreetings_). The code of the home page and the relative bundles are the following:
 
 Java code:
 

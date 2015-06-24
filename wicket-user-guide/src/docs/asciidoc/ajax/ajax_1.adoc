@@ -3,9 +3,9 @@
 
 Wicket support for AJAX is implemented in file wicket-ajax-jquery.js which makes complete transparent to Java code any detail about AJAX communication. 
 
-AJAX components and behaviors shipped with Wicket expose one or more callback methods which are executed when they receive an AJAX request. One of the arguments of these methods is an instance of interface 'org.apache.wicket.ajax.AjaxRequestTarget'. 
+AJAX components and behaviors shipped with Wicket expose one or more callback methods which are executed when they receive an AJAX request. One of the arguments of these methods is an instance of interface _org.apache.wicket.ajax.AjaxRequestTarget_. 
 
-For example component AjaxLink (in package 'org.apache.wicket.ajax.markup.html') defines abstract method 'onClick(AjaxRequestTarget target)' which is executed when user clicks on the component:
+For example component AjaxLink (in package _org.apache.wicket.ajax.markup.html_) defines abstract method _onClick(AjaxRequestTarget target)_ which is executed when user clicks on the component:
 
 [source,java]
 ----
@@ -17,7 +17,7 @@ new AjaxLink("ajaxLink"){
 };
 ----
 
-Using AjaxRequestTarget we can specify the content that must be sent back to the client as response to the current AJAX request. The most commonly used method of this interface is probably 'add(Component... components)'. With this method we tell Wicket to render again the specified components and refresh their markup via AJAX:
+Using AjaxRequestTarget we can specify the content that must be sent back to the client as response to the current AJAX request. The most commonly used method of this interface is probably _add(Component... components)_. With this method we tell Wicket to render again the specified components and refresh their markup via AJAX:
 
 [source,java]
 ----
@@ -31,8 +31,7 @@ new AjaxLink("ajaxLink"){
 };
 ----
 
-Components can be refreshed via Ajax only if they have rendered a markup id for their related tag. As a consequence, we must remember to set a valid id value on every component we want to add to 'AjaxRequestTarget'. This can be done using one of the two methods seen in  <<guide:keepControl_3,paragraph 6.3>>
-:
+Components can be refreshed via Ajax only if they have rendered a markup id for their related tag. As a consequence, we must remember to set a valid id value on every component we want to add to _AjaxRequestTarget_. This can be done using one of the two methods seen in <<keepControl.adoc#generating-tag-attribute-id,paragraph 6.3>>:
 
 [source,java]
 ----
@@ -63,11 +62,11 @@ new AjaxLink("ajaxLink"){
 };
 ----
 
-WARNING: Repeaters component that have 'org.apache.wicket.markup.repeater.AbstractRepeater' as base class (like 'ListView', 'RepeatingView', etc...) can not be directly updated via AJAX.
+WARNING: Repeaters component that have _org.apache.wicket.markup.repeater.AbstractRepeater_ as base class (like _ListView_, _RepeatingView_, etc...) can not be directly updated via AJAX.
 
-If we want to refresh their markup via AJAX we must add one of their parent containers to the 'AjaxRequestTarget'.
+If we want to refresh their markup via AJAX we must add one of their parent containers to the _AjaxRequestTarget_.
 
-The standard implementation of 'AjaxRequestTarget' used by Wicket is class 'org.apache.wicket.ajax.AjaxRequestHandler'. To create new instances of 'AjaxRequestTarget' a Wicket application uses the provider object registered with method 'setAjaxRequestTargetProvider':
+The standard implementation of _AjaxRequestTarget_ used by Wicket is class _org.apache.wicket.ajax.AjaxRequestHandler_. To create new instances of _AjaxRequestTarget_ a Wicket application uses the provider object registered with method _setAjaxRequestTargetProvider_:
 
 [source,java]
 ----
@@ -75,7 +74,7 @@ setAjaxRequestTargetProvider(
 		IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
 ----
 
-The provider is an implementation of interface 'org.apache.wicket.util.IContextProvider', hence to use custom implementations of 'AjaxRequestTarget' we must register a custom provider that returns the desired implementation: 
+The provider is an implementation of interface _org.apache.wicket.util.IContextProvider_, hence to use custom implementations of _AjaxRequestTarget_ we must register a custom provider that returns the desired implementation: 
 
 [source,java]
 ----
@@ -90,7 +89,7 @@ private static class MyCustomAjaxRequestTargetProvider implements
 	}
 ----
 
-NOTE: During request handling 'AjaxRequestHandler' sends an event to its application to notify the entire component hierarchy of the current page:
+NOTE: During request handling _AjaxRequestHandler_ sends an event to its application to notify the entire component hierarchy of the current page:
 
 [source,java]
 ----
@@ -98,5 +97,5 @@ NOTE: During request handling 'AjaxRequestHandler' sends an event to its applica
    page.send(app, Broadcast.BREADTH, this);
 ----
 
-The payload of the event is the 'AjaxRequestHandler' itself.
+The payload of the event is the _AjaxRequestHandler_ itself.
 

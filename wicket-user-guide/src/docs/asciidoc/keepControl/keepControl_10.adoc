@@ -1,5 +1,5 @@
 
-Component 'org.apache.wicket.markup.html.border.Border' is a special purpose container created to enclose its tag body with its related markup. Just like panels and pages, borders also have their own markup file which is defined following the same rules seen for panels and pages. In this file '<wicket:border>' tag is used to indicate which part of the content is to be considered as border markup:
+Component _org.apache.wicket.markup.html.border.Border_ is a special purpose container created to enclose its tag body with its related markup. Just like panels and pages, borders also have their own markup file which is defined following the same rules seen for panels and pages. In this file _<wicket:border>_ tag is used to indicate which part of the content is to be considered as border markup:
 
 [source,html]
 ----
@@ -21,7 +21,7 @@ Component 'org.apache.wicket.markup.html.border.Border' is a special purpose con
 </html>
 ----
 
-The '<wicket:body/>' tag used in the example above is used to indicate where the body of the tag will be placed inside border markup. Now if we attached this border to the following tag
+The _<wicket:body/>_ tag used in the example above is used to indicate where the body of the tag will be placed inside border markup. Now if we attached this border to the following tag
 
 [source,html]
 ----
@@ -43,7 +43,7 @@ we would obtain the following resulting HTML:
 </span>
 ----
 
-'Border' can also contain children components which can be placed either inside its markup file or inside its corresponding HTML tag. In the first case children must be added to the border component with method 'addToBorder(Component...)', while in the second case we must use the 'add(Component...)' method.
+_Border_ can also contain children components which can be placed either inside its markup file or inside its corresponding HTML tag. In the first case children must be added to the border component with method _addToBorder(Component...)_, while in the second case we must use the _add(Component...)_ method.
 
 The following example illustrates both use cases:
 

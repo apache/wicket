@@ -1,7 +1,7 @@
 
 
 
-Component Link has a stateful nature, hence it cannot be used with stateless pages. To use links with these kinds of pages Wicket provides the convenience 'org.apache.wicket.markup.html.link.StatelessLink' component which is basically a subtype of Link with the stateless hint set to true. 
+Component Link has a stateful nature, hence it cannot be used with stateless pages. To use links with these kinds of pages Wicket provides the convenience _org.apache.wicket.markup.html.link.StatelessLink_ component which is basically a subtype of Link with the stateless hint set to true. 
 
 Please keep in mind that Wicket generates a new instance of a stateless page also to serve stateless links, so the code inside the onClick() method can not depend on instance variables. To illustrate this potential issue let's consider the following code (from the project StatelessPage) where the value of the variable index is used inside onclick():
 

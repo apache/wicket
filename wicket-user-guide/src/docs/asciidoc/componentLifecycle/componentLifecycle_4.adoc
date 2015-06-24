@@ -3,12 +3,11 @@ This stage is triggered each time a component is rendered by Wicket, typically w
 
 === Method onConfigure
 
-Method 'onConfigure()' has been introduced in order to provide a good point to manage the component states such as its visibility or enabled state. This method is called before the render phase starts. As stated in  <<guide:keepControl_1,chapter 6.1>>
-, 'isVisible' and 'isEnabled' are called multiple times when a page or a component is rendered, so it's highly recommended not to directly override these method, but rather to use 'onConfigure' to change component states. On the contrary method 'onBeforeRender' (see the next paragraph) is not indicated for this task because it will not be invoked if component visibility is set to false.
+Method _onConfigure()_ has been introduced in order to provide a good point to manage the component states such as its visibility or enabled state. This method is called before the render phase starts. As stated in <<keepControl.adoc#hiding-or-disabling-a-component,chapter 6.1>>, _isVisible_ and _isEnabled_ are called multiple times when a page or a component is rendered, so it's highly recommended not to directly override these method, but rather to use _onConfigure_ to change component states. On the contrary method _onBeforeRender_ (see the next paragraph) is not indicated for this task because it will not be invoked if component visibility is set to false.
 
 === Method onBeforeRender
 
-The most important hook method of this stage is probably 'onBeforeRender()'. This method is called before a component starts its rendering phase and it is our last chance to change its children hierarchy.
+The most important hook method of this stage is probably _onBeforeRender()_. This method is called before a component starts its rendering phase and it is our last chance to change its children hierarchy.
 
 If we want add/remove children components this is the right place to do it. In the next example (project LifeCycleStages) we will create a page which alternately displays two different labels, swapping between them each time it is rendered:
 
@@ -43,20 +42,20 @@ public class HomePage extends WebPage
 }
 ----
 
-The code inside 'onBeforeRender()' is quite trivial as it just checks which label among 'firstLabel' and 'secondLabel' is currently inserted into the component hierarchy and it replaces the inserted label with the other one.
+The code inside _onBeforeRender()_ is quite trivial as it just checks which label among _firstLabel_ and _secondLabel_ is currently inserted into the component hierarchy and it replaces the inserted label with the other one.
 
-This method is also responsible for invoking children 'onBeforeRender()' so if we decide to override it we have to call 'super.onBeforeRender()'. However, unlike 'onInitialize()', the call to superclass method should be placed at the end of method's body in order to affect children's rendering with our custom code.
+This method is also responsible for invoking children _onBeforeRender()_ so if we decide to override it we have to call _super.onBeforeRender()_. However, unlike _onInitialize()_, the call to superclass method should be placed at the end of method's body in order to affect children's rendering with our custom code.
 
 Please note that in the example above we can trigger the rendering stage pressing F5 key or clicking on link “reload”.
 
-WARNING: If we forget to call superclass version of methods 'onInitialize()' or 'onBeforeRender()', Wicket will throw an 'IllegalStateException' with the following message:
+WARNING: If we forget to call superclass version of methods _onInitialize()_ or _onBeforeRender()_, Wicket will throw an _IllegalStateException_ with the following message:
 
-'java.lang.IllegalStateException: 'org.apache.wicket.Component' has not been properly initialized. Something in the hierarchy of <page class name> has not called super.onInitialize()/onBeforeRender() in the override of onInitialize()/ onBeforeRender() method'
+_java.lang.IllegalStateException: _org.apache.wicket.Component_ has not been properly initialized. Something in the hierarchy of <page class name> has not called super.onInitialize()/onBeforeRender() in the override of onInitialize()/ onBeforeRender() method_
 
 
 === Method onComponentTag
 
-Method 'onComponentTag(ComponentTag)' is called to process component tag, which can be freely manipulated through its argument of type 'org.apache.wicket.markup.ComponentTag'. For example we can add/remove tag attributes with methods 'put(String key, String value)' and 'remove(String key)', or we can even decide to change the tag or rename it with method 'setName(String)' (the following code is taken from project OnComponentTagExample):
+Method _onComponentTag(ComponentTag)_ is called to process component tag, which can be freely manipulated through its argument of type _org.apache.wicket.markup.ComponentTag_. For example we can add/remove tag attributes with methods _put(String key, String value)_ and _remove(String key)_, or we can even decide to change the tag or rename it with method _setName(String)_ (the following code is taken from project OnComponentTagExample):
 
 *Markup code:*
 
@@ -104,17 +103,15 @@ public class HomePage extends WebPage {
 </body>
 ----
 
-Just like we do with 'onInitialize', if we decide to override 'onComponentTag' we must remember to call the same method of the super class because also this class may also customize the tag. Overriding 'onComponentTag' is perfectly fine if we have to customize the tag of a specific component, but if we wanted to reuse the code across different components we should consider to use a behavior in place of this hook method.
+Just like we do with _onInitialize_, if we decide to override _onComponentTag_ we must remember to call the same method of the super class because also this class may also customize the tag. Overriding _onComponentTag_ is perfectly fine if we have to customize the tag of a specific component, but if we wanted to reuse the code across different components we should consider to use a behavior in place of this hook method.
 
-We have already seen in  <<guide:keepControl_2,chapter 6.2>>
- how to use behavior 'AttributeModifier' to manipulate the tag's attribute. In  <<guide:advanced_1,chapter 19.1>>
- we will see that base class 'Behavior' offers also a callback method named 'onComponentTag(ComponentTag, Component)' that can be used in place of the hook method 'onComponentTag(ComponentTag)'.
+We have already seen in <<keepControl.adoc#modifing-tag-attributes,chapter 6.2>> how to use behavior _AttributeModifier_ to manipulate the tag's attribute. In <<advanced.adoc#enriching-components-with-behaviors,chapter 19.1>> we will see that base class _Behavior_ offers also a callback method named _onComponentTag(ComponentTag, Component)_ that can be used in place of the hook method _onComponentTag(ComponentTag)_.
 
 === Methods onComponentTagBody
 
-Method 'onComponentTagBody(MarkupStream, ComponentTag)' is called to process the component tag's body. Just like 'onComponentTag' it takes as input a 'ComponentTag' parameter representing the component tag. In addition, we also find a 'MarkupStream' parameter which represents the page markup stream that will be sent back to the client as response. 
+Method _onComponentTagBody(MarkupStream, ComponentTag)_ is called to process the component tag's body. Just like _onComponentTag_ it takes as input a _ComponentTag_ parameter representing the component tag. In addition, we also find a _MarkupStream_ parameter which represents the page markup stream that will be sent back to the client as response. 
 
-'onComponentTagBody' can be used in combination with the 'Component''s method 'replaceComponentTagBody' to render a custom body under specific conditions. For example (taken from project OnComponentTagExample) we can display a brief description instead of the body if the label component is disabled:
+_onComponentTagBody_ can be used in combination with the _Component_'s method _replaceComponentTagBody_ to render a custom body under specific conditions. For example (taken from project OnComponentTagExample) we can display a brief description instead of the body if the label component is disabled:
 
 [source,java]
 ----
@@ -135,4 +132,4 @@ public class HomePage extends WebPage {
 }
 ----
 
-Note that the original version of 'onComponentTagBody' is invoked only when we want to preserve the standard rendering mechanism for the tag's body (in our example this happens when the component is enabled).
+Note that the original version of _onComponentTagBody_ is invoked only when we want to preserve the standard rendering mechanism for the tag's body (in our example this happens when the component is enabled).

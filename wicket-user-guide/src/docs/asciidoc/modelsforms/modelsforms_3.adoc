@@ -1,7 +1,7 @@
 
 
 
-Web applications use HTML forms to collect user input and send it to the server. Wicket provides 'org.apache.wicket.markup.html.form.Form' class to handle web forms. This component must be bound to <form> tag. The following snippet shows how to create a very basic Wicket form in a page:
+Web applications use HTML forms to collect user input and send it to the server. Wicket provides _org.apache.wicket.markup.html.form.Form_ class to handle web forms. This component must be bound to <form> tag. The following snippet shows how to create a very basic Wicket form in a page:
 
 Html:
 
@@ -27,7 +27,7 @@ add(form);
 ----
 
 Method onSubmit is called whenever a form has been submitted and it can be overridden to perform custom actions. Please note that a Wicket form can be submitted using a standard HTML submit button which is not mapped to any component (i.e. it does not have a wicket:id attribute). 
-In the next chapter we will continue to explore Wicket forms and we will see how to submit forms using special components which implement interface 'org.apache.wicket.markup.html.form.IFormSubmitter'.
+In the next chapter we will continue to explore Wicket forms and we will see how to submit forms using special components which implement interface _org.apache.wicket.markup.html.form.IFormSubmitter_.
 
 === Form and models
 
@@ -42,7 +42,7 @@ The purpose of FormComponent is to store the corresponding user input into its m
 As first example of interaction between the form and its models, we will build a classic login form which asks for username and password (project LoginForm).
 
 WARNING: The topic of security will be discussed later in chapter 22. The following form is for example purposes only and is not suited for a real application.
-If you need to use a login form you should consider to use component 'org.apache.wicket.authroles.authentication.panel.SignInPanel' shipped with Wicket.
+If you need to use a login form you should consider to use component _org.apache.wicket.authroles.authentication.panel.SignInPanel_ shipped with Wicket.
 
 This form needs two text fields, one of which must be a password field. We should also use a label to display the result of login process1. For the sake of simplicity, the login logic is all inside onSubmit and is quite trivial.
 

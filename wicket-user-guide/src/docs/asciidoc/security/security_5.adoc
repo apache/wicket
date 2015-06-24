@@ -1,9 +1,9 @@
 
 
 
-Wicket internally uses an entity called package resource guard to protect package resources from external access. This entity is an implementation of interface 'org.apache.wicket.markup.html.IPackageResourceGuard'. 
+Wicket internally uses an entity called package resource guard to protect package resources from external access. This entity is an implementation of interface _org.apache.wicket.markup.html.IPackageResourceGuard_. 
 
-By default Wicket applications use as package resource guard class 'SecurePackageResourceGuard', which allows to access only to the following file extensions (grouped by type):
+By default Wicket applications use as package resource guard class _SecurePackageResourceGuard_, which allows to access only to the following file extensions (grouped by type):
 
 |===
 File | Extensions
@@ -16,7 +16,7 @@ File | Extensions
 |*Web font files* |.eot, .ttf, .woff
 |===
 
-To modify the set of allowed files formats we can add one or more patterns with method 'addPattern(String)'. The rules to write a pattern are the following:
+To modify the set of allowed files formats we can add one or more patterns with method _addPattern(String)_. The rules to write a pattern are the following:
 
 * patterns start with either a  [+] or a  [-] In the first case the pattern will add one or more file to the set while starting a pattern with a “-” we exclude all the files matching the given pattern. For example pattern “-web.xml” excludes all web.xml files in all directories.
 * wildcard character “\*” is supported as placeholder for zero or more characters. For example  pattern “+\*.mp4” adds all the mp4 files inside all directories.

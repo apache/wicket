@@ -1,5 +1,5 @@
 
-When we bind a component to its corresponding tag we can choose to get rid of this outer tag in the final markup. If we call method 'setRenderBodyOnly(true)' on a component Wicket will remove the surrounding tag.
+When we bind a component to its corresponding tag we can choose to get rid of this outer tag in the final markup. If we call method _setRenderBodyOnly(true)_ on a component Wicket will remove the surrounding tag.
 
 For example given the following markup and code:
 
@@ -40,4 +40,4 @@ the output will be:
 </html>
 ----
 
-As you can see the '<div>' tag used for component 'Label' is not present in the final markup.
+As you can see the _<div>_ tag used for component _Label_ is not present in the final markup.

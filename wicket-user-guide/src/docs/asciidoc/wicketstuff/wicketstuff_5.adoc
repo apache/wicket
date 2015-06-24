@@ -3,8 +3,7 @@
 
 Module wicketstuff-inmethod-grid implements a sophisticated grid-component with class com. inmethod.grid.datagrid.DataGrid. 
 
-Just like pageable repeaters (seen in  <<guide:repeaters_4,paragraph 13.4>>
-) DataGrid provides data pagination and uses interface IDataProvider as data source. In addition the component is completely ajaxified:
+Just like pageable repeaters (seen in <<repeaters.adoc#pageable-repeaters,paragraph 13.4>>) DataGrid provides data pagination and uses interface IDataProvider as data source. In addition the component is completely ajaxified:
 
 image::../img/inmethod-grid1.png[]
 

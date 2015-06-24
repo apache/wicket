@@ -1,5 +1,5 @@
 
-By adding a '(Base)WebSocketBehavior' to your component(s) Wicket will contribute 'wicket-websocket-jquery.js' library which provides some helper functions to write your client side code. There is a default websocket connection per Wicket Page opened for you which you can use like:
+By adding a _(Base)WebSocketBehavior_ to your component(s) Wicket will contribute _wicket-websocket-jquery.js_ library which provides some helper functions to write your client side code. There is a default websocket connection per Wicket Page opened for you which you can use like:
 [source,java]
 ----
 Wicket.WebSocket.send('{msg: "my message"}').
@@ -25,7 +25,7 @@ ws.close()
 ----
 
 Wicket.WebSocket is a simple wrapper around the native window.WebSocket API which is used to intercept the calls and to fire special JavaScript events (Wicket.Event PubSub).
-Once a page that contributes '(Base)WebSocketBehavior' is rendered the client may react on messages pushed by the server by subscribing to the ''/websocket/message'' event:
+Once a page that contributes _(Base)WebSocketBehavior_ is rendered the client may react on messages pushed by the server by subscribing to the _'/websocket/message'_ event:
 
 [source,java]
 ----

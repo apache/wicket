@@ -1,12 +1,11 @@
 
 
 
-In  <<guide:layout_2,chapter 5.2.2>>
- we have seen how to use class Panel to create custom components with their own markup and with an arbitrary number of children components.
+In <<layout.adoc#here-comes-the-inheritance,chapter 5.2.2>> we have seen how to use class Panel to create custom components with their own markup and with an arbitrary number of children components.
 
 While it's perfectly legal to use Panel also to group form components, the resulting component won't be itself a form component and it won't participate in the form's submission workflow. 
 
-This could be a strong limitation if the custom component needs to coordinate its children during sub-tasks like input conversion or model updating. That's why in Wicket we have the 'org.apache.wicket.markup.html.form.FormComponentPanel' component which combines the features of a Panel (it has its own markup file) and a FormComponent (it is a subclass of FormComponent). 
+This could be a strong limitation if the custom component needs to coordinate its children during sub-tasks like input conversion or model updating. That's why in Wicket we have the _org.apache.wicket.markup.html.form.FormComponentPanel_ component which combines the features of a Panel (it has its own markup file) and a FormComponent (it is a subclass of FormComponent). 
 
 A typical scenario in which we may need to implement a custom FormComponentPanel is when our web application and its users work with different units of measurement for the same data. 
 
@@ -71,8 +70,8 @@ public class TemperatureDegreeField extends FormComponentPanel<Double> {
 	}
 ----
 
-Inside the onInitialize method we have created a read-only model for the label that displays the letter corresponding to the user's temperature scale. To determinate which temperature scale is in use, we retrieve the Locale from the session by calling Component's getLocale() method (we will talk more about this method in  <<guide:i18n,paragraph 15>>
-). Then, if locale is the one corresponding to the United States, the chosen scale will be Fahrenheit, otherwise it will be considered as Celsius. 
+Inside the onInitialize method we have created a read-only model for the label that displays the letter corresponding to the user's temperature scale. To determinate which temperature scale is in use, we retrieve the Locale from the session by calling Component's getLocale() method (we will talk more about this method in 
+<<internationalization-with-wicket,paragraph 15>>). Then, if locale is the one corresponding to the United States, the chosen scale will be Fahrenheit, otherwise it will be considered as Celsius. 
 
 In the final part of onInitialize() we add the two components to our custom form component. You may have noticed that we have explicitly set the type of model object for the text field to double. This is necessary as the starting model object is a null reference and this prevents the component from automatically determining the type of its model object. 
 

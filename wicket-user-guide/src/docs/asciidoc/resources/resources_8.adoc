@@ -21,10 +21,10 @@ Some web developers prefer to put their <script> tags at the end of page body in
 ----
 
 
-In Wicket we can achieve this result providing a custom 'IHeaderResponseDecorator' to a our application and using Wicket tag <wicket:container/> to indicate where we want to render our scripts inside the page. Interface 'IHeaderResponseDecorator' defines method 'IHeaderResponse decorate(IHeaderResponse response)' which allows to decorate or add funtionalities to Wicket 'IHeaderResponse'. Our custom 'IHeaderResponseDecorator' can be registered in the application with method 'setHeaderResponseDecorator'. Anytime Wicket creates an instance of 'IHeaderResponse', it will call the registered 'IHeaderResponseDecorator' to decorate the header response.
+In Wicket we can achieve this result providing a custom _IHeaderResponseDecorator_ to a our application and using Wicket tag <wicket:container/> to indicate where we want to render our scripts inside the page. Interface _IHeaderResponseDecorator_ defines method _IHeaderResponse decorate(IHeaderResponse response)_ which allows to decorate or add funtionalities to Wicket _IHeaderResponse_. Our custom _IHeaderResponseDecorator_ can be registered in the application with method _setHeaderResponseDecorator_. Anytime Wicket creates an instance of _IHeaderResponse_, it will call the registered _IHeaderResponseDecorator_ to decorate the header response.
 
-In the example project 'ScriptInsideBody' we can find a custom 'IHeaderResponseDecorator' that renders CSS into the usual <head> tag and put JavaScricpt header items into a specific container (tag <wicket:container/>)
-Wicket already comes with class 'JavaScriptFilteredIntoFooterHeaderResponse' which wraps a 'IHeaderResponse' and renders in a given container all the instances of 'JavaScriptHeaderItem'.
+In the example project _ScriptInsideBody_ we can find a custom _IHeaderResponseDecorator_ that renders CSS into the usual <head> tag and put JavaScricpt header items into a specific container (tag <wicket:container/>)
+Wicket already comes with class _JavaScriptFilteredIntoFooterHeaderResponse_ which wraps a _IHeaderResponse_ and renders in a given container all the instances of _JavaScriptHeaderItem_.
 The following code is taken from the Application class of the project:
 
 [source,java]
@@ -58,14 +58,14 @@ The following code is taken from the Application class of the project:
     }
 ----
 
-As you can see in the code above the  [bucket] that will contain JavaScript tags is called ' .[footer-container] To make a use of it the developer have to add a special component called 'HeaderResponseContainer' in his page:
+As you can see in the code above the  [bucket] that will contain JavaScript tags is called _ .[footer-container] To make a use of it the developer have to add a special component called _HeaderResponseContainer_ in his page:
 
 [source,java]
 ----
 add(new HeaderResponseContainer("someId", "filterName"));
 ----
 
-Please note that 'HeaderResponseContainer''s needs also a name for the corresponding header response's filter. The markup of our page will look like this:
+Please note that _HeaderResponseContainer_'s needs also a name for the corresponding header response's filter. The markup of our page will look like this:
 
 [source,html]
 ----
@@ -103,7 +103,7 @@ The code of the home page is the following:
     }
 ----
 
-Looking at the code above you can note that our page adds two script to the header section: the first is an instance of 'JavaScriptHeaderItem' and will be rendered in the 'HeaderResponseContainer' while the second will follow the usual behavior and will be rendered inside <head> tag.
+Looking at the code above you can note that our page adds two script to the header section: the first is an instance of _JavaScriptHeaderItem_ and will be rendered in the _HeaderResponseContainer_ while the second will follow the usual behavior and will be rendered inside <head> tag.
 
 
 

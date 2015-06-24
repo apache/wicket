@@ -1,8 +1,7 @@
 
 One of the biggest challenge for a web framework is to offer an efficient and consistent mechanism to handle internal resources such as CSS/JavaScript files, picture files, pdf and so on. Resources can be static (like an icon used across the site) or dynamic (they can be generated on the fly) and they can be made available to users as a download or as a simple URL.
 
-In  <<guide:keepControl_6,paragraph 6.6>>
- we have already seen how to add CSS and JavaScript contents to the header section of the page. In the first half of this chapter we will learn a more sophisticated technique that allows us to manage static resources directly from code and “pack” them with our custom components.
+In <<keepControl.adoc#adding-header-contents-to-the-final-page,paragraph 6.6>> we have already seen how to add CSS and JavaScript contents to the header section of the page. In the first half of this chapter we will learn a more sophisticated technique that allows us to manage static resources directly from code and “pack” them with our custom components.
 
 Then, in the second part of the chapter we will see how to implement custom resources to enrich our web application with more complex and dynamic functionalities.
 

@@ -11,11 +11,11 @@ image::../img/package-resources.png[]
 
 With package resources custom components become independent and self-contained and client code can use them without worrying about their dependencies.
 
-To load package resources Wicket provides class 'org.apache.wicket.request.resource.PackageResourceReference'. 
+To load package resources Wicket provides class _org.apache.wicket.request.resource.PackageResourceReference_. 
 
 To identify a package resource we need to specify a class inside the target package and the name of the desired resource (most of the times this will be a file name). 
 
-In the following example taken from project ImageAsPackageRes, CustomPanel loads a picture file available as package resource and it displays it in a <img> tag using the built-in component 'org.apache.wicket.markup.html.image.Image': 
+In the following example taken from project ImageAsPackageRes, CustomPanel loads a picture file available as package resource and it displays it in a <img> tag using the built-in component _org.apache.wicket.markup.html.image.Image_: 
 
 *HTML:*
 [source,html]
@@ -46,14 +46,13 @@ public class CustomPanel extends Panel {
 
 Wicket will take care of generating a valid URL for file calendar.jpg. URLs for package resources have the following structure:
 
-'<path to application root>/wicket/resource/<fully qualified classname>/<resource file name>-<ver-<id>>(.file extension)'
+_<path to application root>/wicket/resource/<fully qualified classname>/<resource file name>-<ver-<id>>(.file extension)_
 
 In our example the URL for our picture file calendar.jpg is the following:
 
-'./wicket/resource/org.wicketTutorial.CustomPanel/calendar-ver-1297887542000.jpg'
+_./wicket/resource/org.wicketTutorial.CustomPanel/calendar-ver-1297887542000.jpg_
 
-The first part of the URL is the relative path to the application root. In our example our page is already at the application's root so we have only a single-dotted segment. The next two segments, wicket and resource, are respectively the namespace and the identifier for resources seen in  <<guide:urls_6,paragraph 10.6.4>>
-. 
+The first part of the URL is the relative path to the application root. In our example our page is already at the application's root so we have only a single-dotted segment. The next two segments, wicket and resource, are respectively the namespace and the identifier for resources seen in <<urls.adoc#generating-structured-and-clear-urls,paragraph 10.6.4>>. 
 
 The fourth segment is the fully qualified name of the class used to locate the resource and it is the scope of the package resource. In the last segment of the URL we can find the name of the resource (the file name).
 
@@ -69,7 +68,7 @@ In the example illustrated in the picture above, if we try to retrieve package r
 
 === Responsive images - multiple resource references use in one component
 
-Since Wicket 7.0.0 the build-in component 'org.apache.wicket.markup.html.image.Image' allows you to add several ResourceReferences via varargs and to provide sizes for each image so that the browser is able to pick the best image source.
+Since Wicket 7.0.0 the build-in component _org.apache.wicket.markup.html.image.Image_ allows you to add several ResourceReferences via varargs and to provide sizes for each image so that the browser is able to pick the best image source.
 
 *HTML:*
 [source,html]
@@ -95,7 +94,7 @@ Since Wicket 7.0.0 the build-in component 'org.apache.wicket.markup.html.image.I
 ...
 ----
 
-The component 'org.apache.wicket.markup.html.image.Picture' is used to provide a fallback image 'org.apache.wicket.markup.html.image.Image' and several source components 'org.apache.wicket.markup.html.image.Source' which gives a developer the control as to when and if those images are presented to the user.
+The component _org.apache.wicket.markup.html.image.Picture_ is used to provide a fallback image _org.apache.wicket.markup.html.image.Image_ and several source components _org.apache.wicket.markup.html.image.Source_ which gives a developer the control as to when and if those images are presented to the user.
 
 *HTML:*
 [source,html]
@@ -148,7 +147,7 @@ In some components like in the inline image resource references are going to be 
 
 Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support  [Range] HTTP header for the request and  [Content-Range] /  [Accept-Range] HTTP headers for the response, which are used for videos / audio tags. The  [Range] header allows the client to only request a specific byte range of the resource. The server provides the  [Content-Range] and tells the client which bytes are going to be send.
 
-If you want the resource not to be load into memory apply readBuffered(false) - this way the stream is written directly to the response. ('org.apache.wicket.resource.ITextResourceCompressor' will not be applied if readBuffered is set to false)
+If you want the resource not to be load into memory apply readBuffered(false) - this way the stream is written directly to the response. (_org.apache.wicket.resource.ITextResourceCompressor_ will not be applied if readBuffered is set to false)
 
 *HTML:*
 [source,html]
@@ -168,8 +167,7 @@ If you want the resource not to be load into memory apply readBuffered(false) - 
 
 === Using package resources with tag <wicket:link>
 
-In  <<guide:urls_3,paragraph 10.3>>
- we have used tag <wicket:link> to automatically create links to bookmarkable pages. The same technique can be used also for package resources in order to use them directly from markup file. Let's assume for example that we have a picture file called icon.png placed in the same package of the current page. Under these conditions we can display the picture file using the following markup fragment:
+In <<urls.adoc#automatically-creating-bookmarkable-links-with-tag-wicketlink,paragraph 10.3>> we have used tag <wicket:link> to automatically create links to bookmarkable pages. The same technique can be used also for package resources in order to use them directly from markup file. Let's assume for example that we have a picture file called icon.png placed in the same package of the current page. Under these conditions we can display the picture file using the following markup fragment:
 
 [source,html]
 ----

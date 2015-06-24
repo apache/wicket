@@ -1,7 +1,7 @@
 
 
 
-In order to get the Wicket framework up to speed when your server is up and running, you usually configure a 'WicketFilter' instance in your web application deployment descriptor file ('web.xml') while passing it a single init parameter called 'applicationClassName' that points to your main implementation class extending 'org.apache.wicket.protocol.http.WebApplication' where all of your application-wide settings and initialization requirements are dealt with:
+In order to get the Wicket framework up to speed when your server is up and running, you usually configure a _WicketFilter_ instance in your web application deployment descriptor file (_web.xml_) while passing it a single init parameter called _applicationClassName_ that points to your main implementation class extending _org.apache.wicket.protocol.http.WebApplication_ where all of your application-wide settings and initialization requirements are dealt with:
 
 [source,xml]
 ----
@@ -38,7 +38,7 @@ In case you want to get Wicket application up and running while leaving the appl
 </web-app>
 ----
 
-The additional configuration part containing listener and context parameter definition is a usual Spring container related configuration detail. ContextLoaderListener is an implementation of standard Servlet API ServletContextListener interface provided by the Spring framework itself and is responsible for looking up an according bean definition file(s) specified by the context param above and creating an ApplicationContext instance during servlet context initialization accordingly. When integrating an ApplicationContext instance with Wicket, one of the beans defined in the above mentioned Spring bean definition file has to be your own specific extension of 'org.apache.wicket.protocol.http.WebApplication'. You can either define a suitable bean in the bean definition file itself:
+The additional configuration part containing listener and context parameter definition is a usual Spring container related configuration detail. ContextLoaderListener is an implementation of standard Servlet API ServletContextListener interface provided by the Spring framework itself and is responsible for looking up an according bean definition file(s) specified by the context param above and creating an ApplicationContext instance during servlet context initialization accordingly. When integrating an ApplicationContext instance with Wicket, one of the beans defined in the above mentioned Spring bean definition file has to be your own specific extension of _org.apache.wicket.protocol.http.WebApplication_. You can either define a suitable bean in the bean definition file itself:
 
 [source,xml]
 ----
@@ -47,7 +47,7 @@ The additional configuration part containing listener and context parameter defi
 </beans>
 ----
 
-or use powerful classpath scanning feature of the Spring framework and annotate the MyWebApplication implementation with the appropriate '\'Component' annotation accordingly while enabling the Spring container to scan the according package(s) of your application for relevant bean definitions:
+or use powerful classpath scanning feature of the Spring framework and annotate the MyWebApplication implementation with the appropriate _\_Component_ annotation accordingly while enabling the Spring container to scan the according package(s) of your application for relevant bean definitions:
 
 [source,xml]
 ----
@@ -58,7 +58,7 @@ or use powerful classpath scanning feature of the Spring framework and annotate 
 </beans>
 ----
 
-Either way, if everything goes well, you'll get a pre-configured ApplicationContext all set up during the startup of your web container. One of the beans in the ApplicationContext will be your own extension of Wicket's WebApplication type. SpringWebApplicationFactory implementation provided by the Wicket framework itself that you have defined as the 'applicationFactoryClassName' in the configuration of your WicketFilter will then be used in order to retrieve that very same WebApplication bean out of your Spring ApplicationContext. The Factory expects one and only one extension of Wicket's very own WebApplication type to be found within the ApplicationContext instance at runtime. If no such bean or more than one bean extending WebApplication is found in the given ApplicationContext an according IllegalStateException will be raised and initialization of your web application will fail:
+Either way, if everything goes well, you'll get a pre-configured ApplicationContext all set up during the startup of your web container. One of the beans in the ApplicationContext will be your own extension of Wicket's WebApplication type. SpringWebApplicationFactory implementation provided by the Wicket framework itself that you have defined as the _applicationFactoryClassName_ in the configuration of your WicketFilter will then be used in order to retrieve that very same WebApplication bean out of your Spring ApplicationContext. The Factory expects one and only one extension of Wicket's very own WebApplication type to be found within the ApplicationContext instance at runtime. If no such bean or more than one bean extending WebApplication is found in the given ApplicationContext an according IllegalStateException will be raised and initialization of your web application will fail:
 
 [source,java]
 ----
@@ -89,4 +89,4 @@ public class MyWebApplication extends WebApplication {
 }
 ----
 
-SpringComponentInjector provided by the Wicket framework enables you to get dependencies from the ApplicationContext directly injected into your Wicket components by simply annotating these with the according '\'SpringBean' annotation.
+SpringComponentInjector provided by the Wicket framework enables you to get dependencies from the ApplicationContext directly injected into your Wicket components by simply annotating these with the according _\_SpringBean_ annotation.

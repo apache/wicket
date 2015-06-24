@@ -1,7 +1,7 @@
 
 
 
-Class 'Component' comes with a number of hook methods that can be overridden in order to customize component behavior during its lifecycle.
+Class _Component_ comes with a number of hook methods that can be overridden in order to customize component behavior during its lifecycle.
 In the following table these methods are grouped according to the stage in which they are invoked (and they are sorted by execution order):
 
 |===

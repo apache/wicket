@@ -1,7 +1,7 @@
 
 Another circumstance in which we may prefer to avoid the creation of custom panels is when we want to conditionally display in a page small fragments of markup. In this case if we decided to use panels, we would end up having a huge number of small panel classes with their related markup file.
 
-To better cope with situations like this, Wicket defines component 'Fragment' in package 'org.apache.wicket.markup.html.panel'. Just like its parent component 'WebMarkupContainer', Fragment doesn't have its own markup file but it uses a markup fragment defined in the markup file of its parent container, which can be a page or a panel. The fragment must be delimited with tag '<wicket:fragment>' and must be identified by a 'wicket:id' attribute. In addition to the component id, 'Fragment''s constructor takes as input also the id of the fragment and a reference to its container.
+To better cope with situations like this, Wicket defines component _Fragment_ in package _org.apache.wicket.markup.html.panel_. Just like its parent component _WebMarkupContainer_, Fragment doesn't have its own markup file but it uses a markup fragment defined in the markup file of its parent container, which can be a page or a panel. The fragment must be delimited with tag _<wicket:fragment>_ and must be identified by a _wicket:id_ attribute. In addition to the component id, _Fragment_'s constructor takes as input also the id of the fragment and a reference to its container.
 
 In the following  example we have defined a fragment in a page and we used it as content area:
 

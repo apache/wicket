@@ -55,16 +55,16 @@ We will examine these below.
 
 === Markup Id Ambiguities
 
-In the example above we have a form that collects the name of a customer along with the name of their child and the child’s date of birth. We mapped the name of the customer and child to form components with wicket ids 'first' and 'last'. If we were to add all the components to the same parent we would get an error because we cannot have two components with the same wicket id under the same parent (two components with id 'first' and two with id 'last'). 
+In the example above we have a form that collects the name of a customer along with the name of their child and the child’s date of birth. We mapped the name of the customer and child to form components with wicket ids _first_ and _last_. If we were to add all the components to the same parent we would get an error because we cannot have two components with the same wicket id under the same parent (two components with id _first_ and two with id _last_). 
 Without hierarchy in Java we would have to make sure that all wicket ids in a markup file are unique, no small feat in a non-trivial page or panel. But, with hierarchy on the Java side we just have to make sure that no parent has two children with the same id, which is trivial.
 
 === Inheriting State From Parents
 
-Suppose we wanted to hide form fields related to the child in the example above when certain conditions are met. Without hierarchy we would have to modify the 'first', 'last', and 'dob' fields to implement the visibility check. Worse, whenever we would add a new child related field we would have to remember to implement the same check; this is a maintenance headache. With hierarchy this is easy, simply hide the parent container and all children will be hidden as well — the code lives in one place and is automatically inherited by all descendant components. Thus, hierarchy on the Java side allows us to write succinct and maintainable code by making use of the parent-child relationship of components.
+Suppose we wanted to hide form fields related to the child in the example above when certain conditions are met. Without hierarchy we would have to modify the _first_, _last_, and _dob_ fields to implement the visibility check. Worse, whenever we would add a new child related field we would have to remember to implement the same check; this is a maintenance headache. With hierarchy this is easy, simply hide the parent container and all children will be hidden as well — the code lives in one place and is automatically inherited by all descendant components. Thus, hierarchy on the Java side allows us to write succinct and maintainable code by making use of the parent-child relationship of components.
 
 === Pain Points of the Java-Side Hierarchy
 
-While undeniably useful, the Java-side hierarchy can be a pain to maintain. It is very common to get requests to change things because the designer needs to wrap some components in a 'div' with a dynamic style or class attribute. Essentially we want to go from:
+While undeniably useful, the Java-side hierarchy can be a pain to maintain. It is very common to get requests to change things because the designer needs to wrap some components in a _div_ with a dynamic style or class attribute. Essentially we want to go from:
 
 [source,html]
 ----
@@ -150,12 +150,12 @@ child.queue(new TextField("last"));
 child.queue(new TextField("dob"));
 ----
 
-NOTE: Note that we had to queue child’s 'first' and 'last' name fields to the 'child' container in order to disambiguate their wicket ids.
+NOTE: Note that we had to queue child’s _first_ and _last_ name fields to the _child_ container in order to disambiguate their wicket ids.
 
 
 The code above does not look shorter or that much different, so where is the advantage?
 
-Suppose our designer wants us to wrap the customer’s first and last name fields with a 'div' that changes its styling based on some condition. We saw how to do that above, we had to create a container and then reparent the two 'TextField' components into it. Using queueing we can skip the second step, all we have to do is add the following line:
+Suppose our designer wants us to wrap the customer’s first and last name fields with a _div_ that changes its styling based on some condition. We saw how to do that above, we had to create a container and then reparent the two _TextField_ components into it. Using queueing we can skip the second step, all we have to do is add the following line:
 
 [source,java]
 ----
@@ -164,6 +164,6 @@ queue(new WebMarkupContainer("container"));
 
 When dequeueing Wicket will automatically reparent the first and last name fields into the container for us.
 
-If the designer later wanted to move the first name field out of the 'div' we just added for them they could do it all by themselves without requiring any changes in the Java code. Wicket would dequeue the first name field into the form and the last name field into the container div.
+If the designer later wanted to move the first name field out of the _div_ we just added for them they could do it all by themselves without requiring any changes in the Java code. Wicket would dequeue the first name field into the form and the last name field into the container div.
 
 

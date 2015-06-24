@@ -3,7 +3,7 @@
 
 So far, as markup source for our pages/panels we have used a static markup file, no matter if it was inherited or directly associated to the component. Now we want to investigate a more complex use case where we want to dynamical generate the markup directly inside component code.
 
-To become a markup producer, a component must simply implement interface 'org.apache.wicket.markup.IMarkupResourceStreamProvider'. The only method defined in this interface is 'getMarkupResourceStream(MarkupContainer, Class<?>)' which returns an utility interface called 'IResourceStream' representing the actual markup.
+To become a markup producer, a component must simply implement interface _org.apache.wicket.markup.IMarkupResourceStreamProvider_. The only method defined in this interface is _getMarkupResourceStream(MarkupContainer, Class<?>)_ which returns an utility interface called _IResourceStream_ representing the actual markup.
 
 In the following example we have a custom panel without a related markup file that generates a simple <div> tag as markup: 
 
@@ -29,9 +29,9 @@ Class StringResourceStream is a resource stream that uses a String instance as b
 
 === Avoiding markup caching
 
-As we have seen in the previous paragraph, Wicket uses an internal cache for components markup. This can be a problem if our component dynamical generates its markup when it is rendered because once the markup has been cached, Wicket will always use the cached version for the specific component. To overwrite this default caching policy, a component can implement interface 'IMarkupCacheKeyProvider'. 
+As we have seen in the previous paragraph, Wicket uses an internal cache for components markup. This can be a problem if our component dynamical generates its markup when it is rendered because once the markup has been cached, Wicket will always use the cached version for the specific component. To overwrite this default caching policy, a component can implement interface _IMarkupCacheKeyProvider_. 
 
-This interface defines method 'getCacheKey(MarkupContainer, Class<?>)' which returns a string value representing the key used by Wicket to retrieve the markup of the component from the cache. If this value is null the markup will not be cached, allowing the component to display the last generated markup each time it is rendered:
+This interface defines method _getCacheKey(MarkupContainer, Class<?>)_ which returns a string value representing the key used by Wicket to retrieve the markup of the component from the cache. If this value is null the markup will not be cached, allowing the component to display the last generated markup each time it is rendered:
 
 [source,java]
 ----

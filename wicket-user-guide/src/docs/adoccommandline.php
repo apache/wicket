@@ -7,6 +7,9 @@
 	$noteactive = 0;
 	$tableactive = 0;
 	$imagelink= "";
+	require_once "spyc.php";
+	$tocarray = Spyc::YAMLLoad('guide/toc.yml');
+	
 	while (($gdoc=fgets(STDIN, 256*1024)) !== false){ 
 		$gdoclength= strlen($gdoc);
 		for($i=0; $i<$gdoclength; $i++){
@@ -36,7 +39,7 @@
 			if ($codeactive==0){
 				if($gdoc[$i]=="@"){
 					$apos = html_entity_decode("\'");
-					echo $apos[1];
+					echo "_";
 					$echo=1;
 				}
 			}
@@ -143,9 +146,9 @@
 						$templink= $templink . $gdoc[$i+$i2];
 					}
 					if($link==""){
-							$link=$templink;
-							$link=substr_replace($link, "", 0,1);
-						}
+						$link=$templink;
+						$link=substr_replace($link, "", 0,1);
+					}
 					if($linkname==""){
 					$linkvalidated = filter_var($link, FILTER_SANITIZE_URL);
 					if (!filter_var($linkvalidated, FILTER_VALIDATE_URL) === false) {
@@ -169,10 +172,44 @@
 					}		
 					if($linkplaced==0){
 						if($linkname!=""){
-							$linklength = strlen($link) + strlen($linkname) + 2;	
-							echo " <<$linkname,$link>>\n";
-							$echo=1;
-							$i=$i+$linklength;
+							$linknamelength=strlen($linkname);
+							$linkname=substr($linkname,6,$linknamelength-6);
+							$linknamelength=strlen($linkname);
+							if($linkname[$linknamelength-2]=="_"){
+								$linkbase=substr($linkname,0,$linknamelength-2);
+								foreach($tocarray as $key => $value){
+									if($key==$linkbase){
+										foreach($tocarray["$key"] as $key2 => $value2){
+											if($key2==$linkname){
+												$value2=str_replace(" - ","-",$value2);
+												$value2=str_replace("   ","-",$value2);
+												$value2=str_replace("  ","-",$value2);
+												$value2=str_replace(" ","-",$value2);
+												$value2=strtolower(ereg_replace("[^A-Za-z-]", "",$value2));
+												echo "<<$linkbase.adoc#$value2,$link>>";
+												$echo=1;
+												$linklength=strlen($link);
+												$i=$i+$linklength+$linknamelength+8;
+											}
+										}
+									}
+								}
+							}else{
+								foreach($tocarray as $key => $value){
+									if($key==$linkname){
+										$value2=$tocarray[$key]["title"];
+										$value2=str_replace(" - ","-",$value2);
+										$value2=str_replace("   ","-",$value2);
+										$value2=str_replace("  ","-",$value2);
+										$value2=str_replace(" ","-",$value2);
+										$value2=strtolower(ereg_replace("[^A-Za-z-]", "",$value2));
+										echo "\n<<$value2,$link>>";
+										$echo=1;
+										$linklength=strlen($link);
+										$i=$i+$linklength+$linknamelength+8;
+									}
+								}
+							}
 						}else{
 							$linklength = strlen($link) + strlen($linkname) + 1;
 							echo " <<$link>>\n";

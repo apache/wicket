@@ -1,8 +1,8 @@
 
-At the end of the previous chapter we have seen how to hide a component calling its method 'setVisible'. In a similar fashion, we can also decide to disable a component using method 'setEnabled'. When a component is disabled all the links inside it will be in turn disabled (they will be rendered as '<span>') and it can not fire JavaScript events. 
+At the end of the previous chapter we have seen how to hide a component calling its method _setVisible_. In a similar fashion, we can also decide to disable a component using method _setEnabled_. When a component is disabled all the links inside it will be in turn disabled (they will be rendered as _<span>_) and it can not fire JavaScript events. 
 
-Class 'Component' provides two getter methods to determinate if a component is visible or enabled: 'isVisible' and 'isEnabled'. 
+Class _Component_ provides two getter methods to determinate if a component is visible or enabled: _isVisible_ and _isEnabled_. 
 
-Even if nothing prevents us from overriding these two methods to implement a custom logic to determinate the state of a component, we should keep in mind that methods 'isVisible' and 'isEnabled' are called multiple times before a component is fully rendered. Hence, if we place non-trivial code inside these two methods, we can sensibly deteriorate the responsiveness of our pages.
+Even if nothing prevents us from overriding these two methods to implement a custom logic to determinate the state of a component, we should keep in mind that methods _isVisible_ and _isEnabled_ are called multiple times before a component is fully rendered. Hence, if we place non-trivial code inside these two methods, we can sensibly deteriorate the responsiveness of our pages.
 
-As we will see in the next chapter, class 'Component' provides method 'onConfigure' which is more suited to contain code that contributes to determinate component states because it is called just once during rendering phase.
+As we will see in the next chapter, class _Component_ provides method _onConfigure_ which is more suited to contain code that contributes to determinate component states because it is called just once during rendering phase.

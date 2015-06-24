@@ -1,7 +1,7 @@
 
 
 
-One of the main goals of Wicket is to use JavaBeans and POJO as data model, overcoming the impedance mismatch between web technologies and OO paradigm. In order to make this task as easy as possible, Wicket offers two special model classes: 'org.apache.wicket.model.PropertyModel' and 'org.apache.wicket.model.CompoundPropertyModel'. We will see how to use them in the next two examples, using the following JavaBean as the data object:
+One of the main goals of Wicket is to use JavaBeans and POJO as data model, overcoming the impedance mismatch between web technologies and OO paradigm. In order to make this task as easy as possible, Wicket offers two special model classes: _org.apache.wicket.model.PropertyModel_ and _org.apache.wicket.model.CompoundPropertyModel_. We will see how to use them in the next two examples, using the following JavaBean as the data object:
 
 [source,java]
 ----
@@ -43,7 +43,7 @@ Person person = new Person();
 Label label = new Label("name", new Model(person.getName()));
 ----
 
-However this solution has a huge drawback: the text displayed by the label will be static and if we change the value of the field, the label won't update its content. Instead, to always display the current value of a class field, we should use the 'org.apache.wicket.model.PropertyModel' model class:
+However this solution has a huge drawback: the text displayed by the label will be static and if we change the value of the field, the label won't update its content. Instead, to always display the current value of a class field, we should use the _org.apache.wicket.model.PropertyModel_ model class:
 
 [source,java]
 ----
@@ -53,7 +53,7 @@ Person person = new Person();
 Label label = new Label("name", new PropertyModel(person, "name"));
 ----
 
-PropertyModel has just one constructor with two parameters: the model object (person in our example) and the name of the property we want to read/write ( [name] in our example). This last parameter is called property expression. Internally, methods getObject/setObject use property expression to get/set property's value. To resolve class properties PropertyModel uses class 'org.apache.wicket.util.lang.Property' Resolver which can access any kind of property, private fields included.
+PropertyModel has just one constructor with two parameters: the model object (person in our example) and the name of the property we want to read/write ( [name] in our example). This last parameter is called property expression. Internally, methods getObject/setObject use property expression to get/set property's value. To resolve class properties PropertyModel uses class _org.apache.wicket.util.lang.Property_ Resolver which can access any kind of property, private fields included.
 
 Just like the Java language, property expressions support dotted notation to select sub properties. So if we want to display the name of the Person's spouse we can write:
 
@@ -81,7 +81,7 @@ mapField[key].subfield ...
 
 === CompoundPropertyModel and model inheritance
 
-Class 'org.apache.wicket.model.CompoundPropertyModel' is a particular kind of model which is usually used in conjunction with another Wicket feature called model inheritance. With this feature, when a component needs to use a model but none has been assigned to it, it will search through the whole container hierarchy for a parent with an inheritable model. Inheritable models are those which implement interface 'org.apache.wicket.model.IComponentInheritedModel' and 'CompoundPropertyModel' is one of them. Once a 'CompoundPropertyModel' has been inherited by a component, it will behave just like a PropertyModel using the id of the component as property expression. As a consequence, to make the most of CompoundPropertyModel we must assign it to one of the containers of a given component, rather than directly to the component itself.
+Class _org.apache.wicket.model.CompoundPropertyModel_ is a particular kind of model which is usually used in conjunction with another Wicket feature called model inheritance. With this feature, when a component needs to use a model but none has been assigned to it, it will search through the whole container hierarchy for a parent with an inheritable model. Inheritable models are those which implement interface _org.apache.wicket.model.IComponentInheritedModel_ and _CompoundPropertyModel_ is one of them. Once a _CompoundPropertyModel_ has been inherited by a component, it will behave just like a PropertyModel using the id of the component as property expression. As a consequence, to make the most of CompoundPropertyModel we must assign it to one of the containers of a given component, rather than directly to the component itself.
 
 For example if we use CompoundPropertyModel with the previous example (display spouse's name), the code would become like this:
 

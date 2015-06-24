@@ -1,7 +1,7 @@
 
 
 
-A link to a bookmarkable page can be built with the link component 'org.apache.wicket.markup.html.link.BookmarkablePageLink':
+A link to a bookmarkable page can be built with the link component _org.apache.wicket.markup.html.link.BookmarkablePageLink_:
 
 [source,java]
 ----

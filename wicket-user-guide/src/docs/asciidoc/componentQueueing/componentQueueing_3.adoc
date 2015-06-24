@@ -1,7 +1,7 @@
 
-Once you call 'queue()', when are the components dequeued into the page hierarchy? When is it safe to call 'getParent()' or use methods such as 'isVisibleInHierarchy()' which rely on component’s position in hierarchy?
+Once you call _queue()_, when are the components dequeued into the page hierarchy? When is it safe to call _getParent()_ or use methods such as _isVisibleInHierarchy()_ which rely on component’s position in hierarchy?
 
-The components are dequeued as soon as a path is available from 'Page' to the component they are queued into. The dequeue operation needs access to markup which is only available once the Page is known (because the 'Page' object controls the extension of the markup).
+The components are dequeued as soon as a path is available from _Page_ to the component they are queued into. The dequeue operation needs access to markup which is only available once the Page is known (because the _Page_ object controls the extension of the markup).
 
-If the 'Page' is known at the time of the 'queue()' call (eg if its called inside 'onInitialize()') the components are dequeued before 'queue()' returns.
+If the _Page_ is known at the time of the _queue()_ call (eg if its called inside _onInitialize()_) the components are dequeued before _queue()_ returns.
 

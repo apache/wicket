@@ -1,11 +1,11 @@
 
 
 
-With class 'org.apache.wicket.behavior.Behavior' Wicket provides a very flexible mechanism to share common features across different components and to enrich existing components with further functionalities. As the class name suggests, 'Behavior' adds a generic behavior to a component modifying its markup and/or contributing to the header section of the page ('Behavior' implements the interface 'IHeaderContributor').
+With class _org.apache.wicket.behavior.Behavior_ Wicket provides a very flexible mechanism to share common features across different components and to enrich existing components with further functionalities. As the class name suggests, _Behavior_ adds a generic behavior to a component modifying its markup and/or contributing to the header section of the page (_Behavior_ implements the interface _IHeaderContributor_).
 
-One or more behaviors can be added to a component with 'Component''s method 'add(Behavior...)', while to remove a behavior we must use method 'remove(Behavior)'.
+One or more behaviors can be added to a component with _Component_'s method _add(Behavior...)_, while to remove a behavior we must use method _remove(Behavior)_.
 
-Here is a partial list of methods defined inside class 'Behavior' along with a brief description of what they do:
+Here is a partial list of methods defined inside class _Behavior_ along with a brief description of what they do:
 
 * *beforeRender(Component component)*: called when a component is about to be rendered. 
 * *afterRender(Component component)*: called after a component has been rendered. 
@@ -40,9 +40,9 @@ public class RedAsteriskBehavior extends Behavior {
 }
 ----
 
-Since method 'beforeRender' is called before the coupled component is rendered, we can use it to prepend custom markup to component tag. This can be done writing our markup directly to the current  Response object, as we did in the example above.
+Since method _beforeRender_ is called before the coupled component is rendered, we can use it to prepend custom markup to component tag. This can be done writing our markup directly to the current  Response object, as we did in the example above.
 
-Please note that we could achieve the same result overriding component method 'onBeforeRender'. However using a behavior we can easily reuse our custom code with any other kind of component without modifying its source code. As general best practice we should always consider to implement a new functionality using a behavior if it can be shared among different kinds of component.
+Please note that we could achieve the same result overriding component method _onBeforeRender_. However using a behavior we can easily reuse our custom code with any other kind of component without modifying its source code. As general best practice we should always consider to implement a new functionality using a behavior if it can be shared among different kinds of component.
 
 Behaviors play also a strategic role in the built-in AJAX support provided by Wicket, as we will see in the next chapter. 
 

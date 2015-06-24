@@ -1,8 +1,8 @@
 
-Standard JSR 303 defines a set of annotations and APIs to validate our domain objects at field-level. Wicket has introduced an experimental support for this standard since version 6.4.0 and with version 6.14.0 it has became an official Wicket model (named 'wicket-bean-validation').
-In this paragraph we will see the basic steps needed to use JSR 303 validation in our Wicket application. Code snippets are from example project 'JSR303validation'.
+Standard JSR 303 defines a set of annotations and APIs to validate our domain objects at field-level. Wicket has introduced an experimental support for this standard since version 6.4.0 and with version 6.14.0 it has became an official Wicket model (named _wicket-bean-validation_).
+In this paragraph we will see the basic steps needed to use JSR 303 validation in our Wicket application. Code snippets are from example project _JSR303validation_.
 
-In the example application we have a form to insert the data for a new 'Person' bean and its relative 'Address'. The code for class 'Person' is the following
+In the example application we have a form to insert the data for a new _Person_ bean and its relative _Address_. The code for class _Person_ is the following
 
 [source,java]
 ----
@@ -26,7 +26,7 @@ public class Person implements Serializable{
 }
 ----
 
-You can note the JSR 303 annotations used in the code above to declare validation constraints on class fields. Class 'Address' has the following code:
+You can note the JSR 303 annotations used in the code above to declare validation constraints on class fields. Class _Address_ has the following code:
 
 [source,java]
 ----
@@ -43,7 +43,7 @@ public class Address implements Serializable {
 }
 ----
 
-You might have noted that in class 'Address' we have used annotation 'Pattern using also attribute 'message' which contains the key of the bundle to use for validation message. Our custom bundle is contained inside 'HomePage.properties':
+You might have noted that in class _Address_ we have used annotation _Pattern using also attribute _message_ which contains the key of the bundle to use for validation message. Our custom bundle is contained inside _HomePage.properties_:
 
 [source,java]
 ----
@@ -64,7 +64,7 @@ public class WicketApplication extends WebApplication {
 }
 ----
 
-The last step to harness JSR 303 annotations is to add validator 'org.apache.wicket.bean.validation.PropertyValidator' to our corresponding form components:
+The last step to harness JSR 303 annotations is to add validator _org.apache.wicket.bean.validation.PropertyValidator_ to our corresponding form components:
 
 [source,java]
 ----

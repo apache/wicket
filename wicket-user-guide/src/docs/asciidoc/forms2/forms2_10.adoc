@@ -1,8 +1,8 @@
 
 
 
-In  <<guide:versioningCaching,chapter 8>>
- we have seen how Wicket pages can be divided into two categories: stateful and stateless. Pages that are stateless don't need to be stored in the user session and they should be used  when we don't need to save any user data in the user session (for example in the public area of a site).
+In 
+<<page-versioning-and-caching,chapter 8>> we have seen how Wicket pages can be divided into two categories: stateful and stateless. Pages that are stateless don't need to be stored in the user session and they should be used  when we don't need to save any user data in the user session (for example in the public area of a site).
 
 Besides saving resources on server-side, stateless pages can be adopted to improve user experience and to avoid security weaknesses. A typical situation where a stateless page can bring these benefits is when we have to implement a login page. 
 

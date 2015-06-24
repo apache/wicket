@@ -39,9 +39,9 @@ Variation's value contributes to the final full name of the bundle and is placed
 
 === Using UTF-8 for resource bundles
 
-Java uses the standard character set  http://en.wikipedia.org/wiki/ISO/IEC_8859-1[ISO 8859-11] to encode text files like properties files. Unfortunately ISO 8859-1 does not support most of the extra-European languages like Chinese or Japanese. The only way to use properties files with such languages is to use escaped  http://en.wikipedia.org/wiki/List_of_Unicode_characters[Unicode] characters, but this leads to not human-readable files. For example if we wanted to write the word 'website' in simplified Chinese (the ideograms are 网站) we should write the Unicode characters '\u7F51\u7AD9'.
+Java uses the standard character set  http://en.wikipedia.org/wiki/ISO/IEC_8859-1[ISO 8859-11] to encode text files like properties files. Unfortunately ISO 8859-1 does not support most of the extra-European languages like Chinese or Japanese. The only way to use properties files with such languages is to use escaped  http://en.wikipedia.org/wiki/List_of_Unicode_characters[Unicode] characters, but this leads to not human-readable files. For example if we wanted to write the word 'website' in simplified Chinese (the ideograms are 网站) we should write the Unicode characters _\u7F51\u7AD9_.
 For this reason ISO 8859-11 is being replaced with another Unicode-compliant character encoding called UTF-8. Text files created with this encoding can contain Unicode symbols in plain format.
-Wicket provides a useful convention to use properties file encoded with UTF-8. We just have to add prefix '.utf8.' to file extension (i.e. '.utf8.properties').
+Wicket provides a useful convention to use properties file encoded with UTF-8. We just have to add prefix _.utf8._ to file extension (i.e. _.utf8.properties_).
 
 NOTE: If you want to use UTF-8 with your text files, make sure that your editor/IDE is actually using this character encoding. Some OS like Windows use a different encoding by default.
 
@@ -64,8 +64,7 @@ To use XML bundles in Wicket we don't need to put in place any additional config
 
 === Reading bundles from code
 
-Class Component makes reading bundles very easy with method getString(String key). This method searches for a resource with the given key looking into the resource bundles visited by the lookup algorithm illustrated in  <<guide:i18n_3,paragraph 15.3>>
-. For example if we have a greeting message with key greetingMessage in our application's resource  bundle, we can read it from our component code with this instruction:
+Class Component makes reading bundles very easy with method getString(String key). This method searches for a resource with the given key looking into the resource bundles visited by the lookup algorithm illustrated in <<i18n.adoc#bundles-lookup-algorithm,paragraph 15.3>>. For example if we have a greeting message with key greetingMessage in our application's resource  bundle, we can read it from our component code with this instruction:
 
 [source,java]
 ----
@@ -74,8 +73,7 @@ getString("greetingMessage");
 
 === Localization of bundles in Wicket
 
-In  <<guide:forms2_2,paragraph 12.2>>
- we have used as resource bundle the properties file placed next to our application class. This file is the default resource bundle for the entire application and it is used by the lookup algorithm if it doesn't find any better match for a given component and locale. If we want to provide localized versions of this file we must simply follow the rules of Java i18n and put our translated resources into another properties file with a name corresponding to the desired locale. For example project LocalizedGreetings comes with the default application's properties file ( WicketApplication.properties) containing a greeting message:
+In <<forms2.adoc#form-validation-and-feedback-messages,paragraph 12.2>> we have used as resource bundle the properties file placed next to our application class. This file is the default resource bundle for the entire application and it is used by the lookup algorithm if it doesn't find any better match for a given component and locale. If we want to provide localized versions of this file we must simply follow the rules of Java i18n and put our translated resources into another properties file with a name corresponding to the desired locale. For example project LocalizedGreetings comes with the default application's properties file ( WicketApplication.properties) containing a greeting message:
 
 [source,java]
 ----
@@ -100,8 +98,7 @@ AbstractReadOnlyModel<String> model = new AbstractReadOnlyModel<String>() {
 add(new Label("greetingMessage", model));
 ----
 
-Class 'org.apache.wicket.model.AbstractReadOnlyModel' is a convenience class for implementing read-only models. In this project we have implemented a custom read-only model for illustrative purposes only because Wicket already provides built-in models for the same task. We will see them in paragraph  <<guide:i18n_5,paragraph 15.5>>
-.
+Class _org.apache.wicket.model.AbstractReadOnlyModel_ is a convenience class for implementing read-only models. In this project we have implemented a custom read-only model for illustrative purposes only because Wicket already provides built-in models for the same task. We will see them in paragraph <<i18n.adoc#internationalization-and-models,paragraph 15.5>>.
 
 The rest of the code of the home page builds the stateless form and the drop-down menu used to change the locale.
 
@@ -140,7 +137,7 @@ String resources can be also retrieved directly from markup code using tag <wick
 <wicket:message key="greetingMessage">message goes here</wicket:message>
 ----
 
-By default the resource value is not escaped for HTML entities. To do that use the 'escape' attribute:
+By default the resource value is not escaped for HTML entities. To do that use the _escape_ attribute:
 
 [source,xml]
 ----
@@ -148,7 +145,7 @@ By default the resource value is not escaped for HTML entities. To do that use t
 ----
 
 
-'wicket:message' can be adopted also to localize the attributes of a tag. The name of the attribute and the resource key are expressed as a colon-separated value. In the following markup the content of attribute 'value' will be replaced with the localized resource having 'key4value' as key:
+_wicket:message_ can be adopted also to localize the attributes of a tag. The name of the attribute and the resource key are expressed as a colon-separated value. In the following markup the content of attribute _value_ will be replaced with the localized resource having 'key4value' as key:
 
 [source,html]
 ----

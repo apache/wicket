@@ -34,7 +34,7 @@ public class LoginPageTest {
 }
 ----
 
-By defining three annotations on the class level (see code snippet above) in your test, Spring's TestContext framework takes care of preparing and initializing an ApplicationContext instance having all the beans defined in the according Spring context file as well as the transaction management in case your integration test includes some kind of database access. Fields marked with '\'Autowired' annotation will be automatically dependency injected as well so that you can easily access and use these for your testing purposes. Since MyWebApplication, which extends Wicket's WebApplication type and represents the main class of our web application, is also a bean within the ApplicationContext managed by Spring, it will also be provided to us by the test framework itself and can be easily used in order to initialize a WicketTester instance later on during the execution of the test's setUp() method. With this kind of simple, annotation based test configuration we are able to run an integration test that verifies whether a LoginPage gets started and initialized, whether the rendering of the page runs smoothly and whether the page itself contains a LoginComponent that we possibly need in order to process user's login successfully.
+By defining three annotations on the class level (see code snippet above) in your test, Spring's TestContext framework takes care of preparing and initializing an ApplicationContext instance having all the beans defined in the according Spring context file as well as the transaction management in case your integration test includes some kind of database access. Fields marked with _\_Autowired_ annotation will be automatically dependency injected as well so that you can easily access and use these for your testing purposes. Since MyWebApplication, which extends Wicket's WebApplication type and represents the main class of our web application, is also a bean within the ApplicationContext managed by Spring, it will also be provided to us by the test framework itself and can be easily used in order to initialize a WicketTester instance later on during the execution of the test's setUp() method. With this kind of simple, annotation based test configuration we are able to run an integration test that verifies whether a LoginPage gets started and initialized, whether the rendering of the page runs smoothly and whether the page itself contains a LoginComponent that we possibly need in order to process user's login successfully.
 
 When you run this test though, you'll unfortunately get the following exception raised:
 
@@ -61,7 +61,7 @@ java.lang.IllegalStateException: No WebApplicationContext found: no ContextLoade
 	<init>(WicketTester.java:308)
 ----
 
-As you can see above, the Exception gets raised during the initialization of the 'WicketTester' instance even before the actual test method gets executed. Even though we have applied rather cool and simple annotation based test configuration already described and passed in perfectly well prepared ApplicationContext instance to the WicketTester instance in the constructor, somewhere down the rabbit hole someone complained that no WebApplicationContext instance could have been found which seems to be required in order to initialize the WicketTester properly.
+As you can see above, the Exception gets raised during the initialization of the _WicketTester_ instance even before the actual test method gets executed. Even though we have applied rather cool and simple annotation based test configuration already described and passed in perfectly well prepared ApplicationContext instance to the WicketTester instance in the constructor, somewhere down the rabbit hole someone complained that no WebApplicationContext instance could have been found which seems to be required in order to initialize the WicketTester properly.
 
 image::../img/description-of-illegalstate.jpg[]
 
@@ -105,7 +105,7 @@ public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx,
 }
 ----
 
-In order to use this constructor instead of the one we used previously, we now obviously need to get hold of the 'ApplicationContext' instance on our own in our 'MyWebApplication' implementation. The easiest way to do this is to use Spring's own concept of  http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/beans.html#beans-factory-aware[lifecycle callbacks] provided to the beans managed by the Spring container. Since our 'MyWebApplication' is also a bean managed by the Spring container at runtime (enabled by the classpath scanning and '\'Component' annotation on a type level), we can declare it to implement 'ApplicationContextAware' interface which ensures that it gets provided with the 'ApplicationContext' instance that it runs in by the Spring container itself during startup.
+In order to use this constructor instead of the one we used previously, we now obviously need to get hold of the _ApplicationContext_ instance on our own in our _MyWebApplication_ implementation. The easiest way to do this is to use Spring's own concept of  http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/beans.html#beans-factory-aware[lifecycle callbacks] provided to the beans managed by the Spring container. Since our _MyWebApplication_ is also a bean managed by the Spring container at runtime (enabled by the classpath scanning and _\_Component_ annotation on a type level), we can declare it to implement _ApplicationContextAware_ interface which ensures that it gets provided with the _ApplicationContext_ instance that it runs in by the Spring container itself during startup.
 
 [source,java]
 ----
@@ -116,7 +116,7 @@ public interface ApplicationContextAware {
 }
 ----
 
-So the relevant parts of 'MyWebApplication' type will now look something like the following code snippet:
+So the relevant parts of _MyWebApplication_ type will now look something like the following code snippet:
 
 [source,java]
 ----
@@ -133,7 +133,7 @@ public class MyWebApplication extends WebApplication implements ApplicationConte
 }
 ----
 
-For additional clarification of how 'MyWebApplication' now relates to both Wicket and Spring framework here is an according class diagram:
+For additional clarification of how _MyWebApplication_ now relates to both Wicket and Spring framework here is an according class diagram:
 
 image::../img/mywebapp-class-diagramm.jpg[]
 

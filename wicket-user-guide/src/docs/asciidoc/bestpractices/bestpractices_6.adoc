@@ -1,7 +1,7 @@
 
 
 
-Always use models - period! Do not pass raw objects directly to components. Instances of pages and components can exist for several requests. If you use raw objects, you cannot replace them later. An example is an entity which gets loaded at each request within a 'LoadableDetachableModel'. The entity manager creates a new object reference, but the page would keep the obsolete instance. Always pass 'IModel' in the constructor of your components:
+Always use models - period! Do not pass raw objects directly to components. Instances of pages and components can exist for several requests. If you use raw objects, you cannot replace them later. An example is an entity which gets loaded at each request within a _LoadableDetachableModel_. The entity manager creates a new object reference, but the page would keep the obsolete instance. Always pass _IModel_ in the constructor of your components:
 
 *Listing 9:*
 
@@ -15,4 +15,4 @@ public class RegistrationInputPanel extends Panel{
 }
 ----
 
-This code can use any implementation of 'IModel', e.g. the class 'Model', a 'PropertyModel' or a custom implementation of 'LoadableDetachableModel' which loads and persists the values automatically. The model implementations gets very easy to replace. You - as a developer - just need to know: if I call 'IModel.getObject()', I will get an object of type 'Registration'. Where the object comes from is within the responsibility of the model implementation and the calling component. For example you can pass the model while instanciating the component. If you avoid using models, you will almost certainly have to modify the component tree sooner or later which forces you to duplicate states and thus produce unmaintainable code. Additionally, you should use models due to serialization issues. Objects which get stored in fields of pages and components get serialized and deserialized on each request. This can be inefficient in some cases.
+This code can use any implementation of _IModel_, e.g. the class _Model_, a _PropertyModel_ or a custom implementation of _LoadableDetachableModel_ which loads and persists the values automatically. The model implementations gets very easy to replace. You - as a developer - just need to know: if I call _IModel.getObject()_, I will get an object of type _Registration_. Where the object comes from is within the responsibility of the model implementation and the calling component. For example you can pass the model while instanciating the component. If you avoid using models, you will almost certainly have to modify the component tree sooner or later which forces you to duplicate states and thus produce unmaintainable code. Additionally, you should use models due to serialization issues. Objects which get stored in fields of pages and components get serialized and deserialized on each request. This can be inefficient in some cases.

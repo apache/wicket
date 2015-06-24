@@ -49,12 +49,11 @@ image::../img/browser-back.png[]
 
 NOTE: For more details about page storing you can take a look at paragraph  [Page storing] from chapter  [Wicket Internals] The content of this paragraph is from wiki page https://cwiki.apache.org/confluence/display/WICKET/Page+Storage. 
 
-As we have stated at the beginning of this chapter, page versions are stored using Java serialization, therefore every object referenced inside a page must be serializable. In  <<guide:modelsforms_6,paragraph 11.6>>
- we will see how to overcome this limit and work with non-serializable objects in our components using detachable Wicket models.
+As we have stated at the beginning of this chapter, page versions are stored using Java serialization, therefore every object referenced inside a page must be serializable. In <<modelsforms.adoc#detachable-models,paragraph 11.6>> we will see how to overcome this limit and work with non-serializable objects in our components using detachable Wicket models.
 
 === Using a specific page version with PageReference
 
-To retrieve a specific page version in our code we can use class 'org.apache.wicket.PageReference' by providing its constructor with the corresponding page id:
+To retrieve a specific page version in our code we can use class _org.apache.wicket.PageReference_ by providing its constructor with the corresponding page id:
 
 [source,java]
 ----
@@ -72,9 +71,9 @@ If for any reason we need to switch off versioning for a given page, we can call
 
 === Pluggable serialization
 
-Starting from version 1.5 it is possible to choose which implementation of Java serialization will be used by Wicket to store page versions. Wicket serializes pages using an implementation of interface 'org.apache.wicket.serialize.ISerializer'. The default implementation is 'org.apache.wicket.serialize.java.JavaSerializer' and it uses the standard Java serialization mechanism based on classes ObjectOutputStream and ObjectInputStream. However on Internet we can find other interesting serialization libraries like https://github.com/EsotericSoftware/kryo[Kryo]
+Starting from version 1.5 it is possible to choose which implementation of Java serialization will be used by Wicket to store page versions. Wicket serializes pages using an implementation of interface _org.apache.wicket.serialize.ISerializer_. The default implementation is _org.apache.wicket.serialize.java.JavaSerializer_ and it uses the standard Java serialization mechanism based on classes ObjectOutputStream and ObjectInputStream. However on Internet we can find other interesting serialization libraries like https://github.com/EsotericSoftware/kryo[Kryo]
 
-We can access this class inside the method 'init' of the class Application using the getFrameworkSettings() method :
+We can access this class inside the method _init_ of the class Application using the getFrameworkSettings() method :
 
 [source,java]
 ----
@@ -96,7 +95,7 @@ The following picture is an overview of these two caching levels:
 
 image::../img/wicket-cache.png[]
 
-The session-scoped cache is faster then the other memory levels but it contains only the pages used to serve the last request. Wicket allows us to set the maximum amount of memory allowed for the application-scoped cache and for the page store file. Both parameters can be configured via setting class 'org.apache.wicket.settings.StoreSettings'. 
+The session-scoped cache is faster then the other memory levels but it contains only the pages used to serve the last request. Wicket allows us to set the maximum amount of memory allowed for the application-scoped cache and for the page store file. Both parameters can be configured via setting class _org.apache.wicket.settings.StoreSettings_. 
 
 This interface provides the setMaxSizePerSession(Bytes bytes) method to set the size for page store file. The Bytes parameter is the maximum size allowed for this file:
 
@@ -110,7 +109,7 @@ public void init()
 }
 ----
 
-Class 'org.apache.wicket.util.lang.Bytes' is an utility class provided by Wicket to express size in bytes (for further details refer to the JavaDoc).
+Class _org.apache.wicket.util.lang.Bytes_ is an utility class provided by Wicket to express size in bytes (for further details refer to the JavaDoc).
 For the second level cache we can use the setInmemoryCacheSize(int inmemoryCacheSize) method. The integer parameter is the maximum number of page instances that will be saved into application-scoped cache:
 
 [source,java]
@@ -129,7 +128,7 @@ Page instances are not kept in the user session forever. They can be discarded w
 
 image::../img/page-expired.png[]
 
-This error page can be customized with the 'setPageExpiredErrorPage' method of class 'org.apache.wicket.settings.ApplicationSettings':
+This error page can be customized with the _setPageExpiredErrorPage_ method of class _org.apache.wicket.settings.ApplicationSettings_:
 
 [source,java]
 ----
@@ -142,6 +141,5 @@ public void init()
 }
 ----
 
-The page class provided as custom error page must have a public constructor with no argument or a constructor that takes as input a single PageParameters argument (the page must be bookmarkable as described in  <<guide:urls_1,paragraph 10.1.1>>
-).
+The page class provided as custom error page must have a public constructor with no argument or a constructor that takes as input a single PageParameters argument (the page must be bookmarkable as described in <<urls.adoc#pageparameters,paragraph 10.1.1>>).
 

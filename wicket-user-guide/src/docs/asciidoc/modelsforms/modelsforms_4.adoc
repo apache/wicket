@@ -1,7 +1,7 @@
 
 
 
-Class 'org.apache.wicket.markup.html.form.DropDownChoice' is the form component needed to display a list of possible options as a drop-down list where users can select one of the proposed options. This component must be used with <select> tag:
+Class _org.apache.wicket.markup.html.form.DropDownChoice_ is the form component needed to display a list of possible options as a drop-down list where users can select one of the proposed options. This component must be used with <select> tag:
 
 Html:
 
@@ -42,7 +42,7 @@ In the example above the possible options are provided as a list of String objec
 </select>
 ----
 
-The first option is a placeholder item corresponding to a null model value. By default DropDownChoice cannot have a null value so users are forced to select a not-null option. If we want to change this behavior we can set the nullValid flag to true via the setNullValid method. Please note that the placeholder text (“Chose one”) can be localized, as we will see in chapter 15. The other options are identified by the attribute value. By default the value of this attribute is the index of the single option inside the provided list of choices, while the text displayed to the user is obtained by  calling toString()on the choice object. This default behavior works fine as long as our options are simple objects like strings, but when we move to more complex objects we may need to implement a more sophisticated algorithm to generate the value to use as the option id and the one to display to user. Wicket has solved this problem with 'org.apache.wicket.markup.html.form.IChoiceRender' interface. This interface defines method getDisplayValue(T object) that is called to generate the value to display for the given choice object, and method getIdValue(T object, int index) that is called to generate the option id. The built-in implementation of this interface is class 'org.apache.wicket.markup.html.form.ChoiceRenderer' which renders the two values using property expressions.
+The first option is a placeholder item corresponding to a null model value. By default DropDownChoice cannot have a null value so users are forced to select a not-null option. If we want to change this behavior we can set the nullValid flag to true via the setNullValid method. Please note that the placeholder text (“Chose one”) can be localized, as we will see in chapter 15. The other options are identified by the attribute value. By default the value of this attribute is the index of the single option inside the provided list of choices, while the text displayed to the user is obtained by  calling toString()on the choice object. This default behavior works fine as long as our options are simple objects like strings, but when we move to more complex objects we may need to implement a more sophisticated algorithm to generate the value to use as the option id and the one to display to user. Wicket has solved this problem with _org.apache.wicket.markup.html.form.IChoiceRender_ interface. This interface defines method getDisplayValue(T object) that is called to generate the value to display for the given choice object, and method getIdValue(T object, int index) that is called to generate the option id. The built-in implementation of this interface is class _org.apache.wicket.markup.html.form.ChoiceRenderer_ which renders the two values using property expressions.
 
 In the following code we want to show a list of Person objects using their full name as value to display and using their passport code as option id: 
 

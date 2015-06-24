@@ -13,7 +13,7 @@ TextField integerField = new TextField("number", new Model()).setType(Integer.cl
 
 If no type has been provided, FormComponent will try to ask its model for this information. The PropertyModel and CompoundPropertyModel models can use reflection to get the type of object model. By default, if FormComponent can not obtain the type of its model object in any way, it will consider it as a simple String.
 
-Once FormComponent has determined the type of model object, it can look up for a converter, which is the entity in charge of converting input to Java object and vice versa. Converters are instances of 'org.apache.wicket.util.convert.IConverter' interface and are registered by our application class on start up. 
+Once FormComponent has determined the type of model object, it can look up for a converter, which is the entity in charge of converting input to Java object and vice versa. Converters are instances of _org.apache.wicket.util.convert.IConverter_ interface and are registered by our application class on start up. 
 
 To get a converter for a specific type we must call method getConverter(Class<C> type) on the interface IConverterLocator returned by Application's method getConverterLocator():
 
@@ -29,7 +29,7 @@ These kinds of components (like DropDownChoice and RadioChoice1) use their choic
 
 === Creating custom application-scoped converters
 
-The default converter locator used by Wicket is 'org.apache.wicket.ConverterLocator'. This class provides converters for the most common Java types. Here we can see the converters registered inside its constructor:
+The default converter locator used by Wicket is _org.apache.wicket.ConverterLocator_. This class provides converters for the most common Java types. Here we can see the converters registered inside its constructor:
 
 [source,java]
 ----
@@ -85,8 +85,8 @@ public class RegExpPatternConverter implements IConverter<Pattern> {
 }
 ----
 
-Methods declared by interface IConverter take as input a Locale parameter in order to deal with locale-sensitive data and conversions. We will learn more about locales and internationalization in  <<guide:i18n,paragraph 15>>
-.
+Methods declared by interface IConverter take as input a Locale parameter in order to deal with locale-sensitive data and conversions. We will learn more about locales and internationalization in 
+<<internationalization-with-wicket,paragraph 15>>.
 
 Once we have implemented our custom converter, we must override method newConverterLocator() inside our application class and tell it to add our new converter to the default set:
 

@@ -25,7 +25,7 @@ NOTE: Starting with Wicket version 6.0 interface IFormSubmitter defines a furthe
 
 === Components Button and SubmitLink
 
-Component 'org.apache.wicket.markup.html.form.Button' is a basic implementation of a form submitter. It can be used with either the <input> or <button> tags. The string model received as input by its constructor is used as button label and it will be the value of the markup attribute value.
+Component _org.apache.wicket.markup.html.form.Button_ is a basic implementation of a form submitter. It can be used with either the <input> or <button> tags. The string model received as input by its constructor is used as button label and it will be the value of the markup attribute value.
 
 In the following snippet we have a form with two submit buttons bound to an <input> tag. One of them is set as default button and both have a string model for the label:
 
@@ -80,7 +80,7 @@ public class HomePage extends WebPage {
 </form>
 ----
 
-Another component that can be used to submit a form is 'org.apache.wicket.markup.html.form.SubmitLink'. This component uses JavaScript to submit the form. Like the name suggests, the component can be used with the <a> tag but it can be also bound to any other tag that supports the event handler onclick. When used with the <a> tag, the JavaScript code needed to submit the form will be placed inside href attribute while with other tags the script will go inside the event handler onclick.
+Another component that can be used to submit a form is _org.apache.wicket.markup.html.form.SubmitLink_. This component uses JavaScript to submit the form. Like the name suggests, the component can be used with the <a> tag but it can be also bound to any other tag that supports the event handler onclick. When used with the <a> tag, the JavaScript code needed to submit the form will be placed inside href attribute while with other tags the script will go inside the event handler onclick.
 
 A notable difference between this component and Button is that SubmitLink can be placed outside the form it must submit. In this case we must specify the form to submit in its constructor:
 

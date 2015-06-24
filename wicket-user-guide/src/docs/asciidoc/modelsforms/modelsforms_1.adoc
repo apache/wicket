@@ -1,7 +1,7 @@
 
 
 
-Model is essentially a  http://en.wikipedia.org/wiki/Facade_pattern[facade] interface which allows components to access and modify their data without knowing any detail about how they are managed or persisted. Every component has at most one related model, while a model can be shared among different components. In Wicket a model is any implementation of the interface 'org.apache.wicket.model.IModel':
+Model is essentially a  http://en.wikipedia.org/wiki/Facade_pattern[facade] interface which allows components to access and modify their data without knowing any detail about how they are managed or persisted. Every component has at most one related model, while a model can be shared among different components. In Wicket a model is any implementation of the interface _org.apache.wicket.model.IModel_:
 
 image::../img/uml-imodel.png[]
 
@@ -23,7 +23,7 @@ public Label(final String id, String label) {
 }
 ----
 
-Class 'org.apache.wicket.model.Model' is a basic implementation of 'IModel'. It can wrap any object that implements the interface java.io.Serializable. The reason of this constraint over data object is that this model is stored in the web session, and we know from chapter 6 that data are stored into session using serialization.
+Class _org.apache.wicket.model.Model_ is a basic implementation of _IModel_. It can wrap any object that implements the interface java.io.Serializable. The reason of this constraint over data object is that this model is stored in the web session, and we know from chapter 6 that data are stored into session using serialization.
 
 NOTE: In general, Wicket models support a detaching capability that allows us to work also with non-serializable objects as data model. We will see the detaching mechanism later in this chapter.
 

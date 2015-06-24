@@ -1,13 +1,13 @@
 
 
 
-In addition to specific components, Wicket offers also a set of built in AJAX behaviors that can be used to easily add AJAX functionalities to existing components. As we will see in this paragraph AJAX behaviors can be used also to ajaxify components that weren't initially designed to work with this technology. All the following behaviors are inside package 'org.apache.wicket.ajax'. 
+In addition to specific components, Wicket offers also a set of built in AJAX behaviors that can be used to easily add AJAX functionalities to existing components. As we will see in this paragraph AJAX behaviors can be used also to ajaxify components that weren't initially designed to work with this technology. All the following behaviors are inside package _org.apache.wicket.ajax_. 
 
 === AjaxEventBehavior
 
-AjaxEventBehavior allows to handle a JavaScript event (like click, change, etc...) on server side via AJAX. Its constructor takes in input the name of the event that must be handled. Every time this event is fired for a given component on client side, the callback method 'onEvent(AjaxRequestTarget target)' is executed. onEvent is abstract, hence we must implement it to tell 'AjaxEventBehavior' what to do when the specified event occurs.
+AjaxEventBehavior allows to handle a JavaScript event (like click, change, etc...) on server side via AJAX. Its constructor takes in input the name of the event that must be handled. Every time this event is fired for a given component on client side, the callback method _onEvent(AjaxRequestTarget target)_ is executed. onEvent is abstract, hence we must implement it to tell _AjaxEventBehavior_ what to do when the specified event occurs.
 
-In project 'AjaxEventBehaviorExample' we used this behavior to build a “clickable” Label component that counts the number of clicks. Here is the code from the home page of the project:
+In project _AjaxEventBehaviorExample_ we used this behavior to build a “clickable” Label component that counts the number of clicks. Here is the code from the home page of the project:
 
 *HTML:*
 [source,html]
@@ -63,9 +63,9 @@ class ClickCounterLabel extends Label{
 }
 ----
 
-In the code above we have declared a custom label class named 'ClickCounterLabel' that exposes a public integer field called clickCounter. Then, in the home page we have attached a 'AjaxEventBehavior' to our custom label to increment clickCounter every time it receives a click event.
+In the code above we have declared a custom label class named _ClickCounterLabel_ that exposes a public integer field called clickCounter. Then, in the home page we have attached a _AjaxEventBehavior_ to our custom label to increment clickCounter every time it receives a click event.
 
-The number of clicks is displayed with another standard label named 'clickCounter'.
+The number of clicks is displayed with another standard label named _clickCounter_.
 
 === AjaxFormSubmitBehavior
 
@@ -85,7 +85,7 @@ add(submitButton);
 
 This behavior updates the model of the form component it is attached to when a given event occurs. The standard form submitting process is skipped and the behavior validates only its form component. 
 
-The behavior doesn't work with radio buttons and checkboxes. For these kinds of components we must use 'AjaxFormChoiceComponentUpdatingBehavior':
+The behavior doesn't work with radio buttons and checkboxes. For these kinds of components we must use _AjaxFormChoiceComponentUpdatingBehavior_:
 
 [source,java]
 ----
@@ -103,7 +103,7 @@ add(form.add(textField));
 
 === AbstractAjaxTimerBehavior
 
-'AbstractAjaxTimerBehavior' executes callback method 'onTimer(AjaxRequestTarget target)' at a specified interval. The behavior can be stopped and restarted at a later time with methods 'stop(AjaxRequestTarget target)' and 'restart(AjaxRequestTarget target)':
+_AbstractAjaxTimerBehavior_ executes callback method _onTimer(AjaxRequestTarget target)_ at a specified interval. The behavior can be stopped and restarted at a later time with methods _stop(AjaxRequestTarget target)_ and _restart(AjaxRequestTarget target)_:
 
 [source,java]
 ----

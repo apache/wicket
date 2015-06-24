@@ -5,8 +5,7 @@ Internationalization is another good chance to taste the power of models. Wicket
 
 === ResourceModel
 
-Model 'org.apache.wicket.model.ResourceModel' acts just like the read-only model we have implemented in  <<guide:i18n_3,paragraph 15.3>>
-. It simply retrieves a string resource corresponding to a given key:
+Model _org.apache.wicket.model.ResourceModel_ acts just like the read-only model we have implemented in <<i18n.adoc#bundles-lookup-algorithm,paragraph 15.3>>. It simply retrieves a string resource corresponding to a given key:
 
 [source,java]
 ----
@@ -24,7 +23,7 @@ new ResourceModel("notExistingResource", "Resource not found.");
 
 === StringResourceModel
 
-Model 'org.apache.wicket.model.StringResourceModel' allows to work with complex and dynamic string resources containing parameters and property expressions. The basic constructor of this model takes in input a resource key and another model. This further model can be used by both the key and the related resource to specify dynamic values with property expressions. For example let's say that we are working on an e-commerce site which has a page where users can see an overview of their orders. To handle the state of user's orders we will use the following bean and enum (the code is from project StringResourceModelExample):
+Model _org.apache.wicket.model.StringResourceModel_ allows to work with complex and dynamic string resources containing parameters and property expressions. The basic constructor of this model takes in input a resource key and another model. This further model can be used by both the key and the related resource to specify dynamic values with property expressions. For example let's say that we are working on an e-commerce site which has a page where users can see an overview of their orders. To handle the state of user's orders we will use the following bean and enum (the code is from project StringResourceModelExample):
 
 Bean:
 
@@ -78,9 +77,9 @@ Order order = new Order(new Date(), ORDER_STATUS.IN_PROGRESS);
 add(new Label("orderStatus", new StringResourceModel("orderStatus.${status.code}", Model.of(order))));
 ----
 
-As we can see in the code above also the key contains a property expression (${status.code}) which makes its value dynamic. In this way the state of an object (an Order in our example) can determinate which resource will be loaded by StringResourceModel. If we don't use properties expressions we can provide a null value as model and in this case StringResourceModel will behave exactly as a ResourceModel. StringResourceModel supports also the same parameter substitution used by standard class 'java.text.MessageFormat'. 
+As we can see in the code above also the key contains a property expression (${status.code}) which makes its value dynamic. In this way the state of an object (an Order in our example) can determinate which resource will be loaded by StringResourceModel. If we don't use properties expressions we can provide a null value as model and in this case StringResourceModel will behave exactly as a ResourceModel. StringResourceModel supports also the same parameter substitution used by standard class _java.text.MessageFormat_. 
 
-Parameters can be generic objects but if we use a model as parameter, StringResourceModel will use the data object inside it as actual value (it will call getObject on the model). Parameters are passed as a vararg argument with method 'setParameters(Object... parameters)'. Here is an example of usage of parameter substitution:
+Parameters can be generic objects but if we use a model as parameter, StringResourceModel will use the data object inside it as actual value (it will call getObject on the model). Parameters are passed as a vararg argument with method _setParameters(Object... parameters)_. Here is an example of usage of parameter substitution:
 
 Java code:
 

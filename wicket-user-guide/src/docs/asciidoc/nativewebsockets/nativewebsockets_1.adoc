@@ -1,10 +1,10 @@
 
-Each of the modules provide a specialization of 'org.apache.wicket.protocol.http.WicketFilter' that registers implementation specific endpoint when an HTTP request is http://en.wikipedia.org/wiki/WebSocket#WebSocket_protocol_handshake[upgraded]
+Each of the modules provide a specialization of _org.apache.wicket.protocol.http.WicketFilter_ that registers implementation specific endpoint when an HTTP request is http://en.wikipedia.org/wiki/WebSocket#WebSocket_protocol_handshake[upgraded]
 
-WebSockets communication can be used in a Wicket page by using 'org.apache.wicket.protocol.ws.api.WebSocketBehavior' or in a IResource by exteding 'org.apache.wicket.protocol.ws.api.WebSocketResource'.
+WebSockets communication can be used in a Wicket page by using _org.apache.wicket.protocol.ws.api.WebSocketBehavior_ or in a IResource by exteding _org.apache.wicket.protocol.ws.api.WebSocketResource_.
 When a client is connected it is being registered in a application scoped registry using as a key the application name, the client http session id, and the id of the page or the resource name that registered it. Later when the server needs to push a message it can use this registry to filter out which clients need to receive the message.
 
-When a message is received from the client Wicket wraps it in 'IWebSocketMessage' and calls WebSocketBehavior1.*onMessage()* or WebSocketResource1.*onMessage()* where the application logic can react on it.
-The server can push plain text and binary data to the client, but it can also add components for re-render, prepend/append JavaScript as it can do with  <<guide:ajax,Ajax>>
-.
+When a message is received from the client Wicket wraps it in _IWebSocketMessage_ and calls WebSocketBehavior1.*onMessage()* or WebSocketResource1.*onMessage()* where the application logic can react on it.
+The server can push plain text and binary data to the client, but it can also add components for re-render, prepend/append JavaScript as it can do with 
+<<working-with-ajax,Ajax>>.
 

@@ -1,9 +1,9 @@
 
 
 
-If we need to inject dependencies with Spring we can use listener 'org.apache.wicket.spring.injection.annot.SpringComponentInjector' provided by module wicket-spring.
+If we need to inject dependencies with Spring we can use listener _org.apache.wicket.spring.injection.annot.SpringComponentInjector_ provided by module wicket-spring.
 
-For the sake of simplicity in the example project 'SpringInjectionExample' we have used Spring class 'AnnotationConfigApplicationContext' to avoid any XML file and create a Spring context directly from code:
+For the sake of simplicity in the example project _SpringInjectionExample_ we have used Spring class _AnnotationConfigApplicationContext_ to avoid any XML file and create a Spring context directly from code:
 
 [source,java]
 ----
@@ -26,9 +26,9 @@ public class WicketApplication extends WebApplication
 }
 ----
 
-As we can see in the code above, the constructor of 'SpringComponentInjector' takes in input also an instance of Spring context.
+As we can see in the code above, the constructor of _SpringComponentInjector_ takes in input also an instance of Spring context.
 
-The injected object is the same used in the previous project 'EjbInjectionExample', it differs only for the greeting message:
+The injected object is the same used in the previous project _EjbInjectionExample_, it differs only for the greeting message:
 
 [source,java]
 ----
@@ -38,7 +38,7 @@ public class EnterpriseMessage {
 }
 ----
 
-In the home page of the project the object is injected using Wicket annotation 'SpringBean:
+In the home page of the project the object is injected using Wicket annotation _SpringBean:
 
 [source,java]
 ----
@@ -55,7 +55,7 @@ public class HomePage extends WebPage {
 }
 ----
 
-By default 'SpringBean' searches into Spring context for a bean having the same type of the annotated field. If we want we can specify also the name of the bean to use as injected object and we can declare if the dependency is required or not. By default dependencies are required and if they can not be resolved to a compatible bean, Wicket will throw an 'IllegalStateException':
+By default _SpringBean_ searches into Spring context for a bean having the same type of the annotated field. If we want we can specify also the name of the bean to use as injected object and we can declare if the dependency is required or not. By default dependencies are required and if they can not be resolved to a compatible bean, Wicket will throw an _IllegalStateException_:
 
 [source,java]
 ----

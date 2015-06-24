@@ -1,7 +1,7 @@
 
 
 
-Avoid unwrapping models within the constructor hierarchy, i.e. do not call 'IModel.getObject()' within any constructor. As already mentioned, a page instance can exist for several page requests, so you might store obsolete and redundant infomation. It is reasonable to unpack Wicket Models at events (user actions), that are methods like 'onUpdate()', 'onClick() or 'onSubmit()':
+Avoid unwrapping models within the constructor hierarchy, i.e. do not call _IModel.getObject()_ within any constructor. As already mentioned, a page instance can exist for several page requests, so you might store obsolete and redundant infomation. It is reasonable to unpack Wicket Models at events (user actions), that are methods like _onUpdate()_, _onClick() or _onSubmit()_:
 
 *Listing 10:*
 
@@ -16,4 +16,4 @@ new Form("register") {
 }
 ----
 
-An additional possibility to unwrap models is via overriding methods like 'isVisible()', 'isEnabled()' or 'onBeforeRender()'.
+An additional possibility to unwrap models is via overriding methods like _isVisible()_, _isEnabled()_ or _onBeforeRender()_.

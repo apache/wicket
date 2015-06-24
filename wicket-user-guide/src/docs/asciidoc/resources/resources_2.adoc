@@ -1,4 +1,4 @@
 
 
 
-Most of the times in Wicket we won't directly instantiate a resource but rather we will use a reference to it. Resource references are represented by abstract class 'org.apache.wicket.request.resource.ResourceReference' which returns a concrete resource with factory method getResource(). In this way we can lazy-initialize resources loading them only the first time they are requested.
+Most of the times in Wicket we won't directly instantiate a resource but rather we will use a reference to it. Resource references are represented by abstract class _org.apache.wicket.request.resource.ResourceReference_ which returns a concrete resource with factory method getResource(). In this way we can lazy-initialize resources loading them only the first time they are requested.

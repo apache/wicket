@@ -3,7 +3,7 @@ Wicket is available as a binary package on the main site  http://wicket.apache.o
 
 |===
  *Module'sname* | *Description* | *Dependencies*
-| wicket-core | Contains the main classes of the framework, like class 'Component' and 'Application'. | wicket-request, wicket-util
+| wicket-core | Contains the main classes of the framework, like class _Component_ and _Application_. | wicket-request, wicket-util
 | wicket-request | This module contains the classes involved into web request processing. | wicket-util
 | wicket-util | Contains general-purpose utility classes for functional areas such as I/O, lang, string manipulation, security, etc... | None
 | wicket-datetime | Contains special purpose components designed to work with date and time. | wicket-core

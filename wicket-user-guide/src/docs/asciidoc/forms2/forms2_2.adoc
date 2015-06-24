@@ -1,10 +1,9 @@
 
 
 
-A basic example of a validation rule is to make a field required. In  <<guide:modelsforms_3,paragraph 11.3>>
- we have already seen how this can be done calling setRequired(true) on a field. However, to set a validation rule on a FormComponent we must add the corresponding validator to it.
+A basic example of a validation rule is to make a field required. In <<modelsforms.adoc#wicket-forms,paragraph 11.3>> we have already seen how this can be done calling setRequired(true) on a field. However, to set a validation rule on a FormComponent we must add the corresponding validator to it.
 
-A validator is an implementation of the 'org.apache.wicket.validation.IValidator' interface and the 'FormComponent' has a version of method add which takes as input a reference of this interface. 
+A validator is an implementation of the _org.apache.wicket.validation.IValidator_ interface and the _FormComponent_ has a version of method add which takes as input a reference of this interface. 
 
 For example if we want to use a text field to insert an email address, we could use the built-in validator  EmailAddressValidator to ensure that the inserted input will respect the email format  http://en.wikipedia.org/wiki/Email_address[local-part@domain] :
 
@@ -20,25 +19,24 @@ Wicket comes with a set of built-in validators that should suit most of our need
 
 Wicket generates a feedback message for each field that doesn't satisfy one of its validation rules. For example the message generated when a required field is left empty is the following
 
-'Field '<label>' is required.'
+_Field '<label>' is required._
 
 <label> is the value of the label model set on a FormComponent with method setLabel(IModel <String> model). If such model is not provided, component id will be used as the default value.
 
 The entire infrastructure of feedback messages is built on top of the Java internationalization (I18N) support and it uses  http://docs.oracle.com/javase/tutorial/i18n/resbundle/index.html[resource bundles] to store messages.
 
-NOTE: The topics of internationalization will be covered in  <<guide:i18n,chapter 15>>
-. For now we will give just few notions needed to understand the examples from this chapter.
+NOTE: The topics of internationalization will be covered in 
+<<internationalization-with-wicket,chapter 15>>. For now we will give just few notions needed to understand the examples from this chapter.
 
-By default resource bundles are stored into properties files but we can easily configure other sources as described later in  <<guide:i18n_2,paragraph 15.2>>
-. 
+By default resource bundles are stored into properties files but we can easily configure other sources as described later in <<i18n.adoc#localization-in-wicket,paragraph 15.2>>. 
 
 Default feedback messages (like the one above for required fields) are stored in the file Application. properties placed inside Wicket the org.apache.wicket package. Opening this file we can find the key and the localized value of the message:
 
-'Required=Field '$\{label\}' is required.'
+_Required=Field '$\{label\}' is required._
 
 We can note the key (Required in our case) and the label parameter written in the  http://en.wikipedia.org/wiki/Expression_Language[expression language] (${label}). Scrolling down this file we can also find the message used by the Email AddressValidator:
 
-'EmailAddressValidator=The value of '${label}' is not a valid email address.'
+_EmailAddressValidator=The value of '${label}' is not a valid email address._
 
 By default FormComponent provides 3 parameters for feedback message: input (the value that failed validation), label and name (this later is the id of the component).
 
@@ -46,7 +44,7 @@ WARNING: Remember that component model is updated with the user input only if va
 
 === Displaying feedback messages and filtering them
 
-To display feedback messages we must use component 'org.apache.wicket.markup.html.panel.FeedbackPanel'. This component automatically reads all the feedback messages generated during form validation and displays them with an unordered list:
+To display feedback messages we must use component _org.apache.wicket.markup.html.panel.FeedbackPanel_. This component automatically reads all the feedback messages generated during form validation and displays them with an unordered list:
 
 [source,html]
 ----
@@ -77,11 +75,11 @@ Wicket already provides a number of built-in validators ready to be used. The fo
 
 ==== EmailAddressValidator
 
-Checks if input respects the format local-part\'domain.
+Checks if input respects the format local-part\_domain.
 
 *Message:*
 
-'The value of '${label}' is not a valid email address.'
+_The value of '${label}' is not a valid email address._
 
 ==== UrlValidator
 
@@ -89,7 +87,7 @@ Checks if input is a valid URL. We can specify in the constructor which protocol
 
 *Message:*
 
-'The value of '${label}' is not a valid URL.'
+_The value of '${label}' is not a valid URL._
 
 ==== DateValidator
 
@@ -97,11 +95,11 @@ Validator class that can be extended or used as a factory class to get date vali
 
 *Messages:*
 
-'The value of '${label}' is less than the minimum of ${minimum}.'
+_The value of '${label}' is less than the minimum of ${minimum}._
 
-'The value of '${label}' is larger than the maximum of ${maximum}.'
+_The value of '${label}' is larger than the maximum of ${maximum}._
 
-'The value of '${label}' is not between ${minimum} and ${maximum}.'
+_The value of '${label}' is not between ${minimum} and ${maximum}._
 
 ==== RangeValidator
 
@@ -111,11 +109,11 @@ The type of the value is a generic subtype of java.lang.Comparable and must impl
 
 *Messages:*
 
-'The value of '${label}' must be at least ${minimum}.'
+_The value of '${label}' must be at least ${minimum}._
 
-'The value of '${label}' must be at most ${maximum}.'
+_The value of '${label}' must be at most ${maximum}._
 
-'The value of '${label}' must be between ${minimum} and ${maximum}.'
+_The value of '${label}' must be between ${minimum} and ${maximum}._
 
 ==== StringValidator
 
@@ -125,13 +123,13 @@ To accept only string values consisting of exactly n characters, we must use met
 
 *Messages:*
 
-'The value of '${label}' is shorter than the minimum of ${minimum} characters.'
+_The value of '${label}' is shorter than the minimum of ${minimum} characters._
 
-'The value of '${label}' is longer than the maximum of ${maximum} characters.'
+_The value of '${label}' is longer than the maximum of ${maximum} characters._
 
-'The value of '${label}' is not between ${minimum} and ${maximum} characters long.'
+_The value of '${label}' is not between ${minimum} and ${maximum} characters long._
 
-'The value of '${label}' is not exactly ${exact} characters long.'
+_The value of '${label}' is not exactly ${exact} characters long._
 
 ==== CreditCardValidator
 
@@ -139,7 +137,7 @@ Checks if input is a valid credit card number. This validator supports some of t
 
 *Message:*
 
-'The credit card number is invalid.'
+_The credit card number is invalid._
 
 ==== EqualPasswordInputValidator
 
@@ -147,13 +145,13 @@ This validator checks if two password fields have the same value.
 
 *Message:*
 
-'${label0} and ${label1} must be equal.'
+_${label0} and ${label1} must be equal._
 
 === Overriding standard feedback messages with custom bundles
 
 If we don't like the default validation feedback messages, we can override them providing custom properties files. In these files we can write our custom messages using the same keys of the messages we want to override. For example if we wanted to override the default message for invalid email addresses, our properties file would contain a line like this:
 
-'EmailAddressValidator=Man, your email address is not good!'
+_EmailAddressValidator=Man, your email address is not good!_
 
 As we will see in the next chapter, Wicket searches for custom properties files in various positions inside the application's class path, but for now we will consider just the properties file placed next to our application class. The name of this file must be equal to the name of our application class:
 
@@ -161,7 +159,7 @@ image::../img/custom-properties-file.png[]
 
 The example project OverrideMailMessage overrides email validator's message with a new one which also reports the value that failed validation:
 
-'EmailAddressValidator=The value '${input}' inserted for field '${label}' is not a valid email address.'
+_EmailAddressValidator=The value '${input}' inserted for field '${label}' is not a valid email address._
 
 image::../img/validation-error-message.png[]
 
@@ -199,7 +197,7 @@ The custom validation logic is all inside IValidator's method validate. When val
 
 In our example when validation fails, we suggest a possible username concatenating the given input with a pseudo-random integer. This value is passed to the feedback message with a variable named suggestedUserName. The message is inside application's properties file:
 
-'UsernameValidator=The username '${input}' is already in use. Try with '${suggestedUserName}''
+_UsernameValidator=The username '${input}' is already in use. Try with '${suggestedUserName}'_
 
 To provide further variables to our feedback message we can use method setVariable(String name, Object value) of class ValidationError as we did in our example.
 

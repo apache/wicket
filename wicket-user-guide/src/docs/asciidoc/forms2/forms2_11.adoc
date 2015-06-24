@@ -5,8 +5,7 @@ In this paragraph we will see which components can be used to handle HTML radio 
 
 image::../img/choice-form-screenshot.png[]
 
-A check box can be used as single component to set a boolean property. For this purpose Wicket provides the 'org.apache.wicket.markup.html.form.CheckBox' component which must be attached to <input type= ../>[checkbox] tag. In the next example (project SingleCheckBox) we will consider a form similar to the one used in  <<guide:modelsforms_5,paragraph 11.5>>
- to edit a Person object, but with an additional checkbox to let the user decide if she wants to subscribe to our mailing list or not. The form uses the following bean as backing object:
+A check box can be used as single component to set a boolean property. For this purpose Wicket provides the _org.apache.wicket.markup.html.form.CheckBox_ component which must be attached to <input type= ../>[checkbox] tag. In the next example (project SingleCheckBox) we will consider a form similar to the one used in <<modelsforms.adoc#model-chaining,paragraph 11.5>> to edit a Person object, but with an additional checkbox to let the user decide if she wants to subscribe to our mailing list or not. The form uses the following bean as backing object:
 
 [source,java]
 ----
@@ -92,7 +91,7 @@ image::../img/subscribe-checkbox-set.png[]
 
 === Working with grouped checkboxes
 
-When we need to display a given number of options with checkboxes, we can use the 'org.apache.wicket.markup.html.form.CheckBoxMultipleChoice' component. For example, If our options are a list of strings, we can display them in this way:
+When we need to display a given number of options with checkboxes, we can use the _org.apache.wicket.markup.html.form.CheckBoxMultipleChoice_ component. For example, If our options are a list of strings, we can display them in this way:
 
 *HTML:*
 
@@ -116,12 +115,11 @@ form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new
 
 image::../img/grouped-checkbox.png[]
 
-This component can be attached to a <div> tag or to a <span> tag. No specific content is required for this tag as it will be populated with the actual checkboxes. Since this component allows multiple selection, its model object is a list. In the example above we have used model class 'org.apache.wicket.model.util.ListModel' which is specifically designed to wrap a List object.
+This component can be attached to a <div> tag or to a <span> tag. No specific content is required for this tag as it will be populated with the actual checkboxes. Since this component allows multiple selection, its model object is a list. In the example above we have used model class _org.apache.wicket.model.util.ListModel_ which is specifically designed to wrap a List object.
 
 By default CheckBoxMultipleChoice inserts a <br/> tag as suffix after each option. We can configure both the suffix and the prefix used by the component with the setPrefix and setSuffix methods.
 
-When our options are more complex objects than simple strings, we can render them using an IChoiceRender, as we did for DropDownChoice in  <<guide:modelsforms_5,paragraph 11.5>>
-:
+When our options are more complex objects than simple strings, we can render them using an IChoiceRender, as we did for DropDownChoice in <<modelsforms.adoc#model-chaining,paragraph 11.5>>:
 
 *HTML:*
 
@@ -155,7 +153,7 @@ A nice feature we can offer to users when we have a group of checkboxes is a “
 
 image::../img/select-all-checkbox.png[]
 
-Wicket comes with a couple of utility components that make it easy to implement such a feature. They are CheckboxMultipleChoiceSelector and CheckBoxSelector classes, both inside package 'org.apache.wicket.markup.html.form'. The difference between these two components is that the first works with an instance of CheckBoxMultipleChoice while the second takes in input a list of CheckBox objects:
+Wicket comes with a couple of utility components that make it easy to implement such a feature. They are CheckboxMultipleChoiceSelector and CheckBoxSelector classes, both inside package _org.apache.wicket.markup.html.form_. The difference between these two components is that the first works with an instance of CheckBoxMultipleChoice while the second takes in input a list of CheckBox objects:
 
 [source,java]
 ----
@@ -174,7 +172,7 @@ CheckBoxSelector cbmcs = new CheckBoxSelector("id", checkBox1, checkBox2, checkB
 
 === Working with grouped radio buttons
 
-For groups of radio buttons we can use the 'org.apache.wicket.markup.html.form.RadioChoice' component which works in much the same way as CheckBoxMultipleChoice:
+For groups of radio buttons we can use the _org.apache.wicket.markup.html.form.RadioChoice_ component which works in much the same way as CheckBoxMultipleChoice:
 
 *HTML:*
 

@@ -1,7 +1,7 @@
 
 
 
-The authorization support provided by Wicket is built around the concept of authorization strategy which is represented by interface 'IAuthorizationStrategy' (in package 'org.apache.wicket.authorization'):
+The authorization support provided by Wicket is built around the concept of authorization strategy which is represented by interface _IAuthorizationStrategy_ (in package _org.apache.wicket.authorization_):
 
 [source,java]
 ----
@@ -33,9 +33,9 @@ This interface defines two methods:
 * isInstantiationAuthorized checks if user is allowed to instantiate a given component.
 * isActionAuthorized checks if user is authorized to perform a given action on a component's instance. The standard actions checked by this method are defined into class Action and are Action.ENABLE and Action.RENDER.
 
-Inside 'IAuthorizationStrategy' we can also find a default implementation of the interface (called ALLOW_ALL) that allows everyone to instantiate every component and perform every possible action on it. This is the default strategy adopted by class 'Application'.
+Inside _IAuthorizationStrategy_ we can also find a default implementation of the interface (called ALLOW_ALL) that allows everyone to instantiate every component and perform every possible action on it. This is the default strategy adopted by class _Application_.
 
-To change the authorization strategy in use we must register the desired implementation into security settings (class 'SecuritySettings') during initialization phase with method setAuthorization Strategy:
+To change the authorization strategy in use we must register the desired implementation into security settings (class _SecuritySettings_) during initialization phase with method setAuthorization Strategy:
 
 [source,java]
 ----
@@ -50,13 +50,13 @@ To change the authorization strategy in use we must register the desired impleme
 //...
 ----
 
-If we want to combine the action of two or more authorization strategies we can chain them with strategy 'CompoundAuthorizationStrategy' which implements composite pattern for authorization strategies.
+If we want to combine the action of two or more authorization strategies we can chain them with strategy _CompoundAuthorizationStrategy_ which implements composite pattern for authorization strategies.
 
-Most of the times we won't need to implement an 'IAuthorizationStrategy' from scratch as Wicket already comes with a set of built-in strategies. In the next paragraphs we will see some of these strategies that can be used to implement an effective and flexible security policy.
+Most of the times we won't need to implement an _IAuthorizationStrategy_ from scratch as Wicket already comes with a set of built-in strategies. In the next paragraphs we will see some of these strategies that can be used to implement an effective and flexible security policy.
 
 === SimplePageAuthorizationStrategy
 
-Abstract class SimplePageAuthorizationStrategy (in package 'org.apache.wicket.authorization.strategies.page') is a strategy that checks user authorizations calling abstract method 'isAuthorized' only for those pages that are subclasses of a given supertype. If 'isAuthorized' returns false, the user is redirected to the sign in page specified as second constructor parameter:
+Abstract class SimplePageAuthorizationStrategy (in package _org.apache.wicket.authorization.strategies.page_) is a strategy that checks user authorizations calling abstract method _isAuthorized_ only for those pages that are subclasses of a given supertype. If _isAuthorized_ returns false, the user is redirected to the sign in page specified as second constructor parameter:
 
 [source,java]
 ----
@@ -70,14 +70,13 @@ SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizat
 };
 ----
 
-By default 'SimplePageAuthorizationStrategy' checks for permissions only on pages. If we want to change this behavior and check also other kinds of components, we must override method 'isActionAuthorized' and implement our custom logic inside it.
+By default _SimplePageAuthorizationStrategy_ checks for permissions only on pages. If we want to change this behavior and check also other kinds of components, we must override method _isActionAuthorized_ and implement our custom logic inside it.
 
 === Role-based strategies
 
-At the end of  <<guide:security_1,paragraph 22.1>>
- we have introduced AbstractAuthenticatedWebSession's method getRoles which is provided to support role-based authorization returning the set of roles granted to the current user.
+At the end of <<security.adoc#authentication,paragraph 22.1>> we have introduced AbstractAuthenticatedWebSession's method getRoles which is provided to support role-based authorization returning the set of roles granted to the current user.
 
-In Wicket roles are simple strings like “BASIC_USER” or “ADMIN” (they don't need to be capitalized) and they are handled with class 'org.apache.wicket.authroles.authorization.strategies.role.Roles'. This class extends standard HashSet collection adding some functionalities to check whether the set contains one or more roles. Class 'Roles' already defines roles Roles.USER and Roles.ADMIN.
+In Wicket roles are simple strings like “BASIC_USER” or “ADMIN” (they don't need to be capitalized) and they are handled with class _org.apache.wicket.authroles.authorization.strategies.role.Roles_. This class extends standard HashSet collection adding some functionalities to check whether the set contains one or more roles. Class _Roles_ already defines roles Roles.USER and Roles.ADMIN.
 
 The session class in the following example returns a custom “SIGNED_IN” role for every authenticated user and it adds an Roles.ADMIN role if username is equal to superuser:
 
@@ -117,20 +116,19 @@ class BasicAuthenticationRolesSession extends AuthenticatedWebSession {
 }
 ----
 
-Roles can be adopted to apply security restrictions on our pages and components. This can be done  using one of the two built-in authorization strategies that extend super class 'AbstractRoleAuthorizationStrategyWicket': 'MetaDataRoleAuthorizationStrategy' and 'AnnotationsRoleAuthorizationStrategy'
+Roles can be adopted to apply security restrictions on our pages and components. This can be done  using one of the two built-in authorization strategies that extend super class _AbstractRoleAuthorizationStrategyWicket_: _MetaDataRoleAuthorizationStrategy_ and _AnnotationsRoleAuthorizationStrategy_
 
-The difference between these two strategies is that 'MetaDataRoleAuthorizationStrategy' handles role-based authorizations with Wicket metadata while 'AnnotationsRoleAuthorizationStrategy' uses Java annotations.
+The difference between these two strategies is that _MetaDataRoleAuthorizationStrategy_ handles role-based authorizations with Wicket metadata while _AnnotationsRoleAuthorizationStrategy_ uses Java annotations.
 
-NOTE: Application class 'AuthenticatedWebApplication' already sets 'MetaDataRoleAuthorizationStrategy' and 'AnnotationsRoleAuthorizationStrategy' as its own authorization strategies (it uses a compound strategy as we will see in  <<guide:security_2,paragraph 22.2>>
-).
+NOTE: Application class _AuthenticatedWebApplication_ already sets _MetaDataRoleAuthorizationStrategy_ and _AnnotationsRoleAuthorizationStrategy_ as its own authorization strategies (it uses a compound strategy as we will see in <<security.adoc#authorizations,paragraph 22.2>>).
 
-The code that we will see in the next examples is for illustrative purpose only. If our application class inherits from 'AuthenticatedWebApplication' we won't need to configure anything to use these two strategies.
+The code that we will see in the next examples is for illustrative purpose only. If our application class inherits from _AuthenticatedWebApplication_ we won't need to configure anything to use these two strategies.
 
 ==== Using roles with metadata
 
-Strategy 'MetaDataRoleAuthorizationStrategy' uses application and components metadata to implement role-based authorizations. The class defines a set of static methods authorize that can be used to specify which roles are allowed to instantiate a component and which roles can perform a given action on a component.
+Strategy _MetaDataRoleAuthorizationStrategy_ uses application and components metadata to implement role-based authorizations. The class defines a set of static methods authorize that can be used to specify which roles are allowed to instantiate a component and which roles can perform a given action on a component.
 
-The following code snippet reports both application and session classes from project 'MetaDataRolesStrategyExample' and illustrates how to use 'MetaDataRoleAuthorizationStrategy' to allow access to a given page (AdminOnlyPage) only to ADMIN role:
+The following code snippet reports both application and session classes from project _MetaDataRolesStrategyExample_ and illustrates how to use _MetaDataRoleAuthorizationStrategy_ to allow access to a given page (AdminOnlyPage) only to ADMIN role:
 
 *Application class:*
 
@@ -203,17 +201,17 @@ public class BasicAuthenticationSession extends AuthenticatedWebSession {
 }
 ----
 
-The code that instantiates 'MetaDataRoleAuthorizationStrategy' and set it as application's strategy is inside application class method init. 
+The code that instantiates _MetaDataRoleAuthorizationStrategy_ and set it as application's strategy is inside application class method init. 
 
-Any subclass of 'AbstractRoleAuthorizationStrategyWicket' needs an implementation of interface 'IRoleCheckingStrategy' to be instantiated. For this purpose in the code above we used the application class itself because its base class 'AuthenticatedWebApplication' already implements interface 'IRoleCheckingStrategy'. By default 'AuthenticatedWebApplication' checks for authorizations using the roles returned by the current 'AbstractAuthenticatedWebSession'. As final step inside init we grant the access to page 'AdminOnlyPage' to ADMIN role calling method authorize.
+Any subclass of _AbstractRoleAuthorizationStrategyWicket_ needs an implementation of interface _IRoleCheckingStrategy_ to be instantiated. For this purpose in the code above we used the application class itself because its base class _AuthenticatedWebApplication_ already implements interface _IRoleCheckingStrategy_. By default _AuthenticatedWebApplication_ checks for authorizations using the roles returned by the current _AbstractAuthenticatedWebSession_. As final step inside init we grant the access to page _AdminOnlyPage_ to ADMIN role calling method authorize.
 
 The code from session class has three interesting methods. The first is authenticate which considers as valid credentials every pair of username and password having the same value. The second notable method is getRoles which returns role SIGNED_IN if user is authenticated and it adds role ADMIN if username is equal to superuser. Finally, we have method signOut which has been overridden in order to clean the username field used internally to generate roles.
 
-Now if we run the project and we try to access to 'AdminOnlyPage' from the home page without having the ADMIN role, we will be redirected to the default access-denied page used by Wicket:
+Now if we run the project and we try to access to _AdminOnlyPage_ from the home page without having the ADMIN role, we will be redirected to the default access-denied page used by Wicket:
 
 image::../img/authorization-access-denied.png[]
 
-The access-denied page can be customized using method 'setAccessDeniedPage(Class<? extends Page>)' of setting class 'ApplicationSettings':
+The access-denied page can be customized using method _setAccessDeniedPage(Class<? extends Page>)_ of setting class _ApplicationSettings_:
 
 [source,java]
 ----
@@ -225,12 +223,11 @@ The access-denied page can be customized using method 'setAccessDeniedPage(Class
    }
 ----
 
-Just like custom “Page expired” page (see  <<guide:versioningCaching_2,chapter 8.2.5>>
-), also custom “Access denied” page must be bookmarkable.
+Just like custom “Page expired” page (see <<versioningCaching.adoc#stateful-pages,chapter 8.2.5>>), also custom “Access denied” page must be bookmarkable.
 
 ==== Using roles with annotations
 
-Strategy 'AnnotationsRoleAuthorizationStrategy' relies on two built-in annotations to handle role-based authorizations. These annotations are 'AuthorizeInstantiation' and 'AuthorizeAction'. As their names suggest the first annotation specifies which roles are allowed to instantiate the annotated component while the second must be used to indicate which roles are allowed to perform a specific action on the annotated component.
+Strategy _AnnotationsRoleAuthorizationStrategy_ relies on two built-in annotations to handle role-based authorizations. These annotations are _AuthorizeInstantiation_ and _AuthorizeAction_. As their names suggest the first annotation specifies which roles are allowed to instantiate the annotated component while the second must be used to indicate which roles are allowed to perform a specific action on the annotated component.
 
 In the following example we use annotations to make a page accessible only to signed-in users and to enable it only if user has the ADMIN role:
 
@@ -245,7 +242,7 @@ public class MyPage extends WebPage {
 
 Remember that when a component is not enabled, user can render it but he can neither click on its links nor interact with its forms.
 
-Example project 'AnnotationsRolesStrategyExample' is a revisited version of 'MetaDataRolesStrategyExample' where we use 'AnnotationsRoleAuthorizationStrategy' as authorization strategy. To ensure that page 'AdminOnlyPage' is accessible only to ADMIN role we have used the following annotation:
+Example project _AnnotationsRolesStrategyExample_ is a revisited version of _MetaDataRolesStrategyExample_ where we use _AnnotationsRoleAuthorizationStrategy_ as authorization strategy. To ensure that page _AdminOnlyPage_ is accessible only to ADMIN role we have used the following annotation:
 
 [source,java]
 ----
@@ -257,9 +254,9 @@ public class AdminOnlyPage extends WebPage {
 
 === Catching an unauthorized component instantiation
 
-Interface IUnauthorizedComponentInstantiationListener (in package 'org.apache.wicket.authorization') is provided to give the chance to handle the case in which a user tries to instantiate a component without having the permissions to do it. The method defined inside this interface is 'onUnauthorizedInstantiation(Component)' and it is executed whenever a user attempts to execute an unauthorized instantiation.
+Interface IUnauthorizedComponentInstantiationListener (in package _org.apache.wicket.authorization_) is provided to give the chance to handle the case in which a user tries to instantiate a component without having the permissions to do it. The method defined inside this interface is _onUnauthorizedInstantiation(Component)_ and it is executed whenever a user attempts to execute an unauthorized instantiation.
 
-This listener must be registered into application's security settings with method 'setUnauthorizedComponentInstantiationListener' defined by setting class 'SecuritySettings'. In the following code snippet we register a listener that redirect user to a warning page if he tries to do a not-allowed instantiation:
+This listener must be registered into application's security settings with method _setUnauthorizedComponentInstantiationListener_ defined by setting class _SecuritySettings_. In the following code snippet we register a listener that redirect user to a warning page if he tries to do a not-allowed instantiation:
 
 [source,java]
 ----
@@ -279,13 +276,13 @@ public class WicketApplication extends AuthenticatedWebApplication{
 }
 ----
 
-In addition to interface 'IRoleCheckingStrategy', class 'AuthenticatedWebApplication' implements also 'IUnauthorizedComponentInstantiationListener' and registers itself as listener for unauthorized instantiations.
+In addition to interface _IRoleCheckingStrategy_, class _AuthenticatedWebApplication_ implements also _IUnauthorizedComponentInstantiationListener_ and registers itself as listener for unauthorized instantiations.
 
-By default 'AuthenticatedWebApplication' redirects users to sign-in page if they are not signed-in and they try to instantiate a restricted component. Otherwise, if users are already signed in but they are not allowed to instantiate a given component, an 'UnauthorizedInstantiationException' will be thrown.
+By default _AuthenticatedWebApplication_ redirects users to sign-in page if they are not signed-in and they try to instantiate a restricted component. Otherwise, if users are already signed in but they are not allowed to instantiate a given component, an _UnauthorizedInstantiationException_ will be thrown.
 
 === Strategy RoleAuthorizationStrategy
 
-Class 'RoleAuthorizationStrategy' is a compound strategy that combines both 'MetaDataRoleAuthorizationStrategy' and 'AnnotationsRoleAuthorizationStrategy'.
+Class _RoleAuthorizationStrategy_ is a compound strategy that combines both _MetaDataRoleAuthorizationStrategy_ and _AnnotationsRoleAuthorizationStrategy_.
 
-This is the strategy used internally by 'AuthenticatedWebApplication'.
+This is the strategy used internally by _AuthenticatedWebApplication_.
 

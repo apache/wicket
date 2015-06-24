@@ -1,8 +1,7 @@
 
 
 
-As pointed out in the note in  <<guide:helloWorld_2,paragraph 4.2>>
-, Wicket can be started in two modes, DEVELOPMENT and DEPLOYMENT. When we are in DEVELOPMENT mode Wicket warns us at application startup with the following message:
+As pointed out in the note in <<helloWorld.adoc#configuration-of-wicket-applications,paragraph 4.2>>, Wicket can be started in two modes, DEVELOPMENT and DEPLOYMENT. When we are in DEVELOPMENT mode Wicket warns us at application startup with the following message:
 
 [source,java]
 ----

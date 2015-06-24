@@ -1,7 +1,7 @@
 
 
 
-You should consider Wicket's component tree a constant and fixed skeleton which gets revived when its model is filled with data like a robot without brain. Without brain the robot is not able to do anything and is just a dead and fixed skeleton. However, when you fill it with data, it becomes alive and can act. There is no need for changing hardware when filling him with data. In Wicket, you should manipulate the component tree as little as possible. Consequently, you should avoid calling methods like 'Component.replace(Component)' and 'Component.remove(Component)'. Calling these methods indicates missing usage or misusage of Wicket's models. Furthermore the component trees should not be constructed using conditions (see listing 5). This reduces the possibility of reusing the same instance significantly.
+You should consider Wicket's component tree a constant and fixed skeleton which gets revived when its model is filled with data like a robot without brain. Without brain the robot is not able to do anything and is just a dead and fixed skeleton. However, when you fill it with data, it becomes alive and can act. There is no need for changing hardware when filling him with data. In Wicket, you should manipulate the component tree as little as possible. Consequently, you should avoid calling methods like _Component.replace(Component)_ and _Component.remove(Component)_. Calling these methods indicates missing usage or misusage of Wicket's models. Furthermore the component trees should not be constructed using conditions (see listing 5). This reduces the possibility of reusing the same instance significantly.
 
 *Listing 5:*
 
@@ -16,4 +16,4 @@ else {
 }
 ----
 
-Instead of constructing 'LoginBoxPanel' conditionally, it is recommended to always add the panel  and control the visibility by overriding 'isVisible()'. So the component 'LoginBoxPanel' is responsible for displaying itself. We move the responsibility into the same component which executes the login. Brilliant! Cleanly encapsulated business logic. There is no decision from outside, the component handles all the logic. You can see another example in  [Implement visibilities of components correctly] .
+Instead of constructing _LoginBoxPanel_ conditionally, it is recommended to always add the panel  and control the visibility by overriding _isVisible()_. So the component _LoginBoxPanel_ is responsible for displaying itself. We move the responsibility into the same component which executes the login. Brilliant! Cleanly encapsulated business logic. There is no decision from outside, the component handles all the logic. You can see another example in  [Implement visibilities of components correctly] .

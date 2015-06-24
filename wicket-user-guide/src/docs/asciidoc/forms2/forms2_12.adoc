@@ -6,7 +6,7 @@ image::../img/list-multiple-choices.png[]
 
 Now the user can select multiple options by holding down Ctrl key (or Command key for Mac) and selecting them. 
 
-To work with multiple choice list Wicket provides the 'org.apache.wicket.markup.html.form.ListMultipleChoice' component:
+To work with multiple choice list Wicket provides the _org.apache.wicket.markup.html.form.ListMultipleChoice_ component:
 
 *HTML:*
 
@@ -42,7 +42,7 @@ image::../img/multi-select-transfer-component.png[]
 
 This kind of component is composed by two multiple-choice lists, one on the left displaying the available options and the other one on the right displaying the selected options. User can move options from a list to another by double clicking on them or using the buttons placed between the two list.
 
-Built-in 'org.apache.wicket.extensions.markup.html.form.palette.Palette' component provides an out-of-the-box implementation of a multi select transfer component. It works in a similar way to ListMultipleChoice:
+Built-in _org.apache.wicket.extensions.markup.html.form.palette.Palette_ component provides an out-of-the-box implementation of a multi select transfer component. It works in a similar way to ListMultipleChoice:
 
 *HTML:*
 

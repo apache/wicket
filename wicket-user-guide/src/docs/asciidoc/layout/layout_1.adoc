@@ -1,7 +1,7 @@
 
-There was a time in the 90s when Internet was just a buzzword and watching a plain HTML page being rendered by a browser was a new and amazing experience. In those days we used to organize our page layout using the '<frame>' HTML tag. Over the years this tag has almost disappeared from our code and it survives only in few specific domains. For example is still being used by JavaDoc.
+There was a time in the 90s when Internet was just a buzzword and watching a plain HTML page being rendered by a browser was a new and amazing experience. In those days we used to organize our page layout using the _<frame>_ HTML tag. Over the years this tag has almost disappeared from our code and it survives only in few specific domains. For example is still being used by JavaDoc.
 
-With the adoption of server side technologies like JSP, ASP or PHP the tag '<frame>' has been replaced by a template-based approach where we divide our page layout into some common areas that will be present in each page of our web application. Then, we manually insert these areas in every page including the appropriate markup fragments.
+With the adoption of server side technologies like JSP, ASP or PHP the tag _<frame>_ has been replaced by a template-based approach where we divide our page layout into some common areas that will be present in each page of our web application. Then, we manually insert these areas in every page including the appropriate markup fragments.
 
 In this chapter we will see how to use Wicket to build a site layout. The sample layout we will use is a typical page layout consisting of the following areas:
 
@@ -18,7 +18,7 @@ Once we have chosen a page layout, our web designer can start building up the si
 
 image::../img/layout-mock.png[]
 
-Now in order to have a consistent layout across all the site, we must ensure that each page will include the layout areas seen above. With an old template-based approach we must manually put them inside every page. If we were using JSP we would probably end up using 'include' directive to add layout areas in our pages. We would have one 'include' for each of the areas (except for the content):
+Now in order to have a consistent layout across all the site, we must ensure that each page will include the layout areas seen above. With an old template-based approach we must manually put them inside every page. If we were using JSP we would probably end up using _include_ directive to add layout areas in our pages. We would have one _include_ for each of the areas (except for the content):
 
 image::../img/layout-include.png[]
 

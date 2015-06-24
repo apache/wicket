@@ -1,6 +1,6 @@
 
 
 
-This stage is performed at the beginning of the component lifecycle. During initialization, the component has already been inserted into its component hierarchy so we can safely access to its parent container or to its page with methods 'getParent()' or 'getPage()'. The only method triggered during this stage is 'onInitialize()'. This method is a sort of “special” constructor where we can execute a custom initialization of our component.   
+This stage is performed at the beginning of the component lifecycle. During initialization, the component has already been inserted into its component hierarchy so we can safely access to its parent container or to its page with methods _getParent()_ or _getPage()_. The only method triggered during this stage is _onInitialize()_. This method is a sort of “special” constructor where we can execute a custom initialization of our component.   
 
-Since 'onInitialize' is similar to a regular constructor, when we override this method we have to call 'super.onInitialize' inside its body, usually as first instruction.
+Since _onInitialize_ is similar to a regular constructor, when we override this method we have to call _super.onInitialize_ inside its body, usually as first instruction.

@@ -1,7 +1,7 @@
 
 
 
-Introduced in Wicket 6.20.0 / Wicket 7.0.0 there is a default way to be used in which the output of all CssHeaderItems / JavaScriptHeaderItems is modified before they are cached and delivered to the client. You can add a so called Compressor by receiving the resource settings and invoke 1.setJavaScriptCompressor(...) / 1.setJavaScriptCompressor(...). If you want to add several Compressors use 'org.apache.wicket.resource.CompositeCssCompressor' or 'org.apache.wicket.resource.CompositeJavaScriptCompressor'
+Introduced in Wicket 6.20.0 / Wicket 7.0.0 there is a default way to be used in which the output of all CssHeaderItems / JavaScriptHeaderItems is modified before they are cached and delivered to the client. You can add a so called Compressor by receiving the resource settings and invoke 1.setJavaScriptCompressor(...) / 1.setJavaScriptCompressor(...). If you want to add several Compressors use _org.apache.wicket.resource.CompositeCssCompressor_ or _org.apache.wicket.resource.CompositeJavaScriptCompressor_
 
 *Java Code:*
 [source,java]
@@ -25,7 +25,7 @@ Introduced in Wicket 6.20.0 / Wicket 7.0.0 there is a default way to be used in 
 ...
 ----
 
-In the previous example you see that a 'org.apache.wicket.resource.CssUrlReplacer' is added which does not compress the content, but replaces all urls in CSS files and applies a Wicket representation for them by automatically wrapping them into PackageResourceReferences. Here is an example where you can see what Wicket does with the url representation.
+In the previous example you see that a _org.apache.wicket.resource.CssUrlReplacer_ is added which does not compress the content, but replaces all urls in CSS files and applies a Wicket representation for them by automatically wrapping them into PackageResourceReferences. Here is an example where you can see what Wicket does with the url representation.
 
 HomePage (in package my/company/):
 *Java Code:*

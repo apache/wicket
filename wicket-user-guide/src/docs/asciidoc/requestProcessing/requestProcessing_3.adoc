@@ -1,16 +1,15 @@
 
 
 
-Class 'org.apache.wicket.request.cycle.RequestCycle' is the entity in charge of serving a web request. Our application class creates a new 'RequestCycle' on every request with its method 'createRequestCycle(request, response)'. 
+Class _org.apache.wicket.request.cycle.RequestCycle_ is the entity in charge of serving a web request. Our application class creates a new _RequestCycle_ on every request with its method _createRequestCycle(request, response)_. 
 
-Method 'createRequestCycle' is declared as final, so we can't override it to return a custom subclass of 'RequestCycle'. Instead, we must build a request cycle provider implementing interface 'org.apache.wicket.IRequestCycleProvider', and then we must tell our application class to use it via the 'setRequestCycleProvider' method.
+Method _createRequestCycle_ is declared as final, so we can't override it to return a custom subclass of _RequestCycle_. Instead, we must build a request cycle provider implementing interface _org.apache.wicket.IRequestCycleProvider_, and then we must tell our application class to use it via the _setRequestCycleProvider_ method.
 
-The current running request cycle can be retrieved at any time by calling its static method 'RequestCycle.get()'. Strictly speaking this method returns the request cycle associated with the current (or local) thread, which is the thread that is serving the current request. A similar 'get()' method is also implemented in classes 'org.apache.wicket.Application' (as we have seen in  <<guide:helloWorld_2,paragraph 4.2.2>>
-) and 'org.apache.wicket.Session' in order to get the application and the session in use by the current thread.
+The current running request cycle can be retrieved at any time by calling its static method _RequestCycle.get()_. Strictly speaking this method returns the request cycle associated with the current (or local) thread, which is the thread that is serving the current request. A similar _get()_ method is also implemented in classes _org.apache.wicket.Application_ (as we have seen in <<helloWorld.adoc#configuration-of-wicket-applications,paragraph 4.2.2>>) and _org.apache.wicket.Session_ in order to get the application and the session in use by the current thread.
 
-NOTE: The implementation of the get method takes advantage of the standard class 'java.lang.ThreadLocal'. See its JavaDoc for an introduction to local-thread variables.
+NOTE: The implementation of the get method takes advantage of the standard class _java.lang.ThreadLocal_. See its JavaDoc for an introduction to local-thread variables.
 
-Class 'org.apache.wicket.Component' provides the 'getRequestCycle()' method which is a convenience method that internally invokes 'RequestCycle.get()':
+Class _org.apache.wicket.Component_ provides the _getRequestCycle()_ method which is a convenience method that internally invokes _RequestCycle.get()_:
 
 [source,java]
 ----
@@ -23,11 +22,11 @@ public final RequestCycle getRequestCycle() {
 
 NOTE: This paragraph will provide just the basic informations about what happens behind the scenes of request processing. When you work with Wicket it's unlikely to have a need for customizing this process, so we won't cover this topic in detail.
 
-In order to process a request, 'RequestCycle' delegates the task to another entity which implements interface 'org.apache.wicket.request.IRequestHandler'. There are different implementations of this interface, each suited for a particular type of requested resource (a page to render, an AJAX request, an URL to an external page, etc.). 
+In order to process a request, _RequestCycle_ delegates the task to another entity which implements interface _org.apache.wicket.request.IRequestHandler_. There are different implementations of this interface, each suited for a particular type of requested resource (a page to render, an AJAX request, an URL to an external page, etc.). 
 
-To resolve the right handler for a given HTTP request, the 'RequestCycle' uses a set of objects implementing the 'org.apache.wicket.request.IRequestMapper' interface. The mapping interface defines the 'getCompatibilityScore(Request request)' method which returns a score indicating how compatible the request mapper is for the current request. 'RequestCycle' will choose the mapper with the highest score and it will call its 'mapRequest(Request request)' method to get the proper handler for the given request. Once 'RequestCycle' has resolved a request handler, it invokes its method 'respond(IRequestCycle requestCycle)' to start request processing.
+To resolve the right handler for a given HTTP request, the _RequestCycle_ uses a set of objects implementing the _org.apache.wicket.request.IRequestMapper_ interface. The mapping interface defines the _getCompatibilityScore(Request request)_ method which returns a score indicating how compatible the request mapper is for the current request. _RequestCycle_ will choose the mapper with the highest score and it will call its _mapRequest(Request request)_ method to get the proper handler for the given request. Once _RequestCycle_ has resolved a request handler, it invokes its method _respond(IRequestCycle requestCycle)_ to start request processing.
 
-The following sequence diagram recaps how a request handler is resolved by the 'RequestCycle':
+The following sequence diagram recaps how a request handler is resolved by the _RequestCycle_:
 
 image::../img/request-cycle-handler.png[]
 
@@ -37,17 +36,16 @@ Developers can create additional implementations of IRequestMapper and add them 
 
 The RequestCycle is also responsible for generating the URL value (as CharSequence) for the following entities:
 
-* a page class, via the 'urlFor(Class<C> pageClass, PageParameters parameters)' method 
-* an IRequestHandler via the 'urlFor(IRequestHandler handler)' method 
-* a ResourceReference via the 'urlFor(ResourceReference reference, PageParameters params)' method (resource entities will be introduced in  <<guide:resources,chapter 19>>
-). 
+* a page class, via the _urlFor(Class<C> pageClass, PageParameters parameters)_ method 
+* an IRequestHandler via the _urlFor(IRequestHandler handler)_ method 
+* a ResourceReference via the _urlFor(ResourceReference reference, PageParameters params)_ method (resource entities will be introduced in 
+<<resource-management-with-wicket,chapter 19>>). 
 
-The overloaded 'urlFor' method from above also has a corresponding version that returns an instance of 'org.apache.wicket.request.Url' instead of a 'CharSequence'. This version has the prefix 'map' in its name (i.e. it has 'mapUrlFor' as full name).
+The overloaded _urlFor_ method from above also has a corresponding version that returns an instance of _org.apache.wicket.request.Url_ instead of a _CharSequence_. This version has the prefix 'map' in its name (i.e. it has _mapUrlFor_ as full name).
 
 === Method setResponsePage
 
-The 'RequestCycle' class contains the implementation of the 'setResponsePage' method we use to redirect a user to a specific page (see  <<guide:helloWorld_4,paragraph 4.4>>
-). The namesake method of class 'org.apache.wicket.Component' is just a convenience method that internally invokes the actual implementation on current request cycle:
+The _RequestCycle_ class contains the implementation of the _setResponsePage_ method we use to redirect a user to a specific page (see <<helloWorld.adoc#wicket-links,paragraph 4.4>>). The namesake method of class _org.apache.wicket.Component_ is just a convenience method that internally invokes the actual implementation on current request cycle:
 
 [source,java]
 ----
@@ -65,7 +63,7 @@ The RequestCycle comes with some hook methods which can be overridden to perform
 
 Methods onBeforeRequest and onEndRequest can be used if we need to execute custom actions before and after business code is executed, such as opening a Hibernate/JPA session and closing it when code has terminated. 
 
-A more flexible way to interact with the request processing is to use the listener interface 'org.apache.wicket.request.cycle.IRequestCycleListener'. In addition to the three methods already seen for RequestCycle, this interface offers further hooks into request processing:
+A more flexible way to interact with the request processing is to use the listener interface _org.apache.wicket.request.cycle.IRequestCycleListener_. In addition to the three methods already seen for RequestCycle, this interface offers further hooks into request processing:
 * *onBeginRequest(RequestCycle cycle):* (see the description above)
 * *onEndRequest(RequestCycle cycle):* (see the description above)
 * *onDetach(RequestCycle cycle):* (see the description above)
@@ -76,7 +74,7 @@ A more flexible way to interact with the request processing is to use the listen
 * *onExceptionRequestHandlerResolved(RequestCycle rc, IRequestHandler rh, Exception ex):* called when an IRequestHandler has been resolved and will be used to handle an exception. 
 * *onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url):* called when an URL has been generated for an IRequestHandler object.
 
-To use the request cycle listeners we must add them to our application which in turn will pass them to the new 'RequestCycle''s instances created with 'createRequestCycle' method:
+To use the request cycle listeners we must add them to our application which in turn will pass them to the new _RequestCycle_'s instances created with _createRequestCycle_ method:
 
 [source,java]
 ----
@@ -91,6 +89,6 @@ public void init() {
 }
 ----
 
-The 'getRequestCycleListeners' method returns an instance of class 'org.apache.wicket.request.cycle.RequestCycleListenerCollection'. This class is a sort of typed collection for 'IRequestCycleListener' and it also implements the  http://en.wikipedia.org/wiki/Composite_pattern[Composite pattern] .
+The _getRequestCycleListeners_ method returns an instance of class _org.apache.wicket.request.cycle.RequestCycleListenerCollection_. This class is a sort of typed collection for _IRequestCycleListener_ and it also implements the  http://en.wikipedia.org/wiki/Composite_pattern[Composite pattern] .
 
 

@@ -3,14 +3,13 @@
 
 HTTPS is the standard technology adopted on Internet to create a secure communication channel between web applications and their users.
 
-In Wicket we can easily protect our pages with HTTPS mounting a special request mapper called 'HttpsMapper' and using annotation RequireHttps with those pages we want to serve over this protocol. Both these two entities are in package 'org.apache.wicket.protocol.https'.
+In Wicket we can easily protect our pages with HTTPS mounting a special request mapper called _HttpsMapper_ and using annotation RequireHttps with those pages we want to serve over this protocol. Both these two entities are in package _org.apache.wicket.protocol.https_.
 
-HttpsMapper wraps an existing mapper and redirects incoming requests to HTTPS if the related response must render a page containing annotation 'RequireHttps'. Most of the times the wrapped mapper will be the root one, just like we saw before for 'CryptoMapper' in  <<guide:urls_6,paragraph 10.6>>
-.
+HttpsMapper wraps an existing mapper and redirects incoming requests to HTTPS if the related response must render a page containing annotation _RequireHttps_. Most of the times the wrapped mapper will be the root one, just like we saw before for _CryptoMapper_ in <<urls.adoc#generating-structured-and-clear-urls,paragraph 10.6>>.
 
-Another parameter needed to build a 'HttpsMapper' is an instance of class 'HttpsConfi'g. This class allows us to specify which ports must be used for HTTPS and HTTP. By default the port numbers used by these two protocols are respectively 443 and 80.
+Another parameter needed to build a _HttpsMapper_ is an instance of class _HttpsConfi_g. This class allows us to specify which ports must be used for HTTPS and HTTP. By default the port numbers used by these two protocols are respectively 443 and 80.
 
-The following code is taken from project 'HttpsProtocolExample' and illustrates how to enable HTTPS  in our applications:
+The following code is taken from project _HttpsProtocolExample_ and illustrates how to enable HTTPS  in our applications:
 
 [source,java]
 ----
@@ -34,7 +33,7 @@ public class HomePage extends WebPage {
 }
 ----
 
-If we want to protect many pages with HTTPS without adding annotation 'RequireHttps' to each of them, we can annotate a marker interface or a base page class and implement/extend it in any page we want to make secure:
+If we want to protect many pages with HTTPS without adding annotation _RequireHttps_ to each of them, we can annotate a marker interface or a base page class and implement/extend it in any page we want to make secure:
 
 [source,java]
 ----

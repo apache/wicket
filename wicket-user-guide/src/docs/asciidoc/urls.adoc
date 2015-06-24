@@ -1,6 +1,5 @@
 
-Up to now we used component Link to move from a page to another and we have seen that it is quiet similar to a “click” event handler (see  <<guide:helloWorld_4,paragraph 4.4>>
-). 
+Up to now we used component Link to move from a page to another and we have seen that it is quiet similar to a “click” event handler (see <<helloWorld.adoc#wicket-links,paragraph 4.4>>). 
 
 However this component alone is not enough to build all possible kinds of links we may need in our pages. Therefore, Wicket offers other link components suited for those tasks which can not be accomplished with a basic Link. 
 

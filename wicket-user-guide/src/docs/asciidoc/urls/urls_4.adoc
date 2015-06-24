@@ -1,7 +1,7 @@
 
 
 
-Since Wicket uses plain HTML markup files as templates, we can place an anchor to an external page directly inside the markup file. When we need to dynamically generate external anchors, we can use link component 'org.apache.wicket.markup.html.link.ExternalLink'. In order to build an external link we must specify the value of the href attribute using a model or a plain string. In the next snippet, given an instance of Person, we generate a Google search query for its full name:
+Since Wicket uses plain HTML markup files as templates, we can place an anchor to an external page directly inside the markup file. When we need to dynamically generate external anchors, we can use link component _org.apache.wicket.markup.html.link.ExternalLink_. In order to build an external link we must specify the value of the href attribute using a model or a plain string. In the next snippet, given an instance of Person, we generate a Google search query for its full name:
 
 Html:
 
