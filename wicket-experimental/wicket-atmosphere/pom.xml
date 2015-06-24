@@ -27,8 +27,8 @@
 	<version>0.24-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<properties>
-		<atmosphere.version>2.2.2</atmosphere.version>
-		<jquery.atmosphere.version>2.2.3</jquery.atmosphere.version>
+		<atmosphere.version>2.2.3</atmosphere.version>
+		<jquery.atmosphere.version>2.2.7</jquery.atmosphere.version>
 	</properties>
 	<name>Wicket-Atmosphere</name>
 	<description>Wicket-Atmosphere provides integration of the Atmosphere Framework in Wicket.</description>
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>17.0</version>
+			<version>18.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.atmosphere</groupId>
@@ -67,12 +67,12 @@
 		<dependency>
 			<groupId>de.agilecoders.wicket.webjars</groupId>
 			<artifactId>wicket-webjars</artifactId>
-			<version>0.4.3</version>
+			<version>0.4.6</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>1.3.9</version>
+			<version>3.0.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
