@@ -34,7 +34,7 @@ import org.apache.wicket.model.Model;
  * @param <T>
  * 
  */
-public class ListDataProvider<T extends Serializable> implements IDataProvider<T>
+public class ListDataProvider<T extends Serializable, S> implements ISortableDataProvider<T, S>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -111,6 +111,14 @@ public class ListDataProvider<T extends Serializable> implements IDataProvider<T
 	@Override
 	public void detach()
 	{
+	}
+
+	private final SingleSortState<S> state = new SingleSortState<>();
+
+	@Override
+	public final ISortState<S> getSortState()
+	{
+		return state;
 	}
 
 }

@@ -14,10 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.repeater.util;
+package org.apache.wicket.markup.repeater.data;
 
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
-import org.apache.wicket.markup.repeater.data.SortOrder;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
@@ -27,9 +25,8 @@ import org.apache.wicket.util.lang.Args;
  * @author Igor Vaynberg (ivaynberg)
  * @param <T>
  *            the type of the sort property
- * @deprecated Use {@link org.apache.wicket.markup.repeater.data.SingleSortState} instead
+ * 
  */
-@Deprecated
 public class SingleSortState<T> implements ISortState<T>, IClusterable
 {
 	private static final long serialVersionUID = 1L;
@@ -77,7 +74,7 @@ public class SingleSortState<T> implements ISortState<T>, IClusterable
 
 	/**
 	 * Sets the current sort state
-	 *
+	 * 
 	 * @param param
 	 *            parameter containing new sorting information
 	 */

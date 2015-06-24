@@ -18,8 +18,8 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.Iterator;
 
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.repeater.data.SortOrder;
 import org.apache.wicket.model.IModel;
 
 

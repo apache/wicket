@@ -14,25 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.markup.html.repeater.data.sort;
+package org.apache.wicket.markup.repeater.data;
 
 /**
- * Sort order for columns
+ * Data provider that can hold sort state
  * 
- * @author pete
+ * @author Igor Vaynberg (ivaynberg at apache dot org)
+ * @param <T>
+ * @param <S>
+ *     the type of the sorting parameter
  * 
  */
-public enum SortOrder {
-	/**
-	 * unsorted
-	 */
-	NONE,
-	/**
-	 * ascending sort order
-	 */
-	ASCENDING,
-	/**
-	 * descending sort order
-	 */
-	DESCENDING
+public interface ISortableDataProvider<T, S> extends IDataProvider<T>, ISortStateLocator<S>
+{
 }

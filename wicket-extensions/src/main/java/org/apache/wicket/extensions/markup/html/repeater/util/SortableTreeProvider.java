@@ -41,7 +41,7 @@ public abstract class SortableTreeProvider<T, S> implements ISortableTreeProvide
 	@Override
 	public final ISortState<S> getSortState()
 	{
-		return state;
+		return (ISortState<S>) state;
 	}
 
 	/**

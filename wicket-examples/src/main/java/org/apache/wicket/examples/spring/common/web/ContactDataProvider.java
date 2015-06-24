@@ -21,8 +21,8 @@ import java.util.Iterator;
 import org.apache.wicket.examples.spring.common.Contact;
 import org.apache.wicket.examples.spring.common.ContactDao;
 import org.apache.wicket.examples.spring.common.QueryParam;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import org.apache.wicket.markup.repeater.data.SortOrder;
 
 /**
  * Base class for contact data provider implementations. This class implements everything except

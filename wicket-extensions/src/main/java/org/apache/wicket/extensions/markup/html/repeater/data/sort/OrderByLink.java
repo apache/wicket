@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.repeater.data.SortOrder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 

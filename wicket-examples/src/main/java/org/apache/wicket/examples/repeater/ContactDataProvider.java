@@ -40,12 +40,12 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 * retrieves contacts from database starting with index <code>first</code> and ending with
 	 * <code>first+count</code>
 	 * 
-	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(int, int)
+	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#iterator(long, long)
 	 */
 	@Override
 	public Iterator<Contact> iterator(long first, long count)
 	{
-		return getContactsDB().find(first, count, new SortParam<String>("firstName", true))
+		return getContactsDB().find(first, count, new SortParam<>("firstName", true))
 			.iterator();
 	}
 

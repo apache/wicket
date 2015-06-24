@@ -16,35 +16,15 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
-import org.apache.wicket.util.io.IClusterable;
-
 /**
  * Interface used by OrderByLink to interact with any object that keeps track of sorting state
  * 
  * @author Igor Vaynberg (ivaynberg)
  * @param <S>
  *            the type of the sort property
- * 
+ * @deprecated Use {@link org.apache.wicket.markup.repeater.data.ISortState} instead
  */
-public interface ISortState<S> extends IClusterable
+@Deprecated
+public interface ISortState<S> extends org.apache.wicket.markup.repeater.data.ISortState<S>
 {
-	/**
-	 * Sets sort order of the property
-	 * 
-	 * @param property
-	 *            the name of the property to sort on
-	 * @param order
-	 *            sort order
-	 */
-	public void setPropertySortOrder(S property, SortOrder order);
-
-	/**
-	 * Gets the sort order of a property
-	 * 
-	 * @param property
-	 *            sort property to be checked
-	 * @return sort order
-	 */
-	public SortOrder getPropertySortOrder(S property);
-
 }

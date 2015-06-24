@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
-import org.apache.wicket.util.io.IClusterable;
-
-
 /**
  * Locator interface for ISortState implementations. OrderByLink uses this interface to locate and
  * version ISortState objects.
@@ -26,12 +23,11 @@ import org.apache.wicket.util.io.IClusterable;
  * @author Igor Vaynberg (ivaynberg)
  * @param <T>
  *            the type of the sort property
- * 
+ * @deprecated Use {@link org.apache.wicket.markup.repeater.data.ISortStateLocator} instead
  */
-public interface ISortStateLocator<T> extends IClusterable
+@Deprecated
+public interface ISortStateLocator<T> extends org.apache.wicket.markup.repeater.data.ISortStateLocator<T>
 {
-	/**
-	 * @return ISortState object
-	 */
+	@Override
 	ISortState<T> getSortState();
 }

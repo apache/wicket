@@ -17,13 +17,12 @@
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortState;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.SortOrder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDataProvider;
-
+import org.apache.wicket.markup.repeater.data.SortOrder;
 
 /**
  * Convenience implementation of a data provider that can also act as a locator for a
- * {@link SingleSortState} object.
+ * {@link org.apache.wicket.markup.repeater.data.SingleSortState} object.
  * 
  * Most times it is convenient to keep sort and filtering information inside the data provider
  * implementation because it makes that information easy to access within the data provider.
@@ -35,20 +34,14 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
  */
 public abstract class SortableDataProvider<T, S> implements ISortableDataProvider<T, S>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final SingleSortState<S> state = new SingleSortState<>();
 
-	/**
-	 * @see ISortableDataProvider#getSortState()
-	 */
 	@Override
 	public final ISortState<S> getSortState()
 	{
-		return state;
+		return (ISortState<S>) state;
 	}
 
 	/**
@@ -92,6 +85,4 @@ public abstract class SortableDataProvider<T, S> implements ISortableDataProvide
 	public void detach()
 	{
 	}
-
-
 }
