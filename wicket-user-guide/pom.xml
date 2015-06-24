@@ -28,6 +28,11 @@
                         <artifactId>jruby-complete</artifactId>
                         <version>${jruby.version}</version>
                     </dependency>
+                    <dependency>
+                      <groupId>org.slf4j</groupId>
+                      <artifactId>slf4j-log4j12</artifactId>
+                      <version>1.7.12</version>
+                    </dependency>
                     <!-- Uncomment the following element to override the version of AsciidoctorJ -->
                     <!--
                     <dependency>
@@ -62,7 +67,6 @@
                             <imagesdir>../img</imagesdir>
                             <sourceDocumentName>index.adoc</sourceDocumentName>
                             <sourceHighlighter>coderay</sourceHighlighter>
-                            <preserveDirectories>true</preserveDirectories>
                             <!--
                             Scenarios for linking vs embedding assets:
 
@@ -126,10 +130,10 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-            NOTE: Use the maven-resources-plugin if there are assets outside the AsciiDoc source folder
+            <!--NOTE: Use the maven-resources-plugin if there are assets outside the AsciiDoc source folder
                   that need to be copied to the generated-docs. The Maven plugin automatically copies
                   non-AsciiDoc files in the AsciiDoc source folder to generated-docs.
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -144,19 +148,18 @@
                         <configuration>
                             <resources>
                                 <resource>
-                                    <directory>src/docs/resources</directory>
+                                    <directory>src/docs/img</directory>
                                     <includes>
                                         <include>**/*.jpg</include>
                                         <include>**/*.png</include>
                                     </includes>
                                 </resource>
                             </resources>
-                            <outputDirectory>target/generated-docs</outputDirectory>
+                            <outputDirectory>target/generated-docs/img</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            -->
         </plugins>
     </build>
 </project>
