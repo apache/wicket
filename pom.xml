@@ -238,7 +238,7 @@
 			<dependency>
 				<groupId>de.agilecoders.wicket.webjars</groupId>
 				<artifactId>wicket-webjars</artifactId>
-				<version>0.5.0</version>
+				<version>0.5.2</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.inject</groupId>
