@@ -21,8 +21,10 @@ import static org.hamcrest.CoreMatchers.is;
 
 import com.google.inject.ConfigurationException;
 import com.google.inject.spi.Message;
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.junit.Test;
+
+import javax.inject.Inject;
 
 /**
  */
@@ -50,21 +52,30 @@ public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
 	@Test
 	public void required()
 	{
-		JavaxInjectTestComponent component = newTestComponent("id");
-
-		// get the lazy proxy
-		IResourceSettings nonExisting = component.getNonExisting();
-
 		try
 		{
-			// call any method on the lazy proxy
-			nonExisting.getCachingStrategy();
+			JavaxInjectTestComponent component = new MyJavaxInjectWithNonExistingTestComponent();
+			// Throws exception because component.getNonExisting() cannot be injected
 			fail("Fields annotated with @javax.inject.Inject are required!");
 		}
 		catch (ConfigurationException cx)
 		{
 			Message message = cx.getErrorMessages().iterator().next();
-			assertThat(message.getMessage(), is(equalTo("No implementation for org.apache.wicket.settings.IResourceSettings was bound.")));
+			assertThat(message.getMessage(), is(equalTo("No implementation for org.apache.wicket.ajax.attributes.IAjaxCallListener was bound.")));
+		}
+	}
+
+	private static class MyJavaxInjectWithNonExistingTestComponent extends JavaxInjectTestComponent {
+		@Inject
+		private IAjaxCallListener nonExisting;
+
+		public MyJavaxInjectWithNonExistingTestComponent() {
+			super("id");
+		}
+
+
+		public IAjaxCallListener getNonExisting() {
+			return nonExisting;
 		}
 	}
 }
