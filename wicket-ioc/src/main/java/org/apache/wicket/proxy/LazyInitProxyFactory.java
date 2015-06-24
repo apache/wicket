@@ -40,6 +40,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.proxy.objenesis.ObjenesisProxyFactory;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -119,7 +120,7 @@ public class LazyInitProxyFactory
 	private static final int CGLIB_CALLBACK_NO_OVERRIDE = 0;
 	private static final int CGLIB_CALLBACK_HANDLER = 1;
 
-	private static final boolean useObjenesis = isObjenesisAvailable();
+	private static final boolean IS_OBJENESIS_AVAILABLE = isObjenesisAvailable();
 
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
@@ -167,10 +168,11 @@ public class LazyInitProxyFactory
 		}
 		else
 		{
-			if (useObjenesis && !hasNoArgConstructor(type))
+			if (IS_OBJENESIS_AVAILABLE && !hasNoArgConstructor(type))
 			{
 				return ObjenesisProxyFactory.createProxy(type, locator, WicketNamingPolicy.INSTANCE);
 			}
+
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
 			Callback[] callbacks = new Callback[2];
@@ -217,7 +219,7 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static interface IWriteReplace
+	public interface IWriteReplace
 	{
 		/**
 		 * write replace method as defined by Serializable
@@ -276,7 +278,7 @@ public class LazyInitProxyFactory
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private abstract static class AbstractCGLibInterceptor
+	public abstract static class AbstractCGLibInterceptor
 		implements
 			MethodInterceptor,
 			ILazyInitProxy,
@@ -591,10 +593,9 @@ public class LazyInitProxyFactory
 			(method.getParameterTypes().length == 0) && method.getName().equals("writeReplace");
 	}
 
-	private static final class WicketNamingPolicy extends DefaultNamingPolicy
+	public static final class WicketNamingPolicy extends DefaultNamingPolicy
 	{
-
-		private static final WicketNamingPolicy INSTANCE = new WicketNamingPolicy();
+		public static final WicketNamingPolicy INSTANCE = new WicketNamingPolicy();
 
 		private WicketNamingPolicy()
 		{
@@ -609,53 +610,6 @@ public class LazyInitProxyFactory
 		}
 	}
 
-
-
-	/**
-	 * Method interceptor for proxies representing concrete object not backed by an interface. These
-	 * proxies are representing by cglib proxies.
-	 */
-	protected static class ObjenesisCGLibInterceptor extends AbstractCGLibInterceptor {
-		public ObjenesisCGLibInterceptor(Class<?> type, IProxyTargetLocator locator) {
-			super(type, locator);
-		}
-
-		/**
-		 * @see org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace#writeReplace()
-		 */
-		@Override
-		public Object writeReplace() throws ObjectStreamException {
-			return new ObjenesisProxyReplacement(typeName, locator);
-		}
-	}
-
-	/**
-	 * Object that replaces the proxy when it is serialized. Upon deserialization this object will
-	 * create a new proxy with the same locator.
-	 */
-	static class ObjenesisProxyReplacement implements IClusterable {
-		private static final long serialVersionUID = 1L;
-
-		private final IProxyTargetLocator locator;
-
-		private final String type;
-
-		public ObjenesisProxyReplacement(final String type, final IProxyTargetLocator locator) {
-			this.type = type;
-			this.locator = locator;
-		}
-
-		protected Object readResolve() throws ObjectStreamException {
-			Class<?> clazz = WicketObjects.resolveClass(type);
-			if (clazz == null) {
-				ClassNotFoundException cause = new ClassNotFoundException(
-						"Could not resolve type [" + type +
-								"] with the currently configured org.apache.wicket.application.IClassResolver");
-				throw new WicketRuntimeException(cause);
-			}
-			return ObjenesisProxyFactory.createProxy(clazz, locator, WicketNamingPolicy.INSTANCE);
-		}
-	}
 
 	private static boolean hasNoArgConstructor(Class<?> type)
 	{
