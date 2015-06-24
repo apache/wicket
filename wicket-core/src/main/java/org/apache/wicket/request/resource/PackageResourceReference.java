@@ -122,7 +122,7 @@ public class PackageResourceReference extends ResourceReference
 		final String extension = getExtension();
 
 		final PackageResource resource;
-
+		
 		final Url url = RequestCycle.get().getRequest().getUrl();
 		//resource attributes (locale, style, variation) might be encoded in the URL
 		final UrlAttributes urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
@@ -219,10 +219,10 @@ public class PackageResourceReference extends ResourceReference
 	private String getCurrentStyle(UrlAttributes attributes)
 	{
 		String currentStyle = getCurrentStyle();
-
+		
 		return currentStyle != null ? currentStyle : attributes.getStyle();
 	}
-
+	
 	private String getCurrentStyle()
 	{
 		final String style = getStyle();
@@ -239,7 +239,7 @@ public class PackageResourceReference extends ResourceReference
 
 		return style;
 	}
-
+	
 	private String getCurrentVariation(UrlAttributes attributes)
 	{
 		final String variation = getVariation();

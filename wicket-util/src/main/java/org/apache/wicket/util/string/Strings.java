@@ -1564,9 +1564,9 @@ public final class Strings
 	}
 
 	/**
-	 * Returns the original string if this one is not empty (i.e. {@link #isEmpty(CharSequence)} returns false),
+	 * Returns the original string if this one is not empty (i.e. {@link #isEmpty(CharSequence)} returns false), 
 	 * otherwise the default one is returned. The default string might be itself an empty one.
-	 *
+	 * 
 	 * @param originalString
 	 * 				the original sting value
 	 * @param defaultValue
@@ -1575,6 +1575,6 @@ public final class Strings
 	 */
 	public static String defaultIfEmpty(String originalString, String defaultValue)
 	{
-		return isEmpty(originalString) ? defaultValue : originalString;
+		return isEmpty(originalString) ? defaultValue : originalString;		
 	}
 }

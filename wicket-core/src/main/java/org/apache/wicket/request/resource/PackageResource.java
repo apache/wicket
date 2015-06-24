@@ -431,7 +431,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 
 	/**
-	 * Locate resource stream for current resource. Be aware that method takes the current wicket session's
+
+	 * Locate resource stream for current resource. Be aware that method takes the current wicket session's 
 	 * locale and style into account when locating the stream.
 	 *
 	 * @return resource stream or <code>null</code> if not found
@@ -443,7 +444,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	{
 		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
 	}
-
+	
 	/**
 	 * locate resource stream for current resource
 	 * 
@@ -453,7 +454,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	public IResourceStream getResourceStream()
 	{
 		return getCacheableResourceStream();
-	}
+ 	}
 
 	/**
 	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to

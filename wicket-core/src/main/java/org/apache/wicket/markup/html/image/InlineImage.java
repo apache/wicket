@@ -31,7 +31,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
  *
  * @author Tobias Soloschenko
  * @since 6.20.0
- *
+ * 
  */
 public class InlineImage extends WebComponent
 {
