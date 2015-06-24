@@ -28,7 +28,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
  * The inline image is used to embed the complete image content within a HTML document.
- * 
+ *
  * @author Tobias Soloschenko
  * @since 6.20.0
  * 
@@ -42,7 +42,7 @@ public class InlineImage extends WebComponent
 
 	/**
 	 * Creates an inline image
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @param packageResourceReference
@@ -55,7 +55,7 @@ public class InlineImage extends WebComponent
 
 	/**
 	 * Creates an inline image
-	 * 
+	 *
 	 * @param id
 	 *            the id
 	 * @param model
@@ -76,7 +76,7 @@ public class InlineImage extends WebComponent
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		
+
 		checkComponentTag(tag, "img");
 
 		try

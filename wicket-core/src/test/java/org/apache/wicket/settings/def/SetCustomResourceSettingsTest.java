@@ -21,10 +21,10 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.ResourceSettings;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.time.Duration;
 import org.junit.Before;
 import org.junit.Test;

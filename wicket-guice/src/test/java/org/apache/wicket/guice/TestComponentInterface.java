@@ -38,4 +38,6 @@ public interface TestComponentInterface
 	Provider<ITestService> getInjectedFieldProvider();
 
 	Map<String, String> getInjectedTypeLiteralField();
+
+	String getEvilId();
 }

@@ -19,10 +19,10 @@ package org.apache.wicket.markup.html.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -62,31 +62,34 @@ public class ListViewTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void generics() {
+	public void generics()
+	{
 		// a listView for numbers
-		class NumberListView extends ListView<Number> {
+		class NumberListView<N extends Number> extends ListView<N>
+		{
 
 			private static final long serialVersionUID = 1L;
 
 			// since the given list is not changed actually, we can safely
 			// accept lists accepting subtypes of numbers only
-			public NumberListView(String id, IModel<? extends List<? extends Number>> model)
+			public NumberListView(String id, IModel<? extends List<N>> model)
 			{
 				super(id, model);
 			}
 
 			@Override
-			protected void populateItem(ListItem<Number> item)
+			protected void populateItem(ListItem<N> item)
 			{
 				// non-fancy display of the number
 				add(new Label("label", item.getModel()));
 			}
-		};
-		
+		}
+		;
+
 		IModel<List<Integer>> integers = new ListModel<>(new ArrayList<Integer>());
 
 		// pass list of integers to the number listView
-		new NumberListView("integers", integers);
+		new NumberListView<>("integers", integers);
 	}
 
 	/**

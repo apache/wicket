@@ -21,10 +21,10 @@ import static org.hamcrest.CoreMatchers.is;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.RestartResponseException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.CsrfPreventionRequestCycleListener.CsrfAction;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

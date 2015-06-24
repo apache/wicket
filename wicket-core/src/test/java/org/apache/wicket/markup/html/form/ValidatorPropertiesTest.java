@@ -19,10 +19,10 @@ package org.apache.wicket.markup.html.form;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.properties.MyApplication;
 import org.apache.wicket.properties.TestPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

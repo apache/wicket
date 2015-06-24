@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.PackageResourceGuard;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

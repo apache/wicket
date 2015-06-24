@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.junit.Test;
 

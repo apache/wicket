@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.form;
 import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.PropertyModel;
@@ -27,6 +26,7 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

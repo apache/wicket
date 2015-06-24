@@ -38,6 +38,7 @@ function getJdkToolchain {
 }
 
 # set -e
+# set -x
 
 # the branch on which the code base lives for this version (master is
 # always current development version)
@@ -62,7 +63,7 @@ REQUIREMENTS:
 
 if [ ! -f ~/.m2/toolchains.xml ] ; then
 	fail "
-Maven will load the Java $JAVA_VERSION environment from the toolchain specified in 
+Maven will load the Java $JAVA_VERSION environment from the toolchain specified in
 ~/.m2/toolchains.xml
 
 You don't have a toolchains.xml file in your .m2 folder. Please specify your
@@ -84,21 +85,41 @@ Java used to compile (from toolchain) is: $(getJdkToolchain)
 
 agentcount=`ps aux|grep gpg-agent|wc -l`
 
-if [ ! -z "$1" ] ; then
-	current_version="$1"
-	major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
-	minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
-	bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
-	milestone_version=$(expr $current_version : '.*\..*-M\(.*\)')
-	version="$major_version.$minor_version.0-M$milestone_version"
+current_version=$(getProjectVersionFromPom)
+major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
+minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
+bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
+version="$major_version.$minor_version.0"
+
+default_version="$version"
+
+version=
+
+while [[ ! $version =~ ^[0-9]+\.[0-9]+\.[0-9]+(-M[0-9]+)?$ ]]
+do
+	read -p "Version to release (default is $default_version): " -e t1
+	if [ -n "$t1" ]
+	then
+	  version="$t1"
+	else
+	  version="$default_version"
+	fi
+done
+
+# recalculate the version coordinates for the current release
+major_version=$(expr $version : '\(.*\)\..*\..*')
+minor_version=$(expr $version : '.*\.\(.*\)\..*')
+bugfix_version=$(expr $version : '.*\..*\.\(.*\)')
+
+if [[ $version =~ .+-M[0-9]+ ]]
+then
+	milestone_version=$(expr $version : '.*\..*-M\(.*\)')
+fi
+
+if [ ! -z "$milestone_version" ] ; then
 	next_version="$major_version.0.0-SNAPSHOT"
 	previous_version="$major_version.0.0-SNAPSHOT"
 else
-	current_version=$(getProjectVersionFromPom)
-	major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
-	minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
-	bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
-	version="$major_version.$minor_version.0"
 	next_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
 	previous_minor_version=$(expr $minor_version - 1)
 	if [ $previous_minor_version -lt 0 ] ; then
@@ -117,6 +138,17 @@ if [ $? -ne 0 ] ; then
 Use build-changelog.sh to add the release notes to the changelog.
 "
 fi
+
+git status --porcelain CHANGELOG-$major_version.x | grep -q "M"
+if [ $? -eq 0 ] ; then
+	fail "You have changes in your workspace that have not been committed.
+
+$(git status)
+"
+fi
+
+echo "Cleaning up any release artifacts that might linger"
+mvn -q release:clean
 
 log=$(pwd)/release.out
 
@@ -144,14 +176,11 @@ This script will release version: Apache Wicket $version and continue
 development with $next_version
 
 Press enter to continue or CTRL-C to abort \c"
-read 
+read
 
 echo "Ensuring we are starting from wicket-$major_version.x"
 # otherwise we can't remove a previous release branch that failed
 git checkout $GIT_BRANCH
-
-echo "Cleaning up any release artifacts that might linger"
-mvn -q release:clean
 
 echo "Removing previous release tag $tag (if exists)"
 oldtag=`git tag -l |grep -e "$tag"|wc -l`
@@ -291,13 +320,16 @@ $(cat $i.asc)
 done
 popd > /dev/null
 
-echo "========================================================================
+	echo "========================================================================
 
 CHANGELOG for $version:
 " >> /tmp/release-$version-sigs.txt
 
-awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-6.x >> /tmp/release-$version-sigs.txt
-
+if [ -f "/tmp/release-notes-$version.txt" ] ; then
+	tail -n +4 /tmp/release-notes-$version.txt >> /tmp/release-$version-sigs.txt
+else
+	awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-$major_version.x >> /tmp/release-$version-sigs.txt
+fi
 
 echo "Generating Vote email"
 
@@ -397,7 +429,7 @@ You can find the distribution in target/dist
 
 To verify all signatures:
 
-    find . -name \"*.asc\" -exec gpg --verify {} \; 
+    find . -name \"*.asc\" -exec gpg --verify {} \;
 
 To push the release branch to ASF git servers
 
@@ -411,7 +443,7 @@ Remove previous version $previous_version from the mirrors
 
     svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\"
 
-To sign the release tag issue the following three commands: 
+To sign the release tag issue the following three commands:
 
     git checkout $tag
     git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log

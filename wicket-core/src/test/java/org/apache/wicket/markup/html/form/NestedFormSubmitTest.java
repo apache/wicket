@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

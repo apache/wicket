@@ -19,12 +19,12 @@ package org.apache.wicket.markupFragments;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.InlinePanelPage_1;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -42,13 +42,13 @@ public class MarkupFragmentTest extends WicketTestCase
 	public void page() throws Exception
 	{
 		IMarkupFragment markup = new MyPage().getAssociatedMarkup();
-		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html", MyPage.class);
 
 		markup = new MyPage().getMarkup();
-		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html", MyPage.class);
 
 		markup = new MyPage().getMarkup(null);
-		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPage_ExpectedResult.html", MyPage.class);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the associated markup file
 		IMarkupFragment markup = panel.getAssociatedMarkup();
-		compareMarkupWithFile(markup, "MyPanel_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPanel_ExpectedResult.html", MyPage.class);
 
 		// The Page is missing the tag to "call" the panel
 		assertNull(panel.getMarkup());
@@ -99,7 +99,7 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the associated markup file
 		IMarkupFragment markup = panel.getAssociatedMarkup();
-		compareMarkupWithFile(markup, "MyPanelWithAutoComponent_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyPanelWithAutoComponent_ExpectedResult.html", MyPage.class);
 
 		// The Page is missing the tag to "call" the panel
 		assertNull(panel.getMarkup());
@@ -166,7 +166,7 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the associated markup file
 		IMarkupFragment markup = border.getAssociatedMarkup();
-		compareMarkupWithFile(markup, "MyBorder_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyBorder_ExpectedResult.html", MyPage.class);
 
 		// getMarkup() returns the "calling" tags
 		markup = border.getMarkup();
@@ -205,7 +205,7 @@ public class MarkupFragmentTest extends WicketTestCase
 
 		// Get the associated markup file
 		IMarkupFragment markup = border.getAssociatedMarkup();
-		compareMarkupWithFile(markup, "MyBorder2_ExpectedResult.html");
+		compareMarkupWithFile(markup, "MyBorder2_ExpectedResult.html", MyPage.class);
 
 		// getMarkup() returns the "calling" tags
 		markup = border.getMarkup();

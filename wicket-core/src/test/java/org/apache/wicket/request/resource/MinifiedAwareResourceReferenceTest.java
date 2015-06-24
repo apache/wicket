@@ -17,11 +17,11 @@
 package org.apache.wicket.request.resource;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

@@ -25,7 +25,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

@@ -48,45 +48,45 @@ public class ResourceUtilTest extends Assert
 		assertNull(attributes.getLocale());
 		assertEquals("style", attributes.getStyle());
 		assertEquals("variation", attributes.getVariation());
-		
+
 		attributes = ResourceUtil.decodeResourceReferenceAttributes("--variation");
 		assertNull(attributes.getLocale());
 		assertNull(attributes.getStyle());
 		assertEquals("variation", attributes.getVariation());
-		
+
 		attributes = ResourceUtil.decodeResourceReferenceAttributes("-style");
 		assertNull(attributes.getLocale());
 		assertEquals("style", attributes.getStyle());
 		assertNull(attributes.getVariation());
 	}
-	
+
 	@Test
 	public void decodeResourceReferenceAttributesWithUrl() throws Exception
 	{
 		Url url = Url.parse("www.funny.url/?param1=value1");
 		UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
-		
+
 		assertEquals(new UrlAttributes(null, null, null), attributes);
-		
+
 		url = Url.parse("www.funny.url/?de_DE");
 		attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 		assertEquals(Locale.GERMANY, attributes.getLocale());
 		assertNull(attributes.getStyle());
 		assertNull(attributes.getVariation());
-		
+
 		url = Url.parse("www.funny.url/?-style");
 		attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 		assertNull(attributes.getLocale());
 		assertEquals("style", attributes.getStyle());
 		assertNull(attributes.getVariation());
 	}
-	
+
 	@Test
 	public void encodeResourceReferenceAttributes() throws Exception
 	{
 		UrlAttributes attributes = new UrlAttributes(null, null, null);
 		assertNull(ResourceUtil.encodeResourceReferenceAttributes(attributes));
-		
+
 		attributes = new UrlAttributes(Locale.CANADA_FRENCH, "style", "variation");
 		
 		assertEquals("fr_CA-style-variation", ResourceUtil.encodeResourceReferenceAttributes(attributes));
@@ -95,12 +95,12 @@ public class ResourceUtilTest extends Assert
 		
 		assertEquals("--variation", ResourceUtil.encodeResourceReferenceAttributes(attributes));
 	}
-	
+
 	@Test
 	public void encodeResourceReferenceAttributesWithResource() throws Exception
 	{
 		ResourceReference resourceReference = Mockito.mock(ResourceReference.class);
-		
+
 		//test with all null attributes
 		UrlAttributes attributes = new UrlAttributes(null, null, null);
 		
@@ -132,6 +132,5 @@ public class ResourceUtilTest extends Assert
 		ResourceUtil.encodeResourceReferenceAttributes(url, resourceReference);
 		
 		assertEquals(urlString + "?--variation", url.toString());
-		
 	}
 }

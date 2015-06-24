@@ -341,7 +341,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				if (readBuffered)
 				{
 					bytes = IOUtils.toByteArray(inputStream);
-					resourceResponse.setContentLength(new Long(bytes.length));
+					resourceResponse.setContentLength(bytes.length);
 				}
 				else
 				{
@@ -431,6 +431,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 
 	/**
+
 	 * Locate resource stream for current resource. Be aware that method takes the current wicket session's 
 	 * locale and style into account when locating the stream.
 	 *

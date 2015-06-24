@@ -17,7 +17,6 @@
 package org.apache.wicket.util.tester;
 
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;

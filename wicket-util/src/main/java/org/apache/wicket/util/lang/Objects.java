@@ -769,7 +769,7 @@ public final class Objects
 	/**
 	 * Returns the original object if this one is != null. If the original object is null
 	 * the default one is returned. The default object has no restriction, it might be itself null.
-	 * 
+	 *
 	 * @param originalObj
 	 * 			the original object
 	 * @param defaultObj
@@ -780,7 +780,7 @@ public final class Objects
 	{
 		return originalObj != null ? originalObj : defaultObj;
 	}
-	
+
 	/**
 	 * Instantiation not allowed
 	 */

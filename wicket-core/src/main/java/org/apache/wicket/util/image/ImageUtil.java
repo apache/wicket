@@ -27,7 +27,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
  * Util class to provide basic image functionality like converting image data to base64 content
- * 
+ *
  * @author Tobias Soloschenko
  * @since 6.20.0
  *
@@ -37,7 +37,7 @@ public class ImageUtil
 
 	/**
 	 * Creates a base64 encoded image string based on the given image reference
-	 * 
+	 *
 	 * @param imageReference
 	 *            the image reference to create the base64 encoded image string of
 	 * @param removeWhitespaces

@@ -29,7 +29,6 @@ import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.MockPanelWithLink;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

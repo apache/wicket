@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

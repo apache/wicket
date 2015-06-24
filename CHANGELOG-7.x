@@ -1,4 +1,97 @@
-This file contains all changes done in releases for Apache Wicket 7. x.
+This file contains all changes done in releases for Apache Wicket 7.x.
+
+=======================================================================
+
+Release Notes - Wicket - Version 7.0.0-M6
+
+** Bug
+
+    * [WICKET-5790] - VariableInterpolator & #getThrowExceptionOnMissingResource
+    * [WICKET-5814] - CryptoMapper clears feedback messages
+    * [WICKET-5816] - Apps can't use Application.setName instead of WicketFilter for e.g. JMX names
+    * [WICKET-5822] - AjaxSelfUpdatingTimer stops working after ajax download
+    * [WICKET-5825] - Deployment of wicket-examples.war fails in Tomcat
+    * [WICKET-5828] - PageProvider not serializable
+    * [WICKET-5834] - NPE in DefaultPropertyResolver
+    * [WICKET-5835] - InlineEnclosure doesn't call child.configure() before updating its visilbity
+    * [WICKET-5837] - JUnit tests may fail because of AbstractDefaultAjaxBehavior
+    * [WICKET-5838] - Last-modified header of external markup is ignored
+    * [WICKET-5841] - continueToOriginalDestination() discards new cookies
+    * [WICKET-5843] - CryptoMapper doesn't work with context relative UrlResourceReferences
+    * [WICKET-5845] - AuthenticatedWebSession.get() returns a new session with signedIn false
+    * [WICKET-5850] - LazyInitProxyFactory causes NoClassDefFound org/apache/wicket/proxy/ILazyInitProxy in case of multimodule deployment
+    * [WICKET-5851] - PackageResourceTest#packageResourceGuard test fails under Windows
+    * [WICKET-5853] - LongConverter converts some values greater than Long.MAX_VALUE
+    * [WICKET-5855] - RememberMe functionality seems to be broken after the change of the default crypt factory
+    * [WICKET-5856] - StackOverFlowError when working with transparent containers
+    * [WICKET-5857] - PagingNavigator invalid HTML (rel attribute on span tag)
+    * [WICKET-5858] - AjaxRequestTarget.focusComponent does not work in modal window
+    * [WICKET-5861] - BigDecimalConverter does not allow parsing of values great than Double.MAX_VALUE
+    * [WICKET-5862] - Wicket Container visibility bug
+    * [WICKET-5864] - Multipart Ajax form submit does not release the channel in case of connection failure
+    * [WICKET-5869] - Kittencaptcha doesn't calculate click y-coordinate correctly
+    * [WICKET-5870] - wicket-event-jquery.js: Wicket.Browser.isIE11() does not return boolean
+    * [WICKET-5874] - WicketTester TagTester does not work as expected when using non self closing tags
+    * [WICKET-5879] - Using an AjaxSubmitLink to hide its form results in an exception
+    * [WICKET-5881] - NPE in FormComponent#updateCollectionModel in case of no converted input and unmodifiable collection
+    * [WICKET-5883] - Feedback messages not cleared for invisible/disabled form components on submit.
+    * [WICKET-5887] - wicket.xsd refers to non-existing xhtml.label:attlist
+    * [WICKET-5891] - Parsing of ChinUnionPay credit card should use the first 6 characters
+    * [WICKET-5893] - CookieUtils should use the original response when saving a cookie
+    * [WICKET-5895] - validateHeaders fails to detect missing head/body (regression)
+    * [WICKET-5898] - StackOverflowError after form submit with a validation error
+    * [WICKET-5900] - Add WicketTester support for IAjaxLink
+    * [WICKET-5903] - Regression in mount resolution when using optional parameters
+    * [WICKET-5904] - NPE after editing a markup file in debug mode
+    * [WICKET-5906] - Use default on missing resource does not work
+    * [WICKET-5908] - A new HtmlHeaderContainer is added each time a page instance is rendered
+    * [WICKET-5910] - CGLib proxy should not intercept protected methods
+    * [WICKET-5911] - Re-rendering page after exception in render phase does not call onBeforeRender()
+    * [WICKET-5912] - NPE in Page#hasInvisibleTransparentChild
+    * [WICKET-5915] - The application can not find  /META-INF/wicket/**.properties on Windows systems
+    * [WICKET-5916] - StackOverflowError when calling getObject() from load() in LDM
+    * [WICKET-5917] - Do not use jQuery's $ in String snippets in Java code
+
+** Improvement
+
+    * [WICKET-5314] - AbstractAutoCompleteBehavior does not support AjaxChannels
+    * [WICKET-5749] - Wicket-auth-roles should deal with resource authorization
+    * [WICKET-5789] - Make org.apache.wicket.protocol.ws.javax.WicketServerEndpointConfig publicly visible
+    * [WICKET-5801] - Responsive Images
+    * [WICKET-5823] - DefaultAuthenticationStrategy should be modified to reduce copy/paste while extending it's functionality
+    * [WICKET-5829] - rename PageSettings#recreateMountedPagesAfterExpiry
+    * [WICKET-5831] - Improve unsafe Id reporting in the AbstractRepeater
+    * [WICKET-5832] - Do not fail at CDI's ConversationPropagator when running in non-http thread
+    * [WICKET-5833] - Add a way to get all opened web socket connections per user session
+    * [WICKET-5840] - WicketTester doesn't support #clickLink() for ExternalLink component
+    * [WICKET-5859] - Add Hebrew and Arabic translations
+    * [WICKET-5860] - Cross-Site Websocket Hijacking protection
+    * [WICKET-5863] - Overiding disableCaching in ServletWebResponse is ignored when responce is buffered
+    * [WICKET-5865] - AjaxEditableLabel should implement IGenericComponent
+    * [WICKET-5872] - wicket extensions initializer.properties for greek language
+    * [WICKET-5875] - ComponentRenderer.renderComponent() unexpectedly produces a WicketRuntimeException when called with a nested Component which contains a nested wicket:message
+    * [WICKET-5889] - Ability to not submit a nested form
+    * [WICKET-5892] - add ClientProperties#isJavaScriptEnabled()
+    * [WICKET-5894] - Support *.woff2 webfonts in SecurePackageResourceGuard as well
+    * [WICKET-5901] - Leaving veil when ajax processing ends with redirect
+    * [WICKET-5905] - allow listening to Ajax calls before scheduling
+    * [WICKET-5921] - Provide a default implementation of IModelComparator that always returns false
+
+** New Feature
+
+    * [WICKET-5819] - Support for HTML 5 media tags (audio / video)
+    * [WICKET-5827] - Allow to apply multiple Javascript / CSS compressors
+    * [WICKET-5897] - Use the #isEnabled() method with validators
+    * [WICKET-5918] - Create an Image component that uses the new data: protocol (an InlineImage)
+    * [WICKET-5919] - Add support for CSRF prevention
+
+** Task
+
+    * [WICKET-5896] - Upgrade jQuery to latest stable versions (1.11.4 & 2.1.3)
+
+** Wish
+
+    * [WICKET-5848] - Remove .settings folders of projects
 
 =======================================================================
 

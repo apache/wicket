@@ -19,7 +19,6 @@ package org.apache.wicket.request.resource;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -30,6 +29,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

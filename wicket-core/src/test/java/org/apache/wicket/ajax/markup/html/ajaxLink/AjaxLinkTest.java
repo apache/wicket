@@ -18,9 +18,9 @@ package org.apache.wicket.ajax.markup.html.ajaxLink;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.util.tester.TagTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

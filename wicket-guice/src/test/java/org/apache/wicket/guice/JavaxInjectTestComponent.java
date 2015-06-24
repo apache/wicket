@@ -22,9 +22,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 
 import com.google.inject.Provider;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 
 /**
  */
@@ -58,13 +58,16 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	private String named2;
 
 	/**
-	 * A non-existing bean.
-	 * IResourceSettings is chosen randomly. Any non-primitive type would suffice
-	 */
+     * A non-existing bean.
+     * IResourceSettings is chosen randomly. Any non-primitive type would suffice
+     */
 	@Inject
 	private IAjaxCallListener nonExisting;
 
 	private final JavaxInjectTestNoComponent noComponent;
+
+	@Inject
+	private EvilTestService evilTestService;
 
 	/**
 	 * Construct.
@@ -165,4 +168,9 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 		return noComponent.getString();
 	}
 
+	@Override
+	public String getEvilId()
+	{
+		return evilTestService.getId();
+	}
 }

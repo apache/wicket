@@ -8,7 +8,7 @@
 #
 #     build-versions.py <release-version> <dev-version>
 #
-# This will generate a release.properties file that will release the 
+# This will generate a release.properties file that will release the
 # release-version, and will continue development on dev-version.
 #
 # Example:
@@ -34,7 +34,7 @@ devVersions = []
 def addVersions(groupId, module):
     relVersions.append("project.rel." + groupId + "\\:" + module + "=" + relVersion)
     devVersions.append("project.dev." + groupId + "\\:" + module + "=" + devVersion)
-    
+
 def getModulesFromParent(parentPomFile):
     pom = parse(parentPomFile)
 

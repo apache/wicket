@@ -41,7 +41,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 	private final String fieldName;
 
 	public GuiceProxyTargetLocator(final Field field, final Annotation bindingAnnotation,
-		final boolean optional)
+	                               final boolean optional)
 	{
 		this.bindingAnnotation = bindingAnnotation;
 		this.optional = optional;
@@ -53,7 +53,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 	public Object locateProxyTarget()
 	{
 		final GuiceInjectorHolder holder = Application.get().getMetaData(
-			GuiceInjectorHolder.INJECTOR_KEY);
+				GuiceInjectorHolder.INJECTOR_KEY);
 
 		final Type type;
 		try
@@ -65,7 +65,7 @@ class GuiceProxyTargetLocator implements IProxyTargetLocator
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("Error accessing member: " + fieldName +
-				" of class: " + className, e);
+					" of class: " + className, e);
 		}
 
 		// using TypeLiteral to retrieve the key gives us automatic support for

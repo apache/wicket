@@ -18,12 +18,12 @@ package org.apache.wicket.request.handler.resource;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

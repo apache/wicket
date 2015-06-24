@@ -58,6 +58,9 @@ public class TestComponent extends Component implements TestComponentInterface
 	@Named("named2")
 	private String named2;
 
+	@Inject()
+	private EvilTestService evilTestService;
+
 	private final TestNoComponent noComponent;
 
 	/**
@@ -154,4 +157,9 @@ public class TestComponent extends Component implements TestComponentInterface
 		return noComponent.getString();
 	}
 
+	@Override
+	public String getEvilId()
+	{
+		return evilTestService.getId();
+	}
 }

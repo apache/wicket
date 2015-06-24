@@ -18,6 +18,7 @@ package org.apache.wicket;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.DefaultPageFactory;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

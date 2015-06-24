@@ -38,7 +38,7 @@ import org.apache.wicket.util.string.Strings;
 public class ResourceUtil
 {
 	/**
-	 * Reads resource reference attributes (style, locale, variation) encoded in the given string. 
+	 * Reads resource reference attributes (style, locale, variation) encoded in the given string.
 	 * 
 	 * @param encodedAttributes
 	 * 			the string containing the resource attributes
@@ -51,7 +51,7 @@ public class ResourceUtil
 		Locale locale = null;
 		String style = null;
 		String variation = null;
-	
+
 		if (Strings.isEmpty(encodedAttributes) == false)
 		{
 			String split[] = Strings.split(encodedAttributes, '-');
@@ -137,7 +137,7 @@ public class ResourceUtil
 			return res.toString();
 		}
 	}
-	
+
 	/**
 	 * Encodes the attributes of the given resource reference in the specified url.
 	 * 
@@ -152,7 +152,7 @@ public class ResourceUtil
 	{
 		Args.notNull(url, "url");
 		Args.notNull(reference, "reference");
-		
+
 		String encoded = encodeResourceReferenceAttributes(reference.getUrlAttributes());
 		if (!Strings.isEmpty(encoded))
 		{
@@ -173,7 +173,7 @@ public class ResourceUtil
 		CharSequence tmp = Strings.replaceAll(attribute, "~", "~~");
 		return Strings.replaceAll(tmp, "-", "~");
 	}
-	
+
 	/**
 	 * Parses the string representation of a {@link java.util.Locale} (for example 'en_GB').
 	 * 

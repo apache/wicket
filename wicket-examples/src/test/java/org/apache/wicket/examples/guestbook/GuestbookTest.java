@@ -18,9 +18,9 @@ package org.apache.wicket.examples.guestbook;
 
 import java.util.ArrayList;
 
-import org.apache.wicket.examples.WicketTestCase;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 

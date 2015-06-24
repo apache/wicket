@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.http;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Locale;
-import org.apache.wicket.WicketTestCase;
+
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -28,6 +28,7 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.ICompoundRequestMapper;
 import org.apache.wicket.request.mapper.IRequestMapperDelegate;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

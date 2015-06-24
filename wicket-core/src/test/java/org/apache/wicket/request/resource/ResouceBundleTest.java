@@ -18,11 +18,11 @@ package org.apache.wicket.request.resource;
 
 import java.util.Arrays;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.bundles.ConcatBundleResource;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

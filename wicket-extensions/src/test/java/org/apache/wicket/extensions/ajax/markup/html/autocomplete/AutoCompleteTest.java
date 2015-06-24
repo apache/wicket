@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

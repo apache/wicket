@@ -14,38 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples;
+package org.apache.wicket.proxy.objenesis;
 
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import java.io.ObjectStreamException;
+
+import org.apache.wicket.proxy.IProxyTargetLocator;
+import org.apache.wicket.proxy.LazyInitProxyFactory;
 
 /**
- * 
+ * Method interceptor for proxies representing concrete object not backed by an interface. These
+ * proxies are representing by cglib proxies.
  */
-public abstract class WicketTestCase extends Assert
+public class ObjenesisCGLibInterceptor extends LazyInitProxyFactory.AbstractCGLibInterceptor
 {
-	/***/
-	public WicketTester tester;
-
-	/**
-	 * 
-	 */
-	@Before
-	public void before()
-	{
-		tester = new WicketTester();
+	public ObjenesisCGLibInterceptor(Class<?> type, IProxyTargetLocator locator) {
+		super(type, locator);
 	}
 
-	/**
-	 * 
-	 */
-	@After
-	public void after()
+	@Override
+	public Object writeReplace() throws ObjectStreamException
 	{
-		tester.destroy();
+		return new ObjenesisProxyReplacement(typeName, locator);
 	}
-
-
 }

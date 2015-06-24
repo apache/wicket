@@ -213,7 +213,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 				// need to remove indexed parameters otherwise the URL won't be able to decode
 				parameters.clearIndexed();
 			}
-			
+
 			ResourceUtil.encodeResourceReferenceAttributes(url, reference);
 
 			StringTokenizer tokens = new StringTokenizer(reference.getName(), "/");

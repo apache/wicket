@@ -24,7 +24,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AbstractAjaxResponse;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.XmlAjaxResponse;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -47,7 +46,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0
  */
-public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketRequestHandler
+public class WebSocketRequestHandler implements IWebSocketRequestHandler
 {
 	private static final Logger LOG = LoggerFactory.getLogger(WebSocketRequestHandler.class);
 
@@ -165,11 +164,6 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	}
 
 	@Override
-	public void addListener(IListener listener)
-	{
-	}
-
-	@Override
 	public void appendJavaScript(CharSequence javascript)
 	{
 		hasData.set(true);
@@ -181,11 +175,6 @@ public class WebSocketRequestHandler implements AjaxRequestTarget, IWebSocketReq
 	{
 		hasData.set(true);
 		ajaxResponse.prependJavaScript(javascript);
-	}
-
-	@Override
-	public void registerRespondListener(ITargetRespondListener listener)
-	{
 	}
 
 	@Override

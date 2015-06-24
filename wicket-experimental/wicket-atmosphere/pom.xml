@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-atmosphere</artifactId>
-	<version>0.22-SNAPSHOT</version>
+	<version>0.23-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Wicket-Atmosphere</name>
 	<description>Wicket-Atmosphere provides integration of the Atmosphere Framework in Wicket.</description>
@@ -41,8 +41,8 @@
         </repository>
     </repositories>
 	<properties>
-		<atmosphere.version>2.2.2</atmosphere.version>
-		<jquery.atmosphere.version>2.2.3</jquery.atmosphere.version>
+		<atmosphere.version>2.2.3</atmosphere.version>
+		<jquery.atmosphere.version>2.2.7</jquery.atmosphere.version>
 	</properties>
     <dependencyManagement>
         <dependencies>
@@ -79,6 +79,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
+			<version>18.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.agilecoders.wicket.webjars</groupId>

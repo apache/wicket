@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
+import org.apache.wicket.request.ILoggableRequestHandler;
+
 /**
  * An interface for outbound communication with web socket clients
  *
  * @since 6.0
  */
-public interface IWebSocketRequestHandler
+public interface IWebSocketRequestHandler extends IPartialPageRequestHandler, ILoggableRequestHandler
 {
 	/**
 	 * Pushes a text message to the client.

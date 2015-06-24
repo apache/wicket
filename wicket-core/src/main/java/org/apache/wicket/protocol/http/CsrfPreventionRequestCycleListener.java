@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * You can enable this CSRF prevention filter by adding it to the request cycle listeners in your
  * {@link WebApplication#init() application's init method}:
- * 
+ *
  * <pre>
  * &#064;Override
  * protected void init()
@@ -82,7 +82,7 @@ import org.slf4j.LoggerFactory;
  * checked for CSRF requests. For example you can skip checking pages that have a
  * {@code @NoCsrfCheck} annotation, or only those pages that extend your base secure page class. For
  * example:
- * 
+ *
  * <pre>
  * &#064;Override
  * protected boolean isChecked(IRequestablePage requestedPage)
@@ -120,7 +120,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * The action to perform when a missing or conflicting Origin header is detected.
 	 */
-	public static enum CsrfAction {
+	public enum CsrfAction {
 		/** Aborts the request and throws an exception when a CSRF request is detected. */
 		ABORT {
 			@Override
@@ -157,7 +157,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	private CsrfAction noOriginAction = CsrfAction.ALLOW;
 
 	/**
-	 * Action to perform when a conflicing Origin header is found.
+	 * Action to perform when a conflicting Origin header is found.
 	 */
 	private CsrfAction conflictingOriginAction = CsrfAction.ABORT;
 
@@ -239,7 +239,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * Adds an origin (host name/domain name) to the white list. An origin is in the form of
 	 * &lt;domainname&gt;.&lt;TLD&gt;, and can contain a subdomain. Every Origin header that matches
 	 * a domain from the whitelist is accepted and not checked any further for CSRF issues.
-	 * 
+	 *
 	 * E.g. when {@code example.com} is in the white list, this allows requests from (i.e. with an
 	 * {@code Origin:} header containing) {@code example.com} and {@code blabla.example.com} but
 	 * rejects requests from {@code blablaexample.com} and {@code example2.com}.
@@ -279,7 +279,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * Dynamic override for enabling/disabling the CSRF detection. Might be handy for specific
 	 * tenants in a multi-tenant application. When false, the CSRF detection is not performed for
 	 * the running request. Default {@code true}
-	 * 
+	 *
 	 * @return {@code true} when the CSRF checks need to be performed.
 	 */
 	protected boolean isEnabled()
@@ -290,7 +290,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * Override to limit whether the request to the specific page should be checked for a possible
 	 * CSRF attack.
-	 * 
+	 *
 	 * @param targetedPage
 	 *            the page that is the target for the action
 	 * @return {@code true} when the request to the page should be checked for CSRF issues.
@@ -303,7 +303,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * Override to change the request handler types that are checked. Currently only action handlers
 	 * (form submits, link clicks, AJAX events) are checked for a matching Origin HTTP header.
-	 * 
+	 *
 	 * @param handler
 	 *            the handler that is currently processing
 	 * @return true when the Origin HTTP header should be checked for this {@code handler}
@@ -416,7 +416,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 
 	/**
 	 * Checks whether the domain part of the {@code Origin} HTTP header is whitelisted.
-	 * 
+	 *
 	 * @param origin
 	 *            the {@code Origin} HTTP header
 	 * @return {@code true} when the origin domain was whitelisted
@@ -452,7 +452,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * Checks whether the {@code Origin} HTTP header of the request matches where the request came
 	 * from.
-	 * 
+	 *
 	 * @param containerRequest
 	 *            the current container request
 	 * @param originHeader
@@ -475,7 +475,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 
 	/**
 	 * Creates a RFC-6454 comparable origin from the {@code origin} string.
-	 * 
+	 *
 	 * @param origin
 	 *            the contents of the Origin HTTP header
 	 * @return only the scheme://host[:port] part, or {@code null} when the origin string is not
@@ -533,7 +533,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 
 	/**
 	 * Creates a RFC-6454 comparable origin from the {@code request} requested resource.
-	 * 
+	 *
 	 * @param request
 	 *            the incoming request
 	 * @return only the scheme://host[:port] part, or {@code null} when the origin string is not
@@ -575,7 +575,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * Handles the case where an origin is in the whitelist. Default action is to allow the
 	 * whitelisted origin.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -596,7 +596,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * Called when the origin was available in the whitelist. Override this method to implement your
 	 * own custom action.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -611,7 +611,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * Handles the case where an origin was checked and matched the request origin. Default action
 	 * is to allow the whitelisted origin.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -632,7 +632,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	/**
 	 * Called when the origin HTTP header matched the request. Override this method to implement
 	 * your own custom action.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -648,7 +648,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * Handles the case where an Origin HTTP header was not present or did not match the request
 	 * origin, and the corresponding action ({@link #noOriginAction} or
 	 * {@link #conflictingOriginAction}) is set to {@code ALLOW}.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -667,7 +667,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * Override this method to customize the case where an Origin HTTP header was not present or did
 	 * not match the request origin, and the corresponding action ({@link #noOriginAction} or
 	 * {@link #conflictingOriginAction}) is set to {@code ALLOW}.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -683,7 +683,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * Handles the case where an Origin HTTP header was not present or did not match the request
 	 * origin, and the corresponding action ({@link #noOriginAction} or
 	 * {@link #conflictingOriginAction}) is set to {@code SUPPRESS}.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -703,7 +703,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * Override this method to customize the case where an Origin HTTP header was not present or did
 	 * not match the request origin, and the corresponding action ({@link #noOriginAction} or
 	 * {@link #conflictingOriginAction}) is set to {@code SUPPRESSED}.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -719,7 +719,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * Handles the case where an Origin HTTP header was not present or did not match the request
 	 * origin, and the corresponding action ({@link #noOriginAction} or
 	 * {@link #conflictingOriginAction}) is set to {@code ABORT}.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin
@@ -740,7 +740,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * Override this method to customize the case where an Origin HTTP header was not present or did
 	 * not match the request origin, and the corresponding action ({@link #noOriginAction} or
 	 * {@link #conflictingOriginAction}) is set to {@code ABORTED}.
-	 * 
+	 *
 	 * @param request
 	 *            the request
 	 * @param origin

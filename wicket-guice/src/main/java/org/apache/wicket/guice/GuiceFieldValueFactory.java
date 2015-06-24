@@ -30,7 +30,7 @@ import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
 
 /**
- * 
+ *
  */
 public class GuiceFieldValueFactory implements IFieldValueFactory
 {
@@ -38,7 +38,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param wrapInProxies
 	 */
 	GuiceFieldValueFactory(final boolean wrapInProxies)
@@ -83,8 +83,8 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 				catch (MoreThanOneBindingException e)
 				{
 					throw new RuntimeException(
-						"Can't have more than one BindingAnnotation on field " + field.getName() +
-							" of class " + fieldOwner.getClass().getName());
+							"Can't have more than one BindingAnnotation on field " + field.getName() +
+									" of class " + fieldOwner.getClass().getName());
 				}
 			}
 		}
@@ -102,13 +102,13 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	}
 
 	/**
-	 * 
+	 *
 	 * @param annotations
 	 * @return Annotation
 	 * @throws MoreThanOneBindingException
 	 */
 	private Annotation findBindingAnnotation(final Annotation[] annotations)
-		throws MoreThanOneBindingException
+			throws MoreThanOneBindingException
 	{
 		Annotation bindingAnnotation = null;
 
@@ -116,7 +116,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 		for (Annotation annotation : annotations)
 		{
 			if (annotation.annotationType().getAnnotation(BindingAnnotation.class) != null ||
-				annotation.annotationType().getAnnotation(Qualifier.class) != null)
+					annotation.annotationType().getAnnotation(Qualifier.class) != null)
 			{
 				if (bindingAnnotation != null)
 				{
@@ -129,7 +129,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static class MoreThanOneBindingException extends Exception
 	{

@@ -202,7 +202,7 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 
 		// add caching information
 		addCachingDecoration(url, parameters);
-		
+
 		ResourceUtil.encodeResourceReferenceAttributes(url, resourceReference);
 		// create url
 		return encodePageParameters(url, parameters, parametersEncoder);
