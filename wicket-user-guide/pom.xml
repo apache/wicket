@@ -1,162 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.asciidoctor.maven</groupId>
-    <artifactId>asciidoc-to-html-example</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <name>AsciiDoc to HTML Maven Example</name>
-    <description>An example project that demonstrates how to convert AsciiDoc to HTML5 using the Asciidoctor Maven plugin.</description>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <asciidoctor.maven.plugin.version>1.5.2.1</asciidoctor.maven.plugin.version>
-        <jruby.version>1.7.20.1</jruby.version>
-    </properties>
+        http://www.apache.org/licenses/LICENSE-2.0
 
-    <build>
-        <defaultGoal>process-resources</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>${asciidoctor.maven.plugin.version}</version>
-                <dependencies>
-                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
-                    <dependency>
-                        <groupId>org.jruby</groupId>
-                        <artifactId>jruby-complete</artifactId>
-                        <version>${jruby.version}</version>
-                    </dependency>
-                    <!-- Uncomment the following element to override the version of AsciidoctorJ -->
-                    <!--
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj</artifactId>
-                        <version>1.5.3-SNAPSHOT</version>
-                    </dependency>
-                    -->
-                </dependencies>
-                <configuration>
-                    <sourceDirectory>src/docs/asciidoc</sourceDirectory>
-                    <!-- If you set baseDir to ${project.basedir}, top-level includes are resolved relative to the project root -->
-                    <!--
-                    <baseDir>${project.basedir}</baseDir>
-                    -->
-                    <!-- Attributes common to all output formats -->
-                    <attributes>
-                        <endpoint-url>http://example.org</endpoint-url>
-                        <sourcedir>${project.build.sourceDirectory}</sourcedir>
-                        <project-version>${project.version}</project-version>
-                    </attributes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>asciidoc-to-html</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html5</backend>
-                            <imagesdir>../img</imagesdir>
-                            <sourceDocumentName>index.adoc</sourceDocumentName>
-                            <sourceHighlighter>coderay</sourceHighlighter>
-                            <preserveDirectories>true</preserveDirectories>
-                            <!--
-                            Scenarios for linking vs embedding assets:
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.apache.wicket</groupId>
+		<artifactId>wicket-parent</artifactId>
+		<version>6.21.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>wicket-user-guide</artifactId>
+	<packaging>jar</packaging>
+	<name>Wicket User Guide</name>
+	<description>
+		Provides the user guide of wicket
+	</description>
 
-                            Link to both stylesheets and images::
+	<dependencies>
+		<dependency>
+			<groupId>org.grails</groupId>
+			<artifactId>grails-dependencies</artifactId>
+			<version>${grails.version}</version>
+			<type>pom</type>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>grails-plugin-log4j</artifactId>
+					<groupId>org.grails</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.grails</groupId>
+			<artifactId>grails-docs</artifactId>
+			<version>${grails.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+	</dependencies>
 
-                              - don't set embedAssets option
-                              - set linkcss attribute to true
-                              - set imagesdir attribute to path relative to AsciiDoc source file
+	<repositories>
+		<repository>
+			<id>grails</id>
+			<name>grails</name>
+			<url>http://repo.grails.org/grails/core</url>
+		</repository>
+		<repository>
+			<id>grails-plugins</id>
+			<name>grails-plugins</name>
+			<url>http://repo.grails.org/grails/plugins</url>
+		</repository>
+	</repositories>
 
-                              <attributes>
-                                  <linkcss>true</linkcss>
-                                  <imagesdir>./images</imagesdir>
-                              </attributes>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration>
+						<!-- Just documentation. No need to deploy -->
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<configuration>
+						<!-- Just documentation, no sources -->
+						<skipSource>true</skipSource>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<!-- Just documentation, no sources -->
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
-                            Embed stylesheets and images::
-
-                              - set embedAssets option to true
-                              - don't set linkcss attribute
-                              - set imagesdir attribute to path relative to project root
-
-                              <embedAssets>true</embedAssets>
-                              <attributes>
-                                  <imagesdir>src/docs/asciidoc/images</imagesdir>
-                              </attributes>
-
-                            Link to stylesheets but embed images::
-
-                              - set embedAssets option to true
-                              - set linkcss attribute to true
-                              - set imagesdir attribute to path relative to project root
-
-                              <embedAssets>true</embedAssets>
-                              <attributes>
-                                  <linkcss>true</linkcss>
-                                  <imagesdir>src/docs/asciidoc/images</imagesdir>
-                              </attributes>
-
-                            Embed stylesheets but link images (default)::
-
-                              - don't set embedAssets option
-                              - don't set linkcss attribute
-                              - set imagesdir attribute to path relative to AsciiDoc source file
-
-                              <attributes>
-                                  <imagesdir>./images</imagesdir>
-                              </attributes>
-
-                            IMPORTANT: When you enable image embedding, you must qualify the path the the imagesdir, as shown above.
-                            -->
-                            <attributes>
-                                <imagesdir>./images</imagesdir>
-                                <toc>left</toc>
-                                <icons>font</icons>
-                                <sectanchors>true</sectanchors>
-                                <!-- set the idprefix to blank -->
-                                <idprefix/>
-                                <idseparator>-</idseparator>
-                                <docinfo1>true</docinfo1>
-                            </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!--
-            NOTE: Use the maven-resources-plugin if there are assets outside the AsciiDoc source folder
-                  that need to be copied to the generated-docs. The Maven plugin automatically copies
-                  non-AsciiDoc files in the AsciiDoc source folder to generated-docs.
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <id>copy-asciidoc-resources</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>src/docs/resources</directory>
-                                    <includes>
-                                        <include>**/*.jpg</include>
-                                        <include>**/*.png</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <outputDirectory>target/generated-docs</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
-        </plugins>
-    </build>
+	<profiles>
+		<profile>
+			<id>guide</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-clean-plugin</artifactId>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>plugins</directory>
+									<includes>
+										<include>**/*</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+							</filesets>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.grails</groupId>
+						<artifactId>grails-maven-plugin</artifactId>
+						<version>${grails.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<grailsVersion>${grails.version}</grailsVersion>
+						</configuration>
+						<executions>
+							<!-- HTML guide -->
+							<execution>
+								<id>doc</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<command>doc</command>
+								</configuration>
+							</execution>
+							<!-- PDF guide -->
+							<execution>
+								<id>pdf</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<command>doc</command>
+									<args>--pdf</args>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+                </plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
