@@ -259,20 +259,58 @@ public class BaseWicketTester
 	 */
 	public BaseWicketTester(final WebApplication application, final ServletContext servletCtx)
 	{
-		servletContext = servletCtx != null ? servletCtx
-			: new MockServletContext(application, null);
+		this(application, servletCtx, true);
+	}
 
-		final FilterConfig filterConfig = new TestFilterConfig();
-		WicketFilter filter = new WicketFilter()
+	/**
+	 * Creates a <code>WicketTester</code>.
+	 *
+	 * @param application
+	 *            a <code>WicketTester</code> <code>WebApplication</code> object
+	 * @param init
+	 *            force the application to be initialized (default = true)
+	 */
+	public BaseWicketTester(final WebApplication application, boolean init)
+	{
+		this(application, null, init);
+	}
+
+	/**
+	 * Creates a <code>WicketTester</code>.
+	 *
+	 * @param application
+	 *            a <code>WicketTester</code> <code>WebApplication</code> object
+	 * @param servletCtx
+	 *            the servlet context used as backend
+	 * @param init
+	 *            force the application to be initialized (default = true)
+	 */
+	public BaseWicketTester(final WebApplication application, final ServletContext servletCtx, boolean init)
+	{
+		if (!init)
 		{
-			@Override
-			public FilterConfig getFilterConfig()
-			{
-				return filterConfig;
-			}
-		};
+			Args.notNull(application, "application");
+		}
 
-		application.setWicketFilter(filter);
+		servletContext = servletCtx != null ? servletCtx
+				// If it's provided from the container it's not necessary to mock.
+				: !init && application.getServletContext() != null ? application.getServletContext()
+				: new MockServletContext(application, null);
+
+		// If using Arquillian and it's configured in a web.xml it'll be provided. If not, mock it.
+		if(application.getWicketFilter() == null)
+		{
+			final FilterConfig filterConfig = new TestFilterConfig();
+			WicketFilter filter = new WicketFilter()
+			{
+				@Override
+				public FilterConfig getFilterConfig()
+				{
+					return filterConfig;
+				}
+			};
+			application.setWicketFilter(filter);
+		}
 
 		httpSession = new MockHttpSession(servletContext);
 
@@ -280,15 +318,22 @@ public class BaseWicketTester
 
 		this.application = application;
 
-		// FIXME some tests are leaking applications by not calling destroy on them or overriding
-		// teardown() without calling super, for now we work around by making each name unique
-		application.setName("WicketTesterApplication-" + UUID.randomUUID());
+		// If it's provided from the container it's not necessary to set again.
+		if (init)
+		{
+			// FIXME some tests are leaking applications by not calling destroy on them or overriding
+			// teardown() without calling super, for now we work around by making each name unique
+			application.setName("WicketTesterApplication-" + UUID.randomUUID());
+		}
 		ThreadContext.setApplication(application);
 
-		application.setServletContext(servletContext);
-
-		// initialize the application
-		application.initApplication();
+		// If it's provided from the container it's not necessary to set again and init.
+		if (init)
+		{
+			application.setServletContext(servletContext);
+			// initialize the application
+			application.initApplication();
+		}
 
 		// We don't expect any changes during testing. In addition we avoid creating
 		// ModificationWatcher threads tests.

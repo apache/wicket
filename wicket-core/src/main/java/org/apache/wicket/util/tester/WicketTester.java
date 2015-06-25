@@ -228,6 +228,34 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
+	 * Creates a <code>WicketTester</code> to help unit testing.
+	 *
+	 * @param application
+	 *            a <code>WicketTester</code> <code>WebApplication</code> object
+	 * @param init
+	 *            force the application to be initialized (default = true)
+	 */
+	public WicketTester(WebApplication application, boolean init)
+	{
+		super(application, init);
+	}
+
+	/**
+	 * Creates a <code>WicketTester</code> to help unit testing.
+	 *
+	 * @param application
+	 *            a <code>WicketTester</code> <code>WebApplication</code> object
+	 * @param servletCtx
+	 *            the servlet context used as backend
+	 * @param init
+	 *            force the application to be initialized (default = true)
+	 */
+	public WicketTester(WebApplication application, ServletContext servletCtx, boolean init)
+	{
+		super(application, servletCtx, init);
+	}
+
+	/**
 	 * Asserts that the Ajax location header is present.
 	 */
 	public void assertAjaxLocation()
