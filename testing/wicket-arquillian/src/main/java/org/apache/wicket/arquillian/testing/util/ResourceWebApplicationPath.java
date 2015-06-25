@@ -29,8 +29,6 @@ import org.apache.wicket.util.resource.IResourceStream;
  * Maintain a list of paths which might either be ordinary folders of the filesystem or relative
  * paths to the web application's servlet context.
  * 
- * @author Johan Compagner
- * 
  * @author felipecalmeida
  * 		Modified to look inside servletContext and same package as Application.
  */
@@ -56,14 +54,10 @@ public final class ResourceWebApplicationPath implements IResourceFinder
 		this.servletContext = servletContext;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.util.file.IResourceFinder#find(Class, String)
-	 */
+	@Override
 	public IResourceStream find(final Class<?> clazz, final String pathname)
 	{
-
-		if (pathname.startsWith(WEB_INF) == false)
+		if (pathname != null && pathname.startsWith(WEB_INF) == false)
 		{
 			try
 			{
@@ -82,9 +76,6 @@ public final class ResourceWebApplicationPath implements IResourceFinder
 		return null;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
