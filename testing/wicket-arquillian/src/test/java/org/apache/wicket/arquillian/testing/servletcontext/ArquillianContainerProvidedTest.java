@@ -49,14 +49,17 @@ import org.slf4j.LoggerFactory;
  */
 @RunWith(Arquillian.class)
 public class ArquillianContainerProvidedTest extends AbstractDeploymentTest {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(ArquillianContainerProvidedTest.class);
+
+	private static final String RESOURCE_PAGES_INSERT_CONTACT_HTML_NOT_FOUND = "Resource /pages/InsertContact.html not found.";
 
 	/**
 	 * Using container's servlet context and/or filter provided configured in web.xml and using Arquillian.
 	 */
 	@Test
-	public void testFindResourcesServletContextFromContainer() {
+	public void testFindResourcesServletContextFromContainer() throws MalformedURLException
+	{
 		WebApplication webApplication =  useServletContextContainer();
 		setWicketTester(new WicketTester(webApplication, webApplication.getServletContext(), false));
 		findResourcesServletContext();
@@ -66,7 +69,8 @@ public class ArquillianContainerProvidedTest extends AbstractDeploymentTest {
 	 * Using container's servlet context and/or filter provided configured in web.xml and using Arquillian.
 	 */
 	@Test
-	public void testFindResourcesWebApplicationFromContainer() {
+	public void testFindResourcesWebApplicationFromContainer() throws MalformedURLException
+	{
 		WebApplication webApplication = useServletContextContainer();
 		setWicketTester(new WicketTester(webApplication, false));
 		findResourcesServletContext();
@@ -79,12 +83,12 @@ public class ArquillianContainerProvidedTest extends AbstractDeploymentTest {
 	public void testNewApplicationTryReuseServletContextFilter() {
 		try {
 			log.info("Trying to reuse container's ServletContext/Filter.");
-			setWicketTester(new WicketTester(new TestWicketJavaEEApplication(),false));
+			setWicketTester(new WicketTester(new TestWicketJavaEEApplication(), false));
+			fail("Should not be able to reuse the servlet context");
 		} catch (IllegalStateException e) {
-			assertEquals("servletContext is not set yet. Any code in your Application object that uses the wicket filter instance should be put in the init() method instead of your constructor",e.getMessage());
-			log.error("Cannot use container's ServletContext.\n", e);
+			assertEquals("servletContext is not set yet. Any code in your Application object that uses the wicket filter instance should be put in the init() method instead of your constructor", e.getMessage());
 		}
-		
+
 		assertNull(wicketTester);
 	}
 	
@@ -95,55 +99,52 @@ public class ArquillianContainerProvidedTest extends AbstractDeploymentTest {
 	public void testNullApplication() {
 		try {
 			log.info("Trying to use a null application.");
-			setWicketTester(new WicketTester(null,false));
+			setWicketTester(new WicketTester(null, false));
+			fail("WebApplication cannot be null");
 		} catch (AssertionError e) {
-			assertEquals("WebApplication cannot be null",e.getMessage());
-			log.error("WebApplication cannot be null\n", e);
-			assertNull(wicketTester);
+			assertEquals("WebApplication cannot be null", e.getMessage());
 		}
-		
+		assertNull(wicketTester);
 	}
 	
 	/**
 	 * Test with new application.
 	 */
 	@Test
-	public void testNewApplication() {
-		try {
-			setWicketTester(new WicketTester(new TestWicketJavaEEApplication()));
-			assertNotNull(getWicketTester().getApplication());
-			log.info("Using mock servletcontext.");
-			log.info("WebApplication MOCK after wicketTester Name: " + getWicketTester().getApplication().getName());
-			log.info("ServletContext MOCK after wicketTester Name: " + getWicketTester().getServletContext().getServletContextName());
-			log.info("Server info: " + getWicketTester().getServletContext().getServerInfo());
-			assertEquals("Wicket Mock Test Environment v1.0", getWicketTester().getServletContext().getServerInfo());
-		} catch (IllegalStateException e) {
-			// I don't know what or if could cause this.
-			fail("Cannot use a mock ServletContext.");
-		}
-		
+	public void testNewApplication() throws MalformedURLException
+	{
+		setWicketTester(new WicketTester(new TestWicketJavaEEApplication()));
+		assertNotNull(getWicketTester().getApplication());
+		log.info("Using mock servletcontext.");
+		log.info("WebApplication MOCK after wicketTester Name: " + getWicketTester().getApplication().getName());
+		log.info("ServletContext MOCK after wicketTester Name: " + getWicketTester().getServletContext().getServletContextName());
+		log.info("Server info: " + getWicketTester().getServletContext().getServerInfo());
+		assertEquals("Wicket Mock Test Environment v1.0", getWicketTester().getServletContext().getServerInfo());
+
 		// USING MOCK.
-		findResourcesServletContext();
+		try
+		{
+			findResourcesServletContext();
+			fail("Should not be able to find '/pages/InsertContact.html' in the mocked servlet context");
+		}
+		catch (IllegalStateException isx)
+		{
+			assertEquals(RESOURCE_PAGES_INSERT_CONTACT_HTML_NOT_FOUND, isx.getMessage());
+		}
 	}
 
 	/**
 	 * Look for resources (like html, js, css, img, etc).
-	 * 
-	 * @param servletContext
 	 */
-	private void findResourcesServletContext() {
-		try {
-			// Doing the same thing that ResourceWebApplicationPath does.
-			URL resource = getWicketTester().getServletContext().getResource("/pages/InsertContact.html");
-			if(resource == null) {
-				throw new MalformedURLException("Resource /pages/InsertContact.html not found.");
-			}
-			log.info("Resource found " + resource.getFile());
-			assertTrue(resource.getFile().contains("/pages/InsertContact.html"));
-		} catch (Exception e) {
-			assertEquals("Resource /pages/InsertContact.html not found.", e.getMessage());
-			log.error("Resource cannot be found.", e);
+	private void findResourcesServletContext() throws MalformedURLException
+	{
+		// Doing the same thing that ResourceWebApplicationPath does.
+		URL resource = getWicketTester().getServletContext().getResource("/pages/InsertContact.html");
+		if (resource == null) {
+			throw new IllegalStateException(RESOURCE_PAGES_INSERT_CONTACT_HTML_NOT_FOUND);
 		}
+		log.info("Resource found " + resource.getFile());
+		assertTrue(resource.getFile().contains("/pages/InsertContact.html"));
 	}
 
 }

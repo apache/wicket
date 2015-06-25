@@ -268,7 +268,7 @@
 				<version>${version.wildfly.maven.plugin}</version>
 				<configuration>
 					<fileNames>
-						<fileName>target/${build.finalName}.war</fileName>
+						<fileName>target/${project.build.finalName}.war</fileName>
 					</fileNames>
 				</configuration>
 			</plugin>
