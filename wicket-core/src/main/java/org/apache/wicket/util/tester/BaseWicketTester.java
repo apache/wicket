@@ -137,7 +137,6 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -291,12 +290,11 @@ public class BaseWicketTester
 	 */
 	public BaseWicketTester(final WebApplication application, final ServletContext servletCtx, boolean init)
 	{
-		// Assert the application is not null.
-		if(!init)
+		if (!init)
 		{
-			Assert.assertNotNull("WebApplication cannot be null",application);
+			Args.notNull(application, "application");
 		}
-		
+
 		servletContext = servletCtx != null ? servletCtx
 			// If it's provided from the container it's not necessary to mock. 
 			: !init && application.getServletContext() != null ? application.getServletContext()
@@ -324,17 +322,17 @@ public class BaseWicketTester
 		this.application = application;
 
 		// If it's provided from the container it's not necessary to set again.
-		if(init)
+		if (init)
 		{
 			// FIXME some tests are leaking applications by not calling destroy on them or overriding
 			// teardown() without calling super, for now we work around by making each name unique
 			application.setName("WicketTesterApplication-" + UUID.randomUUID());
 		}
-		
+
 		ThreadContext.setApplication(application);
 
 		// If it's provided from the container it's not necessary to set again and init.
-		if(init)
+		if (init)
 		{
 			application.setServletContext(servletContext);
 			// initialize the application
