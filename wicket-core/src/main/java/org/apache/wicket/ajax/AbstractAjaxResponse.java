@@ -791,15 +791,8 @@ public abstract class AbstractAjaxResponse
 			return null;
 		}
 
-		return Strings.replaceAll(str, "]", "]^").toString();
-	}
-
-	/**
-	 * @return name of encoding used to possibly encode the contents of the CDATA blocks
-	 */
-	protected String getEncodingName()
-	{
-		return "wicket1";
+		// split each CDATA end sequence
+		return Strings.replaceAll(str, "]]>", "]]]]><![CDATA[>").toString();
 	}
 
 	/**

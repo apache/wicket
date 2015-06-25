@@ -251,31 +251,11 @@ jQuery(document).ready(function() {
 		equal(newNumber, initialHeadElementsNumber + 1, 'A script element in the added element should be added and executed'); // 2
 	});
 
-
-	module("Contributor.decode");
-
-	test('Wicket.Head.Contributor.decode - remove trailing ^ from closing CDATA', function() {
-		var expected = '<![CDATA[some data]]>',
-			input = '<![CDATA[some data]]^>',
-			encoding = 'wicket1',
-			actual = Wicket.Head.Contributor.decode(encoding, input);
-			
-		equal(actual, expected);
-	});
-
-	test('Wicket.Head.Contributor.decode - no decoding because of wrong encoding', function() {
-		var expected = '<![CDATA[some data]]^>',
-			encoding = 'somethingWrong',
-			actual = Wicket.Head.Contributor.decode(encoding, expected);
-			
-		equal(actual, expected);
-	});
-
 	module('Contributor.parse');
 
 	test('Wicket.Head.Contributor.parse - parse head element with three script elements inside', function() {
 		
-		var xmlDocument = Wicket.Xml.parse('<header-contribution encoding="wicket1"><![CDATA[<head><script type="text/javascript" src="data/test.js"></script><script type="text/javascript" id="wicket-ajax-debug-enable">/*<![CDATA[*/wicketAjaxDebugEnable=true;/*]^]^>*/</script><script type="text/javascript" id="wicket-ajax-base-url">/*<![CDATA[*/Wicket.Ajax.baseUrl="clock";/*]^]^>*/</script></head>]]></header-contribution>');
+		var xmlDocument = Wicket.Xml.parse('<header-contribution><![CDATA[<head><script type="text/javascript" src="data/test.js"></script><script type="text/javascript" id="wicket-ajax-debug-enable">/*<![CDATA[*/wicketAjaxDebugEnable=true;/*]]]]><![CDATA[>*/</script><script type="text/javascript" id="wicket-ajax-base-url">/*<![CDATA[*/Wicket.Ajax.baseUrl="clock";/*]]]]><![CDATA[>*/</script></head>]]></header-contribution>');
 		var xmlRootElement = xmlDocument.documentElement;
 		var xmlElement   = Wicket.Head.Contributor.parse(xmlRootElement);
 		var isXml = jQuery.isXMLDoc(xmlElement);

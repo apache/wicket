@@ -143,14 +143,7 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 
 		response.write("<component id=\"");
 		response.write(markupId);
-		response.write("\" ");
-		if (encodingBodyResponse.isContentsEncoded())
-		{
-			response.write(" encoding=\"");
-			response.write(getEncodingName());
-			response.write("\" ");
-		}
-		response.write("><![CDATA[");
+		response.write("\" ><![CDATA[");
 		response.write(encodingBodyResponse.getContents());
 		response.write("]]></component>");
 
@@ -168,18 +161,11 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	{
 		if (encodingHeaderResponse.getContents().length() != 0)
 		{
-			response.write("<header-contribution");
-
-			if (encodingHeaderResponse.isContentsEncoded())
-			{
-				response.write(" encoding=\"");
-				response.write(getEncodingName());
-				response.write("\" ");
-			}
+			response.write("<header-contribution>");
 
 			// we need to write response as CDATA and parse it on client,
 			// because konqueror crashes when there is a <script> element
-			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
+			response.write("<![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
 			response.write(encodingHeaderResponse.getContents());
 			response.write("</head>]]>");
 			response.write("</header-contribution>");
@@ -221,24 +207,16 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	*/
 	private void writeEvaluation(final String invocation, final Response response, final CharSequence js)
 	{
-		boolean encoded = false;
 		CharSequence javascript = js;
 
 		// encode the response if needed
 		if (needsEncoding(js))
 		{
-			encoded = true;
 			javascript = encode(js);
 		}
 
 		response.write("<");
 		response.write(invocation);
-		if (encoded)
-		{
-			response.write(" encoding=\"");
-			response.write(getEncodingName());
-			response.write("\"");
-		}
 		response.write(">");
 
 		response.write("<![CDATA[");

@@ -1127,13 +1127,6 @@
 				} else {
 					var text = Wicket.DOM.text(node);
 
-					// if the text was escaped, unescape it
-					// (escaping is done when the component body contains a CDATA section)
-					var encoding = node.getAttribute("encoding");
-					if (encoding) {
-						text = Wicket.Head.Contributor.decode(encoding, text);
-					}
-
 					// replace the component
 					Wicket.DOM.replace(element, text);
 				}
@@ -1161,12 +1154,6 @@
 
 			// get the javascript body
 			var text = Wicket.DOM.text(node);
-
-			// unescape it if necessary
-			var encoding = node.getAttribute("encoding");
-			if (encoding) {
-				text = Wicket.Head.Contributor.decode(encoding, text);
-			}
 
 			// aliases to improve performance
 			var steps = context.steps;
@@ -2000,24 +1987,6 @@
 		Head: {
 			Contributor: {
 
-				/**
-				 * Decoding functionality
-				 *
-				 * Wicket sends rendered components and javascript as CDATA section of XML document. When the
-				 * component body itself contains a CDATA section, Wicket needs to escape it properly.
-				 */
-				decode: function (encoding, text) {
-
-					var decode1 = function (text) {
-						return replaceAll(text, "]^", "]");
-					};
-
-					if (encoding === "wicket1") {
-						text = decode1(text);
-					}
-					return text;
-				},
-
 				// Parses the header contribution element (returns a DOM tree with the contribution)
 				parse: function (headerNode) {
 					// the header contribution is stored as CDATA section in the header-contribution element.
@@ -2028,11 +1997,6 @@
 
 					// get the header contribution text and unescape it if necessary
 					var text = Wicket.DOM.text(headerNode);
-					var encoding = headerNode.getAttribute("encoding");
-
-					if (encoding !== null && encoding !== "") {
-						text = this.decode(encoding, text);
-					}
 
 					if (Wicket.Browser.isKHTML()) {
 						// konqueror crashes if there is a <script element in the xml, but <SCRIPT is fine.
