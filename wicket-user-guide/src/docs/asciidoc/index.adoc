@@ -1,12 +1,12 @@
-:icons: font
+:pagenums!:
 
-:source-highlighter: pygments
-
-:imagesdir: ../img
+:sectlinks:
             
 :sectnums:
 
 :toc: right
+
+:doctitle: Wicket user-guide
 
 == Introduction
 

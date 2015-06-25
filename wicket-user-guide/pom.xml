@@ -77,7 +77,7 @@
                         </goals>
                         <configuration>
                             <backend>html5</backend>
-                            <imagesdir>../img</imagesdir>
+                            <imagesdir>./img</imagesdir>
                             <sourceDocumentName>index.adoc</sourceDocumentName>
                             <sourceHighlighter>coderay</sourceHighlighter>
                             <!--
@@ -130,14 +130,14 @@
                             IMPORTANT: When you enable image embedding, you must qualify the path the the imagesdir, as shown above.
                             -->
                             <attributes>
-                                <imagesdir>./images</imagesdir>
+                                <imagesdir>./img</imagesdir>
                                 <toc>left</toc>
                                 <icons>font</icons>
                                 <sectanchors>true</sectanchors>
                                 <!-- set the idprefix to blank -->
                                 <idprefix/>
                                 <idseparator>-</idseparator>
-                                <docinfo1>true</docinfo1>
+                                <docinfo1>false</docinfo1>
                             </attributes>
                         </configuration>
                     </execution>
@@ -215,6 +215,127 @@
                         </goals>
                         <configuration>
                             <backend>pdf</backend>
+                            <doctype>book</doctype>
+                            <imagesDir>${project.basedir}/src/docs/img</imagesDir>
+                            <sourceDocumentName>index.adoc</sourceDocumentName>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <attributes>
+                                <!--
+                                WARNING: The font necessary to support font-based icons is missing in AsciidoctorJ PDF 1.5.0-alpha.7.
+                                See https://github.com/asciidoctor/asciidoctorj/issues/330 for details.
+                                <icons>font</icons>
+                                -->
+                                <pagenums/>
+                                <toc/>
+                                <idprefix/>
+                                <idseparator>-</idseparator>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin><plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor.maven.plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-pdf</artifactId>
+                        <version>1.5.0-alpha.7</version>
+                    </dependency>
+                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+                    <dependency>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-complete</artifactId>
+                        <version>${jruby.version}</version>
+                    </dependency>
+                    <!-- Uncomment the following element to override the version of AsciidoctorJ -->
+                    <!--
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj</artifactId>
+                        <version>1.5.3-SNAPSHOT</version>
+                    </dependency>
+                    -->
+                </dependencies>
+                <configuration>
+                    <sourceDirectory>src/docs/asciidoc</sourceDirectory>
+                    <!-- Attributes common to all output formats -->
+                    <attributes>
+                        <sourcedir>${project.build.sourceDirectory}</sourcedir>
+                    </attributes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-pdf-doc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>pdf</backend>
+                            <doctype>book</doctype>
+                            <imagesDir>${project.basedir}/src/docs/img</imagesDir>
+                            <sourceDocumentName>index.adoc</sourceDocumentName>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <attributes>
+                                <!--
+                                WARNING: The font necessary to support font-based icons is missing in AsciidoctorJ PDF 1.5.0-alpha.7.
+                                See https://github.com/asciidoctor/asciidoctorj/issues/330 for details.
+                                <icons>font</icons>
+                                -->
+                                <pagenums/>
+                                <toc/>
+                                <idprefix/>
+                                <idseparator>-</idseparator>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin><plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor.maven.plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-pdf</artifactId>
+                        <version>1.5.0-alpha.7</version>
+                    </dependency>
+                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+                    <dependency>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-complete</artifactId>
+                        <version>${jruby.version}</version>
+                    </dependency>
+                    <!-- Uncomment the following element to override the version of AsciidoctorJ -->
+                    <!--
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj</artifactId>
+                        <version>1.5.3-SNAPSHOT</version>
+                    </dependency>
+                    -->
+                </dependencies>
+                <configuration>
+                    <sourceDirectory>src/docs/asciidoc</sourceDirectory>
+                    <!-- Attributes common to all output formats -->
+                    <attributes>
+                        <sourcedir>${project.build.sourceDirectory}</sourcedir>
+                    </attributes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-pdf-doc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>pdf</backend>
+                            <doctype>book</doctype>
+                            <imagesDir>${project.basedir}/src/docs/img</imagesDir>
+                            <sourceDocumentName>index.adoc</sourceDocumentName>
                             <sourceHighlighter>coderay</sourceHighlighter>
                             <attributes>
                                 <!--
