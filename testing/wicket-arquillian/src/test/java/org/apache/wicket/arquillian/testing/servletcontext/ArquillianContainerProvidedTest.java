@@ -101,8 +101,8 @@ public class ArquillianContainerProvidedTest extends AbstractDeploymentTest {
 			log.info("Trying to use a null application.");
 			setWicketTester(new WicketTester(null, false));
 			fail("WebApplication cannot be null");
-		} catch (AssertionError e) {
-			assertEquals("WebApplication cannot be null", e.getMessage());
+		} catch (IllegalArgumentException iax) {
+			assertEquals("Argument 'application' may not be null.", iax.getMessage());
 		}
 		assertNull(wicketTester);
 	}
