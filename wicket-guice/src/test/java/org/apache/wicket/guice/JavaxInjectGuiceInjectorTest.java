@@ -25,6 +25,8 @@ import org.junit.Test;
 import com.google.inject.ConfigurationException;
 import com.google.inject.spi.Message;
 
+import javax.inject.Inject;
+
 /**
  */
 public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
@@ -51,15 +53,10 @@ public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
 	@Test
 	public void required()
 	{
-		JavaxInjectTestComponent component = newTestComponent("id");
-
-		// get the lazy proxy
-		IAjaxCallListener nonExisting = component.getNonExisting();
-
 		try
 		{
-			// call any method on the lazy proxy
-			nonExisting.getAfterHandler(null);
+			JavaxInjectTestComponent component = new MyJavaxInjectWithNonExistingTestComponent();
+			// Throws exception because component.getNonExisting() cannot be injected
 			fail("Fields annotated with @javax.inject.Inject are required!");
 		}
 		catch (ConfigurationException cx)
@@ -67,5 +64,19 @@ public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
 			Message message = cx.getErrorMessages().iterator().next();
 			assertThat(message.getMessage(), is(equalTo("No implementation for org.apache.wicket.ajax.attributes.IAjaxCallListener was bound.")));
 		}
+	}
+
+	private static class MyJavaxInjectWithNonExistingTestComponent extends JavaxInjectTestComponent {
+        @Inject
+        private IAjaxCallListener nonExisting;
+
+		public MyJavaxInjectWithNonExistingTestComponent() {
+			super("id");
+		}
+
+
+        public IAjaxCallListener getNonExisting() {
+            return nonExisting;
+        }
 	}
 }
