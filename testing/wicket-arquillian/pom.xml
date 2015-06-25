@@ -267,9 +267,7 @@
 				<artifactId>wildfly-maven-plugin</artifactId>
 				<version>${version.wildfly.maven.plugin}</version>
 				<configuration>
-					<fileNames>
-						<fileName>target/${project.build.finalName}.war</fileName>
-					</fileNames>
+					<filename>target/${project.build.finalName}.war</filename>
 				</configuration>
 			</plugin>
 			<plugin>
