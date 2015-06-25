@@ -25,6 +25,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.wicket.arquillian.testing.TestWicketJavaEEApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Filters;
@@ -34,6 +35,7 @@ import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.junit.experimental.categories.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +51,7 @@ import org.slf4j.LoggerFactory;
  * @since 06/23/2015
  *
  */
+@Category(SlowTests.class)
 public abstract class AbstractDeploymentTest {
 	
 	private static final Logger log = LoggerFactory.getLogger(AbstractDeploymentTest.class);
