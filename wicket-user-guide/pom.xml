@@ -13,6 +13,19 @@
         <asciidoctor.maven.plugin.version>1.5.2.1</asciidoctor.maven.plugin.version>
         <jruby.version>1.7.20.1</jruby.version>
     </properties>
+    <repositories>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <defaultGoal>process-resources</defaultGoal>
@@ -134,6 +147,7 @@
                   that need to be copied to the generated-docs. The Maven plugin automatically copies
                   non-AsciiDoc files in the AsciiDoc source folder to generated-docs.
             -->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -156,6 +170,63 @@
                                 </resource>
                             </resources>
                             <outputDirectory>target/generated-docs/img</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>${asciidoctor.maven.plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-pdf</artifactId>
+                        <version>1.5.0-alpha.7</version>
+                    </dependency>
+                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+                    <dependency>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-complete</artifactId>
+                        <version>${jruby.version}</version>
+                    </dependency>
+                    <!-- Uncomment the following element to override the version of AsciidoctorJ -->
+                    <!--
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj</artifactId>
+                        <version>1.5.3-SNAPSHOT</version>
+                    </dependency>
+                    -->
+                </dependencies>
+                <configuration>
+                    <sourceDirectory>src/docs/asciidoc</sourceDirectory>
+                    <!-- Attributes common to all output formats -->
+                    <attributes>
+                        <sourcedir>${project.build.sourceDirectory}</sourcedir>
+                    </attributes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-pdf-doc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>pdf</backend>
+                            <sourceHighlighter>coderay</sourceHighlighter>
+                            <attributes>
+                                <!--
+                                WARNING: The font necessary to support font-based icons is missing in AsciidoctorJ PDF 1.5.0-alpha.7.
+                                See https://github.com/asciidoctor/asciidoctorj/issues/330 for details.
+                                <icons>font</icons>
+                                -->
+                                <pagenums/>
+                                <toc/>
+                                <idprefix/>
+                                <idseparator>-</idseparator>
+                            </attributes>
                         </configuration>
                     </execution>
                 </executions>
