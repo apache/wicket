@@ -104,12 +104,7 @@ public abstract class AbstractPageManager implements IPageManager
 	@Override
 	public IManageablePage getPage(int id)
 	{
-		IManageablePage page = getRequestAdapter().getPage(id);
-		if (page != null)
-		{
-			getRequestAdapter().touch(page);
-		}
-		return page;
+		return getRequestAdapter().getPage(id);
 	}
 
 	/**

@@ -282,7 +282,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			isInitialization))
 		{
 			setFlag(FLAG_IS_DIRTY, true);
-			setNextAvailableId();
+			setNextAvailableId(isInitialization);
 
 			if (isInitialization == false)
 			{
@@ -729,9 +729,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Increments the version id of the page
 	 * 
+	 * @param isInitialization
+	 * 			tells if the page has been newly instantiated
 	 */
-	private void setNextAvailableId()
+	protected void setNextAvailableId(boolean isInitialization)
 	{
 		setNumericId(getSession().nextPageId());
 	}
