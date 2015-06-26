@@ -23,25 +23,16 @@ import org.apache.wicket.Page;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * An AbstractAjaxResponse that serializes itself to XML.
- * <p>
- *     The elements of such response are:
- *     <ul>
- *         <li>priority-evaluate - an item of the prepend JavaScripts</li>
- *         <li>component - the markup of the updated component</li>
- *         <li>evaluate - an item of the onDomReady and append JavaScripts</li>
- *         <li>header-contribution - all HeaderItems which have been contributed in components'
- *         and their behaviors' #renderHead(Component, IHeaderResponse)</li>
- *     </ul>
- * </p>
+ * A {@link PartialPageUpdate} that serializes itself to XML.
  */
-public abstract class XmlAjaxResponse extends AbstractAjaxResponse
+public abstract class XmlPartialPageUpdate extends PartialPageUpdate
 {
-	private static final Logger LOG = LoggerFactory.getLogger(XmlAjaxResponse.class);
+	private static final Logger LOG = LoggerFactory.getLogger(XmlPartialPageUpdate.class);
 
 	/**
 	 * The name of the root element in the produced XML document.
@@ -49,7 +40,7 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	public static final String START_ROOT_ELEMENT = "<ajax-response>";
 	public static final String END_ROOT_ELEMENT = "</ajax-response>";
 
-	public XmlAjaxResponse(final Page page)
+	public XmlPartialPageUpdate(final Page page)
 	{
 		super(page);
 	}
@@ -75,7 +66,7 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 		if (component.getRenderBodyOnly() == true)
 		{
 			throw new IllegalStateException(
-					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: " +
+					"A partial update is not possible for a component that has renderBodyOnly enabled. Component: " +
 							component.toString());
 		}
 
@@ -144,7 +135,7 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 		response.write("<component id=\"");
 		response.write(markupId);
 		response.write("\" ><![CDATA[");
-		response.write(encodingBodyResponse.getContents());
+		response.write(encode(encodingBodyResponse.getContents()));
 		response.write("]]></component>");
 
 		encodingBodyResponse.reset();
@@ -166,7 +157,7 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 			// we need to write response as CDATA and parse it on client,
 			// because konqueror crashes when there is a <script> element
 			response.write("<![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
-			response.write(encodingHeaderResponse.getContents());
+			response.write(encode(encodingHeaderResponse.getContents()));
 			response.write("</head>]]>");
 			response.write("</header-contribution>");
 		}
@@ -207,20 +198,12 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 	*/
 	private void writeEvaluation(final String invocation, final Response response, final CharSequence js)
 	{
-		CharSequence javascript = js;
-
-		// encode the response if needed
-		if (needsEncoding(js))
-		{
-			javascript = encode(js);
-		}
-
 		response.write("<");
 		response.write(invocation);
 		response.write(">");
 
 		response.write("<![CDATA[");
-		response.write(javascript);
+		response.write(encode(js));
 		response.write("]]>");
 
 		response.write("</");
@@ -229,5 +212,23 @@ public abstract class XmlAjaxResponse extends AbstractAjaxResponse
 
 		encodingBodyResponse.reset();
 	}
+
+	protected CharSequence encode(CharSequence str)
+	{
+		/*
+		 * TODO Post 1.2: we can improve this by keeping a buffer of at least 3 characters and
+		 * checking that buffer so that we can narrow down escaping occurring only for ']]>'
+		 * sequence, or at least for ]] if ] is the last char in this buffer.
+		 *
+		 * but this improvement will only work if we write first and encode later instead of working
+		 * on fragments sent to write
+		 */
+		if (Strings.indexOf(str, ']') >= 0) {
+			str = Strings.replaceAll(str, "]]>", "]]]]><![CDATA[>").toString(); 
+		}
+		
+		return str;
+	}
+
 
 }

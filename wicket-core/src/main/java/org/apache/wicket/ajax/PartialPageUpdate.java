@@ -49,18 +49,26 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A POJO-like that collects the data for the Ajax response written to the client
- * and serializes it to specific String-based format (XML, JSON, ...).
+ * A partial update of a page that collects components and header contributions to be written to the client in a specific
+ * String-based format (XML, JSON, * ...).
+ * <p>
+ * The elements of such response are:
+ * <ul>
+ * <li>priority-evaluate - an item of the prepend JavaScripts</li>
+ * <li>component - the markup of the updated component</li>
+ * <li>evaluate - an item of the onDomReady and append JavaScripts</li>
+ * <li>header-contribution - all HeaderItems which have been contributed in
+ * components' and their behaviors' #renderHead(Component, IHeaderResponse)</li>
+ * </ul>
  */
-public abstract class AbstractAjaxResponse
+public abstract class PartialPageUpdate
 {
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractAjaxResponse.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PartialPageUpdate.class);
 
 	/**
 	 * A list of scripts (JavaScript) which should be executed on the client side before the
@@ -87,8 +95,10 @@ public abstract class AbstractAjaxResponse
 	protected final Map<String, Component> markupIdToComponent = new LinkedHashMap<String, Component>();
 
 	/**
-	 * A flag that indicates that components cannot be added to AjaxRequestTarget anymore.
+	 * A flag that indicates that components cannot be added anymore.
 	 * See https://issues.apache.org/jira/browse/WICKET-3564
+	 * 
+	 * @see #add(Component, String)
 	 */
 	protected transient boolean componentsFrozen;
 
@@ -96,13 +106,13 @@ public abstract class AbstractAjaxResponse
 	 * Create a response for component body and javascript that will escape output to make it safe
 	 * to use inside a CDATA block
 	 */
-	protected final AjaxResponse encodingBodyResponse;
+	protected final ResponseWrapper encodingBodyResponse;
 
 	/**
 	 * Response for header contribution that will escape output to make it safe to use inside a
 	 * CDATA block
 	 */
-	protected final AjaxResponse encodingHeaderResponse;
+	protected final ResponseWrapper encodingHeaderResponse;
 
 	protected HtmlHeaderContainer header = null;
 
@@ -122,13 +132,13 @@ public abstract class AbstractAjaxResponse
 	 * @param page
 	 *      the page which components are being updated.
 	 */
-	public AbstractAjaxResponse(final Page page)
+	public PartialPageUpdate(final Page page)
 	{
 		this.page = page;
 
 		WebResponse response = (WebResponse) page.getResponse();
-		encodingBodyResponse = new AjaxResponse(response);
-		encodingHeaderResponse = new AjaxResponse(response);
+		encodingBodyResponse = new ResponseWrapper(response);
+		encodingHeaderResponse = new ResponseWrapper(response);
 	}
 
 	/**
@@ -282,7 +292,7 @@ public abstract class AbstractAjaxResponse
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		AbstractAjaxResponse that = (AbstractAjaxResponse) o;
+		PartialPageUpdate that = (PartialPageUpdate) o;
 
 		if (!appendJavaScripts.equals(that.appendJavaScripts)) return false;
 		if (!domReadyJavaScripts.equals(that.domReadyJavaScripts)) return false;
@@ -354,7 +364,7 @@ public abstract class AbstractAjaxResponse
 			throw new IllegalArgumentException(
 					"Component " +
 							component.getClass().getName() +
-							" has been added to the target. This component is a repeater and cannot be repainted via ajax directly. " +
+							" has been added to a partial page update. This component is a repeater and cannot be repainted directly. " +
 							"Instead add its parent or another markup container higher in the hierarchy.");
 		}
 
@@ -432,8 +442,8 @@ public abstract class AbstractAjaxResponse
 		if (headerResponse == null)
 		{
 			// we don't need to decorate the header response here because this is called from
-			// within AjaxHtmlHeaderContainer, which decorates the response
-			headerResponse = new AjaxHeaderResponse();
+			// within PartialHtmlHeaderContainer, which decorates the response
+			headerResponse = new PartialHeaderResponse();
 		}
 		return headerResponse;
 	}
@@ -451,7 +461,7 @@ public abstract class AbstractAjaxResponse
 		// create the htmlheadercontainer if needed
 		if (header == null)
 		{
-			header = new AjaxHtmlHeaderContainer(this);
+			header = new PartialHtmlHeaderContainer(this);
 			final Page parentPage = component.getPage();
 			parentPage.addOrReplace(header);
 		}
@@ -478,7 +488,7 @@ public abstract class AbstractAjaxResponse
 	}
 
 	/**
-	 * Sets the Content-Type header to indicate the type of the Ajax response.
+	 * Sets the Content-Type header to indicate the type of the response.
 	 *
 	 * @param response
 	 *      the current we response
@@ -489,26 +499,26 @@ public abstract class AbstractAjaxResponse
 
 
 	/**
-	 * Header container component for ajax header contributions
+	 * Header container component partial page updates.
 	 *
 	 * @author Matej Knopp
 	 */
-	private static class AjaxHtmlHeaderContainer extends HtmlHeaderContainer
+	private static class PartialHtmlHeaderContainer extends HtmlHeaderContainer
 	{
 		private static final long serialVersionUID = 1L;
 
-		private transient AbstractAjaxResponse ajaxResponse;
+		private transient PartialPageUpdate update;
 
 		/**
 		 * Constructor.
 		 *
-		 * @param ajaxResponse
-		 *      the object that keeps the data for the Ajax response
+		 * @param update
+		 *      the partial page update
 		 */
-		public AjaxHtmlHeaderContainer(final AbstractAjaxResponse ajaxResponse)
+		public PartialHtmlHeaderContainer(final PartialPageUpdate update)
 		{
 			super(HtmlHeaderSectionHandler.HEADER_ID);
-			this.ajaxResponse = ajaxResponse;
+			this.update = update;
 		}
 
 		/**
@@ -518,9 +528,9 @@ public abstract class AbstractAjaxResponse
 		@Override
 		protected IHeaderResponse newHeaderResponse()
 		{
-		    if (ajaxResponse != null)
+		    if (update != null)
             {
-		        return ajaxResponse.getHeaderResponse();
+		        return update.getHeaderResponse();
             }
 		    
 		    return super.newHeaderResponse();
@@ -530,16 +540,16 @@ public abstract class AbstractAjaxResponse
 		protected void onDetach()
 		{
 		    super.onDetach();
-		    ajaxResponse = null;
+		    update = null;
 		}
 	}
 
 	/**
-	 * Header response for an ajax request.
+	 * Header response for partial updates.
 	 *
 	 * @author Matej Knopp
 	 */
-	private class AjaxHeaderResponse extends HeaderResponse
+	private class PartialHeaderResponse extends HeaderResponse
 	{
 		@Override
 		public void render(HeaderItem item)
@@ -558,7 +568,7 @@ public abstract class AbstractAjaxResponse
 			{
 				if (!wasItemRendered(item))
 				{
-					AbstractAjaxResponse.this.appendJavaScript(((OnLoadHeaderItem) item).getJavaScript());
+					PartialPageUpdate.this.appendJavaScript(((OnLoadHeaderItem) item).getJavaScript());
 					markItemRendered(item);
 				}
 			}
@@ -566,7 +576,7 @@ public abstract class AbstractAjaxResponse
 			{
 				if (!wasItemRendered(item))
 				{
-					AbstractAjaxResponse.this.appendJavaScript(((OnEventHeaderItem) item).getCompleteJavaScript());
+					PartialPageUpdate.this.appendJavaScript(((OnEventHeaderItem) item).getCompleteJavaScript());
 					markItemRendered(item);
 				}
 			}
@@ -576,11 +586,11 @@ public abstract class AbstractAjaxResponse
 				{
 					if (priorityHeaderItem != null)
 					{
-						AbstractAjaxResponse.this.domReadyJavaScripts.add(0, ((OnDomReadyHeaderItem)item).getJavaScript());
+						PartialPageUpdate.this.domReadyJavaScripts.add(0, ((OnDomReadyHeaderItem)item).getJavaScript());
 					}
 					else
 					{
-						AbstractAjaxResponse.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
+						PartialPageUpdate.this.domReadyJavaScripts.add(((OnDomReadyHeaderItem)item).getJavaScript());
 					}
 					markItemRendered(item);
 				}
@@ -603,15 +613,17 @@ public abstract class AbstractAjaxResponse
 	}
 
 	/**
-	 * Response that uses an encoder to encode its contents
+	 * Wrapper of a response.
 	 *
 	 * @author Igor Vaynberg (ivaynberg)
+	 * @author Sven Meier (svenmeier)
+	 * 
+	 * @see ResponseWrapper#getContents()
+	 * @see ResponseWrapper#reset()
 	 */
-	protected static final class AjaxResponse extends WebResponse
+	protected static final class ResponseWrapper extends WebResponse
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
-
-		private boolean escaped = false;
 
 		private final WebResponse originalResponse;
 
@@ -621,7 +633,7 @@ public abstract class AbstractAjaxResponse
 		 * @param originalResponse
 		 *      the original request cycle response
 		 */
-		private AjaxResponse(WebResponse originalResponse)
+		private ResponseWrapper(WebResponse originalResponse)
 		{
 			this.originalResponse = originalResponse;
 		}
@@ -644,30 +656,12 @@ public abstract class AbstractAjaxResponse
 		}
 
 		/**
-		 * @return true if any escaping has been performed, false otherwise
-		 */
-		public boolean isContentsEncoded()
-		{
-			return escaped;
-		}
-
-		/**
 		 * @see org.apache.wicket.request.Response#write(CharSequence)
 		 */
 		@Override
 		public void write(CharSequence cs)
 		{
-			String string = cs.toString();
-			if (needsEncoding(string))
-			{
-				string = encode(string);
-				escaped = true;
-				buffer.append(string);
-			}
-			else
-			{
-				buffer.append(cs);
-			}
+			buffer.append(cs);
 		}
 
 		/**
@@ -677,7 +671,6 @@ public abstract class AbstractAjaxResponse
 		public void reset()
 		{
 			buffer.clear();
-			escaped = false;
 		}
 
 		@Override
@@ -775,43 +768,6 @@ public abstract class AbstractAjaxResponse
 		{
 			originalResponse.flush();
 		}
-	}
-
-	/**
-	 * Encodes a string so it is safe to use inside CDATA blocks
-	 *
-	 * @param str
-	 *      the string to encode.
-	 * @return encoded string
-	 */
-	static String encode(CharSequence str)
-	{
-		if (str == null)
-		{
-			return null;
-		}
-
-		// split each CDATA end sequence
-		return Strings.replaceAll(str, "]]>", "]]]]><![CDATA[>").toString();
-	}
-
-	/**
-	 *
-	 * @param str
-	 *      the string to check
-	 * @return {@code true} if string needs to be encoded, {@code false} otherwise
-	 */
-	static boolean needsEncoding(CharSequence str)
-	{
-		/*
-		 * TODO Post 1.2: Ajax: we can improve this by keeping a buffer of at least 3 characters and
-		 * checking that buffer so that we can narrow down escaping occurring only for ']]>'
-		 * sequence, or at least for ]] if ] is the last char in this buffer.
-		 *
-		 * but this improvement will only work if we write first and encode later instead of working
-		 * on fragments sent to write
-		 */
-		return Strings.indexOf(str, ']') >= 0;
 	}
 
 	private void assertComponentsNotFrozen()

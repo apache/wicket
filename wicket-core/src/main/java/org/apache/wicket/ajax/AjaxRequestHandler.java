@@ -84,7 +84,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	 * A POJO-like that collects the data for the Ajax response written to the client and serializes
 	 * it to specific String-based format (XML, JSON, ...).
 	 */
-	private final AbstractAjaxResponse responseObject;
+	private final PartialPageUpdate responseObject;
 
 	/** a list of listeners */
 	private List<AjaxRequestTarget.IListener> listeners = null;
@@ -111,7 +111,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	{
 		this.page = Args.notNull(page, "page");
 
-		responseObject = new XmlAjaxResponse(page)
+		responseObject = new XmlPartialPageUpdate(page)
 		{
 
 			/**
