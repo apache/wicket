@@ -52,6 +52,7 @@ public abstract class AbstractCachingPageStore<P> extends AbstractPageStore
 		this.pagesCache = Args.notNull(pagesCache, "pagesCache");
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IManageablePage getPage(final String sessionId, final int pageId)
 	{
@@ -64,7 +65,9 @@ public abstract class AbstractCachingPageStore<P> extends AbstractPageStore
 		byte[] data = getPageData(sessionId, pageId);
 		if (data != null)
 		{
-			return deserializePage(data);
+			IManageablePage page = deserializePage(data);
+			pagesCache.storePage(sessionId, pageId,  (P) page);
+			return page;
 		}
 		return null;
 	}
