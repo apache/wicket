@@ -155,7 +155,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	}
 
 	@Override
-	public void onConfigure()
+	protected void onConfigure()
 	{
 		super.onConfigure();
 
@@ -172,6 +172,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private Class<N> getNumberType()
 	{
 		Class<N> numberType = getType();
