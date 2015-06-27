@@ -152,6 +152,13 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	void registerRespondListener(ITargetRespondListener listener);
 
 	/**
+	 * Returns the HTML id of the last focused element.
+	 *
+	 * @return markup id of last focused element, <code>null</code> if none
+	 */
+	String getLastFocusedElementId();
+
+	/**
 	 * Returns the page. Be aware that the page can be instantiated if this wasn't the case already.
 	 *
 	 * @return page instance

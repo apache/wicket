@@ -30,10 +30,8 @@ import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
@@ -188,14 +186,6 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	{
 		hasData.set(true);
 		return update.getHeaderResponse();
-	}
-
-	@Override
-	public String getLastFocusedElementId()
-	{
-		WebRequest request = (WebRequest) page.getRequest();
-		String id = request.getHeader("Wicket-FocusedElementId");
-		return Strings.isEmpty(id) ? null : id;
 	}
 
 	@Override

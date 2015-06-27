@@ -103,13 +103,6 @@ public interface IPartialPageRequestHandler extends IPageRequestHandler
 	void focusComponent(Component component);
 
 	/**
-	 * Returns the HTML id of the last focused element.
-	 *
-	 * @return markup id of last focused element, <code>null</code> if none
-	 */
-	String getLastFocusedElementId();
-
-	/**
 	 * Returns an unmodifiable collection of all components added to this target
 	 *
 	 * @return unmodifiable collection of all components added to this target

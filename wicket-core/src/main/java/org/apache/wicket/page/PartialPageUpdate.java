@@ -172,9 +172,19 @@ public abstract class PartialPageUpdate
 		writeFooter(response, encoding);
 	}
 
+	/**
+	 * Hook-method called before components are written. 
+	 * 
+	 * @param response
+	 */
 	protected void onBeforeRespond(Response response) {
 	}
 
+	/**
+	 * Hook-method called after components are written. 
+	 * 
+	 * @param response
+	 */
 	protected void onAfterRespond(Response response) {
 	}
 

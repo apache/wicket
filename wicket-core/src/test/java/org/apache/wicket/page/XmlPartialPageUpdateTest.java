@@ -29,7 +29,7 @@ public class XmlPartialPageUpdateTest extends WicketTestCase {
 	 * CData start "]]>" has to be encoded in "]]]]><![CDATA[>".
 	 */
 	@Test
-	public void encode() {
+	public void encodeCdataEnd() {
 		PageForPartialUpdate page = new PageForPartialUpdate();
 		
 		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page);
@@ -40,6 +40,6 @@ public class XmlPartialPageUpdateTest extends WicketTestCase {
 		
 		update.writeTo(response, "UTF-8");
 		
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response><component id=\"container1\" ><![CDATA[<span wicket:id=\"container\" id=\"container1\"> two brackets ]] greater than > CDATA start ]]]]><![CDATA[> </span>]]></component></ajax-response>", response.getTextResponse().toString());
+		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response><component id=\"container1\" ><![CDATA[<span wicket:id=\"container\" id=\"container1\"> two brackets: ]] greater than: > CDATA end: ]]]]><![CDATA[> </span>]]></component></ajax-response>", response.getTextResponse().toString());
 	}
 }
