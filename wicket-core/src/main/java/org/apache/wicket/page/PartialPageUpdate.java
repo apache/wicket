@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax;
+package org.apache.wicket.page;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -103,16 +103,14 @@ public abstract class PartialPageUpdate
 	protected transient boolean componentsFrozen;
 
 	/**
-	 * Create a response for component body and javascript that will escape output to make it safe
-	 * to use inside a CDATA block
+	 * Buffer of response body. 
 	 */
-	protected final ResponseWrapper encodingBodyResponse;
+	protected final ResponseBuffer bodyBuffer;
 
 	/**
-	 * Response for header contribution that will escape output to make it safe to use inside a
-	 * CDATA block
+	 * Buffer of response header.
 	 */
-	protected final ResponseWrapper encodingHeaderResponse;
+	protected final ResponseBuffer headerBuffer;
 
 	protected HtmlHeaderContainer header = null;
 
@@ -137,8 +135,8 @@ public abstract class PartialPageUpdate
 		this.page = page;
 
 		WebResponse response = (WebResponse) page.getResponse();
-		encodingBodyResponse = new ResponseWrapper(response);
-		encodingHeaderResponse = new ResponseWrapper(response);
+		bodyBuffer = new ResponseBuffer(response);
+		headerBuffer = new ResponseBuffer(response);
 	}
 
 	/**
@@ -239,8 +237,8 @@ public abstract class PartialPageUpdate
 			// tag, which we do here:
 			headerRendering = true;
 			// save old response, set new
-			Response oldResponse = RequestCycle.get().setResponse(encodingHeaderResponse);
-			encodingHeaderResponse.reset();
+			Response oldResponse = RequestCycle.get().setResponse(headerBuffer);
+			headerBuffer.reset();
 
 			// now, close the response (which may render things)
 			header.getHeaderResponse().close();
@@ -428,7 +426,7 @@ public abstract class PartialPageUpdate
 	/**
 	 * @return {@code true} if the page has been added for replacement
 	 */
-	boolean containsPage()
+	public boolean containsPage()
 	{
 		return markupIdToComponent.values().contains(page);
 	}
@@ -470,10 +468,10 @@ public abstract class PartialPageUpdate
 		RequestCycle requestCycle = component.getRequestCycle();
 
 		// save old response, set new
-		Response oldResponse = requestCycle.setResponse(encodingHeaderResponse);
+		Response oldResponse = requestCycle.setResponse(headerBuffer);
 
 		try {
-			encodingHeaderResponse.reset();
+			headerBuffer.reset();
 
 			IHeaderRenderStrategy strategy = AbstractHeaderRenderStrategy.get();
 
@@ -496,8 +494,7 @@ public abstract class PartialPageUpdate
 	 * @param encoding
 	 *      the encoding to use
 	 */
-	protected abstract void setContentType(WebResponse response, String encoding);
-
+	public abstract void setContentType(WebResponse response, String encoding);
 
 	/**
 	 * Header container component partial page updates.
@@ -614,15 +611,15 @@ public abstract class PartialPageUpdate
 	}
 
 	/**
-	 * Wrapper of a response.
+	 * Wrapper of a response that buffers its contents.
 	 *
 	 * @author Igor Vaynberg (ivaynberg)
 	 * @author Sven Meier (svenmeier)
 	 * 
-	 * @see ResponseWrapper#getContents()
-	 * @see ResponseWrapper#reset()
+	 * @see ResponseBuffer#getContents()
+	 * @see ResponseBuffer#reset()
 	 */
-	protected static final class ResponseWrapper extends WebResponse
+	protected static final class ResponseBuffer extends WebResponse
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 
@@ -634,7 +631,7 @@ public abstract class PartialPageUpdate
 		 * @param originalResponse
 		 *      the original request cycle response
 		 */
-		private ResponseWrapper(WebResponse originalResponse)
+		private ResponseBuffer(WebResponse originalResponse)
 		{
 			this.originalResponse = originalResponse;
 		}

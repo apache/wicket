@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.response.filter;
 
-import org.apache.wicket.ajax.XmlPartialPageUpdate;
+import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

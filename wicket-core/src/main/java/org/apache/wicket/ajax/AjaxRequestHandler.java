@@ -33,6 +33,8 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.page.PartialPageUpdate;
+import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;

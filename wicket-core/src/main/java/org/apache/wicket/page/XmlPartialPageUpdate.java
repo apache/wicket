@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.ajax;
+package org.apache.wicket.page;
 
 import java.util.Collection;
 
@@ -85,11 +85,11 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 
 		// substitute our encoding response for the old one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
-		Response oldResponse = RequestCycle.get().setResponse(encodingBodyResponse);
+		Response oldResponse = RequestCycle.get().setResponse(bodyBuffer);
 
 		try
 		{
-			encodingBodyResponse.reset();
+			bodyBuffer.reset();
 			
 			page.startComponentRender(component);
 
@@ -110,7 +110,7 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 				{
 					// ignore this one could be a result off.
 				}
-				encodingBodyResponse.reset();
+				bodyBuffer.reset();
 				throw e;
 			}
 
@@ -120,7 +120,7 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 			}
 			catch (RuntimeException e)
 			{
-				encodingBodyResponse.reset();
+				bodyBuffer.reset();
 				throw e;
 			}
 
@@ -135,10 +135,10 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 		response.write("<component id=\"");
 		response.write(markupId);
 		response.write("\" ><![CDATA[");
-		response.write(encode(encodingBodyResponse.getContents()));
+		response.write(encode(bodyBuffer.getContents()));
 		response.write("]]></component>");
 
-		encodingBodyResponse.reset();
+		bodyBuffer.reset();
 	}
 
 	@Override
@@ -150,14 +150,14 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	@Override
 	protected void writeHeaderContribution(Response response)
 	{
-		if (encodingHeaderResponse.getContents().length() != 0)
+		if (headerBuffer.getContents().length() != 0)
 		{
 			response.write("<header-contribution>");
 
 			// we need to write response as CDATA and parse it on client,
 			// because konqueror crashes when there is a <script> element
 			response.write("<![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
-			response.write(encode(encodingHeaderResponse.getContents()));
+			response.write(encode(headerBuffer.getContents()));
 			response.write("</head>]]>");
 			response.write("</header-contribution>");
 		}
@@ -210,7 +210,7 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 		response.write(invocation);
 		response.write(">");
 
-		encodingBodyResponse.reset();
+		bodyBuffer.reset();
 	}
 
 	protected CharSequence encode(CharSequence str)

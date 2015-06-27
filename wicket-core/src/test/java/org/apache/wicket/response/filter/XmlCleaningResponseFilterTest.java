@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.response.filter;
 
-import static org.apache.wicket.ajax.XmlPartialPageUpdate.END_ROOT_ELEMENT;
-import static org.apache.wicket.ajax.XmlPartialPageUpdate.START_ROOT_ELEMENT;
+import static org.apache.wicket.page.XmlPartialPageUpdate.END_ROOT_ELEMENT;
+import static org.apache.wicket.page.XmlPartialPageUpdate.START_ROOT_ELEMENT;
+
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.junit.Assert;
 import org.junit.Test;
