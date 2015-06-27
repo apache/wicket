@@ -215,19 +215,7 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 
 	protected CharSequence encode(CharSequence str)
 	{
-		/*
-		 * TODO Post 1.2: we can improve this by keeping a buffer of at least 3 characters and
-		 * checking that buffer so that we can narrow down escaping occurring only for ']]>'
-		 * sequence, or at least for ]] if ] is the last char in this buffer.
-		 *
-		 * but this improvement will only work if we write first and encode later instead of working
-		 * on fragments sent to write
-		 */
-		if (Strings.indexOf(str, ']') >= 0) {
-			str = Strings.replaceAll(str, "]]>", "]]]]><![CDATA[>").toString(); 
-		}
-		
-		return str;
+		return Strings.replaceAll(str, "]]>", "]]]]><![CDATA[>"); 
 	}
 
 
