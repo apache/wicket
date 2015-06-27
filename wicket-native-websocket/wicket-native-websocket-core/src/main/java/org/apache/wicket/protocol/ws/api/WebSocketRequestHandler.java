@@ -18,7 +18,7 @@ package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Collections;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -50,13 +50,7 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 
 	private final IWebSocketConnection connection;
 
-	private final PartialPageUpdate update;
-
-	/**
-	 * A flag indicating that there is data to be written to construct an &lt;ajax-response&gt;
-	 * There is no need to push empty response if only #push() is used
-	 */
-	private final AtomicBoolean hasData = new AtomicBoolean(false);
+	private PartialPageUpdate update;
 
 	private PageLogData logData;
 
@@ -64,7 +58,6 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	{
 		this.page = Args.notNull(component, "component").getPage();
 		this.connection = Args.notNull(connection, "connection");
-		this.update = new XmlPartialPageUpdate(page);
 	}
 
 	@Override
@@ -110,8 +103,14 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	@Override
 	public void add(Component component, String markupId)
 	{
-		hasData.set(true);
-		update.add(component, markupId);
+		getUpdate().add(component, markupId);
+	}
+
+	private PartialPageUpdate getUpdate() {
+		if (update == null) {
+			update = new XmlPartialPageUpdate(page);
+		}
+		return update;
 	}
 
 	@Override
@@ -151,21 +150,23 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	@Override
 	public void appendJavaScript(CharSequence javascript)
 	{
-		hasData.set(true);
-		update.appendJavaScript(javascript);
+		getUpdate().appendJavaScript(javascript);
 	}
 
 	@Override
 	public void prependJavaScript(CharSequence javascript)
 	{
-		hasData.set(true);
-		update.prependJavaScript(javascript);
+		getUpdate().prependJavaScript(javascript);
 	}
 
 	@Override
 	public Collection<? extends Component> getComponents()
 	{
-		return update.getComponents();
+		if (update == null) {
+			return Collections.emptyList();
+		} else {
+			return update.getComponents();
+		}
 	}
 
 	@Override
@@ -184,8 +185,7 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	@Override
 	public IHeaderResponse getHeaderResponse()
 	{
-		hasData.set(true);
-		return update.getHeaderResponse();
+		return getUpdate().getHeaderResponse();
 	}
 
 	@Override
@@ -233,7 +233,7 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		if (hasData.get())
+		if (update != null)
 		{
 			update.writeTo(requestCycle.getResponse(), "UTF-8");
 		}
@@ -247,7 +247,9 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 			logData = new PageLogData(page);
 		}
 
-		update.detach(requestCycle);
-		hasData.set(false);
+		if (update != null) {
+			update.detach(requestCycle);
+			update = null;
+		}
 	}
 }
