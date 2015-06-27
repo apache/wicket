@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.page;
 
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 
 /**
- * 
+ *
  */
 public class PageForPartialUpdate extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	public WebMarkupContainer container;
 
 	/**
@@ -33,7 +35,12 @@ public class PageForPartialUpdate extends WebPage
 	 */
 	public PageForPartialUpdate()
 	{
-		container = new WebMarkupContainer("container");
+		container = new WebMarkupContainer("container") {
+			@Override
+			public void renderHead(IHeaderResponse response) {
+				response.render(JavaScriptHeaderItem.forScript("// two brackets: ]] greater than: > CDATA end: ]]>", null));
+			}
+		};
 		container.setOutputMarkupId(true);
 		add(container);
 	}

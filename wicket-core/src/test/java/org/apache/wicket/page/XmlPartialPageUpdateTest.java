@@ -40,6 +40,12 @@ public class XmlPartialPageUpdateTest extends WicketTestCase {
 		
 		update.writeTo(response, "UTF-8");
 		
-		assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response><component id=\"container1\" ><![CDATA[<span wicket:id=\"container\" id=\"container1\"> two brackets: ]] greater than: > CDATA end: ]]]]><![CDATA[> </span>]]></component></ajax-response>", response.getTextResponse().toString());
+		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response><component id=\"container1\" ><![CDATA[<span wicket:id=\"container\" id=\"container1\"> two brackets: ]] greater than: > CDATA end: ]]]]><![CDATA[> </span>]]></component><header-contribution><![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\"><script type=\"text/javascript\" >\n" + 
+				"/*<![CDATA[*/\n" + 
+				"// two brackets: ]] greater than: > CDATA end: ]]]]><![CDATA[>\n" + 
+				"/*]]]]><![CDATA[>*/\n" + 
+				"</script>\n" + 
+				"</head>]]></header-contribution></ajax-response>";
+		assertEquals(expected, response.getTextResponse().toString());
 	}
 }
