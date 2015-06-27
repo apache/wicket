@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A {@link PartialPageUpdate} that serializes itself to XML.
  */
-public abstract class XmlPartialPageUpdate extends PartialPageUpdate
+public class XmlPartialPageUpdate extends PartialPageUpdate
 {
 	private static final Logger LOG = LoggerFactory.getLogger(XmlPartialPageUpdate.class);
 

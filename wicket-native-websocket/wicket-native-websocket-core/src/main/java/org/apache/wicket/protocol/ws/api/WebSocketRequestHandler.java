@@ -29,7 +29,6 @@ import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.IRequestCycle;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -67,18 +66,7 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 	{
 		this.page = Args.notNull(component, "component").getPage();
 		this.connection = Args.notNull(connection, "connection");
-		this.update = new XmlPartialPageUpdate(page)
-		{
-			@Override
-			protected void fireOnAfterRespondListeners(Response response)
-			{
-			}
-
-			@Override
-			protected void fireOnBeforeRespondListeners()
-			{
-			}
-		};
+		this.update = new XmlPartialPageUpdate(page);
 	}
 
 	@Override

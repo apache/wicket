@@ -81,10 +81,9 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 {
 
 	/**
-	 * A POJO-like that collects the data for the Ajax response written to the client and serializes
-	 * it to specific String-based format (XML, JSON, ...).
+	 * Collector of page updates.
 	 */
-	private final PartialPageUpdate responseObject;
+	private final PartialPageUpdate update;
 
 	/** a list of listeners */
 	private List<AjaxRequestTarget.IListener> listeners = null;
@@ -111,8 +110,28 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	{
 		this.page = Args.notNull(page, "page");
 
-		responseObject = new XmlPartialPageUpdate(page)
+		update = new XmlPartialPageUpdate(page)
 		{
+			/**
+			 * Freezes the {@link AjaxRequestHandler#listeners} before firing the event and
+			 * un-freezes them afterwards to allow components to add more
+			 * {@link AjaxRequestTarget.IListener}s for the second event.
+			 */
+			@Override
+			protected void onBeforeRespond(final Response response)
+			{
+				listenersFrozen = true;
+
+				if (listeners != null)
+				{
+					for (AjaxRequestTarget.IListener listener : listeners)
+					{
+						listener.onBeforeRespond(markupIdToComponent, AjaxRequestHandler.this);
+					}
+				}
+
+				listenersFrozen = false;
+			}
 
 			/**
 			 * Freezes the {@link AjaxRequestHandler#listeners}, and does not un-freeze them as the
@@ -122,7 +141,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			 *      the response to write to
 			 */
 			@Override
-			protected void fireOnAfterRespondListeners(final Response response)
+			protected void onAfterRespond(final Response response)
 			{
 				listenersFrozen = true;
 
@@ -148,28 +167,6 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 					}
 				}
 			}
-
-			/**
-			 * Freezes the {@link AjaxRequestHandler#listeners} before firing the event and
-			 * un-freezes them afterwards to allow components to add more
-			 * {@link AjaxRequestTarget.IListener}s for the second event.
-			 */
-			@Override
-			protected void fireOnBeforeRespondListeners()
-			{
-				listenersFrozen = true;
-
-				if (listeners != null)
-				{
-					for (AjaxRequestTarget.IListener listener : listeners)
-					{
-						listener.onBeforeRespond(markupIdToComponent, AjaxRequestHandler.this);
-					}
-				}
-
-				listenersFrozen = false;
-			}
-
 		};
 	}
 
@@ -236,13 +233,13 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	@Override
 	public void add(Component component, String markupId)
 	{
-		responseObject.add(component, markupId);
+		update.add(component, markupId);
 	}
 
 	@Override
 	public final Collection<? extends Component> getComponents()
 	{
-		return responseObject.getComponents();
+		return update.getComponents();
 	}
 
 	@Override
@@ -261,7 +258,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	@Override
 	public final void appendJavaScript(CharSequence javascript)
 	{
-		responseObject.appendJavaScript(javascript);
+		update.appendJavaScript(javascript);
 	}
 
 	/**
@@ -275,7 +272,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			logData = new PageLogData(page);
 		}
 
-		responseObject.detach(requestCycle);
+		update.detach(requestCycle);
 	}
 
 	/**
@@ -287,7 +284,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		if (obj instanceof AjaxRequestHandler)
 		{
 			AjaxRequestHandler that = (AjaxRequestHandler)obj;
-			return responseObject.equals(that.responseObject);
+			return update.equals(that.update);
 		}
 		return false;
 	}
@@ -299,14 +296,14 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	public int hashCode()
 	{
 		int result = "AjaxRequestHandler".hashCode();
-		result += responseObject.hashCode() * 17;
+		result += update.hashCode() * 17;
 		return result;
 	}
 
 	@Override
 	public final void prependJavaScript(CharSequence javascript)
 	{
-		responseObject.prependJavaScript(javascript);
+		update.prependJavaScript(javascript);
 	}
 
 	@Override
@@ -350,20 +347,20 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		responseObject.setContentType(response, encoding);
+		update.setContentType(response, encoding);
 
 		// Make sure it is not cached by a client
 		response.disableCaching();
 
 		final StringResponse bodyResponse = new StringResponse();
-		responseObject.writeTo(bodyResponse, encoding);
+		update.writeTo(bodyResponse, encoding);
 		CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
 		response.write(filteredResponse);
 	}
 
 	private boolean shouldRedirectToPage(IRequestCycle requestCycle)
 	{
-		if (responseObject.containsPage())
+		if (update.containsPage())
 		{
 			return true;
 		}
@@ -411,13 +408,13 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	@Override
 	public String toString()
 	{
-		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + responseObject + "]";
+		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + update + "]";
 	}
 
 	@Override
 	public IHeaderResponse getHeaderResponse()
 	{
-		return responseObject.getHeaderResponse();
+		return update.getHeaderResponse();
 	}
 
 	/**

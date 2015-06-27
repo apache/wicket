@@ -153,13 +153,12 @@ public abstract class PartialPageUpdate
 	{
 		writeHeader(response, encoding);
 
-		// invoke onbeforerespond event on listeners
-		fireOnBeforeRespondListeners();
+		onBeforeRespond(response);
 
 		// process added components
 		writeComponents(response, encoding);
 
-		fireOnAfterRespondListeners(response);
+		onAfterRespond(response);
 
 		// queue up prepend javascripts. unlike other steps these are executed out of order so that
 		// components can contribute them from inside their onbeforerender methods.
@@ -175,9 +174,11 @@ public abstract class PartialPageUpdate
 		writeFooter(response, encoding);
 	}
 
-	protected abstract void fireOnAfterRespondListeners(Response response);
+	protected void onBeforeRespond(Response response) {
+	}
 
-	protected abstract void fireOnBeforeRespondListeners();
+	protected void onAfterRespond(Response response) {
+	}
 
 	/**
 	 * @param response
