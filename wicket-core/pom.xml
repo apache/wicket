@@ -39,24 +39,16 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>provided</scope>
-			<!-- provided because of the -test jar we build? -->
-		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-core</artifactId>
+			<!-- provided because of WicketTester -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-library</artifactId>
-			<scope>provided</scope>
+			<artifactId>hamcrest-junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<scope>provided</scope>
-			<!-- provided because of the -test jar we build? -->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

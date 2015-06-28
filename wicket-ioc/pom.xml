@@ -57,5 +57,9 @@
 			<artifactId>objenesis</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-junit</artifactId>
+		</dependency>
 	</dependencies>
 </project>

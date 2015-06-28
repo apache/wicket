@@ -138,7 +138,7 @@
 		<maven.surefire.version>2.18</maven.surefire.version>
 		<mockito.version>1.10.16</mockito.version>
 		<slf4j.version>1.7.12</slf4j.version>
-		<hamcrest.version>1.3</hamcrest.version>
+		<hamcrest.version>2.0.0.0</hamcrest.version>
 		<objenesis.version>2.1</objenesis.version>
 		<!-- do not increase the version - wicket-user-guide requires 2.2.4 -->
 		<grails.version>2.2.4</grails.version>
@@ -480,13 +480,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
-				<artifactId>hamcrest-core</artifactId>
-				<version>${hamcrest.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hamcrest</groupId>
-				<artifactId>hamcrest-library</artifactId>
+				<artifactId>hamcrest-junit</artifactId>
 				<version>${hamcrest.version}</version>
 				<scope>test</scope>
 			</dependency>
