@@ -785,7 +785,7 @@
 						<additionalDependencies>
 							<additionalDependency>
 								<groupId>org.hamcrest</groupId>
-								<artifactId>hamcrest-core</artifactId>
+								<artifactId>hamcrest-junit</artifactId>
 								<version>${hamcrest.version}</version>
 							</additionalDependency>
 						</additionalDependencies>
