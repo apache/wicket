@@ -66,6 +66,8 @@ public abstract class AbstractResource implements IResource
 		private static final long serialVersionUID = 1L;
 	};
 
+	public static final String CONTENT_DISPOSITION_HEADER_NAME = "content-disposition";
+
 	/**
 	 * All available content range types. The type name represents the name used in header
 	 * information.
@@ -76,7 +78,7 @@ public abstract class AbstractResource implements IResource
 
 		private final String typeName;
 
-		private ContentRangeType(String typeName)
+		ContentRangeType(String typeName)
 		{
 			this.typeName = typeName;
 		}
@@ -96,10 +98,9 @@ public abstract class AbstractResource implements IResource
 		INTERNAL_HEADERS.add("last-modified");
 		INTERNAL_HEADERS.add("content-type");
 		INTERNAL_HEADERS.add("content-length");
-		INTERNAL_HEADERS.add("content-disposition");
+		INTERNAL_HEADERS.add(CONTENT_DISPOSITION_HEADER_NAME);
 		INTERNAL_HEADERS.add("transfer-encoding");
 		INTERNAL_HEADERS.add("connection");
-		INTERNAL_HEADERS.add("content-disposition");
 		INTERNAL_HEADERS.add("content-range");
 		INTERNAL_HEADERS.add("accept-range");
 	}

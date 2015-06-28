@@ -29,12 +29,13 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemHeaders;
 import org.apache.commons.fileupload.util.FileItemHeadersImpl;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * An adapter of {@link Part} to {@link FileItem}
+ * An adapter of Servlet 3.0 {@link Part} to Apache Commons FileUpload's {@link FileItem}
  */
 class ServletPartFileItem implements FileItem
 {
@@ -72,7 +73,7 @@ class ServletPartFileItem implements FileItem
 
 	private String getFileName(Part part)
 	{
-		String contentDisposition = part.getHeader("content-disposition");
+		String contentDisposition = part.getHeader(AbstractResource.CONTENT_DISPOSITION_HEADER_NAME);
 		for (String cd : Strings.split(contentDisposition, ';'))
 		{
 			if (cd.trim().startsWith("filename"))

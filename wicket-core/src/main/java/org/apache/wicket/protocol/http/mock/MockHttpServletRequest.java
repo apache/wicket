@@ -170,13 +170,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final ServletContext context;
 
-	private final Map<Cookies.Key, Cookie> cookies = new LinkedHashMap<Cookies.Key, Cookie>();
+	private final Map<Cookies.Key, Cookie> cookies = new LinkedHashMap<>();
 
 	private final ValueMap headers = new ValueMap();
 
 	private String method;
 
-	private final LinkedHashMap<String, String[]> parameters = new LinkedHashMap<String, String[]>();
+	private final LinkedHashMap<String, String[]> parameters = new LinkedHashMap<>();
+
+	private final LinkedHashMap<String, Part> parts = new LinkedHashMap<>();
 
 	private String path;
 
@@ -1228,13 +1230,18 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public Collection<Part> getParts() throws IOException, ServletException
 	{
-		return null;
+		return parts.values();
 	}
 
 	@Override
 	public Part getPart(String name) throws IOException, ServletException
 	{
-		return null;
+		return parts.get(name);
+	}
+
+	public MockHttpServletRequest setPart(String name, Part part) {
+		parts.put(name, part);
+		return this;
 	}
 
 	/**

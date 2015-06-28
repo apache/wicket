@@ -30,6 +30,9 @@ public class MockPageWithFormAndUploadField extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String FILE_UPLOAD_ID = "upload";
+	public static final String FORM_ID = "form";
+
 	private final Form<?> form;
 	protected final FileUploadField fileUploadField;
 	private FileUpload fileUpload;
@@ -41,13 +44,8 @@ public class MockPageWithFormAndUploadField extends WebPage
 	{
 		final ListModel<FileUpload> model = new ListModel<FileUpload>();
 
-		form = new StatelessForm<Void>("form")
+		form = new StatelessForm<Void>(FORM_ID)
 		{
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
 			@Override
 			protected void onSubmit()
 			{
@@ -61,7 +59,7 @@ public class MockPageWithFormAndUploadField extends WebPage
 				}
 			}
 		};
-		fileUploadField = new FileUploadField("upload", model);
+		fileUploadField = new FileUploadField(FILE_UPLOAD_ID, model);
 		form.add(fileUploadField);
 		add(form);
 	}
