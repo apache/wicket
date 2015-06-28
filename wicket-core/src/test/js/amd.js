@@ -16,7 +16,7 @@
  */
 
 /*global ok: true, start: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true, define: true */
+ QUnit: true, module: true, expect: true, define: true, console: true */
 
 define(
 	[
