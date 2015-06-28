@@ -191,10 +191,13 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		}
 		else
 		{
+			// try to parse the file uploads by using Apache Commons FileUpload APIs
+			// because they are feature richer (e.g. progress updates, cleaner)
 			items = fileUpload.parseRequest(new ServletRequestContext(request));
 			if (items.isEmpty())
 			{
-				items = readParts(request);
+				// fallback to Servlet 3.0 APIs
+				items = readServlet3Parts(request);
 			}
 		}
 
@@ -239,7 +242,18 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		}
 	}
 
-	private List<FileItem> readParts(HttpServletRequest request) throws FileUploadException
+	/**
+	 * Reads the uploads' parts by using Servlet 3.0 APIs.
+	 *
+	 * <strong>Note</strong>: By using Servlet 3.0 APIs the application won't be able to use
+	 * upload progress updates.
+	 *
+	 * @param request
+	 *              The http request with the upload data
+	 * @return A list of {@link FileItem}s
+	 * @throws FileUploadException
+	 */
+	private List<FileItem> readServlet3Parts(HttpServletRequest request) throws FileUploadException
 	{
 		List<FileItem> itemsFromParts = new ArrayList<>();
 		try
@@ -255,7 +269,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 			}
 		} catch (IOException | ServletException e)
 		{
-			throw new FileUploadException("", e);
+			throw new FileUploadException("An error occurred while reading the upload parts", e);
 		}
 		return itemsFromParts;
 	}
