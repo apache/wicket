@@ -132,41 +132,44 @@ public class ZipResourceStream extends AbstractResourceStream
 		BufferedInputStream origin;
 		byte data[] = new byte[BUFFER];
 
-		for (String file : files)
+		if (files != null)
 		{
-			if (log.isDebugEnabled())
+			for (String file : files)
 			{
-				log.debug("Adding: '{}'", file);
-			}
-			File f = new File(dir, file);
-			if (f.isDirectory())
-			{
-				if (recursive)
+				if (log.isDebugEnabled())
 				{
-					zipDir(f, out, path + f.getName() + "/", recursive);
+					log.debug("Adding: '{}'", file);
 				}
-			}
-			else
-			{
-				out.putNextEntry(new ZipEntry(path + f.getName()));
-
-				FileInputStream fi = new FileInputStream(f);
-				origin = new BufferedInputStream(fi, BUFFER);
-
-				try
+				File f = new File(dir, file);
+				if (f.isDirectory())
 				{
-					int count;
-					while ((count = origin.read(data, 0, BUFFER)) != -1)
+					if (recursive)
 					{
-						out.write(data, 0, count);
+						zipDir(f, out, path + f.getName() + "/", recursive);
 					}
-				} finally {
-					origin.close();
+				} else
+				{
+					out.putNextEntry(new ZipEntry(path + f.getName()));
+
+					FileInputStream fi = new FileInputStream(f);
+					origin = new BufferedInputStream(fi, BUFFER);
+
+					try
+					{
+						int count;
+						while ((count = origin.read(data, 0, BUFFER)) != -1)
+						{
+							out.write(data, 0, count);
+						}
+					} finally
+					{
+						origin.close();
+					}
 				}
 			}
 		}
 
-		if (path.equals(""))
+		if ("".equals(path))
 		{
 			out.close();
 		}
