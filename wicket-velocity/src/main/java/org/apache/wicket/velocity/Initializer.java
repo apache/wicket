@@ -56,14 +56,7 @@ public class Initializer implements IInitializer
 
 		try
 		{
-			if (null != props)
-			{
-				Velocity.init(props);
-			}
-			else
-			{
-				Velocity.init();
-			}
+			Velocity.init(props);
 			log.info("Initialized Velocity successfully");
 		}
 		catch (Exception e)
