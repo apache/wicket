@@ -23,7 +23,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * The media component is used to provide basic functionality to the video and audio component. The
@@ -132,7 +132,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 	private final PageParameters pageParameters;
 
-	private final PackageResourceReference resourceReference;
+	private final ResourceReference resourceReference;
 
 	private final String url;
 
@@ -166,9 +166,9 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * @param id
 	 *            The component id
 	 * @param resourceReference
-	 *            the package resource reference of the media file
+	 *            the resource reference of the media file
 	 */
-	public MediaComponent(String id, PackageResourceReference resourceReference)
+	public MediaComponent(String id, ResourceReference resourceReference)
 	{
 		this(id, null, null, null, resourceReference);
 	}
@@ -181,9 +181,9 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * @param model
 	 *            the internally used model
 	 * @param resourceReference
-	 *            the package resource reference of the media file
+	 *            the resource reference of the media file
 	 */
-	public MediaComponent(String id, IModel<?> model, PackageResourceReference resourceReference)
+	public MediaComponent(String id, IModel<?> model, ResourceReference resourceReference)
 	{
 		this(id, model, null, null, resourceReference);
 	}
@@ -194,11 +194,11 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * @param id
 	 *            The component id
 	 * @param resourceReference
-	 *            the package resource reference of the media file
+	 *            the resource reference of the media file
 	 * @param pageParameters
 	 *            the page parameters to be used to be prepended to the media URL
 	 */
-	public MediaComponent(String id, PackageResourceReference resourceReference,
+	public MediaComponent(String id, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, null, null, pageParameters, resourceReference);
@@ -212,11 +212,11 @@ public abstract class MediaComponent extends WebMarkupContainer
 	 * @param model
 	 *            the internally used model
 	 * @param resourceReference
-	 *            the package resource reference of the media file
+	 *            the resource reference of the media file
 	 * @param pageParameters
 	 *            the page parameters to be used to be prepended to the media URL
 	 */
-	public MediaComponent(String id, IModel<?> model, PackageResourceReference resourceReference,
+	public MediaComponent(String id, IModel<?> model, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, model, null, pageParameters, resourceReference);
@@ -268,7 +268,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 	}
 
 	private MediaComponent(String id, IModel<?> model, String url, PageParameters pageParameters,
-		PackageResourceReference resourceReference)
+		ResourceReference resourceReference)
 	{
 		super(id, model);
 		this.url = url;

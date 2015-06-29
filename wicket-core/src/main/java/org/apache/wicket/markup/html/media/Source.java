@@ -23,6 +23,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResource;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.resource.IResourceStream;
 
 /**
@@ -42,7 +43,7 @@ public class Source extends WebMarkupContainer
 
 	private String media;
 
-	private final PackageResourceReference resourceReference;
+	private final ResourceReference resourceReference;
 
 	private final PageParameters pageParameters;
 
@@ -80,7 +81,7 @@ public class Source extends WebMarkupContainer
 	 * @param resourceReference
 	 *            the resource reference to provide the source data
 	 */
-	public Source(String id, PackageResourceReference resourceReference)
+	public Source(String id, ResourceReference resourceReference)
 	{
 		this(id, null, null, null, resourceReference);
 	}
@@ -95,7 +96,7 @@ public class Source extends WebMarkupContainer
 	 * @param resourceReference
 	 *            the resource reference to provide the source data
 	 */
-	public Source(String id, IModel<?> model, PackageResourceReference resourceReference)
+	public Source(String id, IModel<?> model, ResourceReference resourceReference)
 	{
 		this(id, model, null, null, resourceReference);
 	}
@@ -110,7 +111,7 @@ public class Source extends WebMarkupContainer
 	 * @param resourceReference
 	 *            the resource reference to provide the source data
 	 */
-	public Source(String id, PackageResourceReference resourceReference,
+	public Source(String id, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, null, null, pageParameters, resourceReference);
@@ -128,7 +129,7 @@ public class Source extends WebMarkupContainer
 	 * @param pageParameters
 	 *            the the page parameters applied to the source URL
 	 */
-	public Source(String id, IModel<?> model, PackageResourceReference resourceReference,
+	public Source(String id, IModel<?> model, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		this(id, model, null, pageParameters, resourceReference);
@@ -163,7 +164,7 @@ public class Source extends WebMarkupContainer
 	}
 
 	private Source(String id, IModel<?> model, String url, PageParameters pageParameters,
-		PackageResourceReference resourceReference)
+		ResourceReference resourceReference)
 	{
 		super(id, model);
 		this.url = url;
@@ -195,10 +196,14 @@ public class Source extends WebMarkupContainer
 			}
 			else if (resourceReference != null)
 			{
-				PackageResource resource = resourceReference.getResource();
-				IResourceStream resourceStream = resource.getCacheableResourceStream();
-				String contentType = resourceStream.getContentType();
-				tag.put("type", contentType);
+				// if package resource reference we can get the content
+				// type of the package resource
+				if(resourceReference instanceof PackageResourceReference){
+					PackageResource resource = ((PackageResourceReference)resourceReference).getResource();
+					IResourceStream resourceStream = resource.getCacheableResourceStream();
+					String contentType = resourceStream.getContentType();
+					tag.put("type", contentType);
+				}
 			}
 		}
 

@@ -21,7 +21,6 @@ import org.apache.wicket.markup.html.media.MediaComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
@@ -73,9 +72,9 @@ public class Video extends MediaComponent
 	 * @param id
 	 *            the component id
 	 * @param resourceReference
-	 *            the package resource reference of the video file
+	 *            the resource reference of the video file
 	 */
-	public Video(String id, PackageResourceReference resourceReference)
+	public Video(String id, ResourceReference resourceReference)
 	{
 		super(id, resourceReference);
 	}
@@ -88,9 +87,9 @@ public class Video extends MediaComponent
 	 * @param model
 	 *            the internally used model
 	 * @param resourceReference
-	 *            the package resource reference of the video file
+	 *            the resource reference of the video file
 	 */
-	public Video(String id, IModel<?> model, PackageResourceReference resourceReference)
+	public Video(String id, IModel<?> model, ResourceReference resourceReference)
 	{
 		super(id, model, resourceReference);
 	}
@@ -101,11 +100,11 @@ public class Video extends MediaComponent
 	 * @param id
 	 *            the component id
 	 * @param resourceReference
-	 *            the package resource reference of the video file
+	 *            the resource reference of the video file
 	 * @param pageParameters
 	 *            the page parameters to be used to be prepended to the video URL
 	 */
-	public Video(String id, PackageResourceReference resourceReference,
+	public Video(String id, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		super(id, resourceReference, pageParameters);
@@ -119,11 +118,11 @@ public class Video extends MediaComponent
 	 * @param model
 	 *            the internally used model
 	 * @param resourceReference
-	 *            the package resource reference of the video file
+	 *            the resource reference of the video file
 	 * @param pageParameters
 	 *            the page parameters to be used to be prepended to the video URL
 	 */
-	public Video(String id, IModel<?> model, PackageResourceReference resourceReference,
+	public Video(String id, IModel<?> model, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		super(id, model, resourceReference, pageParameters);

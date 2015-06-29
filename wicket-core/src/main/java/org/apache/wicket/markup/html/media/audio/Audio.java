@@ -20,7 +20,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.media.MediaComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * An audio media component to playback audio files.
@@ -63,9 +63,9 @@ public class Audio extends MediaComponent
 	 * @param id
 	 *            the component id
 	 * @param resourceReference
-	 *            the package resource reference of the audio file
+	 *            the resource reference of the audio file
 	 */
-	public Audio(String id, PackageResourceReference resourceReference)
+	public Audio(String id, ResourceReference resourceReference)
 	{
 		super(id, resourceReference);
 	}
@@ -78,9 +78,9 @@ public class Audio extends MediaComponent
 	 * @param model
 	 *            the internally used model
 	 * @param resourceReference
-	 *            the package resource reference of the audio file
+	 *            the resource reference of the audio file
 	 */
-	public Audio(String id, IModel<?> model, PackageResourceReference resourceReference)
+	public Audio(String id, IModel<?> model, ResourceReference resourceReference)
 	{
 		super(id, model, resourceReference);
 	}
@@ -91,11 +91,11 @@ public class Audio extends MediaComponent
 	 * @param id
 	 *            the component id
 	 * @param resourceReference
-	 *            the package resource reference of the audio file
+	 *            the resource reference of the audio file
 	 * @param pageParameters
 	 *            the page parameters to be used to be prepended to the audio URL
 	 */
-	public Audio(String id, PackageResourceReference resourceReference,
+	public Audio(String id, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		super(id, resourceReference, pageParameters);
@@ -109,11 +109,11 @@ public class Audio extends MediaComponent
 	 * @param model
 	 *            the internally used model
 	 * @param resourceReference
-	 *            the package resource reference of the audio file
+	 *            the resource reference of the audio file
 	 * @param pageParameters
 	 *            the page parameters to be used to be prepended to the audio URL
 	 */
-	public Audio(String id, IModel<?> model, PackageResourceReference resourceReference,
+	public Audio(String id, IModel<?> model, ResourceReference resourceReference,
 		PageParameters pageParameters)
 	{
 		super(id, model, resourceReference, pageParameters);
