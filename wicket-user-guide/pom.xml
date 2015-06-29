@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.asciidoctor.maven</groupId>
-    <artifactId>asciidoc-to-html-example</artifactId>
+    <groupId>org.apache.wicket</groupId>
+    <artifactId>wicket-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>AsciiDoc to HTML Maven Example</name>
-    <description>An example project that demonstrates how to convert AsciiDoc to HTML5 using the Asciidoctor Maven plugin.</description>
+    <name>Wicket user guide</name>
+    <description>Provides the user guide of wicket</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
