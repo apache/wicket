@@ -349,8 +349,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				}
 
 				// get content range information
-				Long startbyte = RequestCycle.get().getMetaData(CONTENT_RANGE_STARTBYTE);
-				Long endbyte = RequestCycle.get().getMetaData(CONTENT_RANGE_ENDBYTE);
+				RequestCycle cycle = RequestCycle.get();
+				Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
+				Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
 
 				// send response body with resource data
 				PartWriterCallback partWriterCallback = new PartWriterCallback(bytes != null
@@ -373,7 +374,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			}
 			finally
 			{
-
 				try
 				{
 					if (readBuffered)
