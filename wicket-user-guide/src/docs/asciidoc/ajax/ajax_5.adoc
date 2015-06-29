@@ -6,7 +6,7 @@ Starting from version 6.0 Wicket has introduced two entities which allow us to c
 AjaxRequestAttributes exposes the attributes used to generate the JavaScript call invoked on client side to start an AJAX request. Each attribute will be passed as a  http://en.wikipedia.org/wiki/JSON[JSON] parameter to the JavaScript function _Wicket.Ajax.ajax_ which is responsible for sending the concrete AJAX request. Every JSON parameter is identified by a short name. Here is a partial list of the available parameters:
 
 |===
-*Short name* | *Description* | *Default value*
+|*Short name* | *Description* | *Default value*
 |u | The callback URL used to serve the AJAX request that will be sent. |
 |c | The id of the component that wants to start the AJAX call. |
 |e | A list of event (click, change, etc...) that can trigger the AJAX call. | domready

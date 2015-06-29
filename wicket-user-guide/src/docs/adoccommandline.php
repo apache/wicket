@@ -7,6 +7,8 @@
 	$noteactive = 0;
 	$tableactive = 0;
 	$imagelink= "";
+	$newlines=0;
+	$listnumber=1;
 	require_once "spyc.php";
 	$tocarray = Spyc::YAMLLoad('guide/toc.yml');
 	
@@ -16,10 +18,15 @@
 			$echo=0;
 		   
 			//numbered list
+			if($gdoc[$i]=="\n"){$newlines++;}
 			if($codeactive==0){
 				if($gdoc[$i]=="#"){
-					echo "1.";
+					if($newlines!=$newlinesold+1){$listnumber=1;}
+					echo $listnumber . ".";
 					$echo=1;
+					$listnumber++;
+					$newlinesold=$newlines;
+					
 				}
 			}
 		   //check if {code} is active
@@ -225,7 +232,7 @@
 				if($tag=="{table}"){
 					if($tableactive==0){
 						$tableactive = 1;
-						echo "|===\n";
+						echo "|===\n|";
 						$echo=1;
 						$i=$i+7;
 						break;

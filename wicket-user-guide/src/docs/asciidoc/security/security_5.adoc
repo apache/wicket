@@ -6,7 +6,7 @@ Wicket internally uses an entity called package resource guard to protect packag
 By default Wicket applications use as package resource guard class _SecurePackageResourceGuard_, which allows to access only to the following file extensions (grouped by type):
 
 |===
-File | Extensions
+|File | Extensions
 |*JavaScript files* |.js
 |*CSS files* |.css
 |*HTML pages* |.html

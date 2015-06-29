@@ -36,5 +36,5 @@ The method returns an instance of _org.apache.wicket.util.IProvider_ that should
 === Ajax requests
 
 To control the behavior in Ajax requests the application may use _org.apache.wicket.settings.ExceptionSettings1.  setAjaxErrorHandlingStrategy(ExceptionSettings.AjaxErrorStrategy)_. By default if an error occurs during the 
-processing of an Ajax request Wicket will render the configured error page. By configuring _org.apache.wicket.settings.ExceptionSettings.  AjaxErrorStrategy1.INVOKE_FAILURE_HANDLER_ as the default strategy the application will call the JavaScript _onFailure_ callback(s) instead.
+processing of an Ajax request Wicket will render the configured error page. By configuring _org.apache.wicket.settings.ExceptionSettings.  AjaxErrorStrategy2.INVOKE_FAILURE_HANDLER_ as the default strategy the application will call the JavaScript _onFailure_ callback(s) instead.
 

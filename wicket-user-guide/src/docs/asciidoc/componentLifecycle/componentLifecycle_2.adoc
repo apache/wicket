@@ -5,7 +5,7 @@ Class _Component_ comes with a number of hook methods that can be overridden in 
 In the following table these methods are grouped according to the stage in which they are invoked (and they are sorted by execution order):
 
 |===
-*Cycle stage* | *Involved methods*
+|*Cycle stage* | *Involved methods*
 |Initialization | onInitialize
 |Rendering | onConfigure, onBeforeRender, onRender, onComponentTag, onComponentTagBody, onAfterRenderChildren, onAfterRender
 |Removing | onRemove

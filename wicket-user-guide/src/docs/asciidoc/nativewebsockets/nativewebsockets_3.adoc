@@ -37,7 +37,7 @@ Wicket.Event.subscribe("/websocket/message", function(jqEvent, message) {
 
 Here is a table of all events that the application can subscribe to:
 |===
-Event name | Arguments | Description
+|Event name | Arguments | Description
 |/websocket/open | jqEvent | A WebSocket connection has been just opened
 |/websocket/message | jqEvent, message | A message has been received from the server
 |/websocket/closed | jqEvent | A WebSocket connection has been closed

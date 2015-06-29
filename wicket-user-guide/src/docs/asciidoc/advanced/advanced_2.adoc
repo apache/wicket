@@ -145,7 +145,7 @@ _IEventSource_ exposes a single method named send which takes in input three par
 * *sink*: an implementation of _IEventSink_ that will be the receiver of the event. 
 * *broadcast*: a _Broadcast_ enum which defines the broadcast method used to dispatch the event to the sink and to other entities such as sink children, sink containers, session object, application object and the current request cycle. It has four possible values:
 |===
-*Value* | *Description*
+|*Value* | *Description*
 |BREADTH | The event is sent first to the specified sink and then to all its children components following a breadth-first order.
 |DEPTH | The event is sent to the specified sink only after it has been dispatched to all its children components following a depth-first order.
 |BUBBLE | The event is sent first to the specified sink and then to its parent containers.
