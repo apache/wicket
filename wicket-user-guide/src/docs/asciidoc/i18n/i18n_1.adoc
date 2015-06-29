@@ -18,9 +18,9 @@ For example a bundle with MyBundle as base name and localized for Mandarin Chine
 _ResourceBundle_ is an abstract factory class, hence it exposes a number of factory methods named  getBundle to load a concrete bundle. Without going into too much details we can say that a bundle corresponds to a file in the classpath. To find a file for a given bundle, getBundle needs first to generate an ordered list of candidate bundle names. These names are the set of all possible full names for a given bundle. For example if we have org.foo.MyBundle as base name and the current locale is the one seen before for Mandarin Chinese, the candidate names will be:
 
 1. org.foo.MyBundle_zh_CH_cmn
-1. org.foo.MyBundle_zh_CH
-1. org.foo.MyBundle_zh
-1. org.foo.MyBundle
+2. org.foo.MyBundle_zh_CH
+3. org.foo.MyBundle_zh
+4. org.foo.MyBundle
 
 The list of these candidate names is generated starting from the most specific one and subtracting an optional parameter at each step. The last name of the list corresponds to the default resource bundle which is the most general name and is equal to the base name. Once that getBundle has generated the list of candidate names, it will iterate over them to find the first one for which is possible to load a class or a properties file. The class must be a subclass of _ResourceBundle_ having as class name the full name used in the current iteration. If such a class is not found, getBundle will try to locate a properties file having a file name equals to the current full name (Java will automatically append extension .properties to the full name). For example given the resource bundle of the previous example, Java will search first for class org.foo.MyBundle_zh_CH_cmn and then for file MyBundle_zh_CH_cmn.properties inside package org.foo. If no file is found for any of the candidate names, a MissingResourceException will be thrown. Bundles contains local-dependent string resources identified by a key that is unique in the given bundle. So once we have obtained a valid bundle we can access these objects with method getString (String key).
 

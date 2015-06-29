@@ -6,7 +6,7 @@ Wicket makes it very easy to build stateful pages, but sometimes we might want t
 In Wicket a page can be stateless only if it satisfies the following requirements:
 
 1. it has been instantiated by Wicket (i.e. we don't create it with operator new) using a constructor with no argument or a constructor that takes as input a single PageParameters argument (class PageParameters will be covered in <<urls.adoc#pageparameters,chapter 10.1>>).
-1. All its children components (and behaviors) are in turn stateless, which means that their method isStateless must return true.
+2. All its children components (and behaviors) are in turn stateless, which means that their method isStateless must return true.
 
 The first requirement implies that, rather than creating a page by hand, we should rely on Wicket's capability of resolving page instances, like we do when we use method setResponsePage(Class page).
 

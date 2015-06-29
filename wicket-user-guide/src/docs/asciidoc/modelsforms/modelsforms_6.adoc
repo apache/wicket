@@ -5,7 +5,7 @@ In chapter 6 we have seen how Wicket uses serialization to store page instances.
 For model objects this could be a serious issue for (at least) two main reasons:
 
 1. The model object could be a very large instance, hence serialization would become very expensive in terms of time and memory.
-1. We simply may not be able to use a serializable object as model object. In paragraphs 1.4 and 9.2 we stated that Wicket allows us to use a POJO as backing object, but  http://en.wikipedia.org/wiki/Plain_Old_Java_Object#Definition[POJOs] are ordinary objects with no prespecified interface, annotation or superclass, hence they are not required to implement the standard Serializable interface.
+2. We simply may not be able to use a serializable object as model object. In paragraphs 1.4 and 9.2 we stated that Wicket allows us to use a POJO as backing object, but  http://en.wikipedia.org/wiki/Plain_Old_Java_Object#Definition[POJOs] are ordinary objects with no prespecified interface, annotation or superclass, hence they are not required to implement the standard Serializable interface.
 
 To cope with these problems IModel extends another interface called IDetachable.
 

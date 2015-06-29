@@ -86,10 +86,10 @@ Validator's resource bundles have the lowest priority in the lookup algorithm. T
 Wicket implements the default lookup algorithm using the strategy pattern. The concrete strategies are abstracted with the interface _org.apache.wicket.resource.loader.IStringResourceLoader_. By default Wicket uses the following implementations of _IStringResourceLoader_ (sorted by execution order):
 
 1. *ComponentStringResourceLoader:* implements most of the default algorithm. It searches for a given resource across bundles from the container hierarchy, from class hierarchy and from the given component.
-1. *PackageStringResourceLoader:* searches into package bundles.
-1. *ClassStringResourceLoader:* searches into bundles of a given class. By default the target class is the application class.
-1. *ValidatorStringResourceLoader:* searches for resources into validator's bundles. A list of validators is provided by the form component that failed validation.
-1. *InitializerStringResourceLoader:* this resource allows internationalization to interact with the initialization mechanism of the framework that will be illustrated in <<advanced.adoc#initializers,paragraph 18.3>>.
+2. *PackageStringResourceLoader:* searches into package bundles.
+3. *ClassStringResourceLoader:* searches into bundles of a given class. By default the target class is the application class.
+4. *ValidatorStringResourceLoader:* searches for resources into validator's bundles. A list of validators is provided by the form component that failed validation.
+5. *InitializerStringResourceLoader:* this resource allows internationalization to interact with the initialization mechanism of the framework that will be illustrated in <<advanced.adoc#initializers,paragraph 18.3>>.
 
 Developer can customize lookup algorithm removing default resource loaders or adding custom implementations to the list of the resource loaders in use. This task can be accomplished using method getStringResourceLoaders of setting class _org.apache.wicket.settings.ResourceSettings_:
 

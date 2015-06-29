@@ -4,8 +4,8 @@
 In <<modelsforms.adoc#wicket-forms,paragraph 11.3>> we have seen a very basic usage of the Form component and we didn't pay much attention to what happens behind the scenes of form submission. In Wicket when we submit a form we trigger the following steps on server side:
 
 1. Form validation: user input is checked to see if it satisfies the validation rules set on the form. If validation fails, step number 2 is skipped and the form should display a feedback message to explain to user what went wrong. During this step input values (which are simple strings sent with a web request) are converted into Java objects. In the next paragraphs we will explore the infrastructures provided by Wicket for the three sub-tasks involved with form validation, which are: conversion of user input into objects, validation of user input, and visualization of feedback messages.
-1. Updating of models: if validation succeeds, the form updates the model of its children components with the converted values obtained in the previous step.
-1. Invoking callback methods onSubmit() or onError(): if we didn't have any validation error, method onSubmit() is called, otherwise onError() will be called. The default implementation of both these methods is left empty and we can override them to perform custom actions.  
+2. Updating of models: if validation succeeds, the form updates the model of its children components with the converted values obtained in the previous step.
+3. Invoking callback methods onSubmit() or onError(): if we didn't have any validation error, method onSubmit() is called, otherwise onError() will be called. The default implementation of both these methods is left empty and we can override them to perform custom actions.  
 
 NOTE: Please note that the model of form components is updated only if no validation error occurred (i.e. step two is performed only if validation succeeds). 
 
