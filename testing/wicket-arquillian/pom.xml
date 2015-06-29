@@ -29,7 +29,7 @@
 	<artifactId>wicket-arquillian-testing</artifactId>
 	<packaging>war</packaging>
 
-	<name>Wicket Arquillian Testing with Wildfly Java EE 6 Managed and Unpacked :: WAR</name>
+	<name>Wicket Arquillian Testing</name>
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
