@@ -67,9 +67,10 @@ public class LinkParser implements ILinkParser
 		// don't try to parse markup. just plain text. WICKET-4099
 		if (work.indexOf('<') == -1)
 		{
-			for (String pattern : renderStrategies.keySet())
+			for (Map.Entry<String, ILinkRenderStrategy> entry : renderStrategies.entrySet())
 			{
-				ILinkRenderStrategy strategy = renderStrategies.get(pattern);
+				String pattern = entry.getKey();
+				ILinkRenderStrategy strategy = entry.getValue();
 
 				Matcher matcher = Pattern.compile(pattern, Pattern.DOTALL).matcher(work);
 				StringBuffer buffer = new StringBuffer();
