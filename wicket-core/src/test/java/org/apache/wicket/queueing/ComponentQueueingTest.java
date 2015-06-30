@@ -576,6 +576,35 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(p);
 		assertEquals("<div id=\"wicket__InlineEnclosure_01\" style=\"display:none\"></div>", tester.getLastResponseAsString());
 	}
+	
+	/**
+	 * Test empty child attribute
+	 */
+	@Test
+	public void autos7()
+	{
+		TestPage p = new TestPage();
+		p.setPageMarkup("<wicket:enclosure child=''><div wicket:id='a'></div></wicket:enclosure>");
+		A a = new A();
+		
+		p.queue(a);
+		tester.startPage(p);
+
+		assertTrue(a.getParent() instanceof Enclosure);
+		
+
+		// A is visible, enclosure renders
+
+		assertEquals(
+			"<wicket:enclosure child=\"a\"><div wicket:id=\"a\"></div></wicket:enclosure>",
+			tester.getLastResponseAsString());
+
+		// A is not visible, enclosure does not render
+
+		a.setVisible(false);
+		tester.startPage(p);
+		assertEquals("", tester.getLastResponseAsString());
+	}
 
 	@Test
 	public void border1()
