@@ -38,7 +38,7 @@
 		<spring.version>3.0.7.RELEASE</spring.version>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-		<maven.javadoc.version>2.9.1</maven.javadoc.version>
+		<maven.javadoc.version>2.10.3</maven.javadoc.version>
 		<maven.surefire.version>2.12.2</maven.surefire.version>
 		<!-- do not increase the version - wicket-user-guide requires 2.2.4 -->
 		<grails.version>2.2.4</grails.version>
