@@ -118,8 +118,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	public String getEvent()
 	{
-		String events = event.toLowerCase();
-		String[] splitEvents = events.split("\\s+");
+		String[] splitEvents = event.split("\\s+");
 		List<String> cleanedEvents = new ArrayList<String>(splitEvents.length);
 		for (String evt : splitEvents)
 		{
