@@ -43,9 +43,9 @@ public class Source extends WebMarkupContainer
 
 	private String media;
 
-	private final ResourceReference resourceReference;
+	private PageParameters pageParameters;
 
-	private final PageParameters pageParameters;
+	private final ResourceReference resourceReference;
 
 	private final String url;
 
@@ -319,5 +319,26 @@ public class Source extends WebMarkupContainer
 	public void setMedia(String media)
 	{
 		this.media = media;
+	}
+
+	/**
+	 * Gets the page parameter applied to the URL of the source
+	 * 
+	 * @return the page parameter applied to the URL of the source
+	 */
+	public PageParameters getPageParameters()
+	{
+		return pageParameters;
+	}
+
+	/**
+	 * Sets the page parameter applied to the URL of the source
+	 * 
+	 * @param pageParameters
+	 *            the page parameter which are going to be applied to the URL of the source
+	 */
+	public void setPageParameters(PageParameters pageParameters)
+	{
+		this.pageParameters = pageParameters;
 	}
 }

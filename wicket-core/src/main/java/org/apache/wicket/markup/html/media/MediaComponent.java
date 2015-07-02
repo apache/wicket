@@ -26,9 +26,7 @@ import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
 
 /**
- * The media component is used to provide basic functionality to the video and audio component. The
- * given media streaming resource reference supports Content-Ranges and other stuff to make the
- * audio and video playback smooth.
+ * The media component is used to provide basic functionality to the video and audio component.
  *
  * @author Tobias Soloschenko
  * @author Andrew Lombardi
@@ -130,7 +128,7 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 	private Cors crossOrigin;
 
-	private final PageParameters pageParameters;
+	private PageParameters pageParameters;
 
 	private final ResourceReference resourceReference;
 
@@ -381,6 +379,27 @@ public abstract class MediaComponent extends WebMarkupContainer
 	public void setLooping(boolean loop)
 	{
 		this.loop = loop;
+	}
+
+	/**
+	 * Gets the page parameter applied to the URL of the media component
+	 * 
+	 * @return the page parameter applied to the URL of the media component
+	 */
+	public PageParameters getPageParameters()
+	{
+		return pageParameters;
+	}
+
+	/**
+	 * Sets the page parameter applied to the URL of the media component
+	 * 
+	 * @param pageParameters
+	 *            the page parameter which are going to be applied to the URL of the media component
+	 */
+	public void setPageParameters(PageParameters pageParameters)
+	{
+		this.pageParameters = pageParameters;
 	}
 
 	/**
