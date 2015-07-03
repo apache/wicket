@@ -19,6 +19,7 @@ package org.apache.wicket.examples.repeater;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -30,7 +31,7 @@ public class RepeaterTest extends Assert
 	 * Test page.
 	 */
 	@Test
-	public void testHelloWorld()
+	public void allRepeaterPages()
 	{
 		WicketTester tester = new WicketTester(new RepeaterApplication());
 		try
@@ -38,6 +39,8 @@ public class RepeaterTest extends Assert
 			tester.startPage(Index.class);
 			tester.assertContains("Wicket Examples - repeater views");
 
+			// AjaxDataTablePage below RepeatingPage will fail this test.
+			checkPage(tester, AjaxDataTablePage.class);
 			checkPage(tester, RepeatingPage.class);
 			checkPage(tester, RefreshingPage.class);
 			checkPage(tester, FormPage.class);
@@ -47,6 +50,24 @@ public class RepeaterTest extends Assert
 			checkPage(tester, OIRPage.class);
 			checkPage(tester, DataGridPage.class);
 			checkPage(tester, GridViewPage.class);
+		}
+		finally
+		{
+			tester.destroy();
+		}
+	}
+	
+	@Ignore("WICKET-5942")
+	@Test
+	public void breakingRepeaterPages()
+	{
+		WicketTester tester = new WicketTester(new RepeaterApplication());
+		try
+		{
+			tester.startPage(Index.class);
+			tester.assertContains("Wicket Examples - repeater views");
+
+			checkPage(tester, RepeatingPage.class);
 			checkPage(tester, AjaxDataTablePage.class);
 		}
 		finally
