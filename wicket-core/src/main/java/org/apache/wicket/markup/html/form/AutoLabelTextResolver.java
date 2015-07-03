@@ -262,7 +262,7 @@ public class AutoLabelTextResolver implements IComponentResolver
 			else
 			{
 				// ...found the form component, so we can return our label.
-				return new TextLabel("label" + container.getPage().getAutoIndex(), related);
+				return new TextLabel(tag.getId(), related);
 			}
 		}
 		return null;

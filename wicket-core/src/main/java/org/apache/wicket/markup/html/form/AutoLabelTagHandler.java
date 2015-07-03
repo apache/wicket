@@ -70,7 +70,7 @@ public class AutoLabelTagHandler extends AbstractMarkupFilter
 				"Attribute wicket:for cannot be used in conjunction with wicket:id", tag.getPos());
 		}
 
-		tag.setId(getClass().getName());
+		tag.setId(AutoLabelResolver.LABEL_ATTR + getRequestUniqueId());
 		tag.setModified(true);
 		tag.setAutoComponentTag(true);
 		return tag;

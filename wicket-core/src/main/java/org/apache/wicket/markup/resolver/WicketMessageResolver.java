@@ -134,7 +134,7 @@ public class WicketMessageResolver implements IComponentResolver
 
 				boolean escape = attributes.getBoolean(ESCAPE_ATTRIBUTE);
 
-				final String id = "_message_" + container.getPage().getAutoIndex();
+				final String id = wtag.getId();
 				MessageContainer label = new MessageContainer(id, messageKey, escape);
 				label.setRenderBodyOnly(container.getApplication()
 					.getMarkupSettings()
