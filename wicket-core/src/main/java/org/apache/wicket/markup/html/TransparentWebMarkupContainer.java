@@ -49,7 +49,8 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		Component resolvedComponent = getParent().get(tag.getId());
-		if (resolvedComponent != null && getPage().wasRendered(resolvedComponent))
+		if (resolvedComponent != null && 
+			(getPage().wasRendered(resolvedComponent) || resolvedComponent.isAuto()))
 		{
 			/*
 			 * Means that parent container has an associated homonymous tag to this grandchildren
