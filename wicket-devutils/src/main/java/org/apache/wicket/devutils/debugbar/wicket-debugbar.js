@@ -57,14 +57,14 @@ function wicketDebugBarCheckState() {
 	var state = wicketDebugBarGetExpandedCookie();
     // state cookie has not been set. determine state and set it
 	if (state === null) {
-		var isVisible = $('#wicketDebugBarContents').is(':visible');
+		var isVisible = jQuery('#wicketDebugBarContents').is(':visible');
 		wicketDebugBarSetExpandedCookie(isVisible ? 'expanded' : 'collapsed');
     // set state of debug bar according to cookie
 	} else {
 		if (state === 'expanded') {
-			$('#wicketDebugBarContents').css('display', '');
+			jQuery('#wicketDebugBarContents').css('display', '');
 		} else {
-			$('#wicketDebugBarContents').css('display', 'none');
+			jQuery('#wicketDebugBarContents').css('display', 'none');
 		}
 	}
 }
