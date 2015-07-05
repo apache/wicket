@@ -414,6 +414,74 @@ cat /tmp/release-$version-sigs.txt >> release-announce.txt
 mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
 mvn_version_to_replace2="$major_version.$minor_version.0-SNAPSHOT"
 
+echo "Generating release promotion script 'promote-$version.sh'"
+echo "#!/bin/sh
+echo \"Promoting release $version
+
+Press enter to continue or CTRL-C to abort \\c\"
+
+read
+
+# push the build branch to ASF git repo
+
+git push origin $branch:refs/heads/$branch
+
+# Sign the release tag
+
+git checkout $tag
+git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log
+git checkout $branch
+
+# promote the source distribution by moving it from the staging area to the release area
+
+svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\"
+
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has passed\"
+
+# Renumber the next development iteration $next_version:
+
+git checkout $GIT_BRANCH
+mvn release:update-versions --batch-mode
+find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
+find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
+git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
+git commit -m \"Start next development version\"
+git push
+
+echo \"Remove the previous version of Wicket using this command:
+
+  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \\\"Remove previous version from mirrors\\\"
+  
+" > promote-$version.sh
+chmod +x promote-$version.sh
+
+echo "Generating release rollback script 'revert-$version.sh'"
+echo "#!/bin/sh
+echo \"Reverting release $version
+
+Press enter to continue or CTRL-C to abort \\c\"
+
+read
+
+git checkout $GIT_BRANCH
+git branch -D $branch
+git tag -d $tag
+
+svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m \"Release vote has failed\"
+
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
+
+find . -name "*.releaseBackup" -exec rm {} \;
+rm release.properties
+
+" > revert-$version.sh
+
+chmod +x revert-$version.sh
+
+pushd target/dist
+find . -name "*.asc" -exec gpg --verify {} \;
+popd
+
 echo "
 The release has been created. It is up to you to check if the release is up
 to par, and perform the following commands yourself when you start the vote
@@ -423,49 +491,42 @@ A vote email has been generated in release-vote.txt, you can copy/paste it using
 
     cat release-vote.txt | pbcopy
 
-You can find the distribution in target/dist
+You can find the distribution in target/dist.
 
-    cd target/dist
 
-To verify all signatures:
+Failed release
+--------------
 
-    find . -name \"*.asc\" -exec gpg --verify {} \;
+To rollback a release due to a failed vote or some other complication use:
 
-To push the release branch to ASF git servers
+    $ ./revert-$version.sh
 
-    git push origin $branch:refs/heads/$branch
+This will clean up the artfifacts from the staging areas, including Nexus,
+dist.apache.org and the release branch and tag.
 
-To move the release from staging to the mirrors:
 
-    svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\"
+Successful release
+------------------
 
-Remove previous version $previous_version from the mirrors
+Congratulations on the successful release vote!
 
-    svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\"
+Use the release-announce.txt as a starter for the release announcement:
 
-To sign the release tag issue the following three commands:
+    cat release-announce.txt | pbcopy
 
-    git checkout $tag
-    git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log
-    git checkout $branch
+To promote the release after a successful vote, run:
 
-To renumber the next development iteration $next_version:
+    $ ./promote-$version.sh
 
-    git checkout $GIT_BRANCH
-    mvn release:update-versions --batch-mode
-    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
-    find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
-    git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
-    git commit -m \"Start next development version\"
-    git push
+This will promote the Nexus staging repository to Maven Central, and move
+the release artifacts from the staging area to dist.apache.org. It will
+also sign the release tag and push the release branch to git.apache.org
 
-To release the Maven artefacts:
+You can read this message at a later time using:
 
-	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has passed\"
+    $ cat release.txt
 
-Or in case of a failed vote, to drop the staging repository:
-
-	mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
+Happy voting!
 " > release.txt
 
 cat release.txt
