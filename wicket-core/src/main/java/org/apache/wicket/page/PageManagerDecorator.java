@@ -59,13 +59,6 @@ public class PageManagerDecorator implements IPageManager
 		delegate.touchPage(page);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void untouchPage(IManageablePage page)
-	{
-		delegate.untouchPage(page);
-	}
-
 	@Override
 	public boolean supportsVersioning()
 	{
