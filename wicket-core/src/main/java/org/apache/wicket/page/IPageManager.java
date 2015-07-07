@@ -39,7 +39,7 @@ public interface IPageManager
 	 * @throws CouldNotLockPageException if the page is already locked by another thread
 	 * and the lock cannot be acquired for some timeout
 	 */
-	public IManageablePage getPage(int id) throws CouldNotLockPageException;
+	IManageablePage getPage(int id) throws CouldNotLockPageException;
 
 	/**
 	 * Marks page as changed.
@@ -50,7 +50,7 @@ public interface IPageManager
 	 * @throws CouldNotLockPageException if the page is already locked by another thread
 	 * and the lock cannot be acquired for some timeout
 	 */
-	public void touchPage(IManageablePage page) throws CouldNotLockPageException;
+	void touchPage(IManageablePage page) throws CouldNotLockPageException;
 
 	/**
 	 * Returns whether this manager supports versioning. Managers that support versioning must store
@@ -58,27 +58,27 @@ public interface IPageManager
 	 * 
 	 * @return whether this page manager supports versioning
 	 */
-	public boolean supportsVersioning();
+	boolean supportsVersioning();
 
 	/**
 	 * Commits the changes to external storage if the manager uses it.
 	 * 
 	 * Should also detach all pages that were touched during this request.
 	 */
-	public void commitRequest();
+	void commitRequest();
 
 	/**
 	 * Invoked when new session has been created.
 	 */
-	public void newSessionCreated();
+	void newSessionCreated();
 
 	/**
 	 * Clears all data for the current session.
 	 */
-	public void clear();
+	void clear();
 
 	/**
 	 * Destroy the page manager.
 	 */
-	public void destroy();
+	void destroy();
 }
