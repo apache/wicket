@@ -18,7 +18,6 @@ package org.apache.wicket.markup.html;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
@@ -31,6 +30,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -324,23 +324,19 @@ public class WebPage extends Page
 	{
 		return new BookmarkablePageLink<Void>(id, getApplication().getHomePage());
 	}
-	
+
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
-	 * 
-	 * Don't increment page version during AJAX requests. 
-	 * Do it only if page is new.
+	 * Prevents page from get dirty inside an AJAX request.
 	 */
 	@Override
-	protected final void setNextAvailableId(boolean isInitialization)
+	public final void dirty(boolean isInitialization)
 	{
 		Request request = getRequest();
-		if (request instanceof WebRequest && ((WebRequest)request).isAjax()
-			&& !isInitialization)
+		if (isInitialization == false && request instanceof WebRequest &&
+			((WebRequest)request).isAjax())
 		{
 			return;
 		}
-		
-		super.setNextAvailableId(isInitialization);
+		super.dirty(isInitialization);
 	}
 }
