@@ -19,8 +19,14 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 
 /**
  * A simple "transparent" markup container.
@@ -59,5 +65,62 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 			return null;
 		}
 		return resolvedComponent;
+	}
+	
+	@Override
+	public void internalRenderHead(HtmlHeaderContainer container)
+	{
+		if(isAjaxRequest())
+		{
+			renderHeadForInnerSiblings(container);
+		}
+		
+		super.internalRenderHead(container);
+	}
+
+	private boolean isAjaxRequest()
+	{
+		Request request = RequestCycle.get().getRequest();
+		
+		if( request instanceof WebRequest)
+		{	
+			WebRequest webRequest = (WebRequest)request;
+			return webRequest.isAjax();
+		}
+		
+		return false;
+	}
+
+	private void renderHeadForInnerSiblings(HtmlHeaderContainer container)
+	{
+		MarkupStream stream = new MarkupStream(getMarkup());
+		
+		while (stream.hasMore())
+		{
+			MarkupElement childOpenTag = stream.nextOpenTag();
+			
+			if ((childOpenTag instanceof ComponentTag) && !stream.atCloseTag())
+			{
+				// Get element as tag
+				final ComponentTag tag = (ComponentTag)childOpenTag;
+
+				// Get component id
+				final String id = tag.getId();
+
+				Component component = null;
+				
+				if (get(id) == null)
+				{
+					component = ComponentResolvers.resolveByComponentHierarchy(this, stream, tag);					
+				}
+				
+				if (component != null)
+				{
+					component.internalRenderHead(container);
+				}		
+				
+				stream.skipToMatchingCloseTag(tag);
+			}			
+		}
 	}
 }

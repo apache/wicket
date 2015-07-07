@@ -75,7 +75,7 @@ public class ComponentResolvers
 	 * @param filter
 	 * @return Null, if no component was found
 	 */
-	private static Component resolveByApplication(final MarkupContainer container,
+	public static Component resolveByApplication(final MarkupContainer container,
 		final MarkupStream markupStream, final ComponentTag tag, final ResolverFilter filter)
 	{
 		for (final IComponentResolver resolver : Application.get()
@@ -103,7 +103,7 @@ public class ComponentResolvers
 	 * @param tag
 	 * @return Null, if no component was found
 	 */
-	private static Component resolveByComponentHierarchy(final MarkupContainer container,
+	public static Component resolveByComponentHierarchy(final MarkupContainer container,
 		final MarkupStream markupStream, final ComponentTag tag)
 	{
 		Component cursor = container;
