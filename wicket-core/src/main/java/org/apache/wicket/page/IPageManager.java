@@ -50,7 +50,18 @@ public interface IPageManager
 	 * @throws CouldNotLockPageException if the page is already locked by another thread
 	 * and the lock cannot be acquired for some timeout
 	 */
-	void touchPage(IManageablePage page) throws CouldNotLockPageException;
+	void touchPage(IManageablePage page);
+
+	/**
+	 * Marks page as non-changed.
+	 * Could be used in Ajax requests to avoid storing the page if no changes have happened.
+	 *
+	 * @param page
+	 *      the page that should <strong>not</strong> be stored in the page stores at the end of the request.
+	 * @throws CouldNotLockPageException if the page is already locked by another thread
+	 * and the lock cannot be acquired for some timeout
+	 */
+	void untouchPage(IManageablePage page);
 
 	/**
 	 * Returns whether this manager supports versioning. Managers that support versioning must store
