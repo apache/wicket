@@ -200,7 +200,7 @@ public class Source extends WebMarkupContainer
 				// type of the package resource
 				if(resourceReference instanceof PackageResourceReference){
 					PackageResource resource = ((PackageResourceReference)resourceReference).getResource();
-					IResourceStream resourceStream = resource.getCacheableResourceStream();
+					IResourceStream resourceStream = resource.getResourceStream();
 					String contentType = resourceStream.getContentType();
 					tag.put("type", contentType);
 				}

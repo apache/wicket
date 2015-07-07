@@ -255,7 +255,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	@Override
 	public Serializable getCacheKey()
 	{
-		IResourceStream stream = getCacheableResourceStream();
+		IResourceStream stream = getResourceStream();
 
 		// if resource stream can not be found do not cache
 		if (stream == null)
@@ -299,7 +299,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	{
 		final ResourceResponse resourceResponse = new ResourceResponse();
 
-		final IResourceStream resourceStream = getCacheableResourceStream();
+		final IResourceStream resourceStream = getResourceStream();
 
 		// bail out if resource stream could not be found
 		if (resourceStream == null)
@@ -429,31 +429,15 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return resourceResponse;
 	}
 
-
-	/**
-
-	 * Locate resource stream for current resource. Be aware that method takes the current wicket session's 
-	 * locale and style into account when locating the stream.
-	 *
-	 * @return resource stream or <code>null</code> if not found
-	 *
-	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
-	 */
-	@Override
-	public IResourceStream getCacheableResourceStream()
-	{
-		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
-	}
-	
 	/**
 	 * locate resource stream for current resource
 	 * 
 	 * @return resource stream or <code>null</code> if not found
-	 * @deprecated use {@link #getCacheableResourceStream} instead.
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
-		return getCacheableResourceStream();
+		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
  	}
 
 	/**

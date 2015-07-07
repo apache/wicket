@@ -137,7 +137,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		for (IReferenceHeaderItem curItem : providedResources)
 		{
 			IResourceStream stream = ((IStaticCacheableResource)curItem.getReference()
-				.getResource()).getCacheableResourceStream();
+				.getResource()).getResourceStream();
 			if (stream == null)
 			{
 				reportError(curItem.getReference(), "Cannot get resource stream for ");
@@ -254,7 +254,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 	}
 
 	@Override
-	public IResourceStream getCacheableResourceStream()
+	public IResourceStream getResourceStream()
 	{
 		List<IResourceStream> resources = collectResourceStreams();
 

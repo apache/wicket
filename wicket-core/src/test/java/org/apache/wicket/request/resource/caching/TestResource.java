@@ -39,7 +39,7 @@ class TestResource implements IStaticCacheableResource
 	}
 
 	@Override
-	public IResourceStream getCacheableResourceStream()
+	public IResourceStream getResourceStream()
 	{
 		return new StringResourceStream("content");
 	}

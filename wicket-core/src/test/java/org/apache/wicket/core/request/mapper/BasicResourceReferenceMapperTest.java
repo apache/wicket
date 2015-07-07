@@ -29,8 +29,6 @@ import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandle
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
@@ -486,7 +484,7 @@ public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceM
 			}
 
 			@Override
-			public IResourceStream getCacheableResourceStream()
+			public IResourceStream getResourceStream()
 			{
 				return new StringResourceStream("foo-bar");
 			}

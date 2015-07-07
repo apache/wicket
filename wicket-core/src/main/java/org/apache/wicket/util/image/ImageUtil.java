@@ -51,7 +51,7 @@ public class ImageUtil
 	public static CharSequence createBase64EncodedImage(PackageResourceReference imageReference,
 		boolean removeWhitespaces) throws ResourceStreamNotFoundException, IOException
 	{
-		IResourceStream resourceStream = imageReference.getResource().getCacheableResourceStream();
+		IResourceStream resourceStream = imageReference.getResource().getResourceStream();
 		InputStream inputStream = resourceStream.getInputStream();
 		try
 		{

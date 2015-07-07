@@ -82,7 +82,7 @@ public class ContextRelativeResource extends AbstractResource implements IStatic
 	}
 
 	@Override
-	public IResourceStream getCacheableResourceStream()
+	public IResourceStream getResourceStream()
 	{
 		return new WebExternalResourceStream(path);
 	}
