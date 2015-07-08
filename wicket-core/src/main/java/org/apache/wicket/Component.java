@@ -4377,6 +4377,11 @@ public abstract class Component
 		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_VALUE, state);
 		return state;
 	}
+	
+	public boolean isRendering()
+	{
+		return getFlag(FLAG_RENDERING);
+	}
 
 	/**
 	 * Checks whether or not a listener method can be invoked on this component. Usually components

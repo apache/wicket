@@ -70,12 +70,19 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	@Override
 	public void internalRenderHead(HtmlHeaderContainer container)
 	{
-		if(isAjaxRequest())
+		if(isAjaxRequest() && !isParentRendering())
 		{
 			renderHeadForInnerSiblings(container);
 		}
 		
 		super.internalRenderHead(container);
+	}
+
+	private boolean isParentRendering()
+	{
+		MarkupContainer parent = getParent();
+		
+		return parent != null ? parent.isRendering() : false;
 	}
 
 	private boolean isAjaxRequest()
