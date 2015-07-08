@@ -36,6 +36,7 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	private StringBuilder after;
 	private StringBuilder complete;
 	private StringBuilder precondition;
+	private StringBuilder done;
 
 	/**
 	 * Sets the JavaScript code that will be returned by {@link #getInitHandler(Component)}.
@@ -54,6 +55,27 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 				this.init = new StringBuilder();
 			}
 			this.init.append(init);
+		}
+		return this;
+	}
+
+	/**
+	 * Sets the JavaScript code that will be returned by {@link #getDoneHandler(Component)}.
+	 * If this code was already set, the new one will be appended to the existing one.
+	 *
+	 * @param init
+	 * 			the JavaScript code for the corresponding handler
+	 * @return This
+	 */
+	public AjaxCallListener onDone(final CharSequence done)
+	{
+		if (Strings.isEmpty(done) == false)
+		{
+			if (this.done == null)
+			{
+				this.done = new StringBuilder();
+			}
+			this.done.append(done);
 		}
 		return this;
 	}
@@ -251,6 +273,11 @@ public class AjaxCallListener implements IAjaxCallListener, IComponentAwareHeade
 	public CharSequence getPrecondition(Component component)
 	{
 		return precondition;
+	}
+
+	@Override
+	public CharSequence getDoneHandler(Component component) {
+		return done;
 	}
 
 	@Override
