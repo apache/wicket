@@ -31,6 +31,11 @@
 
 		 </Directory>
 
+	... or tweak wicket-examples' StartExamples.java like so:
+
+		bb.setContextPath("/ajax-tests");
+		bb.setWar("../wicket-core/src");
+
 	then run it by opening "http://localhost/ajax-tests/test/js/all.html" in the browser
 
  */
@@ -430,7 +435,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('verify default attributes.', function () {
 
-			expect(24);
+			expect(25);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -456,6 +461,7 @@ jQuery(document).ready(function() {
 						ok(attributes.sh === undefined, 'success handlers');
 						ok(attributes.fh === undefined, 'failure handlers');
 						deepEqual(attrs.coh, attributes.coh, 'complete handlers');
+						ok(attributes.dh === undefined, 'done handlers');
 						ok(attributes.ep === undefined, 'extra parameters');
 						ok(attributes.dep === undefined, 'dynamic extra parameters');
 						equal(attributes.async, true, 'asynchronous');
@@ -471,7 +477,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to global listeners. Success scenario.', function () {
 
-			expect(11);
+			expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -479,6 +485,10 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false // not Wicket's <ajax-response>
 			};
+
+			Wicket.Event.subscribe('/ajax/call/init', function(jqEvent, attributes) {
+				equal(attrs.u, attributes.u, 'Complete: attrs');
+			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attributes, jqXHR, data, textStatus) {
 				start();
@@ -511,6 +521,10 @@ jQuery(document).ready(function() {
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				equal('success', textStatus, 'Complete: textStatus');
 				equal(attrs.u, attributes.u, 'Complete: attrs');
+			});
+
+			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attributes) {
+				equal(attrs.u, attributes.u, 'Done: attrs');
 
 				// unregister all subscribers
 				Wicket.Event.unsubscribe();
@@ -525,7 +539,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to global listeners. Failure scenario.', function () {
 
-			expect(11);
+			expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
@@ -533,6 +547,10 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false // not Wicket's <ajax-response>
 			};
+
+			Wicket.Event.subscribe('/ajax/call/init', function(jqEvent, attributes) {
+				equal(attrs.u, attributes.u, 'Complete: attrs');
+			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attributes, jqXHR, data, textStatus) {
 				ok(false, 'Success handles should not be called');
@@ -560,6 +578,10 @@ jQuery(document).ready(function() {
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				equal('error', textStatus, 'Complete: textStatus');
 				equal(attrs.u, attributes.u, 'Complete: attrs');
+			});
+
+			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attributes) {
+				equal(attrs.u, attributes.u, 'Done: attrs');
 
 				// unregister all subscribers
 				Wicket.Event.unsubscribe();
@@ -748,18 +770,18 @@ jQuery(document).ready(function() {
 
 		/**
 		 * Verifies the order of execution of the callbacks.
-		 * The order must be: before, precondition, beforeSend, after, success, complete.
+		 * The order must be: before, precondition, beforeSend, after, success, complete, done.
 		 * Three consecutive executions are made on the same Ajax channel validating
 		 * that they do not overlap.
 		 */
 		asyncTest('callbacks order - success scenario.', function () {
 
-			expect(36);
+			expect(42);
 
 			var order = 0,
 
 			// the number of assertions per iteration
-			numberOfTests = 12,
+			numberOfTests = 14,
 
 			// calculates the offset for the order depending on the execution number
 			offset = function(extraData) {
@@ -804,6 +826,11 @@ jQuery(document).ready(function() {
 					function(attrs) {
 						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
+				],
+				dh: [
+					function(attrs) {
+						equal((13 + offset(attrs.event.extraData)), ++order, "Done handler");
+					}
 				]
 			};
 
@@ -835,6 +862,10 @@ jQuery(document).ready(function() {
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
 				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attrs) {
+				equal((14 + offset(attrs.event.extraData)), ++order, "Global done handler");
 
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
@@ -861,12 +892,12 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('callbacks order - failure scenario.', function () {
 
-			expect(36);
+			expect(42);
 
 			var order = 0,
 
 			// the number of assertions per iteration
-			numberOfTests = 12,
+			numberOfTests = 14,
 
 			// calculates the offset for the order depending on the execution number
 			offset = function(extraData) {
@@ -911,6 +942,11 @@ jQuery(document).ready(function() {
 					function(attrs) {
 						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
+				],
+				dh: [
+					function(attrs) {
+						equal((13 + offset(attrs.event.extraData)), ++order, "Done handler");
+					}
 				]
 			};
 
@@ -942,6 +978,10 @@ jQuery(document).ready(function() {
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
 				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attrs) {
+				equal((14 + offset(attrs.event.extraData)), ++order, "Global done handler");
 
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers

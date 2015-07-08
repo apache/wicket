@@ -141,12 +141,14 @@ So far we have seen how to use an AJAX call listener to track the AJAX activity 
 
 Global AJAX call events are handled with JavaScript. We can register a callback function for a specific event of the AJAX call lifecycle with function @Wicket.Event.subscribe('<eventName>', <callback Function>)@. The first parameter of this function is the name of the event we want to handle. The possible names are:
 
+* '/ajax/call/init': called on initialization of an ajax call
 * '/ajax/call/before': called before any other event handler.
 * '/ajax/call/beforeSend': called just before the AJAX call.
 * '/ajax/call/after': called after the AJAX request has been sent.
 * '/ajax/call/success': called if the AJAX call has successfully returned.
 * '/ajax/call/failure': called if the AJAX call has returned with a failure.
 * '/ajax/call/complete': called when the AJAX call has completed.
+* '/ajax/call/done': called when the AJAX call is done.
 * '/dom/node/removing': called when a component is about to be removed via AJAX. This  happens when component markup is updated via AJAX (i.e. the component itself or one of its containers has been added to @AjaxRequestTarget@) 
 * '/dom/node/added': called when a component has been added via AJAX. Just like '/dom/node/removing', this event is triggered when a component is added to @AjaxRequestTarget@.
 
