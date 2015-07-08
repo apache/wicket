@@ -66,7 +66,8 @@ public class CssPackageResource extends PackageResource
 		{
 			try
 			{
-				String nonCompressed = new String(processedResponse, "UTF-8");
+				String charsetName = "UTF-8";
+				String nonCompressed = new String(processedResponse, charsetName);
 				String output;
 				if (compressor instanceof IScopeAwareTextResourceProcessor)
 				{
@@ -77,7 +78,7 @@ public class CssPackageResource extends PackageResource
 				{
 					output = compressor.compress(nonCompressed);
 				}
-				return output.getBytes();
+				return output.getBytes(charsetName);
 			}
 			catch (Exception e)
 			{
