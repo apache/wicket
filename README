@@ -139,7 +139,7 @@ from, and get started quickly:
  - wicket-examples:
 
     shows all components in short usage examples, also available live on:
-    http://www.wicket-library.com/wicket-examples
+    http://wicket-library.com/wicket-examples-6.0.x/
 
  - wicket-quickstart archetype:
 
