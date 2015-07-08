@@ -72,6 +72,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	private static final String BEFORE_SEND_HANDLER_FUNCTION_TEMPLATE = "function(attrs, jqXHR, settings){%s}";
 	private static final String BEFORE_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
 	private static final String INIT_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
+	private static final String DONE_HANDLER_FUNCTION_TEMPLATE = "function(attrs){%s}";
 
 	/**
 	 * Subclasses should call super.onBind()
@@ -313,6 +314,13 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 					CharSequence precondition = ajaxCallListener.getPrecondition(component);
 					appendListenerHandler(precondition, attributesJson,
 						AjaxAttributeName.PRECONDITION.jsonName(), PRECONDITION_FUNCTION_TEMPLATE);
+
+					if (ajaxCallListener instanceof AjaxCallListener) {
+						CharSequence doneHandler = ((AjaxCallListener) ajaxCallListener).getDoneHandler(component);
+						appendListenerHandler(doneHandler, attributesJson,
+							AjaxAttributeName.DONE_HANDLER.jsonName(),
+							DONE_HANDLER_FUNCTION_TEMPLATE);
+					}
 				}
 			}
 

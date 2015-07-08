@@ -550,9 +550,6 @@
 		 */
 		doAjax: function (attrs) {
 
-			// keep channel for done()
-			this.channel = attrs.ch;
-
 			var
 				// the headers to use for each Ajax request
 				headers = {
@@ -611,7 +608,7 @@
 					}
 					if (result === false) {
 						Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
-						self.done();
+						self.done(attrs);
 						return false;
 					}
 				}
@@ -702,7 +699,7 @@
 						self._executeHandlers(attrs.coh, attrs, jqXHR, textStatus);
 						we.publish(topic.AJAX_CALL_COMPLETE, attrs, jqXHR, textStatus);
 
-						self.done();
+						self.done(attrs);
 						return FunctionsExecuter.DONE;
 					}, self));
 
@@ -759,7 +756,7 @@
 					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
 					// A file download popup will appear but the page in the browser won't change.
 					this.success(context);
-					this.done();
+					this.done(context.attrs);
 
 					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
 					    rhttps = /^https:\/\//; // checks whether the string starts with https://
@@ -930,7 +927,7 @@
 				this._executeHandlers(attrs.coh, attrs, null, null);
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
 
-				this.done();
+				this.done(attrs);
 				return FunctionsExecuter.DONE;
 			}, this);
 
@@ -1112,8 +1109,11 @@
 			}, this));
 		},
 
-		done: function () {
-			Wicket.channelManager.done(this.channel);
+		done: function (attrs) {
+			this._executeHandlers(attrs.dh, attrs);
+			Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs);
+
+			Wicket.channelManager.done(attrs.channel);
 		},
 
 		// Adds a closure that replaces a component
