@@ -1108,7 +1108,7 @@
 			this._executeHandlers(attrs.dh, attrs);
 			Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs);
 
-			Wicket.channelManager.done(attrs.channel);
+			Wicket.channelManager.done(attrs.ch);
 		},
 
 		// Adds a closure that replaces a component
