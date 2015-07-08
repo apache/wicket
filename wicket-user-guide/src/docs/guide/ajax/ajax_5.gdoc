@@ -15,7 +15,7 @@ mp | If the AJAX call involves the submission of a form, this flag indicates whe
 sc | The input name of the submitting component of the form |
 async | A boolean parameter that indicates if the AJAX call is asynchronous (true) or not. | true
 wr | Specifies the type of data returned by the AJAX call (XML, HTML, JSON, etc...). | XML
-bh, pre, bsh, ah, sh, fh, coh | This is a list of the listeners that are executed on client side (they are JavaScript scripts) during the lifecycle of an AJAX request. Each short name is the abbreviation of one of the methods defined in the interface IAjaxCallListener (see below). | An empty list
+ih, bh, pre, bsh, ah, sh, fh, coh, dh | This is a list of the listeners that are executed on client side (they are JavaScript scripts) during the lifecycle of an AJAX request. Each short name is the abbreviation of one of the methods defined in the interface IAjaxCallListener (see below). | An empty list
 {table}
 
 {note}
@@ -37,6 +37,7 @@ One of the attribute we may need to modify is the list of @IAjaxCallListeners@ r
 
 @IAjaxCallListener@ defines a set of methods which return the JavaScript code (as a @CharSequence@) that must be executed on client side when the AJAX request handling reaches a given stage:
 
+* *getInitHandler(Component)*: returns the JavaScript code that will be executed on initialization of the Ajax call, immediately after the causing event. The code is executed in a scope where it can use variable attrs, which is an array containing the JSON parameters passed to Wicket.Ajax.ajax.
 * *getBeforeHandler(Component)*: returns the JavaScript code that will be executed before any other handlers returned by IAjaxCallListener. The code is executed in a scope where it can use variable attrs, which is an array containing the JSON parameters passed to Wicket.Ajax.ajax. 
 * *getPrecondition(Component)*: returns the JavaScript code that will be used as precondition for the AJAX call. If the script returns false then neither the Ajax call nor the other handlers will be executed. The code is executed in a scope where it can use variable attrs, which is the same variable seen for getBeforeHandler. 
 * *getBeforeSendHandler(Component)*: returns the JavaScript code that will be executed just before the AJAX call is performed. The code is executed in a scope where it can use variables attrs, jqXHR and settings:
@@ -50,5 +51,6 @@ One of the attribute we may need to modify is the list of @IAjaxCallListeners@ r
 ** textStatus it's the status returned as text.
 * *getFailureHandler(Component)*: returns the JavaScript code that will be executed if the AJAX call has returned with a failure. The code is executed in a scope where it can use variable attrs, which is the same variable seen for getBeforeHandler. 
 * *getCompleteHandler(Component)*: returns the JavaScript that will be invoked after success or failure handler has been executed. The code is executed in a scope where it can use variables attrs, jqXHR and textStatus which are the same variables seen for getSuccessHandler. 
+* *getDoneHandler(Component)*: returns the JavaScript code that will be executed after the Ajax call is done, regardless whether it was sent or not. The code is executed in a scope where it can use variable attrs, which is an array containing the JSON parameters passed to Wicket.Ajax.ajax.
 
 In the next paragraph we will see an example of custom @IAjaxCallListener@ designed to disable a component during AJAX request processing.
