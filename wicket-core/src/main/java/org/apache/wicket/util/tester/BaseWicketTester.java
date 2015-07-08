@@ -1871,18 +1871,6 @@ public class BaseWicketTester
 				executeBehavior(behavior);
 			}
 		}
-		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
-		// If it's not handling of the linkComponent is passed through to the
-		// Link.
-		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
-		{
-			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
-				linkComponent, "click");
-			for (AjaxEventBehavior behavior : behaviors)
-			{
-				executeBehavior(behavior);
-			}
-		}
 		// if the link is an AjaxSubmitLink, we need to find the form
 		// from it using reflection so we know what to submit.
 		else if (linkComponent instanceof AjaxSubmitLink)
@@ -1905,26 +1893,6 @@ public class BaseWicketTester
 		// if the link is an IAjaxLink, use it (do check if AJAX is expected)
 		else if (linkComponent instanceof IAjaxLink && isAjax)
 		{
-			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
-				linkComponent, "click");
-			for (AjaxEventBehavior behavior : behaviors)
-			{
-				executeBehavior(behavior);
-			}
-		}
-		/*
-		 * If the link is an instanceof IAjaxLink, it is not one of the
-		 * special cases marked above, so we treat it as an AjaxLink.
-		 */
-		else if (linkComponent instanceof IAjaxLink) 
-		{
-			// If it's not ajax we fail
-			if (isAjax == false)
-			{
-				fail("Link " + path + "is an AjaxLink and will " +
-					"not be invoked when AJAX (javascript) is disabled.");
-			}
-
 			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
 				linkComponent, "click");
 			for (AjaxEventBehavior behavior : behaviors)
@@ -2008,6 +1976,13 @@ public class BaseWicketTester
 			{
 				executeListener(link, ILinkListener.INTERFACE);
 			}
+		}
+		// The link requires AJAX
+		else if (linkComponent instanceof IAjaxLink && isAjax == false) 
+		{
+			
+			fail("Link " + path + "is an IAjaxLink and will " +
+				"not be invoked when AJAX (javascript) is disabled.");	
 		}
 		else
 		{
