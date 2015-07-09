@@ -2,6 +2,34 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.0.0
+
+** Bug
+
+    * [WICKET-5909] - Session style is not taken into account when loading mounted resources.
+    * [WICKET-5924] - FileUploadField does not work with Servlet 3.0 multipart config
+    * [WICKET-5927] - Velocity remote code execution
+    * [WICKET-5939] - AjaxEventBehavior should not lower-case the event name
+    * [WICKET-5942] - TestCase failure after cfa36fbea621
+    * [WICKET-5944] - CSRF prevention does not work with https URLs on the default port
+    * [WICKET-5946] - JavaScript/Css PackageResource should use the same charset for compressing
+
+** Improvement
+
+    * [WICKET-5922] - IoC: Optionally use objensis for proxy creation to inject concrete classes without default ctor
+    * [WICKET-5926] - Arquillian Support with Container ServletContext in BaseWicketTester/WicketTester.
+    * [WICKET-5928] - Move WicketTestCase from tests to main so that it is reusable by other Wicket modules and applications.
+    * [WICKET-5929] - Introduce IPartialPageRequestHandler
+    * [WICKET-5930] - Upgrade Atmosphere to 2.2.7
+    * [WICKET-5931] - Improve generics for ListView: don't use wildcard for T
+    * [WICKET-5932] - Allow empty column list for DataTable
+    * [WICKET-5933] - Avoid serialization of untouched page after ajax request
+    * [WICKET-5935] - IoC Guice: cache proxies and fail on creation when binding is missing
+    * [WICKET-5936] - simplify cdata escaping for ajax-response
+    * [WICKET-5945] - add a new topic/listener that notifies of Ajax calls done
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.0.0-M6
 
 ** Bug
