@@ -21,6 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
@@ -358,7 +359,7 @@ public class ModalWindow extends Panel
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public void show(final AjaxRequestTarget target)
+	public void show(final IPartialPageRequestHandler target)
 	{
 		if (shown == false)
 		{
@@ -377,7 +378,7 @@ public class ModalWindow extends Panel
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public static void closeCurrent(final AjaxRequestTarget target)
+	public static void closeCurrent(final IPartialPageRequestHandler target)
 	{
 		target.appendJavaScript(getCloseJavacriptInternal());
 	}
@@ -388,7 +389,7 @@ public class ModalWindow extends Panel
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public void close(final AjaxRequestTarget target)
+	public void close(final IPartialPageRequestHandler target)
 	{
 		getContent().setVisible(false);
 		if (isCustomComponent())

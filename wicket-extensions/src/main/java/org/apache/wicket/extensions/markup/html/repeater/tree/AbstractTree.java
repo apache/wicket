@@ -21,6 +21,7 @@ import java.util.Set;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.markup.html.repeater.util.ProviderSubset;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.DefaultItemReuseStrategy;
@@ -201,7 +202,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 		getModelObject().add(t);
 		modelChanged();
 
-		updateBranch(t, getRequestCycle().find(AjaxRequestTarget.class));
+		updateBranch(t, getRequestCycle().find(IPartialPageRequestHandler.class));
 	}
 
 	/**
@@ -221,7 +222,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 		getModelObject().remove(t);
 		modelChanged();
 
-		updateBranch(t, getRequestCycle().find(AjaxRequestTarget.class));
+		updateBranch(t, getRequestCycle().find(IPartialPageRequestHandler.class));
 	}
 
 	/**
@@ -300,7 +301,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 * @param target
 	 *            request target
 	 */
-	public abstract void updateBranch(T node, final AjaxRequestTarget target);
+	public abstract void updateBranch(T node, final IPartialPageRequestHandler target);
 
 	/**
 	 * Convenience method to update a single node on an {@link AjaxRequestTarget}. Does nothing if
@@ -311,7 +312,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 * @param target
 	 *            request target or {@code null}
 	 */
-	public abstract void updateNode(T node, final AjaxRequestTarget target);
+	public abstract void updateNode(T node, final IPartialPageRequestHandler target);
 
 	/**
 	 * The state of a node.

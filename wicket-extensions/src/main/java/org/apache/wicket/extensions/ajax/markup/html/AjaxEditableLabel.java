@@ -26,6 +26,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
@@ -101,7 +102,7 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T>
 		{
 			super.renderHead(component, response);
 
-			AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
+			IPartialPageRequestHandler target = getRequestCycle().find(IPartialPageRequestHandler.class);
 			if (target != null)
 			{
 				CharSequence callbackScript = getCallbackScript(component);

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
 import org.apache.wicket.extensions.markup.html.repeater.tree.table.ITreeColumn;
@@ -170,7 +171,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * For updating of a single branch the whole table is added to the ART.
 	 */
 	@Override
-	public void updateBranch(T node, AjaxRequestTarget target)
+	public void updateBranch(T node, IPartialPageRequestHandler target)
 	{
 		if (target != null)
 		{
@@ -183,7 +184,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * For an update of a node the complete row item is added to the ART.
 	 */
 	@Override
-	public void updateNode(T t, final AjaxRequestTarget target)
+	public void updateNode(T t, final IPartialPageRequestHandler target)
 	{
 		if (target != null)
 		{

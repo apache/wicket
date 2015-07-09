@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.ResourceAggregator;
@@ -281,7 +281,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 
 	protected void render(HeaderItem item, List<HeaderItem> filteredItems)
 	{
-		if (RequestCycle.get().find(AjaxRequestTarget.class) != null)
+		if (RequestCycle.get().find(IPartialPageRequestHandler.class) != null)
 		{
 			// we're in an ajax request, so we don't filter and separate stuff....
 			getRealResponse().render(item);
