@@ -1980,20 +1980,19 @@ public class BaseWicketTester
 		// The link requires AJAX
 		else if (linkComponent instanceof IAjaxLink && isAjax == false) 
 		{
-			
 			fail("Link " + path + "is an IAjaxLink and will " +
 				"not be invoked when AJAX (javascript) is disabled.");	
 		}
 		else
 		{
-			fail("Link " + path + " is not a Link, AjaxLink, AjaxFallbackLink or AjaxSubmitLink");
+			fail("Link " + path + " is not an instance of AbstractLink or IAjaxLink");
 		}
 	}
 
 	/**
 	 * Submit the given form in the last rendered {@link Page}
 	 * <p>
-	 * <strong>Note</strong>: Form request parameters have to be set explicitely.
+	 * <strong>Note</strong>: Form request parameters have to be set explicitly.
 	 * 
 	 * @param form
 	 *            path to component
