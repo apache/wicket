@@ -14,6 +14,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+# set -e
+# set -x
+
 function fail {
 	echo "$1"
 	exit 1
@@ -37,8 +40,205 @@ function getJdkToolchain {
 	xmllint ~/.m2/toolchains.xml --xpath "/toolchains/toolchain[provides/version/text() = '$JAVA_VERSION']/configuration/jdkHome/text()"
 }
 
-# set -e
-# set -x
+function generate_promotion_script {
+
+echo "Generating release promotion script 'promote-$version.sh'"
+echo "#!/bin/sh
+echo -n \"Promoting release $version
+
+Actions about to be performed:
+------------------------------
+
+$(cat $0 | tail -n +14)
+
+------------------------------------------
+Press enter to continue or CTRL-C to abort\"
+
+read
+
+# push the build branch to ASF git repo
+
+git push origin $branch:refs/heads/$branch
+
+# push the release tag to ASF git repo
+
+git push origin $tag
+
+# promote the source distribution by moving it from the staging area to the release area
+
+svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\"
+
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has passed\"
+
+# Renumber the next development iteration $next_version:
+
+git checkout $GIT_BRANCH
+mvn release:update-versions --batch-mode
+find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
+find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
+git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
+git commit -m \"Start next development version\"
+git push
+
+echo \"Remove the previous version of Wicket using this command:
+
+  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \\\"Remove previous version from mirrors\\\"
+  
+" > promote-$version.sh
+chmod +x promote-$version.sh
+}
+
+function generate_rollback_script {
+
+echo "Generating release rollback script 'revert-$version.sh'"
+echo "#!/bin/sh
+echo -n\"Reverting release $version
+
+Actions about to be performed:
+------------------------------
+
+$(cat $0 | tail -n +14)
+
+------------------------------------------
+Press enter to continue or CTRL-C to abort\"
+
+read
+
+# clean up local repository
+git checkout $GIT_BRANCH
+git branch -D $branch
+git tag -d $tag
+
+# clean up staging repository
+git push staging --delete refs/heads/$branch
+git push staging --delete $tag
+
+# clean up staging dist area
+svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m \"Release vote has failed\"
+
+# clean up staging maven repository
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
+
+# clean up remaining release files
+find . -name "*.releaseBackup" -exec rm {} \;
+[ -f release.properties ] && rm release.properties
+
+" > revert-$version.sh
+
+chmod +x revert-$version.sh
+}
+
+function generate_signatures_from_release {
+
+	echo "========================================================================
+
+	The signatures for the source release artefacts:
+
+	" > /tmp/release-$version-sigs.txt
+
+	pushd target/dist > /dev/null
+	for i in apache-wicket*{zip,tar.gz}
+	do
+		echo "Signature for $i:
+
+	$(cat $i.asc)
+	" >> /tmp/release-$version-sigs.txt
+	done
+	popd > /dev/null
+
+		echo "========================================================================
+
+	CHANGELOG for $version:
+	" >> /tmp/release-$version-sigs.txt
+
+	if [ -f "/tmp/release-notes-$version.txt" ] ; then
+		tail -n +4 /tmp/release-notes-$version.txt >> /tmp/release-$version-sigs.txt
+	else
+		awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-$major_version.x >> /tmp/release-$version-sigs.txt
+	fi
+}
+
+function generate_release_vote_email {
+
+	echo "Generating Vote email"
+
+	echo "This is a vote to release Apache Wicket $version
+
+	Please download the source distributions found in our staging area
+	linked below.
+
+	I have included the signatures for both the source archives. This vote
+	lasts for 72 hours minimum.
+
+	[ ] Yes, release Apache Wicket $version
+	[ ] No, don't release Apache Wicket $version, because ...
+
+	Distributions, changelog, keys and signatures can be found at:
+
+	    https://dist.apache.org/repos/dist/dev/wicket/$version
+
+	Staging repository:
+
+	    https://repository.apache.org/content/repositories/$stagingrepoid/
+
+	The binaries are available in the above link, as are a staging
+	repository for Maven. Typically the vote is on the source, but should
+	you find a problem with one of the binaries, please let me know, I can
+	re-roll them some way or the other.
+
+	" > release-vote.txt
+
+	cat /tmp/release-$version-sigs.txt >> release-vote.txt
+}
+
+function generate_announce_email {
+	echo "The Apache Wicket PMC is proud to announce Apache Wicket $version!
+
+	This release marks another minor release of Wicket $major_version. We
+	use semantic versioning for the development of Wicket, and as such no
+	API breaks are present breaks are present in this release compared to
+	$major_version.0.0.
+
+	New and noteworthy
+	------------------
+
+	<OPTIONAL>
+
+	Using this release
+	------------------
+
+	With Apache Maven update your dependency to (and don't forget to
+	update any other dependencies on Wicket projects to the same version):
+
+	<dependency>
+	    <groupId>org.apache.wicket</groupId>
+	    <artifactId>wicket-core</artifactId>
+	    <version>$version</version>
+	</dependency>
+
+	Or download and build the distribution yourself, or use our
+	convenience binary package
+
+	 * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
+	 * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
+
+	Upgrading from earlier versions
+	-------------------------------
+
+	If you upgrade from $major_version.y.z this release is a drop in replacement. If
+	you come from a version prior to $major_version.0.0, please read our Wicket $major_version
+	migration guide found at
+
+	 * http://s.apache.org/wicket${major_version}migrate
+
+	Have fun!
+
+	— The Wicket team
+
+	" > release-announce.txt
+
+	cat /tmp/release-$version-sigs.txt >> release-announce.txt
+}
 
 # the branch on which the code base lives for this version (master is
 # always current development version)
@@ -60,6 +260,24 @@ REQUIREMENTS:
  - Maven 3.3.0 (older releases are b0rked, just don't bother)
  - gpg, gpg-agent and pinentry for signing
 "
+
+if [ ! -d .git/refs/remotes/staging ] ; then
+	fail "
+No staging remote git repository found. The staging repository is used to temporarily
+publish the build artifacts during the voting process. Since no staging repository is
+available at Apache, it is best to use a git mirror on your personal github account.
+
+First fork the github Apache Wicket mirror (https://github.com/apache/wicket) and then
+add the remote staging repository with the following command:
+
+    $ git remote add staging git@github.com:<your github username>/wicket.git
+	$ git fetch staging
+	$ git push staging
+
+This will bring the staging area in sync with the origin and the release script can
+push the build branch and the tag to the staging area.
+"
+fi
 
 if [ ! -f ~/.m2/toolchains.xml ] ; then
 	fail "
@@ -128,6 +346,10 @@ else
 		previous_version="$major_version.$(expr $minor_version - 1).0"
 	fi
 fi
+
+# work around for versions upgrade (TODO maybe no longer necessary?)
+mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
+mvn_version_to_replace2="$major_version.$minor_version.0-SNAPSHOT"
 
 # Check if the changelog has the issues this release
 
@@ -238,15 +460,6 @@ if [ $? -ne 0 ] ; then
 	fail "ERROR: mvn release:prepare was not successful"
 fi
 
-# this needs to be done before signing the tag otherwise the snapshot version
-# is tagged
-#echo "Rollback the last commit of the release plugin"
-#git reset HEAD^ --hard >> $log
-
-#echo "Sign the tag"
-# TODO the git tag --sign doesn't utilize the gpg-agent for some reason
-#git tag --sign --force --message "Signed release tag for Apache Wicket $version" $tag >> $log
-
 echo "Performing the release using Maven"
 mvn -Dgpg.passphrase="$passphrase" -ff -l $log release:perform -DlocalCheckout=true -Dtag=$tag -Papache-release,release
 if [ $? -ne 0 ] ; then
@@ -258,6 +471,9 @@ stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-li
 
 echo "Closing staging repository with id $stagingrepoid"
 mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
+
+generate_promotion_script()
+generate_rollback_script()
 
 echo "Create and sign the source tarballs"
 
@@ -304,183 +520,27 @@ svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
-echo "========================================================================
-
-The signatures for the source release artefacts:
-
-" > /tmp/release-$version-sigs.txt
-
-pushd target/dist > /dev/null
-for i in apache-wicket*{zip,tar.gz}
-do
-	echo "Signature for $i:
-
-$(cat $i.asc)
-" >> /tmp/release-$version-sigs.txt
-done
-popd > /dev/null
-
-	echo "========================================================================
-
-CHANGELOG for $version:
-" >> /tmp/release-$version-sigs.txt
-
-if [ -f "/tmp/release-notes-$version.txt" ] ; then
-	tail -n +4 /tmp/release-notes-$version.txt >> /tmp/release-$version-sigs.txt
-else
-	awk "/Release Notes - Wicket - Version $version/{flag=1;next} /==================/{flag=0} flag { print }" CHANGELOG-$major_version.x >> /tmp/release-$version-sigs.txt
-fi
-
-echo "Generating Vote email"
-
-echo "This is a vote to release Apache Wicket $version
-
-Please download the source distributions found in our staging area
-linked below.
-
-I have included the signatures for both the source archives. This vote
-lasts for 72 hours minimum.
-
-[ ] Yes, release Apache Wicket $version
-[ ] No, don't release Apache Wicket $version, because ...
-
-Distributions, changelog, keys and signatures can be found at:
-
-    https://dist.apache.org/repos/dist/dev/wicket/$version
-
-Staging repository:
-
-    https://repository.apache.org/content/repositories/$stagingrepoid/
-
-The binaries are available in the above link, as are a staging
-repository for Maven. Typically the vote is on the source, but should
-you find a problem with one of the binaries, please let me know, I can
-re-roll them some way or the other.
-
-" > release-vote.txt
-
-cat /tmp/release-$version-sigs.txt >> release-vote.txt
-
-echo "The Apache Wicket PMC is proud to announce Apache Wicket $version!
-
-This release marks another minor release of Wicket $major_version. We
-use semantic versioning for the development of Wicket, and as such no
-API breaks are present breaks are present in this release compared to
-$major_version.0.0.
-
-New and noteworthy
-------------------
-
-<OPTIONAL>
-
-Using this release
-------------------
-
-With Apache Maven update your dependency to (and don't forget to
-update any other dependencies on Wicket projects to the same version):
-
-<dependency>
-    <groupId>org.apache.wicket</groupId>
-    <artifactId>wicket-core</artifactId>
-    <version>$version</version>
-</dependency>
-
-Or download and build the distribution yourself, or use our
-convenience binary package
-
- * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
- * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
-
-Upgrading from earlier versions
--------------------------------
-
-If you upgrade from $major_version.y.z this release is a drop in replacement. If
-you come from a version prior to $major_version.0.0, please read our Wicket $major_version
-migration guide found at
-
- * http://s.apache.org/wicket${major_version}migrate
-
-Have fun!
-
-— The Wicket team
-
-" > release-announce.txt
-
-cat /tmp/release-$version-sigs.txt >> release-announce.txt
+generate_signatures_from_release()
+generate_release_vote_email()
+generate_announce_email()
 
 # Done with the tasks, now print out the next things the release manager
 # needs to do
 
-mvn_version_to_replace="$major_version.$minor_version.1-SNAPSHOT"
-mvn_version_to_replace2="$major_version.$minor_version.0-SNAPSHOT"
+pushd target/dist
+find . -name "*.asc" -exec gpg --verify {} \;
+popd
 
-echo "Generating release promotion script 'promote-$version.sh'"
-echo "#!/bin/sh
-echo \"Promoting release $version
-
-Press enter to continue or CTRL-C to abort \\c\"
-
-read
-
-# push the build branch to ASF git repo
-
-git push origin $branch:refs/heads/$branch
-
-# Sign the release tag
-
+echo "Signing the release tag"
 git checkout $tag
 git tag --sign --force --message \"Signed release tag for Apache Wicket $version\" $tag >> $log
 git checkout $branch
 
-# promote the source distribution by moving it from the staging area to the release area
+echo "Pushing build artifacts to the staging repository"
+git push staging $branch:refs/heads/$branch
 
-svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\"
-
-mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has passed\"
-
-# Renumber the next development iteration $next_version:
-
-git checkout $GIT_BRANCH
-mvn release:update-versions --batch-mode
-find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
-find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
-git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
-git commit -m \"Start next development version\"
-git push
-
-echo \"Remove the previous version of Wicket using this command:
-
-  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \\\"Remove previous version from mirrors\\\"
-  
-" > promote-$version.sh
-chmod +x promote-$version.sh
-
-echo "Generating release rollback script 'revert-$version.sh'"
-echo "#!/bin/sh
-echo \"Reverting release $version
-
-Press enter to continue or CTRL-C to abort \\c\"
-
-read
-
-git checkout $GIT_BRANCH
-git branch -D $branch
-git tag -d $tag
-
-svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m \"Release vote has failed\"
-
-mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
-
-find . -name "*.releaseBackup" -exec rm {} \;
-rm release.properties
-
-" > revert-$version.sh
-
-chmod +x revert-$version.sh
-
-pushd target/dist
-find . -name "*.asc" -exec gpg --verify {} \;
-popd
+echo "Pushing release tag to the staging repository"
+git push staging $tag
 
 echo "
 The release has been created. It is up to you to check if the release is up
