@@ -423,14 +423,20 @@ echo "Ensuring we are starting from wicket-$major_version.x"
 git checkout $GIT_BRANCH
 
 echo "Removing previous release tag $tag (if exists)"
-oldtag=`git tag -l |grep -e "$tag"|wc -l`
-[ "$oldtag" -ne 0 ] && git tag -d $tag
+oldtag=`git tag -l |grep -e "$tag"|wc -l` >> release.out
+[ "$oldtag" -ne 0 ] && git tag -d $tag >> release.out
 
 echo "Removing previous build branch $branch (if exists)"
-oldbranch=`git branch |grep -e "$branch"|wc -l`
-[ "$oldbranch" -ne 0 ] && git branch -D $branch
+oldbranch=`git branch |grep -e "$branch"|wc -l` >> release.out
+[ "$oldbranch" -ne 0 ] && git branch -D $branch >> release.out
 
-git checkout -b $branch
+echo "Removing previous staging branch (if exists)"
+git push staging --delete refs/heads/$branch >> release.out
+git push staging --delete $tag >> release.out
+
+
+echo "Creating release branch"
+git checkout -b $branch >> release.out
 
 # Clear the current NOTICE.txt file
 echo "Creating notice file."
