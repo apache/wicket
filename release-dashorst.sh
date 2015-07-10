@@ -53,7 +53,7 @@ echo -n "Promoting release $version
 Actions about to be performed:
 ------------------------------
 
-$(cat $0 | tail -n +14)
+$(cat \$0 | tail -n +14)
 
 ------------------------------------------
 Press enter to continue or CTRL-C to abort"
@@ -80,7 +80,7 @@ git checkout $GIT_BRANCH
 mvn release:update-versions --batch-mode
 find . ! \( -type d -name "target" -prune \) -name pom.xml -exec sed -i "" -E "s/$mvn_version_to_replace/$next_version/g" {} \;
 find . ! \( -type d -name "target" -prune \) -name pom.xml -exec sed -i "" -E "s/$mvn_version_to_replace/$next_version/g" {} \;
-git add `find . ! \( -type d -name "target" -prune \) -name pom.xml`
+git add \` find . ! \( -type d -name "target" -prune \) -name pom.xml \`
 git commit -m "Start next development version"
 git push
 
@@ -255,7 +255,7 @@ function generate_announce_email {
     " > release-announce.txt
 
     cat /tmp/release-$version-sigs.txt >> release-announce.txt
-	git add release-announce.sh
+	git add release-announce.txt
 }
 
 # the branch on which the code base lives for this version (master is
