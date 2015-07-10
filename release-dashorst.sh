@@ -14,8 +14,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# set -e
-# set -x
+set -e
+set -x
 
 function fail {
     >&2 echo "\033[31m
@@ -45,10 +45,10 @@ function getJdkToolchain {
 }
 
 function generate_promotion_script {
-
-echo "Generating release promotion script 'promote-$version.sh'"
-echo "#!/bin/sh
-echo -n \"Promoting release $version
+    echo "Generating release promotion script 'promote-$version.sh'"
+read -d '' script <<- EOF
+#!/bin/sh
+echo -n "Promoting release $version
 
 Actions about to be performed:
 ------------------------------
@@ -56,7 +56,7 @@ Actions about to be performed:
 $(cat $0 | tail -n +14)
 
 ------------------------------------------
-Press enter to continue or CTRL-C to abort\"
+Press enter to continue or CTRL-C to abort"
 
 read
 
@@ -70,34 +70,37 @@ git push origin $tag
 
 # promote the source distribution by moving it from the staging area to the release area
 
-svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m \"Upload release to the mirrors\"
+svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m "Upload release to the mirrors"
 
-mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has passed\"
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release vote has passed"
 
 # Renumber the next development iteration $next_version:
 
 git checkout $GIT_BRANCH
 mvn release:update-versions --batch-mode
-find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
-find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml -exec sed -i \"\" -E \"s/$mvn_version_to_replace/$next_version/g\" {} \\;
-git add \`find . ! \\( -type d -name \"target\" -prune \\) -name pom.xml\`
-git commit -m \"Start next development version\"
+find . ! \( -type d -name "target" -prune \) -name pom.xml -exec sed -i "" -E "s/$mvn_version_to_replace/$next_version/g" {} \;
+find . ! \( -type d -name "target" -prune \) -name pom.xml -exec sed -i "" -E "s/$mvn_version_to_replace/$next_version/g" {} \;
+git add `find . ! \( -type d -name "target" -prune \) -name pom.xml`
+git commit -m "Start next development version"
 git push
 
-echo \"Remove the previous version of Wicket using this command:
+echo "Remove the previous version of Wicket using this command:
 
-  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \\\"Remove previous version from mirrors\\\"
-  
-" > promote-$version.sh
-chmod +x promote-$version.sh
-git add promote-$version.sh
+  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\"
+
+"  
+EOF
+
+echo "$script" > promote-$version.sh
+    chmod +x promote-$version.sh
+    git add promote-$version.sh
 }
 
 function generate_rollback_script {
-
-echo "Generating release rollback script 'revert-$version.sh'"
-echo "#!/bin/sh
-echo -n\"Reverting release $version
+	echo "Generating release rollback script 'revert-$version.sh'"
+read -d '' script <<- EOF
+#!/bin/sh
+echo -n "Reverting release $version
 
 Actions about to be performed:
 ------------------------------
@@ -105,7 +108,7 @@ Actions about to be performed:
 $(cat $0 | tail -n +14)
 
 ------------------------------------------
-Press enter to continue or CTRL-C to abort\"
+Press enter to continue or CTRL-C to abort"
 
 read
 
@@ -119,19 +122,20 @@ git push staging --delete refs/heads/$branch
 git push staging --delete $tag
 
 # clean up staging dist area
-svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m \"Release vote has failed\"
+svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m "Release vote has failed"
 
 # clean up staging maven repository
-mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription=\"Release vote has failed\"
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release vote has failed"
 
 # clean up remaining release files
 find . -name "*.releaseBackup" -exec rm {} \;
 [ -f release.properties ] && rm release.properties
 
-" > revert-$version.sh
+EOF
+echo "$script" > revert-$version.sh
 
-chmod +x revert-$version.sh
-git add revert-$version.sh
+	chmod +x revert-$version.sh
+	git add revert-$version.sh
 }
 
 function generate_signatures_from_release {
@@ -486,8 +490,8 @@ stagingrepoid=$(mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-li
 echo "Closing staging repository with id $stagingrepoid"
 mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-close -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release has been built, awaiting vote"
 
-generate_promotion_script()
-generate_rollback_script()
+generate_promotion_script
+generate_rollback_script
 
 echo "Create and sign the source tarballs"
 
@@ -534,9 +538,9 @@ svn add *
 svn commit -m "Upload wicket-$version to staging area"
 popd
 
-generate_signatures_from_release()
-generate_release_vote_email()
-generate_announce_email()
+generate_signatures_from_release
+generate_release_vote_email
+generate_announce_email
 
 # Done with the tasks, now print out the next things the release manager
 # needs to do
