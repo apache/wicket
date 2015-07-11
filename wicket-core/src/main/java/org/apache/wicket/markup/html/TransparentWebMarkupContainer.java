@@ -68,28 +68,44 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	}
 	
 	@Override
-	public void internalRenderHead(HtmlHeaderContainer container)
+	public void renderHead(HtmlHeaderContainer container)
 	{
+		/*
+		 * https://issues.apache.org/jira/browse/WICKET-5941
+		 * 
+		 * if this component is updated via AJAX and is the root
+		 * one, then render head also for embedded components.
+		 */
 		if(isAjaxRequest() && !isParentRendering())
 		{
 			renderHeadForInnerSiblings(container);
 		}
 		
-		super.internalRenderHead(container);
+		super.renderHead(container);
 	}
 
+	/**
+	 * Says if parent container is rendering or not.
+	 * 
+	 * @return true if parent is rendering, false otherwise.
+	 */
 	private boolean isParentRendering()
 	{
 		MarkupContainer parent = getParent();
 		
-		return parent != null ? parent.isRendering() : false;
+		return parent != null && parent.isRendering();
 	}
-
+	
+	/**
+	 * Says if the current request is an AJAX one.
+	 * 
+	 * @return true if the current request is an AJAX one, false otherwise.
+	 */
 	private boolean isAjaxRequest()
 	{
 		Request request = RequestCycle.get().getRequest();
 		
-		if( request instanceof WebRequest)
+		if (request instanceof WebRequest)
 		{	
 			WebRequest webRequest = (WebRequest)request;
 			return webRequest.isAjax();
@@ -98,6 +114,13 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 		return false;
 	}
 
+	/**
+	 * Renders head for embedded component, i.e. those who are not added 
+	 * directly to this container but have the markup inside it.
+	 * 
+	 * @param container
+	 * 				The HtmlHeaderContainer
+	 */
 	private void renderHeadForInnerSiblings(HtmlHeaderContainer container)
 	{
 		MarkupStream stream = new MarkupStream(getMarkup());
@@ -123,9 +146,10 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 				
 				if (component != null)
 				{
-					component.internalRenderHead(container);
+					component.renderHead(container);
 				}		
 				
+				//consider just direct children
 				stream.skipToMatchingCloseTag(tag);
 			}			
 		}
