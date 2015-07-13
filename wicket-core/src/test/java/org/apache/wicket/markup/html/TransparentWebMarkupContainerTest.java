@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
@@ -29,6 +32,7 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
@@ -227,6 +231,24 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		tester.assertComponentOnAjaxResponse("label");
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5941
+	 * 
+	 * Headers not rendered for components inside TransparentWebMarkupContainer on ajax update
+	 */
+	@Test
+	public void updateEmbeddedAjaxComponent() throws Exception
+	{
+		tester.startPage(TestEmbeddedAjaxComponet.class);
+		tester.clickLink("ajaxLink", true);
+		
+		TagTester scriptTag = TagTester.createTagByAttribute(
+			tester.getLastResponseAsString(), "header-contribution");
+		
+		//check if our response contains headers
+		assertNotNull(scriptTag);
+	}
+	
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
@@ -319,6 +341,40 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				"	<div wicket:id=\"_wicket_message\"></div>" + //
 				"	<div wicket:id=\"container\">" + //
 				"		<wicket:message key=\"null\" />" + //
+				"	</div>" + //
+				"</body></html>");
+		}
+	}
+	
+	public static class TestEmbeddedAjaxComponet extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** */
+		public TestEmbeddedAjaxComponet()
+		{
+			final Component container;
+			add(container = new TransparentWebMarkupContainer("container")
+					.setOutputMarkupId(true));
+			add(new AjaxLink<Void>("ajaxLink"){
+
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					target.add(container);
+				}
+				
+			});
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+				"<html><body>" + //
+				"	<div wicket:id=\"container\">" + //
+				"		<a wicket:id=\"ajaxLink\"></a>" + //
 				"	</div>" + //
 				"</body></html>");
 		}
