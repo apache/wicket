@@ -41,6 +41,7 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	 * Construct.
 	 * 
 	 * @param id
+	 *          The component id
 	 */
 	public TransparentWebMarkupContainer(String id)
 	{
@@ -67,7 +68,7 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 		}
 		return resolvedComponent;
 	}
-	
+
 	@Override
 	public void internalRenderHead(HtmlHeaderContainer container)
 	{
@@ -77,11 +78,11 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 		 * if this component is updated via AJAX and is the root
 		 * one, then render head also for embedded components.
 		 */
-		if(isAjaxRequest() && !isParentRendering())
+		if (isAjaxRequest() && !isParentRendering())
 		{
 			renderHeadForInnerSiblings(container);
 		}
-		
+
 		super.internalRenderHead(container);
 	}
 
@@ -93,10 +94,10 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	private boolean isParentRendering()
 	{
 		MarkupContainer parent = getParent();
-		
-		return parent != null ? parent.isRendering() : false;
+
+		return parent != null && parent.isRendering();
 	}
-	
+
 	/**
 	 * Says if the current request is an AJAX one.
 	 * 
@@ -105,13 +106,13 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	private boolean isAjaxRequest()
 	{
 		Request request = RequestCycle.get().getRequest();
-		
-		if( request instanceof WebRequest)
-		{	
+
+		if (request instanceof WebRequest)
+		{
 			WebRequest webRequest = (WebRequest)request;
 			return webRequest.isAjax();
 		}
-		
+
 		return false;
 	}
 
@@ -125,11 +126,11 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	private void renderHeadForInnerSiblings(HtmlHeaderContainer container)
 	{
 		MarkupStream stream = new MarkupStream(getMarkup());
-		
+
 		while (stream.hasMore())
 		{
 			MarkupElement childOpenTag = stream.nextOpenTag();
-			
+
 			if ((childOpenTag instanceof ComponentTag) && !stream.atCloseTag())
 			{
 				// Get element as tag
@@ -139,20 +140,20 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 				final String id = tag.getId();
 
 				Component component = null;
-				
+
 				if (get(id) == null)
 				{
 					component = ComponentResolvers.resolveByComponentHierarchy(this, stream, tag);					
 				}
-				
+
 				if (component != null)
 				{
 					component.internalRenderHead(container);
-				}		
-				
+				}
+
 				//consider just direct children
 				stream.skipToMatchingCloseTag(tag);
-			}			
+			}
 		}
 	}
 }
