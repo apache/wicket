@@ -22,6 +22,8 @@ import org.apache.wicket.bean.validation.PropertyValidator;
 import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -34,9 +36,17 @@ public class BeanValidationPage extends WicketExamplePage
 
 	public BeanValidationPage()
 	{
-		add(new FeedbackPanel("feedback"));
+		add(new FeedbackPanel("feedbackErrors", new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR)));
 
-		Form<?> form = new Form<>("form");
+		Form<?> form = new Form<Void>("form") {
+			@Override
+			protected void onSubmit()
+			{
+				super.onSubmit();
+				info("Form successfully submitted!");
+			}
+		};
+		
 		add(form);
 
 		form.add(new TextField<String>("name", new PropertyModel<String>(this, "person.name")).add(new PropertyValidator<>()));
@@ -45,6 +55,7 @@ public class BeanValidationPage extends WicketExamplePage
 		form.add(new DateTextField("birthdate", new PropertyModel<Date>(this, "person.birthdate"),
 			new StyleDateConverter("S-", true)).add(new PropertyValidator<>()));
 		form.add(new TextField<String>("password", new PropertyModel<String>(this, "person.password")).add(new PropertyValidator<>()));
-
+		
+		add(new FeedbackPanel("feedbackSuccess", new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO)));
 	}
 }
