@@ -89,7 +89,11 @@
 			initialElement = obj;
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
-				window.setTimeout(hideAutoComplete, 500);
+				var containerId=getMenuId()+"-container";
+				
+				if (containerId !== document.activeElement.id) {
+					window.setTimeout(hideAutoComplete, 500);
+				}				
 			});
 
 			Wicket.Event.add(obj, 'focus', function (jqEvent) {
