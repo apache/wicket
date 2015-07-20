@@ -91,6 +91,8 @@
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
 				var containerId=getMenuId()+"-container";
 				
+				//workaround for IE. Clicks on scrollbar trigger
+				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
 				if (containerId !== document.activeElement.id) {
 					window.setTimeout(hideAutoComplete, 500);
 				}				
