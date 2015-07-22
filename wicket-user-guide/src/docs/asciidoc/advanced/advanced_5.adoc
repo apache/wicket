@@ -1,0 +1,66 @@
+
+
+
+So far, as markup source for our pages/panels we have used a static markup file, no matter if it was inherited or directly associated to the component. Now we want to investigate a more complex use case where we want to dynamical generate the markup directly inside component code.
+
+To become a markup producer, a component must simply implement interface _org.apache.wicket.markup.IMarkupResourceStreamProvider_. The only method defined in this interface is _getMarkupResourceStream(MarkupContainer, Class<?>)_ which returns an utility interface called _IResourceStream_ representing the actual markup.
+
+In the following example we have a custom panel without a related markup file that generates a simple <div> tag as markup: 
+
+[source,java]
+----
+public class AutoMarkupGenPanel extends Panel implements IMarkupResourceStreamProvider {
+	public AutoMarkupGenPanel(String id, IModel<?> model) {
+		super(id, model);		
+	}
+
+	@Override
+	public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass) {
+		String markup = "<div>Panel markup</div>";
+		StringResourceStream resourceStream = new StringResourceStream(markup);
+		
+		return resourceStream;
+	}
+}
+----
+
+Class StringResourceStream is a resource stream that uses a String instance as backing object.
+
+=== Avoiding markup caching
+
+As we have seen in the previous paragraph, Wicket uses an internal cache for components markup. This can be a problem if our component dynamical generates its markup when it is rendered because once the markup has been cached, Wicket will always use the cached version for the specific component. To overwrite this default caching policy, a component can implement interface _IMarkupCacheKeyProvider_. 
+
+This interface defines method _getCacheKey(MarkupContainer, Class<?>)_ which returns a string value representing the key used by Wicket to retrieve the markup of the component from the cache. If this value is null the markup will not be cached, allowing the component to display the last generated markup each time it is rendered:
+
+[source,java]
+----
+public class NoCacheMarkupPanel extends Panel implements IMarkupCacheKeyProvider {
+	public NoCacheMarkupPanel(String id, IModel<?> model) {
+		super(id, model);		
+	}
+	
+	/**
+	* Generate a dynamic HTML markup that changes every time
+	* the component is rendered
+	*/
+	@Override
+	public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass) {
+		String markup = "<div>Panel with current nanotime: " + System.nanoTime() +
+				 "</div>"; 
+		StringResourceStream resourceStream = new StringResourceStream(markup);
+		
+		return resourceStream;
+	}
+
+	/**
+	* Avoid markup caching for this component
+	*/
+	@Override
+	public String getCacheKey(MarkupContainer arg0, Class<?> arg1) {
+		return null;
+	}
+}
+----
+

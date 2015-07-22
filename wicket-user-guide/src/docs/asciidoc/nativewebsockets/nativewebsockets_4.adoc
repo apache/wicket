@@ -1,0 +1,4 @@
+
+The module provides _org.apache.wicket.protocol.ws.util.tester.WebSocketTester_ which gives you the possibility to emulate sending and receiving messages without the need to run in a real web container, as WicketTester does this for HTTP requests.
+Check https://github.com/apache/wicket/blob/master/wicket-native-websocket/wicket-native-websocket-core/src/test/java/org/apache/wicket/protocol/ws/util/tester/WebSocketTesterBehaviorTest.java?source=c[WebSocketTesterBehaviorTest]
+

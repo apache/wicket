@@ -1,0 +1,40 @@
+
+Wicket uses a number of custom exceptions during the regular running of an application. We have already seen _PageExpiredException_ raised when a page version is expired. Other examples of such exceptions are _AuthorizationException_ and _RestartResponseException_. We will see them later in the next chapters.
+All the other exceptions raised during rendering phase are handled by an implementation of _org.apache.wicket.request.IExceptionMapper_ which by default is class _org.apache.wicket.DefaultExceptionMapper_. If we are working in DEVELOPMENT mode this mapper will redirect us to a page that shows the exception stacktrace (page _ExceptionErrorPage_). On the contrary, if application is running in DEPLOYMENT mode _DefaultExceptionMapper_ will display an internal error page which by default is _org.apache.wicket.markup.html.pages.InternalErrorPage_.
+To use a custom internal error page we can change application settings like this:
+
+[source,java]
+----
+getApplicationSettings().setInternalErrorPage(MyInternalErrorPage.class);
+----
+
+We can also manually set if Wicket should display the exception with _ExceptionErrorPage_ or if we want to use the internal error page or if we don't want to display anything at all when an unexpected exception is thrown:
+
+[source,java]
+----
+//show default developer page
+getExceptionSettings().setUnexpectedExceptionDisplay( ExceptionSettings.SHOW_EXCEPTION_PAGE );
+//show internal error page
+getExceptionSettings().setUnexpectedExceptionDisplay( ExceptionSettings.SHOW_INTERNAL_ERROR_PAGE );
+//show no exception page when an unexpected exception is thrown
+getExceptionSettings().setUnexpectedExceptionDisplay( ExceptionSettings.SHOW_NO_EXCEPTION_PAGE );
+----
+
+Developers can also decide to use a custom exception mapper instead of _DefaultExceptionMapper_. To do this we must override _Application_'s method _getExceptionMapperProvider_:
+
+[source,java]
+----
+@Override
+public IProvider<IExceptionMapper> getExceptionMapperProvider()
+{
+    //...
+}
+----
+
+The method returns an instance of _org.apache.wicket.util.IProvider_ that should return our custom exception mapper.
+
+=== Ajax requests
+
+To control the behavior in Ajax requests the application may use _org.apache.wicket.settings.ExceptionSettings1.  setAjaxErrorHandlingStrategy(ExceptionSettings.AjaxErrorStrategy)_. By default if an error occurs during the 
+processing of an Ajax request Wicket will render the configured error page. By configuring _org.apache.wicket.settings.ExceptionSettings.  AjaxErrorStrategy2.INVOKE_FAILURE_HANDLER_ as the default strategy the application will call the JavaScript _onFailure_ callback(s) instead.
+

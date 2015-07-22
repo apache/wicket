@@ -1,0 +1,6 @@
+
+
+
+Links and URLs are not trivial topics as they may seem and in Wicket they are strictly interconnected. Developers must choose the right trade-off between producing structured URLs and avoiding to make them verbose and vulnerable.
+
+In this chapter we have explored the tools provided by Wicket to control how URLs are generated. We have started with static URLs for bookmarkable pages and we have seen how to pass parameters to target pages with PageParameters. In the second part of the chapter we focused on mounting pages to a specific path and on controlling how parameters are encoded by Wicket. Finally, we have also seen how to encrypt URLs to prevent security vulnerabilities.

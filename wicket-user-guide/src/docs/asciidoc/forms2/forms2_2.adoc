@@ -1,0 +1,287 @@
+
+
+
+A basic example of a validation rule is to make a field required. In <<modelsforms.adoc#wicket-forms,paragraph 11.3>> we have already seen how this can be done calling setRequired(true) on a field. However, to set a validation rule on a FormComponent we must add the corresponding validator to it.
+
+A validator is an implementation of the _org.apache.wicket.validation.IValidator_ interface and the _FormComponent_ has a version of method add which takes as input a reference of this interface. 
+
+For example if we want to use a text field to insert an email address, we could use the built-in validator  EmailAddressValidator to ensure that the inserted input will respect the email format  http://en.wikipedia.org/wiki/Email_address[local-part@domain] :
+
+[source,java]
+----
+TextField email = new TextField("email");
+email.add(EmailAddressValidator.getInstance());
+----
+
+Wicket comes with a set of built-in validators that should suit most of our needs. We will see them later in this chapter.
+
+=== Feedback messages and localization
+
+Wicket generates a feedback message for each field that doesn't satisfy one of its validation rules. For example the message generated when a required field is left empty is the following
+
+_Field '<label>' is required._
+
+<label> is the value of the label model set on a FormComponent with method setLabel(IModel <String> model). If such model is not provided, component id will be used as the default value.
+
+The entire infrastructure of feedback messages is built on top of the Java internationalization (I18N) support and it uses  http://docs.oracle.com/javase/tutorial/i18n/resbundle/index.html[resource bundles] to store messages.
+
+NOTE: The topics of internationalization will be covered in 
+<<internationalization-with-wicket,chapter 15>>. For now we will give just few notions needed to understand the examples from this chapter.
+
+By default resource bundles are stored into properties files but we can easily configure other sources as described later in <<i18n.adoc#localization-in-wicket,paragraph 15.2>>. 
+
+Default feedback messages (like the one above for required fields) are stored in the file Application. properties placed inside Wicket the org.apache.wicket package. Opening this file we can find the key and the localized value of the message:
+
+_Required=Field '$\{label\}' is required._
+
+We can note the key (Required in our case) and the label parameter written in the  http://en.wikipedia.org/wiki/Expression_Language[expression language] (${label}). Scrolling down this file we can also find the message used by the Email AddressValidator:
+
+_EmailAddressValidator=The value of '${label}' is not a valid email address._
+
+By default FormComponent provides 3 parameters for feedback message: input (the value that failed validation), label and name (this later is the id of the component).
+
+WARNING: Remember that component model is updated with the user input only if validation succeeds! As a consequence, we can't retrieve the wrong value inserted for a field from its model. Instead, we should use getValue() method of FormComponent class. (This method will be introduced in the example used later in this chapter)
+
+=== Displaying feedback messages and filtering them
+
+To display feedback messages we must use component _org.apache.wicket.markup.html.panel.FeedbackPanel_. This component automatically reads all the feedback messages generated during form validation and displays them with an unordered list:
+
+[source,html]
+----
+<ul class="feedbackPanel"> 
+	<li class="feedbackPanelERROR"> 
+		<span class="feedbackPanelERROR">Field 'Username' is required.</span> 
+	</li> 
+</ul>
+----
+
+CSS classes  [feedbackPanel] and  [feedbackPanelERROR] can be used in order to customize the style of the message list:
+
+image::../img/feedback-panel-style.png[]
+
+The component can be freely placed inside the page and we can set the maximum amount of displayed messages with the setMaxMessages() method.
+
+Error messages can be filtered using three built-in filters:
+
+* *ComponentFeedbackMessageFilter*: shows only messages coming from a specific component.
+* *ContainerFeedbackMessageFilter*: shows only messages coming from a specific container or from any of its children components.
+* *ErrorLevelFeedbackMessageFilter*: shows only messages with a level of severity equals or greater than a given lower bound. Class FeedbackMessage defines a set of static constants to express different levels of severity: DEBUG, ERROR, WARNING, INFO, SUCCESS, etc.... Levels of severity for feedback messages are discussed later in this chapter.
+
+These filters are intended to be used when there are more than one feedback panel (or more than one form) in the same page. We can pass a filter to a feedback panel via its constructor or using the setFilter method. Custom filters can be created implementing the IFeedbackMessageFilter interface. An example of custom filter is illustrated later in this paragraph.
+
+=== Built-in validators
+
+Wicket already provides a number of built-in validators ready to be used. The following table is a short reference where validators are listed along with a brief description of what they do. The default feedback message used by each of them is reported as well:
+
+==== EmailAddressValidator
+
+Checks if input respects the format local-part\_domain.
+
+*Message:*
+
+_The value of '${label}' is not a valid email address._
+
+==== UrlValidator
+
+Checks if input is a valid URL. We can specify in the constructor which protocols are allowed (http://, https://, and ftp://).
+
+*Message:*
+
+_The value of '${label}' is not a valid URL._
+
+==== DateValidator
+
+Validator class that can be extended or used as a factory class to get date validators to check if a date is bigger than a lower bound (method minimum(Date min)), smaller than a upper bound (method maximum(Date max)) or inside a range (method range(Date min, Date max)).
+
+*Messages:*
+
+_The value of '${label}' is less than the minimum of ${minimum}._
+
+_The value of '${label}' is larger than the maximum of ${maximum}._
+
+_The value of '${label}' is not between ${minimum} and ${maximum}._
+
+==== RangeValidator
+
+Validator class that can be extended or used as a factory class to get validators to check if a value is bigger than a given lower bound (method minimum(T min)), smaller than a upper bound (method maximum(T max)) or inside a range (method range(T min,T max)). 
+
+The type of the value is a generic subtype of java.lang.Comparable and must implement Serializable interface.
+
+*Messages:*
+
+_The value of '${label}' must be at least ${minimum}._
+
+_The value of '${label}' must be at most ${maximum}._
+
+_The value of '${label}' must be between ${minimum} and ${maximum}._
+
+==== StringValidator
+
+Validator class that can be extended or used as a factory class to get validators to check if the length of a string value is bigger then a given lower bound (method minimumLength (int min)), smaller then a given upper bound (method maximumLength (int max)) or within a given range (method lengthBetween(int min, int max)).
+
+To accept only string values consisting of exactly n characters, we must use method exactLength(int length).
+
+*Messages:*
+
+_The value of '${label}' is shorter than the minimum of ${minimum} characters._
+
+_The value of '${label}' is longer than the maximum of ${maximum} characters._
+
+_The value of '${label}' is not between ${minimum} and ${maximum} characters long._
+
+_The value of '${label}' is not exactly ${exact} characters long._
+
+==== CreditCardValidator
+
+Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American Express ["MasterCard] , “Visa” or “Diners Club”). 
+
+*Message:*
+
+_The credit card number is invalid._
+
+==== EqualPasswordInputValidator
+
+This validator checks if two password fields have the same value.  
+
+*Message:*
+
+_${label0} and ${label1} must be equal._
+
+=== Overriding standard feedback messages with custom bundles
+
+If we don't like the default validation feedback messages, we can override them providing custom properties files. In these files we can write our custom messages using the same keys of the messages we want to override. For example if we wanted to override the default message for invalid email addresses, our properties file would contain a line like this:
+
+_EmailAddressValidator=Man, your email address is not good!_
+
+As we will see in the next chapter, Wicket searches for custom properties files in various positions inside the application's class path, but for now we will consider just the properties file placed next to our application class. The name of this file must be equal to the name of our application class:
+
+image::../img/custom-properties-file.png[]
+
+The example project OverrideMailMessage overrides email validator's message with a new one which also reports the value that failed validation:
+
+_EmailAddressValidator=The value '${input}' inserted for field '${label}' is not a valid email address._
+
+image::../img/validation-error-message.png[]
+
+=== Creating custom validators
+
+If our web application requires a complex validation logic and built-in validators are not enough, we can  implement our own custom validators. For example (project UsernameCustomValidator) suppose we are working on the registration page of our site where users can create their profile choosing their username. Our registration form should validate the new username checking if it was already chosen by another user. In a situation like this we may need to implement a custom validator that queries a specific data source to check if a username is already in use.
+
+For the sake of simplicity, the validator of our example will check the given username against a fixed list of three existing usernames. 
+
+A custom validator must simply implement interface IValidator:
+
+[source,java]
+----
+public class UsernameValidator implements IValidator<String> {
+	List<String> existingUsernames = Arrays.asList("bigJack", "anonymous", "mrSmith");
+
+	public void validate(IValidatable<String> validatable) {
+		String chosenUserName = validatable.getValue();
+		
+		if(existingUsernames.contains(chosenUserName)){
+			ValidationError error = new ValidationError(this);
+			Random random = new Random();
+			
+			error.setVariable("suggestedUserName", 
+					validatable.getValue() + random.nextInt());
+			validatable.error(error);
+		}
+	}	
+}
+----
+
+The only method defined inside IValidator is validate(IValidatable<T> validatable) and is invoked during validation's step. Interface IValidatable represents the component being validated and it can be used to retrieve the component model (getModel()) or the value to validate (getValue()). 
+
+The custom validation logic is all inside IValidator's method validate. When validation fails a validator must use IValidatable's method error(IValidationError error) to generate the appropriate feedback message. In the code above we used the ValidationError class as convenience implementation of the IValidationError interface which represents the validation error that must be displayed to the user. This class provides a constructor that uses the class name of the validator in input as key for the resource to use as feedback message (i.e. 'UsernameValidator' in the example). If we want to specify more then one key to use to locate the error message, we can use method addKey(String key) of ValidationError class.
+
+In our example when validation fails, we suggest a possible username concatenating the given input with a pseudo-random integer. This value is passed to the feedback message with a variable named suggestedUserName. The message is inside application's properties file:
+
+_UsernameValidator=The username '${input}' is already in use. Try with '${suggestedUserName}'_
+
+To provide further variables to our feedback message we can use method setVariable(String name, Object value) of class ValidationError as we did in our example.
+
+The code of the home page of the project will be examined in the next paragraph after we have introduced the topic of flash messages.
+
+=== Using flash messages
+
+So far we have considered just the error messages generated during validation step. However Wicket's Component class provides a set of methods to explicitly generate feedback messages called flash messages. These methods are:
+
+* debug(Serializable message) 
+* info(Serializable message) 
+* success(Serializable message) 
+* warn(Serializable message) 
+* error(Serializable message) 
+* fatal(Serializable message) 
+
+Each of these methods corresponds to a level of severity for the message. The list above is sorted by increasing level of severity. 
+
+In the example seen in the previous paragraph we have a form which uses success method to notify user when the inserted username is valid. Inside this form there are two FeedbackPanel components: one to display the error message produced by custom validator and the other one to display the success message. The code of the example page is the following:
+
+*HTML:*
+
+[source,html]
+----
+<body>
+	<form wicket:id="form">
+		Username: <input type="text" wicket:id="username"/>
+		<br/>
+		<input type="submit"/>
+	</form>
+	<div style="color:green" wicket:id="succesMessage">
+	</div>
+	<div style="color:red" wicket:id="feedbackMessage">
+	</div>
+</body>
+----
+
+*Java code:*
+
+[source,java]
+----
+public class HomePage extends WebPage {
+
+    public HomePage(final PageParameters parameters) {	
+	Form form = new Form("form"){
+		@Override
+		protected void onSubmit() {
+			super.onSubmit();
+			success("Username is good!");
+		}
+	};
+    	
+	TextField mail;
+	
+	form.add(mail = new TextField("username", Model.of("")));
+	mail.add(new UsernameValidator());
+	
+	add(new FeedbackPanel("feedbackMessage", 
+		new ExactErrorLevelFilter(FeedbackMessage.ERROR)));
+	add(new FeedbackPanel("succesMessage", 
+		new ExactErrorLevelFilter(FeedbackMessage.SUCCESS)));
+	
+	add(form);
+    }
+    
+    class ExactErrorLevelFilter implements IFeedbackMessageFilter{
+    	private int errorLevel;
+
+		public ExactErrorLevelFilter(int errorLevel){
+			this.errorLevel = errorLevel;
+		}
+		
+		public boolean accept(FeedbackMessage message) {
+			return message.getLevel() == errorLevel;
+		}
+    	
+    }
+    //UsernameValidator definition
+    //...
+}
+----
+
+The two feedback panels must be filtered in order to display just the messages with a given level of severity (ERROR for validator message and SUCCESS for form's flash message). Unfortunately the built-in message filter ErrorLevelFeedbackMessageFilter is not suitable for this task because its filter condition does not check for an exact error level (the given level is used as lower bound value). As a consequence, we had to build a custom filter (inner class ExactErrorLevelFilter) to accept only the desired severity level (see method accept of interface IFeedbackMessageFilter).
+
+NOTE: Since version 6.13.0 Wicket provides the additional filter class org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter to accept only feedback messages of a certain error level.
+ 
+

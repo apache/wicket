@@ -1,0 +1,128 @@
+
+
+
+In <<layout.adoc#here-comes-the-inheritance,chapter 5.2.2>> we have seen how to use class Panel to create custom components with their own markup and with an arbitrary number of children components.
+
+While it's perfectly legal to use Panel also to group form components, the resulting component won't be itself a form component and it won't participate in the form's submission workflow. 
+
+This could be a strong limitation if the custom component needs to coordinate its children during sub-tasks like input conversion or model updating. That's why in Wicket we have the _org.apache.wicket.markup.html.form.FormComponentPanel_ component which combines the features of a Panel (it has its own markup file) and a FormComponent (it is a subclass of FormComponent). 
+
+A typical scenario in which we may need to implement a custom FormComponentPanel is when our web application and its users work with different units of measurement for the same data. 
+
+To illustrate this possible scenario, let's consider a form where a user can insert a  temperature that will be recorded after being converted to Kelvin degrees (see the example project CustomForm ComponentPanel).
+
+The Kelvin scale is wildly adopted among the scientific community and it is one of the seven base units of the  http://en.wikipedia.org/wiki/International_System_of_Units[International System of Units] , so it makes perfect sense to store temperatures expressed with this unit of measurement.
+
+However, in our everyday life we still use other temperature scales like Celsius or Fahrenheit, so it would be nice to have a component which internally works with Kelvin degrees and automatically applies conversion between Kelvin temperature scale and the one adopted by the user. 
+
+In order to implement such a component, we can make a subclass of FormComponentPanel and leverage the convertInput and onBeforeRender methods: in the implementation of the convertInput method we will convert input value to Kelvin degrees while in the implementation of onBeforeRender method we will take care of converting the Kelvin value to the temperature scale adopted by the user.
+
+Our custom component will contain two children components: a text field to let user insert and edit a temperature value and a label to display the letter corresponding to user's temperature scale (F for Fahrenheit and C for Celsius). The resulting markup file is the following:
+
+[source,html]
+----
+<html>
+<head>
+</head>
+<body>
+	<wicket:panel>
+		Registered temperature: <input size="3" maxlength="3"         
+                             wicket:id="registeredTemperature"/> 
+		<label wicket:id="mesuramentUnit"></label> 
+	</wicket:panel>
+</body>
+</html>
+----
+
+As shown in the markup above FormComponentPanel uses the same <wicket:panel> tag used by Panel to define its markup. Now let's see the Java code of the new form component starting with the onInitialize() method:
+
+[source,java]
+----
+public class TemperatureDegreeField extends FormComponentPanel<Double> {
+	
+	private TextField<Double> userDegree;
+
+	public TemperatureDegreeField(String id) {
+		super(id);		
+	}
+	
+	public TemperatureDegreeField(String id, IModel<Double> model) {
+		super(id, model);		
+	}
+	
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();	
+		
+	     AbstractReadOnlyModel<String> labelModel=new AbstractReadOnlyModel<String>(){
+			@Override
+			public String getObject() {
+				if(getLocale().equals(Locale.US))
+					return "°F";
+				return "°C";
+			}
+		};
+		
+		add(new Label("mesuramentUnit", labelModel));
+		add(userDegree=new TextField<Double>("registeredTemperature", new 
+                           Model<Double>()));
+		userDegree.setType(Double.class);
+	}
+----
+
+Inside the onInitialize method we have created a read-only model for the label that displays the letter corresponding to the user's temperature scale. To determinate which temperature scale is in use, we retrieve the Locale from the session by calling Component's getLocale() method (we will talk more about this method in 
+<<internationalization-with-wicket,paragraph 15>>). Then, if locale is the one corresponding to the United States, the chosen scale will be Fahrenheit, otherwise it will be considered as Celsius. 
+
+In the final part of onInitialize() we add the two components to our custom form component. You may have noticed that we have explicitly set the type of model object for the text field to double. This is necessary as the starting model object is a null reference and this prevents the component from automatically determining the type of its model object. 
+
+Now we can look at the rest of the code containing the convertInput and onBeforeRender methods:
+
+[source,java]
+----
+// continued example
+	@Override
+	protected void convertInput() {
+		Double userDegreeVal = userDegree.getConvertedInput();
+		Double kelvinDegree;
+		
+		if(getLocale().equals(Locale.US)){
+			kelvinDegree = userDegreeVal +  459.67;
+			BigDecimal bdKelvin = new BigDecimal(kelvinDegree);
+			BigDecimal fraction = new BigDecimal(5).divide(new BigDecimal(9));
+			
+			kelvinDegree = bdKelvin.multiply(fraction).doubleValue();
+		}else{
+			kelvinDegree = userDegreeVal + 273.15;
+		}
+		
+		setConvertedInput(kelvinDegree);
+	}
+	
+	@Override
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+		
+		Double kelvinDegree = (Double) getDefaultModelObject();		
+		Double userDegreeVal = null;
+		
+		if(kelvinDegree == null) return;
+		
+		if(getLocale().equals(Locale.US)){
+			BigDecimal bdKelvin = new BigDecimal(kelvinDegree);
+			BigDecimal fraction = new BigDecimal(9).divide(new BigDecimal(5));
+			
+			kelvinDegree = bdKelvin.multiply(fraction).doubleValue();
+			userDegreeVal = kelvinDegree - 459.67;
+		}else{
+			userDegreeVal = kelvinDegree - 273.15;
+		}
+		
+		userDegree.setModelObject(userDegreeVal);
+	}
+}
+----
+
+Since our component does not directly receive the user input, convertInput() must read this value from the inner text field using FormComponent's getConvertedInput() method which returns the input value already converted to the type specified for the component (Double in our case). Once we have the user input we convert it to kelvin degrees and we use the resulting value to set the converted input for our custom component (using method setConvertedInput(T convertedInput)).
+
+Method onBeforeRender() is responsible for synchronizing the model of the inner textfield with the model of our custom component. To do this we retrieve the model object of the custom component with the getDefaultModelObject() method, then we convert it to the temperature scale adopted by the user and finally we use this value to set the model object of the text field.
+

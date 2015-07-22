@@ -1,0 +1,36 @@
+
+Panel's markup can also contain HTML tags which must go inside header section of the final page, like tags _<script>_ or _<style>_. To tell Wicket to put these tags inside page _<head>_, we must surround them with the _<wicket:head>_ tag.
+
+Considering the markup of a generic panel, we can use _<wicket:head>_ tag in this way:
+
+[source,html]
+----
+<wicket:head>
+	<script type="text/javascript">
+	  	function myPanelFunction(){
+	  	}
+	  </script>
+	
+	<style>
+        .myPanelClass{
+	  	font-weight: bold;
+	  	color: red;
+	  }	 
+       </style>
+</wicket:head>
+<body>
+	<wicket:panel>
+
+	</wicket:panel>
+</body>	
+----
+
+Wicket will take care of placing the content of _<wicket:head>_ inside the _<head>_ tag of the final page.
+
+NOTE: The _<wicket:head>_ tag can also be used with children pages/panels which extend parent markup using tag _<wicket:extend>_.
+
+NOTE: The content of the _<wicket:head>_ tag is added to the header section once per component class. In other words, if we add multiple instances of the same panel to a page, the _<head>_ tag will be populated just once with the content of _<wicket:head>_.
+
+WARNING: The _<wicket:head>_ tag is ideal if we want to define small in-line blocks of CSS or JavaScript. However Wicket provides also a more sophisticated technique to let components contribute to header section with in-line blocks and resource files like CSS or JavaScript files. We will see this technique later in 
+<<resource-management-with-wicket,chapter 16>>.
+

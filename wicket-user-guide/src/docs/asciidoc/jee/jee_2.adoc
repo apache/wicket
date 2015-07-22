@@ -1,0 +1,66 @@
+
+
+
+If we need to inject dependencies with Spring we can use listener _org.apache.wicket.spring.injection.annot.SpringComponentInjector_ provided by module wicket-spring.
+
+For the sake of simplicity in the example project _SpringInjectionExample_ we have used Spring class _AnnotationConfigApplicationContext_ to avoid any XML file and create a Spring context directly from code:
+
+[source,java]
+----
+public class WicketApplication extends WebApplication
+{      
+  //Constructor...
+
+  @Override
+  public void init()
+  {
+    super.init();
+
+    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+    //Scan package for annotated beans
+    ctx.scan("org.wicketTutorial.ejbBean");
+    ctx.refresh();
+    
+    getComponentInstantiationListeners().add(new SpringComponentInjector(this, ctx));
+  }	
+}
+----
+
+As we can see in the code above, the constructor of _SpringComponentInjector_ takes in input also an instance of Spring context.
+
+The injected object is the same used in the previous project _EjbInjectionExample_, it differs only for the greeting message:
+
+[source,java]
+----
+@ManagedBean
+public class EnterpriseMessage {
+	public String message = "Welcome to the Spring world!";
+}
+----
+
+In the home page of the project the object is injected using Wicket annotation _SpringBean:
+
+[source,java]
+----
+public class HomePage extends WebPage {
+  @SpringBean
+  private EnterpriseMessage enterpriseMessage;
+  //getter and setter for enterpriseMessage...
+  
+  public HomePage(final PageParameters parameters) {
+  	super(parameters);
+	
+	add(new Label("message", enterpriseMessage.message));
+  }
+}
+----
+
+By default _SpringBean_ searches into Spring context for a bean having the same type of the annotated field. If we want we can specify also the name of the bean to use as injected object and we can declare if the dependency is required or not. By default dependencies are required and if they can not be resolved to a compatible bean, Wicket will throw an _IllegalStateException_:
+
+[source,java]
+----
+  //set the dependency as not required, i.e the field can be left null
+  @SpringBean(name="anotherName", required=false)
+  private EnterpriseMessage enterpriseMessage;
+----
+

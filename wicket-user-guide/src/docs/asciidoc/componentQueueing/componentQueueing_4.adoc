@@ -1,0 +1,34 @@
+
+=== Ancestors
+
+Suppose on a user profile panel we have the following code:
+
+[source,java]
+----
+queue(new Label("first"));
+queue(new Label("last"));
+ 
+WebMarkupContainer secure=new WebMarkupContainer("secure") {
+    void onConfigure() {
+       super.onConfigure();
+       setVisible(isViewingOwnProfile());
+    }
+};
+ 
+queue(secure);
+secure.queue(new Label("creditCardNumber"));
+secure.queue(new Label("creditCardExpiry"));
+----
+
+What is to prevent someone with access to markup from moving the _creditCardNumber_ label out of the _secure_ div, causing a big security problem for the site?
+
+Wicket will only dequeue components either to the component they are queued to or any of its descendants.
+
+In the code above this is the reason why we queued the _creditCardNumber_ label into the _secure_ container. That means it can only be dequeued into the _secure_ container’s hierarchy.
+
+This restriction allows developers to enforce certain parent-child relationships in their code.
+
+=== Regions
+
+Dequeuing of components will not happen across components that implement the _org.apache.wicket.IQueueRegion_ interface. This interface is implemented by all components that provide their own markup such as: _Page_, _Panel_, _Border_, _Fragment_. This is done so that if both a page and panel contain a component with id _foo_ the one queued into the page will not be dequeued into the panel. This minimizes confusion and debugging time. The rule so far is that if a component provides its own markup only components queued inside it will be dequeued into it.
+

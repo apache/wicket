@@ -1,0 +1,35 @@
+
+
+
+Component Link has a stateful nature, hence it cannot be used with stateless pages. To use links with these kinds of pages Wicket provides the convenience _org.apache.wicket.markup.html.link.StatelessLink_ component which is basically a subtype of Link with the stateless hint set to true. 
+
+Please keep in mind that Wicket generates a new instance of a stateless page also to serve stateless links, so the code inside the onClick() method can not depend on instance variables. To illustrate this potential issue let's consider the following code (from the project StatelessPage) where the value of the variable index is used inside onclick():
+
+[source,java]
+----
+public class StatelessPage extends WebPage {
+	private int index = 0;
+
+	public StatelessPage(PageParameters parameters) {
+		super(parameters);
+	}
+	
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+		setStatelessHint(true);
+		
+		add(new StatelessLink("statelessLink") {
+
+			@Override
+			public void onClick() {
+				//It will always print zero
+				System.out.println(index++);
+			}
+			
+		});
+	}	
+}
+----
+
+The printed value will always be zero because a new instance of the page is used every time the user clicks on the statelessLink link.

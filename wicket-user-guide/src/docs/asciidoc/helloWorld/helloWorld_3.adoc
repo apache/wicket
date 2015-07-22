@@ -1,0 +1,62 @@
+
+
+
+To complete our first Wicket application we must explore the home page class that is returned by the _Application_'s method _getHomePage()_ seen above. 
+In Wicket a web page is a subclass of _org.apache.wicket.WebPage_. This subclass must have a corresponding HTML file which will be used by the framework as template to generate its HTML markup. This file is a regular plain HTML file (its extension must be html).
+
+By default this HTML file must have the same name of the related page class and must be in the same package:
+
+image::../img/samepackage.png[]
+
+_Illustration :Page class and its related HTML file_
+
+If you don't like to put class and html side by side (let's say you want all your HTML files in a separated folder) you can use Wicket settings to specify where HTML files can be found. We will cover this topic later in <<resources.adoc#header-contributors-positioning,chapter 16.9>>.
+
+The Java code for the _HomePage_ class is the following:
+
+[source,java]
+----
+package org.wicketTutorial;
+
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.WebPage;
+
+public class HomePage extends WebPage {	
+    public HomePage() {
+	add(new Label("helloMessage", "Hello WicketWorld!"));
+    }
+}
+----
+
+Apart from subclassing _WebPage_, _HomePage_ defines a constructor that adds a _Label_ component to  itself. 
+Method _add(Component component)_ is inherited from ancestor class _org.apache.wicket.MarkupContainer_ and is used to add children components to a web page. We'll see more about _MarkupContainer_ later in <<layout.adoc#here-comes-the-inheritance,chapter 5.2>>.
+Class _org.apache.wicket.markup.html.basic.Label_ is the simplest component shipped with Wicket. It just inserts a string (the second argument of its constructor) inside the corresponding HTML tag.
+Just like any other Wicket component, _Label_ needs a textual id (_'helloMessage'_ in our example) to be instantiated. At runtime Wicket will use this value to find the HTML tag we want to bind to the component. This tag must have a special attribute called _wicket:id_ and its value must be identical to the component id (comparison is case-sensitive!).
+
+Here is the HTML markup for _HomePage_ (file HomePage.html):
+
+[source,html]
+----
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Apache Wicket HelloWorld</title>
+	</head>
+	<body>
+		
+		<div wicket:id="helloMessage">
+		[Label's message goes here]
+		</div>
+	</body>
+</html>
+----
+
+We can see that the _wicket:id_ attribute is set according to the value of the component id. If we run this example we will see the text _Hello WicketWorld!_ Inside a _<div>_ tag.
+
+NOTE: _Label_ replaces the original content of its tag (in our example _ <<Label's message goes here>>
+_) with the string passed as value (_Hello WicketWorld!_ in our example).
+
+WARNING: If we specify a _wicket:id_ attribute for a tag without adding the corresponding component in our Java code, Wicket will throw a _ComponentNotFound_ Exception.  On the contrary if we add a component in our Java code without specifying a corresponding _wicket:id_ attribute in our markup, Wicket will throw a _WicketRuntimeException_.
+

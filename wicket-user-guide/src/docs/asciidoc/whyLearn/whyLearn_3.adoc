@@ -1,0 +1,10 @@
+
+At this point some people may still wonder why OOP is so important also for web development and what benefits it can bring to developers.
+Let's quickly review the main advantages that this paradigm can offer us:
+
+* *Web pages are objects*: web pages are not just text files sent back to the client. They are object instances and we can harness OOP to design web pages and their components. With Wicket we can also apply inheritance to HTML markup in order to build a consistent graphic layout for our applications (we will see markup inheritance in <<layout.adoc#here-comes-the-inheritance,chapter 4.2>>).
+* *We don't have to worry about application's state*: pages and components can be considered stateful entities. They are Java objects and they can keep a state inside them and reference other objects. We can stop worrying about keeping track of user data stored inside the _HttpSession_ and we can start managing them in a natural and transparent way.
+* *Testing web applications is much easier*: since pages and components are pure objects, you can use JUnit to test their behavior and to ensure that they render as expected. Wicket has a set of utility classes for unit testing that simulate user interaction with web pages, hence we can write acceptance tests using just JUnit without any other test framework (unit testing is covered in 
+<<test-driven-development-with-wicket,chapter 23>>).
+
+

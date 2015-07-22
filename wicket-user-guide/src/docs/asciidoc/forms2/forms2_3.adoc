@@ -1,0 +1,142 @@
+
+
+
+Working with Wicket we will rarely need to worry about conversion between input values (which are strings because the underlying HTTP protocol) and Java types because in most cases the default conversion mechanism will be smart enough to infer the type of the model object and perform the proper conversion. However, sometimes we may need to work under the hood of this mechanism to make it properly work or to perform custom conversions. That's why this paragraph will illustrate how to control input value conversion.
+
+The component that is responsible for converting input is the FormComponent itself with its convertInput() method. In order to convert its input a FormComponent must know the type of its model object. This parameter can be explicitly set with method setType(Class<?> type):
+
+[source,java]
+----
+//this field must receive an integer value
+TextField integerField = new TextField("number", new Model()).setType(Integer.class));
+----
+
+If no type has been provided, FormComponent will try to ask its model for this information. The PropertyModel and CompoundPropertyModel models can use reflection to get the type of object model. By default, if FormComponent can not obtain the type of its model object in any way, it will consider it as a simple String.
+
+Once FormComponent has determined the type of model object, it can look up for a converter, which is the entity in charge of converting input to Java object and vice versa. Converters are instances of _org.apache.wicket.util.convert.IConverter_ interface and are registered by our application class on start up. 
+
+To get a converter for a specific type we must call method getConverter(Class<C> type) on the interface IConverterLocator returned by Application's method getConverterLocator():
+
+[source,java]
+----
+//retrieve converter for Boolean type
+Application.get().getConverterLocator().getConverter(Boolean.class);
+----
+
+NOTE: Components which are subclasses of AbstractSingleSelectChoice don't follow the schema illustrated above to convert user input. 
+
+These kinds of components (like DropDownChoice and RadioChoice1) use their choice render and their collection of possible choices to perform input conversion.
+
+=== Creating custom application-scoped converters
+
+The default converter locator used by Wicket is _org.apache.wicket.ConverterLocator_. This class provides converters for the most common Java types. Here we can see the converters registered inside its constructor:
+
+[source,java]
+----
+public ConverterLocator()
+{
+	set(Boolean.TYPE, BooleanConverter.INSTANCE);
+	set(Boolean.class, BooleanConverter.INSTANCE);
+	set(Byte.TYPE, ByteConverter.INSTANCE);
+	set(Byte.class, ByteConverter.INSTANCE);
+	set(Character.TYPE, CharacterConverter.INSTANCE);
+	set(Character.class, CharacterConverter.INSTANCE);
+	set(Double.TYPE, DoubleConverter.INSTANCE);
+	set(Double.class, DoubleConverter.INSTANCE);
+	set(Float.TYPE, FloatConverter.INSTANCE);
+	set(Float.class, FloatConverter.INSTANCE);
+	set(Integer.TYPE, IntegerConverter.INSTANCE);
+	set(Integer.class, IntegerConverter.INSTANCE);
+	set(Long.TYPE, LongConverter.INSTANCE);
+	set(Long.class, LongConverter.INSTANCE);
+	set(Short.TYPE, ShortConverter.INSTANCE);
+	set(Short.class, ShortConverter.INSTANCE);
+	set(Date.class, new DateConverter());
+	set(Calendar.class, new CalendarConverter());
+	set(java.sql.Date.class, new SqlDateConverter());
+	set(java.sql.Time.class, new SqlTimeConverter());
+	set(java.sql.Timestamp.class, new SqlTimestampConverter());
+	set(BigDecimal.class, new BigDecimalConverter());
+}
+----
+
+If we want to add more converters to our application, we can override Application's method newConverterLocator which is used by application class to build its converter locator.
+
+To illustrate how to implement custom converters and use them in our application, we will build a form with two text field: one to input a regular expression pattern and another one to input a string value that will be split with the given pattern. 
+
+The first text field will have an instance of class java.util.regex.Pattern as model object. The final page will look like this (the code of this example is from the CustomConverter project):
+
+image::../img/regex-form.png[]
+
+The conversion between Pattern and String is quite straightforward. The code of our custom converter is the following:
+
+[source,java]
+----
+public class RegExpPatternConverter implements IConverter<Pattern> {
+	@Override
+	public Pattern convertToObject(String value, Locale locale) {
+		return Pattern.compile(value);
+	}
+
+	@Override
+	public String convertToString(Pattern value, Locale locale) {
+		return value.toString();
+	}
+}
+----
+
+Methods declared by interface IConverter take as input a Locale parameter in order to deal with locale-sensitive data and conversions. We will learn more about locales and internationalization in 
+<<internationalization-with-wicket,paragraph 15>>.
+
+Once we have implemented our custom converter, we must override method newConverterLocator() inside our application class and tell it to add our new converter to the default set:
+
+[source,java]
+----
+@Override
+	protected IConverterLocator newConverterLocator() {
+		ConverterLocator defaultLocator = new ConverterLocator();
+		
+		defaultLocator.set(Pattern.class, new RegExpPatternConverter());
+		
+		return defaultLocator;
+	}
+----
+
+Finally, in the home page of the project we build the form which displays (with a flash message) the tokens obtained splitting the string with the given pattern: 
+
+[source,java]
+----
+public class HomePage extends WebPage {
+    private Pattern regExpPatter;
+    private String stringToSplit;
+    
+    public HomePage(final PageParameters parameters) {		
+    	TextField mail;
+	TextField stringToSplitTxt;
+		
+    	Form form = new Form("form"){
+			@Override
+			protected void onSubmit() {
+				super.onSubmit();
+				String messageResult = "Tokens for the given string and pattern:<br/>";
+				String[] tokens = regExpPatter.split(stringToSplit);
+			
+				for (String token : tokens) {
+					messageResult += "- " + token + "<br/>";
+				}				
+				success(messageResult);
+		}
+	};
+    	
+		form.setDefaultModel(new CompoundPropertyModel(this));
+		form.add(mail = new TextField("regExpPatter"));
+		form.add(stringToSplitTxt = new TextField("stringToSplit"));
+		add(new FeedbackPanel("feedbackMessage").setEscapeModelStrings(false));
+		
+		add(form);
+    }
+}
+----
+
+NOTE: If the user input can not be converted to the target type, FormComponent will generate the default error message “The value of '${label}' is not a valid ${type}.”. The bundle key for this message is IConverter.
+

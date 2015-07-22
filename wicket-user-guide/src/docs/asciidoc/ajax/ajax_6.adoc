@@ -1,0 +1,182 @@
+
+
+
+Displaying an activity indicator is a nice way to notify user that an AJAX request is already running, but sometimes is not enough. In some situations we may need to completely disable a component during AJAX request processing, for example when we want to avoid that impatient users submit a form multiple times. In this paragraph we will see how to accomplish this goal building a custom and reusable _IAjaxCallListener_. The code used in this example is from project _CustomAjaxListenerExample_.
+
+=== What we want for our listener
+
+The listener should execute some JavaScript code to disable a given component when the component it is attached to is about to make an AJAX call. Then, when the AJAX request has been completed, the listener should bring back the disabled component to an active state.
+
+When a component is disabled it must be clear to user that an AJAX request is running and that he/she must wait for it to complete. To achieve this result we want to disable a given component covering it with a semi-transparent overlay area with an activity indicator in the middle. 
+
+The final result will look like this:
+
+image::../img/custom-ajax-call-listener.png[]
+
+=== How to implement the listener
+
+The listener will implement methods _getBeforeHandler_ and _getAfterHandler_: the first will return the code needed to place an overlay <div> on the desired component while the second must remove this overlay when the AJAX call has completed.
+
+To move and resize the overlay area we will use another module from  http://jqueryui.com/position/[JQueryUI library] that allows us to position DOM elements on our page relative to another element.
+
+So our listener will depend on four static resources: the JQuery library, the position module of JQuery UI, the custom code used to move the overlay <div> and the picture used as activity indicator. Except for the activity indicator, all these resources must be added to page header section in order to be used. 
+
+Ajax call listeners can contribute to header section by simply implementing interface _IComponentAwareHeaderContributor_. Wicket provides adapter class _AjaxCallListener_ that implements both _IAjaxCallListener_ and _IComponentAwareHeaderContributor_. We will use this class as base class for our listener.
+
+=== JavaScript code
+
+Now that we know what to do on the Java side, let's have a look at the custom JavaScript code that must be returned by our listener (file moveHiderAndIndicator.js):
+
+[source,java]
+----
+DisableComponentListener = {
+   disableElement: function(elementId, activeIconUrl){
+      var hiderId = elementId + "-disable-layer";
+      var indicatorId = elementId + "-indicator-picture";
+      
+      elementId = "#" + elementId;
+      //create the overlay <div>
+      $(elementId).after('<div id="' + hiderId 
+         + '" style="position:absolute;">'
+         + '<img id="' + indicatorId +  '" src="' + activeIconUrl + '"/>'
+         + '</div>');
+      
+      hiderId = "#" + hiderId;
+      //set the style properties of the overlay <div>
+      $(hiderId).css('opacity', '0.8');               
+      $(hiderId).css('text-align', 'center');
+      $(hiderId).css('background-color', 'WhiteSmoke');
+      $(hiderId).css('border', '1px solid DarkGray');
+      //set the dimention of the overlay <div>
+      $(hiderId).width($(elementId).outerWidth());
+      $(hiderId).height($(elementId).outerHeight());       	 
+      //positioning the overlay <div> on the component that must be disabled.     
+      $(hiderId).position({of: $(elementId),at: 'top left', my: 'top left'});
+       
+      //positioning the activity indicator in the middle of the overlay <div>
+      $("#" + indicatorId).position({of: $(hiderId), at: 'center center',
+                                     my: 'center center'});
+   },
+   //function hideComponent
+----
+
+Function DisableComponentListener.disableElement places the overlay <div> an the activity indicator on the desired component. The parameters in input are the markup id of the component we want to disable and the URL of the activity indicator picture. These two parameters must be provided by our custom listener.
+
+The rest of custom JavaScript contains function DisableComponentListener.hideComponent which is just a wrapper around the JQuery function remove():
+
+[source,java]
+----
+hideComponent: function(elementId){
+	var hiderId = elementId + "-disable-layer";
+	$('#' + hiderId).remove();
+	}
+};
+----
+
+=== Java class code
+
+The code of our custom listener is the following:
+
+[source,java]
+----
+public class DisableComponentListener extends AjaxCallListener {
+   private static PackageResourceReference customScriptReference = new   
+   PackageResourceReference(DisableComponentListener.class, "moveHiderAndIndicator.js");
+   
+   private static PackageResourceReference jqueryUiPositionRef = new    
+   PackageResourceReference(DisableComponentListener.class, "jquery-ui-position.min.js");
+   
+   private static PackageResourceReference indicatorReference = 
+         new PackageResourceReference(DisableComponentListener.class, "ajax-loader.gif");
+   
+   private Component targetComponent;
+   
+   public DisableComponentListener(Component targetComponent){
+      this.targetComponent = targetComponent;
+   }
+   
+   @Override
+   public CharSequence getBeforeHandler(Component component) {   
+      CharSequence indicatorUrl = getIndicatorUrl(component);
+      return ";DisableComponentListener.disableElement('" + targetComponent.getMarkupId() 
+              + "'," + "'" + indicatorUrl + "');";
+   }
+
+   @Override
+   public CharSequence getCompleteHandler(Component component) {
+      return ";DisableComponentListener.hideComponent('" 
+		+ targetComponent.getMarkupId() + "');";
+   }
+   
+   protected CharSequence getIndicatorUrl(Component component) {
+      return component.urlFor(indicatorReference, null);
+   }
+   
+   @Override
+   public void renderHead(Component component, IHeaderResponse response) {   
+      ResourceReference jqueryReference = 
+      Application.get().getJavaScriptLibrarySettings().getJQueryReference();
+      response.render(JavaScriptHeaderItem.forReference(jqueryReference));      
+      response.render(JavaScriptHeaderItem.forReference(jqueryUiPositionRef));
+      response.render(JavaScriptHeaderItem.forReference(customScriptReference) );
+   }
+}
+----
+
+As you can see in the code above we have created a function (_getIndicatorUrl_) to retrieve the URL of the indicator picture. This was done in order to make the picture customizable by overriding this method.
+
+Once we have our listener in place, we can finally use it in our example overwriting method _updateAjaxAttributes_ of the AJAX button that submits the form:
+
+[source,java]
+----
+//...
+new AjaxButton("ajaxButton"){
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+	  super.updateAjaxAttributes(attributes);
+	  attributes.getAjaxCallListeners().add(new DisableComponentListener(form));
+	}
+}
+//...
+----
+
+=== Global listeners
+
+So far we have seen how to use an AJAX call listener to track the AJAX activity of a single component. In addition to these kinds of listeners, Wicket provides also global listeners which are triggered for any AJAX request sent from a page. 
+
+Global AJAX call events are handled with JavaScript. We can register a callback function for a specific event of the AJAX call lifecycle with function _Wicket.Event.subscribe('<eventName>', <callback Function>)_. The first parameter of this function is the name of the event we want to handle. The possible names are:
+
+* '/ajax/call/before': called before any other event handler.
+* '/ajax/call/beforeSend': called just before the AJAX call.
+* '/ajax/call/after': called after the AJAX request has been sent.
+* '/ajax/call/success': called if the AJAX call has successfully returned.
+* '/ajax/call/failure': called if the AJAX call has returned with a failure.
+* '/ajax/call/complete': called when the AJAX call has completed.
+* '/dom/node/removing': called when a component is about to be removed via AJAX. This  happens when component markup is updated via AJAX (i.e. the component itself or one of its containers has been added to _AjaxRequestTarget_) 
+* '/dom/node/added': called when a component has been added via AJAX. Just like '/dom/node/removing', this event is triggered when a component is added to _AjaxRequestTarget_.
+
+The callback function takes in input the following parameters:  attrs, jqXHR, textStatus, jqEvent and errorThrown. The first three parameters are the same seen before with _IAjaxCallListener_ while jqEvent is an event internally fired by Wicket. The last parameter errorThrown indicates if an error has occurred during the AJAX call. 
+
+To see a basic example of use of a global AJAX call listener, let's go back to our custom datepicker created in 
+<<an-example-of-integration-with-javascript,chapter 19>>. When we built it we didn't think about a possible use of the component with AJAX.  When a complex component like our datepicker is refreshed via AJAX, the following two side effects can occur: 
+
+* After been refreshed, the component loses every JavaScript handler set on it. This is not a problem for our datepicker as it sets a new JQuery datepicker every time is rendered (inside method renderHead).
+* The markup previously created with JavaScript is not removed. For our datepicker this means that the icon used to open the calendar won't be removed while a new one will be added each time the component is refreshed.
+
+To solve the second unwanted side effect we can register a global AJAX call listener that completely removes the datepicker functionality from our component before it is removed due to an AJAX refresh (which fires event '/dom/node/removing'). 
+
+Project _CustomDatepickerAjax_ contains a new version of our datepicker which adds to its JavaScript file JQDatePicker.js the code needed to register a callback function that gets rid of the JQuery datepicker before the component is removed from the DOM:
+
+[source,java]
+----
+Wicket.Event.subscribe('/dom/node/removing', 
+    function(jqEvent, attributes, jqXHR, errorThrown, textStatus) {
+	var componentId = '#' + attributes['id'];
+	if($(componentId).datepicker !== undefined)
+	      $(componentId).datepicker('destroy');
+     }
+);
+----
+
+The code above retrieves the id of the component that is about to be removed using parameter attributes. Then it checks if a JQuery datepicker was defined for the given component and if so, it removes the widget calling function destroy.
+

@@ -1,0 +1,117 @@
+
+
+
+Wicket offers a number of components that should be used when we have to display a big number of  items (for example the results of a select SQL query). 
+
+All these components implement interface _org.apache.wicket.markup.html.navigation.paging.IPageable_ and use interface _IDataProvider_ (placed in package _org.apache.wicket.markup.repeater.data_) as data source. This interface is designed to support data paging. We will see an example of data paging later in <<repeaters.adoc#pageable-repeaters,paragraph 13.4.2>>. 
+
+The methods defined by IDataProvider are the following:
+* iterator(long first, long count): returns an iterator over a subset of the entire dataset. The subset starts from the item at position first and includes all the next count items (i.e. it's the closed interval  <<first,first+count>>
+).
+* size(): gets the size of the entire dataset. 
+* model(T object): this method is used to wrap an item returned by the iterator with a model. This can be necessary if, for example, we need to wrap items with a detachable model to prevent them from being serialized.
+
+Wicket already provides implementations of IDataProvider to work with a List as data source (ListDataProvider) and to support data sorting (SortableDataProvider).
+
+=== Component DataView
+
+Class _org.apache.wicket.markup.repeater.data.DataView_ is the simplest pageable repeater shipped with Wicket. DataView comes with abstract method populateItem(Item) that must be implemented to configure children components. In the following example we use a DataView to display a list of Person objects in a HTML table:
+
+*HTML:*
+[source,html]
+----
+<table>
+	<tr>
+	   <th>Name</th><th>Surename</th><th>Address</th><th>Email</th>
+	</tr>
+	<tr wicket:id="rows">
+	   <td wicket:id="dataRow"></td>
+	</tr>
+</table>
+----
+
+*Java Code:*
+[source,java]
+----
+//method loadPersons is defined elsewhere
+List<Person> persons = loadPersons();
+ListDataProvider<Person> listDataProvider = new ListDataProvider<Person>(persons);
+
+DataView<Person> dataView = new DataView<Person>("rows", listDataProvider) {
+      
+  @Override
+  protected void populateItem(Item<Person> item) {
+    Person person = item.getModelObject();
+    RepeatingView repeatingView = new RepeatingView("dataRow");
+
+    repeatingView.add(new Label(repeatingView.newChildId(), person.getName()));
+    repeatingView.add(new Label(repeatingView.newChildId(), person.getSurename()));
+    repeatingView.add(new Label(repeatingView.newChildId(), person.getAddress()));    
+    repeatingView.add(new Label(repeatingView.newChildId(), person.getEmail()));
+    item.add(repeatingView); 
+  }
+};
+add(dataView);
+----
+
+Please note that in the code above we have used also a RepeatingView component to populate the rows of the table. 
+
+In the next paragraph we will see a similar example that adds support for data paging.
+
+=== Data paging
+
+To enable data paging on a pageable repeater, we must first set the number of items to display per page with method setItemsPerPage(long items). Then, we must attach the repeater to panel PagingNavigator (placed in package _org.apache.wicket.markup.html.navigation.paging_) which is responsible for rendering a navigation bar containing the links illustrated in the following picture:
+
+image::../img/paging-navigator.png[]
+
+Project PageDataViewExample mixes a DataView component with a PagingNavigator to display the list of all countries of the world sorted by alphabetical order. Here is the initialization code of the project home page:
+
+*HTML:*
+[source,html]
+----
+<table>
+  <tr>
+    <th>ISO 3166-1</th><th>Name</th><th>Long name</th><th>Capital</th><th>Population</th>
+  </tr>
+  <tr wicket:id="rows">
+    <td wicket:id="dataRow"></td>
+  </tr>
+</table>
+----
+
+*Java Code:*
+[source,java]
+----
+public HomePage(final PageParameters parameters) {
+  super(parameters);
+  //method loadCountriesFromCsv is defined elsewhere in the class.
+  //It reads countries data from a csv file and returns each row as an array of Strings.
+  List<String[]> countries = loadCountriesFromCsv();
+  ListDataProvider<String[]> listDataProvider = new ListDataProvider<String[]>(countries);
+    	
+  DataView<String[]> dataView = new DataView<String[]>("rows", listDataProvider) {
+    @Override
+    protected void populateItem(Item<String[]> item) {
+      String[] countriesArr = item.getModelObject();
+      RepeatingView repeatingView = new RepeatingView("dataRow");
+         
+      for (int i = 0; i < countriesArr.length; i++){
+         repeatingView.add(new Label(repeatingView.newChildId(), countriesArr[i]));
+      }
+      item.add(repeatingView);
+    }
+  };
+      
+  dataView.setItemsPerPage(15);
+      
+  add(dataView);
+  add(new PagingNavigator("pagingNavigator", dataView));
+}
+----
+
+The data of a single country (ISO code, name, long name, capital and population) are handled with an array of strings. The usage of PagingNavigator it's quite straightforward as we need to simply pass the pageable repeater to its constructor. 
+
+To explore the other pageable repeaters shipped with Wicket you can visit the page at  http://www.wicket-library.com/wicket-examples/repeater/[http://www.wicket-library.com/wicket-examples/repeater/] where you can find live examples of these components.
+
+NOTE: Wicket provides also component PageableListView which is a sublcass of ListView that implements interface IPageable, hence it can be considered a pageable repeaters even if it doesn't use interface IDataProvider as data source.
+

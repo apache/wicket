@@ -1,0 +1,3 @@
+
+1. Request and session scoped beans do not work.
+The Web Socket communication is not processed by Servlet Filters and Listeners and thus the Dependency Injection libraries have no chance to export the request and session bean proxies.

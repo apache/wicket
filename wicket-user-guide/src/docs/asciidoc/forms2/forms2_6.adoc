@@ -1,0 +1,24 @@
+
+
+
+As you might already known, HTLM doesn't allow to have nested forms. However with Wicket we can overcome this limitation by adding one or more form components to a parent form.
+
+This can be useful if we want to split a big form into smaller ones in order to reuse them and to better distribute responsibilities among different components.
+Forms can be nested to an arbitrary level:
+
+[source,html]
+----
+<form wicket:id="outerForm"> 
+	...
+	<form wicket:id="innerForm"> 
+		...
+		<form wicket:id="veryInnerForm">
+			...
+		</form> 
+	</form> 
+</form>
+----
+
+When a form is submitted also its nested forms are submitted and they participate in the validation step. This means that if a nested form contains invalid input values, the outer form won't be submitted. On the contrary, nested forms can be singularly submitted without depending on the status of their outer form.
+
+To submit a parent form when one of its children forms is submitted, we must override its method wantSubmitOnNestedFormSubmit and make it return true. 

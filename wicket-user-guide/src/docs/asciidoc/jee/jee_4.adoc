@@ -1,0 +1,7 @@
+
+
+
+In this chapter we have seen how to integrate Wicket applications with Spring and with an EJB container. Module wicket-examples contains also an example of integration with Guice (see application class _org.apache.wicket.examples.guice.GuiceApplication_). 
+
+
+

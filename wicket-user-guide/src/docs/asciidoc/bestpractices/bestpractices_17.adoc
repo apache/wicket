@@ -1,0 +1,4 @@
+
+
+
+The best practices presented in this chapter should help you to write better and more maintainable code in Wicket. All described methodologies were already proven in a few Wicket projects. If you follow these advices, your Wicket projects will get future-proof and hopefully successful.

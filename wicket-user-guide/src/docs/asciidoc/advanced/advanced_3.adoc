@@ -1,0 +1,43 @@
+
+
+
+Some components or resources may need to be configured before being used in our applications. While so far we used Application's init method to initialize these kinds of entities, Wicket offers a more flexible and modular way to configure our classes. 
+
+During application's bootstrap Wicket searches for any properties file placed in one of the '/META-INF/wicket/' folder visible to the application classpath. When one of these files is found, the initializer defined inside it will be executed. An initializer is an implementation of interface _org.apache.wicket.IInitializer_ and is defined inside a properties with a line like this:
+
+[source,java]
+----
+initializer=org.wicketTutorial.MyInitializer
+----
+
+The fully qualified class name corresponds to the initializer that must be executed. Interface _IInitializer_ defines method init(Application) which should contain our initialization code, and method _destroy(Application)_ which is invoked when application is terminated:
+
+[source,java]
+----
+public class MyInitializer implements IInitializer{
+
+	public void init(Application application) {
+		//initialization code 
+	}
+
+	public void destroy(Application application) {
+		//code to execute when application is terminated
+	}	
+}
+----
+
+Only one initializer can be defined in a single properties file. To overcome this limit we can create a main initializer that in turn executes every initializer we need:
+
+[source,java]
+----
+public class MainInitializer implements IInitializer{
+
+	public void init(Application application) {
+		new AnotherInitializer().init(application);
+		new YetAnotherInitializer().init(application);
+		//... 
+	}
+	//destroy... 
+}
+----
+

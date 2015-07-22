@@ -1,0 +1,82 @@
+
+REST-based API are becoming more and more popular around the web and the number of services based on this architecture is constantly increasing.
+
+Wicket is well-known for its capability of transparently handling the state of web applications on server side, but it can be also easily adopted to create RESTful services.
+WicketStuff module for REST provides a special resource class and a set of annotations to implement REST APIs/services in much the same way as we do it with Spring MVC or with the standard JAX-RS.
+
+The module provides class _AbstractRestResource_ as generic abstract class to implement a Wicket resource that handles the request and the response using a particular data format (XML, JSON, etc...).
+Subclassing _AbstractRestResource_ we can create custom resources and map their pubblic methods to a given subpath with annotation _MethodMapping_. The following snippet is taken from resource _PersonsRestResource_ inside module _'restannotations-examples'_:
+
+[source,java]
+----
+    @MethodMapping("/persons")
+    public List<PersonPojo> getAllPersons() {
+        //method mapped at subpath "/persons" and HTTP method GET
+    }
+
+    @MethodMapping(value = "/persons/{personIndex}", httpMethod = HttpMethod.DELETE)
+    public void deletePerson(int personIndex) {
+        //method mapped at subpath "/persons/{personIndex}" and HTTP method DELETE. 
+        //Segment {personIndex} will contain an integer value as index.
+    }
+
+    @MethodMapping(value = "/persons", httpMethod = HttpMethod.POST)
+    public void createPerson(@RequestBody PersonPojo personPojo) {
+        //creates a new instance of PersonPojo reading it from request body
+    }
+----
+
+_MethodMapping_ requires to specify the subpath we want to map the method to. In addition we can specify also the HTTP method that must be used to invoke the method via REST (GET, POST, DELETE, PATCH, etc...). This value can be specified with enum class _HttpMethod_ and is GET by default. 
+In the code above we can see annotation _RequestBody_ which is used to extract the value of a method parameter from the request body (method createPerson).
+To write/read objects to response/from request, _AbstractRestResource_ uses an implementation of interface _IWebSerialDeserial_ which defines the following methods: 
+
+[source,java]
+----
+
+    public interface IWebSerialDeserial {
+
+       public void objectToResponse(Object targetObject, WebResponse response, String mimeType) throws Exception;
+
+       public <T> T requestToObject(WebRequest request, Class<T> argClass, String mimeType) throws Exception;
+
+       public boolean isMimeTypeSupported(String mimeType);
+    }
+----
+
+To convert segments value (which are strings) to parameters type, _AbstractRestResource_ uses the standard Wicket mechanism based on the application converter locator:
+
+[source,java]
+----
+
+    //return the converter for type clazz
+    IConverter converter = Application.get().getConverterLocator().getConverter(clazz);
+    //convert string to object
+    return converter.convertToObject(value, Session.get().getLocale());
+----
+
+In order to promote the principle of convention over configuration, we don't need to use any annotation to map method parameters to path parameters if they are declared in the same order. If we need to manually bind method parameters to path parameters we can use annotation _PathParam_.
+
+[source,java]
+----
+    @MethodMapping(value = "/variable/{p1}/order/{p2}", produces = RestMimeTypes.PLAIN_TEXT)
+    public String testParamOutOfOrder(@PathParam("p2") String textParam, @PathParam("p1") int intParam) {
+        //method parameter textParam is taken from path param 'p2', while intParam uses 'p1'
+    }
+----
+
+As JSON is de-facto standard format for REST API, the project comes also with a ready-to-use resource (_GsonRestResource_) and a serial/deserial (_GsonSerialDeserial_) that work with JSON format (both inside module _'restannotations-json'_). These classes use Gson as JSON library.
+
+_AbstractRestResource_ supports role-based authorizations for mapped method with annotation _AuthorizeInvocation_:
+
+[source,java]
+----
+    @MethodMapping(value = "/admin", httpMethod = HttpMethod.GET)
+    @AuthorizeInvocation("ROLE_ADMIN")
+    public void testMethodAdminAuth() {
+
+    }
+----
+
+To use annotation _AuthorizeInvocation_ we must specify in the resource construcor an instance of Wicket interface _IRoleCheckingStrategy_.
+
+To read the complete documentation of the module and to discover more advanced feature please refer to the  https://github.com/wicketstuff/core/blob/master/jdk-1.7-parent/wicketstuff-restannotations-parent[project homepage] 

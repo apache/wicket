@@ -1,0 +1,35 @@
+
+
+
+To integrate the  https://developers.google.com/chart/[Google Chart] tool into our pages we can use module wicketstuff-googlecharts. To display a chart we must combine the following entities: component Chart, interface IChartData and class ChartProvider, all inside package org.wicketstuff.googlecharts. The following snippet is taken from example page Home:
+
+*HTML:*
+
+[source,html]
+----
+...
+  <h2>Hello World</h2>
+  <img wicket:id="helloWorld"/>
+... 
+----
+
+*Java code:*
+
+[source,java]
+----
+IChartData data = new AbstractChartData(){
+    public double[][] getData(){
+       return new double[][] { { 34, 22 } };
+    }
+};
+
+ChartProvider provider = new ChartProvider(new Dimension(250, 100), ChartType.PIE_3D, data);
+provider.setPieLabels(new String[] { "Hello", "World" });
+add(new Chart("helloWorld", provider));
+----
+
+*Displayed chart:*
+
+image::../img/googlechart.png[]
+
+As we can see in the snippet above, component Chart must be used with <img> tag while the input data returned by IChartData must be a two-dimensional array of double values. 

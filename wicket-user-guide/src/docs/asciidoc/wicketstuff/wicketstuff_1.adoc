@@ -1,0 +1,20 @@
+
+
+
+WicketStuff is an umbrella project that gathers different Wicket-related projects developed and maintained by the community. The project is hosted on GitHub at  https://github.com/wicketstuff/core[https://github.com/wicketstuff/core] . 
+Every module is structured as a parent Maven project containing the actual project that implements the new functionality and an example project that illustrates how to use it in our code. The resulting directory structure of each module is the following:
+
+[source,java]
+----
+\<module name>-parent
+        |
+        +---<module name>
+        \---<module name>-examples
+----
+
+So far we have introduced only modules Kryo Serializer and JavaEE Inject, but WicketStuff comes with many other modules that can be used in our applications. Some of them come in handy to improve the user experience of our pages with complex components or integrating some popular web services (like  http://maps.google.com/[Google Maps] ) and JavaScript libraries (like  http://www.tinymce.com/[TinyMCE] ).
+
+This appendix provides a quick overview of what WicketStuff offers to enhance the usability and the visually-appealing of our pages.
+
+NOTE: Every WicketStuff module can be downloaded as JAR archive at  http://mvnrepository.com[http://mvnrepository.com] . This site provides also the XML fragment needed to include it as a dependency into our pom.xml file.
+

@@ -1,0 +1,2 @@
+
+This chapter explains how Wicket manages page instances, underlining the difference between stateful and stateless pages. The chapter also introduces some advanced topics like Java Serialization and multi-level cache. However, to understand what you will read you are not required to be familiar with these concepts.

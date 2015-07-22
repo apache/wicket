@@ -1,0 +1,8 @@
+
+
+Forms are the standard solution to let users interact with our web applications. In this chapter we have seen the three steps involved with the form processing workflow in Wicket. We have started looking at form validation and feedback messages generation, then we have seen how Wicket converts input values into Java objects and vice versa. 
+
+In the second part of the chapter we learnt how to build reusable form components and how to  implement a stateless form. We have ended the chapter with an overview of the built-in form components needed to handle standard input form elements like checkboxes, radio buttons and multiple selections lists. 
+
+
+

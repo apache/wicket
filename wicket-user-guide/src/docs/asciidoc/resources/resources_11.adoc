@@ -1,0 +1,41 @@
+
+
+
+Just like pages also resources can be mounted to a specific path. Class _WebApplication_ provides method _mountResource_ which is almost identical to _mountPage_ seen in <<urls.adoc#generating-structured-and-clear-urls,paragraph 10.6.1>>:
+
+[source,java]
+----
+@Override
+public void init() {
+  super.init();
+  //resource mounted to path /foo/bar
+  ResourceReference resourceReference = new ResourceReference("rssProducer"){
+     RSSReaderResource rssResource = new RSSReaderResource();
+     @Override
+     public IResource getResource() {
+	return rssResource;
+  }};
+  mountResource("/foo/bar", resourceReference);
+}
+----
+
+With the configuration above (taken from project _CustomResourceMounting_) every request to /foo/bar will be served by the custom resource built in the previous paragraph. 
+
+Parameter placeholders are supported as well:
+
+[source,java]
+----
+@Override
+public void init() {
+  super.init();
+  //resource mounted to path /foo with a required indexed parameter
+  ResourceReference resourceReference = new ResourceReference("rssProducer"){
+     RSSReaderResource rssResource = new RSSReaderResource();
+     @Override
+     public IResource getResource() {
+	return rssResource;
+  }};
+  mountResource("/bar/${baz}", resourceReference);
+}
+----
+

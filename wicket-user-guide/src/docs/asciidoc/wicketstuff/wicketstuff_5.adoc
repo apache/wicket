@@ -1,0 +1,44 @@
+
+
+
+Module wicketstuff-inmethod-grid implements a sophisticated grid-component with class com. inmethod.grid.datagrid.DataGrid. 
+
+Just like pageable repeaters (seen in <<repeaters.adoc#pageable-repeaters,paragraph 13.4>>) DataGrid provides data pagination and uses interface IDataProvider as data source. In addition the component is completely ajaxified:
+
+image::../img/inmethod-grid1.png[]
+
+DataGrid supports also editable cells and row selection:
+
+image::../img/inmethod-grid2.png[]
+
+The following snippet illustrate how to use DataGrid and is taken from wiki page  https://github.com/wicketstuff/core/wiki/InMethodGrid[https://github.com/wicketstuff/core/wiki/InMethodGrid] : 
+
+*HTML:*
+
+[source,html]
+----
+...
+  <div wicket:id="grid">Grid</div>
+... 
+----
+
+*Java code:*
+
+[source,java]
+----
+final List<Person> personList = //load a list of Persons
+final ListDataProvider listDataProvider = new ListDataProvider(personList);
+//define grid's columns
+List<IGridColumn> cols = (List) Arrays.asList(
+	     new PropertyColumn(new Model("First Name"), "firstName"),
+	     new PropertyColumn(new Model("Last Name"), "lastName"));
+
+DataGrid grid = new DefaultDataGrid("grid", new DataProviderAdapter(listDataProvider), cols);
+add(grid);
+----
+
+In the code above we have used convenience class DefaultDataGrid that is a subclass of DataGrid and it already comes with a navigation toolbar.
+
+The example pages are under package com.inmethod.grid.examples.pages in the example project which is hosted at  http://www.wicket-library.com/inmethod-grid/data-grid/simple[http://www.wicket-library.com/inmethod-grid/data-grid/simple] .
+
+

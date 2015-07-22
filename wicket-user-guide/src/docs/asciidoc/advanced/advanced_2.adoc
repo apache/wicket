@@ -1,0 +1,176 @@
+
+
+
+With Wicket it's quite easy to build a callback URL that executes a specific method on server side. This method must be defined in a functional interface (i.e. an an interface that defines just one method) that inherits from built-in _org.apache.wicket.IRequestListener_ and it must be a void method with no parameters in input:
+
+[source,java]
+----
+public interface IMyListener extends IRequestListener
+{
+	/**
+	 * Called when the relative callback URL is requested.
+	 */
+	void myCallbackMethod();
+}
+----
+
+To control how the method will be invoked we must use class _org.apache.wicket.RequestListenerInterface_. In Wicket is a common practice to instantiate this class as a public static field inside the relative callback interface:
+
+[source,java]
+----
+public interface IMyListener extends IRequestListener
+{
+	/**RequestListenerInterface instance*/
+	public static final RequestListenerInterface INTERFACE = new 
+                               RequestListenerInterface(IMyListener.class);
+	/**
+	 * Called when the relative callback URL is requested.
+	 */
+	void myCallbackMethod();
+}
+----
+
+By default _RequestListenerInterface_ will respond rendering the current page after the callback method has been executed (if we have a non-AJAX request). To change this behavior we can use setter method _setRenderPageAfterInvocation(boolean)_.
+
+Now that our callback interface is complete we can generate a callback URL with _Component_'s method _urlFor(RequestListenerInterface, PageParameters)_ or with method _urlFor (Behavior, RequestListenerInterface, PageParameters)_ if we are using a callback interface with a behavior (see the following example).
+
+Project CallbackURLExample contains a behavior (class _OnChangeSingleChoiceBehavior_) that implements a callback interface to update the model of an _AbstractSingleSelectChoice_ component when user changes the selected option (it provides the same functionality of method _wantOnSelectionChangedNotifications_). 
+
+Instead of a custom callback interface, _OnChangeSingleChoiceBehavior_ implements built-in interface _org.apache.wicket.behavior.IBehaviorListener_ which is designed to generate a callback URL for behaviors. The callback method defined in this interface is _onRequest()_ and the following is the implementation provided by _OnSelectionChangedNotifications_:
+
+[source,java]
+----
+@Override
+public void onRequest() {	
+	Request request = RequestCycle.get().getRequest();
+	IRequestParameters requestParameters = request.getRequestParameters();
+	StringValue choiceId = requestParameters.getParameterValue("choiceId");
+	//boundComponent is the component that the behavior it is bound to.
+	boundComponent.setDefaultModelObject( convertChoiceIdToChoice(choiceId.toString()));
+}
+----
+
+When invoked via URL, the behavior expects to find a request parameter (choiceId) containing the id of the selected choice. This value is used to obtain the corresponding choice object that must be used to set the model of the component that the behavior is bound to (boundComponent). Method _convertChoiceIdToChoice_ is in charge of retrieving the choice object given its id and it has been copied from class _AbstractSingleSelectChoice_.
+
+Another interesting part of _OnChangeSingleChoiceBehavior_ is its method _onComponentTag_ where some JavaScript “magic” is used to move user's browser to the callback URL when event “change” occurs on bound component:
+
+[source,java]
+----
+@Override
+public void onComponentTag(Component component, ComponentTag tag) {
+	super.onComponentTag(component, tag);
+		
+	CharSequence callBackURL = getCallbackUrl();
+	String separatorChar = (callBackURL.toString().indexOf('?') > -1 ? "&" : "?");
+		
+	String finalScript = "var isSelect = $(this).is('select');\n" +
+				 "var component;\n" +	
+				 "if(isSelect)\n" +
+				 "	component = $(this);\n" +
+				 "else \n" +
+				 "	component = $(this).find('input:radio:checked');\n" +
+				 "window.location.href='" + callBackURL +  separatorChar + 
+				 "choiceId=' + " + "component.val()";
+		
+	tag.put("onchange", finalScript);
+}
+----
+
+The goal of _onComponentTag_ is to build an onchange handler that forces user's browser to move to the callback URL (modifing standard property window.location.href). Please note that we have appended the expected parameter (choiceId) to the URL retrieving its value with a JQuery selector suited for the current type of component (a drop-down menu or a radio group). Since we are using JQuery in our JavaScript code, the behavior comes also with method _renderHead_ that adds the bundled JQuery library to the current page.
+
+Method _getCallbackUrl()_ is used to generate the callback URL for our custom behavior and it has been copied from built-in class _AbstractAjaxBehavior_: 
+
+[source,java]
+----
+public CharSequence getCallbackUrl(){
+	if (boundComponent == null){
+		throw new IllegalArgumentException(
+			"Behavior must be bound to a component to create the URL");
+	}
+
+	final RequestListenerInterface rli;
+
+	rli = IBehaviorListener.INTERFACE;
+
+	return boundComponent.urlFor(this, rli, new PageParameters());
+}
+----
+
+Static field _IBehaviorListener.INTERFACE_ is the implementation of _RequestListenerInterface_ defined inside callback interface _IBehaviorListener_.
+
+The home page of project _CallbackURLExample_ contains a _DropDownChoice_ and a _RadioChoice_ which use our custom behavior. There are also two labels to display the content of the models of the two components:
+
+image::../img/CallbackURLExample-screenshot.png[]
+
+NOTE: Implementing interface _IBehaviorListener_ makes a behavior stateful because its callback URL is specific for a given instance of component.
+
+As final note it's interesting to see how Wicket internally uses callback URLs for its standard link component. Class _org.apache.wicket.markup.html.link.Link_ implements interface _org.apache.wicket.markup.html.link.ILinkListener_ which in turn extends _IRequestListener_:
+
+[source,java]
+----
+public interface ILinkListener extends IRequestListener
+{
+	/** Listener interface */
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+		ILinkListener.class);
+
+	/**
+	 * Called when a link is clicked.
+	 */
+	void onLinkClicked();
+}
+----
+
+The implementation of method _onLinkClicked_ simply delegates event handling to our custom version of _onClick_:
+
+[source,java]
+----
+@Override
+public final void onLinkClicked()
+{
+	// Invoke subclass handler
+	onClick();
+}
+----
+
+=== Wicket events infrastructure
+
+Starting from version 1.5 Wicket offers an event-based infrastructure for inter-component communication. The infrastructure is based on two simple interfaces (both in package _org.apache.wicket.event_) : _IEventSource_ and _IEventSink_. 
+
+The first interface must be implemented by those entities that want to broadcast en event while the second interface must be implemented by those entities that want to receive a broadcast event.
+
+The following entities already implement both these two interfaces (i.e. they can be either sender or receiver): _Component_, _Session_, _RequestCycle_ and _Application_.
+_IEventSource_ exposes a single method named send which takes in input three parameters:
+
+* *sink*: an implementation of _IEventSink_ that will be the receiver of the event. 
+* *broadcast*: a _Broadcast_ enum which defines the broadcast method used to dispatch the event to the sink and to other entities such as sink children, sink containers, session object, application object and the current request cycle. It has four possible values:
+|===
+|*Value* | *Description*
+|BREADTH | The event is sent first to the specified sink and then to all its children components following a breadth-first order.
+|DEPTH | The event is sent to the specified sink only after it has been dispatched to all its children components following a depth-first order.
+|BUBBLE | The event is sent first to the specified sink and then to its parent containers.
+|EXACT | The event is sent only to the specified sink.
+|===
+* *payload*: a generic object representing the data sent with the event.
+
+Each broadcast mode has its own traversal order for _Session_, _RequestCycle_ and _Application_. See JavaDoc of class _Broadcast_ for further details about this order.
+
+Interface _IEventSink_ exposes callback method _onEvent(IEvent<?> event)_ which is triggered when a sink receives an event. The interface _IEvent_ represents the received event and provides getter methods to retrieve the event broadcast type, the source of the event and its payload. Typically the received event is used checking the type of its payload object:
+
+[source,java]
+----
+@Override
+public void onEvent(IEvent event) {
+  //if the type of payload is MyPayloadClass perform some actions 
+  if(event.getPayload() instanceof MyPayloadClass) {
+     //execute some business code.
+  }else{
+     //other business code
+  }   		
+}
+----
+
+Project _InterComponetsEventsExample_ provides a concrete example of sending an event to a component (named 'container in the middle') using all the available broadcast methods:
+
+image::../img/InterComponentsEventsExample-screenshot.png[]
+

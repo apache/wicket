@@ -1,0 +1,33 @@
+
+
+
+One of the things we must take care of when we use AJAX is to notify user when an AJAX request is already in progress. This is usually done displaying an animated picture as activity indicator while the AJAX request is running. 
+
+Wicket comes with a variant of components _AjaxButton_, _AjaxLink_ and _AjaxFallbackLink_ that display a default activity indicator during AJAX request processing. These components are respectively _IndicatingAjaxButton_, _IndicatingAjaxLink_ and _IndicatingAjaxFallbackLink_.
+
+The default activity indicator used in Wicket can be easily integrated in our components using behavior AjaxIndicatorAppender (available in package _org.apache.wicket.extensions.ajax.markup.html_) and implementing the interface _IAjaxIndicatorAware_ (in package _org.apache.wicket.ajax_). 
+
+_IAjaxIndicatorAware_ declares method _getAjaxIndicatorMarkupId()_ which returns the id of the markup element used to display the activity indicator. This id can be obtained from the AjaxIndicatorAppender behavior that has been added to the current component. The following code snippet summarizes the steps needed to integrate the default activity indicator with an ajaxified component:
+
+[source,java]
+----
+//1-Implement interface IAjaxIndicatorAware
+public class MyComponent extends Component implements IAjaxIndicatorAware {
+	//2-Instantiate an AjaxIndicatorAppender
+	private AjaxIndicatorAppender indicatorAppender =
+			new AjaxIndicatorAppender();
+	
+	public MyComponent(String id, IModel<?> model) {
+		super(id, model);
+		//3-Add the AjaxIndicatorAppender to the component
+		add(indicatorAppender);
+	}
+	//4-Return the markup id obtained from AjaxIndicatorAppender
+	public String getAjaxIndicatorMarkupId() {		
+		return indicatorAppender.getMarkupId();
+	}
+//...
+}
+----
+
+If we need to change the default picture used as activity indicator, we can override method _getIndicatorUrl()_ of _AjaxIndicatorAppender_ and return the URL to the desired picture.

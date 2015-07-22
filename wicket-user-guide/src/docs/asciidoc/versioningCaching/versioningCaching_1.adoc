@@ -1,0 +1,10 @@
+
+
+
+Wicket pages can be divided into two categories: stateful and stateless pages. Stateful pages are those which rely on user session to store their internal state and to keep track of user interaction.
+On the contrary stateless pages are those which don't change their internal state during their lifecycle and they don't need to occupy space into user session. 
+
+From Wicket's point of view the biggest difference between these two types of page is that stateful pages are versioned, meaning that they will be saved into user session every time their internal state has changed. Wicket automatically assigns a session to the user the first time a stateful page is requested. Page versions are stored into user session using Java Serialization mechanism. 
+Stateless pages are never versioned and that's why they don't require a valid user session. If we want to know whether a page is stateless or not, we can call the isPageStateless() method of class Page.
+
+In order to build a stateless page we must comply with some rules to ensure that the page won't need to use user session. These rules are illustrated in paragraph 8.3 but before talking about stateless pages we must first understand how stateful pages are handled and why they are versioned.

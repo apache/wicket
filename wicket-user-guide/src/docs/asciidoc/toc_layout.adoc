@@ -1,0 +1,84 @@
+
+:sectnums:
+
+= Wicket user guide
+
+:toc:
+
+= sectie 2
+
+== Introduction
+
+include::introduction.adoc[]
+
+== How to use the example code
+
+include::howToSource.adoc[]
+
+== Why should I learn Wicket?
+
+include::whyLearn.adoc[]
+
+=== We all like spaghetti :-) ...
+
+include::whyLearn/whyLearn_1.adoc[leveloffset=+1]
+
+=== Component oriented frameworks - an overview
+
+include::whyLearn/whyLearn_2.adoc[leveloffset=+1]
+
+=== Benefits of component oriented frameworks for web development
+
+include::whyLearn/whyLearn_3.adoc[leveloffset=+1]
+
+=== Wicket vs the other component oriented frameworks
+
+include::whyLearn/whyLearn_4.adoc[leveloffset=+1]
+
+== Wicket says “Hello world!”
+
+include::helloWorld.adoc[]
+
+=== Wicket distribution and modules
+
+include::helloWorld/helloWorld_1.adoc[leveloffset=+1]
+
+=== Configuration of Wicket applications
+
+include::helloWorld/helloWorld_2.adoc[leveloffset=+1]
+
+=== The HomePage class
+
+include::helloWorld/helloWorld_3.adoc[leveloffset=+1]
+
+=== Wicket Links
+
+include::helloWorld/helloWorld_4.adoc[leveloffset=+1]
+
+=== Summary
+
+include::helloWorld/helloWorld_5.adoc[leveloffset=+1]
+
+== Wicket as page layout manager
+
+include::layout.adoc[]
+
+=== Header, footer, left menu, content, etc...
+
+include::layout/layout_1.adoc[leveloffset=+1]
+
+=== Here comes the inheritance!
+
+include::layout/layout_2.adoc[leveloffset=+1]
+
+=== Divide et impera!
+
+include::layout/layout_3.adoc[leveloffset=+1]
+
+=== Markup inheritance with the wicket:extend tag
+
+include::layout/layout_4.adoc[leveloffset=+1]
+
+=== Summary
+
+include::layout/layout_5.adoc[leveloffset=+1]
