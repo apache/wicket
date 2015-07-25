@@ -16,12 +16,21 @@
  */
 package org.apache.wicket;
 
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 /**
  * Tests for {@link RestartResponseAtInterceptPageException}
@@ -42,10 +51,12 @@ public class RestartResponseAtInterceptPageExceptionTest extends WicketTestCase
 				getSecuritySettings().setAuthorizationStrategy(
 					new AbstractPageAuthorizationStrategy()
 					{
+						/**
+						 * No rendering for pages other than RedirectPage.
+						 */
 						@Override
-						protected <T extends Page> boolean isPageAuthorized(Class<T> pageClass)
-						{
-							if (pageClass != RedirectPage.class)
+						public boolean isActionAuthorized(Component c, Action action) {
+							if ((action.toString() == Action.RENDER) && c instanceof WebPage && c.getClass() != RedirectPage.class)
 							{
 								RedirectPage intercept = new RedirectPage("http://example.com/path");
 								throw new RestartResponseAtInterceptPageException(intercept);
@@ -68,4 +79,26 @@ public class RestartResponseAtInterceptPageExceptionTest extends WicketTestCase
 		tester.assertRenderedPage(RedirectPage.class);
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5955
+	 */
+	@Test
+	public void interceptPagePreventsHeaderContributionButShouldNotBeLogged()
+	{
+		tester.startPage(new MockHomePage() {
+			@Override
+			public void renderHead(IHeaderResponse response) {
+				super.renderHead(response);
+
+				CoreLibrariesContributor.contribute(getApplication(), response);
+			}
+
+			@Override
+			protected void reportMissingHead(CharSequence collectedHeaderOutput) {
+				fail("missing headers should not be reported for unrendered page");
+			}
+		});
+
+		tester.assertRenderedPage(RedirectPage.class);
+	}
 }
