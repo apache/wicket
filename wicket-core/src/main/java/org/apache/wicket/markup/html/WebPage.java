@@ -213,23 +213,13 @@ public class WebPage extends Page
 	@Override
 	protected void onAfterRender()
 	{
-		super.onAfterRender();
-
 		// only in development mode validate the headers
 		if (getApplication().usesDevelopmentConfig())
 		{
-			// Ignore if an exception and a redirect happened in between (e.g.
-			// RestartResponseAtInterceptPageException)
-			IRequestHandler activeHandler = getRequestCycle().getActiveRequestHandler();
-			if (activeHandler instanceof IPageRequestHandler)
-			{
-				IPageRequestHandler h = (IPageRequestHandler)activeHandler;
-				if (h.getPage() == this)
-				{
-					validateHeaders();
-				}
-			}
+			validateHeaders();
 		}
+
+		super.onAfterRender();
 	}
 
 	/**
