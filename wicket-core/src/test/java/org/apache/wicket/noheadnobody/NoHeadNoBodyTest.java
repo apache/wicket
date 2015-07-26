@@ -20,6 +20,10 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.mock.MockHomePage;
+import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -48,5 +52,35 @@ public class NoHeadNoBodyTest extends WicketTestCase
 
 		tester.startPage(page);
 		assertThat(reported.get(), is(true));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5955
+	 */
+	@Test
+	public void interceptedRenderDoesNotReportMissingHeader()
+	{
+		tester.startPage(new MockHomePage()
+		{
+			@Override
+			protected void onInitialize()
+			{
+				throw new RestartResponseAtInterceptPageException(getApplication().getHomePage());
+			}
+
+			@Override
+			public void renderHead(IHeaderResponse response)
+			{
+				super.renderHead(response);
+
+				CoreLibrariesContributor.contribute(getApplication(), response);
+			}
+
+			@Override
+			protected void reportMissingHead(CharSequence collectedHeaderOutput)
+			{
+				fail("missing headers should not be reported when rendering was interceptede");
+			}
+		});
 	}
 }

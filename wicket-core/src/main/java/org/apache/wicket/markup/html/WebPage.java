@@ -215,7 +215,8 @@ public class WebPage extends Page
 		if (getApplication().usesDevelopmentConfig())
 		{
 			// check headers only when page was completely rendered
-			if (wasRendered(this)) {
+			if (wasRendered(this))
+			{
 				validateHeaders();
 			}
 		}
