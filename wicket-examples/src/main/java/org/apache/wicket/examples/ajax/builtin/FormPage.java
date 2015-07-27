@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormValidatingBehavior;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RequiredTextField;
@@ -46,13 +46,27 @@ public class FormPage extends BasePage
 	public FormPage()
 	{
 		// create feedback panel to show errors
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-		feedback.setOutputMarkupId(true);
-		add(feedback);
-
+		final FeedbackPanel feedbackErrors = new FeedbackPanel("feedbackErrors", new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR));
+		feedbackErrors.setOutputMarkupId(true);
+		add(feedbackErrors);
+		
+		// create feedback panel to show info message
+		final FeedbackPanel feedbackSuccess = new FeedbackPanel("feedbackSuccess", new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO));
+		feedbackSuccess.setOutputMarkupId(true);
+		add(feedbackSuccess);
+		
 		// add form with markup id setter so it can be updated via ajax
 		Bean bean = new Bean();
-		Form<Bean> form = new Form<>("form", new CompoundPropertyModel<>(bean));
+		Form<Bean> form = new Form<Bean>("form", new CompoundPropertyModel<>(bean)) 
+		{
+			@Override
+			protected void onSubmit()
+			{
+				super.onSubmit();
+				info("Form successfully submitted!");
+			}
+		};
+		
 		add(form);
 		form.setOutputMarkupId(true);
 
@@ -78,24 +92,6 @@ public class FormPage extends BasePage
 		// event and throttle it down to once per second
 
 		form.add(new AjaxFormValidatingBehavior("keydown", Duration.ONE_SECOND));
-
-		// add a button that can be used to submit the form via ajax
-		form.add(new AjaxButton("ajax-button", form)
-		{
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-			{
-				// repaint the feedback panel so that it is hidden
-				target.add(feedback);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
-			{
-				// repaint the feedback panel so errors are shown
-				target.add(feedback);
-			}
-		});
 	}
 
 	/** simple java bean. */

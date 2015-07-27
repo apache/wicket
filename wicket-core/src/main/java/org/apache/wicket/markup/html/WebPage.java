@@ -26,11 +26,9 @@ import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -213,23 +211,17 @@ public class WebPage extends Page
 	@Override
 	protected void onAfterRender()
 	{
-		super.onAfterRender();
-
 		// only in development mode validate the headers
 		if (getApplication().usesDevelopmentConfig())
 		{
-			// Ignore if an exception and a redirect happened in between (e.g.
-			// RestartResponseAtInterceptPageException)
-			IRequestHandler activeHandler = getRequestCycle().getActiveRequestHandler();
-			if (activeHandler instanceof IPageRequestHandler)
+			// check headers only when page was completely rendered
+			if (wasRendered(this))
 			{
-				IPageRequestHandler h = (IPageRequestHandler)activeHandler;
-				if (h.getPage() == this)
-				{
-					validateHeaders();
-				}
+				validateHeaders();
 			}
 		}
+
+		super.onAfterRender();
 	}
 
 	/**
