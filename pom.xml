@@ -916,7 +916,6 @@
 					<artifactId>clirr-maven-plugin</artifactId>
 					<version>2.6.1</version>
 					<configuration>
-						<skip>true</skip> <!-- Disabled until 7.0 -->
 						<comparisonVersion>7.0.0</comparisonVersion>
 						<failOnError>true</failOnError>
 						<logResults>true</logResults>
