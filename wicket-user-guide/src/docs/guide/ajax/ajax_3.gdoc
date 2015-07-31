@@ -77,6 +77,10 @@ add(form);
 add(submitButton);
 {code}
 
+{note}
+@AjaxFormSubmitBehavior@ does not prevent JavaScript default event handling. For @<input type="submit">@ you'll have to call @AjaxRequestAttributes#setPreventDefault(true)@ to prevent the form from being submitted twice.
+{note}
+
 h3. AjaxFormComponentUpdatingBehavior
 
 This behavior updates the model of the form component it is attached to when a given event occurs. The standard form submitting process is skipped and the behavior validates only its form component. 
