@@ -114,6 +114,22 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>1.4</version>
+                    <inherited>false</inherited>
+					<configuration>
+                        <skip>true</skip>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.github.ferstl</groupId>
+							<artifactId>pedantic-pom-enforcers</artifactId>
+							<version>1.2.0</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<configuration>
 						<!-- Just documentation, no sources -->
