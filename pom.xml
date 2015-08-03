@@ -465,6 +465,12 @@
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 				<scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hamcrest</groupId>
+                        <artifactId>hamcrest-core</artifactId>
+                    </exclusion>
+                </exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish</groupId>
@@ -480,13 +486,13 @@
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
-				<artifactId>java-hamcrest</artifactId>
+				<artifactId>hamcrest-junit</artifactId>
 				<version>${hamcrest.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
-				<artifactId>hamcrest-junit</artifactId>
+				<artifactId>java-hamcrest</artifactId>
 				<version>${hamcrest.version}</version>
 				<scope>test</scope>
 			</dependency>
@@ -513,6 +519,12 @@
 				<artifactId>mockito-core</artifactId>
 				<version>${mockito.version}</version>
 				<scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hamcrest</groupId>
+                        <artifactId>hamcrest-core</artifactId>
+                    </exclusion>
+                </exclusions>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -531,6 +543,11 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-junit</artifactId>
+			<scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
