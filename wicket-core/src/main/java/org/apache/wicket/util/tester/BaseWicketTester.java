@@ -154,6 +154,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @since 1.2.6
  */
+@SuppressWarnings("serial")
 public class BaseWicketTester
 {
 	/** log. */
@@ -1541,6 +1542,9 @@ public class BaseWicketTester
 			return calculatedMarkup;
 		}
 
+		/**
+		 * @param markup
+		 */
 		public void setPageMarkup(IMarkupFragment markup)
 		{
 			setMarkup(markup);
