@@ -66,7 +66,7 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void jeaderContribution2() throws IOException
+	public void headerContribution2() throws IOException
 	{
 		executeHeaderTest(MockComponent2.class);
 	}
@@ -262,6 +262,7 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 	 */
 	private static class Wicket3921 extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
@@ -272,6 +273,8 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 
 			add(new AjaxLink<Void>("updatePage")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
@@ -283,6 +286,8 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 
 			add(new AjaxLink<Void>("updateComponent")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
