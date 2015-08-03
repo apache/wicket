@@ -649,6 +649,9 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts there are no feedback messages with a certain level.
+	 * 
+	 * @param level
+	 *            the level to check for
 	 */
 	public void assertNoFeedbackMessage(int level)
 	{
