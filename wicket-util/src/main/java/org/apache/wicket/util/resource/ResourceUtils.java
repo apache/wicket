@@ -33,6 +33,8 @@ public class ResourceUtils
 {
 	/** The default postfix for minified names (ex: /css/mystyle.min.css) **/
 	public static final String MIN_POSTFIX_DEFAULT = "min";
+	/** The default postfix for minified names (ex: /css/mystyle.min.css) **/
+	public static final String MIN_POSTFIX_DEFAULT_AS_EXTENSION = ".min.";
 	/** Regular expression patter to extract the locale from the filename (ex: de_DE) **/
 	private static final Pattern LOCALE_MIN_PATTERN = Pattern
 		.compile("_([a-z]{2})(_([A-Z]{2})(_([^_\\.]+))?)?(\\.min)?$");

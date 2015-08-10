@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.apache.wicket.util.resource.ResourceUtils.MIN_POSTFIX_DEFAULT_AS_EXTENSION;
+
 import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.resource.IScopeAwareTextResourceProcessor;
+import org.apache.wicket.util.resource.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +40,18 @@ public class JavaScriptPackageResource extends PackageResource
 
 	/**
 	 * Construct.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in
+	 * @param name
+	 *            The relative path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource
+	 * @param variation
+	 *            The component's variation (of the style)
 	 */
 	public JavaScriptPackageResource(Class<?> scope, String name, Locale locale, String style,
 		String variation)
@@ -45,8 +60,9 @@ public class JavaScriptPackageResource extends PackageResource
 
 		this.name = name;
 
-		// JS resources can be compressed if there is configured IJavaScriptCompressor
-		setCompress(true);
+		// JS resources can be compressed if there is configured IJavaScriptCompressor, and the
+		// resource isn't already minified (the file already has .min. in its name).
+		setCompress(!name.contains(MIN_POSTFIX_DEFAULT_AS_EXTENSION));
 	}
 
 	@Override

@@ -198,7 +198,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * see WICKET-5251 : Proper detection of already minified resources
 	 */
 	@Test
-	public void testMinifiedNameDetectMinInName() throws Exception
+	public void testMinifiedNameDetectMinInName()
 	{
 		final PackageResourceReference html5minjs = new PackageResourceReference("html5.min.js");
 		Assert.assertEquals("html5.min.js", html5minjs.getMinifiedName());

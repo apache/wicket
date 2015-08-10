@@ -27,7 +27,6 @@ import java.util.Locale;
 
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -38,7 +37,6 @@ import org.junit.runners.Parameterized.Parameters;
  */
 @SuppressWarnings("javadoc")
 @RunWith(Parameterized.class)
-@Ignore("WICKET-5967 - Unable to load i18n minified js")
 public class ResourceReferenceLocatingTest extends WicketTestCase
 {
 	/** Loads the test cases from a spread sheet in semi-colon separated format. */

@@ -197,7 +197,17 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 				// it could be an attack, so ignore it and pretend there are no resources
 				return new EmptyResourceNameIterator();
 			}
-			extensions = Collections.singleton(realExtension);
+
+			// add a minimized file to the resource lookup if necessary
+			if (Application.exists() &&
+				Application.get().getResourceSettings().getUseMinifiedResources())
+			{
+				extensions = Arrays.asList("min." + realExtension, realExtension);
+			}
+			else
+			{
+				extensions = Collections.singleton(realExtension);
+			}
 		}
 		else
 		{
@@ -209,7 +219,24 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			else
 			{
 				String[] commaSeparated = Strings.split(extension, ',');
-				extensions = Arrays.asList(commaSeparated);
+				List<String> nonMinifiedExtensions = Arrays.asList(commaSeparated);
+
+				// add a minimized file to the resource lookup if necessary
+				if (Application.exists() &&
+					Application.get().getResourceSettings().getUseMinifiedResources())
+				{
+					ArrayList<String> minifiedExtensions = new ArrayList<>();
+					for (String nonMinifiedExtension : nonMinifiedExtensions)
+					{
+						minifiedExtensions.add("min." + nonMinifiedExtension);
+						minifiedExtensions.add(nonMinifiedExtension);
+					}
+					extensions = minifiedExtensions;
+				}
+				else
+				{
+					extensions = nonMinifiedExtensions;
+				}
 			}
 		}
 
