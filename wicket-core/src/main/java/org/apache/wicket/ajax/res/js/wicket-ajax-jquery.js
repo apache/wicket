@@ -2758,7 +2758,9 @@
 
 		setup: function () {
 
-			if (Wicket.Browser.isIELessThan11()) {
+			if (Wicket.Browser.isIE()) {
+				// WICKET-5959: IE >= 11 supports "input" events, but triggers too often
+				// to be reliable
 
 				jQuery(this).on('keydown', function (event) {
 					jQuery.event.special.inputchange.keyDownPressed = true;
