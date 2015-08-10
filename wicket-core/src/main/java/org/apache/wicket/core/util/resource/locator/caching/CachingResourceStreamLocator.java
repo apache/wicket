@@ -138,6 +138,11 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		return delegate.newResourceNameIterator(path, locale, style, variation, extension, strict);
 	}
 
+	/**
+	 * Clears the resource cache.
+	 * 
+	 * @since 6.16.0
+	 */
 	public void clearCache()
 	{
 		cache.clear();
