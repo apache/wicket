@@ -25,6 +25,7 @@ import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Test;
 
+/** */
 public class ResourceUtilsTest extends Assert
 {
 	/**
@@ -47,12 +48,13 @@ public class ResourceUtilsTest extends Assert
 		assertThat(pathLocale.path, is(equalTo("some.min.ext")));
 		assertThat(pathLocale.locale, is(Locale.ENGLISH));
 
-		pathLocale = ResourceUtils.getLocaleFromFilename("some.min_fr_CA.ext");
+		pathLocale = ResourceUtils.getLocaleFromFilename("some_fr_CA.min.ext");
 		assertThat(pathLocale.path, is(equalTo("some.min.ext")));
 		assertThat(pathLocale.locale, is(Locale.CANADA_FRENCH));
 
 		String localeVariant = "blah";
-		pathLocale = ResourceUtils.getLocaleFromFilename("some.min_fr_CA_"+localeVariant+".ext");
+		pathLocale = ResourceUtils
+			.getLocaleFromFilename("some_fr_CA_" + localeVariant + ".min.ext");
 		assertThat(pathLocale.path, is(equalTo("some.min.ext")));
 		assertThat(pathLocale.locale.getLanguage(), is("fr"));
 		assertThat(pathLocale.locale.getCountry(), is("CA"));
