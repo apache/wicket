@@ -49,7 +49,8 @@
 		getAjaxBaseUrl,
 		isUndef,
 		replaceAll,
-		htmlToDomDocument;
+		htmlToDomDocument,
+		nodeListToArray;
 
 	isUndef = function (target) {
 		return (typeof(target) === 'undefined' || target === null);
@@ -95,6 +96,23 @@
 		xmlAsString = xmlAsString.replace(/(\n|\r)-*/g, ''); // remove '\r\n-'. The dash is optional.
 		var xmldoc = Wicket.Xml.parse(xmlAsString);
 		return xmldoc;
+	};
+
+	/**
+	 * Converts a NodeList to an Array
+	 *
+	 * @param nodeList The NodeList to convert
+	 * @returns {Array} The array with document nodes
+	 */
+	nodeListToArray = function (nodeList) {
+		var arr = [],
+			nodeId;
+		if (nodeList && nodeList.length) {
+			for (nodeId = 0; nodeId < nodeList.length; nodeId++) {
+				arr.push(nodeList.item(nodeId));
+			}
+		}
+		return arr;
 	};
 
 	/**
@@ -1531,25 +1549,24 @@
 				} else if (tag === "input" || tag === "textarea") {
 					return Wicket.Form.serializeInput(element);
 				} else {
-					return [];
+					var elements = nodeListToArray(element.getElementsByTagName("input"));
+					elements = elements.concat(nodeListToArray(element.getElementsByTagName("select")));
+					elements = elements.concat(nodeListToArray(element.getElementsByTagName("textarea")));
+
+					var result = [];
+					for (var i = 0; i < elements.length; ++i) {
+						var el = elements[i];
+						if (el.name && el.name !== "") {
+							result = result.concat(Wicket.Form.serializeElement(el));
+						}
+					}
+					return result;
 				}
 			},
 
 			serializeForm: function (form) {
 				var result = [],
-					elements,
-					nodeListToArray,
-					nodeId;
-
-				nodeListToArray = function (nodeList) {
-					var arr = [];
-					if (nodeList && nodeList.length) {
-						for (nodeId = 0; nodeId < nodeList.length; nodeId++) {
-							arr.push(nodeList.item(nodeId));
-						}
-					}
-					return arr;
-				};
+					elements;
 
 				if (form) {
 					if (form.tagName.toLowerCase() === 'form') {
