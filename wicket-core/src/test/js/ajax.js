@@ -334,8 +334,8 @@ jQuery(document).ready(function() {
 				e: 'event1',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
-				ih: [function() {ok('Init handler should be called')}],
-				dh: [function() {ok('Done handler should be called')}],
+				ih: [function() {ok('Init handler should be called');}],
+				dh: [function() {ok('Done handler should be called');}],
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
 						start();
@@ -392,8 +392,8 @@ jQuery(document).ready(function() {
 				e: 'event1',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
-				ih: [function() {ok('Init handler should be called')}],
-				dh: [function() {ok('Done handler should be called')}],
+				ih: [function() {ok('Init handler should be called');}],
+				dh: [function() {ok('Done handler should be called');}],
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
 						ok(false, 'Should not be called');
