@@ -327,13 +327,15 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to IAjaxCallListener handlers. Success scenario.', function () {
 
-			expect(11);
+			expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
 				e: 'event1',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
+				ih: [function() {ok('Init handler should be called')}],
+				dh: [function() {ok('Done handler should be called')}],
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
 						start();
@@ -383,13 +385,15 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to IAjaxCallListener handlers. Failure scenario.', function () {
 
-			expect(8);
+			expect(10);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
 				e: 'event1',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
+				ih: [function() {ok('Init handler should be called')}],
+				dh: [function() {ok('Done handler should be called')}],
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
 						ok(false, 'Should not be called');
