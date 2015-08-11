@@ -73,7 +73,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	@Override
 	public IResourceStream locate(Class<?> clazz, String path)
 	{
-		CacheKey key = new CacheKey(clazz.getName(), path, null, null, null, null);
+		CacheKey key = new CacheKey(clazz.getName(), path, null, null, null, null, true);
 		IResourceStreamReference resourceStreamReference = cache.get(key);
 
 		final IResourceStream result;
@@ -113,7 +113,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	public IResourceStream locate(Class<?> scope, String path, String style, String variation,
 		Locale locale, String extension, boolean strict)
 	{
-		CacheKey key = new CacheKey(scope.getName(), path, extension, locale, style, variation);
+		CacheKey key = new CacheKey(scope.getName(), path, extension, locale, style, variation, strict);
 		IResourceStreamReference resourceStreamReference = cache.get(key);
 
 		final IResourceStream result;
@@ -154,37 +154,54 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	 */
 	private static class CacheKey extends Key
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * The file extension
 		 */
 		private final String extension;
 
-		private CacheKey(String scope, String name, String extension, Locale locale, String style, String variation)
+		/** Whether the key was looked up using a strict matching search */
+		private final boolean strict;
+
+		private CacheKey(String scope, String name, String extension, Locale locale, String style, String variation, boolean strict)
 		{
 			super(scope, name, locale, style, variation);
 
 			this.extension = extension;
-		}
-
-		@Override
-		public boolean equals(Object o)
-		{
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			if (!super.equals(o)) return false;
-
-			CacheKey cacheKey = (CacheKey) o;
-
-			return !(extension != null ? !extension.equals(cacheKey.extension) : cacheKey.extension != null);
-
+			this.strict = strict;
 		}
 
 		@Override
 		public int hashCode()
 		{
+			final int prime = 31;
 			int result = super.hashCode();
-			result = 31 * result + (extension != null ? extension.hashCode() : 0);
+			result = prime * result + ((extension == null) ? 0 : extension.hashCode());
+			result = prime * result + (strict ? 1231 : 1237);
 			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			CacheKey other = (CacheKey)obj;
+			if (extension == null)
+			{
+				if (other.extension != null)
+					return false;
+			}
+			else if (!extension.equals(other.extension))
+				return false;
+			if (strict != other.strict)
+				return false;
+			return true;
 		}
 	}
 }
