@@ -16,12 +16,17 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import java.util.Iterator;
+
 import org.apache.wicket.Component;
+import org.apache.wicket.DequeueContext;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.EnclosureContainer;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
@@ -125,7 +130,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		if (childComponent == null)
 		{
 			// try to find child when queued
-			childComponent = get(childId);
+			childComponent = resolveChild(this);
 		}
 		if (childComponent == null)
 		{
@@ -133,6 +138,33 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 			childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
 		}
 		return childComponent;
+	}
+	
+	/**
+	 * Searches for the controlling child component looking also 
+	 * through transparent components.
+	 * 
+	 * @param container
+	 * 			the current container
+	 * @return the controlling child component, null if no one is found 
+	 */
+	private Component resolveChild(MarkupContainer container)
+	{
+		Component childController = container.get(childId);
+		
+		Iterator<Component> children = container.iterator();
+		
+		while (children.hasNext() && childController == null)
+		{
+			Component transparentChild = children.next();
+			
+			if(transparentChild instanceof TransparentWebMarkupContainer)
+			{
+				childController = resolveChild((MarkupContainer)transparentChild);
+			}
+		}
+		
+		return childController;
 	}
 
 	@Override
@@ -273,5 +305,17 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 			throw new WicketRuntimeException(
 				"Programming error: childComponent == enclose component; endless loop");
 		}
+	}
+	
+	@Override
+	public DequeueContext newDequeueContext()
+	{
+		IMarkupFragment markup = getMarkupSourcingStrategy().getMarkup(this, null);
+		if (markup == null)
+		{
+			return null;
+		}
+
+		return new DequeueContext(markup, this, true);
 	}
 }

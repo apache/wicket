@@ -5,8 +5,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-    <a href="ref/transparentContainer.html">
-        <span wicket:id="queuedComponent"></span>
-    </a>
+    <wicket:enclosure child="queuedComponent">
+	    <a href="ref/transparentContainer.html">
+	        <span wicket:id="queuedComponent"></span>
+	    </a>
+    </wicket:enclosure>
 </body>
 </html>

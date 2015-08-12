@@ -45,6 +45,11 @@ public class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 	 * 
 	 * Transparent component inside page body must allow 
 	 * queued children components.
+	 * 
+	 * 
+	 * https://issues.apache.org/jira/browse/WICKET-5964
+	 * 
+	 * Queuing a component within an enclosure
 	 */
 	@Test
 	public void queuedComponentsInsideTransparentContainer()
