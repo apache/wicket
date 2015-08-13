@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
  * Component with id "c". The number of children in a MarkupContainer can be determined by calling
  * size(), and the whole hierarchy of children held by a MarkupContainer can be traversed by calling
  * visitChildren(), passing in an implementation of IVisitor.
- * 
+ *
  * <li><b>Markup Rendering </b>- A MarkupContainer also holds/references associated markup which is
  * used to render the container. As the markup stream for a container is rendered, component
  * references in the markup are resolved by using the container to look up Components in the
@@ -90,10 +90,10 @@ import org.slf4j.LoggerFactory;
  * {@link #getAssociatedMarkupStream(boolean)} to load the markup associated with the page. Since
  * Page is at the top of the container hierarchy, it is guaranteed that {@link #findMarkupStream()}
  * will always return a valid markup stream.
- * 
+ *
  * @see MarkupStream
  * @author Jonathan Locke
- * 
+ *
  */
 public abstract class MarkupContainer extends Component implements Iterable<Component>
 {
@@ -123,7 +123,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Adds a child component to this container.
-	 * 
+	 *
 	 * @param childs
 	 *            The child(ren) to add.
 	 * @throws IllegalArgumentException
@@ -184,7 +184,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Replaces a child component of this container with another or just adds it in case no child
 	 * with the same id existed yet.
-	 * 
+	 *
 	 * @param childs
 	 *            The child(s) to be added or replaced
 	 * @return This
@@ -224,7 +224,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * The result of all this is that components added with autoAdd() are free from versioning and
 	 * can add their own children without the usual exception that would normally be thrown when the
 	 * component hierarchy is modified during rendering.
-	 * 
+	 *
 	 * @param component
 	 *            The component to add
 	 * @param markupStream
@@ -309,7 +309,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * <p>
 	 * A component path consists of component ids separated by colons, e.g. "b:c" identifies a
 	 * component "c" inside container "b" inside this container.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @return The component at the path
@@ -362,7 +362,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
-	 * 
+	 *
 	 * @param throwException
 	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
@@ -395,7 +395,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Gets a fresh markup stream that contains the (immutable) markup resource for this class.
-	 * 
+	 *
 	 * @return A stream of MarkupElement elements. Null if not found.
 	 */
 	public Markup getAssociatedMarkup()
@@ -437,9 +437,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Get the childs markup
-	 * 
+	 *
 	 * @see Component#getMarkup()
-	 * 
+	 *
 	 * @param child
 	 *            The child component. If null, the container's markup will be returned. See Border,
 	 *            Panel or Enclosure where getMarkup(null) != getMarkup().
@@ -453,7 +453,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Get the type of associated markup for this component.
-	 * 
+	 *
 	 * @return The type of associated markup for this component (for example, "html", "wml" or
 	 *         "vxml"). The markup type for a component is independent of whether or not the
 	 *         component actually has an associated markup resource file (which is determined at
@@ -473,9 +473,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
+	 *
 	 * Adds a child component to this container.
-	 * 
+	 *
 	 * @param child
 	 *            The child
 	 * @throws IllegalArgumentException
@@ -578,7 +578,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Removes the given component
-	 * 
+	 *
 	 * @param id
 	 *            The id of the component to remove
 	 * @return {@code this} for chaining
@@ -606,7 +606,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * <p>
 	 * Note: implementation does not call {@link MarkupContainer#remove(Component) } for each
 	 * component.
-	 * 
+	 *
 	 * @return {@code this} for method chaining
 	 */
 	public MarkupContainer removeAll()
@@ -642,7 +642,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Renders the entire associated markup for a container such as a Border or Panel. Any leading
 	 * or trailing raw markup in the associated markup is skipped.
-	 * 
+	 *
 	 * @param openTagName
 	 *            the tag to render the associated markup for
 	 * @param exceptionMessage
@@ -705,7 +705,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Replaces a child component of this container with another
-	 * 
+	 *
 	 * @param child
 	 *            The child
 	 * @throws IllegalArgumentException
@@ -786,7 +786,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Get the number of children in this container.
-	 * 
+	 *
 	 * @return Number of children in this container
 	 */
 	public int size()
@@ -840,10 +840,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Traverses all child components of the given class in this container, calling the visitor's
 	 * visit method at each one.
-	 * 
+	 *
 	 * Make sure that if you give a type S that the clazz parameter will only resolve to those
 	 * types. Else a class cast exception will occur.
-	 * 
+	 *
 	 * @param <S>
 	 *            The type that goes into the Visitor.component() method.
 	 * @param <R>
@@ -863,7 +863,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Traverses all child components in this container, calling the visitor's visit method at each
 	 * one.
-	 * 
+	 *
 	 * @param <R>
 	 * @param visitor
 	 *            The visitor to call back to
@@ -949,10 +949,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
-	 * 
+	 *
 	 * Overrides {@link Component#internalInitialize()} to call {@link Component#fireInitialize()}
 	 * for itself and for all its children.
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#fireInitialize()
 	 */
 	@Override
@@ -992,7 +992,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Returns child component at the specified index
-	 * 
+	 *
 	 * @param index
 	 * @throws ArrayIndexOutOfBoundsException
 	 * @return child component at the specified index
@@ -1003,7 +1003,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 * @return The child component
 	 */
@@ -1013,7 +1013,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 * @param reconstruct
 	 * @return the child component
@@ -1053,7 +1053,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Returns the wicket:id of the given object if it is a {@link Component}
-	 * 
+	 *
 	 * @param object
 	 * @return The id of the object (object can be component)
 	 */
@@ -1070,7 +1070,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return The child component
 	 */
@@ -1115,7 +1115,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @param child
 	 * @return The index of the given child component
 	 */
@@ -1159,7 +1159,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @param component
 	 * @return The component that is removed.
 	 */
@@ -1174,7 +1174,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 * @return The component that is removed
 	 */
@@ -1234,7 +1234,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 * @param child
 	 * @param reconstruct
@@ -1272,7 +1272,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 * @param child
 	 * @return The component that is replaced
@@ -1283,7 +1283,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The size of the children
 	 */
 	private int children_size()
@@ -1308,7 +1308,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Ensure that there is space in childForId map for a new entry before adding it.
-	 * 
+	 *
 	 * @param child
 	 *            The child to put into the map
 	 * @return Any component that was replaced
@@ -1350,9 +1350,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE OR OVERWRITE IT.
-	 * 
+	 *
 	 * Renders the next element of markup in the given markup stream.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream
 	 * @return true, if element was rendered as RawMarkup
@@ -1475,7 +1475,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Handle the container's body. If your override of this method does not advance the markup
 	 * stream to the close tag for the openTag, a runtime exception will be thrown by the framework.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -1500,7 +1500,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * Renders markup for the body of a ComponentTag from the current position in the given markup
 	 * stream. If the open tag passed in does not require a close tag, nothing happens. Markup is
 	 * rendered until the closing tag for openTag is reached.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -1535,11 +1535,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 	/**
 	 * Loop through the markup in this container
-	 * 
+	 *
 	 * @param markupStream
 	 * @param openTag
 	 */
-	protected final void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		while (markupStream.hasMore())
 		{
@@ -1628,7 +1628,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#internalMarkRendering(boolean)
 	 */
 	@Override
@@ -1658,7 +1658,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.apache.wicket.Component#onBeforeRenderChildren()
 	 */
 	@Override
@@ -1739,7 +1739,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static class ChildList extends AbstractList<Object> implements IClusterable
 	{
@@ -1749,7 +1749,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param children
 		 */
 		public ChildList(Object children)
@@ -1856,7 +1856,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * Swaps position of children. This method is particularly useful for adjusting positions of
 	 * repeater's items without rebuilding the component hierarchy
-	 * 
+	 *
 	 * @param idx1
 	 *            index of first component to be swapped
 	 * @param idx2

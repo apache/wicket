@@ -45,11 +45,11 @@ import org.slf4j.LoggerFactory;
  * You may register additional IStringResourceLoader to extend or replace Wickets default search
  * strategy for the properties. E.g. string resource loaders which load the properties from a
  * database. There should be hardly any need to extend Localizer.
- * 
+ *
  * @see org.apache.wicket.settings.IResourceSettings#getLocalizer()
  * @see org.apache.wicket.resource.loader.IStringResourceLoader
  * @see org.apache.wicket.settings.IResourceSettings#getStringResourceLoaders()
- * 
+ *
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
@@ -84,7 +84,7 @@ public class Localizer
 
 	/**
 	 * Clear all cache entries by instantiating a new cache object
-	 * 
+	 *
 	 * @see #newCache()
 	 */
 	public final void clearCache()
@@ -97,7 +97,7 @@ public class Localizer
 
 	/**
 	 * @see #getString(String, Component, IModel, Locale, String, String)
-	 * 
+	 *
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
@@ -114,7 +114,7 @@ public class Localizer
 
 	/**
 	 * @see #getString(String, Component, IModel, Locale, String, String)
-	 * 
+	 *
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
@@ -133,7 +133,7 @@ public class Localizer
 
 	/**
 	 * @see #getString(String, Component, IModel, Locale, String, String)
-	 * 
+	 *
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
@@ -152,7 +152,7 @@ public class Localizer
 
 	/**
 	 * @see #getString(String, Component, IModel, Locale, String, String)
-	 * 
+	 *
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
@@ -176,7 +176,7 @@ public class Localizer
 	 * allow developers full control over string resource loading. However, it is recommended that
 	 * one of the other convenience methods in the class are used as they handle all of the work
 	 * related to obtaining the current user locale and style information.
-	 * 
+	 *
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
@@ -274,7 +274,7 @@ public class Localizer
 
 	/**
 	 * @see #getStringIgnoreSettings(String, Component, IModel, Locale, String, String)
-	 * 
+	 *
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
@@ -285,7 +285,7 @@ public class Localizer
 	 *            The default value (optional)
 	 * @return The string resource
 	 */
-	public final String getStringIgnoreSettings(final String key, final Component component,
+	public String getStringIgnoreSettings(final String key, final Component component,
 		final IModel<?> model, final String defaultValue)
 	{
 		return getStringIgnoreSettings(key, component, model, null, null, defaultValue);
@@ -294,7 +294,7 @@ public class Localizer
 	/**
 	 * This is similar to {@link #getString(String, Component, IModel, String)} except that the
 	 * resource settings are ignored. This allows to to code something like
-	 * 
+	 *
 	 * <pre>
 	 * String option = getLocalizer().getStringIgnoreSettings(getId() + &quot;.null&quot;, this, &quot;&quot;);
 	 * if (Strings.isEmpty(option))
@@ -302,7 +302,7 @@ public class Localizer
 	 * 	option = getLocalizer().getString(&quot;null&quot;, this, CHOOSE_ONE);
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * @param key
 	 *            The key to obtain the resource for
 	 * @param component
@@ -317,7 +317,7 @@ public class Localizer
 	 *            The default value (optional)
 	 * @return The string resource
 	 */
-	public final String getStringIgnoreSettings(final String key, final Component component,
+	public String getStringIgnoreSettings(final String key, final Component component,
 		final IModel<?> model, Locale locale, String style, final String defaultValue)
 	{
 		boolean addedToPage = false;
@@ -427,7 +427,7 @@ public class Localizer
 
 	/**
 	 * In case you want to provide your own list of string resource loaders
-	 * 
+	 *
 	 * @return List of string resource loaders
 	 */
 	protected List<IStringResourceLoader> getStringResourceLoaders()
@@ -437,7 +437,7 @@ public class Localizer
 
 	/**
 	 * Put the value into the cache and associate it with the cache key
-	 * 
+	 *
 	 * @param cacheKey
 	 * @param string
 	 */
@@ -461,7 +461,7 @@ public class Localizer
 
 	/**
 	 * Get the value associated with the key from the cache.
-	 * 
+	 *
 	 * @param cacheKey
 	 * @return The value of the key
 	 */
@@ -484,7 +484,7 @@ public class Localizer
 
 	/**
 	 * Gets the cache key
-	 * 
+	 *
 	 * @param key
 	 * @param component
 	 * @param locale
@@ -516,7 +516,7 @@ public class Localizer
 				 * only append component id if component is not a loop item because (a) these ids
 				 * are irrelevant when generating resource cache keys (b) they cause a lot of
 				 * redundant keys to be generated
-				 * 
+				 *
 				 * also if the cursor component is an auto component we append a constant string
 				 * instead of component's id because auto components have a newly generated id on
 				 * every render.
@@ -548,7 +548,7 @@ public class Localizer
 
 /**
 	 * Helper method to handle property variable substitution in strings.
-	 * 
+	 *
 	 * @param component
 	 *            The component requesting a model value or {@code null]
 	 * @param string
@@ -592,7 +592,7 @@ public class Localizer
 	/**
 	 * By default the cache is enabled. Disabling the cache will disable it and clear the cache.
 	 * This can be handy for example in development mode.
-	 * 
+	 *
 	 * @param value
 	 */
 	public final void setEnableCache(boolean value)
@@ -610,9 +610,9 @@ public class Localizer
 	/**
 	 * Create a new cache, override this method if you want a different map to store the cache keys,
 	 * for example a map that hold only the last X number of elements..
-	 * 
+	 *
 	 * By default it uses the {@link ConcurrentHashMap}
-	 * 
+	 *
 	 * @return cache
 	 */
 	protected Map<String, String> newCache()
@@ -623,7 +623,7 @@ public class Localizer
 	/**
 	 * Database that maps class names to an integer id. This is used to make localizer keys shorter
 	 * because sometimes they can contain a large number of class names.
-	 * 
+	 *
 	 * @author igor.vaynberg
 	 */
 	private static class ClassMetaDatabase
@@ -634,7 +634,7 @@ public class Localizer
 		/**
 		 * Returns a unique id that represents this class' name. This can be used for compressing
 		 * class names. Notice this id should not be used across cluster nodes.
-		 * 
+		 *
 		 * @param clazz
 		 * @return long id of class name
 		 */

@@ -98,7 +98,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Component serves as the highest level abstract base class for all components.
- * 
+ *
  * <ul>
  * <li><b>Identity </b>- All Components must have a non-null id which is retrieved by calling
  * getId(). The id must be unique within the {@link MarkupContainer} that holds the Component, but
@@ -207,7 +207,7 @@ import org.slf4j.LoggerFactory;
  * <li><b>Security </b>- All components are subject to an {@link IAuthorizationStrategy} which
  * controls instantiation, visibility and enabling. See {@link SimplePageAuthorizationStrategy} for
  * a simple implementation.</li>
- * 
+ *
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -241,14 +241,14 @@ public abstract class Component
 	 * When a component is not allowed to be enabled (in effect disabled through the implementation
 	 * of this interface), Wicket will try to prevent model updates too. This is not completely fail
 	 * safe, as constructs like:
-	 * 
+	 *
 	 * <pre>
-	 * 
+	 *
 	 * User u = (User)getModelObject();
 	 * u.setName(&quot;got you there!&quot;);
-	 * 
+	 *
 	 * </pre>
-	 * 
+	 *
 	 * can't be prevented. Indeed it can be argued that any model protection is best dealt with in
 	 * your model objects to be completely secured. Wicket will catch all normal framework-directed
 	 * use though.
@@ -411,7 +411,7 @@ public abstract class Component
 	private static final int FLAG_VISIBILITY_ALLOWED = 0x40000000;
 
 	private static final int FLAG_DETACHING = 0x80000000;
-	
+
 	/**
 	 * The name of attribute that will hold markup id
 	 */
@@ -655,7 +655,7 @@ public abstract class Component
 	/**
 	 * Constructor. All components have names. A component's id cannot be null. This is the minimal
 	 * constructor of component. It does not register a model.
-	 * 
+	 *
 	 * @param id
 	 *            The non-null id of this component
 	 * @throws WicketRuntimeException
@@ -669,12 +669,12 @@ public abstract class Component
 	/**
 	 * Constructor. All components have names. A component's id cannot be null. This constructor
 	 * includes a model.
-	 * 
+	 *
 	 * @param id
 	 *            The non-null id of this component
 	 * @param model
 	 *            The component's model
-	 * 
+	 *
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
@@ -718,9 +718,9 @@ public abstract class Component
 	 * Panel/Border/Enclosure.getMarkup(null) to return the associated markup file. And
 	 * Panel/Border/Enclosure.getMarkup(child) will search the child in the appropriate markup
 	 * fragment.
-	 * 
+	 *
 	 * @see MarkupContainer#getMarkup(Component)
-	 * 
+	 *
 	 * @return The markup fragment
 	 */
 	public IMarkupFragment getMarkup()
@@ -779,7 +779,7 @@ public abstract class Component
 	 * Set the markup for the component. Note that the component's markup variable is transient and
 	 * thus must only be used for one render cycle. E.g. auto-component are using it. You may also
 	 * it if you subclassed getMarkup().
-	 * 
+	 *
 	 * @param markup
 	 */
 	public final void setMarkup(final IMarkupFragment markup)
@@ -829,16 +829,16 @@ public abstract class Component
 	 * <p>
 	 * Parent containers are guaranteed to be initialized before their children
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * It is safe to use {@link #getPage()} in this method
 	 * </p>
-	 * 
+	 *
 	 * <p>
 	 * NOTE:The timing of this call is not precise, the contract is that it is called sometime
 	 * before {@link Component#onBeforeRender()}.
 	 * </p>
-	 * 
+	 *
 	 */
 	protected void onInitialize()
 	{
@@ -847,7 +847,7 @@ public abstract class Component
 
 	/**
 	 * Checks if the component has been initialized - {@link #onInitialize()} has been called
-	 * 
+	 *
 	 * @return {@code true} if component has been initialized
 	 */
 	final boolean isInitialized()
@@ -857,7 +857,7 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
-	 * 
+	 *
 	 * Used to call {@link #onInitialize()}
 	 */
 	public void internalInitialize()
@@ -933,7 +933,7 @@ public abstract class Component
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private final void internalBeforeRender()
 	{
@@ -1028,14 +1028,14 @@ public abstract class Component
 	 * visibility or enabled or other state of one component depends on the state of another this
 	 * method should be manually invoked on the other component by the user. EG to link visiliby of
 	 * two markup containers the following should be done:
-	 * 
+	 *
 	 * <pre>
 	 * final WebMarkupContainer source=new WebMarkupContainer("a") {
 	 * 	protected void onConfigure() {
 	 *    setVisible(Math.rand()>0.5f);
 	 *  }
 	 * };
-	 * 
+	 *
 	 * WebMarkupContainer linked=new WebMarkupContainer("b") {
 	 * 	protected void onConfigure() {
 	 * 		source.configure(); // make sure source is configured
@@ -1043,7 +1043,7 @@ public abstract class Component
 	 *  }
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * </p>
 	 */
 	public final void configure()
@@ -1073,9 +1073,9 @@ public abstract class Component
 	}
 
 	/**
-	 * 
+	 *
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * Called after the {@link #onConfigure()}, but before {@link #onBeforeRender()}
 	 */
 	void internalOnAfterConfigure()
@@ -1086,9 +1086,9 @@ public abstract class Component
 	 * Redirects to any intercept page previously specified by a call to redirectToInterceptPage.
 	 * The redirect is done by throwing an exception. If there is no intercept page no exception
 	 * will be thrown and the program flow will continue uninterrupted.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 * <pre>
 	 * add(new Link(&quot;login&quot;)
 	 * {
@@ -1102,7 +1102,7 @@ public abstract class Component
 	 * 		}
 	 * 	}
 	 * });
-	 * 
+	 *
 	 * @see Component#redirectToInterceptPage(Page)
 	 */
 	public final void continueToOriginalDestination()
@@ -1120,7 +1120,7 @@ public abstract class Component
 
 	/**
 	 * Registers a debug feedback message for this component
-	 * 
+	 *
 	 * @param message
 	 *            The feedback message
 	 */
@@ -1251,7 +1251,7 @@ public abstract class Component
 
 	/**
 	 * Registers an error feedback message for this component
-	 * 
+	 *
 	 * @param message
 	 *            The feedback message
 	 */
@@ -1263,7 +1263,7 @@ public abstract class Component
 
 	/**
 	 * Registers a fatal feedback message for this component
-	 * 
+	 *
 	 * @param message
 	 *            The feedback message
 	 */
@@ -1275,11 +1275,11 @@ public abstract class Component
 
 	/**
 	 * Finds the first container parent of this component of the given class.
-	 * 
+	 *
 	 * @param <Z>
 	 *            type of parent
-	 * 
-	 * 
+	 *
+	 *
 	 * @param c
 	 *            MarkupContainer class to search for
 	 * @return First container parent that is an instance of the given class, or null if none can be
@@ -1328,7 +1328,7 @@ public abstract class Component
 
 	/**
 	 * Gets interface to application that this component is a part of.
-	 * 
+	 *
 	 * @return The application associated with the session that this component is in.
 	 * @see Application
 	 */
@@ -1348,10 +1348,10 @@ public abstract class Component
 
 	/**
 	 * Gets the converter that should be used by this component.
-	 * 
+	 *
 	 * @param type
 	 *            The type to convert to
-	 * 
+	 *
 	 * @return The converter that should be used by this component
 	 */
 	@Override
@@ -1362,7 +1362,7 @@ public abstract class Component
 
 	/**
 	 * Gets whether model strings should be escaped.
-	 * 
+	 *
 	 * @return Returns whether model strings should be escaped
 	 */
 	public final boolean getEscapeModelStrings()
@@ -1372,7 +1372,7 @@ public abstract class Component
 
 	/**
 	 * Gets the id of this component.
-	 * 
+	 *
 	 * @return The id of this component
 	 */
 	@Override
@@ -1392,7 +1392,7 @@ public abstract class Component
 	/**
 	 * Gets the locale for this component. By default, it searches its parents for a locale. If no
 	 * parents (it's a recursive search) returns a locale, it gets one from the session.
-	 * 
+	 *
 	 * @return The locale to be used for this component
 	 * @see Session#getLocale()
 	 */
@@ -1407,7 +1407,7 @@ public abstract class Component
 
 	/**
 	 * Convenience method to provide easy access to the localizer object within any component.
-	 * 
+	 *
 	 * @return The localizer object
 	 */
 	public final Localizer getLocalizer()
@@ -1417,7 +1417,7 @@ public abstract class Component
 
 	/**
 	 * Get the first component tag in the associated markup
-	 * 
+	 *
 	 * @return first component tag
 	 */
 	private final ComponentTag getMarkupTag()
@@ -1439,14 +1439,14 @@ public abstract class Component
 
 	/**
 	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
-	 * 
+	 *
 	 * Get a copy of the markup's attributes which are associated with the component.
 	 * <p>
 	 * Modifications to the map returned don't change the tags attributes. It is just a copy.
 	 * <p>
 	 * Note: The component must have been added (directly or indirectly) to a container with an
 	 * associated markup file (Page, Panel or Border).
-	 * 
+	 *
 	 * @return markup attributes
 	 */
 	public final ValueMap getMarkupAttributes()
@@ -1463,7 +1463,7 @@ public abstract class Component
 
 	/**
 	 * Get the markupId
-	 * 
+	 *
 	 * @return MarkupId
 	 */
 	public final Object getMarkupIdImpl()
@@ -1494,15 +1494,15 @@ public abstract class Component
 	 * the preferred way as there is no chance of id collision. This will also enable
 	 * {@link #setOutputMarkupId(boolean)}.
 	 * <p>
-	 * 
+	 *
 	 * <p>
 	 * Note: This method should only be called after the component or its parent have been added to
 	 * the page.
-	 * 
+	 *
 	 * @param createIfDoesNotExist
 	 *            When there is no existing markup id, determines whether it should be generated or
 	 *            whether <code>null</code> should be returned.
-	 * 
+	 *
 	 * @return markup id of the component
 	 */
 	public String getMarkupId(boolean createIfDoesNotExist)
@@ -1523,7 +1523,7 @@ public abstract class Component
 	 * <p>
 	 * Note: This method should only be called after the component or its parent have been added to
 	 * the page.
-	 * 
+	 *
 	 * @return markup id of the component
 	 */
 	public String getMarkupId()
@@ -1533,10 +1533,10 @@ public abstract class Component
 
 	/**
 	 * Gets metadata for this component using the given key.
-	 * 
+	 *
 	 * @param <M>
 	 *            The type of the metadata.
-	 * 
+	 *
 	 * @param key
 	 *            The key for the data
 	 * @return The metadata or null of no metadata was found for the given key
@@ -1548,7 +1548,7 @@ public abstract class Component
 	}
 
 	/**
-	 * 
+	 *
 	 * @return meta data entry
 	 */
 	private MetaDataEntry<?>[] getMetaData()
@@ -1578,7 +1578,7 @@ public abstract class Component
 
 	/**
 	 * Gets the model. It returns the object that wraps the backing model.
-	 * 
+	 *
 	 * @return The model
 	 */
 	public final IModel<?> getDefaultModel()
@@ -1598,7 +1598,7 @@ public abstract class Component
 	/**
 	 * Gets the backing model object. Unlike getDefaultModel().getObject(), this method returns null
 	 * for a null model.
-	 * 
+	 *
 	 * @return The backing model object
 	 */
 	public final Object getDefaultModelObject()
@@ -1629,10 +1629,10 @@ public abstract class Component
 	 * sensitive chars are escaped but not all none-ascii chars. Proper HTML encoding should be used
 	 * instead. In case you really need a fully escaped model string you may call
 	 * {@link Strings#escapeMarkup(CharSequence, boolean, boolean)} on the model string returned.
-	 * 
+	 *
 	 * @see Strings#escapeMarkup(CharSequence, boolean, boolean)
 	 * @see #getEscapeModelStrings()
-	 * 
+	 *
 	 * @return Model object for this component as a string
 	 */
 	public final String getDefaultModelObjectAsString()
@@ -1646,10 +1646,10 @@ public abstract class Component
 	 * sensitive chars are escaped but not all none-ascii chars. Proper HTML encoding should be used
 	 * instead. In case you really need a fully escaped model string you may call
 	 * {@link Strings#escapeMarkup(CharSequence, boolean, boolean)} on the model string returned.
-	 * 
+	 *
 	 * @see Strings#escapeMarkup(CharSequence, boolean, boolean)
 	 * @see #getEscapeModelStrings()
-	 * 
+	 *
 	 * @param modelObject
 	 *            Model object to convert to string
 	 * @return The string
@@ -1684,7 +1684,7 @@ public abstract class Component
 	/**
 	 * Gets whether or not component will output id attribute into the markup. id attribute will be
 	 * set to the value returned from {@link Component#getMarkupId()}.
-	 * 
+	 *
 	 * @return whether or not component will output id attribute into the markup
 	 */
 	public final boolean getOutputMarkupId()
@@ -1694,7 +1694,7 @@ public abstract class Component
 
 	/**
 	 * Gets whether or not an invisible component will render a placeholder tag.
-	 * 
+	 *
 	 * @return true if a placeholder tag should be rendered
 	 */
 	public final boolean getOutputMarkupPlaceholderTag()
@@ -1704,7 +1704,7 @@ public abstract class Component
 
 	/**
 	 * Gets the page holding this component.
-	 * 
+	 *
 	 * @return The page holding this component
 	 * @throws IllegalStateException
 	 *             Thrown if component is not yet attached to a Page.
@@ -1728,7 +1728,7 @@ public abstract class Component
 	/**
 	 * Gets the path to this component relative to its containing page, i.e. without leading page
 	 * id.
-	 * 
+	 *
 	 * @return The path to this component relative to the page it is in
 	 */
 	@Override
@@ -1739,7 +1739,7 @@ public abstract class Component
 
 	/**
 	 * Gets any parent container, or null if there is none.
-	 * 
+	 *
 	 * @return Any parent container, or null if there is none
 	 */
 	@Override
@@ -1750,7 +1750,7 @@ public abstract class Component
 
 	/**
 	 * Gets this component's path.
-	 * 
+	 *
 	 * @return Colon separated path to this component in the component hierarchy
 	 */
 	public final String getPath()
@@ -1770,7 +1770,7 @@ public abstract class Component
 	/**
 	 * If false the component's tag will be printed as well as its body (which is default). If true
 	 * only the body will be printed, but not the component's tag.
-	 * 
+	 *
 	 * @return If true, the component tag will not be printed
 	 */
 	public final boolean getRenderBodyOnly()
@@ -1795,7 +1795,7 @@ public abstract class Component
 
 	/**
 	 * Gets the active request cycle for this component
-	 * 
+	 *
 	 * @return The request cycle
 	 */
 	public final RequestCycle getRequestCycle()
@@ -1813,7 +1813,7 @@ public abstract class Component
 
 	/**
 	 * Gets the current Session object.
-	 * 
+	 *
 	 * @return The Session that this component is in
 	 */
 	public Session getSession()
@@ -1882,9 +1882,9 @@ public abstract class Component
 
 	/**
 	 * A convenience method to access the Sessions's style.
-	 * 
+	 *
 	 * @return The style of this component respectively the style of the Session.
-	 * 
+	 *
 	 * @see org.apache.wicket.Session#getStyle()
 	 */
 	public final String getStyle()
@@ -1901,7 +1901,7 @@ public abstract class Component
 	 * Gets the variation string of this component that will be used to look up markup for this
 	 * component. Subclasses can override this method to define by an instance what markup variation
 	 * should be picked up. By default it will return null or the value of a parent.
-	 * 
+	 *
 	 * @return The variation of this component.
 	 */
 	public String getVariation()
@@ -1915,7 +1915,7 @@ public abstract class Component
 
 	/**
 	 * Gets whether this component was rendered at least once.
-	 * 
+	 *
 	 * @return true if the component has been rendered before, false if it is merely constructed
 	 */
 	public final boolean hasBeenRendered()
@@ -1928,7 +1928,7 @@ public abstract class Component
 	 * {@link FeedbackMessages} instance and add it to the component metadata, even when called on a
 	 * component that has no feedback messages, to avoid the overhead use
 	 * {@link #hasFeedbackMessage()}
-	 * 
+	 *
 	 * @return feedback messages instance
 	 */
 	public FeedbackMessages getFeedbackMessages()
@@ -1957,7 +1957,7 @@ public abstract class Component
 
 	/**
 	 * @return True if this component has some kind of feedback message
-	 * 
+	 *
 	 */
 	public final boolean hasFeedbackMessage()
 	{
@@ -1971,7 +1971,7 @@ public abstract class Component
 
 	/**
 	 * Registers an informational feedback message for this component
-	 * 
+	 *
 	 * @param message
 	 *            The feedback message
 	 */
@@ -1983,7 +1983,7 @@ public abstract class Component
 
 	/**
 	 * Registers an success feedback message for this component
-	 * 
+	 *
 	 * @param message
 	 *            The feedback message
 	 */
@@ -1995,7 +1995,7 @@ public abstract class Component
 
 	/**
 	 * Authorizes an action for a component.
-	 * 
+	 *
 	 * @param action
 	 *            The action to authorize
 	 * @return True if the action is allowed
@@ -2024,7 +2024,7 @@ public abstract class Component
 	 * Gets whether this component is enabled. Specific components may decide to implement special
 	 * behavior that uses this property, like web form components that add a disabled='disabled'
 	 * attribute when enabled is false.
-	 * 
+	 *
 	 * @return Whether this component is enabled.
 	 */
 	public boolean isEnabled()
@@ -2035,7 +2035,7 @@ public abstract class Component
 	/**
 	 * Checks the security strategy if the {@link Component#RENDER} action is allowed on this
 	 * component
-	 * 
+	 *
 	 * @return ture if {@link Component#RENDER} action is allowed, false otherwise
 	 */
 	public final boolean isRenderAllowed()
@@ -2047,7 +2047,7 @@ public abstract class Component
 	 * Returns if the component is stateless or not. It checks the stateless hint if that is false
 	 * it returns directly false. If that is still true it checks all its behaviors if they can be
 	 * stateless.
-	 * 
+	 *
 	 * @return whether the component is stateless.
 	 */
 	public final boolean isStateless()
@@ -2113,7 +2113,7 @@ public abstract class Component
 	 * method, it is a good idea to keep it cheap in terms of processing. Alternatively, you can
 	 * call {@link #setVisible(boolean)}.
 	 * <p>
-	 * 
+	 *
 	 * @return True if component and any children are visible
 	 */
 	public boolean isVisible()
@@ -2123,7 +2123,7 @@ public abstract class Component
 
 	/**
 	 * Checks if the component itself and all its parents are visible.
-	 * 
+	 *
 	 * @return true if the component and all its parents are visible.
 	 */
 	public final boolean isVisibleInHierarchy()
@@ -2141,14 +2141,14 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * Sets the RENDERING flag and removes the PREPARED_FOR_RENDER flag on component and it's
 	 * children.
-	 * 
+	 *
 	 * @param setRenderingFlag
 	 *            if this is false only the PREPARED_FOR_RENDER flag is removed from component, the
 	 *            RENDERING flag is not set.
-	 * 
+	 *
 	 * @see #internalPrepareForRender(boolean)
 	 */
 	public final void markRendering(boolean setRenderingFlag)
@@ -2189,7 +2189,7 @@ public abstract class Component
 	 * <p>
 	 * Prepares the component and it's children for rendering. On whole page render this method must
 	 * be called on the page. On AJAX request, this method must be called on the updated component.
-	 * 
+	 *
 	 * @param setRenderingFlag
 	 *            Whether to set the rendering flag. This must be true if the page is about to be
 	 *            rendered. However, there are usecases to call this method without an immediate
@@ -2231,7 +2231,7 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * Prepares the component and it's children for rendering. On whole page render this method must
 	 * be called on the page. On AJAX request, this method must be called on updated component.
 	 */
@@ -2245,10 +2245,10 @@ public abstract class Component
 	 * is saved for future use by method continueToOriginalDestination(); Only use this method when
 	 * you plan to continue to the current url at some later time; otherwise just use
 	 * setResponsePage or - when you are in a constructor or checkAccessMethod, call redirectTo.
-	 * 
+	 *
 	 * @param page
 	 *            The sign in page
-	 * 
+	 *
 	 * @see Component#continueToOriginalDestination()
 	 */
 	public final void redirectToInterceptPage(final Page page)
@@ -2391,7 +2391,7 @@ public abstract class Component
 
 	/**
 	 * Called when a runtime exception is caught during the render process
-	 * 
+	 *
 	 * @param ex
 	 *            The exception caught.
 	 */
@@ -2421,7 +2421,7 @@ public abstract class Component
 	/**
 	 * Renders a placeholder tag for the component when it is invisible and
 	 * {@link #setOutputMarkupPlaceholderTag(boolean)} has been called with <code>true</code>.
-	 * 
+	 *
 	 * @param tag
 	 *            component tag
 	 * @param response
@@ -2453,7 +2453,7 @@ public abstract class Component
 	 * Returns the id of the markup region that will be updated via ajax. This can be different to
 	 * the markup id of the component if a {@link IAjaxRegionMarkupIdProvider} behavior has been
 	 * added.
-	 * 
+	 *
 	 * @return the markup id of the region to be updated via ajax.
 	 */
 	public final String getAjaxRegionMarkupId()
@@ -2562,7 +2562,7 @@ public abstract class Component
 	}
 
 	/**
-	 * 
+	 *
 	 * @param openTag
 	 * @return true, if the tag shall be rendered
 	 */
@@ -2603,7 +2603,7 @@ public abstract class Component
 	/**
 	 * Get the markup sourcing strategy for the component. If null,
 	 * {@link #newMarkupSourcingStrategy()} will be called.
-	 * 
+	 *
 	 * @return Markup sourcing strategy
 	 */
 	protected final IMarkupSourcingStrategy getMarkupSourcingStrategy()
@@ -2629,7 +2629,7 @@ public abstract class Component
 	 * Please note that markup source strategies are not persisted. Instead they get re-created by
 	 * calling this method again. That's ok since markup sourcing strategies usually do not maintain
 	 * a state.
-	 * 
+	 *
 	 * @return Markup sourcing strategy
 	 */
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
@@ -2639,14 +2639,14 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * 
+	 *
 	 * Print to the web response what ever the component wants to contribute to the head section.
 	 * Make sure that all attached behaviors are asked as well.
 	 * <p>
 	 * NOT intended for overriding by framework clients. Rather, use
 	 * {@link Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)}
 	 * </p>
-	 * 
+	 *
 	 * @param container
 	 *            The HtmlHeaderContainer
 	 */
@@ -2707,16 +2707,16 @@ public abstract class Component
 	/**
 	 * Replaces this component with another. The replacing component must have the same component id
 	 * as this component. This method serves as a shortcut to
-	 * 
+	 *
 	 * <code>this.getParent().replace(replacement)</code>
-	 * 
+	 *
 	 * and provides a better context for errors.
 	 * <p>
 	 * Usage: <code>component = component.replaceWith(replacement);</code>
 	 * </p>
-	 * 
+	 *
 	 * @since 1.2.1
-	 * 
+	 *
 	 * @param replacement
 	 *            component to replace this one
 	 * @return the component which replaced this one
@@ -2775,7 +2775,7 @@ public abstract class Component
 	 * attribute when enabled is false. If it is not enabled, it will not be allowed to call any
 	 * listener method on it (e.g. Link.onClick) and the model object will be protected (for the
 	 * common use cases, not for programmer's misuse)
-	 * 
+	 *
 	 * @param enabled
 	 *            whether this component is enabled
 	 * @return This
@@ -2814,7 +2814,7 @@ public abstract class Component
 
 	/**
 	 * Sets whether model strings should be escaped.
-	 * 
+	 *
 	 * @param escapeMarkup
 	 *            True is model strings should be escaped
 	 * @return This
@@ -2827,7 +2827,7 @@ public abstract class Component
 
 	/**
 	 * Set markup ID, which must be String or Integer
-	 * 
+	 *
 	 * @param markupId
 	 */
 	public final void setMarkupIdImpl(Object markupId)
@@ -2852,7 +2852,7 @@ public abstract class Component
 
 	/**
 	 * Copy markupId
-	 * 
+	 *
 	 * @param comp
 	 */
 	final void setMarkupId(Component comp)
@@ -2876,9 +2876,9 @@ public abstract class Component
 	 * <p>
 	 * If null is passed in the user defined value is cleared and markup id value will fall back on
 	 * automatically generated value
-	 * 
+	 *
 	 * @see #getMarkupId()
-	 * 
+	 *
 	 * @param markupId
 	 *            markup id value or null to clear any previous user defined value
 	 * @return this for chaining
@@ -2899,10 +2899,10 @@ public abstract class Component
 	 * Sets the metadata for this component using the given key. If the metadata object is not of
 	 * the correct type for the metadata key, an IllegalArgumentException will be thrown. For
 	 * information on creating MetaDataKeys, see {@link MetaDataKey}.
-	 * 
+	 *
 	 * @param <M>
 	 *            The type of the metadata
-	 * 
+	 *
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
@@ -2943,7 +2943,7 @@ public abstract class Component
 	 * WARNING: DO NOT OVERRIDE THIS METHOD UNLESS YOU HAVE A VERY GOOD REASON FOR IT. OVERRIDING
 	 * THIS MIGHT OPEN UP SECURITY LEAKS AND BREAK BACK-BUTTON SUPPORT.
 	 * </p>
-	 * 
+	 *
 	 * @param model
 	 *            The model
 	 * @return This
@@ -2991,7 +2991,7 @@ public abstract class Component
 	}
 
 	/**
-	 * 
+	 *
 	 * @param model
 	 */
 	void setModelImpl(IModel<?> model)
@@ -3022,7 +3022,7 @@ public abstract class Component
 	 * Sets the backing model object. Unlike <code>getDefaultModel().setObject(object)</code>, this
 	 * method checks authorisation and model comparator, and invokes <code>modelChanging</code> and
 	 * <code>modelChanged</code> if the value really changes.
-	 * 
+	 *
 	 * @param object
 	 *            The object to set
 	 * @return This
@@ -3059,13 +3059,13 @@ public abstract class Component
 	/**
 	 * Sets whether or not component will output id attribute into the markup. id attribute will be
 	 * set to the value returned from {@link Component#getMarkupId()}.
-	 * 
+	 *
 	 * @param output
 	 *            True if the component will output the id attribute into markup. Please note that
 	 *            the default behavior is to use the same id as the component. This means that your
 	 *            component must begin with [a-zA-Z] in order to generate a valid markup id
 	 *            according to: http://www.w3.org/TR/html401/types.html#type-name
-	 * 
+	 *
 	 * @return this for chaining
 	 */
 	public final Component setOutputMarkupId(final boolean output)
@@ -3078,15 +3078,15 @@ public abstract class Component
 	 * Render a placeholder tag when the component is not visible. The tag is of form:
 	 * &lt;componenttag style="display:none;" id="markupid"/&gt;. This method will also call
 	 * <code>setOutputMarkupId(true)</code>.
-	 * 
+	 *
 	 * This is useful, for example, in ajax situations where the component starts out invisible and
 	 * then becomes visible through an ajax update. With a placeholder tag already in the markup you
 	 * do not need to repaint this component's parent, instead you can repaint the component
 	 * directly.
-	 * 
+	 *
 	 * When this method is called with parameter <code>false</code> the outputmarkupid flag is not
 	 * reverted to false.
-	 * 
+	 *
 	 * @param outputTag
 	 * @return this for chaining
 	 */
@@ -3112,7 +3112,7 @@ public abstract class Component
 	/**
 	 * If false the component's tag will be printed as well as its body (which is default). If true
 	 * only the body will be printed, but not the component's tag.
-	 * 
+	 *
 	 * @param renderTag
 	 *            If true, the component tag will not be printed
 	 * @return This
@@ -3125,9 +3125,9 @@ public abstract class Component
 
 	/**
 	 * Sets the page that will respond to this request
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @param cls
 	 *            The response page class
 	 * @see RequestCycle#setResponsePage(Class)
@@ -3139,9 +3139,9 @@ public abstract class Component
 
 	/**
 	 * Sets the page class and its parameters that will respond to this request
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @param cls
 	 *            The response page class
 	 * @param parameters
@@ -3156,10 +3156,10 @@ public abstract class Component
 
 	/**
 	 * Sets the page that will respond to this request
-	 * 
+	 *
 	 * @param page
 	 *            The response page
-	 * 
+	 *
 	 * @see RequestCycle#setResponsePage(org.apache.wicket.request.component.IRequestablePage)
 	 */
 	public final void setResponsePage(final Page page)
@@ -3181,7 +3181,7 @@ public abstract class Component
 
 	/**
 	 * Sets whether this component and any children are visible.
-	 * 
+	 *
 	 * @param visible
 	 *            True if this component and any children should be visible
 	 * @return This
@@ -3214,7 +3214,7 @@ public abstract class Component
 
 	/**
 	 * Gets the string representation of this component.
-	 * 
+	 *
 	 * @return The path to this component
 	 */
 	@Override
@@ -3282,11 +3282,11 @@ public abstract class Component
 	 * Returns a bookmarkable URL that references a given page class using a given set of page
 	 * parameters. Since the URL which is returned contains all information necessary to instantiate
 	 * and render the page, it can be stored in a user's browser as a stable bookmark.
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @see RequestCycle#urlFor(Class, org.apache.wicket.request.mapper.parameter.PageParameters)
-	 * 
+	 *
 	 * @param pageClass
 	 *            Class of page
 	 * @param parameters
@@ -3302,7 +3302,7 @@ public abstract class Component
 	/**
 	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
 	 * AjaxPagingNavigationBehavior).
-	 * 
+	 *
 	 * @param behaviour
 	 *            The behavior that the URL should point to
 	 * @param listener
@@ -3343,12 +3343,12 @@ public abstract class Component
 
 	/**
 	 * Returns a URL that references the given request target.
-	 * 
+	 *
 	 * @see RequestCycle#urlFor(IRequestHandler)
-	 * 
+	 *
 	 * @param requestHandler
 	 *            the request target to reference
-	 * 
+	 *
 	 * @return a URL that references the given request target
 	 */
 	public final CharSequence urlFor(final IRequestHandler requestHandler)
@@ -3358,9 +3358,9 @@ public abstract class Component
 
 	/**
 	 * Gets a URL for the listener interface (e.g. ILinkListener).
-	 * 
+	 *
 	 * @see RequestCycle#urlFor(IRequestHandler)
-	 * 
+	 *
 	 * @param listener
 	 *            The listener interface that the URL should call
 	 * @param parameters
@@ -3376,9 +3376,9 @@ public abstract class Component
 
 	/**
 	 * Returns a URL that references a shared resource through the provided resource reference.
-	 * 
+	 *
 	 * @see RequestCycle#urlFor(IRequestHandler)
-	 * 
+	 *
 	 * @param resourceReference
 	 *            The resource reference
 	 * @param parameters
@@ -3394,7 +3394,7 @@ public abstract class Component
 	/**
 	 * Traverses all parent components of the given class in this parentClass, calling the visitor's
 	 * visit method at each one.
-	 * 
+	 *
 	 * @param <R>
 	 *            the type of the result object
 	 * @param parentClass
@@ -3412,7 +3412,7 @@ public abstract class Component
 	/**
 	 * Traverses all parent components of the given class in this parentClass, calling the visitor's
 	 * visit method at each one.
-	 * 
+	 *
 	 * @param <R>
 	 *            the type of the result object
 	 * @param parentClass
@@ -3456,7 +3456,7 @@ public abstract class Component
 
 	/**
 	 * Registers a warning feedback message for this component.
-	 * 
+	 *
 	 * @param message
 	 *            The feedback message
 	 */
@@ -3500,10 +3500,10 @@ public abstract class Component
 	/**
 	 * TODO WICKET-NG rename to something more useful - like componentChanged(), this method used to
 	 * be called with a Change object
-	 * 
+	 *
 	 * Adds state change to page.
 	 */
-	protected final void addStateChange()
+	protected void addStateChange()
 	{
 		checkHierarchyChange(this);
 		final Page page = findPage();
@@ -3515,7 +3515,7 @@ public abstract class Component
 
 	/**
 	 * Checks whether the given type has the expected name.
-	 * 
+	 *
 	 * @param tag
 	 *            The tag to check
 	 * @param name
@@ -3537,7 +3537,7 @@ public abstract class Component
 
 	/**
 	 * Checks that a given tag has a required attribute value.
-	 * 
+	 *
 	 * @param tag
 	 *            The tag
 	 * @param key
@@ -3567,7 +3567,7 @@ public abstract class Component
 	/**
 	 * Checks whether the hierarchy may be changed at all, and throws an exception if this is not
 	 * the case.
-	 * 
+	 *
 	 * @param component
 	 *            the component which is about to be added or removed
 	 */
@@ -3601,7 +3601,7 @@ public abstract class Component
 
 	/**
 	 * Suffixes an exception message with useful information about this. component.
-	 * 
+	 *
 	 * @param message
 	 *            The message
 	 * @return The modified message
@@ -3613,7 +3613,7 @@ public abstract class Component
 
 	/**
 	 * Finds the markup stream for this component.
-	 * 
+	 *
 	 * @return The markup stream for this component. Since a Component cannot have a markup stream,
 	 *         we ask this component's parent to search for it.
 	 */
@@ -3625,7 +3625,7 @@ public abstract class Component
 	/**
 	 * If this Component is a Page, returns self. Otherwise, searches for the nearest Page parent in
 	 * the component hierarchy. If no Page parent can be found, null is returned.
-	 * 
+	 *
 	 * @return The Page or null if none can be found
 	 */
 	protected final Page findPage()
@@ -3638,7 +3638,7 @@ public abstract class Component
 	 * Gets the subset of the currently coupled {@link Behavior}s that are of the provided type as
 	 * an unmodifiable list. Returns an empty list if there are no behaviors coupled to this
 	 * component.
-	 * 
+	 *
 	 * @param type
 	 *            The type or null for all
 	 * @return The subset of the currently coupled behaviors that are of the provided type as an
@@ -3653,7 +3653,7 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * @param flag
 	 *            The flag to test
 	 * @return True if the flag is set
@@ -3665,7 +3665,7 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * @param flag
 	 *            The flag to test
 	 * @return True if the flag is set
@@ -3677,7 +3677,7 @@ public abstract class Component
 
 	/**
 	 * Finds the innermost IModel object for an IModel that might contain nested IModel(s).
-	 * 
+	 *
 	 * @param model
 	 *            The model
 	 * @return The innermost (most nested) model
@@ -3700,7 +3700,7 @@ public abstract class Component
 	/**
 	 * Gets the component's current model comparator. Implementations can be used for testing the
 	 * current value of the components model data with the new value that is given.
-	 * 
+	 *
 	 * @return the value defaultModelComparator
 	 */
 	public IModelComparator getModelComparator()
@@ -3713,7 +3713,7 @@ public abstract class Component
 	 * stateless, otherwise the component will be treat as stateful. In order for page to be
 	 * stateless (and not to be stored in session), all components (and component behaviors) must be
 	 * stateless.
-	 * 
+	 *
 	 * @return whether the component can be stateless
 	 */
 	protected boolean getStatelessHint()
@@ -3732,7 +3732,7 @@ public abstract class Component
 	 * For example a {@link FormComponent} has the opportunity to instantiate a model on the fly
 	 * using its {@code id} and the containing {@link Form}'s model, if the form holds a
 	 * {@link CompoundPropertyModel}.
-	 * 
+	 *
 	 * @return The model
 	 */
 	protected IModel<?> initModel()
@@ -3767,7 +3767,7 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR OVERRIDE.
-	 * 
+	 *
 	 * <p>
 	 * Called anytime a model is changed via setModel or setModelObject.
 	 * </p>
@@ -3778,7 +3778,7 @@ public abstract class Component
 
 	/**
 	 * Components are allowed to reject behavior modifiers.
-	 * 
+	 *
 	 * @param behavior
 	 * @return False, if the component should not apply this behavior
 	 */
@@ -3796,7 +3796,7 @@ public abstract class Component
 
 	/**
 	 * If true, all attribute modifiers will be ignored
-	 * 
+	 *
 	 * @return True, if attribute modifiers are to be ignored
 	 */
 	protected final boolean isIgnoreAttributeModifier()
@@ -3817,7 +3817,7 @@ public abstract class Component
 	 * <p>
 	 * <strong>NOTE</strong>: If you override this, you *must* call super.onBeforeRender() within
 	 * your implementation.
-	 * 
+	 *
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
 	 * children it is strongly recommended that super call is made at the end of the override.
 	 * </p>
@@ -3825,7 +3825,7 @@ public abstract class Component
 	 * Changes to the component tree can be made only <strong>before</strong> calling
 	 * super.onBeforeRender().
 	 *
-	 * @see org.apache.wicket.MarkupContainer#addOrReplace(Component...) 
+	 * @see org.apache.wicket.MarkupContainer#addOrReplace(Component...)
 	 */
 	protected void onBeforeRender()
 	{
@@ -3836,9 +3836,9 @@ public abstract class Component
 
 	/**
 	 * Processes the component tag.
-	 * 
+	 *
 	 * Overrides of this method most likely should call the super implementation.
-	 * 
+	 *
 	 * @param tag
 	 *            Tag to modify
 	 */
@@ -3867,7 +3867,7 @@ public abstract class Component
 
 	/**
 	 * Processes the body.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream
 	 * @param openTag
@@ -3879,7 +3879,7 @@ public abstract class Component
 
 	/**
 	 * Called to allow a component to detach resources after use.
-	 * 
+	 *
 	 * Overrides of this method MUST call the super implementation, the most logical place to do
 	 * this is the last line of the override method.
 	 */
@@ -3890,7 +3890,7 @@ public abstract class Component
 
 	/**
 	 * Called to notify the component it is being removed from the component hierarchy
-	 * 
+	 *
 	 * Overrides of this method MUST call the super implementation, the most logical place to do
 	 * this is the last line of the override method.
 	 */
@@ -3922,7 +3922,7 @@ public abstract class Component
 	 * Writes a simple tag out to the response stream. Any components that might be referenced by
 	 * the tag are ignored. Also undertakes any tag attribute modifications if they have been added
 	 * to the component.
-	 * 
+	 *
 	 * @param tag
 	 *            The tag to write
 	 */
@@ -3987,7 +3987,7 @@ public abstract class Component
 
 	/**
 	 * Replaces the body with the given one.
-	 * 
+	 *
 	 * @param markupStream
 	 *            The markup stream to replace the tag body in
 	 * @param tag
@@ -4050,7 +4050,7 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * @param flag
 	 *            The flag to set
 	 * @param set
@@ -4070,7 +4070,7 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * @param flag
 	 *            The flag to set
 	 * @param set
@@ -4090,7 +4090,7 @@ public abstract class Component
 
 	/**
 	 * If true, all attribute modifiers will be ignored
-	 * 
+	 *
 	 * @param ignore
 	 *            If true, all attribute modifiers will be ignored
 	 * @return This
@@ -4133,7 +4133,7 @@ public abstract class Component
 
 	/**
 	 * Gets the component at the given path.
-	 * 
+	 *
 	 * @param path
 	 *            Path to component
 	 * @return The component at the path
@@ -4180,7 +4180,7 @@ public abstract class Component
 	}
 
 	/**
-	 * 
+	 *
 	 * @return <code>true</code> if component has been prepared for render
 	 */
 	boolean isPreparedForRender()
@@ -4189,7 +4189,7 @@ public abstract class Component
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected void onAfterRenderChildren()
 	{
@@ -4207,7 +4207,7 @@ public abstract class Component
 
 	/**
 	 * Renders the close tag at the current position in the markup stream.
-	 * 
+	 *
 	 * @param markupStream
 	 *            the markup stream
 	 * @param openTag
@@ -4241,9 +4241,9 @@ public abstract class Component
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 *
 	 * Sets the id of this component.
-	 * 
+	 *
 	 * @param id
 	 *            The non-null id of this component
 	 */
@@ -4267,13 +4267,13 @@ public abstract class Component
 
 	/**
 	 * THIS IS A WICKET INTERNAL API. DO NOT USE IT.
-	 * 
+	 *
 	 * Sets the parent of a component. Typically what you really want is parent.add(child).
 	 * <p/>
 	 * Note that calling setParent() and not parent.add() will connect the child to the parent, but
 	 * the parent will not know the child. This might not be a problem in some cases, but e.g.
 	 * child.onDetach() will not be invoked (since the parent doesn't know it is his child).
-	 * 
+	 *
 	 * @param parent
 	 *            The parent container
 	 */
@@ -4288,7 +4288,7 @@ public abstract class Component
 
 	/**
 	 * Sets the render allowed flag.
-	 * 
+	 *
 	 * @param renderAllowed
 	 */
 	final void setRenderAllowed(boolean renderAllowed)
@@ -4298,7 +4298,7 @@ public abstract class Component
 
 	/**
 	 * Sets the render allowed flag.
-	 * 
+	 *
 	 * Visit all this page's children (overridden in MarkupContainer) to check rendering
 	 * authorization, as appropriate. We set any result; positive or negative as a temporary boolean
 	 * in the components, and when a authorization exception is thrown it will block the rendering
@@ -4315,7 +4315,7 @@ public abstract class Component
 	 * {@link #setVisible(boolean)} will not always have a desired effect because that component may
 	 * have {@link #isVisible()} overridden. Both {@link #setVisibilityAllowed(boolean)} and
 	 * {@link #isVisibilityAllowed()} are <code>final</code> so their contract is enforced always.
-	 * 
+	 *
 	 * @param allowed
 	 * @return <code>this</code> for chaining
 	 */
@@ -4328,7 +4328,7 @@ public abstract class Component
 	/**
 	 * Gets whether or not visibility is allowed on this component. See
 	 * {@link #setVisibilityAllowed(boolean)} for details.
-	 * 
+	 *
 	 * @return true if this component is allowed to be visible, false otherwise.
 	 */
 	public final boolean isVisibilityAllowed()
@@ -4339,7 +4339,7 @@ public abstract class Component
 	/**
 	 * Determines whether or not a component should be visible, taking into account all the factors:
 	 * {@link #isVisible()}, {@link #isVisibilityAllowed()}, {@link #isRenderAllowed()}
-	 * 
+	 *
 	 * @return <code>true</code> if the component should be visible, <code>false</code> otherwise
 	 */
 	public final boolean determineVisibility()
@@ -4352,7 +4352,7 @@ public abstract class Component
 	 * Calculates enabled state of the component taking its hierarchy into account. A component is
 	 * enabled iff it is itself enabled ({@link #isEnabled()} and {@link #isEnableAllowed()} both
 	 * return <code>true</code>), and all of its parents are enabled.
-	 * 
+	 *
 	 * @return <code>true</code> if this component is enabled</code>
 	 */
 	public final boolean isEnabledInHierarchy()
@@ -4377,10 +4377,10 @@ public abstract class Component
 		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_VALUE, state);
 		return state;
 	}
-	
+
 	/**
 	 * Says if the component is rendering or not checking the corresponding flag.
-	 * 
+	 *
 	 * @return true if this component is rendering, false otherwise.
 	 */
 	public final boolean isRendering()
@@ -4405,11 +4405,11 @@ public abstract class Component
 	 * method so that image data can be streamed. Such a component would override this method and
 	 * return {@literal true} if the listener method belongs to {@link IRequestListener}.
 	 * </p>
-	 * 
+	 *
 	 * @param method
 	 *            listener method about to be invoked on this component. Could be {@code null} - in
 	 *            this case it means <em>any</em> method.
-	 * 
+	 *
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
 	public boolean canCallListenerInterface(Method method)
@@ -4422,7 +4422,7 @@ public abstract class Component
 	 * implementing {@link IHeaderContributor}. overload
 	 * {@link Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)} instead to
 	 * contribute to the response header.
-	 * 
+	 *
 	 * @param component
 	 * @param response
 	 */
@@ -4438,7 +4438,7 @@ public abstract class Component
 
 	/**
 	 * Render to the web response whatever the component wants to contribute to the head section.
-	 * 
+	 *
 	 * @param response
 	 *            Response object
 	 */
@@ -4464,10 +4464,10 @@ public abstract class Component
 
 	/**
 	 * Removes behavior from component
-	 * 
+	 *
 	 * @param behaviors
 	 *            behaviors to remove
-	 * 
+	 *
 	 * @return this (to allow method call chaining)
 	 */
 	public Component remove(final Behavior... behaviors)
@@ -4496,7 +4496,7 @@ public abstract class Component
 
 	/**
 	 * Adds a behavior modifier to the component.
-	 * 
+	 *
 	 * @param behaviors
 	 *            The behavior modifier(s) to be added
 	 * @return this (to allow method call chaining)
@@ -4510,7 +4510,7 @@ public abstract class Component
 	/**
 	 * Gets the currently coupled {@link Behavior}s as a unmodifiable list. Returns an empty list
 	 * rather than null if there are no behaviors coupled to this component.
-	 * 
+	 *
 	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
 	public final List<? extends Behavior> getBehaviors()
