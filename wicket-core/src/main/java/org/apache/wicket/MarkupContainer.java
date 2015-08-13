@@ -1539,7 +1539,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @param markupStream
 	 * @param openTag
 	 */
-	protected final void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
+	protected void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		while (markupStream.hasMore())
 		{
