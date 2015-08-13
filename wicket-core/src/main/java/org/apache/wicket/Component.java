@@ -1561,8 +1561,9 @@ public abstract class Component
 	}
 
 	/**
-	 * 
-	 * @return meta data entry
+	 * Gets the meta data entries for this component as an array of {@link MetaDataEntry} objects.
+         *
+	 * @return the meta data entries for this component
 	 */
 	private MetaDataEntry<?>[] getMetaData()
 	{
