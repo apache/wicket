@@ -39,16 +39,18 @@ public interface IGenericComponent<T>
 	 *
 	 * @param model
 	 *            the new model
+	 * @return This for chaining
 	 */
-	void setModel(IModel<T> model);
+	Component setModel(IModel<T> model);
 
 	/**
 	 * Typesafe setter for the model object
 	 *
 	 * @param object
 	 *            the new model object
+	 * @return This for chaining
 	 */
-	void setModelObject(T object);
+	Component setModelObject(T object);
 
 	/**
 	 * Typesafe getter for the model's object
