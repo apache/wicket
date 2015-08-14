@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.request.cycle;
 
+import static org.hamcrest.CoreMatchers.containsString;
+
 import org.apache.wicket.core.request.mapper.MountedMapper;
+import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.cycle.RerenderPage.Supplier;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -68,5 +70,53 @@ public class RerenderPageTest extends WicketTestCase
 
 		// due to the mentioned issue, no headers are rendered at all.
 		tester.assertContains("<!-- I should be present 2 -->");
+	}
+
+	/**
+	 * Another test case for WICKET-5960.
+	 * 
+	 * When an AJAX update was performed, the next normal request would still find the page left
+	 * with the PartialHtmlHeaderContainer causing an empty {@code 
+	 * <head>} section to be rendered. This test case walks Wicket through this scenario.
+	 */
+	@Test
+	public void nonAjaxRequestAfterAjaxUpdatedComponentShouldHaveHtmlHeadSection()
+	{
+		// perform a normal render of the page
+		tester.startPage(RerenderAjaxPage.class);
+		tester.assertRenderedPage(RerenderAjaxPage.class);
+
+		MockHttpServletResponse firstResponseBeforeAjaxUpdate = tester.getLastResponse();
+
+		// call an ajax event that updates a component
+		tester.executeAjaxEvent("form:username", "blur");
+		tester.assertComponentOnAjaxResponse("feedback");
+
+		// perform a normal render of the page (in this case submitting the form which triggers a
+		// feedback error
+		tester.submitForm("form");
+
+		// record the response for later reference
+		MockHttpServletResponse normalResponseAfterAjaxUpdate = tester.getLastResponse();
+
+		// submit the form again to ascertain if the HTML head section was restored upon the second
+		// render
+		tester.submitForm("form");
+
+		// record the response for later reference
+		MockHttpServletResponse secondNormalResponse = tester.getLastResponse();
+
+		// assert that the first response indeed got the correct <head> section
+		assertThat(firstResponseBeforeAjaxUpdate.getDocument(),
+			containsString(RerenderAjaxPage.HEAD_TEXT));
+
+		// assert that the second normal response after the AJAX update indeed got the correct
+		// <head> section (this worked while the bug was still present)
+		assertThat(secondNormalResponse.getDocument(), containsString(RerenderAjaxPage.HEAD_TEXT));
+
+		// assert that the first normal response after the AJAX update indeed got the correct
+		// <head> section (this failed while the bug was still present)
+		assertThat(normalResponseAfterAjaxUpdate.getDocument(),
+			containsString(RerenderAjaxPage.HEAD_TEXT));
 	}
 }
