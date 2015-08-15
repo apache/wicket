@@ -321,14 +321,6 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 		headerResponse = null;
 	}
 
-	@Override
-	protected void onDetach() {
-		super.onDetach();
-
-		renderedComponentsPerScope = null;
-		headerResponse = null;
-	}
-
 	/**
 	 * Factory method for creating header response
 	 * 
