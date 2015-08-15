@@ -141,28 +141,36 @@ public abstract class AbstractAjaxResponse
 	 */
 	public void writeTo(final Response response, final String encoding)
 	{
-		writeHeader(response, encoding);
+		try {
+			writeHeader(response, encoding);
 
-		// invoke onbeforerespond event on listeners
-		fireOnBeforeRespondListeners();
+			// invoke onbeforerespond event on listeners
+			fireOnBeforeRespondListeners();
 
-		// process added components
-		writeComponents(response, encoding);
+			// process added components
+			writeComponents(response, encoding);
 
-		fireOnAfterRespondListeners(response);
+			fireOnAfterRespondListeners(response);
 
-		// queue up prepend javascripts. unlike other steps these are executed out of order so that
-		// components can contribute them from inside their onbeforerender methods.
-		writePriorityEvaluations(response, prependJavaScripts);
+			// queue up prepend javascripts. unlike other steps these are executed out of order so that
+			// components can contribute them from inside their onbeforerender methods.
+			writePriorityEvaluations(response, prependJavaScripts);
 
-		// execute the dom ready javascripts as first javascripts
-		// after component replacement
-		List<CharSequence> evaluationScripts = new ArrayList<CharSequence>();
-		evaluationScripts.addAll(domReadyJavaScripts);
-		evaluationScripts.addAll(appendJavaScripts);
-		writeNormalEvaluations(response, evaluationScripts);
+			// execute the dom ready javascripts as first javascripts
+			// after component replacement
+			List<CharSequence> evaluationScripts = new ArrayList<CharSequence>();
+			evaluationScripts.addAll(domReadyJavaScripts);
+			evaluationScripts.addAll(appendJavaScripts);
+			writeNormalEvaluations(response, evaluationScripts);
 
-		writeFooter(response, encoding);
+			writeFooter(response, encoding);
+		} finally {
+			if (header != null) {
+				// restore a normal header
+				page.replace(new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID));
+				header = null;
+			}
+		}
 	}
 
 	protected abstract void fireOnAfterRespondListeners(Response response);
@@ -451,7 +459,7 @@ public abstract class AbstractAjaxResponse
 		// create the htmlheadercontainer if needed
 		if (header == null)
 		{
-			header = new AjaxHtmlHeaderContainer(this);
+			header = new AjaxHtmlHeaderContainer();
 			final Page parentPage = component.getPage();
 			parentPage.addOrReplace(header);
 		}
@@ -493,11 +501,9 @@ public abstract class AbstractAjaxResponse
 	 *
 	 * @author Matej Knopp
 	 */
-	private static class AjaxHtmlHeaderContainer extends HtmlHeaderContainer
+	private class AjaxHtmlHeaderContainer extends HtmlHeaderContainer
 	{
 		private static final long serialVersionUID = 1L;
-
-		private final transient AbstractAjaxResponse ajaxResponse;
 
 		/**
 		 * Constructor.
@@ -505,10 +511,9 @@ public abstract class AbstractAjaxResponse
 		 * @param ajaxResponse
 		 *      the object that keeps the data for the Ajax response
 		 */
-		public AjaxHtmlHeaderContainer(final AbstractAjaxResponse ajaxResponse)
+		public AjaxHtmlHeaderContainer()
 		{
 			super(HtmlHeaderSectionHandler.HEADER_ID);
-			this.ajaxResponse = ajaxResponse;
 		}
 
 		/**
@@ -518,7 +523,7 @@ public abstract class AbstractAjaxResponse
 		@Override
 		protected IHeaderResponse newHeaderResponse()
 		{
-			return ajaxResponse.getHeaderResponse();
+			return AbstractAjaxResponse.this.getHeaderResponse();
 		}
 	}
 
