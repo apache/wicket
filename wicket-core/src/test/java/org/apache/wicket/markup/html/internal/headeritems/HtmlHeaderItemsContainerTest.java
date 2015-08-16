@@ -32,7 +32,7 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(PageWithHeaderItems.class);
 		String responseAsString = tester.getLastResponseAsString();
-//		System.err.println("RES:\n" + responseAsString);
+
 		int idxMetaCharset = responseAsString.indexOf("<meta charset=\"utf-8\"");
 		int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
@@ -57,7 +57,7 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(PageWithoutHeaderItems.class);
 		String responseAsString = tester.getLastResponseAsString();
-//		System.err.println("RES:\n" + responseAsString);
+
 		int idxMetaCharset = responseAsString.indexOf("<meta charset=\"utf-8\"");
 		int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
@@ -82,7 +82,7 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(SubPageWithoutHeaderItemsAndWicketHead.class);
 		String responseAsString = tester.getLastResponseAsString();
-//		System.err.println("RES:\n" + responseAsString);
+
 		int idxMetaCharset = responseAsString.indexOf("<meta charset=\"utf-8\"");
 		int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
@@ -111,7 +111,7 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(SubPageWithHeaderItemsAndWicketHead.class);
 		String responseAsString = tester.getLastResponseAsString();
-//		System.err.println("RES:\n" + responseAsString);
+
 		int idxMetaCharset = responseAsString.indexOf("<meta charset=\"utf-8\"");
 		int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");

@@ -18,11 +18,16 @@ package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ComponentTag.IAutoComponentFactory;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
+import org.apache.wicket.markup.html.internal.HtmlHeaderItemsContainer;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
@@ -72,6 +77,24 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	/** The Markup available so far for the resource */
 	private final Markup markup;
 
+	private static final IAutoComponentFactory HTML_HEADER_FACTORY = new IAutoComponentFactory()
+	{
+		@Override
+		public Component newComponent(MarkupContainer container, ComponentTag tag)
+		{
+			return new HtmlHeaderContainer(tag.getId());
+		}
+	};
+	
+	private static final IAutoComponentFactory HTML_HEADER_ITEMS_FACTORY = new IAutoComponentFactory()
+	{
+		@Override
+		public Component newComponent(MarkupContainer container, ComponentTag tag)
+		{
+			return new HtmlHeaderItemsContainer(tag.getId());
+		}
+	};
+	
 	/**
 	 * Construct.
 	 * 
@@ -164,6 +187,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		tag.setId(HEADER_ID);
 		tag.setAutoComponentTag(true);
 		tag.setModified(true);
+		tag.setAutoComponentFactory(HTML_HEADER_ITEMS_FACTORY);
 	}
 
 	/**
@@ -188,6 +212,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 				tag.setId(HEADER_ID);
 				tag.setAutoComponentTag(true);
 				tag.setModified(true);
+				tag.setAutoComponentFactory(HTML_HEADER_FACTORY);
 			}
 		}
 		else if (tag.isClose())
@@ -201,6 +226,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 				headOpenTag.setAutoComponentTag(false);
 				headOpenTag.setModified(false);
 				headOpenTag.setFlag(ComponentTag.RENDER_RAW, true);
+				headOpenTag.setAutoComponentFactory(null);
 			}
 
 			foundClosingHead = true;
@@ -217,6 +243,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		openTag.setId(HEADER_ID);
 		openTag.setAutoComponentTag(true);
 		openTag.setModified(true);
+		openTag.setAutoComponentFactory(HTML_HEADER_FACTORY);
 
 		final ComponentTag closeTag = new ComponentTag(HEAD, TagType.CLOSE);
 		closeTag.setOpenTag(openTag);

@@ -28,6 +28,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.link.Link;
@@ -701,6 +702,24 @@ public class ComponentQueueingTest extends WicketTestCase
 		page.queue(a, b);
 
 		assertThat(page, hasPath(new Path(a, b)));
+	}
+	
+	@Test
+	public void queueInsideHeader()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup("<html>"
+			+"<head><title wicket:id='title'></title></head>"
+			+ "<body><div>"
+			+ "Hello!"
+			+ "</div></body>"
+			+ "</html>");
+		
+		page.queue(new Label("title"));
+		
+		tester.startPage(page);	
+		
+		tester.assertContains("title");
 	}
 
 	private static class A extends WebMarkupContainer
