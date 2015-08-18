@@ -281,7 +281,9 @@ public class UrlRenderer
 		}
 		newSegments.addAll(urlSegments);
 
-		String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
+		Url relativeUrl = new Url(newSegments, url.getQueryParameters());
+		relativeUrl.setFragment(url.getFragment());
+		String renderedUrl = relativeUrl.toString();
 
 		// sanitize start
 		if (!renderedUrl.startsWith("..") && !renderedUrl.equals("."))
