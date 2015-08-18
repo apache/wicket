@@ -572,7 +572,8 @@ public class UrlRendererTest extends Assert
 	@Test
 	public void removeCommonPrefixesWithJSessionId()
 	{
-		Url baseUrl = new Url(Arrays.asList("", "SomePage;jsessionid=1234"), Arrays.<Url.QueryParameter>asList());
+		Url baseUrl = new Url(Arrays.asList("", "SomePage;jsessionid=1234"),
+			Arrays.<Url.QueryParameter> asList());
 
 		MockWebRequest request = new MockWebRequest(baseUrl);
 		request.setContextPath("/");
@@ -618,5 +619,50 @@ public class UrlRendererTest extends Assert
 
 		fullUrl = renderer.renderFullUrl(Url.parse("/one/.././two/three"));
 		assertEquals("/two/three", fullUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5970
+	 */
+	@Test
+	public void renderFullUrlWithFragment()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
+
+		Url urlWithFragment = Url.parse("http://localhost:8080/redirect#access_token=123456");
+		assertEquals("access_token=123456", urlWithFragment.getFragment());
+
+		String renderedUrl = renderer.renderFullUrl(urlWithFragment);
+		assertEquals("http://localhost:8080/redirect#access_token=123456", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5970
+	 */
+	@Test
+	public void renderRelativeUrlWithFragment()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
+
+		Url urlWithFragment = Url.parse("http://localhost:8080/redirect#access_token=123456");
+		assertEquals("access_token=123456", urlWithFragment.getFragment());
+
+		String renderedUrl = renderer.renderRelativeUrl(urlWithFragment);
+		assertEquals("./redirect#access_token=123456", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5970
+	 */
+	@Test
+	public void renderUrlWithFragment()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
+
+		Url urlWithFragment = Url.parse("http://localhost:8080/redirect#access_token=123456");
+		assertEquals("access_token=123456", urlWithFragment.getFragment());
+
+		String renderedUrl = renderer.renderUrl(urlWithFragment);
+		assertEquals("http://localhost:8080/redirect#access_token=123456", renderedUrl);
 	}
 }
