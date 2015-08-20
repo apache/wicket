@@ -154,6 +154,33 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>buildbot</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-toolchains-plugin</artifactId>
+						<version>1.1</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>toolchain</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<toolchains>
+								<jdk>
+									<version>1.6</version>
+									<vendor>oracle</vendor>
+								</jdk>
+							</toolchains>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 	<url>http://wicket.apache.org/${project.artifactId}</url>
 	<inceptionYear>2006</inceptionYear>
