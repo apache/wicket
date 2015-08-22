@@ -4383,7 +4383,7 @@ public abstract class Component
 	 * 
 	 * @return true if this component is rendering, false otherwise.
 	 */
-	public final boolean isRendering()
+	public boolean isRendering()
 	{
 		return getFlag(FLAG_RENDERING);
 	}
