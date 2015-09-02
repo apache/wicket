@@ -389,6 +389,16 @@ public class LazyInitProxyFactory
 	public static class SerializableNoOpCallback implements NoOp, Serializable
 	{
 		private static final long serialVersionUID = 1L;
+
+		@Override
+		public int hashCode() {
+			return getClass().hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj instanceof SerializableNoOpCallback;
+		}
 	}
 
 	/**
@@ -417,6 +427,16 @@ public class LazyInitProxyFactory
 			{
 				return CGLIB_CALLBACK_HANDLER;
 			}
+		}
+
+		@Override
+		public int hashCode() {
+			return getClass().hashCode();
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj instanceof NoOpForProtectedMethodsCGLibCallbackFilter;
 		}
 	}
 
