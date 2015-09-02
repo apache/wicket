@@ -167,7 +167,7 @@ public class LazyInitProxyFactory
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
 			Callback[] callbacks = new Callback[2];
-			callbacks[CGLIB_CALLBACK_NO_OVERRIDE] = new SerializableNoOpCallback();
+			callbacks[CGLIB_CALLBACK_NO_OVERRIDE] = SerializableNoOpCallback.INSTANCE;
 			callbacks[CGLIB_CALLBACK_HANDLER] = handler;
 
 			Enhancer e = new Enhancer();
@@ -175,7 +175,7 @@ public class LazyInitProxyFactory
 			e.setInterfaces(new Class[] { Serializable.class, ILazyInitProxy.class,
 					IWriteReplace.class });
 			e.setSuperclass(type);
-			e.setCallbackFilter(new NoOpForProtectedMethodsCGLibCallbackFilter());
+			e.setCallbackFilter(NoOpForProtectedMethodsCGLibCallbackFilter.INSTANCE);
 			e.setCallbacks(callbacks);
 			e.setNamingPolicy(WicketNamingPolicy.INSTANCE);
 
@@ -367,15 +367,7 @@ public class LazyInitProxyFactory
 	{
 		private static final long serialVersionUID = 1L;
 
-		@Override
-		public int hashCode() {
-			return getClass().hashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			return obj instanceof SerializableNoOpCallback;
-		}
+		private static final NoOp INSTANCE = new SerializableNoOpCallback();
 	}
 
 	/**
@@ -394,6 +386,8 @@ public class LazyInitProxyFactory
 	 */
 	private static class NoOpForProtectedMethodsCGLibCallbackFilter implements CallbackFilter
 	{
+		private static final CallbackFilter INSTANCE = new NoOpForProtectedMethodsCGLibCallbackFilter();
+
 		@Override
 		public int accept(Method method) {
 			if (Modifier.isProtected(method.getModifiers()))
@@ -404,16 +398,6 @@ public class LazyInitProxyFactory
 			{
 				return CGLIB_CALLBACK_HANDLER;
 			}
-		}
-
-		@Override
-		public int hashCode() {
-			return getClass().hashCode();
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			return obj instanceof NoOpForProtectedMethodsCGLibCallbackFilter;
 		}
 	}
 
