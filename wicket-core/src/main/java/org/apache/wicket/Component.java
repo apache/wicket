@@ -1822,13 +1822,13 @@ public abstract class Component
 	}
 
 	/**
-	 * @return Size of this Component in bytes
+	 * @return Size of this Component in bytes. Returns {@code 0} - if the size cannot be calculated for some reason
 	 */
 	public long getSizeInBytes()
 	{
 		final MarkupContainer originalParent = parent;
 		parent = null;
-		long size = -1;
+		long size = 0;
 		try
 		{
 			size = WicketObjects.sizeof(this);
