@@ -294,15 +294,7 @@ public class WicketFilterTest extends Assert
 		{
 			return new WebXmlFile().getUniqueFilterPath(false, filterName, in);
 		}
-		catch (ParserConfigurationException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-		catch (SAXException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-		catch (IOException ex)
+		catch (ParserConfigurationException | IOException | SAXException ex)
 		{
 			throw new RuntimeException(ex);
 		}
@@ -310,7 +302,7 @@ public class WicketFilterTest extends Assert
 
 	private static class FilterTestingConfig implements FilterConfig
 	{
-		private final Map<String, String> initParameters = new HashMap<String, String>();
+		private final Map<String, String> initParameters = new HashMap<>();
 
 		public FilterTestingConfig()
 		{
