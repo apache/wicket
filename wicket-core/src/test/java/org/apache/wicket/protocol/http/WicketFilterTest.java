@@ -112,9 +112,10 @@ public class WicketFilterTest extends Assert
 		config.initParameters.put("applicationClassName", "org.apache.wicket.mock.MockApplication");
 
 		WicketFilter filter = new AnnotatedServlet3Filter();
+		// creates an Application
 		filter.init(config);
 
-		// no idea why this fails, but without the line below another test fails.
+		// get a reference to the application, so that @After is able to clean it up
 		application = filter.getApplication();
 
 		// assert that the filter path is not /web/*/
