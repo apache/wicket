@@ -519,6 +519,10 @@ public class WicketFilter implements Filter
 				pattern = "";
 			}
 
+			if (pattern.endsWith("*"))
+			{
+				pattern = pattern.substring(0, pattern.length() - 1);
+			}
 			return pattern;
 		}
 		return null;

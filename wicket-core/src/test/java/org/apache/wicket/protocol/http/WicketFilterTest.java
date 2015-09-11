@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
@@ -85,6 +86,39 @@ public class WicketFilterTest extends Assert
 			application.internalDestroy();
 			application = null;
 		}
+	}
+
+	/**
+	 * Test for WICKET-5980 When using Servlet 3.0 filter Wicket calculates filter path wrong.
+	 * 
+	 * When using a servlet 3.0 filter with annotations Wicket calculates the filter path wrong
+	 * causing it to not match any pages other than the home page. e.g.
+	 * 
+	 * <pre>
+	 * &#64;WebFilter(value = "/web/*", initParams = {
+	 * 		&#64;WebInitParam(name = "applicationClassName", value = "com.example.CheesrApplication") })
+	 * public class CheesrFilter extends WicketFilter
+	 * {
+	 * }
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void parsingOfAnnotatedServlet3FiltersWorks() throws Exception
+	{
+		FilterTestingConfig config = new FilterTestingConfig();
+		config.initParameters.clear();
+		config.initParameters.put("applicationClassName", "org.apache.wicket.mock.MockApplication");
+
+		WicketFilter filter = new AnnotatedServlet3Filter();
+		filter.init(config);
+
+		// no idea why this fails, but without the line below another test fails.
+		application = filter.getApplication();
+
+		// assert that the filter path is not /web/*/
+		assertThat(filter.getFilterPath(), is("web/"));
 	}
 
 	/**
