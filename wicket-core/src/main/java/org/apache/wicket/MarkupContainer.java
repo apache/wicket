@@ -1987,8 +1987,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		else
 		{
-			MarkupContainer queueRegion = (MarkupContainer)findParent(IQueueRegion.class);
+			MarkupContainer containerWithQueue = this;
+			while (containerWithQueue.queue == null || containerWithQueue.queue.isEmpty())
+			{
+				containerWithQueue = containerWithQueue.getParent();
+				if (containerWithQueue == null)
+				{
+					return;
+				}
+			}
 
+			MarkupContainer queueRegion = (MarkupContainer)findParent(IQueueRegion.class);
 			if (queueRegion != null && !queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
 				queueRegion.dequeue();
