@@ -100,13 +100,26 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	private static final long serialVersionUID = 1L;
 	
 	private static final int INITIAL_CHILD_LIST_CAPACITY = 12;
-	
+
+	/**
+	 * The threshold where we start using a Map to store children in, replacing a List. Adding
+	 * components to a list is O(n), and to a map O(1). The magic number is 24, due to a Map using
+	 * more memory to store its elements and below 24 children there's no discernible difference
+	 * between adding to a Map or a List.
+	 * 
+	 * We have focused on adding elements to a list, instead of indexed lookups because adding is an
+	 * action that is performed very often, and lookups often are done by component IDs, not index.
+	 */
 	private static final int MAPIFY_THRESHOLD = 24; // 32 * 0.75
 
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(MarkupContainer.class);
 
-	/** List of children or single child */
+	/**
+	 * The children of this markup container, if any. Can be a Component when there's only one
+	 * child, a List when the number of children is fewer than {@link #MAPIFY_THRESHOLD} or a Map
+	 * when there are more children.
+	 */
 	private Object children;
 
 	/**
