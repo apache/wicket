@@ -638,10 +638,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			addStateChange();
 
-			// Loop through child components
 			for (Component child: this)
 			{
-				// Do not call remove() because the state change would than be
+				// Do not call remove() because the state change would then be
 				// recorded twice.
 				child.internalOnRemove();
 				child.detach();
