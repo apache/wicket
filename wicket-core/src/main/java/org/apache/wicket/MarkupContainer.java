@@ -1715,21 +1715,55 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		else
 		{
 			MarkupContainer containerWithQueue = this;
-			while (containerWithQueue.queue == null || containerWithQueue.queue.isEmpty())
+
+			// check if there are any parent containers that have queued components, up till our
+			// queue region
+			while (containerWithQueue.isQueueEmpty() &&
+				!(containerWithQueue instanceof IQueueRegion))
 			{
 				containerWithQueue = containerWithQueue.getParent();
 				if (containerWithQueue == null)
 				{
+					// no queued components are available for dequeuing, so we can stop
 					return;
 				}
 			}
 
-			MarkupContainer queueRegion = (MarkupContainer)findParent(IQueueRegion.class);
+			// when there are no components to be dequeued, just stop
+			if (containerWithQueue.isQueueEmpty())
+				return;
+
+			// get the queue region where we are going to dequeue components in
+			MarkupContainer queueRegion = containerWithQueue;
+
+			// the container with queued components could be a queue region, if not, find the region
+			// to dequeue in
+			if (!queueRegion.isQueueRegion())
+			{
+				queueRegion = (MarkupContainer)queueRegion.findParent(IQueueRegion.class);
+			}
+
 			if (queueRegion != null && !queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
 				queueRegion.dequeue();
 			}
 		}
+	}
+
+	/**
+	 * @return {@code true} when one or more components are queued
+	 */
+	private boolean isQueueEmpty()
+	{
+		return queue == null || queue.isEmpty();
+	}
+
+	/**
+	 * @return {@code true} when this markup container is a queue region
+	 */
+	private boolean isQueueRegion() 
+	{
+		return IQueueRegion.class.isInstance(this);
 	}
 
 	/**
