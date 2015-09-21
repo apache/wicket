@@ -1011,7 +1011,9 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * @throws ArrayIndexOutOfBoundsException
 	 *             when {@code index} exceeds {@code size()}
 	 * @return child component at the specified index
+	 * @deprecated this method is marked for deletion for WICKET8
 	 */
+	@Deprecated
 	public final Component get(int index)
 	{
 		Component childAtIndex = null;
@@ -1626,20 +1628,22 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 *            index of first component to be swapped
 	 * @param idx2
 	 *            index of second component to be swapped
+	 * @deprecated this method is marked for deletion for WICKET8
 	 */
+	@Deprecated
 	public final void swap(int idx1, int idx2)
 	{
 		int size = children_size();
 		if (idx1 < 0 || idx1 >= size)
 		{
-			throw new IndexOutOfBoundsException("Argument idx is out of bounds: " + idx1 + "<>[0," +
-				size + ")");
+			throw new IndexOutOfBoundsException(
+				"Argument idx is out of bounds: " + idx1 + "<>[0," + size + ")");
 		}
 
 		if (idx2 < 0 || idx2 >= size)
 		{
-			throw new IndexOutOfBoundsException("Argument idx is out of bounds: " + idx2 + "<>[0," +
-				size + ")");
+			throw new IndexOutOfBoundsException(
+				"Argument idx is out of bounds: " + idx2 + "<>[0," + size + ")");
 		}
 
 		if (idx1 == idx2)
