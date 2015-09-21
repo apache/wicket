@@ -194,11 +194,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				parent.remove(child);
 			}
 
-			// Add to map
-			if (put(child) != null)
+			// Add the child to my children 
+			Component previousChild = put(child);
+			if (previousChild != null)
 			{
-				throw new IllegalArgumentException(exceptionMessage("A child with id '"
-					+ child.getId() + "' already exists"));
+				throw new IllegalArgumentException(
+					exceptionMessage("A child '" + previousChild.getClass().getSimpleName() +
+						"' with id '" + child.getId() + "' already exists"));
 			}
 
 			addedComponent(child);
