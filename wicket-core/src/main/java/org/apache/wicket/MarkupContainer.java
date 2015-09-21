@@ -1007,12 +1007,24 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * the number of children.
 	 * 
 	 * @param index
+	 *            the index of the child in this container
 	 * @throws ArrayIndexOutOfBoundsException
+	 *             when {@code index} exceeds {@code size()}
 	 * @return child component at the specified index
 	 */
 	public final Component get(int index)
 	{
-		return copyChildren().get(index);
+		Component childAtIndex = null;
+		Iterator<Component> childIterator = iterator();
+		while (index-- >= 0 && childIterator.hasNext())
+		{
+			childAtIndex = childIterator.next();
+		}
+		if(childAtIndex == null) 
+		{
+			throw new ArrayIndexOutOfBoundsException(Integer.toString(index));
+		}
+		return childAtIndex;
 	}
 
 	/**

@@ -16,6 +16,10 @@
  */
 package org.apache.wicket;
 
+import static org.hamcrest.CoreMatchers.is;
+
+import java.util.NoSuchElementException;
+
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -23,6 +27,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -106,6 +111,65 @@ public class MarkupContainerTest extends WicketTestCase
 		assertNull(a.get("..:a"));
 		assertNull(b.get("..|.."));
 		assertNull(a.get("q"));
+	}
+
+	/**
+	 * Tests the get(int) method of MarkupContainer.
+	 */
+	@Test
+	public void getIndexed() 
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		Component c1 = new WebComponent("c1");
+		Component c2 = new WebComponent("c2");
+
+		c.add(c1);
+		c.add(c2);
+
+		assertThat(c.get(0), is(c1));
+		assertThat(c.get(1), is(c2));
+	}
+
+	/**
+	 * Tests the get(int) method of MarkupContainer when the index exceeds the number of children.
+	 */
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void getIndexedArrayIndexOutOfBoundsException() 
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		c.get(0);
+	}
+
+	/**
+	 * Tests the swap method.
+	 */
+	@Test
+	public void swap() 
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		Component c1 = new WebComponent("c1");
+		Component c2 = new WebComponent("c2");
+		Component c3 = new WebComponent("c3");
+
+		c.add(c1);
+		c.add(c2);
+		c.add(c3);
+
+		assertThat(c.get(0), is(c1));
+		assertThat(c.get(1), is(c2));
+		assertThat(c.get(2), is(c3));
+
+		c.swap(0, 1);
+		
+		assertThat(c.get(0), is(c2));
+		assertThat(c.get(1), is(c1));
+		assertThat(c.get(2), is(c3));
+
+		c.swap(0, 2);
+
+		assertThat(c.get(0), is(c3));
+		assertThat(c.get(1), is(c1));
+		assertThat(c.get(2), is(c2));
 	}
 
 	/**
