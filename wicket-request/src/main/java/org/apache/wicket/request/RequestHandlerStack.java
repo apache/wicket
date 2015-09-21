@@ -218,6 +218,14 @@ public abstract class RequestHandlerStack
 			this.replacementRequestHandler = replacementRequestHandler;
 			this.removeAll = removeAll;
 		}
+		
+		/**
+		 * @return the RequestHandler that should be used to continue handling the request
+		 */
+		public IRequestHandler getReplacementRequestHandler()
+		{
+			return replacementRequestHandler;
+		}
 
 		/**
 		 * @see java.lang.Throwable#fillInStackTrace()
