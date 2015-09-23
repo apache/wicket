@@ -18,8 +18,6 @@ package org.apache.wicket;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import java.util.NoSuchElementException;
-
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -27,7 +25,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -128,6 +125,36 @@ public class MarkupContainerTest extends WicketTestCase
 
 		assertThat(c.get(0), is(c1));
 		assertThat(c.get(1), is(c2));
+	}
+
+	/**
+	 * Tests the get(int) method of MarkupContainer with non-existing index.
+	 */
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void getIndexedOutOfBounds()
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		Component c1 = new WebComponent("c1");
+
+		c.add(c1);
+
+		assertThat(c.get(0), is(c1));
+		c.get(1);
+	}
+
+	/**
+	 * Tests the get(int) method of MarkupContainer with negative index.
+	 */
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void getIndexedNegative()
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		Component c1 = new WebComponent("c1");
+
+		c.add(c1);
+
+		assertThat(c.get(0), is(c1));
+		c.get(-1);
 	}
 
 	/**
