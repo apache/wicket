@@ -35,6 +35,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 
@@ -235,6 +236,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	@Override
+	public void publishEvent(Object o)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public boolean containsBeanDefinition(final String beanName)
 	{
 		return containsBean(beanName);
@@ -250,6 +257,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	public String[] getBeanDefinitionNames()
 	{
 		return beans.keySet().toArray(new String[beans.size()]);
+	}
+
+	@Override
+	public String[] getBeanNamesForType(ResolvableType resolvableType)
+	{
+		return new String[0];
 	}
 
 	@Override
@@ -395,6 +408,12 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	public boolean isPrototype(final String name) throws NoSuchBeanDefinitionException
 	{
 		return !isSingleton(name);
+	}
+
+	@Override
+	public boolean isTypeMatch(String s, ResolvableType resolvableType) throws NoSuchBeanDefinitionException
+	{
+		return false;
 	}
 
 	@Override
