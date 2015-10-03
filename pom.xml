@@ -127,7 +127,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<jacoco.version>0.7.4.201502262128</jacoco.version>
+		<jacoco.version>0.7.5.201505241946</jacoco.version>
 		<jetty.version>8.1.16.v20140903</jetty.version>
 		<jetty9.version>9.0.7.v20131107</jetty9.version>
 		<joda-time.version>2.7</joda-time.version>
