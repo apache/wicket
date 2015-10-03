@@ -236,7 +236,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 			</plugin>
 		</plugins>

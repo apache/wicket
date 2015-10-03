@@ -129,7 +129,6 @@
 		<!-- Project Versions -->
 		<jacoco.version>0.7.5.201505241946</jacoco.version>
 		<jetty.version>8.1.16.v20140903</jetty.version>
-		<jetty9.version>9.0.7.v20131107</jetty9.version>
 		<joda-time.version>2.7</joda-time.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>4.2.1.RELEASE</spring.version>
@@ -188,10 +187,28 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.jetty.aggregate</groupId>
-				<artifactId>jetty-all-server</artifactId>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-server</artifactId>
 				<version>${jetty.version}</version>
-				<scope>provided</scope>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-webapp</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-util</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-jmx</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<dependency>
@@ -1034,7 +1051,7 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<groupId>org.mortbay.jetty</groupId>
+					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-maven-plugin</artifactId>
 					<version>${jetty.version}</version>
 					<configuration>

@@ -39,6 +39,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
 /**
@@ -243,6 +244,12 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
+	public long getContentLengthLong()
+	{
+		return 0;
+	}
+
+	@Override
 	public String getContentType()
 	{
 		return null;
@@ -422,6 +429,12 @@ public class ServletRequestCopy implements HttpServletRequest
 	}
 
 	@Override
+	public String changeSessionId()
+	{
+		return null;
+	}
+
+	@Override
 	public boolean isRequestedSessionIdValid()
 	{
 		return false;
@@ -469,6 +482,12 @@ public class ServletRequestCopy implements HttpServletRequest
 
 	@Override
 	public Part getPart(String name) throws IOException, ServletException
+	{
+		return null;
+	}
+
+	@Override
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException
 	{
 		return null;
 	}

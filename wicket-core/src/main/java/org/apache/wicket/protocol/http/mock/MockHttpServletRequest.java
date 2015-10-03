@@ -43,6 +43,7 @@ import java.util.Map;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.DispatcherType;
+import javax.servlet.ReadListener;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -53,6 +54,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileUploadBase;
@@ -428,6 +430,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return -1;
 	}
 
+	@Override
+	public long getContentLengthLong()
+	{
+		return getContentLength();
+	}
+
 	/**
 	 * If useMultiPartContentType set as true return the correct content-type.
 	 * 
@@ -595,9 +603,31 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		return new ServletInputStream()
 		{
+			private boolean isFinished = false;
+			private boolean isReady = true;
+
+			@Override
+			public boolean isFinished()
+			{
+				return isFinished;
+			}
+
+			@Override
+			public boolean isReady()
+			{
+				return isReady;
+			}
+
+			@Override
+			public void setReadListener(ReadListener readListener)
+			{
+			}
+
 			@Override
 			public int read()
 			{
+				isFinished = true;
+				isReady = false;
 				return bais.read();
 			}
 		};
@@ -1110,6 +1140,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return getSession(true);
 	}
 
+	@Override
+	public String changeSessionId()
+	{
+		final HttpSession oldSession = getSession(false);
+		if (oldSession == null)
+		{
+			throw new IllegalStateException("There is no active session associated with the current request");
+		}
+		oldSession.invalidate();
+
+		final HttpSession newSession = getSession(true);
+
+		return newSession.getId();
+	}
+
 	/**
 	 * Get the session.
 	 * 
@@ -1237,6 +1282,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public Part getPart(String name) throws IOException, ServletException
 	{
 		return parts.get(name);
+	}
+
+	@Override
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> aClass) throws IOException, ServletException
+	{
+		return null;
 	}
 
 	public MockHttpServletRequest setPart(String name, Part part) {
