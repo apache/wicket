@@ -40,16 +40,16 @@
 	<properties>
 		<!-- Wildfly dependency versions -->
 		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
-		<version.wildfly_8>8.2.0.Final</version.wildfly_8>
+		<version.wildfly_8>8.2.1.Final</version.wildfly_8>
 		
 		<!-- Java EE 6 SPEC JBoss -->
 		<version.jboss.spec.javaee.6.0>3.0.3.Final</version.jboss.spec.javaee.6.0>
 
 		<!-- ShrinkWrap Resolvers Maven -->
-		<version.shrinkwrap.resolvers>2.1.1</version.shrinkwrap.resolvers>
+		<version.shrinkwrap.resolvers>2.2.0</version.shrinkwrap.resolvers>
 		
 		<!-- Arquillian -->
-		<version.arquillian_core>1.1.8.Final</version.arquillian_core>
+		<version.arquillian_core>1.1.9.Final</version.arquillian_core>
 	</properties>
 
 	<dependencyManagement>
@@ -66,36 +66,36 @@
 				<version>${version.arquillian_core}</version>
 				<classifier>tests</classifier>
 			</dependency>
-            <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging</artifactId>
-                <version>3.1.4.GA</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.marshalling</groupId>
-                <artifactId>jboss-marshalling</artifactId>
-                <version>1.4.9.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.marshalling</groupId>
-                <artifactId>jboss-marshalling-river</artifactId>
-                <version>1.4.9.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.remoting</groupId>
-                <artifactId>jboss-remoting</artifactId>
-                <version>4.0.6.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.xnio</groupId>
-                <artifactId>xnio-api</artifactId>
-                <version>3.3.0.Final</version>
-            </dependency>
-             <dependency>
-                 <groupId>org.jboss.xnio</groupId>
-                 <artifactId>xnio-nio</artifactId>
-                 <version>3.3.0.Final</version>
-             </dependency>
+			<dependency>
+				<groupId>org.jboss.logging</groupId>
+				<artifactId>jboss-logging</artifactId>
+				<version>3.3.0.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.marshalling</groupId>
+				<artifactId>jboss-marshalling</artifactId>
+				<version>1.4.10.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.marshalling</groupId>
+				<artifactId>jboss-marshalling-river</artifactId>
+				<version>1.4.10.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.remoting</groupId>
+				<artifactId>jboss-remoting</artifactId>
+				<version>4.0.14.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.xnio</groupId>
+				<artifactId>xnio-api</artifactId>
+				<version>3.3.2.Final</version>
+			</dependency>
+			 <dependency>
+				 <groupId>org.jboss.xnio</groupId>
+				 <artifactId>xnio-nio</artifactId>
+				 <version>3.3.2.Final</version>
+			 </dependency>
 			<dependency>
 				<groupId>org.wildfly</groupId>
 				<artifactId>wildfly-arquillian-container-managed</artifactId>
@@ -319,21 +319,21 @@
     				</configuration>
     			</plugin>
     		</plugins>
-        </pluginManagement>
-        <plugins>
+		</pluginManagement>
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-            </plugin>
+			</plugin>
 			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
+			</plugin>
 			<plugin>
 				<groupId>org.wildfly.plugins</groupId>
 				<artifactId>wildfly-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+			</plugin>
+		</plugins>
 	</build>
 </project>
 
