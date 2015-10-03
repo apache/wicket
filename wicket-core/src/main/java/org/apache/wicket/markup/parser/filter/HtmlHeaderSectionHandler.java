@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.internal.HtmlHeaderItemsContainer;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
+import org.apache.wicket.util.tester.BaseWicketTester;
 
 
 /**
@@ -172,7 +173,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 */
 	private void handleHeaderItemsTag(ComponentTag tag)
 	{
-		if (foundHeaderItemsTag)
+		if ((tag.isOpen() || tag.isOpenClose()) && foundHeaderItemsTag)
 		{
 			throw new MarkupException(new MarkupStream(markup),
 					"More than one <wicket:header-items/> detected in the <head> element. Only one is allowed.");
