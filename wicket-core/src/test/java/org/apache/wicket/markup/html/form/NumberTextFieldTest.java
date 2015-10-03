@@ -43,7 +43,7 @@ public class NumberTextFieldTest extends WicketTestCase
 	@Test
 	public void convertBigDecimal()
 	{
-		TestPage<BigDecimal> testPage = new TestPage<>();
+		TestPage<BigDecimal> testPage = new TestPage<BigDecimal>();
 		testPage.textField.setType(BigDecimal.class);
 		testPage.textField.setMinimum(Model.of(new BigDecimal("0.00")));
 		testPage.textField.setMaximum(new BigDecimal("100.00"));
