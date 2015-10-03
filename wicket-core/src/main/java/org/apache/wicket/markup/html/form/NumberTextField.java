@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Objects;
@@ -51,11 +52,11 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 	private RangeValidator<N> validator;
 
-	private N minimum;
+	private IModel<N> minimum;
 
-	private N maximum;
+	private IModel<N> maximum;
 
-	private N step;
+	private IModel<N> step;
 
 	/**
 	 * Construct.
@@ -111,20 +112,21 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		super(id, model, type);
 
 		validator = null;
-		minimum = null;
-		maximum = null;
+		minimum = Model.of((N)null);
+		maximum = Model.of((N)null);
+		step = Model.of((N)null);
 	}
-
+	
 	/**
 	 * Sets the minimum allowed value
-	 * 
+	 *
 	 * @param minimum
 	 *            the minimum allowed value
 	 * @return this instance
 	 */
 	public NumberTextField<N> setMinimum(final N minimum)
 	{
-		this.minimum = minimum;
+		this.minimum = Model.of(minimum);
 		return this;
 	}
 
@@ -137,7 +139,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 */
 	public NumberTextField<N> setMaximum(final N maximum)
 	{
-		this.maximum = maximum;
+		this.maximum = Model.of(maximum);
 		return this;
 	}
 
@@ -149,6 +151,45 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 * @return this instance
 	 */
 	public NumberTextField<N> setStep(final N step)
+	{
+		this.step = Model.of(step);
+		return this;
+	}
+
+	/**
+	 * Sets the minimum allowed value
+	 * 
+	 * @param minimum
+	 *            the minimum allowed value
+	 * @return this instance
+	 */
+	public NumberTextField<N> setMinimum(final IModel<N> minimum)
+	{
+		this.minimum = minimum;
+		return this;
+	}
+
+	/**
+	 * Sets the maximum allowed value
+	 *
+	 * @param maximum
+	 *            the maximum allowed value
+	 * @return this instance
+	 */
+	public NumberTextField<N> setMaximum(final IModel<N> maximum)
+	{
+		this.maximum = maximum;
+		return this;
+	}
+
+	/**
+	 * Sets the step attribute
+	 *
+	 * @param step
+	 *            the step attribute
+	 * @return this instance
+	 */
+	public NumberTextField<N> setStep(final IModel<N> step)
 	{
 		this.step = step;
 		return this;
@@ -165,9 +206,11 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 			validator = null;
 		}
 
-		if (minimum != null || maximum != null)
+		final N min = minimum.getObject();
+		final N max = maximum.getObject();
+		if (min != null || max != null)
 		{
-			validator = RangeValidator.range(minimum, maximum);
+			validator = RangeValidator.range(min, max);
 			add(validator);
 		}
 	}
@@ -189,33 +232,36 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		IValueMap attributes = tag.getAttributes();
 
-		if (minimum != null)
+		final N min = minimum.getObject();
+		if (min != null)
 		{
-			attributes.put("min", Objects.stringValue(minimum));
+			attributes.put("min", Objects.stringValue(min));
 		}
 		else
 		{
 			attributes.remove("min");
 		}
 
-		if (maximum != null)
+		final N max = maximum.getObject();
+		if (max != null)
 		{
-			attributes.put("max", Objects.stringValue(maximum));
+			attributes.put("max", Objects.stringValue(max));
 		}
 		else
 		{
 			attributes.remove("max");
 		}
 
-		if (step != null)
+		final N _step = step.getObject();
+		if (_step != null)
 		{
-			if (step.doubleValue() == ANY)
+			if (_step.doubleValue() == ANY)
 			{
 				attributes.put("step", "any");
 			}
 			else
 			{
-				attributes.put("step", Objects.stringValue(step));
+				attributes.put("step", Objects.stringValue(_step));
 			}
 		}
 		else
