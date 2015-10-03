@@ -135,7 +135,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		else if (HtmlHeaderResolver.HEADER_ITEMS.equalsIgnoreCase(tag.getName()) &&
 				tag.getNamespace().equalsIgnoreCase(getWicketNamespace()))
 		{
-			if (foundHeaderItemsTag)
+			if ((tag.isOpen() || tag.isOpenClose()) && foundHeaderItemsTag)
 			{
 				throw new MarkupException(new MarkupStream(markup),
 						"More than one <wicket:header-items/> detected in the <head> element. Only one is allowed.");
