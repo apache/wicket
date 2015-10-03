@@ -53,25 +53,34 @@
     					<artifactId>servlet-api</artifactId>
     				</exclusion>
     			</exclusions>
-    		</dependency>
-    		<dependency>
-    			<groupId>org.eclipse.jetty.aggregate</groupId>
-    			<artifactId>jetty-all-server</artifactId>
-                <version>${jetty.version}</version>
-    			<exclusions>
-    				<exclusion>
-    					<!-- exclude because the same jar comes from JBoss Weld and the following error occurs:
-    					 class "javax.annotation.ManagedBean"'s signer information does not match signer
-    					 information of other classes in the same package
-    					 -->
-    					<groupId>org.eclipse.jetty.orbit</groupId>
-    					<artifactId>javax.annotation</artifactId>
-    				</exclusion>
-    			</exclusions>
-    		</dependency>
-        </dependencies>
-    </dependencyManagement>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-util</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jmx</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>javax.el</groupId>
 			<artifactId>javax.el-api</artifactId>
@@ -154,14 +163,10 @@
 			<artifactId>wicket-atmosphere</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty.aggregate</groupId>
-			<artifactId>jetty-all-server</artifactId>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<scope>compile</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <scope>compile</scope>
-        </dependency>
 		<dependency>
 			<groupId>org.jboss.weld.servlet</groupId>
 			<artifactId>weld-servlet</artifactId>

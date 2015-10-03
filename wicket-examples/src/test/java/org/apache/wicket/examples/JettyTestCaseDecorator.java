@@ -17,9 +17,10 @@
 package org.apache.wicket.examples;
 
 import com.meterware.httpunit.HttpUnitOptions;
-import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.After;
 import org.junit.Assert;
@@ -48,8 +49,14 @@ public class JettyTestCaseDecorator extends Assert
 		System.setProperty("wicket.configuration", "deployment");
 
 		server = new Server(0);
-		SelectChannelConnector connector = new SelectChannelConnector();
-		server.setConnectors(new Connector[] { connector });
+
+		HttpConfiguration http_config = new HttpConfiguration();
+		http_config.setSecureScheme("https");
+		http_config.setSecurePort(8443);
+		http_config.setOutputBufferSize(32768);
+
+		ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
+		server.addConnector(http);
 
 		WebAppContext web = new WebAppContext();
 		if (contextPath == null)
@@ -74,7 +81,7 @@ public class JettyTestCaseDecorator extends Assert
 		server.setHandler(web);
 
 		server.start();
-		localPort = connector.getLocalPort();
+		localPort = http.getLocalPort();
 	}
 
 	/**
