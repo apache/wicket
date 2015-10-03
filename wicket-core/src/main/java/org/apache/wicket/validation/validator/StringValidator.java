@@ -122,7 +122,7 @@ public class StringValidator extends AbstractRangeValidator<Integer, String>
 		}
 	}
 
-	private boolean hasLengthAttribute(String tagName)
+	protected boolean hasLengthAttribute(String tagName)
 	{
 		return "input".equalsIgnoreCase(tagName) || "textarea".equalsIgnoreCase(tagName);
 	}
