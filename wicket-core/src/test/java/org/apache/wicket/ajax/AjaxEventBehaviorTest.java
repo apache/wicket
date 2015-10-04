@@ -112,6 +112,18 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 		assertThat(behavior.getEvent(), is("event event2on event3on on"));
 	}
 
+	@Test
+	public void lambdaConsumer()
+	{
+		AtomicInteger counter = new AtomicInteger(0);
+		LambdaConsumerTestPage page = new LambdaConsumerTestPage(counter);
+		tester.startPage(page);
+
+		assertEquals(0 ,counter.get());
+		tester.executeAjaxEvent("comp", "eventName");
+		assertEquals(1 ,counter.get());
+	}
+
 	private static class EventNamesBehavior extends AjaxEventBehavior
 	{
 		/**
@@ -150,6 +162,26 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 					counter.incrementAndGet();
 				}
 			});
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body><span wicket:id='comp'></span></body></html>");
+		}
+	}
+
+	/**
+	 * Test page for #lambdaConsumer()
+	 */
+	private static class LambdaConsumerTestPage extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private LambdaConsumerTestPage(final AtomicInteger counter)
+		{
+			WebComponent comp = new WebComponent("comp");
+			add(comp);
+
+			comp.add(new AjaxEventBehavior("eventName", (target) -> counter.incrementAndGet()));
 		}
 
 		@Override

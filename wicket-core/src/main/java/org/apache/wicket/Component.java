@@ -24,7 +24,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.IAjaxRegionMarkupIdProvider;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.AuthorizationException;
@@ -68,6 +71,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IModelComparator;
 import org.apache.wicket.model.IWrapModel;
+import org.apache.wicket.model.lambda.AjaxListener;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -2875,7 +2879,7 @@ public abstract class Component
 		}
 
 		generatedMarkupId = -1;
-		setMetaData(MARKUP_ID_KEY, (String)markupId);
+		setMetaData(MARKUP_ID_KEY, (String) markupId);
 
 	}
 
@@ -3164,7 +3168,7 @@ public abstract class Component
 	 */
 	public final <C extends IRequestablePage> void setResponsePage(final Class<C> cls)
 	{
-		getRequestCycle().setResponsePage(cls, (PageParameters)null);
+		getRequestCycle().setResponsePage(cls, (PageParameters) null);
 	}
 
 	/**
@@ -4599,5 +4603,39 @@ public abstract class Component
 	protected void onReAdd()
 	{
 		setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, true);
+	}
+
+	/**
+	 * jQuery-like API for registering Ajax listeners
+	 *
+	 * @param eventName
+	 *              The name of the JavaScript event, e.g. 'click'
+	 * @param listener
+	 *              The listener to execute
+	 */
+	public void on(String eventName, AjaxListener listener)
+	{
+		Args.notNull(eventName, eventName);
+		Args.notNull(listener, "listener");
+
+		final AjaxEventBehavior ajaxBehavior;
+		switch (eventName)
+		{
+			case "change":
+			case "blur":
+				ajaxBehavior = new AjaxFormComponentUpdatingBehavior(eventName, listener);
+				break;
+			default:
+				if (AjaxFormChoiceComponentUpdatingBehavior.appliesTo(this))
+				{
+					ajaxBehavior = new AjaxFormChoiceComponentUpdatingBehavior(listener);
+				}
+				else
+				{
+					ajaxBehavior = new AjaxEventBehavior(eventName, listener);
+				}
+		}
+
+		add(ajaxBehavior);
 	}
 }

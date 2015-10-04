@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.model.lambda.WicketConsumer;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
@@ -61,13 +62,15 @@ import org.slf4j.LoggerFactory;
  * @author Igor Vaynberg (ivaynberg)
  * @see #onEvent(AjaxRequestTarget)
  */
-public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
+public class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AjaxEventBehavior.class);
 
 	private static final long serialVersionUID = 1L;
 
 	private final String event;
+
+	private final WicketConsumer<AjaxRequestTarget> consumer;
 
 	/**
 	 * Construct.
@@ -77,11 +80,17 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	public AjaxEventBehavior(String event)
 	{
+		this(event, null);
+	}
+
+	public AjaxEventBehavior(String event, WicketConsumer<AjaxRequestTarget> consumer)
+	{
 		Args.notEmpty(event, "event");
 
 		onCheckEvent(event);
 
 		this.event = event;
+		this.consumer = consumer;
 	}
 
 	@Override
@@ -145,14 +154,17 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return Strings.join(" ", cleanedEvents);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(AjaxRequestTarget)
-	 */
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		onEvent(target);
+		if (consumer != null)
+		{
+			consumer.accept(target);
+		}
+		else
+		{
+			onEvent(target);
+		}
 	}
 
 	/**
@@ -161,5 +173,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * @param target
 	 *      the current request handler
 	 */
-	protected abstract void onEvent(final AjaxRequestTarget target);
+	protected void onEvent(final AjaxRequestTarget target)
+	{}
 }

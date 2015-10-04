@@ -40,7 +40,7 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
  * @see #onAfterSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
  * @see #onError(org.apache.wicket.ajax.AjaxRequestTarget)
  */
-public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
+public class AjaxFormSubmitBehavior extends AjaxEventBehavior
 {
 	private static final long serialVersionUID = 1L;
 

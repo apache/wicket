@@ -20,11 +20,15 @@ import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.model.lambda.AjaxListener;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -242,6 +246,41 @@ public class ComponentTest extends WicketTestCase
 	{
 		FlagReserved5Component component = new FlagReserved5Component("test");
 		assertTrue(component.getFlagReserved5());
+	}
+
+	@Test
+	public void onClick()
+	{
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		WebMarkupContainer component = new WebMarkupContainer(MockPageWithOneComponent.COMPONENT_ID);
+		final String eventName = "click";
+		AtomicBoolean executed = new AtomicBoolean(false);
+
+		component.on(eventName, (target) -> executed.set(true));
+
+		// this is how AjaxFormComponentUpdatingBehavior could be used
+//		component.on("change", new AjaxListener()
+//		{
+//			@Override
+//			public void onEvent(AjaxRequestTarget target)
+//			{
+//				// use 'form' if you need with
+//				final Form<?> form = Form.findForm(component);
+//			}
+//
+//			@Override
+//			public void onError(AjaxRequestTarget target, RuntimeException error)
+//			{
+//
+//			}
+//		});
+
+		page.add(component);
+		tester.startPage(page);
+
+		assertFalse(executed.get());
+		tester.executeAjaxEvent(component, eventName);
+		assertTrue(executed.get());
 	}
 
 	/**

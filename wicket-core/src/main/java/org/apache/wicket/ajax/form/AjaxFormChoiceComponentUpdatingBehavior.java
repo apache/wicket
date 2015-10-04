@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.model.lambda.AjaxListener;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
@@ -46,7 +47,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * @see RadioGroup
  * @see CheckGroup
  */
-public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
+public class AjaxFormChoiceComponentUpdatingBehavior extends
 	AjaxFormComponentUpdatingBehavior
 {
 	private static final ResourceReference CHOICE_JS = new JavaScriptResourceReference(
@@ -59,7 +60,12 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	 */
 	public AjaxFormChoiceComponentUpdatingBehavior()
 	{
-		super("click");
+		this(null);
+	}
+
+	public AjaxFormChoiceComponentUpdatingBehavior(AjaxListener listener)
+	{
+		super("click", listener);
 	}
 
 	@Override
@@ -122,7 +128,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	 *            the component to check
 	 * @return if the component applies to the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 */
-	static boolean appliesTo(Component component)
+	public static boolean appliesTo(Component component)
 	{
 		return (component instanceof RadioChoice) ||
 			(component instanceof CheckBoxMultipleChoice) || (component instanceof RadioGroup) ||

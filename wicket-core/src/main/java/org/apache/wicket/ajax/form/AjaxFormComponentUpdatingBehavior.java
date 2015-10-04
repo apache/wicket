@@ -25,6 +25,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
+import org.apache.wicket.model.lambda.AjaxListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * @see #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)
  * @see #onError(org.apache.wicket.ajax.AjaxRequestTarget, RuntimeException)
  */
-public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
+public class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
 	private static final Logger log = LoggerFactory
 		.getLogger(AjaxFormComponentUpdatingBehavior.class);
@@ -56,6 +57,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private final AjaxListener listener;
+
 	/**
 	 * Construct.
 	 * 
@@ -64,13 +67,16 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	public AjaxFormComponentUpdatingBehavior(final String event)
 	{
-		super(event);
+		this(event, null);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.behavior.AbstractAjaxBehavior#onBind()
-	 */
+	public AjaxFormComponentUpdatingBehavior(final String event, AjaxListener listener)
+	{
+		super(event);
+
+		this.listener = listener;
+	}
+
 	@Override
 	protected void onBind()
 	{
@@ -151,18 +157,39 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 					formComponent.updateModel();
 				}
 
-				onUpdate(target);
+				if (listener != null)
+				{
+					listener.accept(target);
+				}
+				else
+				{
+					onUpdate(target);
+				}
 			}
 			else
 			{
 				formComponent.invalid();
 
-				onError(target, null);
+				if (listener != null)
+				{
+					listener.onError(target, null);
+				}
+				else
+				{
+					onError(target, null);
+				}
 			}
 		}
 		catch (RuntimeException e)
 		{
-			onError(target, e);
+			if (listener != null)
+			{
+				listener.onError(target, e);
+			}
+			else
+			{
+				onError(target, null);
+			}
 		}
 		formComponent.updateAutoLabels(target);
 	}
@@ -197,7 +224,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @param target
 	 *            the current request handler
 	 */
-	protected abstract void onUpdate(AjaxRequestTarget target);
+	protected void onUpdate(AjaxRequestTarget target)
+	{
+	}
 
 	/**
 	 * Called to handle any error resulting from updating form component. Errors thrown from
