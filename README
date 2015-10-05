@@ -35,7 +35,7 @@ Java/Application server requirements
 ------------------------------------
 
 Wicket requires at least Java 1.8. The application server for running your web
-application should adhere to the servlet specification version 3.1 or newer.
+application should adhere to the servlet specification version 3.0 or newer.
 
 What is in this package
 -----------------------
