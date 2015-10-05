@@ -68,7 +68,7 @@ public interface DiffAlgorithm
 {
 	/**
 	 * Computes the difference between the original sequence and the revised sequence and returns it
-	 * as a {@link org.suigeneris.jrcs.diff.Revision Revision} object.
+	 * as a org.suigeneris.jrcs.diff.Revision Revision object.
 	 * <p>
 	 * The revision can be used to construct the revised sequence from the original sequence.
 	 * 
