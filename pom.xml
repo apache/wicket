@@ -493,13 +493,13 @@
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest-junit</artifactId>
 				<version>${hamcrest.version}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
 				<artifactId>java-hamcrest</artifactId>
 				<version>${hamcrest.version}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
