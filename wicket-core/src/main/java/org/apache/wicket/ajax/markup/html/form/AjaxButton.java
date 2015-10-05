@@ -169,7 +169,9 @@ public abstract class AjaxButton extends Button
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// WICKET-5594 prevent non-Ajax submit
-		tag.put("type", "button");
+		if ("submit".equals(tag.getAttribute("type"))) {
+			tag.put("type", "button");
+		}
 
 		super.onComponentTag(tag);
 	}
