@@ -1,4 +1,4 @@
-Apache Wicket 7.0
+Apache Wicket 8.0
 =================
 
 This is the readme file for the Apache Wicket project. 
@@ -20,7 +20,7 @@ Contents
  - Getting started
  - Dependencies
  - Building Wicket from source
- - Migrating from 6.x
+ - Migrating from 7.x
  - Getting help
  - Cryptographic Software Notice
 
@@ -34,8 +34,8 @@ of the project.
 Java/Application server requirements
 ------------------------------------
 
-Wicket requires at least Java 1.7. The application server for running your web
-application should adhere to the servlet specification version 3.0 or newer.
+Wicket requires at least Java 1.8. The application server for running your web
+application should adhere to the servlet specification version 3.1 or newer.
 
 What is in this package
 -----------------------
@@ -235,12 +235,12 @@ do:
     creates wicket-x.y.z.jar in target/ subdirectory and installs the file
     into your local Maven repository for use in other projects.
 
-Migrating from 6.x
+Migrating from 7.x
 ------------------
 
 This file is a copy of the migration guide from available on our Wiki:
 
-    https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+7.0
+    https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0
     
 Getting help
 ------------
