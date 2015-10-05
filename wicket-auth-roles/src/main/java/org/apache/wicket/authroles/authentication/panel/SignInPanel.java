@@ -35,9 +35,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
  * passing the username and password submitted. The signIn() method should authenticate the user's
  * session.
  * 
- * @see {@link IAuthenticationStrategy}
- * @see {@link org.apache.wicket.settings.SecuritySettings#getAuthenticationStrategy()}
- * @see {@link DefaultAuthenticationStrategy}
+ * @see IAuthenticationStrategy
+ * @see org.apache.wicket.settings.SecuritySettings#getAuthenticationStrategy()
+ * @see DefaultAuthenticationStrategy
  *
  * @author Jonathan Locke
  * @author Juergen Donnerstag

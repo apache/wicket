@@ -35,9 +35,9 @@ import java.lang.annotation.Target;
  * </pre>
  * 
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
- * @see org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
- * @see org.apache.wicket.authorization.strategies.role.annotations.AuthorizeActions
- * @see org.apache.wicket.authorization.strategies.role.annotations.AuthorizeAction
+ * @see AnnotationsRoleAuthorizationStrategy
+ * @see AuthorizeActions
+ * @see AuthorizeAction
  * 
  * @author Eelco hillenius
  */
