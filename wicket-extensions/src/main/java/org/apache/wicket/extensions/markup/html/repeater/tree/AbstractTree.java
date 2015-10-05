@@ -194,7 +194,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 * 
 	 * @see #getModelObject()
 	 * @see Set#add(Object)
-	 * @see #updateBranch(Object, AjaxRequestTarget)
+	 * @see #updateBranch(Object, IPartialPageRequestHandler)
 	 */
 	public void expand(T t)
 	{
@@ -214,7 +214,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 * 
 	 * @see #getModelObject()
 	 * @see Set#remove(Object)
-	 * @see #updateBranch(Object, AjaxRequestTarget)
+	 * @see #updateBranch(Object, IPartialPageRequestHandler)
 	 */
 	public void collapse(T t)
 	{
