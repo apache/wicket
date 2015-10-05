@@ -112,12 +112,6 @@ public class FileUploadServletPartTest extends WicketTestCase
 		}
 
 		@Override
-		public String getSubmittedFileName()
-		{
-			return getName();
-		}
-
-		@Override
 		public long getSize()
 		{
 			return DATA.length;
