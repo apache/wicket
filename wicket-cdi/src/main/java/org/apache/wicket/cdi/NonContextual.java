@@ -70,7 +70,7 @@ public class NonContextual<T>
 	 * @param <T>
 	 * @param clazz
 	 * @param manager
-	 * @return
+	 * @return The NonContextual for the given class managed by the given manager
 	 */
 	public static <T> NonContextual<T> of(Class<? extends T> clazz, BeanManager manager)
 	{
