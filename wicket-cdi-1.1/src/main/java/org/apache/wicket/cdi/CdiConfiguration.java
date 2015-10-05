@@ -71,7 +71,7 @@ public class CdiConfiguration
 	 * application that was configured with this CdiConfiguration).
 	 * 
 	 * @param fallbackBeanManager
-	 * @return
+	 * @return this instance
 	 */
 	public CdiConfiguration setFallbackBeanManager(BeanManager fallbackBeanManager)
 	{
@@ -83,7 +83,6 @@ public class CdiConfiguration
 	 * Configures the specified application
 	 * 
 	 * @param application
-	 * @return
 	 */
 	public void configure(Application application)
 	{
