@@ -816,7 +816,7 @@
 						<maxmemory>256m</maxmemory>
 						<quiet>true</quiet>
 						<links>
-							<link>http://download.oracle.com/javase/6/docs/api</link>
+							<link>http://docs.oracle.com/javase/7/docs/api/</link>
 						</links>
 					</configuration>
 					<executions>
