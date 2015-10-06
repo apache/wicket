@@ -132,7 +132,7 @@
 		<joda-time.version>2.8.2</joda-time.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>4.2.1.RELEASE</spring.version>
-		<servlet-api.version>3.0.1</servlet-api.version>
+		<servlet-api.version>3.1.0</servlet-api.version>
 		<maven.javadoc.version>2.10.3</maven.javadoc.version>
 		<maven.surefire.version>2.18.1</maven.surefire.version>
 		<mockito.version>1.10.16</mockito.version>
