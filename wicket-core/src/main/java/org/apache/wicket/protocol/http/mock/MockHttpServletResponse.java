@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -442,6 +443,17 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 		servletStream = new ServletOutputStream()
 		{
 			@Override
+			public boolean isReady()
+			{
+				return true;
+			}
+
+			@Override
+			public void setWriteListener(WriteListener writeListener)
+			{
+			}
+
+			@Override
 			public void write(int b)
 			{
 				byteStream.write(b);
@@ -643,6 +655,12 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	public void setContentLength(final int length)
 	{
 		setIntHeader("Content-Length", length);
+	}
+
+	@Override
+	public void setContentLengthLong(long len)
+	{
+		setContentLength((int) len);
 	}
 
 	/**

@@ -707,6 +707,12 @@ public class MockServletContext implements ServletContext
 	{
 	}
 
+	@Override
+	public String getVirtualServerName()
+	{
+		return "WicketTester 8.x";
+	}
+
 	/**
 	 * NOT USED - Servlet spec requires that this always returns null.
 	 * 
