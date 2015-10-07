@@ -1511,7 +1511,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-"
 			+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
 		addHeader("User-Agent",
-			"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
+			"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox/41.0");
 	}
 
 	private static final String crlf = "\r\n";
