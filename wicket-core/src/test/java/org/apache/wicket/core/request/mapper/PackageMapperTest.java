@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.is;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
@@ -369,6 +371,30 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertNull("A non-page class should not create a request handler!", handler);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5996
+	 */
+	@Test
+	public void decode11()
+	{
+		Url url = Url.parse(MOUNT_PATH);
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+
+		assertThat(handler, is(nullValue()));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5996
+	 */
+	@Test
+	public void decode12()
+	{
+		Url url = Url.parse(MOUNT_PATH + '/');
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+
+		assertThat(handler, is(nullValue()));
 	}
 
 	/**
