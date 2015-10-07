@@ -17,6 +17,7 @@
 package org.apache.wicket.core.request.mapper;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.nio.charset.Charset;
 import java.util.Locale;
@@ -453,6 +454,30 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		int score = encoder.getCompatibilityScore(getRequest(url));
 
 		assertThat(score, is(0));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5996
+	 */
+	@Test
+	public void decode15()
+	{
+		Url url = Url.parse("wicket/bookmarkable");
+		final AbstractBookmarkableMapper.UrlInfo urlInfo = encoder.parseRequest(getRequest(url));
+
+		assertThat(urlInfo, is(nullValue()));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5996
+	 */
+	@Test
+	public void decode16()
+	{
+		Url url = Url.parse("wicket/bookmarkable/");
+		final AbstractBookmarkableMapper.UrlInfo urlInfo = encoder.parseRequest(getRequest(url));
+
+		assertThat(urlInfo, is(nullValue()));
 	}
 
 	/**

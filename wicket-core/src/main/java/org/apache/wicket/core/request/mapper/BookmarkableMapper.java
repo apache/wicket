@@ -118,6 +118,11 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 				className = segments.get(1);
 			}
 
+			if (Strings.isEmpty(className))
+			{
+				return null;
+			}
+
 			Class<? extends IRequestablePage> pageClass = getPageClass(className);
 
 			if (pageClass != null && IRequestablePage.class.isAssignableFrom(pageClass))

@@ -17,6 +17,7 @@
 package org.apache.wicket.core.request.mapper;
 
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
@@ -28,6 +29,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A request mapper that mounts all bookmarkable pages in a given package.
@@ -135,8 +137,13 @@ public class PackageMapper extends AbstractBookmarkableMapper
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 
-			// load the page class
 			String name = url.getSegments().get(0);
+
+			if (Strings.isEmpty(name))
+			{
+				return null;
+			}
+
 			String className = cleanClassName(name);
 
 			if (isValidClassName(className) == false)
@@ -173,7 +180,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	private boolean isValidClassName(String className)
 	{
 		// darn simple check - feel free to enhance this method to your needs
-		if (className == null)
+		if (Strings.isEmpty(className))
 		{
 			return false;
 		}
