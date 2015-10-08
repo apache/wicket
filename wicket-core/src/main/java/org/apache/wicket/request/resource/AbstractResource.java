@@ -46,6 +46,7 @@ import org.apache.wicket.util.time.Time;
  * {@link #newResourceResponse(org.apache.wicket.request.resource.IResource.Attributes)} method.
  * 
  * @author Matej Knopp
+ * @author Tobias Soloschenko
  */
 public abstract class AbstractResource implements IResource
 {
@@ -731,8 +732,12 @@ public abstract class AbstractResource implements IResource
 
 			String range = rangeHeader.substring(rangeHeader.indexOf('=') + 1,
 					rangeHeader.length());
+			
+			// Due to WICKET-5995 it is required to check if several ranges are specified
+			// because of streams in java only the first given range can be used to read them.
+			String firstRange = range.contains(",") ? range.substring(0, range.indexOf(',')) : range;
 
-			String[] rangeParts = Strings.split(range, '-');
+			String[] rangeParts = Strings.split(firstRange, '-');
 
 			String startByteString = rangeParts[0];
 			String endByteString = rangeParts[1];
