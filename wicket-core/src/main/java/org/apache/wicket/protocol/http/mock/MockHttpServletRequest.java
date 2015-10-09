@@ -43,6 +43,7 @@ import java.util.Map;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.DispatcherType;
+import javax.servlet.ReadListener;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -53,6 +54,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
 import org.apache.commons.fileupload.FileUploadBase;
@@ -428,6 +430,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return -1;
 	}
 
+	@Override
+	public long getContentLengthLong()
+	{
+		return getContentLength();
+	}
+
 	/**
 	 * If useMultiPartContentType set as true return the correct content-type.
 	 * 
@@ -595,9 +603,31 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		return new ServletInputStream()
 		{
+			private boolean isFinished = false;
+			private boolean isReady = true;
+
+			@Override
+			public boolean isFinished()
+			{
+				return isFinished;
+			}
+
+			@Override
+			public boolean isReady()
+			{
+				return isReady;
+			}
+
+			@Override
+			public void setReadListener(ReadListener readListener)
+			{
+			}
+
 			@Override
 			public int read()
 			{
+				isFinished = true;
+				isReady = false;
 				return bais.read();
 			}
 		};
@@ -1110,6 +1140,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return getSession(true);
 	}
 
+	@Override
+	public String changeSessionId()
+	{
+		final HttpSession oldSession = getSession(false);
+		if (oldSession == null)
+		{
+			throw new IllegalStateException("There is no active session associated with the current request");
+		}
+		oldSession.invalidate();
+
+		final HttpSession newSession = getSession(true);
+
+		return newSession.getId();
+	}
+
 	/**
 	 * Get the session.
 	 * 
@@ -1237,6 +1282,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public Part getPart(String name) throws IOException, ServletException
 	{
 		return parts.get(name);
+	}
+
+	@Override
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> aClass) throws IOException, ServletException
+	{
+		return null;
 	}
 
 	public MockHttpServletRequest setPart(String name, Part part) {
@@ -1447,168 +1498,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 		setUrl(Url.parse(url));
 	}
 
-	// /**
-	// * Initialize the request parameters to point to the given bookmarkable page.
-	// *
-	// * @param page
-	// * The page to point to
-	// * @param params
-	// * Additional parameters
-	// */
-	// public void setRequestToBookmarkablePage(final Page page, final Map<String, Object> params)
-	// {
-	// parameters.putAll(params);
-	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
-	// .getName());
-	// }
-	//
-	// /**
-	// * Initialize the request parameters to point to the given component.
-	// *
-	// * @param component
-	// * The component
-	// */
-	// public void setRequestToComponent(final Component component)
-	// {
-	// final IPageMap pageMap = component.getPage().getPageMap();
-	// final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
-	// if (component instanceof BookmarkablePageLink)
-	// {
-	// final Class<? extends Page> clazz = ((BookmarkablePageLink<?>)component).getPageClass();
-	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
-	// ':' + clazz.getName());
-	// }
-	// else
-	// {
-	// int version = component.getPage().getCurrentVersionNumber();
-	// Class<?> clazz = null;
-	// if (component instanceof IRedirectListener)
-	// {
-	// clazz = IRedirectListener.class;
-	// }
-	// else if (component instanceof IResourceListener)
-	// {
-	// clazz = IResourceListener.class;
-	// }
-	// else if (component instanceof IFormSubmitListener)
-	// {
-	// clazz = IFormSubmitListener.class;
-	// }
-	// else if (component instanceof ILinkListener)
-	// {
-	// clazz = ILinkListener.class;
-	// }
-	// else if (component instanceof IOnChangeListener)
-	// {
-	// clazz = IOnChangeListener.class;
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(
-	// "The component class doesn't seem to implement any of the known *Listener interfaces: " +
-	// component.getClass());
-	// }
-	//
-	// // manually create the url using default strategy and format
-	// parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' +
-	// component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
-	// Classes.simpleName(clazz) + "::");
-	//
-	// // see if we can replace our manual listener url with a properly generated one...
-	//
-	// try
-	// {
-	// RequestListenerInterface rli = (RequestListenerInterface)clazz.getField("INTERFACE")
-	// .get(clazz);
-	//
-	// String auto = component.getRequestCycle().urlFor(component, rli).toString();
-	//
-	// // check for crypted strategy
-	// if (auto.startsWith("?x="))
-	// {
-	// auto = auto.substring(3);
-	// parameters.put("x", auto);
-	// parameters.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
-	// }
-	// else
-	// {
-	// int idx = auto.indexOf(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
-	// if (idx >= 0)
-	// {
-	// auto = auto.substring(idx +
-	// WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.length() + 1);
-	// }
-	// else
-	// {
-	// idx = auto.indexOf("&");
-	// if (idx >= 0)
-	// {
-	// auto = auto.substring(0, idx);
-	// }
-	// }
-	// parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, auto);
-	// }
-	// }
-	// catch (Exception e)
-	// {
-	// // noop
-	// }
-	//
-	// if (component.isStateless() && component.getPage().isBookmarkable())
-	// {
-	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-	// pageMapName + ':' + component.getPage().getClass().getName());
-	// }
-	// }
-	// }
-
-	// /**
-	// * Initialize the request parameters to point to the given form component. The additional map
-	// * should contain mappings between individual components that appear in the form and the
-	// string
-	// * value that should be submitted for each of these components.
-	// *
-	// * @param form
-	// * The for to send the request to
-	// * @param values
-	// * The values for each of the form components
-	// */
-	// public void setRequestToFormComponent(final Form<?> form, final Map<String, Object> values)
-	// {
-	// setRequestToComponent(form);
-	//
-	// final Map<String, Object> valuesApplied = new HashMap<String, Object>();
-	// form.visitChildren(FormComponent.class, new IVisitor<FormComponent<?>>()
-	// {
-	// public Object component(final FormComponent<?> component)
-	// {
-	// String value = (String)values.get(component);
-	// if (value != null)
-	// {
-	// parameters.put(component.getInputName(), values.get(component));
-	// valuesApplied.put(component.getId(), component);
-	// }
-	// return CONTINUE_TRAVERSAL;
-	// }
-	// });
-	//
-	// if (values.size() != valuesApplied.size())
-	// {
-	// Map<String, Object> diff = new HashMap<String, Object>();
-	// diff.putAll(values);
-	//
-	// Iterator<String> iter = valuesApplied.keySet().iterator();
-	// while (iter.hasNext())
-	// {
-	// diff.remove(iter.next());
-	// }
-	//
-	// log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
-	// +
-	// diff.keySet());
-	// }
-	// }
-
 	/**
 	 * Helper method to create some default headers for the request
 	 */
@@ -1622,7 +1511,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-"
 			+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
 		addHeader("User-Agent",
-			"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
+			"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox/41.0");
 	}
 
 	private static final String crlf = "\r\n";

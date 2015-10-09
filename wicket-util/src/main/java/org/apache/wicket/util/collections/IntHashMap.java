@@ -1036,7 +1036,7 @@ public class IntHashMap<V> implements Cloneable, Serializable
 	 * operations. It does not support the <tt>add</tt> or <tt>addAll</tt> operations.
 	 * 
 	 * @return a collection view of the mappings contained in this map.
-	 * @see Map.Entry
+	 * @see java.util.Map.Entry
 	 */
 	public Set<Entry<V>> entrySet()
 	{

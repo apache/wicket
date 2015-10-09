@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.util.resource.locator;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -23,12 +27,18 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Locale;
 
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
-import org.apache.wicket.util.resource.FileResourceStream;
-import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.caching.CachingResourceStreamLocator;
+import org.apache.wicket.util.resource.FileResourceStream;
+import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.resource.StringResourceStream;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -60,6 +70,99 @@ public class CachingResourceStreamLocatorTest
 	}
 
 	/**
+	 * Tests strict before non-strict matching without a specific locale.
+	 */
+	@Test
+	public void strictBeforeNonStrictMatchingWithoutLocaleDoesntResultInInvalidNonStrictMatch()
+	{
+		IResourceStreamLocator resourceStreamLocator = new ResourceStreamLocator(
+			new ClassPathResourceFinder(""));
+		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
+			resourceStreamLocator);
+
+		String style = null;
+		String variation = null;
+		Locale locale = null;
+		String extension = null;
+
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+
+		// a strict lookup for the resource with no specific locale results in a match
+		IResourceStream strictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
+			filename, style, variation, locale, extension, true);
+
+		assertThat(strictLocate, is(not(nullValue())));
+
+		// followed by a non-strict search for the same resource also finds it
+		IResourceStream nonStrictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
+			filename, style, variation, locale, extension, false);
+
+		assertThat(nonStrictLocate, is(not(nullValue())));
+	}
+
+	/**
+	 * Tests strict before non-strict matching with a specific locale.
+	 */
+	@Test
+	public void strictMatchingDoesntInvalidateNonStrictMatching()
+	{
+		IResourceStreamLocator resourceStreamLocator = new ResourceStreamLocator(
+			new ClassPathResourceFinder(""));
+		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
+			resourceStreamLocator);
+
+		String style = null;
+		String variation = null;
+		Locale locale = new Locale("nl", "NL");
+		String extension = null;
+
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+
+		// a strict lookup of a localized resource should not find the non-localized resource
+		IResourceStream strictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
+			filename, style, variation, locale, extension, true);
+		assertThat(strictLocate, is(nullValue()));
+
+		// but a non-strict lookup with a locale should fall back to the non-localized resource
+		IResourceStream nonStrictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
+			filename, style, variation, locale, extension, false);
+
+		assertThat(nonStrictLocate, is(not(nullValue())));
+	}
+
+	/**
+	 * Tests non-strict before strict matching with a specific locale.
+	 */
+	@Test
+	public void nonStrictMatchingDoesntResultInInvalidStrictMatch()
+	{
+		IResourceStreamLocator resourceStreamLocator = new ResourceStreamLocator(
+			new ClassPathResourceFinder(""));
+		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
+			resourceStreamLocator);
+
+		String style = null;
+		String variation = null;
+		Locale locale = new Locale("nl", "NL");
+		String extension = null;
+
+		String filename = "org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js";
+
+		// a non-strict lookup with a specific locale should find the non-localized resource
+		IResourceStream nonStrictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
+			filename, style, variation, locale, extension, false);
+
+		assertThat(nonStrictLocate, is(not(nullValue())));
+
+		// but a strict lookup with a specific locale should not fall back to the non-localized
+		// resource
+		IResourceStream strictLocate = cachingLocator.locate(AbstractDefaultAjaxBehavior.class,
+			filename, style, variation, locale, extension, true);
+
+		assertThat(strictLocate, is(nullValue()));
+	}
+
+	/**
 	 * Tests FileResourceStreamReference
 	 */
 	@Test
@@ -69,19 +172,18 @@ public class CachingResourceStreamLocatorTest
 
 		FileResourceStream frs = new FileResourceStream(new File("."));
 
-		when(
-				resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
-						"extension", true)).thenReturn(frs);
+		when(resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
+			"extension", true)).thenReturn(frs);
 
 		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
-				resourceStreamLocator);
+			resourceStreamLocator);
 
 		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
 		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
 
 		// there is a file resource with that Key so expect just one call to the delegate
 		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
-				null, "extension", true);
+			null, "extension", true);
 	}
 
 	/**
@@ -95,9 +197,10 @@ public class CachingResourceStreamLocatorTest
 		FileResourceStream frs = new FileResourceStream(new File("."));
 
 		when(resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
-						"extension", true)).thenReturn(frs);
+			"extension", true)).thenReturn(frs);
 
-		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(resourceStreamLocator);
+		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
+			resourceStreamLocator);
 
 		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
 		cachingLocator.locate(String.class, "path", "style", "variation", null, "extension", true);
@@ -105,9 +208,9 @@ public class CachingResourceStreamLocatorTest
 
 		// there is a file resource with that Key so expect just one call to the delegate
 		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
-				null, "extension", true);
+			null, "extension", true);
 		verify(resourceStreamLocator, times(1)).locate(String.class, "path", "style", "variation",
-				null, "extension2", true);
+			null, "extension2", true);
 	}
 
 	/**
@@ -145,9 +248,8 @@ public class CachingResourceStreamLocatorTest
 
 		StringResourceStream srs = new StringResourceStream("anything");
 
-		when(
-			resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
-				"extension", true)).thenReturn(srs);
+		when(resourceStreamLocator.locate(String.class, "path", "style", "variation", null,
+			"extension", true)).thenReturn(srs);
 
 		CachingResourceStreamLocator cachingLocator = new CachingResourceStreamLocator(
 			resourceStreamLocator);

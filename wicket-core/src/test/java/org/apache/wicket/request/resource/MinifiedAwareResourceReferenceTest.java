@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.request.resource.IResource.Attributes;
@@ -52,9 +56,9 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
 		ResourceReference reference = new JavaScriptResourceReference(
 			MinifiedAwareResourceReferenceTest.class, "b.js");
-		assertEquals("b.min.js", reference.getName());
+		assertEquals("b.js", reference.getName());
 		String fileContent = renderResource(reference);
-		assertEquals("//minified-b", fileContent);
+		assertEquals("// b.min.js", fileContent.trim());
 	}
 
 	/**
@@ -74,7 +78,8 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 		String fileContent = renderResource(reference);
 		assertEquals("//a", fileContent);
 
-		assertEquals(1, locator.minLocated);
+		// this will try 3 lookups for minified resources: en_US.min, en.min and .min 
+		assertEquals(3, locator.minLocated);
 	}
 
 	private class MinCountingResourceStreamLocator extends ResourceStreamLocator

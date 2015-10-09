@@ -115,7 +115,8 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	implements
 		IRequestCycleListener
 {
-	private static final Logger log = LoggerFactory.getLogger(CsrfPreventionRequestCycleListener.class);
+	private static final Logger log = LoggerFactory
+		.getLogger(CsrfPreventionRequestCycleListener.class);
 
 	/**
 	 * The action to perform when a missing or conflicting Origin header is detected.
@@ -162,8 +163,8 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	private CsrfAction conflictingOriginAction = CsrfAction.ABORT;
 
 	/**
-	 * The error code to report when the action to take for a CSRF request is {@link CsrfAction#ABORT}. Default
-	 * {@code 400 BAD REQUEST}.
+	 * The error code to report when the action to take for a CSRF request is
+	 * {@link CsrfAction#ABORT}. Default {@code 400 BAD REQUEST}.
 	 */
 	private int errorCode = javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
@@ -516,8 +517,11 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 			target.append(host);
 
 			int port = originUri.getPort();
-			if (port != -1 && "http".equals(scheme) && port != 80 || "https".equals(scheme) &&
-				port != 443)
+			boolean portIsSpecified = port != -1;
+			boolean isAlternateHttpPort = "http".equals(scheme) && port != 80;
+			boolean isAlternateHttpsPort = "https".equals(scheme) && port != 443;
+
+			if (portIsSpecified && (isAlternateHttpPort || isAlternateHttpsPort))
 			{
 				target.append(':');
 				target.append(port);
@@ -583,7 +587,8 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * @param page
 	 *            the page that is targeted with this request
 	 */
-	private void whitelistedHandler(HttpServletRequest request, String origin, IRequestablePage page)
+	private void whitelistedHandler(HttpServletRequest request, String origin,
+		IRequestablePage page)
 	{
 		onWhitelisted(request, origin, page);
 		if (log.isDebugEnabled())
@@ -640,7 +645,8 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * @param page
 	 *            the page that is targeted with this request
 	 */
-	protected void onMatchingOrigin(HttpServletRequest request, String origin, IRequestablePage page)
+	protected void onMatchingOrigin(HttpServletRequest request, String origin,
+		IRequestablePage page)
 	{
 	}
 

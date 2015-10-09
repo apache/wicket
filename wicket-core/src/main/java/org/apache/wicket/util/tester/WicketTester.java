@@ -19,7 +19,7 @@ package org.apache.wicket.util.tester;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.Serializable;
@@ -52,7 +52,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.hamcrest.core.IsCollectionContaining;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -503,8 +502,8 @@ public class WicketTester extends BaseWicketTester
 		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
 		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
 
-		assertThat(String.format("Feedback message with key '%s' cannot be found", key),
-				actualMessages, IsCollectionContaining.hasItem(expectedMessage));
+		assertTrue(String.format("Feedback message with key '%s' cannot be found in %s", key, actualMessages),
+				actualMessages.contains(expectedMessage));
 	}
 
 	/**
@@ -650,6 +649,9 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Asserts there are no feedback messages with a certain level.
+	 * 
+	 * @param level
+	 *            the level to check for
 	 */
 	public void assertNoFeedbackMessage(int level)
 	{

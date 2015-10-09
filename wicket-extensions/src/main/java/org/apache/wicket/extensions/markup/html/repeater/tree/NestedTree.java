@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.markup.html.repeater.tree.nested.BranchItem;
 import org.apache.wicket.extensions.markup.html.repeater.tree.nested.Subtree;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -62,7 +63,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 * @param state
 	 *            the expansion state
 	 * 
-	 * @see State
+	 * @see org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree.State
 	 */
 	public NestedTree(String id, ITreeProvider<T> provider, IModel<? extends Set<T>> state)
 	{
@@ -88,7 +89,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	/**
 	 * Overridden to let the node output its markup id.
 	 * 
-	 * @see #updateNode(Object, AjaxRequestTarget)
+	 * @see #updateNode(Object, IPartialPageRequestHandler)
 	 * @see Component#setOutputMarkupId(boolean)
 	 */
 	@Override
@@ -105,7 +106,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 * Overridden to update the corresponding {@link BranchItem} only.
 	 */
 	@Override
-	public void updateBranch(T t, final AjaxRequestTarget target)
+	public void updateBranch(T t, final IPartialPageRequestHandler target)
 	{
 		if (target != null)
 		{
@@ -131,7 +132,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 * Overridden to update the corresponding {@link Node} only.
 	 */
 	@Override
-	public void updateNode(T node, final AjaxRequestTarget target)
+	public void updateNode(T node, final IPartialPageRequestHandler target)
 	{
 		if (target != null)
 		{

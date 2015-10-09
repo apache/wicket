@@ -339,6 +339,13 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		// ignored will be calculated when the buffer is really streamed.
 	}
 
+	@Override
+	public void setContentLengthLong(long len)
+	{
+		isOpen();
+		// ignored will be calculated when the buffer is really streamed.
+	}
+
 	/**
 	 * @see javax.servlet.ServletResponse#setContentType(java.lang.String)
 	 */

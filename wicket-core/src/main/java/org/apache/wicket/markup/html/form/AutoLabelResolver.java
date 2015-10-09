@@ -72,20 +72,23 @@ public class AutoLabelResolver implements IComponentResolver
 	private static final Logger logger = LoggerFactory.getLogger(AutoLabelResolver.class);
 
 	static final String WICKET_FOR = ":for";
-
+	
+	public static final String LABEL_ATTR = "label_attr";
+	
 	public static final String CSS_REQUIRED_KEY = CssUtils.key(AutoLabel.class, "required");
 	public static final String CSS_DISABLED_KEY = CssUtils.key(AutoLabel.class, "disabled");
 	public static final String CSS_ERROR_KEY = CssUtils.key(AutoLabel.class, "error");
 	private static final String CSS_DISABLED_DEFAULT = "disabled";
 	private static final String CSS_REQUIRED_DEFAULT = "required";
 	private static final String CSS_ERROR_DEFAULT = "error";
+	
 
 
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		if (!AutoLabelTagHandler.class.getName().equals(tag.getId()))
+		if (!tag.getId().startsWith(LABEL_ATTR))
 		{
 			return null;
 		}
@@ -121,7 +124,7 @@ public class AutoLabelResolver implements IComponentResolver
 			component.setMetaData(MARKER_KEY, new AutoLabelMarker((FormComponent<?>)component));
 		}
 
-		return new AutoLabel("label" + container.getPage().getAutoIndex(), component);
+		return new AutoLabel(tag.getId(), component);
 	}
 
 	private String getWicketNamespace(MarkupStream markupStream)

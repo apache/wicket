@@ -157,4 +157,18 @@ public interface IAjaxCallListener
 	 *         the Ajax call.
 	 */
 	CharSequence getCompleteHandler(Component component);
+
+	/**
+	 * The JavaScript that will be executed after the Ajax call is done, regardless whether it was
+	 * sent or not. The script will be executed in a function that receives the following
+	 * parameters:
+	 * <ol>
+	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
+	 *
+	 * @param component
+	 *            the Component with the Ajax behavior
+	 * @return the JavaScript that will be executed after the Ajax call is done.
+	 */
+	CharSequence getDoneHandler(Component component);
 }

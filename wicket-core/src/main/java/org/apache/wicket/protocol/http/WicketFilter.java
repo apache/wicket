@@ -171,6 +171,7 @@ public class WicketFilter implements Filter
 				log.debug("Ignoring request {}", httpServletRequest.getRequestURL());
 				if (chain != null)
 				{
+					// invoke next filter from within Wicket context
 					chain.doFilter(request, response);
 				}
 				return false;
@@ -266,6 +267,7 @@ public class WicketFilter implements Filter
 		{
 			if (chain != null)
 			{
+				// invoke next filter from within Wicket context
 				chain.doFilter(httpServletRequest, httpServletResponse);
 			}
 			res = false;
@@ -519,6 +521,10 @@ public class WicketFilter implements Filter
 				pattern = "";
 			}
 
+			if (pattern.endsWith("*"))
+			{
+				pattern = pattern.substring(0, pattern.length() - 1);
+			}
 			return pattern;
 		}
 		return null;

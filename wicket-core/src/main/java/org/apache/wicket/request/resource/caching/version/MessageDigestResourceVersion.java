@@ -122,7 +122,7 @@ public class MessageDigestResourceVersion implements IResourceVersion
 	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
-		IResourceStream stream = resource.getCacheableResourceStream();
+		IResourceStream stream = resource.getResourceStream();
 
 		// if resource stream can not be found do not cache
 		if (stream == null)

@@ -19,7 +19,6 @@ package org.apache.wicket.queueing;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.hamcrest.Description;
-import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -127,12 +126,8 @@ class HasPath extends TypeSafeMatcher<Component>
 		return str;
 	}
 
-
-	@Factory
 	public static <T> Matcher<Component> hasPath(Path path)
 	{
 		return new HasPath(path);
 	}
-
-
 }

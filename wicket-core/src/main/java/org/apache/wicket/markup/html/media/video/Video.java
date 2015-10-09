@@ -104,8 +104,7 @@ public class Video extends MediaComponent
 	 * @param pageParameters
 	 *            the page parameters to be used to be prepended to the video URL
 	 */
-	public Video(String id, ResourceReference resourceReference,
-		PageParameters pageParameters)
+	public Video(String id, ResourceReference resourceReference, PageParameters pageParameters)
 	{
 		super(id, resourceReference, pageParameters);
 	}
@@ -231,6 +230,17 @@ public class Video extends MediaComponent
 	public PageParameters getPosterPageParameters()
 	{
 		return posterPageParameters;
+	}
+
+	/**
+	 * Sets the posters page parameters
+	 * 
+	 * @param posterPageParameters
+	 *            the page parameters for the poster
+	 */
+	public void setPosterPageParameters(PageParameters posterPageParameters)
+	{
+		this.posterPageParameters = posterPageParameters;
 	}
 
 	/**

@@ -87,7 +87,7 @@ public abstract class AbstractMapper implements IRequestMapper
 
 	/**
 	 * Returns true if the given url starts with specified segments. Segments that contain
-	 * placelhoders are not compared.
+	 * placeholders are not compared.
 	 * 
 	 * @param url
 	 * @param segments

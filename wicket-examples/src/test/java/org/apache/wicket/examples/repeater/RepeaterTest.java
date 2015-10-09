@@ -18,19 +18,18 @@ package org.apache.wicket.examples.repeater;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Test for Repeater application
  */
-public class RepeaterTest extends Assert
+public class RepeaterTest
 {
 	/**
 	 * Test page.
 	 */
 	@Test
-	public void testHelloWorld()
+	public void allRepeaterPages()
 	{
 		WicketTester tester = new WicketTester(new RepeaterApplication());
 		try

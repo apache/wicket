@@ -20,6 +20,10 @@ import static org.hamcrest.number.OrderingComparison.lessThan;
 
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.apache.wicket.Page;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.DummyPanelPage;
+import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
 /**
@@ -32,7 +36,7 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(PageWithHeaderItems.class);
 		String responseAsString = tester.getLastResponseAsString();
-//		System.err.println("RES:\n" + responseAsString);
+
 		int idxMetaCharset = responseAsString.indexOf("<meta charset=\"utf-8\"");
 		int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
@@ -57,7 +61,7 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(PageWithoutHeaderItems.class);
 		String responseAsString = tester.getLastResponseAsString();
-//		System.err.println("RES:\n" + responseAsString);
+
 		int idxMetaCharset = responseAsString.indexOf("<meta charset=\"utf-8\"");
 		int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
@@ -82,7 +86,7 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(SubPageWithoutHeaderItemsAndWicketHead.class);
 		String responseAsString = tester.getLastResponseAsString();
-//		System.err.println("RES:\n" + responseAsString);
+
 		int idxMetaCharset = responseAsString.indexOf("<meta charset=\"utf-8\"");
 		int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
@@ -111,7 +115,7 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	{
 		tester.startPage(SubPageWithHeaderItemsAndWicketHead.class);
 		String responseAsString = tester.getLastResponseAsString();
-//		System.err.println("RES:\n" + responseAsString);
+
 		int idxMetaCharset = responseAsString.indexOf("<meta charset=\"utf-8\"");
 		int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
@@ -196,5 +200,36 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 			int lastIdxMetaFromSubPage = responseAsString.lastIndexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
 			assertEquals(idxMetaFromSubPage, lastIdxMetaFromSubPage);
 		}
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5989
+	 */
+	@Test
+	public void pageWithBasePageWithHeaderItems() {
+		WicketTesterForBasePageWithHeaderItems tester = new WicketTesterForBasePageWithHeaderItems();
+		try
+		{
+			tester.startComponentInPage(new PanelA(DummyPanelPage.TEST_PANEL_ID));
+		}
+		finally
+		{
+			tester.destroy();
+		}
+	}
+
+	private static class WicketTesterForBasePageWithHeaderItems extends WicketTester
+	{
+		@Override
+		protected Page createPage() {
+			return new PageExtendingBasePageWithHeaderItems(new PageParameters());
+		}
+
+
+		@Override
+		protected String createPageMarkup(final String componentId) {
+			return new PageExtendingBasePageWithHeaderItems(new PageParameters()).getMarkup().toString(true);
+		}
+
 	}
 }

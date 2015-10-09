@@ -22,8 +22,7 @@ import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A bean that can be used to override whether the lifecycle of the conversation
- * should be managed automatically or not. See
- * {@link CdiConfiguration#setAutoConversationManagement(boolean)} for details.
+ * should be managed automatically or not.
  * 
  * @author igor
  */

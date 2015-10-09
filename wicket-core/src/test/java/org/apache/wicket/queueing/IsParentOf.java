@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.hamcrest.Description;
-import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -88,11 +87,8 @@ class IsParentOf extends TypeSafeMatcher<Component>
 		return c.getClass().getSimpleName() + "('" + c.getId() + "')";
 	}
 
-	@Factory
 	public static <T> Matcher<Component> isParentOf(Component child)
 	{
 		return new IsParentOf(child);
 	}
-
-
 }

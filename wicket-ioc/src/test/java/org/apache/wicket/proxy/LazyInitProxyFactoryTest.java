@@ -151,6 +151,11 @@ public class LazyInitProxyFactoryTest extends Assert
 		final IObjectMethodTester tester = new ObjectMethodTester();
 		assertTrue(tester.isValid());
 
+		// test only a single class is generated,
+		// otherwise permgen space will fill up with each proxy
+		assertSame(proxy.getClass(), LazyInitProxyFactory.createProxy(
+			ConcreteObject.class, concreteObjectLocator).getClass());
+
 		IProxyTargetLocator testerLocator = new IProxyTargetLocator()
 		{
 			private static final long serialVersionUID = 1L;

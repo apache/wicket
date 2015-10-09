@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.head;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -275,7 +275,7 @@ public abstract class CssHeaderItem extends HeaderItem
 		boolean hasCondition = Strings.isEmpty(condition) == false; 
 		if (hasCondition)
 		{
-			if (RequestCycle.get().find(AjaxRequestTarget.class) != null)
+			if (RequestCycle.get().find(IPartialPageRequestHandler.class) != null)
 			{
 				// WICKET-4894
 				logger.warn("IE CSS engine doesn't support dynamically injected links in " +

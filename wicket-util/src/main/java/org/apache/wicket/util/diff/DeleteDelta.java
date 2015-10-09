@@ -102,7 +102,7 @@ public class DeleteDelta extends Delta
 	}
 
 	/**
-	 * @see org.apache.wicket.util.diff.Delta#toString(java.lang.StringBuffer)
+	 * @see org.apache.wicket.util.diff.Delta#toString(java.lang.StringBuilder)
 	 */
 	@Override
 	public void toString(final StringBuilder s)
@@ -115,7 +115,7 @@ public class DeleteDelta extends Delta
 	}
 
 	/**
-	 * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
+	 * @see org.apache.wicket.util.diff.Delta#toRCSString(java.lang.StringBuilder, java.lang.String)
 	 */
 	@Override
 	public void toRCSString(final StringBuilder s, final String EOL)

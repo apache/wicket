@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IResourceListener;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebComponent;
@@ -511,7 +511,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	protected boolean shouldAddAntiCacheParameter()
 	{
-		return getRequestCycle().find(AjaxRequestTarget.class) != null;
+		return getRequestCycle().find(IPartialPageRequestHandler.class) != null;
 	}
 
 	/**

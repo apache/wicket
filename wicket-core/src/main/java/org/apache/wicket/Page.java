@@ -284,7 +284,7 @@ public abstract class Page extends MarkupContainer
 			isInitialization))
 		{
 			setFlag(FLAG_IS_DIRTY, true);
-			setNextAvailableId(isInitialization);
+			setNextAvailableId();
 
 			if (isInitialization == false)
 			{
@@ -722,12 +722,9 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * Increments the version id of the page
 	 * 
-	 * @param isInitialization
-	 * 			tells if the page has been newly instantiated
 	 */
-	protected void setNextAvailableId(boolean isInitialization)
+	private void setNextAvailableId()
 	{
 		setNumericId(getSession().nextPageId());
 	}

@@ -155,7 +155,7 @@ public class Folder<T> extends StyledLinkLabel<T>
 	 * 
 	 * @return CSS style class
 	 * 
-	 * @see State#CLOSED
+	 * @see State#COLLAPSED
 	 */
 	protected String getClosedStyleClass()
 	{
@@ -167,7 +167,7 @@ public class Folder<T> extends StyledLinkLabel<T>
 	 * 
 	 * @return CSS style class
 	 * 
-	 * @see State#OPEN
+	 * @see State#EXPANDED
 	 */
 	protected String getOpenStyleClass()
 	{

@@ -31,7 +31,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -845,7 +844,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			// Try to find the Page matching the href
 			// Note: to not use tag.getId() because it will be modified while
 			// resolving the link and hence the 2nd render will fail.
-			Component link = resolveAutomaticLink(pathInfo, WicketLinkTagHandler.AUTOLINK_ID, tag);
+			Component link = resolveAutomaticLink(pathInfo, tag);
 
 			if (log.isDebugEnabled())
 			{
@@ -875,14 +874,10 @@ public final class AutoLinkResolver implements IComponentResolver
 	 *            the component tag
 	 * @return A BookmarkablePageLink<?> to handle the href
 	 */
-	private Component resolveAutomaticLink(final PathInfo pathInfo, final String id,
-		final ComponentTag tag)
+	private Component resolveAutomaticLink(final PathInfo pathInfo, final ComponentTag tag)
 	{
 		final MarkupContainer container = pathInfo.getContainer();
-		final Page page = container.getPage();
-
-		// Make the id (page-)unique
-		final String autoId = id + Integer.toString(page.getAutoIndex());
+		final String componentId = tag.getId();
 
 		// get the tag name, which is something like 'a' or 'script'
 		final String tagName = tag.getName();
@@ -899,7 +894,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		Component autoComponent = null;
 		if (autolinkResolverDelegate != null)
 		{
-			autoComponent = autolinkResolverDelegate.newAutoComponent(autoId, pathInfo);
+			autoComponent = autolinkResolverDelegate.newAutoComponent(componentId, pathInfo);
 		}
 
 		if (autoComponent == null)
@@ -907,7 +902,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			// resolving didn't have the desired result or there was no delegate
 			// found; fallback on the default resolving which is a simple
 			// component that leaves the tag unchanged
-			autoComponent = new AutolinkExternalLink(autoId, pathInfo.reference);
+			autoComponent = new AutolinkExternalLink(componentId, pathInfo.reference);
 		}
 
 		return autoComponent;

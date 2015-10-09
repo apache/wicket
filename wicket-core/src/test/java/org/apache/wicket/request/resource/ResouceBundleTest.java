@@ -45,7 +45,7 @@ public class ResouceBundleTest extends WicketTestCase
 				ResouceBundleTest.class, "b.js"))));
 
 		tester.startResource(bundle);
-		assertEquals("//a//b", tester.getLastResponseAsString());
+		assertEquals("//a// b.js", tester.getLastResponseAsString().trim());
 	}
 
 	/**

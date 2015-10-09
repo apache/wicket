@@ -1561,8 +1561,9 @@ public abstract class Component
 	}
 
 	/**
-	 * 
-	 * @return meta data entry
+	 * Gets the meta data entries for this component as an array of {@link MetaDataEntry} objects.
+         *
+	 * @return the meta data entries for this component
 	 */
 	private MetaDataEntry<?>[] getMetaData()
 	{
@@ -1835,13 +1836,13 @@ public abstract class Component
 	}
 
 	/**
-	 * @return Size of this Component in bytes
+	 * @return Size of this Component in bytes. Returns {@code 0} - if the size cannot be calculated for some reason
 	 */
 	public long getSizeInBytes()
 	{
 		final MarkupContainer originalParent = parent;
 		parent = null;
-		long size = -1;
+		long size = 0;
 		try
 		{
 			size = WicketObjects.sizeof(this);
@@ -4428,6 +4429,16 @@ public abstract class Component
 		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_SET, true);
 		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_VALUE, state);
 		return state;
+	}
+	
+	/**
+	 * Says if the component is rendering or not checking the corresponding flag.
+	 * 
+	 * @return true if this component is rendering, false otherwise.
+	 */
+	public final boolean isRendering()
+	{
+		return getFlag(FLAG_RENDERING);
 	}
 
 	/**

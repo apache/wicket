@@ -21,8 +21,8 @@ import javax.inject.Inject;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Objects;
 import org.slf4j.Logger;
@@ -57,7 +57,7 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 	@Override
 	public void onBeforeRender(Component component)
 	{
-		if (component instanceof Page || RequestCycle.get().find(AjaxRequestTarget.class) != null)
+		if (component instanceof Page || RequestCycle.get().find(IPartialPageRequestHandler.class) != null)
 		{
 			Page page = component.getPage();
 			String cid = container.getConversationMarker(page);

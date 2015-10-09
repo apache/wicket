@@ -67,5 +67,4 @@ public class RestartResponseAtInterceptPageExceptionTest extends WicketTestCase
 
 		tester.assertRenderedPage(RedirectPage.class);
 	}
-
 }

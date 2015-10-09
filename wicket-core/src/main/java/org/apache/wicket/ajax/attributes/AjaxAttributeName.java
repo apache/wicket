@@ -181,6 +181,13 @@ public enum AjaxAttributeName {
 	INIT_HANDLER("ih"),
 
 	/**
+	 * done handler (dh)
+	 *
+	 * @see AjaxCallListener#getDoneHandler(org.apache.wicket.Component)
+	 */
+	DONE_HANDLER("dh"),
+
+	/**
 	 * the indicator id, if any found (i)
 	 * 
 	 * @see AbstractDefaultAjaxBehavior#findIndicatorId()

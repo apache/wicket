@@ -11,15 +11,6 @@ Depending on the web container that is used the application has to add a depende
 </dependency>
 {code}
 
-- for Jetty 7.x and 8.x
-{code}
-<dependency>
-  <groupId>org.apache.wicket</groupId>
-  <artifactId>wicket-native-websocket-jetty</artifactId>
-  <version>...</version>
-</dependency>
-{code}
-
 - for Tomcat 7.0.27+ (the old, non-JSR356 implementation)
 {code}
 <dependency>
@@ -39,7 +30,7 @@ Depending on the web container that is used the application has to add a depende
 {code}
 
 {note}
-All web containers providing JSR356 implementation are built with Java 7. This is the reason why @wicket-native-websocket-javax@ module is available only with Wicket 7.x. If your application runs with JRE 7.x then you can
+All web containers providing JSR356 implementation are built with Java 7. This is the reason why @wicket-native-websocket-javax@ module is available only with Wicket 7.x+. If your application runs with JRE 7.x then you can
 use @wicket-native-websocket-javax@ together with the latest version of Wicket 6.x. Beware that the API/implementation of @wicket-native-websocket-javax@ may change before Wicket 7.0.0 is released!
 {note}
 

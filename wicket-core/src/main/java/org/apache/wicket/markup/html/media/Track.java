@@ -91,7 +91,7 @@ public class Track extends WebMarkupContainer
 
 	private final String url;
 
-	private final PageParameters pageParameters;
+	private PageParameters pageParameters;
 
 	/**
 	 * Creates a track
@@ -365,5 +365,26 @@ public class Track extends WebMarkupContainer
 	public void setSrclang(Locale srclang)
 	{
 		this.srclang = srclang;
+	}
+
+	/**
+	 * Gets the page parameter applied to the URL of the track
+	 * 
+	 * @return the page parameter applied to the URL of the track
+	 */
+	public PageParameters getPageParameters()
+	{
+		return pageParameters;
+	}
+
+	/**
+	 * Sets the page parameter applied to the URL of the track
+	 * 
+	 * @param pageParameters
+	 *            the page parameter which are going to be applied to the URL of the track
+	 */
+	public void setPageParameters(PageParameters pageParameters)
+	{
+		this.pageParameters = pageParameters;
 	}
 }

@@ -5,17 +5,17 @@
     xml:lang="en" lang="en">
     <wicket:extend>
         <br/>
-		Start typing in the textfields and see the form being validated as you type. Ajax requests are throttled down to once per second, so they will not overload the server.
+		Start typing in the textfields and see the form being validated as you type. If there are no validation errors the form is automatically submitted. Ajax requests are throttled down to once per second, so they will not overload the server.
 		<br/>
-		<div wicket:id="feedback">[[ feedback ]]</div>
+		<div wicket:id="feedbackErrors">[[ feedback ]]</div>
 
         <form wicket:id="form">
             <label wicket:id="name-label">[name label]</label>: <input type="text" wicket:id="name"/>
             <br/><label wicket:id="email-label">[email label]</label>: <input type="text" wicket:id="email"/>
             <br/>
             <br/>
-			<input type="submit" value="submit via ajax" wicket:id="ajax-button"/>
-            <input type="submit" value="submit"/>
         </form>
+        
+        <div wicket:id="feedbackSuccess"></div>
     </wicket:extend>
 </html>

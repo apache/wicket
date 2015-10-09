@@ -301,6 +301,7 @@
 				AJAX_CALL_COMPLETE     : '/ajax/call/complete',
 				AJAX_CALL_AFTER        : '/ajax/call/after',
 				AJAX_CALL_FAILURE      : '/ajax/call/failure',
+				AJAX_CALL_DONE         : '/ajax/call/done',
 				AJAX_HANDLERS_BOUND    : '/ajax/handlers/bound'
 			}
 		}

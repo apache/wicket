@@ -138,16 +138,20 @@ public class UrlRenderer
 		final String host = resolveHost(url);
 		final Integer port = resolvePort(url);
 
-		final String path;
+		final StringBuilder path;
 		if (url.isFull() || url.isContextAbsolute())
 		{
-			path = url.canonical().toString();
+			path = new StringBuilder(url.canonical().toString());
 		}
 		else
 		{
 			Url base = new Url(baseUrl);
 			base.resolveRelative(url);
-			path = base.toString();
+			path = new StringBuilder(base.toString());
+		}
+		if (url.getFragment() != null)
+		{
+			path.append('#').append(url.getFragment());
 		}
 
 		StringBuilder render = new StringBuilder();
@@ -174,7 +178,7 @@ public class UrlRenderer
 			render.append(request.getContextPath());
 			render.append(request.getFilterPath());
 		}
-		return Strings.join("/", render.toString(), path);
+		return Strings.join("/", render.toString(), path.toString());
 	}
 
 	/**
@@ -281,7 +285,9 @@ public class UrlRenderer
 		}
 		newSegments.addAll(urlSegments);
 
-		String renderedUrl = new Url(newSegments, url.getQueryParameters()).toString();
+		Url relativeUrl = new Url(newSegments, url.getQueryParameters());
+		relativeUrl.setFragment(url.getFragment());
+		String renderedUrl = relativeUrl.toString();
 
 		// sanitize start
 		if (!renderedUrl.startsWith("..") && !renderedUrl.equals("."))

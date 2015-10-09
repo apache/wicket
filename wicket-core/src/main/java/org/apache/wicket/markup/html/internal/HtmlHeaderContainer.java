@@ -314,9 +314,8 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	}
 
 	@Override
-	protected void onDetach()
-	{
-		super.onDetach();
+	protected void onAfterRender() {
+		super.onAfterRender();
 
 		renderedComponentsPerScope = null;
 		headerResponse = null;

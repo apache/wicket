@@ -149,27 +149,35 @@ public abstract class PartialPageUpdate
 	 */
 	public void writeTo(final Response response, final String encoding)
 	{
-		writeHeader(response, encoding);
+		try {
+			writeHeader(response, encoding);
 
-		onBeforeRespond(response);
+			onBeforeRespond(response);
 
-		// process added components
-		writeComponents(response, encoding);
+			// process added components
+			writeComponents(response, encoding);
 
-		onAfterRespond(response);
+			onAfterRespond(response);
 
-		// queue up prepend javascripts. unlike other steps these are executed out of order so that
-		// components can contribute them from inside their onbeforerender methods.
-		writePriorityEvaluations(response, prependJavaScripts);
+			// queue up prepend javascripts. unlike other steps these are executed out of order so that
+			// components can contribute them from inside their onbeforerender methods.
+			writePriorityEvaluations(response, prependJavaScripts);
 
-		// execute the dom ready javascripts as first javascripts
-		// after component replacement
-		List<CharSequence> evaluationScripts = new ArrayList<>();
-		evaluationScripts.addAll(domReadyJavaScripts);
-		evaluationScripts.addAll(appendJavaScripts);
-		writeNormalEvaluations(response, evaluationScripts);
+			// execute the dom ready javascripts as first javascripts
+			// after component replacement
+			List<CharSequence> evaluationScripts = new ArrayList<>();
+			evaluationScripts.addAll(domReadyJavaScripts);
+			evaluationScripts.addAll(appendJavaScripts);
+			writeNormalEvaluations(response, evaluationScripts);
 
-		writeFooter(response, encoding);
+			writeFooter(response, encoding);
+		} finally {
+			if (header != null) {
+				// restore a normal header
+				page.replace(new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID));
+				header = null;
+			}
+		}
 	}
 
 	/**
@@ -470,9 +478,8 @@ public abstract class PartialPageUpdate
 		// create the htmlheadercontainer if needed
 		if (header == null)
 		{
-			header = new PartialHtmlHeaderContainer(this);
-			final Page parentPage = component.getPage();
-			parentPage.addOrReplace(header);
+			header = new PartialHtmlHeaderContainer();
+			page.addOrReplace(header);
 		}
 
 		RequestCycle requestCycle = component.getRequestCycle();
@@ -492,7 +499,6 @@ public abstract class PartialPageUpdate
 		}
 
 		writeHeaderContribution(response);
-
 		headerRendering = false;
 	}
 
@@ -511,11 +517,9 @@ public abstract class PartialPageUpdate
 	 *
 	 * @author Matej Knopp
 	 */
-	private static class PartialHtmlHeaderContainer extends HtmlHeaderContainer
+	private class PartialHtmlHeaderContainer extends HtmlHeaderContainer
 	{
 		private static final long serialVersionUID = 1L;
-
-		private transient PartialPageUpdate update;
 
 		/**
 		 * Constructor.
@@ -523,10 +527,9 @@ public abstract class PartialPageUpdate
 		 * @param update
 		 *      the partial page update
 		 */
-		public PartialHtmlHeaderContainer(final PartialPageUpdate update)
+		public PartialHtmlHeaderContainer()
 		{
 			super(HtmlHeaderSectionHandler.HEADER_ID);
-			this.update = update;
 		}
 
 		/**
@@ -536,19 +539,7 @@ public abstract class PartialPageUpdate
 		@Override
 		protected IHeaderResponse newHeaderResponse()
 		{
-		    if (update != null)
-            {
-		        return update.getHeaderResponse();
-            }
-		    
-		    return super.newHeaderResponse();
-		}
-		
-		@Override
-		protected void onDetach()
-		{
-		    super.onDetach();
-		    update = null;
+	        return PartialPageUpdate.this.getHeaderResponse();
 		}
 	}
 

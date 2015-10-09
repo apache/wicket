@@ -630,4 +630,18 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		
 		return borderMarkup != null ? borderMarkup : markup;
 	}
+	
+	@Override
+	protected void onBeforeRender()
+	{
+		super.onBeforeRender();
+		/**
+		 * https://issues.apache.org/jira/browse/WICKET-5981
+		 * dequeue border to adjust children hierarchy.
+		 */
+		if (!hasBeenRendered())
+		{
+			dequeue();
+		}
+	}
 }

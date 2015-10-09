@@ -166,7 +166,7 @@ public class CdiConfiguration
 	 * Configures the specified application
 	 * 
 	 * @param application
-	 * @return
+	 * @return The CdiContainer
 	 */
 	public CdiContainer configure(Application application)
 	{

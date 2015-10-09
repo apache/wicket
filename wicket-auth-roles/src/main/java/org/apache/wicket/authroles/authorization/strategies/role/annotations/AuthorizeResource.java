@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  *
  * @author Carl-Eric Menzel
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
- * @see org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
+ * @see AnnotationsRoleAuthorizationStrategy
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PACKAGE, ElementType.TYPE})

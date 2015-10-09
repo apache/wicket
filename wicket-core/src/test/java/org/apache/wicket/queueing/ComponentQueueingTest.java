@@ -28,6 +28,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.link.Link;
@@ -576,6 +577,35 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(p);
 		assertEquals("<div id=\"wicket__InlineEnclosure_01\" style=\"display:none\"></div>", tester.getLastResponseAsString());
 	}
+	
+	/**
+	 * Test empty child attribute
+	 */
+	@Test
+	public void autos7()
+	{
+		TestPage p = new TestPage();
+		p.setPageMarkup("<wicket:enclosure child=''><div wicket:id='a'></div></wicket:enclosure>");
+		A a = new A();
+		
+		p.queue(a);
+		tester.startPage(p);
+
+		assertTrue(a.getParent() instanceof Enclosure);
+		
+
+		// A is visible, enclosure renders
+
+		assertEquals(
+			"<wicket:enclosure child=\"a\"><div wicket:id=\"a\"></div></wicket:enclosure>",
+			tester.getLastResponseAsString());
+
+		// A is not visible, enclosure does not render
+
+		a.setVisible(false);
+		tester.startPage(p);
+		assertEquals("", tester.getLastResponseAsString());
+	}
 
 	@Test
 	public void border1()
@@ -672,6 +702,24 @@ public class ComponentQueueingTest extends WicketTestCase
 		page.queue(a, b);
 
 		assertThat(page, hasPath(new Path(a, b)));
+	}
+	
+	@Test
+	public void queueInsideHeader()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup("<html>"
+			+"<head><title wicket:id='title'></title></head>"
+			+ "<body><div>"
+			+ "Hello!"
+			+ "</div></body>"
+			+ "</html>");
+		
+		page.queue(new Label("title"));
+		
+		tester.startPage(page);	
+		
+		tester.assertContains("title");
 	}
 
 	private static class A extends WebMarkupContainer

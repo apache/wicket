@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.apache.wicket.util.resource.ResourceUtils.MIN_POSTFIX_DEFAULT_AS_EXTENSION;
+
 import java.util.Locale;
 import java.util.concurrent.ConcurrentMap;
 
@@ -53,19 +55,6 @@ public class PackageResourceReference extends ResourceReference
 	 * Reads the resource buffered - the content is copied into memory
 	 */
 	private boolean readBuffered = true;
-
-	/**
-	 * Cache for existence of minified version of the resource to avoid repetitive calls to
-	 * org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate() and
-	 * #getMinifiedName().
-	 */
-	private static final ConcurrentMap<PackageResourceReference, String> MINIFIED_NAMES_CACHE = Generics.newConcurrentHashMap();
-
-	/**
-	 * A constant used to indicate that there is no minified version of the resource.
-	 */
-	// WARNING: always compare by identity!
-	private static final String NO_MINIFIED_NAME = new String();
 
 	/**
 	 * Construct.
@@ -166,8 +155,8 @@ public class PackageResourceReference extends ResourceReference
 	 */
 	protected final void removeCompressFlagIfUnnecessary(final PackageResource resource)
 	{
-		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
-		if (minifiedName != null && minifiedName != NO_MINIFIED_NAME)
+		String minifiedName = getName();
+		if (minifiedName != null && minifiedName.contains(MIN_POSTFIX_DEFAULT_AS_EXTENSION))
 		{
 			resource.setCompress(false);
 		}
@@ -248,72 +237,12 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Initializes the cache for the existence of the minified resource.
-	 * 
-	 * @return the name of the minified resource or the special constant {@link #NO_MINIFIED_NAME}
-	 *         if there is no minified version
-	 */
-	private String internalGetMinifiedName()
-	{
-		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
-		if (minifiedName != null)
-		{
-			return minifiedName;
-		}
-
-		String name = getMinifiedName();
-		IResourceStreamLocator locator = Application.get()
-			.getResourceSettings()
-			.getResourceStreamLocator();
-		String absolutePath = Packages.absolutePath(getScope(), name);
-		IResourceStream stream = locator.locate(getScope(), absolutePath, getStyle(),
-			getVariation(), getLocale(), null, true);
-
-		minifiedName = stream != null ? name : NO_MINIFIED_NAME;
-		MINIFIED_NAMES_CACHE.put(this, minifiedName);
-		if (minifiedName == NO_MINIFIED_NAME && log.isDebugEnabled())
-		{
-			log.debug("No minified version of '" + super.getName() +
-				"' found, expected a file with the name '" + name + "', using full version");
-		}
-		return minifiedName;
-	}
-
-	/**
 	 * @return How the minified file should be named.
 	 */
 	protected String getMinifiedName()
 	{
 		String name = super.getName();
 		return ResourceUtils.getMinifiedName(name, ResourceUtils.MIN_POSTFIX_DEFAULT);
-	}
-
-	/**
-	 * Returns the name of the file: minified or full version. This method is called in a
-	 * multithreaded context, so it has to be thread safe.
-	 *
-	 * @see org.apache.wicket.request.resource.ResourceReference#getName()
-	 */
-	@Override
-	public String getName()
-	{
-		String name = null;
-
-		if (Application.exists() &&
-			Application.get().getResourceSettings().getUseMinifiedResources())
-		{
-			String minifiedName = internalGetMinifiedName();
-			if (minifiedName != NO_MINIFIED_NAME)
-			{
-				name = minifiedName;
-			}
-		}
-
-		if (name == null)
-		{
-			name = super.getName();
-		}
-		return name;
 	}
 
 	@Override

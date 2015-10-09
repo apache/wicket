@@ -39,8 +39,8 @@ import org.apache.wicket.util.io.IClusterable;
  * null value converters will not be invoked because no type conversion is necessary.
  * </p>
  * 
- * @see org.apache.wicket.Component#getConverter(Class)
- * @see org.apache.wicket.Application#getConverterLocator()
+ * See org.apache.wicket.Component#getConverter(Class)
+ * See org.apache.wicket.Application#getConverterLocator()
  *
  * @author Eelco Hillenius
  * @author Jonathan Locke

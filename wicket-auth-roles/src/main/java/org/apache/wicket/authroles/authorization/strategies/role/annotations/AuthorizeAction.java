@@ -25,12 +25,12 @@ import java.lang.annotation.Target;
 
 /**
  * A mapping of 1..n roles to an action. This annotions must be embedded in the
- * {@link org.apache.wicket.authorization.strategies.role.annotations.AuthorizeActions} annotation.
+ * {@link AuthorizeActions} annotation.
  * 
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
- * @see org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
- * @see org.apache.wicket.authorization.strategies.role.annotations.AuthorizeActions
- * @see org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation
+ * @see AnnotationsRoleAuthorizationStrategy
+ * @see AuthorizeActions
+ * @see AuthorizeInstantiation
  * 
  * @author Eelco Hillenius
  */

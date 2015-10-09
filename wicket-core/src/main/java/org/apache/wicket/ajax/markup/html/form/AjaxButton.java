@@ -27,7 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A button that submits the form via ajax.
+ * A button that submits the form via Ajax. <br>
+ * Note that an HTML type attribute of "submit" is automatically changed to "button"- Use
+ * {@link AjaxFallbackButton} if you want to support non-Ajax form submits too.
  * 
  * @since 1.3
  * 
@@ -169,7 +171,10 @@ public abstract class AjaxButton extends Button
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// WICKET-5594 prevent non-Ajax submit
-		tag.put("type", "button");
+		if ("submit".equals(tag.getAttribute("type")))
+		{
+			tag.put("type", "button");
+		}
 
 		super.onComponentTag(tag);
 	}

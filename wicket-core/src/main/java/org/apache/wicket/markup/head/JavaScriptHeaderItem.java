@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.head;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -360,7 +360,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		boolean isAjax = RequestCycle.get().find(AjaxRequestTarget.class) != null;
+		boolean isAjax = RequestCycle.get().find(IPartialPageRequestHandler.class) != null;
 		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
 		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
 

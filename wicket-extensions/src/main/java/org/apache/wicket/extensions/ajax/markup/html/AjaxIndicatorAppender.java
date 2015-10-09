@@ -18,9 +18,9 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -65,7 +65,7 @@ public class AjaxIndicatorAppender extends Behavior
 	{
 		super.renderHead(component, response);
 
-		AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
+		IPartialPageRequestHandler target = component.getRequestCycle().find(IPartialPageRequestHandler.class);
 		if (target != null)
 		{
 			final String javascript = "var e = Wicket.$('" + getMarkupId() +

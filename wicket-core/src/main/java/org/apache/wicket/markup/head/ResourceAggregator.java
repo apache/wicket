@@ -27,8 +27,8 @@ import java.util.Set;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -279,7 +279,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		renderHeaderItems();
 
-		if (RequestCycle.get().find(AjaxRequestTarget.class) == null)
+		if (RequestCycle.get().find(IPartialPageRequestHandler.class) == null)
 		{
 			renderCombinedEventScripts();
 		}
