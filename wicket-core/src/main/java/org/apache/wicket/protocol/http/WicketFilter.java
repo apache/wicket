@@ -132,12 +132,13 @@ public class WicketFilter implements Filter
 	 * 
 	 * @param request
 	 * @param response
+	 * @param chain
 	 * @return false, if the request could not be processed
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	boolean processRequest(ServletRequest request, final ServletResponse response)
-		throws IOException, ServletException
+	boolean processRequest(ServletRequest request, final ServletResponse response,
+		final FilterChain chain) throws IOException, ServletException
 	{
 		final ThreadContext previousThreadContext = ThreadContext.detach();
 
@@ -168,6 +169,10 @@ public class WicketFilter implements Filter
 			if (shouldIgnorePath(httpServletRequest))
 			{
 				log.debug("Ignoring request {}", httpServletRequest.getRequestURL());
+				if (chain != null)
+				{
+					chain.doFilter(request, response);
+				}
 				return false;
 			}
 
@@ -196,7 +201,7 @@ public class WicketFilter implements Filter
 
 				RequestCycle requestCycle = application.createRequestCycle(webRequest, webResponse);
 				res = processRequestCycle(requestCycle, webResponse, httpServletRequest,
-					httpServletResponse);
+					httpServletResponse, chain);
 			}
 			else
 			{
@@ -241,13 +246,14 @@ public class WicketFilter implements Filter
 	 * @param webResponse
 	 * @param httpServletRequest
 	 * @param httpServletResponse
+	 * @param chain
 	 * @return false, if the request could not be processed
 	 * @throws IOException
 	 * @throws ServletException
 	 */
 	protected boolean processRequestCycle(RequestCycle requestCycle, WebResponse webResponse,
-		HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-			throws IOException, ServletException
+		HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+		final FilterChain chain) throws IOException, ServletException
 	{
 		// Assume we are able to handle the request
 		boolean res = true;
@@ -258,6 +264,10 @@ public class WicketFilter implements Filter
 		}
 		else
 		{
+			if (chain != null)
+			{
+				chain.doFilter(httpServletRequest, httpServletResponse);
+			}
 			res = false;
 		}
 		return res;
@@ -271,9 +281,7 @@ public class WicketFilter implements Filter
 	public void doFilter(final ServletRequest request, final ServletResponse response,
 		final FilterChain chain) throws IOException, ServletException
 	{
-		if (!processRequest(request, response)) {
-			chain.doFilter(request, response);
-		}
+		processRequest(request, response, chain);
 	}
 
 	/**
