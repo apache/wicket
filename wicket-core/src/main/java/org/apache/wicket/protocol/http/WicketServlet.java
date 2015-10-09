@@ -134,7 +134,7 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		if (wicketFilter.processRequest(servletRequest, servletResponse, null) == false)
+		if (wicketFilter.processRequest(servletRequest, servletResponse) == false)
 		{
 			fallback(servletRequest, servletResponse);
 		}
@@ -156,7 +156,7 @@ public class WicketServlet extends HttpServlet
 	public final void doPost(final HttpServletRequest servletRequest,
 		final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		if (wicketFilter.processRequest(servletRequest, servletResponse, null) == false)
+		if (wicketFilter.processRequest(servletRequest, servletResponse) == false)
 		{
 			fallback(servletRequest, servletResponse);
 		}

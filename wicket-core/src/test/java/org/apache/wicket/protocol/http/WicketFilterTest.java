@@ -484,27 +484,23 @@ public class WicketFilterTest extends Assert
 				return (String)invocation.getArguments()[0];
 			}
 		});
-		FilterChain chain = mock(FilterChain.class);
 
 		// execute 3 requests - 1 for bla.js, 1 for bla.css and 1 for bla.img
 		for (int i = 0; i < 3; i++)
 		{
-			boolean isProcessed = filter.processRequest(request, response, chain);
+			boolean isProcessed = filter.processRequest(request, response);
 			assertFalse(isProcessed);
 			verify(application, Mockito.never()).newWebRequest(Matchers.eq(request),
 				Matchers.anyString());
 			verify(application, Mockito.never()).newWebResponse(Matchers.any(WebRequest.class),
 				Matchers.eq(response));
-			verify(chain, Mockito.times(i + 1)).doFilter(request, response);
 		}
 
 		// execute the request to /something/real
-		boolean isProcessed = filter.processRequest(request, response, chain);
+		boolean isProcessed = filter.processRequest(request, response);
 		assertTrue(isProcessed);
 		verify(application).newWebRequest(Matchers.eq(request), Matchers.anyString());
 		verify(application).newWebResponse(Matchers.any(WebRequest.class), Matchers.eq(response));
-		// the request is processed so the chain is not executed
-		verify(chain, Mockito.times(3)).doFilter(request, response);
 	}
 
 	/**
