@@ -1253,6 +1253,48 @@
 		}
 	};
 
+	Wicket.Ajax.ChanneledAjax = Wicket.Class.create();
+
+	Wicket.Ajax.ChanneledAjax.prototype = {
+
+		initialize: function(channelName, channelType, channelManager, ajaxTransport) {
+			this.name = channelName;
+			this.type = channelType;
+			this.channel = this.name + "|" + this.type;
+			this.channelManager = channelManager;
+			this.transport = ajaxTransport? ajaxTransport : jQuery.ajax;
+		},
+
+		ajax: function(url, options) {
+			if (typeof url === "object") {
+				options = url;
+				url = undefined;
+			}
+
+			options = options || {};
+
+			this._schedule(url, options);
+		},
+
+		_schedule: function(url, options) {
+			this.channelManager.schedule(this.channel, function() {
+				this.transport(url, this._withDoneOnComplete(options));
+			}.bind(this));
+		},
+
+		_withDoneOnComplete: function(options) {
+			var originalComplete = options.complete,
+				complete = {
+					complete: function(jqXHR, textStatus) {
+						this.channelManager.done(this.channel);
+						if (originalComplete) {
+							originalComplete(jqXHR, textStatus);
+						}
+					}.bind(this)
+				};
+			return Wicket.merge(options, complete);
+		}
+	};
 
 	/**
 	 * Throttler's purpose is to make sure that ajax requests wont be fired too often.
@@ -1968,6 +2010,16 @@
 			 */
 			redirect: function(url) {
 				window.location = url;
+			},
+
+			/**
+			 * Creates an AJAX handler that uses the channelManager and $.ajax to coordinate AJAX requests.
+			 * @param channelName
+			 * @param channelType s (stack/queue), d (drop), a (active)
+			 */
+			channeledAjax: function(channelName, channelType) {
+				var ca = new Wicket.Ajax.ChanneledAjax(channelName, channelType, Wicket.channelManager);
+				return ca.ajax.bind(ca);
 			}
 		},
 
