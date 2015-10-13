@@ -33,13 +33,13 @@
 
 /* node */
 
-.tree-theme-human a.tree-junction {
+.tree-theme-human .tree-junction {
   display: block;
   float: left;
   width: 18px;
 }
 
-.tree-theme-human a.tree-junction-expanded {
+.tree-theme-human .tree-junction-expanded {
   display: block;
   float: left;
   width: 18px;
@@ -49,11 +49,11 @@
   text-decoration: none;
 }
 
-.tree-theme-human a.tree-junction-expanded:hover {
+.tree-theme-human .tree-junction-expanded:hover {
   background-position: -54px center;
 }
 
-.tree-theme-human a.tree-junction-collapsed {
+.tree-theme-human .tree-junction-collapsed {
   display: block;
   float: left;
   width: 18px;
@@ -63,7 +63,7 @@
   text-decoration: none;
 }
 
-.tree-theme-human a.tree-junction-collapsed:hover {
+.tree-theme-human .tree-junction-collapsed:hover {
   background-position: -36px center;
 }
 
