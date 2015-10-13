@@ -517,10 +517,10 @@ public class MarkupCache implements IMarkupCache
 				.getResourceWatcher(true);
 			if (watcher != null)
 			{
-				watcher.add(markupResourceStream, new IChangeListener()
+				watcher.add(markupResourceStream, new IChangeListener<IModifiable>()
 				{
 					@Override
-					public void onChange()
+					public void onChange(IModifiable modifiable)
 					{
 						if (log.isDebugEnabled())
 						{

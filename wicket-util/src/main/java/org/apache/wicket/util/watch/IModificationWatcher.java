@@ -41,7 +41,7 @@ public interface IModificationWatcher
 	 *            modified
 	 * @return <code>true</code> if the set did not already contain the specified element
 	 */
-	boolean add(final IModifiable modifiable, final IChangeListener listener);
+	boolean add(final IModifiable modifiable, final IChangeListener<IModifiable> listener);
 
 	/**
 	 * Removes all entries associated with an <code>IModifiable</code> object.

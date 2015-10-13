@@ -31,6 +31,7 @@ import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.util.watch.IModifiable;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
@@ -256,10 +257,10 @@ public class PropertiesFactory implements IPropertiesFactory
 	protected void addToWatcher(final String path, final IResourceStream resourceStream,
 		final IModificationWatcher watcher)
 	{
-		watcher.add(resourceStream, new IChangeListener()
+		watcher.add(resourceStream, new IChangeListener<IModifiable>()
 		{
 			@Override
-			public void onChange()
+			public void onChange(IModifiable modifiable)
 			{
 				log.info("A properties files has changed. Removing all entries " +
 					"from the cache. Resource: " + resourceStream);

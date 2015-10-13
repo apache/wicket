@@ -30,6 +30,7 @@ import org.apache.wicket.util.collections.UrlExternalFormComparator;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.watch.IModifiable;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class ReloadingClassLoader extends URLClassLoader
 
 	private static final List<String> patterns = new ArrayList<>();
 
-	private IChangeListener listener;
+	private IChangeListener<Class<?>> listener;
 
 	private final IModificationWatcher watcher;
 
@@ -301,7 +302,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * @param listener
 	 *            the listener to notify upon class change
 	 */
-	public void setListener(IChangeListener listener)
+	public void setListener(IChangeListener<Class<?>> listener)
 	{
 		this.listener = listener;
 	}
@@ -331,15 +332,15 @@ public class ReloadingClassLoader extends URLClassLoader
 			if (clzFile.exists())
 			{
 				log.info("Watching changes of class " + clzFile);
-				watcher.add(clzFile, new IChangeListener()
+				watcher.add(clzFile, new IChangeListener<IModifiable>()
 				{
 					@Override
-					public void onChange()
+					public void onChange(IModifiable modifiable)
 					{
 						log.info("Class file " + finalClzFile + " has changed, reloading");
 						try
 						{
-							listener.onChange();
+							listener.onChange(clz);
 						}
 						catch (Exception e)
 						{
