@@ -39,11 +39,11 @@ public class AjaxFormValidatingBehaviorTestPage extends WebPage
 	public AjaxFormValidatingBehaviorTestPage()
 	{
 		super();
-		addFormWithOrdinalFeedbackPanel();
+		addFormWithOrdinaryFeedbackPanel();
 		addFormWithHiddenFeedbackPanel();
 	}
 
-	private void addFormWithOrdinalFeedbackPanel()
+	private void addFormWithOrdinaryFeedbackPanel()
 	{
 		Form<Void> form = new Form<>("form1");
 		form.add(new AjaxFormValidatingBehavior("blur"));

@@ -29,7 +29,7 @@ public class AjaxFormValidatingBehaviorTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void ajaxUpdateOrdinalFeedbackComponents() throws Exception
+	public void ajaxUpdateOrdinaryFeedbackComponents() throws Exception
 	{
 		tester.startPage(AjaxFormValidatingBehaviorTestPage.class);
 		tester.assertRenderedPage(AjaxFormValidatingBehaviorTestPage.class);
