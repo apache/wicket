@@ -92,7 +92,7 @@ public class AjaxFormValidatingBehavior extends Behavior
 
 		if (component instanceof Form<?>)
 		{
-			form = (Form<?>) component;
+			form = (Form<?>)component;
 		}
 		else
 		{
@@ -100,7 +100,7 @@ public class AjaxFormValidatingBehavior extends Behavior
 			if (form == null)
 			{
 				throw new WicketRuntimeException(AjaxFormValidatingBehavior.class.getSimpleName() +
-						" should be bound to a Form component or a component that is inside a form!");
+					" should be bound to a Form component or a component that is inside a form!");
 			}
 		}
 	}
@@ -148,7 +148,8 @@ public class AjaxFormValidatingBehavior extends Behavior
 				if (component.isVisibleInHierarchy())
 				{
 					target.add(component);
-				}else
+				}
+				else
 				{
 					visit.dontGoDeeper();
 				}
