@@ -144,14 +144,11 @@ public class AjaxFormValidatingBehavior extends Behavior
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				if (component.isVisibleInHierarchy())
+				if (component.isVisibilityAllowed())
 				{
 					target.add(component);
-				}
-				else
-				{
-					visit.dontGoDeeper();
-				}
+				}				
+				visit.dontGoDeeper(); // no need to traverse deeper into IFeedback component
 			}
 		});
 	}
@@ -162,6 +159,8 @@ public class AjaxFormValidatingBehavior extends Behavior
 
 	private class FormValidateVisitor implements IVisitor<FormComponent, Void>, IClusterable
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void component(final FormComponent component, final IVisit<Void> visit)
 		{
