@@ -144,6 +144,7 @@ public class AjaxFormValidatingBehavior extends Behavior
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
+				component.configure(); // feedback component might change its visibility
 				if (component.isVisibleInHierarchy())
 				{
 					target.add(component);
@@ -162,6 +163,8 @@ public class AjaxFormValidatingBehavior extends Behavior
 
 	private class FormValidateVisitor implements IVisitor<FormComponent, Void>, IClusterable
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void component(final FormComponent component, final IVisit<Void> visit)
 		{
