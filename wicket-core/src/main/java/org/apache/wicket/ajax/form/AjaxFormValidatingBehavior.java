@@ -148,7 +148,8 @@ public class AjaxFormValidatingBehavior extends Behavior
 				if (component.isVisibleInHierarchy())
 				{
 					target.add(component);
-				}else
+				}
+				else
 				{
 					visit.dontGoDeeper();
 				}
