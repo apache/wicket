@@ -20,10 +20,23 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
- * @author amorozov
+ * @author shuraa
  */
 public class AjaxFormValidatingBehaviorTest extends WicketTestCase
 {
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void ajaxUpdateOrdinalFeedbackComponents() throws Exception
+	{
+		tester.startPage(AjaxFormValidatingBehaviorTestPage.class);
+		tester.assertRenderedPage(AjaxFormValidatingBehaviorTestPage.class);
+		tester.assertVisible("form1:feedback");
+		tester.executeAjaxEvent("form1:input", "blur");
+		tester.assertVisible("form1:feedback");
+	}
 
 	/**
 	 * @throws Exception
@@ -33,9 +46,9 @@ public class AjaxFormValidatingBehaviorTest extends WicketTestCase
 	{
 		tester.startPage(AjaxFormValidatingBehaviorTestPage.class);
 		tester.assertRenderedPage(AjaxFormValidatingBehaviorTestPage.class);
-		tester.assertInvisible("form:feedback");
-		tester.executeAjaxEvent("form:input", "blur");
-		tester.assertVisible("form:feedback");
+		tester.assertInvisible("form2:feedback");
+		tester.executeAjaxEvent("form2:input", "blur");
+		tester.assertVisible("form2:feedback");
 	}
 
 }

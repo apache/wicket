@@ -144,11 +144,14 @@ public class AjaxFormValidatingBehavior extends Behavior
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				if (component.isVisibilityAllowed())
+				component.configure(); // feedback component might change its visibility
+				if (component.isVisibleInHierarchy())
 				{
 					target.add(component);
-				}				
-				visit.dontGoDeeper(); // no need to traverse deeper into IFeedback component
+				}else
+				{
+					visit.dontGoDeeper();
+				}
 			}
 		});
 	}
