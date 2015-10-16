@@ -333,7 +333,7 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * @return The client's time DST offset from UTC in minutes (note: if you do this yourself, use
+	 * @return The client's time DST offset from UTC in hours (note: if you do this yourself, use
 	 *         'new Date(new Date().getFullYear(), 0, 6, 0, 0, 0, 0).getTimezoneOffset() / -60'
 	 *         (note the -)).
 	 */
@@ -344,7 +344,7 @@ public class ClientProperties implements IClusterable
 
 
 	/**
-	 * @return The client's time offset from UTC in minutes (note: if you do this yourself, use 'new
+	 * @return The client's time offset from UTC in hours (note: if you do this yourself, use 'new
 	 *         Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60' (note the
 	 *         -)).
 	 */
