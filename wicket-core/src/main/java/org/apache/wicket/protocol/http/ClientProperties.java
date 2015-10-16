@@ -435,22 +435,6 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * @deprecated use {@link #isNavigatorCookieEnabled()} instead
-	 */
-	public boolean isCookiesEnabled()
-	{
-		return isNavigatorCookieEnabled();
-	}
-
-	/**
-	 * @deprecated use {@link #isNavigatorJavaEnabled()} instead
-	 */
-	public boolean isJavaEnabled()
-	{
-		return isNavigatorJavaEnabled();
-	}
-
-	/**
 	 * 
 	 * 
 	 * @return The client's navigator.cookieEnabled property.
