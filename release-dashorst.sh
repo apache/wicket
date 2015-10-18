@@ -260,7 +260,7 @@ function generate_announce_email {
 
 # the branch on which the code base lives for this version (master is
 # always current development version)
-GIT_BRANCH=master
+GIT_BRANCH=wicket-7.x
 
 JAVA_VERSION=$(getJavaVersionFromPom)
 
