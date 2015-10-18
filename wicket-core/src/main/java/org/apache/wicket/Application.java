@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
@@ -78,7 +79,6 @@ import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
-import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.ICompoundRequestMapper;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.response.filter.EmptySrcAttributeCheckFilter;
@@ -485,7 +485,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 	}
 
-
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
@@ -613,8 +612,15 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		for (IInitializer initializer : initializers)
 		{
-			log.info("[" + getName() + "] init: " + initializer);
+			log.info("[{}] init: {}", getName(), initializer);
 			initializer.init(this);
+		}
+
+		final ServiceLoader<IInitializer> serviceLoaderInitializers = ServiceLoader.load(IInitializer.class);
+		for (IInitializer serviceLoaderInitializer : serviceLoaderInitializers) {
+			log.info("[{}] init: {}", getName(), serviceLoaderInitializer);
+			serviceLoaderInitializer.init(this);
+			initializers.add(serviceLoaderInitializer);
 		}
 	}
 
