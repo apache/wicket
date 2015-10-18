@@ -39,7 +39,7 @@ read
 branch="build/wicket-$version"
 tag="wicket-$version"
 
-git checkout master
+git checkout wicket-7.x
 git branch -D $branch
 git tag -d $tag
 
