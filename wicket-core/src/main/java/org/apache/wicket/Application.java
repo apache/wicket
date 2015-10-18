@@ -522,7 +522,7 @@ public abstract class Application implements UnboundListener, IEventSink
 								log.warn("Found '{}' in '{}'. /META-INF/wicket/*.properties doesn't work in OSGi " +
 										"and single-jar environments and is not supported anymore! " +
 										"Please see https://issues.apache.org/jira/browse/WICKET-5997 for more details " +
-										"and report a issue for the library that still uses it.",
+										"and report an issue for the library that still uses it.",
 										entryName, metaInfWicket);
 								Properties properties = new Properties();
 								properties.load(jarEntryStream);
@@ -552,7 +552,7 @@ public abstract class Application implements UnboundListener, IEventSink
 							log.warn("Found '{}' in '{}'. /META-INF/wicket/*.properties doesn't work in OSGi " +
 											"and single-jar environments and is not supported anymore! " +
 											"Please see https://issues.apache.org/jira/browse/WICKET-5997 for more " +
-											"details and report a issue for the library that still uses it.",
+											"details and report an issue for the library that still uses it.",
 									jarEntryName, metaInfWicket);
 							Properties properties = new Properties();
 							properties.load(new ByteArrayInputStream(buf));
@@ -586,7 +586,7 @@ public abstract class Application implements UnboundListener, IEventSink
 						log.warn("Found '{}'. /META-INF/wicket/*.properties doesn't work in OSGi " +
 										"and single-jar environments and is not supported anymore! " +
 										"Please see https://issues.apache.org/jira/browse/WICKET-5997 for more " +
-										"details and report a issue for the library that still uses it.",
+										"details and report an issue for the library that still uses it.",
 								wicketPropertiesFile);
 						Properties properties = new Properties();
 						properties.load(stream);
