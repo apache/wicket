@@ -91,11 +91,6 @@
 			<artifactId>commons-lang</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
 			<groupId>com.uwyn</groupId>
 			<artifactId>jhighlight</artifactId>
 			<version>1.0</version>
