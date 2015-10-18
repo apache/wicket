@@ -1285,8 +1285,12 @@
 
 		ajax: function(url, options) {
 			if (typeof url === "object") {
-				options = url;
-				url = undefined;
+				if (typeof options === "object") {
+					options = Wicket.merge(url, options);
+				} else {
+					options = url;
+				}
+				url = options.u || options.url;
 			}
 
 			options = options || {};

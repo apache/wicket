@@ -127,6 +127,82 @@ jQuery(document).ready(function() {
 		equal(originalCompleted, true);
 	});
 
+	test('can be called only with options when the URL is named "url"', function () {
+
+		expect(3);
+
+		var cm = new TestChannelManager(),
+			ajaxHandler = new TestAjaxHandler(),
+
+			name = 'my-channel',
+			type = 'd',
+
+			options = {
+				url: 'TEST-URL',
+				success: function() { console.log("SUCCESS"); }
+			},
+
+			channeledAjax = new Wicket.Ajax.ChanneledAjax(name, type, cm, ajaxHandler.ajax);
+
+		channeledAjax.ajax(options);
+		cm.scheduled.handler();
+
+		equal(ajaxHandler.calledWith.url, options.url);
+		equal(ajaxHandler.calledWith.options.url, options.url);
+		equal(ajaxHandler.calledWith.options.success, options.success);
+	});
+
+	test('can be called only with options when the URL is named "u"', function () {
+
+		expect(3);
+
+		var cm = new TestChannelManager(),
+			ajaxHandler = new TestAjaxHandler(),
+
+			name = 'my-channel',
+			type = 'd',
+
+			options = {
+				u: 'TEST-URL',
+				success: function() { console.log("SUCCESS"); }
+			},
+
+			channeledAjax = new Wicket.Ajax.ChanneledAjax(name, type, cm, ajaxHandler.ajax);
+
+		channeledAjax.ajax(options);
+		cm.scheduled.handler();
+
+		equal(ajaxHandler.calledWith.url, options.u);
+		equal(ajaxHandler.calledWith.options.u, options.u);
+		equal(ajaxHandler.calledWith.options.success, options.success);
+	});
+
+	test('can be called with two option objects', function () {
+
+		expect(3);
+
+		var cm = new TestChannelManager(),
+			ajaxHandler = new TestAjaxHandler(),
+
+			name = 'my-channel',
+			type = 'd',
+
+			urlOptions = {
+				url: 'TEST-URL'
+			},
+			options = {
+				success: function() { console.log("SUCCESS"); }
+			},
+
+			channeledAjax = new Wicket.Ajax.ChanneledAjax(name, type, cm, ajaxHandler.ajax);
+
+		channeledAjax.ajax(urlOptions, options);
+		cm.scheduled.handler();
+
+		equal(ajaxHandler.calledWith.url, urlOptions.url);
+		equal(ajaxHandler.calledWith.options.url, urlOptions.url);
+		equal(ajaxHandler.calledWith.options.success, options.success);
+	});
 
 	// Ajax tests are executed only when run with Web Server
 	if ( !QUnit.isLocal ) {
