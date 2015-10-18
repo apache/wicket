@@ -20,8 +20,6 @@ echo "Apache Wicket Release script"
 echo "----------------------------"
 echo "Building a release for Apache Wicket. We will need the passphrase for"
 echo "GPG to sign the release."
-echo "This program assumes you use a jdk 1.5 explicitly configured when"
-echo "invoking the 'mvn5' Maven 2 command."
 echo ""
 
 echo "Enter release version:"
@@ -52,8 +50,8 @@ echo "Switching to branch $branch"
 git checkout -b $branch
 
 echo "Modifying poms with the new version: $version"
-mvn5 versions:set -DnewVersion=$version
-mvn5 versions:commit
+mvn7 versions:set -DnewVersion=$version
+mvn7 versions:commit
 find . -name "pom.xml" | xargs sed -i -e "s/1.5-SNAPSHOT/$version/g"
 find . -name "pom.xml" | xargs sed -i -e "s/wicket\/trunk/wicket\/releases\/$version/g"
 
@@ -93,16 +91,16 @@ echo "Committing changes"
 git commit -am "changes to notice files"
 
 # prebuilding to work around javadoc generation problem
-mvn5 clean install -DskipTests=true
-mvn5 javadoc:jar
+mvn7 clean install -DskipTests=true
+mvn7 javadoc:jar
 
 # clean all projects
 echo "Clean all projects"
-mvn5 clean -Pall
+mvn7 clean -Pall
 
 # package and assemble the release
 echo "Package and assemble the release"
-mvn5 -ff -Dgpg.passphrase="$passphrase" -Prelease deploy javadoc:javadoc assembly:attached $1
+mvn7 -ff -Dgpg.passphrase="$passphrase" -Prelease deploy javadoc:javadoc assembly:attached $1
 
 filename=`ls target/dist/apache-wicket*gz`
 gpg --print-md MD5 $filename > $filename.md5
