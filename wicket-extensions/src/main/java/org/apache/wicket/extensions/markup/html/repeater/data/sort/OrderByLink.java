@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.lang.Args;
 
@@ -32,21 +31,6 @@ import org.apache.wicket.util.lang.Args;
 public class OrderByLink<S> extends Link<Void>
 {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @deprecated use {@link OrderByBorder#SORT_ASCENDING_CSS_CLASS_KEY} instead
-	 */
-	public static final String SORT_ASCENDING_CSS_CLASS_KEY = OrderByBorder.SORT_ASCENDING_CSS_CLASS_KEY;
-
-	/**
-	 * @deprecated use {@link OrderByBorder#SORT_DESCENDING_CSS_CLASS_KEY} instead
-	 */
-	public static final String SORT_DESCENDING_CSS_CLASS_KEY = OrderByBorder.SORT_DESCENDING_CSS_CLASS_KEY;
-
-	/**
-	 * @deprecated use {@link OrderByBorder#SORT_NONE_CSS_CLASS_KEY} instead
-	 */
-	public static final String SORT_NONE_CSS_CLASS_KEY = OrderByBorder.SORT_NONE_CSS_CLASS_KEY;
 
 	/** sortable property */
 	private final S property;
@@ -138,14 +122,5 @@ public class OrderByLink<S> extends Link<Void>
 		{
 			return order == SortOrder.ASCENDING ? SortOrder.DESCENDING : SortOrder.ASCENDING;
 		}
-	}
-
-	/**
-	 * @deprecated delegates to super implementation only
-	 */
-	@Override
-	public void onComponentTag(final ComponentTag tag)
-	{
-		super.onComponentTag(tag);
 	}
 }
