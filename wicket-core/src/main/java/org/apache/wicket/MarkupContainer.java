@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.markup.ComponentTag;
@@ -42,7 +41,6 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.DebugSettings;
-import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
@@ -892,31 +890,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * @return A iterator which iterators over all children and grand-children the Component
-	 * @deprecated ComponentHierarchyIterator is deprecated.
-	 *      Use {@link #visitChildren(org.apache.wicket.util.visit.IVisitor)} instead
-	 */
-	@Deprecated
-	public final ComponentHierarchyIterator visitChildren()
-	{
-		return new ComponentHierarchyIterator(this);
-	}
-
-	/**
-	 * @param clazz
-	 *            Filter condition
-	 * @return A iterator which iterators over all children and grand-children the Component,
-	 *         returning only components which implement (instanceof) the provided clazz.
-	 * @deprecated ComponentHierarchyIterator is deprecated.
-	 *      Use {@link #visitChildren(Class, org.apache.wicket.util.visit.IVisitor)} instead.
-	 */
-	@Deprecated
-	public final ComponentHierarchyIterator visitChildren(final Class<?> clazz)
-	{
-		return new ComponentHierarchyIterator(this).filterByClass(clazz);
-	}
-
-	/**
 	 * @param child
 	 *            Component being added
 	 */
@@ -1000,35 +973,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				component.fireInitialize();
 			}
 		});
-	}
-
-	/**
-	 * Returns child component at the specified index. Note that this method has O(n) complexity on
-	 * the number of children.
-	 * 
-	 * @param index
-	 *            the index of the child in this container
-	 * @throws ArrayIndexOutOfBoundsException
-	 *             when {@code index} exceeds {@code size()}
-	 * @return child component at the specified index
-	 * @deprecated this method is marked for deletion for WICKET8
-	 */
-	@Deprecated
-	public final Component get(int index)
-	{
-		final int requestedIndex = index;
-		Component childAtIndex = null;
-		Iterator<Component> childIterator = iterator();
-		while (index >= 0 && childIterator.hasNext())
-		{
-			childAtIndex = childIterator.next();
-			index--;
-		}
-		if(index >= 0 || childAtIndex == null)
-		{
-			throw new ArrayIndexOutOfBoundsException(Integer.toString(requestedIndex));
-		}
-		return childAtIndex;
 	}
 
 	/**
@@ -1620,57 +1564,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			child.markRendering(false);
 		}
 		super.onAfterRenderChildren();
-	}
-
-	/**
-	 * Swaps position of children. This method is particularly useful for adjusting positions of
-	 * repeater's items without rebuilding the component hierarchy
-	 * 
-	 * @param idx1
-	 *            index of first component to be swapped
-	 * @param idx2
-	 *            index of second component to be swapped
-	 * @deprecated this method is marked for deletion for WICKET8
-	 */
-	@Deprecated
-	public final void swap(int idx1, int idx2)
-	{
-		int size = children_size();
-		if (idx1 < 0 || idx1 >= size)
-		{
-			throw new IndexOutOfBoundsException(
-				"Argument idx is out of bounds: " + idx1 + "<>[0," + size + ")");
-		}
-
-		if (idx2 < 0 || idx2 >= size)
-		{
-			throw new IndexOutOfBoundsException(
-				"Argument idx is out of bounds: " + idx2 + "<>[0," + size + ")");
-		}
-
-		if (idx1 == idx2)
-		{
-			return;
-		}
-
-		if (children instanceof List)
-		{
-			@SuppressWarnings("unchecked")
-			List<Component> childrenList = (List<Component>)children;
-			childrenList.set(idx1, childrenList.set(idx2, childrenList.get(idx1)));
-		}
-		else
-		{
-			@SuppressWarnings("unchecked")
-			Map<String, Component> childrenMap = (Map<String, Component>)children;
-			List<Component> childrenList = copyChildren();
-			childrenList.set(idx1, childrenList.set(idx2, childrenList.get(idx1)));
-			childrenMap.clear();
-			for (Component child : childrenList)
-			{
-				childrenMap.put(child.getId(), child);
-			}
-		}
 	}
 
 	@Override
