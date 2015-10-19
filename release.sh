@@ -53,7 +53,7 @@ echo -n "Promoting release $version
 Actions about to be performed:
 ------------------------------
 
-$(cat \$0 | tail -n +14)
+\$(cat \$0 | tail -n +14)
 
 ------------------------------------------
 Press enter to continue or CTRL-C to abort"
@@ -105,7 +105,7 @@ echo -n "Reverting release $version
 Actions about to be performed:
 ------------------------------
 
-$(cat $0 | tail -n +14)
+\$(cat \$0 | tail -n +14)
 
 ------------------------------------------
 Press enter to continue or CTRL-C to abort"
