@@ -2,6 +2,51 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.1.0
+
+** Bug
+
+    * [WICKET-5882] - AutoComplete suggestion list disappear when I click on autoComplete scrollbar in IE
+    * [WICKET-5941] - Headers not rendered for components inside TransparentWebMarkupContainer on ajax update
+    * [WICKET-5959] - HTML input placeholder text breaks AutoCompleteTextField in IE11
+    * [WICKET-5960] - Page header isn't rendered for pages where URL has changed during render
+    * [WICKET-5964] - Queuing a component within an enclosure
+    * [WICKET-5965] - Queuing a component in head
+    * [WICKET-5966] - ResourceUtils.getLocaleFromFilename can't handle minimized resources well
+    * [WICKET-5967] - Unable to load i18n minified js
+    * [WICKET-5968] - CachingResourceLocator lookup key doesn't take strict into account
+    * [WICKET-5970] - UrlRenderer does not render fragments
+    * [WICKET-5973] - IllegalArgumentException 'bytes' cannot be negative. on opening Inspector
+    * [WICKET-5975] - AjaxFallbackOrderByBorder wicketOrder[Up|Down|None] class missing
+    * [WICKET-5978] - LazyInitProxyFactory fills permgen space
+    * [WICKET-5980] - When using Servlet 3.0 filter Wicket calculates filter path wrong
+    * [WICKET-5981] - Significant Performance Degradation From Wicket 6.20.0 to Wicket 7.0.0
+    * [WICKET-5983] - O(n^2) complexity in MarkupContainer.add
+    * [WICKET-5988] - WICKET-5981 breaks forms inside borders
+    * [WICKET-5989] - BaseWicketTester#startComponentInPage fails for pages with <wicket:header-items></wicket:header> placeholder
+    * [WICKET-5993] - AjaxButton - image is not shown even though type="image" is in html-template 
+    * [WICKET-5994] - Mounted TemplateResourceReference throws  org.apache.wicket.WicketRuntimeException when https is used
+    * [WICKET-5995] - "Range" header parsing is broken
+    * [WICKET-5996] - Mounted packages throw IllegalArgumentException when visiting base package url.
+    * [WICKET-5997] - Compatibility problem with Websphere liberty profile
+    * [WICKET-5999] - AjaxFormValidatingBehavior not updates initially hidden feedback component
+    * [WICKET-6005] - WicketRuntimeException from AjaxPagingNavigator#onAjaxEvent
+
+** Improvement
+
+    * [WICKET-5948] - wicket-ajax.js probably doesn't traverse the children of <div> or <span>
+    * [WICKET-5971] - Code cleanup in ServletWebResponse
+    * [WICKET-5974] - Change AjaxPagingNavigator#onAjaxEvent() to only consider parent components that have setOutputMarkupId(true)
+    * [WICKET-5976] - Improve the documentation of FeedbackMessages first(int level)
+    * [WICKET-5984] - ReplaceHandlerException lacks an accessor for the replacement RequestHandler
+    * [WICKET-5986] - NumberTextField<N> should use Models for minimum, maximum and step
+
+** Task
+
+    * [WICKET-5951] - Upgrade Atmosphere to 2.2.8
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.0.0
 
 ** Bug
