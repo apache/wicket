@@ -75,21 +75,21 @@ public class DebugSettings implements DebugSettingsMBean
 	}
 
 	/**
-	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setOutputComponentPath(boolean)
+	 * @see org.apache.wicket.jmx.DebugSettingsMBean#setComponentPathAttributeName(boolean)
 	 */
 	@Override
-	public void setOutputComponentPath(final boolean enabled)
+	public void setComponentPathAttributeName(final String name)
 	{
-		application.getDebugSettings().setOutputComponentPath(enabled);
+		application.getDebugSettings().setComponentPathAttributeName(name);
 	}
 
 	/**
 	 * @see org.apache.wicket.jmx.DebugSettingsMBean#isOutputComponentPath()
 	 */
 	@Override
-	public boolean isOutputComponentPath()
+	public String getComponentPathAttributeName()
 	{
-		return application.getDebugSettings().isOutputComponentPath();
+		return application.getDebugSettings().getComponentPathAttributeName();
 	}
 
 
