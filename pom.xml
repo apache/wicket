@@ -663,6 +663,11 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-toolchains-plugin</artifactId>
+                            <inherited>true</inherited>
+                        </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
