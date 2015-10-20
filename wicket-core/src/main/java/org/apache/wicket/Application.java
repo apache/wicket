@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -489,7 +490,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 *
 	 * @throws IOException When there is a problem reading the content of the properties file
 	 * @throws URISyntaxException When the url to the properties file cannot be translated to a file system path
+	 * @deprecated The collection of wicket.properties in the classpath is broken in OSGi and single-jar
+	 *             environments. It is deprecated and will be removed in Wicket 7.3.0. Please see WICKET-5997
 	 */
+	@Deprecated
 	private void collectWicketProperties() throws IOException, URISyntaxException
 	{
 		Iterator<URL> wicketResources = getApplicationSettings().getClassResolver().getResources("META-INF/wicket/");
@@ -500,21 +504,31 @@ public abstract class Application implements UnboundListener, IEventSink
 
 			if ("jar".equals(protocol) || "wsjar".equals(protocol))
 			{
-				JarURLConnection jarURLConnection = (JarURLConnection) metaInfWicket.openConnection();
-				JarFile jarFile = jarURLConnection.getJarFile();
-				Enumeration<JarEntry> jarEntries = jarFile.entries();
-				while (jarEntries.hasMoreElements())
+				// some versions of WebSphere use JarURL connections, others don't. WICKET-5997
+				final URLConnection urlConnection = metaInfWicket.openConnection();
+				if (urlConnection instanceof JarURLConnection)
 				{
-					JarEntry jarEntry = jarEntries.nextElement();
-					String entryName = jarEntry.getName();
-					if (entryName.startsWith("META-INF/wicket/") && entryName.endsWith(".properties"))
+					JarURLConnection jarURLConnection = (JarURLConnection) urlConnection;
+					JarFile jarFile = jarURLConnection.getJarFile();
+					Enumeration<JarEntry> jarEntries = jarFile.entries();
+					while (jarEntries.hasMoreElements())
 					{
-						try (InputStream jarEntryStream = jarFile.getInputStream(jarEntry))
+						JarEntry jarEntry = jarEntries.nextElement();
+						String entryName = jarEntry.getName();
+						if (entryName.startsWith("META-INF/wicket/") && entryName.endsWith(".properties"))
 						{
-							Properties properties = new Properties();
-							properties.load(jarEntryStream);
-							load(properties);
-							break; // atm there is no need to have more than one .properties file
+							try (InputStream jarEntryStream = jarFile.getInputStream(jarEntry))
+							{
+								log.warn("Found '{}' in '{}'. /META-INF/wicket/*.properties doesn't work in OSGi " +
+										"and single-jar environments and is not supported anymore! " +
+										"Please see https://issues.apache.org/jira/browse/WICKET-5997 for more details " +
+										"and report an issue for the library that still uses it.",
+										entryName, metaInfWicket);
+								Properties properties = new Properties();
+								properties.load(jarEntryStream);
+								load(properties);
+								break; // atm there is no need to have more than one .properties file
+							}
 						}
 					}
 				}
@@ -535,6 +549,11 @@ public abstract class Application implements UnboundListener, IEventSink
 						int read = inputStream.read(buf, offset, size);
 						if (read == size)
 						{
+							log.warn("Found '{}' in '{}'. /META-INF/wicket/*.properties doesn't work in OSGi " +
+											"and single-jar environments and is not supported anymore! " +
+											"Please see https://issues.apache.org/jira/browse/WICKET-5997 for more " +
+											"details and report an issue for the library that still uses it.",
+									jarEntryName, metaInfWicket);
 							Properties properties = new Properties();
 							properties.load(new ByteArrayInputStream(buf));
 							load(properties);
@@ -564,6 +583,11 @@ public abstract class Application implements UnboundListener, IEventSink
 				{
 					try (InputStream stream = wicketPropertiesFile.inputStream())
 					{
+						log.warn("Found '{}'. /META-INF/wicket/*.properties doesn't work in OSGi " +
+										"and single-jar environments and is not supported anymore! " +
+										"Please see https://issues.apache.org/jira/browse/WICKET-5997 for more " +
+										"details and report an issue for the library that still uses it.",
+								wicketPropertiesFile);
 						Properties properties = new Properties();
 						properties.load(stream);
 						load(properties);
@@ -707,8 +731,15 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		for (IInitializer initializer : initializers)
 		{
-			log.info("[" + getName() + "] init: " + initializer);
+			log.info("[{}] init: {}", getName(), initializer);
 			initializer.init(this);
+		}
+
+		final ServiceLoader<IInitializer> serviceLoaderInitializers = ServiceLoader.load(IInitializer.class);
+		for (IInitializer serviceLoaderInitializer : serviceLoaderInitializers) {
+			log.info("[{}] init: {}", getName(), serviceLoaderInitializer);
+			serviceLoaderInitializer.init(this);
+			initializers.add(serviceLoaderInitializer);
 		}
 	}
 

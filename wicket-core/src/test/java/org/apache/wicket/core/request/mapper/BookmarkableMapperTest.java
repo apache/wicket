@@ -471,6 +471,30 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5996
+	 */
+	@Test
+	public void decode15()
+	{
+		Url url = Url.parse("wicket/bookmarkable");
+		final AbstractBookmarkableMapper.UrlInfo urlInfo = encoder.parseRequest(getRequest(url));
+
+		assertThat(urlInfo, is(nullValue()));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5996
+	 */
+	@Test
+	public void decode16()
+	{
+		Url url = Url.parse("wicket/bookmarkable/");
+		final AbstractBookmarkableMapper.UrlInfo urlInfo = encoder.parseRequest(getRequest(url));
+
+		assertThat(urlInfo, is(nullValue()));
+	}
+
+	/**
 	 *
 	 */
 	@Test

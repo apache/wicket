@@ -109,7 +109,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * Factory method for the wrapped {@link DataTable}.
 	 * 
 	 * Note: If overwritten, the DataTable's row items have to output their markupId, or
-	 * {@link #updateNode(Object, AjaxRequestTarget)} will fail.
+	 * {@link #updateNode(Object, IPartialPageRequestHandler)} will fail.
 	 * 
 	 * @param id
 	 * @param columns

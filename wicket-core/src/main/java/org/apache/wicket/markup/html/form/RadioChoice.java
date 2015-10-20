@@ -567,11 +567,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			DebugSettings debugSettings = getApplication().getDebugSettings();
 			String componentPathAttributeName = debugSettings.getComponentPathAttributeName();
-			if (Strings.isEmpty(componentPathAttributeName) && debugSettings.isOutputComponentPath())
-			{
-				// fallback to the old 'wicketpath'
-				componentPathAttributeName = "wicketpath";
-			}
 			if (Strings.isEmpty(componentPathAttributeName) == false)
 			{
 				CharSequence path = getPageRelativePath();

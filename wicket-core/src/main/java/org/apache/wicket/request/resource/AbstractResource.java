@@ -46,6 +46,7 @@ import org.apache.wicket.util.time.Time;
  * {@link #newResourceResponse(org.apache.wicket.request.resource.IResource.Attributes)} method.
  * 
  * @author Matej Knopp
+ * @author Tobias Soloschenko
  */
 public abstract class AbstractResource implements IResource
 {
@@ -731,20 +732,23 @@ public abstract class AbstractResource implements IResource
 
 			String range = rangeHeader.substring(rangeHeader.indexOf('=') + 1,
 					rangeHeader.length());
+			
+			// support only the first range (WICKET-5995)
+			final int idxOfComma = range.indexOf(',');
+			String firstRange = idxOfComma > -1 ? range.substring(0, idxOfComma) : range;
 
-			String[] rangeParts = Strings.split(range, '-');
+			String[] rangeParts = Strings.split(firstRange, '-');
 
 			String startByteString = rangeParts[0];
 			String endByteString = rangeParts[1];
 
-			Long startbyte = startByteString != null && !startByteString.trim().equals("")
-					? Long.parseLong(startByteString) : 0;
-			Long endbyte = endByteString != null && !endByteString.trim().equals("")
-					? Long.parseLong(endByteString) : -1;
+			long startbyte = !Strings.isEmpty(startByteString) ? Long.parseLong(startByteString) : 0;
+			long endbyte = !Strings.isEmpty(endByteString) ? Long.parseLong(endByteString) : -1;
 
 			// Make the content range information available for the whole request cycle
-			RequestCycle.get().setMetaData(CONTENT_RANGE_STARTBYTE, startbyte);
-			RequestCycle.get().setMetaData(CONTENT_RANGE_ENDBYTE, endbyte);
+			RequestCycle requestCycle = RequestCycle.get();
+			requestCycle.setMetaData(CONTENT_RANGE_STARTBYTE, startbyte);
+			requestCycle.setMetaData(CONTENT_RANGE_ENDBYTE, endbyte);
 		}
 	}
 

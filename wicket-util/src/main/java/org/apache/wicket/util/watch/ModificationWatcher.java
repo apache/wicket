@@ -57,7 +57,7 @@ public class ModificationWatcher implements IModificationWatcher
 		public Time lastModifiedTime;
 
 		// The set of listeners to call when the modifiable changes
-		public final ChangeListenerSet listeners = new ChangeListenerSet();
+		public final ChangeListenerSet<IModifiable> listeners = new ChangeListenerSet<>();
 
 		// The modifiable thing
 		public IModifiable modifiable;
@@ -82,7 +82,7 @@ public class ModificationWatcher implements IModificationWatcher
 	}
 
 	@Override
-	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
+	public final boolean add(final IModifiable modifiable, final IChangeListener<IModifiable> listener)
 	{
 		// Look up entry for modifiable
 		final Entry entry = modifiableToEntry.get(modifiable);

@@ -493,13 +493,13 @@
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest-junit</artifactId>
 				<version>${hamcrest.version}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
 				<artifactId>java-hamcrest</artifactId>
 				<version>${hamcrest.version}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -826,7 +826,7 @@
 						<maxmemory>256m</maxmemory>
 						<quiet>true</quiet>
 						<links>
-							<link>http://download.oracle.com/javase/6/docs/api</link>
+							<link>http://docs.oracle.com/javase/8/docs/api/</link>
 						</links>
 						<failOnError>false</failOnError>
 						<additionalparam>-Xdoclint:none</additionalparam>

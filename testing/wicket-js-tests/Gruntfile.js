@@ -114,7 +114,7 @@ module.exports = function(grunt) {
 			 */
 			all: {
 				options: {
-			        urls: ['http://localhost:38888/test/js/all.html']
+			        urls: ['http://localhost:38887/test/js/all.html']
 			    }
 			},
 
@@ -123,7 +123,7 @@ module.exports = function(grunt) {
 			 */
 			amd: {
 				options: {
-					urls: ['http://localhost:38888/test/js/amd.html']
+					urls: ['http://localhost:38887/test/js/amd.html']
 				}
 			},
 
@@ -136,7 +136,7 @@ module.exports = function(grunt) {
 		connect: {
 			server: {
 				options: {
-					port: 38888,
+					port: 38887,
 //					debug: true,
 					middleware: function(connect, options, middlewares) {
 						middlewares.unshift(function(req, res, next) {

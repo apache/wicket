@@ -66,7 +66,7 @@ public class NonContextual<T>
 	 * 
 	 * @param <T>
 	 * @param clazz
-	 * @return
+	 * @return The NonContextual for the given class
 	 */
 	public static <T> NonContextual<T> of(Class<? extends T> clazz)
 	{

@@ -214,7 +214,7 @@ public class LazyInitProxyFactory
 	 * proxy itself in case the proxy subclass is deserialized on a VM that does not have it
 	 * created.
 	 * 
-	 * @see ProxyReplacement
+	 * @see LazyInitProxyFactory.ProxyReplacement
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 

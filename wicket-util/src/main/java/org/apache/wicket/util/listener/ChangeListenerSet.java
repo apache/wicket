@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.util.listener;
 
-import org.apache.wicket.util.watch.IModifiable;
-
 /**
  * Holds a set of IChangeListeners.
  * 
@@ -26,37 +24,18 @@ import org.apache.wicket.util.watch.IModifiable;
  * 
  * @author Jonathan Locke
  */
-public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
+public final class ChangeListenerSet<T> extends ListenerCollection<IChangeListener<T>>
 {
 	private static final long serialVersionUID = 1L;
 
-	public void notifyListeners()
+	public void notifyListeners(final T t)
 	{
-		notify(new INotifier<IChangeListener>()
+		notify(new INotifier<IChangeListener<T>>()
 		{
 			@Override
-			public void notify(final IChangeListener object)
+			public void notify(final IChangeListener<T> listener)
 			{
-				object.onChange();
-			}
-		});
-	}
-
-	public void notifyListeners(final IModifiable modifiable)
-	{
-		notify(new INotifier<IChangeListener>()
-		{
-			@Override
-			public void notify(final IChangeListener listener)
-			{
-				if (listener instanceof IChangeListener2)
-				{
-					((IChangeListener2) listener).onChange(modifiable);
-				}
-				else
-				{
-					listener.onChange();
-				}
+				listener.onChange(t);
 			}
 		});
 	}

@@ -147,10 +147,10 @@ public class ReloadingWicketFilter extends WicketFilter
 	public void init(final boolean isServlet, final FilterConfig filterConfig)
 		throws ServletException
 	{
-		reloadingClassLoader.setListener(new IChangeListener()
+		reloadingClassLoader.setListener(new IChangeListener<Class<?>>()
 		{
 			@Override
-			public void onChange()
+			public void onChange(Class<?> clz)
 			{
 				destroy();
 

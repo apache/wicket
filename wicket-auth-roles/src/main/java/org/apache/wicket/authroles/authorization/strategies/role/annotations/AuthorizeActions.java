@@ -40,9 +40,9 @@ import java.lang.annotation.Target;
  * </pre>
  * 
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
- * @see org.apache.wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
- * @see org.apache.wicket.authorization.strategies.role.annotations.AuthorizeAction
- * @see org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation
+ * @see AnnotationsRoleAuthorizationStrategy
+ * @see AuthorizeAction
+ * @see AuthorizeInstantiation
  * @author Eelco Hillenius
  */
 @Retention(RetentionPolicy.RUNTIME)

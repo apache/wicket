@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -89,6 +90,16 @@ public class WebMarkupContainer extends MarkupContainer
 	 */
 	public final WebSession getWebSession()
 	{
-		return (WebSession)getSession();
+		return WebSession.get();
+	}
+
+	/**
+	 * A convenience method to return the WebApplication. Same as {@link WebApplication#get()}.
+	 *
+	 * @return the current WebApplication
+	 */
+	public final WebApplication getWebApplication()
+	{
+		return WebApplication.get();
 	}
 }

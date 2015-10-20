@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +39,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.converter.ZeroPaddingIntegerConverter;
+import org.apache.wicket.util.convert.converter.IntegerConverter;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
@@ -113,7 +115,11 @@ public class DateTimeField extends FormComponentPanel<Date>
 	// PropertyModel string to access getAmOrPm
 	private static final String AM_OR_PM = "amOrPm";
 
-	private static final IConverter<Integer> MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
+	private static final IConverter<Integer> MINUTES_CONVERTER = new IntegerConverter() {
+		protected NumberFormat newNumberFormat(Locale locale) {
+			return new DecimalFormat("00");
+		}
+	};
 
 	// The dropdown list for AM/PM and it's associated model object
 	private DropDownChoice<AM_PM> amOrPmChoice;

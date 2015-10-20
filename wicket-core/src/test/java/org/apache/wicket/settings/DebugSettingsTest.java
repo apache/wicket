@@ -51,27 +51,4 @@ public class DebugSettingsTest extends WicketTestCase
 		String wicketPath = tagTester.getAttribute(attributeName);
 		assertEquals(link.getPageRelativePath(), wicketPath);
 	}
-
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5498
-	 */
-	@Test
-	public void setComponentPathAttributeNameDeprected()
-	{
-		tester.getApplication().getDebugSettings().setOutputComponentPath(true);
-		MockPageWithLink page = new MockPageWithLink();
-		Component link = new Link(MockPageWithLink.LINK_ID)
-		{
-			@Override
-			public void onClick()
-			{
-			}
-		}.setMarkupId(MockPageWithLink.LINK_ID);
-		page.add(link);
-		tester.startPage(page);
-
-		TagTester tagTester = tester.getTagById(MockPageWithLink.LINK_ID);
-		String wicketPath = tagTester.getAttribute("wicketpath");
-		assertEquals(link.getPageRelativePath(), wicketPath);
-	}
 }

@@ -14,46 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model.util;
+package org.apache.wicket.markup.html.border;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.Form;
 
-
-/**
- * Based on <code>Model</code> but for sets of serializable objects.
- * 
- * @author Timo Rantalaiho
- * @param <T>
- *            type of object inside set
- * @deprecated Will be removed in Wicket 8
- */
-@Deprecated
-public class WildcardSetModel<T> extends GenericBaseModel<Set<? extends T>>
+public class BorderWithForm extends Border
 {
-	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Creates empty model
-	 */
-	public WildcardSetModel()
+	public BorderWithForm(String id)
 	{
+		super(id);
+		WebMarkupContainer container = new WebMarkupContainer("borderContainer");
+		container.add(new Form<>("form"));
+		
+		addToBorder(container);
 	}
-
-	/**
-	 * Creates model that will contain <code>set</code>
-	 * 
-	 * @param set
-	 */
-	public WildcardSetModel(Set<? extends T> set)
-	{
-		setObject(set);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected Set<? extends T> createSerializableVersionOf(Set<? extends T> object)
-	{
-		return new HashSet<T>(object);
-	}
+	
 }

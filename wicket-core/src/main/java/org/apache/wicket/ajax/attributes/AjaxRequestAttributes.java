@@ -348,26 +348,6 @@ public final class AjaxRequestAttributes
 	}
 
 	/**
-	 * @return {@code this} object for chaining
-	 * @deprecated Use #setPreventDefault() instead
-	 */
-	@Deprecated
-	public AjaxRequestAttributes setAllowDefault(boolean allowDefault)
-	{
-		this.preventDefault = !allowDefault;
-		return this;
-	}
-
-	/**
-	 * @deprecated Use #isPreventDefault() instead
-	 */
-	@Deprecated
-	public boolean isAllowDefault()
-	{
-		return !preventDefault;
-	}
-
-	/**
 	 * Only applies for event behaviors. Returns whether the behavior should allow the JavaScript
 	 * event to propagate to the parent of its target.
 	 */

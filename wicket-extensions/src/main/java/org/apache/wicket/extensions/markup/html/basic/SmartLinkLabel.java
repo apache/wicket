@@ -41,7 +41,7 @@ public class SmartLinkLabel extends Label
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see Label#Label(String, String)
+	 * @see Label#Label(String, java.io.Serializable)
 	 */
 	public SmartLinkLabel(final String name, final String label)
 	{

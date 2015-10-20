@@ -349,15 +349,6 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 		return wrapped.values();
 	}
 
-	/**
-	 * @see IValueMap#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return super.toString();
-	}
-
 	// //
 	// // getAs convenience methods
 	// //

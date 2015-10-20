@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.convert;
 
-import java.awt.Component;
 import java.text.ParseException;
 import java.util.Locale;
 

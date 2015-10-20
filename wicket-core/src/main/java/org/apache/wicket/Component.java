@@ -3899,11 +3899,6 @@ public abstract class Component
 
 		DebugSettings debugSettings = getApplication().getDebugSettings();
 		String componentPathAttributeName = debugSettings.getComponentPathAttributeName();
-		if (Strings.isEmpty(componentPathAttributeName) && debugSettings.isOutputComponentPath())
-		{
-			// fallback to the old 'wicketpath'
-			componentPathAttributeName = "wicketpath";
-		}
 		if (Strings.isEmpty(componentPathAttributeName) == false)
 		{
 			String path = getPageRelativePath();

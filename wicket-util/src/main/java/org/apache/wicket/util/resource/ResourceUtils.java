@@ -85,7 +85,7 @@ public class ResourceUtils
 	 * E.g. {@code file_us_EN.min.js} will correctly determine a locale of {@code us_EN} by
 	 * stripping the {@code .min} from the filename, the filename returned will be
 	 * {@code file.min.js}, if you want the {@code .min} to be removed as well, use
-	 * {@link #getLocaleFromMinifiedFilename(String)} instead.
+	 * {@link #getLocaleFromFilename(String)} instead.
 	 * 
 	 * @param path
 	 *            The file path

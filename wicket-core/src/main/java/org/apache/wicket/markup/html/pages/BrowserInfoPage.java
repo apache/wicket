@@ -19,15 +19,12 @@ package org.apache.wicket.markup.html.pages;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This page uses a form post right after the page has loaded in the browser, using JavaScript or
@@ -48,8 +45,6 @@ import org.slf4j.LoggerFactory;
 public class BrowserInfoPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger log = LoggerFactory.getLogger(BrowserInfoPage.class);
 
 	private BrowserInfoForm browserInfoForm;
 
@@ -89,16 +84,6 @@ public class BrowserInfoPage extends WebPage
 				return WebSession.get().getClientInfo().getProperties();
 			}
 		};
-
-		// hide the formerly used meta-tag from markup
-		// TODO remove in Wicket 8
-		add(new WebMarkupContainer("meta") {
-			protected void onAfterRender() {
-				super.onAfterRender();
-
-				log.warn("remove the meta tag with wicket:id=\"meta\" from the markup of your BrowserInfoPage subclass");
-			}
-		}.setVisible(false));
 
 		add(new ContinueLink("link", properties));
 

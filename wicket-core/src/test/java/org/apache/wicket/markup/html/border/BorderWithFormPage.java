@@ -14,51 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model.util;
+package org.apache.wicket.markup.html.border;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.IModel;
 
-
-/**
- * Based on <code>Model</code> but for lists of serializable objects.
- * 
- * @author Timo Rantalaiho
- * @param <T>
- *            type of object inside list
- * @deprecated Will be removed in Wicket 8
- */
-@Deprecated
-public class WildcardListModel<T> extends GenericBaseModel<List<? extends T>>
-{
+public class BorderWithFormPage extends WebPage {
 	private static final long serialVersionUID = 1L;
+	private TextField<String> field;
 
-	/**
-	 * Creates empty model
-	 */
-	public WildcardListModel()
-	{
-	}
-
-	/**
-	 * Creates model that will contain <code>list</code>
-	 * 
-	 * @param list
-	 * 
-	 */
-	public WildcardListModel(List<? extends T> list)
-	{
-		setObject(list);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected List<? extends T> createSerializableVersionOf(List<? extends T> object)
-	{
-		if (object == null)
-		{
-			return null;
-		}
-		return new ArrayList<T>(object);
-	}
+	public BorderWithFormPage(IModel<String> model) {
+		super();
+		
+		WebMarkupContainer container = new WebMarkupContainer("borderContainer");
+		
+		BorderWithForm border = new BorderWithForm("formBorder");
+		
+		border.add(field = new TextField<>("text", model));
+		
+		container.add(border);
+		add(container);
+    }
 }

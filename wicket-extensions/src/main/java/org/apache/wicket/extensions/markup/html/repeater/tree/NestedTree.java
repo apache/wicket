@@ -63,7 +63,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 * @param state
 	 *            the expansion state
 	 * 
-	 * @see State
+	 * @see org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree.State
 	 */
 	public NestedTree(String id, ITreeProvider<T> provider, IModel<? extends Set<T>> state)
 	{
@@ -89,7 +89,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	/**
 	 * Overridden to let the node output its markup id.
 	 * 
-	 * @see #updateNode(Object, AjaxRequestTarget)
+	 * @see #updateNode(Object, IPartialPageRequestHandler)
 	 * @see Component#setOutputMarkupId(boolean)
 	 */
 	@Override
