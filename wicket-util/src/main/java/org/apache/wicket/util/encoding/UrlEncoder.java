@@ -49,11 +49,7 @@ public class UrlEncoder
 		/**
 		 * path type
 		 */
-		PATH,
-		/**
-		 * full path type
-		 */
-		FULL_PATH
+		PATH
 	}
 
 	// list of what not to decode
@@ -77,16 +73,6 @@ public class UrlEncoder
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
 	public static final UrlEncoder PATH_INSTANCE = new UrlEncoder(Type.PATH);
-
-	/**
-	 * Encoder used to encode all path segments. Querystring will be excluded.<br/>
-	 * <br/>
-	 * 
-	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
-	 */
-	public static final UrlEncoder FULL_PATH_INSTANCE = new UrlEncoder(Type.FULL_PATH);
-
-	private final Type type;
 
 	/**
 	 * Allow subclass to call constructor.
@@ -144,7 +130,6 @@ public class UrlEncoder
 		 * query =( pchar / "/" / "?" )
 		 */
 
-		this.type = type;
 		// unreserved
 		dontNeedEncoding = new BitSet(256);
 		int i;
@@ -216,18 +201,6 @@ public class UrlEncoder
 				// don't encode semicolon because it is used in ;jsessionid=
 				dontNeedEncoding.set(';');
 				break;
-
-			// same as path, but '/' will not be encoded
-			case FULL_PATH :
-				// encode ' ' with a % instead of + in path portion
-
-				// path component sub-delim values we do not need to escape
-				dontNeedEncoding.set('&');
-				dontNeedEncoding.set('=');
-				dontNeedEncoding.set('+');
-
-				dontNeedEncoding.set('/');
-				break;
 		}
 	}
 
@@ -270,18 +243,12 @@ public class UrlEncoder
 			throw new RuntimeException(new UnsupportedEncodingException(charsetName));
 		}
 
-		boolean stopEncoding = false;
 		for (int i = 0; i < s.length();)
 		{
 			int c = s.charAt(i);
 
-			if ((stopEncoding == false) && (c == '?' && type == Type.FULL_PATH))
-			{
-				stopEncoding = true;
-			}
-
 			// System.out.println("Examining character: " + c);
-			if (stopEncoding || dontNeedEncoding.get(c))
+			if (dontNeedEncoding.get(c))
 			{
 				if (c == ' ')
 				{
