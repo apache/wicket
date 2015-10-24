@@ -18,6 +18,7 @@ package org.apache.wicket.request;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,14 +32,10 @@ import java.util.List;
 
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.Url.StringMode;
-import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author Matej Knopp
- * @author Igor Vaynberg
- */
-public class UrlTest extends Assert
+@SuppressWarnings("javadoc")
+public class UrlTest
 {
 	private void checkSegments(Url url, String... segments)
 	{
@@ -57,9 +54,6 @@ public class UrlTest extends Assert
 		assertEquals(list, url.getQueryParameters());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse1()
 	{
@@ -70,9 +64,6 @@ public class UrlTest extends Assert
 		assertEquals("foo2", url.getFragment());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse2()
 	{
@@ -82,9 +73,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url, "", "4", "6", "");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse3()
 	{
@@ -97,9 +85,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse4()
 	{
@@ -110,9 +95,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse5()
 	{
@@ -135,9 +117,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url, "a", "b", "x?&4", "y=z");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse6()
 	{
@@ -147,9 +126,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse7()
 	{
@@ -159,9 +135,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url, "a", "b");
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse8()
 	{
@@ -172,9 +145,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parse9()
 	{
@@ -185,9 +155,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url, "a", "b");
 	}
 
-	/**
-	 *
-	 */
 	@Test
 	public void parse10()
 	{
@@ -198,9 +165,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url, "a", "");
 	}
 
-	/**
-	 *
-	 */
 	@Test
 	public void parse11()
 	{
@@ -211,9 +175,6 @@ public class UrlTest extends Assert
 		checkQueryParams(url, "a", "");
 	}
 
-	/**
-	 *
-	 */
 	@Test
 	public void parse12()
 	{
@@ -335,9 +296,6 @@ public class UrlTest extends Assert
 		assertThat(url.getFragment(), is(nullValue()));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void render1()
 	{
@@ -352,9 +310,6 @@ public class UrlTest extends Assert
 		assertEquals("foo/b=r/b&z/x%3F?a=b&x%3F%264=y%3Dz", url.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void render2()
 	{
@@ -363,9 +318,6 @@ public class UrlTest extends Assert
 		assertEquals(url.toString(), s);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void render3()
 	{
@@ -374,9 +326,6 @@ public class UrlTest extends Assert
 		assertEquals(url.toString(StringMode.FULL), s);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void render4()
 	{
@@ -412,9 +361,6 @@ public class UrlTest extends Assert
 		assertEquals("https://www.domain.com/foo/bar?baz=ban#bat", url.toString(StringMode.FULL));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void absolute1()
 	{
@@ -423,9 +369,6 @@ public class UrlTest extends Assert
 		assertFalse(url.isContextAbsolute());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void absolute2()
 	{
@@ -434,9 +377,6 @@ public class UrlTest extends Assert
 		assertFalse(url.isContextAbsolute());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void absolute3()
 	{
@@ -445,9 +385,6 @@ public class UrlTest extends Assert
 		assertTrue(url.isContextAbsolute());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void absolute4()
 	{
@@ -456,9 +393,6 @@ public class UrlTest extends Assert
 		assertTrue(url.isContextAbsolute());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void absolute5()
 	{
@@ -468,9 +402,6 @@ public class UrlTest extends Assert
 	}
 
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat1()
 	{
@@ -479,9 +410,6 @@ public class UrlTest extends Assert
 		assertEquals(Url.parse("abc/xx/yy"), url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat2()
 	{
@@ -490,9 +418,6 @@ public class UrlTest extends Assert
 		assertEquals(Url.parse("xx/yy"), url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat3()
 	{
@@ -501,9 +426,6 @@ public class UrlTest extends Assert
 		assertEquals(Url.parse("xx/yy"), url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat4()
 	{
@@ -512,9 +434,6 @@ public class UrlTest extends Assert
 		assertEquals(Url.parse("../xx/yy"), url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat5()
 	{
@@ -523,9 +442,6 @@ public class UrlTest extends Assert
 		assertEquals(Url.parse("abc/efg/xx/yy"), url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat6()
 	{
@@ -534,9 +450,6 @@ public class UrlTest extends Assert
 		assertEquals(Url.parse("abc/"), url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat7()
 	{
@@ -545,9 +458,6 @@ public class UrlTest extends Assert
 		assertEquals(Url.parse(""), url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat8()
 	{
@@ -556,9 +466,6 @@ public class UrlTest extends Assert
 		assertEquals(Url.parse("fff/abc/"), url);
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void concat9()
 	{
@@ -746,9 +653,6 @@ public class UrlTest extends Assert
 		return (Url)ois.readObject();
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parseRelativeUrl()
 	{
@@ -775,9 +679,6 @@ public class UrlTest extends Assert
 		assertTrue(url.isContextAbsolute());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void parseAbsoluteUrl()
 	{
@@ -921,9 +822,6 @@ public class UrlTest extends Assert
 
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void prependLeadingSegments1()
 	{
@@ -934,9 +832,6 @@ public class UrlTest extends Assert
 		assertEquals("x/y/a", url.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void prependLeadingSegments2()
 	{
@@ -947,9 +842,6 @@ public class UrlTest extends Assert
 		assertEquals("x/a", url.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void prependLeadingSegments3()
 	{
@@ -960,9 +852,6 @@ public class UrlTest extends Assert
 		assertEquals("a", url.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void prependLeadingSegments4()
 	{
@@ -973,9 +862,6 @@ public class UrlTest extends Assert
 		assertEquals("x", url.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void removeLeadingSegments1()
 	{
@@ -985,9 +871,6 @@ public class UrlTest extends Assert
 		assertEquals("b", url.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void removeLeadingSegments2()
 	{
@@ -997,9 +880,6 @@ public class UrlTest extends Assert
 		assertEquals("", url.toString());
 	}
 
-	/**
-	 * 
-	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void removeLeadingSegments3()
 	{
@@ -1099,5 +979,4 @@ public class UrlTest extends Assert
 		checkUrl(url, "http", "[::1]", 1234, "", "myapp");
 		
 	}
-
 }
