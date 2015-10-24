@@ -30,6 +30,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractDateConverter<D extends Date> extends AbstractConverter<D>
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Creates a new instance of D out of the passed date(time) as long
 	 * @param date

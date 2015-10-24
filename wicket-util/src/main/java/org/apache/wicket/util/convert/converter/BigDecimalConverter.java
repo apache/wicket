@@ -19,12 +19,12 @@ package org.apache.wicket.util.convert.converter;
 import java.math.BigDecimal;
 import java.util.Locale;
 
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.convert.IConverter;
 
 /**
  * BigDecimal converter
  * 
- * see IConverter
+ * @see IConverter
  */
 public class BigDecimalConverter extends AbstractDecimalConverter<BigDecimal>
 {

@@ -30,6 +30,9 @@ public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Notifies all change listeners.
+	 */
 	public void notifyListeners()
 	{
 		notify(new INotifier<IChangeListener>()
@@ -42,16 +45,23 @@ public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
 		});
 	}
 
+	/**
+	 * Notifies all change listeners that modifiable was changed.
+	 * 
+	 * @param modifiable
+	 *            the changed object
+	 */
 	public void notifyListeners(final IModifiable modifiable)
 	{
 		notify(new INotifier<IChangeListener>()
 		{
+			@SuppressWarnings("unchecked")
 			@Override
 			public void notify(final IChangeListener listener)
 			{
 				if (listener instanceof IChangeListener2)
 				{
-					((IChangeListener2) listener).onChange(modifiable);
+					IChangeListener2.class.cast(listener).onChange(modifiable);
 				}
 				else
 				{

@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class UrlDecoderTest
 {
 	@Test
@@ -42,7 +43,6 @@ public class UrlDecoderTest
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4803
-	 * @throws Exception
 	 */
 	@Test
 	public void badUrlEntities() throws Exception

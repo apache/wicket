@@ -21,12 +21,9 @@ import org.apache.wicket.util.encoding.UrlEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Tests for {@link org.apache.wicket.util.encoding.UrlDecoder}
- */
+@SuppressWarnings("javadoc")
 public class UrlEncoderTest extends Assert
 {
-
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3721">WICKET-3721</a> Encode
 	 * apostrophes because otherwise they get XML encoded by ComponentTag#writeOutput() to

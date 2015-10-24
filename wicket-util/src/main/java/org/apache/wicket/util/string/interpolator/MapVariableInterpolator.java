@@ -27,6 +27,7 @@ import org.apache.wicket.util.string.Strings;
  * @author Jonathan Locke
  * @since 1.2.6
  */
+@SuppressWarnings("serial")
 public class MapVariableInterpolator extends VariableInterpolator
 {
 	/** Map of variables */

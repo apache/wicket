@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.io;
 
+import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -23,14 +24,13 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import java.net.URL;
 
 import org.apache.wicket.util.time.Time;
-import org.junit.Assert;
 import org.junit.Test;
 
-public class ConnectionsTest extends Assert
+@SuppressWarnings("javadoc")
+public class ConnectionsTest 
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5838
-	 * @throws Exception
 	 */
 	@Test
 	public void getLastModified() throws Exception

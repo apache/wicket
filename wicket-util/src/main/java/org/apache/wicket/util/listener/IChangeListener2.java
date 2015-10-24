@@ -19,8 +19,11 @@ package org.apache.wicket.util.listener;
 import org.apache.wicket.util.watch.IModifiable;
 
 /**
- * Generic "something changed" listener interface that also provides the
- * changed object as an argument.
+ * Generic "something changed" listener interface that also provides the changed object as an
+ * argument.
+ * 
+ * @param <T>
+ *            The type of the modifiable
  */
 // TODO Wicket 8: Rename to IChangeListener and remove the old one
 public interface IChangeListener2<T extends IModifiable> extends IChangeListener

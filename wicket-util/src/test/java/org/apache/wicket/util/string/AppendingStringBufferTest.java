@@ -19,15 +19,9 @@ package org.apache.wicket.util.string;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author jcompagner
- */
+@SuppressWarnings("javadoc")
 public class AppendingStringBufferTest extends Assert
 {
-
-	/**
-	 * Test method for 'org.apache.wicket.util.string.AppendingStringBuffer.append(String)'
-	 */
 	@Test
 	public void append()
 	{
@@ -40,9 +34,6 @@ public class AppendingStringBufferTest extends Assert
 		assertEquals("test1test2test3test4", asb.toString());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void largeBegin() throws Exception
 	{
@@ -50,9 +41,6 @@ public class AppendingStringBufferTest extends Assert
 		assertEquals("123456789012345678901234567890", asb.toString());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void charPrepend() throws Exception
 	{
@@ -61,9 +49,6 @@ public class AppendingStringBufferTest extends Assert
 		assertEquals("1234567890", asb.toString());
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void equalsToAppeningBuffer() throws Exception
 	{
@@ -72,9 +57,6 @@ public class AppendingStringBufferTest extends Assert
 		assertEquals(asb1, asb2);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void equalsToCharSequence() throws Exception
 	{
@@ -88,9 +70,6 @@ public class AppendingStringBufferTest extends Assert
 		assertFalse(asb.equals("01234567890"));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void startsWidth() throws Exception
 	{
@@ -105,9 +84,6 @@ public class AppendingStringBufferTest extends Assert
 		assertFalse(asb.startsWith("01234"));
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	@Test
 	public void endsWidth() throws Exception
 	{
@@ -156,7 +132,5 @@ public class AppendingStringBufferTest extends Assert
 		asb = new AppendingStringBuffer("123456789");
 		asb.insert(5, (Integer)null);
 		assertEquals("12345null6789", asb.toString());
-
 	}
-
 }

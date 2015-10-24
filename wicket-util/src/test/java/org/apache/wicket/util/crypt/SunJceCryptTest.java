@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class SunJceCryptTest extends Assert
 {
 	/**

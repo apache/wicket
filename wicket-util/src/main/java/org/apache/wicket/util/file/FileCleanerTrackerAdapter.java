@@ -28,6 +28,12 @@ public class FileCleanerTrackerAdapter extends FileCleaningTracker
 {
 	private final IFileCleaner fileCleaner;
 
+	/**
+	 * Creates an adaptor for a {@code fileCleaner}
+	 * 
+	 * @param fileCleaner
+	 *            the cleaner to adapt
+	 */
 	public FileCleanerTrackerAdapter(IFileCleaner fileCleaner)
 	{
 		this.fileCleaner = Args.notNull(fileCleaner, "fileCleaner");
