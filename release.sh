@@ -48,21 +48,16 @@ function generate_promotion_script {
     echo "Generating release promotion script 'promote-$version.sh'"
 read -d '' script <<- EOF
 #!/bin/sh
-echo -n "Promoting release $version
+echo "Promoting release $version
 
 Actions about to be performed:
 ------------------------------
 
 \$(cat \$0 | tail -n +14)
 
-------------------------------------------
-Press enter to continue or CTRL-C to abort"
+------------------------------------------"
 
-read
-
-# push the build branch to ASF git repo
-
-git push origin $branch:refs/heads/$branch
+read --prompt "Press enter to continue or CTRL-C to abort"
 
 # push the release tag to ASF git repo
 
@@ -78,13 +73,16 @@ mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingR
 
 git checkout $GIT_BRANCH
 mvn release:update-versions --batch-mode
-find . ! \( -type d -name "target" -prune \) -name pom.xml -exec sed -i "" -E "s/$mvn_version_to_replace/$next_version/g" {} \;
-find . ! \( -type d -name "target" -prune \) -name pom.xml -exec sed -i "" -E "s/$mvn_version_to_replace/$next_version/g" {} \;
+mvn versions:set versions:commit -DnewVersion=$next_version
 git add \` find . ! \( -type d -name "target" -prune \) -name pom.xml \`
-git commit -m "Start next development version"
-git push
 
-echo "Remove the previous version of Wicket using this command:
+echo "
+Check the new versions and commit and push them to origin:
+
+  git commit -m \"Start next development version\"
+  git push
+
+Remove the previous version of Wicket using this command:
 
   svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \\\"Remove previous version from mirrors\\\"
 
