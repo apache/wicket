@@ -21,17 +21,19 @@ package org.apache.wicket.util.listener;
  * 
  * Note that these classes are not meant to be serializable or for you to hold them in session (see
  * WICKET-2697)
- * 
- * @author Jonathan Locke
  */
 public final class ChangeListenerSet<T> extends ListenerCollection<IChangeListener<T>>
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Notifies all change listeners.
+	 */
 	public void notifyListeners(final T t)
 	{
 		notify(new INotifier<IChangeListener<T>>()
 		{
+			@SuppressWarnings("unchecked")
 			@Override
 			public void notify(final IChangeListener<T> listener)
 			{

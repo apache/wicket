@@ -1543,6 +1543,8 @@ public final class Strings
 	/**
 	 * Return this value as en enum value.
 	 *
+	 * @param value
+	 *            the value to convert to an enum value
 	 * @param enumClass
 	 *            the enum type
 	 * @return an enum value

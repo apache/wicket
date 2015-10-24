@@ -32,6 +32,8 @@ import java.util.Comparator;
  */
 public class UrlExternalFormComparator implements Comparator<URL>, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public int compare(URL url1, URL url2)
 	{

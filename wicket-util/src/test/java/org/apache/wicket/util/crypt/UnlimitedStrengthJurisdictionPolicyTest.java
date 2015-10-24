@@ -38,6 +38,7 @@ import org.junit.Test;
  * A demo how to create {@link org.apache.wicket.util.crypt.ICrypt} implementation that
  * uses <em>PBKDF2WithHmacSHA1</em> for encryption
  */
+@SuppressWarnings("javadoc")
 public class UnlimitedStrengthJurisdictionPolicyTest extends Assert
 {
 	@Test

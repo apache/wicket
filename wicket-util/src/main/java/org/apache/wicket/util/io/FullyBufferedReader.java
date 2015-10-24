@@ -227,6 +227,7 @@ public final class FullyBufferedReader
 	 * @param startPos
 	 *            The index to start at
 	 * @return -1 if not found
+	 * @throws ParseException 
 	 */
 	public int findOutOfQuotes(final char ch, int startPos) throws ParseException
 	{
@@ -244,6 +245,7 @@ public final class FullyBufferedReader
 	 * @param quotationChar
 	 *            The current quotation char. Must be ' or ", otherwise will be ignored.
 	 * @return -1 if not found
+	 * @throws ParseException 
 	 */
 	public int findOutOfQuotes(final char ch, int startPos, char quotationChar)
 		throws ParseException

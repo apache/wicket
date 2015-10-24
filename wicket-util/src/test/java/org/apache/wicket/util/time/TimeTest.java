@@ -23,25 +23,13 @@ import java.util.Calendar;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Test cases for this object
- * 
- * @author Jonathan Locke
- */
+@SuppressWarnings("javadoc")
 public final class TimeTest extends Assert
 {
-	/**
-	 * 
-	 * @throws ParseException
-	 */
 	@Test
 	public void test() throws ParseException
 	{
 		Time.now();
-
-		// TODO Post 1.2: Bug: Eelco mentioned this test fails on his computer
-		// from time to time. I have seen this and it's very weird -- Jonathan
-		// Assert.assertTrue(Time.now().after(start) || Time.now().equals(start));
 
 		final Time birthday = Time.parseDate("1966.06.01");
 
@@ -58,12 +46,9 @@ public final class TimeTest extends Assert
 	 * WICKET-5442 getHour() should be on 24-hour clock
 	 */
 	@Test
-	public void hour() throws Exception
+	public void hour() throws ParseException
 	{
-
 		Time time = Time.valueOf("2000.10.30-9.30PM");
-
 		assertEquals(21, time.getHour());
 	}
-
 }

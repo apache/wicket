@@ -19,20 +19,20 @@ package org.apache.wicket.util.collections;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Iterator;
 
 import org.apache.wicket.util.io.ByteArrayOutputStream;
-import org.junit.Assert;
 import org.junit.Test;
 
-public class IntHashMapTest extends Assert
+@SuppressWarnings("javadoc")
+public class IntHashMapTest
 {
-
+	@SuppressWarnings({ "resource", "unchecked" })
 	@Test
 	public void serialize() throws IOException, ClassNotFoundException
 	{

@@ -29,13 +29,25 @@ import org.apache.wicket.util.time.Time;
  */
 public class ResourceStreamWrapper implements IResourceStream
 {
+	private static final long serialVersionUID = 1L;
+
 	private final IResourceStream delegate;
 
+	/**
+	 * Creates the wrapper around the {@code delegate} resource stream.
+	 * 
+	 * @param delegate
+	 */
 	public ResourceStreamWrapper(IResourceStream delegate)
 	{
 		this.delegate = Args.notNull(delegate, "delegate");
 	}
 
+	/**
+	 * Returns the wrapped delegate.
+	 * 
+	 * @return the wrapped delegate.
+	 */
 	public IResourceStream getDelegate()
 	{
 		return delegate;

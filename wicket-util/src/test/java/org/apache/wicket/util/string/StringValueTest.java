@@ -23,9 +23,7 @@ import org.apache.wicket.util.time.Time;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Tests for StringValue
- */
+@SuppressWarnings("javadoc")
 public class StringValueTest extends Assert
 {
 	/**
@@ -132,7 +130,7 @@ public class StringValueTest extends Assert
 	}
 
 	@Test
-	public void enums() throws Exception
+	public void enums() 
 	{
 		assertEquals(TestEnum.FOO, new StringValue("FOO").toEnum(TestEnum.class));
 		assertEquals(TestEnum.FOO, new StringValue("FOO").toEnum(TestEnum.BAR));

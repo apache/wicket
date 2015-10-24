@@ -23,9 +23,7 @@ import org.apache.wicket.util.convert.ConversionException;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Tests for BigIntegerConverter
- */
+@SuppressWarnings("javadoc")
 public class BigIntegerConverterTest extends Assert
 {
 	@Test

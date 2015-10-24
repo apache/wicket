@@ -37,6 +37,7 @@ public interface IResourceStreamWriter extends IResourceStream
 	 *
 	 * @param output
 	 *            The response where the resource can write its content into.
+	 * @throws IOException 
 	 */
 	void write(OutputStream output) throws IOException;
 }
