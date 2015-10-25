@@ -48,7 +48,7 @@ import org.apache.wicket.markup.html.list.ListView;
  * 
  * @author Filippo Diotalevi
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "javadoc" })
 public class ListContacts extends WebPage
 {
     // Inject the ContactDao using @Inject

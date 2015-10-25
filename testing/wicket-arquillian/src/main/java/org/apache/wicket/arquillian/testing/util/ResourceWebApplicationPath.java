@@ -29,8 +29,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  * Maintain a list of paths which might either be ordinary folders of the filesystem or relative
  * paths to the web application's servlet context.
  * 
- * @author felipecalmeida
- * 		Modified to look inside servletContext and same package as Application.
+ * @author felipecalmeida Modified to look inside servletContext and same package as Application.
  */
 public final class ResourceWebApplicationPath implements IResourceFinder
 {
@@ -38,17 +37,20 @@ public final class ResourceWebApplicationPath implements IResourceFinder
 
 	/** The web apps servlet context */
 	private final ServletContext servletContext;
-	
+
 	/** basePath of the project org/apache/wicket/arquillian/testing **/
 	private String basePath;
 
 	/**
 	 * Constructor
 	 * 
+	 * @param basePath
+	 *            basePath of the project org/apache/wicket/arquillian/testing
+	 * 
 	 * @param servletContext
 	 *            The webapplication context where the resources must be loaded from
 	 */
-	public ResourceWebApplicationPath(String basePath,final ServletContext servletContext)
+	public ResourceWebApplicationPath(String basePath, final ServletContext servletContext)
 	{
 		this.basePath = basePath.replaceAll("\\.", "\\/");
 		this.servletContext = servletContext;
