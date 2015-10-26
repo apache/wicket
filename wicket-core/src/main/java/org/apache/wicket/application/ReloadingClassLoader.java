@@ -314,7 +314,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * @param clz
 	 *            the class to watch
 	 */
-	private void watchForModifications(Class<?> clz)
+	private void watchForModifications(final Class<?> clz)
 	{
 		// Watch class in the future
 		Iterator<URL> locationsIterator = urls.iterator();
