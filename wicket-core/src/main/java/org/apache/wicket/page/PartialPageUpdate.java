@@ -478,7 +478,7 @@ public abstract class PartialPageUpdate
 		// create the htmlheadercontainer if needed
 		if (header == null)
 		{
-			header = new PartialHtmlHeaderContainer();
+			header = new PartialHtmlHeaderContainer(this);
 			page.addOrReplace(header);
 		}
 
@@ -513,13 +513,24 @@ public abstract class PartialPageUpdate
 	public abstract void setContentType(WebResponse response, String encoding);
 
 	/**
-	 * Header container component partial page updates.
+	 * Header container component for partial page updates.
+	 * <p>
+	 * This container is temporarily injected into the page to provide the
+	 * {@link IHeaderResponse} while components are rendered. It is never
+	 * rendered itself. 
 	 *
 	 * @author Matej Knopp
 	 */
-	private class PartialHtmlHeaderContainer extends HtmlHeaderContainer
+	private static class PartialHtmlHeaderContainer extends HtmlHeaderContainer
 	{
 		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Keep transiently, in case the containing page gets serialized before
+		 * this container is removed again. This happens when DebugBar determines
+		 * the page size by serializing/deserializing it.
+		 */
+		private transient PartialPageUpdate pageUpdate;
 
 		/**
 		 * Constructor.
@@ -527,9 +538,11 @@ public abstract class PartialPageUpdate
 		 * @param update
 		 *      the partial page update
 		 */
-		public PartialHtmlHeaderContainer()
+		public PartialHtmlHeaderContainer(PartialPageUpdate pageUpdate)
 		{
 			super(HtmlHeaderSectionHandler.HEADER_ID);
+
+			this.pageUpdate = pageUpdate;
 		}
 
 		/**
@@ -539,7 +552,11 @@ public abstract class PartialPageUpdate
 		@Override
 		protected IHeaderResponse newHeaderResponse()
 		{
-	        return PartialPageUpdate.this.getHeaderResponse();
+			if (pageUpdate == null) {
+				throw new IllegalStateException("disconnected from pageUpdate after serialization");
+			}
+
+	        return pageUpdate.getHeaderResponse();
 		}
 	}
 
