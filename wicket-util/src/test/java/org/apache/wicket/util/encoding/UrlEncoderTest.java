@@ -33,7 +33,7 @@ public class UrlEncoderTest extends Assert
 	public void encodeApostrophe()
 	{
 		assertEquals("someone%27s%20bad%20url",
-			UrlEncoder.FULL_PATH_INSTANCE.encode("someone's bad url", CharEncoding.UTF_8));
+			UrlEncoder.PATH_INSTANCE.encode("someone's bad url", CharEncoding.UTF_8));
 	}
 
 	/**
@@ -53,6 +53,6 @@ public class UrlEncoderTest extends Assert
 	public void dontStopOnNullByte() throws Exception
 	{
 		assertEquals("someone%27s%20badNULL%20url",
-			UrlEncoder.FULL_PATH_INSTANCE.encode("someone's bad\0 url", CharEncoding.UTF_8));
+			UrlEncoder.PATH_INSTANCE.encode("someone's bad\0 url", CharEncoding.UTF_8));
 	}
 }

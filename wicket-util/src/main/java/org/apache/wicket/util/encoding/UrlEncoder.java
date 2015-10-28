@@ -84,6 +84,7 @@ public class UrlEncoder
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
+	@Deprecated
 	public static final UrlEncoder FULL_PATH_INSTANCE = new UrlEncoder(Type.FULL_PATH);
 
 	private final Type type;
