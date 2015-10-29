@@ -3,6 +3,7 @@ velocity.log
 **.project
 **.classpath
 **.settings/
+.metadata
 **velocity.log*
 *.idea/
 *.iml
