@@ -1,6 +1,49 @@
-This file contains all changes done in releases for Apache Wicket 6.x.
+This file contains all changes done in releases for Apache Wicket 7.x.
 
-=============================================================================
+=======================================================================
+
+Release Notes - Wicket - Version 6.21.0
+
+** Bug
+
+    * [WICKET-5882] - AutoComplete suggestion list disappear when I click on autoComplete scrollbar in IE
+    * [WICKET-5898] - StackOverflowError after form submit with a validation error
+    * [WICKET-5925] - wicket-examples DataTablePage is broken
+    * [WICKET-5927] - Velocity remote code execution
+    * [WICKET-5939] - AjaxEventBehavior should not lower-case the event name
+    * [WICKET-5941] - Headers not rendered for components inside TransparentWebMarkupContainer on ajax update
+    * [WICKET-5944] - CSRF prevention does not work with https URLs on the default port
+    * [WICKET-5946] - JavaScript/Css PackageResource should use the same charset for compressing
+    * [WICKET-5959] - HTML input placeholder text breaks AutoCompleteTextField in IE11
+    * [WICKET-5960] - Page header isn't rendered for pages where URL has changed during render
+    * [WICKET-5968] - CachingResourceLocator lookup key doesn't take strict into account
+    * [WICKET-5970] - UrlRenderer does not render fragments
+    * [WICKET-5973] - IllegalArgumentException 'bytes' cannot be negative. on opening Inspector
+    * [WICKET-5978] - LazyInitProxyFactory fills permgen space
+    * [WICKET-5989] - BaseWicketTester#startComponentInPage fails for pages with <wicket:header-items></wicket:header> placeholder
+    * [WICKET-5994] - Mounted TemplateResourceReference throws  org.apache.wicket.WicketRuntimeException when https is used
+    * [WICKET-5996] - Mounted packages throw IllegalArgumentException when visiting base package url.
+    * [WICKET-6005] - WicketRuntimeException from AjaxPagingNavigator#onAjaxEvent
+
+** Improvement
+
+    * [WICKET-5926] - Arquillian Support with Container ServletContext in BaseWicketTester/WicketTester.
+    * [WICKET-5930] - Upgrade Atmosphere to 2.2.7
+    * [WICKET-5932] - Allow empty column list for DataTable
+    * [WICKET-5933] - Avoid serialization of untouched page after ajax request
+    * [WICKET-5935] - IoC Guice: cache proxies and fail on creation when binding is missing
+    * [WICKET-5945] - add a new topic/listener that notifies of Ajax calls done
+    * [WICKET-5948] - wicket-ajax.js probably doesn't traverse the children of <div> or <span>
+    * [WICKET-5955] - error from WebPage # reportMissingHead
+    * [WICKET-5974] - Change AjaxPagingNavigator#onAjaxEvent() to only consider parent components that have setOutputMarkupId(true)
+    * [WICKET-5976] - Improve the documentation of FeedbackMessages first(int level)
+    * [WICKET-5986] - NumberTextField<N> should use Models for minimum, maximum and step
+
+** Task
+
+    * [WICKET-5951] - Upgrade Atmosphere to 2.2.8
+
+=======================================================================
 
 Release Notes - Wicket - Version 6.20.0
 
@@ -1426,3 +1469,4 @@ Release Notes - Wicket - Version 6.0.0-beta1
 
 ** Wish
     * [WICKET-757] - FormComponent.rawInput needs a better name
+
