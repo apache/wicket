@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
@@ -38,7 +38,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 {
 	private static final long serialVersionUID = 1L;
-	private IAjaxCallListener ajaxCallListener;
 
 	/**
 	 * Constructor
@@ -50,33 +49,21 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, sortProperty, stateLocator, null);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param sortProperty
-	 * @param stateLocator
-	 * @param ajaxCallListener
-	 */
-	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
-	{
 		super(id, sortProperty, stateLocator);
-
-		this.ajaxCallListener = ajaxCallListener;
 	}
 
 	@Override
-	protected OrderByLink<S> newOrderByLink(String id, S property,
-		ISortStateLocator<S> stateLocator)
+	protected OrderByLink<S> newOrderByLink(String id, S property, ISortStateLocator<S> stateLocator)
 	{
-		return new AjaxFallbackOrderByLink<S>("orderByLink", property, stateLocator, ajaxCallListener)
+		return new AjaxFallbackOrderByLink<S>("orderByLink", property, stateLocator)
 		{
-
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				AjaxFallbackOrderByBorder.this.updateAjaxAttributes(attributes);
+			}
 
 			@Override
 			protected void onSortChanged()
@@ -92,6 +79,11 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 			}
 		};
 	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+	}
+
 	/**
 	 * This method is a hook for subclasses to perform an action after sort has changed
 	 */
