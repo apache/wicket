@@ -1,0 +1,46 @@
+
+The release has been created. It is up to you to check if the release is up
+to par, and perform the following commands yourself when you start the vote
+to enable future development during the vote and after.
+
+A vote email has been generated in release-vote.txt, you can copy/paste it using:
+
+    cat release-vote.txt | pbcopy
+
+You can find the distribution in target/dist.
+
+
+Failed release
+--------------
+
+To rollback a release due to a failed vote or some other complication use:
+
+    $ ./revert-6.21.0.sh
+
+This will clean up the artfifacts from the staging areas, including Nexus,
+dist.apache.org and the release branch and tag.
+
+
+Successful release
+------------------
+
+Congratulations on the successful release vote!
+
+Use the release-announce.txt as a starter for the release announcement:
+
+    cat release-announce.txt | pbcopy
+
+To promote the release after a successful vote, run:
+
+    $ ./promote-6.21.0.sh
+
+This will promote the Nexus staging repository to Maven Central, and move
+the release artifacts from the staging area to dist.apache.org. It will
+also sign the release tag and push the release branch to git.apache.org
+
+You can read this message at a later time using:
+
+    $ cat release.txt
+
+Happy voting!
+
