@@ -66,6 +66,8 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	 * @param sortProperty
 	 * @param stateLocator
 	 * @param ajaxCallListener
+	 *
+	 * @deprecated override {@link #updateAjaxAttributes(AjaxRequestAttributes)} instead
 	 */
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
@@ -106,13 +108,20 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 			{
 				super.updateAjaxAttributes(attributes);
 				attributes.setPreventDefault(true);
+
 				if (ajaxCallListener != null) {
 					attributes.getAjaxCallListeners().add(ajaxCallListener);
 				}
+
+				AjaxFallbackOrderByLink.this.updateAjaxAttributes(attributes);
 			}
 
 		};
 
+	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**

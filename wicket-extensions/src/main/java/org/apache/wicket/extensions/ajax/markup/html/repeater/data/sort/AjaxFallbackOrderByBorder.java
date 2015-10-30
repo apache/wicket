@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
@@ -60,6 +61,8 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 	 * @param sortProperty
 	 * @param stateLocator
 	 * @param ajaxCallListener
+	 *
+	 * @deprecated override {@link #updateAjaxAttributes(AjaxRequestAttributes)} instead
 	 */
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
@@ -69,6 +72,7 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 		this.ajaxCallListener = ajaxCallListener;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected OrderByLink<S> newOrderByLink(String id, S property,
 		ISortStateLocator<S> stateLocator)
@@ -77,6 +81,12 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 		{
 
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				AjaxFallbackOrderByBorder.this.updateAjaxAttributes(attributes);
+			}
 
 			@Override
 			protected void onSortChanged()
@@ -88,10 +98,14 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 			public void onClick(final AjaxRequestTarget target)
 			{
 				AjaxFallbackOrderByBorder.this.onAjaxClick(target);
-
 			}
 		};
 	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+	}
+
 	/**
 	 * This method is a hook for subclasses to perform an action after sort has changed
 	 */
