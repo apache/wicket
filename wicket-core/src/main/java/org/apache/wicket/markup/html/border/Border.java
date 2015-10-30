@@ -167,7 +167,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 
 		body = new BorderBodyContainer(id + "_" + BODY);
 	}
-
+	
 	/**
 	 * @return The border body container
 	 */
@@ -206,7 +206,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		for (Component component : children)
 		{
-			if (component.equals(body))
+			if (component == body)
 			{
 				addToBorder(component);
 			}

@@ -1765,11 +1765,15 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private void dequeueChild(Component child, ComponentTag tag, DequeueContext dequeue)
 	{
-		if (child == null || child instanceof IQueueRegion)
+		if (child == null)
 		{
 			// could not dequeue, or is a dequeue container
 			dequeue.skipToCloseTag();
-
+		}
+		else if (child instanceof IQueueRegion) 
+		{
+			((IQueueRegion)child).dequeue();
+			dequeue.skipToCloseTag();
 		}
 		else if (child instanceof MarkupContainer)
 		{
