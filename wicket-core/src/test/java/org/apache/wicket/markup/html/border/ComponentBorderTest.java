@@ -112,4 +112,10 @@ public class ComponentBorderTest extends WicketTestCase
 		
 		assertEquals(TEST_TEXT, model.getObject());
 	}
+	
+	@Test
+	public void borderWithEnclosurePage() throws Exception
+	{
+		tester.startPage(BorderWithEnclosurePage.class);
+	}
 }
