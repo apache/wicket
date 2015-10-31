@@ -193,6 +193,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		// necessary when queued and lives with the page instead of just during render
 		childComponent = null;
 	}
+	
 	/**
 	 * Get the real parent container
 	 * 
@@ -201,11 +202,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	protected MarkupContainer getEnclosureParent()
 	{
 		MarkupContainer parent = getParent();
-		while ((parent != null) && parent.isAuto())
-		{
-			parent = parent.getParent();
-		}
-
+		
 		if (parent == null)
 		{
 			throw new WicketRuntimeException(
