@@ -285,7 +285,7 @@ public class Localizer
 	 *            The default value (optional)
 	 * @return The string resource
 	 */
-	public final String getStringIgnoreSettings(final String key, final Component component,
+	public String getStringIgnoreSettings(final String key, final Component component,
 		final IModel<?> model, final String defaultValue)
 	{
 		return getStringIgnoreSettings(key, component, model, null, null, defaultValue);
@@ -317,7 +317,7 @@ public class Localizer
 	 *            The default value (optional)
 	 * @return The string resource
 	 */
-	public final String getStringIgnoreSettings(final String key, final Component component,
+	public String getStringIgnoreSettings(final String key, final Component component,
 		final IModel<?> model, Locale locale, String style, final String defaultValue)
 	{
 		boolean addedToPage = false;
