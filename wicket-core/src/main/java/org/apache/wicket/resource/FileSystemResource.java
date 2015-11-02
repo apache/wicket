@@ -87,7 +87,7 @@ public class FileSystemResource extends AbstractResource
 	 * Configures the resource response by overriding it with additional information
 	 * 
 	 * @param resourceResponse
-	 *            the resource response to configured
+	 *            the resource response to be configured
 	 * 
 	 * @return the resource response to be configured
 	 */
