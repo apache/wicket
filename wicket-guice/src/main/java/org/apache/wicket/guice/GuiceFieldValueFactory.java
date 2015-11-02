@@ -73,7 +73,7 @@ public class GuiceFieldValueFactory implements IFieldValueFactory
 					Object cachedValue = cache.get(locator);
 					if (cachedValue != null)
 					{
-						return cachedValue;
+						return cachedValue == NULL_SENTINEL ? null : cachedValue;
 					}
 
 					target = locator.locateProxyTarget();
