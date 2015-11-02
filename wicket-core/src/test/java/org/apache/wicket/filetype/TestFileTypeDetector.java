@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.resource;
+package org.apache.wicket.filetype;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,13 +26,17 @@ import java.nio.file.spi.FileTypeDetector;
  * @author Tobias Soloschenko
  *
  */
-public class FileSystemResourceReferenceTestFileTypeDetector extends FileTypeDetector
+public class TestFileTypeDetector extends FileTypeDetector
 {
 
 	@Override
 	public String probeContentType(Path path) throws IOException
 	{
-		return "text/plain_provided_by_detector";
+		if(path.getFileName().toString().contains("FileSystemResourceReference")){			
+			return "text/plain_provided_by_detector";
+		}else{
+			return null;
+		}
 	}
 
 }

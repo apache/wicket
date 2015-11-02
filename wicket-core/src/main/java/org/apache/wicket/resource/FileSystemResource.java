@@ -22,10 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.PartWriterCallback;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Used to provide resources based on the on Java NIO FileSystem API.<br>
@@ -39,7 +41,7 @@ public class FileSystemResource extends AbstractResource
 {
 	private static final long serialVersionUID = 1L;
 
-	private Path path;
+	private final Path path;
 
 	/**
 	 * Creates a new file system resource based on the given path
@@ -49,6 +51,7 @@ public class FileSystemResource extends AbstractResource
 	 */
 	public FileSystemResource(Path path)
 	{
+		Args.notNull(path, "path");
 		this.path = path;
 	}
 
@@ -65,7 +68,7 @@ public class FileSystemResource extends AbstractResource
 			resourceResponse.setContentType(getMimeType());
 			resourceResponse.setAcceptRange(ContentRangeType.BYTES);
 			resourceResponse.setContentLength(size);
-			resourceResponse = adjustResourceResponse(resourceResponse);
+			resourceResponse = configureResourceResponse(resourceResponse);
 			RequestCycle cycle = RequestCycle.get();
 			Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
 			Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
@@ -81,14 +84,14 @@ public class FileSystemResource extends AbstractResource
 	}
 
 	/**
-	 * Adjusts the resource response by overriding it with additional information
+	 * Configures the resource response by overriding it with additional information
 	 * 
 	 * @param resourceResponse
-	 *            the resource response to adjust
+	 *            the resource response to configured
 	 * 
-	 * @return the resource response to be adjusted
+	 * @return the resource response to be configured
 	 */
-	protected ResourceResponse adjustResourceResponse(ResourceResponse resourceResponse)
+	protected ResourceResponse configureResourceResponse(ResourceResponse resourceResponse)
 	{
 		return resourceResponse;
 	}
@@ -106,7 +109,8 @@ public class FileSystemResource extends AbstractResource
 	}
 
 	/**
-	 * Gets the mime type to be used for the response
+	 * Gets the mime type to be used for the response it first uses the URL connection to get the
+	 * mime type and after this the FileTypeDetector SPI is used.
 	 * 
 	 * @return the mime type to be used for the response
 	 * @throws IOException
@@ -114,7 +118,17 @@ public class FileSystemResource extends AbstractResource
 	 */
 	protected String getMimeType() throws IOException
 	{
-		return Files.probeContentType(path);
+		String mimeType = null;
+		if (Application.exists())
+		{
+			mimeType = Application.get().getMimeType(path.getFileName().toString());
+		}
+		if (mimeType == null)
+		{
+
+			mimeType = Files.probeContentType(path);
+		}
+		return mimeType;
 	}
 
 	/**

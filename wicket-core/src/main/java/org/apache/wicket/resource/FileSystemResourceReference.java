@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * This resource reference is used to provide a reference to a resource based on Java NIO FileSystem
@@ -56,7 +57,7 @@ public class FileSystemResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
-	private Path path;
+	private final Path path;
 
 	private static Map<URI, FileSystem> fileSystemURIs = new HashMap<URI, FileSystem>();
 
@@ -70,7 +71,8 @@ public class FileSystemResourceReference extends ResourceReference
 	 */
 	public FileSystemResourceReference(String name, Path path)
 	{
-		super(name);
+		super(Args.notNull(name, "name"));
+		Args.notNull(path, "path");
 		this.path = path;
 	}
 
@@ -82,7 +84,7 @@ public class FileSystemResourceReference extends ResourceReference
 	 */
 	public FileSystemResourceReference(Path path)
 	{
-		super(path.getFileName().toString());
+		super(Args.notNull(path, "path").getFileName().toString());
 		this.path = path;
 	}
 
@@ -97,7 +99,7 @@ public class FileSystemResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Used to apply a custom mime type without implementing a mime type detection
+	 * Override to apply a custom mime type without implementing a mime type detection
 	 * 
 	 * @return the mime type
 	 * @throws IOException
@@ -141,17 +143,21 @@ public class FileSystemResourceReference extends ResourceReference
 			return Paths.get(uri);
 		}
 		String zipFile = uriString.substring(0, indexOfExclamationMark);
-		FileSystem fileSystem = fileSystemURIs.get(uri);
-		if (fileSystem == null)
+		FileSystem fileSystem = null;
+		synchronized (fileSystemURIs)
 		{
-			if (env == null)
+			fileSystem = fileSystemURIs.get(uri);
+			if (fileSystem == null)
 			{
-				env = new HashMap<>();
-				env.put("create", "true");
-				env.put("encoding", "UTF-8");
+				if (env == null)
+				{
+					env = new HashMap<>();
+					env.put("create", "true");
+					env.put("encoding", "UTF-8");
+				}
+				fileSystem = FileSystems.newFileSystem(new URI(zipFile), env);
+				fileSystemURIs.put(uri, fileSystem);
 			}
-			fileSystem = FileSystems.newFileSystem(new URI(zipFile), env);
-			fileSystemURIs.put(uri, fileSystem);
 		}
 		String fileName = uriString.substring(uriString.indexOf('!') + 1);
 		return fileSystem.getPath(fileName);
