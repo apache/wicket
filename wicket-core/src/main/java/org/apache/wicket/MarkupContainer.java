@@ -520,25 +520,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return new Iterator<Component>()
 		{
 			Component currentComponent = null;
-			Iterator<Component> internalIterator;
-			{
-				if (children == null)
-				{
-					internalIterator = Collections.emptyIterator();
-				}
-				else if (children instanceof Component)
-				{
-					internalIterator = Collections.singleton((Component)children).iterator();
-				}
-				else if (children instanceof List)
-				{
-					internalIterator = ((List<Component>)children).iterator();
-				}
-				else
-				{
-					internalIterator = ((Map<String, Component>)children).values().iterator();
-				}
-			}
+			Iterator<Component> internalIterator = copyChildren().iterator();
 
 			@Override
 			public boolean hasNext()
