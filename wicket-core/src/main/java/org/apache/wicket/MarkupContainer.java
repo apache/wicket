@@ -1477,12 +1477,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		super.onBeforeRenderChildren();
 
-		// We need to copy the children list because the children components can
-		// modify the hierarchy in their onBeforeRender.
 		try
 		{
 			// Loop through child components
-			for (final Component child : copyChildren())
+			for (final Component child : this)
 			{
 				// Get next child
 				// Call begin request on the child
