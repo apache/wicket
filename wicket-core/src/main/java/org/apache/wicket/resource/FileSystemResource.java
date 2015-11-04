@@ -68,7 +68,6 @@ public class FileSystemResource extends AbstractResource
 			resourceResponse.setContentType(getMimeType());
 			resourceResponse.setAcceptRange(ContentRangeType.BYTES);
 			resourceResponse.setContentLength(size);
-			resourceResponse = configureResourceResponse(resourceResponse);
 			RequestCycle cycle = RequestCycle.get();
 			Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
 			Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
@@ -81,19 +80,6 @@ public class FileSystemResource extends AbstractResource
 			throw new WicketRuntimeException(
 				"An error occured while processing the media resource response", e);
 		}
-	}
-
-	/**
-	 * Configures the resource response by overriding it with additional information
-	 * 
-	 * @param resourceResponse
-	 *            the resource response to be configured
-	 * 
-	 * @return the resource response to be configured
-	 */
-	protected ResourceResponse configureResourceResponse(ResourceResponse resourceResponse)
-	{
-		return resourceResponse;
 	}
 
 	/**
@@ -125,7 +111,6 @@ public class FileSystemResource extends AbstractResource
 		}
 		if (mimeType == null)
 		{
-
 			mimeType = Files.probeContentType(path);
 		}
 		return mimeType;

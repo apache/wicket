@@ -25,6 +25,7 @@ import java.nio.file.Path;
 
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,7 +35,7 @@ import org.junit.Test;
  * @author Tobias Soloschenko
  *
  */
-public class FileSystemResourceReferenceTest
+public class FileSystemResourceReferenceTest extends WicketTestCase
 {
 
 	/**
@@ -56,7 +57,7 @@ public class FileSystemResourceReferenceTest
 				"!/folderInZip/FileSystemResourceReference.txt"));
 			final FileSystemResource fileSystemResource = new FileSystemResource(path);
 			FileSystemResourceReference fileSystemResourceReference = new FileSystemResourceReference(
-				path)
+				"test", path)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -100,7 +101,7 @@ public class FileSystemResourceReferenceTest
 			Path path = FileSystemResourceReference.getPath(resource.toURI());
 			final FileSystemResource fileSystemResource = new FileSystemResource(path);
 			FileSystemResourceReference fileSystemResourceReference = new FileSystemResourceReference(
-				path)
+				"test", path)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -150,7 +151,7 @@ public class FileSystemResourceReferenceTest
 			}
 		};
 		FileSystemResourceReference fileSystemResourceReference = new FileSystemResourceReference(
-			path)
+			"test", path)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -161,7 +162,6 @@ public class FileSystemResourceReferenceTest
 			}
 		};
 		Assert.assertEquals("test/mime1", fileSystemResource.getMimeType());
-		Assert.assertEquals("test/mime1", fileSystemResourceReference.getMimeType());
 	}
 
 	/**
@@ -175,24 +175,44 @@ public class FileSystemResourceReferenceTest
 	@Test
 	public void testMimeTypeDetection() throws IOException, URISyntaxException
 	{
-		URL resource = FileSystemResourceReferenceTest.class.getResource("FileSystemResourceReference.txt");
+		// uke > unknown extension :-)
+		URL resource = FileSystemResourceReferenceTest.class.getResource("FileSystemResourceReference.uke");
 		Path path = FileSystemResourceReference.getPath(resource.toURI());
-		FileSystemResourceReference fileSystemResourceReference = new FileSystemResourceReference(
-			path);
-		Assert.assertEquals("text/plain_provided_by_detector",
-			fileSystemResourceReference.getMimeType());
 
-		FileSystemResourceReference fileSystemResourceReferenceOverriddenMime = new FileSystemResourceReference(
-			path)
+		final FileSystemResource fileSystemResource = new FileSystemResource(path);
+		FileSystemResourceReference fileSystemResourceReference = new FileSystemResourceReference(
+			"test", path)
 		{
 			private static final long serialVersionUID = 1L;
 
-			@Override
+			protected FileSystemResource getFileSystemResource()
+			{
+				return fileSystemResource;
+
+			}
+		};
+		Assert.assertEquals("text/plain_provided_by_detector", fileSystemResource.getMimeType());
+
+		final FileSystemResource fileSystemResourceMime = new FileSystemResource(path)
+		{
+			private static final long serialVersionUID = 1L;
+
 			protected String getMimeType() throws IOException
 			{
 				return "text/plain";
 			}
 		};
-		Assert.assertEquals("text/plain", fileSystemResourceReferenceOverriddenMime.getMimeType());
+		FileSystemResourceReference fileSystemResourceReferenceOverriddenMime = new FileSystemResourceReference(
+			"test", path)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected FileSystemResource getFileSystemResource()
+			{
+				return fileSystemResourceMime;
+			}
+		};
+		Assert.assertEquals("text/plain", fileSystemResourceMime.getMimeType());
 	}
 }
