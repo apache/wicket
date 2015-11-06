@@ -6,6 +6,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
@@ -13,7 +14,7 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 
 /**
- * A PathResourceStream is an IResource implementation for paths.
+ * A PathResourceStream is an IResourceStream implementation for Java NIO paths.
  * 
  * @see org.apache.wicket.util.resource.IResourceStream
  * @see org.apache.wicket.util.watch.IModifiable
@@ -26,11 +27,11 @@ public class PathResourceStream extends AbstractResourceStream
 	private static final long serialVersionUID = 1L;
 
 	/** Any associated path */
-	private Path path;
+	private final Path path;
 
 	/** Resource stream */
 	private transient InputStream inputStream;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -42,7 +43,7 @@ public class PathResourceStream extends AbstractResourceStream
 		Args.notNull(path, "path");
 		this.path = path;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -54,7 +55,7 @@ public class PathResourceStream extends AbstractResourceStream
 		Args.notNull(file, "file");
 		this.path = file.toPath();
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -66,7 +67,7 @@ public class PathResourceStream extends AbstractResourceStream
 		Args.notNull(file, "file");
 		this.path = file.toPath();
 	}
-	
+
 	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
@@ -79,7 +80,7 @@ public class PathResourceStream extends AbstractResourceStream
 			catch (IOException e)
 			{
 				throw new ResourceStreamNotFoundException(
-					"Inputstream of path " + path + " could not be acquired", e);
+					"Input stream of path " + path + " could not be acquired", e);
 			}
 		}
 		return inputStream;
@@ -100,15 +101,17 @@ public class PathResourceStream extends AbstractResourceStream
 	{
 		try
 		{
-			String contentType = URLConnection.getFileNameMap().getContentTypeFor(path.getFileName().toString());
-			if(contentType == null){
+			String contentType = URLConnection.getFileNameMap()
+				.getContentTypeFor(path.getFileName().toString());
+			if (contentType == null)
+			{
 				contentType = Files.probeContentType(path);
 			}
 			return contentType;
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("content type of path " + path + " could not be acquired",
+			throw new RuntimeException("Content type of path " + path + " could not be acquired",
 				e);
 		}
 	}
@@ -116,7 +119,7 @@ public class PathResourceStream extends AbstractResourceStream
 	/**
 	 * @return The path this resource resides in, if any.
 	 */
-	public Path getPath()
+	public final Path getPath()
 	{
 		return path;
 	}
@@ -126,13 +129,15 @@ public class PathResourceStream extends AbstractResourceStream
 	{
 		try
 		{
-			return Time.millis(Files.readAttributes(path, BasicFileAttributes.class)
-				.lastModifiedTime()
-				.toMillis());
+			BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+			FileTime lastModifiedTime = attributes.lastModifiedTime();
+			long millis = lastModifiedTime.toMillis();
+			return Time.millis(millis);
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("length of path " + path + " could not be acquired", e);
+			throw new RuntimeException(
+				"Modification time of path " + path + " could not be acquired", e);
 		}
 	}
 
@@ -141,11 +146,13 @@ public class PathResourceStream extends AbstractResourceStream
 	{
 		try
 		{
-			return Bytes.bytes(Files.readAttributes(path, BasicFileAttributes.class).size());
+			BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+			long size = attributes.size();
+			return Bytes.bytes(size);
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("length of path " + path + " could not be acquired", e);
+			throw new RuntimeException("Length of path " + path + " could not be acquired", e);
 		}
 	}
 
@@ -158,6 +165,6 @@ public class PathResourceStream extends AbstractResourceStream
 	@Override
 	public String toString()
 	{
-		return path.toString();
+		return locationAsString();
 	}
 }
