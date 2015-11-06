@@ -329,7 +329,7 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-eclipse-settings</artifactId>
-				<version>2</version>
+				<version>3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
@@ -741,7 +741,7 @@
 				        <dependency>
 				            <groupId>org.apache.wicket</groupId>
 				            <artifactId>wicket-eclipse-settings</artifactId>
-				            <version>2</version>
+				            <version>3</version>
 				        </dependency>
 				    </dependencies>
 				</plugin>
