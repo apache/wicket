@@ -2,11 +2,10 @@ package org.apache.wicket.core.util.resource.locator.caching;
 
 import java.nio.file.Paths;
 
-import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.PathResourceStream;
 
 /**
- * A reference which can be used to recreate {@link FileResourceStream}
+ * A reference which can be used to recreate {@link PathResourceStream}
  * 
  * @author Tobias Soloschenko
  */
