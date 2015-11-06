@@ -14,13 +14,13 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
 
 /**
- * A PathResourceStream is an IResourceStream implementation for Java NIO paths.
+ * A FileSystemResourceStream is an IResourceStream implementation for Java NIO paths.
  * 
  * @see org.apache.wicket.util.resource.IResourceStream
  * @see org.apache.wicket.util.watch.IModifiable
  * @author Tobias Soloschenko
  */
-public class PathResourceStream extends AbstractResourceStream
+public class FileSystemResourceStream extends AbstractResourceStream
 	implements
 		IFixedLocationResourceStream
 {
@@ -38,7 +38,7 @@ public class PathResourceStream extends AbstractResourceStream
 	 * @param path
 	 *            {@link Path} containing resource
 	 */
-	public PathResourceStream(final Path path)
+	public FileSystemResourceStream(final Path path)
 	{
 		Args.notNull(path, "path");
 		this.path = path;
@@ -50,7 +50,7 @@ public class PathResourceStream extends AbstractResourceStream
 	 * @param file
 	 *            {@link java.io.File} containing resource
 	 */
-	public PathResourceStream(final java.io.File file)
+	public FileSystemResourceStream(final java.io.File file)
 	{
 		Args.notNull(file, "file");
 		this.path = file.toPath();
@@ -62,7 +62,7 @@ public class PathResourceStream extends AbstractResourceStream
 	 * @param file
 	 *            {@link File} containing resource
 	 */
-	public PathResourceStream(final File file)
+	public FileSystemResourceStream(final File file)
 	{
 		Args.notNull(file, "file");
 		this.path = file.toPath();

@@ -2,10 +2,10 @@ package org.apache.wicket.core.util.resource.locator.caching;
 
 import java.nio.file.Paths;
 
-import org.apache.wicket.util.resource.PathResourceStream;
+import org.apache.wicket.util.resource.FileSystemResourceStream;
 
 /**
- * A reference which can be used to recreate {@link PathResourceStream}
+ * A reference which can be used to recreate {@link FileSystemResourceStream}
  * 
  * @author Tobias Soloschenko
  */
@@ -13,17 +13,17 @@ public class FileSystemResourceStreamReference extends AbstractResourceStreamRef
 {
 	private final String absolutePath;
 
-	FileSystemResourceStreamReference(final PathResourceStream pathResourceStream)
+	FileSystemResourceStreamReference(final FileSystemResourceStream fileSystemResourceStream)
 	{
-		absolutePath = pathResourceStream.getPath().toAbsolutePath().toString();
-		saveResourceStream(pathResourceStream);
+		absolutePath = fileSystemResourceStream.getPath().toAbsolutePath().toString();
+		saveResourceStream(fileSystemResourceStream);
 	}
 
 	@Override
-	public PathResourceStream getReference()
+	public FileSystemResourceStream getReference()
 	{
-		PathResourceStream pathResourceStream = new PathResourceStream(Paths.get(absolutePath));
-		restoreResourceStream(pathResourceStream);
-		return pathResourceStream;
+		FileSystemResourceStream fileSystemResourceStream = new FileSystemResourceStream(Paths.get(absolutePath));
+		restoreResourceStream(fileSystemResourceStream);
+		return fileSystemResourceStream;
 	}
 }
