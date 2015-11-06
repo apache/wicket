@@ -79,8 +79,8 @@ public class PathResourceStream extends AbstractResourceStream
 			}
 			catch (IOException e)
 			{
-				throw new ResourceStreamNotFoundException(
-					"Input stream of path " + path + " could not be acquired", e);
+				throw new ResourceStreamNotFoundException("Input stream of path " + path +
+					" could not be acquired", e);
 			}
 		}
 		return inputStream;
@@ -101,18 +101,17 @@ public class PathResourceStream extends AbstractResourceStream
 	{
 		try
 		{
-			String contentType = URLConnection.getFileNameMap()
-				.getContentTypeFor(path.getFileName().toString());
+			String contentType = Files.probeContentType(path);
 			if (contentType == null)
 			{
-				contentType = Files.probeContentType(path);
+				contentType = URLConnection.getFileNameMap().getContentTypeFor(
+					path.getFileName().toString());
 			}
 			return contentType;
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("Content type of path " + path + " could not be acquired",
-				e);
+			throw new RuntimeException("Content type of path " + path + " could not be acquired", e);
 		}
 	}
 
@@ -136,8 +135,8 @@ public class PathResourceStream extends AbstractResourceStream
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException(
-				"Modification time of path " + path + " could not be acquired", e);
+			throw new RuntimeException("Modification time of path " + path +
+				" could not be acquired", e);
 		}
 	}
 
