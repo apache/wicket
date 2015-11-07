@@ -19,6 +19,7 @@ package org.apache.wicket.queueing;
 import static org.apache.wicket.queueing.WicketMatchers.hasPath;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 

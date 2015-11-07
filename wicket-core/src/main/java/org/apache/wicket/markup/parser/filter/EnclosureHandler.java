@@ -144,7 +144,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 		// Are we inside a wicket:enclosure tag?
 		else if (stack != null)
 		{
-			ComponentTag lastEnclosure = stack.getLast();
+			ComponentTag lastEnclosure = stack.getFirst();
 
 			// If the enclosure tag has NO child attribute, then ...
 			if (Strings.isEmpty(lastEnclosure.getAttribute(CHILD_ATTRIBUTE)))

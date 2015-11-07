@@ -432,4 +432,48 @@ public class EnclosureTest extends WicketTestCase
 
 		tester.assertContainsNot(ChildWithDeeperPathInTransparentContainerPage.LABEL_TEXT);
 	}
+	
+	@Test
+	public void nestedEnclousers()
+	{
+		TestPageMarkup p = new TestPageMarkup();
+		p.setPageMarkup("<wicket:enclosure child='labelOuter'>tOuter Enclosure <span wicket:id='labelOuter'/>"
+				+ "<wicket:enclosure>Inner Enclosure <span wicket:id='labelInner' /></wicket:enclosure>"
+				+ "</wicket:enclosure>");
+		
+		p.add(new Label("labelOuter"), new Label("labelInner"));
+		tester.startPage(p);
+	}
+	
+	private static class TestPageMarkup extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private String markup;
+
+		public TestPageMarkup()
+		{
+		}
+
+		public TestPageMarkup(String markup)
+		{
+			this.markup = markup;
+		}
+
+		protected String getPageMarkup()
+		{
+			return markup;
+		}
+
+		public void setPageMarkup(String markup)
+		{
+			this.markup = markup;
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(getPageMarkup());
+		}
+
+	}
 }
