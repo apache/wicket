@@ -17,14 +17,19 @@
 package org.apache.wicket.util.tester;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.After;
 import org.junit.Assert;
@@ -71,7 +76,12 @@ public abstract class WicketTestCase extends Assert
 	 */
 	protected WicketTester newWicketTester(final WebApplication app)
 	{
-		return new WicketTester(app);
+		return new WicketTester(app) {
+			@Override
+			protected Locale servletRequestLocale() {
+				return Locale.US;
+			}
+		};
 	}
 
 	/**

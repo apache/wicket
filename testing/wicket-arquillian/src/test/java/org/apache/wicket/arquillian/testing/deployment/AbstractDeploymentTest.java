@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
@@ -112,7 +113,12 @@ public abstract class AbstractDeploymentTest {
 	 */
 	public WicketTester getWicketTester() {
 		if(wicketTester == null) {
-			wicketTester = new WicketTester(useServletContextContainer(),false);
+			wicketTester = new WicketTester(useServletContextContainer(),false) {
+				@Override
+				protected Locale servletRequestLocale() {
+					return Locale.US;
+				}
+			};
 		}
 		return wicketTester;
 	}
