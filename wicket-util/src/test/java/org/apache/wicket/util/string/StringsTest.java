@@ -16,56 +16,21 @@
  */
 package org.apache.wicket.util.string;
 
+import static org.junit.Assert.*;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.util.lang.Args;
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Tests for {@link Strings}
- * 
- * @author Jonathan Locke
- * @author Martijn Dashorst
- */
-public class StringsTest extends Assert
+@SuppressWarnings("javadoc")
+public class StringsTest
 {
 	private static final Logger log = LoggerFactory.getLogger(StringsTest.class);
 
-	/**
-	 * 
-	 */
-	@Test
-	public void logger()
-	{
-		log.debug("Test: '{}'", 1);
-
-		try
-		{
-			throw new IllegalArgumentException("meine Exception");
-		}
-		catch (Exception ex)
-		{
-			log.debug("Test: '{}'", 1, ex);
-		}
-
-		try
-		{
-			Args.isTrue(false, "args error: %s", 123);
-		}
-		catch (Exception ex)
-		{
-			log.debug("Test: '{}'", 321, ex);
-		}
-	}
-
-	/**
-	 * 
-	 */
 	@Test
 	public void stripJSessionId()
 	{
@@ -86,34 +51,28 @@ public class StringsTest extends Assert
 			Strings.stripJSessionId(url + ";a=b;c=d;jsessionid=12345?param=a;b"));
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void test()
 	{
-		Assert.assertEquals("foo", Strings.lastPathComponent("bar:garply:foo", ':'));
-		Assert.assertEquals("foo", Strings.lastPathComponent("foo", ':'));
-		Assert.assertEquals("bar", Strings.firstPathComponent("bar:garply:foo", ':'));
-		Assert.assertEquals("foo", Strings.lastPathComponent("foo", ':'));
-		Assert.assertEquals("garply:foo", Strings.afterFirstPathComponent("bar:garply:foo", ':'));
-		Assert.assertEquals("", Strings.afterFirstPathComponent("foo", ':'));
-		Assert.assertEquals("bar:baz", Strings.beforeLast("bar:baz:foo", ':'));
-		Assert.assertEquals("", Strings.beforeLast("bar", ':'));
-		Assert.assertEquals("bar", Strings.beforeFirst("bar:baz:foo", ':'));
-		Assert.assertEquals("", Strings.beforeFirst("bar", ':'));
-		Assert.assertEquals("baz:foo", Strings.afterFirst("bar:baz:foo", ':'));
-		Assert.assertEquals("", Strings.afterFirst("bar", ':'));
-		Assert.assertEquals("foo", Strings.afterLast("bar:baz:foo", ':'));
-		Assert.assertEquals("", Strings.afterLast("bar", ':'));
-		Assert.assertEquals("foo", Strings.replaceAll("afaooaaa", "a", "").toString());
-		Assert.assertEquals("fuzzyffuzzyoofuzzyfuzzyfuzzy",
+		assertEquals("foo", Strings.lastPathComponent("bar:garply:foo", ':'));
+		assertEquals("foo", Strings.lastPathComponent("foo", ':'));
+		assertEquals("bar", Strings.firstPathComponent("bar:garply:foo", ':'));
+		assertEquals("foo", Strings.lastPathComponent("foo", ':'));
+		assertEquals("garply:foo", Strings.afterFirstPathComponent("bar:garply:foo", ':'));
+		assertEquals("", Strings.afterFirstPathComponent("foo", ':'));
+		assertEquals("bar:baz", Strings.beforeLast("bar:baz:foo", ':'));
+		assertEquals("", Strings.beforeLast("bar", ':'));
+		assertEquals("bar", Strings.beforeFirst("bar:baz:foo", ':'));
+		assertEquals("", Strings.beforeFirst("bar", ':'));
+		assertEquals("baz:foo", Strings.afterFirst("bar:baz:foo", ':'));
+		assertEquals("", Strings.afterFirst("bar", ':'));
+		assertEquals("foo", Strings.afterLast("bar:baz:foo", ':'));
+		assertEquals("", Strings.afterLast("bar", ':'));
+		assertEquals("foo", Strings.replaceAll("afaooaaa", "a", "").toString());
+		assertEquals("fuzzyffuzzyoofuzzyfuzzyfuzzy",
 			Strings.replaceAll("afaooaaa", "a", "fuzzy").toString());
 	}
 
-	/**
-	 * Tests the <code>beforeFirst</code> method.
-	 */
 	@Test
 	public void beforeFirst()
 	{
@@ -127,9 +86,6 @@ public class StringsTest extends Assert
 		assertEquals("com foo", Strings.beforeFirst("com foo.bar", '.'));
 	}
 
-	/**
-	 * Tests the <code>afterFirst</code> method.
-	 */
 	@Test
 	public void afterFirst()
 	{
@@ -143,9 +99,6 @@ public class StringsTest extends Assert
 		assertEquals("bar", Strings.afterFirst("com.foo bar", ' '));
 	}
 
-	/**
-	 * Tests the <code>afterLast</code> method.
-	 */
 	@Test
 	public void afterLast()
 	{
@@ -159,9 +112,6 @@ public class StringsTest extends Assert
 		assertEquals("bar", Strings.afterLast("com foo.bar", '.'));
 	}
 
-	/**
-	 * Tests the beforeLastPathComponent method
-	 */
 	@Test
 	public void beforeLastPathComponent()
 	{
@@ -176,22 +126,18 @@ public class StringsTest extends Assert
 		assertEquals("com.foo", Strings.beforeLastPathComponent("com.foo.bar", '.'));
 	}
 
-	/**
-	 * Tests the capitalize method.
-	 */
 	@Test
 	public void capitalize()
 	{
-		assertEquals("Lorem ipsum dolor sit amet", Strings.capitalize("lorem ipsum dolor sit amet"));
-		assertEquals("Lorem ipsum dolor sit amet", Strings.capitalize("Lorem ipsum dolor sit amet"));
+		assertEquals("Lorem ipsum dolor sit amet",
+			Strings.capitalize("lorem ipsum dolor sit amet"));
+		assertEquals("Lorem ipsum dolor sit amet",
+			Strings.capitalize("Lorem ipsum dolor sit amet"));
 		assertEquals(" abcdefghijklm", Strings.capitalize(" abcdefghijklm"));
 		assertEquals("", Strings.capitalize(""));
 		assertNull(Strings.capitalize(null));
 	}
 
-	/**
-	 * Tests the escapeMarkup method.
-	 */
 	@Test
 	public void escapeMarkup()
 	{
@@ -224,9 +170,6 @@ public class StringsTest extends Assert
 			Strings.escapeMarkup(controlCharacters.toString()).toString());
 	}
 
-	/**
-	 * Tests the escapeMarkup method with whitespace.
-	 */
 	@Test
 	public void escapeMarkupWhiteSpace()
 	{
@@ -234,46 +177,35 @@ public class StringsTest extends Assert
 		assertEquals("", Strings.escapeMarkup("", true).toString());
 
 		assertEquals("\n \t", Strings.escapeMarkup("\n \t", false).toString());
-		assertEquals("\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Strings.escapeMarkup("\n \t", true)
-			.toString());
+		assertEquals("\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+			Strings.escapeMarkup("\n \t", true).toString());
 		assertEquals("  ", Strings.escapeMarkup("  ", false).toString());
 		assertEquals("&nbsp;&nbsp;", Strings.escapeMarkup("  ", true).toString());
 	}
 
-	/**
-	 * Tests the escapeMarkup method with unicode escapes.
-	 * 
-	 * @throws UnsupportedEncodingException
-	 */
 	@Test
-	public void escapeMarkupUnicode() throws UnsupportedEncodingException
+	public void escapeMarkupUnicode()
 	{
 		assertNull(Strings.escapeMarkup(null, true, true));
 		assertEquals("", Strings.escapeMarkup("", true, true).toString());
 
 		// The escaped unicode is ����������"
-		assertEquals(
-			"&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;",
+		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;",
 			Strings.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
 				false, true).toString());
 
 	}
 
-	/**
-	 * Tests the <code>replaceHtmlEscapeNumber</code> method.
-	 * 
-	 * @throws UnsupportedEncodingException
-	 */
 	@Test
-	public void replaceHtmlEscapeNumber() throws UnsupportedEncodingException
+	public void replaceHtmlEscapeNumber()
 	{
 		assertNull(Strings.replaceHtmlEscapeNumber(null));
 		assertEquals("", Strings.replaceHtmlEscapeNumber(""));
 		assertEquals("abcdefghijklm�", Strings.replaceHtmlEscapeNumber("abcdefghijklm�"));
 		assertEquals("a &#", Strings.replaceHtmlEscapeNumber("a &#"));
-		assertEquals(
-			"\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
-			Strings.replaceHtmlEscapeNumber("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
+		assertEquals("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
+			Strings.replaceHtmlEscapeNumber(
+				"&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
 	}
 
 	private String convertNonASCIIString(final String str) throws UnsupportedEncodingException
@@ -281,9 +213,6 @@ public class StringsTest extends Assert
 		return new String(str.getBytes(), "iso-8859-1");
 	}
 
-	/**
-	 * Tests the <code>firstPathComponent</code> method.
-	 */
 	@Test
 	public void firstPathComponent()
 	{
@@ -294,9 +223,6 @@ public class StringsTest extends Assert
 		assertEquals("foo bar", Strings.firstPathComponent("foo bar", '.'));
 	}
 
-	/**
-	 * Tests the <code>isEmpty</code> method.
-	 */
 	@Test
 	public void isEmpty()
 	{
@@ -309,11 +235,6 @@ public class StringsTest extends Assert
 		assertFalse(Strings.isEmpty(" a"));
 	}
 
-	/**
-	 * Tests the <code>isTrue</code> method.
-	 * 
-	 * @throws StringValueConversionException
-	 */
 	@Test
 	public void isTrue() throws StringValueConversionException
 	{
@@ -337,21 +258,14 @@ public class StringsTest extends Assert
 		assertTrue(Strings.isTrue("Y"));
 		assertTrue(Strings.isTrue("tRuE"));
 		assertTrue(Strings.isTrue("1"));
-
-		try
-		{
-			Strings.isTrue("foo");
-			fail("Exception expected");
-		}
-		catch (StringValueConversionException e)
-		{
-			assertTrue(true);
-		}
 	}
 
-	/**
-	 * Tests the <code>replaceAll</code> method.
-	 */
+	@Test(expected = StringValueConversionException.class)
+	public void invalidIsTrue()
+	{
+		Strings.isTrue("foo");
+	}
+
 	@Test
 	public void replaceAll()
 	{
@@ -386,25 +300,19 @@ public class StringsTest extends Assert
 		assertEquals("aaaa", Strings.replaceAll(asb, "a", "aa").toString());
 	}
 
-	/**
-	 * Tests the <code>split</code> method.
-	 */
 	@Test
 	public void split()
 	{
-		assertEquals(new String[0], Strings.split(null, '.'));
-		assertEquals(new String[0], Strings.split("", '.'));
-		assertEquals(new String[] { "", "" }, Strings.split(".", '.'));
-		assertEquals(new String[] { "a", "" }, Strings.split("a.", '.'));
-		assertEquals(new String[] { "a", "b" }, Strings.split("a.b", '.'));
-		assertEquals(new String[] { "a", "b", "c" }, Strings.split("a.b.c", '.'));
-		assertEquals(new String[] { "a", "b", "c" }, Strings.split("a b c", ' '));
-		assertEquals(new String[] { "abc" }, Strings.split("abc", ' '));
+		assertArrayEquals(new String[0], Strings.split(null, '.'));
+		assertArrayEquals(new String[0], Strings.split("", '.'));
+		assertArrayEquals(new String[] { "", "" }, Strings.split(".", '.'));
+		assertArrayEquals(new String[] { "a", "" }, Strings.split("a.", '.'));
+		assertArrayEquals(new String[] { "a", "b" }, Strings.split("a.b", '.'));
+		assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a.b.c", '.'));
+		assertArrayEquals(new String[] { "a", "b", "c" }, Strings.split("a b c", ' '));
+		assertArrayEquals(new String[] { "abc" }, Strings.split("abc", ' '));
 	}
 
-	/**
-	 * Tests the <code>stripEnding</code> method.
-	 */
 	@Test
 	public void stripEnding()
 	{
@@ -417,11 +325,6 @@ public class StringsTest extends Assert
 		assertEquals("abc", Strings.stripEnding("abc", "ab"));
 	}
 
-	/**
-	 * Tests the <code>toBoolean</code> method.
-	 * 
-	 * @throws StringValueConversionException
-	 */
 	@Test
 	public void toBoolean() throws StringValueConversionException
 	{
@@ -437,58 +340,39 @@ public class StringsTest extends Assert
 		assertEquals(Boolean.TRUE, Strings.toBoolean("y"));
 		assertEquals(Boolean.TRUE, Strings.toBoolean("true"));
 		assertEquals(Boolean.TRUE, Strings.toBoolean("1"));
-
-		try
-		{
-			Strings.toBoolean("waar");
-			fail("Exception expected");
-		}
-		catch (StringValueConversionException e)
-		{
-			assertTrue(true);
-		}
 	}
 
-	/**
-	 * Tests the <code>toChar</code> method.
-	 * 
-	 * @throws StringValueConversionException
-	 */
+	@Test(expected = StringValueConversionException.class)
+	public void invalidToBoolean()
+	{
+		Strings.toBoolean("waar");
+	}
+
 	@Test
-	public void toChar() throws StringValueConversionException
+	public void toChar()
 	{
 		assertEquals(' ', Strings.toChar(" "));
 		assertEquals('a', Strings.toChar("a"));
-
-		try
-		{
-			Strings.toChar("");
-			fail("Exception expected");
-		}
-		catch (StringValueConversionException e)
-		{
-		}
-		try
-		{
-			Strings.toChar(null);
-			fail("Exception expected");
-		}
-		catch (StringValueConversionException e)
-		{
-		}
-		try
-		{
-			Strings.toChar("aa");
-			fail("Exception expected");
-		}
-		catch (StringValueConversionException e)
-		{
-		}
 	}
 
-	/**
-	 * Tests the <code>toMultilineMarkup</code> method.
-	 */
+	@Test(expected = StringValueConversionException.class)
+	public void invalidToChar1()
+	{
+		Strings.toChar("");
+	}
+
+	@Test(expected = StringValueConversionException.class)
+	public void invalidToChar2()
+	{
+		Strings.toChar(null);
+	}
+
+	@Test(expected = StringValueConversionException.class)
+	public void invalidToChar3()
+	{
+		Strings.toChar("aa");
+	}
+
 	@Test
 	public void toMultilineMarkup()
 	{
@@ -500,14 +384,15 @@ public class StringsTest extends Assert
 		assertEquals("<p>abc<br/></p>", Strings.toMultilineMarkup("abc\n").toString());
 		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\ndef").toString());
 		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\r\ndef").toString());
-		assertEquals("<p>abc<br/>def<br/>ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi")
-			.toString());
+		assertEquals("<p>abc<br/>def<br/>ghi</p>",
+			Strings.toMultilineMarkup("abc\ndef\nghi").toString());
 
 		// WICKET-4837
 		assertEquals(
 			"<p><a href=\"mailto:john@doe.com\">john@doe.com</a><br/><a href=\"http://apache.wicket.org\">http://apache.wicket.org</a></p>",
-			Strings.toMultilineMarkup(
-				"<a href=\"mailto:john@doe.com\">john@doe.com</a>\n<a href=\"http://apache.wicket.org\">http://apache.wicket.org</a>")
+			Strings
+				.toMultilineMarkup(
+					"<a href=\"mailto:john@doe.com\">john@doe.com</a>\n<a href=\"http://apache.wicket.org\">http://apache.wicket.org</a>")
 				.toString());
 
 		assertEquals("<p>abc</p><p>def</p><p>ghi</p>",
@@ -521,9 +406,6 @@ public class StringsTest extends Assert
 		assertEquals("<p>a\\nbc</p>", Strings.toMultilineMarkup("a\\nbc").toString());
 	}
 
-	/**
-	 * Tests the <code>toString</code> method.
-	 */
 	@Test
 	public void testToString()
 	{
@@ -543,9 +425,6 @@ public class StringsTest extends Assert
 		}
 	}
 
-	/**
-	 * Test the toString(throwable)
-	 */
 	@Test
 	public void toStringThrowable()
 	{
@@ -555,35 +434,16 @@ public class StringsTest extends Assert
 		assertTrue(exceptionString.length() > 1);
 		assertTrue(exceptionString.contains("RuntimeException"));
 	}
-	
-	/**
-	 * Tests the <code>join</code> method.
-	 */
+
 	@Test
 	public void testJoin() throws Exception
 	{
 		List<String> fragments = Arrays.asList("foo", "bar", "baz");
-		
+
 		assertEquals("foo-bar-baz", Strings.join("-", fragments));
-		
-		//empty separator
-		assertEquals("foobarbaz", Strings.join("", fragments));		
-	}
-	/**
-	 * Asserts that both string arrays are equal.
-	 * 
-	 * @param expected
-	 *            the expected value
-	 * @param actual
-	 *            the actual value
-	 */
-	private void assertEquals(final String[] expected, final String[] actual)
-	{
-		if (expected == null)
-		{
-			assertNull(actual);
-		}
-		assertEquals(stringValue(expected), stringValue(actual));
+
+		// empty separator
+		assertEquals("foobarbaz", Strings.join("", fragments));
 	}
 
 	/**

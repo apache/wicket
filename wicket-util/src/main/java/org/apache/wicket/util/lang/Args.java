@@ -21,7 +21,7 @@ import java.util.Collection;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * 
+ * Class with methods for asserting conditions on arguments. 
  */
 public class Args
 {
@@ -74,6 +74,7 @@ public class Args
 	 * @param collection
 	 * @param message
 	 * @param params
+	 * @return the {code collection}
 	 * @throws IllegalArgumentException
 	 *             if the passed collection is either null or empty
 	 */
@@ -92,6 +93,7 @@ public class Args
 	 * 
 	 * @param collection
 	 * @param name
+	 * @return the {code collection}
 	 * @throws IllegalArgumentException
 	 *             if the passed collection is either null or empty
 	 */
@@ -108,6 +110,7 @@ public class Args
 	 * @param max
 	 * @param value
 	 * @param name
+	 * @return the {code value}
 	 * @throws IllegalArgumentException
 	 */
 	public static <T extends Comparable<? super T>> T withinRange(final T min, final T max,

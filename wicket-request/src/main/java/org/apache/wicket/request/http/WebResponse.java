@@ -175,7 +175,7 @@ public abstract class WebResponse extends Response
 	{
 		return (Strings.isEmpty(filename) ? "" : String.format(
 			"; filename=\"%1$s\"; filename*=UTF-8''%1$s",
-			UrlEncoder.PATH_INSTANCE.encode(filename, "UTF-8")));
+			UrlEncoder.HEADER_INSTANCE.encode(filename, "UTF-8")));
 	}
 
 	/**

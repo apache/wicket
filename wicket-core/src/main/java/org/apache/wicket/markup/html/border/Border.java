@@ -166,9 +166,8 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		super(id, model);
 
 		body = new BorderBodyContainer(id + "_" + BODY);
-		addToBorder(body);
 	}
-
+	
 	/**
 	 * @return The border body container
 	 */
@@ -205,7 +204,17 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	@Override
 	public Border add(final Component... children)
 	{
-		getBodyContainer().add(children);
+		for (Component component : children)
+		{
+			if (component == body)
+			{
+				addToBorder(component);
+			}
+			else 
+			{
+				getBodyContainer().add(component);				
+			}
+		}
 		return this;
 	}
 
@@ -631,17 +640,4 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		return borderMarkup != null ? borderMarkup : markup;
 	}
 	
-	@Override
-	protected void onBeforeRender()
-	{
-		super.onBeforeRender();
-		/**
-		 * https://issues.apache.org/jira/browse/WICKET-5981
-		 * dequeue border to adjust children hierarchy.
-		 */
-		if (!hasBeenRendered())
-		{
-			dequeue();
-		}
-	}
 }

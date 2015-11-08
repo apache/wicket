@@ -552,11 +552,11 @@ public final class Time extends AbstractTime
 	}
 
 	/**
-	 * return timestamp string in RFC1123 format
-	 * <p/>
-	 * Contrary to {@link java.text.SimpleDateFormat} this is thread-safe.
-	 * <p/> 
-	 * taken from the source code of jetty 7.3.0, credits + thanks to Greg Wilkins!
+	 * Returns this time stamp in RFC1123 string format. Contrary to
+	 * {@link java.text.SimpleDateFormat} this is thread-safe. Taken from the source code of jetty
+	 * 7.3.0, credits + thanks to Greg Wilkins!
+	 * 
+	 * @return timestamp string in RFC1123 format
 	 */
 	public String toRfc1123TimestampString()
 	{

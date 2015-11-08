@@ -42,21 +42,15 @@ public class UrlEncoder
 	 * encoder types
 	 */
 	public enum Type {
-		/**
-		 * query type
-		 */
 		QUERY,
-		/**
-		 * path type
-		 */
 		PATH,
-		/**
-		 * full path type
-		 */
-		FULL_PATH
+		HEADER
 	}
 
-	// list of what not to decode
+	/**
+	 * List of what not to encode, i.e. characters (e.g. A-Z) and other allowed signs (e.g. !)
+	 * that are allowed but don't have a special meaning.
+	 */
 	protected BitSet dontNeedEncoding;
 
 	// used in decoding
@@ -71,7 +65,7 @@ public class UrlEncoder
 	public static final UrlEncoder QUERY_INSTANCE = new UrlEncoder(Type.QUERY);
 
 	/**
-	 * Encoder used to encode components of a path.<br/>
+	 * Encoder used to encode segments of a path.<br/>
 	 * <br/>
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
@@ -79,14 +73,9 @@ public class UrlEncoder
 	public static final UrlEncoder PATH_INSTANCE = new UrlEncoder(Type.PATH);
 
 	/**
-	 * Encoder used to encode all path segments. Querystring will be excluded.<br/>
-	 * <br/>
-	 * 
-	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
+	 * Encoder used to encode a header.
 	 */
-	public static final UrlEncoder FULL_PATH_INSTANCE = new UrlEncoder(Type.FULL_PATH);
-
-	private final Type type;
+	public static final UrlEncoder HEADER_INSTANCE = new UrlEncoder(Type.HEADER);
 
 	/**
 	 * Allow subclass to call constructor.
@@ -144,7 +133,6 @@ public class UrlEncoder
 		 * query =( pchar / "/" / "?" )
 		 */
 
-		this.type = type;
 		// unreserved
 		dontNeedEncoding = new BitSet(256);
 		int i;
@@ -169,29 +157,25 @@ public class UrlEncoder
 		// sub-delims
 		dontNeedEncoding.set('!');
 		dontNeedEncoding.set('$');
-		// "&" needs to be encoded for query stings
-		// "(" and ")" probably don't need encoding, but we'll be conservative
-		dontNeedEncoding.set('*');
-		// "+" needs to be encoded for query strings (since it means =
-		dontNeedEncoding.set(',');
-		// ";" encoded due to use in path and/or query as delim in some
-		// instances (e.g., jsessionid)
-		// "=" needs to be encoded for query strings
-
-		// pchar
-		dontNeedEncoding.set(':'); // allowed and used in wicket interface
-		// params
-		dontNeedEncoding.set('@');
 
 		// encoding type-specific
 		switch (type)
 		{
-		// this code consistent with java.net.URLEncoder version
 			case QUERY :
+				// this code consistent with java.net.URLEncoder version#
+				
 				// encoding a space to a + is done in the encode() method
 				dontNeedEncoding.set(' ');
-				// to allow direct passing of URL in query
-				dontNeedEncoding.set('/');
+				
+				// sub-delims continued
+				dontNeedEncoding.set('*');
+				dontNeedEncoding.set('/'); // to allow direct passing of URL in query
+				dontNeedEncoding.set(',');
+				// "'" doesn't need encoding, but it will make it easier to use in in JavaScript  
+				// "(" and ")" don't need encoding, but we'll be conservative
+
+				dontNeedEncoding.set(':'); // allowed and used in wicket interface
+				dontNeedEncoding.set('@');
 
 				/*
 				 * the below encoding of a ? is disabled because it interferes in portlet
@@ -200,33 +184,41 @@ public class UrlEncoder
 				 * re-enable it as portlet environments are not high priority. we can also add a
 				 * switch somewhere to enable/disable this on applicaiton level. (WICKET-4019)
 				 */
-
-				// to allow direct passing of URL in query
-				// dontNeedEncoding.set('?');
+				// dontNeedEncoding.set('?'); // to allow direct passing of URL in query
 				break;
 
-			// this added to deal with encoding a PATH component
 			case PATH :
-				// encode ' ' with a % instead of + in path portion
-
-				// path component sub-delim values we do not need to escape
+				// this added to deal with encoding a PATH segment
+				
+				// sub-delims continued
+				dontNeedEncoding.set('*');
 				dontNeedEncoding.set('&');
-				dontNeedEncoding.set('=');
 				dontNeedEncoding.set('+');
-				// don't encode semicolon because it is used in ;jsessionid=
-				dontNeedEncoding.set(';');
+				// "'" doesn't need encoding, but it will make it easier to use in in JavaScript  
+				// "(" and ")" don't need encoding, but we'll be conservative
+				dontNeedEncoding.set(',');
+				dontNeedEncoding.set(';'); // semicolon is used in ;jsessionid=
+				dontNeedEncoding.set('=');
+				
+				dontNeedEncoding.set(':'); // allowed and used in wicket interface
+				dontNeedEncoding.set('@');
+
 				break;
+				
+			// this added to deal with encoding a PATH component
+			case HEADER :
+				// this added to deal with encoding of header
+				
+				// ' ' is encoded
 
-			// same as path, but '/' will not be encoded
-			case FULL_PATH :
-				// encode ' ' with a % instead of + in path portion
-
-				// path component sub-delim values we do not need to escape
+				// sub-delims continued
+				dontNeedEncoding.set('#');
 				dontNeedEncoding.set('&');
-				dontNeedEncoding.set('=');
 				dontNeedEncoding.set('+');
-
-				dontNeedEncoding.set('/');
+				
+				dontNeedEncoding.set('^');
+				dontNeedEncoding.set('`');
+				dontNeedEncoding.set('|');
 				break;
 		}
 	}
@@ -270,18 +262,12 @@ public class UrlEncoder
 			throw new RuntimeException(new UnsupportedEncodingException(charsetName));
 		}
 
-		boolean stopEncoding = false;
 		for (int i = 0; i < s.length();)
 		{
 			int c = s.charAt(i);
 
-			if ((stopEncoding == false) && (c == '?' && type == Type.FULL_PATH))
-			{
-				stopEncoding = true;
-			}
-
 			// System.out.println("Examining character: " + c);
-			if (stopEncoding || dontNeedEncoding.get(c))
+			if (dontNeedEncoding.get(c))
 			{
 				if (c == ' ')
 				{

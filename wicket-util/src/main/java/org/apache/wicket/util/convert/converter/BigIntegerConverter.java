@@ -20,12 +20,12 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Locale;
 
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.convert.IConverter;
 
 /**
  * BigInteger converter
  * 
- * see IConverter
+ * see {@link IConverter}
  */
 public class BigIntegerConverter extends AbstractIntegerConverter<BigInteger>
 {

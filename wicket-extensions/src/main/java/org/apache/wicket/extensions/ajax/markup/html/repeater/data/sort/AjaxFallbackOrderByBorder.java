@@ -17,10 +17,10 @@
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 
 
 /**
@@ -35,7 +35,7 @@ import org.apache.wicket.markup.html.border.Border;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AjaxFallbackOrderByBorder<S> extends Border
+public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,26 +49,21 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, sortProperty, stateLocator, null);
+		super(id, sortProperty, stateLocator);
 	}
 
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param sortProperty
-	 * @param stateLocator
-	 * @param ajaxCallListener
-	 */
-	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
+	@Override
+	protected OrderByLink<S> newOrderByLink(String id, S property, ISortStateLocator<S> stateLocator)
 	{
-		super(id);
-		AjaxFallbackOrderByLink<S> link = new AjaxFallbackOrderByLink<S>("orderByLink", sortProperty,
-			stateLocator, ajaxCallListener)
+		return new AjaxFallbackOrderByLink<S>("orderByLink", property, stateLocator)
 		{
-
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				AjaxFallbackOrderByBorder.this.updateAjaxAttributes(attributes);
+			}
 
 			@Override
 			protected void onSortChanged()
@@ -83,8 +78,10 @@ public abstract class AjaxFallbackOrderByBorder<S> extends Border
 
 			}
 		};
-		addToBorder(link);
-		link.add(getBodyContainer());
+	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**

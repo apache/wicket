@@ -156,4 +156,19 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 			}
 		}
 	}
+	
+	@Override
+	protected void addDequeuedComponent(Component component, ComponentTag tag)
+	{	
+		//Transparent containers should be 'transparent' to component queuing, 
+		//hence we should add queued components to parent.
+		MarkupContainer parent = getParent();
+		
+		while (parent instanceof TransparentWebMarkupContainer)
+		{
+			parent = parent.getParent();
+		}
+		
+		parent.add(component);		
+	}
 }

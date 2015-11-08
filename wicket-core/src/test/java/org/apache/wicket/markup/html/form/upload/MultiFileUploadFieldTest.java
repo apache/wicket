@@ -62,7 +62,7 @@ public class MultiFileUploadFieldTest extends WicketTestCase
 				List<FileUpload> uploads = filesModel.getObject();
 				assertEquals(2, uploads.size());
 
-				for (int i = 1; i < 2; i++)
+				for (int i = 0; i < 2; i++)
 				{
 					FileUpload fileUpload = uploads.get(i);
 					String clientFileName = fileUpload.getClientFileName();

@@ -22,6 +22,7 @@ import org.junit.Test;
 /**
  * @since 1.5.5
  */
+@SuppressWarnings("javadoc")
 public class PackagesTest extends Assert
 {
 	@Test

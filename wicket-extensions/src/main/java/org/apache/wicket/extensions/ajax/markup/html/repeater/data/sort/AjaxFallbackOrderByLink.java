@@ -19,7 +19,6 @@ package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
@@ -44,8 +43,6 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final IAjaxCallListener ajaxCallListener;
-
 	/**
 	 * Constructor
 	 * 
@@ -56,23 +53,7 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		this(id, sortProperty, stateLocator, null);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param sortProperty
-	 * @param stateLocator
-	 * @param ajaxCallListener
-	 */
-	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
-	{
 		super(id, sortProperty, stateLocator);
-
-		this.ajaxCallListener = ajaxCallListener;
 	}
 
 	@Override
@@ -106,13 +87,14 @@ public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implemen
 			{
 				super.updateAjaxAttributes(attributes);
 				attributes.setPreventDefault(true);
-				if (ajaxCallListener != null) {
-					attributes.getAjaxCallListeners().add(ajaxCallListener);
-				}
+
+				AjaxFallbackOrderByLink.this.updateAjaxAttributes(attributes);
 			}
-
 		};
+	}
 
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
 	}
 
 	/**

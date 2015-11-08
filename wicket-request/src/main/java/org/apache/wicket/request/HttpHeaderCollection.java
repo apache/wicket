@@ -30,7 +30,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
 
 /**
- * a multivalue map of headers names and header values suitable for processing http request and
+ * A multivalue map of headers names and header values suitable for processing http request and
  * response headers.
  * 
  * @author Peter Ertl
@@ -44,6 +44,9 @@ public class HttpHeaderCollection
 	/** returned in case no header values were found */
 	private static final String[] NO_VALUES = new String[0];
 
+	/**
+	 * Constructor.
+	 */
 	public HttpHeaderCollection()
 	{
 		headers = new HashMap<>();
@@ -237,6 +240,11 @@ public class HttpHeaderCollection
 		return values;
 	}
 
+	/**
+	 * Gets the header identified with the name as a String.
+	 * @param name
+	 * @return {@code null} when the header was not found
+	 */
 	public String getHeader(String name)
 	{
 		final List<Object> objects = headers.get(new HeaderKey(name));
@@ -248,6 +256,11 @@ public class HttpHeaderCollection
 		return valueToString(objects.get(0));
 	}
 
+	/**
+	 * Gets the header identified with the name as a Time
+	 * @param name
+	 * @return {@code null} when the header was not found
+	 */
 	public Time getDateHeader(String name)
 	{
 		final List<Object> objects = headers.get(new HeaderKey(name));
@@ -266,7 +279,7 @@ public class HttpHeaderCollection
 	}
 
 	/**
-	 * check if collection is empty
+	 * Check if collection is empty
 	 * 
 	 * @return <code>true</code> if collection is empty, <code>false</code> otherwise
 	 */

@@ -20,6 +20,7 @@ package org.apache.wicket.util.listener;
  * Generic "something changed" listener interface.
  * 
  * @author Jonathan Locke
+ * @param <T> 
  */
 public interface IChangeListener<T>
 {

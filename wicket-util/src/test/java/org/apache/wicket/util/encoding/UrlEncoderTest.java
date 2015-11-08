@@ -21,11 +21,51 @@ import org.apache.wicket.util.encoding.UrlEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * Tests for {@link org.apache.wicket.util.encoding.UrlDecoder}
- */
+@SuppressWarnings("javadoc")
 public class UrlEncoderTest extends Assert
 {
+
+	// starts with &auml;
+	private static final char[] encodingCandidates = "\u00c4!\"§$%&/()=?`*'_:;><,.-#+´\\}][{|".toCharArray();
+	
+	@Test
+	public void pathUnencoded()  {
+		String unencoded = "azAZ09.-_~!$&*+,;=:@";
+		
+		assertEquals(unencoded,  UrlEncoder.PATH_INSTANCE.encode(unencoded, CharEncoding.UTF_8));
+		
+		for (char candidate : encodingCandidates) {
+			if (unencoded.indexOf(candidate) == -1) {
+				assertNotEquals("" + candidate, UrlEncoder.PATH_INSTANCE.encode("" + candidate, CharEncoding.UTF_8));
+			}
+		}
+	}
+	
+	@Test
+	public void queryStringUnencoded()  {
+		String unencoded = "azAZ09.-_~!$*,:@/";
+		
+		assertEquals(unencoded, UrlEncoder.QUERY_INSTANCE.encode(unencoded, CharEncoding.UTF_8));
+
+		for (char candidate : encodingCandidates) {
+			if (unencoded.indexOf(candidate) == -1) {
+				assertNotEquals("" + candidate, UrlEncoder.QUERY_INSTANCE.encode("" + candidate, CharEncoding.UTF_8));
+			}
+		}
+	}
+	
+	@Test
+	public void headerUnencoded()  {
+		String unencoded = "azAZ09.-_~!$&+#^`|";
+		
+		assertEquals(unencoded, UrlEncoder.HEADER_INSTANCE.encode(unencoded, CharEncoding.UTF_8));
+		
+		for (char candidate : encodingCandidates) {
+			if (unencoded.indexOf(candidate) == -1) {
+				assertNotEquals("" + candidate, UrlEncoder.HEADER_INSTANCE.encode("" + candidate, CharEncoding.UTF_8));
+			}
+		}
+	}
 
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3721">WICKET-3721</a> Encode
@@ -36,7 +76,7 @@ public class UrlEncoderTest extends Assert
 	public void encodeApostrophe()
 	{
 		assertEquals("someone%27s%20bad%20url",
-			UrlEncoder.FULL_PATH_INSTANCE.encode("someone's bad url", CharEncoding.UTF_8));
+			UrlEncoder.PATH_INSTANCE.encode("someone's bad url", CharEncoding.UTF_8));
 	}
 
 	/**
@@ -56,6 +96,6 @@ public class UrlEncoderTest extends Assert
 	public void dontStopOnNullByte() throws Exception
 	{
 		assertEquals("someone%27s%20badNULL%20url",
-			UrlEncoder.FULL_PATH_INSTANCE.encode("someone's bad\0 url", CharEncoding.UTF_8));
+			UrlEncoder.PATH_INSTANCE.encode("someone's bad\0 url", CharEncoding.UTF_8));
 	}
 }

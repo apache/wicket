@@ -58,6 +58,7 @@ public interface INamedParameters
 	 * 
 	 * @author Matej Knopp
 	 */
+	@SuppressWarnings("serial")
 	public static class NamedPair implements IClusterable
 	{
 		private final String key;
@@ -65,7 +66,7 @@ public interface INamedParameters
 		private final Type type;
 
 		/**
-		 * Constructor
+		 * Creates a named parameter entry that is set manually in the application code.
 		 * 
 		 * @param key
 		 * @param value
@@ -75,6 +76,13 @@ public interface INamedParameters
 			this(key, value, Type.MANUAL);
 		}
 
+		/**
+		 * Creates a named parameter entry
+		 * 
+		 * @param key
+		 * @param value
+		 * @param type
+		 */
 		public NamedPair(final String key, final String value, Type type)
 		{
 			this.key = Args.notEmpty(key, "key");
@@ -98,6 +106,9 @@ public interface INamedParameters
 			return value;
 		}
 
+		/**
+		 * @return type
+		 */
 		public Type getType()
 		{
 			return type;

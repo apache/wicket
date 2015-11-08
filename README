@@ -1,8 +1,6 @@
 Apache Wicket 8.0
 =================
 
-This is the readme file for the Apache Wicket project. 
-
 Apache Wicket is an open source, java, component based, web application
 framework. With proper mark-up/logic separation, a POJO data model, and a
 refreshing lack of XML, Apache Wicket makes developing web-apps simple and
@@ -41,9 +39,10 @@ What is in this package
 -----------------------
 
 The archive you just downloaded and unpacked contains the source code and the
-jars of the core projects of Wicket. If you are just starting out, you
-probably only need to include wicket-x.jar, where x stands for the version. As
-a rule, use just the jars you need.
+jars of the core projects of Wicket. If you are just starting out, you probably
+only need to include wicket-util-x.jar, wicket-request-x.jar and
+wicket-core-x.jar, where x stands for the version. As a rule, use just the jars
+you need.
 
 You will find the source code here:
 

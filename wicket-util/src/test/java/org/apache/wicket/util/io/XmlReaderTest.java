@@ -21,137 +21,118 @@ import java.io.BufferedReader;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * 
- * @author Juergen Donnerstag
- */
+@SuppressWarnings("javadoc")
 public class XmlReaderTest extends Assert
 {
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
-	public void test_1() throws Exception
+	public void readHtmlFileWithoutAnyTags() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_1.html"), null);
 		assertNull(reader.getEncoding());
 
-		BufferedReader bufReader = new BufferedReader(reader);
-		assertEquals("Zeile 1", bufReader.readLine());
+		try (BufferedReader bufReader = new BufferedReader(reader);)
+		{
+			assertEquals("Zeile 1", bufReader.readLine());
 
-		assertNull(bufReader.readLine());
+			assertNull(bufReader.readLine());
+		}
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
-	public void test_2() throws Exception
+	public void readHtmlFileWithHtmlAndBody() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_2.html"), null);
 		assertNull(reader.getEncoding());
 
-		BufferedReader bufReader = new BufferedReader(reader);
-		assertEquals("<html>", bufReader.readLine());
-		assertEquals("<body>", bufReader.readLine());
+		try (BufferedReader bufReader = new BufferedReader(reader);)
+		{
+			assertEquals("<html>", bufReader.readLine());
+			assertEquals("<body>", bufReader.readLine());
+		}
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
-	public void test_3() throws Exception
+	public void readHtmlFileWithXmlPreambleSansVersionAndHtmlTag() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_3.html"), null);
 		assertNull(reader.getEncoding());
 
-		BufferedReader bufReader = new BufferedReader(reader);
-		assertEquals("", bufReader.readLine().trim());
-		assertEquals("<html>", bufReader.readLine());
-		assertNull(bufReader.readLine());
+		try (BufferedReader bufReader = new BufferedReader(reader);)
+		{
+			assertEquals("", bufReader.readLine().trim());
+			assertEquals("<html>", bufReader.readLine());
+			assertNull(bufReader.readLine());
+		}
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
-	public void test_4() throws Exception
+	public void readHtmlFileWithXmlPreambleWithVersionAndHtmlTag() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_4.html"), null);
 		assertNull(reader.getEncoding());
 
-		BufferedReader bufReader = new BufferedReader(reader);
-		assertEquals("", bufReader.readLine().trim());
-		assertEquals("<html>", bufReader.readLine());
-		assertNull(bufReader.readLine());
+		try (BufferedReader bufReader = new BufferedReader(reader);)
+		{
+			assertEquals("", bufReader.readLine().trim());
+			assertEquals("<html>", bufReader.readLine());
+			assertNull(bufReader.readLine());
+		}
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
-	public void test_5() throws Exception
+	public void readHtmlFileWithXmlPreambleWithVersionAndEncodingAndHtmlTag() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_5.html"), null);
 		assertEquals("UTF-8", reader.getEncoding());
 
-		BufferedReader bufReader = new BufferedReader(reader);
-		assertEquals("", bufReader.readLine().trim());
-		assertEquals("<html>", bufReader.readLine());
-		assertNull(bufReader.readLine());
+		try (BufferedReader bufReader = new BufferedReader(reader);)
+		{
+			assertEquals("", bufReader.readLine().trim());
+			assertEquals("<html>", bufReader.readLine());
+			assertNull(bufReader.readLine());
+		}
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
 	@Test
-	public void test_6() throws Exception
+	public void readHtmlFileWithXmlPreambleWithVersionAndEncodingInSingleQuotesAndHtmlTag() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_6.html"), null);
 		assertEquals("UTF-8", reader.getEncoding());
 
-		BufferedReader bufReader = new BufferedReader(reader);
-		assertEquals("", bufReader.readLine().trim());
-		assertEquals("<html>", bufReader.readLine());
-		assertNull(bufReader.readLine());
+		try (BufferedReader bufReader = new BufferedReader(reader);)
+		{
+			assertEquals("", bufReader.readLine().trim());
+			assertEquals("<html>", bufReader.readLine());
+			assertNull(bufReader.readLine());
+		}
 	}
 
-	/**
-	 *
-	 * @throws Exception
-	 */
 	@Test
-	public void test_7() throws Exception
+	public void readHtmlFileWithXmlPreambleWithVersionAndEncodingSansQuotesAndHtmlTag() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_7.html"), null);
 		assertEquals("UTF-8", reader.getEncoding());
 
-		BufferedReader bufReader = new BufferedReader(reader);
-		assertEquals("", bufReader.readLine().trim());
-		assertEquals("<html>", bufReader.readLine());
-		assertNull(bufReader.readLine());
+		try (BufferedReader bufReader = new BufferedReader(reader);)
+		{
+			assertEquals("", bufReader.readLine().trim());
+			assertEquals("<html>", bufReader.readLine());
+			assertNull(bufReader.readLine());
+		}
 	}
 
-	/**
-	 *
-	 * @throws Exception
-	 */
 	@Test
-	public void ignoreBOM() throws Exception
+	public void readHtmlFileWithBomAndXmlPreambleWithEncodingSansQuotesAndHtmlTag() throws Exception
 	{
 		// test_8.html starts with <U+FEFF> character
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_8.html"), null);
 		assertEquals("UTF-8", reader.getEncoding());
 
-		BufferedReader bufReader = new BufferedReader(reader);
-		assertEquals("", bufReader.readLine().trim());
-		assertEquals("<html>", bufReader.readLine());
-		assertNull(bufReader.readLine());
+		try (BufferedReader bufReader = new BufferedReader(reader);)
+		{
+			assertEquals("", bufReader.readLine().trim());
+			assertEquals("<html>", bufReader.readLine());
+			assertNull(bufReader.readLine());
+		}
 	}
 }
