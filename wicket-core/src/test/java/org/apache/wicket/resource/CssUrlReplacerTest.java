@@ -19,9 +19,14 @@ package org.apache.wicket.resource;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
+import java.util.Locale;
+
+import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.image.ImageTest;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
@@ -43,7 +48,6 @@ public class CssUrlReplacerTest extends WicketTestCase
 			protected void init()
 			{
 				super.init();
-
 				getResourceSettings().setCachingStrategy(
 					new FilenameWithVersionResourceCachingStrategy("=VER=",
 						new MessageDigestResourceVersion())
@@ -55,6 +59,14 @@ public class CssUrlReplacerTest extends WicketTestCase
 						}
 					});
 			}
+			
+			@Override
+			public Session newSession(Request request, Response response) {
+				Session newSession = super.newSession(request, response);
+				newSession.setLocale(Locale.ROOT);
+				return newSession;
+			}
+			
 		};
 	}
 

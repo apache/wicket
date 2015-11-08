@@ -244,7 +244,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.clickLink("ajaxLinkWithSetResponsePageClass");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -268,7 +268,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "click");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -292,7 +292,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertEnabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be enabled.");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -316,7 +316,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertDisabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be disabled.");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -344,7 +344,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertRequired("createForm:id");
 			fail("Book ID component must not be required anymore!");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -354,7 +354,7 @@ public class WicketTesterTest extends WicketTestCase
 			// test #3: "createForm" is not a FormComponent
 			tester.assertRequired("createForm");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}

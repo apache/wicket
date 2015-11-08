@@ -407,7 +407,7 @@ public class BaseWicketTester
 	 */
 	private void setupNextRequestCycle()
 	{
-		request = new MockHttpServletRequest(application, httpSession, servletContext);
+		request = new MockHttpServletRequest(application, httpSession, servletContext, servletRequestLocale());
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
 
 		// assign protocol://host:port to next request unless the last request was ajax
@@ -483,6 +483,10 @@ public class BaseWicketTester
 		{
 			newSession();
 		}
+	}
+
+	protected Locale servletRequestLocale() {
+		return Locale.getDefault();
 	}
 
 	/**

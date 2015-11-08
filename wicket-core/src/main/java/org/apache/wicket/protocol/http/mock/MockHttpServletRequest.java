@@ -212,14 +212,22 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The session object
 	 * @param context
 	 *            The current servlet context
+	 * @param locale
+	 *            The current locale 			  
 	 */
 	public MockHttpServletRequest(final Application application, final HttpSession session,
-		final ServletContext context)
+		final ServletContext context, Locale locale)
 	{
 		this.application = application;
 		this.session = session;
 		this.context = context;
-		initialize();
+		initialize(locale);
+	}
+	
+	public MockHttpServletRequest(final Application application, final HttpSession session,
+			final ServletContext context) 
+	{
+		this(application, session, context, Locale.getDefault());
 	}
 
 	/**
@@ -1219,13 +1227,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Reset the request back to a default state.
+	 * @param locale 
 	 */
-	public void initialize()
+	public void initialize(Locale locale)
 	{
 		authType = null;
 		method = "post";
 		cookies.clear();
-		setDefaultHeaders();
+		setDefaultHeaders(locale);
 		path = null;
 		url = null;
 		characterEncoding = "UTF-8";
@@ -1500,14 +1509,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Helper method to create some default headers for the request
+	 * @param l 
 	 */
-	private void setDefaultHeaders()
+	private void setDefaultHeaders(Locale l)
 	{
 		headers.clear();
 		addHeader("Accept", "text/xml,application/xml,application/xhtml+xml,"
 			+ "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
 		addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		Locale l = Locale.getDefault();
 		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-"
 			+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
 		addHeader("User-Agent",
