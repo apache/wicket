@@ -262,7 +262,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		if (uploadedFiles == null)
 		{
-			uploadedFiles = new HashMap<String, List<UploadedFile>>();
+			uploadedFiles = new LinkedHashMap<String, List<UploadedFile>>();
 		}
 
 		UploadedFile uf = new UploadedFile(fieldName, file, contentType);

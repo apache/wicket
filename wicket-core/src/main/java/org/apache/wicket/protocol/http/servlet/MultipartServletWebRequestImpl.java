@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -119,7 +120,7 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 		this.upload = upload;
 		this.fileItemFactory = factory;
 		parameters = new ValueMap();
-		files = new HashMap<String, List<FileItem>>();
+		files = new LinkedHashMap<String, List<FileItem>>();
 
 		// Check that request is multipart
 		final boolean isMultipart = ServletFileUpload.isMultipartContent(request);
