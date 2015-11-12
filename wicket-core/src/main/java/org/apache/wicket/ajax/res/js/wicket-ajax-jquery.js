@@ -774,7 +774,6 @@
 					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
 					// A file download popup will appear but the page in the browser won't change.
 					this.success(context);
-					this.done(context.attrs);
 
 					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
 					    rhttps = /^https:\/\//; // checks whether the string starts with https://
