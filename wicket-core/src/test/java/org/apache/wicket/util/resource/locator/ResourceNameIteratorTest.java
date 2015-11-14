@@ -151,7 +151,7 @@ public class ResourceNameIteratorTest extends WicketTestCase
 		String path = "patch.extension";
 		String style = null;
 		String var = "var";
-		Locale locale = Locale.getDefault();
+		Locale locale = Locale.CANADA_FRENCH;
 		Iterable<String> extensions = null;
 		boolean strict = false;
 		Iterator<String> iterator = new ResourceNameIterator(path, style, var, locale, extensions, strict);
