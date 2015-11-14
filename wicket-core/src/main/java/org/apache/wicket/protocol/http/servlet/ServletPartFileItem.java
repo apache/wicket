@@ -43,6 +43,7 @@ class ServletPartFileItem implements FileItem
 	 * The adapted part
 	 */
 	private final Part part;
+	private final boolean isFormField;
 
 	/**
 	 * Constructor
@@ -51,6 +52,9 @@ class ServletPartFileItem implements FileItem
 	{
 		Args.notNull(part, "part");
 		this.part = part;
+
+		String contentType = part.getContentType();
+		this.isFormField = contentType == null;
 	}
 
 	@Override
@@ -164,7 +168,7 @@ class ServletPartFileItem implements FileItem
 	@Override
 	public boolean isFormField()
 	{
-		return false;
+		return isFormField;
 	}
 
 	@Override
