@@ -130,7 +130,8 @@ resources:
   resources_12: Shared resources
   resources_13: Customizing resource loading
   resources_14: CssHeaderItem and JavaScriptHeaderItem compression
-  resources_15: Summary
+  resources_15: NIO resources
+  resources_16: Summary
 jsintegration:
   title: An example of integration with JavaScript
   jsintegration_1: What we want to do...

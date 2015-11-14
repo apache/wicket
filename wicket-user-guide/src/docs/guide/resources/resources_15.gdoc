@@ -1,7 +1,21 @@
+The FileSystemResourceRenference comes along with the FileSystemResource, FileSystemResourceStreamReference and the FileSystemResourceStream. Those classes provide a simple way to handle resources with Java's NIO API in Wicket starting from JDK version 7.0. (Available since Wicket 7.2.0 / Wicket 8.0.0)
 
+Example: To include a resource which is zipped into a file and located in a specific folder in the file system you can simply write code like this:
 
-In this chapter we have learnt how to manage resources with the built-in mechanism provided by Wicket. With this mechanism we handle resources from Java code and Wicket will automatically take care of generating a valid URL for them. We have also seen how resources can be bundled as package resources with a component that depends on them to make it self-contained.
+Java:
+{code}
+URI uri = URI.create("jar:file:///videosFolder/videos.zip!/folderInZip/Video.mp4");
+Path path = FileSystemResourceReference.getPath(uri);
+FileSystemResourceReference ref = new FileSystemResourceReference("video",path);
+Video video = new Video("video",ref);
+add(vide);
+{code}
 
-Then, in the second part of the chapter, we have built a custom resource and we have learnt how to mount it to an arbitrary URL and how to make it globally available as shared resource.
+HTML:
+{code}
+<video wicket:id="video"/>
+{code}
 
-Finally, in the last part of the paragraph we took a peek at the mechanism provided by the framework to customize the locations where the resource-lookup algorithm searches for resources. 
+Further FileSystemProviders and the corresponding FileSystems can be implemented as described here:
+
+[http://docs.oracle.com/javase/7/docs/technotes/guides/io/fsp/filesystemprovider.html|http://docs.oracle.com/javase/7/docs/technotes/guides/io/fsp/filesystemprovider.html]
