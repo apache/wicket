@@ -143,7 +143,7 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 
 				if (get(id) == null)
 				{
-					component = ComponentResolvers.resolveByComponentHierarchy(this, stream, tag);					
+					component = ComponentResolvers.resolveByComponentHierarchy(this, stream, tag);
 				}
 
 				if (component != null)
@@ -169,6 +169,6 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 			parent = parent.getParent();
 		}
 		
-		parent.add(component);		
+		parent.add(component);
 	}
 }
