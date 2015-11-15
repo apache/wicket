@@ -20,7 +20,7 @@ package org.apache.wicket.model.util;
 import java.io.Serializable;
 
 import org.apache.wicket.model.IDetachable;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.util.lang.Objects;
 
 /**
@@ -32,7 +32,7 @@ import org.apache.wicket.util.lang.Objects;
  * @param <T>
  *            type of model object
  */
-public abstract class GenericBaseModel<T> implements IModel<T>
+public abstract class GenericBaseModel<T> implements IObjectClassAwareModel<T>
 {
 	private static final long serialVersionUID = 1L;
 	/** model object */
@@ -82,6 +82,12 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 		{
 			((IDetachable)object).detach();
 		}
+	}
+
+	@Override
+	public Class<T> getObjectClass()
+	{
+		return object != null ? (Class<T>) object.getClass() : null;
 	}
 
 	/**
