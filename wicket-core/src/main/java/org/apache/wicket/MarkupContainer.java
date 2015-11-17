@@ -2157,13 +2157,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		// pull the close tag off
 		ComponentTag close = dequeue.takeTag();
-		if (!close.closes(tag))
+		do
 		{
-			// sanity check
-			throw new IllegalStateException(String.format(
-				"Tag '%s' should be the closing one for '%s'", close, tag));
-		}
+			if (close != null && close.closes(tag))
+			{
+				return;
+			}
+		} while ((close = dequeue.takeTag()) != null);
 
+		throw new IllegalStateException(String.format(
+				"Could not find the closing for '%s'", tag));
 	}
 
     /** @see IQueueRegion#newDequeueContext() */
