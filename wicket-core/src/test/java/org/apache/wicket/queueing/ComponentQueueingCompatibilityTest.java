@@ -17,13 +17,14 @@
 package org.apache.wicket.queueing;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ComponentQueueingCompatibilityTest extends WicketTestCase
 {
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6036
+	 */
 	@Test
-	@Ignore("WICKET-6036")
 	public void nestedTags()
 	{
 		IncorrectCloseTagPanel p = new IncorrectCloseTagPanel("test");
