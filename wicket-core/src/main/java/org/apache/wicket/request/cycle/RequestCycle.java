@@ -664,9 +664,12 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	private void handleDetachException(RuntimeException exception) 
 	{
-		boolean isBufferedResponse = Application.get().
-				getRequestCycleSettings().getBufferResponse();
-		
+		boolean isBufferedResponse = true;
+		if (Application.exists())
+		{
+			isBufferedResponse = Application.get().getRequestCycleSettings().getBufferResponse();
+		}
+
 		//if application is using a buffered response strategy,
 		//then we display exception to user.
 		if (isBufferedResponse) 
