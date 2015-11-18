@@ -110,7 +110,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 		    setContainsWicketIdFlag(tag);
 		    
 			// Push onto stack
-			stack.push(tag);			
+			stack.push(tag);
 		}
 		else if (tag.isClose())
 		{

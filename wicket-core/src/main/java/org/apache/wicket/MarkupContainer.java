@@ -2005,7 +2005,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 				if (child != null)
 				{
-					addDequeuedComponent(child, tag);					
+					addDequeuedComponent(child, tag);
 				}
 			}
 
@@ -2059,8 +2059,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			}
 		} while ((close = dequeue.takeTag()) != null);
 
-		throw new IllegalStateException(String.format(
-				"Could not find the closing for '%s'", tag));
+		throw new IllegalStateException(String.format("Could not find the closing tag for '%s'", tag));
 	}
 
     /** @see IQueueRegion#newDequeueContext() */
