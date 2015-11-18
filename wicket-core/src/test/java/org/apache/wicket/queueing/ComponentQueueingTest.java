@@ -19,7 +19,6 @@ package org.apache.wicket.queueing;
 import static org.apache.wicket.queueing.WicketMatchers.hasPath;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
@@ -721,6 +720,16 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(page);	
 		
 		tester.assertContains("title");
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6036
+	 */
+	@Test
+	public void nestedTags()
+	{
+		IncorrectCloseTagPanel p = new IncorrectCloseTagPanel("test");
+		tester.startComponentInPage(p);
 	}
 
 	private static class A extends WebMarkupContainer
