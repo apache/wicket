@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @author Juergen Donnerstag
  * @deprecated This class is removed in Wicket 8.0. It did nothing since a long time
  */
-@Depracated
+@Deprecated
 public class ConditionalCommentFilter extends AbstractMarkupFilter
 {
 	private static final Logger log = LoggerFactory.getLogger(ConditionalCommentFilter.class);
