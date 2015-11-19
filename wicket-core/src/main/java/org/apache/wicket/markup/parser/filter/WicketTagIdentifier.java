@@ -53,6 +53,8 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
 	/** List of well known wicket tag names */
 	private static final Set<String> WELL_KNOWN_TAG_NAMES = new HashSet<>();
+	/** List of raw wicket tag names */
+	private static final Set<String> RAW_TAG_NAMES = new HashSet<>();
 
 	static {
 		WELL_KNOWN_TAG_NAMES.add(Border.BORDER);
@@ -69,6 +71,11 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.EXTEND);
 		WELL_KNOWN_TAG_NAMES.add(WicketContainerResolver.CONTAINER);
 		WELL_KNOWN_TAG_NAMES.add(WicketMessageResolver.MESSAGE);
+	}
+	
+	static {
+		RAW_TAG_NAMES.add(MarkupInheritanceResolver.CHILD);
+		RAW_TAG_NAMES.add(MarkupInheritanceResolver.EXTEND);
 	}
 
 	/**
@@ -109,14 +116,18 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 			if (Strings.isEmpty(wicketIdValue))
 			{
-				// Make it a Wicket component. Otherwise it would be RawMarkup
+				// Make it a Wicket component.
 				tag.setId(namespace + "_" + tag.getName() + getRequestUniqueId());
 				tag.setModified(true);
 
-				if (tag.isClose() == false)
+				if (isRaw(tag)) 
+				{
+					tag.setFlag(ComponentTag.RENDER_RAW, true);
+				}
+				else if (tag.isClose() == false)
 				{
 					tag.setAutoComponentTag(true);
-				}
+				}				
 			}
 
 			// If the tag is not a well-known wicket namespace tag
@@ -164,5 +175,16 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	{
 		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ENGLISH);
 		return WELL_KNOWN_TAG_NAMES.contains(lowerCaseTagName);
+	}
+
+	/**
+	 * 
+	 * @param tag
+	 * @return true, if tag must be raw
+	 */
+	private boolean isRaw(final ComponentTag tag)
+	{
+		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ENGLISH);
+		return RAW_TAG_NAMES.contains(lowerCaseTagName);
 	}
 }

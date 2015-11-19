@@ -205,8 +205,8 @@ public class WicketTag extends ComponentTag
 		else
 		{
 			final WicketTag tag = new WicketTag(xmlTag.mutable());
-			tag.setId(getId());
-			tag.setAutoComponentTag(isAutoComponentTag());
+			copyPropertiesTo(tag);
+
 			return tag;
 		}
 	}

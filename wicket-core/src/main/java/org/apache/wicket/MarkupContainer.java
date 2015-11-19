@@ -1471,58 +1471,96 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			else if (tag.getFlag(ComponentTag.RENDER_RAW))
 			{
 				// No component found, but "render as raw markup" flag found
-				getResponse().write(element.toCharSequence());
+				if (canRenderRawTag(tag))
+				{					
+					getResponse().write(element.toCharSequence());
+				} 
 				return true;
 			}
 			else
 			{
-				if (tag instanceof WicketTag)
-				{
-					if (((WicketTag)tag).isChildTag())
-					{
-						markupStream.throwMarkupException("Found " + tag.toString() +
-							" but no <wicket:extend>. Container: " + toString());
-					}
-					else
-					{
-						markupStream.throwMarkupException("Failed to handle: " +
-							tag.toString() +
-							". It might be that no resolver has been registered to handle this special tag. " +
-							" But it also could be that you declared wicket:id=" + id +
-							" in your markup, but that you either did not add the " +
-							"component to your page at all, or that the hierarchy does not match. " +
-							"Container: " + toString());
-					}
-				}
-
-				List<String> names = findSimilarComponents(id);
-
-				// No one was able to handle the component id
-				StringBuilder msg = new StringBuilder(500);
-				msg.append("Unable to find component with id '");
-				msg.append(id);
-				msg.append("' in ");
-				msg.append(this.toString());
-				msg.append("\n\tExpected: '");
-				msg.append(getPageRelativePath());
-				msg.append(PATH_SEPARATOR);
-				msg.append(id);
-				msg.append("'.\n\tFound with similar names: '");
-				msg.append(Strings.join("', ", names));
-				msg.append('\'');
-
-				log.error(msg.toString());
-				markupStream.throwMarkupException(msg.toString());
+				throwException(markupStream, tag);
 			}
 		}
 		else
 		{
 			// Render as raw markup
-			getResponse().write(element.toCharSequence());
+			if (canRenderRawTag(element))
+			{
+				getResponse().write(element.toCharSequence());
+			}
 			return true;
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Says if the given tag can be handled as a raw markup.
+	 * 
+	 * @param tag
+	 * 			the current tag.
+	 * @return true if the tag can be handled as raw markup, false otherwise.
+	 */
+	private boolean canRenderRawTag(MarkupElement tag)
+	{
+		boolean isWicketTag = tag instanceof WicketTag;
+		
+		boolean stripTag = isWicketTag ? Application.get().getMarkupSettings().getStripWicketTags() : false; 
+		
+		return !stripTag;
+	}
+	
+	/**
+	 * Throws a {@code org.apache.wicket.markup.MarkupException} when the
+	 * component markup is not consistent.
+	 * 
+	 * @param markupStream
+	 * 			the source stream for the component markup.
+	 * @param tag
+	 * 			the tag that can not be handled.
+	 */
+	private void throwException(final MarkupStream markupStream, final ComponentTag tag)
+	{
+		final String id = tag.getId();
+		
+		if (tag instanceof WicketTag)
+		{
+			if (((WicketTag)tag).isChildTag())
+			{
+				markupStream.throwMarkupException("Found " + tag.toString() +
+					" but no <wicket:extend>. Container: " + toString());
+			}
+			else
+			{
+				markupStream.throwMarkupException("Failed to handle: " +
+					tag.toString() +
+					". It might be that no resolver has been registered to handle this special tag. " +
+					" But it also could be that you declared wicket:id=" + id +
+					" in your markup, but that you either did not add the " +
+					"component to your page at all, or that the hierarchy does not match. " +
+					"Container: " + toString());
+			}
+		}
+
+		List<String> names = findSimilarComponents(id);
+
+		// No one was able to handle the component id
+		StringBuilder msg = new StringBuilder(500);
+		msg.append("Unable to find component with id '");
+		msg.append(id);
+		msg.append("' in ");
+		msg.append(this.toString());
+		msg.append("\n\tExpected: '");
+		msg.append(getPageRelativePath());
+		msg.append(PATH_SEPARATOR);
+		msg.append(id);
+		msg.append("'.\n\tFound with similar names: '");
+		msg.append(Strings.join("', ", names));
+		msg.append('\'');
+
+		log.error(msg.toString());
+		markupStream.throwMarkupException(msg.toString());
 	}
 
 	private List<String> findSimilarComponents(final String id)
