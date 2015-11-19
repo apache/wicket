@@ -28,7 +28,9 @@ import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
  * they have already been processed.
  * 
  * @author Juergen Donnerstag
+ * @deprecated This {@link IComponentResolver} is not used anymore and will be removed in Wicket 8.0
  */
+@Deprecated
 public class MarkupInheritanceResolver implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
