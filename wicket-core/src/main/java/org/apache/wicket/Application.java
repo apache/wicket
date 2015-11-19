@@ -813,7 +813,6 @@ public abstract class Application implements UnboundListener, IEventSink
 		PageSettings pageSettings = getPageSettings();
 
 		// Install default component resolvers
-		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
 		pageSettings.addComponentResolver(new HtmlHeaderResolver());
 		pageSettings.addComponentResolver(new WicketLinkTagHandler());
 		pageSettings.addComponentResolver(new WicketMessageResolver());
