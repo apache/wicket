@@ -32,7 +32,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
-import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.util.string.Strings;
@@ -56,6 +55,10 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	/** List of raw wicket tag names */
 	private static final Set<String> RAW_TAG_NAMES = new HashSet<>();
 
+	public static final String CHILD = "child";
+
+	public static final String EXTEND = "extend";
+
 	static {
 		WELL_KNOWN_TAG_NAMES.add(Border.BORDER);
 		WELL_KNOWN_TAG_NAMES.add(Border.BODY);
@@ -67,15 +70,15 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		WELL_KNOWN_TAG_NAMES.add(FragmentResolver.FRAGMENT);
 		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEAD);
 		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEADER_ITEMS);
-		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.CHILD);
-		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.EXTEND);
+		WELL_KNOWN_TAG_NAMES.add(WicketTagIdentifier.CHILD);
+		WELL_KNOWN_TAG_NAMES.add(WicketTagIdentifier.EXTEND);
 		WELL_KNOWN_TAG_NAMES.add(WicketContainerResolver.CONTAINER);
 		WELL_KNOWN_TAG_NAMES.add(WicketMessageResolver.MESSAGE);
 	}
 	
 	static {
-		RAW_TAG_NAMES.add(MarkupInheritanceResolver.CHILD);
-		RAW_TAG_NAMES.add(MarkupInheritanceResolver.EXTEND);
+		RAW_TAG_NAMES.add(WicketTagIdentifier.CHILD);
+		RAW_TAG_NAMES.add(WicketTagIdentifier.EXTEND);
 	}
 
 	/**
