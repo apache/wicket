@@ -459,7 +459,7 @@ public abstract class AbstractAjaxResponse
 		// create the htmlheadercontainer if needed
 		if (header == null)
 		{
-			header = new AjaxHtmlHeaderContainer();
+			header = new AjaxHtmlHeaderContainer(this);
 			final Page parentPage = component.getPage();
 			parentPage.addOrReplace(header);
 		}
@@ -501,9 +501,16 @@ public abstract class AbstractAjaxResponse
 	 *
 	 * @author Matej Knopp
 	 */
-	private class AjaxHtmlHeaderContainer extends HtmlHeaderContainer
+	private static class AjaxHtmlHeaderContainer extends HtmlHeaderContainer
 	{
 		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Keep transiently, in case the containing page gets serialized before
+		 * this container is removed again. This happens when DebugBar determines
+		 * the page size by serializing/deserializing it.
+		 */
+		private transient AbstractAjaxResponse ajaxResponse;
 
 		/**
 		 * Constructor.
@@ -511,9 +518,11 @@ public abstract class AbstractAjaxResponse
 		 * @param ajaxResponse
 		 *      the object that keeps the data for the Ajax response
 		 */
-		public AjaxHtmlHeaderContainer()
+		public AjaxHtmlHeaderContainer(AbstractAjaxResponse ajaxResponse)
 		{
 			super(HtmlHeaderSectionHandler.HEADER_ID);
+			
+			this.ajaxResponse = ajaxResponse;
 		}
 
 		/**
@@ -523,7 +532,11 @@ public abstract class AbstractAjaxResponse
 		@Override
 		protected IHeaderResponse newHeaderResponse()
 		{
-			return AbstractAjaxResponse.this.getHeaderResponse();
+			if (ajaxResponse == null) {
+				throw new IllegalStateException("disconnected from ajaxResponse after serialization");
+			}
+			
+			return ajaxResponse.getHeaderResponse();
 		}
 	}
 
