@@ -67,7 +67,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 			@Override
 			public CharSequence getPrecondition(Component component)
 			{
-				return "return attrs.event.target.name === " + getFormComponent().getInputName();
+				return String.format("return attrs.event.target.name === '%s'", getFormComponent().getInputName());
 			}
 		});
 	}
