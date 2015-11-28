@@ -218,7 +218,7 @@ public abstract class ListView<T> extends AbstractRepeater
 		final Object modelObject = getDefaultModelObject();
 		if (modelObject == null)
 		{
-			return size == Integer.MAX_VALUE ? 0 : size;
+			return 0;
 		}
 
 		// Adjust view size to model object's list size

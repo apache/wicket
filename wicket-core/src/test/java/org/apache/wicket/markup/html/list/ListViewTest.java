@@ -159,6 +159,6 @@ public class ListViewTest extends WicketTestCase
 		lv.setStartIndex(5);
 		lv.setViewSize(10);
 		assertEquals(0, lv.getStartIndex());
-		assertEquals(10, lv.getViewSize());
+		assertEquals(0, lv.getViewSize());
 	}
 }
