@@ -16,42 +16,21 @@
  */
 package org.apache.wicket.model;
 
-
-/**
- * AbstractReadOnlyModel is an adapter base class for implementing models which have no detach logic
- * and are read-only.
- * 
- * @author Igor Vaynberg ( ivaynberg )
- * 
- * @param <T>
- *            The model object
- */
-public abstract class AbstractReadOnlyModel<T> implements IReadOnlyModel<T>
+public interface IReadOnlyModel<T> extends IModel<T>
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
-	 * @see IModel#getObject()
+	 * This default implementation of setObject unconditionally throws an
+	 * UnsupportedOperationException. 
+	 *  
+	 * @param object
+	 *            The object to set into the model
+	 * @throws UnsupportedOperationException
 	 */
 	@Override
-	public abstract T getObject();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
+	@Deprecated
+	public default void setObject(final T object)
 	{
-		StringBuilder sb = new StringBuilder("Model:classname=[");
-		sb.append(getClass().getName()).append("]");
-		return sb.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void detach()
-	{
+		throw new UnsupportedOperationException("Model " + getClass() +
+			" does not support setObject(Object)");
 	}
 }

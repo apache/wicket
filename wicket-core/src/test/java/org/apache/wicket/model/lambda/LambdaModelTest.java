@@ -88,4 +88,32 @@ public class LambdaModelTest
 		assertThat(clone.getObject(), is(personName));
 	}
 
+	
+	static class Foo<T> {
+		
+		public void callT(T instance) {
+			
+		}
+		
+		static <T> Foo<T> of(Class<? extends T> type) {
+			return new Foo<>();
+		}
+	}
+	
+	@Test
+	public void testMe() {
+		String s="foo";
+		Class<? extends String> class1 = s.getClass();
+		Foo<String> foo = Foo.of(class1);
+		foo.callT(s);
+		
+		
+	}
+	
+	static <X> void again(X s, Class<X> clazz) {
+		Class<? extends X> class1 = clazz;
+		s.getClass();
+		Foo<X> foo = Foo.of(class1);
+		foo.callT(s);
+	}
 }

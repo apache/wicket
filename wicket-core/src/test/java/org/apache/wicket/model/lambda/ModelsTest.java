@@ -14,44 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model;
+package org.apache.wicket.model.lambda;
 
+import static org.junit.Assert.*;
 
-/**
- * AbstractReadOnlyModel is an adapter base class for implementing models which have no detach logic
- * and are read-only.
- * 
- * @author Igor Vaynberg ( ivaynberg )
- * 
- * @param <T>
- *            The model object
- */
-public abstract class AbstractReadOnlyModel<T> implements IReadOnlyModel<T>
+import java.io.Serializable;
+
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.junit.Test;
+
+public class ModelsTest
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @see IModel#getObject()
-	 */
-	@Override
-	public abstract T getObject();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString()
-	{
-		StringBuilder sb = new StringBuilder("Model:classname=[");
-		sb.append(getClass().getName()).append("]");
-		return sb.toString();
+	@Test
+	public void propertyModel() {
+		Foo instance = new Foo();
+		Model<Foo> fooModel = Model.of(instance);
+		IModel<String> nameModel = Models.of(fooModel, (x) -> x::setName, (x) -> x::getName);
+		instance.setName("blub");
+		assertEquals("blub", nameModel.getObject());
+		nameModel.setObject("bar");
+		assertEquals("bar", instance.getName());
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void detach()
-	{
+	
+	static class Foo implements Serializable {
+		
+		String name;
+		
+		public String getName()
+		{
+			return name;
+		}
+		
+		public void setName(String name)
+		{
+			this.name = name;
+		}
 	}
 }
