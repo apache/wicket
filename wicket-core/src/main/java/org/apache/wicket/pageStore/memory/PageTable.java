@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.pageStore.memory;
 
+import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -105,6 +106,11 @@ public class PageTable implements IClusterable
 	public Integer getOldest()
 	{
 		return index.peek();
+	}
+
+	public Iterator<Integer> indexIterator()
+	{
+		return index.iterator();
 	}
 
 	/**

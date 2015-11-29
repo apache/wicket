@@ -32,7 +32,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
-import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.util.string.Strings;
@@ -53,6 +52,12 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
 	/** List of well known wicket tag names */
 	private static final Set<String> WELL_KNOWN_TAG_NAMES = new HashSet<>();
+	/** List of raw wicket tag names */
+	private static final Set<String> RAW_TAG_NAMES = new HashSet<>();
+
+	public static final String CHILD = "child";
+
+	public static final String EXTEND = "extend";
 
 	static {
 		WELL_KNOWN_TAG_NAMES.add(Border.BORDER);
@@ -65,10 +70,15 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		WELL_KNOWN_TAG_NAMES.add(FragmentResolver.FRAGMENT);
 		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEAD);
 		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEADER_ITEMS);
-		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.CHILD);
-		WELL_KNOWN_TAG_NAMES.add(MarkupInheritanceResolver.EXTEND);
+		WELL_KNOWN_TAG_NAMES.add(WicketTagIdentifier.CHILD);
+		WELL_KNOWN_TAG_NAMES.add(WicketTagIdentifier.EXTEND);
 		WELL_KNOWN_TAG_NAMES.add(WicketContainerResolver.CONTAINER);
 		WELL_KNOWN_TAG_NAMES.add(WicketMessageResolver.MESSAGE);
+	}
+	
+	static {
+		RAW_TAG_NAMES.add(WicketTagIdentifier.CHILD);
+		RAW_TAG_NAMES.add(WicketTagIdentifier.EXTEND);
 	}
 
 	/**
@@ -109,14 +119,18 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 			if (Strings.isEmpty(wicketIdValue))
 			{
-				// Make it a Wicket component. Otherwise it would be RawMarkup
+				// Make it a Wicket component.
 				tag.setId(namespace + "_" + tag.getName() + getRequestUniqueId());
 				tag.setModified(true);
 
-				if (tag.isClose() == false)
+				if (isRaw(tag)) 
+				{
+					tag.setFlag(ComponentTag.RENDER_RAW, true);
+				}
+				else if (tag.isClose() == false)
 				{
 					tag.setAutoComponentTag(true);
-				}
+				}				
 			}
 
 			// If the tag is not a well-known wicket namespace tag
@@ -164,5 +178,16 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	{
 		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ENGLISH);
 		return WELL_KNOWN_TAG_NAMES.contains(lowerCaseTagName);
+	}
+
+	/**
+	 * 
+	 * @param tag
+	 * @return true, if tag must be raw
+	 */
+	private boolean isRaw(final ComponentTag tag)
+	{
+		String lowerCaseTagName = tag.getName().toLowerCase(Locale.ENGLISH);
+		return RAW_TAG_NAMES.contains(lowerCaseTagName);
 	}
 }

@@ -12,3 +12,4 @@ release.properties
 **/node_modules/
 nb-configuration.xml
 .DS_Store
+**.launch

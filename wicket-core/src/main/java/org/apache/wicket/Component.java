@@ -986,7 +986,7 @@ public abstract class Component
 			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 			if (feedbacks == null)
 			{
-				feedbacks = new ArrayList<Component>();
+				feedbacks = new ArrayList<>();
 				getRequestCycle().setMetaData(FEEDBACK_LIST, feedbacks);
 			}
 

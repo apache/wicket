@@ -42,7 +42,6 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Modal window component.
@@ -74,8 +73,11 @@ import org.apache.wicket.util.string.Strings;
  * <code>{@link #close(IPartialPageRequestHandler)})</code>, you can use
  * <code>{@link #setWindowClosedCallback(ModalWindow.WindowClosedCallback)}</code>.
  * <p>
- * Title is specified using {@link #setTitle(String)}. If the content is a page (iframe), the title
- * can remain unset, in that case title from the page inside window will be shown.
+ * Title is specified using {@link #setTitle(String)}. Pass <code>true</code> to
+ * <code>{@link #setEscapeModelStrings(boolean)}</code> to use unencoded markup in the title.
+ * <br>
+ * If the content is a page (iframe), the title can remain unset, in that case title from the page
+ * inside window will be shown.
  * <p>
  * There are several options to specify the visual properties of the window. In all methods where
  * size is expected, width refers to width of entire window (including frame), height refers to the
@@ -1016,23 +1018,6 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Replaces all occurrences of " in string with \".
-	 * 
-	 * @param string
-	 *            String to be escaped.
-	 * 
-	 * @return escaped string
-	 */
-	private String escapeQuotes(String string)
-	{
-		if (string.indexOf('"') != -1)
-		{
-			string = Strings.replaceAll(string, "\"", "\\\"").toString();
-		}
-		return string;
-	}
-
-	/**
 	 * Returns the javascript used to open the window. Subclass
 	 * {@link #postProcessSettings(AppendingStringBuffer)} to modify the JavaScript if needed.
 	 * 
@@ -1108,10 +1093,11 @@ public class ModalWindow extends Panel
 			appendAssignment(buffer, "settings.cookieId", getCookieName());
 		}
 
-		Object title = getTitle() != null ? getTitle().getObject() : null;
+		String title = getTitle() != null ? getTitle().getObject() : null;
 		if (title != null)
 		{
-			appendAssignment(buffer, "settings.title", escapeQuotes(title.toString()));
+			String escaped = getDefaultModelObjectAsString(title);
+			appendAssignment(buffer, "settings.title", escaped);
 		}
 
 		if (getMaskType() == MaskType.TRANSPARENT)

@@ -356,9 +356,10 @@ public class MultipartServletWebRequestImpl extends MultipartServletWebRequest
 	protected Map<String, List<StringValue>> generatePostParameters()
 	{
 		Map<String, List<StringValue>> res = new HashMap<>();
-		for (String key : parameters.keySet())
+		for (Map.Entry<String, Object> entry : parameters.entrySet())
 		{
-			String[] val = (String[])parameters.get(key);
+			String key = entry.getKey();
+			String[] val = (String[])entry.getValue();
 			if (val != null && val.length > 0)
 			{
 				List<StringValue> items = new ArrayList<>();

@@ -43,7 +43,7 @@ import org.apache.wicket.util.lang.Objects;
  * @param <T>
  *            The type of the Model Object
  */
-public class Model<T extends Serializable> implements IModel<T>
+public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -242,5 +242,11 @@ public class Model<T extends Serializable> implements IModel<T>
 		}
 		Model<?> that = (Model<?>)obj;
 		return Objects.equal(object, that.object);
+	}
+
+	@Override
+	public Class<T> getObjectClass()
+	{
+		return object != null ? (Class<T>) object.getClass() : null;
 	}
 }

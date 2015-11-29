@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -249,6 +250,19 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		assertNotNull(scriptTag);
 	}
 	
+	@Test
+	public void nestedTransparentContainer() throws Exception
+	{
+		tester.startPage(TestEmbeddedTransparentMarkupContainer.class);
+		tester.assertRenderedPage(TestEmbeddedTransparentMarkupContainer.class);
+		
+		final Page page = tester.getLastRenderedPage();
+		final Component label = page.get("label");
+		
+		assertEquals(TestEmbeddedTransparentMarkupContainer.LABEL_MARKUP,
+			label.getMarkup().toString(true));
+	}
+	
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
@@ -375,6 +389,35 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				"<html><body>" + //
 				"	<div wicket:id=\"container\">" + //
 				"		<a wicket:id=\"ajaxLink\"></a>" + //
+				"	</div>" + //
+				"</body></html>");
+		}
+	}
+	
+	public static class TestEmbeddedTransparentMarkupContainer extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+		
+		public static final String LABEL_MARKUP = "<span wicket:id=\"label\"></span>";
+		
+		/** */
+		public TestEmbeddedTransparentMarkupContainer()
+		{
+			add(new TransparentWebMarkupContainer("outer"));
+			add(new TransparentWebMarkupContainer("inner"));
+			add(new Label("label"));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+				"<html><body>" + //
+				"	<div wicket:id=\"outer\">" + //
+				"		<div wicket:id=\"inner\">" + //
+				"			" + LABEL_MARKUP + //
+				"		</div>" + //
 				"	</div>" + //
 				"</body></html>");
 		}

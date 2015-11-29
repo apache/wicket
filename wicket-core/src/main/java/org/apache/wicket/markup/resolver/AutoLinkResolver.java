@@ -868,15 +868,12 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * 
 	 * @param pathInfo
 	 *            The container where the link is
-	 * @param id
-	 *            the name of the component
 	 * @param tag
 	 *            the component tag
 	 * @return A BookmarkablePageLink<?> to handle the href
 	 */
 	private Component resolveAutomaticLink(final PathInfo pathInfo, final ComponentTag tag)
 	{
-		final MarkupContainer container = pathInfo.getContainer();
 		final String componentId = tag.getId();
 
 		// get the tag name, which is something like 'a' or 'script'

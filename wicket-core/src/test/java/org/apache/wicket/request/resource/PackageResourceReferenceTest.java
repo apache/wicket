@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.Request;
@@ -355,5 +356,23 @@ public class PackageResourceReferenceTest extends WicketTestCase
 			new String(mockHttpServletResponse.getBinaryContent()));
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6031
+	 */
+	@Test
+	public void noRequestCycle()
+	{
+		ThreadContext.setRequestCycle(null);
+
+		PackageResourceReference reference = new PackageResourceReference(scope, "resource.txt",
+				locales[1], styles[1], variations[1]);
+
+		PackageResource resource = reference.getResource();
+		assertNotNull(resource);
+
+		assertEquals(locales[1], resource.getResourceStream().getLocale());
+		assertEquals(styles[1], resource.getResourceStream().getStyle());
+		assertEquals(variations[1], resource.getResourceStream().getVariation());
+	}
 
 }

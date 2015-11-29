@@ -640,6 +640,10 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		{
 			requestHandlerExecutor.detach();
 		}
+		catch (RuntimeException exception)
+		{
+			handleDetachException(exception);
+		}
 		finally
 		{
 			listeners.onDetach(this);
@@ -650,6 +654,32 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			Session.get().detach();
 		}
 
+	}
+
+	/**
+	 * Called to handle a {@link java.lang.RuntimeException} that might be 
+	 * thrown during detaching phase. 
+	 * 
+	 * @param exception
+	 */
+	private void handleDetachException(RuntimeException exception) 
+	{
+		boolean isBufferedResponse = true;
+		if (Application.exists())
+		{
+			isBufferedResponse = Application.get().getRequestCycleSettings().getBufferResponse();
+		}
+
+		//if application is using a buffered response strategy,
+		//then we display exception to user.
+		if (isBufferedResponse) 
+		{
+			throw exception;
+		}
+		else 
+		{
+			log.error("Error detaching RequestCycle", exception);
+		}
 	}
 
 	/**

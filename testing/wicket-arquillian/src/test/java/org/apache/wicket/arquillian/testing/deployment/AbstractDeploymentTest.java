@@ -80,7 +80,7 @@ public abstract class AbstractDeploymentTest {
 				.resolve().withTransitivity().asFile();
 		
 		// Create the WAR.
-		return ShrinkWrap.create(WebArchive.class, "wicket-servletContext.war")
+		return ShrinkWrap.create(WebArchive.class, "wicket-servletContext8.war")
 						 // Add packages and/or classes.
 						 .addPackages(true, TestWicketJavaEEApplication.class.getPackage())
 						 // Add the persistence.xml

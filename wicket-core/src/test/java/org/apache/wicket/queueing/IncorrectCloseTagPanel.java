@@ -14,21 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model;
+package org.apache.wicket.queueing;
 
-/**
- * Interface implemented by model that can provide class of the model object.
- * 
- * @author Matej Knopp
- * @param <T>
- *            The model object type
- */
-public interface IObjectClassAwareModel<T> extends IModel<T>
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
+
+public class IncorrectCloseTagPanel extends Panel
 {
-	/**
-	 * Returns the class of model object
-	 * 
-	 * @return class of model object or null if the class couldn't be determined
-	 */
-	Class<T> getObjectClass();
+	private static final long serialVersionUID = 1L;
+
+	public IncorrectCloseTagPanel(String id)
+	{
+		super(id);
+		add(new Label("test", " test <img src=\"img.png\" />").setEscapeModelStrings(false));
+	}
 }

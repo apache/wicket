@@ -63,7 +63,6 @@ import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
-import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 import org.apache.wicket.page.DefaultPageManagerContext;
@@ -813,7 +812,6 @@ public abstract class Application implements UnboundListener, IEventSink
 		PageSettings pageSettings = getPageSettings();
 
 		// Install default component resolvers
-		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
 		pageSettings.addComponentResolver(new HtmlHeaderResolver());
 		pageSettings.addComponentResolver(new WicketLinkTagHandler());
 		pageSettings.addComponentResolver(new WicketMessageResolver());

@@ -111,10 +111,16 @@ public class PackageResourceReference extends ResourceReference
 		final String extension = getExtension();
 
 		final PackageResource resource;
-		
-		final Url url = RequestCycle.get().getRequest().getUrl();
-		//resource attributes (locale, style, variation) might be encoded in the URL
-		final UrlAttributes urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
+
+		RequestCycle requestCycle = RequestCycle.get();
+		UrlAttributes urlAttributes = null;
+		if (requestCycle != null)
+		{
+			//resource attributes (locale, style, variation) might be encoded in the URL
+			final Url url = requestCycle.getRequest().getUrl();
+			urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
+		}
+
 		final String currentVariation = getCurrentVariation(urlAttributes);
 		final String currentStyle = getCurrentStyle(urlAttributes);
 		final Locale currentLocale = getCurrentLocale(urlAttributes);
@@ -185,7 +191,11 @@ public class PackageResourceReference extends ResourceReference
 	{
 		Locale currentLocale = getCurrentLocale();
 
-		return currentLocale != null ? currentLocale : attributes.getLocale();
+		return currentLocale != null
+				? currentLocale
+				: attributes != null
+					? attributes.getLocale()
+					: null;
 	}
 
 	private Locale getCurrentLocale()
@@ -208,8 +218,12 @@ public class PackageResourceReference extends ResourceReference
 	private String getCurrentStyle(UrlAttributes attributes)
 	{
 		String currentStyle = getCurrentStyle();
-		
-		return currentStyle != null ? currentStyle : attributes.getStyle();
+
+		return currentStyle != null
+				? currentStyle
+				: attributes != null
+					? attributes.getStyle()
+					: null;
 	}
 	
 	private String getCurrentStyle()
@@ -233,7 +247,11 @@ public class PackageResourceReference extends ResourceReference
 	{
 		final String variation = getVariation();
 
-		return variation != null ? variation : attributes.getVariation();
+		return variation != null
+				? variation
+				: attributes != null
+					? attributes.getVariation()
+					: null;
 	}
 
 	/**

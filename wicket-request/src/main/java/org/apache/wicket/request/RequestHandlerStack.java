@@ -179,6 +179,10 @@ public abstract class RequestHandlerStack
 			{
 				detach(handler);
 			}
+			catch (RuntimeException exception)
+			{
+				throw exception;
+			}
 			catch (Exception exception)
 			{
 				log.error("Error detaching RequestHandler", exception);

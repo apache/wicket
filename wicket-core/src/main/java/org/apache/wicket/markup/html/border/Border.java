@@ -221,7 +221,19 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	@Override
 	public Border addOrReplace(final Component... children)
 	{
-		getBodyContainer().addOrReplace(children);
+		for (Component component : children)
+		{
+			if (component == body)
+			{
+				// in this case we do not want to redirect to body
+				// container but to border's old remove.
+				super.addOrReplace(component);
+			}
+			else 
+			{
+				getBodyContainer().addOrReplace(component);				
+			}
+		}
 		return this;
 	}
 
@@ -230,10 +242,9 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		if (component == body)
 		{
-			// when the user calls foo.add(getBodyContainer()) this method will be called with it to
-			// clear body container's old parent, in which case we do not want to redirect to body
+			// in this case we do not want to redirect to body
 			// container but to border's old remove.
-			super.remove(body);
+			removeFromBorder(component);
 		}
 		else
 		{
@@ -242,10 +253,21 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		return this;
 	}
 
+	
+	
 	@Override
 	public Border remove(final String id)
 	{
-		getBodyContainer().remove(id);
+		if (body.getId().equals(id))
+		{
+			// in this case we do not want to redirect to body
+			// container but to border's old remove.
+			super.remove(id);
+		}
+		else
+		{
+			getBodyContainer().remove(id);
+		}
 		return this;
 	}
 
@@ -259,7 +281,16 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	@Override
 	public Border replace(final Component replacement)
 	{
-		getBodyContainer().replace(replacement);
+		if (body.getId().equals(replacement.getId()))
+		{
+			// in this case we do not want to redirect to body
+			// container but to border's old remove.
+			replaceInBorder(replacement);
+		}
+		else
+		{
+			getBodyContainer().replace(replacement);
+		}
 		return this;
 	}
 
