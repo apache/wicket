@@ -316,9 +316,21 @@ public class Image extends WebComponent implements IResourceListener
 		if (xValues == null)
 		{
 			xValues = new ArrayList<>();
+		}else{
+			xValues.clear();
 		}
-		xValues.clear();
 		xValues.addAll(Arrays.asList(values));
+	}
+
+	/**
+	 * Removes all x values from the image src set
+	 */
+	public void removeXValues()
+	{
+		if (xValues != null)
+		{
+			xValues.clear();
+		}
 	}
 
 	/**
@@ -330,9 +342,21 @@ public class Image extends WebComponent implements IResourceListener
 		if (this.sizes == null)
 		{
 			this.sizes = new ArrayList<>();
+		}else{
+			this.sizes.clear();
 		}
-		this.sizes.clear();
 		this.sizes.addAll(Arrays.asList(sizes));
+	}
+
+	/**
+	 * Removes all sizes values. The corresponding attribute will not be rendered anymore.
+	 */
+	public void removeSizes()
+	{
+		if (sizes != null)
+		{
+			sizes.clear();
+		}
 	}
 
 	/**
