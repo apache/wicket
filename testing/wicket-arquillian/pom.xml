@@ -44,6 +44,7 @@
 		<slf4j.version>1.7.12</slf4j.version>
 		<wildfly.version>8.2.1.Final</wildfly.version>
 		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
+		<jee.spec.version>1.0.3.Final</jee.spec.version>
 	</properties>
 
 	<dependencyManagement>
@@ -62,7 +63,7 @@
 		<dependency>
 			<groupId>org.jboss.spec</groupId>
 			<artifactId>jboss-javaee-7.0</artifactId>
-			<version>1.0.2.Final</version>
+			<version>${jee.spec.version}</version>
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
@@ -97,6 +98,7 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>
 			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
@@ -154,7 +156,7 @@
 				<plugin>
 					<groupId>org.wildfly.plugins</groupId>
 					<artifactId>wildfly-maven-plugin</artifactId>
-					<version>1.0.2.Final</version>
+					<version>${version.wildfly.maven.plugin}</version>
 					<configuration>
 						<filename>target/${project.build.finalName}.war</filename>
 					</configuration>
