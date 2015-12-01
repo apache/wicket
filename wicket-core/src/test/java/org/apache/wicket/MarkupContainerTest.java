@@ -29,6 +29,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -37,6 +38,7 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -1208,7 +1210,42 @@ public class MarkupContainerTest extends WicketTestCase
 		assertThat(iterator1.hasNext(), is(false));
 		assertThat(iterator2.hasNext(), is(false));
 	}
-
+	
+	@Test
+	public void testStreamOfChildren() throws Exception
+	{
+		WebMarkupContainer wmc = new WebMarkupContainer("id");
+		WebMarkupContainer container = new WebMarkupContainer("container");
+		addNChildren(wmc, 10);
+		
+		wmc.add(container);
+		container.add(new Form<>("form"));
+		
+		long wmcNumber = filterChildrenStreamByClass(wmc, WebMarkupContainer.class).count();
+		assertEquals(2l, wmcNumber);
+		
+		long formNumber = filterChildrenStreamByClass(wmc, Form.class).count();
+		assertEquals(1l, formNumber);
+		
+		long labelNumber = filterChildrenStreamByClass(wmc, Label.class).count();
+		assertEquals(10l, labelNumber);
+	}
+	
+	/**
+	 * Returns a stream containg only children components who are instance of 
+	 * <code>filterClass</code>.
+	 * 
+	 * @param container
+	 * 			the parent markup container
+	 * @param filterClass
+	 * 			the component class to use as filter
+	 * @return a stream containg only children who are instance of param <code>filterClass</code>
+	 */
+	private Stream<Component> filterChildrenStreamByClass(MarkupContainer container, Class<? extends Component> filterClass)
+	{
+		return container.childrenStream().filter(filterClass::isInstance);
+	}
+	
 	/**
 	 * Asserts that the children property of the {@code wmc} is of a particular {@code type}.
 	 * 

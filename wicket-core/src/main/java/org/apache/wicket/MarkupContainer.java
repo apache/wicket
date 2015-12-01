@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.string.ComponentStrings;
@@ -43,6 +45,7 @@ import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.util.NestedIterator;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
@@ -2190,5 +2193,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	protected void addDequeuedComponent(Component component, ComponentTag tag)
 	{
 		add(component);
+	}
+	
+	/**
+	 * Creates a {@code java.util.stream.Stream} returning all the children (included nested ones)
+	 * of the this container.
+	 * 
+	 * @return a stream returning children.
+	 */
+	public Stream<Component> childrenStream()
+	{
+		NestedIterator<Component> nestedIterator = new NestedIterator<>(this);
+		Iterable<Component> iterable = () -> nestedIterator;
+		
+		return StreamSupport.stream(iterable.spliterator(), false);
 	}
 }
