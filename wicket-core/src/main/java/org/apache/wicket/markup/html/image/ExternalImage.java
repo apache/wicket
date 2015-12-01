@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +49,7 @@ public class ExternalImage extends WebComponent
 	 */
 	private Cors crossOrigin = null;
 
-	private IModel<?>[] srcSet;
+	private IModel<?>[] srcSetModels;
 
 	/**
 	 * Creates an external image
@@ -60,7 +61,7 @@ public class ExternalImage extends WebComponent
 	 * @param srcSet
 	 *            a list of URLs placed in the srcset attribute
 	 */
-	public ExternalImage(String id, String src, String... srcSet)
+	public ExternalImage(String id, Serializable src, Serializable... srcSet)
 	{
 		this(id, src != null ? Model.of(src) : null, convertToModel(srcSet));
 	}
@@ -70,15 +71,15 @@ public class ExternalImage extends WebComponent
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param src
+	 * @param srcModel
 	 *            the model source URL
 	 * @param srcSetModels
 	 *            a model list of URLs placed in the srcset attribute
 	 */
-	public ExternalImage(String id, IModel<?> src, IModel<?>... srcSetModels)
+	public ExternalImage(String id, IModel<?> srcModel, IModel<?>... srcSetModels)
 	{
-		super(id, src);
-		this.srcSet = srcSetModels;
+		super(id, srcModel);
+		this.srcSetModels = srcSetModels;
 	}
 
 	/**
@@ -88,7 +89,7 @@ public class ExternalImage extends WebComponent
 	 *            a variable argument of URLs to be converted to an array of models
 	 * @return an array of models
 	 */
-	private static IModel<?>[] convertToModel(String... srcSet)
+	private static IModel<?>[] convertToModel(Serializable... srcSet)
 	{
 		IModel<?>[] models = null;
 		if (srcSet != null)
@@ -96,7 +97,7 @@ public class ExternalImage extends WebComponent
 
 			models = new IModel<?>[srcSet.length];
 			int i = 0;
-			for (String srcSetElement : srcSet)
+			for (Serializable srcSetElement : srcSet)
 			{
 				models[i] = Model.of(srcSetElement);
 				i++;
@@ -148,8 +149,10 @@ public class ExternalImage extends WebComponent
 	 */
 	protected void buildSrcAttribute(final ComponentTag tag, IModel<?> srcModel)
 	{
-		// The first model is the one put into src attribute
-		tag.put("src", srcModel.getObject().toString());
+		if (srcModel != null)
+		{
+			tag.put("src", srcModel.getObject().toString());
+		}
 	}
 
 	/**
@@ -219,7 +222,10 @@ public class ExternalImage extends WebComponent
 		{
 			xValues = new ArrayList<>();
 		}
-		xValues.clear();
+		else
+		{
+			xValues.clear();
+		}
 		xValues.addAll(Arrays.asList(values));
 	}
 
@@ -233,7 +239,10 @@ public class ExternalImage extends WebComponent
 		{
 			this.sizes = new ArrayList<>();
 		}
-		this.sizes.clear();
+		else
+		{
+			this.sizes.clear();
+		}
 		this.sizes.addAll(Arrays.asList(sizes));
 	}
 
@@ -268,7 +277,19 @@ public class ExternalImage extends WebComponent
 	 */
 	public List<IModel<?>> getSrcSet()
 	{
-		return Arrays.asList(srcSet);
+		return Arrays.asList(srcSetModels);
 	}
 
+	/**
+	 * Detaches the srcSetModels
+	 */
+	@Override
+	protected void onDetach()
+	{
+		for (IModel<?> model : srcSetModels)
+		{
+			model.detach();
+		}
+		super.onDetach();
+	}
 }
