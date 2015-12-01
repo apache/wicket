@@ -316,8 +316,9 @@ public class Image extends WebComponent implements IResourceListener
 		if (xValues == null)
 		{
 			xValues = new ArrayList<>();
+		}else{			
+			xValues.clear();
 		}
-		xValues.clear();
 		xValues.addAll(Arrays.asList(values));
 	}
 
@@ -330,8 +331,9 @@ public class Image extends WebComponent implements IResourceListener
 		if (this.sizes == null)
 		{
 			this.sizes = new ArrayList<>();
+		}else{			
+			this.sizes.clear();
 		}
-		this.sizes.clear();
 		this.sizes.addAll(Arrays.asList(sizes));
 	}
 

@@ -16,12 +16,11 @@
  */
 package org.apache.wicket.markup.html.image;
 
-import java.util.Arrays;
+import java.io.Serializable;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.image.Image.Cors;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * A component which displays external images within a picture tag.
@@ -48,9 +47,9 @@ public class ExternalSource extends ExternalImage
 	 * @param srcSet
 	 *            a list of URLs placed in the srcset attribute
 	 */
-	public ExternalSource(String id, String... srcSet)
+	public ExternalSource(String id, Serializable... srcSet)
 	{
-		super(id, null, Arrays.copyOfRange(srcSet, 1, srcSet.length));
+		super(id, null, srcSet);
 	}
 
 	/**
@@ -60,12 +59,12 @@ public class ExternalSource extends ExternalImage
 	 *            the component id
 	 * @param src
 	 *            the model source URL
-	 * @param srcSet
+	 * @param srcSetModels
 	 *            a model list of URLs placed in the srcset attribute
 	 */
-	public ExternalSource(String id, IModel<?>... srcSet)
+	public ExternalSource(String id, IModel<?>... srcSetModels)
 	{
-		super(id, null, srcSet);
+		super(id, null, srcSetModels);
 	}
 
 	@Override
