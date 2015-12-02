@@ -40,7 +40,6 @@ public class ExternalImageTest extends WicketTestCase
 	{
 		tester.startPage(ExternalImageTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		System.out.println(lastResponseAsString);
 		Assert.assertTrue(lastResponseAsString.contains(
 			"<img wicket:id=\"externalImage1\" src=\"http://wicket.apache.org/img/wicket-7-bg.jpg\"/>"));
 		Assert.assertTrue(lastResponseAsString.contains(
