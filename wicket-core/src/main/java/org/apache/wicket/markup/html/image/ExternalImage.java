@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.image;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -28,9 +29,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
- * A component to display external images. The src / srcset information are hold in models
+ * A component to display external images. The src / srcSet information are hold in models
+ * 
+ * @see org.apache.wicket.markup.html.image.Image
  * 
  * @author Tobias Soloschenko
+ * @author Sebastien Briquet
+ * @author Sven Meier
+ * @author Martin Grigorov
  *
  */
 public class ExternalImage extends WebComponent
@@ -49,7 +55,18 @@ public class ExternalImage extends WebComponent
 	 */
 	private Cors crossOrigin = null;
 
-	private IModel<List<Serializable>> srcSetModels;
+	private IModel<List<Serializable>> srcSetModel;
+
+	/**
+	 * Creates an external image
+	 * 
+	 * @param id
+	 *            the component id
+	 */
+	public ExternalImage(String id)
+	{
+		this(id, null, Model.ofList(Collections.<Serializable> emptyList()));
+	}
 
 	/**
 	 * Creates an external image
@@ -61,7 +78,7 @@ public class ExternalImage extends WebComponent
 	 */
 	public ExternalImage(String id, Serializable src)
 	{
-		this(id, src, (List<Serializable>)null);
+		this(id, Model.of(src), Model.ofList(Collections.<Serializable> emptyList()));
 	}
 
 	/**
@@ -72,7 +89,7 @@ public class ExternalImage extends WebComponent
 	 * @param src
 	 *            the source URL
 	 * @param srcSet
-	 *            a list of URLs placed in the srcset attribute
+	 *            a list of URLs placed in the srcSet attribute
 	 */
 	public ExternalImage(String id, Serializable src, List<Serializable> srcSet)
 	{
@@ -86,12 +103,10 @@ public class ExternalImage extends WebComponent
 	 *            the component id
 	 * @param srcModel
 	 *            the model source URL
-	 * @param srcSetModels
-	 *            a model list of URLs placed in the srcset attribute
 	 */
 	public ExternalImage(String id, IModel<Serializable> srcModel)
 	{
-		this(id, srcModel, (IModel<List<Serializable>>)null);
+		this(id, srcModel, Model.ofList(Collections.<Serializable> emptyList()));
 	}
 
 	/**
@@ -101,14 +116,14 @@ public class ExternalImage extends WebComponent
 	 *            the component id
 	 * @param srcModel
 	 *            the model source URL
-	 * @param srcSetModels
-	 *            a model list of URLs placed in the srcset attribute
+	 * @param srcSetModel
+	 *            a model list of URLs placed in the srcSet attribute
 	 */
 	public ExternalImage(String id, IModel<Serializable> srcModel,
-		IModel<List<Serializable>> srcSetModels)
+		IModel<List<Serializable>> srcSetModel)
 	{
 		super(id, srcModel);
-		this.srcSetModels = srcSetModels;
+		this.srcSetModel = srcSetModel;
 	}
 
 	@Override
@@ -118,13 +133,13 @@ public class ExternalImage extends WebComponent
 
 		if ("source".equals(tag.getName()))
 		{
-			buildSrcSetAttribute(tag, getSrcSet());
+			buildSrcSetAttribute(tag, getSrcSetModel());
 		}
 		else
 		{
 			checkComponentTag(tag, "img");
 			buildSrcAttribute(tag, getDefaultModel());
-			buildSrcSetAttribute(tag, getSrcSet());
+			buildSrcSetAttribute(tag, getSrcSetModel());
 		}
 
 		buildSizesAttribute(tag);
@@ -146,10 +161,7 @@ public class ExternalImage extends WebComponent
 	 */
 	protected void buildSrcAttribute(final ComponentTag tag, IModel<?> srcModel)
 	{
-		if (srcModel != null)
-		{
-			tag.put("src", srcModel.getObject().toString());
-		}
+		tag.put("src", srcModel.getObject().toString());
 	}
 
 	/**
@@ -157,32 +169,28 @@ public class ExternalImage extends WebComponent
 	 *
 	 * @param tag
 	 *            the component tag
-	 * @param srcSetModels
+	 * @param srcSetModel
 	 *            the models containing the src set URLs
 	 */
 	protected void buildSrcSetAttribute(final ComponentTag tag,
-		IModel<List<Serializable>> srcSetModels)
+		IModel<List<Serializable>> srcSetModel)
 	{
 		int srcSetPosition = 0;
-		List<Serializable> srcSetItems = srcSetModels.getObject();
-		if (srcSetItems != null)
+		List<Serializable> srcSetItems = srcSetModel.getObject();
+		for (Serializable srcSet : srcSetItems)
 		{
-			for (Serializable srcSetModel : srcSetItems)
-			{
-				String srcset = tag.getAttribute("srcset");
-				String xValue = "";
+			String srcset = tag.getAttribute("srcset");
+			String xValue = "";
 
-				// If there are xValues set process them in the applied order to the srcset
-				// attribute.
-				if (xValues != null)
-				{
-					xValue = xValues.size() > srcSetPosition && xValues.get(srcSetPosition) != null
-						? " " + xValues.get(srcSetPosition)
-						: "";
-				}
-				tag.put("srcset", (srcset != null ? srcset + ", " : "") + srcSetModel + xValue);
-				srcSetPosition++;
+			// If there are xValues set process them in the applied order to the srcset
+			// attribute.
+			if (xValues != null)
+			{
+				xValue = xValues.size() > srcSetPosition && xValues.get(srcSetPosition) != null
+					? " " + xValues.get(srcSetPosition) : "";
 			}
+			tag.put("srcset", (srcset != null ? srcset + ", " : "") + srcSet + xValue);
+			srcSetPosition++;
 		}
 	}
 
@@ -278,9 +286,20 @@ public class ExternalImage extends WebComponent
 	 * 
 	 * @return a list of models containing the src set values
 	 */
-	public IModel<List<Serializable>> getSrcSet()
+	public IModel<List<Serializable>> getSrcSetModel()
 	{
-		return srcSetModels;
+		return srcSetModel;
+	}
+
+	/**
+	 * Sets the source set model
+	 * 
+	 * @param srcSetModel
+	 *            the model of a list of src set entries
+	 */
+	public void setSrcSetModel(IModel<List<Serializable>> srcSetModel)
+	{
+		this.srcSetModel = srcSetModel;
 	}
 
 	/**
@@ -289,9 +308,9 @@ public class ExternalImage extends WebComponent
 	@Override
 	protected void onDetach()
 	{
-		if (srcSetModels != null)
+		if (srcSetModel != null)
 		{
-			srcSetModels.detach();
+			srcSetModel.detach();
 		}
 		super.onDetach();
 	}

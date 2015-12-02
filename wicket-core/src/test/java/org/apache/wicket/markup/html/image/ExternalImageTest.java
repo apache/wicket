@@ -40,6 +40,7 @@ public class ExternalImageTest extends WicketTestCase
 	{
 		tester.startPage(ExternalImageTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
+		System.out.println(lastResponseAsString);
 		Assert.assertTrue(lastResponseAsString.contains(
 			"<img wicket:id=\"externalImage1\" src=\"http://wicket.apache.org/img/wicket-7-bg.jpg\"/>"));
 		Assert.assertTrue(lastResponseAsString.contains(
@@ -58,7 +59,7 @@ public class ExternalImageTest extends WicketTestCase
 		ExternalImage externalImage2 = (ExternalImage)externalImage2Component;
 
 		TagTester tagById = tester.getTagById("externalImage2");
-		 IModel<List<Serializable>> srcSet = externalImage2.getSrcSet();
+		 IModel<List<Serializable>> srcSet = externalImage2.getSrcSetModel();
 		for (Serializable model :srcSet.getObject())
 		{
 			String attribute = tagById.getAttribute("srcset");

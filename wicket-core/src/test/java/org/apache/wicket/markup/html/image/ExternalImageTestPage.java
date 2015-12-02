@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import org.apache.wicket.markup.html.WebPage;
@@ -39,14 +40,14 @@ public class ExternalImageTestPage extends WebPage
 		add(new ExternalImage("externalImage1", "http://wicket.apache.org/img/wicket-7-bg.jpg"));
 		ExternalImage externalImage2 = new ExternalImage("externalImage2",
 			"http://wicket.apache.org/img/wicket-7-bg.jpg",
-			Arrays.asList("http://wicket.apache.org/img/wicket-7-bg-1.jpg",
+			Arrays.<Serializable>asList("http://wicket.apache.org/img/wicket-7-bg-1.jpg",
 				"http://wicket.apache.org/img/wicket-7-bg-2.jpg"));
 		externalImage2.setSizes("s1", "s2");
 		externalImage2.setXValues("x1", "x2");
 		add(externalImage2);
 		Picture picture = new Picture("externalPicture");
 		ExternalSource externalSource = new ExternalSource("externalSource",
-			Model.ofList(Arrays.asList("http://wicket.apache.org/img/wicket-7-bg-1.jpg",
+			Model.ofList(Arrays.<Serializable>asList("http://wicket.apache.org/img/wicket-7-bg-1.jpg",
 				"http://wicket.apache.org/img/wicket-7-bg-2.jpg")));
 		externalSource.setXValues("", "x2");
 		externalSource.setSizes("1");
@@ -54,7 +55,7 @@ public class ExternalImageTestPage extends WebPage
 		picture.add(externalSource);
 		ExternalImage externalImage3 = new ExternalImage("externalImage3",
 			"http://wicket.apache.org/img/wicket-7-bg.jpg",
-			Arrays.asList("http://wicket.apache.org/img/wicket-7-bg-1.jpg",
+			Arrays.<Serializable>asList("http://wicket.apache.org/img/wicket-7-bg-1.jpg",
 				"http://wicket.apache.org/img/wicket-7-bg-2.jpg"));
 		picture.add(externalImage3);
 		add(picture);
