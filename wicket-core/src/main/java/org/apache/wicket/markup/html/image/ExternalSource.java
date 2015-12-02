@@ -17,11 +17,13 @@
 package org.apache.wicket.markup.html.image;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.image.Image.Cors;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 /**
  * A component which displays external images within a picture tag.
@@ -29,6 +31,9 @@ import org.apache.wicket.model.IModel;
  * @see org.apache.wicket.markup.html.image.Source
  * 
  * @author Tobias Soloschenko
+ * @author Sebastien Briquet
+ * @author Sven Meier
+ * @author Martin Grigorov
  *
  */
 public class ExternalSource extends ExternalImage
@@ -48,9 +53,24 @@ public class ExternalSource extends ExternalImage
 	 * @param srcSet
 	 *            a list of URLs placed in the srcset attribute
 	 */
+	public ExternalSource(String id)
+	{
+		super(id, null, Model.ofList(Collections.<Serializable> emptyList()));
+	}
+	
+	/**
+	 * Creates an external source
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param src
+	 *            the source URL
+	 * @param srcSet
+	 *            a list of URLs placed in the srcset attribute
+	 */
 	public ExternalSource(String id, List<Serializable> srcSet)
 	{
-		super(id, null, srcSet);
+		super(id, null, Model.ofList(srcSet));
 	}
 
 	/**
@@ -60,12 +80,12 @@ public class ExternalSource extends ExternalImage
 	 *            the component id
 	 * @param src
 	 *            the model source URL
-	 * @param srcSetModels
+	 * @param srcSetModel
 	 *            a model list of URLs placed in the srcset attribute
 	 */
-	public ExternalSource(String id, IModel<List<Serializable>> srcSetModels)
+	public ExternalSource(String id, IModel<List<Serializable>> srcSetModel)
 	{
-		super(id, null, srcSetModels);
+		super(id, null, srcSetModel);
 	}
 
 	@Override
