@@ -16,48 +16,16 @@
  */
 package org.apache.wicket.model.lambda;
 
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.IReadOnlyModel;
+import java.io.Serializable;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-public class Models
+/**
+ * A {@link Serializable} {@link Consumer}.
+ *
+ * @param <T>
+ *            - the type of the input to consume
+ */
+public interface WicketBiConsumer<T,V> extends BiConsumer<T,V>, Serializable
 {
-	public static <S, T> IModel<T> of(IModel<S> source, WicketBiConsumer<S, T> setter, WicketFunction<S, T> getter) {
-		return new IModel<T>()	{
-			@Override
-			public void detach()
-			{
-				source.detach();
-			}
-
-			@Override
-			public T getObject()
-			{
-				return getter.apply(source.getObject());
-			}
-
-			@Override
-			public void setObject(T object)
-			{
-				setter.accept(source.getObject(), object);
-			}
-		};
-	}
-	
-	public static <S, T> IReadOnlyModel<T> of(IReadOnlyModel<S> source, WicketFunction<S, T> getter) {
-		return new IReadOnlyModel<T>()
-		{
-
-			@Override
-			public void detach()
-			{
-				source.detach();
-			}
-
-			@Override
-			public T getObject()
-			{
-				return getter.apply(source.getObject());
-			}
-		};
-	}
 }

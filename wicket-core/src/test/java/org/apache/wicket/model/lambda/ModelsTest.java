@@ -19,6 +19,9 @@ package org.apache.wicket.model.lambda;
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -30,7 +33,7 @@ public class ModelsTest
 	public void propertyModel() {
 		Foo instance = new Foo();
 		Model<Foo> fooModel = Model.of(instance);
-		IModel<String> nameModel = Models.of(fooModel, (x) -> x::setName, (x) -> x::getName);
+		IModel<String> nameModel = Models.of(fooModel, Foo::setName, Foo::getName);
 		instance.setName("blub");
 		assertEquals("blub", nameModel.getObject());
 		nameModel.setObject("bar");
