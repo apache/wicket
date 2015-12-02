@@ -49,7 +49,20 @@ public class ExternalImage extends WebComponent
 	 */
 	private Cors crossOrigin = null;
 
-	private IModel<?>[] srcSetModels;
+	private IModel<List<Serializable>> srcSetModels;
+
+	/**
+	 * Creates an external image
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param src
+	 *            the source URL
+	 */
+	public ExternalImage(String id, Serializable src)
+	{
+		this(id, src, (List<Serializable>)null);
+	}
 
 	/**
 	 * Creates an external image
@@ -61,9 +74,9 @@ public class ExternalImage extends WebComponent
 	 * @param srcSet
 	 *            a list of URLs placed in the srcset attribute
 	 */
-	public ExternalImage(String id, Serializable src, Serializable... srcSet)
+	public ExternalImage(String id, Serializable src, List<Serializable> srcSet)
 	{
-		this(id, src != null ? Model.of(src) : null, convertToModel(srcSet));
+		this(id, Model.of(src), Model.ofList(srcSet));
 	}
 
 	/**
@@ -76,38 +89,26 @@ public class ExternalImage extends WebComponent
 	 * @param srcSetModels
 	 *            a model list of URLs placed in the srcset attribute
 	 */
-	public ExternalImage(String id, IModel<?> srcModel, IModel<?>... srcSetModels)
+	public ExternalImage(String id, IModel<Serializable> srcModel)
 	{
-		super(id, srcModel);
-		this.srcSetModels = srcSetModels;
+		this(id, srcModel, (IModel<List<Serializable>>)null);
 	}
 
 	/**
-	 * Converts a variable argument of Strings to an array of models
+	 * Creates an external image
 	 * 
-	 * @param srcSet
-	 *            a variable argument of URLs to be converted to an array of models
-	 * @return an array of models
+	 * @param id
+	 *            the component id
+	 * @param srcModel
+	 *            the model source URL
+	 * @param srcSetModels
+	 *            a model list of URLs placed in the srcset attribute
 	 */
-	private static IModel<?>[] convertToModel(Serializable... srcSet)
+	public ExternalImage(String id, IModel<Serializable> srcModel,
+		IModel<List<Serializable>> srcSetModels)
 	{
-		IModel<?>[] models = null;
-		if (srcSet != null)
-		{
-
-			models = new IModel<?>[srcSet.length];
-			int i = 0;
-			for (Serializable srcSetElement : srcSet)
-			{
-				models[i] = Model.of(srcSetElement);
-				i++;
-			}
-		}
-		else
-		{
-			models = new IModel<?>[0];
-		}
-		return models;
+		super(id, srcModel);
+		this.srcSetModels = srcSetModels;
 	}
 
 	@Override
@@ -121,13 +122,9 @@ public class ExternalImage extends WebComponent
 		}
 		else
 		{
-			List<IModel<?>> srcSet = getSrcSet();
 			checkComponentTag(tag, "img");
 			buildSrcAttribute(tag, getDefaultModel());
-			if (srcSet.size() > 1)
-			{
-				buildSrcSetAttribute(tag, srcSet);
-			}
+			buildSrcSetAttribute(tag, getSrcSet());
 		}
 
 		buildSizesAttribute(tag);
@@ -163,23 +160,29 @@ public class ExternalImage extends WebComponent
 	 * @param srcSetModels
 	 *            the models containing the src set URLs
 	 */
-	protected void buildSrcSetAttribute(final ComponentTag tag, List<IModel<?>> srcSetModels)
+	protected void buildSrcSetAttribute(final ComponentTag tag,
+		IModel<List<Serializable>> srcSetModels)
 	{
 		int srcSetPosition = 0;
-		for (IModel<?> srcSetModel : srcSetModels)
+		List<Serializable> srcSetItems = srcSetModels.getObject();
+		if (srcSetItems != null)
 		{
-			String srcset = tag.getAttribute("srcset");
-			String xValue = "";
-
-			// If there are xValues set process them in the applied order to the srcset attribute.
-			if (xValues != null)
+			for (Serializable srcSetModel : srcSetItems)
 			{
-				xValue = xValues.size() > srcSetPosition && xValues.get(srcSetPosition) != null
-					? " " + xValues.get(srcSetPosition) : "";
+				String srcset = tag.getAttribute("srcset");
+				String xValue = "";
+
+				// If there are xValues set process them in the applied order to the srcset
+				// attribute.
+				if (xValues != null)
+				{
+					xValue = xValues.size() > srcSetPosition && xValues.get(srcSetPosition) != null
+						? " " + xValues.get(srcSetPosition)
+						: "";
+				}
+				tag.put("srcset", (srcset != null ? srcset + ", " : "") + srcSetModel + xValue);
+				srcSetPosition++;
 			}
-			tag.put("srcset",
-				(srcset != null ? srcset + ", " : "") + srcSetModel.getObject() + xValue);
-			srcSetPosition++;
 		}
 	}
 
@@ -275,9 +278,9 @@ public class ExternalImage extends WebComponent
 	 * 
 	 * @return a list of models containing the src set values
 	 */
-	public List<IModel<?>> getSrcSet()
+	public IModel<List<Serializable>> getSrcSet()
 	{
-		return Arrays.asList(srcSetModels);
+		return srcSetModels;
 	}
 
 	/**
@@ -286,9 +289,9 @@ public class ExternalImage extends WebComponent
 	@Override
 	protected void onDetach()
 	{
-		for (IModel<?> model : srcSetModels)
+		if (srcSetModels != null)
 		{
-			model.detach();
+			srcSetModels.detach();
 		}
 		super.onDetach();
 	}
