@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.image;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.image.Image.Cors;
@@ -47,7 +48,7 @@ public class ExternalSource extends ExternalImage
 	 * @param srcSet
 	 *            a list of URLs placed in the srcset attribute
 	 */
-	public ExternalSource(String id, Serializable... srcSet)
+	public ExternalSource(String id, List<Serializable> srcSet)
 	{
 		super(id, null, srcSet);
 	}
@@ -62,7 +63,7 @@ public class ExternalSource extends ExternalImage
 	 * @param srcSetModels
 	 *            a model list of URLs placed in the srcset attribute
 	 */
-	public ExternalSource(String id, IModel<?>... srcSetModels)
+	public ExternalSource(String id, IModel<List<Serializable>> srcSetModels)
 	{
 		super(id, null, srcSetModels);
 	}

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.apache.wicket.Component;
@@ -51,17 +52,17 @@ public class ExternalImageTest extends WicketTestCase
 	public void testExternalImageModel()
 	{
 		tester.startPage(ExternalImageTestPage.class);
-		String lastResponseAsString = tester.getLastResponse().getDocument();
+		tester.getLastResponse().getDocument();
 		Component externalImage2Component = tester
 			.getComponentFromLastRenderedPage("externalImage2");
 		ExternalImage externalImage2 = (ExternalImage)externalImage2Component;
-		Object defaultModelObject = externalImage2.getDefaultModelObject();
 
 		TagTester tagById = tester.getTagById("externalImage2");
-		for (IModel<?> model : externalImage2.getSrcSet())
+		 IModel<List<Serializable>> srcSet = externalImage2.getSrcSet();
+		for (Serializable model :srcSet.getObject())
 		{
 			String attribute = tagById.getAttribute("srcset");
-			Assert.assertTrue(attribute.contains(model.getObject().toString()));
+			Assert.assertTrue(attribute.contains(model.toString()));
 		}
 
 		String attribute = tagById.getAttribute("src");
