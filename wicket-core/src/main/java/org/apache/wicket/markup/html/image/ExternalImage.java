@@ -161,7 +161,7 @@ public class ExternalImage extends WebComponent
 	 */
 	protected void buildSrcAttribute(final ComponentTag tag, IModel<?> srcModel)
 	{
-		tag.put("src", srcModel.getObject().toString());
+		tag.put("src", String.valueOf(srcModel.getObject()));
 	}
 
 	/**
