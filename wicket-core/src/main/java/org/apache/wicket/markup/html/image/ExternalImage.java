@@ -241,6 +241,17 @@ public class ExternalImage extends WebComponent
 	}
 
 	/**
+	 * Removes all sizes values. The corresponding tag will not be rendered anymore.
+	 */
+	public void removeSizes()
+	{
+		if (sizes != null)
+		{
+			sizes.clear();
+		}
+	}
+
+	/**
 	 * @param sizes
 	 *            the sizes to be used in the size
 	 */
@@ -255,6 +266,17 @@ public class ExternalImage extends WebComponent
 			this.sizes.clear();
 		}
 		this.sizes.addAll(Arrays.asList(sizes));
+	}
+
+	/**
+	 * Removes all x values from the image src set.
+	 */
+	public void removeXValues()
+	{
+		if (xValues != null)
+		{
+			xValues.clear();
+		}
 	}
 
 	/**

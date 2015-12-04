@@ -46,6 +46,8 @@ public class ExternalImageTest extends WicketTestCase
 			"<img id=\"externalImage2\" wicket:id=\"externalImage2\" src=\"http://wicket.apache.org/img/wicket-7-bg.jpg\" srcset=\"http://wicket.apache.org/img/wicket-7-bg-1.jpg x1, http://wicket.apache.org/img/wicket-7-bg-2.jpg x2\" sizes=\"s1,s2\"/>"));
 		Assert.assertTrue(lastResponseAsString.contains(
 			"<source wicket:id=\"externalSource\" srcset=\"http://wicket.apache.org/img/wicket-7-bg-1.jpg , http://wicket.apache.org/img/wicket-7-bg-2.jpg x2\" sizes=\"1\" media=\"(min-width: 650px)\"/>"));
+		Assert.assertTrue(lastResponseAsString.contains(
+			"<img wicket:id=\"compoundImage\" src=\"http://www.google.de/test.jpg\"/>"));
 	}
 
 	@Test
