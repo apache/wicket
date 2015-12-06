@@ -47,7 +47,7 @@ public class ExternalImageTest extends WicketTestCase
 		Assert.assertTrue(lastResponseAsString.contains(
 			"<source wicket:id=\"externalSource\" srcset=\"http://wicket.apache.org/img/wicket-7-bg-1.jpg , http://wicket.apache.org/img/wicket-7-bg-2.jpg x2\" sizes=\"1\" media=\"(min-width: 650px)\"/>"));
 		Assert.assertTrue(lastResponseAsString.contains(
-			"<img wicket:id=\"compoundImage\" src=\"http://www.google.de/test.jpg\"/>"));
+			"<img wicket:id=\"url\" src=\"http://www.google.de/test.jpg\"/>"));
 	}
 
 	@Test
