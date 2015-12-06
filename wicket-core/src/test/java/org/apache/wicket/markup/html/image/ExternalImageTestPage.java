@@ -64,8 +64,8 @@ public class ExternalImageTestPage extends WebPage
 
 		ImageSrc imageSrc = new ImageSrc();
 		imageSrc.setUrl("http://www.google.de/test.jpg");
-		CompoundPropertyModel<ImageSrc> compoundPropertyModel = new CompoundPropertyModel<ImageSrc>(imageSrc);
-		add(new ExternalImage("compoundImage",compoundPropertyModel.bind("url")));
+		setDefaultModel(new CompoundPropertyModel<>(imageSrc));
+		add(new ExternalImage("url"));
 	}
 
 	/**
