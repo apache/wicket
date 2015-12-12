@@ -173,14 +173,14 @@ public class ModalWindow extends Panel
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface PageCreator extends IClusterable
+	public interface PageCreator extends IClusterable
 	{
 		/**
 		 * Creates a new instance of content page.
 		 * 
 		 * @return new page instance
 		 */
-		public Page createPage();
+		Page createPage();
 	}
 
 	/**
@@ -191,7 +191,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface CloseButtonCallback extends IClusterable
+	public interface CloseButtonCallback extends IClusterable
 	{
 		/**
 		 * Methods invoked after the button has been clicked. The invocation is done using an ajax
@@ -204,7 +204,7 @@ public class ModalWindow extends Panel
 		 * 
 		 * @return True if the window can be closed (will close the window), false otherwise
 		 */
-		public boolean onCloseButtonClicked(AjaxRequestTarget target);
+		boolean onCloseButtonClicked(AjaxRequestTarget target);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface WindowClosedCallback extends IClusterable
+	public interface WindowClosedCallback extends IClusterable
 	{
 		/**
 		 * Called after the window has been closed.
@@ -223,7 +223,7 @@ public class ModalWindow extends Panel
 		 *            <code>{@link org.apache.wicket.ajax.AjaxRequestTarget}</code> instance bound
 		 *            with the ajax request.
 		 */
-		public void onClose(AjaxRequestTarget target);
+		void onClose(AjaxRequestTarget target);
 	}
 
 	/**
@@ -972,12 +972,6 @@ public class ModalWindow extends Panel
 		}
 
 		@Override
-		public CharSequence getCallbackScript()
-		{
-			return super.getCallbackScript();
-		}
-
-		@Override
 		protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 		{
 			super.updateAjaxAttributes(attributes);
@@ -1003,19 +997,10 @@ public class ModalWindow extends Panel
 		protected final void respond(final AjaxRequestTarget target)
 		{
 			if ((closeButtonCallback == null) ||
-				(closeButtonCallback.onCloseButtonClicked(target) == true))
+				(closeButtonCallback.onCloseButtonClicked(target)))
 			{
 				close(target);
 			}
-		}
-
-		/**
-		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getCallbackScript()
-		 */
-		@Override
-		public final CharSequence getCallbackScript()
-		{
-			return super.getCallbackScript();
 		}
 
 		@Override
@@ -1051,7 +1036,7 @@ public class ModalWindow extends Panel
 	{
 		AppendingStringBuffer buffer = new AppendingStringBuffer(500);
 
-		if (isCustomComponent() == true)
+		if (isCustomComponent())
 		{
 			buffer.append("var element = document.getElementById(\"");
 			buffer.append(getContentMarkupId());
@@ -1175,7 +1160,7 @@ public class ModalWindow extends Panel
 	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
 		final int value)
 	{
-		buffer.append(key).append("=");
+		buffer.append(key).append('=');
 		buffer.append(value);
 		buffer.append(";\n");
 	}
@@ -1189,7 +1174,7 @@ public class ModalWindow extends Panel
 	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
 		final boolean value)
 	{
-		buffer.append(key).append("=");
+		buffer.append(key).append('=');
 		buffer.append(Boolean.toString(value));
 		buffer.append(";\n");
 	}
