@@ -267,13 +267,8 @@ public class ModalWindow extends Panel
 
 		// install a default callback that will force
 		// WindowClosedBehavior to be executed
-		setWindowClosedCallback(new WindowClosedCallback()
-		{
-			@Override
-			public void onClose(AjaxRequestTarget target)
-			{
-				// noop
-			}
+		setWindowClosedCallback((WindowClosedCallback) target -> {
+			// noop
 		});
 
 	}
