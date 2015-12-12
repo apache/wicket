@@ -14,7 +14,7 @@ add(new ExternalImage("url"));
 
 HTML:
 {code}
-<video wicket:id="video"/>
+<img wicket:id="url" />
 {code}
 
 The ExternalImage can also be constructed by passing in a Model (src) and Model of List (srcSet). For ExternalSource only the srcSet is available.
