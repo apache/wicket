@@ -51,6 +51,12 @@ mountResource("/filecontent/${name}", new FileSystemResourceReference("filesyste
 });
 {code}
 
+FileSystemResourceReference.getPath(uri) uses a FileSystemPathService to setup a path the resource reference can work on. 
+
+So if you write a custom file system you can easily handle every path by adding a *org.apache.wicket.resource.FileSystemPathService* text file into *META-INF/services* and put in your implementation.
+
+A reference implementation can be found in the java class org.apache.wicket.resource.FileSystemJarPathService.
+
 Further FileSystemProviders and the corresponding FileSystems can be implemented as described here:
 
 [http://docs.oracle.com/javase/7/docs/technotes/guides/io/fsp/filesystemprovider.html|http://docs.oracle.com/javase/7/docs/technotes/guides/io/fsp/filesystemprovider.html]

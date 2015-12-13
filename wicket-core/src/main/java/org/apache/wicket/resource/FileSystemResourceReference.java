@@ -19,15 +19,12 @@ package org.apache.wicket.resource;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceLoader;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -96,12 +93,6 @@ public class FileSystemResourceReference extends ResourceReference
 	private static final long serialVersionUID = 1L;
 
 	private Path path;
-
-	/** The key for the file system meta data **/
-	public static final MetaDataKey<Map<String, FileSystem>> FILE_SYSTEM_META_DATA_KEY = new MetaDataKey<Map<String, FileSystem>>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
 
 	/**
 	 * Creates a file system resource reference based on the given path
@@ -176,48 +167,25 @@ public class FileSystemResourceReference extends ResourceReference
 	 * @param env
 	 *            the environment parameter to create the file system with
 	 * @return the path of the file in the file system
-	 * @throws IOException
-	 *             if the file system could'nt be created
-	 * @throws URISyntaxException
-	 *             if the URI has no valid syntax
 	 */
 	public static Path getPath(URI uri, Map<String, String> env)
-		throws IOException, URISyntaxException
 	{
-		String uriString = uri.toString();
-		int indexOfExclamationMark = uriString.indexOf('!');
-		if (indexOfExclamationMark == -1)
+		Iterator<FileSystemPathService> pathServiceIterator = ServiceLoader
+			.load(FileSystemPathService.class).iterator();
+		while (pathServiceIterator.hasNext())
 		{
-			return Paths.get(uri);
-		}
-		String zipFile = uriString.substring(0, indexOfExclamationMark);
-		FileSystem fileSystem = null;
-
-		synchronized (FILE_SYSTEM_META_DATA_KEY)
-		{
-			Map<String, FileSystem> metaData = Application.get()
-				.getMetaData(FILE_SYSTEM_META_DATA_KEY);
-			if (metaData == null)
+			FileSystemPathService pathService = pathServiceIterator.next();
+			if (pathService.isResponsible(uri))
 			{
-				metaData = new HashMap<String, FileSystem>();
-				Application.get().setMetaData(FILE_SYSTEM_META_DATA_KEY, metaData);
-			}
-			fileSystem = metaData.get(zipFile);
-			if (fileSystem == null)
-			{
-				if (env == null)
+				Path fileSystemPath = pathService.getPath(uri, env);
+				if (fileSystemPath != null)
 				{
-					env = new HashMap<>();
-					env.put("create", "true");
-					env.put("encoding", "UTF-8");
+					return fileSystemPath;
 				}
-				fileSystem = FileSystems.newFileSystem(new URI(zipFile), env);
-				metaData.put(zipFile, fileSystem);
 			}
 		}
-		String fileName = uriString.substring(uriString.indexOf('!') + 1);
-
-		return fileSystem.getPath(fileName);
+		// fall back to just get the path from the URI
+		return Paths.get(uri);
 	}
 
 	/**
