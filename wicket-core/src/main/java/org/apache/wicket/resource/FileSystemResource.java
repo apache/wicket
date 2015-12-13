@@ -74,8 +74,8 @@ public class FileSystemResource extends AbstractResource
 	/**
 	 * Creates a resource response based on the given attributes
 	 * 
-	 * @param attributes
-	 *            the attributes to create the resource response on
+	 * @param path
+	 *            the path to create the resource response with
 	 * @return the actual resource response x
 	 */
 	protected ResourceResponse createResourceResponse(Path path)
