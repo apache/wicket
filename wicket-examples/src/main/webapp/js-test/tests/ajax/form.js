@@ -37,7 +37,7 @@ $q(document).ready(function() {
 			var name = 'Aj';
 			$nameInput.val(name);
 
-			return gym.ajaxKeydown($emailInput);
+			return gym.ajaxEvent('keydown', $emailInput);
 		}).then(function($) {
 
 			// an error feedback message that email is mandatory is expected
@@ -49,7 +49,7 @@ $q(document).ready(function() {
 			var name = 'Ajax form name';
 			$nameInput.val(name);
 
-			return gym.ajaxKeydown($emailInput);
+			return gym.ajaxEvent('keydown', $emailInput);
 		}).then(function($) {
 
 			// an error feedback message that email is mandatory is expected
@@ -61,7 +61,7 @@ $q(document).ready(function() {
 			var email = 'contact@example.com';
 			$emailInput.val(email);
 
-			return gym.ajaxKeydown($nameInput);
+			return gym.ajaxEvent('keydown', $nameInput);
 		}).then(function($) {
 
 			// the feedback panel must be empty now
