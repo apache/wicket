@@ -24,16 +24,32 @@ $q(document).ready(function() {
 	module('Ajax');
 
 	asyncTest('successful ajax form submit', function () {
-		expect(3);
+		expect(6);
+
+		var $nameInput, $emailInput;
 
 		gym.load('/ajax/form').then(function($) {
+			$nameInput = $('input[name="p::name"]');
+			$emailInput = $('input[name=email]');
 
 			// enter just the name field
-			var $nameInput = $('input[name="p::name"]');
+			$nameInput.focus();
+			var name = 'Aj';
+			$nameInput.val(name);
+
+			return gym.ajaxKeydown($emailInput);
+		}).then(function($) {
+
+			// an error feedback message that email is mandatory is expected
+			var $feedback = $('li.feedbackPanelERROR > span');
+			equal($feedback.length, 2, 'The error feedback message that name is too short and the email is missing');
+			equal($feedback.eq(0).text(), 'Name must be at least 4 characters', 'The error feedback matches');
+			equal($feedback.eq(1).text(), 'Email is required', 'The error feedback matches');
+
 			var name = 'Ajax form name';
 			$nameInput.val(name);
 
-			return gym.ajaxClick($('input[name=ajax-button]'));
+			return gym.ajaxKeydown($emailInput);
 		}).then(function($) {
 
 			// an error feedback message that email is mandatory is expected
@@ -42,11 +58,10 @@ $q(document).ready(function() {
 			equal($feedback.text(), 'Email is required', 'The error feedback matches');
 
 			// enter the email field too
-			var $emailInput = $('input[name=email]');
 			var email = 'contact@example.com';
 			$emailInput.val(email);
 
-			return gym.ajaxClick($('input[name=ajax-button]'));
+			return gym.ajaxKeydown($nameInput);
 		}).then(function($) {
 
 			// the feedback panel must be empty now

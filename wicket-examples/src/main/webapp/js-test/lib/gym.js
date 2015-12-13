@@ -91,6 +91,19 @@
 		return deferred.promise();
 	}
 
+	var ajaxKeydown = function($el) {
+		var deferred = $.Deferred();
+		var iframeWindow = _getIframe()[0].contentWindow;
+
+		_onAjaxComplete(iframeWindow, function($$) {
+			deferred.resolve($$);
+		});
+
+		$el.keydown();
+
+		return deferred.promise();
+	}
+
 	/**
 	 * Registers a callback when Wicket Ajax call is completed
 	 */
@@ -118,6 +131,7 @@
 	window.gym = {
 		load: load,
 		click: click,
-		ajaxClick: ajaxClick
+		ajaxClick: ajaxClick,
+		ajaxKeydown: ajaxKeydown
 	};
 })($q);
