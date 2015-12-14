@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.resource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,12 +54,36 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	 */
 	public static final String EMBED_BASE64 = "embedBase64";
 
+	private final List<String> excludes = new ArrayList<>();
+
+	/**
+	 * Creates a css url replacer
+	 */
+	public CssUrlReplacer()
+	{
+	}
+
+	/**
+	 * Creates a css url replacer
+	 * 
+	 * @param excludes
+	 *            css file names to be excluded
+	 */
+	public CssUrlReplacer(List<String> excludes)
+	{
+		this.excludes.addAll(excludes);
+	}
+
 	/**
 	 * Replaces the URLs of CSS resources with Wicket representatives.
 	 */
 	@Override
 	public String process(String input, Class<?> scope, String name)
 	{
+		// filter out the excluded css files
+		if(this.excludes.contains(name)){
+			return input;
+		}
 		RequestCycle cycle = RequestCycle.get();
 		Url cssUrl = Url.parse(name);
 		Matcher matcher = URL_PATTERN.matcher(input);
@@ -108,8 +134,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 				}
 
 			}
-			matcher.appendReplacement(output, embedded ? "url(" + processedUrl + ")" : "url('" +
-				processedUrl + "')");
+			matcher.appendReplacement(output,
+				embedded ? "url(" + processedUrl + ")" : "url('" + processedUrl + "')");
 		}
 		matcher.appendTail(output);
 		return output.toString();
@@ -118,7 +144,29 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	@Override
 	public String compress(String original)
 	{
-		throw new UnsupportedOperationException(CssUrlReplacer.class.getSimpleName() +
-			".process() should be used instead!");
+		throw new UnsupportedOperationException(
+			CssUrlReplacer.class.getSimpleName() + ".process() should be used instead!");
+	}
+
+	/**
+	 * Gets excluded css file names
+	 * 
+	 * @return a list with css file names to be excluded
+	 */
+	public List<String> getExcludes()
+	{
+		return excludes;
+	}
+
+	/**
+	 * Sets a list of css file names to be excluded
+	 * 
+	 * @param excludes
+	 *            a list with css file names to be excluded
+	 */
+	public void setExcludes(List<String> excludes)
+	{
+		this.excludes.clear();
+		this.excludes.addAll(excludes);
 	}
 }
