@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.resource;
 
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,7 +47,8 @@ import org.apache.wicket.util.image.ImageUtil;
 public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCompressor
 {
 	// The pattern to find URLs in CSS resources
-	private static final Pattern URL_PATTERN = Pattern.compile("url\\(['|\"]*(.*?)['|\"]*\\)");
+	private static final Pattern URL_PATTERN = Pattern
+		.compile("url\\(['|\"][ ]*([^ ]*?)['|\"][ ]*\\)");
 
 	/**
 	 * Used to be append to CSS URLs (background-image: url('Beer.gif?embedBase64');). The
@@ -52,12 +56,39 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	 */
 	public static final String EMBED_BASE64 = "embedBase64";
 
+	private final Set<String> excludes = new LinkedHashSet<>();
+
+	/**
+	 * Creates a css url replacer
+	 */
+	public CssUrlReplacer()
+	{
+	}
+
+	/**
+	 * Creates a css url replacer
+	 * 
+	 * @param excludes
+	 *            css file names to be excluded
+	 */
+	public CssUrlReplacer(Collection<String> excludes)
+	{
+		this.excludes.addAll(excludes);
+	}
+
 	/**
 	 * Replaces the URLs of CSS resources with Wicket representatives.
 	 */
 	@Override
 	public String process(String input, Class<?> scope, String name)
 	{
+		// filter out the excluded css files
+		for (String excludeName : excludes)
+		{
+			if(name.endsWith(excludeName)){
+				return input;
+			}
+		}
 		RequestCycle cycle = RequestCycle.get();
 		Url cssUrl = Url.parse(name);
 		Matcher matcher = URL_PATTERN.matcher(input);
@@ -84,8 +115,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 				cssUrlCopy.resolveRelative(imageCandidateUrl);
 
 				// if the image should be processed as URL or base64 embedded
-				if (cssUrlCopy.getQueryString() != null &&
-					cssUrlCopy.getQueryString().contains(EMBED_BASE64))
+				if (cssUrlCopy.getQueryString() != null
+					&& cssUrlCopy.getQueryString().contains(EMBED_BASE64))
 				{
 					embedded = true;
 					PackageResourceReference imageReference = new PackageResourceReference(scope,
@@ -108,8 +139,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 				}
 
 			}
-			matcher.appendReplacement(output, embedded ? "url(" + processedUrl + ")" : "url('" +
-				processedUrl + "')");
+			matcher.appendReplacement(output,
+				embedded ? "url(" + processedUrl + ")" : "url('" + processedUrl + "')");
 		}
 		matcher.appendTail(output);
 		return output.toString();
@@ -118,7 +149,29 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	@Override
 	public String compress(String original)
 	{
-		throw new UnsupportedOperationException(CssUrlReplacer.class.getSimpleName() +
-			".process() should be used instead!");
+		throw new UnsupportedOperationException(
+			CssUrlReplacer.class.getSimpleName() + ".process() should be used instead!");
+	}
+
+	/**
+	 * Gets excluded css file names
+	 * 
+	 * @return a list with css file names to be excluded
+	 */
+	public Collection<String> getExcludes()
+	{
+		return excludes;
+	}
+
+	/**
+	 * Sets a list of css file names to be excluded
+	 * 
+	 * @param excludes
+	 *            a list with css file names to be excluded
+	 */
+	public void setExcludes(Collection<String> excludes)
+	{
+		this.excludes.clear();
+		this.excludes.addAll(excludes);
 	}
 }
