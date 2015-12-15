@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.resource;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +47,7 @@ import org.apache.wicket.util.image.ImageUtil;
 public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCompressor
 {
 	// The pattern to find URLs in CSS resources
-	private static final Pattern URL_PATTERN = Pattern.compile("url\\(['|\"]*(.*?)['|\"]*\\)");
+	private static final Pattern URL_PATTERN = Pattern.compile("url\\(['|\"][ ]*([^ ]*?)['|\"][ ]*\\)");
 
 	/**
 	 * Used to be append to CSS URLs (background-image: url('Beer.gif?embedBase64');). The
@@ -54,7 +55,7 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	 */
 	public static final String EMBED_BASE64 = "embedBase64";
 
-	private final List<String> excludes = new ArrayList<>();
+	private final Set<String> excludes = new HashSet<>();
 
 	/**
 	 * Creates a css url replacer
@@ -69,7 +70,7 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	 * @param excludes
 	 *            css file names to be excluded
 	 */
-	public CssUrlReplacer(List<String> excludes)
+	public CssUrlReplacer(Collection<String> excludes)
 	{
 		this.excludes.addAll(excludes);
 	}
@@ -153,7 +154,7 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	 * 
 	 * @return a list with css file names to be excluded
 	 */
-	public List<String> getExcludes()
+	public Collection<String> getExcludes()
 	{
 		return excludes;
 	}
@@ -164,7 +165,7 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 	 * @param excludes
 	 *            a list with css file names to be excluded
 	 */
-	public void setExcludes(List<String> excludes)
+	public void setExcludes(Collection<String> excludes)
 	{
 		this.excludes.clear();
 		this.excludes.addAll(excludes);
