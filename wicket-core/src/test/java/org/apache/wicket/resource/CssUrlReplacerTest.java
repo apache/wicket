@@ -152,7 +152,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 		String processed = replacer.process(input, scope, cssRelativePath);
 		assertThat(
 			processed,
-			containsString(".class {background-image: url(data:image/gif;base64,R0lGODlh1wATAXAAACH5BAEAAP8ALAAAAADXA"));
+			containsString(".class {background-image: url(data:image/gif;base64,R0lGODlhUAB4ANUAANbX1hQSEXV0c/fz8tCBfc3NzFBNTPO6ttzIx"));
 	}
 
 	@Test
