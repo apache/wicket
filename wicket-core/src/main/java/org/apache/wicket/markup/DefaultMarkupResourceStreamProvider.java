@@ -90,8 +90,7 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 			// Did we find it already?
 			if (resourceStream != null)
 			{
-				return new MarkupResourceStream(resourceStream, new ContainerInfo(container),
-					containerClass);
+				return new MarkupResourceStream(resourceStream, new ContainerInfo(containerClass, container), containerClass);
 			}
 
 			// Walk up the class hierarchy one level, if markup has not
