@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.TagTester;
-import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 import static org.apache.wicket.util.tester.TagTester.createTagByAttribute;

@@ -29,7 +29,7 @@ public class EscapeAttributesInChoicesPage extends WebPage {
 	public EscapeAttributesInChoicesPage(final PageParameters parameters) {
 		super(parameters);
 
-		final Map<String, String> fruits = new HashMap<>();
+		final Map<String, String> fruits = new HashMap<String, String>();
 		fruits.put("apple\" onmouseover=\"alert('hi');\" \"", "Apple");
 
 		IChoiceRenderer<String> iChoiceRenderer = new ChoiceRenderer<String>() {
@@ -44,9 +44,9 @@ public class EscapeAttributesInChoicesPage extends WebPage {
 			}
 		};
 
-		add(new RadioChoice<>("radiofield", new ArrayList<>(fruits.keySet()), iChoiceRenderer));
-		add(new DropDownChoice<>("dropdownfield", new ArrayList<>(fruits.keySet()), iChoiceRenderer));
-		add(new CheckBoxMultipleChoice<>("checkboxfield", new ArrayList<>(fruits.keySet()), iChoiceRenderer));
+		add(new RadioChoice<String>("radiofield", new ArrayList<String>(fruits.keySet()), iChoiceRenderer));
+		add(new DropDownChoice<String>("dropdownfield", new ArrayList<String>(fruits.keySet()), iChoiceRenderer));
+		add(new CheckBoxMultipleChoice<String>("checkboxfield", new ArrayList<String>(fruits.keySet()), iChoiceRenderer));
 
 
     }
