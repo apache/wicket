@@ -477,9 +477,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
 				{
 					extraLabelAttributes.append(' ')
-							.append(attr.getKey())
+							.append(Strings.escapeMarkup(attr.getKey()))
 							.append("=\"")
-							.append(attr.getValue())
+							.append(Strings.escapeMarkup(attr.getValue().toString()))
 							.append('"');
 				}
 			}
@@ -489,7 +489,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				case BEFORE:
 
 					buffer.append("<label for=\"")
-							.append(idAttr)
+							.append(Strings.escapeMarkup(idAttr))
 							.append('"')
 							.append(extraLabelAttributes)
 							.append('>')
@@ -518,9 +518,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
 				.append((enabled ? "" : " disabled=\"disabled\""))
 				.append(" value=\"")
-				.append(id)
+				.append(Strings.escapeMarkup(id))
 				.append("\" id=\"")
-				.append(idAttr)
+				.append(Strings.escapeMarkup(idAttr))
 				.append('"');
 
 			// Should a roundtrip be made (have onSelectionChanged called)
@@ -544,7 +544,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 						.append(url)
 						.append((url.toString().indexOf('?') > -1 ? '&' : '?') + getInputName())
 						.append('=')
-						.append(id)
+						.append(Strings.escapeMarkup(id))
 						.append("';\"");
 				}
 			}
@@ -557,9 +557,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					for (Map.Entry<String, Object> attr : attrs.entrySet())
 					{
 						buffer.append(' ')
-							.append(attr.getKey())
+							.append(Strings.escapeMarkup(attr.getKey()))
 							.append("=\"")
-							.append(attr.getValue())
+							.append(Strings.escapeMarkup(attr.getValue().toString()))
 							.append('"');
 					}
 				}
@@ -590,7 +590,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 			{
 				case AFTER:
 					buffer.append("<label for=\"")
-							.append(idAttr)
+							.append(Strings.escapeMarkup(idAttr))
 							.append('"')
 							.append(extraLabelAttributes)
 							.append('>')
