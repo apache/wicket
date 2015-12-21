@@ -405,9 +405,9 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				buffer.append(" disabled=\"disabled\"");
 			}
 			buffer.append(" value=\"");
-			buffer.append(id);
+			buffer.append(Strings.escapeMarkup(id));
 			buffer.append("\" id=\"");
-			buffer.append(idAttr);
+			buffer.append(Strings.escapeMarkup(idAttr));
 			buffer.append("\"/>");
 
 			// Add label for checkbox
@@ -421,7 +421,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				: display);
 
 			buffer.append("<label for=\"");
-			buffer.append(idAttr);
+			buffer.append(Strings.escapeMarkup(idAttr));
 			buffer.append("\">").append(escaped).append("</label>");
 
 			// Append option suffix
