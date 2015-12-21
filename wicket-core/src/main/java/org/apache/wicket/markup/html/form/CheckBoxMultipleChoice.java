@@ -425,7 +425,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			{
 				case BEFORE:
 					buffer.append("<label for=\"");
-					buffer.append(idAttr);
+					buffer.append(Strings.escapeMarkup(idAttr));
 					buffer.append("\">").append(escaped).append("</label>");
 					break;
 				case WRAP_AFTER:
@@ -451,9 +451,9 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				buffer.append(" disabled=\"disabled\"");
 			}
 			buffer.append(" value=\"");
-			buffer.append(id);
+			buffer.append(Strings.escapeMarkup(id));
 			buffer.append("\" id=\"");
-			buffer.append(idAttr);
+			buffer.append(Strings.escapeMarkup(idAttr));
 			buffer.append('"');
 
 			// Allows user to add attributes to the <input..> tag
@@ -464,9 +464,9 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 					for (Map.Entry<String, Object> attr : attrs.entrySet())
 					{
 						buffer.append(' ')
-							.append(attr.getKey())
+							.append(Strings.escapeMarkup(attr.getKey()))
 							.append("=\"")
-							.append(attr.getValue())
+							.append(Strings.escapeMarkup(attr.getValue().toString()))
 							.append('"');
 					}
 				}
@@ -503,7 +503,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 					break;
 				case AFTER:
 					buffer.append("<label for=\"");
-					buffer.append(idAttr);
+					buffer.append(Strings.escapeMarkup(idAttr));
 					buffer.append("\">").append(escaped).append("</label>");
 					break;
 			}
