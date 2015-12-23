@@ -52,6 +52,20 @@ public class ContainerInfo
 	 * Construct.
 	 * 
 	 * @param containerClass
+	 *            the real container class (could be a parent class)
+	 * @param container
+	 *            The container to create the information from
+	 */
+	public ContainerInfo(final Class<?> containerClass, final MarkupContainer container)
+	{
+		this(containerClass != null ? containerClass : container.getClass(), container.getLocale(), container.getStyle(),
+			container.getVariation(), container.getMarkupType());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param containerClass
 	 * @param locale
 	 * @param style
 	 * @param variation
