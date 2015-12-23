@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util;
 
+import java.util.function.Supplier;
+
 /**
  * Provider that always provides the specified value.
  * 
@@ -23,7 +25,7 @@ package org.apache.wicket.util;
  * @param <T>
  *            type of value this provider provides
  */
-public class ValueProvider<T> implements IProvider<T>
+public class ValueProvider<T> implements Supplier<T>
 {
 	private final T value;
 

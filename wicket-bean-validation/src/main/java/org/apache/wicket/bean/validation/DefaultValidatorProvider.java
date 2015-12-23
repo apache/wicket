@@ -1,12 +1,13 @@
 package org.apache.wicket.bean.validation;
 
+import java.util.function.Supplier;
+
 import javax.validation.Configuration;
 import javax.validation.MessageInterpolator;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import org.apache.wicket.util.IProvider;
 
 /**
  * This is the default validator provider. It creates a validator instance with the default message
@@ -16,7 +17,7 @@ import org.apache.wicket.util.IProvider;
  * @author igor
  * 
  */
-public class DefaultValidatorProvider implements IProvider<Validator>
+public class DefaultValidatorProvider implements Supplier<Validator>
 {
 
 	private Validator validator;

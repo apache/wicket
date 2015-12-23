@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.util.function.Supplier;
+
 import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
@@ -28,7 +30,6 @@ import org.apache.wicket.request.mapper.info.PageInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.reference.ClassReference;
 import org.apache.wicket.util.string.Strings;
@@ -64,7 +65,7 @@ import org.apache.wicket.util.string.Strings;
 public class MountedMapper extends AbstractBookmarkableMapper
 {
 	/** bookmarkable page class. */
-	private final IProvider<Class<? extends IRequestablePage>> pageClassProvider;
+	private final Supplier<Class<? extends IRequestablePage>> pageClassProvider;
 
 	/**
 	 * Construct.
@@ -84,7 +85,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * @param pageClassProvider
 	 */
 	public MountedMapper(String mountPath,
-		IProvider<Class<? extends IRequestablePage>> pageClassProvider)
+		Supplier<Class<? extends IRequestablePage>> pageClassProvider)
 	{
 		this(mountPath, pageClassProvider, new PageParametersEncoder());
 	}
@@ -110,7 +111,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	 * @param pageParametersEncoder
 	 */
 	public MountedMapper(String mountPath,
-		IProvider<Class<? extends IRequestablePage>> pageClassProvider,
+		Supplier<Class<? extends IRequestablePage>> pageClassProvider,
 		IPageParametersEncoder pageParametersEncoder)
 	{
 		super(mountPath, pageParametersEncoder);

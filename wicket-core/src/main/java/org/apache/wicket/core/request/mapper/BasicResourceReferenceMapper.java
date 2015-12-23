@@ -18,6 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Supplier;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestHandler;
@@ -35,7 +36,6 @@ import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
@@ -66,7 +66,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	protected final IPageParametersEncoder pageParametersEncoder;
 
 	/** resource caching strategy */
-	protected final IProvider<? extends IResourceCachingStrategy> cachingStrategy;
+	protected final Supplier<? extends IResourceCachingStrategy> cachingStrategy;
 
 	/**
 	 * Construct.
@@ -75,7 +75,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	 * @param cachingStrategy
 	 */
 	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-		IProvider<? extends IResourceCachingStrategy> cachingStrategy)
+		Supplier<? extends IResourceCachingStrategy> cachingStrategy)
 	{
 		this.pageParametersEncoder = Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 		this.cachingStrategy = cachingStrategy;

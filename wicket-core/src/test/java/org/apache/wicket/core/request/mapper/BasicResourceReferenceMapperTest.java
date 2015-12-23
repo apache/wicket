@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.request.IRequestHandler;
@@ -36,7 +37,6 @@ import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.request.resource.caching.version.StaticResourceVersion;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.ValueProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -48,7 +48,7 @@ import org.junit.Test;
  */
 public class BasicResourceReferenceMapperTest extends AbstractResourceReferenceMapperTest
 {
-	private static final IProvider<IResourceCachingStrategy> NO_CACHING = new ValueProvider<>(
+	private static final Supplier<IResourceCachingStrategy> NO_CACHING = new ValueProvider<>(
 		NoOpResourceCachingStrategy.INSTANCE);
 
 	private final BasicResourceReferenceMapper encoder = new BasicResourceReferenceMapper(

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util;
 
+import java.util.function.Supplier;
+
 /**
  * Provider that provides {@code null}s. Convenient to have to avoid a double {@code null} check for
  * the provider and its provided instance.
@@ -23,7 +25,7 @@ package org.apache.wicket.util;
  * @author igor.vaynberg
  * @param <T>
  */
-public class NullProvider<T> implements IProvider<T>
+public class NullProvider<T> implements Supplier<T>
 {
 	@Override
 	public T get()

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Supplier;
 
 import javax.validation.Validator;
 import javax.validation.constraints.Size;
@@ -12,7 +13,6 @@ import javax.validation.constraints.Size;
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -27,7 +27,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	{
 	};
 
-	private IProvider<Validator> validatorProvider = new DefaultValidatorProvider();
+	private Supplier<Validator> validatorProvider = new DefaultValidatorProvider();
 
 	private IViolationTranslator violationTranslator = new DefaultViolationTranslator();
 
@@ -102,7 +102,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 * 
 	 * @param validatorProvider
 	 */
-	public void setValidatorProvider(IProvider<Validator> validatorProvider)
+	public void setValidatorProvider(Supplier<Validator> validatorProvider)
 	{
 		Args.notNull(validatorProvider, "validatorProvider");
 

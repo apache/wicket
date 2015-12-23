@@ -21,9 +21,9 @@ package org.apache.wicket.util;
  * 
  * @author igor.vaynberg
  * @param <T>
+ * 
+ * @deprecated  Use {@code java.util.function.Supplier<T>} instead
  */
-// TODO Wicket 8: consider to deprecate this interface in Wicket 7 and replace it with standard
-// Java 8 {@code java.util.function.Supplier<T>} which is virtually identical.
 public interface IProvider<T>
 {
 	/**

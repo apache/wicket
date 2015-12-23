@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import java.util.function.Supplier;
+
 import org.apache.wicket.core.request.mapper.BookmarkableMapper;
 import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
 import org.apache.wicket.core.request.mapper.HomePageMapper;
@@ -25,7 +27,6 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
-import org.apache.wicket.util.IProvider;
 
 /**
  * Mapper that encapsulates mappers that are necessary for Wicket to function.
@@ -55,19 +56,12 @@ public class SystemMapper extends CompoundRequestMapper
 		add(new BufferedResponseMapper());
 	}
 
-	private IProvider<IResourceCachingStrategy> getResourceCachingStrategy()
+	private Supplier<IResourceCachingStrategy> getResourceCachingStrategy()
 	{
-		return new IProvider<IResourceCachingStrategy>()
-		{
-			@Override
-			public IResourceCachingStrategy get()
-			{
-				return application.getResourceSettings().getCachingStrategy();
-			}
-		};
+		return () -> application.getResourceSettings().getCachingStrategy();
 	}
 
-	private static class ParentFolderPlaceholderProvider implements IProvider<String>
+	private static class ParentFolderPlaceholderProvider implements Supplier<String>
 	{
 		private final Application application;
 
@@ -83,7 +77,7 @@ public class SystemMapper extends CompoundRequestMapper
 		}
 	}
 
-	private static class HomePageProvider<C extends IRequestablePage> implements IProvider<Class<C>>
+	private static class HomePageProvider<C extends IRequestablePage> implements Supplier<Class<C>>
 	{
 		private final Application application;
 
