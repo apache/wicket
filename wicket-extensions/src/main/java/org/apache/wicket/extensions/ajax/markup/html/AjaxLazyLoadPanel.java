@@ -17,9 +17,12 @@
 package org.apache.wicket.extensions.ajax.markup.html;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
@@ -28,13 +31,23 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.util.time.Duration;
 
 /**
- * A panel where you can lazy load another panel. This can be used if you have a panel/component
- * that is pretty heavy in creation and you first want to show the user the page and then replace
- * the panel when it is ready.
+ * A panel where you can lazily load another component. This can be used if you have a
+ * panel/component that is pretty heavy in creation and you first want to show the user the page and
+ * then replace the panel when it is ready.
  * 
- * @author jcompagner
+ * This panel will not block the application while waiting for the replacement, provided you
+ * overwrite {@link #isReadyForReplacement()} to return false, until the replacement is ready.
+ * 
+ * This panel will wait with replacing the component until {@link #isReadyForReplacement()} returns
+ * {@code true}. It will poll using an AJAX timer behavior that is installed on the page. When the
+ * component is replaced, the timer stops. When you have multiple {@code AjaxLazyLoadPanel}s on the
+ * same page, only one timer is used and all panels piggyback on this single timer.
+ * 
+ * This component will also replace the contents when a normal request comes through and the
+ * component is ready for replacement.
  * 
  * @since 1.3
  */
@@ -42,16 +55,32 @@ public abstract class AjaxLazyLoadPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
+	/** Key used to store the timer in the page. */
+	private static final MetaDataKey<AjaxLazyLoadTimer> AJAX_LAZY_LOAD_TIMER = new MetaDataKey<AjaxLazyLoadTimer>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 	/**
 	 * The component id which will be used to load the lazily loaded component.
 	 */
 	public static final String LAZY_LOAD_COMPONENT_ID = "content";
 
-	// state,
-	// 0:add loading component
-	// 1:loading component added, waiting for ajax replace
-	// 2:ajax replacement completed
-	private byte state = 0;
+	/**
+	 * States for this panel for replacing the spinner with a component.
+	 */
+	private enum LoadingState {
+		/** Initial state, not ready to replace the spinner */
+		WAITING_FOR_LAZY_COMPONENT,
+
+		/** Second state, ready to replace the spinner with the lazy component */
+		REPLACING_LAZY_COMPONENT,
+
+		/** Final state, done with replacing the spinner and cleaning up the timer */
+		REPLACEMENT_COMPLETED;
+	}
+
+	private LoadingState state = LoadingState.WAITING_FOR_LAZY_COMPONENT;
 
 	/**
 	 * Constructor
@@ -74,43 +103,60 @@ public abstract class AjaxLazyLoadPanel extends Panel
 		super(id, model);
 
 		setOutputMarkupId(true);
+	}
 
-		add(new AbstractDefaultAjaxBehavior()
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		// when the timer is not yet installed add it
+		AjaxLazyLoadTimer timer = getPage().getMetaData(AJAX_LAZY_LOAD_TIMER);
+		if (timer == null)
 		{
-			private static final long serialVersionUID = 1L;
+			timer = new AjaxLazyLoadTimer();
+			getPage().setMetaData(AJAX_LAZY_LOAD_TIMER, timer);
+			getPage().add(timer);
+		}
 
-			@Override
-			protected void respond(final AjaxRequestTarget target)
+		// and register this panel with the timer
+		timer.addLazyLoadPanel();
+	}
+
+	@Override
+	public void onEvent(IEvent<?> event)
+	{
+		super.onEvent(event);
+
+		if (state == LoadingState.REPLACING_LAZY_COMPONENT)
+		{
+			if (isReadyForReplacement())
 			{
-				if (state < 2)
+				// create the lazy load component
+				Component component = getLazyLoadComponent(LAZY_LOAD_COMPONENT_ID);
+
+				// replace the spinner with the new component
+				AjaxLazyLoadPanel.this.replace(component);
+
+				// mark replacement as done
+				setState(LoadingState.REPLACEMENT_COMPLETED);
+
+				// remove ourselves from the timer
+				getPage().getMetaData(AJAX_LAZY_LOAD_TIMER).removeLazyLoadPanel();
+
+				AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
+
+				// notify our subclasses of the updated component
+				onComponentLoaded(component, target);
+
+				// repaint our selves if there's an ajax request in play, otherwise let the page
+				// redraw itself
+				if (target != null)
 				{
-					Component component = getLazyLoadComponent(LAZY_LOAD_COMPONENT_ID);
-					AjaxLazyLoadPanel.this.replace(component);
-					setState((byte) 2);
-					AjaxLazyLoadPanel.this.onComponentLoaded(component, target);
-				}
-				target.add(AjaxLazyLoadPanel.this);
-
-			}
-
-			@Override
-			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
-			{
-				super.updateAjaxAttributes(attributes);
-				AjaxLazyLoadPanel.this.updateAjaxAttributes(attributes);
-			}
-
-			@Override
-			public void renderHead(final Component component, final IHeaderResponse response)
-			{
-				super.renderHead(component, response);
-				if (state < 2)
-				{
-					CharSequence js = getCallbackScript(component);
-					handleCallbackScript(response, js, component);
+					target.add(AjaxLazyLoadPanel.this);
 				}
 			}
-		});
+		}
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
@@ -121,11 +167,11 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	 * Allows subclasses to change the callback script if needed.
 	 * 
 	 * @param response
-	 *      the current response that writes to the header
+	 *            the current response that writes to the header
 	 * @param callbackScript
-	 *      the JavaScript to write in the header
+	 *            the JavaScript to write in the header
 	 * @param component
-	 *      the component which produced the callback script
+	 *            the component which produced the callback script
 	 */
 	protected void handleCallbackScript(final IHeaderResponse response,
 		final CharSequence callbackScript, final Component component)
@@ -139,46 +185,50 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	@Override
 	protected void onBeforeRender()
 	{
-		if (state == 0)
+		if (state == LoadingState.WAITING_FOR_LAZY_COMPONENT)
 		{
 			add(getLoadingComponent(LAZY_LOAD_COMPONENT_ID));
-			setState((byte)1);
+			setState(LoadingState.REPLACING_LAZY_COMPONENT);
 		}
 		super.onBeforeRender();
 	}
 
 	/**
+	 * Determines that the component we're waiting for is ready for replacement, typically used in
+	 * polling background threads for their result. Override this to implement your own check.
 	 * 
-	 * @param state
+	 * @return true when the LazyLoadPanel should replace its contents with the actual component
 	 */
-	private void setState(final byte state)
+	protected boolean isReadyForReplacement()
 	{
-		this.state = state;
-		getPage().dirty();
+		return true;
 	}
 
 	/**
 	 * 
-	 * @param markupId
-	 *            The components markupid.
-	 * @return The component that must be lazy created. You may call setRenderBodyOnly(true) on this
-	 *         component if you need the body only.
+	 * @param newState
 	 */
-	public abstract Component getLazyLoadComponent(String markupId);
+	private void setState(final LoadingState newState)
+	{
+		this.state = newState;
+		getPage().dirty();
+	}
 
 	/**
 	 * Called when the placeholder component is replaced with the lazy loaded one.
 	 *
 	 * @param component
-	 *      The lazy loaded component
+	 *            The lazy loaded component
 	 * @param target
-	 *      The Ajax request handler
+	 *            The Ajax request handler, can be null
 	 */
 	protected void onComponentLoaded(Component component, AjaxRequestTarget target)
 	{
 	}
 
 	/**
+	 * Gets the spinner component shown when the lazy component is not ready yet.
+	 * 
 	 * @param markupId
 	 *            The components markupid.
 	 * @return The component to show while the real component is being created.
@@ -187,8 +237,56 @@ public abstract class AjaxLazyLoadPanel extends Panel
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(
 			AbstractDefaultAjaxBehavior.INDICATOR);
-		return new Label(markupId, "<img alt=\"Loading...\" src=\"" +
-			RequestCycle.get().urlFor(handler) + "\"/>").setEscapeModelStrings(false);
+		return new Label(markupId,
+			"<img alt=\"Loading...\" src=\"" + RequestCycle.get().urlFor(handler) + "\"/>")
+				.setEscapeModelStrings(false);
 	}
 
+	/**
+	 * Factory method for creating the lazily loaded component that replaces the spinner after
+	 * {@link #isReadyForReplacement()} returns {@code true}. You may call setRenderBodyOnly(true)
+	 * on this component if you need the body only.
+	 * 
+	 * @param markupId
+	 *            The components markupid.
+	 * @return The component that must be lazy created.
+	 */
+	public abstract Component getLazyLoadComponent(String markupId);
+
+	/**
+	 * The AJAX timer for updating the AjaxLazyLoadPanel. Is designed to be a page-local singleton
+	 * keeping track of multiple LazyLoadPanels using reference counting.
+	 */
+	private class AjaxLazyLoadTimer extends AbstractAjaxTimerBehavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		private int lazyLoadPanels = 0;
+
+		public AjaxLazyLoadTimer()
+		{
+			super(Duration.ONE_SECOND);
+		}
+
+		public void addLazyLoadPanel()
+		{
+			lazyLoadPanels++;
+		}
+
+		public void removeLazyLoadPanel()
+		{
+			lazyLoadPanels--;
+		}
+
+		@Override
+		protected void onTimer(AjaxRequestTarget target)
+		{
+			if (lazyLoadPanels <= 0)
+			{
+				stop(target);
+				getPage().remove(this);
+				getPage().setMetaData(AJAX_LAZY_LOAD_TIMER, null);
+			}
+		}
+	}
 }
