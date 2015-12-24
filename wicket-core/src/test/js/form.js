@@ -137,7 +137,7 @@ jQuery(document).ready(function() {
 	test("Wicket.Form.serializeElement should serialize the HTMLFormElement's which a children of a non-HTMLFormElement", function() {
 		expect(1);
 
-		var actual = Wicket.Form.serializeElement('nonHtmlFormElement');
+		var actual = Wicket.Form.serializeElement('nonHtmlFormElement', true);
 
 		var expected = [
 			{ name: "textInput",      value: "textValue"          },
@@ -156,6 +156,15 @@ jQuery(document).ready(function() {
 			{ name: "select",         value: "0"                  },
 			{ name: "textArea",       value: "some text"          }
 		];
+		deepEqual(actual, expected);
+	});
+
+	test("Wicket.Form.serializeElement should serialize the HTMLFormElement's which a children of a non-HTMLFormElement", function() {
+		expect(1);
+
+		var actual = Wicket.Form.serializeElement('nonHtmlFormElement', false);
+
+		var expected = [];
 		deepEqual(actual, expected);
 	});
 

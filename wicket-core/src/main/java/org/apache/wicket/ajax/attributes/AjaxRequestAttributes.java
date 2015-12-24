@@ -142,6 +142,12 @@ public final class AjaxRequestAttributes
 	private CharSequence childSelector;
 
 	/**
+	 * A flag indicating whether to collect (submit) the name/value pairs for all HTML form elements
+	 * children of the HTML element with the JavaScript listener
+	 */
+	private boolean serializeRecursively;
+
+	/**
 	 * @see #childSelector
 	 * @return The selector string that filters the descendants
 	 */
@@ -530,4 +536,21 @@ public final class AjaxRequestAttributes
 		return this;
 	}
 
+	/**
+	 * @return whether to collect (submit) the name/value pairs for all HTML form elements
+	 *      children of the HTML element with the JavaScript listener
+	 */
+	public boolean isSerializeRecursively() {
+		return serializeRecursively;
+	}
+
+	/**
+	 * @param serializeRecursively
+	 *          a flag indicating whether to collect (submit) the name/value pairs for all HTML form elements
+	 * children of the HTML element with the JavaScript listener
+	 */
+	public AjaxRequestAttributes setSerializeRecursively(final boolean serializeRecursively) {
+		this.serializeRecursively = serializeRecursively;
+		return this;
+	}
 }

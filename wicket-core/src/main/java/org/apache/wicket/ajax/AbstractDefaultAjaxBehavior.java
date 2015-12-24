@@ -236,6 +236,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 						childSelector);
 			}
 
+			if (attributes.isSerializeRecursively())
+			{
+				attributesJson.put(AjaxAttributeName.SERIALIZE_RECURSIVELY.jsonName(), true);
+			}
+
 			String indicatorId = findIndicatorId();
 			if (Strings.isEmpty(indicatorId) == false)
 			{

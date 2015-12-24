@@ -235,13 +235,18 @@ public enum AjaxAttributeName {
 	URL("u"),
 
 	/**
-	 * @see org.apache.wicket.ajax.attributes.AjaxRequestAttributes#childSelector
+	 * @see AjaxRequestAttributes#childSelector
 	 */
-	CHILD_SELECTOR("sel");
+	CHILD_SELECTOR("sel"),
+
+	/**
+	 * @see AjaxRequestAttributes#serializeRecursively
+	 */
+	SERIALIZE_RECURSIVELY("sr");
 
 	private final String jsonName;
 
-	private AjaxAttributeName(String jsonName)
+	AjaxAttributeName(String jsonName)
 	{
 		this.jsonName = Args.notNull(jsonName, "jsonName");
 	}

@@ -435,6 +435,10 @@
 			if (!attrs.sp) {
 				attrs.sp = "bubble";
 			}
+
+			if (!attrs.sr) {
+				attrs.sr = false;
+			}
 		},
 
 		/**
@@ -653,7 +657,7 @@
 			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
-				data = data.concat(Wicket.Form.serializeElement(el));
+				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
 
 			// convert to URL encoded string
@@ -1510,9 +1514,12 @@
 			 * <em>Wicket.Form.excludeFromAjaxSerialization</em>
 			 *
 			 * @param element {HTMLFormElement} - the form element to serialize. E.g. HTMLInputElement
+			 * @param serializeRecursively {Boolean} - a flag indicating whether to collect (submit) the
+			 * 			name/value pairs for all HTML form elements children of the HTML element with
+			 * 			the JavaScript listener
 			 * @return An array with a single element - an object with two keys - <em>name</em> and <em>value</em>.
 			 */
-			serializeElement: function(element) {
+			serializeElement: function(element, serializeRecursively) {
 
 				if (!element) {
 					return [];
@@ -1531,15 +1538,17 @@
 				} else if (tag === "input" || tag === "textarea") {
 					return Wicket.Form.serializeInput(element);
 				} else {
-					var elements = nodeListToArray(element.getElementsByTagName("input"));
-					elements = elements.concat(nodeListToArray(element.getElementsByTagName("select")));
-					elements = elements.concat(nodeListToArray(element.getElementsByTagName("textarea")));
-
 					var result = [];
-					for (var i = 0; i < elements.length; ++i) {
-						var el = elements[i];
-						if (el.name && el.name !== "") {
-							result = result.concat(Wicket.Form.serializeElement(el));
+					if (serializeRecursively) {
+						var elements = nodeListToArray(element.getElementsByTagName("input"));
+						elements = elements.concat(nodeListToArray(element.getElementsByTagName("select")));
+						elements = elements.concat(nodeListToArray(element.getElementsByTagName("textarea")));
+
+						for (var i = 0; i < elements.length; ++i) {
+							var el = elements[i];
+							if (el.name && el.name !== "") {
+								result = result.concat(Wicket.Form.serializeElement(el, serializeRecursively));
+							}
 						}
 					}
 					return result;
@@ -1567,7 +1576,7 @@
 				for (var i = 0; i < elements.length; ++i) {
 					var el = elements[i];
 					if (el.name && el.name !== "") {
-						result = result.concat(Wicket.Form.serializeElement(el));
+						result = result.concat(Wicket.Form.serializeElement(el, false));
 					}
 				}
 				return result;
