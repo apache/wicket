@@ -18,11 +18,16 @@ package org.apache.wicket.protocol.ws;
 
 import java.util.concurrent.Callable;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.ServletRequestCopy;
+import org.apache.wicket.protocol.ws.api.WebSocketRequest;
 import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.SimpleWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
 
@@ -117,6 +122,21 @@ public class WebSocketSettings implements IWebSocketSettings
 	public WebResponse newWebSocketResponse(IWebSocketConnection connection)
 	{
 		return new WebSocketResponse(connection);
+	}
+
+	/**
+	 * A factory method for the {@link org.apache.wicket.request.http.WebRequest}
+	 * that should be used in the WebSocket processing request cycle
+	 *
+	 * @param request
+	 *              The upgraded http request
+	 * @param filterPath
+	 *              The configured filter path of WicketFilter in web.xml
+	 * @return the request object that should be used in the WebSocket processing request cycle
+	 */
+	public WebRequest newWebSocketRequest(HttpServletRequest request, String filterPath)
+	{
+		return new WebSocketRequest(new ServletRequestCopy(request), filterPath);
 	}
 
 	/**

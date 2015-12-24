@@ -135,10 +135,10 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		this.baseUrl = Url.parse(baseUrl);
 
 		WicketFilter wicketFilter = application.getWicketFilter();
-		this.webRequest = new WebSocketRequest(new ServletRequestCopy(request), getFilterPath(wicketFilter));
 
 		this.application = Args.notNull(application, "application");
 		this.webSocketSettings = IWebSocketSettings.Holder.get(application);
+		this.webRequest = createWebSocketRequest(request, getFilterPath(wicketFilter));
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 	}
 
@@ -290,6 +290,20 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			webResponse = new WebSocketResponse(connection);
 		}
 		return webResponse;
+	}
+	
+	private WebRequest createWebSocketRequest(HttpServletRequest request, String filterPath)
+	{
+		WebRequest webRequest;
+		if (webSocketSettings instanceof WebSocketSettings)
+		{
+			webRequest = ((WebSocketSettings) webSocketSettings).newWebSocketRequest(request, filterPath);
+		}
+		else
+		{
+			webRequest = new WebSocketRequest(new ServletRequestCopy(request), filterPath);
+		}
+		return webRequest;
 	}
 
 	private RequestCycle createRequestCycle(WebSocketRequestMapper requestMapper, WebResponse webResponse)
