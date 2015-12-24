@@ -513,8 +513,8 @@ gpg --print-md MD5  target/dist/apache-wicket-$version.zip > target/dist/apache-
 echo "Create and sign the binaries"
 mkdir target/apache-wicket-$version-bin
 pushd target/apache-wicket-$version-bin
-find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-.*.[jw]ar" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
-find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-.*.[jw]ar\.asc" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
+find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-[^/]*.[jw]ar" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
+find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-[^/]*.[jw]ar\.asc" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
 cp ../../LICENSE .
 cp ../../README .
 cp ../../NOTICE .
