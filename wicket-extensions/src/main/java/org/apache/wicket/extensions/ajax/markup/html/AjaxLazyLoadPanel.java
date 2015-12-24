@@ -216,7 +216,7 @@ public abstract class AjaxLazyLoadPanel extends Panel
 				// notify our subclasses of the updated component
 				onComponentLoaded(component, target);
 
-				// repaint our selves if there's an ajax request in play, otherwise let the page
+				// repaint our selves if there's an AJAX request in play, otherwise let the page
 				// redraw itself
 				if (target != null)
 				{
