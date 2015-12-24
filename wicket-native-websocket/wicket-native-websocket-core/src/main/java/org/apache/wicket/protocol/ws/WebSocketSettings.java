@@ -16,21 +16,25 @@
  */
 package org.apache.wicket.protocol.ws;
 
-import java.util.concurrent.Callable;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnectionFilter;
+import org.apache.wicket.protocol.ws.api.ServletRequestCopy;
 import org.apache.wicket.protocol.ws.api.WebSocketConnectionFilterCollection;
+import org.apache.wicket.protocol.ws.api.WebSocketRequest;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.SimpleWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.Callable;
 
 /**
  * Web Socket related settings.
@@ -202,6 +206,7 @@ public class WebSocketSettings
 	}
 
 	/**
+<<<<<<< HEAD
 	 * A factory method for creating instances of {@link org.apache.wicket.protocol.ws.api.WebSocketRequestHandler}
 	 * for processing a web socket request
 	 *
@@ -212,9 +217,23 @@ public class WebSocketSettings
 	 *          The active web socket connection
 	 * @return a new instance of WebSocketRequestHandler for processing a web socket request
 	 */
-	public WebSocketRequestHandler newWebSocketRequestHandler(Page page, IWebSocketConnection connection)
-	{
+	public WebSocketRequestHandler newWebSocketRequestHandler(Page page, IWebSocketConnection connection) {
 		return new WebSocketRequestHandler(page, connection);
+	}
+
+	/**
+	 * A factory method for the {@link org.apache.wicket.request.http.WebRequest}
+	 * that should be used in the WebSocket processing request cycle
+	 *
+	 * @param request
+	 *              The upgraded http request
+	 * @param filterPath
+	 *              The configured filter path of WicketFilter in web.xml
+	 * @return the request object that should be used in the WebSocket processing request cycle
+	 */
+	public WebRequest newWebSocketRequest(HttpServletRequest request, String filterPath)
+	{
+		return new WebSocketRequest(new ServletRequestCopy(request), filterPath);
 	}
 
 	/**
