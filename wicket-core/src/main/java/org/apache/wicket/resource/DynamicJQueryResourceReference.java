@@ -63,16 +63,16 @@ public class DynamicJQueryResourceReference extends JQueryResourceReference
 		String name = requestCycle.getMetaData(KEY);
 		if (name == null)
 		{
+			WebSession session = WebSession.get();
 			WebClientInfo clientInfo;
 			name = getVersion2();
 			if (Session.exists())
 			{
-				WebSession session = WebSession.get();
 				clientInfo = session.getClientInfo();
 			}
 			else
 			{
-				clientInfo = new WebClientInfo(requestCycle);
+				clientInfo = session.createClientInfo(requestCycle);
 			}
 			ClientProperties clientProperties = clientInfo.getProperties();
 			if (clientProperties.isBrowserInternetExplorer() && clientProperties.getBrowserVersionMajor() < 9)
