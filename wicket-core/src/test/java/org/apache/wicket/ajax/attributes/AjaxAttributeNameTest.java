@@ -35,7 +35,7 @@ public class AjaxAttributeNameTest extends Assert
 	@Test
 	public void jsonNamesDoNotCollide()
 	{
-		Set<String> jsonNames = new HashSet<String>();
+		Set<String> jsonNames = new HashSet<>();
 		for (AjaxAttributeName name : AjaxAttributeName.values())
 		{
 			assertTrue("Attribute: " + name, jsonNames.add(name.jsonName()));
