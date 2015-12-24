@@ -100,9 +100,7 @@ public class LazyLoadingPage extends BasePage
 				{
 					try
 					{
-						System.out.println("Starting sleep");
 						Thread.sleep(seconds * 1000);
-						System.out.println("Slept " + seconds + " seconds");
 					}
 					catch (InterruptedException e)
 					{
