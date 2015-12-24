@@ -22,8 +22,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
-import org.apache.wicket.ajax.attributes.AjaxCallListener;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
@@ -970,16 +968,6 @@ public class ModalWindow extends Panel
 				windowClosedCallback.onClose(target);
 			}
 		}
-
-		@Override
-		protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
-		{
-			super.updateAjaxAttributes(attributes);
-			AjaxCallListener listener = new AjaxCallListener();
-			// disable all form elements inside the modal window to avoid serializing them in the url
-			listener.onBefore("$('#'+attrs.c+' :input').prop('disabled', true);");
-			attributes.getAjaxCallListeners().add(listener);
-		}
 	}
 
 	/**
@@ -1001,16 +989,6 @@ public class ModalWindow extends Panel
 			{
 				close(target);
 			}
-		}
-
-		@Override
-		protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
-		{
-			super.updateAjaxAttributes(attributes);
-			AjaxCallListener listener = new AjaxCallListener();
-			// disable all form elements inside the modal window to avoid serializing them in the url
-			listener.onBefore("$('#'+attrs.c+' :input').prop('disabled', true);");
-			attributes.getAjaxCallListeners().add(listener);
 		}
 	}
 
