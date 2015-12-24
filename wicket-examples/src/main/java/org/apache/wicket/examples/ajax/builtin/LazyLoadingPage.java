@@ -88,12 +88,12 @@ public class LazyLoadingPage extends BasePage
 		RepeatingView rv;
 		addOrReplace(rv = new RepeatingView("lazy2"));
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 5; i++)
 			rv.add(new AjaxLazyLoadPanel(rv.newChildId())
 			{
 				private static final long serialVersionUID = 1L;
 
-				private int seconds = r.nextInt(10);
+				private int seconds = r.nextInt(5);
 
 				@Override
 				public Component getLazyLoadComponent(String markupId)
@@ -101,7 +101,7 @@ public class LazyLoadingPage extends BasePage
 					try
 					{
 						System.out.println("Starting sleep");
-						Thread.sleep(Duration.seconds(seconds).getMilliseconds());
+						Thread.sleep(seconds * 1000);
 						System.out.println("Slept " + seconds + " seconds");
 					}
 					catch (InterruptedException e)
