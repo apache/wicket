@@ -2,6 +2,59 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.2.0
+
+** Bug
+
+    * [WICKET-6001] - Exception raised while refreshing a page with queued components missing in the markup
+    * [WICKET-6002] - FileUploadField makes form-component models become null on submit
+    * [WICKET-6006] - ModalWindow.closeCurrent() causes 414 status error
+    * [WICKET-6010] - Downloading filenames containing ',' or ';' gives problems
+    * [WICKET-6011] - NPE in case DebugBar is added to AjaxRequestTarget
+    * [WICKET-6013] - CLONE - AjaxFallbackOrderByBorder wicketOrder[Up|Down|None] class missing in 7.1.0
+    * [WICKET-6014] - TransparentWebMarkupContainer breaks OnChangeAjaxBehavior for Select2
+    * [WICKET-6017] - Tests fail when executed with not expected locale
+    * [WICKET-6018] - TransparentWebMarkupContainer is not really "transparent"
+    * [WICKET-6020] - GuiceFieldValueFactory returns the NULL_SENTINEL from the cache
+    * [WICKET-6021] - ConcurrentModificationException in MarkupContainer#iterator#next
+    * [WICKET-6024] - Possible issue with Border and LoadableDetachableModel in 7.1.0
+    * [WICKET-6026] - Problem in detecting child id on nested <wicket:enclosure>
+    * [WICKET-6027] - Nested TransparentWebMarkupContainer, markup of inner component not found
+    * [WICKET-6028] - Detach called on enclosure component while it had a non-empty queue
+    * [WICKET-6031] - NPE in PackageResourceReference#getResource() when there is no request
+    * [WICKET-6032] - Wicket.Ajax.done() called twice on redirect
+    * [WICKET-6034] - AjaxFallbackOrderByBorder does not generate any CSS class in order link
+    * [WICKET-6036] - Failure to process markup with nested tags inside a Label
+    * [WICKET-6037] - ModalWindow vulnerable to Javascript injection through title model
+    * [WICKET-6043] - Cannot set wicket:enclosure on queued component in ListView
+    * [WICKET-6044] - AjaxFormChoiceComponentUpdatingBehavior: Duplicate input values according to WICKET-5948
+    * [WICKET-6045] - ListView NullPointerException when viewSize is set explicitly
+    * [WICKET-6048] - German Translation for EqualInputValidator wrong
+    * [WICKET-6050] - Wicket Ajax (Wicket.From.serializeElement) causes 400 bad request
+    * [WICKET-6052] - CSS header contribution overlap
+
+** Improvement
+
+    * [WICKET-5950] - Model and GenericBaseModel could both implement IObjectClassAwareModel
+    * [WICKET-5969] - Please give us access to PageTable.index pageId queue
+    * [WICKET-6015] - AjaxFallbackOrderByBorder/Link should support updateAjaxAttributes() idiom
+    * [WICKET-6019] - Remove 'final' modifier for Localizer#getStringIgnoreSettings() methods
+    * [WICKET-6023] - small tweak for component queuing for the AbstractRepeater
+    * [WICKET-6029] - Make Border's methods consistent with commit f14e03f
+    * [WICKET-6042] - Implementation of ExternalImage component
+    * [WICKET-6046] - Wicket Quickstart Example Application shows deployment memory leak in Tomcat
+    * [WICKET-6051] - Improve performance of CssUrlReplacer
+
+** New Feature
+
+    * [WICKET-6025] - Read resource files with Java's NIO API
+
+** Task
+
+    * [WICKET-6049] - Update the site to point to the new deployments of the examples
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.1.0
 
 ** Bug
