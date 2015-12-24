@@ -60,17 +60,17 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * <code>{@link #setPageCreator(ModalWindow.PageCreator)}</code> method.
  * </ul>
  * In case the content is a component, it is not rendered until the window is shown (method
- * <code>{@link #show(org.apache.wicket.ajax.AjaxRequestTarget)})</code>. The window can be made
+ * <code>{@link #show(IPartialPageRequestHandler)}</code>. The window can be made
  * visible from an ajax handler using
- * <code>{@link #show(org.apache.wicket.ajax.AjaxRequestTarget)}</code>.
+ * <code>{@link #show(IPartialPageRequestHandler)}</code>.
  * <p>
  * To close the window there are multiple options. Static method
- * <code>{@link #close(org.apache.wicket.ajax.AjaxRequestTarget)}</code> can be used to close the
+ * <code>{@link #close(IPartialPageRequestHandler)}</code> can be used to close the
  * window from a handler of ajax link inside the window. By default the close button in the upper
  * right corner of the window closes it. This behavior can be altered using
  * <code>{@link #setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>. If you want to be
  * notified when the window is closed (either using the close button or calling
- * <code>{@link #close(org.apache.wicket.ajax.AjaxRequestTarget)})</code>, you can use
+ * <code>{@link #close(IPartialPageRequestHandler)}</code>, you can use
  * <code>{@link #setWindowClosedCallback(ModalWindow.WindowClosedCallback)}</code>.
  * <p>
  * Title is specified using {@link #setTitle(String)}. Pass <code>true</code> to
@@ -375,7 +375,7 @@ public class ModalWindow extends Panel
 	/**
 	 * Hides the modal window. This can be called from within the modal window, however, the modal
 	 * window must have configured WindowClosedCallback. Otherwise use the
-	 * {@link #close(org.apache.wicket.ajax.AjaxRequestTarget)} method.
+	 * {@link #close(IPartialPageRequestHandler)} method.
 	 * 
 	 * @param target
 	 *            Request target associated with current ajax request.

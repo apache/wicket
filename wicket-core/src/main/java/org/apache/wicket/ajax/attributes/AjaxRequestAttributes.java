@@ -35,7 +35,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The method to be used when submitting a form
 	 */
-	public static enum Method
+	public enum Method
 	{
 		/** get */
 		GET,
@@ -53,7 +53,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The JavaScript event propagation type
 	 */
-	public static enum EventPropagation
+	public enum EventPropagation
 	{
 		/**
 		 * Stops the propagation of the JavaScript event to the parent of its target
@@ -259,7 +259,7 @@ public final class AjaxRequestAttributes
 	{
 		if (ajaxCallListeners == null)
 		{
-			ajaxCallListeners = new ArrayList<IAjaxCallListener>();
+			ajaxCallListeners = new ArrayList<>();
 		}
 		return ajaxCallListeners;
 	}
