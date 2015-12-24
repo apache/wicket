@@ -123,12 +123,12 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		WicketFilter wicketFilter = application.getWicketFilter();
 		this.servletRequest = new ServletRequestCopy(request);
 
-		this.webRequest = new WebSocketRequest(servletRequest, wicketFilter.getFilterPath());
-
 		this.application = Args.notNull(application, "application");
 
 		this.webSocketSettings = WebSocketSettings.Holder.get(application);
 
+		this.webRequest = webSocketSettings.newWebSocketRequest(request, wicketFilter.getFilterPath());
+		
 		this.connectionRegistry = webSocketSettings.getConnectionRegistry();
 
 		this.connectionFilter = webSocketSettings.getConnectionFilter();
