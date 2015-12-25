@@ -109,6 +109,20 @@ public class WebSession extends Session
 	}
 
 	/**
+	 * method creates and returns {@code WebClientInfo} instance. Subclasses can extend it and
+	 * create custom {@code WebClientInfo} instance and return.
+	 * 
+	 * @param requestCycle
+	 *            RequestCycle
+	 * @return WebClientInfo
+	 */
+	@SuppressWarnings("unchecked")
+	public <M extends WebClientInfo> M createClientInfo(RequestCycle requestCycle)
+	{
+		return (M) new WebClientInfo(requestCycle);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * <p>
@@ -144,7 +158,7 @@ public class WebSession extends Session
 				// info object will be cached too
 				setMetaData(BROWSER_WAS_POLLED_KEY, null);
 			}
-			clientInfo = new WebClientInfo(requestCycle);
+			clientInfo = createClientInfo(requestCycle);
 		}
 		return (WebClientInfo)clientInfo;
 	}

@@ -17,12 +17,12 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Session;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.pages.BrowserInfoForm;
 import org.apache.wicket.protocol.http.ClientProperties;
+import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -81,8 +81,9 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 		int browserHeight = requestParameters.getParameterValue("browserHeight").toInt(-1);
 		String hostname = requestParameters.getParameterValue("hostname").toString("N/A");
 
-		WebClientInfo clientInfo = new WebClientInfo(requestCycle);
-		Session.get().setClientInfo(clientInfo);
+		WebSession session = WebSession.get();
+		WebClientInfo clientInfo = session.createClientInfo(requestCycle);
+		session.setClientInfo(clientInfo);
 
 		ClientProperties properties = clientInfo.getProperties();
 		properties.setNavigatorAppCodeName(navigatorAppCodeName);
