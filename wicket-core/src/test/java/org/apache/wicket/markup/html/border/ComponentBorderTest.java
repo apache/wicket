@@ -118,4 +118,10 @@ public class ComponentBorderTest extends WicketTestCase
 	{
 		tester.startPage(BorderWithEnclosurePage.class);
 	}
+	
+	@Test
+	public void borderWithAutoLabel() throws Exception
+	{
+		tester.startPage(BorderWithAutoLabelPage.class);
+	}
 }
