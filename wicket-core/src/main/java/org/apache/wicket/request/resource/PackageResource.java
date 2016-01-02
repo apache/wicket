@@ -255,16 +255,17 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	@Override
 	public Serializable getCacheKey()
 	{
-		IResourceStream stream = getResourceStream();
-
+		Class<?> scope = getScope();
+		String currentStyle = getCurrentStyle();
+		Locale currentLocale = getCurrentLocale();
+		
 		// if resource stream can not be found do not cache
-		if (stream == null)
+		if (exists(scope, absolutePath, currentLocale, currentStyle, variation))
 		{
-			return null;
+			return new CacheKey(scopeName, absolutePath, currentLocale, currentStyle, variation);
 		}
 
-		return new CacheKey(scopeName, absolutePath, stream.getLocale(), stream.getStyle(),
-			stream.getVariation());
+		return null;
 	}
 
 	/**
