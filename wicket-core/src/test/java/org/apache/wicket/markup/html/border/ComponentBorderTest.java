@@ -117,11 +117,13 @@ public class ComponentBorderTest extends WicketTestCase
 	public void borderWithEnclosurePage() throws Exception
 	{
 		tester.startPage(BorderWithEnclosurePage.class);
+		tester.assertRenderedPage(BorderWithEnclosurePage.class);
 	}
 	
 	@Test
 	public void borderWithAutoLabel() throws Exception
 	{
 		tester.startPage(BorderWithAutoLabelPage.class);
+		tester.assertRenderedPage(BorderWithAutoLabelPage.class);
 	}
 }
