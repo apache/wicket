@@ -291,7 +291,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		}
 		return webResponse;
 	}
-	
+
 	private WebRequest createWebSocketRequest(HttpServletRequest request, String filterPath)
 	{
 		WebRequest webRequest;

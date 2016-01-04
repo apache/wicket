@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.http.HttpServletResponse;
 
 import junit.framework.AssertionFailedError;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageParametersAware;
 import org.apache.wicket.MockPageWithLink;
@@ -62,6 +63,9 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
+import org.apache.wicket.session.HttpSessionStore;
+import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
@@ -1269,5 +1273,27 @@ public class WicketTesterTest extends WicketTestCase
 		tester.clickLink("link", true);
 
 		tester.assertComponentOnAjaxResponse(label.getPageRelativePath());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6062
+	 */
+	@Test
+	public void renewSessionIdAfterInvalidation() {
+		tester.getApplication().setSessionStoreProvider(new IProvider<ISessionStore>()
+		{
+			@Override
+			public ISessionStore get()
+			{
+				return new HttpSessionStore();
+			}
+		});
+		tester.getSession().bind();
+		String firstId = tester.getSession().getId();
+
+		tester.getSession().invalidateNow();
+
+		String secondId = tester.getSession().getId();
+		assertFalse(firstId.equals(secondId));
 	}
 }
