@@ -873,7 +873,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public final Application setSessionStoreProvider(final Supplier<ISessionStore> sessionStoreProvider)
 	{
-		this.sessionStoreProvider = sessionStoreProvider;
+		this.sessionStoreProvider = Args.notNull(sessionStoreProvider, "sessionStoreProvider");
+		this.sessionStore = null;
 		return this;
 	}
 

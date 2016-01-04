@@ -42,7 +42,7 @@ public class MockHttpSession implements HttpSession, Serializable
 
 	private final long creationTime = System.currentTimeMillis();
 
-	private final String id = UUID.randomUUID().toString().replace(':', '_').replace('-', '_');
+	private String id = generateSessionId();
 
 	private long lastAccessedTime = 0;
 
@@ -187,6 +187,7 @@ public class MockHttpSession implements HttpSession, Serializable
 	public void invalidate()
 	{
 		attributes.clear();
+		id = generateSessionId();
 	}
 
 	/**
@@ -295,5 +296,10 @@ public class MockHttpSession implements HttpSession, Serializable
 	public final void setTemporary(boolean temporary)
 	{
 		this.temporary = temporary;
+	}
+
+	private static String generateSessionId()
+	{
+		return UUID.randomUUID().toString().replace(':', '_').replace('-', '_');
 	}
 }
