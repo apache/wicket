@@ -1325,14 +1325,7 @@ public class WicketTesterTest extends WicketTestCase
 	 */
 	@Test
 	public void renewSessionIdAfterInvalidation() {
-		tester.getApplication().setSessionStoreProvider(new IProvider<ISessionStore>()
-		{
-			@Override
-			public ISessionStore get()
-			{
-				return new HttpSessionStore();
-			}
-		});
+		tester.getApplication().setSessionStoreProvider(HttpSessionStore::new);
 		tester.getSession().bind();
 		String firstId = tester.getSession().getId();
 
