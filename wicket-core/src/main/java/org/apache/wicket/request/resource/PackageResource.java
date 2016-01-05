@@ -259,8 +259,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		String currentStyle = getCurrentStyle();
 		Locale currentLocale = getCurrentLocale();
 		
+		 IResourceStream packageResource = Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(scope, absolutePath, currentStyle, variation, currentLocale, null, false);
+		 
 		// if resource stream can not be found do not cache
-		if (exists(scope, absolutePath, currentLocale, currentStyle, variation))
+		if (packageResource != null)
 		{
 			return new CacheKey(scopeName, absolutePath, currentLocale, currentStyle, variation);
 		}
