@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,6 @@ import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.PartWriterCallback;
 
 import jdk.nashorn.api.scripting.ClassFilter;
-import jdk.nashorn.api.scripting.NashornScriptEngine;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 /**
@@ -49,13 +47,11 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
  * @author Tobias Soloschenko
  *
  */
-@SuppressWarnings({ "unused", "restriction" })
+@SuppressWarnings("restriction")
 public class NashornResource extends AbstractResource
 {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final String ENGINE_NAME = "nashorn";
 
 	private ScheduledExecutorService scheduledExecutorService;
 
