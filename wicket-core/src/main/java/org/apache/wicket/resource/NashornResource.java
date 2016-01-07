@@ -47,7 +47,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
  * @author Tobias Soloschenko
  *
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "deprecation", "restriction" })
 public class NashornResource extends AbstractResource
 {
 
@@ -91,10 +91,28 @@ public class NashornResource extends AbstractResource
 		try (InputStream inputStream = httpServletRequest.getInputStream())
 		{
 			String script = IOUtils.toString(inputStream);
-			Future<Object> scriptTask = scheduledExecutorService
-				.submit(executeScript(script, attributes));
+			ScriptCallable executeScript = executeScript(script, attributes);
+			Future<Object> scriptTask = scheduledExecutorService.submit(executeScript);
 			scheduledExecutorService.schedule(() -> {
-				scriptTask.cancel(true);
+
+				// Ensure the process to be run first
+				Thread currentThread = executeScript.getCurrentThread();
+				while (currentThread == null)
+				{
+					try
+					{
+						Thread.sleep(1000);
+					}
+					catch (Exception e)
+					{
+						// NOOP
+					}
+				}
+				// Has to be stop, because interrupt does not work on endless scripts
+				// scriptTask.cancel(true); will not work and only set an interruption flag on the
+				// thread.
+				currentThread.stop();
+
 			} , this.delay, this.unit);
 			Object scriptResult = scriptTask.get();
 			ResourceResponse resourceResponse = new ResourceResponse();
@@ -134,6 +152,8 @@ public class NashornResource extends AbstractResource
 
 		private Attributes attributes;
 
+		private Thread currentThread;
+
 		/**
 		 * Creates a script result
 		 * 
@@ -151,13 +171,24 @@ public class NashornResource extends AbstractResource
 		@Override
 		public Object call() throws Exception
 		{
-			ScriptEngine scriptEngine = new NashornScriptEngineFactory().getScriptEngine(getClassFilter());
+			currentThread = Thread.currentThread();
+			ScriptEngine scriptEngine = new NashornScriptEngineFactory()
+				.getScriptEngine(getClassFilter());
 			Bindings bindings = scriptEngine.createBindings();
 			SimpleScriptContext scriptContext = new SimpleScriptContext();
 			NashornResource.this.setup(attributes, bindings);
 			scriptContext.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
-			jdk.nashorn.api.scripting.ClassFilter filter ;
 			return scriptEngine.eval(new StringReader(script), scriptContext);
+		}
+
+		/**
+		 * Gets the current thread which executes the script
+		 * 
+		 * @return the current thread which executes the script
+		 */
+		public Thread getCurrentThread()
+		{
+			return currentThread;
 		}
 	}
 
@@ -172,8 +203,7 @@ public class NashornResource extends AbstractResource
 	 * @throws ScriptException
 	 *             if something went wrong in the script
 	 */
-	public Callable<Object> executeScript(String script, Attributes attributes)
-		throws ScriptException
+	public ScriptCallable executeScript(String script, Attributes attributes) throws ScriptException
 	{
 		return new ScriptCallable(script, attributes);
 	}
