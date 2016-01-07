@@ -18,12 +18,12 @@ package org.apache.wicket.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 import javax.script.Bindings;
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -52,21 +52,22 @@ public class NashornResourceReferenceTest extends WicketTestCase
 			@Override
 			public ServletInputStream getInputStream() throws IOException
 			{
-				return new MockInputStream(IOUtils.toInputStream(
-					"function userDefinedFunction(){ return 3 + serverValue; } userDefinedFunction();"));
+				return new MockInputStream(NashornResourceReferenceTest.class
+					.getResourceAsStream("NashornResourceReferenceTest.js"));
 			}
 		};
 		wicketTester.setRequest(mockHttpServletRequest);
-		wicketTester.startResourceReference(new NashornResourceReference("nashorn")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void setup(Attributes attributes, Bindings bindings)
+		wicketTester
+			.startResourceReference(new NashornResourceReference("nashorn", 10, 5, TimeUnit.SECONDS)
 			{
-				bindings.put("serverValue", 1);
-			}
-		});
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void setup(Attributes attributes, Bindings bindings)
+				{
+					bindings.put("serverValue", 1);
+				}
+			});
 		Assert.assertEquals("4.0", wicketTester.getLastResponseAsString());
 	}
 

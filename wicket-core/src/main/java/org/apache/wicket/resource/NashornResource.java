@@ -19,6 +19,11 @@ package org.apache.wicket.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -34,34 +39,46 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.PartWriterCallback;
 
+import jdk.nashorn.api.scripting.ClassFilter;
+import jdk.nashorn.api.scripting.NashornScriptEngine;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+
 /**
  * A nashorn resource to execute java script on server side
  * 
  * @author Tobias Soloschenko
  *
  */
+@SuppressWarnings({ "unused", "restriction" })
 public class NashornResource extends AbstractResource
 {
 
 	private static final long serialVersionUID = 1L;
 
-	private Bindings bindings;
-
-	private ScriptEngine scriptEngine;
-
-	private SimpleScriptContext scriptContext;
-	
 	private static final String ENGINE_NAME = "nashorn";
+
+	private ScheduledExecutorService scheduledExecutorService;
+
+	private long delay;
+
+	private TimeUnit unit;
 
 	/**
 	 * Creates a new nashorn resource
+	 * 
+	 * @param scheduledExecutorService
+	 *            the scheduled executor service to run scripts
+	 * @param delay
+	 *            the delay until a script execution is going to be terminated
+	 * @param unit
+	 *            the unit until a script execution is going to be terminated
 	 */
-	public NashornResource()
+	public NashornResource(ScheduledExecutorService scheduledExecutorService, long delay,
+		TimeUnit unit)
 	{
-		scriptEngine = new ScriptEngineManager().getEngineByName(ENGINE_NAME);
-		bindings = scriptEngine.createBindings();
-		scriptContext = new SimpleScriptContext();
-		scriptContext.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+		this.scheduledExecutorService = scheduledExecutorService;
+		this.delay = delay;
+		this.unit = unit;
 	}
 
 	/**
@@ -73,21 +90,26 @@ public class NashornResource extends AbstractResource
 		RequestCycle cycle = RequestCycle.get();
 		Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
 		Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
-		setup(attributes, bindings);
 		HttpServletRequest httpServletRequest = (HttpServletRequest)attributes.getRequest()
 			.getContainerRequest();
 		try (InputStream inputStream = httpServletRequest.getInputStream())
 		{
 			String script = IOUtils.toString(inputStream);
-			Object eval = scriptEngine.eval(new StringReader(script), scriptContext);
+			Future<Object> scriptTask = scheduledExecutorService
+				.submit(executeScript(script, attributes));
+			scheduledExecutorService.schedule(() -> {
+				scriptTask.cancel(true);
+			} , this.delay, this.unit);
+			Object scriptResult = scriptTask.get();
 			ResourceResponse resourceResponse = new ResourceResponse();
 			resourceResponse.setContentType("text/plain");
-			resourceResponse.setWriteCallback(
-				new PartWriterCallback(IOUtils.toInputStream(eval != null ? eval.toString() : ""),
-					Long.valueOf(eval != null ? eval.toString().length() : 0), startbyte, endbyte));
+			resourceResponse.setWriteCallback(new PartWriterCallback(
+				IOUtils.toInputStream(scriptResult != null ? scriptResult.toString() : ""),
+				Long.valueOf(scriptResult != null ? scriptResult.toString().length() : 0),
+				startbyte, endbyte));
 			return resourceResponse;
 		}
-		catch (IOException | ScriptException e)
+		catch (IOException | ScriptException | InterruptedException | ExecutionException e)
 		{
 			ResourceResponse errorResourceResponse = processError(e);
 			if (errorResourceResponse == null)
@@ -101,6 +123,63 @@ public class NashornResource extends AbstractResource
 			}
 
 		}
+	}
+
+	/**
+	 * The callable to execute the script
+	 * 
+	 * @author Tobias Soloschenko
+	 *
+	 */
+	private class ScriptCallable implements Callable<Object>
+	{
+
+		private String script;
+
+		private Attributes attributes;
+
+		/**
+		 * Creates a script result
+		 * 
+		 * @param script
+		 *            the script to be executed
+		 * @param attributes
+		 *            the attributes to
+		 */
+		public ScriptCallable(String script, Attributes attributes)
+		{
+			this.script = script;
+			this.attributes = attributes;
+		}
+
+		@Override
+		public Object call() throws Exception
+		{
+			ScriptEngine scriptEngine = new NashornScriptEngineFactory().getScriptEngine(getClassFilter());
+			Bindings bindings = scriptEngine.createBindings();
+			SimpleScriptContext scriptContext = new SimpleScriptContext();
+			NashornResource.this.setup(attributes, bindings);
+			scriptContext.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+			jdk.nashorn.api.scripting.ClassFilter filter ;
+			return scriptEngine.eval(new StringReader(script), scriptContext);
+		}
+	}
+
+	/**
+	 * Executes the given script
+	 * 
+	 * @param script
+	 *            the script to be executed
+	 * @param attributes
+	 *            the attributes to be provided for the setup method
+	 * @return the object the script returned
+	 * @throws ScriptException
+	 *             if something went wrong in the script
+	 */
+	public Callable<Object> executeScript(String script, Attributes attributes)
+		throws ScriptException
+	{
+		return new ScriptCallable(script, attributes);
 	}
 
 	/**
@@ -126,5 +205,35 @@ public class NashornResource extends AbstractResource
 	protected void setup(Attributes attributes, Bindings bindings)
 	{
 		// NOOP
+	}
+
+	/**
+	 * The timeout until the script execution is going to be terminated
+	 * 
+	 * @param delay
+	 *            the delay until the script execution is going to be terminated
+	 * @param timeUnit
+	 *            the time unit until the script execution is going to be terminated
+	 */
+	public void setTimeout(long delay, TimeUnit timeUnit)
+	{
+	}
+
+	/**
+	 * Gets the class filter to apply to the scripting engine
+	 * 
+	 * @return the class filter to apply to the scripting engine
+	 */
+	protected ClassFilter getClassFilter()
+	{
+		// default is to allow nothing!
+		return new ClassFilter()
+		{
+			@Override
+			public boolean exposeToScripts(String name)
+			{
+				return false;
+			}
+		};
 	}
 }
