@@ -204,18 +204,6 @@ public class NashornResource extends AbstractResource
 	}
 
 	/**
-	 * The timeout until the script execution is going to be terminated
-	 * 
-	 * @param delay
-	 *            the delay until the script execution is going to be terminated
-	 * @param timeUnit
-	 *            the time unit until the script execution is going to be terminated
-	 */
-	public void setTimeout(long delay, TimeUnit timeUnit)
-	{
-	}
-
-	/**
 	 * Gets the class filter to apply to the scripting engine
 	 * 
 	 * @return the class filter to apply to the scripting engine
