@@ -126,7 +126,7 @@ svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m "Release vote h
 mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release vote has failed"
 
 # clean up remaining release files
-find . -name "*.releaseBackup" -exec rm {} \;
+find . -name "*.releaseBackup" -exec rm {} \\;
 [ -f release.properties ] && rm release.properties
 
 EOF
