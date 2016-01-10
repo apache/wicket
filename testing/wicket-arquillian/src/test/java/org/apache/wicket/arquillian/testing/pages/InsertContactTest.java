@@ -19,6 +19,7 @@ package org.apache.wicket.arquillian.testing.pages;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -27,6 +28,7 @@ import org.apache.wicket.arquillian.testing.deployment.AbstractDeploymentTest;
 import org.apache.wicket.arquillian.testing.model.Contact;
 import org.apache.wicket.util.tester.FormTester;
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -72,6 +74,12 @@ public class InsertContactTest extends AbstractDeploymentTest
 
 	@Inject
 	private ContactDao contactDao;
+
+	@Before
+	public void before()
+	{
+		getWicketTester().getSession().setLocale(Locale.ENGLISH);
+	}
 
 	@Test
 	public void testErrorMessagesInsertContact()
