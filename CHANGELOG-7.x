@@ -32,6 +32,11 @@ Release Notes - Wicket - Version 7.2.0
     * [WICKET-6048] - German Translation for EqualInputValidator wrong
     * [WICKET-6050] - Wicket Ajax (Wicket.From.serializeElement) causes 400 bad request
     * [WICKET-6052] - CSS header contribution overlap
+    * [WICKET-6058] - Error in calculation of byte ranges
+    * [WICKET-6059] - TransparentWebMarkupContainer can not resolve autocomponents in its parent
+    * [WICKET-6062] - MockHttpSession should renew its id after invalidation
+    * [WICKET-6065] - Calling http://examples7x.wicket.apache.org/resourceaggregation/ generate Internal error
+    * [WICKET-6068] - The key RangeValidator.exact is not mapped in Application_de.properties
 
 ** Improvement
 
@@ -41,17 +46,20 @@ Release Notes - Wicket - Version 7.2.0
     * [WICKET-6019] - Remove 'final' modifier for Localizer#getStringIgnoreSettings() methods
     * [WICKET-6023] - small tweak for component queuing for the AbstractRepeater
     * [WICKET-6029] - Make Border's methods consistent with commit f14e03f
-    * [WICKET-6042] - Implementation of ExternalImage component
     * [WICKET-6046] - Wicket Quickstart Example Application shows deployment memory leak in Tomcat
     * [WICKET-6051] - Improve performance of CssUrlReplacer
+    * [WICKET-6054] - Provide a factory method for the WebSocketResponse & WebSocketRequest
+    * [WICKET-6061] - Improved PackageResource#getCacheKey
 
 ** New Feature
 
     * [WICKET-6025] - Read resource files with Java's NIO API
+    * [WICKET-6042] - Implementation of ExternalImage component
 
 ** Task
 
     * [WICKET-6049] - Update the site to point to the new deployments of the examples
+    * [WICKET-6057] - Upgrade commons-collections to 4.1
 
 =======================================================================
 
