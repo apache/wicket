@@ -9,7 +9,7 @@
 		<br/>
 		<div wicket:id="feedbackErrors">[[ feedback ]]</div>
 
-        <form wicket:id="form">
+        <form wicket:id="form" class="validation">
             <label wicket:id="name-label">[name label]</label>: <input type="text" wicket:id="name"/>
             <br/><label wicket:id="email-label">[email label]</label>: <input type="text" wicket:id="email"/>
             <br/>
@@ -17,5 +17,22 @@
         </form>
         
         <div wicket:id="feedbackSuccess"></div>
+
+        <hr/>
+        <p>
+            This form uses <em>org.apache.wicket.ajax.AjaxPreventSubmitBehavior</em> to prevent the submit event
+            when <em>ENTER</em> key is pressed.<br/>
+            Without this special behavior the browser will trigger the <em>submit</em> JavaScript event on the first
+            &lt;input type="submit"/&gt; form element.
+        </p>
+        <form wicket:id="preventEnterForm" class="preventEnter">
+            <label wicket:id="name-label">[name label]</label>: <input type="text" wicket:id="name"/>
+            <br/><label wicket:id="email-label">[email label]</label>: <input type="text" wicket:id="email"/>
+            <br/>
+            <input type="submit" value="Submit"/>
+            <br/>
+        </form>
+
+
     </wicket:extend>
 </html>

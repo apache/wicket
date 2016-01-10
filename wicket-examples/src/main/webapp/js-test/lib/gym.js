@@ -81,11 +81,11 @@
 	/**
 	 * Triggers an JS event on element and waits for an Ajax response
 	 *
-	 * @param eventName The name of the JS event
+	 * @param event {String | jQuery.Event } The event (name)
 	 * @param $el The target element
 	 * @returns A promise that will be fulfilled when the Ajax call returns
 	 */
-	var ajaxEvent = function(eventName, $el) {
+	var ajaxEvent = function(event, $el) {
 		var deferred = $.Deferred();
 		var iframeWindow = _getIframe()[0].contentWindow;
 
@@ -93,7 +93,7 @@
 			deferred.resolve($$);
 		});
 
-		$el.trigger(eventName);
+		$el.trigger(event);
 
 		return deferred.promise();
 	}
