@@ -54,6 +54,24 @@ public class ServletRequestCopy implements HttpServletRequest
 	private final String method;
 	private final String serverName;
 	private final int serverPort;
+	private final String protocol;
+	private final String scheme;
+	private final String contentType;
+	private final Locale locale;
+	private final Enumeration<Locale> locales;
+	private final boolean isSecure;
+	private final String remoteUser;
+	private final String remoteAddr;
+	private final String remoteHost;
+	private final int remotePort;
+	private final String localAddr;
+	private final String localName;
+	private final int localPort;
+	private final String pathTranslated;
+	private final String requestedSessionId;
+	private final Principal principal;
+
+	private String characterEncoding;
 
 	public ServletRequestCopy(HttpServletRequest request) {
 		this.servletPath = request.getServletPath();
@@ -64,6 +82,23 @@ public class ServletRequestCopy implements HttpServletRequest
 		this.method = request.getMethod();
 		this.serverName = request.getServerName();
 		this.serverPort = request.getServerPort();
+		this.protocol = request.getProtocol();
+		this.scheme = request.getScheme();
+		this.characterEncoding = request.getCharacterEncoding();
+		this.contentType = request.getContentType();
+		this.locale = request.getLocale();
+		this.locales = request.getLocales();
+		this.isSecure = request.isSecure();
+		this.remoteUser = request.getRemoteUser();
+		this.remoteAddr = request.getRemoteAddr();
+		this.remoteHost = request.getRemoteHost();
+		this.remotePort = request.getRemotePort();
+		this.localAddr = request.getLocalAddr();
+		this.localName = request.getLocalName();
+		this.localPort = request.getLocalPort();
+		this.pathTranslated = request.getPathTranslated();
+		this.requestedSessionId = request.getRequestedSessionId();
+		this.principal = request.getUserPrincipal();
 
 		HttpSession session = request.getSession(true);
 		httpSession = new HttpSessionCopy(session);
@@ -107,13 +142,13 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public String getRemoteAddr()
 	{
-		return null;
+		return remoteAddr;
 	}
 
 	@Override
 	public String getRemoteHost()
 	{
-		return null;
+		return remoteHost;
 	}
 
 	@Override
@@ -186,19 +221,29 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public Map getParameterMap()
 	{
-		return null;
+		return parameters;
 	}
 
 	@Override
 	public String getProtocol()
 	{
-		return null;
+		String _protocol = "ws";
+		if ("https".equalsIgnoreCase(protocol))
+		{
+			_protocol = "wss";
+		}
+		return _protocol;
 	}
 
 	@Override
 	public String getScheme()
 	{
-		return null;
+		String _scheme = "ws";
+		if ("https".equalsIgnoreCase(scheme))
+		{
+			_scheme = "wss";
+		}
+		return _scheme;
 	}
 
 	@Override
@@ -209,7 +254,13 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public int getIntHeader(String name)
 	{
-		return 0;
+		String value = headers.get(name);
+		int result = -1;
+		if (value != null)
+		{
+			result = Integer.parseInt(value, 10);
+		}
+		return result;
 	}
 
 	@Override
@@ -225,12 +276,13 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public String getCharacterEncoding()
 	{
-		return null;
+		return characterEncoding;
 	}
 
 	@Override
-	public void setCharacterEncoding(String env) throws UnsupportedEncodingException
+	public void setCharacterEncoding(String characterEncoding) throws UnsupportedEncodingException
 	{
+		this.characterEncoding = characterEncoding;
 	}
 
 	@Override
@@ -242,7 +294,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public String getContentType()
 	{
-		return null;
+		return contentType;
 	}
 
 	@Override
@@ -264,19 +316,19 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public Locale getLocale()
 	{
-		return null;
+		return locale;
 	}
 
 	@Override
 	public Enumeration getLocales()
 	{
-		return null;
+		return locales;
 	}
 
 	@Override
 	public boolean isSecure()
 	{
-		return false;
+		return isSecure;
 	}
 
 	@Override
@@ -294,25 +346,25 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public int getRemotePort()
 	{
-		return 0;
+		return remotePort;
 	}
 
 	@Override
 	public String getLocalName()
 	{
-		return null;
+		return localName;
 	}
 
 	@Override
 	public String getLocalAddr()
 	{
-		return null;
+		return localAddr;
 	}
 
 	@Override
 	public int getLocalPort()
 	{
-		return 0;
+		return localPort;
 	}
 
 	@Override
@@ -329,7 +381,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public String getRemoteUser()
 	{
-		return null;
+		return remoteUser;
 	}
 
 	@Override
@@ -341,13 +393,13 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public Principal getUserPrincipal()
 	{
-		return null;
+		return principal;
 	}
 
 	@Override
 	public String getRequestedSessionId()
 	{
-		return null;
+		return requestedSessionId;
 	}
 
 	@Override
@@ -363,7 +415,7 @@ public class ServletRequestCopy implements HttpServletRequest
 	@Override
 	public String getPathTranslated()
 	{
-		return null;
+		return pathTranslated;
 	}
 
 	@Override
