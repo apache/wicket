@@ -92,11 +92,10 @@ $q(document).ready(function() {
 			evt.keyCode = evt.which = 13; // ENTER key
 			var prevented = false;
 			evt.preventDefault = function() {prevented = true;};
-			evt.isDefaultPrevented = function() {return prevented;};
-			equal(evt.isDefaultPrevented(), false, "The JS event default behavior is not yet prevented!");
+			equal(prevented, false, "The JS event default behavior is not yet prevented!");
 
 			setTimeout(function() {
-				equal(evt.isDefaultPrevented(), true, "The JS event default behavior is not yet prevented!");
+				equal(prevented, true, "The JS event default behavior must be prevented!");
 				start();
 			}, 10);
 
