@@ -63,8 +63,6 @@ import org.apache.wicket.request.resource.PackageResource.PackageResourceBlocked
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
