@@ -16,21 +16,10 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.Url;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.time.Time;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * A {@link WebRequest} implementation used for the lifecycle of a web socket
@@ -50,63 +39,6 @@ public class WebSocketRequest extends ServletWebRequest
 	public WebSocketRequest(HttpServletRequest req, String filterPrefix)
 	{
 		super(req, filterPrefix);
-	}
-
-	@Override
-	public List<Cookie> getCookies()
-	{
-		List<Cookie> cookies = Arrays.asList(getContainerRequest().getCookies());
-		return cookies;
-	}
-
-	@Override
-	public List<String> getHeaders(String name)
-	{
-		Enumeration<String> headers = getContainerRequest().getHeaders(name);
-		List<String> h = Generics.newArrayList();
-		while (headers.hasMoreElements())
-		{
-			h.add(headers.nextElement());
-		}
-		
-		return h;
-	}
-
-	@Override
-	public String getHeader(String name)
-	{
-		return getContainerRequest().getHeader(name);
-	}
-
-	@Override
-	public Time getDateHeader(String name)
-	{
-		long dateHeader = getContainerRequest().getDateHeader(name);
-		return Time.millis(dateHeader);
-	}
-
-	@Override
-	public Url getUrl()
-	{
-		return null;
-	}
-
-	@Override
-	public Url getClientUrl()
-	{
-		return null;
-	}
-
-	@Override
-	public Locale getLocale()
-	{
-		return getContainerRequest().getLocale();
-	}
-
-	@Override
-	public Charset getCharset()
-	{
-		return RequestUtils.getCharset(getContainerRequest());
 	}
 
 	@Override
