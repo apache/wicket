@@ -27,6 +27,11 @@
 	<packaging>jar</packaging>
 	<name>Wicket Common Tests</name>
 	<description>Tests for all Wicket modules</description>
+
+	<properties>
+		<clirr.skip>true</clirr.skip>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

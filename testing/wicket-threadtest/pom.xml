@@ -20,13 +20,18 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>6.8.0-SNAPSHOT</version>
+		<version>6.22.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-threadtest</artifactId>
 	<packaging>jar</packaging>
 	<name>Wicket Thread Test</name>
 	<description>Test project</description>
+
+	<properties>
+		<clirr.skip>true</clirr.skip>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
