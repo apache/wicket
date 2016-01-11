@@ -29,6 +29,11 @@
 	<description>
 		Provides the user guide of wicket
 	</description>
+
+	<properties>
+		<clirr.skip>true</clirr.skip>
+	</properties>
+
 	<repositories>
 		<repository>
 			<id>grails</id>
