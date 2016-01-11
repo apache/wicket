@@ -2,7 +2,7 @@ package ${package};
 
 import org.apache.wicket.util.time.Duration;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
@@ -13,7 +13,7 @@ public class Start {
         int timeout = (int) Duration.ONE_HOUR.getMilliseconds();
 
         Server server = new Server();
-        SocketConnector connector = new SocketConnector();
+        SelectChannelConnector connector = new SelectChannelConnector();
 
         // Set some timeout options to make debugging easier.
         connector.setMaxIdleTime(timeout);
