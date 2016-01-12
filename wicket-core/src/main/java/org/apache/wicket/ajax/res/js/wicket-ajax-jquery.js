@@ -832,17 +832,15 @@
 					return; // 'Ajax-Location' header is set - redirected to it
 				}
 
-				// else {
-					// no redirect, just regular response
-					if (Wicket.Log.enabled()) {
-						var responseAsText = jqXHR.responseText;
-						Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
-						Wicket.Log.info("\n" + responseAsText);
-					}
+				// no redirect, just regular response
+				if (Wicket.Log.enabled()) {
+					var responseAsText = jqXHR.responseText;
+					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
+					Wicket.Log.info("\n" + responseAsText);
+				}
 
-					// invoke the loaded callback with an xml document
-					return this.loadedCallback(data, context);
-				// }
+				// invoke the loaded callback with an xml document
+				return this.loadedCallback(data, context);
 			}
 		},
 
