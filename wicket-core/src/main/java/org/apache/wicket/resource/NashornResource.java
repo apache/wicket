@@ -19,8 +19,10 @@ package org.apache.wicket.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -28,11 +30,11 @@ import java.util.concurrent.TimeUnit;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import javax.script.SimpleScriptContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.NullWriter;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.AbstractResource;
@@ -47,7 +49,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
  * @author Tobias Soloschenko
  *
  */
-@SuppressWarnings({ "deprecation", "restriction" })
+@SuppressWarnings({ "restriction" })
 public class NashornResource extends AbstractResource
 {
 
@@ -91,30 +93,8 @@ public class NashornResource extends AbstractResource
 		try (InputStream inputStream = httpServletRequest.getInputStream())
 		{
 			String script = IOUtils.toString(inputStream);
-			ScriptCallable executeScript = executeScript(script, attributes);
-			Future<Object> scriptTask = scheduledExecutorService.submit(executeScript);
-			scheduledExecutorService.schedule(() -> {
-
-				// Ensure the process to be run first
-				Thread currentThread = executeScript.getCurrentThread();
-				while (currentThread == null)
-				{
-					try
-					{
-						Thread.sleep(1000);
-					}
-					catch (Exception e)
-					{
-						// NOOP
-					}
-				}
-				// Has to be stop, because interrupt does not work on endless scripts
-				// scriptTask.cancel(true); will not work and only set an interruption flag on the
-				// thread.
-				currentThread.stop();
-
-			} , this.delay, this.unit);
-			Object scriptResult = scriptTask.get();
+			String saveScript = ensureSavetyScript(script, attributes);
+			Object scriptResult = executeScript(new ScriptCallable(saveScript, attributes));
 			ResourceResponse resourceResponse = new ResourceResponse();
 			resourceResponse.setContentType("text/plain");
 			resourceResponse.setWriteCallback(new PartWriterCallback(
@@ -123,7 +103,7 @@ public class NashornResource extends AbstractResource
 				startbyte, endbyte));
 			return resourceResponse;
 		}
-		catch (IOException | ScriptException | InterruptedException | ExecutionException e)
+		catch (Exception e)
 		{
 			ResourceResponse errorResourceResponse = processError(e);
 			if (errorResourceResponse == null)
@@ -140,6 +120,75 @@ public class NashornResource extends AbstractResource
 	}
 
 	/**
+	 * Ensure that the given script is going to be save. Save because of endless loops for example.
+	 * 
+	 * @param script
+	 *            the script to be make save
+	 * @param attributes
+	 *            the attributes
+	 * @return the save script
+	 * @throws Exception
+	 *             if an error occured while making the script save
+	 */
+	private String ensureSavetyScript(String script, Attributes attributes) throws Exception
+	{
+		ScriptCallable scriptCallable = new ScriptCallable(
+			getScriptByName(NashornResource.class.getSimpleName() + ".js"), attributes);
+		Map<String, Object> extraBindings = new HashMap<>();
+		extraBindings.put("script", script);
+		extraBindings.put("debug", isDebug());
+		extraBindings.put("debug_log_prefix", NashornResource.class.getSimpleName() + " - ");
+		scriptCallable.setExtraBindings(extraBindings);
+		scriptCallable.setOverrideClassFilter(new ClassFilter()
+		{
+			@Override
+			public boolean exposeToScripts(String arg0)
+			{
+				return true;
+			}
+		});
+		return executeScript(scriptCallable).toString();
+	}
+
+
+	/**
+	 * Gets a script by name - the scope is always the class NashornResource
+	 * 
+	 * @param name
+	 *            the name of the script
+	 * @return the script
+	 * @throws IOException
+	 *             if the script fail to load
+	 */
+	private String getScriptByName(String name) throws IOException
+	{
+		String script = "";
+
+		try (InputStream scriptInputStream = NashornResource.class.getResourceAsStream(name))
+		{
+			script = IOUtils.toString(scriptInputStream);
+		}
+		return script;
+	}
+
+	/**
+	 * Executes a given script callable and the corresponding script
+	 * 
+	 * @param executeScript
+	 *            the script callable to execute
+	 * @return the script result
+	 * @throws Exception
+	 */
+	private Object executeScript(ScriptCallable executeScript) throws Exception
+	{
+		Future<Object> scriptTask = scheduledExecutorService.submit(executeScript);
+		scheduledExecutorService.schedule(() -> {
+			scriptTask.cancel(true);
+		} , this.delay, this.unit);
+		return scriptTask.get();
+	}
+
+	/**
 	 * The callable to execute the script
 	 * 
 	 * @author Tobias Soloschenko
@@ -152,7 +201,9 @@ public class NashornResource extends AbstractResource
 
 		private Attributes attributes;
 
-		private Thread currentThread;
+		private Map<? extends String, ? extends Object> extraBindings = new HashMap<>();
+
+		private ClassFilter overrideClassFilter;
 
 		/**
 		 * Creates a script result
@@ -171,41 +222,60 @@ public class NashornResource extends AbstractResource
 		@Override
 		public Object call() throws Exception
 		{
-			currentThread = Thread.currentThread();
-			ScriptEngine scriptEngine = new NashornScriptEngineFactory()
-				.getScriptEngine(getClassFilter());
+			ScriptEngine scriptEngine = new NashornScriptEngineFactory().getScriptEngine(
+				overrideClassFilter != null ? overrideClassFilter : getClassFilter());
 			Bindings bindings = scriptEngine.createBindings();
+			bindings.putAll(extraBindings);
 			SimpleScriptContext scriptContext = new SimpleScriptContext();
+			scriptContext.setWriter(getWriter());
+			scriptContext.setErrorWriter(getErrorWriter());
 			NashornResource.this.setup(attributes, bindings);
+			bindings.put("nashornResourceReferenceScriptExecutionThread", Thread.currentThread());
 			scriptContext.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 			return scriptEngine.eval(new StringReader(script), scriptContext);
 		}
 
 		/**
-		 * Gets the current thread which executes the script
+		 * Gets the extra bindings to be used to execute the script
 		 * 
-		 * @return the current thread which executes the script
+		 * @return the extra bindings
 		 */
-		public Thread getCurrentThread()
+		public Map<? extends String, ? extends Object> getExtraBindings()
 		{
-			return currentThread;
+			return extraBindings;
 		}
-	}
 
-	/**
-	 * Executes the given script
-	 * 
-	 * @param script
-	 *            the script to be executed
-	 * @param attributes
-	 *            the attributes to be provided for the setup method
-	 * @return the object the script returned
-	 * @throws ScriptException
-	 *             if something went wrong in the script
-	 */
-	public ScriptCallable executeScript(String script, Attributes attributes) throws ScriptException
-	{
-		return new ScriptCallable(script, attributes);
+		/**
+		 * Sets the extra bindings to be used to execute the script
+		 * 
+		 * @param extraBindings
+		 *            the extra bindings to be used to execute the script
+		 */
+		public void setExtraBindings(Map<? extends String, ? extends Object> extraBindings)
+		{
+			this.extraBindings = extraBindings;
+		}
+
+		/**
+		 * Gets the override class filter to be used to execute the script
+		 * 
+		 * @return the override class filter
+		 */
+		public ClassFilter getOverrideClassFilter()
+		{
+			return overrideClassFilter;
+		}
+
+		/**
+		 * Sets the override class filter to be used to execute the script
+		 * 
+		 * @param overrideClassFilter
+		 *            the override class filter
+		 */
+		public void setOverrideClassFilter(ClassFilter overrideClassFilter)
+		{
+			this.overrideClassFilter = overrideClassFilter;
+		}
 	}
 
 	/**
@@ -249,5 +319,39 @@ public class NashornResource extends AbstractResource
 				return false;
 			}
 		};
+	}
+
+	/**
+	 * Gets the writer to which print outputs are going to be written to
+	 * 
+	 * the default is to use {@link NullWriter}
+	 * 
+	 * @return the writer for output
+	 */
+	protected Writer getWriter()
+	{
+		return new NullWriter();
+	}
+
+	/**
+	 * Gets the writer to which error messages are going to be written to
+	 * 
+	 * the default is to use {@link NullWriter}
+	 * 
+	 * @return the error writer
+	 */
+	protected Writer getErrorWriter()
+	{
+		return new NullWriter();
+	}
+
+	/**
+	 * If debug is enabled
+	 * 
+	 * @return if debug is enabled
+	 */
+	protected boolean isDebug()
+	{
+		return false;
 	}
 }

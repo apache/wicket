@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.resource;
 
+import java.io.Writer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import javax.script.Bindings;
 
 import org.apache.wicket.request.resource.AbstractResource.ResourceResponse;
+import org.apache.commons.io.output.NullWriter;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.IResource.Attributes;
 
@@ -45,6 +47,8 @@ public class NashornResourceReference extends ResourceReference
 	private long delay;
 
 	private TimeUnit unit;
+
+	private boolean debug;
 
 	/**
 	 * Creates a nashorn resource reference with the given name
@@ -92,6 +96,24 @@ public class NashornResourceReference extends ResourceReference
 			{
 				return NashornResourceReference.this.getClassFilter();
 			}
+
+			@Override
+			protected boolean isDebug()
+			{
+				return NashornResourceReference.this.isDebug();
+			}
+			
+			@Override
+			protected Writer getWriter()
+			{
+				return NashornResourceReference.this.getWriter();
+			}
+			
+			@Override
+			protected Writer getErrorWriter()
+			{
+				return NashornResourceReference.this.getErrorWriter();
+			}
 		};
 	}
 
@@ -119,17 +141,7 @@ public class NashornResourceReference extends ResourceReference
 	{
 		// NOOP
 	}
-
-	/**
-	 * Gets the scheduled executor services
-	 * 
-	 * @return the scheduled executor service
-	 */
-	public ScheduledExecutorService getScheduledExecutorService()
-	{
-		return scheduledExecutorService;
-	}
-
+	
 	/**
 	 * Gets the class filter to apply to the scripting engine
 	 * 
@@ -146,5 +158,49 @@ public class NashornResourceReference extends ResourceReference
 				return false;
 			}
 		};
+	}
+
+	/**
+	 * Gets the writer to which print outputs are going to be written to
+	 * 
+	 * the default is to use {@link NullWriter}
+	 * 
+	 * @return the writer for output
+	 */
+	protected Writer getWriter()
+	{
+		return new NullWriter();
+	}
+
+	/**
+	 * Gets the writer to which error messages are going to be written to
+	 * 
+	 * the default is to use {@link NullWriter}
+	 * 
+	 * @return the error writer
+	 */
+	protected Writer getErrorWriter()
+	{
+		return new NullWriter();
+	}
+
+	/**
+	 * If debug is enabled
+	 * 
+	 * @return if debug is enabled
+	 */
+	protected boolean isDebug()
+	{
+		return debug;
+	}
+
+	/**
+	 * Gets the scheduled executor services
+	 * 
+	 * @return the scheduled executor service
+	 */
+	public ScheduledExecutorService getScheduledExecutorService()
+	{
+		return scheduledExecutorService;
 	}
 }

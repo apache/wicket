@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.resource;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.concurrent.TimeUnit;
 
 import javax.script.Bindings;
@@ -42,9 +45,11 @@ public class NashornResourceReferenceTest extends WicketTestCase
 {
 	/**
 	 * Tests remote invocation
+	 * 
+	 * @throws InterruptedException
 	 */
 	@Test
-	public void testRemoteInvocation()
+	public void testRemoteInvocation() throws InterruptedException
 	{
 		WicketTester wicketTester = new WicketTester(new DummyApplication());
 		MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest(null, null, null)
@@ -57,17 +62,45 @@ public class NashornResourceReferenceTest extends WicketTestCase
 			}
 		};
 		wicketTester.setRequest(mockHttpServletRequest);
-		wicketTester
-			.startResourceReference(new NashornResourceReference("nashorn", 10, 5, TimeUnit.SECONDS)
-			{
-				private static final long serialVersionUID = 1L;
+		NashornResourceReference nashornResourceReference = new NashornResourceReference("nashorn",
+			10, 5, TimeUnit.SECONDS)
+		{
+			private static final long serialVersionUID = 1L;
 
-				@Override
-				protected void setup(Attributes attributes, Bindings bindings)
-				{
-					bindings.put("serverValue", 1);
-				}
-			});
+			@Override
+			protected void setup(Attributes attributes, Bindings bindings)
+			{
+				bindings.put("serverValue", 1);
+			}
+
+			@Override
+			protected Writer getWriter()
+			{
+				return new BufferedWriter(new OutputStreamWriter(System.out));
+			}
+
+			@Override
+			protected Writer getErrorWriter()
+			{
+				return new BufferedWriter(new OutputStreamWriter(System.out));
+			}
+
+			@Override
+			protected boolean isDebug()
+			{
+				return true;
+			}
+		};
+		try
+		{
+			wicketTester.startResourceReference(nashornResourceReference);
+		}
+		catch (Exception e)
+		{
+			nashornResourceReference.getScheduledExecutorService().shutdownNow();
+			nashornResourceReference.getScheduledExecutorService().awaitTermination(10000,
+				TimeUnit.SECONDS);
+		}
 		Assert.assertEquals("4.0", wicketTester.getLastResponseAsString());
 	}
 
