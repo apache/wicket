@@ -18,13 +18,8 @@ function getAbortStatement(type) {
 		"test" : {
 			"type" : "CallExpression",
 			"callee" : {
-				"type" : "MemberExpression",
-				"object" : {
-					"type" : "Identifier",
-					"name" : "nashornResourceReferenceScriptExecutionThread"
-				},
-				"property" : "isInterrupted",
-				"computed" : false
+				"type" : "Identifier",
+				"name" : "nashornResourceReferenceScriptExecutionThread.isInterrupted"
 			},
 			"arguments" : [
 
@@ -100,12 +95,6 @@ manipulateTree(astObject);
 
 // generate the script again
 var saveScript = escodegen.generate(astObject);
-
-// why the heck is generate resolving variables... and translate the function
-// call to undefined
-saveScript = saveScript.replace(
-		/nashornResourceReferenceScriptExecutionThread.undefined\(\)/g,
-		"nashornResourceReferenceScriptExecutionThread.isInterrupted()");
 
 if (debug) {
 	print(debug_log_prefix + "Save Script AST: " + JSON.stringify(astObject));
