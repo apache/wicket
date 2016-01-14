@@ -606,7 +606,25 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(p);
 		assertEquals("", tester.getLastResponseAsString());
 	}
+	
+	/**
+	 * Test autocomponent inside not-queue region
+	 */
+	@Test
+	public void autosInsideNotQueueRegion()
+	{
+		TestPage p = new TestPage();
+		p.setPageMarkup("<div wicket:id='outerContainer'><wicket:enclosure><div wicket:id='a'></div></wicket:enclosure></div>");
+		Label a = new Label("a", "a");
+		WebMarkupContainer outer;
+		p.add(outer = new WebMarkupContainer("outerContainer"));
+		outer.queue(a);
+		
+		tester.startPage(p);
 
+		assertTrue(a.getParent() instanceof Enclosure);
+	}
+	
 	@Test
 	public void border1()
 	{
