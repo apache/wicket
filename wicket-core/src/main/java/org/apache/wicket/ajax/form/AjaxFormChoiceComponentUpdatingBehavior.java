@@ -75,6 +75,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	{
 		super.updateAjaxAttributes(attributes);
 
+		attributes.setSerializeRecursively(true);
 		attributes.getAjaxCallListeners().add(new AjaxCallListener()
 		{
 			private static final long serialVersionUID = 1L;
