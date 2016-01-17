@@ -35,8 +35,12 @@ Release Notes - Wicket - Version 7.2.0
     * [WICKET-6058] - Error in calculation of byte ranges
     * [WICKET-6059] - TransparentWebMarkupContainer can not resolve autocomponents in its parent
     * [WICKET-6062] - MockHttpSession should renew its id after invalidation
+    * [WICKET-6063] - Add support for WebSocketRequest#getUrl() and other properties which are available in the handshake request
+    * [WICKET-6064] - WebSocketResponse.sendRedirect could be supported with <ajax-response><redirect>...</></>
     * [WICKET-6065] - Calling http://examples7x.wicket.apache.org/resourceaggregation/ generate Internal error
     * [WICKET-6068] - The key RangeValidator.exact is not mapped in Application_de.properties
+    * [WICKET-6076] - Problem with queued components and enclosure
+    * [WICKET-6077] - Border's body is not added as a child due to dequeuing
 
 ** Improvement
 
@@ -50,6 +54,8 @@ Release Notes - Wicket - Version 7.2.0
     * [WICKET-6051] - Improve performance of CssUrlReplacer
     * [WICKET-6054] - Provide a factory method for the WebSocketResponse & WebSocketRequest
     * [WICKET-6061] - Improved PackageResource#getCacheKey
+    * [WICKET-6070] - Provide factory methods for WizardButtonBar buttons
+    * [WICKET-6072] - Improve the quickstart to make it easier to use JSR-356 web sockets
 
 ** New Feature
 
@@ -60,6 +66,11 @@ Release Notes - Wicket - Version 7.2.0
 
     * [WICKET-6049] - Update the site to point to the new deployments of the examples
     * [WICKET-6057] - Upgrade commons-collections to 4.1
+    * [WICKET-6071] - Upgrade jQuery to 1.12 / 2.2.0
+
+** Wish
+
+    * [WICKET-6067] - Provide an Ajax Behavior that prevents form submit on ENTER
 
 =======================================================================
 
