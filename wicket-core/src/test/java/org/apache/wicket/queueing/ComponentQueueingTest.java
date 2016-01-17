@@ -37,12 +37,15 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.queueing.bodyisachild.BodyIsAChildPage;
+import org.apache.wicket.queueing.bodyisachild.LoginPanel;
 import org.apache.wicket.queueing.nestedborders.InnerBorder;
 import org.apache.wicket.queueing.nestedborders.OuterBorder;
 import org.apache.wicket.queueing.nestedpanels.InnerPanel;
 import org.apache.wicket.queueing.nestedpanels.OuterPanel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
@@ -787,6 +790,28 @@ public class ComponentQueueingTest extends WicketTestCase
 	{
 		IncorrectCloseTagPanel p = new IncorrectCloseTagPanel("test");
 		tester.startComponentInPage(p);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6077
+	 */
+	@Test
+	public void bodyIsAChild() {
+		tester.startPage(BodyIsAChildPage.class);
+
+		tester.assertRenderedPage(BodyIsAChildPage.class);
+
+		String username = "USER";
+		String password = "PASSWD";
+
+		FormTester formTester = tester.newFormTester("wmc:login:loginForm");
+		formTester.setValue("usernameFormGroup:usernameFormGroup_body:username", username);
+		formTester.setValue("passwordFormGroup:passwordFormGroup_body:password", password);
+		formTester.submit();
+
+		LoginPanel loginPanel = (LoginPanel) tester.getComponentFromLastRenderedPage("wmc:login");
+		assertEquals(username, loginPanel.pojo.username);
+		assertEquals(password, loginPanel.pojo.password);
 	}
 
 	private static class A extends WebMarkupContainer
