@@ -1036,7 +1036,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		
 		// if we have a path to page dequeue any container children.
 		// we can do it only if page is not already rendering!
-		if (page != null && !page.getFlag(FLAG_RENDERING) && child instanceof MarkupContainer)
+		if (page != null && child instanceof MarkupContainer)
 		{
 		    MarkupContainer childContainer = (MarkupContainer)child;
 		    // if we are already dequeueing there is no need to dequeue again
@@ -1979,13 +1979,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		modCounter = 0;
 		removals_clear();
 
-		if (queue != null && !queue.isEmpty())
+		if (queue != null && !queue.isEmpty() && hasBeenRendered())
 		{
 			throw new WicketRuntimeException(
 					String.format("Detach called on component with id '%s' while it had a non-empty queue: %s",
 							getId(), queue));
 		}
-		queue = null;
 	}
 
 	private transient ComponentQueue queue;

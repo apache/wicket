@@ -16,21 +16,22 @@
  */
 
 /*global module: true, ok: true, asyncTest: true, equal: true, expect: true, $q: true,
- gym: true, start: true */
+ gym: true, start: true, notOk: true */
 
 $q(document).ready(function() {
 	"use strict";
 
 	module('Ajax');
 
-	asyncTest('successful ajax form submit', function () {
+	asyncTest('ajax form validation', function () {
 		expect(6);
 
 		var $nameInput, $emailInput;
 
 		gym.load('/ajax/form').then(function($) {
-			$nameInput = $('input[name="p::name"]');
-			$emailInput = $('input[name=email]');
+			var $form = $('form.validation');
+			$nameInput = $('input[name="p::name"]', $form);
+			$emailInput = $('input[name=email]', $form);
 
 			// enter just the name field
 			$nameInput.focus();
@@ -69,6 +70,39 @@ $q(document).ready(function() {
 			equal($feedback.length, 0, 'The error feedback message should be gone');
 
 		}).always(start);
+	});
+
+	asyncTest('Prevent ajax form submit on ENTER key', function () {
+		expect(2);
+
+		var $nameInput, $emailInput;
+
+		gym.load('/ajax/form').then(function($) {
+
+			var $form = $('form.preventEnter');
+			$nameInput = $('input[name="p::name"]', $form);
+			$emailInput = $('input[name=email]', $form);
+
+			// enter just the name field
+			$nameInput.focus();
+			var name = 'abcdef';
+			$nameInput.val(name);
+
+			var evt = $q.Event("keydown");
+			evt.keyCode = evt.which = 13; // ENTER key
+			var prevented = false;
+			evt.preventDefault = function() {prevented = true;};
+			equal(prevented, false, "The JS event default behavior is not yet prevented!");
+
+			setTimeout(function() {
+				equal(prevented, true, "The JS event default behavior must be prevented!");
+				start();
+			}, 10);
+
+			return gym.ajaxEvent(evt, $emailInput);
+		}).always(function() {
+			notOk(true, "Always must not be called!");
+		});
 	});
 
 });

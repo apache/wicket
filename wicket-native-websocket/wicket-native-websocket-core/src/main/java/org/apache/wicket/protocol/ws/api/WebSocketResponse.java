@@ -47,6 +47,8 @@ public class WebSocketResponse extends WebResponse
 
 	private ByteArrayOutputStream binary;
 
+	private boolean isRedirect = false;
+
 	public WebSocketResponse(final IWebSocketConnection conn)
 	{
 		this.connection = conn;
@@ -109,10 +111,7 @@ public class WebSocketResponse extends WebResponse
 	@Override
 	public void reset()
 	{
-		if (text != null)
-		{
-			text = null;
-		}
+		text = null;
 		if (binary != null)
 		{
 			try
@@ -124,6 +123,7 @@ public class WebSocketResponse extends WebResponse
 			}
 			binary = null;
 		}
+		isRedirect = false;
 		super.reset();
 	}
 
@@ -200,24 +200,27 @@ public class WebSocketResponse extends WebResponse
 	@Override
 	public String encodeRedirectURL(CharSequence url)
 	{
-		throw new UnsupportedOperationException();
+		return url.toString();
 	}
 
 	@Override
 	public void sendRedirect(String url)
 	{
-		throw new UnsupportedOperationException();
+		isRedirect = true;
+		url = encodeRedirectURL(url);
+
+		String ajaxRedirect = "<ajax-response><redirect><![CDATA[" + url + "]]></redirect></ajax-response>";
+		write(ajaxRedirect);
 	}
 
 	@Override
 	public boolean isRedirect()
 	{
-		return false;
+		return isRedirect;
 	}
 
 	@Override
 	public void flush()
 	{
-		throw new UnsupportedOperationException();
 	}
 }

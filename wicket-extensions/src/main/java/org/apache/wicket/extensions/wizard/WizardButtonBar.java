@@ -35,6 +35,8 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 {
 	private static final long serialVersionUID = 1L;
 
+	private final IWizard wizard;
+
 	/**
 	 * Construct.
 	 * 
@@ -46,6 +48,15 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 	public WizardButtonBar(final String id, final IWizard wizard)
 	{
 		super(id);
+		
+		this.wizard = wizard;
+	}
+	
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
 		add(newPreviousButton("previous", wizard));
 		add(newNextButton("next", wizard));
 		add(newLastButton("last", wizard));

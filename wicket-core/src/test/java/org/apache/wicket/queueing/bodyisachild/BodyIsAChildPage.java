@@ -14,36 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.api;
+package org.apache.wicket.queueing.bodyisachild;
 
-import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import javax.servlet.http.HttpServletRequest;
-
-/**
- * A {@link WebRequest} implementation used for the lifecycle of a web socket
- * connection. It keeps a copy of the HttpServletRequest provided by the web container
- * during the creation of the web socket connection (the http upgrade).
- *
- * @since 6.0
- */
-public class WebSocketRequest extends ServletWebRequest
+public class BodyIsAChildPage extends WebPage
 {
-	/**
-	 * Constructor.
-	 *
-	 * @param req
-	 *      the copy of the HttpServletRequest used for the upgrade of the HTTP protocol
-	 */
-	public WebSocketRequest(HttpServletRequest req, String filterPrefix)
+	private static final long serialVersionUID = 1L;
+
+	public BodyIsAChildPage(final PageParameters parameters)
 	{
-		super(req, filterPrefix);
-	}
+		super(parameters);
+    }
 
 	@Override
-	public boolean isAjax()
+	protected void onInitialize()
 	{
-		return true;
+		super.onInitialize();
+
+		WebMarkupContainer wmc = new WebMarkupContainer("wmc");
+		wmc.add(new LoginPanel("login"));
+		add(wmc);
 	}
 }
