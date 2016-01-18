@@ -165,11 +165,6 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		if (model instanceof IObjectClassAwareModel)
 		{
 			Class<?> objectClass = ((IObjectClassAwareModel<?>)model).getObjectClass();
-			if (objectClass == null)
-			{
-				log.warn("Couldn't resolve model type of " + model + " for " + this +
-					", please set the type yourself.");
-			}
 			return objectClass;
 		}
 		else
