@@ -742,6 +742,22 @@ public class ComponentQueueingTest extends WicketTestCase
 		
 		tester.assertContains("title");
 	}
+	
+	@Test
+	public void queueInsideAutoLink()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup("<wicket:link>"
+				+ "<a href='test.html'>"
+				+ "<wicket:container wicket:id='test'>test</wicket:container>"
+				+ "</a></wicket:link>");
+		
+		page.queue(new WebMarkupContainer("test"));
+
+		tester.startPage(page);	
+		
+	
+	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6036
