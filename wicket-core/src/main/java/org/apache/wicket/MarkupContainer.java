@@ -1008,18 +1008,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		Page page = findPage();
 		
-		// if we have a path to page dequeue any container children.
-		// we can do it only if page is not already rendering!
+		// if we have a path to page, dequeue any container children.
 		if (page != null && child instanceof MarkupContainer)
 		{
 		    MarkupContainer childContainer = (MarkupContainer)child;
 		    // if we are already dequeueing there is no need to dequeue again
 		    if (!childContainer.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
-			{
-				/*
-				 * dequeue both normal and auto components
-				 *
-				 */
+			{				
 				childContainer.dequeue();
 			}
 		}
