@@ -1616,7 +1616,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					.getAutoComponentFactory();
 				if (autoComponentFactory != null)
 				{
-					queue(autoComponentFactory.newComponent(this, tag));
+					Component autoComponent = autoComponentFactory.newComponent(this, tag);
+					addDequeuedComponent(autoComponent, tag);
 				}
 
 				// Every component is responsible just for its own auto components
