@@ -38,6 +38,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.form.AutoLabelResolver;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -2265,6 +2266,14 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				return null; // don't know
 			}
 		}
+		
+		//if is a label tag, ignore it
+		if (tag.isAutoComponentTag() 
+			&& tag.getId().startsWith(AutoLabelResolver.LABEL_ATTR))
+		{
+			return DequeueTagAction.IGNORE;
+		}
+		
 		return DequeueTagAction.DEQUEUE;
 	}
 
