@@ -748,15 +748,38 @@ public class ComponentQueueingTest extends WicketTestCase
 	{
 		TestPage page = new TestPage();
 		page.setPageMarkup("<wicket:link>"
-				+ "<a href='test.html'>"
-				+ "<wicket:container wicket:id='test'>test</wicket:container>"
-				+ "</a></wicket:link>");
+			+ "<a href='test.html'>"
+			+ "<wicket:container wicket:id='test'>test</wicket:container>"
+			+ "</a></wicket:link>");
 		
 		page.queue(new WebMarkupContainer("test"));
-
-		tester.startPage(page);	
 		
-	
+		tester.startPage(page);	
+	}
+
+	@Test
+	public void queueNestedEnclosure()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup( "<div wicket:enclosure='outer'>" +
+			"<div wicket:id='outer'>" +
+			"	<div wicket:enclosure='middle'>" +
+			"		<div wicket:enclosure='inner'>" +
+			"			<div wicket:id='inner'>inner</div>" +
+			"		</div>" +
+			"		<div wicket:id='middle'>middle</div>" +
+			"	</div>" +
+			"	outer" +
+			"</div>" +
+			"</div>");
+		
+		WebMarkupContainer container = new WebMarkupContainer("outer");
+		container.add(new WebMarkupContainer("middle"));
+		container.add(new WebMarkupContainer("inner"));
+		
+		page.add(container);
+		
+		tester.startPage(page);	
 	}
 
 	/**
