@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -753,6 +754,20 @@ public class ComponentQueueingTest extends WicketTestCase
 			+ "</a></wicket:link>");
 		
 		page.queue(new WebMarkupContainer("test"));
+		
+		tester.startPage(page);	
+	}
+	
+	@Test
+	public void queueInsideLabelComponent()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup("<label wicket:for='input'>"
+				+ "label:"
+				+ "<input wicket:id='input'/>"
+				+ "</label>");
+		
+		page.queue(new TextField<>("input", Model.of("test")));
 		
 		tester.startPage(page);	
 	}
