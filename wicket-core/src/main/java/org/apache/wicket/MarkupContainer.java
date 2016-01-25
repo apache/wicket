@@ -38,6 +38,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.form.AutoLabelResolver;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -1034,18 +1035,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		Page page = findPage();
 		
-		// if we have a path to page dequeue any container children.
-		// we can do it only if page is not already rendering!
+		// if we have a path to page, dequeue any container children.
 		if (page != null && child instanceof MarkupContainer)
 		{
 		    MarkupContainer childContainer = (MarkupContainer)child;
 		    // if we are already dequeueing there is no need to dequeue again
 		    if (!childContainer.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
-			{
-				/*
-				 * dequeue both normal and auto components
-				 *
-				 */
+			{				
 				childContainer.dequeue();
 			}
 		}
@@ -1676,7 +1672,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					.getAutoComponentFactory();
 				if (autoComponentFactory != null)
 				{
-					queue(autoComponentFactory.newComponent(this, tag));
+					Component autoComponent = autoComponentFactory.newComponent(this, tag);
+					addDequeuedComponent(autoComponent, tag);
 				}
 
 				// Every component is responsible just for its own auto components
@@ -2260,11 +2257,23 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				return DequeueTagAction.SKIP;
 			}
+			else if (wicketTag.isLinkTag())
+			{
+				return DequeueTagAction.DEQUEUE;
+			}
 			else
 			{
 				return null; // don't know
 			}
 		}
+		
+		//if is a label tag, ignore it
+		if (tag.isAutoComponentTag() 
+			&& tag.getId().startsWith(AutoLabelResolver.LABEL_ATTR))
+		{
+			return DequeueTagAction.IGNORE;
+		}
+		
 		return DequeueTagAction.DEQUEUE;
 	}
 
