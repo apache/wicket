@@ -385,7 +385,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to IAjaxCallListener handlers. Failure scenario.', function () {
 
-			expect(10);
+			expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
@@ -400,9 +400,12 @@ jQuery(document).ready(function() {
 					}
 				],
 				fh: [
-					function(attributes) {
+					function(attributes, jqXHR, errorMessage, textStatus) {
 						start();
 						equal(attrs.u, attributes.u);
+						ok(typeof(jqXHR.success) === "function", "jqXHR should be passed");
+						equal(errorMessage, "Not Found", "Error message should be passed");
+						equal(textStatus, "error", "Text status should be passed");
 					}
 				],
 				bsh: [
