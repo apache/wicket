@@ -1123,7 +1123,7 @@
 					Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + errorMessage);
 				}
 				var attrs = context.attrs;
-				this._executeHandlers(attrs.fh, attrs, errorMessage);
+				this._executeHandlers(attrs.fh, attrs, jqXHR, errorMessage, textStatus);
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_FAILURE, attrs, jqXHR, errorMessage, textStatus);
 
 				return FunctionsExecuter.DONE;
