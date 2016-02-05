@@ -1203,8 +1203,8 @@
 					var toExecute = "f = function(" + parameters + ") {" + body + "};";
 
 					try {
-						// do the evaluation
-						eval(toExecute);
+						// do the evaluation in global scope
+						window.eval(toExecute);
 						f(notify);
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
@@ -1217,8 +1217,8 @@
 				return function(notify) {
 					// just evaluate the javascript
 					try {
-						// do the evaluation
-						eval(script);
+						// do the evaluation in global scope
+						window.eval(script);
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
@@ -2290,7 +2290,8 @@
 								Wicket.Head.addJavascript(text, id, "", type);
 							} else {
 								try {
-									eval(text);
+									// do the evaluation in global scope
+									window.eval(text);
 								} catch (e) {
 									Wicket.Log.error("Wicket.Head.Contributor.processScript: " + e + ": eval -> " + text);
 								}
