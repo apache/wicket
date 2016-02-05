@@ -82,13 +82,13 @@ public abstract class AbstractRequestWrapperFactory
 	 * @param request
 	 * @return True, if a wrapper is needed
 	 */
-	abstract boolean needsWrapper(final HttpServletRequest request);
+	protected abstract boolean needsWrapper(final HttpServletRequest request);
 
 	/**
 	 * @param request
 	 * @return Create a wrapper for the request
 	 */
-	abstract public HttpServletRequest newRequestWrapper(HttpServletRequest request);
+	public abstract HttpServletRequest newRequestWrapper(HttpServletRequest request);
 
 	/**
 	 * Convert a given comma delimited list of regular expressions into an array of compiled
