@@ -254,7 +254,7 @@ public class JavaxUpgradeHttpRequest implements HttpServletRequest
 	@Override
 	public StringBuffer getRequestURL()
 	{
-		return null;
+		return new StringBuffer(requestUri);
 	}
 
 	@Override
