@@ -43,7 +43,7 @@ def getModulesFromParent(parentPomFile):
         addVersions(groupId, module)
 
 addVersions(groupId, "wicket-parent")
-addVersions("org.apache.wicket.experimental.wicket7", "wicket-experimental")
+addVersions("org.apache.wicket.experimental.wicket6", "wicket-experimental")
 
 getModulesFromParent("pom.xml")
 getModulesFromParent("wicket-native-websocket/pom.xml")
