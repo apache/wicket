@@ -395,7 +395,7 @@ if [ -f $log ] ; then
 fi
 
 branch="build/wicket-$version"
-tag="wicket-$version"
+tag="rel/wicket-$version"
 
 echo "# Release configuration for Wicket-$version
 scm.tag=${tag}
