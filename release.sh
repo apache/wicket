@@ -48,21 +48,16 @@ function generate_promotion_script {
     echo "Generating release promotion script 'promote-$version.sh'"
 read -d '' script <<- EOF
 #!/bin/sh
-echo -n "Promoting release $version
+echo "Promoting release $version
 
 Actions about to be performed:
 ------------------------------
 
 \$(cat \$0 | tail -n +14)
 
-------------------------------------------
-Press enter to continue or CTRL-C to abort"
+------------------------------------------"
 
-read
-
-# push the build branch to ASF git repo
-
-git push origin $branch:refs/heads/$branch
+read --prompt "Press enter to continue or CTRL-C to abort"
 
 # push the release tag to ASF git repo
 
@@ -78,15 +73,18 @@ mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingR
 
 git checkout $GIT_BRANCH
 mvn release:update-versions --batch-mode
-find . ! \( -type d -name "target" -prune \) -name pom.xml -exec sed -i "" -E "s/$mvn_version_to_replace/$next_version/g" {} \;
-find . ! \( -type d -name "target" -prune \) -name pom.xml -exec sed -i "" -E "s/$mvn_version_to_replace/$next_version/g" {} \;
+mvn versions:set versions:commit -DnewVersion=$next_version
 git add \` find . ! \( -type d -name "target" -prune \) -name pom.xml \`
-git commit -m "Start next development version"
-git push
 
-echo "Remove the previous version of Wicket using this command:
+echo "
+Check the new versions and commit and push them to origin:
 
-  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \"Remove previous version from mirrors\"
+  git commit -m \"Start next development version\"
+  git push
+
+Remove the previous version of Wicket using this command:
+
+  svn rm https://dist.apache.org/repos/dist/release/wicket/$previous_version -m \\\"Remove previous version from mirrors\\\"
 
 "  
 EOF
@@ -128,7 +126,7 @@ svn rm https://dist.apache.org/repos/dist/dev/wicket/$version -m "Release vote h
 mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-drop -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release vote has failed"
 
 # clean up remaining release files
-find . -name "*.releaseBackup" -exec rm {} \;
+find . -name "*.releaseBackup" -exec rm {} \\;
 [ -f release.properties ] && rm release.properties
 
 EOF
@@ -172,7 +170,8 @@ function generate_release_vote_email {
 
     echo "Generating Vote email"
 
-    echo "This is a vote to release Apache Wicket $version
+    echo "
+This is a vote to release Apache Wicket $version
 
 Please download the source distributions found in our staging area
 linked below.
@@ -202,25 +201,24 @@ Staging git repository data:
     Branch:      $branch
     Release tag: $tag
 
-" > release-vote.txt
+" | tail -n+2 > release-vote.txt
 
     cat /tmp/release-$version-sigs.txt >> release-vote.txt
 	git add release-vote.txt
 }
 
 function generate_announce_email {
-    echo "The Apache Wicket PMC is proud to announce Apache Wicket $version!
+    echo "
+The Apache Wicket PMC is proud to announce Apache Wicket $version!
 
 This release marks another minor release of Wicket $major_version. We
 use semantic versioning for the development of Wicket, and as such no
 API breaks are present breaks are present in this release compared to
 $major_version.0.0.
 
-New and noteworthy
-------------------
-
+<OPTIONAL> New and noteworthy
+<OPTIONAL> ------------------
 <OPTIONAL>
-
 Using this release
 ------------------
 
@@ -252,7 +250,7 @@ Have fun!
 
 — The Wicket team
 
-    " > release-announce.txt
+" | tail -n+2 > release-announce.txt
 
     cat /tmp/release-$version-sigs.txt >> release-announce.txt
 	git add release-announce.txt
@@ -515,8 +513,8 @@ gpg --print-md MD5  target/dist/apache-wicket-$version.zip > target/dist/apache-
 echo "Create and sign the binaries"
 mkdir target/apache-wicket-$version-bin
 pushd target/apache-wicket-$version-bin
-find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-.*.[jw]ar" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
-find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-.*.[jw]ar\.asc" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
+find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-[^/]*.[jw]ar" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
+find ../checkout ! \( -type d -name "WEB-INF" -prune \) -regex ".*wicket-[^/]*.[jw]ar\.asc" ! -name "*-sources*" ! -name "*-javadoc*" ! -name "*wicket-archetype-quickstart*" ! -name "wicket-common-tests*"  -type f -exec cp {} . \;
 cp ../../LICENSE .
 cp ../../README .
 cp ../../NOTICE .
