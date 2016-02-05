@@ -750,6 +750,17 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
+	 * assert form component is required.
+	 *
+	 * @param path
+	 *            path to form component
+	 */
+	public void assertNotRequired(String path)
+	{
+		assertResult(isNotRequired(path));
+	}
+
+	/**
 	 * 
 	 * @param result
 	 */
