@@ -1182,12 +1182,11 @@
 
 			var evaluateWithManualNotify = function (parameters, body) {
 				return function(notify) {
-					var f = jQuery.noop;
-					var toExecute = "f = function(" + parameters + ") {" + body + "};";
+					var toExecute = "(function(" + parameters + ") {" + body + "})";
 
 					try {
 						// do the evaluation in global scope
-						window.eval(toExecute);
+						var f = window.eval(toExecute);
 						f(notify);
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
