@@ -121,18 +121,11 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('processEvaluation*s* with identifier|code.', function () {
 
-			expect(7);
+			expect(6);
 
 			var attrs = {
 				u: 'data/ajax/twoEvaluationsWithIdentifier.xml',
-				c: 'twoEvaluationsWithIdentifier',
-				counter: 0,
-				coh: [
-					function(attrs) {
-						start();
-						equal(attrs.counter, 3, "The counter is incremented in both evaluations with and without manual notifying");
-					}
-				]
+				c: 'twoEvaluationsWithIdentifier'
 			};
 			execute(attrs);
 		});
