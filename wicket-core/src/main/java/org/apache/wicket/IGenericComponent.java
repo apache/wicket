@@ -40,7 +40,7 @@ public interface IGenericComponent<T>
 	 * @param model
 	 *            the new model
 	 */
-	void setModel(IModel<T> model);
+	Component setModel(IModel<T> model);
 
 	/**
 	 * Typesafe setter for the model object
@@ -48,7 +48,7 @@ public interface IGenericComponent<T>
 	 * @param object
 	 *            the new model object
 	 */
-	void setModelObject(T object);
+	Component setModelObject(T object);
 
 	/**
 	 * Typesafe getter for the model's object

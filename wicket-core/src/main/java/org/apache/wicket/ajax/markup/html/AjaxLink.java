@@ -141,9 +141,10 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	}
 
 	@Override
-	public final void setModel(IModel<T> model)
+	public final AjaxLink<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@Override
@@ -154,9 +155,10 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	}
 
 	@Override
-	public final void setModelObject(T object)
+	public final AjaxLink<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 
 }

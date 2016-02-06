@@ -426,9 +426,10 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	}
 
 	@Override
-	public final void setModel(IModel<T> model)
+	public final Link<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@Override
@@ -439,9 +440,10 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	}
 
 	@Override
-	public final void setModelObject(T object)
+	public final Link<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 
 }

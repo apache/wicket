@@ -243,9 +243,10 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 	}
 
 	@Override
-	public final void setModel(IModel<T> model)
+	public final Check<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@Override
@@ -256,12 +257,12 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 	}
 
 	@Override
-	public final void setModelObject(T object)
+	public final Check<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected boolean getStatelessHint()
 	{

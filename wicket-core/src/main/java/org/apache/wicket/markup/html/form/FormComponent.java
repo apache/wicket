@@ -1561,9 +1561,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	}
 
 	@Override
-	public final void setModel(IModel<T> model)
+	public final FormComponent<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1574,9 +1575,10 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	}
 
 	@Override
-	public final void setModelObject(T object)
+	public final FormComponent<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 
 	/**

@@ -168,9 +168,10 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 *            the model
 	 */
 	@Override
-	public void setModel(IModel<Set<T>> model)
+	public AbstractTree<T> setModel(IModel<Set<T>> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	/**
@@ -180,9 +181,10 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 *            the model object
 	 */
 	@Override
-	public void setModelObject(Set<T> state)
+	public AbstractTree<T> setModelObject(Set<T> state)
 	{
 		setDefaultModelObject(state);
+		return this;
 	}
 
 	/**

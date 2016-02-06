@@ -279,15 +279,17 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T>
 	}
 
 	@Override
-	public void setModel(IModel<T> model)
+	public AjaxEditableLabel<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@Override
-	public void setModelObject(T object)
+	public AjaxEditableLabel<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 
 	/**

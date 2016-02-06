@@ -78,9 +78,10 @@ public class GenericWebPage<T> extends WebPage implements IGenericComponent<T>
 	}
 
 	@Override
-	public final void setModelObject(final T modelObject)
+	public final GenericWebPage<T> setModelObject(final T modelObject)
 	{
 		setDefaultModelObject(modelObject);
+		return this;
 	}
 
 	@Override
@@ -91,8 +92,9 @@ public class GenericWebPage<T> extends WebPage implements IGenericComponent<T>
 	}
 
 	@Override
-	public final void setModel(final IModel<T> model)
+	public final GenericWebPage<T> setModel(final IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 }
