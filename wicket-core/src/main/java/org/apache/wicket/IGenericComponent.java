@@ -39,6 +39,7 @@ public interface IGenericComponent<T>
 	 *
 	 * @param model
 	 *            the new model
+	 * @return This for chaining
 	 */
 	Component setModel(IModel<T> model);
 
@@ -47,6 +48,7 @@ public interface IGenericComponent<T>
 	 *
 	 * @param object
 	 *            the new model object
+	 * @return This for chaining
 	 */
 	Component setModelObject(T object);
 
