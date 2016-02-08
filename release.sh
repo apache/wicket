@@ -401,7 +401,7 @@ echo "# Release configuration for Wicket-$version
 scm.tag=${tag}
 " > release.properties
 
-./build-versions.py $version $next_version >> release.properties
+./build-versions.py >> release.properties
 
 echo "Contents of the release properties generated for Maven:
 -------------------------------------------------------------------------------
