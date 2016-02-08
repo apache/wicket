@@ -477,7 +477,7 @@ mvn -q clean -Pall
 
 # package and assemble the release
 echo "Prepare the release"
-mvn --batch-mode release:prepare -l $log -DpreparationGoals="clean" -Dtag=$tag -Papache-release,release
+mvn --batch-mode release:prepare -X -l $log -DpreparationGoals="clean" -Dtag=$tag -Papache-release,release
 if [ $? -ne 0 ] ; then
     fail "ERROR: mvn release:prepare was not successful"
 fi
