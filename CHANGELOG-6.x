@@ -2,6 +2,46 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.22.0
+
+** Bug
+
+    * [WICKET-6006] - ModalWindow.closeCurrent() causes 414 status error
+    * [WICKET-6017] - Tests fail when executed with not expected locale
+    * [WICKET-6020] - GuiceFieldValueFactory returns the NULL_SENTINEL from the cache
+    * [WICKET-6030] - Support /META-INF/services/org.apache.wicket.IInitializer (backport to 6.x)
+    * [WICKET-6032] - Wicket.Ajax.done() called twice on redirect
+    * [WICKET-6037] - ModalWindow vulnerable to Javascript injection through title model
+    * [WICKET-6040] - DebugBar not serializable exception
+    * [WICKET-6044] - AjaxFormChoiceComponentUpdatingBehavior: Duplicate input values according to WICKET-5948
+    * [WICKET-6048] - German Translation for EqualInputValidator wrong
+    * [WICKET-6050] - Wicket Ajax (Wicket.From.serializeElement) causes 400 bad request
+    * [WICKET-6052] - CSS header contribution overlap
+    * [WICKET-6062] - MockHttpSession should renew its id after invalidation
+    * [WICKET-6063] - Add support for WebSocketRequest#getUrl() and other properties which are available in the handshake request
+    * [WICKET-6064] - WebSocketResponse.sendRedirect could be supported with <ajax-response><redirect>...</></>
+    * [WICKET-6068] - The key RangeValidator.exact is not mapped in Application_de.properties
+    * [WICKET-6069] - OnChangeAjaxBehavior does not work if the url contains a request parameter with same name as wicket id
+    * [WICKET-6084] - ajax request failure handler receives incorrect arguments
+    * [WICKET-6085] - AjaxTimerBehavior with failure handler cause memory leak in browser
+    * [WICKET-6087] - Invalid AbstractRequestWrapperFactory.needsWrapper method scope: package - cannot create a custom implementation
+
+** Improvement
+
+    * [WICKET-5950] - Model and GenericBaseModel could both implement IObjectClassAwareModel
+    * [WICKET-5969] - Please give us access to PageTable.index pageId queue
+    * [WICKET-6019] - Remove 'final' modifier for Localizer#getStringIgnoreSettings() methods
+    * [WICKET-6051] - Improve performance of CssUrlReplacer
+    * [WICKET-6054] - Provide a factory method for the WebSocketResponse & WebSocketRequest
+    * [WICKET-6073] - Use NIO Jetty connector for the quickstart
+    * [WICKET-6081] - Add "assertNotRequired" to the WicketTester
+
+** Task
+
+    * [WICKET-6071] - Upgrade jQuery to 1.12 / 2.2.0
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.21.0
 
 ** Bug
