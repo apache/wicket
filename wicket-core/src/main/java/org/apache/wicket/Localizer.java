@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -49,9 +50,11 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.settings.ResourceSettings#getLocalizer()
  * @see org.apache.wicket.resource.loader.IStringResourceLoader
  * @see org.apache.wicket.settings.ResourceSettings#getStringResourceLoaders()
+ * @see org.apache.wicket.ILocalizationSupport
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag
+ * @author Tobias Soloschenko
  */
 public class Localizer
 {
@@ -65,6 +68,9 @@ public class Localizer
 
 	/** Database that maps class names to an integer id. */
 	private final ClassMetaDatabase metaDatabase = new ClassMetaDatabase();
+
+	/** localization supports to localize strings */
+	private List<ILocalizationSupport> localizationSupports = new ArrayList<>();
 
 	/**
 	 * @return Same as Application.get().getResourceSettings().getLocalizer()
@@ -80,6 +86,7 @@ public class Localizer
 	 */
 	public Localizer()
 	{
+		localizationSupports.add(new DefaultLocalizationSupport());
 	}
 
 	/**
@@ -195,10 +202,11 @@ public class Localizer
 	 */
 	public String getString(final String key, final Component component, final IModel<?> model,
 		final Locale locale, final String style, final String defaultValue)
-		throws MissingResourceException
+			throws MissingResourceException
 	{
 		IModel<String> defaultValueModel = defaultValue != null ? Model.of(defaultValue) : null;
-		return getString(key, component, model, locale, style, defaultValueModel);
+		return resolveStringWithLocalizationSupport(key, component, model, locale, style,
+			defaultValueModel);
 	}
 
 	/**
@@ -223,9 +231,40 @@ public class Localizer
 	 * @throws MissingResourceException
 	 *             If resource not found and configuration dictates that exception should be thrown
 	 */
-	public String getString(final String key, final Component component, final IModel<?> model,
-	                        final Locale locale, final String style, final IModel<String> defaultValue)
-			throws MissingResourceException
+	public String resolveStringWithLocalizationSupport(final String key, final Component component,
+		final IModel<?> model, final Locale locale, final String style,
+		final IModel<String> defaultValue) throws MissingResourceException
+	{
+		String resolvedString = "";
+		for (ILocalizationSupport localizationSupport : localizationSupports)
+		{
+			resolvedString = localizationSupport.resolveString(this, key, component, model, locale,
+				style, defaultValue, resolvedString);
+		}
+		return resolvedString;
+	}
+
+	/**
+	 * Resolves the actual translated String
+	 * 
+	 * @param key
+	 *            The key to obtain the resource for
+	 * @param component
+	 *            The component to get the resource for (optional)
+	 * @param model
+	 *            The model to use for substitutions in the strings (optional)
+	 * @param locale
+	 *            If != null, it'll supersede the component's locale
+	 * @param style
+	 *            If != null, it'll supersede the component's style
+	 * @param defaultValue
+	 *            The default value (optional)
+	 * @return The string resource
+	 * @throws MissingResourceException
+	 *             If resource not found and configuration dictates that exception should be thrown
+	 */
+	public String resolveString(final String key, final Component component, final IModel<?> model,
+		final Locale locale, final String style, final IModel<String> defaultValue)
 	{
 		final ResourceSettings resourceSettings = Application.get().getResourceSettings();
 
@@ -265,8 +304,8 @@ public class Localizer
 			}
 			message.append(". Locale: ").append(locale).append(", style: ").append(style);
 
-			throw new MissingResourceException(message.toString(), (component != null
-				? component.getClass().getName() : ""), key);
+			throw new MissingResourceException(message.toString(),
+				(component != null ? component.getClass().getName() : ""), key);
 		}
 
 		return "[Warning: Property for '" + key + "' not found]";
@@ -331,10 +370,11 @@ public class Localizer
 			if (!addedToPage && log.isWarnEnabled())
 			{
 				log.warn(
-					"Tried to retrieve a localized string for a component that has not yet been added to the page. "
-						+ "This can sometimes lead to an invalid or no localized resource returned. "
-						+ "Make sure you are not calling Component#getString() inside your Component's constructor. "
-						+ "Offending component: {}", component);
+					"Tried to retrieve a localized string for a component that has not yet been added to the page. " +
+						"This can sometimes lead to an invalid or no localized resource returned. " +
+						"Make sure you are not calling Component#getString() inside your Component's constructor. " +
+						"Offending component: {}",
+					component);
 			}
 		}
 
@@ -546,11 +586,11 @@ public class Localizer
 		}
 	}
 
-/**
+	/**
 	 * Helper method to handle property variable substitution in strings.
 	 * 
 	 * @param component
-	 *            The component requesting a model value or {@code null]
+	 *            The component requesting a model value or {@code null}
 	 * @param string
 	 *            The string to substitute into
 	 * @param model
@@ -653,5 +693,35 @@ public class Localizer
 			}
 			return id;
 		}
+	}
+
+	/**
+	 * Adds a new localization support. The order is important, so add them wisely!<br>
+	 * <br>
+	 * Order Example:<br>
+	 * <br>
+	 * {@link DefaultLocalizationSupport} &gt; MyDataBaseLocalizationSupport &gt;
+	 * {@link NestedKeyLocalizationSupport}<br>
+	 * <br>
+	 * This chain will cause the {@link NestedKeyLocalizationSupport} to invoke all previous
+	 * localization supports to resolve the keys first.
+	 * 
+	 * @param localizationSupport
+	 *            a localization support to be added
+	 */
+	public void addLocalizationSupport(ILocalizationSupport localizationSupport)
+	{
+		localizationSupports.add(localizationSupport);
+	}
+
+	/**
+	 * Removes the given localization support
+	 * 
+	 * @param localizationSupport
+	 *            the localization support to be removed
+	 */
+	public void removeLocalizationSupport(ILocalizationSupport localizationSupport)
+	{
+		localizationSupports.remove(localizationSupport);
 	}
 }
