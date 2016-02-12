@@ -206,7 +206,6 @@ public class WebSocketSettings
 	}
 
 	/**
-<<<<<<< HEAD
 	 * A factory method for creating instances of {@link org.apache.wicket.protocol.ws.api.WebSocketRequestHandler}
 	 * for processing a web socket request
 	 *
