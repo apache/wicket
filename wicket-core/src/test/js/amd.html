@@ -5,14 +5,14 @@
 	<title id="titleId">Asynchronous module tests</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
-	<script type="text/javascript" src="qunit/qunit.js"></script>
-    <script type="text/javascript">
+	<script type="text/javascript">
         var require = {
             paths: {
                 'jquery': '../../main/java/org/apache/wicket/resource/jquery/jquery-1.12.0', // no .js extension
                 'wicket-event': '../../main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery',
                 'Wicket': '../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery',
-                'WicketDebugWindow': '../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug'
+                'WicketDebugWindow': '../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug',
+                "qunit": "qunit/qunit"
             },
             shim: {
                 'wicket-event': {
@@ -33,16 +33,9 @@
 
     <!-- the module under test -->
     <script>
-        var oldAutoStart = QUnit.config.autostart;
-        // do not start the tests before they are loaded via AMD
-        QUnit.config.autostart = false;
-
-        require(["amd"], function (amdModule) {
-                    QUnit.start();
-
-                    amdModule.runTests();
-
-                    QUnit.config.autostart = oldAutoStart;
+        require(["amd", "qunit"], function (amdModule, qunit) {
+                amdModule.runTests();   
+                qunit.start();
             }
         );
     </script>
