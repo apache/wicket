@@ -1,4 +1,4 @@
-This file contains all changes done in releases for Apache Wicket 7.x.
+This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
