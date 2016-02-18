@@ -110,4 +110,19 @@ public abstract class AbstractColumn<T, S> implements IStyledColumn<T, S>
 	{
 		return null;
 	}
+
+
+	/**
+	 * @return The number of rows the header of this column should span
+	 */
+	public int getRowspan() {
+		return 1;
+	}
+
+	/**
+	 * @return The number of columns the header of this column should span
+	 */
+	public int getColspan() {
+		return 1;
+	}
 }
