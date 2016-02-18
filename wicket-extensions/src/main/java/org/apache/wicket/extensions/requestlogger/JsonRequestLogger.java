@@ -19,10 +19,9 @@ package org.apache.wicket.extensions.requestlogger;
 import java.io.IOException;
 import java.io.Serializable;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
@@ -39,9 +38,9 @@ import org.slf4j.LoggerFactory;
  * <pre>
  * {@literal
  * <dependency>
- *     <groupId>org.codehaus.jackson</groupId>
- *     <artifactId>jackson-mapper-asl</artifactId>
- *     <version>1.8.5</version>
+ *     <groupId>com.fasterxml.jackson.core</groupId>
+ *     <artifactId>jackson-databind</artifactId>
+ *     <version>2.6.5</version>
  * </dependency>
  * }
  * </pre>
@@ -62,6 +61,11 @@ public class JsonRequestLogger extends AbstractRequestLogger
 		@Override
 		public Object findFilterId(AnnotatedClass ac)
 		{
+			return "default";
+		}
+
+		@Override
+		public Object findFilterId(final Annotated a) {
 			return "default";
 		}
 	}
@@ -105,7 +109,7 @@ public class JsonRequestLogger extends AbstractRequestLogger
 		SimpleFilterProvider filters = new SimpleFilterProvider();
 		filters.addFilter("default",
 			SimpleBeanPropertyFilter.serializeAllExcept("eventTarget", "responseTarget"));
-		mapper.setFilters(filters);
+		mapper.setFilterProvider(filters);
 		mapper.setAnnotationIntrospector(new FilteredIntrospector());
 	}
 
@@ -131,14 +135,6 @@ public class JsonRequestLogger extends AbstractRequestLogger
 		try
 		{
 			return getMapper().writeValueAsString(new RequestSessionTuple(rd, sd));
-		}
-		catch (JsonGenerationException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (JsonMappingException e)
-		{
-			throw new RuntimeException(e);
 		}
 		catch (IOException e)
 		{
