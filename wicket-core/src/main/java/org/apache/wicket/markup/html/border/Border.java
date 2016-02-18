@@ -588,7 +588,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		@Override
 		public DequeueContext newDequeueContext()
 		{
-			Border border=findParent(Border.class);
+			Border border = findParent(Border.class);
 			IMarkupFragment fragment = border.getMarkup();
 
 			if (fragment == null)

@@ -796,6 +796,40 @@ public class ComponentQueueingTest extends WicketTestCase
 		
 		tester.startPage(page);	
 	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6088
+	 */
+	@Test
+	public void queueComponentInsideWcAndEnclosure()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup(" <div wicket:id=\"container\">\n" +
+			"    <div wicket:enclosure=\"child\">\n" +
+			"      <p wicket:id=\"child\">1</p>\n" +
+			"      <a wicket:id=\"child2\">2</a>\n" +
+			"    </div>\n" +
+			"  </div>");
+		
+		WebMarkupContainer container = new WebMarkupContainer("container");
+
+		container.queue(new Label("child")
+		{
+			@Override
+			protected void onInitialize()
+			{
+				super.onInitialize();
+
+				setDefaultModel(Model.of("test"));
+			}
+		});
+		
+	    container.queue(new WebMarkupContainer("child2").setVisible(false));
+
+	    page.queue(container);
+		
+		tester.startPage(page);	
+	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6036
