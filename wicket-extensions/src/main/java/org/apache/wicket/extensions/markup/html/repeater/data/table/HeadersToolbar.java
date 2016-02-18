@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable.CssAttributeBehavior;
@@ -81,7 +82,7 @@ public class HeadersToolbar<S> extends AbstractToolbar
 			{
 				final IColumn<T, S> column = item.getModelObject();
 
-				WebMarkupContainer header = null;
+				WebMarkupContainer header;
 
 				if (column.isSortable())
 				{
@@ -106,6 +107,14 @@ public class HeadersToolbar<S> extends AbstractToolbar
 					};
 
 					header.add(cssAttributeBehavior);
+				}
+
+				if (column.getColspan() > 1) {
+					header.add(AttributeModifier.replace("colspan", column.getColspan()));
+				}
+
+				if (column.getRowspan() > 1) {
+					header.add(AttributeModifier.replace("rowspan", column.getRowspan()));
 				}
 
 				item.add(header);
