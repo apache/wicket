@@ -90,7 +90,7 @@ public class HttpSessionDataStore implements IDataStore
 		{
 			int bytesLength = pageAsBytes != null ? pageAsBytes.length : -1;
 			LOG.debug("Loaded '{}' bytes for page with id '{}' in session '{}'",
-					new Object[]{bytesLength, pageId, sessionId});
+					bytesLength, pageId, sessionId);
 		}
 
 
@@ -133,7 +133,7 @@ public class HttpSessionDataStore implements IDataStore
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug("Stored '{}' bytes for page '{}' in session '{}'",
-						new Object[]{pageAsBytes.length, pageId, sessionId});
+						pageAsBytes.length, pageId, sessionId);
 			}
 			evictionStrategy.evict(pageTable);
 		}
