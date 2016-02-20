@@ -16,11 +16,15 @@
  */
 package org.apache.wicket.pageStore.memory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Helper class that knows how to remove the nth oldest pages from {@link PageTable}
  */
 public class PageTableCleaner
 {
+	private static final Logger LOG = LoggerFactory.getLogger(PageTableCleaner.class);
 
 	/**
 	 * Removes {@code pagesNumber} of pages from the {@link PageTable pageTable}
@@ -36,6 +40,7 @@ public class PageTableCleaner
 		{
 			Integer pageIdOfTheOldest = pageTable.getOldest();
 			pageTable.removePage(pageIdOfTheOldest);
+			LOG.debug("Evicted page with id '{}' from the HttpSessionDataStore");
 		}
 	}
 }

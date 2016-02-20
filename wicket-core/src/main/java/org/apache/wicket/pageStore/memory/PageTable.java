@@ -34,7 +34,6 @@ public class PageTable implements IClusterable
 {
 	private static final long serialVersionUID = 1L;
 
-
 	/**
 	 * Holds the index of last/least recently used page ids. The most recently used page id is in
 	 * the tail, the least recently used is in the head.
