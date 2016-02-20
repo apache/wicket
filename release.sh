@@ -170,87 +170,92 @@ function generate_release_vote_email {
 
     echo "Generating Vote email"
 
-    echo "This is a vote to release Apache Wicket $version
+    echo "
+This is a vote to release Apache Wicket $version
 
-    Please download the source distributions found in our staging area
-    linked below.
+Please download the source distributions found in our staging area
+linked below.
 
-    I have included the signatures for both the source archives. This vote
-    lasts for 72 hours minimum.
+I have included the signatures for both the source archives. This vote
+lasts for 72 hours minimum.
 
-    [ ] Yes, release Apache Wicket $version
-    [ ] No, don't release Apache Wicket $version, because ...
+[ ] Yes, release Apache Wicket $version
+[ ] No, don't release Apache Wicket $version, because ...
 
-    Distributions, changelog, keys and signatures can be found at:
+Distributions, changelog, keys and signatures can be found at:
 
-        https://dist.apache.org/repos/dist/dev/wicket/$version
+    https://dist.apache.org/repos/dist/dev/wicket/$version
 
-    Staging repository:
+Staging repository:
 
-        https://repository.apache.org/content/repositories/$stagingrepoid/
+    https://repository.apache.org/content/repositories/$stagingrepoid/
 
-    The binaries are available in the above link, as are a staging
-    repository for Maven. Typically the vote is on the source, but should
-    you find a problem with one of the binaries, please let me know, I can
-    re-roll them some way or the other.
-    
-    Staging git repository data:
-    
-        Repository:  $(git config --get remote.staging.url)
-        Branch:      $branch
-        Release tag: $tag
+The binaries are available in the above link, as are a staging
+repository for Maven. Typically the vote is on the source, but should
+you find a problem with one of the binaries, please let me know, I can
+re-roll them some way or the other.
 
-    " > release-vote.txt
+Staging git repository data:
+
+    Repository:  $(git config --get remote.staging.url)
+    Branch:      $branch
+    Release tag: $tag
+
+" | tail -n+2 > release-vote.txt
 
     cat /tmp/release-$version-sigs.txt >> release-vote.txt
 	git add release-vote.txt
 }
 
 function generate_announce_email {
-    echo "The Apache Wicket PMC is proud to announce Apache Wicket $version!
+    echo "
+The Apache Wicket PMC is proud to announce Apache Wicket $version!
 
-    This release marks another minor release of Wicket $major_version. We
-    use semantic versioning for the development of Wicket, and as such no
-    API breaks are present breaks are present in this release compared to
-    $major_version.0.0.
+Apache Wicket is an open source Java component oriented web application
+framework that powers thousands of web applications and web sites for
+governments, stores, universities, cities, banks, email providers, and
+more. You can find more about Apache Wicket at https://wicket.apache.org
 
-    New and noteworthy
-    ------------------
+This release marks another minor release of Wicket $major_version. We
+use semantic versioning for the development of Wicket, and as such no
+API breaks are present breaks are present in this release compared to
+$major_version.0.0.
 
-    <OPTIONAL>
+<OPTIONAL> New and noteworthy
+<OPTIONAL> ------------------
+<OPTIONAL>
+Using this release
+------------------
 
-    Using this release
-    ------------------
+With Apache Maven update your dependency to (and don't forget to
+update any other dependencies on Wicket projects to the same version):
 
-    With Apache Maven update your dependency to (and don't forget to
-    update any other dependencies on Wicket projects to the same version):
+<dependency>
+    <groupId>org.apache.wicket</groupId>
+    <artifactId>wicket-core</artifactId>
+    <version>$version</version>
+</dependency>
 
-    <dependency>
-        <groupId>org.apache.wicket</groupId>
-        <artifactId>wicket-core</artifactId>
-        <version>$version</version>
-    </dependency>
+Or download and build the distribution yourself, or use our
+convenience binary package
 
-    Or download and build the distribution yourself, or use our
-    convenience binary package
+ * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
+ * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
 
-     * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
-     * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
+Upgrading from earlier versions
+-------------------------------
 
-    Upgrading from earlier versions
-    -------------------------------
+If you upgrade from $major_version.y.z this release is a drop in replacement. If
+you come from a version prior to $major_version.0.0, please read our Wicket $major_version
+migration guide found at
 
-    If you upgrade from $major_version.y.z this release is a drop in replacement. If
-    you come from a version prior to $major_version.0.0, please read our Wicket $major_version
-    migration guide found at
+ * http://s.apache.org/wicket${major_version}migrate
 
-     * http://s.apache.org/wicket${major_version}migrate
+Have fun!
 
-    Have fun!
+— The Wicket team
 
-    — The Wicket team
-
-    " > release-announce.txt
+" | tail -n+2 > release-announce.txt
 
     cat /tmp/release-$version-sigs.txt >> release-announce.txt
 	git add release-announce.txt
@@ -395,13 +400,13 @@ if [ -f $log ] ; then
 fi
 
 branch="build/wicket-$version"
-tag="wicket-$version"
+tag="rel/wicket-$version"
 
 echo "# Release configuration for Wicket-$version
 scm.tag=${tag}
 " > release.properties
 
-./build-versions.py $version $next_version >> release.properties
+./build-versions.py >> release.properties
 
 echo "Contents of the release properties generated for Maven:
 -------------------------------------------------------------------------------
@@ -477,7 +482,7 @@ mvn -q clean -Pall
 
 # package and assemble the release
 echo "Prepare the release"
-mvn --batch-mode release:prepare -l $log -DpreparationGoals="clean" -Dtag=$tag -Papache-release,release
+mvn --batch-mode release:prepare -X -l $log -DpreparationGoals="clean" -Dtag=$tag -Papache-release,release
 if [ $? -ne 0 ] ; then
     fail "ERROR: mvn release:prepare was not successful"
 fi
