@@ -305,7 +305,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		if (lookupClass != fieldType)
 		{
 			beanNamesArr = ctx.getBeanNamesForType(lookupClass);
-			beanNames.addAll(Arrays.asList(beanNamesArr));			
+			beanNames.addAll(Arrays.asList(beanNamesArr));
 		}
 		
 		Iterator<String> nameIterator = beanNames.iterator();
@@ -366,8 +366,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			}
 
 			boolean exactMatch = fieldResolvableType.isAssignableFrom(candidateResolvableType);
-			boolean elementMatch = fieldElementsResolvableType != null ? 
-				fieldElementsResolvableType.isAssignableFrom(candidateResolvableType) : false;
+			boolean elementMatch = fieldElementsResolvableType != null && fieldElementsResolvableType.isAssignableFrom(candidateResolvableType);
 
 			if (exactMatch)
 			{
