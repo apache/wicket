@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.datetime;
+package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -26,9 +28,6 @@ import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.Strings;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormatter;
 
 
 /**
@@ -40,7 +39,7 @@ import org.joda.time.format.DateTimeFormatter;
  * 
  * @author eelcohillenius
  */
-public abstract class DateConverter implements IConverter<Date>
+public abstract class DateConverter implements IConverter<ZonedDateTime>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -70,7 +69,7 @@ public abstract class DateConverter implements IConverter<Date>
 	 *      java.util.Locale)
 	 */
 	@Override
-	public Date convertToObject(String value, Locale locale)
+	public ZonedDateTime convertToObject(String value, Locale locale)
 	{
 		if (Strings.isEmpty(value))
 		{
@@ -85,8 +84,8 @@ public abstract class DateConverter implements IConverter<Date>
 
 		if (applyTimeZoneDifference)
 		{
-			TimeZone zone = getClientTimeZone();
-			DateTime dateTime;
+			ZoneId zoneId = getClientTimeZone();
+			ZonedDateTime dateTime;
 
 			// set time zone for client
 			format = format.withZone(getTimeZone());
@@ -94,26 +93,26 @@ public abstract class DateConverter implements IConverter<Date>
 			try
 			{
 				// parse date retaining the time of the submission
-				dateTime = format.parseDateTime(value);
+				dateTime = ZonedDateTime.parse(value, format);
 			}
 			catch (RuntimeException e)
 			{
 				throw newConversionException(e, locale);
 			}
 			// apply the server time zone to the parsed value
-			if (zone != null)
+			if (zoneId != null)
 			{
-				dateTime = dateTime.withZoneRetainFields(DateTimeZone.forTimeZone(zone));
+				dateTime = dateTime.withZoneSameInstant(zoneId);
 			}
 
-			return dateTime.toDate();
+			return dateTime;
 		}
 		else
 		{
 			try
 			{
-				DateTime date = format.parseDateTime(value);
-				return date.toDate();
+				ZonedDateTime dateTime = ZonedDateTime.parse(value);
+				return dateTime;
 			}
 			catch (RuntimeException e)
 			{
@@ -137,26 +136,21 @@ public abstract class DateConverter implements IConverter<Date>
 				.setVariable("format", getDatePattern(locale));
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
-	 *      java.util.Locale)
-	 */
 	@Override
-	public String convertToString(Date value, Locale locale)
+	public String convertToString(ZonedDateTime dateTime, Locale locale)
 	{
-		DateTime dt = new DateTime(value.getTime(), getTimeZone());
 		DateTimeFormatter format = getFormat(locale);
 
 		if (applyTimeZoneDifference)
 		{
-			TimeZone zone = getClientTimeZone();
-			if (zone != null)
+			ZoneId zoneId = getClientTimeZone();
+			if (zoneId != null)
 			{
 				// apply time zone to formatter
-				format = format.withZone(DateTimeZone.forTimeZone(zone));
+				format = format.withZone(zoneId);
 			}
 		}
-		return format.print(dt);
+		return format.format(dateTime);
 	}
 
 	/**
@@ -188,12 +182,13 @@ public abstract class DateConverter implements IConverter<Date>
 	 * 
 	 * @return The client's time zone or null
 	 */
-	protected TimeZone getClientTimeZone()
+	protected ZoneId getClientTimeZone()
 	{
 		ClientInfo info = Session.get().getClientInfo();
 		if (info instanceof WebClientInfo)
 		{
-			return ((WebClientInfo)info).getProperties().getTimeZone();
+			TimeZone timeZone = ((WebClientInfo) info).getProperties().getTimeZone();
+			return timeZone.toZoneId();
 		}
 		return null;
 	}
@@ -212,8 +207,8 @@ public abstract class DateConverter implements IConverter<Date>
 	 * 
 	 * @return The server time zone
 	 */
-	protected DateTimeZone getTimeZone()
+	protected ZoneId getTimeZone()
 	{
-		return DateTimeZone.getDefault();
+		return ZoneId.systemDefault();
 	}
 }

@@ -14,16 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.datetime;
+package org.apache.wicket.extensions.markup.html.form.datetime;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 
 /**
@@ -37,10 +32,10 @@ import org.joda.time.format.DateTimeFormatter;
  * 
  * @see SimpleDateFormat
  * @see StyleDateConverter
- * @see DateTextField
- * @see DateTime
- * @see DateTimeFormat
- * @see DateTimeZone
+ * @see org.apache.wicket.extensions.markup.html.form.DateTextField
+ * @see java.time.ZonedDateTime
+ * @see DateTimeFormatter
+ * @see java.time.ZoneId
  * 
  * @author eelcohillenius
  */
@@ -99,6 +94,6 @@ public class PatternDateConverter extends DateConverter
 	@Override
 	protected DateTimeFormatter getFormat(Locale locale)
 	{
-		return DateTimeFormat.forPattern(datePattern).withLocale(locale).withPivotYear(2000);
+		return DateTimeFormatter.ofPattern(datePattern).withLocale(locale);
 	}
 }

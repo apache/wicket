@@ -14,42 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.datetime.markup.html.basic;
+package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import java.text.SimpleDateFormat;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
 import org.apache.wicket.IGenericComponent;
-import org.apache.wicket.datetime.DateConverter;
-import org.apache.wicket.datetime.PatternDateConverter;
-import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
 
 
 /**
- * A label that is mapped to a <code>java.util.Date</code> object and that uses Joda time to format
- * values.
+ * A label that is mapped to a {@link java.time.LocalDate} object and that uses
+ * {@link java.time.format.DateTimeFormatter} to format values.
  * <p>
  * You can provide a date pattern in two of the constructors. When not provided,
- * {@link DateTimeFormat#shortDate()} will be used.
+ * {@link java.time.format.FormatStyle#SHORT} will be used.
  * </p>
  * <p>
  * A special option is applyTimeZoneDifference which is an option that says whether to correct for
  * the difference between the client's time zone and server's time zone. This is true by default.
  * </p>
  * 
- * @see DateTime
- * @see DateTimeFormat
- * @see DateTimeZone
- * 
- * @author eelcohillenius
+ * @see java.time.LocalDate
+ * @see java.time.format.DateTimeFormatter
  */
 public class DateLabel extends Label implements IGenericComponent<Date>
 {
@@ -63,8 +54,8 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * @param model
 	 *            The model
 	 * @param datePattern
-	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
-	 *            patterns.
+	 *            The pattern to use. Must be not null. See
+	 *            {@link java.time.format.DateTimeFormatter} for available patterns.
 	 * @return new instance
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
@@ -80,8 +71,8 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * @param id
 	 *            The id of the text field
 	 * @param datePattern
-	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
-	 *            patterns.
+	 *            The pattern to use. Must be not null. See
+	 *            {@link java.time.format.DateTimeFormatter} for available patterns.
 	 * @return new instance
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
@@ -99,14 +90,12 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * @param model
 	 *            The model
 	 * @param dateStyle
-	 *            style to use in case no pattern is provided. Must be two characters from the set
-	 *            {"S", "M", "L", "F", "-"}. Must be not null. See
-	 *            {@link DateTimeFormat#forStyle(String)} for options.
+	 *            style to use in case no pattern is provided.
 	 * @return new instance
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel forDateStyle(String id, IModel<Date> model, String dateStyle)
+	public static DateLabel forDateStyle(String id, IModel<Date> model, FormatStyle dateStyle)
 	{
 		return new DateLabel(id, model, new StyleDateConverter(dateStyle, true));
 	}
@@ -117,14 +106,12 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * @param id
 	 *            The id of the text field
 	 * @param dateStyle
-	 *            style to use in case no pattern is provided. Must be two characters from the set
-	 *            {"S", "M", "L", "F", "-"}. Must be not null. See
-	 *            {@link DateTimeFormat#forStyle(String)} for options.
+	 *            style to use in case no pattern is provided.
 	 * @return new instance
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel forDateStyle(String id, String dateStyle)
+	public static DateLabel forDateStyle(String id, FormatStyle dateStyle)
 	{
 		return forDateStyle(id, null, dateStyle);
 	}

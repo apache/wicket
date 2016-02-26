@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Session;
-import org.apache.wicket.datetime.StyleDateConverter;
+import org.apache.wicket.extensions.markup.html.form.datetime.StyleDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;

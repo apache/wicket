@@ -14,16 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.datetime;
+package org.apache.wicket.extensions.markup.html.form.datetime;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Locale;
 
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Date converter that uses Joda Time and can be configured to take the time zone difference between
@@ -33,25 +30,24 @@ import org.joda.time.format.DateTimeFormatter;
  * This converter is especially suited on a per-component base.
  * </p>
  * 
- * @see DateTextField
- * @see DateTime
- * @see DateTimeFormat
- * @see DateTimeZone
+ * @see org.apache.wicket.extensions.markup.html.form.DateTextField
+ * @see java.time.ZonedDateTime
+ * @see DateTimeFormatter
+ * @see java.time.ZoneId
  * 
  * @author eelcohillenius
  */
 public class StyleDateConverter extends DateConverter
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Date style to use. See {@link DateTimeFormat#forStyle(String)}.
+	 * Date style to use. See {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}.
 	 */
-	private final String dateStyle;
+	private final FormatStyle dateStyle;
 
 	/**
-	 * Construct. The dateStyle 'S-' (which is the same as {@link DateTimeFormat#shortDate()}) will
+	 * Construct. The dateStyle 'S-' (which is the same as {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}) will
 	 * be used for constructing the date format for the current locale. </p> When
 	 * applyTimeZoneDifference is true, the current time is applied on the parsed date, and the date
 	 * will be corrected for the time zone difference between the server and the client. For
@@ -65,12 +61,12 @@ public class StyleDateConverter extends DateConverter
 	 */
 	public StyleDateConverter(boolean applyTimeZoneDifference)
 	{
-		this("S-", applyTimeZoneDifference);
+		this(FormatStyle.SHORT, applyTimeZoneDifference);
 	}
 
 	/**
 	 * Construct. The provided pattern will be used as the base format (but they will be localized
-	 * for the current locale) and if null, {@link DateTimeFormat#shortDate()} will be used. </p>
+	 * for the current locale) and if null, {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)} will be used. </p>
 	 * When applyTimeZoneDifference is true, the current time is applied on the parsed date, and the
 	 * date will be corrected for the time zone difference between the server and the client. For
 	 * instance, if I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9
@@ -82,20 +78,16 @@ public class StyleDateConverter extends DateConverter
 	 *            Date style to use. The first character is the date style, and the second character
 	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
 	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
-	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
+	 *            character '-'. See {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}.
 	 * @param applyTimeZoneDifference
 	 *            whether to apply the difference in time zones between client and server
 	 * @throws IllegalArgumentException
 	 *             in case dateStyle is null
 	 */
-	public StyleDateConverter(String dateStyle, boolean applyTimeZoneDifference)
+	public StyleDateConverter(FormatStyle dateStyle, boolean applyTimeZoneDifference)
 	{
 		super(applyTimeZoneDifference);
-		if (dateStyle == null)
-		{
-			throw new IllegalArgumentException("dateStyle must be not null");
-		}
-		this.dateStyle = dateStyle;
+		this.dateStyle = Args.notNull(dateStyle, "dateStyle");
 	}
 
 	/**
@@ -106,7 +98,7 @@ public class StyleDateConverter extends DateConverter
 	@Override
 	public final String getDatePattern(Locale locale)
 	{
-		return DateTimeFormat.patternForStyle(dateStyle, locale);
+		return DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(locale).toString();
 	}
 
 	/**
@@ -115,8 +107,7 @@ public class StyleDateConverter extends DateConverter
 	@Override
 	protected DateTimeFormatter getFormat(Locale locale)
 	{
-		return DateTimeFormat.forPattern(getDatePattern(locale))
-			.withLocale(locale)
-			.withPivotYear(2000);
+		return DateTimeFormatter.ofPattern(getDatePattern(locale))
+			.withLocale(locale);
 	}
 }

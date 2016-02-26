@@ -19,7 +19,7 @@ package org.apache.wicket.examples.bean.validation;
 import java.util.Date;
 
 import org.apache.wicket.bean.validation.PropertyValidator;
-import org.apache.wicket.datetime.StyleDateConverter;
+import org.apache.wicket.extensions.markup.html.form.datetime.StyleDateConverter;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
