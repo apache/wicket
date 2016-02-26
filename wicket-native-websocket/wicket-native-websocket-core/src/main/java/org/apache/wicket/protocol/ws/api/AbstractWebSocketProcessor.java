@@ -212,7 +212,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		IKey key = getRegistryKey();
 		IWebSocketConnection connection = connectionRegistry.getConnection(application, sessionId, key);
 
-		if (connection != null && connection.isOpen())
+		if (connection != null && (connection.isOpen() || message instanceof ClosedMessage))
 		{
 			Application oldApplication = ThreadContext.getApplication();
 			Session oldSession = ThreadContext.getSession();
