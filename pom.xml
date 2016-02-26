@@ -89,7 +89,6 @@
 		<module>wicket</module>
 		<module>wicket-core</module>
 		<module>wicket-util</module>
-		<module>wicket-datetime</module>
 		<module>wicket-request</module>
 		<module>wicket-devutils</module>
 		<module>wicket-extensions</module>
@@ -246,11 +245,6 @@
 				<groupId>javax.inject</groupId>
 				<artifactId>javax.inject</artifactId>
 				<version>1</version>
-			</dependency>
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>${joda-time.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>

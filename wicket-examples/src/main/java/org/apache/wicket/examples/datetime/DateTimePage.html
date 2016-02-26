@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+	<head>
+		<title>Wicket Examples - DateTime</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		<span wicket:id="mainNavigation" />
+
+		<h3>Demo for short style time</h3>
+		<span wicket:id="time1"></span><br/>
+
+		<hr/>
+
+		<h3>Demo for Full style time</h3>
+		<span wicket:id="time2"></span><br/>
+
+		<hr/>
+
+		<h3>Demo for Short style time with 24-hours</h3>
+		<span wicket:id="time3"></span><br/>
+
+		<hr/>
+
+		<form wicket:id="form">
+			<h3>Demo for default Local Date Time in Form</h3>
+			<span wicket:id="datetime1"></span><br/>
+			<input wicket:id="submit" type="submit" value="Submit"/>
+			<div wicket:id="feedback"></div>
+		</form>
+	</body>
+</html>

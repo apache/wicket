@@ -14,24 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.ajax.builtin.modal;
+package org.apache.wicket.examples.datetime;
 
-import org.apache.wicket.extensions.markup.html.form.datetime.DateTimeField;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.Page;
+import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * @author Matej Knopp
+ * Application class for the DateTime example.
+ * 
  */
-public class ModalPanel1 extends Panel
+public class DateTimeApplication extends WicketExampleApplication
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @param id
-	 */
-	public ModalPanel1(String id)
+	@Override
+	public Class< ? extends Page> getHomePage()
 	{
-		super(id);
-		add(new DateTimeField("dateTimeField"));
+		return DateTimePage.class;
 	}
 }

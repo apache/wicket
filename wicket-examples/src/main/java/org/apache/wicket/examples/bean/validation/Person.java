@@ -17,18 +17,20 @@
 package org.apache.wicket.examples.bean.validation;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.apache.wicket.examples.bean.validation.constraint.ValidPassword;
-import org.hibernate.validator.constraints.Email;
 
 public class Person implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	@NotNull
 	@Size(min = 2, max = 30)
 	private String name;
@@ -41,7 +43,7 @@ public class Person implements Serializable
 	private String phone;
 
 	@Past
-	private Date birthdate;
+	private LocalDate birthdate;
 	
 	@ValidPassword
 	private String password;
@@ -76,12 +78,12 @@ public class Person implements Serializable
 		this.phone = phone;
 	}
 
-	public Date getBirthdate()
+	public LocalDate getBirthdate()
 	{
 		return birthdate;
 	}
 
-	public void setBirthdate(Date birthdate)
+	public void setBirthdate(LocalDate birthdate)
 	{
 		this.birthdate = birthdate;
 	}
