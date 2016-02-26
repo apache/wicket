@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxChannel;
 import org.apache.wicket.ajax.AjaxChannel.Type;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -105,15 +107,14 @@ public class EffectsPage extends BasePage
 		add(new AjaxFallbackLink<Void>("c2-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				counter2++;
-				if (target != null)
-				{
+				targetOptional.ifPresent(target -> {
 					target.add(c2);
 					target.appendJavaScript(String.format("jQuery('#%s').effect('highlight');",
-						c2.getMarkupId()));
-				}
+							c2.getMarkupId()));
+				});
 			}
 
 			@Override

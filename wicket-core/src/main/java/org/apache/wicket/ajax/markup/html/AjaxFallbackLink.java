@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -39,7 +41,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            type of model object
  */
-public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
+public abstract class AjaxFallbackLink<T> extends Link<T>
 {
 	/** */
 	private static final long serialVersionUID = 1L;
@@ -87,7 +89,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
-				onClick(target);
+				onClick(Optional.of(target));
 			}
 
 			@Override
@@ -114,7 +116,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	@Override
 	public final void onClick()
 	{
-		onClick(null);
+		onClick(Optional.empty());
 	}
 
 	/**
@@ -124,8 +126,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 */
-	@Override
-	public abstract void onClick(final AjaxRequestTarget target);
+	public abstract void onClick(final Optional<AjaxRequestTarget> target);
 
 	/**
 	 * Removes any inline 'onclick' attributes set by Link#onComponentTag(ComponentTag).

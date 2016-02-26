@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -63,7 +64,7 @@ public class HomePage extends WebPage
 
 		};
 		add(form);
-		form.add(new TextField<String>("textfield", new Model<String>()));
+		form.add(new TextField<>("textfield", new Model<>()));
 		form.add(new Button("submit"));
 
 		final WebMarkupContainer listViewContainer = new WebMarkupContainer("listViewContainer");
@@ -77,7 +78,7 @@ public class HomePage extends WebPage
 				@Override
 				public List<Object> getObject()
 				{
-					List<Object> objects = new LinkedList<Object>();
+					List<Object> objects = new LinkedList<>();
 					for (int i = 0; i < rows; i++)
 					{
 						objects.add(new Object());
@@ -97,11 +98,11 @@ public class HomePage extends WebPage
 		form.add(new AjaxFallbackButton("addButton", form)
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(Optional<AjaxRequestTarget> targetOptional, Form<?> form)
 			{
 				rows++;
 				listView.removeAll();
-				target.add(listViewContainer);
+				targetOptional.ifPresent(target -> target.add(listViewContainer));
 			}
 
 			@Override

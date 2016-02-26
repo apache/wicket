@@ -17,6 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.tabs;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -72,20 +73,15 @@ public class AjaxTabbedPanel<T extends ITab> extends TabbedPanel<T>
 	{
 		return new AjaxFallbackLink<Void>(linkId)
 		{
-
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(final AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				setSelectedTab(index);
-				if (target != null)
-				{
-					target.add(AjaxTabbedPanel.this);
-				}
-				onAjaxUpdate(target);
+				targetOptional.ifPresent(target -> target.add(AjaxTabbedPanel.this));
+				onAjaxUpdate(targetOptional);
 			}
-
 		};
 	}
 
@@ -97,11 +93,11 @@ public class AjaxTabbedPanel<T extends ITab> extends TabbedPanel<T>
 	 * <strong>Note</strong> Since an {@link AjaxFallbackLink} is used to back the ajax update the
 	 * <code>target</code> argument can be null when the client browser does not support ajax and
 	 * the fallback mode is used. See {@link AjaxFallbackLink} for details.
-	 * 
+	 *
 	 * @param target
 	 *            ajax target used to update this component
 	 */
-	protected void onAjaxUpdate(final AjaxRequestTarget target)
+	protected void onAjaxUpdate(final Optional<AjaxRequestTarget> target)
 	{
 	}
 

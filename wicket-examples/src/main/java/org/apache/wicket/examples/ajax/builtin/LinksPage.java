@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -97,17 +98,14 @@ public class LinksPage extends BasePage
 		add(new AjaxFallbackLink<Void>("c2-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				counter2++;
 				// notice that for a fallback link we need to makesure the
 				// target is not null. if the target is null ajax failed and the
 				// fallback was used, so there is no need to do any ajax-related
 				// processing.
-				if (target != null)
-				{
-					target.add(c2);
-				}
+				targetOptional.ifPresent(target -> target.add(c2));
 			}
 		});
 

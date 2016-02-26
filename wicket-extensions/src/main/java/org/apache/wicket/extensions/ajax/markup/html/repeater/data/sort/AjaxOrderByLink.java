@@ -16,66 +16,74 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
-import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 
 
 /**
- * Ajaxified version of {@link OrderByBorder}
+ * Ajaxified {@link OrderByLink}
  *
  * @param <S>
  *            the type of the sort property
- * @see OrderByBorder
- * 
- * @since 1.2.1
- * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ * @see OrderByLink
  */
-public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
+public abstract class AjaxOrderByLink<S> extends OrderByLink<S> implements IAjaxLink
 {
+	/**
+	 *
+	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param id
 	 * @param sortProperty
 	 * @param stateLocator
 	 */
-	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
-		final ISortStateLocator<S> stateLocator)
+	public AjaxOrderByLink(final String id, final S sortProperty,
+	                       final ISortStateLocator<S> stateLocator)
 	{
 		super(id, sortProperty, stateLocator);
 	}
 
 	@Override
-	protected OrderByLink<S> newOrderByLink(String id, S property, ISortStateLocator<S> stateLocator)
+	public void onInitialize()
 	{
-		return new AjaxOrderByLink<S>("orderByLink", property, stateLocator)
+		super.onInitialize();
+
+		add(newAjaxEventBehavior("click"));
+	}
+
+	/**
+	 * @param event
+	 *            the name of the default event on which this link will listen to
+	 * @return the ajax behavior which will be executed when the user clicks the link
+	 */
+	protected AjaxEventBehavior newAjaxEventBehavior(final String event)
+	{
+		return new AjaxEventBehavior(event)
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
+			protected void onEvent(final AjaxRequestTarget target)
+			{
+				onClick();
+				AjaxOrderByLink.this.onClick(target);
+			}
+
+			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
-				AjaxFallbackOrderByBorder.this.updateAjaxAttributes(attributes);
-			}
+				super.updateAjaxAttributes(attributes);
+				attributes.setPreventDefault(true);
 
-			@Override
-			protected void onSortChanged()
-			{
-				AjaxFallbackOrderByBorder.this.onSortChanged();
-			}
-
-			@Override
-			public void onClick(final AjaxRequestTarget target)
-			{
-				AjaxFallbackOrderByBorder.this.onAjaxClick(target);
-
+				AjaxOrderByLink.this.updateAjaxAttributes(attributes);
 			}
 		};
 	}
@@ -85,12 +93,13 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 	}
 
 	/**
-	 * This method is a hook for subclasses to perform an action after sort has changed
+	 * Callback method when an ajax click occurs. All the behavior of changing the sort, etc is
+	 * already performed before this is called so this method should primarily be used to configure
+	 * the target.
+	 * 
+	 * @param target
 	 */
-	protected void onSortChanged()
-	{
-		// noop
-	}
+	@Override
+	public abstract void onClick(AjaxRequestTarget target);
 
-	protected abstract void onAjaxClick(AjaxRequestTarget target);
 }

@@ -17,9 +17,9 @@
 package org.apache.wicket.extensions.markup.html.repeater.tree;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -184,10 +184,9 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * For an update of a node the complete row item is added to the ART.
 	 */
 	@Override
-	public void updateNode(T t, final IPartialPageRequestHandler target)
+	public void updateNode(T t, final Optional<? extends IPartialPageRequestHandler> targetOptional)
 	{
-		if (target != null)
-		{
+		targetOptional.ifPresent(target -> {
 			final IModel<T> model = getProvider().model(t);
 			visitChildren(Item.class, new IVisitor<Item<T>, Void>()
 			{
@@ -207,7 +206,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 				}
 			});
 			model.detach();
-		}
+		});
 	}
 
 	/**

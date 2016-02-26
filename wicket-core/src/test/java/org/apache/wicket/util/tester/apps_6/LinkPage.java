@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.tester.apps_6;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -91,7 +93,7 @@ public class LinkPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				getRequestCycle().setResponsePage(ResultPage.class);
 			}
@@ -102,7 +104,7 @@ public class LinkPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				getRequestCycle().setResponsePage(new ResultPage("A special label"));
 			}

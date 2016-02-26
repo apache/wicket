@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.form;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.markup.html.WebPage;
@@ -76,7 +78,7 @@ public class AjaxFormSubmitTestPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(Optional<AjaxRequestTarget> target, Form<?> form)
 			{
 				formSubmitted = formSubmitted | BUTTON;
 			}

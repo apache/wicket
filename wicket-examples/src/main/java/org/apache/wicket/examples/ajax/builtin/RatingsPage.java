@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.util.Optional;
+
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.extensions.rating.RatingPanel;
@@ -181,7 +183,7 @@ public class RatingsPage extends BasePage
 			}
 
 			@Override
-			public void onRated(int rating, AjaxRequestTarget target)
+			public void onRated(int rating, Optional<AjaxRequestTarget> target)
 			{
 				RatingsPage.rating1.addRating(rating);
 			}
@@ -212,7 +214,7 @@ public class RatingsPage extends BasePage
 			}
 
 			@Override
-			public void onRated(int rating, AjaxRequestTarget target)
+			public void onRated(int rating, Optional<AjaxRequestTarget> target)
 			{
 				// make sure the user can't vote again
 				hasVoted = Boolean.TRUE;

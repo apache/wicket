@@ -18,6 +18,7 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -165,7 +166,7 @@ public class TodoList extends BasePage
 		private boolean linkVisible = true;
 
 		/** Link for displaying the AddTodo form. */
-		private final class AddTodoLink extends AjaxFallbackLink
+		private final class AddTodoLink extends AjaxFallbackLink<Void>
 		{
 			/** Constructor. */
 			private AddTodoLink(String id)
@@ -176,13 +177,13 @@ public class TodoList extends BasePage
 			/**
 			 * onclick handler.
 			 * 
-			 * @param target
+			 * @param targetOptional
 			 *            the request target.
 			 */
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				onShowForm(target);
+				onShowForm(targetOptional);
 			}
 
 			/**
@@ -201,7 +202,7 @@ public class TodoList extends BasePage
 		 * Link for removing all completed todos from the list, this link follows the same
 		 * visibility rules as the add link.
 		 */
-		private final class RemoveCompletedTodosLink extends AjaxFallbackLink
+		private final class RemoveCompletedTodosLink extends AjaxFallbackLink<Void>
 		{
 			/**
 			 * Constructor.
@@ -214,13 +215,10 @@ public class TodoList extends BasePage
 				super(id);
 			}
 
-			/**
-			 * @see AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
-			 */
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				onRemoveCompletedTodos(target);
+				onRemoveCompletedTodos(targetOptional);
 			}
 
 			/**
@@ -318,19 +316,19 @@ public class TodoList extends BasePage
 		/**
 		 * Called then the add link was clicked, shows the form, and hides the link.
 		 * 
-		 * @param target
+		 * @param targetOptional
 		 *            the request target.
 		 */
-		void onShowForm(AjaxRequestTarget target)
+		void onShowForm(Optional<AjaxRequestTarget> targetOptional)
 		{
 			// toggle the visibility
 			linkVisible = false;
 
 			// redraw the add container.
-			target.add(this);
+			targetOptional.ifPresent(target -> target.add(this));
 		}
 
-		void onRemoveCompletedTodos(AjaxRequestTarget target)
+		void onRemoveCompletedTodos(Optional<AjaxRequestTarget> targetOptional)
 		{
 			List<TodoItem> ready = new ArrayList<>();
 			for (TodoItem todo : items)
@@ -342,11 +340,13 @@ public class TodoList extends BasePage
 			}
 			items.removeAll(ready);
 
-			// repaint our panel
-			target.add(this);
+			targetOptional.ifPresent(target -> {
+				// repaint our panel
+				target.add(this);
 
-			// repaint the listview as there was a new item added.
-			target.add(showItems);
+				// repaint the listview as there was a new item added.
+				target.add(showItems);
+			});
 		}
 
 		/**
@@ -413,11 +413,8 @@ public class TodoList extends BasePage
 
 		add(new AjaxFallbackLink<Void>("ajaxback")
 		{
-			/**
-			 * @see org.apache.wicket.ajax.markup.html.AjaxFallbackLink#onClick(org.apache.wicket.ajax.AjaxRequestTarget)
-			 */
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				setResponsePage(getPage());
 			}
