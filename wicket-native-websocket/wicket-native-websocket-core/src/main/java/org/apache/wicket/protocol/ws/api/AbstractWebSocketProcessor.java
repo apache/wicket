@@ -33,6 +33,7 @@ import org.apache.wicket.protocol.ws.api.event.WebSocketAbortedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
+import org.apache.wicket.protocol.ws.api.event.WebSocketErrorPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
@@ -40,6 +41,7 @@ import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.ErrorMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
@@ -181,6 +183,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
 	}
 
+	@Override
+	public void onError(Throwable t)
+	{
+		IKey key = getRegistryKey();
+		broadcastMessage(new ErrorMessage(getApplication(), getSessionId(), key, t));
+	}
+
 	/**
 	 * Exports the Wicket thread locals and broadcasts the received message from the client to all
 	 * interested components and behaviors in the page with id {@code #pageId}
@@ -232,7 +241,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 				WebSocketPayload payload = createEventPayload(message, requestHandler);
 
-				if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage))
+				if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage
+						|| message instanceof AbortedMessage))
 				{
 					requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
 				}
@@ -334,6 +344,10 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		else if (message instanceof ClosedMessage)
 		{
 			payload = new WebSocketClosedPayload((ClosedMessage) message, handler);
+		}
+		else if (message instanceof ErrorMessage)
+		{
+			payload = new WebSocketErrorPayload((ErrorMessage) message, handler);
 		}
 		else if (message instanceof AbortedMessage)
 		{
