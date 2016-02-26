@@ -183,7 +183,12 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
 	}
 
-	@Override
+	/**
+	 * A notification after a communication error.
+	 *
+	 * @param t
+	 *      The throwable for the communication problem
+	 */
 	public void onError(Throwable t)
 	{
 		IKey key = getRegistryKey();

@@ -81,6 +81,7 @@ public class Jetty9WebSocketProcessor extends AbstractWebSocketProcessor
 	public void onWebSocketError(Throwable throwable)
 	{
 		LOG.error("An error occurred when using WebSocket.", throwable);
+		onError(throwable);
 	}
 
 	@Override
