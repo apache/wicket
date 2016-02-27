@@ -16,18 +16,16 @@
  */
 package org.apache.wicket.atmosphere.tester;
 
-import java.util.List;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.atmosphere.AtmosphereBehavior;
 import org.apache.wicket.atmosphere.EventBus;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.util.tester.WicketTester;
-import org.atmosphere.cpr.AtmosphereConfig;
-import org.atmosphere.cpr.AtmosphereFramework;
-import org.atmosphere.cpr.AtmosphereResource;
-import org.atmosphere.cpr.HeaderConfig;
+import org.atmosphere.cpr.*;
+import org.atmosphere.util.SimpleBroadcaster;
+
+import java.util.List;
 
 /**
  * A helper for testing Atmosphere enabled pages
@@ -41,7 +39,7 @@ public class AtmosphereTester
 	private final EventBus eventBus;
 
 	private final WicketTester wicketTester;
-	
+
 	/**
 	 * The response which will be suspended by Atmosphere and
 	 * all pushes/post will go to
@@ -49,7 +47,7 @@ public class AtmosphereTester
 	private MockHttpServletResponse suspendedResponse;
 
 	private MockHttpServletResponse lastResponse;
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -64,9 +62,10 @@ public class AtmosphereTester
 
 		WebApplication application = wicketTester.getApplication();
 
-		TesterBroadcaster broadcaster = createBroadcaster();
+        Broadcaster broadcaster = createBroadcaster();
 
-		if (EventBus.isInstalled(application))
+
+        if (EventBus.isInstalled(application))
 		{
 			this.eventBus = EventBus.get(application);
 			this.eventBus.setBroadcaster(broadcaster);
@@ -100,19 +99,20 @@ public class AtmosphereTester
 		wicketTester.executeBehavior(atmosphereBehavior);
 	}
 
-	private TesterBroadcaster createBroadcaster()
+	private Broadcaster createBroadcaster()
 	{
-		TesterBroadcaster broadcaster = new TesterBroadcaster();
+        AtmosphereFramework framework = new AtmosphereFramework();
+        framework.init();
 
-		AtmosphereFramework framework = new AtmosphereFramework();
-		AtmosphereConfig config = new AtmosphereConfig(framework);
+        BroadcasterFactory factory = new DefaultBroadcasterFactory();
 
-		TesterBroadcasterFactory broadcasterFactory = new TesterBroadcasterFactory(config, broadcaster);
-		framework.setBroadcasterFactory(broadcasterFactory);
+        factory.configure(
+                SimpleBroadcaster.class,
+                BroadcasterLifeCyclePolicy.ATMOSPHERE_RESOURCE_POLICY.NEVER.name(),
+                framework.getAtmosphereConfig()
+        );
 
-		broadcaster.initialize("wicket-atmosphere-tester", config);
-
-		return broadcaster;
+		return factory.get();
 	}
 
 	/**

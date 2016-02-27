@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.util.Date;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -27,6 +25,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+
+import java.util.Date;
 
 public class HomePage extends WebPage
 {
@@ -44,10 +44,10 @@ public class HomePage extends WebPage
 		add(timeLabel = new Label("time", Model.of("start")).setOutputMarkupId(true));
 		add(messageLabel = new Label("message", Model.of("-")).setOutputMarkupId(true));
 
-		Form<Void> form = new Form<Void>("form");
+		Form<Void> form = new Form<>("form");
 		add(form);
-		form.add(receiver = new TextField<String>("receiver", Model.of("")));
-		form.add(input = new TextField<String>("input", Model.of("")));
+		form.add(receiver = new TextField<>("receiver", Model.of("")));
+		form.add(input = new TextField<>("input", Model.of("")));
 		form.add(new AjaxSubmitLink("send", form)
 		{
 			private static final long serialVersionUID = 1L;

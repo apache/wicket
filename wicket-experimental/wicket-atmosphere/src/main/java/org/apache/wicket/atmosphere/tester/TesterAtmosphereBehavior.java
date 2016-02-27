@@ -20,10 +20,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.atmosphere.AtmosphereBehavior;
 import org.apache.wicket.atmosphere.EventBus;
 import org.apache.wicket.util.tester.WicketTester;
-import org.atmosphere.cpr.AtmosphereRequest;
-import org.atmosphere.cpr.AtmosphereResource;
-import org.atmosphere.cpr.AtmosphereResourceImpl;
-import org.atmosphere.cpr.AtmosphereResponse;
+import org.atmosphere.cpr.*;
 import org.atmosphere.handler.AtmosphereHandlerAdapter;
 
 /**
@@ -32,34 +29,40 @@ import org.atmosphere.handler.AtmosphereHandlerAdapter;
  */
 class TesterAtmosphereBehavior extends AtmosphereBehavior
 {
-	private final EventBus eventBus;
-	private final WicketTester wicketTester;
+    private final EventBus eventBus;
+    private final WicketTester wicketTester;
 
-	TesterAtmosphereBehavior(WicketTester wicketTester, EventBus eventBus)
-	{
-		this.wicketTester = wicketTester;
-		this.eventBus = eventBus;
-	}
+    TesterAtmosphereBehavior(WicketTester wicketTester, EventBus eventBus)
+    {
+        this.wicketTester = wicketTester;
+        this.eventBus = eventBus;
+    }
 
-	@Override
-	public void onRequest()
-	{
-		TesterBroadcaster broadcaster = (TesterBroadcaster) eventBus.getBroadcaster();
+    @Override
+    public void onRequest()
+    {
+        Broadcaster broadcaster = eventBus.getBroadcaster();
 
-		AtmosphereResource atmosphereResource = new AtmosphereResourceImpl();
-		AtmosphereRequest atmosphereRequest = AtmosphereRequest.wrap(wicketTester.getRequest());
-		AtmosphereResponse atmosphereResponse = AtmosphereResponse.wrap(wicketTester.getResponse());
-		TesterAsyncSupport asyncSupport = new TesterAsyncSupport();
-		atmosphereResource.initialize(broadcaster.getApplicationConfig(), broadcaster, atmosphereRequest, atmosphereResponse,
-				asyncSupport, new AtmosphereHandlerAdapter());
+        AtmosphereResource atmosphereResource = new AtmosphereResourceImpl();
+        AtmosphereRequest atmosphereRequest = AtmosphereRequestImpl.wrap(wicketTester.getRequest());
+        AtmosphereResponse atmosphereResponse = AtmosphereResponseImpl.wrap(wicketTester.getResponse());
+        TesterAsyncSupport asyncSupport = new TesterAsyncSupport();
+        atmosphereResource.initialize(
+                broadcaster.getBroadcasterConfig().getAtmosphereConfig(),
+                broadcaster,
+                atmosphereRequest,
+                atmosphereResponse,
+                asyncSupport,
+                new AtmosphereHandlerAdapter()
+        );
 
-		atmosphereResource.setBroadcaster(broadcaster);
-		broadcaster.addAtmosphereResource(atmosphereResource);
+        atmosphereResource.setBroadcaster(broadcaster).suspend();
+        broadcaster.addAtmosphereResource(atmosphereResource);
 
-		String uuid = atmosphereResource.uuid();
-		Page page = getComponent().getPage();
+        String uuid = atmosphereResource.uuid();
+        Page page = getComponent().getPage();
 
-		page.setMetaData(ATMOSPHERE_UUID, uuid);
-		eventBus.registerPage(uuid, page);
-	}
+        page.setMetaData(ATMOSPHERE_UUID, uuid);
+        eventBus.registerPage(uuid, page);
+    }
 }

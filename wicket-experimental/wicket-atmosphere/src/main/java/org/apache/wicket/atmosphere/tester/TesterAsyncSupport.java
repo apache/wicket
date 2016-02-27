@@ -16,16 +16,11 @@
  */
 package org.apache.wicket.atmosphere.tester;
 
-import java.io.IOException;
+import org.atmosphere.cpr.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-
-import org.atmosphere.cpr.Action;
-import org.atmosphere.cpr.AsyncSupport;
-import org.atmosphere.cpr.AtmosphereRequest;
-import org.atmosphere.cpr.AtmosphereResource;
-import org.atmosphere.cpr.AtmosphereResponse;
+import java.io.IOException;
 
 /**
  *

@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.atmosphere;
 
-import javax.servlet.http.Cookie;
-
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.time.Time;
 import org.atmosphere.cpr.AtmosphereResponse;
+
+import javax.servlet.http.Cookie;
 
 /**
  * Internal response class to wrap {@code AtmosphereResponse} to a {@link WebResponse}.

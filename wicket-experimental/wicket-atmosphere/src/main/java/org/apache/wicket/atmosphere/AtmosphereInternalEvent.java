@@ -45,7 +45,7 @@ public class AtmosphereInternalEvent
 	 *
 	 * Suspend type is not supported because it is not possible to push messages with suspended connection
 	 */
-	public static enum Type
+	public enum Type
 	{
 		PreSuspend, /*Suspend,*/ Resume, Disconnect, Broadcast, Throwable, Close
 	}

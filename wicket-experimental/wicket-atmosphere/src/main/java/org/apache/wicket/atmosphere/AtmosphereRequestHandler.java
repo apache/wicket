@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.util.Iterator;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -27,9 +25,12 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
 
 /**
  * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the
@@ -73,7 +74,19 @@ public class AtmosphereRequestHandler implements IRequestHandler
 	{
 		WebApplication application = WebApplication.get();
 		Integer pageId = pageKey.getPageId();
+		Session.get().getPageManager().touchPage(new Page() {
+			@Override
+			public PageParameters getPageParameters() {
+				return super.getPageParameters();
+			}
+
+			@Override
+			public int getPageId() {
+				return 0;
+			}
+		});
 		Page page = (Page) Session.get().getPageManager().getPage(pageId);
+
 		if (page != null)
 		{
 			page.dirty();

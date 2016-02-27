@@ -34,9 +34,6 @@ class TesterBroadcasterFactory extends DefaultBroadcasterFactory
 		super(SimpleBroadcaster.class, BroadcasterLifeCyclePolicy.ATMOSPHERE_RESOURCE_POLICY.NEVER.name(), c);
 
 		this.singleBroadcaster = broadcaster;
-
-		// expose myself as BroadcasterFactory.getDefault();
-		factory = this;
 	}
 
 	@SuppressWarnings("unchecked")

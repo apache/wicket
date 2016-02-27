@@ -16,23 +16,8 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-
-import org.apache.wicket.Application;
-import org.apache.wicket.Component;
-import org.apache.wicket.MetaDataKey;
-import org.apache.wicket.Page;
-import org.apache.wicket.Session;
-import org.apache.wicket.ThreadContext;
-import org.apache.wicket.WicketRuntimeException;
+import com.google.common.collect.*;
+import org.apache.wicket.*;
 import org.apache.wicket.application.IComponentOnBeforeRenderListener;
 import org.apache.wicket.atmosphere.config.AtmosphereParameters;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -40,21 +25,20 @@ import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.session.ISessionStore.UnboundListener;
-import org.atmosphere.cpr.AtmosphereConfig;
-import org.atmosphere.cpr.AtmosphereFramework;
-import org.atmosphere.cpr.AtmosphereResource;
-import org.atmosphere.cpr.AtmosphereResourceFactory;
-import org.atmosphere.cpr.Broadcaster;
-import org.atmosphere.cpr.BroadcasterFactory;
+import org.atmosphere.cpr.*;
+import org.atmosphere.util.SimpleBroadcaster;
 import org.atmosphere.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Broadcasts events to methods on components annotated with {@link Subscribe}.
@@ -98,8 +82,8 @@ public class EventBus implements UnboundListener
 		if (eventBus == null)
 		{
 			throw new WicketRuntimeException(
-				"There is no EventBus registered for the given application: " +
-					application.getName());
+					"There is no EventBus registered for the given application: " +
+							application.getName());
 		}
 		return eventBus;
 	}
@@ -125,6 +109,8 @@ public class EventBus implements UnboundListener
 
 	private Broadcaster broadcaster;
 
+	private AtmosphereFramework framework;
+
 	/**
 	 * A flag indicating whether to be notified about Atmosphere internal events
 	 *
@@ -143,24 +129,35 @@ public class EventBus implements UnboundListener
 	 */
 	public EventBus(WebApplication application)
 	{
-		this(application, null);
+		this.application = application;
+		this.framework = new AtmosphereFramework();
+		framework.init();
+
+		DefaultBroadcasterFactory factory = new DefaultBroadcasterFactory();
+
+		factory.configure(
+				SimpleBroadcaster.class,
+				BroadcasterLifeCyclePolicy.ATMOSPHERE_RESOURCE_POLICY.NEVER.name(),
+				framework.getAtmosphereConfig()
+		);
+		new EventBus(application, factory.get());
 	}
 
-	private static Broadcaster lookupDefaultBroadcaster()
+	private Broadcaster lookupDefaultBroadcaster()
 	{
-		BroadcasterFactory factory = BroadcasterFactory.getDefault();
-		if (factory == null)
+		if (framework == null)
 		{
 			throw new WicketRuntimeException(
-				"There is no Atmosphere BroadcasterFactory configured. Did you include the "
-					+ "atmosphere.xml configuration file and configured AtmosphereServlet?");
+					"There is no Atmosphere Framework configured. Did you include the "
+							+ "atmosphere.xml configuration file and configured AtmosphereServlet?");
 		}
+		BroadcasterFactory factory = framework.getBroadcasterFactory();
 		Collection<Broadcaster> allBroadcasters = factory.lookupAll();
 		if (allBroadcasters.isEmpty())
 		{
 			throw new WicketRuntimeException(
-				"The Atmosphere BroadcasterFactory has no Broadcasters, "
-					+ "something is wrong with your Atmosphere configuration.");
+					"The Atmosphere BroadcasterFactory has no Broadcasters, "
+							+ "something is wrong with your Atmosphere configuration.");
 		}
 		return allBroadcasters.iterator().next();
 	}
@@ -178,7 +175,7 @@ public class EventBus implements UnboundListener
 		application.setMetaData(EVENT_BUS_KEY, this);
 		application.mount(new AtmosphereRequestMapper(createEventSubscriptionInvoker()));
 		application.getComponentPostOnBeforeRenderListeners().add(
-			createEventSubscriptionCollector());
+				createEventSubscriptionCollector());
 		application.getSessionStore().registerUnboundListener(this);
 		checkEnabledAnalytics(getBroadcaster().getBroadcasterConfig().getAtmosphereConfig());
 	}
@@ -262,7 +259,7 @@ public class EventBus implements UnboundListener
 		if (log.isDebugEnabled())
 		{
 			log.debug("registered page {} for session {}", pageKey.getPageId(),
-				pageKey.getSessionId());
+					pageKey.getSessionId());
 		}
 	}
 
@@ -277,14 +274,12 @@ public class EventBus implements UnboundListener
 		if (log.isDebugEnabled())
 		{
 			log.debug(
-				"registering {} for page {} for session {}: {}{}",
-				new Object[] {
-						subscription.getBehaviorIndex() == null ? "component" : "behavior",
-						page.getPageId(),
-						Session.get().getId(),
-						subscription.getComponentPath(),
-						subscription.getBehaviorIndex() == null ? "" : ":" +
-							subscription.getBehaviorIndex() });
+					"registering {} for page {} for session {}: {}{}",
+					subscription.getBehaviorIndex() == null ? "component" : "behavior",
+					page.getPageId(),
+					Session.get().getId(),
+					subscription.getComponentPath(),
+					subscription.getBehaviorIndex() == null ? "" : ":" + subscription.getBehaviorIndex());
 		}
 		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
 		if (!subscriptions.containsEntry(pageKey, subscription))
@@ -304,14 +299,12 @@ public class EventBus implements UnboundListener
 		if (log.isDebugEnabled())
 		{
 			log.debug(
-				"unregistering {} for page {} for session {}: {}{}",
-				new Object[] {
-						subscription.getBehaviorIndex() == null ? "component" : "behavior",
-						page.getPageId(),
-						Session.get().getId(),
-						subscription.getComponentPath(),
-						subscription.getBehaviorIndex() == null ? "" : ":" +
-							subscription.getBehaviorIndex() });
+					"unregistering {} for page {} for session {}: {}{}",
+					subscription.getBehaviorIndex() == null ? "component" : "behavior",
+					page.getPageId(),
+					Session.get().getId(),
+					subscription.getComponentPath(),
+					subscription.getBehaviorIndex() == null ? "" : ":" + subscription.getBehaviorIndex());
 		}
 		PageKey pageKey = new PageKey(page.getPageId(), Session.get().getId());
 		subscriptions.remove(pageKey, subscription);
@@ -366,7 +359,7 @@ public class EventBus implements UnboundListener
 			if (log.isDebugEnabled())
 			{
 				log.debug("unregistering page {} for session {}", pageKey.getPageId(),
-					pageKey.getSessionId());
+						pageKey.getSessionId());
 			}
 		}
 	}
@@ -382,7 +375,9 @@ public class EventBus implements UnboundListener
 	 */
 	public void post(Object event, String resourceUuid)
 	{
-		AtmosphereResource resource = AtmosphereResourceFactory.getDefault().find(resourceUuid);
+//		AtmosphereResource resource = AtmosphereResourceFactory.getDefault().find(resourceUuid);
+		AtmosphereResourceFactory factory = new DefaultAtmosphereResourceFactory();
+		AtmosphereResource resource = factory.find(resourceUuid);
 		if (resource != null)
 		{
 			post(event, resource);
@@ -458,12 +453,15 @@ public class EventBus implements UnboundListener
 	}
 
 	private void post(AtmosphereResource resource, PageKey pageKey,
-		Iterator<EventSubscription> subscriptionsForPage, AtmosphereEvent event)
+					  Iterator<EventSubscription> subscriptionsForPage, AtmosphereEvent event)
 	{
 		String filterPath = WebApplication.get()
-			.getWicketFilter()
-			.getFilterConfig()
-			.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM);
+				.getWicketFilter()
+				.getFilterConfig()
+				.getInitParameter(WicketFilter.FILTER_MAPPING_PARAM);
+		if (filterPath == null) {
+			filterPath = resource.getAtmosphereConfig().getInitParameter(WicketFilter.FILTER_MAPPING_PARAM);
+		}
 		filterPath = filterPath.substring(1, filterPath.length() - 1);
 		HttpServletRequest httpRequest = new HttpServletRequestWrapper(resource.getRequest())
 		{
@@ -473,10 +471,28 @@ public class EventBus implements UnboundListener
 				String ret = super.getContextPath();
 				return ret == null ? "" : ret;
 			}
+
+			@Override
+			public String getRequestURI() {
+				return "/bus";
+			}
+
+			@Override
+			public String getServerName() {
+				return "localhost";
+			}
+
+			@Override
+			public int getServerPort() {
+				return 8443;
+			}
 		};
 		AtmosphereWebRequest request = new AtmosphereWebRequest(
-			(ServletWebRequest)application.newWebRequest(httpRequest, filterPath), pageKey,
-			subscriptionsForPage, event);
+				(ServletWebRequest)application.newWebRequest(httpRequest, filterPath),
+				pageKey,
+				subscriptionsForPage,
+				event
+		);
 		Response response = new AtmosphereWebResponse(resource.getResponse());
 		if (application.createRequestCycle(request, response).processRequestAndDetach())
 			getBroadcaster().broadcast(response.toString(), resource);

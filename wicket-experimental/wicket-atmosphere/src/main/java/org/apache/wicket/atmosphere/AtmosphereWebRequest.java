@@ -16,14 +16,6 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.protocol.http.RequestUtils;
@@ -33,6 +25,13 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Internal request to signal the processing of an event. This request will be mapped by

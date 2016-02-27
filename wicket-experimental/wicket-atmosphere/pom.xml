@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-atmosphere</artifactId>
-	<version>0.24-SNAPSHOT</version>
+	<version>0.26-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Wicket-Atmosphere</name>
 	<description>Wicket-Atmosphere provides integration of the Atmosphere Framework in Wicket.</description>
@@ -41,7 +41,7 @@
         </repository>
     </repositories>
 	<properties>
-		<atmosphere.version>2.2.8</atmosphere.version>
+		<atmosphere.version>2.4.2</atmosphere.version>
 		<jquery.atmosphere.version>2.2.7</jquery.atmosphere.version>
 	</properties>
     <dependencyManagement>
@@ -87,6 +87,7 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
+			<version>7.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.atmosphere</groupId>

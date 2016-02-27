@@ -16,11 +16,11 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Handles invocations of methods annotated with {@link Subscribe} annotation.
@@ -42,15 +42,7 @@ public class SubscribeAnnotationEventSubscriptionInvoker implements EventSubscri
 					curMethod.setAccessible(true);
 					curMethod.invoke(base, target, event.getPayload());
 				}
-				catch (IllegalAccessException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-				catch (IllegalArgumentException e)
-				{
-					throw new WicketRuntimeException(e);
-				}
-				catch (InvocationTargetException e)
+				catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e)
 				{
 					throw new WicketRuntimeException(e);
 				}
