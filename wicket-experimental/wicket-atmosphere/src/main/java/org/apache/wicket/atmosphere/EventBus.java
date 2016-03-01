@@ -375,7 +375,6 @@ public class EventBus implements UnboundListener
 	 */
 	public void post(Object event, String resourceUuid)
 	{
-//		AtmosphereResource resource = AtmosphereResourceFactory.getDefault().find(resourceUuid);
 		AtmosphereResourceFactory factory = new DefaultAtmosphereResourceFactory();
 		AtmosphereResource resource = factory.find(resourceUuid);
 		if (resource != null)
