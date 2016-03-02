@@ -1972,9 +1972,12 @@
 					Wicket.Event.add(attrs.c, evt, function (jqEvent, data) {
 						var call = new Wicket.Ajax.Call();
 						var attributes = jQuery.extend({}, attrs);
-						attributes.event = Wicket.Event.fix(jqEvent);
-						if (data) {
-							attributes.event.extraData = data;
+
+						if (evt !== "domready") {
+							attributes.event = Wicket.Event.fix(jqEvent);
+							if (data) {
+								attributes.event.extraData = data;
+							}
 						}
 
 						call._executeHandlers(attributes.ih, attributes);
@@ -1992,7 +1995,9 @@
 						else {
 							call.ajax(attributes);
 						}
-						Wicket.Ajax._handleEventCancelation(attributes);
+						if (evt !== "domready") {
+							Wicket.Ajax._handleEventCancelation(attributes);
+						}
 					}, null, attrs.sel);
 				});
 			},

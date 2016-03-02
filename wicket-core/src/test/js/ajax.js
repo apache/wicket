@@ -435,7 +435,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('verify default attributes.', function () {
 
-			expect(25);
+			expect(26);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -445,6 +445,7 @@ jQuery(document).ready(function() {
 						equal(textStatus, "parsererror", "textStatus");
 						equal(attributes.u, attrs.u, "url");
 						deepEqual(attributes.e, [ "domready" ], "events");
+						equal(attributes.event, null, "No event for 'domready'");
 						equal(attributes.ch, '0|s', 'channel');
 						equal(attributes.dt, 'xml', 'data type');
 						equal(attributes.wr, true, 'wicket ajax response');
@@ -477,7 +478,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to global listeners. Success scenario.', function () {
 
-			expect(13);
+			expect(14);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -497,6 +498,7 @@ jQuery(document).ready(function() {
 					two: '2',
 					three: true
 				};
+				ok(attributes.event instanceof jQuery.Event, "There must be an event for non-'domready' events");
 				deepEqual(data, expected, 'Success: data');
 				equal('success', textStatus, 'Success: textStatus');
 				equal(attrs.u, attributes.u, 'Success: attrs');
