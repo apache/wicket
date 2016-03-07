@@ -18,7 +18,7 @@ package org.apache.wicket.examples.ajax.builtin.modal;
 
 import java.util.Map;
 
-import org.apache.wicket.extensions.yui.calendar.DateTimeField;
+import org.apache.wicket.extensions.markup.html.form.datetime.DateTimeField;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -37,7 +37,7 @@ public class ModalPanel1 extends Panel
 		add(new DateTimeField("dateTimeField")
 		{
 			/**
-			 * @see org.apache.wicket.extensions.yui.calendar.DateTimeField#configure(java.util.Map)
+			 * @see DateTimeField#configure(java.util.Map)
 			 */
 			@Override
 			protected void configure(Map<String, Object> widgetProperties)

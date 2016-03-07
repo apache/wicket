@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.yui.calendar;
+package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -70,7 +69,7 @@ public class DateField extends DateTimeField
 	 * @param id
 	 * @param model
 	 */
-	public DateField(String id, IModel<Date> model)
+	public DateField(String id, IModel<ZonedDateTime> model)
 	{
 		super(id, model);
 

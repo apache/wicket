@@ -29,7 +29,7 @@ import org.apache.wicket.extensions.markup.html.form.datetime.StyleDateConverter
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.yui.calendar.DatePicker;
-import org.apache.wicket.extensions.yui.calendar.DateTimeField;
+import org.apache.wicket.extensions.markup.html.form.datetime.DateTimeField;
 import org.apache.wicket.extensions.yui.calendar.TimeField;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;

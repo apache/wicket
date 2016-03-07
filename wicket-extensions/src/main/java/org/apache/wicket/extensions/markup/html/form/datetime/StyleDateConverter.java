@@ -46,6 +46,8 @@ public class StyleDateConverter extends DateConverter
 	 */
 	private final FormatStyle dateStyle;
 
+	private final FormatStyle timeStyle;
+
 	/**
 	 * Construct. The dateStyle 'S-' (which is the same as {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}) will
 	 * be used for constructing the date format for the current locale. </p> When
@@ -61,7 +63,7 @@ public class StyleDateConverter extends DateConverter
 	 */
 	public StyleDateConverter(boolean applyTimeZoneDifference)
 	{
-		this(FormatStyle.SHORT, applyTimeZoneDifference);
+		this(FormatStyle.SHORT, FormatStyle.SHORT, applyTimeZoneDifference);
 	}
 
 	/**
@@ -75,19 +77,24 @@ public class StyleDateConverter extends DateConverter
 	 * the client sees 12/24. </p>
 	 * 
 	 * @param dateStyle
-	 *            Date style to use. The first character is the date style, and the second character
-	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
-	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
-	 *            character '-'. See {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}.
+	 *            Date style to use. See {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}.
+	 * @param timeStyle
+	 *            Time style to use. See {@link DateTimeFormatter#ofLocalizedTime(FormatStyle)}
 	 * @param applyTimeZoneDifference
 	 *            whether to apply the difference in time zones between client and server
 	 * @throws IllegalArgumentException
 	 *             in case dateStyle is null
 	 */
-	public StyleDateConverter(FormatStyle dateStyle, boolean applyTimeZoneDifference)
+	public StyleDateConverter(FormatStyle dateStyle, FormatStyle timeStyle, boolean applyTimeZoneDifference)
 	{
 		super(applyTimeZoneDifference);
 		this.dateStyle = Args.notNull(dateStyle, "dateStyle");
+		this.timeStyle = Args.notNull(timeStyle, "timeStyle");
+	}
+
+	public StyleDateConverter(String dateTimeStyle, boolean applyTimeZoneDifference)
+	{
+		this(parseFormatStyle(dateTimeStyle.charAt(0)), parseFormatStyle(dateTimeStyle.charAt(1)), applyTimeZoneDifference);
 	}
 
 	/**
@@ -95,10 +102,12 @@ public class StyleDateConverter extends DateConverter
 	 * 
 	 * @return datePattern
 	 */
+	@Deprecated
 	@Override
 	public final String getDatePattern(Locale locale)
 	{
-		return DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(locale).toString();
+		// TODO this doesn't return a pattern!
+		return DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle).withLocale(locale).toString();
 	}
 
 	/**
@@ -107,7 +116,12 @@ public class StyleDateConverter extends DateConverter
 	@Override
 	protected DateTimeFormatter getFormat(Locale locale)
 	{
-		return DateTimeFormatter.ofPattern(getDatePattern(locale))
+		return DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle)
 			.withLocale(locale);
+	}
+
+	public static FormatStyle parseFormatStyle(char style)
+	{
+		return DateTextField.parseFormatStyle(style);
 	}
 }

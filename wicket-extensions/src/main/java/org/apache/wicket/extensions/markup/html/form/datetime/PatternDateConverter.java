@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import org.apache.wicket.util.lang.Args;
+
 
 /**
  * Date converter that uses Joda Time and can be configured to take the time zone difference between
@@ -70,11 +72,7 @@ public class PatternDateConverter extends DateConverter
 	{
 
 		super(applyTimeZoneDifference);
-		if (datePattern == null)
-		{
-			throw new IllegalArgumentException("datePattern must be not null");
-		}
-		this.datePattern = datePattern;
+		this.datePattern = Args.notNull(datePattern, "datePattern");
 	}
 
 	/**

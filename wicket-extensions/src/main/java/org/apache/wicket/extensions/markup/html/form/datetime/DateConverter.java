@@ -27,6 +27,7 @@ import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -64,10 +65,6 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 		this.applyTimeZoneDifference = applyTimeZoneDifference;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
-	 *      java.util.Locale)
-	 */
 	@Override
 	public ZonedDateTime convertToObject(String value, Locale locale)
 	{
@@ -77,10 +74,7 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 		}
 
 		DateTimeFormatter format = getFormat(locale);
-		if (format == null)
-		{
-			throw new IllegalStateException("format must be not null");
-		}
+		Args.notNull(format, "format");
 
 		if (applyTimeZoneDifference)
 		{

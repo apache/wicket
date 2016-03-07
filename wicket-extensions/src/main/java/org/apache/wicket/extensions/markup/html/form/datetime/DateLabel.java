@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
+import java.time.LocalDate;
 import java.time.format.FormatStyle;
 import java.util.Date;
 
@@ -25,6 +26,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -60,7 +62,7 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel forDatePattern(String id, IModel<Date> model, String datePattern)
+	public static DateLabel forDatePattern(String id, IModel<LocalDate> model, String datePattern)
 	{
 		return new DateLabel(id, model, new PatternDateConverter(datePattern, true));
 	}
@@ -95,9 +97,9 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel forDateStyle(String id, IModel<Date> model, FormatStyle dateStyle)
+	public static DateLabel forDateStyle(String id, IModel<LocalDate> model, FormatStyle dateStyle)
 	{
-		return new DateLabel(id, model, new StyleDateConverter(dateStyle, true));
+		return new DateLabel(id, model, new StyleDateConverter(dateStyle, null, true));
 	}
 
 	/**
@@ -141,7 +143,7 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel forShortStyle(String id, IModel<Date> model)
+	public static DateLabel forShortStyle(String id, IModel<LocalDate> model)
 	{
 		return new DateLabel(id, model, new StyleDateConverter(true));
 	}
@@ -175,7 +177,7 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * 
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
-	public static DateLabel withConverter(String id, IModel<Date> model, DateConverter converter)
+	public static DateLabel withConverter(String id, IModel<LocalDate> model, DateConverter converter)
 	{
 		return new DateLabel(id, model, converter);
 	}
@@ -214,14 +216,10 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * @param converter
 	 *            The converter to use
 	 */
-	public DateLabel(String id, IModel<Date> model, DateConverter converter)
+	public DateLabel(String id, IModel<LocalDate> model, DateConverter converter)
 	{
 		super(id, model);
-		if (converter == null)
-		{
-			throw new IllegalStateException("converter may not be null");
-		}
-		this.converter = converter;
+		this.converter = Args.notNull(converter, "converter");
 	}
 
 	/**

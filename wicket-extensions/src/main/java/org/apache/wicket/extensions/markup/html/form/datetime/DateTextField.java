@@ -14,22 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.datetime.markup.html.form;
+package org.apache.wicket.extensions.markup.html.form.datetime;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
-import org.apache.wicket.datetime.DateConverter;
-import org.apache.wicket.datetime.PatternDateConverter;
-import org.apache.wicket.datetime.StyleDateConverter;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
 
 /**
  * A TextField that is mapped to a <code>java.util.Date</code> object and that uses Joda time to
@@ -45,13 +41,13 @@ import org.joda.time.format.DateTimeFormat;
  * </p>
  * 
  * @see StyleDateConverter
- * @see DateTime
- * @see DateTimeFormat
- * @see DateTimeZone
+ * @see java.time.ZonedDateTime
+ * @see java.time.format.DateTimeFormatter
+ * @see java.time.ZoneId
  * 
  * @author eelcohillenius
  */
-public class DateTextField extends TextField<Date> implements ITextFormatProvider
+public class DateTextField extends TextField<LocalDate> implements ITextFormatProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -67,7 +63,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            patterns.
 	 * @return DateTextField
 	 */
-	public static DateTextField forDatePattern(String id, IModel<Date> model, String datePattern)
+	public static DateTextField forDatePattern(String id, IModel<LocalDate> model, String datePattern)
 	{
 		return new DateTextField(id, model, new PatternDateConverter(datePattern, true));
 	}
@@ -98,12 +94,18 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            Date style to use. The first character is the date style, and the second character
 	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
 	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
-	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
+	 *            character '-'. See {@link org.joda.time.DateTimeFormat#forStyle(String)}.
 	 * @return DateTextField
 	 */
-	public static DateTextField forDateStyle(String id, IModel<Date> model, String dateStyle)
+	public static DateTextField forDateStyle(String id, IModel<LocalDate> model, String dateStyle)
 	{
-		return new DateTextField(id, model, new StyleDateConverter(dateStyle, true));
+		FormatStyle dateFormatStyle = parseFormatStyle(dateStyle.charAt(0));
+		return forDateStyle(id, model, dateFormatStyle, null);
+	}
+
+	public static DateTextField forDateStyle(String id, IModel<LocalDate> model, FormatStyle dateStyle, FormatStyle timeStyle)
+	{
+		return new DateTextField(id, model, new StyleDateConverter(dateStyle, timeStyle, true));
 	}
 
 	/**
@@ -115,7 +117,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            Date style to use. The first character is the date style, and the second character
 	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
 	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
-	 *            character '-'. See {@link DateTimeFormat#forStyle(String)}.
+	 *            character '-'. See {@link org.joda.time.DateTimeFormat#forStyle(String)}.
 	 * @return DateTextField
 	 */
 	public static DateTextField forDateStyle(String id, String dateStyle)
@@ -146,7 +148,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            Whether to apply the time zone difference between client and server
 	 * @return DateTextField
 	 */
-	public static DateTextField forShortStyle(String id, IModel<Date> model,
+	public static DateTextField forShortStyle(String id, IModel<LocalDate> model,
 		boolean applyTimeZoneDifference)
 	{
 		return new DateTextField(id, model, new StyleDateConverter(applyTimeZoneDifference));
@@ -177,7 +179,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 *            the date converter
 	 * @return DateTextField
 	 */
-	public static DateTextField withConverter(String id, IModel<Date> model, DateConverter converter)
+	public static DateTextField withConverter(String id, IModel<LocalDate> model, DateConverter converter)
 	{
 		return new DateTextField(id, model, converter);
 	}
@@ -197,9 +199,9 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 * @param converter
 	 *            The converter to use
 	 */
-	public DateTextField(String id, IModel<Date> model, DateConverter converter)
+	public DateTextField(String id, IModel<LocalDate> model, DateConverter converter)
 	{
-		super(id, model, Date.class);
+		super(id, model, LocalDate.class);
 
 		Args.notNull(converter, "converter");
 		this.converter = converter;
@@ -243,5 +245,22 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	public final String getTextFormat()
 	{
 		return converter.getDatePattern(getLocale());
+	}
+
+	public static FormatStyle parseFormatStyle(char style)
+	{
+		switch (style)
+		{
+			case 'S':
+				return FormatStyle.SHORT;
+			case 'M':
+				return FormatStyle.MEDIUM;
+			case 'L':
+				return FormatStyle.LONG;
+			case 'F':
+				return FormatStyle.FULL;
+			default:
+				return null;
+		}
 	}
 }
