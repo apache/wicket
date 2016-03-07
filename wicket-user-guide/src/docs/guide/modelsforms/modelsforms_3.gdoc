@@ -174,11 +174,11 @@ Person spouse = new Person("Jill", "Smith");
 person.setSpouse(spouse);
 
 setDefaultModel(new CompoundPropertyModel(person));
-WebMarkupContainer spouse = new WebMarkupContainer("spouse");
+WebMarkupContainer spouseContainer = new WebMarkupContainer("spouse");
 Label name;
-spouse.add(name = new Label("name"));
+spouseContainer.add(name = new Label("name"));
 
-add(spouse);
+add(spouseContainer);
 {code}
 
 The value displayed by label "name" will be "John" and not the spouse's name  "Jill" as you may expect. In this example the label doesn't own a model, so it must search up its container hierarchy for an inheritable model. However, its container (WebMarkup Container with id 'spouse') doesn't own a model, hence the request for a model is forwarded to the parent container, which in this case is the page. In the end the label inherits CompoundPropertyModel from page but only its own id is used for the property expression. The containers in between are never taken into account for the final property expression.
