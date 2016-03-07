@@ -16,32 +16,15 @@
  */
 package org.apache.wicket.markup.html.pages;
 
-import java.util.Locale;
-
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Form for posting JavaScript properties.
  */
-public class BrowserInfoForm extends GenericPanel<ClientProperties>
+public class BrowserInfoForm extends AbstractBrowserInfoForm<ClientProperties>
 {
 	private static final long serialVersionUID = 1L;
-	
-	public static final ResourceReference JS = new JavaScriptResourceReference(BrowserInfoForm.class, "wicket-browser-info.js");
-
-	/**
-	 * The special form that submits the client/browser info
-	 */
-	private final Form<ClientProperties> form;
 
 	/**
 	 * Constructor.
@@ -52,88 +35,19 @@ public class BrowserInfoForm extends GenericPanel<ClientProperties>
 	public BrowserInfoForm(String id, IModel<ClientProperties> properties)
 	{
 		super(id, properties);
-
-		this.form = createForm("postback", properties);
-		form.setOutputMarkupId(true);
-		add(form);
 	}
 
 	/**
-	 * Creates the form
-	 *
-	 * @param componentId
-	 *      the id for the Form component
-	 * @return the Form that will submit the data
+	 * {@inheritDoc}
 	 */
-	protected Form<ClientProperties> createForm(String componentId, IModel<ClientProperties> properties)
-	{
-		Form<ClientProperties> form = new Form<ClientProperties>(componentId,
-				new CompoundPropertyModel<ClientProperties>(properties))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onSubmit()
-			{
-				afterSubmit();
-			}
-		};
-		form.add(new ReadOnlyTextField<String>("navigatorAppName"));
-		form.add(new ReadOnlyTextField<String>("navigatorAppVersion"));
-		form.add(new ReadOnlyTextField<String>("navigatorAppCodeName"));
-		form.add(new ReadOnlyTextField<Boolean>("navigatorCookieEnabled"));
-		form.add(new ReadOnlyTextField<Boolean>("navigatorJavaEnabled"));
-		form.add(new ReadOnlyTextField<String>("navigatorLanguage"));
-		form.add(new ReadOnlyTextField<String>("navigatorPlatform"));
-		form.add(new ReadOnlyTextField<String>("navigatorUserAgent"));
-		form.add(new ReadOnlyTextField<String>("screenWidth"));
-		form.add(new ReadOnlyTextField<String>("screenHeight"));
-		form.add(new ReadOnlyTextField<String>("screenColorDepth"));
-		form.add(new ReadOnlyTextField<String>("utcOffset"));
-		form.add(new ReadOnlyTextField<String>("utcDSTOffset"));
-		form.add(new ReadOnlyTextField<String>("browserWidth"));
-		form.add(new ReadOnlyTextField<String>("browserHeight"));
-		form.add(new ReadOnlyTextField<String>("hostname"));
-		return form;
-	}
-
-	protected void afterSubmit()
-	{
-	}
-
 	@Override
-	public void renderHead(IHeaderResponse response)
+	protected void afterSubmit(ClientProperties properties)
 	{
-		super.renderHead(response);
+		getModelObject().setJavaScriptEnabled(true);
 
-		response.render(JavaScriptHeaderItem.forReference(JS));
-	}
+		continueToOriginalDestination();
 
-	/**
-	 * @return The markup id of the form that submits the client info
-	 */
-	public String getFormMarkupId()
-	{
-		return form.getMarkupId();
-	}
-	
-	private static final class ReadOnlyTextField<T> extends TextField<T> {
-
-		public ReadOnlyTextField(String id)
-		{
-			super(id);
-		}
-
-		@Override
-		protected String getModelValue()
-		{
-			return "";
-		}
-		
-		@Override
-		public Locale getLocale()
-		{
-			return Locale.ENGLISH;
-		}
+		// switch to home page if no original destination was intercepted
+		setResponsePage(getApplication().getHomePage());
 	}
 }

@@ -16,15 +16,8 @@
  */
 package org.apache.wicket.markup.html.pages;
 
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.MetaDataHeaderItem;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
-import org.apache.wicket.protocol.http.WebSession;
 
 /**
  * This page uses a form post right after the page has loaded in the browser, using JavaScript or
@@ -42,93 +35,16 @@ import org.apache.wicket.protocol.http.WebSession;
  * 
  * @author Eelco Hillenius
  */
-public class BrowserInfoPage extends WebPage
+public class BrowserInfoPage extends AbstractBrowserInfoPage<ClientProperties, BrowserInfoForm>
 {
 	private static final long serialVersionUID = 1L;
 
-	private BrowserInfoForm browserInfoForm;
-
 	/**
-	 * Bookmarkable constructor.
+	 * {@inheritDoc}
 	 */
-	public BrowserInfoPage()
-	{
-		initComps();
-	}
-
 	@Override
-	public void renderHead(IHeaderResponse response)
+	protected BrowserInfoForm createBrowserInfoForm(String formMarkupId, IModel<ClientProperties> properties)
 	{
-		super.renderHead(response);
-
-		response.render(OnLoadHeaderItem.forScript(
-				String.format("Wicket.BrowserInfo.submitForm('%s')", browserInfoForm.getFormMarkupId())));
+		return new BrowserInfoForm(formMarkupId, properties);
 	}
-
-	@Override
-	public boolean isVersioned()
-	{
-		return false;
-	}
-
-	/**
-	 * Adds components.
-	 */
-	private void initComps()
-	{
-		IModel<ClientProperties> properties = new AbstractReadOnlyModel<ClientProperties>()
-		{
-			@Override
-			public ClientProperties getObject()
-			{
-				return WebSession.get().getClientInfo().getProperties();
-			}
-		};
-
-		add(new ContinueLink("link", properties));
-
-		browserInfoForm = new BrowserInfoForm("postback", properties)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void afterSubmit()
-			{
-				getModelObject().setJavaScriptEnabled(true);
-
-				continueToOriginalDestination();
-
-				// switch to home page if no original destination was intercepted
-				setResponsePage(getApplication().getHomePage());
-			}
-		};
-		add(browserInfoForm);
-	}
-	
-	private static class ContinueLink extends Link<ClientProperties> {
-
-		public ContinueLink(String id, IModel<ClientProperties> properties)
-		{
-			super(id, properties);
-		}
-
-		@Override
-		public void renderHead(IHeaderResponse response)
-		{
-			String content = "0; url=" + getURL();
-
-			response.render(new MetaDataHeaderItem(MetaDataHeaderItem.META_TAG).addTagAttribute("http-equiv", "refresh").addTagAttribute("content", content));
-		}
-		
-		@Override
-		public void onClick()
-		{
-			getModelObject().setJavaScriptEnabled(false);
-
-			continueToOriginalDestination();
-
-			// switch to home page if no original destination was intercepted
-			setResponsePage(getApplication().getHomePage());
-		}
-	};
 }

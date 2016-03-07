@@ -52,7 +52,7 @@ public class WebClientInfo extends ClientInfo
 	private final String userAgent;
 
 	/** Client properties object. */
-	private final ClientProperties properties = new ClientProperties();
+	private final ClientProperties properties;
 
 	/**
 	 * Construct.
@@ -79,6 +79,8 @@ public class WebClientInfo extends ClientInfo
 		super();
 
 		this.userAgent = userAgent;
+		this.properties = createProperties();
+
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
 		init();
 	}
@@ -91,6 +93,17 @@ public class WebClientInfo extends ClientInfo
 	public final ClientProperties getProperties()
 	{
 		return properties;
+	}
+
+	/**
+	 * method creates and returns instance of {@code ClientProperties} or its subclass.
+	 *  
+	 * @return M implementation of ClientProperties
+	 */
+	@SuppressWarnings("unchecked")
+	protected <M extends ClientProperties> M createProperties()
+	{
+		return (M)new ClientProperties();
 	}
 
 	/**

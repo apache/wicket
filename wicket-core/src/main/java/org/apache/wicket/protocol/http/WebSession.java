@@ -85,7 +85,7 @@ public class WebSession extends Session
 		if (clientInfo == null)
 		{
 			RequestCycle requestCycle = RequestCycle.get();
-			clientInfo = new WebClientInfo(requestCycle);
+			clientInfo = createClientInfo(requestCycle);
 
 			if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
 			{
@@ -94,6 +94,20 @@ public class WebSession extends Session
 			}
 		}
 		return (WebClientInfo)clientInfo;
+	}
+
+	/**
+	 * method creates and returns {@code WebClientInfo} instance. Sub-classes can override this
+	 * method and create instance of custom implementation of {@code WebClientInfo}.
+	 * 
+	 * @param requestCycle
+	 *            RequestCycle
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public <M extends WebClientInfo> M createClientInfo(RequestCycle requestCycle)
+	{
+		return (M)new WebClientInfo(requestCycle);
 	}
 
 	/**
