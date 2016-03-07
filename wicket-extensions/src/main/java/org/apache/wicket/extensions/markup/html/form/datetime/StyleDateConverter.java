@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
+import java.time.chrono.Chronology;
+import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
 import java.util.Locale;
-
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Date converter that uses Joda Time and can be configured to take the time zone difference between
@@ -63,7 +64,7 @@ public class StyleDateConverter extends DateConverter
 	 */
 	public StyleDateConverter(boolean applyTimeZoneDifference)
 	{
-		this(FormatStyle.SHORT, FormatStyle.SHORT, applyTimeZoneDifference);
+		this(FormatStyle.SHORT, null, applyTimeZoneDifference);
 	}
 
 	/**
@@ -88,8 +89,8 @@ public class StyleDateConverter extends DateConverter
 	public StyleDateConverter(FormatStyle dateStyle, FormatStyle timeStyle, boolean applyTimeZoneDifference)
 	{
 		super(applyTimeZoneDifference);
-		this.dateStyle = Args.notNull(dateStyle, "dateStyle");
-		this.timeStyle = Args.notNull(timeStyle, "timeStyle");
+		this.dateStyle = dateStyle;
+		this.timeStyle = timeStyle;
 	}
 
 	public StyleDateConverter(String dateTimeStyle, boolean applyTimeZoneDifference)
@@ -102,12 +103,11 @@ public class StyleDateConverter extends DateConverter
 	 * 
 	 * @return datePattern
 	 */
-	@Deprecated
 	@Override
 	public final String getDatePattern(Locale locale)
 	{
-		// TODO this doesn't return a pattern!
-		return DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle).withLocale(locale).toString();
+		String localizedDateTimePattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(dateStyle, timeStyle, IsoChronology.INSTANCE, locale);
+		return localizedDateTimePattern;
 	}
 
 	/**

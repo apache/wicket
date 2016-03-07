@@ -55,7 +55,7 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * <p>
  * <strong>Ajaxifying the DateTimeField</strong>: If you want to update a DateTimeField with an
  * {@link AjaxFormComponentUpdatingBehavior}, you have to attach it to the contained
- * {@link DateTextField} by overriding {@link #newDateTextField(String, PropertyModel)} and calling
+ * {@link DateTextField} by overriding {@link #newDateTextField(String, IModel)} and calling
  * {@link #processInput()}:
  * 
  * <pre>
@@ -104,7 +104,7 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 	private static final long serialVersionUID = 1L;
 
 	// Component-IDs
-	protected static final String DATE = "hours";
+	protected static final String DATE = "date";
 	protected static final String HOURS = "hours";
 	protected static final String MINUTES = "minutes";
 	protected static final String AM_OR_PM_CHOICE = "amOrPmChoice";
@@ -125,7 +125,7 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 	// The date TextField and it's associated model object
 	// Note that any time information in date will be ignored
 	private DateTextField dateField;
-	private ZonedDateTime dateTime;
+	private ZonedDateTime dateTime = ZonedDateTime.now();
 
 	// The TextField for "hours" and it's associated model object
 	private TextField<Integer> hoursField;
@@ -157,8 +157,7 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 		setType(Date.class);
 
 		// Create and add the date TextField
-		PropertyModel<LocalDate> dateFieldModel = new PropertyModel<>(this, DATE);
-		add(dateField = newDateTextField(DATE, dateFieldModel));
+		add(dateField = newDateTextField(DATE, new DateModel()));
 
 		// Add a date picker to the date TextField
 //		dateField.add(newDatePicker());
@@ -306,7 +305,7 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 		if (info instanceof WebClientInfo)
 		{
 			TimeZone timeZone = ((WebClientInfo) info).getProperties().getTimeZone();
-			return timeZone.toZoneId();
+			return timeZone != null ? timeZone.toZoneId() : null;
 		}
 		return null;
 	}
@@ -390,7 +389,7 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 	 *            model that should be used by the {@link DateTextField}
 	 * @return a new date text field instance
 	 */
-	protected DateTextField newDateTextField(String id, PropertyModel<LocalDate> dateFieldModel)
+	protected DateTextField newDateTextField(String id, IModel<LocalDate> dateFieldModel)
 	{
 		return DateTextField.forShortStyle(id, dateFieldModel, false);
 	}
@@ -511,6 +510,29 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 //			}
 //		};
 //	}
+
+
+	protected class DateModel implements IModel<LocalDate>
+	{
+		@Override
+		public LocalDate getObject()
+		{
+			return dateTime.toLocalDate();
+		}
+
+		@Override
+		public void setObject(LocalDate date)
+		{
+			dateTime = dateTime.with(ChronoField.YEAR, date.getYear());
+			dateTime = dateTime.with(ChronoField.MONTH_OF_YEAR, date.getMonthValue());
+			dateTime = dateTime.with(ChronoField.DAY_OF_YEAR, date.getDayOfMonth());
+		}
+
+		@Override
+		public void detach()
+		{
+		}
+	}
 
 	protected class HoursModel implements IModel<Integer>
 	{
