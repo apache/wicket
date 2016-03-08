@@ -16,19 +16,21 @@
  */
 package org.apache.wicket;
 
+import static org.hamcrest.Matchers.emptyString;
+import static org.hamcrest.Matchers.is;
+
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.lambda.AjaxListener;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -182,7 +184,7 @@ public class ComponentTest extends WicketTestCase
         
 		// make the link such that it can call listener interface
 		// methods no matter whether it is visible or enabled
-		link = new Link("someId") {
+		link = new Link<Void>("someId") {
 
 		    @Override
 		    public boolean canCallListenerInterface(Method method) {
@@ -249,7 +251,7 @@ public class ComponentTest extends WicketTestCase
 	}
 
 	@Test
-	public void onClick()
+	public void onComponentClick()
 	{
 		MockPageWithOneComponent page = new MockPageWithOneComponent();
 		WebMarkupContainer component = new WebMarkupContainer(MockPageWithOneComponent.COMPONENT_ID);
@@ -257,23 +259,6 @@ public class ComponentTest extends WicketTestCase
 		AtomicBoolean executed = new AtomicBoolean(false);
 
 		component.on(eventName, (target) -> executed.set(true));
-
-		// this is how AjaxFormComponentUpdatingBehavior could be used
-//		component.on("change", new AjaxListener()
-//		{
-//			@Override
-//			public void onEvent(AjaxRequestTarget target)
-//			{
-//				// use 'form' if you need with
-//				final Form<?> form = Form.findForm(component);
-//			}
-//
-//			@Override
-//			public void onError(AjaxRequestTarget target, RuntimeException error)
-//			{
-//
-//			}
-//		});
 
 		page.add(component);
 		tester.startPage(page);
@@ -283,12 +268,43 @@ public class ComponentTest extends WicketTestCase
 		assertTrue(executed.get());
 	}
 
+	@Test
+	public void onFormComponentChange()
+	{
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		Model<String> model = Model.of("");
+		TextArea<String> component = new TextArea<String>(MockPageWithOneComponent.COMPONENT_ID, model) {
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				tag.setName("textarea");
+				super.onComponentTag(tag);
+			}
+		};
+		page.add(component);
+		final String eventName = "change";
+		AtomicBoolean executed = new AtomicBoolean(false);
+
+		component.on(eventName, (target) -> executed.set(true));
+
+		tester.startPage(page);
+
+		assertFalse(executed.get());
+		assertThat(model.getObject(), is(emptyString()));
+
+		String newValue = "newValue";
+		tester.getRequest().setParameter(component.getInputName(), newValue);
+		tester.executeAjaxEvent(component, eventName);
+
+		assertTrue(executed.get());
+		assertThat(model.getObject(), is(newValue));
+	}
+
 	/**
 	 * Component#FLAG_RESERVED5 (Page's STATELESS_HINT) must be initially set to true
 	 */
 	private static class FlagReserved5Component extends Component
 	{
-
 		public FlagReserved5Component(final String id) {
 			super(id);
 		}

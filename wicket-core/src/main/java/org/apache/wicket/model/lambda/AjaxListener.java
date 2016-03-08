@@ -18,9 +18,6 @@ package org.apache.wicket.model.lambda;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
-/**
- *
- */
 @FunctionalInterface
 public interface AjaxListener extends WicketConsumer<AjaxRequestTarget>
 {

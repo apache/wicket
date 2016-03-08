@@ -52,9 +52,6 @@ public class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 	private static final Logger log = LoggerFactory
 		.getLogger(AjaxFormComponentUpdatingBehavior.class);
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final AjaxListener listener;
@@ -188,7 +185,7 @@ public class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 			}
 			else
 			{
-				onError(target, null);
+				onError(target, e);
 			}
 		}
 		formComponent.updateAutoLabels(target);

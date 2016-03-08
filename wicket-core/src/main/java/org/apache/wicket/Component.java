@@ -4623,17 +4623,19 @@ public abstract class Component
 		{
 			case "change":
 			case "blur":
-				ajaxBehavior = new AjaxFormComponentUpdatingBehavior(eventName, listener);
-				break;
+				if (this instanceof FormComponent)
+				{
+					if (AjaxFormChoiceComponentUpdatingBehavior.appliesTo(this))
+					{
+						ajaxBehavior = new AjaxFormChoiceComponentUpdatingBehavior(listener);
+					} else
+					{
+						ajaxBehavior = new AjaxFormComponentUpdatingBehavior(eventName, listener);
+					}
+					break;
+				}
 			default:
-				if (AjaxFormChoiceComponentUpdatingBehavior.appliesTo(this))
-				{
-					ajaxBehavior = new AjaxFormChoiceComponentUpdatingBehavior(listener);
-				}
-				else
-				{
-					ajaxBehavior = new AjaxEventBehavior(eventName, listener);
-				}
+				ajaxBehavior = new AjaxEventBehavior(eventName, listener);
 		}
 
 		add(ajaxBehavior);
