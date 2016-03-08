@@ -131,7 +131,7 @@ Person bob = new Person("Bob", "Smith");
 Person jill = new Person("Jill", "Smith");
 List<Person> theSmiths = Arrays.asList(john, bob, jill); 
 ChoiceRenderer render = new ChoiceRenderer("name");
-     	form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new ArrayList<String>()),   
+form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new ArrayList<String>()),   
                                     theSmiths, render));
 {code}
 

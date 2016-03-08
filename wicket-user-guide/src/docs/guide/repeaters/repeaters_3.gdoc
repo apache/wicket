@@ -35,10 +35,10 @@ public HomePage(final PageParameters parameters) {
 	   item.add(new Label("fullName", new PropertyModel(item.getModel(), "fullName")));
 	}
 
-@Override
+	@Override
 	protected Iterator<IModel<Person>> getItemModels() {
 	   return persons.iterator();
-}			
+	}			
    });
 }
 {code}
