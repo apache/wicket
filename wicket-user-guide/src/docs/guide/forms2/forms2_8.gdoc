@@ -11,13 +11,13 @@ In the next example (project UploadSingleFile) we will see a form which allows u
 	<head>
 	</head>
 	<body>
-	<h1>Upload your file here!</h1>
-	<form wicket:id="form">
-		<input type="file" wicket:id="fileUploadField"/> 
-		<input type="submit" value="Upload"/>
-	</form>
-	<div wicket:id="feedbackPanel">
-	</div>
+		<h1>Upload your file here!</h1>
+		<form wicket:id="form">
+			<input type="file" wicket:id="fileUploadField"/> 
+			<input type="submit" value="Upload"/>
+		</form>
+		<div wicket:id="feedbackPanel">
+		</div>
 	</body>
 </html>
 {code}
@@ -26,36 +26,36 @@ In the next example (project UploadSingleFile) we will see a form which allows u
 
 {code}
 public class HomePage extends WebPage {
-   private FileUploadField fileUploadField;
-
-    public HomePage(final PageParameters parameters) {
-    	fileUploadField = new FileUploadField("fileUploadField");
-    	
-    	Form form = new Form("form"){
-    		@Override
-    		protected void onSubmit() {
-    		  super.onSubmit();
-    			 
-    		  FileUpload fileUpload = fileUploadField.getFileUpload();
-    			
-    		    try {
-			File file = new File(System.getProperty("java.io.tmpdir") + "/" +
-    						fileUpload.getClientFileName());
-    				
-			    fileUpload.writeTo(file);
-		        } catch (IOException e) {
-			   e.printStackTrace();
-			 }
-    		}
-    	};	
+	private FileUploadField fileUploadField;
 	
-	form.setMultiPart(true);
-	//set a limit for uploaded file's size
-	form.setMaxSize(Bytes.kilobytes(100));
-	form.add(fileUploadField);
-	add(new FeedbackPanel("feedbackPanel"));
-	add(form);
-    }
+	public HomePage(final PageParameters parameters) {
+	   	fileUploadField = new FileUploadField("fileUploadField");
+	    
+		Form form = new Form("form"){
+			@Override
+			protected void onSubmit() {
+				super.onSubmit();
+			     
+				FileUpload fileUpload = fileUploadField.getFileUpload();
+			    
+				try {
+					File file = new File(System.getProperty("java.io.tmpdir") + "/" +
+					fileUpload.getClientFileName());
+				    	
+					fileUpload.writeTo(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};	
+	
+		form.setMultiPart(true);
+		//set a limit for uploaded file's size
+		form.setMaxSize(Bytes.kilobytes(100));
+		form.add(fileUploadField);
+		add(new FeedbackPanel("feedbackPanel"));
+		add(form);
+	}
 }
 {code}
 
@@ -70,7 +70,7 @@ The maximum size for uploaded files can also be set at application's level using
 @Override
 public void init()
 {
- getApplicationSettings().setDefaultMaximumUploadSize(Bytes.kilobytes(100));  
+	getApplicationSettings().setDefaultMaximumUploadSize(Bytes.kilobytes(100));  
 }
 {code}
 {note}

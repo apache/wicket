@@ -101,11 +101,11 @@ Finally, in the home page of the project we build the form which displays (with 
 
 {code}
 public class HomePage extends WebPage {
-    private Pattern regExpPatter;
+    private Pattern regExpPattern;
     private String stringToSplit;
     
     public HomePage(final PageParameters parameters) {		
-    	TextField mail;
+    	TextField regExpPatternTxt;
 	TextField stringToSplitTxt;
 		
     	Form form = new Form("form"){
@@ -113,7 +113,7 @@ public class HomePage extends WebPage {
 			protected void onSubmit() {
 				super.onSubmit();
 				String messageResult = "Tokens for the given string and pattern:<br/>";
-				String[] tokens = regExpPatter.split(stringToSplit);
+				String[] tokens = regExpPattern.split(stringToSplit);
 			
 				for (String token : tokens) {
 					messageResult += "- " + token + "<br/>";
@@ -123,7 +123,7 @@ public class HomePage extends WebPage {
 	};
     	
 		form.setDefaultModel(new CompoundPropertyModel(this));
-		form.add(mail = new TextField("regExpPatter"));
+		form.add(regExpPatternTxt = new TextField("regExpPattern"));
 		form.add(stringToSplitTxt = new TextField("stringToSplit"));
 		add(new FeedbackPanel("feedbackMessage").setEscapeModelStrings(false));
 		
