@@ -70,4 +70,7 @@ public interface IModel<T> extends IDetachable
 	 *            The model object
 	 */
 	void setObject(final T object);
+
+	@Override
+	default void detach() {}
 }
