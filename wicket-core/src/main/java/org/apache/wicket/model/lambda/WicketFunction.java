@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 /**
  * A {@link Serializable} {@link Function}.
- * 
+ *
  * @param <T>
  *            - the type of the input to the function
  * @param <R>

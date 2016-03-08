@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.request.mapper;
 
+import java.util.function.Supplier;
+
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.NullProvider;
 import org.apache.wicket.util.lang.Args;
 
@@ -31,7 +32,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class ParentPathReferenceRewriter implements IRequestMapperDelegate
 {
-	private final IProvider<String> escapeSequence;
+	private final Supplier<String> escapeSequence;
 	private final IRequestMapper chain;
 
 	/**
@@ -43,7 +44,7 @@ public class ParentPathReferenceRewriter implements IRequestMapperDelegate
 	 * @param escapeSequence
 	 */
 	public ParentPathReferenceRewriter(final IRequestMapper chain,
-		final IProvider<String> escapeSequence)
+		final Supplier<String> escapeSequence)
 	{
 		Args.notNull(chain, "chain");
 		Args.notNull(escapeSequence, "relativePathPartEscapeSequence");

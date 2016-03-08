@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * MyApp#init()
  * {
  * 
- * 	setPageManagerProvider(new DefaultPageManagerProvider() 
+ * 	setPageManagerProvider(new DefaultPageManagerProvider(this)
  * 	{
  * 		protected IDataStore newDataStore() 
  * 		{ 
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpSessionDataStore implements IDataStore
 {
-	private static final Logger log = LoggerFactory.getLogger(HttpSessionDataStore.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HttpSessionDataStore.class);
 
 	/** the session attribute key. auto-prefixed with application.getSessionAttributePrefix() */
 	private static final String PAGE_TABLE_KEY = "page:store:memory";
@@ -85,6 +85,15 @@ public class HttpSessionDataStore implements IDataStore
 		{
 			pageAsBytes = pageTable.getPage(pageId);
 		}
+
+		if (LOG.isDebugEnabled())
+		{
+			int bytesLength = pageAsBytes != null ? pageAsBytes.length : -1;
+			LOG.debug("Loaded '{}' bytes for page with id '{}' in session '{}'",
+					bytesLength, pageId, sessionId);
+		}
+
+
 		return pageAsBytes;
 	}
 
@@ -94,7 +103,12 @@ public class HttpSessionDataStore implements IDataStore
 		PageTable pageTable = getPageTable(false);
 		if (pageTable != null)
 		{
-			pageTable.removePage(pageId);
+			byte[] bytes = pageTable.removePage(pageId);
+
+			if (LOG.isDebugEnabled() && bytes != null)
+			{
+				LOG.debug("Removed page '{}' in session '{}'", pageId, sessionId);
+			}
 		}
 	}
 
@@ -105,6 +119,7 @@ public class HttpSessionDataStore implements IDataStore
 		if (pageTable != null)
 		{
 			pageTable.clear();
+			LOG.debug("Removed all pages in session '{}'", sessionId);
 		}
 	}
 
@@ -115,11 +130,16 @@ public class HttpSessionDataStore implements IDataStore
 		if (pageTable != null)
 		{
 			pageTable.storePage(pageId, pageAsBytes);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Stored '{}' bytes for page '{}' in session '{}'",
+						pageAsBytes.length, pageId, sessionId);
+			}
 			evictionStrategy.evict(pageTable);
 		}
 		else
 		{
-			log.error("Cannot store the data for page with id '{}' in session with id '{}'",
+			LOG.error("Cannot store the data for page with id '{}' in session with id '{}'",
 				pageId, sessionId);
 		}
 	}

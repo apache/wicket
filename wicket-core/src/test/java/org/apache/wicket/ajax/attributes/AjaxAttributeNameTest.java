@@ -35,7 +35,7 @@ public class AjaxAttributeNameTest extends Assert
 	@Test
 	public void jsonNamesDoNotCollide()
 	{
-		Set<String> jsonNames = new HashSet<String>();
+		Set<String> jsonNames = new HashSet<>();
 		for (AjaxAttributeName name : AjaxAttributeName.values())
 		{
 			assertTrue("Attribute: " + name, jsonNames.add(name.jsonName()));
@@ -57,7 +57,7 @@ public class AjaxAttributeNameTest extends Assert
 		}
 
 		assertEquals("all known json parameter names",
-			"tr|p|d|id|dt|wr|rt|pd|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|ih|dh|i|sc|mp|f|c|m|u|sel|",
+			"tr|p|d|id|dt|wr|rt|pd|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|ih|dh|i|sc|mp|f|c|m|u|sel|sr|",
 			sb.toString());
 	}
 }

@@ -34,9 +34,9 @@ import org.apache.wicket.util.visit.IVisitor;
  * <pre>
  *    &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
  *      ...
- *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
+ *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;/&gt;choice 1
  *      ...
- *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
+ *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;/&gt;choice 2
  *      ...
  *    &lt;/span&gt;
  * </pre>

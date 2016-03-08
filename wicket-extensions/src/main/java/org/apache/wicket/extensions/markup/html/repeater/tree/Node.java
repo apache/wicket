@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.tree;
 
+import java.util.Optional;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -115,7 +117,7 @@ public abstract class Node<T> extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				toggle();
 			}

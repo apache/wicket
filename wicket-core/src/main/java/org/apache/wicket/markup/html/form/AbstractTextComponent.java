@@ -53,7 +53,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	 * which are based on JavaScript and need some knowledge as to how to communicate properly via
 	 * request parameters.
 	 */
-	public static interface ITextFormatProvider
+	public interface ITextFormatProvider
 	{
 		/**
 		 * Gets the pattern for printing output and parsing input.
@@ -165,11 +165,6 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 		if (model instanceof IObjectClassAwareModel)
 		{
 			Class<?> objectClass = ((IObjectClassAwareModel<?>)model).getObjectClass();
-			if (objectClass == null)
-			{
-				log.warn("Couldn't resolve model type of " + model + " for " + this +
-					", please set the type yourself.");
-			}
 			return objectClass;
 		}
 		else

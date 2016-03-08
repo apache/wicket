@@ -19,18 +19,15 @@ package org.apache.wicket.resource;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceLoader;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * This resource reference is used to provide a reference to a resource based on Java NIO FileSystem
@@ -41,8 +38,8 @@ import org.apache.wicket.util.lang.Args;
  * java.nio.file.spi.FileTypeDetector in the META-INF/services folder for jars or in the
  * /WEB-INF/classes/META-INF/services folder for webapps<br>
  * <br>
- * You can optionally override {@link #getFileSystemResource()} to provide an inline mime type detection,
- * which is preferred to the default detection.<br>
+ * You can optionally override {@link #getFileSystemResource()} to provide an inline mime type
+ * detection, which is preferred to the default detection.<br>
  * <br>
  * Example:
  * 
@@ -53,19 +50,49 @@ import org.apache.wicket.util.lang.Args;
  * </code>
  * </pre>
  * 
+ * Example 2:
+ * 
+ * <pre>
+ * <code>
+ * mountResource("/filecontent/${name}", new FileSystemResourceReference("filesystem")
+ * {
+ * 	private static final long serialVersionUID = 1L;
+ * 
+ * 	{@literal @}Override
+ * 	public IResource getResource()
+ * 	{
+ * 		return new FileSystemResource()
+ * 		{
+ * 			private static final long serialVersionUID = 1L;
+ * 
+ * 			protected ResourceResponse newResourceResponse(Attributes attributes)
+ * 			{
+ * 				try
+ * 				{
+ * 					String name = attributes.getParameters().get("name").toString("");
+ * 					URI uri = URI.create(
+ * 						"jar:file:////folder/example.zip!/zipfolder/" + name);
+ * 					return createResourceResponse(
+ * 						FileSystemResourceReference.getPath(uri));
+ * 				}
+ * 				catch (IOException | URISyntaxException e)
+ * 				{
+ * 					throw new WicketRuntimeException("Error while reading the file.", e);
+ * 				}
+ * 			};
+ * 		};
+ * 	}
+ * });
+ * </code>
+ * </pre>
+ * 
  * @author Tobias Soloschenko
  */
 public class FileSystemResourceReference extends ResourceReference
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Path path;
-
-	/** The key for the file system meta data **/
-	public static final MetaDataKey<Map<URI, FileSystem>> FILE_SYSTEM_META_DATA_KEY = new MetaDataKey<Map<URI, FileSystem>>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
+	private Path path;
 
 	/**
 	 * Creates a file system resource reference based on the given path
@@ -78,8 +105,33 @@ public class FileSystemResourceReference extends ResourceReference
 	public FileSystemResourceReference(String name, Path path)
 	{
 		super(name);
-		Args.notNull(path, "path");
 		this.path = path;
+	}
+
+	/**
+	 * Creates a file system resource reference based on the given name
+	 * 
+	 * @param name
+	 *            the name of the resource reference
+	 * 
+	 */
+	public FileSystemResourceReference(String name)
+	{
+		super(name);
+	}
+
+	/**
+	 * Creates a file system resource reference based on the given scope and name
+	 * 
+	 * @param scope
+	 *            the scope as class
+	 * @param name
+	 *            the name of the resource reference
+	 * 
+	 */
+	public FileSystemResourceReference(Class<?> scope, String name)
+	{
+		super(scope, name);
 	}
 
 	/**
@@ -99,6 +151,11 @@ public class FileSystemResourceReference extends ResourceReference
 	 */
 	protected FileSystemResource getFileSystemResource()
 	{
+		if (path == null)
+		{
+			throw new WicketRuntimeException(
+				"Please override #getResource() and provide a path if using a constructor which doesn't take one as argument.");
+		}
 		return new FileSystemResource(path);
 	}
 
@@ -110,46 +167,25 @@ public class FileSystemResourceReference extends ResourceReference
 	 * @param env
 	 *            the environment parameter to create the file system with
 	 * @return the path of the file in the file system
-	 * @throws IOException
-	 *             if the file system could'nt be created
-	 * @throws URISyntaxException
-	 *             if the URI has no valid syntax
 	 */
-	public static Path getPath(URI uri, Map<String, String> env) throws IOException,
-		URISyntaxException
+	public static Path getPath(URI uri, Map<String, String> env)
 	{
-		String uriString = uri.toString();
-		int indexOfExclamationMark = uriString.indexOf('!');
-		if (indexOfExclamationMark == -1)
+		Iterator<FileSystemPathService> pathServiceIterator = ServiceLoader
+			.load(FileSystemPathService.class).iterator();
+		while (pathServiceIterator.hasNext())
 		{
-			return Paths.get(uri);
-		}
-		String zipFile = uriString.substring(0, indexOfExclamationMark);
-		FileSystem fileSystem = null;
-
-		synchronized (FILE_SYSTEM_META_DATA_KEY)
-		{
-			Map<URI, FileSystem> metaData = Application.get()
-				.getMetaData(FILE_SYSTEM_META_DATA_KEY);
-			if (metaData == null)
+			FileSystemPathService pathService = pathServiceIterator.next();
+			if (pathService.isResponsible(uri))
 			{
-				metaData = new HashMap<URI, FileSystem>();
-				Application.get().setMetaData(FILE_SYSTEM_META_DATA_KEY, metaData);
-			}
-			if (fileSystem == null)
-			{
-				if (env == null)
+				Path fileSystemPath = pathService.getPath(uri, env);
+				if (fileSystemPath != null)
 				{
-					env = new HashMap<>();
-					env.put("create", "true");
-					env.put("encoding", "UTF-8");
+					return fileSystemPath;
 				}
-				fileSystem = FileSystems.newFileSystem(new URI(zipFile), env);
-				metaData.put(uri, fileSystem);
 			}
 		}
-		String fileName = uriString.substring(uriString.indexOf('!') + 1);
-		return fileSystem.getPath(fileName);
+		// fall back to just get the path from the URI
+		return Paths.get(uri);
 	}
 
 	/**

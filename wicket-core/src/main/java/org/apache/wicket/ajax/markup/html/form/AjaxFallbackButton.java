@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -71,7 +73,7 @@ public abstract class AjaxFallbackButton extends Button
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmit(target, AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onSubmit(Optional.ofNullable(target), AjaxFallbackButton.this.getForm());
 			}
 
 			@Override
@@ -138,7 +140,7 @@ public abstract class AjaxFallbackButton extends Button
 	{
 		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
 		{
-			onSubmit(null, getForm());
+			onSubmit(Optional.empty(), getForm());
 		}
 	}
 
@@ -173,7 +175,7 @@ public abstract class AjaxFallbackButton extends Button
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
 	 */
-	protected void onSubmit(final AjaxRequestTarget target, final Form<?> form)
+	protected void onSubmit(final Optional<AjaxRequestTarget> target, final Form<?> form)
 	{
 	}
 

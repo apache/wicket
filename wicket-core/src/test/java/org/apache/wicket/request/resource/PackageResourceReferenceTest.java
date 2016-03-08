@@ -254,8 +254,8 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	public void testContentRange()
 	{
 		// Test range
-		Assert.assertEquals("resource", makeRangeRequest("bytes=0-8"));
-		Assert.assertEquals("ource", makeRangeRequest("bytes=3-8"));
+		Assert.assertEquals("resource", makeRangeRequest("bytes=0-7"));
+		Assert.assertEquals("ource", makeRangeRequest("bytes=3-7"));
 		Assert.assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=0-"));
 		Assert.assertEquals("var_style_en.txt", makeRangeRequest("bytes=9-"));
 		Assert.assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-"));
@@ -292,14 +292,14 @@ public class PackageResourceReferenceTest extends WicketTestCase
 			String content = new String(IOUtils.toByteArray(resourceAsStream));
 
 			// Check buffer comprehensive range request
-			String bytes4094_4106 = makeRangeRequestToBigResource("bytes=4094-4106");
-			assertEquals(12, bytes4094_4106.length());
-			assertEquals("River Roller", bytes4094_4106);
+			String bytes4094_4105 = makeRangeRequestToBigResource("bytes=4094-4105");
+			assertEquals(12, bytes4094_4105.length());
+			assertEquals("River Roller", bytes4094_4105);
 
 			// Check buffer exceeding range request
-			String bytes1000_5000 = makeRangeRequestToBigResource("bytes=1000-5000");
-			assertEquals(4000, bytes1000_5000.length());
-			assertEquals(content.substring(1000, 5000), bytes1000_5000);
+			String bytes1000_4999 = makeRangeRequestToBigResource("bytes=1000-4999");
+			assertEquals(4000, bytes1000_4999.length());
+			assertEquals(content.substring(1000, 5000), bytes1000_4999);
 
 			// Check buffer exceeding range request until end of content
 			String bytes1000_end = makeRangeRequestToBigResource("bytes=1000-");

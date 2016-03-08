@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.html;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
 /**
@@ -54,10 +54,9 @@ public class DoubleNestedTransparentContainerPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				if (target != null)
-					target.add(label);
+				targetOptional.ifPresent(target -> target.add(label));
 			}
 		});
 	}

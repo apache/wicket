@@ -31,7 +31,7 @@ $q(document).ready(function() {
 
 		$nameInput.val(text);
 
-		return gym.ajaxClick($('a:contains("generate")').eq(linkIndex));
+		return gym.ajaxEvent('click', $('a:contains("generate")').eq(linkIndex));
 	};
 
 

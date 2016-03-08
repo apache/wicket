@@ -406,7 +406,6 @@ public class Form<T> extends WebMarkupContainer
 					formComponent.clearInput();
 				}
 			}
-
 		});
 	}
 
@@ -2077,9 +2076,10 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	@Override
-	public final void setModel(IModel<T> model)
+	public final Form<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@Override
@@ -2090,9 +2090,10 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	@Override
-	public final void setModelObject(T object)
+	public final Form<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 
 	/**
@@ -2119,7 +2120,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Produces javascript that registereds Wicket.Forms namespaces
+	 * Produces javascript that registers Wicket.Forms namespaces
 	 * 
 	 * @param response
 	 */

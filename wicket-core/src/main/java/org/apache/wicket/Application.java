@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -103,7 +104,6 @@ import org.apache.wicket.settings.RequestLoggerSettings;
 import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.settings.StoreSettings;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.io.Streams;
@@ -202,10 +202,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	private IRequestCycleProvider requestCycleProvider;
 
 	/** exception mapper provider */
-	private IProvider<IExceptionMapper> exceptionMapperProvider;
+	private Supplier<IExceptionMapper> exceptionMapperProvider;
 
 	/** session store provider */
-	private IProvider<ISessionStore> sessionStoreProvider;
+	private Supplier<ISessionStore> sessionStoreProvider;
 
 	/**
 	 * The decorator this application uses to decorate any header responses created by Wicket
@@ -843,8 +843,8 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		pageFactory = newPageFactory();
 
-		requestCycleProvider = new DefaultRequestCycleProvider();
-		exceptionMapperProvider = new DefaultExceptionMapperProvider();
+		requestCycleProvider = (context) -> new RequestCycle(context);
+		exceptionMapperProvider = () -> new DefaultExceptionMapper();
 
 		// add a request cycle listener that logs each request for the requestlogger.
 		getRequestCycleListeners().add(new RequestLoggerRequestCycleListener());
@@ -853,7 +853,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * @return the exception mapper provider
 	 */
-	public IProvider<IExceptionMapper> getExceptionMapperProvider()
+	public Supplier<IExceptionMapper> getExceptionMapperProvider()
 	{
 		return exceptionMapperProvider;
 	}
@@ -862,7 +862,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @return Session state provider
 	 */
-	public final IProvider<ISessionStore> getSessionStoreProvider()
+	public final Supplier<ISessionStore> getSessionStoreProvider()
 	{
 		return sessionStoreProvider;
 	}
@@ -871,9 +871,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * 
 	 * @param sessionStoreProvider
 	 */
-	public final Application setSessionStoreProvider(final IProvider<ISessionStore> sessionStoreProvider)
+	public final Application setSessionStoreProvider(final Supplier<ISessionStore> sessionStoreProvider)
 	{
-		this.sessionStoreProvider = sessionStoreProvider;
+		this.sessionStoreProvider = Args.notNull(sessionStoreProvider, "sessionStoreProvider");
+		this.sessionStore = null;
 		return this;
 	}
 
@@ -1738,27 +1739,6 @@ public abstract class Application implements UnboundListener, IEventSink
 	{
 		this.requestCycleProvider = requestCycleProvider;
 		return this;
-	}
-
-	private static class DefaultExceptionMapperProvider implements IProvider<IExceptionMapper>
-	{
-		@Override
-		public IExceptionMapper get()
-		{
-			return new DefaultExceptionMapper();
-		}
-	}
-
-	/**
-	 *
-	 */
-	private static class DefaultRequestCycleProvider implements IRequestCycleProvider
-	{
-		@Override
-		public RequestCycle get(final RequestCycleContext context)
-		{
-			return new RequestCycle(context);
-		}
 	}
 
 	/**

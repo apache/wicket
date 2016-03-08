@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.tree;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.wicket.Component;
@@ -168,9 +169,10 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 *            the model
 	 */
 	@Override
-	public void setModel(IModel<Set<T>> model)
+	public AbstractTree<T> setModel(IModel<Set<T>> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	/**
@@ -180,9 +182,10 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 *            the model object
 	 */
 	@Override
-	public void setModelObject(Set<T> state)
+	public AbstractTree<T> setModelObject(Set<T> state)
 	{
 		setDefaultModelObject(state);
+		return this;
 	}
 
 	/**
@@ -312,12 +315,12 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	 * @param target
 	 *            request target or {@code null}
 	 */
-	public abstract void updateNode(T node, final IPartialPageRequestHandler target);
+	public abstract void updateNode(T node, final Optional<? extends IPartialPageRequestHandler> target);
 
 	/**
 	 * The state of a node.
 	 */
-	public static enum State {
+	public enum State {
 		/**
 		 * The node is collapsed, i.e. its children are not iterated.
 		 */

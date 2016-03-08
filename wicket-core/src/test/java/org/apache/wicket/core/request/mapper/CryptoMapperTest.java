@@ -18,6 +18,8 @@ package org.apache.wicket.core.request.mapper;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 
+import java.util.function.Supplier;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
@@ -43,16 +45,15 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.UrlResourceReference;
 import org.apache.wicket.settings.SecuritySettings;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.CachingSunJceCryptFactory;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Tests for {@link CryptoMapper}
@@ -87,7 +88,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 		 * Use explicit crypt provider to prevent crypt warning output, see
 		 * SecuritySettings#getCryptFactory()
 		 */
-		IProvider<ICrypt> cryptProvider = new IProvider<ICrypt>()
+		Supplier<ICrypt> cryptProvider = new Supplier<ICrypt>()
 		{
 			private ICryptFactory cryptFactory = new CachingSunJceCryptFactory(
 				SecuritySettings.DEFAULT_ENCRYPTION_KEY);

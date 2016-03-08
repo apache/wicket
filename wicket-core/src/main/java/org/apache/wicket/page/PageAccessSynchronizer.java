@@ -20,10 +20,10 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
 import org.apache.wicket.util.time.Duration;
@@ -43,7 +43,7 @@ public class PageAccessSynchronizer implements Serializable
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizer.class);
 
 	/** map of which pages are owned by which threads */
-	private final IProvider<ConcurrentMap<Integer, PageLock>> locks = new LazyInitializer<ConcurrentMap<Integer, PageLock>>()
+	private final Supplier<ConcurrentMap<Integer, PageLock>> locks = new LazyInitializer<ConcurrentMap<Integer, PageLock>>()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -221,7 +221,7 @@ public class PageAccessSynchronizer implements Serializable
 	/*
 	 * used by tests
 	 */
-	IProvider<ConcurrentMap<Integer, PageLock>> getLocks()
+	Supplier<ConcurrentMap<Integer, PageLock>> getLocks()
 	{
 		return locks;
 	}

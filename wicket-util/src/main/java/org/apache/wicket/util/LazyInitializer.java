@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util;
 
+import java.util.function.Supplier;
+
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -29,7 +31,7 @@ import org.apache.wicket.util.io.IClusterable;
  * @param <T>
  *            type of value
  */
-public abstract class LazyInitializer<T> implements IProvider<T>, IClusterable
+public abstract class LazyInitializer<T> implements Supplier<T>, IClusterable
 {
 	private static final long serialVersionUID = 1L;
 

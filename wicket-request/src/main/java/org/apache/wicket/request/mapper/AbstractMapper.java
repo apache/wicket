@@ -86,8 +86,7 @@ public abstract class AbstractMapper implements IRequestMapper
 	}
 
 	/**
-	 * Returns true if the given url starts with specified segments. Segments that contain
-	 * placeholders are not compared.
+	 * Returns true if the given url starts with specified segments.
 	 * 
 	 * @param url
 	 * @param segments
@@ -105,9 +104,16 @@ public abstract class AbstractMapper implements IRequestMapper
 		
 		for (int i = 0; i < segments.length; ++i)
 		{
-			if (!segments[i].equals(safeSegmentGetter(urlSegments, i , "")) &&
-				(getPlaceholder(segments[i]) == null && 
-				 getOptionalPlaceholder(segments[i]) == null))
+			String segment = segments[i];
+			String urlSegment = safeSegmentGetter(urlSegments, i, null);
+			if (urlSegment == null && getOptionalPlaceholder(segment) == null)
+			{
+				// if the 'segment' has static value or is mandatory placeholder
+				return false;
+			}
+			else if (!segment.equals(urlSegment) &&
+			    (getPlaceholder(segment) == null &&
+			     getOptionalPlaceholder(segment) == null))
 			{
 				return false;
 			}

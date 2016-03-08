@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,9 +26,6 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.ConversationPropagator;
-import org.apache.wicket.cdi.NonContextual;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.IRequestHandler;
@@ -113,7 +110,7 @@ public class CdiWicketTester extends WicketTester
 	}
 
 	/**
-	 * Asserts that the respons contains the right count. This can only be done
+	 * Asserts that the response contains the right count. This can only be done
 	 * by parsing the markup because models only contain valid values during a
 	 * request, not after.
 	 * 

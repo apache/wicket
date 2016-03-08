@@ -18,9 +18,9 @@ package org.apache.wicket.util.reference;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.util.function.Supplier;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
-import org.apache.wicket.util.IProvider;
 
 /**
  * A serialization-safe reference to a {@link Class}
@@ -30,7 +30,7 @@ import org.apache.wicket.util.IProvider;
  * @param <T>
  *            type of class
  */
-public class ClassReference<T> implements Serializable, IProvider<Class<T>>
+public class ClassReference<T> implements Serializable, Supplier<Class<T>>
 {
 	private static final long serialVersionUID = 1L;
 

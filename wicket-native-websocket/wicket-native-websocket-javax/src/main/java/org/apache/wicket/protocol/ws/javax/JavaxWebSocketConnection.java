@@ -59,7 +59,7 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	}
 
 	@Override
-	public void close(int code, String reason)
+	public synchronized void close(int code, String reason)
 	{
 		if (isOpen())
 		{
@@ -74,7 +74,7 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	}
 
 	@Override
-	public IWebSocketConnection sendMessage(String message) throws IOException
+	public synchronized IWebSocketConnection sendMessage(String message) throws IOException
 	{
 		checkClosed();
 
@@ -83,7 +83,7 @@ public class JavaxWebSocketConnection extends AbstractWebSocketConnection
 	}
 
 	@Override
-	public IWebSocketConnection sendMessage(byte[] message, int offset, int length)
+	public synchronized IWebSocketConnection sendMessage(byte[] message, int offset, int length)
 		throws IOException
 	{
 		checkClosed();

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -293,15 +294,14 @@ public class SourcesPage extends WebPage
 						item.getModel())
 					{
 						@Override
-						public void onClick(AjaxRequestTarget target)
+						public void onClick(Optional<AjaxRequestTarget> targetOptional)
 						{
 							setName(getDefaultModelObjectAsString());
 
-							if (target != null)
-							{
+							targetOptional.ifPresent(target -> {
 								target.add(codePanel);
 								target.add(filename);
-							}
+							});
 						}
 
 						@Override

@@ -3,20 +3,9 @@ By adding a @(Base)WebSocketBehavior@ to your component(s) Wicket will contribut
 Wicket.WebSocket.send('{msg: "my message"}').
 {code}
 
-If you need more WebSocket connections then you can do: 
-{code}
-var ws = new Wicket.WebSocket(); 
-ws.send('message');
-{code}
-
-To close a connection: 
+To close the default connection:
 {code}
 Wicket.WebSocket.close()
-{code}
-
-or 
-{code}
-ws.close()
 {code}
 
 Wicket.WebSocket is a simple wrapper around the native window.WebSocket API which is used to intercept the calls and to fire special JavaScript events (Wicket.Event PubSub).

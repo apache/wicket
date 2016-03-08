@@ -27,7 +27,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.PartWriterCallback;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Used to provide resources based on the on Java NIO FileSystem API.<br>
@@ -41,7 +40,7 @@ public class FileSystemResource extends AbstractResource
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Path path;
+	private Path path;
 
 	/**
 	 * Creates a new file system resource based on the given path
@@ -51,8 +50,15 @@ public class FileSystemResource extends AbstractResource
 	 */
 	public FileSystemResource(Path path)
 	{
-		Args.notNull(path, "path");
 		this.path = path;
+	}
+
+	/**
+	 * Creates a new file system resource
+	 * 
+	 */
+	public FileSystemResource()
+	{
 	}
 
 	/**
@@ -61,8 +67,27 @@ public class FileSystemResource extends AbstractResource
 	@Override
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
+
+		return createResourceResponse(path);
+	}
+
+	/**
+	 * Creates a resource response based on the given attributes
+	 * 
+	 * @param path
+	 *            the path to create the resource response with
+	 * @return the actual resource response x
+	 */
+	protected ResourceResponse createResourceResponse(Path path)
+	{
 		try
 		{
+			if (path == null)
+			{
+				throw new WicketRuntimeException(
+					"Please override #newResourceResponse() and provide a path if using a constructor which doesn't take one as argument.");
+			}
+			this.path = path;
 			long size = getSize();
 			ResourceResponse resourceResponse = new ResourceResponse();
 			resourceResponse.setContentType(getMimeType());
@@ -71,8 +96,8 @@ public class FileSystemResource extends AbstractResource
 			RequestCycle cycle = RequestCycle.get();
 			Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
 			Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
-			resourceResponse.setWriteCallback(new PartWriterCallback(getInputStream(), size,
-				startbyte, endbyte));
+			resourceResponse.setWriteCallback(
+				new PartWriterCallback(getInputStream(), size, startbyte, endbyte));
 			return resourceResponse;
 		}
 		catch (IOException e)

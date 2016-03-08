@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.tree.content;
 
+import java.util.Optional;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.examples.tree.Foo;
@@ -75,9 +77,9 @@ public class CheckedSelectableFolderContent extends SelectableFolderContent
 			}
 
 			@Override
-			protected void onClick(AjaxRequestTarget target)
+			protected void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				CheckedSelectableFolderContent.this.select(getModelObject(), tree, target);
+				CheckedSelectableFolderContent.this.select(getModelObject(), tree, targetOptional);
 			}
 
 			@Override

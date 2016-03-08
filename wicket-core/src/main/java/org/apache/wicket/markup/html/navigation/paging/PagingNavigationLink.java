@@ -129,7 +129,7 @@ public class PagingNavigationLink<T> extends Link<T>
 	 * @param page
 	 *            The page
 	 * @return True if this link links to the given page
-	 * @see org.apache.wicket.markup.html.link.PageLink#linksTo(org.apache.wicket.Page)
+	 * @see org.apache.wicket.markup.html.link.Link#linksTo(org.apache.wicket.Page)
 	 */
 	@Override
 	public final boolean linksTo(final Page page)

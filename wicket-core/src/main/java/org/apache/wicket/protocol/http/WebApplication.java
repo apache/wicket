@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
@@ -36,7 +35,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxRequestTargetListenerCollection;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.request.mapper.PackageMapper;
 import org.apache.wicket.core.request.mapper.ResourceMapper;
@@ -62,7 +60,6 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.render.WebPageRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -73,9 +70,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.IContextProvider;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
@@ -748,9 +743,9 @@ public abstract class WebApplication extends Application
 				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
 			}
 		}
-		setPageRendererProvider(new WebPageRendererProvider());
-		setSessionStoreProvider(new WebSessionStoreProvider());
-		setAjaxRequestTargetProvider(new DefaultAjaxRequestTargetProvider());
+		setPageRendererProvider((handler) -> new WebPageRenderer(handler));
+		setSessionStoreProvider(() -> new HttpSessionStore());
+		setAjaxRequestTargetProvider((page) -> new AjaxRequestHandler(page));
 
 		getAjaxRequestTargetListeners().add(new AjaxEnclosureListener());
 
@@ -1013,24 +1008,6 @@ public abstract class WebApplication extends Application
 		return mimeType != null ? mimeType : super.getMimeType(fileName);
 	}
 
-	private static class WebPageRendererProvider implements IPageRendererProvider
-	{
-		@Override
-		public PageRenderer get(RenderPageRequestHandler handler)
-		{
-			return new WebPageRenderer(handler);
-		}
-	}
-
-	private static class WebSessionStoreProvider implements IProvider<ISessionStore>
-	{
-		@Override
-		public ISessionStore get()
-		{
-			return new HttpSessionStore();
-		}
-	}
-
 	/**
 	 * Returns the provider for {@link org.apache.wicket.ajax.AjaxRequestTarget} objects.
 	 * 
@@ -1062,16 +1039,6 @@ public abstract class WebApplication extends Application
 	public AjaxRequestTargetListenerCollection getAjaxRequestTargetListeners()
 	{
 		return ajaxRequestTargetListeners;
-	}
-
-	private static class DefaultAjaxRequestTargetProvider implements
-		IContextProvider<AjaxRequestTarget, Page>
-	{
-		@Override
-		public AjaxRequestTarget get(Page page)
-		{
-			return new AjaxRequestHandler(page);
-		}
 	}
 
 	/**

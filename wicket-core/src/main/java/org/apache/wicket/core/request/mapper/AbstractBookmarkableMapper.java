@@ -201,9 +201,6 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	 */
 	protected abstract boolean pageMustHaveBeenCreatedBookmarkable();
 
-	/**
-	 * @see IRequestMapper#getCompatibilityScore(Request)
-	 */
 	@Override
 	public int getCompatibilityScore(Request request)
 	{

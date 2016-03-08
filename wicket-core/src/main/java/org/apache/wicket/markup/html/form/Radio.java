@@ -228,9 +228,10 @@ public class Radio<T> extends LabeledWebMarkupContainer implements IGenericCompo
 	}
 
 	@Override
-	public final void setModel(IModel<T> model)
+	public final Radio<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@Override
@@ -241,9 +242,10 @@ public class Radio<T> extends LabeledWebMarkupContainer implements IGenericCompo
 	}
 
 	@Override
-	public final void setModelObject(T object)
+	public final Radio<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 
 	/** {@inheritDoc} */

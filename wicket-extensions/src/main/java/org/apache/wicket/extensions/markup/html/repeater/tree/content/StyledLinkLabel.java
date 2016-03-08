@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.tree.content;
 
+import java.util.Optional;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -66,10 +68,10 @@ public abstract class StyledLinkLabel<T> extends Panel
 	 * Hook method to create a new link component.
 	 * 
 	 * This default implementation returns an {@link AjaxFallbackLink} which invokes
-	 * {@link #onClick(AjaxRequestTarget)} only if {@link #isClickable()} returns <code>true</code>.
+	 * {@link #onClick(Optional<AjaxRequestTarget>)} only if {@link #isClickable()} returns <code>true</code>.
 	 * 
 	 * @see #isClickable()
-	 * @see #onClick(AjaxRequestTarget)
+	 * @see #onClick(Optional<AjaxRequestTarget>)
 	 */
 	protected MarkupContainer newLinkComponent(String id, IModel<T> model)
 	{
@@ -84,9 +86,9 @@ public abstract class StyledLinkLabel<T> extends Panel
 			}
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				StyledLinkLabel.this.onClick(target);
+				StyledLinkLabel.this.onClick(targetOptional);
 			}
 		};
 	}
@@ -140,7 +142,7 @@ public abstract class StyledLinkLabel<T> extends Panel
 	 * @see #newLinkComponent(String, IModel)
 	 * @see #isClickable()
 	 */
-	protected void onClick(AjaxRequestTarget target)
+	protected void onClick(Optional<AjaxRequestTarget> target)
 	{
 	}
 

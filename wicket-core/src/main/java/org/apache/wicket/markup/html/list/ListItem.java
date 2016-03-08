@@ -82,9 +82,10 @@ public class ListItem<T> extends LoopItem implements IGenericComponent<T>,  IQue
 	}
 
 	@Override
-	public final void setModel(IModel<T> model)
+	public final ListItem<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@Override
@@ -95,9 +96,10 @@ public class ListItem<T> extends LoopItem implements IGenericComponent<T>,  IQue
 	}
 
 	@Override
-	public final void setModelObject(T object)
+	public final ListItem<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 	
 	@Override

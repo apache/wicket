@@ -56,8 +56,7 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
 		Component resolvedComponent = getParent().get(tag.getId());
-		if (resolvedComponent != null && 
-			(getPage().wasRendered(resolvedComponent) || resolvedComponent.isAuto()))
+		if (resolvedComponent != null && getPage().wasRendered(resolvedComponent))
 		{
 			/*
 			 * Means that parent container has an associated homonymous tag to this grandchildren
@@ -155,20 +154,5 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 				stream.skipToMatchingCloseTag(tag);
 			}
 		}
-	}
-	
-	@Override
-	protected void addDequeuedComponent(Component component, ComponentTag tag)
-	{	
-		//Transparent containers should be 'transparent' to component queuing, 
-		//hence we should add queued components to parent.
-		MarkupContainer parent = getParent();
-		
-		while (parent instanceof TransparentWebMarkupContainer)
-		{
-			parent = parent.getParent();
-		}
-		
-		parent.add(component);
 	}
 }

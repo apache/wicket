@@ -435,6 +435,10 @@
 			if (!attrs.sp) {
 				attrs.sp = "bubble";
 			}
+
+			if (!attrs.sr) {
+				attrs.sr = false;
+			}
 		},
 
 		/**
@@ -653,7 +657,7 @@
 			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
-				data = data.concat(Wicket.Form.serializeElement(el));
+				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
 
 			// convert to URL encoded string
@@ -1114,7 +1118,7 @@
 					Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + errorMessage);
 				}
 				var attrs = context.attrs;
-				this._executeHandlers(attrs.fh, attrs, errorMessage);
+				this._executeHandlers(attrs.fh, attrs, jqXHR, errorMessage, textStatus);
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_FAILURE, attrs, jqXHR, errorMessage, textStatus);
 
 				return FunctionsExecuter.DONE;
@@ -1178,12 +1182,11 @@
 
 			var evaluateWithManualNotify = function (parameters, body) {
 				return function(notify) {
-					var f = jQuery.noop;
-					var toExecute = "f = function(" + parameters + ") {" + body + "};";
+					var toExecute = "(function(" + parameters + ") {" + body + "})";
 
 					try {
-						// do the evaluation
-						eval(toExecute);
+						// do the evaluation in global scope
+						var f = window.eval(toExecute);
 						f(notify);
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
@@ -1196,8 +1199,8 @@
 				return function(notify) {
 					// just evaluate the javascript
 					try {
-						// do the evaluation
-						eval(script);
+						// do the evaluation in global scope
+						window.eval(script);
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
@@ -1510,9 +1513,12 @@
 			 * <em>Wicket.Form.excludeFromAjaxSerialization</em>
 			 *
 			 * @param element {HTMLFormElement} - the form element to serialize. E.g. HTMLInputElement
+			 * @param serializeRecursively {Boolean} - a flag indicating whether to collect (submit) the
+			 * 			name/value pairs for all HTML form elements children of the HTML element with
+			 * 			the JavaScript listener
 			 * @return An array with a single element - an object with two keys - <em>name</em> and <em>value</em>.
 			 */
-			serializeElement: function(element) {
+			serializeElement: function(element, serializeRecursively) {
 
 				if (!element) {
 					return [];
@@ -1531,15 +1537,17 @@
 				} else if (tag === "input" || tag === "textarea") {
 					return Wicket.Form.serializeInput(element);
 				} else {
-					var elements = nodeListToArray(element.getElementsByTagName("input"));
-					elements = elements.concat(nodeListToArray(element.getElementsByTagName("select")));
-					elements = elements.concat(nodeListToArray(element.getElementsByTagName("textarea")));
-
 					var result = [];
-					for (var i = 0; i < elements.length; ++i) {
-						var el = elements[i];
-						if (el.name && el.name !== "") {
-							result = result.concat(Wicket.Form.serializeElement(el));
+					if (serializeRecursively) {
+						var elements = nodeListToArray(element.getElementsByTagName("input"));
+						elements = elements.concat(nodeListToArray(element.getElementsByTagName("select")));
+						elements = elements.concat(nodeListToArray(element.getElementsByTagName("textarea")));
+
+						for (var i = 0; i < elements.length; ++i) {
+							var el = elements[i];
+							if (el.name && el.name !== "") {
+								result = result.concat(Wicket.Form.serializeElement(el, serializeRecursively));
+							}
 						}
 					}
 					return result;
@@ -1567,7 +1575,7 @@
 				for (var i = 0; i < elements.length; ++i) {
 					var el = elements[i];
 					if (el.name && el.name !== "") {
-						result = result.concat(Wicket.Form.serializeElement(el));
+						result = result.concat(Wicket.Form.serializeElement(el, false));
 					}
 				}
 				return result;
@@ -1947,9 +1955,12 @@
 					Wicket.Event.add(attrs.c, evt, function (jqEvent, data) {
 						var call = new Wicket.Ajax.Call();
 						var attributes = jQuery.extend({}, attrs);
-						attributes.event = Wicket.Event.fix(jqEvent);
-						if (data) {
-							attributes.event.extraData = data;
+
+						if (evt !== "domready") {
+							attributes.event = Wicket.Event.fix(jqEvent);
+							if (data) {
+								attributes.event.extraData = data;
+							}
 						}
 
 						call._executeHandlers(attributes.ih, attributes);
@@ -1967,7 +1978,9 @@
 						else {
 							call.ajax(attributes);
 						}
-						Wicket.Ajax._handleEventCancelation(attributes);
+						if (evt !== "domready") {
+							Wicket.Ajax._handleEventCancelation(attributes);
+						}
 					}, null, attrs.sel);
 				});
 			},
@@ -2256,7 +2269,8 @@
 								Wicket.Head.addJavascript(text, id, "", type);
 							} else {
 								try {
-									eval(text);
+									// do the evaluation in global scope
+									window.eval(text);
 								} catch (e) {
 									Wicket.Log.error("Wicket.Head.Contributor.processScript: " + e + ": eval -> " + text);
 								}

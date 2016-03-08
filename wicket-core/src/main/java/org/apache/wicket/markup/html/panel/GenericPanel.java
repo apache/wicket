@@ -68,9 +68,10 @@ public class GenericPanel<T> extends Panel implements IGenericComponent<T>
 	 *            the new model object
 	 */
 	@Override
-	public final void setModelObject(final T modelObject)
+	public final GenericPanel<T> setModelObject(final T modelObject)
 	{
 		setDefaultModelObject(modelObject);
+		return this;
 	}
 
 	/**
@@ -92,8 +93,9 @@ public class GenericPanel<T> extends Panel implements IGenericComponent<T>
 	 *            the new model
 	 */
 	@Override
-	public final void setModel(final IModel<T> model)
+	public final GenericPanel<T> setModel(final IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 }

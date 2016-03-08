@@ -19,7 +19,8 @@ package org.apache.wicket.model.lambda;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.IModel;
@@ -88,7 +89,6 @@ public class LambdaModelTest
 		assertThat(clone.getObject(), is(personName));
 	}
 
-	
 	static class Foo<T> {
 		
 		public void callT(T instance) {

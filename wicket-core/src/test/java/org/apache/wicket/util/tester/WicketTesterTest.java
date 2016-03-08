@@ -62,6 +62,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
@@ -1315,5 +1316,20 @@ public class WicketTesterTest extends WicketTestCase
 		tester.clickLink("link", true);
 
 		tester.assertComponentOnAjaxResponse(label.getPageRelativePath());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6062
+	 */
+	@Test
+	public void renewSessionIdAfterInvalidation() {
+		tester.getApplication().setSessionStoreProvider(HttpSessionStore::new);
+		tester.getSession().bind();
+		String firstId = tester.getSession().getId();
+
+		tester.getSession().invalidateNow();
+
+		String secondId = tester.getSession().getId();
+		assertNotEquals(firstId, secondId);
 	}
 }

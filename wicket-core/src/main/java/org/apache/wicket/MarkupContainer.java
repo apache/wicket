@@ -30,6 +30,7 @@ import java.util.stream.StreamSupport;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ComponentTag.IAutoComponentFactory;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
@@ -40,6 +41,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.form.AutoLabelResolver;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
@@ -1011,18 +1013,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		Page page = findPage();
 		
-		// if we have a path to page dequeue any container children.
-		// we can do it only if page is not already rendering!
-		if (page != null && !page.getFlag(FLAG_RENDERING) && child instanceof MarkupContainer)
+		// if we have a path to page, dequeue any container children.
+		if (page != null && child instanceof MarkupContainer)
 		{
 		    MarkupContainer childContainer = (MarkupContainer)child;
 		    // if we are already dequeueing there is no need to dequeue again
 		    if (!childContainer.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
-			{
-				/*
-				 * dequeue both normal and auto components
-				 *
-				 */
+			{				
 				childContainer.dequeue();
 			}
 		}
@@ -1605,38 +1602,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		renderComponentTagBody(markupStream, openTag);
 	}
 
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-		dequeueAutoComponents();
-	}
-
-	private void dequeueAutoComponents()
-	{
-		// dequeue auto components
-		DequeueContext context = newDequeueContext();
-		if (context != null && context.peekTag() != null)
-		{
-			for (ComponentTag tag = context.takeTag(); tag != null; tag = context.takeTag())
-			{
-				ComponentTag.IAutoComponentFactory autoComponentFactory = tag
-					.getAutoComponentFactory();
-				if (autoComponentFactory != null)
-				{
-					queue(autoComponentFactory.newComponent(this, tag));
-				}
-
-				// Every component is responsible just for its own auto components
-				// so skip to the close tag.
-				if (tag.isOpen() && !tag.hasNoCloseTag())
-				{
-					context.skipToCloseTag();
-				}
-			}
-		}
-	}
-
 	/**
 	 * @see org.apache.wicket.Component#onRender()
 	 */
@@ -1876,13 +1841,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		modCounter = 0;
 		removals_clear();
 
-		if (queue != null && !queue.isEmpty())
+		if (queue != null && !queue.isEmpty() && hasBeenRendered())
 		{
 			throw new WicketRuntimeException(
 					String.format("Detach called on component with id '%s' while it had a non-empty queue: %s",
 							getId(), queue));
 		}
-		queue = null;
 	}
 
 	private transient ComponentQueue queue;
@@ -2043,13 +2007,20 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				// the container does not yet have a child with this id, see if we can
 				// dequeue
 				child = dequeue.findComponentToDequeue(tag);
-
+				
+				//if tag has an autocomponent factory let's use it
+				if (child == null && tag.getAutoComponentFactory() != null)
+				{
+					IAutoComponentFactory autoComponentFactory = tag.getAutoComponentFactory();
+					child = autoComponentFactory.newComponent(this, tag);
+				}
+				
 				if (child != null)
 				{
 					addDequeuedComponent(child, tag);
 				}
 			}
-
+			
 			if (tag.isOpen() && !tag.hasNoCloseTag())
             {
 			    dequeueChild(child, tag, dequeue);
@@ -2107,7 +2078,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	public DequeueContext newDequeueContext()
 	{
 		IMarkupFragment markup = getRegionMarkup();
-
 		if (markup == null)
 		{
 			return null;
@@ -2158,11 +2128,23 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			{
 				return DequeueTagAction.SKIP;
 			}
+			else if (wicketTag.isLinkTag())
+			{
+				return DequeueTagAction.DEQUEUE;
+			}
 			else
 			{
 				return null; // don't know
 			}
 		}
+		
+		//if is a label tag, ignore it
+		if (tag.isAutoComponentTag() 
+			&& tag.getId().startsWith(AutoLabelResolver.LABEL_ATTR))
+		{
+			return DequeueTagAction.IGNORE;
+		}
+		
 		return DequeueTagAction.DEQUEUE;
 	}
 

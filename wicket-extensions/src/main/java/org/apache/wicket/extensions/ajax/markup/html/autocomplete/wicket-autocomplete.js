@@ -19,7 +19,7 @@
  *
  * @author Janne Hietam&auml;ki
  */
-
+/* jshint latedef: false */
 ;(function (undefined) {
 	'use strict';
 

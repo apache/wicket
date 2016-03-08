@@ -67,9 +67,10 @@ public class SelectOption<T> extends WebMarkupContainer implements IGenericCompo
 	}
 
 	@Override
-	public final void setModel(IModel<T> model)
+	public final SelectOption<T> setModel(IModel<T> model)
 	{
 		setDefaultModel(model);
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -80,9 +81,10 @@ public class SelectOption<T> extends WebMarkupContainer implements IGenericCompo
 	}
 
 	@Override
-	public void setModelObject(T object)
+	public SelectOption<T> setModelObject(T object)
 	{
 		setDefaultModelObject(object);
+		return this;
 	}
 
 	/**

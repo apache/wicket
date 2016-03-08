@@ -35,6 +35,8 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 {
 	private static final long serialVersionUID = 1L;
 
+	private final IWizard wizard;
+
 	/**
 	 * Construct.
 	 * 
@@ -46,11 +48,20 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 	public WizardButtonBar(final String id, final IWizard wizard)
 	{
 		super(id);
-		add(new PreviousButton("previous", wizard));
-		add(new NextButton("next", wizard));
-		add(new LastButton("last", wizard));
-		add(new CancelButton("cancel", wizard));
-		add(new FinishButton("finish", wizard));
+		
+		this.wizard = wizard;
+	}
+	
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		add(newPreviousButton("previous", wizard));
+		add(newNextButton("next", wizard));
+		add(newLastButton("last", wizard));
+		add(newCancelButton("cancel", wizard));
+		add(newFinishButton("finish", wizard));
 	}
 
 	/**
@@ -72,5 +83,65 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 			return (IFormSubmittingComponent)get("finish");
 		}
 		return null;
+	}
+	
+	/**
+	 * Creates a new {@link PreviousButton}
+	 * 
+	 * @param id the button's markup-id
+	 * @param wizard the {@link IWizard}
+	 * @return a new {@code PreviousButton}
+	 */
+	protected PreviousButton newPreviousButton(final String id, final IWizard wizard)
+	{
+		return new PreviousButton(id, wizard);
+	}
+
+	/**
+	 * Creates a new {@link NextButton}
+	 * 
+	 * @param id the button's markup-id
+	 * @param wizard the {@link IWizard}
+	 * @return a new {@code NextButton}
+	 */
+	protected NextButton newNextButton(final String id, final IWizard wizard)
+	{
+		return new NextButton(id, wizard);
+	}
+
+	/**
+	 * Creates a new {@link LastButton}
+	 * 
+	 * @param id the button's markup-id
+	 * @param wizard the {@link IWizard}
+	 * @return a new {@code LastButton}
+	 */
+	protected LastButton newLastButton(final String id, final IWizard wizard)
+	{
+		return new LastButton(id, wizard);
+	}
+
+	/**
+	 * Creates a new {@link CancelButton}
+	 * 
+	 * @param id the button's markup-id
+	 * @param wizard the {@link IWizard}
+	 * @return a new {@code CancelButton}
+	 */
+	protected CancelButton newCancelButton(final String id, final IWizard wizard)
+	{
+		return new CancelButton(id, wizard);
+	}
+
+	/**
+	 * Creates a new {@link FinishButton}
+	 * 
+	 * @param id the button's markup-id
+	 * @param wizard the {@link IWizard}
+	 * @return a new {@code FinishButton}
+	 */
+	protected FinishButton newFinishButton(final String id, final IWizard wizard)
+	{
+		return new FinishButton(id, wizard);
 	}
 }

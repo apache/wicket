@@ -313,13 +313,15 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	}
 
 	@Override
-	public void setModel(IModel<Date> model) {
+	public DateLabel setModel(IModel<Date> model) {
 		super.setDefaultModel(model);
+		return this;
 	}
 
 	@Override
-	public void setModelObject(Date object) {
+	public DateLabel setModelObject(Date object) {
 		super.setDefaultModelObject(object);
+		return this;
 	}
 
 	@Override

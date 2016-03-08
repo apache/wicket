@@ -1641,11 +1641,7 @@ public class BaseWicketTester
 	 */
 	public <C extends Component> Result isComponent(String path, Class<C> expectedComponentClass)
 	{
-		Component component = getComponentFromLastRenderedPage(path);
-		if (component == null)
-		{
-			return Result.fail("Component not found: " + path);
-		}
+		Component component = assertExists(path);
 
 		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
 			Classes.simpleName(expectedComponentClass),
@@ -1713,12 +1709,7 @@ public class BaseWicketTester
 	 */
 	public Result isEnabled(final String path)
 	{
-		Component component = getComponentFromLastRenderedPage(path);
-		if (component == null)
-		{
-			fail("path: '" + path + "' does no exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
-		}
+		Component component = assertExists(path);
 
 		return isTrue("component '" + path + "' is disabled", component.isEnabledInHierarchy());
 	}
@@ -1732,14 +1723,29 @@ public class BaseWicketTester
 	 */
 	public Result isDisabled(final String path)
 	{
+		Component component = assertExists(path);
+
+		return isFalse("component '" + path + "' is enabled", component.isEnabledInHierarchy());
+	}
+
+	private Component assertExists(final String path) {
 		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
+			     Classes.simpleName(getLastRenderedPage().getClass()));
 		}
+		return component;
+	}
 
-		return isFalse("component '" + path + "' is enabled", component.isEnabledInHierarchy());
+	private FormComponent assertFormComponent(final String path) {
+		Component component = assertExists(path);
+
+		if (component instanceof FormComponent == false)
+		{
+			fail("path: '" + path + "' is not a form component");
+		}
+		return (FormComponent) component;
 	}
 
 	/**
@@ -1751,18 +1757,9 @@ public class BaseWicketTester
 	 */
 	public Result isRequired(String path)
 	{
-		Component component = getComponentFromLastRenderedPage(path);
-		if (component == null)
-		{
-			fail("path: '" + path + "' does no exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
-		}
-		else if (component instanceof FormComponent == false)
-		{
-			fail("path: '" + path + "' is not a form component");
-		}
+		FormComponent formComponent = assertFormComponent(path);
 
-		return isRequired((FormComponent<?>)component);
+		return isRequired(formComponent);
 	}
 
 	/**
@@ -1775,6 +1772,32 @@ public class BaseWicketTester
 	public Result isRequired(FormComponent<?> component)
 	{
 		return isTrue("component '" + component + "' is not required", component.isRequired());
+	}
+
+	/**
+	 * Asserts that a component is not required.
+	 *
+	 * @param path
+	 *            path to component
+	 * @return a <code>Result</code>
+	 */
+	public Result isNotRequired(String path)
+	{
+		FormComponent formComponent = assertFormComponent(path);
+
+		return isNotRequired(formComponent);
+	}
+
+	/**
+	 * Asserts that a component is not required.
+	 *
+	 * @param component
+	 *            a form component
+	 * @return a <code>Result</code>
+	 */
+	public Result isNotRequired(FormComponent<?> component)
+	{
+		return isFalse("component '" + component + "' is required", component.isRequired());
 	}
 
 	/**
@@ -1901,7 +1924,7 @@ public class BaseWicketTester
 				(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "click"));
 		}
 		// if the link is an IAjaxLink, use it (do check if AJAX is expected)
-		else if (linkComponent instanceof IAjaxLink && isAjax)
+		else if (isAjax && (linkComponent instanceof IAjaxLink || linkComponent instanceof AjaxFallbackLink))
 		{
 			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
 				linkComponent, "click");

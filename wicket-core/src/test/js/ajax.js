@@ -121,18 +121,11 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('processEvaluation*s* with identifier|code.', function () {
 
-			expect(7);
+			expect(6);
 
 			var attrs = {
 				u: 'data/ajax/twoEvaluationsWithIdentifier.xml',
-				c: 'twoEvaluationsWithIdentifier',
-				counter: 0,
-				coh: [
-					function(attrs) {
-						start();
-						equal(attrs.counter, 3, "The counter is incremented in both evaluations with and without manual notifying");
-					}
-				]
+				c: 'twoEvaluationsWithIdentifier'
 			};
 			execute(attrs);
 		});
@@ -385,7 +378,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to IAjaxCallListener handlers. Failure scenario.', function () {
 
-			expect(10);
+			expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
@@ -400,9 +393,12 @@ jQuery(document).ready(function() {
 					}
 				],
 				fh: [
-					function(attributes) {
+					function(attributes, jqXHR, errorMessage, textStatus) {
 						start();
 						equal(attrs.u, attributes.u);
+						ok(typeof(jqXHR.success) === "function", "jqXHR should be passed");
+						equal(errorMessage, "Not Found", "Error message should be passed");
+						equal(textStatus, "error", "Text status should be passed");
 					}
 				],
 				bsh: [
@@ -439,7 +435,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('verify default attributes.', function () {
 
-			expect(25);
+			expect(26);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -449,6 +445,7 @@ jQuery(document).ready(function() {
 						equal(textStatus, "parsererror", "textStatus");
 						equal(attributes.u, attrs.u, "url");
 						deepEqual(attributes.e, [ "domready" ], "events");
+						equal(attributes.event, null, "No event for 'domready'");
 						equal(attributes.ch, '0|s', 'channel');
 						equal(attributes.dt, 'xml', 'data type');
 						equal(attributes.wr, true, 'wicket ajax response');
@@ -480,7 +477,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to global listeners. Success scenario.', function () {
 
-			expect(13);
+			expect(14);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -500,6 +497,7 @@ jQuery(document).ready(function() {
 					two: '2',
 					three: true
 				};
+				ok(attributes.event instanceof jQuery.Event, "There must be an event for non-'domready' events");
 				deepEqual(data, expected, 'Success: data');
 				equal('success', textStatus, 'Success: textStatus');
 				equal(attrs.u, attributes.u, 'Success: attrs');

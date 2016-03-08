@@ -35,7 +35,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The method to be used when submitting a form
 	 */
-	public static enum Method
+	public enum Method
 	{
 		/** get */
 		GET,
@@ -53,7 +53,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The JavaScript event propagation type
 	 */
-	public static enum EventPropagation
+	public enum EventPropagation
 	{
 		/**
 		 * Stops the propagation of the JavaScript event to the parent of its target
@@ -140,6 +140,12 @@ public final class AjaxRequestAttributes
 	 * @see <a href="http://api.jquery.com/on/">jQuery#on's selector</a>
 	 */
 	private CharSequence childSelector;
+
+	/**
+	 * A flag indicating whether to collect (submit) the name/value pairs for all HTML form elements
+	 * children of the HTML element with the JavaScript listener
+	 */
+	private boolean serializeRecursively;
 
 	/**
 	 * @see #childSelector
@@ -253,7 +259,7 @@ public final class AjaxRequestAttributes
 	{
 		if (ajaxCallListeners == null)
 		{
-			ajaxCallListeners = new ArrayList<IAjaxCallListener>();
+			ajaxCallListeners = new ArrayList<>();
 		}
 		return ajaxCallListeners;
 	}
@@ -530,4 +536,21 @@ public final class AjaxRequestAttributes
 		return this;
 	}
 
+	/**
+	 * @return whether to collect (submit) the name/value pairs for all HTML form elements
+	 *      children of the HTML element with the JavaScript listener
+	 */
+	public boolean isSerializeRecursively() {
+		return serializeRecursively;
+	}
+
+	/**
+	 * @param serializeRecursively
+	 *          a flag indicating whether to collect (submit) the name/value pairs for all HTML form elements
+	 * children of the HTML element with the JavaScript listener
+	 */
+	public AjaxRequestAttributes setSerializeRecursively(final boolean serializeRecursively) {
+		this.serializeRecursively = serializeRecursively;
+		return this;
+	}
 }

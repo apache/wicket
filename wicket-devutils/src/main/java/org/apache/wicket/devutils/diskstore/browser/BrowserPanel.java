@@ -18,6 +18,7 @@ package org.apache.wicket.devutils.diskstore.browser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
@@ -55,12 +56,9 @@ public class BrowserPanel extends Panel
 		AjaxFallbackLink<Void> refreshLink = new AjaxFallbackLink<Void>("refresh")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				if (target != null)
-				{
-					target.add(table);
-				}
+				targetOptional.ifPresent(target -> target.add(table));
 			}
 		};
 		add(refreshLink);
@@ -68,13 +66,10 @@ public class BrowserPanel extends Panel
 		AjaxFallbackLink<Void> currentSessionLink = new AjaxFallbackLink<Void>("currentSessionLink")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				sessionsSelector.setModelObject(getCurrentSession().getObject());
-				if (target != null)
-				{
-					target.add(sessionsSelector, table);
-				}
+				targetOptional.ifPresent(target -> target.add(sessionsSelector, table));
 			}
 
 			@Override

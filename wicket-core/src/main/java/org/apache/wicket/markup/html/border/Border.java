@@ -168,6 +168,18 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		body = new BorderBodyContainer(id + "_" + BODY);
 	}
 	
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		
+		//if body has not been assigned yet, we queue it
+		if (body.getParent() == null)
+		{
+			dequeue();
+		}
+	}
+	
 	/**
 	 * @return The border body container
 	 */
@@ -576,7 +588,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		@Override
 		public DequeueContext newDequeueContext()
 		{
-			Border border=findParent(Border.class);
+			Border border = findParent(Border.class);
 			IMarkupFragment fragment = border.getMarkup();
 
 			if (fragment == null)

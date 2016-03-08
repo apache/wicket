@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.util.function.Supplier;
+
 import org.apache.wicket.request.mapper.ParentPathReferenceRewriter;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
-import org.apache.wicket.util.IProvider;
 
 /**
  * Generic {@link ResourceReference} encoder that encodes and decodes non-mounted
@@ -47,8 +48,8 @@ public class ResourceReferenceMapper extends ParentPathReferenceRewriter
 	 * @param cachingStrategy
 	 */
 	public ResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-		IProvider<String> parentPathPartEscapeSequence,
-		IProvider<IResourceCachingStrategy> cachingStrategy)
+		Supplier<String> parentPathPartEscapeSequence,
+		Supplier<IResourceCachingStrategy> cachingStrategy)
 	{
 		super(new BasicResourceReferenceMapper(pageParametersEncoder, cachingStrategy),
 			parentPathPartEscapeSequence);
