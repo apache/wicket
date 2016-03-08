@@ -62,7 +62,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 		private TestFormComponentPanel(String id, IModel<Serializable> model)
 		{
 			super(id, model);
-			add(new TextField<Serializable>("text", new Model<Serializable>())
+			add(new TextField<Serializable>("text", new Model<>())
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -127,9 +127,9 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 
 		public TestPage()
 		{
-			Form<Void> form = new Form<Void>("form");
+			Form<Void> form = new Form<>("form");
 			add(form);
-			form.add(new TestFormComponentPanel("panel", new Model<Serializable>()));
+			form.add(new TestFormComponentPanel("panel", new Model<>()));
 		}
 
 		@Override

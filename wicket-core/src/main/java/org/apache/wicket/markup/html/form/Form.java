@@ -406,7 +406,6 @@ public class Form<T> extends WebMarkupContainer
 					formComponent.clearInput();
 				}
 			}
-
 		});
 	}
 
