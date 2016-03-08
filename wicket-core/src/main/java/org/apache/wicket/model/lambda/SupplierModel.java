@@ -19,11 +19,10 @@ package org.apache.wicket.model.lambda;
 import java.util.Objects;
 
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A caching model that gets its value from a {@link WicketSupplier}.
+ * A model that gets its value from a {@link java.util.function.Supplier}.
  *
  * @param <T>
  *            - type of the model object
@@ -33,7 +32,7 @@ public class SupplierModel<T> extends AbstractReadOnlyModel<T>
 	/**
 	 * Supplies the model object.
 	 */
-	private WicketSupplier<T> getter;
+	private final WicketSupplier<T> getter;
 
 	/**
 	 * Constructor.
