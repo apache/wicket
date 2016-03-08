@@ -112,7 +112,7 @@ public class HomePage extends WebPage {
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				String mmessageResult = "Tokens for the given string and pattern:<br/>";
+				String messageResult = "Tokens for the given string and pattern:<br/>";
 				String[] tokens = regExpPattern.split(stringToSplit);
 			
 				for (String token : tokens) {
