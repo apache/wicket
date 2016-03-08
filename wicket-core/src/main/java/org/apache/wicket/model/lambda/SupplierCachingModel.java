@@ -22,7 +22,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A caching model that gets its value from a {@link WicketSupplier}.
+ * A {@link LoadableDetachableModel caching} model that gets its value from a {@link java.util.function.Supplier}.
  *
  * @param <T>
  *            - type of the model object
@@ -32,7 +32,7 @@ public class SupplierCachingModel<T> extends LoadableDetachableModel<T>
 	/**
 	 * Supplies the model object.
 	 */
-	private WicketSupplier<T> getter;
+	private final WicketSupplier<T> getter;
 
 	/**
 	 * Constructor.
