@@ -83,9 +83,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public T getObject()
@@ -97,9 +94,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		return (T)target;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
-	 */
 	@Override
 	public IModel<?> getChainedModel()
 	{
@@ -110,9 +104,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
-	 */
 	@Override
 	public void setChainedModel(IModel<?> model)
 	{

@@ -114,9 +114,10 @@ public abstract class FormComponentPanel<T> extends FormComponent<T> implements 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param id
+	 *          The component id
 	 */
 	public FormComponentPanel(String id)
 	{
@@ -124,37 +125,30 @@ public abstract class FormComponentPanel<T> extends FormComponent<T> implements 
 	}
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param id
+	 *          The component id
 	 * @param model
+	 *          The component model
 	 */
 	public FormComponentPanel(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean checkRequired()
 	{
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
 		return new PanelMarkupSourcingStrategy(false);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
