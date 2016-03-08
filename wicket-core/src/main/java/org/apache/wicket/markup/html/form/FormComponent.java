@@ -634,7 +634,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	/**
 	 * Clears the user input.
 	 */
-	public final void clearInput()
+	public void clearInput()
 	{
 		rawInput = NO_RAW_INPUT;
 	}

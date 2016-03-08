@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.hamcrest.Matchers.is;
+
 import java.io.Serializable;
 
 import org.apache.wicket.MarkupContainer;
@@ -50,6 +52,19 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 		ft.submit();
 	}
 
+	@Test
+	public void clearInput()
+	{
+		tester.startPage(new TestPage());
+		tester.assertRenderedPage(TestPage.class);
+
+		TestFormComponentPanel fcp = (TestFormComponentPanel) tester.getComponentFromLastRenderedPage("form:panel");
+		assertThat(fcp.isChildClearInputCalled(), is(false));
+
+		fcp.clearInput();
+		assertThat(fcp.isChildClearInputCalled(), is(true));
+	}
+
 	private static class TestFormComponentPanel extends FormComponentPanel<Serializable>
 		implements
 			IMarkupResourceStreamProvider
@@ -58,6 +73,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 
 		private boolean childValidated = false;
 		private boolean childModelUpdated = false;
+		private boolean childClearInputCalled = false;
 
 		private TestFormComponentPanel(String id, IModel<Serializable> model)
 		{
@@ -79,7 +95,18 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 					super.updateModel();
 					childModelUpdated = true;
 				}
+
+				@Override
+				public void clearInput()
+				{
+					super.clearInput();
+					childClearInputCalled = true;
+				}
 			});
+		}
+
+		private boolean isChildClearInputCalled() {
+			return childClearInputCalled;
 		}
 
 		@Override
