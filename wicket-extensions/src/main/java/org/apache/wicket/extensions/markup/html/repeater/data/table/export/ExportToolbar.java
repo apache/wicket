@@ -202,7 +202,7 @@ public class ExportToolbar extends AbstractToolbar
 		IResource resource = new ResourceStreamResource()
 		{
 			@Override
-			protected IResourceStream getResourceStream()
+			protected IResourceStream getResourceStream(Attributes attributes)
 			{
 				return new DataExportResourceStreamWriter(dataExporter, getTable());
 			}
