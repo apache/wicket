@@ -57,8 +57,8 @@ public class ComponentAspect extends WicketMetrics
 	@Around("execution(org.apache.wicket.Component.new(..))")
 	public Object aroundNew(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		mark("core/component/create/" + joinPoint.getTarget().getClass().getName());
-		return joinPoint.proceed();
+		return measureTime("core/component/create/" + joinPoint.getTarget().getClass().getName(),
+			joinPoint);
 	}
 
 	/**
