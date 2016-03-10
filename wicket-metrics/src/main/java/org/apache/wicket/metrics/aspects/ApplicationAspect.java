@@ -21,8 +21,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
-import com.codahale.metrics.Timer.Context;
-
 /**
  * Aspect to handle basic web application information
  * 
@@ -46,14 +44,6 @@ public class ApplicationAspect extends WicketMetrics
 	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequest(..))")
 	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		Context context = context("core/application/request");
-		try
-		{
-			return joinPoint.proceed();
-		}
-		finally
-		{
-			stopQuietly(context);
-		}
+		return measureTime("core/application/request", joinPoint);
 	}
 }

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.metrics;
 
+import org.aspectj.lang.ProceedingJoinPoint;
+
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer.Context;
@@ -56,7 +58,7 @@ public class WicketMetrics
 	 * @param name
 	 *            the name of the meter to be marked
 	 */
-	protected void mark(String name)
+	public void mark(String name)
 	{
 		if (WicketMetrics.enabled)
 		{
@@ -71,7 +73,7 @@ public class WicketMetrics
 	 *            the name of the timer context
 	 * @return the timer context
 	 */
-	protected Context context(String name)
+	public Context context(String name)
 	{
 		if (WicketMetrics.enabled)
 		{
@@ -94,6 +96,30 @@ public class WicketMetrics
 		if (context != null)
 		{
 			context.stop();
+		}
+	}
+
+	/**
+	 * Simply measure the time for a {@literal @}around
+	 * 
+	 * @param name
+	 *            the name of the timer context
+	 * @param joinPoint
+	 *            the joinPoint to be proceed
+	 * @return the value of the join point
+	 * @throws Throwable
+	 *             if there is an exception while execution
+	 */
+	public Object measureTime(String name, ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		Context context = context(name);
+		try
+		{
+			return joinPoint.proceed();
+		}
+		finally
+		{
+			stopQuietly(context);
 		}
 	}
 
