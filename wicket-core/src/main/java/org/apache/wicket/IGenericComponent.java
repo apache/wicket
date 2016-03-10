@@ -24,6 +24,8 @@ import org.apache.wicket.model.IModel;
  *
  * @param <T>
  *     the type of the model object
+ * @param <C>
+ *     the type of the component
  */
 public interface IGenericComponent<T, C extends IGenericComponent<? super T, ?>>
 {
