@@ -20,30 +20,53 @@ import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 
 /**
- * Aspect to handle basic web application information
+ * Gets information how often different components are rendered
  * 
  * @author Tobias Soloschenko
  */
 @Aspect
-public class ApplicationAspect extends WicketMetrics
+public class ComponentAspect extends WicketMetrics
 {
 
 	/**
-	 * Collects data how often a request has been made against the webapp and counts the time how
-	 * long the request remains
+	 * Collects data how often components are rendered
 	 * 
 	 * @param joinPoint
-	 *            the joinPoint to be proceed
-	 * @return returns the boolean of the processRequest method
+	 * @return the object returned from the joinPoint
+	 * @throws Throwable
+	 */
+	@Around("target(org.apache.wicket.Component+) && execution(* onRender(..))")
+	public Object aroundRender(ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		return measureTime("core/component/render/" + joinPoint.getTarget().getClass().getName(),
+			joinPoint);
+	}
+
+	/**
+	 * Collects data how often components are created
 	 * 
+	 * @param joinPoint
+	 *            the join point (component) which is created
+	 * @return the object returned from the joinPoint
 	 * @throws Throwable
 	 *             might occur while invoking process request
 	 */
-	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequest(..))")
-	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
+	@Around("execution(org.apache.wicket.Component.new(..))")
+	public Object aroundNew(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return measureTime("core/application/request", joinPoint);
+		mark("core/component/create/" + joinPoint.getTarget().getClass().getName());
+		return joinPoint.proceed();
+	}
+
+	/**
+	 * Collects data how often components redirect to another page
+	 */
+	@Before("call(* org.apache.wicket.Component.setResponsePage(..))")
+	public void aroundResponsePage()
+	{
+		mark("core/component/redirect");
 	}
 }

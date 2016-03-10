@@ -17,8 +17,9 @@
 package org.apache.wicket.metrics.aspects;
 
 import org.apache.wicket.metrics.WicketMetrics;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 
 /**
  * Collects basic information about pages
@@ -27,15 +28,22 @@ import org.aspectj.lang.annotation.Before;
  *
  */
 @Aspect
-public class PageAspect extends WicketMetrics
+public class ResourceReferenceAspect extends WicketMetrics
 {
 
 	/**
-	 * Collects data how often a pages has been rendered
+	 * Collects data how often components are created
+	 * 
+	 * @param joinPoint
+	 *            the join point (component) which is created
+	 * @return the object returned from the joinPoint
+	 * @throws Throwable
+	 *             might occur while invoking process request
 	 */
-	@Before("target(org.apache.wicket.Page+) && call(* onRender(..))")
-	public void beforeRequestProcessed()
+	@Around("execution(org.apache.wicket.request.resource.ResourceReference.new(..))")
+	public Object aroundNew(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		mark("core/page/render");
+		mark("core/resourceReference/create/" + joinPoint.getTarget().getClass().getName());
+		return joinPoint.proceed();
 	}
 }
