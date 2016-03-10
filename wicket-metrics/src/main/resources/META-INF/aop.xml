@@ -4,7 +4,8 @@
         <include within="org.apache.wicket..*"/>
     </weaver>
     <aspects>
+		<aspect name="org.apache.wicket.metrics.aspects.ComponentAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.ApplicationAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.PageAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ResourceReferenceAspect" />
     </aspects>
 </aspectj>
