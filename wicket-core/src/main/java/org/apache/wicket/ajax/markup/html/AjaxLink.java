@@ -34,7 +34,7 @@ import org.apache.wicket.model.IModel;
  *            type of model object
  * 
  */
-public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGenericComponent<T>
+public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGenericComponent<T, AjaxLink<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -132,33 +132,4 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	 */
 	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final AjaxLink<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final AjaxLink<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
-	}
-
 }

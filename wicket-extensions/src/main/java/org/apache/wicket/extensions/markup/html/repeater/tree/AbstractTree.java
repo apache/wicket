@@ -43,7 +43,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            the node type
  */
-public abstract class AbstractTree<T> extends Panel implements IGenericComponent<Set<T>>
+public abstract class AbstractTree<T> extends Panel implements IGenericComponent<Set<T>, AbstractTree<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -140,55 +140,6 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	}
 
 	/**
-	 * Get the model of this tree.
-	 * 
-	 * @return model
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public IModel<Set<T>> getModel()
-	{
-		return (IModel<Set<T>>)getDefaultModel();
-	}
-
-	/**
-	 * Get the model object of this tree.
-	 * 
-	 * @return the model object
-	 */
-	@Override
-	public Set<T> getModelObject()
-	{
-		return getModel().getObject();
-	}
-
-	/**
-	 * Set the model.
-	 * 
-	 * @param model
-	 *            the model
-	 */
-	@Override
-	public AbstractTree<T> setModel(IModel<Set<T>> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	/**
-	 * Set the model object.
-	 * 
-	 * @param state
-	 *            the model object
-	 */
-	@Override
-	public AbstractTree<T> setModelObject(Set<T> state)
-	{
-		setDefaultModelObject(state);
-		return this;
-	}
-
-	/**
 	 * Expand the given node, tries to update the affected branch if the change happens on an
 	 * {@link AjaxRequestTarget}.
 	 * 
@@ -251,7 +202,7 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 	}
 
 	/**
-	 * Overriden to detach the {@link ITreeProvider}.
+	 * Overridden to detach the {@link ITreeProvider}.
 	 */
 	@Override
 	protected void onDetach()

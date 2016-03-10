@@ -73,7 +73,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @param <T>
  *            type of model object
  */
-public abstract class Link<T> extends AbstractLink implements ILinkListener, IGenericComponent<T>
+public abstract class Link<T> extends AbstractLink implements ILinkListener, IGenericComponent<T, Link<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -417,33 +417,4 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 			disableLink(tag);
 		}
 	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final Link<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final Link<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
-	}
-
 }

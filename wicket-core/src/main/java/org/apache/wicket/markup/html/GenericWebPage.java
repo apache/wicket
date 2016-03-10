@@ -27,7 +27,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @param <T>
  *            the type of the page's model object
  */
-public class GenericWebPage<T> extends WebPage implements IGenericComponent<T>
+public class GenericWebPage<T> extends WebPage implements IGenericComponent<T, GenericWebPage<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -68,33 +68,5 @@ public class GenericWebPage<T> extends WebPage implements IGenericComponent<T>
 	protected GenericWebPage(final PageParameters parameters)
 	{
 		super(parameters);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final GenericWebPage<T> setModelObject(final T modelObject)
-	{
-		setDefaultModelObject(modelObject);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final GenericWebPage<T> setModel(final IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
 	}
 }

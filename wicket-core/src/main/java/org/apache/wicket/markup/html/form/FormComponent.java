@@ -101,7 +101,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public abstract class FormComponent<T> extends LabeledWebMarkupContainer implements
-	IFormVisitorParticipant, IFormModelUpdateListener, IGenericComponent<T>
+	IFormVisitorParticipant, IFormModelUpdateListener, IGenericComponent<T, FormComponent<T>>
 {
 	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
 
@@ -1551,34 +1551,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	public final IValidatable<T> newValidatable()
 	{
 		return new ValidatableAdapter();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final FormComponent<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final FormComponent<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
 	}
 
 	/**

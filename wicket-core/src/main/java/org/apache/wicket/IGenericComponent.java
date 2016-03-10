@@ -25,14 +25,18 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *     the type of the model object
  */
-public interface IGenericComponent<T>
+public interface IGenericComponent<T, C extends IGenericComponent<? super T, ?>>
 {
 	/**
 	 * Typesafe getter for the model
 	 *
 	 * @return the model
 	 */
-	IModel<T> getModel();
+	@SuppressWarnings("unchecked")
+	default IModel<T> getModel()
+	{
+		return (IModel<T>)getDefaultModel();
+	}
 
 	/**
 	 * Typesafe setter for the model
@@ -40,7 +44,22 @@ public interface IGenericComponent<T>
 	 * @param model
 	 *            the new model
 	 */
-	Component setModel(IModel<T> model);
+	default C setModel(IModel<T> model)
+	{
+		setDefaultModel(model);
+		return (C) this;
+	}
+
+	/**
+	 * Typesafe getter for the model's object
+	 *
+	 * @return the model object
+	 */
+	@SuppressWarnings("unchecked")
+	default T getModelObject()
+	{
+		return (T)getDefaultModelObject();
+	}
 
 	/**
 	 * Typesafe setter for the model object
@@ -48,12 +67,17 @@ public interface IGenericComponent<T>
 	 * @param object
 	 *            the new model object
 	 */
-	Component setModelObject(T object);
+	default C setModelObject(T object)
+	{
+		setDefaultModelObject(object);
+		return (C) this;
+	}
 
-	/**
-	 * Typesafe getter for the model's object
-	 *
-	 * @return the model object
-	 */
-	T getModelObject();
+	IModel<?> getDefaultModel();
+
+	Component setDefaultModel(IModel<?> model);
+
+	Component setDefaultModelObject(Object object);
+
+	Object getDefaultModelObject();
 } 

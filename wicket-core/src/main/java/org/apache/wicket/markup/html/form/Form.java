@@ -147,7 +147,7 @@ import org.slf4j.LoggerFactory;
 public class Form<T> extends WebMarkupContainer
 	implements
 		IFormSubmitListener,
-		IGenericComponent<T>
+		IGenericComponent<T, Form<T>>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
 
@@ -2066,34 +2066,6 @@ public class Form<T> extends WebMarkupContainer
 	protected String getInputNamePrefix()
 	{
 		return "";
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final Form<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final Form<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
 	}
 
 	/**

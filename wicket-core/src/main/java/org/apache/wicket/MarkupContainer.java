@@ -857,9 +857,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return this;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
-	 */
 	@Override
 	public MarkupContainer setDefaultModel(final IModel<?> model)
 	{

@@ -30,7 +30,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            Model object type
  */
-public class ListItem<T> extends LoopItem implements IGenericComponent<T>,  IQueueRegion
+public class ListItem<T> extends LoopItem implements IGenericComponent<T, ListItem<T>>,  IQueueRegion
 {
 	private static final long serialVersionUID = 1L;
 
@@ -72,34 +72,6 @@ public class ListItem<T> extends LoopItem implements IGenericComponent<T>,  IQue
 	public ListItem(final String id, final int index)
 	{
 		super(id, index);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final ListItem<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final ListItem<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
 	}
 	
 	@Override
