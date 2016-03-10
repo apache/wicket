@@ -1,6 +1,8 @@
 <!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
 <aspectj>
-    <!-- <weaver options="-debug -showWeaveInfo -verbose"/> -->
+    <weaver options="-nowarn">
+        <include within="org.apache.wicket..*"/>
+    </weaver>
     <aspects>
 		<aspect name="org.apache.wicket.metrics.aspects.ApplicationAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.PageAspect" />
