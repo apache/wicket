@@ -4,8 +4,10 @@
         <include within="org.apache.wicket..*"/>
     </weaver>
     <aspects>
+		<aspect name="org.apache.wicket.metrics.aspects.BehaviorAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.IPartialPageRequestHandlerAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.ComponentAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.ApplicationAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.ResourceReferenceAspect" />
     </aspects>
 </aspectj>

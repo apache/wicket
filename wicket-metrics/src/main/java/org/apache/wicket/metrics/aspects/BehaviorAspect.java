@@ -22,28 +22,26 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 /**
- * Aspect to handle basic web application information
+ * Measures everything about behaviors
  * 
  * @author Tobias Soloschenko
+ *
  */
 @Aspect
-public class ApplicationAspect extends WicketMetrics
+public class BehaviorAspect extends WicketMetrics
 {
-
 	/**
-	 * Collects data how often a request has been made against the webapp and counts the time how
-	 * long the request remains
+	 * Collects data how often a behavior is created
 	 * 
 	 * @param joinPoint
-	 *            the joinPoint to be proceed
-	 * @return returns the boolean of the processRequest method
-	 * 
+	 *            the join point (behavior) which is created
+	 * @return the result of constructor
 	 * @throws Throwable
-	 *             might occur while invoking process request
+	 *             might occur while creating a new behavior
 	 */
-	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequest(..))")
-	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
+	@Around("execution(org.apache.wicket.behavior.Behavior.new(..))")
+	public Object aroundNew(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return measureTime("core/application/request", joinPoint);
+		return mark("core/behavior/create", joinPoint);
 	}
 }
