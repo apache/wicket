@@ -22,6 +22,13 @@ import org.apache.wicket.model.IModel;
  * An interface for all {@link Component components} with type-safe accessors and mutators
  * for the model and its object.
  *
+ * <p>
+ *     Usage:<br/>
+ *     <code>
+ *         public class MyComponent&lt;T&gt; extends AnotherComponent implements IGenericComponent&lt;T, MyComponent&lt;T&gt;&gt; { ... }
+ *     </code>
+ * </p>
+ *
  * @param <T>
  *     the type of the model object
  * @param <C>
