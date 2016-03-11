@@ -35,14 +35,15 @@ public class ComponentAspect extends WicketMetrics
 	 * Collects data how often components are rendered
 	 * 
 	 * @param joinPoint
-	 * @return the object returned from the joinPoint
+	 *            the join point (component) which is rendered
+	 * @return the object returned from the join point
 	 * @throws Throwable
+	 *             might occur while onRender
 	 */
-	@Around("target(org.apache.wicket.Component+) && execution(* onRender(..))")
-	public Object aroundRender(ProceedingJoinPoint joinPoint) throws Throwable
+	@Around("execution(* org.apache.wicket.Component.onRender(..))")
+	public Object aroundOnRender(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return measureTime("core/component/render/" + joinPoint.getTarget().getClass().getName(),
-			joinPoint);
+		return measureTime("core/component/render", joinPoint);
 	}
 
 	/**
@@ -50,23 +51,72 @@ public class ComponentAspect extends WicketMetrics
 	 * 
 	 * @param joinPoint
 	 *            the join point (component) which is created
-	 * @return the object returned from the joinPoint
+	 * @return the object returned from the join point
 	 * @throws Throwable
-	 *             might occur while invoking process request
+	 *             might occur while constructing a new component
 	 */
 	@Around("execution(org.apache.wicket.Component.new(..))")
 	public Object aroundNew(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return measureTime("core/component/create/" + joinPoint.getTarget().getClass().getName(),
-			joinPoint);
+		return measureTime("core/component/create", joinPoint);
+	}
+
+	/**
+	 * Collects data how often components calls onConfigure
+	 * 
+	 * @param joinPoint
+	 *            the join point (component) which is configured
+	 * @return the object returned from the join point
+	 * 
+	 * @throws Throwable
+	 *             might occur while invoking onConfigure
+	 */
+	@Around("execution(* org.apache.wicket.Component.onConfigure(..))")
+	public Object aroundOnConfigure(ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		return measureTime("core/component/configure", joinPoint);
+	}
+
+	/**
+	 * Collects data how often components calls onInitialize
+	 * 
+	 * @param joinPoint
+	 *            the join point (component) which is initialized
+	 * @return the object returned from the join point
+	 * 
+	 * @throws Throwable
+	 *             might occur while invoking onInitialize
+	 */
+	@Around("execution(* org.apache.wicket.Component.onInitialize(..))")
+	public Object aroundOnInitialize(ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		return measureTime("core/component/initialize", joinPoint);
+	}
+
+	/**
+	 * Collects data how often components calls onDetach
+	 * 
+	 * @param joinPoint
+	 *            the join point (component) which is calling detach
+	 * @return the object returned from the join point
+	 * @throws Throwable
+	 *             might occur while invoking onDetach
+	 */
+	@Around("execution(* org.apache.wicket.Component.onDetach(..))")
+	public Object arroundOnDetach(ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		return mark("core/component/detach", joinPoint);
 	}
 
 	/**
 	 * Collects data how often components redirect to another page
+	 * 
+	 * @throws Throwable
+	 *             might occur while invoking setResponsePage
 	 */
 	@Before("call(* org.apache.wicket.Component.setResponsePage(..))")
-	public void aroundResponsePage()
+	public void beforeResponsePage() throws Throwable
 	{
-		mark("core/component/redirect");
+		mark("core/component/redirect", null);
 	}
 }

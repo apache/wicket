@@ -1,0 +1,19 @@
+This is a little example how to setup wicket-metrics within a tomcat.
+
+(1)  Add the maven dependency to your project
+{code}
+<dependency>
+	<groupId>org.apache.wicket</groupId>
+	<artifactId>wicket-metrics</artifactId>
+	<version>${wicket.version}</version>
+</dependency>
+{code}
+
+(2) Just drop the jars of aspectjrt and aspectjweaver into the tomcat lib folder - you can download it from here "http://mvnrepository.com/artifact/org.aspectj/":http://mvnrepository.com/artifact/org.aspectj/ (the metrics dependency is shipped with the project)
+
+(3) Add the java agent to the jvm start options of your tomcat: -javaagent:/pathToServer/lib/aspectjweaver-x.x.x.jar
+
+(4) To enable the JMX measurement write the following line into your init method of your Application (Now you are able to connect with jvisualvm to your server and have a look at the data):
+{code}
+WicketMetrics.startJmxReporter();
+{code}

@@ -51,54 +51,6 @@ public class WicketMetrics
 		return metricRegistry;
 	}
 
-
-	/**
-	 * Marks the meter with the given name
-	 * 
-	 * @param name
-	 *            the name of the meter to be marked
-	 */
-	public void mark(String name)
-	{
-		if (WicketMetrics.enabled)
-		{
-			getMetricRegistry().meter(PREFIX + name).mark();
-		}
-	}
-
-	/**
-	 * Gets a timer context
-	 * 
-	 * @param name
-	 *            the name of the timer context
-	 * @return the timer context
-	 */
-	public Context context(String name)
-	{
-		if (WicketMetrics.enabled)
-		{
-			return getMetricRegistry().timer(PREFIX + name).time();
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	/**
-	 * Stops the contex quietly
-	 * 
-	 * @param context
-	 *            the context to stop
-	 */
-	public void stopQuietly(Context context)
-	{
-		if (context != null)
-		{
-			context.stop();
-		}
-	}
-
 	/**
 	 * Simply measure the time for a {@literal @}around
 	 * 
@@ -112,14 +64,59 @@ public class WicketMetrics
 	 */
 	public Object measureTime(String name, ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		Context context = context(name);
-		try
+		if (WicketMetrics.enabled)
+		{
+			Context context = getMetricRegistry().timer(PREFIX + name + renderClassName(joinPoint))
+				.time();
+			try
+			{
+				return joinPoint.proceed();
+			}
+			finally
+			{
+				stopQuietly(context);
+			}
+		}
+		else
 		{
 			return joinPoint.proceed();
 		}
-		finally
+	}
+
+	/**
+	 * Marks the meter with the given name
+	 * 
+	 * @param name
+	 *            the name of the meter to be marked
+	 * @param joinPoint
+	 *            the join point
+	 * @return the result of the proceeded join point
+	 * @throws Throwable
+	 */
+	public Object mark(String name, ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		if (WicketMetrics.enabled)
 		{
-			stopQuietly(context);
+			getMetricRegistry().meter(PREFIX + name + renderClassName(joinPoint)).mark();
+		}
+		if (joinPoint != null)
+		{
+			return joinPoint.proceed();
+		}
+		return null;
+	}
+
+	/**
+	 * Stops the contex quietly
+	 * 
+	 * @param context
+	 *            the context to stop
+	 */
+	public void stopQuietly(Context context)
+	{
+		if (context != null)
+		{
+			context.stop();
 		}
 	}
 
@@ -148,5 +145,18 @@ public class WicketMetrics
 	public static void setEnabled(boolean enabled)
 	{
 		WicketMetrics.enabled = enabled;
+	}
+
+	/**
+	 * Renders the class name of the given join point
+	 * 
+	 * @param joinPoint
+	 *            the join point to get the class of
+	 * @return the class name representation
+	 */
+	public String renderClassName(ProceedingJoinPoint joinPoint)
+	{
+		return joinPoint != null
+			? "/" + joinPoint.getTarget().getClass().getName().replace('.', '_') : "";
 	}
 }

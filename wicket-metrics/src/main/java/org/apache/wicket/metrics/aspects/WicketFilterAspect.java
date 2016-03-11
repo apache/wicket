@@ -22,27 +22,28 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 /**
- * Collects basic information about pages
+ * Aspect to handle basic web application information
  * 
  * @author Tobias Soloschenko
- *
  */
 @Aspect
-public class ResourceReferenceAspect extends WicketMetrics
+public class WicketFilterAspect extends WicketMetrics
 {
 
 	/**
-	 * Collects data how often a resource reference is created
+	 * Collects data how often a request has been made against the webapp and counts the time how
+	 * long the request remains
 	 * 
 	 * @param joinPoint
-	 *            the join point (resource reference) which is created
-	 * @return the result of constructor
+	 *            the joinPoint to be proceed
+	 * @return returns the boolean of the processRequest method
+	 * 
 	 * @throws Throwable
-	 *             might occur while creating a new resource reference
+	 *             might occur while invoking process request
 	 */
-	@Around("execution(org.apache.wicket.request.resource.ResourceReference.new(..))")
-	public Object aroundNew(ProceedingJoinPoint joinPoint) throws Throwable
+	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequest(..))")
+	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return mark("core/resource/create", joinPoint);
+		return measureTime("core/application/request", joinPoint);
 	}
 }

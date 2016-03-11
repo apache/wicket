@@ -223,6 +223,10 @@ wicketstuff:
   wicketstuff_5: Module wicketstuff-inmethod-grid
   wicketstuff_6: Module wicketstuff-rest-annotations
   wicketstuff_7: Module stateless
+monitoring:
+  title: Wicket Metrics Monitoring
+  monitoring_1: Example setup
+  monitoring_2: Visualization with Graphite
 redirects:
   title: Lost In Redirection With Apache Wicket (Appendix)
 contributing:
