@@ -24,7 +24,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  * @see ListView
  * @param <T>
  *            Model object type
- * 
  */
 public class ListItemModel<T> extends AbstractReadOnlyModel<T>
 {
@@ -50,21 +49,9 @@ public class ListItemModel<T> extends AbstractReadOnlyModel<T>
 		this.index = index;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
 		return listView.getModelObject().get(index);
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	@Override
-	public void detach()
-	{
-		// Do nothing. ListView will detach its own model object.
 	}
 }

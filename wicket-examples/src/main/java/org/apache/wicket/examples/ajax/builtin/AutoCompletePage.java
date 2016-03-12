@@ -68,11 +68,6 @@ public class AutoCompletePage extends BasePage
 				values.append("\n");
 				values.append(value);
 			}
-
-			@Override
-			public void detach()
-			{
-			}
 		};
 
 		final AutoCompleteTextField<String> field = new AutoCompleteTextField<String>("ac", model)

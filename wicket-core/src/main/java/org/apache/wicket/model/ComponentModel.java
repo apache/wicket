@@ -76,14 +76,6 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	@Override
-	public void detach()
-	{
-	}
-
-	/**
 	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
 	 */
 	@Override

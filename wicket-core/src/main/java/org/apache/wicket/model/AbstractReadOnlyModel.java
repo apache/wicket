@@ -31,12 +31,6 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see IModel#getObject()
-	 */
-	@Override
-	public abstract T getObject();
-
-	/**
 	 * This default implementation of setObject unconditionally throws an
 	 * UnsupportedOperationException. Since the method is final, any subclass is effectively a
 	 * read-only model.
@@ -52,22 +46,11 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 			" does not support setObject(Object)");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder("Model:classname=[");
 		sb.append(getClass().getName()).append("]");
 		return sb.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void detach()
-	{
 	}
 }

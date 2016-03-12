@@ -87,11 +87,6 @@ public class CheckedFolderContent extends Content
 					{
 						check(model.getObject(), object);
 					}
-
-					@Override
-					public void detach()
-					{
-					}
 				};
 			}
 		};

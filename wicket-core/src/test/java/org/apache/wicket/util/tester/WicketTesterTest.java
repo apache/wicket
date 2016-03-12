@@ -526,11 +526,6 @@ public class WicketTesterTest extends WicketTestCase
 			{
 				value = object;
 			}
-
-			@Override
-			public void detach()
-			{
-			}
 		};
 
 		labelModel.setObject("Label 1");

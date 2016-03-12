@@ -71,11 +71,6 @@ public class NodeModelTest extends Assert
 		}
 
 		@Override
-		public void detach()
-		{
-		}
-
-		@Override
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof StringModel)

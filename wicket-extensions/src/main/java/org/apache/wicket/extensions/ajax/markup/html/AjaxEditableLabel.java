@@ -571,7 +571,6 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 		public void detach()
 		{
 			getParentModel().detach();
-
 		}
 
 		@Override
