@@ -18,7 +18,7 @@ package org.apache.wicket.model.lambda;
 
 import java.util.Objects;
 
-import org.apache.wicket.lambdas.WicketSupplier;
+import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.util.lang.Args;
 

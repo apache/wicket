@@ -18,8 +18,8 @@ package org.apache.wicket.model.lambda;
 
 import java.util.Objects;
 
-import org.apache.wicket.lambdas.WicketConsumer;
-import org.apache.wicket.lambdas.WicketSupplier;
+import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 

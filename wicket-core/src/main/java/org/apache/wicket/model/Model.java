@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.lambdas.WicketConsumer;
-import org.apache.wicket.lambdas.WicketSupplier;
+import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.lambda.LambdaModel;
 import org.apache.wicket.model.lambda.SupplierCachingModel;
 import org.apache.wicket.model.lambda.SupplierModel;

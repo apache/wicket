@@ -21,7 +21,7 @@ import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.lambdas.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.util.lang.Args;
 
 /**

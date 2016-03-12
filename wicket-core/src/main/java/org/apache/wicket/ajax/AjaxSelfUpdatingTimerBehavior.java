@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.lambdas.Lambdas;
-import org.apache.wicket.lambdas.WicketConsumer;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.util.time.Duration;
 
 /**
