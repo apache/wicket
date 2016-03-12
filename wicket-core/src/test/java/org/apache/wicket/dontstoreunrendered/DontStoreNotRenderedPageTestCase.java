@@ -58,7 +58,7 @@ public abstract class DontStoreNotRenderedPageTestCase extends WicketTestCase
 				return new IPageManagerProvider()
 				{
 					@Override
-					public IPageManager get(IPageManagerContext context)
+					public IPageManager apply(IPageManagerContext context)
 					{
 						return new MockPageManager()
 						{

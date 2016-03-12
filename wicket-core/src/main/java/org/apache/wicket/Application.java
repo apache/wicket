@@ -1539,7 +1539,7 @@ public abstract class Application implements UnboundListener, IEventSink
 			{
 				if (pageManager == null)
 				{
-					pageManager = pageManagerProvider.get(getPageManagerContext());
+					pageManager = pageManagerProvider.apply(getPageManagerContext());
 				}
 			}
 		}
@@ -1752,7 +1752,7 @@ public abstract class Application implements UnboundListener, IEventSink
 		RequestCycleContext context = new RequestCycleContext(request, response,
 			getRootRequestMapper(), getExceptionMapperProvider().get());
 
-		RequestCycle requestCycle = getRequestCycleProvider().get(context);
+		RequestCycle requestCycle = getRequestCycleProvider().apply(context);
 		requestCycle.getListeners().add(requestCycleListeners);
 		requestCycle.getListeners().add(new AbstractRequestCycleListener()
 		{

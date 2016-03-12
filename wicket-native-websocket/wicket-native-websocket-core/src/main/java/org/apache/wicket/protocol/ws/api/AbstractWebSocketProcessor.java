@@ -280,7 +280,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		RequestCycleContext context = new RequestCycleContext(webRequest, webResponse,
 				requestMapper, application.getExceptionMapperProvider().get());
 
-		RequestCycle requestCycle = application.getRequestCycleProvider().get(context);
+		RequestCycle requestCycle = application.getRequestCycleProvider().apply(context);
 		requestCycle.getListeners().add(application.getRequestCycleListeners());
 		requestCycle.getListeners().add(new AbstractRequestCycleListener()
 		{

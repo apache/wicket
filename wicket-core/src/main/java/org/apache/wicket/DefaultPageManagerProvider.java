@@ -51,7 +51,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	}
 
 	@Override
-	public IPageManager get(IPageManagerContext pageManagerContext)
+	public IPageManager apply(IPageManagerContext pageManagerContext)
 	{
 		IDataStore dataStore = newDataStore();
 

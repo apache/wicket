@@ -2764,14 +2764,14 @@ public class BaseWicketTester
 		}
 
 		@Override
-		public PageRenderer get(final RenderPageRequestHandler handler)
+		public PageRenderer apply(final RenderPageRequestHandler handler)
 		{
 			return new PageRenderer(handler)
 			{
 				@Override
 				public void respond(RequestCycle requestCycle)
 				{
-					delegate.get(handler).respond(requestCycle);
+					delegate.apply(handler).respond(requestCycle);
 
 					// WICKET-5424 record page after wrapped renderer has responded
 					if (handler.getPageProvider().hasPageInstance())
@@ -2828,9 +2828,6 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestRequestCycleProvider implements IRequestCycleProvider
 	{
 		private final IRequestCycleProvider delegate;
@@ -2841,18 +2838,15 @@ public class BaseWicketTester
 		}
 
 		@Override
-		public RequestCycle get(RequestCycleContext context)
+		public RequestCycle apply(RequestCycleContext context)
 		{
 			context.setRequestMapper(new TestRequestMapper(context.getRequestMapper()));
 			forcedHandler = null;
 			context.setExceptionMapper(new TestExceptionMapper(context.getExceptionMapper()));
-			return delegate.get(context);
+			return delegate.apply(context);
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestRequestMapper implements IRequestMapperDelegate
 	{
 		private final IRequestMapper delegate;
@@ -2896,17 +2890,10 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
-
-	/**
-	 *
-	 */
 	private static class TestPageManagerProvider implements IPageManagerProvider
 	{
 		@Override
-		public IPageManager get(IPageManagerContext pageManagerContext)
+		public IPageManager apply(IPageManagerContext pageManagerContext)
 		{
 			return new MockPageManager();
 		}
