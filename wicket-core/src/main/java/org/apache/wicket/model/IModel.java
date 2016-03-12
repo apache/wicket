@@ -54,6 +54,7 @@ package org.apache.wicket.model;
  * @param <T>
  *            Model object.
  */
+@FunctionalInterface
 public interface IModel<T> extends IDetachable
 {
 	/**
@@ -65,11 +66,15 @@ public interface IModel<T> extends IDetachable
 
 	/**
 	 * Sets the model object.
-	 * 
+	 *
 	 * @param object
 	 *            The model object
+     * @throws UnsupportedOperationException unless overridden
 	 */
-	void setObject(final T object);
+	default void setObject(final T object)
+	{
+		throw new UnsupportedOperationException("Override this method to support setObject(Object)");
+	}
 
 	@Override
 	default void detach() {}

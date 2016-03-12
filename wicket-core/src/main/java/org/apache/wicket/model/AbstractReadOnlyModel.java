@@ -25,7 +25,10 @@ package org.apache.wicket.model;
  * 
  * @param <T>
  *            The model object
+ * @deprecated Use an anonymous instance of {@link IModel} instead. Since Wicket 8.0 {@link IModel}
+ * doesn't require providing implementation of {@link IModel#setObject(Object)} method.
  */
+@Deprecated
 public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
