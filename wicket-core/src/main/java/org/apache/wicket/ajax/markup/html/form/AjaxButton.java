@@ -23,6 +23,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.lambda.WicketBiConsumer;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -215,6 +217,42 @@ public abstract class AjaxButton extends Button
 	 */
 	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 	{
+	}
+
+	public static AjaxButton ajaxButton(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+
+		return new AjaxButton(id)
+		{
+			@Override
+			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				onSubmit.accept(target, form);
+			}
+		};
+	}
+
+	public static AjaxButton ajaxButton(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
+	                                  WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+		Args.notNull(onError, "onError");
+
+		return new AjaxButton(id)
+		{
+			@Override
+			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				onSubmit.accept(target, form);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+				onError.accept(target, form);
+			}
+		};
 	}
 
 	/**

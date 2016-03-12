@@ -24,6 +24,8 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.lambda.WicketConsumer;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * An ajax link that will degrade to a normal request if ajax is not available or javascript is
