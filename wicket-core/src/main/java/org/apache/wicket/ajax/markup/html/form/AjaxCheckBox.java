@@ -19,10 +19,10 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.lambdas.Lambdas;
+import org.apache.wicket.lambdas.WicketConsumer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.lambda.WicketConsumer;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * A CheckBox which is updated via ajax when the user changes its value
@@ -92,17 +92,8 @@ public abstract class AjaxCheckBox extends CheckBox
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
-	public static AjaxCheckBox ajaxCheckBox(String id, WicketConsumer<AjaxRequestTarget> onUpdate)
+	public static AjaxCheckBox onUpdate(String id, WicketConsumer<AjaxRequestTarget> onUpdate)
 	{
-		Args.notNull(onUpdate, "onUpdate");
-
-		return new AjaxCheckBox(id)
-		{
-			@Override
-			public void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdate.accept(target);
-			}
-		};
+		return Lambdas.ajaxCheckBox(id, onUpdate);
 	}
 }

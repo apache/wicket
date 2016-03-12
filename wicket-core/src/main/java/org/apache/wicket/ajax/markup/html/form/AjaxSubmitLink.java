@@ -19,11 +19,11 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.lambdas.Lambdas;
+import org.apache.wicket.lambdas.WicketBiConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.model.lambda.WicketBiConsumer;
-import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,39 +138,14 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 
 	public static AjaxSubmitLink ajaxSubmitLink(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
 	{
-		Args.notNull(onSubmit, "onSubmit");
-
-		return new AjaxSubmitLink(id)
-		{
-			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
-			{
-				onSubmit.accept(target, form);
-			}
-		};
+		return Lambdas.ajaxSubmitLink(id, onSubmit);
 	}
 
 	public static AjaxSubmitLink ajaxSubmitLink(String id,
 	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
 	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
 	{
-		Args.notNull(onSubmit, "onSubmit");
-		Args.notNull(onError, "onError");
-
-		return new AjaxSubmitLink(id)
-		{
-			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
-			{
-				onSubmit.accept(target, form);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
-			{
-				onError.accept(target, form);
-			}
-		};
+		return Lambdas.ajaxSubmitLink(id, onSubmit, onError);
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)

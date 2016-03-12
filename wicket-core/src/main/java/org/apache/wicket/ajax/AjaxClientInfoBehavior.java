@@ -19,15 +19,15 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambdas.Lambdas;
+import org.apache.wicket.lambdas.WicketBiConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.pages.BrowserInfoForm;
-import org.apache.wicket.model.lambda.WicketBiConsumer;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -122,16 +122,7 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 
 	public static AjaxClientInfoBehavior onClientInfo(WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
 	{
-		Args.notNull(onClientInfo, "onClientInfo");
-
-		return new AjaxClientInfoBehavior()
-		{
-			@Override
-			protected void onClientInfo(AjaxRequestTarget target, WebClientInfo clientInfo)
-			{
-				onClientInfo.accept(target, clientInfo);
-			}
-		};
+		return Lambdas.onClientInfo(onClientInfo);
 	}
 
 	@Override

@@ -21,7 +21,7 @@ import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.lambda.WicketBiConsumer;
+import org.apache.wicket.lambdas.WicketBiConsumer;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -96,7 +96,7 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 	}
 
 
-	public static IndicatingAjaxButton indicatingAjaxButton(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	public static IndicatingAjaxButton onSubmit(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -110,8 +110,9 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 		};
 	}
 
-	public static IndicatingAjaxButton indicatingAjaxButton(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-	                                  WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	public static IndicatingAjaxButton onSubmit(String id,
+	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
+	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");

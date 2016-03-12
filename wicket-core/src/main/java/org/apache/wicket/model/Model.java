@@ -24,6 +24,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.lambdas.WicketConsumer;
+import org.apache.wicket.lambdas.WicketSupplier;
+import org.apache.wicket.model.lambda.LambdaModel;
+import org.apache.wicket.model.lambda.SupplierCachingModel;
+import org.apache.wicket.model.lambda.SupplierModel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.model.util.MapModel;
@@ -167,6 +172,42 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	public static <T extends Serializable> Model<T> of()
 	{
 		return new Model<>();
+	}
+
+	/**
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
+	 * <code>new LambdaModel<TypeOfObject>(getter, setter)</code>.
+	 *
+	 * @param <T>
+	 * @return Model that contains <code>object</code>
+	 */
+	public static <T> IModel<T> ofLambdas(WicketSupplier<T> getter, WicketConsumer<T> setter)
+	{
+		return new LambdaModel<>(getter, setter);
+	}
+
+	/**
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
+	 * <code>new SupplierModel<TypeOfObject>(getter)</code>.
+	 *
+	 * @param <T>
+	 * @return Model that contains <code>object</code>
+	 */
+	public static <T> IModel<T> readOnly(WicketSupplier<T> getter)
+	{
+		return new SupplierModel<>(getter);
+	}
+
+	/**
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
+	 * <code>new SupplierCachingModel<TypeOfObject>(getter)</code>.
+	 *
+	 * @param <T>
+	 * @return Model that contains <code>object</code>
+	 */
+	public static <T> IModel<T> cachingReadOnly(WicketSupplier<T> getter)
+	{
+		return new SupplierCachingModel<>(getter);
 	}
 
 	/**

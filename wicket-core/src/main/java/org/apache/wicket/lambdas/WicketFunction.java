@@ -14,17 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model.lambda;
+package org.apache.wicket.lambdas;
 
 import java.io.Serializable;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 /**
- * A {@link Serializable} {@link Supplier}.
+ * A {@link Serializable} {@link Function}.
  *
  * @param <T>
- *            - the type of results supplied by this supplier
+ *            - the type of the input to the function
+ * @param <R>
+ *            - the type of the result of the function
  */
-public interface WicketSupplier<T> extends Supplier<T>, Serializable
+public interface WicketFunction<T, R> extends Function<T, R>, Serializable
 {
 }

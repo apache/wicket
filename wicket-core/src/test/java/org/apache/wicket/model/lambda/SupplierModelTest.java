@@ -25,6 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.lambdas.WicketSupplier;
 import org.apache.wicket.model.IModel;
 import org.junit.Test;
 

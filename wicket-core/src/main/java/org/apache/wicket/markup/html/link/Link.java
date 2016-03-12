@@ -20,11 +20,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.lambdas.Lambdas;
+import org.apache.wicket.lambdas.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.lambda.WicketConsumer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -177,18 +177,9 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	 */
 	public abstract void onClick();
 
-	public static <T> Link<T> link(String id, WicketConsumer<Void> onClick)
+	public static <T> Link<T> onClick(String id, WicketConsumer<Void> onClick)
 	{
-		Args.notNull(onClick, "onClick");
-
-		return new Link<T>(id)
-		{
-			@Override
-			public void onClick()
-			{
-				onClick.accept((Void)null);
-			}
-		};
+		return Lambdas.link(id, onClick);
 	}
 
 	/**

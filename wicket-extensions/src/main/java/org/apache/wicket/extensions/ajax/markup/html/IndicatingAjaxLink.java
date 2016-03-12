@@ -20,7 +20,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.lambda.WicketConsumer;
+import org.apache.wicket.lambdas.WicketConsumer;
 import org.apache.wicket.util.lang.Args;
 
 /**

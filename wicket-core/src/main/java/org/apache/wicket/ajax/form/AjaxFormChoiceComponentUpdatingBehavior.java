@@ -21,14 +21,14 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambdas.Lambdas;
+import org.apache.wicket.lambdas.WicketBiConsumer;
+import org.apache.wicket.lambdas.WicketConsumer;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.model.lambda.WicketBiConsumer;
-import org.apache.wicket.model.lambda.WicketConsumer;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * This is a Ajax Component Update Behavior that is meant for choices/groups that are not one
@@ -114,36 +114,12 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 			(component instanceof CheckGroup);
 	}
 
-
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice) {
-		Args.notNull(onUpdateChoice, "onUpdateChoice");
-		return new AjaxFormChoiceComponentUpdatingBehavior()
-		{
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdateChoice.accept(target);
-			}
-		};
+		return Lambdas.onUpdateChoice(onUpdateChoice);
 	}
 
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice,
 	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError) {
-		Args.notNull(onUpdateChoice, "onUpdateChoice");
-		Args.notNull(onError, "onError");
-		return new AjaxFormChoiceComponentUpdatingBehavior()
-		{
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdateChoice.accept(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, RuntimeException e)
-			{
-				onError.accept(target, e);
-			}
-		};
+		return Lambdas.onUpdateChoice(onUpdateChoice, onError);
 	}
 }
