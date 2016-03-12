@@ -19,12 +19,14 @@ package org.apache.wicket.model.lambda;
 import java.io.Serializable;
 import java.util.function.Supplier;
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * A {@link Serializable} {@link Supplier}.
  *
  * @param <T>
  *            - the type of results supplied by this supplier
  */
-public interface WicketSupplier<T> extends Supplier<T>, Serializable
+public interface WicketSupplier<T> extends Supplier<T>, IClusterable
 {
 }
