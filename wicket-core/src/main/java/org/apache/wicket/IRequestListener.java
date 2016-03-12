@@ -27,7 +27,7 @@ import org.apache.wicket.util.io.IClusterable;
  * {@link RequestListenerInterface} object for the given interface class. The best way to do this is
  * to create a public static final constant field in your request listener interface. Doing this
  * will cause the interface to automatically register whenever it is used. For example, see
- * {@link org.apache.wicket.IRedirectListener#INTERFACE}.
+ * {@link org.apache.wicket.IResourceListener#INTERFACE}.
  * 
  * @author Jonathan Locke
  */

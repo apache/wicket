@@ -152,7 +152,7 @@ public interface ISessionStore
 	/**
 	 * Listener invoked when session is unbound.
 	 */
-	public interface UnboundListener
+	interface UnboundListener
 	{
 		/**
 		 * Informs the listener that session with specific id has been unbound.
@@ -184,7 +184,7 @@ public interface ISessionStore
 	/**
 	 * Listener invoked when session is bound.
 	 */
-	public interface BindListener
+	interface BindListener
 	{
 		/**
 		 * Informs the listener that a session is about to be bound. Note that this method is also

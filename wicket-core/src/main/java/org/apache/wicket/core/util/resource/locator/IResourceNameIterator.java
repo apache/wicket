@@ -32,26 +32,26 @@ public interface IResourceNameIterator extends Iterator<String>
 	 * 
 	 * @return current Locale
 	 */
-	public Locale getLocale();
+	Locale getLocale();
 
 	/**
 	 * Get the exact Style which has been used for the latest resource path.
 	 * 
 	 * @return current Style
 	 */
-	public String getStyle();
+	String getStyle();
 
 	/**
 	 * Get the exact Variation which has been used for the latest resource path.
 	 * 
 	 * @return current Variation
 	 */
-	public String getVariation();
+	String getVariation();
 
 	/**
 	 * Get the exact filename extension used for the latest resource path.
 	 * 
 	 * @return current filename extension
 	 */
-	public String getExtension();
+	String getExtension();
 }

@@ -31,7 +31,7 @@ import java.text.ParseException;
 public interface IXmlPullParser
 {
 	/** The last element found */
-	public enum HttpTagType {
+	enum HttpTagType {
 		/** next() must be called at least once for the Type to be valid */
 		NOT_INITIALIZED,
 

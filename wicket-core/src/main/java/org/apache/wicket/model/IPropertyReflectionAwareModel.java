@@ -36,20 +36,19 @@ public interface IPropertyReflectionAwareModel<T> extends IModel<T>
 	 * 
 	 * @return Field or null
 	 */
-	public Field getPropertyField();
+	Field getPropertyField();
 
 	/**
 	 * Returns the getter method of model property or null if the method doesn't exist.
 	 * 
 	 * @return Method or null
 	 */
-	public Method getPropertyGetter();
-
+	Method getPropertyGetter();
 
 	/**
 	 * Returns the setter method of model property or null if the method doesn't exist.
 	 * 
 	 * @return Method or null
 	 */
-	public Method getPropertySetter();
+	Method getPropertySetter();
 }

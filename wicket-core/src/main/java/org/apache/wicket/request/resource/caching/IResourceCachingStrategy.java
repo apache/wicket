@@ -37,7 +37,7 @@ public interface IResourceCachingStrategy
 	 * A key used to store the extracted resource's version in
 	 * {@linkplain #undecorateUrl(ResourceUrl)} into the request cycle
 	 */
-	final MetaDataKey<String> URL_VERSION = new MetaDataKey<String>()
+	MetaDataKey<String> URL_VERSION = new MetaDataKey<String>()
 	{
 	};
 

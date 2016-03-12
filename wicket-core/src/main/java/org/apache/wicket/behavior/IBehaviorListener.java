@@ -30,7 +30,7 @@ import org.apache.wicket.RequestListenerInterface;
 public interface IBehaviorListener extends IRequestListener
 {
 	/** Behavior listener interface */
-	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+	RequestListenerInterface INTERFACE = new RequestListenerInterface(
 		IBehaviorListener.class);
 
 	/**

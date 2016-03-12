@@ -30,7 +30,7 @@ import org.apache.wicket.RequestListenerInterface;
 public interface IOnChangeListener extends IRequestListener
 {
 	/** Listener interface */
-	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+	RequestListenerInterface INTERFACE = new RequestListenerInterface(
 		IOnChangeListener.class);
 
 	/**

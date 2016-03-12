@@ -34,7 +34,7 @@ package org.apache.wicket;
 public interface IResourceListener extends IRequestListener
 {
 	/** Resource listener interface object */
-	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+	RequestListenerInterface INTERFACE = new RequestListenerInterface(
 		IResourceListener.class).setIncludeRenderCount(false).setRenderPageAfterInvocation(false);
 
 	/**
