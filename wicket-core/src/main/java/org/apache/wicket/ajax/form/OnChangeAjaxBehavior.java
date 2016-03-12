@@ -17,10 +17,14 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.lambda.WicketBiConsumer;
+import org.apache.wicket.model.lambda.WicketConsumer;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A behavior that updates the hosting {@link FormComponent} via Ajax when value of the component is
@@ -73,4 +77,41 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 			attributes.setEventNames(EVENT_CHANGE);
 		}
 	}
+
+	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange)
+	{
+		Args.notNull(onChange, "onChange");
+
+		return new OnChangeAjaxBehavior()
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onChange.accept(target);
+			}
+		};
+	}
+
+	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange,
+	                                            WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	{
+		Args.notNull(onChange, "onChange");
+		Args.notNull(onError, "onError");
+
+		return new OnChangeAjaxBehavior()
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onChange.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, RuntimeException e)
+			{
+				onError.accept(target, e);
+			}
+		};
+	}
+
 }

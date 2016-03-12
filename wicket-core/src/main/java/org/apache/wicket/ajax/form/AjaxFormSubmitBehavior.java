@@ -25,6 +25,8 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
+import org.apache.wicket.model.lambda.WicketConsumer;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Ajax event behavior that submits a form via ajax when the event it is attached to, is invoked.
@@ -265,5 +267,42 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	public void setDefaultProcessing(boolean defaultProcessing)
 	{
 		this.defaultProcessing = defaultProcessing;
+	}
+
+
+	public static AjaxFormSubmitBehavior onSubmit(String eventName, WicketConsumer<AjaxRequestTarget> onSubmit)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+
+		return new AjaxFormSubmitBehavior(eventName)
+		{
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(target);
+			}
+		};
+	}
+
+	public static AjaxFormSubmitBehavior onSubmit(String eventName,
+	                                              WicketConsumer<AjaxRequestTarget> onSubmit,
+	                                              WicketConsumer<AjaxRequestTarget> onError) {
+		Args.notNull(onSubmit, "onSubmit");
+		Args.notNull(onError, "onError");
+
+		return new AjaxFormSubmitBehavior(eventName)
+		{
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target)
+			{
+				onError.accept(target);
+			}
+		};
 	}
 }

@@ -25,7 +25,12 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.model.lambda.WicketBiConsumer;
+import org.apache.wicket.model.lambda.WicketConsumer;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * An Ajax behavior that notifies when a new browser window/tab is opened with
@@ -125,5 +130,24 @@ public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjax
 	 *      the current ajax request handler
 	 */
 	protected abstract void onNewWindow(AjaxRequestTarget target);
+
+	public static AjaxNewWindowNotifyingBehavior onNewWindow(String windowName, WicketConsumer<AjaxRequestTarget> onNewWindow)
+	{
+		Args.notNull(onNewWindow, "onNewWindow");
+
+		if (Strings.isEmpty(windowName))
+		{
+			windowName = UUID.randomUUID().toString();
+		}
+
+		return new AjaxNewWindowNotifyingBehavior(windowName)
+		{
+			@Override
+			protected void onNewWindow(AjaxRequestTarget target)
+			{
+				onNewWindow.accept(target);
+			}
+		};
+	}
 
 }

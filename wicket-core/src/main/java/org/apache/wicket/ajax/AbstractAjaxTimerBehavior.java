@@ -21,6 +21,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
+import org.apache.wicket.model.lambda.WicketConsumer;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -160,6 +162,20 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 *            The request target
 	 */
 	protected abstract void onTimer(final AjaxRequestTarget target);
+
+	public static AbstractAjaxTimerBehavior onTimer(Duration interval, WicketConsumer<AjaxRequestTarget> onTimer)
+	{
+		Args.notNull(onTimer, "onTimer");
+
+		return new AbstractAjaxTimerBehavior(interval)
+		{
+			@Override
+			protected void onTimer(AjaxRequestTarget target)
+			{
+				onTimer.accept(target);
+			}
+		};
+	}
 
 	/**
 	 * @return {@code true} if has been stopped via {@link #stop(IPartialPageRequestHandler)}

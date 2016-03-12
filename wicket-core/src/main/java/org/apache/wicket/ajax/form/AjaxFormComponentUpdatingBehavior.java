@@ -25,6 +25,9 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
+import org.apache.wicket.model.lambda.WicketBiConsumer;
+import org.apache.wicket.model.lambda.WicketConsumer;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -198,6 +201,44 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 *            the current request handler
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
+
+
+	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName, WicketConsumer<AjaxRequestTarget> onUpdate)
+	{
+		Args.notNull(onUpdate, "onUpdate");
+
+		return new AjaxFormComponentUpdatingBehavior(eventName)
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onUpdate.accept(target);
+			}
+		};
+	}
+
+	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
+	                                                         WicketConsumer<AjaxRequestTarget> onUpdate,
+	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	{
+		Args.notNull(onUpdate, "onUpdate");
+		Args.notNull(onError, "onError");
+
+		return new AjaxFormComponentUpdatingBehavior(eventName)
+		{
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onUpdate.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, RuntimeException e)
+			{
+				onError.accept(target, e);
+			}
+		};
+	}
 
 	/**
 	 * Called to handle any error resulting from updating form component. Errors thrown from

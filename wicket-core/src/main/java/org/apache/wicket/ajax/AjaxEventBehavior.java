@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.model.lambda.WicketConsumer;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
@@ -162,4 +163,18 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 *      the current request handler
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
+
+	public static AjaxEventBehavior onEvent(String eventName, WicketConsumer<AjaxRequestTarget> onEvent)
+	{
+		Args.notNull(onEvent, "onEvent");
+
+		return new AjaxEventBehavior(eventName)
+		{
+			@Override
+			protected void onEvent(AjaxRequestTarget target)
+			{
+				onEvent.accept(target);
+			}
+		};
+	}
 }

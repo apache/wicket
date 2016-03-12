@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
+import org.apache.wicket.model.lambda.WicketConsumer;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -61,5 +63,19 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	 */
 	protected void onPostProcessTarget(final AjaxRequestTarget target)
 	{
+	}
+
+	public static AbstractAjaxTimerBehavior onSelfUpdate(Duration interval, WicketConsumer<AjaxRequestTarget> onTimer)
+	{
+		Args.notNull(onTimer, "onTimer");
+
+		return new AjaxSelfUpdatingTimerBehavior(interval)
+		{
+			@Override
+			protected void onPostProcessTarget(AjaxRequestTarget target)
+			{
+				onTimer.accept(target);
+			}
+		};
 	}
 }
