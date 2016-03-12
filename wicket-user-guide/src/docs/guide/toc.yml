@@ -227,6 +227,7 @@ monitoring:
   title: Wicket Metrics Monitoring
   monitoring_1: Example setup
   monitoring_2: Visualization with Graphite
+  monitoring_3: Measured data
 redirects:
   title: Lost In Redirection With Apache Wicket (Appendix)
 contributing:

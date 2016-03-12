@@ -63,4 +63,8 @@ reporter.start(1, TimeUnit.SECONDS);
 
 - (20) Go to http://localhost:8080
 
+* (18) and (19) have to be executed if the mac has been restarted 
+
 (4) Now start your tomcat server configured like mentioned in the previous chapter.
+
+!wicket_metrics_graphite.png!

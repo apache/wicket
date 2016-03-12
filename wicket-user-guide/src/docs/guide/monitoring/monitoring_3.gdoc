@@ -1,0 +1,18 @@
+The data which is going to be measured depends on the wicket-metrics implementation. So it doesn't make any sense to collect time data
+
+about setRepsonsePage, but it does for the constructor of components, to see if a component needs a long time to be created. You can
+
+get the information about which data has been collected from out of the mbeans.
+
+Here are some information about them:
+
+* max - the maximal time for a task (created, initialized, etc.)
+
+* min - the minimal time for a task (created, initialized, etc.)
+
+* count - how often something happend (request count)
+
+The structure is separated in the way that under core there are the kind of components measured and below that the type of operation
+
+(created, initialized, detached). In this category every component is listed dynamically.
+
