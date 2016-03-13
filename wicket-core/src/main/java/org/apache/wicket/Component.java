@@ -683,9 +683,10 @@ public abstract class Component
 		checkId(id);
 		this.id = id;
 
-		getApplication().getComponentInstantiationListeners().onInstantiation(this);
+		Application application = getApplication();
+		application.getComponentInstantiationListeners().onInstantiation(this);
 
-		final DebugSettings debugSettings = getApplication().getDebugSettings();
+		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
@@ -922,9 +923,6 @@ public abstract class Component
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void internalBeforeRender()
 	{
 		configure();
@@ -934,10 +932,11 @@ public abstract class Component
 		{
 			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
-			getApplication().getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
+			Application application = getApplication();
+			application.getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
 
 			onBeforeRender();
-			getApplication().getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
+			application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
 			if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
 			{
