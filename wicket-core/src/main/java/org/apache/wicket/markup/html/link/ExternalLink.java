@@ -68,7 +68,7 @@ public class ExternalLink extends AbstractLink
 	{
 		super(id);
 
-		setDefaultModel(href != null ? new Model<String>(href) : null);
+		setDefaultModel(href != null ? new Model<>(href) : null);
 		setBody(Model.of(label));
 	}
 
