@@ -184,12 +184,6 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		super.onComponentTag(tag);
 	}
 
-	/**
-	 * Final because we made {@link #convertInput()} final and it no longer delegates to
-	 * {@link #getConverter(Class)}
-	 * 
-	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
-	 */
 	@Override
 	public final <C> IConverter<C> getConverter(Class<C> type)
 	{
