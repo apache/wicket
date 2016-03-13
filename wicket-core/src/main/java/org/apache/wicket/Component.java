@@ -683,6 +683,8 @@ public abstract class Component
 		checkId(id);
 		this.id = id;
 
+		init();
+
 		Application application = getApplication();
 		application.getComponentInstantiationListeners().onInstantiation(this);
 
@@ -697,6 +699,15 @@ public abstract class Component
 		{
 			setModelImpl(wrap(model));
 		}
+	}
+	
+	/**
+	 * Let subclasses initialize this instance, before constructors are executed. <br>
+	 * This method is intentionally <b>not</b> declared protected, to limit overriding to classes in
+	 * this package.
+	 */
+	void init()
+	{
 	}
 
 	/**
