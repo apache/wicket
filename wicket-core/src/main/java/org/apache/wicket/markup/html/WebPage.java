@@ -60,7 +60,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WebPage extends Page
 {
-	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
@@ -76,9 +75,6 @@ public class WebPage extends Page
 		commonInit();
 	}
 
-	/**
-	 * @see Page#Page(IModel)
-	 */
 	protected WebPage(final IModel<?> model)
 	{
 		super(model);
