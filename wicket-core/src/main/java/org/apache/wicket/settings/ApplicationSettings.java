@@ -27,7 +27,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * * Settings interface for application settings.
+ * * Settings class for application settings.
  * <p>
  * <i>internalErrorPage </i>- You can override this with your own page class to display internal
  * errors in a different way.

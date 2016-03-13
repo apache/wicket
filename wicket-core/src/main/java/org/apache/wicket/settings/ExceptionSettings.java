@@ -21,7 +21,7 @@ import org.apache.wicket.util.lang.EnumeratedType;
 
 /**
  *
- * Settings interface for configuring exception handling related settings.
+ * Settings class for configuring exception handling related settings.
  * <p>
  * <i>unexpectedExceptionDisplay </i> (defaults to SHOW_EXCEPTION_PAGE) - Determines how exceptions
  * are displayed to the developer or user

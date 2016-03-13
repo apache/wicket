@@ -22,7 +22,7 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.lang.Generics;
 
 /**
- * Interface for page related settings.
+ * Class for page related settings.
  *
  * @author Jonathan Locke
  * @author Chris Turner
