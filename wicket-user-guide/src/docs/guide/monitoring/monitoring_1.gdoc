@@ -1,4 +1,4 @@
-This is a little example how to setup wicket-metrics within a tomcat.
+This is a little example how to setup wicket-metrics within a Apache Tomcat.
 
 (1)  Add the maven dependency to your project
 {code}
@@ -13,7 +13,36 @@ This is a little example how to setup wicket-metrics within a tomcat.
 
 (3) Add the java agent to the jvm start options of your tomcat: -javaagent:/pathToServer/lib/aspectjweaver-x.x.x.jar
 
-(4) To enable the JMX measurement write the following line into your init method of your Application (Now you are able to connect with jvisualvm to your server and have a look at the data):
+(4) Add an aop.xml to your project with the metrics you want to use (aspect tags) - if you don't want to enable a metrics just remove the aspect tag:
 {code}
-WicketMetrics.startJmxReporter();
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+    <weaver options="-nowarn">
+        <include within="org.apache.wicket..*"/>
+    </weaver>
+    <aspects>
+		<aspect name="org.apache.wicket.metrics.aspects.BehaviorAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.IPartialPageRequestHandlerAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ComponentAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ResourceReferenceAspect" />
+    </aspects>
+</aspectj>
 {code}
+
+(5 - optional) To enable the JMX measurement write the following line into your init method of your Application (Now you are able to connect with jvisualvm to your server and have a look at the data):
+{code}
+Application.get().getMetaData(WicketMetrics.METRIC_SETTINGS).startJmxReporter();
+{code}
+
+To deactivate:
+{code}
+Application.get().getMetaData(WicketMetrics.METRIC_SETTINGS).stopJmxReporter();
+{code}
+
+To disable measurement:
+{code}
+Application.get().getMetaData(WicketMetrics.METRIC_SETTINGS).setEnable(false);
+{code}
+
+

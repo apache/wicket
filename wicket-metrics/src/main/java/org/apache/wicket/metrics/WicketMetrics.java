@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.metrics;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 import org.aspectj.lang.ProceedingJoinPoint;
 
-import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer.Context;
 
@@ -31,24 +32,32 @@ import com.codahale.metrics.Timer.Context;
 public class WicketMetrics
 {
 
-	private static MetricRegistry metricRegistry;
-
-	private static boolean enabled = true;
-
-	private static final String PREFIX = "ApacheWicket/";
-
-	/**
-	 * Gets the metric registry
-	 * 
-	 * @return the metric registry
-	 */
-	public static MetricRegistry getMetricRegistry()
+	/** The key for metrics **/
+	public static final MetaDataKey<WicketMetrics> METRICS = new MetaDataKey<WicketMetrics>()
 	{
-		if (metricRegistry == null)
-		{
-			metricRegistry = new MetricRegistry();
-		}
-		return metricRegistry;
+		private static final long serialVersionUID = 1L;
+	};
+	
+	/** The key for metrics registry **/
+	public static final MetaDataKey<MetricRegistry> METRIC_REGISTRY = new MetaDataKey<MetricRegistry>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+	
+	/** The key for metrics registry **/
+	public static final MetaDataKey<WicketMetricsSettings> METRIC_SETTINGS = new MetaDataKey<WicketMetricsSettings>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+	
+	/**
+	 * Creates the wicket metrics
+	 */
+	public WicketMetrics()
+	{
+		Application application = Application.get();
+		application.setMetaData(METRICS, this);
+		application.setMetaData(METRIC_SETTINGS, new WicketMetricsSettings());
 	}
 
 	/**
@@ -64,10 +73,13 @@ public class WicketMetrics
 	 */
 	public Object measureTime(String name, ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		if (WicketMetrics.enabled)
+		WicketMetricsSettings settings = getSettings();
+		MetricRegistry registry = getMetricRegistry();
+		
+		if (settings.isEnabled())
 		{
-			Context context = getMetricRegistry().timer(PREFIX + name + renderClassName(joinPoint))
-				.time();
+			Context context = registry
+				.timer(settings.getPrefix() + name + renderClassName(joinPoint)).time();
 			try
 			{
 				return joinPoint.proceed();
@@ -95,9 +107,12 @@ public class WicketMetrics
 	 */
 	public Object mark(String name, ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		if (WicketMetrics.enabled)
+		WicketMetricsSettings settings = getSettings();
+		MetricRegistry registry = getMetricRegistry();
+		
+		if (settings.isEnabled())
 		{
-			getMetricRegistry().meter(PREFIX + name + renderClassName(joinPoint)).mark();
+			registry.meter(settings.getPrefix() + name + renderClassName(joinPoint)).mark();
 		}
 		if (joinPoint != null)
 		{
@@ -107,7 +122,7 @@ public class WicketMetrics
 	}
 
 	/**
-	 * Stops the contex quietly
+	 * Stops the context quietly
 	 * 
 	 * @param context
 	 *            the context to stop
@@ -121,33 +136,6 @@ public class WicketMetrics
 	}
 
 	/**
-	 * Starts the jmx reporter
-	 */
-	public static void startJmxReporter()
-	{
-		JmxReporter.forRegistry(getMetricRegistry()).build().start();
-	}
-
-	/**
-	 * Stops the jmx reporter
-	 */
-	public static void stopJmxReporter()
-	{
-		JmxReporter.forRegistry(getMetricRegistry()).build().stop();
-	}
-
-	/**
-	 * If the metrics should be enabled
-	 * 
-	 * @param enabled
-	 *            if the metrics should be enabled
-	 */
-	public static void setEnabled(boolean enabled)
-	{
-		WicketMetrics.enabled = enabled;
-	}
-
-	/**
 	 * Renders the class name of the given join point
 	 * 
 	 * @param joinPoint
@@ -158,5 +146,40 @@ public class WicketMetrics
 	{
 		return joinPoint != null
 			? "/" + joinPoint.getTarget().getClass().getName().replace('.', '_') : "";
+	}
+
+	/**
+	 * Gets the metric registry
+	 * 
+	 * @return the metric registry
+	 */
+	private MetricRegistry getMetricRegistry()
+	{
+		Application application = Application.get();
+		MetricRegistry metricRegistry = application.getMetaData(METRIC_REGISTRY);
+		if (metricRegistry == null)
+		{
+			metricRegistry = new MetricRegistry();
+			application.setMetaData(METRIC_REGISTRY, metricRegistry);
+		}
+		return metricRegistry;
+	}
+
+	/**
+	 * Gets the wicket metrics settings
+	 * 
+	 * @return the wicket metrics settings
+	 */
+	private WicketMetricsSettings getSettings()
+	{
+		Application application = Application.get();
+		
+		WicketMetricsSettings metricRegistry = application.getMetaData(METRIC_SETTINGS);
+		if (metricRegistry == null)
+		{
+			metricRegistry = new WicketMetricsSettings();
+			Application.get().setMetaData(METRIC_SETTINGS, metricRegistry);
+		}
+		return metricRegistry;
 	}
 }
