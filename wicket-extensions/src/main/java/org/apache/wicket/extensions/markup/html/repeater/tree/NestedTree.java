@@ -23,7 +23,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.markup.html.repeater.tree.nested.BranchItem;
 import org.apache.wicket.extensions.markup.html.repeater.tree.nested.Subtree;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -153,7 +152,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 		});
 	}
 
-	private class RootsModel extends AbstractReadOnlyModel<T>
+	private class RootsModel implements IModel<T>
 	{
 		private static final long serialVersionUID = 1L;
 

@@ -25,7 +25,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -53,11 +52,8 @@ public class HelloBrowser extends WicketExamplePage
 
 		add(new MultiLineLabel("clientinfo", properties.toString()));
 
-		IModel<String> clientTimeModel = new AbstractReadOnlyModel<String>()
+		IModel<String> clientTimeModel = new IModel<String>()
 		{
-			/**
-			 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
-			 */
 			@Override
 			public String getObject()
 			{

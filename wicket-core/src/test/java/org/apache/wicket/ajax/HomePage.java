@@ -29,7 +29,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
@@ -73,7 +73,7 @@ public class HomePage extends WebPage
 
 		final ListView<Object> listView;
 		listViewContainer.add(listView = new ListView<Object>("listView",
-			new AbstractReadOnlyModel<List<Object>>()
+			new IModel<List<Object>>()
 			{
 				@Override
 				public List<Object> getObject()

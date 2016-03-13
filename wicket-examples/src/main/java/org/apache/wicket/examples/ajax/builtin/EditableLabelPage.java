@@ -25,8 +25,8 @@ import org.apache.wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 
 
 /**
@@ -50,24 +50,17 @@ public class EditableLabelPage extends BasePage
 	 */
 	public EditableLabelPage()
 	{
-		Form form = new Form("form", new CompoundPropertyModel<>(this));
+		Form form = new Form<>("form", new CompoundPropertyModel<>(this));
 		add(form);
 
 		form.add(new AjaxEditableLabel("text1"));
 		form.add(new AjaxEditableLabel("text2"));
 		form.add(new AjaxEditableMultiLineLabel("text3"));
-		form.add(new AjaxEditableChoiceLabel("site", SITES));
+		form.add(new AjaxEditableChoiceLabel<>("site", SITES));
 
-		form.add(new Label("refresh-counter", new AbstractReadOnlyModel<String>()
-		{
-			@Override
-			public String getObject()
-			{
-				return "" + refreshCounter;
-			}
-		}));
+		form.add(new Label("refresh-counter", (IModel<String>) () -> "" + refreshCounter));
 
-		form.add(new Link("refresh-link")
+		form.add(new Link<Void>("refresh-link")
 		{
 			@Override
 			public void onClick()

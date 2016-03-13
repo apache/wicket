@@ -37,11 +37,10 @@ import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.util.file.Files;
@@ -67,7 +66,7 @@ public class Home extends WicketExamplePage
 	public Home()
 	{
 		// Action link counts link clicks
-		final Link actionLink = new Link("actionLink")
+		final Link<Void> actionLink = new Link<Void>("actionLink")
 		{
 			@Override
 			public void onClick()
@@ -80,7 +79,7 @@ public class Home extends WicketExamplePage
 		add(actionLink);
 
 		// Action link counts link clicks on works with onclick handler
-		final Link actionOnClickLink = new Link("actionOnClickLink")
+		final Link<Void> actionOnClickLink = new Link<Void>("actionOnClickLink")
 		{
 			@Override
 			public void onClick()
@@ -154,7 +153,7 @@ public class Home extends WicketExamplePage
 		// Shared resource link
 		add(new ResourceLink<>("cancelButtonLink", new SharedResourceReference("cancelButton")));
 
-		add(new DownloadLink("downloadLink", new AbstractReadOnlyModel<File>()
+		add(new DownloadLink("downloadLink", new IModel<File>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -184,7 +183,7 @@ public class Home extends WicketExamplePage
 		add(feedbackPanel);
 		add(new RedirectForm("redirectForm"));
 
-		Link linkToAnchor = new Link("linkToAnchor")
+		Link<Void> linkToAnchor = new Link<Void>("linkToAnchor")
 		{
 			@Override
 			public void onClick()
@@ -192,7 +191,7 @@ public class Home extends WicketExamplePage
 			}
 		};
 		add(linkToAnchor);
-		Link anotherlinkToAnchor = new Link("anotherlinkToAnchor")
+		Link<Void> anotherlinkToAnchor = new Link<Void>("anotherlinkToAnchor")
 		{
 			@Override
 			public void onClick()

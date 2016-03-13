@@ -18,7 +18,7 @@ package org.apache.wicket.model.lambda;
 
 import java.util.Objects;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -27,7 +27,7 @@ import org.apache.wicket.util.lang.Args;
  * @param <T>
  *            - type of the model object
  */
-public class SupplierModel<T> extends AbstractReadOnlyModel<T>
+public class SupplierModel<T> implements IModel<T>
 {
 	/**
 	 * Supplies the model object.
@@ -50,6 +50,12 @@ public class SupplierModel<T> extends AbstractReadOnlyModel<T>
 	public T getObject()
 	{
 		return getter.get();
+	}
+
+	@Override
+	public final void setObject(T object)
+	{
+		IModel.super.setObject(object);
 	}
 
 	@Override

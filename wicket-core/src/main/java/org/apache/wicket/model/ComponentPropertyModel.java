@@ -28,9 +28,7 @@ import org.apache.wicket.core.util.lang.PropertyResolver;
  * @param <T>
  *            The Model object
  */
-public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
-	implements
-		IComponentAssignedModel<T>
+public class ComponentPropertyModel<T> implements IComponentAssignedModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -48,13 +46,16 @@ public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
 		this.propertyName = propertyName;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
 		throw new IllegalStateException("Wrapper should have been called");
+	}
+
+	@Override
+	public final void setObject(T object)
+	{
+		IComponentAssignedModel.super.setObject(object);
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
 	 * @param <P>
 	 *            The Model Object
 	 */
-	private class AssignmentWrapper<P> extends AbstractReadOnlyModel<P> implements IWrapModel<P>
+	private class AssignmentWrapper<P> implements IWrapModel<P>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -112,7 +113,6 @@ public class ComponentPropertyModel<T> extends AbstractReadOnlyModel<T>
 		@Override
 		public void detach()
 		{
-			super.detach();
 			ComponentPropertyModel.this.detach();
 		}
 	}

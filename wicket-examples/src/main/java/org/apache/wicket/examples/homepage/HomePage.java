@@ -19,7 +19,7 @@ package org.apache.wicket.examples.homepage;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * @author mocleiri
@@ -36,18 +36,13 @@ public class HomePage extends WebPage
 	{
 		super();
 
-		add(new Label("version", new AbstractReadOnlyModel<String>()
+		add(new Label("version", new IModel<String>()
 		{
-
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public String getObject()
 			{
-
 				/*
 				 * Read the specification version from the wicket-core MANIFEST.MF file.
 				 */

@@ -31,7 +31,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 
@@ -66,7 +65,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		protected IModel<FeedbackMessage> getListItemModel(
 			final IModel<? extends List<FeedbackMessage>> listViewModel, final int index)
 		{
-			return new AbstractReadOnlyModel<FeedbackMessage>()
+			return new IModel<FeedbackMessage>()
 			{
 				private static final long serialVersionUID = 1L;
 

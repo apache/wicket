@@ -26,7 +26,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -43,7 +42,7 @@ public class AjaxHelloBrowser extends WicketExamplePage
 	 */
 	public AjaxHelloBrowser()
 	{
-		final MultiLineLabel clientInfo = new MultiLineLabel("clientinfo", new AbstractReadOnlyModel<String>()
+		final MultiLineLabel clientInfo = new MultiLineLabel("clientinfo", new IModel<String>()
 		{
 			@Override
 			public String getObject()
@@ -55,7 +54,7 @@ public class AjaxHelloBrowser extends WicketExamplePage
 		clientInfo.setOutputMarkupPlaceholderTag(true);
 		clientInfo.setVisible(false);
 
-		IModel<String> clientTimeModel = new AbstractReadOnlyModel<String>()
+		IModel<String> clientTimeModel = new IModel<String>()
 		{
 			@Override
 			public String getObject()
