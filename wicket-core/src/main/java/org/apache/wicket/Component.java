@@ -456,7 +456,7 @@ public abstract class Component
 	private transient short requestFlags = 0;
 
 	/** Component id. */
-	private String id;
+	private final String id;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -680,9 +680,8 @@ public abstract class Component
 	 */
 	public Component(final String id, final IModel<?> model)
 	{
-		setId(id);
-
-		init();
+		checkId(id);
+		this.id = id;
 
 		getApplication().getComponentInstantiationListeners().onInstantiation(this);
 
@@ -697,15 +696,6 @@ public abstract class Component
 		{
 			setModelImpl(wrap(model));
 		}
-	}
-
-	/**
-	 * Let subclasses initialize this instance, before constructors are executed. <br>
-	 * This method is intentionally <b>not</b> declared protected, to limit overriding to classes in
-	 * this package.
-	 */
-	void init()
-	{
 	}
 
 	/**
@@ -4294,7 +4284,7 @@ public abstract class Component
 	 * @param id
 	 *            The non-null id of this component
 	 */
-	final Component setId(final String id)
+	private void checkId(final String id)
 	{
 		if (!(this instanceof Page))
 		{
@@ -4308,9 +4298,6 @@ public abstract class Component
 		{
 			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
-
-		this.id = id;
-		return this;
 	}
 
 	/**
