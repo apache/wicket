@@ -72,13 +72,11 @@ public class WebPage extends Page
 	 */
 	protected WebPage()
 	{
-		commonInit();
 	}
 
 	protected WebPage(final IModel<?> model)
 	{
 		super(model);
-		commonInit();
 	}
 
 	/**
@@ -99,7 +97,6 @@ public class WebPage extends Page
 	protected WebPage(final PageParameters parameters)
 	{
 		super(parameters);
-		commonInit();
 	}
 
 	/**
@@ -114,14 +111,6 @@ public class WebPage extends Page
 	public MarkupType getMarkupType()
 	{
 		return MarkupType.HTML_MARKUP_TYPE;
-	}
-
-	/**
-	 * Common code executed by constructors.
-	 */
-	private void commonInit()
-	{
-		// so far a noop
 	}
 
 	@Override
