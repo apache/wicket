@@ -41,9 +41,9 @@ public class WicketFilterAspect extends WicketMetrics
 	 * @throws Throwable
 	 *             might occur while invoking process request
 	 */
-	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequest(..))")
+	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequestCycle(..))")
 	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return measureTime("core/application/request", joinPoint);
+		return measureTime("core/application/requestCycle", joinPoint);
 	}
 }
