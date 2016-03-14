@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.model;
 
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,8 +108,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 				state = InternalState.DETACHED;
 				transientModelObject = null;
 
-				log.debug("removed transient object for {}, requestCycle {}", this,
-					RequestCycle.get());
+				log.debug("removed transient object for '{}'", this);
 			}
 		}
 	}
@@ -127,8 +125,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 
 			if (log.isDebugEnabled())
 			{
-				log.debug("loaded transient object " + transientModelObject + " for " + this +
-					", requestCycle " + RequestCycle.get());
+				log.debug("loaded transient object '{}' for '{}'", transientModelObject, this);
 			}
 
 			state = InternalState.ATTACHED;
