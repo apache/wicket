@@ -32,33 +32,17 @@ import com.codahale.metrics.Timer.Context;
 public class WicketMetrics
 {
 
-	/** The key for metrics **/
-	public static final MetaDataKey<WicketMetrics> METRICS = new MetaDataKey<WicketMetrics>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
-	
 	/** The key for metrics registry **/
 	public static final MetaDataKey<MetricRegistry> METRIC_REGISTRY = new MetaDataKey<MetricRegistry>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
-	
+
 	/** The key for metrics registry **/
 	public static final MetaDataKey<WicketMetricsSettings> METRIC_SETTINGS = new MetaDataKey<WicketMetricsSettings>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
-	
-	/**
-	 * Creates the wicket metrics
-	 */
-	public WicketMetrics()
-	{
-		Application application = Application.get();
-		application.setMetaData(METRICS, this);
-		application.setMetaData(METRIC_SETTINGS, new WicketMetricsSettings());
-	}
 
 	/**
 	 * Simply measure the time for a {@literal @}around
@@ -75,7 +59,7 @@ public class WicketMetrics
 	{
 		WicketMetricsSettings settings = getSettings();
 		MetricRegistry registry = getMetricRegistry();
-		
+
 		if (settings.isEnabled())
 		{
 			Context context = registry
@@ -109,7 +93,7 @@ public class WicketMetrics
 	{
 		WicketMetricsSettings settings = getSettings();
 		MetricRegistry registry = getMetricRegistry();
-		
+
 		if (settings.isEnabled())
 		{
 			registry.meter(settings.getPrefix() + name + renderClassName(joinPoint)).mark();
@@ -173,12 +157,11 @@ public class WicketMetrics
 	private WicketMetricsSettings getSettings()
 	{
 		Application application = Application.get();
-		
 		WicketMetricsSettings metricRegistry = application.getMetaData(METRIC_SETTINGS);
 		if (metricRegistry == null)
 		{
 			metricRegistry = new WicketMetricsSettings();
-			Application.get().setMetaData(METRIC_SETTINGS, metricRegistry);
+			application.setMetaData(METRIC_SETTINGS, metricRegistry);
 		}
 		return metricRegistry;
 	}
