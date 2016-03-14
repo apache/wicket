@@ -28,7 +28,7 @@ import org.apache.wicket.Component;
  * @param <T>
  *            The model object type
  */
-public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssignedModel<T>
+public class ComponentDetachableModel<T> implements IComponentAssignedModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
