@@ -20,10 +20,10 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
 
-public class AddressFormPanel extends Panel
+public class AddressFormPanel extends GenericPanel<AddressFormPanel.ChildModel>
 {
 	public AddressFormPanel(String id, IModel<ChildModel> model)
 	{
@@ -35,13 +35,13 @@ public class AddressFormPanel extends Panel
 	private void setupPanel()
 	{
 		// create the form and add the fields and submit button
-		Form form = new Form("childForm", getDefaultModel())
+		Form<ChildModel> form = new Form<ChildModel>("childForm", getModel())
 		{
 			@Override
 			protected void onValidateModelObjects()
 			{
 				super.onValidateModelObjects();
-				((ChildModel)getModelObject()).setChildValidated(true);
+				getModelObject().setChildValidated(true);
 			}
 		};
 
@@ -60,7 +60,7 @@ public class AddressFormPanel extends Panel
 			@Override
 			public void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				((ChildModel)getPanelInstance().getDefaultModelObject()).submittedCalled(target);
+				getPanelInstance().getModelObject().submittedCalled(target);
 			}
 		});
 	}
