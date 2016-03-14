@@ -19,6 +19,8 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.pages.BrowserInfoForm;
@@ -116,6 +118,11 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	 */
 	protected void onClientInfo(AjaxRequestTarget target, WebClientInfo clientInfo)
 	{
+	}
+
+	public static AjaxClientInfoBehavior onClientInfo(WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
+	{
+		return Lambdas.onClientInfo(onClientInfo);
 	}
 
 	@Override

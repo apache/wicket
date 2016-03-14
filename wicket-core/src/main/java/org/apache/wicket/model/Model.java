@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.WicketSupplier;
+import org.apache.wicket.model.lambda.LambdaModel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.model.util.MapModel;
@@ -167,6 +170,37 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	public static <T extends Serializable> Model<T> of()
 	{
 		return new Model<>();
+	}
+
+	/**
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
+	 * <code>new LambdaModel<TypeOfObject>(getter, setter)</code>.
+	 *
+	 * @param <T>
+	 * @return Model that contains <code>object</code>
+	 */
+	public static <T> IModel<T> of(WicketSupplier<T> getter, WicketConsumer<T> setter)
+	{
+		return new LambdaModel<>(getter, setter);
+	}
+
+	/**
+	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
+	 * <code>new LoadableDetachableModel<TypeOfObject>(getter)</code>.
+	 *
+	 * @param <T>
+	 * @return Model that contains <code>object</code>
+	 */
+	public static <T> IModel<T> loadableDetachable(WicketSupplier<T> getter)
+	{
+		return new LoadableDetachableModel<T>()
+		{
+			@Override
+			protected T load()
+			{
+				return getter.get();
+			}
+		};
 	}
 
 	/**

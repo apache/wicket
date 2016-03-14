@@ -14,19 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model.lambda;
+package org.apache.wicket.lambda;
 
 import java.io.Serializable;
-import java.util.function.Consumer;
-
-import org.apache.wicket.util.io.IClusterable;
+import java.util.function.BiConsumer;
 
 /**
- * A {@link Serializable} {@link Consumer}.
+ * A {@link Serializable} {@link BiConsumer}.
  *
  * @param <T>
- *            - the type of the input to consume
+ *            - the type of the first input to consume
+ * @param <T>
+ *            - the type of the second input to consume
  */
-public interface WicketConsumer<T> extends Consumer<T>, IClusterable
+public interface WicketBiConsumer<T, U> extends BiConsumer<T, U>, Serializable
 {
 }

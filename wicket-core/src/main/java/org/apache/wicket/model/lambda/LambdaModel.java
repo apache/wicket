@@ -18,6 +18,8 @@ package org.apache.wicket.model.lambda;
 
 import java.util.Objects;
 
+import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 
@@ -48,11 +50,6 @@ public class LambdaModel<T> implements IModel<T>
 	{
 		this.getter = Args.notNull(getter, "getter");
 		this.setter = Args.notNull(setter, "setter");
-	}
-
-	public static <T> LambdaModel<T> of(WicketSupplier<T> getter, WicketConsumer<T> setter)
-	{
-		return new LambdaModel<>(getter, setter);
 	}
 
 	@Override

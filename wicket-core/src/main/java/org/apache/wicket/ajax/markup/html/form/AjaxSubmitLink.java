@@ -19,6 +19,8 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
@@ -132,6 +134,18 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 */
 	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
 	{
+	}
+
+	public static AjaxSubmitLink ajaxSubmitLink(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	{
+		return Lambdas.ajaxSubmitLink(id, onSubmit);
+	}
+
+	public static AjaxSubmitLink ajaxSubmitLink(String id,
+	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
+	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	{
+		return Lambdas.ajaxSubmitLink(id, onSubmit, onError);
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)

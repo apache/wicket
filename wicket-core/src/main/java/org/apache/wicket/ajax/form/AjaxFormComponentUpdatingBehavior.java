@@ -23,6 +23,9 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.slf4j.Logger;
@@ -198,6 +201,19 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 *            the current request handler
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
+
+
+	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName, WicketConsumer<AjaxRequestTarget> onUpdate)
+	{
+		return Lambdas.onUpdate(eventName, onUpdate);
+	}
+
+	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
+	                                                         WicketConsumer<AjaxRequestTarget> onUpdate,
+	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	{
+		return onUpdate(eventName, onUpdate, onError);
+	}
 
 	/**
 	 * Called to handle any error resulting from updating form component. Errors thrown from

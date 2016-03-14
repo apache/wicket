@@ -21,6 +21,8 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
@@ -265,5 +267,17 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	public void setDefaultProcessing(boolean defaultProcessing)
 	{
 		this.defaultProcessing = defaultProcessing;
+	}
+
+
+	public static AjaxFormSubmitBehavior onSubmit(String eventName, WicketConsumer<AjaxRequestTarget> onSubmit)
+	{
+		return Lambdas.onSubmit(eventName, onSubmit);
+	}
+
+	public static AjaxFormSubmitBehavior onSubmit(String eventName,
+	                                              WicketConsumer<AjaxRequestTarget> onSubmit,
+	                                              WicketConsumer<AjaxRequestTarget> onError) {
+		return Lambdas.onSubmit(eventName, onSubmit, onError);
 	}
 }

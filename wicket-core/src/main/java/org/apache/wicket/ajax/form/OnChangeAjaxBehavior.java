@@ -17,7 +17,11 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -73,4 +77,16 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 			attributes.setEventNames(EVENT_CHANGE);
 		}
 	}
+
+	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange)
+	{
+		return Lambdas.onChange(onChange);
+	}
+
+	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange,
+	                                            WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	{
+		return Lambdas.onChange(onChange, onError);
+	}
+
 }

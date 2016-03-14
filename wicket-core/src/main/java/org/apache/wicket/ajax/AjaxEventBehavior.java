@@ -21,6 +21,8 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
@@ -162,4 +164,9 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 *      the current request handler
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
+
+	public static AjaxEventBehavior onEvent(String eventName, WicketConsumer<AjaxRequestTarget> onEvent)
+	{
+		return Lambdas.onEvent(eventName, onEvent);
+	}
 }

@@ -19,6 +19,8 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
@@ -215,6 +217,18 @@ public abstract class AjaxButton extends Button
 	 */
 	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 	{
+	}
+
+	public static AjaxButton onSubmit(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	{
+		return Lambdas.ajaxButton(id, onSubmit);
+	}
+
+	public static AjaxButton onSubmit(String id,
+	                                    WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
+	                                    WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	{
+		return Lambdas.ajaxButton(id, onSubmit, onError);
 	}
 
 	/**

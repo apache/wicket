@@ -18,8 +18,12 @@ package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -108,5 +112,14 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 		return (component instanceof RadioChoice) ||
 			(component instanceof CheckBoxMultipleChoice) || (component instanceof RadioGroup) ||
 			(component instanceof CheckGroup);
+	}
+
+	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice) {
+		return Lambdas.onUpdateChoice(onUpdateChoice);
+	}
+
+	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice,
+	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError) {
+		return Lambdas.onUpdateChoice(onUpdateChoice, onError);
 	}
 }

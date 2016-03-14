@@ -20,6 +20,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -174,6 +176,11 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	 * Called when a link is clicked.
 	 */
 	public abstract void onClick();
+
+	public static <T> Link<T> onClick(String id, WicketConsumer<Void> onClick)
+	{
+		return Lambdas.link(id, onClick);
+	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.

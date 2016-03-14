@@ -21,6 +21,8 @@ import java.util.UUID;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
@@ -126,4 +128,8 @@ public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjax
 	 */
 	protected abstract void onNewWindow(AjaxRequestTarget target);
 
+	public static AjaxNewWindowNotifyingBehavior onNewWindow(String windowName, WicketConsumer<AjaxRequestTarget> onNewWindow)
+	{
+		return Lambdas.onNewWindow(windowName, onNewWindow);
+	}
 }
