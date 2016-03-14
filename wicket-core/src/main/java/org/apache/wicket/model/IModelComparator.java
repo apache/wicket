@@ -31,6 +31,7 @@ import org.apache.wicket.util.io.IClusterable;
  * @author Jonathan Locke
  * 
  */
+@FunctionalInterface
 public interface IModelComparator extends IClusterable
 {
 	/**
