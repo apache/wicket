@@ -116,7 +116,7 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 		 * @param owner
 		 *            component that this model has been attached to
 		 */
-		public AttachedCompoundPropertyModel(Component owner)
+		AttachedCompoundPropertyModel(Component owner)
 		{
 			super(CompoundPropertyModel.this);
 			this.owner = owner;

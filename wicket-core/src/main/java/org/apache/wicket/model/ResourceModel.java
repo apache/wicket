@@ -104,7 +104,7 @@ public class ResourceModel implements IComponentAssignedModel<String>
 		 * 
 		 * @param component
 		 */
-		public AssignmentWrapper(Component component)
+		AssignmentWrapper(Component component)
 		{
 			this.component = component;
 		}
