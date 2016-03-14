@@ -14,36 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.metrics.aspects;
+package org.apache.wicket.metrics.aspects.markup;
 
 import org.apache.wicket.metrics.WicketMetrics;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 
 /**
- * Aspect to handle basic web application information
+ * Measures information about wicket tags
  * 
  * @author Tobias Soloschenko
+ *
  */
 @Aspect
-public class WicketFilterAspect extends WicketMetrics
+public class WicketTagCreateAspect extends WicketMetrics
 {
-
 	/**
-	 * Collects data how often a request has been made against the webapp and counts the time how
-	 * long the request remains
-	 * 
-	 * @param joinPoint
-	 *            the joinPoint to be proceed
-	 * @return returns the boolean of the processRequest method
+	 * Collects data how often components redirect to another page
 	 * 
 	 * @throws Throwable
-	 *             might occur while invoking process request
+	 *             might occur while invoking setResponsePage
 	 */
-	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequestCycle(..))")
-	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
+	@Before("call(org.apache.wicket.markup.WicketTag.new(..))")
+	public void beforeResponsePage() throws Throwable
 	{
-		return measureTime("core/application/requestCycle", joinPoint);
+		mark("core/tags/wicket/create", null);
 	}
 }

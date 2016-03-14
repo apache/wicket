@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.metrics.aspects;
+package org.apache.wicket.metrics.aspects.component;
 
 import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,27 +22,26 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 /**
- * Collects basic information about pages
+ * Gets information how often different components are created
  * 
  * @author Tobias Soloschenko
- *
  */
 @Aspect
-public class ResourceReferenceAspect extends WicketMetrics
+public class ComponentCreateAspect extends WicketMetrics
 {
 
 	/**
-	 * Collects data how often a resource reference is created
+	 * Collects data how often components are created
 	 * 
 	 * @param joinPoint
-	 *            the join point (resource reference) which is created
-	 * @return the result of constructor
+	 *            the join point (component) which is created
+	 * @return the object returned from the join point
 	 * @throws Throwable
-	 *             might occur while creating a new resource reference
+	 *             might occur while constructing a new component
 	 */
-	@Around("execution(org.apache.wicket.request.resource.ResourceReference.new(..))")
+	@Around("execution(org.apache.wicket.Component.new(..))")
 	public Object aroundNew(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return mark("core/resource/create", joinPoint);
+		return measureTime("core/component/create", joinPoint);
 	}
 }
