@@ -190,7 +190,7 @@ public class StringResourceModelTest extends WicketTestCase
 		assertEquals("Let's play in the rain!", model.getString());
 
 		model = new StringResourceModel("with.quote.substitution", page)
-			.setParameters(new Object[] { "rain!" });
+			.setParameters("rain!");
 		assertEquals("Let's play in the rain!", model.getString());
 	}
 
