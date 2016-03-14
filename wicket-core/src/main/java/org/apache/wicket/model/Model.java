@@ -23,10 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.lambda.WicketSupplier;
-import org.apache.wicket.model.lambda.LambdaModel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.model.util.MapModel;
@@ -220,13 +218,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	@Override
 	public void setObject(final T object)
 	{
-		if (object != null)
-		{
-			if (!(object instanceof Serializable))
-			{
-				throw new WicketRuntimeException("Model object must be Serializable");
-			}
-		}
 		this.object = object;
 	}
 
