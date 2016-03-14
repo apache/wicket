@@ -24,6 +24,7 @@ import org.apache.wicket.Component;
  * 
  * @author Matej Knopp
  */
+@FunctionalInterface
 public interface IComponentOnBeforeRenderListener
 {
 	/**

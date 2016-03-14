@@ -28,6 +28,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
+@FunctionalInterface
 public interface IResource extends IClusterable
 {
 	/**

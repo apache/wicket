@@ -26,6 +26,7 @@ import org.apache.wicket.Component;
  *
  * <strong>Implementations must be thread safe</strong>
  */
+@FunctionalInterface
 public interface IComponentOnConfigureListener
 {
 	/**
