@@ -36,7 +36,7 @@ public interface IResource extends IClusterable
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static class Attributes
+	class Attributes
 	{
 		private final Request request;
 		private final Response response;

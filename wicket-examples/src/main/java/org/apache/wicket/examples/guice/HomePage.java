@@ -16,12 +16,13 @@
  */
 package org.apache.wicket.examples.guice;
 
-import com.google.inject.Inject;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.guice.service.IMyService;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+
+import com.google.inject.Inject;
 
 /**
  * Everybody's favorite example (Hello World), modified to use Guice.
@@ -51,15 +52,6 @@ public class HomePage extends WicketExamplePage
 				labelValue = service.getHelloWorldText();
 			}
 		});
-		add(new Label("message", new AbstractReadOnlyModel<String>()
-		{
-
-			@Override
-			public String getObject()
-			{
-				return labelValue;
-			}
-
-		}));
+		add(new Label("message", (IModel<String>) () -> labelValue));
 	}
 }

@@ -560,7 +560,7 @@ public interface IRequestLogger
 	 * 
 	 * @author jcompagner
 	 */
-	public interface ISessionLogInfo
+	interface ISessionLogInfo
 	{
 		/**
 		 * If you use the request logger log functionality then this object should have a nice

@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
@@ -113,7 +112,7 @@ public class DownloadLinkTest extends WicketTestCase
 
 		FileNameModel fileNameModel = new FileNameModel();
 
-		DownloadLink link = new DownloadLink("test", new AbstractReadOnlyModel<File>()
+		DownloadLink link = new DownloadLink("test", new IModel<File>()
 		{
 			@Override
 			public File getObject()
@@ -129,8 +128,7 @@ public class DownloadLinkTest extends WicketTestCase
 		assertTrue(fileNameModel.detachCalled);
 	}
 
-	private class FileNameModel extends AbstractReadOnlyModel<String>
-		implements
+	private class FileNameModel implements IModel<String>,
 			IComponentAssignedModel<String>,
 			IWrapModel<String>
 	{

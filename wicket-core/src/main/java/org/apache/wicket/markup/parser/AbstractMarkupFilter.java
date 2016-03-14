@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.parser;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MetaDataKey;
@@ -44,8 +46,13 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
 
-	/** A key for a request-relative counter (see {@link #getRequestUniqueId()}) **/
-	private final static MetaDataKey<AtomicInteger> REQUEST_COUNTER_KEY = new MetaDataKey<AtomicInteger>()
+	/**
+	 *  A key for a request-relative map of counters.
+	 *  As map keys we use the {@link org.apache.wicket.markup.MarkupResourceStream} cacheKey, 
+	 *  meaning that each {@link org.apache.wicket.markup.MarkupResourceStream} has its own counter. 
+	 *  The counters are used by {@link #getRequestUniqueId()} to get unique ids for markup tags.
+	 * **/
+	private final static MetaDataKey<Map<String, AtomicInteger>> REQUEST_COUNTER_KEY = new MetaDataKey<Map<String, AtomicInteger>>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -196,8 +203,9 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	}
 
 	/**
-	 * Returns an id using a request-relative counter. This can be
-	 * useful for autocomponent tags that need to get a tag id.
+	 * Returns an id using the request-relative counter associated with the 
+	 * underlying {@link org.apache.wicket.markup.MarkupResourceStream}. 
+	 * This can be useful for autocomponent tags that need to get a tag id.
 	 * 
 	 * @return
 	 * 		the request-relative id
@@ -205,15 +213,28 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	protected int getRequestUniqueId()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
-		AtomicInteger counter = requestCycle.getMetaData(REQUEST_COUNTER_KEY);
+		Map<String, AtomicInteger> markupUniqueCounters = requestCycle.getMetaData(REQUEST_COUNTER_KEY);
+		String cacheKey = getMarkupResourceStream().getCacheKey();
+		
+		if (markupUniqueCounters == null)
+		{
+			markupUniqueCounters = new HashMap<>();
+			
+			requestCycle.setMetaData(REQUEST_COUNTER_KEY, markupUniqueCounters);
+		}
+		
+		AtomicInteger counter = markupUniqueCounters.get(cacheKey);
 		
 		if (counter == null)
 		{
 			counter = new AtomicInteger();
-			
-			requestCycle.setMetaData(REQUEST_COUNTER_KEY, counter);
+			markupUniqueCounters.put(cacheKey, counter);
 		}
 		
-		return counter.getAndIncrement();
+ 	    int cacheHash = cacheKey == null ? 0 : cacheKey.hashCode();
+		
+ 	    //add the counter value to the string hash 
+ 	    //using the same algorithm of String#hashCode() 
+ 	    return  cacheHash * 31 + counter.getAndIncrement();
 	}
 }

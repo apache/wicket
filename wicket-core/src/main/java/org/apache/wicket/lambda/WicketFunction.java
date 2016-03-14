@@ -19,6 +19,8 @@ package org.apache.wicket.lambda;
 import java.io.Serializable;
 import java.util.function.Function;
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * A {@link Serializable} {@link Function}.
  *
@@ -27,6 +29,6 @@ import java.util.function.Function;
  * @param <R>
  *            - the type of the result of the function
  */
-public interface WicketFunction<T, R> extends Function<T, R>, Serializable
+public interface WicketFunction<T, R> extends Function<T, R>, IClusterable
 {
 }

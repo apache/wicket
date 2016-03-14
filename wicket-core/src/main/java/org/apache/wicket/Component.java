@@ -456,7 +456,7 @@ public abstract class Component
 	private transient short requestFlags = 0;
 
 	/** Component id. */
-	private String id;
+	private final String id;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -680,13 +680,15 @@ public abstract class Component
 	 */
 	public Component(final String id, final IModel<?> model)
 	{
-		setId(id);
+		checkId(id);
+		this.id = id;
 
 		init();
 
-		getApplication().getComponentInstantiationListeners().onInstantiation(this);
+		Application application = getApplication();
+		application.getComponentInstantiationListeners().onInstantiation(this);
 
-		final DebugSettings debugSettings = getApplication().getDebugSettings();
+		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
@@ -932,9 +934,6 @@ public abstract class Component
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void internalBeforeRender()
 	{
 		configure();
@@ -944,10 +943,11 @@ public abstract class Component
 		{
 			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
-			getApplication().getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
+			Application application = getApplication();
+			application.getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
 
 			onBeforeRender();
-			getApplication().getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
+			application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
 			if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
 			{
@@ -4294,7 +4294,7 @@ public abstract class Component
 	 * @param id
 	 *            The non-null id of this component
 	 */
-	final Component setId(final String id)
+	private void checkId(final String id)
 	{
 		if (!(this instanceof Page))
 		{
@@ -4308,9 +4308,6 @@ public abstract class Component
 		{
 			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
-
-		this.id = id;
-		return this;
 	}
 
 	/**

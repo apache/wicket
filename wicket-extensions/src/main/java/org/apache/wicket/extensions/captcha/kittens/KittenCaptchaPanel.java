@@ -43,7 +43,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -153,17 +153,14 @@ public class KittenCaptchaPanel extends Panel
 		setOutputMarkupId(true);
 
 		// Show how many animals have been selected
-		animalSelectionLabel = new Label("animalSelectionLabel",
-			new AbstractReadOnlyModel<String>()
+		animalSelectionLabel = new Label("animalSelectionLabel", new IModel<String>()
+		{
+			@Override
+			public String getObject()
 			{
-				private static final long serialVersionUID = 6792322972316712326L;
-
-				@Override
-				public String getObject()
-				{
-					return imageResource.selectString();
-				}
-			});
+				return imageResource.selectString();
+			}
+		});
 		animalSelectionLabel.setOutputMarkupId(true);
 		add(animalSelectionLabel);
 

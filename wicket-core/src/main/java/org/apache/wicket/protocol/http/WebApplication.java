@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.function.Function;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -70,7 +71,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.util.IContextProvider;
 import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
@@ -135,7 +135,7 @@ public abstract class WebApplication extends Application
 
 	private final AjaxRequestTargetListenerCollection ajaxRequestTargetListeners;
 
-	private IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider;
+	private Function<Page, AjaxRequestTarget> ajaxRequestTargetProvider;
 
 	private FilterFactoryManager filterFactoryManager;
 
@@ -743,9 +743,9 @@ public abstract class WebApplication extends Application
 				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
 			}
 		}
-		setPageRendererProvider((handler) -> new WebPageRenderer(handler));
-		setSessionStoreProvider(() -> new HttpSessionStore());
-		setAjaxRequestTargetProvider((page) -> new AjaxRequestHandler(page));
+		setPageRendererProvider(WebPageRenderer::new);
+		setSessionStoreProvider(HttpSessionStore::new);
+		setAjaxRequestTargetProvider(AjaxRequestHandler::new);
 
 		getAjaxRequestTargetListeners().add(new AjaxEnclosureListener());
 
@@ -899,7 +899,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final AjaxRequestTarget newAjaxRequestTarget(final Page page)
 	{
-		AjaxRequestTarget target = getAjaxRequestTargetProvider().get(page);
+		AjaxRequestTarget target = getAjaxRequestTargetProvider().apply(page);
 		for (AjaxRequestTarget.IListener listener : ajaxRequestTargetListeners)
 		{
 			target.addListener(listener);
@@ -1013,7 +1013,7 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @return the provider for {@link org.apache.wicket.ajax.AjaxRequestTarget} objects.
 	 */
-	public IContextProvider<AjaxRequestTarget, Page> getAjaxRequestTargetProvider()
+	public Function<Page, AjaxRequestTarget> getAjaxRequestTargetProvider()
 	{
 		return ajaxRequestTargetProvider;
 	}
@@ -1025,7 +1025,7 @@ public abstract class WebApplication extends Application
 	 *            the new provider
 	 */
 	public Application setAjaxRequestTargetProvider(
-		IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
+		Function<Page, AjaxRequestTarget> ajaxRequestTargetProvider)
 	{
 		this.ajaxRequestTargetProvider = ajaxRequestTargetProvider;
 		return this;

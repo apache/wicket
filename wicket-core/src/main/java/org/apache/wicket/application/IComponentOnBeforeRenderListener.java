@@ -32,5 +32,5 @@ public interface IComponentOnBeforeRenderListener
 	 * @param component
 	 *            the component that is about to be rendered
 	 */
-	public void onBeforeRender(Component component);
+	void onBeforeRender(Component component);
 }

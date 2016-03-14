@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * Model for list items.
@@ -24,9 +24,8 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
  * @see ListView
  * @param <T>
  *            Model object type
- * 
  */
-public class ListItemModel<T> extends AbstractReadOnlyModel<T>
+public class ListItemModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,21 +49,15 @@ public class ListItemModel<T> extends AbstractReadOnlyModel<T>
 		this.index = index;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
 		return listView.getModelObject().get(index);
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
-	public void detach()
+	public final void setObject(T object)
 	{
-		// Do nothing. ListView will detach its own model object.
+		IModel.super.setObject(object);
 	}
 }

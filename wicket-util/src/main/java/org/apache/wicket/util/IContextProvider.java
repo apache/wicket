@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util;
 
+import java.util.function.Function;
+
 /**
  * An object that can provide instances of type {@code T} depending on context parameter of type
  * {@code C}
@@ -24,8 +26,10 @@ package org.apache.wicket.util;
  *            the type of the instance
  * @param <C>
  *            the type of the context parameter
+ * @deprecated Use {@link Function<C, T>} instead
  */
-public interface IContextProvider<T, C>
+@Deprecated
+public interface IContextProvider<T, C> extends Function<C, T>
 {
 	/**
 	 * Provides an instance of type {@code T}
@@ -35,4 +39,9 @@ public interface IContextProvider<T, C>
 	 * @return instance of type {@code T}
 	 */
 	T get(C context);
+
+	@Override
+	default T apply(C context) {
+		return get(context);
+	}
 }

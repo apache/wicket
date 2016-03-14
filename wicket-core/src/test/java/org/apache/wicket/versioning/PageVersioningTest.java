@@ -62,7 +62,7 @@ public class PageVersioningTest
 				{
 
 					@Override
-					public IPageManager get(IPageManagerContext pageManagerContext)
+					public IPageManager apply(IPageManagerContext pageManagerContext)
 					{
 
 						final IDataStore dataStore = new InMemoryPageStore();

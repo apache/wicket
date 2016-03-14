@@ -44,13 +44,13 @@ public interface IChainingModel<T> extends IModel<T>
 	 * 
 	 * @param model
 	 */
-	public void setChainedModel(IModel<?> model);
+	void setChainedModel(IModel<?> model);
 
 	/**
 	 * Returns the chained model if there is a chained model.
 	 * 
 	 * @return The chained model
 	 */
-	public IModel<?> getChainedModel();
+	IModel<?> getChainedModel();
 
 }

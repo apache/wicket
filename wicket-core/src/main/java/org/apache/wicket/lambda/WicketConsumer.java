@@ -19,12 +19,14 @@ package org.apache.wicket.lambda;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * A {@link Serializable} {@link Consumer}.
  *
  * @param <T>
  *            - the type of the input to consume
  */
-public interface WicketConsumer<T> extends Consumer<T>, Serializable
+public interface WicketConsumer<T> extends Consumer<T>, IClusterable
 {
 }

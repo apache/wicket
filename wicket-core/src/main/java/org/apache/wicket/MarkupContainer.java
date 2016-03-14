@@ -163,17 +163,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private Object children;
 
-	/**
-	 * @see org.apache.wicket.Component#Component(String)
-	 */
 	public MarkupContainer(final String id)
 	{
 		this(id, null);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#Component(String, IModel)
-	 */
 	public MarkupContainer(final String id, IModel<?> model)
 	{
 		super(id, model);
@@ -899,9 +893,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return children_size();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -1596,9 +1587,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		renderComponentTagBody(markupStream, openTag);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onRender()
-	 */
 	@Override
 	protected void onRender()
 	{
@@ -1685,9 +1673,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#removeChildren()
-	 */
 	@Override
 	void removeChildren()
 	{
@@ -1710,10 +1695,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#internalMarkRendering(boolean)
-	 */
 	@Override
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
@@ -1749,10 +1730,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRenderChildren()
-	 */
 	@Override
 	void onBeforeRenderChildren()
 	{

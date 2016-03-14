@@ -171,7 +171,7 @@ public class RenderPageRequestHandler
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		PageRenderer renderer = Application.get().getPageRendererProvider().get(this);
+		PageRenderer renderer = Application.get().getPageRendererProvider().apply(this);
 		renderer.respond((RequestCycle)requestCycle);
 	}
 

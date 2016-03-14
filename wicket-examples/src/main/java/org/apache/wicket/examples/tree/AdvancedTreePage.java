@@ -44,7 +44,6 @@ import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -206,7 +205,7 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 		return content.newContentComponent(id, tree, model);
 	}
 
-	private class FooExpansionModel extends AbstractReadOnlyModel<Set<Foo>>
+	private class FooExpansionModel implements IModel<Set<Foo>>
 	{
 		@Override
 		public Set<Foo> getObject()

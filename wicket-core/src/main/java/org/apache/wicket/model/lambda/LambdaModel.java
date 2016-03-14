@@ -65,11 +65,6 @@ public class LambdaModel<T> implements IModel<T>
 	}
 
 	@Override
-	public void detach()
-	{
-	}
-
-	@Override
 	public int hashCode()
 	{
 		return org.apache.wicket.util.lang.Objects.hashCode(getter, setter);

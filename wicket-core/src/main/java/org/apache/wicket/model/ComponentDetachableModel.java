@@ -76,16 +76,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 		attached = true;
 	}
 
-
-	/**
-	 * Detaches from the current request. Implement this method with custom behavior, such as
-	 * setting the model object to null.
-	 */
-	@Override
-	public void detach()
-	{
-	}
-
 	/**
 	 * Attaches to the current request. Implement this method with custom behavior, such as loading
 	 * the model object.
@@ -121,9 +111,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
-	 */
 	@Override
 	public IWrapModel<T> wrapOnAssignment(Component comp)
 	{
@@ -144,9 +131,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 			component = comp;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
-		 */
 		@Override
 		public IModel<T> getWrappedModel()
 		{
@@ -165,9 +149,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 			}
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IModel#getObject()
-		 */
 		@Override
 		public T getObject()
 		{
@@ -175,9 +156,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 			return ComponentDetachableModel.this.getObject(component);
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-		 */
 		@Override
 		public void setObject(T object)
 		{
@@ -185,9 +163,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 			ComponentDetachableModel.this.setObject(component, object);
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IDetachable#detach()
-		 */
 		@Override
 		public void detach()
 		{
@@ -196,15 +171,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 				attached = false;
 				ComponentDetachableModel.this.detach();
 			}
-
-// IModel nestedModel = getChainedModel();
-// if (nestedModel != null)
-// {
-// // do detach the nested model because this one could be attached
-// // if the model is used not through this compound model
-// nestedModel.detach();
-// }
 		}
-
 	}
 }

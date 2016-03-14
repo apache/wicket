@@ -26,7 +26,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -88,7 +88,7 @@ public class FileUploadPage extends BasePage
 		// create the file upload field
 		form.add(file = new FileUploadField("file"));
 
-		form.add(new Label("max", new AbstractReadOnlyModel<String>()
+		form.add(new Label("max", new IModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 

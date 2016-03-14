@@ -32,12 +32,12 @@ public interface IManageablePage extends IClusterable
 	 * @return Whether this page is stateless
 	 */
 	// note that this has different semantics than Component#isStateless()
-	public boolean isPageStateless();
+	boolean isPageStateless();
 
 	/**
 	 * @return A unique identifier for this page map entry
 	 */
-	public int getPageId();
+	int getPageId();
 
 	/**
 	 * Detaches model after use. This is generally used to null out transient references that can be

@@ -124,9 +124,6 @@ public class ComponentResolvers
 		return null;
 	}
 
-	/**
-	 * 
-	 */
 	public interface ResolverFilter
 	{
 		/**

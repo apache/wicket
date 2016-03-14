@@ -24,7 +24,7 @@ import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Interface for settings related to the JavaScript libraries that come with and are used by Wicket.
+ * Class for settings related to the JavaScript libraries that come with and are used by Wicket.
  * <p>
  * With these settings the user application can replace the JavaScript libraries used for Wicket's
  * event and Ajax functionality. By default Wicket uses {@linkplain JQueryResourceReference JQuery}

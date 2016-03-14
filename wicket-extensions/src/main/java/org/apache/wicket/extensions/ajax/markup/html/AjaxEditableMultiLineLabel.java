@@ -26,7 +26,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -142,26 +141,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				AjaxEditableMultiLineLabel.this.onModelChanging();
 			}
 		};
-		editor.add(new AttributeModifier("rows", new AbstractReadOnlyModel<Integer>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Integer getObject()
-			{
-				return rows;
-			}
-		}));
-		editor.add(new AttributeModifier("cols", new AbstractReadOnlyModel<Integer>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Integer getObject()
-			{
-				return cols;
-			}
-		}));
+		editor.add(new AttributeModifier("rows", (IModel<Integer>) () -> rows));
+		editor.add(new AttributeModifier("cols", (IModel<Integer>) () -> cols));
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior()

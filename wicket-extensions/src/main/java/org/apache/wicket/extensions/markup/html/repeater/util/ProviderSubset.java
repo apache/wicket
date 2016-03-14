@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
 
@@ -242,10 +241,8 @@ public class ProviderSubset<T> implements Set<T>, IDetachable
 	 */
 	public IModel<Set<T>> createModel()
 	{
-		return new AbstractReadOnlyModel<Set<T>>()
+		return new IModel<Set<T>>()
 		{
-			/**
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override

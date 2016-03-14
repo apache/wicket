@@ -21,7 +21,6 @@ import org.apache.wicket.markup.head.MetaDataHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
@@ -76,7 +75,7 @@ public class BrowserInfoPage extends WebPage
 	 */
 	private void initComps()
 	{
-		IModel<ClientProperties> properties = new AbstractReadOnlyModel<ClientProperties>()
+		IModel<ClientProperties> properties = new IModel<ClientProperties>()
 		{
 			@Override
 			public ClientProperties getObject()

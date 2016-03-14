@@ -22,7 +22,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.AbstractItem;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 
 /**
@@ -60,7 +60,7 @@ public class RepeatingPage extends BasePage
 			item.add(new Label("cellphone", contact.getCellPhone()));
 
 			final int idx = index;
-			item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
+			item.add(AttributeModifier.replace("class", new IModel<String>()
 			{
 				private static final long serialVersionUID = 1L;
 

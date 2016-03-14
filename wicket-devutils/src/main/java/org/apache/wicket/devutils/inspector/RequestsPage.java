@@ -29,7 +29,6 @@ import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IRequestLogger;
@@ -69,10 +68,10 @@ public class RequestsPage extends DevUtilsPage
 		else
 		{
 			add(new Label("id", new Model<>(sessionData.getSessionId())));
-			add(new Label("sessionInfo", new Model<Serializable>(
+			add(new Label("sessionInfo", new Model<>(
 				(Serializable)sessionData.getSessionInfo())));
 			add(new Label("startDate", new Model<>(sdf.format(sessionData.getStartDate()))));
-			add(new Label("lastRequestTime", new Model<String>(
+			add(new Label("lastRequestTime", new Model<>(
 				sdf.format(sessionData.getLastActive()))));
 			add(new Label("numberOfRequests", new Model<>(sessionData.getNumberOfRequests())));
 			add(new Label("totalTimeTaken", new Model<>(sessionData.getTotalTimeTaken())));
@@ -80,7 +79,7 @@ public class RequestsPage extends DevUtilsPage
 			add(new WebMarkupContainer("sessionid").setVisible(false));
 		}
 
-		IModel<List<RequestData>> requestsModel = new AbstractReadOnlyModel<List<RequestData>>()
+		IModel<List<RequestData>> requestsModel = new IModel<List<RequestData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -124,8 +123,7 @@ public class RequestsPage extends DevUtilsPage
 					.getName() : "";
 				item.add(new Label("responseTarget", new Model<>(responseTarget)));
 				item.add(new Label("alteredObjects", new Model<>(rd.getAlteredObjects())).setEscapeModelStrings(false));
-				item.add(new Label("sessionSize", new Model<Bytes>(Bytes.bytes(rd.getSessionSize()
-					.longValue()))));
+				item.add(new Label("sessionSize", new Model<>(Bytes.bytes(rd.getSessionSize()))));
 			}
 		};
 		add(listView);

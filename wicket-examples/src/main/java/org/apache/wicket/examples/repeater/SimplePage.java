@@ -20,7 +20,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * Page that demonstrates a simple dataview.
@@ -51,7 +51,7 @@ public class SimplePage extends BasePage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
+				item.add(AttributeModifier.replace("class", new IModel<String>()
 				{
 					private static final long serialVersionUID = 1L;
 

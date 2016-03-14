@@ -32,14 +32,14 @@ public interface IRequestablePage extends IRequestableComponent, IManageablePage
 	/**
 	 * Renders the page
 	 */
-	public void renderPage();
+	void renderPage();
 
 	/**
 	 * Bookmarkable page can be instantiated using a bookmarkable URL.
 	 * 
 	 * @return Returns true if the page is bookmarkable.
 	 */
-	public boolean isBookmarkable();
+	boolean isBookmarkable();
 
 	/**
 	 * Returns the number of times this page has been rendered. The number will be appended to
@@ -51,7 +51,7 @@ public interface IRequestablePage extends IRequestableComponent, IManageablePage
 	 * 
 	 * @return render count
 	 */
-	public int getRenderCount();
+	int getRenderCount();
 
 	/**
 	 * Returns whether the page instance was created by a bookmarkable URL. Non mounted pages have
@@ -61,8 +61,7 @@ public interface IRequestablePage extends IRequestableComponent, IManageablePage
 	 * @return <code>true</code> if this page has been created by a bookmarkable URL,
 	 *         <code>false</code> otherwise.
 	 */
-	public boolean wasCreatedBookmarkable();
-
+	boolean wasCreatedBookmarkable();
 
 	/**
 	 * Returns the {@link PageParameters} for the page. Each bookmarkable page instance should have
@@ -71,5 +70,5 @@ public interface IRequestablePage extends IRequestableComponent, IManageablePage
 	 * 
 	 * @return page parameters or <code>null</code>
 	 */
-	public PageParameters getPageParameters();
+	PageParameters getPageParameters();
 }

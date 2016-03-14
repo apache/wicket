@@ -48,7 +48,7 @@ public interface IQueueRegion
 	 * standard way (such as repeaters and borders) may choose to override this method to implement
 	 * custom behavior for the dequeueing process.
 	 */
-	public DequeueContext newDequeueContext();
+	DequeueContext newDequeueContext();
 
 	/**
 	 * Starts component dequeueing on this {@link IQueueRegion}. This is the entry point into the
@@ -56,7 +56,7 @@ public interface IQueueRegion
 	 * {@link org.apache.wicket.MarkupContainer#dequeue(DequeueContext)} method which performs the
 	 * actual dequeueing. The context's markup is retrieved using the {@link MarkupContainer#getAssociatedMarkup()}.
 	 */
-	public void dequeue();
+	void dequeue();
 	
 	/**
 	 * Returns the markup to use for queuing. Normally, this is the markup of the component 
@@ -64,5 +64,5 @@ public interface IQueueRegion
 	 * 
 	 * @return the markup to use for queuing
 	 */
-	public IMarkupFragment getRegionMarkup();
+	IMarkupFragment getRegionMarkup();
 }

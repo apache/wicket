@@ -16,15 +16,14 @@
  */
 package org.apache.wicket;
 
+import java.util.function.Function;
+
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.request.handler.render.PageRenderer;
-import org.apache.wicket.util.IContextProvider;
 
 /**
- * Interface for {@link IContextProvider}&ltPageRenderer, RenderPageRequestHandler&gt
+ * Interface for {@link Function}&ltRenderPageRequestHandler, PageRenderer&gt
  */
-public interface IPageRendererProvider
-	extends
-		IContextProvider<PageRenderer, RenderPageRequestHandler>
+public interface IPageRendererProvider extends Function<RenderPageRequestHandler, PageRenderer>
 {
 }
