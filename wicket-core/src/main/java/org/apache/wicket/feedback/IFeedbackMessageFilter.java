@@ -23,35 +23,18 @@ import org.apache.wicket.util.io.IClusterable;
  * 
  * @author Jonathan Locke
  */
+@FunctionalInterface
 public interface IFeedbackMessageFilter extends IClusterable
 {
 	/**
 	 * Filter that returns simply all available messages.
 	 */
-	IFeedbackMessageFilter ALL = new IFeedbackMessageFilter()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public boolean accept(FeedbackMessage message)
-		{
-			return true;
-		}
-	};
+	IFeedbackMessageFilter ALL = (IFeedbackMessageFilter) message -> true;
 
 	/**
 	 * Filter that does not match any message
 	 */
-	IFeedbackMessageFilter NONE = new IFeedbackMessageFilter()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public boolean accept(FeedbackMessage message)
-		{
-			return false;
-		}
-	};
+	IFeedbackMessageFilter NONE = (IFeedbackMessageFilter) message -> false;
 
 	/**
 	 * @param message
