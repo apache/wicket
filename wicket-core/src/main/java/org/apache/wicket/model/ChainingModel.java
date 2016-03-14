@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0.0
  */
-public abstract class ChainingModel<T> implements IChainingModel<T>
+public class ChainingModel<T> implements IChainingModel<T>
 {
 	private static final Logger LOG = LoggerFactory.getLogger(ChainingModel.class);
 
