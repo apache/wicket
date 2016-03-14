@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.jar.JarEntry;
@@ -42,6 +41,7 @@ import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
 import org.apache.wicket.application.ComponentOnBeforeRenderListenerCollection;
 import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
 import org.apache.wicket.application.HeaderContributorListenerCollection;
+import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
 import org.apache.wicket.core.request.mapper.IMapperContext;
@@ -734,11 +734,13 @@ public abstract class Application implements UnboundListener, IEventSink
 			initializer.init(this);
 		}
 
-		final ServiceLoader<IInitializer> serviceLoaderInitializers = ServiceLoader.load(IInitializer.class);
-		for (IInitializer serviceLoaderInitializer : serviceLoaderInitializers) {
-			log.info("[{}] init: {}", getName(), serviceLoaderInitializer);
-			serviceLoaderInitializer.init(this);
-			initializers.add(serviceLoaderInitializer);
+		IClassResolver classResolver = getApplicationSettings().getClassResolver();
+		Iterator<IInitializer> implementations = classResolver.getImplementations(IInitializer.class);
+		while (implementations.hasNext()) {
+			IInitializer initializer = implementations.next();
+			log.info("[{}] init: {}", getName(), initializer);
+			initializer.init(this);
+			initializers.add(initializer);
 		}
 	}
 

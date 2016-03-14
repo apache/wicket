@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.commons.collections4.iterators.IteratorChain;
 import org.apache.wicket.util.collections.UrlExternalFormComparator;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class CompoundClassResolver implements IClassResolver
 {
 	private static final Logger logger = LoggerFactory.getLogger(CompoundClassResolver.class);
 
-	private final List<IClassResolver> resolvers = new CopyOnWriteArrayList<IClassResolver>();
+	private final List<IClassResolver> resolvers = new CopyOnWriteArrayList<>();
 
 	/**
 	 * {@inheritDoc}
@@ -125,6 +126,17 @@ public class CompoundClassResolver implements IClassResolver
 			classLoader = Thread.currentThread().getContextClassLoader();
 		}
 		return classLoader;
+	}
+
+	@Override
+	public <C> Iterator<C> getImplementations(Class<C> klass)
+	{
+		IteratorChain<C> chain = new IteratorChain<>();
+		for (IClassResolver resolver : resolvers)
+		{
+			chain.addIterator(resolver.getImplementations(klass));
+		}
+		return chain;
 	}
 
 	/**

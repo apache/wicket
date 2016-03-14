@@ -53,4 +53,6 @@ public interface IClassResolver
 	 * @return the {@link ClassLoader} to be used for resolving classes
 	 */
 	ClassLoader getClassLoader();
+
+	<C> Iterator<C> getImplementations(Class<C> klass);
 }

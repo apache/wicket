@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.application;
 
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
 /**
  * Resolves a class by using the classloader that loaded this class.
  * 
@@ -26,7 +29,6 @@ package org.apache.wicket.application;
  */
 public final class DefaultClassResolver extends AbstractClassResolver
 {
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -42,5 +44,12 @@ public final class DefaultClassResolver extends AbstractClassResolver
 			loader = DefaultClassResolver.class.getClassLoader();
 		}
 		return loader;
+	}
+
+	@Override
+	public <C> Iterator<C> getImplementations(Class<C> klass)
+	{
+		ServiceLoader<C> loader = ServiceLoader.load(klass);
+		return loader.iterator();
 	}
 }
