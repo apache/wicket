@@ -27,6 +27,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.LambdaColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.CSVDataExporter;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.ExportToolbar;
@@ -70,9 +71,9 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("First Name"), "firstName", "firstName"));
+		columns.add(new LambdaColumn<>(Model.of("First Name"), "firstName", Contact::getFirstName));
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("Last Name"), "lastName", "lastName")
+		columns.add(new LambdaColumn<Contact, String>(new Model<>("Last Name"), "lastName", Contact::getLastName)
 		{
 			@Override
 			public String getCssClass()
