@@ -25,6 +25,7 @@ import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LambdaModel;
 import org.junit.Test;
 
 /**

@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model.lambda;
+package org.apache.wicket.model;
 
 import java.util.Objects;
 
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.lambda.WicketSupplier;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 
 /**
