@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.metrics.aspects;
+package org.apache.wicket.metrics.aspects.component;
 
 import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,26 +22,26 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 /**
- * Measures everything about behaviors
+ * Gets information how often different components are detached
  * 
  * @author Tobias Soloschenko
- *
  */
 @Aspect
-public class BehaviorAspect extends WicketMetrics
+public class ComponentOnDetachAspect extends WicketMetrics
 {
+
 	/**
-	 * Collects data how often a behavior is created
+	 * Collects data how often components calls onDetach
 	 * 
 	 * @param joinPoint
-	 *            the join point (behavior) which is created
-	 * @return the result of constructor
+	 *            the join point (component) which is calling detach
+	 * @return the object returned from the join point
 	 * @throws Throwable
-	 *             might occur while creating a new behavior
+	 *             might occur while invoking onDetach
 	 */
-	@Around("execution(org.apache.wicket.behavior.Behavior.new(..))")
-	public Object aroundNew(ProceedingJoinPoint joinPoint) throws Throwable
+	@Around("execution(* org.apache.wicket.Component.onDetach(..))")
+	public Object arroundOnDetach(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return mark("core/behavior/create", joinPoint);
+		return mark("core/component/detach", joinPoint);
 	}
 }

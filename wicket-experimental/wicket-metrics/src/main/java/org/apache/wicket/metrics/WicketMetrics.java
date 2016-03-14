@@ -137,7 +137,7 @@ public class WicketMetrics
 	 * 
 	 * @return the metric registry
 	 */
-	private MetricRegistry getMetricRegistry()
+	private static synchronized MetricRegistry getMetricRegistry()
 	{
 		Application application = Application.get();
 		MetricRegistry metricRegistry = application.getMetaData(METRIC_REGISTRY);
@@ -154,7 +154,7 @@ public class WicketMetrics
 	 * 
 	 * @return the wicket metrics settings
 	 */
-	private WicketMetricsSettings getSettings()
+	private static synchronized WicketMetricsSettings getSettings()
 	{
 		Application application = Application.get();
 		WicketMetricsSettings metricRegistry = application.getMetaData(METRIC_SETTINGS);

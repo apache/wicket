@@ -3,7 +3,7 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 (1)  Add the maven dependency to your project
 {code}
 <dependency>
-	<groupId>org.apache.wicket</groupId>
+	<groupId>org.apache.wicket.experimental.wicket8</groupId>
 	<artifactId>wicket-metrics</artifactId>
 	<version>${wicket.version}</version>
 </dependency>
@@ -13,7 +13,7 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 
 (3) Add the java agent to the jvm start options of your tomcat: -javaagent:/pathToServer/lib/aspectjweaver-x.x.x.jar
 
-(4) Add an aop.xml to your project with the metrics you want to use (aspect tags) - if you don't want to enable a metrics just remove the aspect tag:
+(4) Add an aop.xml to your project's META-INF folder at the root of your classpath with the metrics you want to use (aspect tags) - if you don't want to enable a metrics just remove the aspect tag:
 {code}
 <!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
 <aspectj>
@@ -21,14 +21,30 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
         <include within="org.apache.wicket..*"/>
     </weaver>
     <aspects>
-		<aspect name="org.apache.wicket.metrics.aspects.BehaviorAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.IPartialPageRequestHandlerAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.ComponentAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.ResourceReferenceAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerDetachAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerRespondAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.resource.IResourceCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.behavior.BehaviorCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnConfigureAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnDetachAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnInitializeAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnRenderAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentSetResponsePageAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerAddAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerAppendJavaScriptAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerPrependJavaScriptAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.resource.ResourceReferenceCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.markup.WicketTagCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleAspect" />
     </aspects>
 </aspectj>
 {code}
+
+* If you have set wicket-metrics as dependency you can open "wicket-metrics.template.xml" to get a full template of the "aop.xml"
+
+* For the weaver options refer to the "AspectJ LTW configuration documentation":https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html
 
 (5 - optional) To enable the JMX measurement write the following line into your init method of your Application (Now you are able to connect with jvisualvm to your server and have a look at the data):
 {code}

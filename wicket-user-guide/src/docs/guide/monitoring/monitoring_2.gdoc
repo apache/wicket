@@ -1,5 +1,6 @@
 To visualize the metrics with Graphite a little additional configuration is required:
 
+
 (1) Add the additional maven dependency to your project:
 {code}
 <dependency>
@@ -11,15 +12,27 @@ To visualize the metrics with Graphite a little additional configuration is requ
 
 (2) Add the following code to your Application's init method:
 {code}
-MetricRegistry metricRegistry = Application.get().getMetaData(WicketMetrics.METRIC_REGISTRY)
-final Graphite graphite = new Graphite(new InetSocketAddress("127.0.0.1", 2003));
-final GraphiteReporter reporter = GraphiteReporter.forRegistry(metricRegistry)
-                                                  .prefixedWith("WebApplications")
-                                                  .convertRatesTo(TimeUnit.SECONDS)
-                                                  .convertDurationsTo(TimeUnit.MILLISECONDS)
-                                                  .filter(MetricFilter.ALL)
-                                                  .build(graphite);
-reporter.start(1, TimeUnit.SECONDS);
+	private GraphiteReporter reporter;
+	
+	@Override
+	protected void init()
+	{
+		MetricRegistry metricRegistry = this.getMetaData(WicketMetrics.METRIC_REGISTRY);
+		final Graphite graphite = new Graphite(new InetSocketAddress("127.0.0.1", 2003));
+		reporter = GraphiteReporter.forRegistry(metricRegistry).prefixedWith("WebApplications")
+			.convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS)
+			.filter(MetricFilter.ALL).build(graphite);
+		
+		// Collects data every 5 seconds
+		reporter.start(5, TimeUnit.SECONDS);
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		reporter.stop();
+	}
 {code}
 
 (3) Install and setup graphite on your system. Example installation for mac (beware that this is only a quickstart setup!):

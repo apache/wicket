@@ -14,45 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.metrics.aspects;
+package org.apache.wicket.metrics.aspects.ajax;
 
 import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 
 /**
- * Aspect which checks ajax request targets
+ * Aspect which measures ajax request targets append java script metrics
  * 
  * @author Tobias Soloschenko
  *
  */
 @Aspect
-public class IPartialPageRequestHandlerAspect extends WicketMetrics
+public class IPartialPageRequestHandlerAppendJavaScriptAspect extends WicketMetrics
 {
-	/**
-	 * Collects data how often components calls add
-	 * 
-	 * @throws Throwable
-	 *             might occur while invoking add
-	 */
-	@Before("call(* org.apache.wicket.core.request.handler.IPartialPageRequestHandler.add(..))")
-	public void beforeAdd() throws Throwable
-	{
-		mark("core/ajax/add", null);
-	}
-	
-	/**
-	 * Collects data how often components calls prependJavaScript
-	 * 
-	 * @throws Throwable
-	 *             might occur while invoking prependJavaScript
-	 */
-	@Before("call(* org.apache.wicket.core.request.handler.IPartialPageRequestHandler.prependJavaScript(..))")
-	public void beforePrependJavaScript() throws Throwable
-	{
-		mark("core/ajax/prependJavaScript", null);
-	}
-	
+
 	/**
 	 * Collects data how often components calls appendJavaScript
 	 * 
