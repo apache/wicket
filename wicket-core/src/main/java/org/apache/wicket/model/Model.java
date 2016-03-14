@@ -27,8 +27,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.lambda.LambdaModel;
-import org.apache.wicket.model.lambda.SupplierCachingModel;
-import org.apache.wicket.model.lambda.SupplierModel;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.model.util.MapModel;
@@ -181,33 +179,28 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	 * @param <T>
 	 * @return Model that contains <code>object</code>
 	 */
-	public static <T> IModel<T> ofLambdas(WicketSupplier<T> getter, WicketConsumer<T> setter)
+	public static <T> IModel<T> of(WicketSupplier<T> getter, WicketConsumer<T> setter)
 	{
 		return new LambdaModel<>(getter, setter);
 	}
 
 	/**
 	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
-	 * <code>new SupplierModel<TypeOfObject>(getter)</code>.
+	 * <code>new LoadableDetachableModel<TypeOfObject>(getter)</code>.
 	 *
 	 * @param <T>
 	 * @return Model that contains <code>object</code>
 	 */
-	public static <T> IModel<T> readOnly(WicketSupplier<T> getter)
+	public static <T> IModel<T> loadableDetachable(WicketSupplier<T> getter)
 	{
-		return new SupplierModel<>(getter);
-	}
-
-	/**
-	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
-	 * <code>new SupplierCachingModel<TypeOfObject>(getter)</code>.
-	 *
-	 * @param <T>
-	 * @return Model that contains <code>object</code>
-	 */
-	public static <T> IModel<T> cachingReadOnly(WicketSupplier<T> getter)
-	{
-		return new SupplierCachingModel<>(getter);
+		return new LoadableDetachableModel<T>()
+		{
+			@Override
+			protected T load()
+			{
+				return getter.get();
+			}
+		};
 	}
 
 	/**
