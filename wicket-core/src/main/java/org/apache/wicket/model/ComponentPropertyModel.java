@@ -58,9 +58,6 @@ public class ComponentPropertyModel<T> implements IComponentAssignedModel<T>
 		IComponentAssignedModel.super.setObject(object);
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
-	 */
 	@Override
 	public IWrapModel<T> wrapOnAssignment(final Component component)
 	{
@@ -87,9 +84,6 @@ public class ComponentPropertyModel<T> implements IComponentAssignedModel<T>
 			this.propertyName = propertyName;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
-		 */
 		@Override
 		public IModel<T> getWrappedModel()
 		{

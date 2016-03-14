@@ -203,9 +203,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 		};
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
@@ -233,9 +230,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 		this.object = object;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
 	public void detach()
 	{
@@ -245,15 +239,12 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder("Model:classname=[");
-		sb.append(getClass().getName()).append("]");
-		sb.append(":object=[").append(object).append("]");
+		sb.append(getClass().getName()).append(']');
+		sb.append(":object=[").append(object).append(']');
 		return sb.toString();
 	}
 
@@ -278,6 +269,7 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 		return Objects.equal(object, that.object);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Class<T> getObjectClass()
 	{

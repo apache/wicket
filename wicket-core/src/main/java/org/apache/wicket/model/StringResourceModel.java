@@ -564,7 +564,7 @@ public class StringResourceModel extends LoadableDetachableModel<String>
 		{
 			sb.append(Arrays.asList(parameters));
 		}
-		sb.append("]");
+		sb.append(']');
 		return sb.toString();
 	}
 

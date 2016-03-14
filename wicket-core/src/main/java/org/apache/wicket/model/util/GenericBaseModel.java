@@ -38,9 +38,6 @@ public abstract class GenericBaseModel<T> implements IObjectClassAwareModel<T>
 	/** model object */
 	private T object;
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
@@ -72,9 +69,6 @@ public abstract class GenericBaseModel<T> implements IObjectClassAwareModel<T>
 	 */
 	protected abstract T createSerializableVersionOf(T object);
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
 	public void detach()
 	{
@@ -84,15 +78,13 @@ public abstract class GenericBaseModel<T> implements IObjectClassAwareModel<T>
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Class<T> getObjectClass()
 	{
 		return object != null ? (Class<T>) object.getClass() : null;
 	}
 
-	/**
-	 * @see Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -102,14 +94,12 @@ public abstract class GenericBaseModel<T> implements IObjectClassAwareModel<T>
 		return sb.toString();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{
 		return Objects.hashCode(object);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj)
 	{

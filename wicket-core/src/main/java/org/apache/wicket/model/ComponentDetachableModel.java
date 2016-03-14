@@ -49,9 +49,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 		throw new RuntimeException("get object call not expected on a IComponentAssignedModel");
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
 	@Override
 	public final void setObject(T object)
 	{
@@ -82,7 +79,6 @@ public class ComponentDetachableModel<T> implements IModel<T>, IComponentAssigne
 	 */
 	protected void attach()
 	{
-
 	}
 
 	/**

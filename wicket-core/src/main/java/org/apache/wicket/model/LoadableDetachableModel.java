@@ -52,10 +52,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class LoadableDetachableModel<T> implements IModel<T>
 {
-	/** */
 	private static final long serialVersionUID = 1L;
 
-	/** Logger. */
 	private static final Logger log = LoggerFactory.getLogger(LoadableDetachableModel.class);
 
 	/** Internal state of the LoadableDetachableModel. */
@@ -97,9 +95,6 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 		state = InternalState.ATTACHED;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
 	public void detach()
 	{
@@ -120,9 +115,6 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public final T getObject()
 	{
@@ -155,9 +147,6 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 		return state == InternalState.ATTACHED;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -166,7 +155,7 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 			.append(isAttached())
 			.append(":tempModelObject=[")
 			.append(this.transientModelObject)
-			.append("]");
+			.append(']');
 		return sb.toString();
 	}
 
@@ -192,7 +181,6 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	protected void onDetach()
 	{
 	}
-
 
 	/**
 	 * Manually loads the model with the specified object. Subsequent calls to {@link #getObject()}

@@ -66,9 +66,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public void setObject(T object)
@@ -128,9 +125,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		return this;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
