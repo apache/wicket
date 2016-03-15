@@ -27,14 +27,14 @@ import org.apache.wicket.model.IModel;
  * An implementation of column that adds a label to the cell whose model is determined by
  * the provided {@link WicketFunction} that is evaluated against the current row's model object
  * <p>
- * Example
+ * Example for a table of {@code Contact}s:
  * 
  * <pre>
- * columns[0] = new LambdaColumn(new Model&lt;String&gt;(&quot;First Name&quot;), this::getFirstName);
+ * columns[0] = new LambdaColumn(new Model&lt;String&gt;(&quot;First Name&quot;), Contact::getFirstName);
  * </pre>
  * 
  * The above will attach a label to the cell which calls {@code #getFirstName()} for each displayed
- * row.
+ * contact.
  * 
  * @param <T>
  *            The Model object type
