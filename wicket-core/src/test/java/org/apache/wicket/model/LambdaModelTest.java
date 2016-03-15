@@ -53,6 +53,15 @@ public class LambdaModelTest
 	}
 
 	@Test
+	public void targetModel()
+	{
+		IModel<Person> target = Model.of(new Person());
+
+		IModel<String> personNameModel = LambdaModel.of(target, Person::getName, Person::setName);
+		check(personNameModel);
+	}
+
+	@Test
 	public void equality()
 	{
 		Person person = new Person();

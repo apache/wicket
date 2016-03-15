@@ -18,7 +18,9 @@ package org.apache.wicket.model;
 
 import java.util.Objects;
 
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.util.lang.Args;
 
@@ -90,5 +92,67 @@ public class LambdaModel<T> implements IModel<T>
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Create a {@link LambdaModel}. Usage:
+	 * <pre>
+	 * {@code
+	 * 	LambdaModel.of(person::getName, person::setName)
+	 * }
+	 * </pre>
+	 *
+	 * @param getter used to get value
+	 * @param setter used to set value
+	 * @return model
+	 *
+	 * @param <T> model object type
+	 */
+	public static <T> IModel<T> of(WicketSupplier<T> getter, WicketConsumer<T> setter) {
+		return new LambdaModel<T>(getter, setter);
+	}
+
+	/**
+	 * Create a {@link LambdaModel} for a given target. Usage:
+	 * <pre>
+	 * {@code
+	 * 	LambdaModel.of(personModel, Person::getName, Person::setName)
+	 * }
+	 * </pre>
+	 * The target model will be detached automatically.
+	 *
+	 * @param targe target for getter and setter
+	 * @param getter used to get a value
+	 * @param setter used to set a value
+	 * @return model
+	 *
+	 * @param <X> target model object type
+	 * @param <T> model object type
+	 */
+	public static <X, T> IModel<T> of(IModel<X> target, WicketFunction<X, T> getter, WicketBiConsumer<X, T> setter)
+	{
+		return new LambdaModel<T>(
+			() ->
+			{
+				X x = target.getObject();
+				if (x == null) {
+					return null;
+				}
+				return getter.apply(x);
+			},
+
+			(t) ->
+			{
+				X x = target.getObject();
+				if (x != null) {
+					setter.accept(x, t);
+				}
+			}
+		) {
+			@Override
+			public void detach() {
+				target.detach();
+			}
+		};
 	}
 }
