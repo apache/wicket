@@ -60,6 +60,17 @@ public class LambdaModelTest
 		check(personNameModel);
 	}
 
+	@Test
+	public void targetModelNull()
+	{
+		IModel<Person> target = Model.of((Person)null);
+
+		IModel<String> personNameModel = LambdaModel.of(target, Person::getName, Person::setName);
+
+		personNameModel.setObject("new name");
+		assertThat(personNameModel.getObject(), is(nullValue()));
+	}
+
 	@Test(expected=UnsupportedOperationException.class)
 	public void targetReadOnly()
 	{
