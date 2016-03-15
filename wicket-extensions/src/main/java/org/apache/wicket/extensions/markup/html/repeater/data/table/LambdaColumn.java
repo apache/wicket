@@ -22,6 +22,7 @@ import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * An implementation of column that adds a label to the cell whose model is determined by
@@ -45,7 +46,7 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 {
 	private static final long serialVersionUID = 1L;
 	
-	private WicketFunction<T, ?> function;
+	private final WicketFunction<T, ?> function;
 
 	/**
 	 * Creates a column that is not sortable.
@@ -74,7 +75,7 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 	{
 		super(displayModel, sortProperty);
 		
-		this.function = function;
+		this.function = Args.notNull(function, "function");
 	}
 	
 	@Override
