@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * A test object for lambda related tests
  */
-class Person implements Serializable
+public class Person implements Serializable
 {
 	private String name;
 

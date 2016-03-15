@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.model.lambda;
+package org.apache.wicket.model;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -26,6 +26,7 @@ import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LambdaModel;
+import org.apache.wicket.model.lambda.Person;
 import org.junit.Test;
 
 /**
