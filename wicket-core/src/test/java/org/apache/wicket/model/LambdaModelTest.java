@@ -19,13 +19,12 @@ package org.apache.wicket.model;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.lambda.WicketSupplier;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LambdaModel;
 import org.apache.wicket.model.lambda.Person;
 import org.junit.Test;
 
@@ -58,6 +57,15 @@ public class LambdaModelTest
 		IModel<Person> target = Model.of(new Person());
 
 		IModel<String> personNameModel = LambdaModel.of(target, Person::getName, Person::setName);
+		check(personNameModel);
+	}
+
+	@Test(expected=UnsupportedOperationException.class)
+	public void targetReadOnly()
+	{
+		IModel<Person> target = Model.of(new Person());
+
+		IModel<String> personNameModel = LambdaModel.of(target, Person::getName);
 		check(personNameModel);
 	}
 

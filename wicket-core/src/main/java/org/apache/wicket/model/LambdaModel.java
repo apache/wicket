@@ -116,6 +116,46 @@ public class LambdaModel<T> implements IModel<T>
 	 * Create a {@link LambdaModel} for a given target. Usage:
 	 * <pre>
 	 * {@code
+	 * 	LambdaModel.of(personModel, Person::getName)
+	 * }
+	 * </pre>
+	 * The target model will be detached automatically.
+	 *
+	 * @param targe target for getter and setter
+	 * @param getter used to get a value
+	 * @return model
+	 *
+	 * @param <X> target model object type
+	 * @param <T> model object type
+	 */
+	public static <X, T> IModel<T> of(IModel<X> target, WicketFunction<X, T> getter)
+	{
+		return new LambdaModel<T>(
+			() ->
+			{
+				X x = target.getObject();
+				if (x == null) {
+					return null;
+				}
+				return getter.apply(x);
+			},
+
+			(t) ->
+			{
+				throw new UnsupportedOperationException("setObject(Object) not supported");
+			}
+		) {
+			@Override
+			public void detach() {
+				target.detach();
+			}
+		};
+	}
+
+	/**
+	 * Create a {@link LambdaModel} for a given target. Usage:
+	 * <pre>
+	 * {@code
 	 * 	LambdaModel.of(personModel, Person::getName, Person::setName)
 	 * }
 	 * </pre>
