@@ -159,7 +159,7 @@
 			<artifactId>wicket-velocity</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket7</groupId>
+			<groupId>org.apache.wicket.experimental.wicket8</groupId>
 			<artifactId>wicket-atmosphere</artifactId>
 		</dependency>
 		<dependency>
