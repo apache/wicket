@@ -5,7 +5,7 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 <dependency>
 	<groupId>org.apache.wicket.experimental.wicket8</groupId>
 	<artifactId>wicket-metrics</artifactId>
-	<version>${wicket.version}</version>
+	<version>0.X-SNAPSHOT</version>
 </dependency>
 {code}
 
