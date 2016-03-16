@@ -728,7 +728,7 @@ public class BaseWicketTester
 
 		try
 		{
-			if (followRedirects && lastResponse.isRedirect())
+			if (isFollowRedirects() && lastResponse.isRedirect())
 			{
 				if (redirectCount++ >= 100)
 				{
