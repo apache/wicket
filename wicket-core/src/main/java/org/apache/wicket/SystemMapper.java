@@ -77,7 +77,7 @@ public class SystemMapper extends CompoundRequestMapper
 		}
 	}
 
-	private static class HomePageProvider<C extends IRequestablePage> implements Supplier<Class<C>>
+	private static class HomePageProvider<C extends Page> implements Supplier<Class<C>>
 	{
 		private final Application application;
 
