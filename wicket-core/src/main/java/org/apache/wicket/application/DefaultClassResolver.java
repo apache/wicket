@@ -49,7 +49,8 @@ public final class DefaultClassResolver extends AbstractClassResolver
 	@Override
 	public <C> Iterator<C> getImplementations(Class<C> klass)
 	{
-		ServiceLoader<C> loader = ServiceLoader.load(klass);
+		ClassLoader applicationClassLoader = DefaultClassResolver.class.getClassLoader();
+		ServiceLoader<C> loader = ServiceLoader.load(klass, applicationClassLoader);
 		return loader.iterator();
 	}
 }
