@@ -66,36 +66,18 @@ public abstract class AbstractColumn<T, S> implements IStyledColumn<T, S>
 		return displayModel;
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn#getSortProperty()
-	 */
 	@Override
 	public S getSortProperty()
 	{
 		return sortProperty;
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn#isSortable()
-	 */
-	@Override
-	public boolean isSortable()
-	{
-		return getSortProperty() != null;
-	}
-
-	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(java.lang.String)
-	 */
 	@Override
 	public Component getHeader(final String componentId)
 	{
 		return new Label(componentId, getDisplayModel());
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
 	public void detach()
 	{
