@@ -1,8 +1,8 @@
+
 <!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
 <aspectj>
     <weaver options="-nowarn">
         <include within="org.apache.wicket..*"/>
-        <include within="com.fluentsqaure..*"/>
     </weaver>
     <aspects>
     	<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
