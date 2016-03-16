@@ -130,6 +130,9 @@ public class LambdaModel<T> implements IModel<T>
 	 */
 	public static <X, T> IModel<T> of(IModel<X> target, WicketFunction<X, T> getter)
 	{
+		Args.notNull(target, "target");
+		Args.notNull(getter, "getter");
+
 		return new LambdaModel<T>(
 			() ->
 			{
@@ -171,6 +174,10 @@ public class LambdaModel<T> implements IModel<T>
 	 */
 	public static <X, T> IModel<T> of(IModel<X> target, WicketFunction<X, T> getter, WicketBiConsumer<X, T> setter)
 	{
+		Args.notNull(target, "target");
+		Args.notNull(getter, "getter");
+		Args.notNull(setter, "setter");
+
 		return new LambdaModel<T>(
 			() ->
 			{
