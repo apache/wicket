@@ -45,7 +45,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	@Override
 	public Iterator<Contact> iterator(long first, long count)
 	{
-		return getContactsDB().find(first, count, new SortParam<String>("firstName", true))
+		return getContactsDB().find(first, count, new SortParam<>("firstName", true))
 			.iterator();
 	}
 
