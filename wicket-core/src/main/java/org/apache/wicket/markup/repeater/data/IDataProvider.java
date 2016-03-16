@@ -93,4 +93,7 @@ public interface IDataProvider<T> extends IDetachable
 	 */
 	IModel<T> model(T object);
 
+	@Override
+	default void detach()
+	{}
 }
