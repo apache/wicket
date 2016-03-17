@@ -31,9 +31,6 @@ public abstract class AbstractTreeColumn<T, S> extends AbstractColumn<T, S>
 	implements
 		ITreeColumn<T, S>
 {
-
-	/**
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private TableTree<T, S> tree;
