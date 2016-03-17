@@ -1,5 +1,5 @@
 /*!
- * jQuery JavaScript Library v1.12.0
+ * jQuery JavaScript Library v1.12.2
  * http://jquery.com/
  *
  * Includes Sizzle.js
@@ -9,7 +9,7 @@
  * Released under the MIT license
  * http://jquery.org/license
  *
- * Date: 2016-01-08T19:56Z
+ * Date: 2016-03-17T17:44Z
  */
 
 (function( global, factory ) {
@@ -65,7 +65,7 @@
 
 
 	var
-		version = "1.12.0",
+		version = "1.12.2",
 
 	// Define a local copy of jQuery
 		jQuery = function( selector, context ) {
@@ -661,19 +661,19 @@
 
 			// Attribute selectors: http://www.w3.org/TR/selectors/#attribute-selectors
 				attributes = "\\[" + whitespace + "*(" + identifier + ")(?:" + whitespace +
-						// Operator (capture 2)
+					// Operator (capture 2)
 					"*([*^$|!~]?=)" + whitespace +
-						// "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
+					// "Attribute values must be CSS identifiers [capture 5] or strings [capture 3 or capture 4]"
 					"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|(" + identifier + "))|)" + whitespace +
 					"*\\]",
 
 				pseudos = ":(" + identifier + ")(?:\\((" +
-						// To reduce the number of selectors needing tokenize in the preFilter, prefer arguments:
-						// 1. quoted (capture 3; capture 4 or capture 5)
+					// To reduce the number of selectors needing tokenize in the preFilter, prefer arguments:
+					// 1. quoted (capture 3; capture 4 or capture 5)
 					"('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|" +
-						// 2. simple (capture 6)
+					// 2. simple (capture 6)
 					"((?:\\\\.|[^\\\\()[\\]]|" + attributes + ")*)|" +
-						// 3. anything else (capture 2)
+					// 3. anything else (capture 2)
 					".*" +
 					")\\)|)",
 
@@ -1458,8 +1458,8 @@
 
 						// IE 9's matchesSelector returns false on disconnected nodes
 						if ( ret || support.disconnectedMatch ||
-								// As well, disconnected nodes are said to be in a document
-								// fragment in IE 9
+							// As well, disconnected nodes are said to be in a document
+							// fragment in IE 9
 							elem.document && elem.document.nodeType !== 11 ) {
 							return ret;
 						}
@@ -1650,9 +1650,9 @@
 
 							// Strip excess characters from unquoted arguments
 						} else if ( unquoted && rpseudo.test( unquoted ) &&
-								// Get excess from tokenize (recursively)
+							// Get excess from tokenize (recursively)
 							(excess = tokenize( unquoted, true )) &&
-								// advance to the next closing parenthesis
+							// advance to the next closing parenthesis
 							(excess = unquoted.indexOf( ")", unquoted.length - excess ) - unquoted.length) ) {
 
 							// excess is a negative index
@@ -1773,7 +1773,7 @@
 
 										while ( (node = ++nodeIndex && node && node[ dir ] ||
 
-												// Fallback to seeking `elem` from the start
+											// Fallback to seeking `elem` from the start
 											(diff = nodeIndex = 0) || start.pop()) ) {
 
 											// When found, cache indexes on `parent` and break
@@ -2027,8 +2027,8 @@
 						return elem.nodeName.toLowerCase() === "input" &&
 							elem.type === "text" &&
 
-								// Support: IE<8
-								// New HTML5 attribute values (e.g., "search") appear with elem.type === "text"
+							// Support: IE<8
+							// New HTML5 attribute values (e.g., "search") appear with elem.type === "text"
 							( (attr = elem.getAttribute("type")) == null || attr.toLowerCase() === "text" );
 					},
 
@@ -3625,11 +3625,10 @@
 
 			// Catch cases where $(document).ready() is called
 			// after the browser event has already occurred.
-			// we once tried to use readyState "interactive" here,
-			// but it caused issues like the one
-			// discovered by ChrisS here:
-			// http://bugs.jquery.com/ticket/12282#comment:15
-			if ( document.readyState === "complete" ) {
+			// Support: IE6-10
+			// Older IE sometimes signals "interactive" too soon
+			if ( document.readyState === "complete" ||
+				( document.readyState !== "loading" && !document.documentElement.doScroll ) ) {
 
 				// Handle it asynchronously to allow scripts the opportunity to delay ready
 				window.setTimeout( jQuery.ready );
@@ -5531,7 +5530,7 @@
 			this.isDefaultPrevented = src.defaultPrevented ||
 			src.defaultPrevented === undefined &&
 
-				// Support: IE < 9, Android < 4.0
+			// Support: IE < 9, Android < 4.0
 			src.returnValue === false ?
 				returnTrue :
 				returnFalse;
@@ -6701,7 +6700,7 @@
 			// FF meanwhile throws on frame elements through "defaultView.getComputedStyle"
 			var view = elem.ownerDocument.defaultView;
 
-			if ( !view.opener ) {
+			if ( !view || !view.opener ) {
 				view = window;
 			}
 
@@ -6717,11 +6716,14 @@
 			// getPropertyValue is only needed for .css('filter') in IE9, see #12537
 			ret = computed ? computed.getPropertyValue( name ) || computed[ name ] : undefined;
 
-			if ( computed ) {
+			// Support: Opera 12.1x only
+			// Fall back to style even without computed
+			// computed is undefined for elems on document fragments
+			if ( ( ret === "" || ret === undefined ) && !jQuery.contains( elem.ownerDocument, elem ) ) {
+				ret = jQuery.style( elem, name );
+			}
 
-				if ( ret === "" && !jQuery.contains( elem.ownerDocument, elem ) ) {
-					ret = jQuery.style( elem, name );
-				}
+			if ( computed ) {
 
 				// A tribute to the "awesome hack by Dean Edwards"
 				// Chrome < 17 and Safari 5.0 uses "computed value"
@@ -7292,10 +7294,10 @@
 				return (
 						parseFloat( curCSS( elem, "marginLeft" ) ) ||
 
-							// Support: IE<=11+
-							// Running getBoundingClientRect on a disconnected node in IE throws an error
-							// Support: IE8 only
-							// getClientRects() errors on disconnected elems
+						// Support: IE<=11+
+						// Running getBoundingClientRect on a disconnected node in IE throws an error
+						// Support: IE8 only
+						// getClientRects() errors on disconnected elems
 						( jQuery.contains( elem.ownerDocument, elem ) ?
 							elem.getBoundingClientRect().left -
 							swap( elem, { marginLeft: 0 }, function() {
@@ -8196,7 +8198,8 @@
 	} )();
 
 
-	var rreturn = /\r/g;
+	var rreturn = /\r/g,
+		rspaces = /[\x20\t\r\n\f]+/g;
 
 	jQuery.fn.extend( {
 		val: function( value ) {
@@ -8276,7 +8279,9 @@
 
 						// Support: IE10-11+
 						// option.text throws exceptions (#14686, #14858)
-						jQuery.trim( jQuery.text( elem ) );
+						// Strip and collapse whitespace
+						// https://html.spec.whatwg.org/#strip-and-collapse-whitespace
+						jQuery.trim( jQuery.text( elem ) ).replace( rspaces, " " );
 				}
 			},
 			select: {
@@ -8298,7 +8303,7 @@
 						// oldIE doesn't update selected after form reset (#2551)
 						if ( ( option.selected || i === index ) &&
 
-								// Don't return options that are disabled or in a disabled optgroup
+							// Don't return options that are disabled or in a disabled optgroup
 							( support.optDisabled ?
 								!option.disabled :
 							option.getAttribute( "disabled" ) === null ) &&
@@ -8330,7 +8335,7 @@
 					while ( i-- ) {
 						option = options[ i ];
 
-						if ( jQuery.inArray( jQuery.valHooks.option.get( option ), values ) >= 0 ) {
+						if ( jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1 ) {
 
 							// Support: IE6
 							// When new option element is added to select box we need to
@@ -8749,8 +8754,11 @@
 	}
 
 // Support: Safari, IE9+
-// mis-reports the default selected property of an option
-// Accessing the parent's selectedIndex property fixes it
+// Accessing the selectedIndex property
+// forces the browser to respect setting selected
+// on the option
+// The getter ensures a default option is selected
+// when in an optgroup
 	if ( !support.optSelected ) {
 		jQuery.propHooks.selected = {
 			get: function( elem ) {
@@ -8765,6 +8773,16 @@
 					}
 				}
 				return null;
+			},
+			set: function( elem ) {
+				var parent = elem.parentNode;
+				if ( parent ) {
+					parent.selectedIndex;
+
+					if ( parent.parentNode ) {
+						parent.parentNode.selectedIndex;
+					}
+				}
 			}
 		};
 	}
@@ -10540,21 +10558,6 @@
 
 
 
-// Support: Safari 8+
-// In Safari 8 documents created via document.implementation.createHTMLDocument
-// collapse sibling forms: the second one becomes a child of the first one.
-// Because of that, this security measure has to be disabled in Safari 8.
-// https://bugs.webkit.org/show_bug.cgi?id=137337
-	support.createHTMLDocument = ( function() {
-		if ( !document.implementation.createHTMLDocument ) {
-			return false;
-		}
-		var doc = document.implementation.createHTMLDocument( "" );
-		doc.body.innerHTML = "<form></form><form></form>";
-		return doc.body.childNodes.length === 2;
-	} )();
-
-
 // data: string of html
 // context (optional): If specified, the fragment will be created in this context,
 // defaults to document
@@ -10567,12 +10570,7 @@
 			keepScripts = context;
 			context = false;
 		}
-
-		// document.implementation stops scripts or inline event handlers from
-		// being executed immediately
-		context = context || ( support.createHTMLDocument ?
-				document.implementation.createHTMLDocument( "" ) :
-				document );
+		context = context || document;
 
 		var parsed = rsingleTag.exec( data ),
 			scripts = !keepScripts && [];
@@ -10818,11 +10816,8 @@
 				}
 
 				// Add offsetParent borders
-				// Subtract offsetParent scroll positions
-				parentOffset.top += jQuery.css( offsetParent[ 0 ], "borderTopWidth", true ) -
-					offsetParent.scrollTop();
-				parentOffset.left += jQuery.css( offsetParent[ 0 ], "borderLeftWidth", true ) -
-					offsetParent.scrollLeft();
+				parentOffset.top  += jQuery.css( offsetParent[ 0 ], "borderTopWidth", true );
+				parentOffset.left += jQuery.css( offsetParent[ 0 ], "borderLeftWidth", true );
 			}
 
 			// Subtract parent offsets and element margins
