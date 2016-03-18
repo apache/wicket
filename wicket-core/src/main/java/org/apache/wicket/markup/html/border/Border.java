@@ -218,7 +218,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		for (Component component : children)
 		{
-			if (component == body)
+			if (component == body || component.isAuto())
 			{
 				addToBorder(component);
 			}
