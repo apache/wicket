@@ -22,9 +22,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -178,7 +178,7 @@ public class ComponentTest extends WicketTestCase
         
 		// make the link such that it can call listener interface
 		// methods no matter whether it is visible or enabled
-		link = new Link("someId") {
+		link = new Link<Void>("someId") {
 
 		    @Override
 		    public boolean canCallListenerInterface(Method method) {

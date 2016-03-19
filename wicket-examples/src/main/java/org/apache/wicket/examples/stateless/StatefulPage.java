@@ -50,7 +50,7 @@ public class StatefulPage extends WicketExamplePage
 		add(new BookmarkablePageLink<>("indexLink", Index.class));
 
 		// Action link counts link clicks
-		final Link actionLink = new Link("actionLink")
+		final Link actionLink = new Link<Void>("actionLink")
 		{
 			@Override
 			public void onClick()

@@ -46,7 +46,7 @@ public abstract class TemplatePage extends WicketExamplePage
 	{
 		add(new Label("title", new PropertyModel<>(this, "pageTitle")));
 		add(currentBanner = new Banner1("ad"));
-		add(new Link("changeAdLink")
+		add(new Link<Void>("changeAdLink")
 		{
 			/**
 			 * @see org.apache.wicket.markup.html.link.Link#onClick()

@@ -1292,7 +1292,7 @@ public class WicketTesterTest extends WicketTestCase
 		MockPageWithLinkAndLabel page = new MockPageWithLinkAndLabel();
 		final Label label = new Label(MockPageWithLinkAndLabel.LABEL_ID, "Some text");
 		label.setOutputMarkupPlaceholderTag(true);
-		AjaxLink link = new AjaxLink(MockPageWithLinkAndLabel.LINK_ID)
+		AjaxLink link = new AjaxLink<Void>(MockPageWithLinkAndLabel.LINK_ID)
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

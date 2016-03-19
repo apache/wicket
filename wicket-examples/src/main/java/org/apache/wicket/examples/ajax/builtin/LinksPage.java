@@ -109,7 +109,7 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new IndicatingAjaxLink("c3-link")
+		add(new IndicatingAjaxLink<Void>("c3-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

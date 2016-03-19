@@ -36,7 +36,7 @@ public class Index extends WicketExamplePage
 	 * wizard, there is still the first access to the wizard. But if you link to the page that
 	 * renders it using and internal link, you'll circumvent that.
 	 */
-	private static final class WizardLink extends Link
+	private static final class WizardLink extends Link<Void>
 	{
 		private final Class<? extends Wizard> wizardClass;
 

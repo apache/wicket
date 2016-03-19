@@ -40,7 +40,7 @@ public class LeftFrame extends WebPage
 	 * Tags that use this link should have a <code>target="_parent"</code> attribute, so that the
 	 * top frame will be refreshed.
 	 */
-	private static final class ChangeFramePageLink extends Link
+	private static final class ChangeFramePageLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
