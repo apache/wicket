@@ -21,15 +21,12 @@ import java.text.ParseException;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.form.IOnChangeListener;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -53,14 +50,14 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 		// non-existing component on fresh page is ignored
 		PageAndComponentProvider freshPage = new PageAndComponentProvider(DummyPage.class, null,
 			"foo");
-		new ListenerInterfaceRequestHandler(freshPage, IOnChangeListener.INTERFACE).respond(tester
+		new ListenerInterfaceRequestHandler(freshPage).respond(tester
 			.getRequestCycle());
 
 		// non-existing component on old page fails
 		PageAndComponentProvider oldPage = new PageAndComponentProvider(new DummyPage(), "foo");
 		try
 		{
-			new ListenerInterfaceRequestHandler(oldPage, IOnChangeListener.INTERFACE)
+			new ListenerInterfaceRequestHandler(oldPage)
 				.respond(tester.getRequestCycle());
 			fail();
 		}
@@ -149,8 +146,7 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 	public void isPageInstanceCreatedOnClassLinks()
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page.class, "link");
-		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
-			RequestListenerInterface.forName(ILinkListener.class.getSimpleName()));
+		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
 		assertFalse("Handler should not report a page instance is available ",
 			handler.isPageInstanceCreated());
 	}

@@ -18,7 +18,6 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.function.Supplier;
 
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
@@ -166,19 +165,15 @@ public class MountedMapper extends AbstractBookmarkableMapper
 			IRequestablePage page = handler.getPage();
 			if (checkPageInstance(page))
 			{
-				String componentPath = handler.getComponentPath();
-				RequestListenerInterface listenerInterface = handler.getListenerInterface();
-
 				Integer renderCount = null;
-				if (listenerInterface.isIncludeRenderCount())
+				if (handler.includeRenderCount())
 				{
 					renderCount = page.getRenderCount();
 				}
 
+				String componentPath = handler.getComponentPath();
 				PageInfo pageInfo = getPageInfo(handler);
-				ComponentInfo componentInfo = new ComponentInfo(renderCount,
-					requestListenerInterfaceToString(listenerInterface), componentPath,
-					handler.getBehaviorIndex());
+				ComponentInfo componentInfo = new ComponentInfo(renderCount, componentPath, handler.getBehaviorIndex());
 				PageComponentInfo pageComponentInfo = new PageComponentInfo(pageInfo, componentInfo);
 				PageParameters parameters = new PageParameters(page.getPageParameters());
 				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(),

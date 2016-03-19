@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * 
@@ -43,7 +43,6 @@ public class PageComponentInfoTest extends TestCase
 
 		assertEquals(pageId, info.getPageInfo().getPageId());
 
-		assertEquals(listener, info.getComponentInfo().getListenerInterface());
 		assertEquals(componentPath, info.getComponentInfo().getComponentPath());
 	}
 

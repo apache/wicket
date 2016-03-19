@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
-import org.apache.wicket.IResourceListener;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -31,7 +31,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * @param <T>
  *            type of model object
  */
-public class ResourceLink<T> extends Link<T> implements IResourceListener
+public class ResourceLink<T> extends Link<T> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -103,6 +103,12 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	{
 	}
 
+	@Override
+	public boolean includeRenderCount()
+	{
+		return false;
+	}
+	
 	/**
 	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
 	 */
@@ -142,6 +148,6 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 			return getRequestCycle().urlFor(
 				new ResourceReferenceRequestHandler(resourceReference, resourceParameters));
 		}
-		return urlFor(IResourceListener.INTERFACE, resourceParameters);
+		return urlFor(resourceParameters);
 	}
 }

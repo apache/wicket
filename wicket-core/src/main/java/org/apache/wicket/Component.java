@@ -58,7 +58,6 @@ import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.DefaultMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -852,7 +851,7 @@ public abstract class Component
 	 * 
 	 * @return {@code true} if component has been initialized
 	 */
-	final boolean isInitialized()
+	public final boolean isInitialized()
 	{
 		return getFlag(FLAG_INITIALIZED);
 	}
@@ -3343,19 +3342,17 @@ public abstract class Component
 	 *            The parameters that should be rendered into the urls
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final Behavior behaviour,
-		final RequestListenerInterface listener, final PageParameters parameters)
+	public final CharSequence urlFor(final Behavior behaviour, final PageParameters parameters)
 	{
 		int id = getBehaviorId(behaviour);
-		IRequestHandler handler = createRequestHandler(listener, parameters, id);
+		IRequestHandler handler = createRequestHandler(parameters, id);
 		return getRequestCycle().urlFor(handler);
 	}
 
 	/**
 	 * Create a suitable request handler depending whether the page is stateless or bookmarkable.
 	 */
-	private IRequestHandler createRequestHandler(RequestListenerInterface listener,
-		PageParameters parameters, Integer id)
+	private IRequestHandler createRequestHandler(PageParameters parameters, Integer id)
 	{
 		Page page = getPage();
 
@@ -3365,11 +3362,11 @@ public abstract class Component
 			|| (getApplication().getPageSettings().getRecreateBookmarkablePagesAfterExpiry()
 				&& page.isBookmarkable() && page.wasCreatedBookmarkable()))
 		{
-			return new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
+			return new BookmarkableListenerInterfaceRequestHandler(provider, id);
 		}
 		else
 		{
-			return new ListenerInterfaceRequestHandler(provider, listener, id);
+			return new ListenerInterfaceRequestHandler(provider, id);
 		}
 	}
 
@@ -3393,16 +3390,13 @@ public abstract class Component
 	 * 
 	 * @see RequestCycle#urlFor(IRequestHandler)
 	 * 
-	 * @param listener
-	 *            The listener interface that the URL should call
 	 * @param parameters
 	 *            The parameters that should be rendered into the urls
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final RequestListenerInterface listener,
-		final PageParameters parameters)
+	public final CharSequence urlFor(final PageParameters parameters)
 	{
-		IRequestHandler handler = createRequestHandler(listener, parameters, null);
+		IRequestHandler handler = createRequestHandler(parameters, null);
 		return getRequestCycle().urlFor(handler);
 	}
 

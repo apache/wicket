@@ -50,8 +50,14 @@ public abstract class StatelessLink<T> extends Link<T>
 	}
 
 	@Override
+	public boolean includeRenderCount()
+	{
+		return false;
+	}
+	
+	@Override
 	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.INTERFACE, getPage().getPageParameters());
+		return urlFor(getPage().getPageParameters());
 	}
 }

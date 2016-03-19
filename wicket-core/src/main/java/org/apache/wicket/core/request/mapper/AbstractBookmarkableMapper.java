@@ -19,7 +19,6 @@ package org.apache.wicket.core.request.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -31,7 +30,6 @@ import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
-import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -297,41 +295,18 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		PageInfo pageInfo = pageComponentInfo.getPageInfo();
 		ComponentInfo componentInfo = pageComponentInfo.getComponentInfo();
 		Integer renderCount = null;
-		RequestListenerInterface listenerInterface = null;
 
 		if (componentInfo != null)
 		{
 			renderCount = componentInfo.getRenderCount();
-			listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
 		}
 
-		if (listenerInterface != null)
-		{
-			PageAndComponentProvider provider = new PageAndComponentProvider(pageInfo.getPageId(),
-				pageClass, pageParameters, renderCount, componentInfo.getComponentPath());
+		PageAndComponentProvider provider = new PageAndComponentProvider(pageInfo.getPageId(),
+			pageClass, pageParameters, renderCount, componentInfo.getComponentPath());
 
-			provider.setPageSource(getContext());
+		provider.setPageSource(getContext());
 
-			return new ListenerInterfaceRequestHandler(provider, listenerInterface,
-				componentInfo.getBehaviorId());
-		}
-		else
-		{
-			if (logger.isWarnEnabled())
-			{
-				if (componentInfo != null)
-				{
-					logger.warn("Unknown listener interface '{}'",
-						componentInfo.getListenerInterface());
-				}
-				else
-				{
-					logger.warn("Cannot extract the listener interface for PageComponentInfo: '{}'" +
-						pageComponentInfo);
-				}
-			}
-			return null;
-		}
+		return new ListenerInterfaceRequestHandler(provider, componentInfo.getBehaviorId());
 	}
 
 	/**
@@ -463,15 +438,13 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			}
 
 			Integer renderCount = null;
-			if (handler.getListenerInterface().isIncludeRenderCount())
+			if (handler.includeRenderCount())
 			{
 				renderCount = handler.getRenderCount();
 			}
 
 			PageInfo pageInfo = getPageInfo(handler);
-			ComponentInfo componentInfo = new ComponentInfo(renderCount,
-				requestListenerInterfaceToString(handler.getListenerInterface()),
-				handler.getComponentPath(), handler.getBehaviorIndex());
+			ComponentInfo componentInfo = new ComponentInfo(renderCount, handler.getComponentPath(), handler.getBehaviorIndex());
 
 			PageParameters parameters = getRecreateMountedPagesAfterExpiry() ? new PageParameters(
 				handler.getPage().getPageParameters()).mergeWith(handler.getPageParameters())

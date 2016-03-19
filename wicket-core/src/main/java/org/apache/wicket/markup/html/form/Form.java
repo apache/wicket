@@ -30,6 +30,7 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -146,7 +147,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Form<T> extends WebMarkupContainer
 	implements
-		IFormSubmitListener,
+		IRequestListener,
 		IGenericComponent<T, Form<T>>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
@@ -674,6 +675,12 @@ public class Form<T> extends WebMarkupContainer
 		return getFlag(FLAG_SUBMITTED);
 	}
 
+	@Override
+	public boolean includeRenderCount()
+	{
+		return true;
+	}
+	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
 	 * 
@@ -1646,7 +1653,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected CharSequence getActionUrl()
 	{
-		return urlFor(IFormSubmitListener.INTERFACE, new PageParameters());
+		return urlFor(new PageParameters());
 	}
 
 	/**

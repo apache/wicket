@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
@@ -65,7 +66,7 @@ import org.apache.wicket.util.value.IValueMap;
  * @param <T>
  *            The model object type
  */
-public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
+public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -244,6 +245,12 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 		tag.remove("name");
 	}
 
+	@Override
+	public boolean includeRenderCount()
+	{
+		return true;
+	}
+	
 	/**
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
@@ -527,7 +534,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 			// when the option is clicked?
 			if (wantOnSelectionChangedNotifications())
 			{
-				CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
+				CharSequence url = urlFor(new PageParameters());
 
 				Form<?> form = findParent(Form.class);
 				if (form != null)

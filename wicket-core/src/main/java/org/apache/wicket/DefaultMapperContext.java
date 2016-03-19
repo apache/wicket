@@ -82,18 +82,6 @@ public class DefaultMapperContext implements IMapperContext
 	}
 
 	@Override
-	public RequestListenerInterface requestListenerInterfaceFromString(final String interfaceName)
-	{
-		return RequestListenerInterface.forName(interfaceName);
-	}
-
-	@Override
-	public String requestListenerInterfaceToString(final RequestListenerInterface listenerInterface)
-	{
-		return listenerInterface.getName();
-	}
-
-	@Override
 	public IRequestablePage newPageInstance(final Class<? extends IRequestablePage> pageClass,
 		final PageParameters pageParameters)
 	{

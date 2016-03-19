@@ -17,7 +17,7 @@
 package org.apache.wicket.behavior;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
@@ -30,7 +30,7 @@ import org.apache.wicket.util.lang.Args;
  * @author Ralf Ebert
  * @author Igor Vaynberg
  */
-public abstract class AbstractAjaxBehavior extends Behavior implements IBehaviorListener
+public abstract class AbstractAjaxBehavior extends Behavior implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -68,6 +68,12 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 		onBind();
 	}
 
+	@Override
+	public boolean includeRenderCount()
+	{
+		return true;
+	}
+	
 	/**
 	 * Gets the url that references this handler.
 	 * 
@@ -81,11 +87,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 				"Behavior must be bound to a component to create the URL");
 		}
 
-		final RequestListenerInterface rli;
-
-		rli = IBehaviorListener.INTERFACE;
-
-		return getComponent().urlFor(this, rli, new PageParameters());
+		return getComponent().urlFor(this, new PageParameters());
 	}
 
 	/**

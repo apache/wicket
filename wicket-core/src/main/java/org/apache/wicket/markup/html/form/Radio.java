@@ -183,7 +183,7 @@ public class Radio<T> extends LabeledWebMarkupContainer implements IGenericCompo
 		if (group.wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			CharSequence url = group.urlFor(IOnChangeListener.INTERFACE, new PageParameters());
+			CharSequence url = group.urlFor(new PageParameters());
 
 			Form<?> form = group.findParent(Form.class);
 			if (form != null)

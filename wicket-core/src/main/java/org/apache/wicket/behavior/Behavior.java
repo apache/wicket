@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.lambda.WicketFunction;
@@ -153,7 +154,7 @@ public abstract class Behavior
 	 */
 	public boolean getStatelessHint(Component component)
 	{
-		if (this instanceof IBehaviorListener)
+		if (this instanceof IRequestListener)
 		{
 			// this behavior implements a callback interface, so it cannot be stateless
 			return false;

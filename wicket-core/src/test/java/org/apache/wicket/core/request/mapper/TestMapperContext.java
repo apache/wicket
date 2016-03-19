@@ -17,8 +17,8 @@
 package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.MockPage;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.page.PageStoreManager;
@@ -27,7 +27,6 @@ import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.Key;
@@ -199,18 +198,6 @@ public class TestMapperContext implements IMapperContext
 		{
 			throw new WicketRuntimeException(e);
 		}
-	}
-
-	@Override
-	public RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
-	{
-		return RequestListenerInterface.forName(interfaceName);
-	}
-
-	@Override
-	public String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
-	{
-		return listenerInterface.getName();
 	}
 
 	@Override

@@ -17,8 +17,8 @@
 package org.apache.wicket.core.request.mapper;
 
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
@@ -30,7 +30,6 @@ import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.mapper.PackageMapperTest.OuterPage.InnerPage;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
@@ -251,7 +250,6 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 		assertNull(h.getBehaviorIndex());
 	}
@@ -271,7 +269,6 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
 		PageParameters p = h.getPageParameters();
@@ -296,7 +293,6 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 		assertEquals((Object)4, h.getBehaviorIndex());
 	}
@@ -509,8 +505,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE);
+		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
 
@@ -537,8 +532,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE, 4);
+		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider, 4);
 
 		Url url = encoder.mapHandler(handler);
 

@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.List;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
@@ -63,7 +64,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @param <T>
  *            The model object type
  */
-public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
+public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -202,6 +203,12 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 		super(id, model, choices, renderer);
 	}
 
+	@Override
+	public boolean includeRenderCount()
+	{
+		return true;
+	}
+	
 	/**
 	 * Called when a selection changes.
 	 */
@@ -231,7 +238,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 		{
 			// we do not want relative URL here, because it will be used by
 			// Form#dispatchEvent
-			CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
+			CharSequence url = urlFor(new PageParameters());
 
 			Form<?> form = findParent(Form.class);
 			if (form != null)

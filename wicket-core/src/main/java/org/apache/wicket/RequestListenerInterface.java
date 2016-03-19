@@ -16,18 +16,14 @@
  */
 package org.apache.wicket;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
-import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
+import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,7 +171,7 @@ public class RequestListenerInterface
 			// just return so that we have a silent fail and just re-render the
 			// page
 			log.info("component not enabled or visible; ignoring call. Component: " + component);
-			throw new ListenerInvocationNotAllowedException(this, component, null,
+			throw new ListenerInvocationNotAllowedException(component, null,
 				"Component rejected interface invocation");
 		}
 
@@ -200,7 +196,7 @@ public class RequestListenerInterface
 		{
 			log.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
 				component);
-			throw new ListenerInvocationNotAllowedException(this, component, behavior,
+			throw new ListenerInvocationNotAllowedException(component, behavior,
 				"Behavior rejected interface invocation. ");
 		}
 

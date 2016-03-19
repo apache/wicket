@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -47,7 +48,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * @param <T>
  *            The model object type
  */
-public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
+public class RadioGroup<T> extends FormComponent<T> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -163,6 +164,12 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 		tag.remove("name");
 	}
 
+	@Override
+	public boolean includeRenderCount()
+	{
+		return true;
+	}
+	
 	/**
 	 * Called when a selection changes.
 	 */

@@ -17,7 +17,6 @@
 package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
@@ -45,32 +44,6 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	protected IMapperContext getContext()
 	{
 		return Application.get().getMapperContext();
-	}
-
-	/**
-	 * Converts the specified listener interface to String.
-	 *
-	 * @param listenerInterface
-	 * @return listenerInterface name as string
-	 */
-	protected String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
-	{
-		Args.notNull(listenerInterface, "listenerInterface");
-
-		return getContext().requestListenerInterfaceToString(listenerInterface);
-	}
-
-	/**
-	 * Creates listener interface from the specified string
-	 *
-	 * @param interfaceName
-	 * @return listener interface
-	 */
-	protected RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
-	{
-		Args.notEmpty(interfaceName, "interfaceName");
-
-		return getContext().requestListenerInterfaceFromString(interfaceName);
 	}
 
 	/**

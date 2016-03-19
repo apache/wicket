@@ -19,7 +19,6 @@ package org.apache.wicket;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -125,7 +124,7 @@ public class BehaviorUrlTest extends WicketTestCase
 
 	/**
 	 */
-	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
+	private static class TestCallbackBehavior extends Behavior implements IRequestListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -134,9 +133,15 @@ public class BehaviorUrlTest extends WicketTestCase
 		{
 			super.onComponentTag(component, tag);
 			tag.put("href",
-				component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters()));
+				component.urlFor(this, new PageParameters()));
 		}
 
+		@Override
+		public boolean includeRenderCount()
+		{
+			return true;
+		}
+		
 		@Override
 		public void onRequest()
 		{

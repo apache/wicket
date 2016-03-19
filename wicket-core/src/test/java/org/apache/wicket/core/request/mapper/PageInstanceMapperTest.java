@@ -28,7 +28,6 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -96,7 +95,6 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		checkPage(h.getPage(), 4);
 		assertEquals(h.getComponent().getPageRelativePath(), "a:b:c");
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertNull(h.getBehaviorIndex());
 	}
 
@@ -138,7 +136,6 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
 		checkPage(h.getPage(), 4);
 		assertEquals(h.getComponent().getPageRelativePath(), "a:b:c");
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals((Object)5, h.getBehaviorIndex());
 	}
 
@@ -290,8 +287,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("a:b:c");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE);
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
 		assertEquals("wicket/page?15-5.ILinkListener-a-b-c", url.toString());

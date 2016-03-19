@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IResourceListener;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
@@ -49,7 +49,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * @author Jonathan Locke
  * @author Tobias Soloschenko
  */
-public class Image extends WebComponent implements IResourceListener
+public class Image extends WebComponent implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -210,6 +210,12 @@ public class Image extends WebComponent implements IResourceListener
 		this(id, new Model<>(string));
 	}
 
+	@Override
+	public boolean includeRenderCount()
+	{
+		return false;
+	}
+	
 	/**
 	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
 	 */
@@ -582,9 +588,7 @@ public class Image extends WebComponent implements IResourceListener
 	@Override
 	public boolean canCallListenerInterface(Method method)
 	{
-		boolean isResource = method != null &&
-			IResourceListener.class.isAssignableFrom(method.getDeclaringClass());
-		if (isResource && isVisibleInHierarchy())
+		if (isVisibleInHierarchy())
 		{
 			// when the image data is requested we do not care if this component
 			// is enabled in

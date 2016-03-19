@@ -40,8 +40,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -50,7 +48,6 @@ import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
@@ -82,12 +79,10 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.list.ListView;
@@ -139,6 +134,8 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
@@ -1070,7 +1067,7 @@ public class BaseWicketTester
 	{
 		Args.notNull(link, "link");
 
-		Url url = Url.parse(link.urlFor(ILinkListener.INTERFACE, new PageParameters()).toString());
+		Url url = Url.parse(link.urlFor(new PageParameters()).toString());
 		return transform(url).toString();
 	}
 
@@ -1084,14 +1081,14 @@ public class BaseWicketTester
 	 * @param component
 	 * @param listener
 	 */
-	public void executeListener(final Component component, final RequestListenerInterface listener)
+	public void executeListener(final Component component)
 	{
 		Args.notNull(component, "component");
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
-			component.getPage(), component), listener);
+			component.getPage(), component));
 
 		Url url = urlFor(handler);
 		request.setUrl(url);
@@ -1110,36 +1107,16 @@ public class BaseWicketTester
 	 * @param component
 	 * @param listener
 	 */
-	public void invokeListener(final Component component, final RequestListenerInterface listener)
+	public void invokeListener(final Component component)
 	{
 		Args.notNull(component, "component");
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
-			component.getPage(), component), listener);
+			component.getPage(), component));
 
 		processRequest(handler);
-	}
-
-	/**
-	 * Builds and processes a request suitable for invoking a listener. The <code>Component</code>
-	 * must implement any of the known <code>IListener</code> interfaces.
-	 * 
-	 * @param component
-	 *            the listener to invoke
-	 */
-	public void executeListener(final Component component)
-	{
-		Args.notNull(component, "component");
-
-		for (RequestListenerInterface iface : RequestListenerInterface.getRegisteredInterfaces())
-		{
-			if (iface.getListenerInterfaceClass().isAssignableFrom(component.getClass()))
-			{
-				executeListener(component, iface);
-			}
-		}
 	}
 
 	/**
@@ -1988,7 +1965,7 @@ public class BaseWicketTester
 			}
 			else
 			{
-				executeListener(link, ILinkListener.INTERFACE);
+				executeListener(link);
 			}
 		}
 		// The link requires AJAX
@@ -2029,7 +2006,7 @@ public class BaseWicketTester
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
 		Url url = Url.parse(
 			form.getRootForm()
-				.urlFor(IFormSubmitListener.INTERFACE, new PageParameters())
+				.urlFor(new PageParameters())
 				.toString(), Charset.forName(request.getCharacterEncoding()));
 
 		// make url absolute

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.IResourceListener;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.image.resource.LocalizedImageResource;
 import org.apache.wicket.model.IModel;
@@ -34,7 +34,7 @@ import org.apache.wicket.request.resource.ResourceReference;
  * 
  * @author Jonathan Locke
  */
-public class ImageButton extends Button implements IResourceListener
+public class ImageButton extends Button implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -126,6 +126,11 @@ public class ImageButton extends Button implements IResourceListener
 		this(id, new Model<String>(string));
 	}
 
+	@Override
+	public boolean includeRenderCount()
+	{
+		return false;
+	}
 
 	/**
 	 * @see org.apache.wicket.IResourceListener#onResourceRequested()

@@ -108,7 +108,6 @@ public class ComponentInfo
 		}
 	}
 
-	private final String listenerInterface;
 	private final String componentPath;
 	private final Integer behaviorId;
 	private final Integer renderCount;
@@ -121,13 +120,10 @@ public class ComponentInfo
 	 * @param componentPath
 	 * @param behaviorId
 	 */
-	public ComponentInfo(final Integer renderCount, final String listenerInterface,
-		final String componentPath, final Integer behaviorId)
+	public ComponentInfo(final Integer renderCount, final String componentPath, final Integer behaviorId)
 	{
-		Args.notEmpty(listenerInterface, "listenerInterface");
 		Args.notNull(componentPath, "componentPath");
 
-		this.listenerInterface = listenerInterface;
 		this.componentPath = componentPath;
 		this.behaviorId = behaviorId;
 		this.renderCount = renderCount;
@@ -139,14 +135,6 @@ public class ComponentInfo
 	public String getComponentPath()
 	{
 		return componentPath;
-	}
-
-	/**
-	 * @return listener interface name
-	 */
-	public String getListenerInterface()
-	{
-		return listenerInterface;
 	}
 
 	/**
@@ -177,14 +165,12 @@ public class ComponentInfo
 		if (renderCount != null)
 		{
 			result.append(renderCount);
-			result.append(BEHAVIOR_INDEX_SEPARATOR);
 		}
 
-		result.append(listenerInterface);
-
+		result.append(BEHAVIOR_INDEX_SEPARATOR);
+		
 		if (behaviorId != null)
 		{
-			result.append(BEHAVIOR_INDEX_SEPARATOR);
 			result.append(behaviorId);
 		}
 		result.append(SEPARATOR);
@@ -237,11 +223,6 @@ public class ComponentInfo
 			String listenerInterface = string.substring(0, i);
 			String componentPath = decodeComponentPath(string.substring(i + 1));
 
-			if (Strings.isEmpty(listenerInterface))
-			{
-				return null;
-			}
-
 			Integer behaviorIndex = null;
 			Integer renderCount = null;
 
@@ -251,34 +232,18 @@ public class ComponentInfo
 				if (isNumber(listenerParts[0]))
 				{
 					renderCount = Integer.valueOf(listenerParts[0]);
-					listenerInterface = listenerParts[1];
 				}
-				else if (isNumber(listenerParts[1]))
+				if (isNumber(listenerParts[1]))
 				{
-					listenerInterface = listenerParts[0];
 					behaviorIndex = Integer.valueOf(listenerParts[1]);
 				}
-				else
-				{
-					return null;
-				}
+				
+				return new ComponentInfo(renderCount, componentPath, behaviorIndex);
 			}
-			else if (listenerParts.length == 3)
-			{
-				if (!isNumber(listenerParts[0]) && !isNumber(listenerParts[1]))
-				{
-					return null;
-				}
-				renderCount = Integer.valueOf(listenerParts[0]);
-				listenerInterface = listenerParts[1];
-				behaviorIndex = Integer.valueOf(listenerParts[2]);
-			}
-			else if (listenerParts.length != 1)
+			else
 			{
 				return null;
 			}
-
-			return new ComponentInfo(renderCount, listenerInterface, componentPath, behaviorIndex);
 		}
 	}
 }
