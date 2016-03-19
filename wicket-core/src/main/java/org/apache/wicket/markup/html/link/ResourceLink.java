@@ -107,13 +107,14 @@ public class ResourceLink<T> extends Link<T> implements IResourceListener
 	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
 	 */
 	@Override
-	public final void onResourceRequested()
+	public final void onRequest()
 	{
 
 		Attributes a = new Attributes(RequestCycle.get().getRequest(), RequestCycle.get()
 			.getResponse(), null);
 		resource.respond(a);
-		onLinkClicked();
+		
+		super.onRequest();
 	}
 
 	/**

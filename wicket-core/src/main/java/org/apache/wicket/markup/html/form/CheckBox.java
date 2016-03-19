@@ -78,7 +78,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	@Override
-	public void onSelectionChanged()
+	public void onRequest()
 	{
 		convertInput();
 		updateModel();

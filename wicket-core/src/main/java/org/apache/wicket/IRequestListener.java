@@ -33,4 +33,9 @@ import org.apache.wicket.util.io.IClusterable;
  */
 public interface IRequestListener extends IClusterable
 {
+	
+	/**
+	 * Called when a request to a behavior is received.
+	 */
+	void onRequest();
 }

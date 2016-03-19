@@ -59,9 +59,6 @@ public class RequestListenerInterface
 		return interfaces.get(interfaceName);
 	}
 
-	/** The listener interface method */
-	private Method method;
-
 	/** The name of this listener interface */
 	private final String name;
 
@@ -95,29 +92,6 @@ public class RequestListenerInterface
 		{
 			throw new IllegalArgumentException("Class " + listenerInterfaceClass +
 				" must extend IRequestListener");
-		}
-
-		// Get interface methods
-		final Method[] methods = listenerInterfaceClass.getMethods();
-
-		// If there is only one method
-		if (methods.length == 1)
-		{
-			// and that method takes no parameters
-			if (methods[0].getParameterTypes().length == 0)
-			{
-				method = methods[0];
-			}
-			else
-			{
-				throw new IllegalArgumentException("Method " + methods[0] + " in interface " +
-					listenerInterfaceClass + " cannot take any arguments");
-			}
-		}
-		else
-		{
-			throw new IllegalArgumentException("Interface " + listenerInterfaceClass +
-				" can have only one method");
 		}
 
 		// Save short class name
@@ -175,14 +149,6 @@ public class RequestListenerInterface
 	}
 
 	/**
-	 * @return The method for this request listener interface
-	 */
-	public final Method getMethod()
-	{
-		return method;
-	}
-
-	/**
 	 * @return The name of this request listener interface
 	 */
 	public final String getName()
@@ -204,7 +170,7 @@ public class RequestListenerInterface
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
 
-		if (!component.canCallListenerInterface(method))
+		if (!component.canCallListenerInterface(null))
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page
@@ -230,7 +196,7 @@ public class RequestListenerInterface
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
 
-		if (!behavior.canCallListenerInterface(component, method))
+		if (!behavior.canCallListenerInterface(component, null))
 		{
 			log.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
 				component);
@@ -253,28 +219,7 @@ public class RequestListenerInterface
 			page.internalInitialize();
 		}
 
-		try
-		{
-			method.invoke(target);
-		}
-		catch (InvocationTargetException e)
-		{
-			if (e.getTargetException() instanceof ReplaceHandlerException ||
-				e.getTargetException() instanceof AuthorizationException ||
-				e.getTargetException() instanceof WicketRuntimeException)
-			{
-				throw (RuntimeException)e.getTargetException();
-			}
-			throw new WicketRuntimeException("Method " + method.getName() + " of " +
-				method.getDeclaringClass() + " targeted at " + target + " on component " +
-				component + " threw an exception", e);
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("Method " + method.getName() + " of " +
-				method.getDeclaringClass() + " targeted at " + target + " on component " +
-				component + " threw an exception", e);
-		}
+		((IRequestListener)target).onRequest();
 	}
 
 	/**
@@ -292,7 +237,7 @@ public class RequestListenerInterface
 	@Override
 	public String toString()
 	{
-		return "[RequestListenerInterface name=" + name + ", method=" + method + "]";
+		return "[RequestListenerInterface name=" + name + "]";
 	}
 
 
@@ -313,16 +258,7 @@ public class RequestListenerInterface
 		// Check that a different interface method with the same name has not
 		// already been registered
 		final RequestListenerInterface existingInterface = RequestListenerInterface.forName(requestListenerInterface.getName());
-		if (existingInterface != null)
-		{
-			if (existingInterface.getMethod().equals(requestListenerInterface.getMethod()) == false)
-			{
-				throw new IllegalStateException("Cannot register listener interface " +
-				requestListenerInterface +
-				" because it conflicts with the already registered interface " + existingInterface);
-			}
-		}
-		else
+		if (existingInterface == null)
 		{
 			// Save this interface method by the non-qualified class name
 			interfaces.put(requestListenerInterface.getName(), requestListenerInterface);

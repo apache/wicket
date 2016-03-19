@@ -30,8 +30,4 @@ public interface IFormSubmitListener extends IRequestListener
 	RequestListenerInterface INTERFACE = new RequestListenerInterface(
 		IFormSubmitListener.class);
 
-	/**
-	 * Called when a form is submitted
-	 */
-	void onFormSubmitted();
 }

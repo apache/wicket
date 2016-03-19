@@ -682,7 +682,7 @@ public class Form<T> extends WebMarkupContainer
 	 * @see #onFormSubmitted(IFormSubmitter)
 	 */
 	@Override
-	public final void onFormSubmitted()
+	public final void onRequest()
 	{
 		// check methods match
 		if (getRequest().getContainerRequest() instanceof HttpServletRequest)

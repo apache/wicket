@@ -29,9 +29,4 @@ public interface ILinkListener extends IRequestListener
 	/** Listener interface */
 	RequestListenerInterface INTERFACE = new RequestListenerInterface(
 		ILinkListener.class);
-
-	/**
-	 * Called when a link is clicked.
-	 */
-	void onLinkClicked();
 }

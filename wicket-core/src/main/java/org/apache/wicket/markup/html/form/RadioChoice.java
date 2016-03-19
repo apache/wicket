@@ -248,7 +248,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	@Override
-	public void onSelectionChanged()
+	public void onRequest()
 	{
 		convertInput();
 		updateModel();

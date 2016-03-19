@@ -186,7 +186,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	 * @see ILinkListener
 	 */
 	@Override
-	public final void onLinkClicked()
+	public void onRequest()
 	{
 		// Invoke subclass handler
 		onClick();

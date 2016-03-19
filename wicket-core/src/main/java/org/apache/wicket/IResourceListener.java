@@ -36,9 +36,4 @@ public interface IResourceListener extends IRequestListener
 	/** Resource listener interface object */
 	RequestListenerInterface INTERFACE = new RequestListenerInterface(
 		IResourceListener.class).setIncludeRenderCount(false).setRenderPageAfterInvocation(false);
-
-	/**
-	 * Called when a resource is requested.
-	 */
-	void onResourceRequested();
 }

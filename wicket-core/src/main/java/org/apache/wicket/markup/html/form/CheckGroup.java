@@ -204,7 +204,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 * Called when a selection changes.
 	 */
 	@Override
-	public final void onSelectionChanged()
+	public final void onRequest()
 	{
 		convertInput();
 		updateModel();

@@ -32,9 +32,4 @@ public interface IOnChangeListener extends IRequestListener
 	/** Listener interface */
 	RequestListenerInterface INTERFACE = new RequestListenerInterface(
 		IOnChangeListener.class);
-
-	/**
-	 * Called when a new option is selected.
-	 */
-	void onSelectionChanged();
 }

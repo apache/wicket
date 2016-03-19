@@ -167,7 +167,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	 * Called when a selection changes.
 	 */
 	@Override
-	public final void onSelectionChanged()
+	public final void onRequest()
 	{
 		convertInput();
 		updateModel();

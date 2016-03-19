@@ -150,7 +150,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @see org.apache.wicket.markup.html.link.ILinkListener#onLinkClicked()
 	 */
 	@Override
-	public final void onLinkClicked()
+	public final void onRequest()
 	{
 		setResponsePage(pageProvider.getPageInstance());
 	}

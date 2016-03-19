@@ -33,8 +33,4 @@ public interface IBehaviorListener extends IRequestListener
 	RequestListenerInterface INTERFACE = new RequestListenerInterface(
 		IBehaviorListener.class);
 
-	/**
-	 * Called when a request to a behavior is received.
-	 */
-	void onRequest();
 }
