@@ -142,7 +142,7 @@
 		<objenesis.version>2.1</objenesis.version>
 		<!-- do not increase the version - wicket-user-guide requires 2.2.4 -->
 		<grails.version>2.2.4</grails.version>
-		<aspectj.version>1.8.8</aspectj.version>
+		<aspectj.version>1.8.9</aspectj.version>
 		<metrics.version>3.1.2</metrics.version>
 	</properties>
 	<dependencyManagement>

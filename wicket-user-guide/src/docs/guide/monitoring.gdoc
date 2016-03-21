@@ -6,4 +6,4 @@ The module itself is using "Metrics of dropwizard":https://dropwizard.github.io/
 
 to your web application.
 
-Keep in mind that AspectJ is licensed under the Eclipse Public License and should provide the required license information.
+Keep in mind that AspectJ is licensed under the Eclipse Public License and you should provide the required license information.
