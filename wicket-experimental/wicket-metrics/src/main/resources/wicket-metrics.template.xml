@@ -1,0 +1,26 @@
+
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+    <weaver options="-nowarn">
+        <include within="org.apache.wicket..*"/>
+    </weaver>
+    <aspects>
+    	<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
+    	<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerDetachAspect" />
+    	<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerRespondAspect" />
+    	<aspect name="org.apache.wicket.metrics.aspects.resource.IResourceCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.behavior.BehaviorCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnConfigureAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnDetachAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnInitializeAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnRenderAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentSetResponsePageAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerAddAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerAppendJavaScriptAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerPrependJavaScriptAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.resource.ResourceReferenceCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.markup.WicketTagCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleAspect" />
+    </aspects>
+</aspectj>

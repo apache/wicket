@@ -76,6 +76,7 @@ You will find the source code here:
 	    |-- wicket-spring
 	    |-- wicket-util
 	    |-- wicket-user-guide
+	    |-- wicket-metrics
 	    `-- wicket-velocity
 	    
 
@@ -118,6 +119,7 @@ Here is a list of projects in this distribution and what they do.
  - wicket-eclipse-settings: specifies Eclipse settings for a uniform development environment.
    Most notably the formatting rules;
  - wicket-user-guide: the user guide of wicket
+ - wicket-metrics: collects data of a running wicket application
 
 Getting started
 ---------------

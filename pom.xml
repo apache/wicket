@@ -142,6 +142,8 @@
 		<objenesis.version>2.1</objenesis.version>
 		<!-- do not increase the version - wicket-user-guide requires 2.2.4 -->
 		<grails.version>2.2.4</grails.version>
+		<aspectj.version>1.8.8</aspectj.version>
+		<metrics.version>3.1.2</metrics.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -399,6 +401,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket7</groupId>
+				<artifactId>wicket-metrics</artifactId>
+				<version>0.1-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket.experimental.wicket7</groupId>
 				<artifactId>wicket-atmosphere</artifactId>
 				<version>0.26-SNAPSHOT</version>
 				<type>jar</type>
@@ -530,6 +538,16 @@
                         <artifactId>hamcrest-core</artifactId>
                     </exclusion>
                 </exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.dropwizard.metrics</groupId>
+				<artifactId>metrics-core</artifactId>
+				<version>${metrics.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

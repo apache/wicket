@@ -15,34 +15,36 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.apache.wicket</groupId>
-		<artifactId>wicket-parent</artifactId>
+		<groupId>org.apache.wicket.experimental.wicket7</groupId>
+		<artifactId>wicket-experimental</artifactId>
 		<version>7.3.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<groupId>org.apache.wicket.experimental.wicket7</groupId>
-	<artifactId>wicket-experimental</artifactId>
-	<packaging>pom</packaging>
-	<name>Wicket-Experimental</name>
-	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
-	<modules>
-		<module>wicket-atmosphere</module>
-		<module>wicket-metrics</module>
-	</modules>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>clirr-maven-plugin</artifactId>
-					<configuration>
-						<skip>true</skip>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+	<artifactId>wicket-metrics</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>Wicket Metrics</name>
+	<description>
+		Wicket’s implementation to show metric information
+		about web applications build on the web framework.
+	</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.dropwizard.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+		</dependency>
+	</dependencies>
 </project>
