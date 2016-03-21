@@ -3,7 +3,7 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 (1)  Add the maven dependency to your project
 {code}
 <dependency>
-	<groupId>org.apache.wicket.experimental.wicket8</groupId>
+	<groupId>org.apache.wicket.experimental.wicket7</groupId>
 	<artifactId>wicket-metrics</artifactId>
 	<version>0.X-SNAPSHOT</version>
 </dependency>
