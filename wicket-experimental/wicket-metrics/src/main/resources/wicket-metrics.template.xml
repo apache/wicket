@@ -1,14 +1,14 @@
 
 <!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
 <aspectj>
-    <weaver options="-nowarn">
+    <weaver options="-nowarn"><!-- -verbose -showWeaveInfo -->
         <include within="org.apache.wicket..*"/>
     </weaver>
     <aspects>
-    	<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
-    	<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerDetachAspect" />
-    	<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerRespondAspect" />
-    	<aspect name="org.apache.wicket.metrics.aspects.resource.IResourceCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerDetachAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerRespondAspect" />
+ 		<aspect name="org.apache.wicket.metrics.aspects.resource.IResourceCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.behavior.BehaviorCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnConfigureAspect" />
@@ -22,5 +22,6 @@
 		<aspect name="org.apache.wicket.metrics.aspects.resource.ResourceReferenceCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.markup.WicketTagCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.session.SessionCountListenerAspect" />
     </aspects>
 </aspectj>

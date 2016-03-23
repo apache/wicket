@@ -18,7 +18,7 @@ To visualize the metrics with Graphite a little additional configuration is requ
 	@Override
 	protected void init()
 	{
-		MetricRegistry metricRegistry = this.getMetaData(WicketMetrics.METRIC_REGISTRY);
+		MetricRegistry metricRegistry = WicketMetrics.getMetricRegistry();
 		final Graphite graphite = new Graphite(new InetSocketAddress("127.0.0.1", 2003));
 		reporter = GraphiteReporter.forRegistry(metricRegistry).prefixedWith("WebApplications")
 			.convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS)
