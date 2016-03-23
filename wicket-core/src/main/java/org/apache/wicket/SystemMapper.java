@@ -23,6 +23,7 @@ import org.apache.wicket.core.request.mapper.BufferedResponseMapper;
 import org.apache.wicket.core.request.mapper.HomePageMapper;
 import org.apache.wicket.core.request.mapper.PageInstanceMapper;
 import org.apache.wicket.core.request.mapper.ResourceReferenceMapper;
+import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
@@ -32,7 +33,6 @@ import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
  * Mapper that encapsulates mappers that are necessary for Wicket to function.
  * 
  * @author igor.vaynberg
- * 
  */
 public class SystemMapper extends CompoundRequestMapper
 {
@@ -46,26 +46,59 @@ public class SystemMapper extends CompoundRequestMapper
 	public SystemMapper(final Application application)
 	{
 		this.application = application;
-		add(new PageInstanceMapper());
-		add(new BookmarkableMapper());
-		add(new HomePageMapper(new HomePageProvider(application)));
-		add(new ResourceReferenceMapper(new PageParametersEncoder(),
+
+		add(newPageInstanceMapper());
+		add(newBookmarkableMapper());
+		add(newHomePageMapper(new HomePageProvider(application)));
+		add(newResourceReferenceMapper(new PageParametersEncoder(),
 			new ParentFolderPlaceholderProvider(application), getResourceCachingStrategy()));
-		add(new UrlResourceReferenceMapper());
+		add(newUrlResourceReferenceMapper());
 		add(RestartResponseAtInterceptPageException.MAPPER);
-		add(new BufferedResponseMapper());
+		add(newBufferedResponseMapper());
 	}
 
-	private Supplier<IResourceCachingStrategy> getResourceCachingStrategy()
+	protected IRequestMapper newBufferedResponseMapper()
+	{
+		return new BufferedResponseMapper();
+	}
+
+	protected IRequestMapper newUrlResourceReferenceMapper()
+	{
+		return new UrlResourceReferenceMapper();
+	}
+
+	private IRequestMapper newResourceReferenceMapper(PageParametersEncoder pageParametersEncoder,
+	                                                  ParentFolderPlaceholderProvider parentFolderPlaceholderProvider,
+	                                                  Supplier<IResourceCachingStrategy> resourceCachingStrategy)
+	{
+		return new ResourceReferenceMapper(pageParametersEncoder, parentFolderPlaceholderProvider,resourceCachingStrategy);
+	}
+
+	protected IRequestMapper newBookmarkableMapper()
+	{
+		return new BookmarkableMapper();
+	}
+
+	protected IRequestMapper newPageInstanceMapper()
+	{
+		return new PageInstanceMapper();
+	}
+
+	protected IRequestMapper newHomePageMapper(Supplier<Class<? extends IRequestablePage>> homePageProvider)
+	{
+		return new HomePageMapper(homePageProvider);
+	}
+
+	protected Supplier<IResourceCachingStrategy> getResourceCachingStrategy()
 	{
 		return () -> application.getResourceSettings().getCachingStrategy();
 	}
 
-	private static class ParentFolderPlaceholderProvider implements Supplier<String>
+	protected static class ParentFolderPlaceholderProvider implements Supplier<String>
 	{
 		private final Application application;
 
-		public ParentFolderPlaceholderProvider(Application application)
+		protected ParentFolderPlaceholderProvider(Application application)
 		{
 			this.application = application;
 		}
@@ -77,11 +110,11 @@ public class SystemMapper extends CompoundRequestMapper
 		}
 	}
 
-	private static class HomePageProvider<C extends Page> implements Supplier<Class<C>>
+	protected static class HomePageProvider<C extends Page> implements Supplier<Class<C>>
 	{
 		private final Application application;
 
-		private HomePageProvider(final Application application)
+		protected HomePageProvider(final Application application)
 		{
 			this.application = application;
 		}
