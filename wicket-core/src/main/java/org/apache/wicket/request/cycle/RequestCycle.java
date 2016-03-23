@@ -259,22 +259,26 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	{
 		Args.notNull(handler, "handler");
 
-		try
-		{
-			listeners.onRequestHandlerResolved(this, handler);
-			requestHandlerExecutor.execute(handler);
-			listeners.onRequestHandlerExecuted(this, handler);
-		}
-		catch (RuntimeException e)
-		{
-			IRequestHandler replacement = requestHandlerExecutor.resolveHandler(e);
-			if (replacement != null)
+		while (handler != null) {
+			try
 			{
-				execute(replacement);
+				listeners.onRequestHandlerResolved(this, handler);
+				IRequestHandler next = requestHandlerExecutor.execute(handler);
+				listeners.onRequestHandlerExecuted(this, handler);
+				
+				handler = next;
 			}
-			else
+			catch (RuntimeException e)
 			{
-				throw e;
+				IRequestHandler replacement = requestHandlerExecutor.resolveHandler(e);
+				if (replacement != null)
+				{
+					handler = replacement;
+				}
+				else
+				{
+					throw e;
+				}
 			}
 		}
 	}

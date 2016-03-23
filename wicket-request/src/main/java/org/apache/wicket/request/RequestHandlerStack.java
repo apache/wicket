@@ -53,12 +53,9 @@ public abstract class RequestHandlerStack
 	/**
 	 * @param handler
 	 */
-	public void execute(final IRequestHandler handler)
+	public IRequestHandler execute(final IRequestHandler handler)
 	{
-		final boolean first = requestHandlers.isEmpty();
 		requestHandlers.add(handler);
-
-		IRequestHandler replacementHandler = null;
 		try
 		{
 			respond(handler);
@@ -73,11 +70,11 @@ public abstract class RequestHandlerStack
 				throw exception;
 			}
 
-			if (replacer.removeAll && !first)
+			if (replacer.removeAll)
 			{
+				scheduledAfterCurrent = null;
 				throw exception;
 			}
-			replacementHandler = replacer.replacementRequestHandler;
 		}
 		finally
 		{
@@ -87,15 +84,7 @@ public abstract class RequestHandlerStack
 
 		IRequestHandler scheduled = scheduledAfterCurrent;
 		scheduledAfterCurrent = null;
-
-		if (replacementHandler != null)
-		{
-			execute(replacementHandler);
-		}
-		else if (scheduled != null)
-		{
-			execute(scheduled);
-		}
+		return scheduled;
 	}
 
 	/**
