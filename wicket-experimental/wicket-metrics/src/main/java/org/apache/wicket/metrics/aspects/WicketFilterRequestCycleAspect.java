@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.metrics.aspects;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -33,6 +35,35 @@ public class WicketFilterRequestCycleAspect extends WicketMetrics
 	/**
 	 * Collects data how often a request has been made against the webapp and counts the time how
 	 * long the request remains
+	 * 
+	 * @param joinPoint
+	 *            the joinPoint to be proceed
+	 * @return returns the boolean of the processRequest method
+	 * 
+	 * @throws Throwable
+	 *             might occur while invoking process request
+	 */
+	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequestCycle(..))")
+	public Object aroundRequestProcessedWithURL(ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		Object[] args = joinPoint.getArgs();
+		if (args.length >= 3)
+		{
+			Object requestAsObject = args[2];
+			if(requestAsObject instanceof HttpServletRequest){
+				HttpServletRequest httpServletRequest = (HttpServletRequest)requestAsObject;
+				if (httpServletRequest != null)
+				{
+					return measureTime("core/application/request/" + httpServletRequest.getRequestURL().toString().replace("/", "_").replace(".", "_").replace(":", ""), joinPoint,
+						false);
+				}
+			}
+		}
+		return joinPoint.proceed();
+	}
+
+	/**
+	 * Collects the time how long a request took to be processed
 	 * 
 	 * @param joinPoint
 	 *            the joinPoint to be proceed
