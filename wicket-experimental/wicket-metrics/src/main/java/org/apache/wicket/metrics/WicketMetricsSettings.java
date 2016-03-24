@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.metrics;
 
-import org.apache.wicket.Application;
-
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 
@@ -70,8 +68,7 @@ public class WicketMetricsSettings
 	 */
 	public void startJmxReporter()
 	{
-		MetricRegistry metricRegistry = Application.get()
-			.getMetaData(WicketMetrics.METRIC_REGISTRY);
+		MetricRegistry metricRegistry = WicketMetrics.getMetricRegistry();
 		JmxReporter.forRegistry(metricRegistry).build().start();
 	}
 
@@ -80,8 +77,7 @@ public class WicketMetricsSettings
 	 */
 	public void stopJmxReporter()
 	{
-		MetricRegistry metricRegistry = Application.get()
-			.getMetaData(WicketMetrics.METRIC_REGISTRY);
+		MetricRegistry metricRegistry = WicketMetrics.getMetricRegistry();
 		JmxReporter.forRegistry(metricRegistry).build().stop();
 	}
 }

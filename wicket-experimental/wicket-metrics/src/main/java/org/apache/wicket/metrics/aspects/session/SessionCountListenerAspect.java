@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.metrics.aspects;
+package org.apache.wicket.metrics.aspects.session;
 
 import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,27 +22,47 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 /**
- * Aspect to handle basic web application information
+ * The Session count listener aspect measures how many sessions are active
  * 
  * @author Tobias Soloschenko
+ *
  */
 @Aspect
-public class WicketFilterRequestCycleAspect extends WicketMetrics
+public class SessionCountListenerAspect extends WicketMetrics
 {
 
 	/**
-	 * Collects the time how long a request took to be processed
+	 * Measures if a session is going to be activated
 	 * 
 	 * @param joinPoint
-	 *            the joinPoint to be proceed
-	 * @return returns the boolean of the processRequest method
-	 * 
+	 *            the join point
+	 * @return void
 	 * @throws Throwable
-	 *             might occur while invoking process request
+	 *             if an error occurred 
 	 */
-	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequestCycle(..))")
-	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
+	@Around("execution(* org.apache.wicket.metrics.aspects.session.SessionCountListener.inc(..))")
+	public Object aroundInc(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		return measureTime("core/application/requestCycle", joinPoint);
+		Object count = joinPoint.proceed();
+		counter("core/session/count", null, CounterOperation.INC, 1L);
+		return count;
 	}
+	
+	/**
+	 * Measures if a session is going to be destroyed
+	 * 
+	 * @param joinPoint
+	 *            the join point
+	 * @return void
+	 * @throws Throwable
+	 *             if an error occurred
+	 */
+	@Around("execution(* org.apache.wicket.metrics.aspects.session.SessionCountListener.dec(..))")
+	public Object aroundDec(ProceedingJoinPoint joinPoint) throws Throwable
+	{
+		Object count = joinPoint.proceed();
+		counter("core/session/count", null, CounterOperation.DEC, 1L);
+		return count;
+	}
+
 }

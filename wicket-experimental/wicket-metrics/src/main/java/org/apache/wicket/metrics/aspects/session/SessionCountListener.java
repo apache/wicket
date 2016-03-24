@@ -14,35 +14,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.metrics.aspects;
+package org.apache.wicket.metrics.aspects.session;
 
-import org.apache.wicket.metrics.WicketMetrics;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
+import javax.servlet.annotation.WebListener;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
+
 
 /**
- * Aspect to handle basic web application information
+ * Listener that counts the current active sessions
  * 
  * @author Tobias Soloschenko
+ *
  */
-@Aspect
-public class WicketFilterRequestCycleAspect extends WicketMetrics
+@WebListener
+public class SessionCountListener implements HttpSessionListener
 {
 
-	/**
-	 * Collects the time how long a request took to be processed
-	 * 
-	 * @param joinPoint
-	 *            the joinPoint to be proceed
-	 * @return returns the boolean of the processRequest method
-	 * 
-	 * @throws Throwable
-	 *             might occur while invoking process request
-	 */
-	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequestCycle(..))")
-	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
+	@Override
+	public void sessionDestroyed(HttpSessionEvent event)
 	{
-		return measureTime("core/application/requestCycle", joinPoint);
+		dec(event);
+	}
+
+	@Override
+	public void sessionCreated(HttpSessionEvent event)
+	{
+		inc(event);
+	}
+
+	/**
+	 * Used to wire an aspect around
+	 * 
+	 * @param event the http session event
+	 */
+	public void dec(HttpSessionEvent event)
+	{
+		// NOOP for aspect usage
+	}
+	
+	/**
+	 * Used to wire an aspect around
+	 * 
+	 * @param event the http session event
+	 */
+	public void inc(HttpSessionEvent event)
+	{
+		// NOOP for aspect usage
 	}
 }
