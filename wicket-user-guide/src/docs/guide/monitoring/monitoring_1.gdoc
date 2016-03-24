@@ -38,6 +38,7 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 		<aspect name="org.apache.wicket.metrics.aspects.resource.ResourceReferenceCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.markup.WicketTagCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.session.SessionCountListenerAspect" />
     </aspects>
 </aspectj>
 {code}
@@ -46,19 +47,34 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 
 * For the weaver options refer to the "AspectJ LTW configuration documentation":https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html
 
+* If you use the SessionCountListenerAspect you have to ensure that metadata-complete="false" is set otherwise you have to add the listener yourself:
+{code}
+<listener>
+	<listener-class>org.apache.wicket.metrics.aspects.session.SessionCountListener</listenerclass>
+</listener>
+{code}
+
+You also have to clear the session store if you restart the server - otherwise physically stored session will corrupt the data, because the count is initialized with 0.
+
 (5 - optional) To enable the JMX measurement write the following line into your init method of your Application (Now you are able to connect with jvisualvm to your server and have a look at the data):
 {code}
-Application.get().getMetaData(WicketMetrics.METRIC_SETTINGS).startJmxReporter();
+WicketMetrics.getSettings().startJmxReporter();
 {code}
 
 To deactivate:
 {code}
-Application.get().getMetaData(WicketMetrics.METRIC_SETTINGS).stopJmxReporter();
+WicketMetrics.getSettings().stopJmxReporter();
 {code}
 
 To disable measurement:
 {code}
-Application.get().getMetaData(WicketMetrics.METRIC_SETTINGS).setEnable(false);
+WicketMetrics.getSettings().setEnable(false);
 {code}
+
+(6 - optional) There are two system flags which can be applied to the start of the server
+
+-Dwicket.metrics.staticRegistration=true - If this argument is set the wicket metrics settings and the metrics registry are stored in static variables within the WicketMetrics class - this might cause problems in an osgi environment
+
+-dwicket.applicationName=<filtername> - If this argument is set no ThreadLocal access is required, because the Application is received via get(String). Needs to be set if the session should be measured SessionCountListenerAspect
 
 
