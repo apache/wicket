@@ -125,7 +125,7 @@ public class ServletWebResponseTest extends Assert
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		webResponse.sendRedirect(url);
 
-		verify(httpServletResponse).sendRedirect("relative/path");
+		verify(httpServletResponse).sendRedirect("./relative/path");
 		assertTrue(webResponse.isRedirect());
 	}
 
