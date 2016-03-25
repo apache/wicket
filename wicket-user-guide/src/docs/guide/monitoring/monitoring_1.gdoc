@@ -75,7 +75,6 @@ WicketMetrics.getSettings().setEnabled(false);
 
 -Dwicket.metrics.staticRegistration=true - If this argument is set the wicket metrics settings and the metrics registry are stored in static variables within the WicketMetrics class - this might cause problems in an OSGi environment
 
--Dwicket.applicationName=<filtername> - If this argument is set no ThreadLocal access is required, because the Application is looked up via Application#get(String). This property needs to be set if the active sessions counter should be measured with SessionCountListenerAspect because
-timed out sessions are invalidated in non-HTTP-worker thread and the Wicket thread locals are not available.
+-Dwicket.metrics.applicationName=<filtername> - If this argument is set no ThreadLocal access is required, because the Application is looked up via Application#get(String). This property needs to be set if the active sessions counter should be measured with SessionCountListenerAspect because timed out sessions are invalidated in non-HTTP-worker thread and the Wicket thread locals are not available. Caution: this approach could not be used when there are more than one applications in the same web container!
 
 
