@@ -1,4 +1,4 @@
-There are only a two steps required to write own measurements for life data statistics in wicket:
+There are only a two steps required to write own measurements for life data statistics in Wicket:
 
 (1) Write a class which is named very close to what it measures. This class should extends WicketMetrics and should annotated with @Aspect and provide one method with a join point scanning for the target signature.
 {code}
