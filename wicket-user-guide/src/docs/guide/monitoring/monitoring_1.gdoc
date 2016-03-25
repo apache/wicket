@@ -68,13 +68,14 @@ WicketMetrics.getSettings().stopJmxReporter();
 
 To disable measurement:
 {code}
-WicketMetrics.getSettings().setEnable(false);
+WicketMetrics.getSettings().setEnabled(false);
 {code}
 
 (6 - optional) There are two system flags which can be applied to the start of the server
 
--Dwicket.metrics.staticRegistration=true - If this argument is set the wicket metrics settings and the metrics registry are stored in static variables within the WicketMetrics class - this might cause problems in an osgi environment
+-Dwicket.metrics.staticRegistration=true - If this argument is set the wicket metrics settings and the metrics registry are stored in static variables within the WicketMetrics class - this might cause problems in an OSGi environment
 
--dwicket.applicationName=<filtername> - If this argument is set no ThreadLocal access is required, because the Application is received via get(String). Needs to be set if the session should be measured SessionCountListenerAspect
+-Dwicket.applicationName=<filtername> - If this argument is set no ThreadLocal access is required, because the Application is looked up via Application#get(String). This property needs to be set if the active sessions counter should be measured with SessionCountListenerAspect because
+timed out sessions are invalidated in non-HTTP-worker thread and the Wicket thread locals are not available.
 
 

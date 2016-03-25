@@ -10,7 +10,7 @@ Here are some information about them:
 
 * min - the minimal time for a task (created, initialized, etc.)
 
-* count - how often something happend (request count)
+* count - how often something happened (request count)
 
 The structure is separated in the way that under core there are the kind of components measured and below that the type of operation
 
