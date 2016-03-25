@@ -37,6 +37,7 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerPrependJavaScriptAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.resource.ResourceReferenceCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.markup.WicketTagCreateAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleUrlAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.session.SessionCountListenerAspect" />
     </aspects>
