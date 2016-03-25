@@ -35,12 +35,11 @@ public void init()
 }
 {code}
 
-Usually we won't need to change the defgitk
-ault configuration of @IMarkupFilters@S, but it's important to be aware of this internal mechanism before we talk about another advanced feature, which is building auto components resolvers.
+Usually we won't need to change the default configuration of @IMarkupFilters@S, but it's important to be aware of this internal mechanism before we talk about another advanced feature, which is building auto components resolvers.
 
 h3. Auto components resolvers
 
-Even if Wicket encourages developers to use just standard HTML in their markup code, in this guide we have seen a number of "special" tags (those starting with @wicket:@) that help us for specific tasks (think for example at the @wicket:enclosure@ tag). Wicket handles most of these tags creating a corresponding special component called _auto_ component. This kind of components are resolved in two steps:
+Even if Wicket encourages developers to use just standard HTML in their markup code, in this guide we have seen a number of "special" tags (those starting with @wicket:@) that help us for specific tasks (e.g. @wicket:enclosure@ tag). Wicket handles most of these tags creating a corresponding special component called _auto_ component. This kind of components are resolved in two steps:
 
 # first their tag is identified by a @IMarkupFilters@ which also takes care of assigning a unique tag id.
 # then during rendering phase when an auto-component is found a new component is created for it using one of the registered @org.apache.wicket.markup.resolver.IComponentResolver@:
@@ -64,7 +63,7 @@ public interface IComponentResolver extends IClusterable
 }
 {code}
 
-Registerd @IComponentResolver@S can be retrieved through Application's settings:
+Registered @IComponentResolver@s can be retrieved through Application's settings:
 
 {code}
 Application.get()
