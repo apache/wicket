@@ -1,0 +1,77 @@
+h3. Markup loading and parsing
+
+Before rendering any component Wicket must retrieve its markup calling method @getMarkup()@ of class @org.apache.wicket.Component@. This markup is an instance of interface @org.apache.wicket.markup.IMarkupFragment@. Markup is lazy loaded the first time we render the relative component and is cached at application level. The internal class that actually loads the markup is @org.apache.wicket.markup.MarkupFactory@ and is part of application's markup settings:
+
+{code}
+	//get current markup factory
+	Application.get().getMarkupSettings().getMarkupFactory()
+{code}
+ 
+After the markup has been loaded by @MarkupFactory@, it's parsed with class @org.apache.wicket.markup.MarkupParser@. @MarkupFactory@ creates a new @MarkupParser@ with method @newMarkupParser(MarkupResourceStream resource)@. The effective markup parsing is performed with a chain of entities implementing interface @org.apache.wicket.markup.parser.IMarkupFilter@. The default set of @IMarkupFilters@S used by @MarkupParser@ takes care of different tasks such as HTML validation, comments removing, Wicket tags handling, etc... 
+
+To customize the set of @IMarkupFilters@S used in our application we can create a subclass of @MarkupFactory@ overriding method @newMarkupParser(MarkupResourceStream resource)@:
+
+{code}
+public MyMarkupFactory 
+{
+...
+  public MarkupParser newMarkupParser(final MarkupResourceStream resource) 
+  {
+       MarkupParser parser = super.newMarkupParser(resource);
+       parser.add(new MyFilter());
+       return parser;
+  }
+}
+{code}
+
+This custom class must be registered in the markup settings during application's initialization:
+
+{code}
+@Override
+public void init()
+{
+	super.init();
+	getMarkupSettings().setMarkupFactory(myMarkupFactory)
+}
+{code}
+
+Usually we won't need to change the defgitk
+ault configuration of @IMarkupFilters@S, but it's important to be aware of this internal mechanism before we talk about another advanced feature, which is building auto components resolvers.
+
+h3. Auto components resolvers
+
+Even if Wicket encourages developers to use just standard HTML in their markup code, in this guide we have seen a number of "special" tags (those starting with @wicket:@) that help us for specific tasks (think for example at the @wicket:enclosure@ tag). Wicket handles most of these tags creating a corresponding special component called _auto_ component. This kind of components are resolved in two steps:
+
+# first their tag is identified by a @IMarkupFilters@ which also takes care of assigning a unique tag id.
+# then during rendering phase when an auto-component is found a new component is created for it using one of the registered @org.apache.wicket.markup.resolver.IComponentResolver@:
+
+{code}
+public interface IComponentResolver extends IClusterable
+{
+	/**
+	 * Try to resolve a component.
+	 * 
+	 * @param container
+	 *            The container parsing its markup
+	 * @param markupStream
+	 *            The current markupStream
+	 * @param tag
+	 *            The current component tag while parsing the markup
+	 * @return component or {@code null} if not found
+	 */
+	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
+		final ComponentTag tag);
+}
+{code}
+
+Registerd @IComponentResolver@S can be retrieved through Application's settings:
+
+{code}
+Application.get()
+	.getPageSettings()
+	.getComponentResolvers()
+{code}
+
+{note}
+An internal utility class named @org.apache.wicket.markup.resolver.ComponentResolvers@ is also available to resolve autocomponents for the current markup tag.
+{note}
