@@ -33,7 +33,7 @@ import com.codahale.metrics.Timer.Context;
 public class WicketMetrics
 {
 
-	private static final String APPLICATION_NAME_PROPERTY = "wicket.applicationName";
+	private static final String APPLICATION_NAME_PROPERTY = "wicket.metrics.applicationName";
 
 	private static final String METRICS_STATIC_REGISTRATION = "wicket.metrics.staticRegistration";
 	/**
