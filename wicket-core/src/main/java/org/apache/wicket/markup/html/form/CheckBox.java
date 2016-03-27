@@ -170,7 +170,7 @@ public class CheckBox extends FormComponent<Boolean> implements IRequestListener
 		// checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
 		{
-			CharSequence url = urlFor(new PageParameters());
+			CharSequence url = urlForListener(new PageParameters());
 
 			Form<?> form = findParent(Form.class);
 			if (form != null)

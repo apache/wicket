@@ -166,7 +166,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			super.onComponentTag(component, tag);
-			tag.put(attr, component.urlFor(this, new PageParameters()));
+			tag.put(attr, component.urlForListener(this, new PageParameters()));
 		}
 
 		@Override

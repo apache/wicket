@@ -534,7 +534,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IRe
 			// when the option is clicked?
 			if (wantOnSelectionChangedNotifications())
 			{
-				CharSequence url = urlFor(new PageParameters());
+				CharSequence url = urlForListener(new PageParameters());
 
 				Form<?> form = findParent(Form.class);
 				if (form != null)

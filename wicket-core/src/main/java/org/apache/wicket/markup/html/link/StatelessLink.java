@@ -58,6 +58,6 @@ public abstract class StatelessLink<T> extends Link<T>
 	@Override
 	protected CharSequence getURL()
 	{
-		return urlFor(getPage().getPageParameters());
+		return urlForListener(getPage().getPageParameters());
 	}
 }

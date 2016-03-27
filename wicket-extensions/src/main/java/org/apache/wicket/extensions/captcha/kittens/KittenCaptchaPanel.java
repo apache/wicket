@@ -212,7 +212,7 @@ public class KittenCaptchaPanel extends Panel
 					javascript.append("Wicket.$('")
 						.append(image.getMarkupId())
 						.append("').src = '");
-					CharSequence url = image.urlFor(new PageParameters());
+					CharSequence url = image.urlForListener(new PageParameters());
 					javascript.append(url);
 					javascript.append(url.toString().indexOf('?') > -1 ? "&amp;" : "?")
 						.append("rand=")

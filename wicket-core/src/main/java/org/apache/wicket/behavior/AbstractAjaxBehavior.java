@@ -87,7 +87,7 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IRequestL
 				"Behavior must be bound to a component to create the URL");
 		}
 
-		return getComponent().urlFor(this, new PageParameters());
+		return getComponent().urlForListener(this, new PageParameters());
 	}
 
 	/**

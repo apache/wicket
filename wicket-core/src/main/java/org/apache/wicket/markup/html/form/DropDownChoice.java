@@ -238,7 +238,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 		{
 			// we do not want relative URL here, because it will be used by
 			// Form#dispatchEvent
-			CharSequence url = urlFor(new PageParameters());
+			CharSequence url = urlForListener(new PageParameters());
 
 			Form<?> form = findParent(Form.class);
 			if (form != null)

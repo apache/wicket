@@ -1653,7 +1653,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected CharSequence getActionUrl()
 	{
-		return urlFor(new PageParameters());
+		return urlForListener(new PageParameters());
 	}
 
 	/**

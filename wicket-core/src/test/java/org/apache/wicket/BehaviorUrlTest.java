@@ -133,7 +133,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		{
 			super.onComponentTag(component, tag);
 			tag.put("href",
-				component.urlFor(this, new PageParameters()));
+				component.urlForListener(this, new PageParameters()));
 		}
 
 		@Override

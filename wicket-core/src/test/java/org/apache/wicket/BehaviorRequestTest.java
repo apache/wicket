@@ -134,7 +134,7 @@ public class BehaviorRequestTest extends WicketTestCase
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			super.onComponentTag(component, tag);
-			tag.put("href", component.urlFor(this, new PageParameters()));
+			tag.put("href", component.urlForListener(this, new PageParameters()));
 		}
 
 		@Override

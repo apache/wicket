@@ -332,7 +332,7 @@ public final class LocalizedImageResource implements IClusterable
 		else
 		{
 			// Create URL to component
-			url = component.urlFor(resourceParameters);
+			url = component.urlForListener(resourceParameters);
 		}
 
 		// Set the SRC attribute to point to the component or shared resource

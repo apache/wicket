@@ -123,7 +123,7 @@ public class InlineFrame extends WebMarkupContainer implements IRequestListener
 	 */
 	protected CharSequence getURL()
 	{
-		return urlFor(new PageParameters());
+		return urlForListener(new PageParameters());
 	}
 
 	/**
