@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.image;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -586,7 +585,7 @@ public class Image extends WebComponent implements IRequestListener
 	}
 
 	@Override
-	public boolean canCallListenerInterface(Method method)
+	public boolean canCallListenerInterface()
 	{
 		if (isVisibleInHierarchy())
 		{
@@ -597,7 +596,7 @@ public class Image extends WebComponent implements IRequestListener
 		}
 		else
 		{
-			return super.canCallListenerInterface(method);
+			return super.canCallListenerInterface();
 		}
 	}
 

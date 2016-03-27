@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -143,7 +142,7 @@ public class ComponentTest extends WicketTestCase
 		// methods no matter whether it is visible or enabled
 		component = new WebComponent("someId") {
 			@Override
-			public boolean canCallListenerInterface(Method method)
+			public boolean canCallListenerInterface()
 			{
 				return true;
 			}
@@ -181,8 +180,8 @@ public class ComponentTest extends WicketTestCase
 		link = new Link<Void>("someId") {
 
 		    @Override
-		    public boolean canCallListenerInterface(Method method) {
-			return true;
+		    public boolean canCallListenerInterface() {
+		    	return true;
 		    }
 
 		    @Override

@@ -17,7 +17,6 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -2065,13 +2064,9 @@ public abstract class Component
 	 */
 	public final boolean isStateless()
 	{
-		if (
-		// the component is either invisible or disabled
-		(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
-
-		// and it can't call listener interfaces
-			canCallListenerInterface(null) == false)
+		if ((isVisibleInHierarchy() && isEnabledInHierarchy()) == false && canCallListenerInterface() == false)
 		{
+			// the component is either invisible or disabled and it can't call listener interfaces
 			// then pretend the component is stateless
 			return true;
 		}
@@ -4431,9 +4426,7 @@ public abstract class Component
 
 	/**
 	 * Checks whether or not a listener method can be invoked on this component. Usually components
-	 * deny these invocations if they are either invisible or disabled in hierarchy. Components can
-	 * examine which listener interface is being invoked by examining the declaring class of the
-	 * passed in {@literal method} parameter.
+	 * deny these invocations if they are either invisible or disabled in hierarchy.
 	 * <p>
 	 * WARNING: be careful when overriding this method because it may open security holes - such as
 	 * allowing a user to click on a link that should be disabled.
@@ -4442,18 +4435,14 @@ public abstract class Component
 	 * Example usecase for overriding: Suppose you are building an component that displays images.
 	 * The component generates a callback to itself using {@link IRequestListener} interface and
 	 * uses this callback to stream image data. If such a component is placed inside a disabled
-	 * webmarkupcontainer we still want to allow the invocation of the request listener callback
+	 * {@code WebMarkupContainer} we still want to allow the invocation of the request listener callback
 	 * method so that image data can be streamed. Such a component would override this method and
-	 * return {@literal true} if the listener method belongs to {@link IRequestListener}.
+	 * return {@literal true}.
 	 * </p>
-	 * 
-	 * @param method
-	 *            listener method about to be invoked on this component. Could be {@code null} - in
-	 *            this case it means <em>any</em> method.
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
-	public boolean canCallListenerInterface(Method method)
+	public boolean canCallListenerInterface()
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
 	}

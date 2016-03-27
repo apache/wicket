@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.behavior;
 
-import java.lang.reflect.Method;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
@@ -205,21 +203,19 @@ public abstract class Behavior
 
 	/**
 	 * Checks whether or not a listener interface can be invoked on this behavior. For further
-	 * information please read the javadoc on {@link Component#canCallListenerInterface(Method)},
+	 * information please read the javadoc on {@link Component#canCallListenerInterface()},
 	 * this method has the same semantics.
 	 * 
-	 * WARNING: Read the javadoc of {@link Component#canCallListenerInterface(Method)} for important
+	 * WARNING: Read the javadoc of {@link Component#canCallListenerInterface()} for important
 	 * security-related information.
 	 * 
 	 * @param component
 	 *            component this behavior is attached to
-	 * @param method
-	 *            listener method being invoked
 	 * @return {@literal true} iff the listener method can be invoked
 	 */
-	public boolean canCallListenerInterface(Component component, Method method)
+	public boolean canCallListenerInterface(Component component)
 	{
-		return isEnabled(component) && component.canCallListenerInterface(method);
+		return isEnabled(component) && component.canCallListenerInterface();
 	}
 
 
