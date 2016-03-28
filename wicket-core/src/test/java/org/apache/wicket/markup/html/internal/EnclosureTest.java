@@ -175,7 +175,6 @@ public class EnclosureTest extends WicketTestCase
 	private void assertResultPage(final String file) throws IOException
 	{
 		String document = tester.getLastResponse().getDocument();
-		document = document.replaceAll("[1-9]+[.]IFormSubmitListener", "1.IFormSubmitListener");
 		DiffUtil.validatePage(document, getClass(), file, true);
 	}
 
