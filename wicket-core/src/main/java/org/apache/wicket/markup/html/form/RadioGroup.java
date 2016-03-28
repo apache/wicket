@@ -164,12 +164,6 @@ public class RadioGroup<T> extends FormComponent<T> implements IRequestListener
 		tag.remove("name");
 	}
 
-	@Override
-	public boolean includeRenderCount()
-	{
-		return true;
-	}
-	
 	/**
 	 * Called when a selection changes.
 	 */

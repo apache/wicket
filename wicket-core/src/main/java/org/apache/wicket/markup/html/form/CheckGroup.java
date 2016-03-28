@@ -201,12 +201,6 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IRequ
 		tag.remove("name");
 	}
 
-	@Override
-	public boolean includeRenderCount()
-	{
-		return true;
-	}
-	
 	/**
 	 * Called when a selection changes.
 	 */

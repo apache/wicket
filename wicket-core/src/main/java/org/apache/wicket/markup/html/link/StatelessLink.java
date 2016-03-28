@@ -50,7 +50,7 @@ public abstract class StatelessLink<T> extends Link<T>
 	}
 
 	@Override
-	public boolean includeRenderCount()
+	public boolean rendersPage()
 	{
 		return false;
 	}

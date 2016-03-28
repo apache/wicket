@@ -675,12 +675,6 @@ public class Form<T> extends WebMarkupContainer
 		return getFlag(FLAG_SUBMITTED);
 	}
 
-	@Override
-	public boolean includeRenderCount()
-	{
-		return true;
-	}
-	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
 	 * 

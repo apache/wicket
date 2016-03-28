@@ -68,12 +68,6 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IRequestL
 		onBind();
 	}
 
-	@Override
-	public boolean includeRenderCount()
-	{
-		return true;
-	}
-	
 	/**
 	 * Gets the url that references this handler.
 	 * 

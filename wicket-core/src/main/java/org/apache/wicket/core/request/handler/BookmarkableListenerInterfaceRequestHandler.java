@@ -68,9 +68,9 @@ public class BookmarkableListenerInterfaceRequestHandler
 
 	public boolean includeRenderCount() {
 		if (behaviorIndex == null) {
-			return ((IRequestListener)getComponent()).includeRenderCount();
+			return ((IRequestListener)getComponent()).rendersPage();
 		} else {
-			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).includeRenderCount();
+			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).rendersPage();
 		}
 	}
 

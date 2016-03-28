@@ -170,12 +170,6 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		}
 
 		@Override
-		public boolean includeRenderCount()
-		{
-			return true;
-		}
-		
-		@Override
 		public void onRequest()
 		{
 		}

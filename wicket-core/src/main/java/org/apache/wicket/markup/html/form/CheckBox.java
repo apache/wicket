@@ -75,12 +75,6 @@ public class CheckBox extends FormComponent<Boolean> implements IRequestListener
 		setType(Boolean.class);
 	}
 
-	@Override
-	public boolean includeRenderCount()
-	{
-		return true;
-	}
-	
 	/**
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */

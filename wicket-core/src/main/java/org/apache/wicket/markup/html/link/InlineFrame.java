@@ -148,9 +148,9 @@ public class InlineFrame extends WebMarkupContainer implements IRequestListener
 	}
 
 	@Override
-	public boolean includeRenderCount()
+	public boolean rendersPage()
 	{
-		return true;
+		return false;
 	}
 	
 	/**

@@ -104,7 +104,7 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 	}
 
 	@Override
-	public boolean includeRenderCount()
+	public boolean rendersPage()
 	{
 		return false;
 	}

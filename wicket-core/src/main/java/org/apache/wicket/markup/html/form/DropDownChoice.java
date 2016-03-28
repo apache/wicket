@@ -203,12 +203,6 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 		super(id, model, choices, renderer);
 	}
 
-	@Override
-	public boolean includeRenderCount()
-	{
-		return true;
-	}
-	
 	/**
 	 * Called when a selection changes.
 	 */

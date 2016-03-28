@@ -210,7 +210,7 @@ public class Image extends WebComponent implements IRequestListener
 	}
 
 	@Override
-	public boolean includeRenderCount()
+	public boolean rendersPage()
 	{
 		return false;
 	}

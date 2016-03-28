@@ -245,12 +245,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IRe
 		tag.remove("name");
 	}
 
-	@Override
-	public boolean includeRenderCount()
-	{
-		return true;
-	}
-	
 	/**
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */

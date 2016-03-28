@@ -81,9 +81,9 @@ public class ListenerInterfaceRequestHandler
 
 	public boolean includeRenderCount() {
 		if (behaviorId == null) {
-			return ((IRequestListener)getComponent()).includeRenderCount();
+			return ((IRequestListener)getComponent()).rendersPage();
 		} else {
-			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).includeRenderCount();
+			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).rendersPage();
 		}
 	}
 	
@@ -302,7 +302,7 @@ public class ListenerInterfaceRequestHandler
 
 		IRequestListener requestListener = (IRequestListener)target;
 		
-		if (requestListener.includeRenderCount() && !ajax)
+		if (requestListener.rendersPage() && !ajax)
 		{
 			// schedule page render after current request handler is done. this can be
 			// overridden during invocation of listener
