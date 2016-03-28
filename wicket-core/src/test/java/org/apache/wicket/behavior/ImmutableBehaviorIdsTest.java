@@ -70,8 +70,8 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		assertTrue(output.contains("autocomplete=\"off\""));
 		assertTrue(output.contains("class2=\"border\""));
 		assertTrue(output.contains("autocomplete2=\"off\""));
-		assertTrue(output.contains("IBehaviorListener.0"));
-		assertTrue(output.contains("IBehaviorListener.1"));
+		assertTrue(output.contains(".0"));
+		assertTrue(output.contains(".1"));
 		assertEquals(link, page.getContainer().getBehaviorById(0));
 		assertEquals(link2, page.getContainer().getBehaviorById(1));
 
@@ -86,8 +86,8 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		tester.startPage(page);
 		output = tester.getLastResponseAsString();
 //		System.out.println(output);
-		assertTrue(output.contains("IBehaviorListener.0"));
-		assertTrue(output.contains("IBehaviorListener.1"));
+		assertTrue(output.contains(".0"));
+		assertTrue(output.contains(".1"));
 		assertEquals(link, page.getContainer().getBehaviorById(0));
 		assertEquals(link2, page.getContainer().getBehaviorById(1));
 	}

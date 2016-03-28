@@ -166,7 +166,7 @@ public class RequestListenerInterface
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
 
-		if (!component.canCallListenerInterface(null))
+		if (!component.canCallListenerInterface())
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page
@@ -192,7 +192,7 @@ public class RequestListenerInterface
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
 
-		if (!behavior.canCallListenerInterface(component, null))
+		if (!behavior.canCallListenerInterface(component))
 		{
 			log.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
 				component);
