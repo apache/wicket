@@ -21,7 +21,8 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
- * Interface to be implemented by {@link Component}s or {@link Behaviors} that listen for requests from the client browser.
+ * Interface to be implemented by {@link Component}s or {@link org.apache.wicket.behavior.Behavior}s
+ * that listen for requests from the client browser.
  * 
  * @author Jonathan Locke
  */
@@ -33,7 +34,8 @@ public interface IRequestListener extends IClusterable
 	 * 
 	 * @return default {@code true}, i.e. a {@link RenderPageRequestHandler} is schedules after invocation 
 	 */
-	default boolean rendersPage() {
+	default boolean rendersPage()
+	{
 		return true;
 	}
 	
