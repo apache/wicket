@@ -3326,13 +3326,11 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets a URL for the listener interface on a behavior (e.g. IRequestBehaviorListener on
-	 * AjaxPagingNavigationBehavior).
+	 * Gets a URL for the listener interface on a behavior (e.g. {@link IRequestListener} on
+	 * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationBehavior}).
 	 * 
 	 * @param behaviour
 	 *            The behavior that the URL should point to
-	 * @param listener
-	 *            The listener interface that the URL should call
 	 * @param parameters
 	 *            The parameters that should be rendered into the urls
 	 * @return The URL
