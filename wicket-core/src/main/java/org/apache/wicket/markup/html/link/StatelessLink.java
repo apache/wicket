@@ -50,12 +50,6 @@ public abstract class StatelessLink<T> extends Link<T>
 	}
 
 	@Override
-	public boolean rendersPage()
-	{
-		return false;
-	}
-	
-	@Override
 	protected CharSequence getURL()
 	{
 		return urlForListener(getPage().getPageParameters());

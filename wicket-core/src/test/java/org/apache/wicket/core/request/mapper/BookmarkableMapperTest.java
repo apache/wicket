@@ -174,7 +174,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	@Test
 	public void decode5()
 	{
-		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
+		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15-.-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -195,7 +195,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	public void decode6()
 	{
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME
-			+ "/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
+			+ "/i1/i2?15-.-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -612,7 +612,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		Url url = encoder.mapHandler(handler);
 
 		assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME
-			+ "/i1/i2?15-0.ILinkListener-foo-bar&a=b&b=c", url.toString());
+			+ "/i1/i2?15-0.-foo-bar&a=b&b=c", url.toString());
 	}
 
 	/**
@@ -640,7 +640,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		Url url = encoder.mapHandler(handler);
 
 		assertEquals("wicket/bookmarkable/" + PAGE_CLASS_NAME
-			+ "/i1/i2?15-0.ILinkListener.4-foo-bar&a=b&b=c", url.toString());
+			+ "/i1/i2?15-0.4-foo-bar&a=b&b=c", url.toString());
 	}
 
 	/**

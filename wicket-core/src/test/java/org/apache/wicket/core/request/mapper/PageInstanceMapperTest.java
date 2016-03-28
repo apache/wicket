@@ -87,7 +87,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 	@Test
 	public void decode3()
 	{
-		Url url = Url.parse("wicket/page?4-ILinkListener-a-b-c");
+		Url url = Url.parse("wicket/page?4-.-a-b-c");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -104,7 +104,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 	@Test
 	public void decode4()
 	{
-		Url url = Url.parse("wickett/pagee?4-ILinkListener-a:b-c");
+		Url url = Url.parse("wickett/pagee?4-.-a:b-c");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertNull(handler);
@@ -145,7 +145,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 	@Test
 	public void decode7()
 	{
-		Url url = Url.parse("wicket/page?4-6.ILinkListener.5-a-b-c");
+		Url url = Url.parse("wicket/page?4-6.5-a-b-c");
 
 		context.setNextPageRenderCount(6);
 
@@ -162,7 +162,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 	@Test(expected = StalePageException.class)
 	public void decode8()
 	{
-		Url url = Url.parse("wicket/page?4-6.ILinkListener.5-a-b-c");
+		Url url = Url.parse("wicket/page?4-6.5-a-b-c");
 
 		context.setNextPageRenderCount(8);
 
@@ -290,7 +290,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
-		assertEquals("wicket/page?15-5.ILinkListener-a-b-c", url.toString());
+		assertEquals("wicket/page?15-5.-a-b-c", url.toString());
 	}
 
 }

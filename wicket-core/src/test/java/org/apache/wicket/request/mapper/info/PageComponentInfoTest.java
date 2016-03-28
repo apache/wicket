@@ -35,8 +35,7 @@ public class PageComponentInfoTest extends TestCase
 		assertEquals(pageId, info.getPageInfo().getPageId());
 	}
 
-	private void testPageComponentInfo(PageComponentInfo info, Integer pageId, String listener,
-		String componentPath)
+	private void testPageComponentInfo(PageComponentInfo info, Integer pageId, String componentPath)
 	{
 		assertNotNull(info.getComponentInfo());
 		assertNotNull(info.getPageInfo());
@@ -52,9 +51,9 @@ public class PageComponentInfoTest extends TestCase
 	@Test
 	public void test1()
 	{
-		String s = "2-click-foo-bar-baz";
+		String s = "2-.-foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
-		testPageComponentInfo(info, 2, "click", "foo:bar:baz");
+		testPageComponentInfo(info, 2, "foo:bar:baz");
 		assertEquals(s, info.toString());
 	}
 
