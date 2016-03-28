@@ -79,7 +79,7 @@ public class WicketMetrics
 	 * @return the value of the join point
 	 * @throws Throwable
 	 *             if there is an exception while execution
-	 * @see #org.apache.wicket.metrics.WicketMetrics.measureTime(String, ProceedingJoinPoint,
+	 * @see org.apache.wicket.metrics.WicketMetrics#measureTime(String, ProceedingJoinPoint,
 	 *      boolean)
 	 */
 	public Object measureTime(String name, ProceedingJoinPoint joinPoint) throws Throwable
