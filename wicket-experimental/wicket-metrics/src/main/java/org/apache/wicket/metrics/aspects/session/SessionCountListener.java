@@ -16,9 +16,14 @@
  */
 package org.apache.wicket.metrics.aspects.session;
 
+import static org.apache.wicket.metrics.Initializer.METRICS_SERVLET_REGISTRY;
+
+import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
+import com.codahale.metrics.MetricRegistry;
 
 
 /**
@@ -30,35 +35,46 @@ import javax.servlet.http.HttpSessionListener;
 @WebListener
 public class SessionCountListener implements HttpSessionListener
 {
-
 	@Override
 	public void sessionDestroyed(HttpSessionEvent event)
 	{
-		dec(event);
+		ServletContext servletContext = event.getSession().getServletContext();
+		MetricRegistry metricRegistry = (MetricRegistry) servletContext.getAttribute(METRICS_SERVLET_REGISTRY);
+		if (metricRegistry != null)
+		{
+			dec(event, metricRegistry);
+		}
 	}
 
 	@Override
 	public void sessionCreated(HttpSessionEvent event)
 	{
-		inc(event);
+		ServletContext servletContext = event.getSession().getServletContext();
+		MetricRegistry metricRegistry = (MetricRegistry) servletContext.getAttribute(METRICS_SERVLET_REGISTRY);
+		if (metricRegistry != null)
+		{
+			inc(event, metricRegistry);
+		}
 	}
 
 	/**
 	 * Used to wire an aspect around
-	 * 
+	 *
 	 * @param event the http session event
+	 * @param metricRegistry
 	 */
-	public void dec(HttpSessionEvent event)
+	public void dec(HttpSessionEvent event, MetricRegistry metricRegistry)
 	{
 		// NOOP for aspect usage
 	}
 	
 	/**
 	 * Used to wire an aspect around
-	 * 
+	 *
 	 * @param event the http session event
+	 * @param metricRegistry
 	 */
-	public void inc(HttpSessionEvent event)
+	public void inc(HttpSessionEvent event, MetricRegistry metricRegistry)
 	{
 		// NOOP for aspect usage
 	}
