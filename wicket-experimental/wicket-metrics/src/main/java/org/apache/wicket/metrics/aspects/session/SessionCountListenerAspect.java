@@ -50,7 +50,7 @@ public class SessionCountListenerAspect extends WicketMetrics
 		MetricRegistry metricRegistry = (MetricRegistry) methodArguments[1];
 		WicketMetricsSettings metricsSettings = (WicketMetricsSettings) methodArguments[2];
 
-		return counter("core/session/count", null, CounterOperation.INC, 1L, metricRegistry, metricsSettings);
+		return counter("core/session/count", joinPoint, CounterOperation.INC, 1L, metricRegistry, metricsSettings);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class SessionCountListenerAspect extends WicketMetrics
 		MetricRegistry metricRegistry = (MetricRegistry) methodArguments[1];
 		WicketMetricsSettings metricsSettings = (WicketMetricsSettings) methodArguments[2];
 
-		return counter("core/session/count", null, CounterOperation.DEC, 1L, metricRegistry, metricsSettings);
+		return counter("core/session/count", joinPoint, CounterOperation.DEC, 1L, metricRegistry, metricsSettings);
 	}
 
 }
