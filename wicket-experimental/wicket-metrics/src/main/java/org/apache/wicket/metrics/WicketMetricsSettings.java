@@ -30,7 +30,7 @@ public class WicketMetricsSettings
 
 	private boolean enabled = true;
 
-	private String prefix = "ApacheWicket/";
+	private String prefix = "application/";
 
 	/**
 	 * If the metrics should be enabled
@@ -61,6 +61,21 @@ public class WicketMetricsSettings
 	public String getPrefix()
 	{
 		return prefix;
+	}
+
+	/**
+	 * Sets the prefix to be used for the statistics
+	 * 
+	 * @param prefix
+	 *            the prefix to be used
+	 */
+	public void setPrefix(String prefix)
+	{
+		if (!prefix.endsWith("/"))
+		{
+			prefix = prefix + "/";
+		}
+		this.prefix = prefix;
 	}
 
 	/**

@@ -18,6 +18,7 @@ package org.apache.wicket.metrics;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.WicketRuntimeException;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 import com.codahale.metrics.Counter;
@@ -33,28 +34,12 @@ import com.codahale.metrics.Timer.Context;
 public class WicketMetrics
 {
 
-	private static final String APPLICATION_NAME_PROPERTY = "wicket.metrics.applicationName";
-
-	private static final String METRICS_STATIC_REGISTRATION = "wicket.metrics.staticRegistration";
 	/**
-	 * if the application has been resolved
+	 * The name of the filter the metrics are going to collect of
 	 */
-	private static boolean applicationResolved;
+	private static String filterName;
 
-	/**
-	 * The application
-	 */
-	private static Application application;
-
-	/**
-	 * Fall back if the application couldn't be resolved the registry is stored static
-	 */
-	private static MetricRegistry metricRegistry;
-
-	/**
-	 * Fall back if the application couldn't be resolved the settings are stored static
-	 */
-	private static WicketMetricsSettings wicketMetricsSettings;
+	private static final String APPLICATION_ERROR = "The application couldn't be resolved, please ensure to apply \"<aspect name=\"org.apache.wicket.metrics.aspects.WicketFilterInitAspect\" />\" to your aspects";
 
 	/** The key for metrics registry **/
 	public static final MetaDataKey<MetricRegistry> METRIC_REGISTRY = new MetaDataKey<MetricRegistry>()
@@ -115,7 +100,7 @@ public class WicketMetrics
 				.time();
 			try
 			{
-				return joinPoint.proceed();
+				return proceedSilent(joinPoint);
 			}
 			finally
 			{
@@ -124,7 +109,21 @@ public class WicketMetrics
 		}
 		else
 		{
-			return joinPoint.proceed();
+			return proceedSilent(joinPoint);
+		}
+	}
+
+	/**
+	 * Stops the context quietly
+	 * 
+	 * @param context
+	 *            the context to stop
+	 */
+	public void stopQuietly(Context context)
+	{
+		if (context != null)
+		{
+			context.stop();
 		}
 	}
 
@@ -145,7 +144,7 @@ public class WicketMetrics
 	}
 
 	/**
-	 * Creates a histogram of the given arguments
+	 * Creates a count of the given arguments
 	 * 
 	 * @param name
 	 *            the name of the meter to be marked
@@ -158,7 +157,7 @@ public class WicketMetrics
 	 * @return the result of the proceeded join point
 	 * @throws Throwable
 	 */
-	public Object counter(String name, ProceedingJoinPoint joinPoint,
+	public Object count(String name, ProceedingJoinPoint joinPoint,
 		CounterOperation counterOperation, Long value) throws Throwable
 	{
 		WicketMetricsSettings settings = getSettings();
@@ -177,11 +176,7 @@ public class WicketMetrics
 				counter.dec(value);
 			}
 		}
-		if (joinPoint != null)
-		{
-			return joinPoint.proceed();
-		}
-		return null;
+		return proceedSilent(joinPoint);
 	}
 
 
@@ -204,25 +199,21 @@ public class WicketMetrics
 		{
 			registry.meter(settings.getPrefix() + name + renderClassName(joinPoint)).mark();
 		}
-		if (joinPoint != null)
-		{
-			return joinPoint.proceed();
-		}
-		return null;
+		return proceedSilent(joinPoint);
 	}
 
 	/**
-	 * Stops the context quietly
+	 * Proceed the join point silent
 	 * 
-	 * @param context
-	 *            the context to stop
+	 * @param joinPoint
+	 *            the join point to proceed
+	 * @return the result of the proceeded join point
+	 * @throws Throwable
+	 *             if the invocation throws an error
 	 */
-	public void stopQuietly(Context context)
+	private Object proceedSilent(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		if (context != null)
-		{
-			context.stop();
-		}
+		return joinPoint != null ? joinPoint.proceed() : null;
 	}
 
 	/**
@@ -245,29 +236,18 @@ public class WicketMetrics
 	 */
 	public static synchronized MetricRegistry getMetricRegistry()
 	{
-		if (!applicationResolved)
+		Application application = Application.get(getFilterName());
+		if (application == null)
 		{
-			application = getApplication();
-			applicationResolved = true;
+			throw new WicketRuntimeException(APPLICATION_ERROR);
 		}
-		if (application != null && System.getProperty(METRICS_STATIC_REGISTRATION) == null)
+		MetricRegistry metricRegistry = application.getMetaData(METRIC_REGISTRY);
+		if (metricRegistry == null)
 		{
-			MetricRegistry metricRegistry = application.getMetaData(METRIC_REGISTRY);
-			if (metricRegistry == null)
-			{
-				metricRegistry = new MetricRegistry();
-				application.setMetaData(METRIC_REGISTRY, metricRegistry);
-			}
-			return metricRegistry;
+			metricRegistry = new MetricRegistry();
+			application.setMetaData(METRIC_REGISTRY, metricRegistry);
 		}
-		else
-		{
-			if (WicketMetrics.metricRegistry == null)
-			{
-				WicketMetrics.metricRegistry = new MetricRegistry();
-			}
-			return WicketMetrics.metricRegistry;
-		}
+		return metricRegistry;
 	}
 
 	/**
@@ -277,77 +257,39 @@ public class WicketMetrics
 	 */
 	public static synchronized WicketMetricsSettings getSettings()
 	{
-		if (!applicationResolved)
-		{
-			application = getApplication();
-			applicationResolved = true;
-		}
-		if (application != null && System.getProperty(METRICS_STATIC_REGISTRATION) == null)
-		{
-			WicketMetricsSettings wicketMetricsSettings = application.getMetaData(METRIC_SETTINGS);
-			if (wicketMetricsSettings == null)
-			{
-				wicketMetricsSettings = new WicketMetricsSettings();
-				application.setMetaData(METRIC_SETTINGS, wicketMetricsSettings);
-			}
-			return wicketMetricsSettings;
-		}
-		else
-		{
-			if (wicketMetricsSettings == null)
-			{
-				wicketMetricsSettings = new WicketMetricsSettings();
-			}
-			return wicketMetricsSettings;
-		}
-	}
-
-	/**
-	 * Gets the application. First it tries to resolve the application with Application.get(String)
-	 * - the String is resolved by the system property "wicket.applicationName". If the application
-	 * can't be found by the corresponding name a Application.get() will be invoked to resolve it.
-	 * 
-	 * 
-	 * @return the application or null if the application can't be resolved via get() or get(String)
-	 */
-	private static Application getApplication()
-	{
-		Application application = getApplicationBySystemProperty();
+		Application application = Application.get(getFilterName());
 		if (application == null)
 		{
-			application = getApplicationFromThreadLocal();
+			throw new WicketRuntimeException(APPLICATION_ERROR);
 		}
-		return application;
+		WicketMetricsSettings wicketMetricsSettings = application.getMetaData(METRIC_SETTINGS);
+		if (wicketMetricsSettings == null)
+		{
+			wicketMetricsSettings = new WicketMetricsSettings();
+			wicketMetricsSettings.setPrefix(getFilterName());
+			application.setMetaData(METRIC_SETTINGS, wicketMetricsSettings);
+		}
+		return wicketMetricsSettings;
 	}
 
 	/**
-	 * Gets the application from thread local
+	 * Gets the filter name the application should be resolved with
 	 * 
-	 * @return the application or null if not available
+	 * @return the filter name
 	 */
-	private static Application getApplicationFromThreadLocal()
+	public static String getFilterName()
 	{
-		Application application = null;
-		if (Application.exists())
-		{
-			application = Application.get();
-		}
-		return application;
+		return filterName;
 	}
 
 	/**
-	 * Gets the application by the system property wicket.applicationName
+	 * Sets the filter name the application should be resolved with
 	 * 
-	 * @return the application or null if not available
+	 * @param filterName
+	 *            the filter name
 	 */
-	private static Application getApplicationBySystemProperty()
+	public static void setFilterName(String filterName)
 	{
-		Application application = null;
-		String applicatioName = System.getProperty(APPLICATION_NAME_PROPERTY);
-		if (applicatioName != null)
-		{
-			application = Application.get(applicatioName);
-		}
-		return application;
+		WicketMetrics.filterName = filterName;
 	}
 }

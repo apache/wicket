@@ -44,7 +44,7 @@ public class SessionCountListenerAspect extends WicketMetrics
 	public Object aroundInc(ProceedingJoinPoint joinPoint) throws Throwable
 	{
 		Object count = joinPoint.proceed();
-		counter("core/session/count", null, CounterOperation.INC, 1L);
+		count("core/session/count", null, CounterOperation.INC, 1L);
 		return count;
 	}
 	
@@ -61,7 +61,7 @@ public class SessionCountListenerAspect extends WicketMetrics
 	public Object aroundDec(ProceedingJoinPoint joinPoint) throws Throwable
 	{
 		Object count = joinPoint.proceed();
-		counter("core/session/count", null, CounterOperation.DEC, 1L);
+		count("core/session/count", null, CounterOperation.DEC, 1L);
 		return count;
 	}
 

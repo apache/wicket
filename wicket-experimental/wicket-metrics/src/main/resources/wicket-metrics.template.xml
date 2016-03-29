@@ -5,6 +5,10 @@
         <include within="org.apache.wicket..*"/>
     </weaver>
     <aspects>
+    	<!-- required -->
+    	<aspect name="org.apache.wicket.metrics.aspects.WicketFilterInitAspect" />
+    	
+    	<!-- optional -->
 		<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerDetachAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerRespondAspect" />
@@ -21,8 +25,8 @@
 		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerPrependJavaScriptAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.resource.ResourceReferenceCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.markup.WicketTagCreateAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleUrlAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.request.WicketFilterRequestCycleUrlAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.request.WicketFilterRequestCycleAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.session.SessionCountListenerAspect" />
     </aspects>
 </aspectj>
