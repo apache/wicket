@@ -21,10 +21,10 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
         <include within="org.apache.wicket..*"/>
     </weaver>
     <aspects>
-    	<!-- required -->
-    	<aspect name="org.apache.wicket.metrics.aspects.WicketFilterInitAspect" />
-    	
-    	<!-- optional -->
+		<!-- required -->
+		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterInitAspect" />
+
+		<!-- optional -->
 		<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerDetachAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerRespondAspect" />
