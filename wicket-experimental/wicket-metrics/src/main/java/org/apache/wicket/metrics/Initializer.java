@@ -21,21 +21,16 @@ public class Initializer implements IInitializer
 	@Override
 	public void init(Application application)
 	{
-		WebApplication webApplication = (WebApplication) application;
-		ServletContext servletContext = webApplication.getServletContext();
-
-		MetricRegistry metricRegistry = (MetricRegistry) servletContext.getAttribute(METRICS_SERVLET_REGISTRY);
-		WicketMetricsSettings metricsSettings = (WicketMetricsSettings) servletContext.getAttribute(WICKET_METRICS_SETTINGS);
-		if (metricRegistry == null)
-		{
-			metricRegistry = new MetricRegistry();
-			metricsSettings = new WicketMetricsSettings();
-			servletContext.setAttribute(METRICS_SERVLET_REGISTRY, metricRegistry);
-			servletContext.setAttribute(WICKET_METRICS_SETTINGS, metricsSettings);
-		}
+		MetricRegistry metricRegistry = new MetricRegistry();
+		WicketMetricsSettings metricsSettings = new WicketMetricsSettings();
 
 		application.setMetaData(WicketMetrics.METRIC_REGISTRY, metricRegistry);
 		application.setMetaData(WicketMetrics.METRIC_SETTINGS, metricsSettings);
+
+		WebApplication webApplication = (WebApplication) application;
+		ServletContext servletContext = webApplication.getServletContext();
+		servletContext.setAttribute(METRICS_SERVLET_REGISTRY, metricRegistry);
+		servletContext.setAttribute(WICKET_METRICS_SETTINGS, metricsSettings);
 	}
 
 	@Override
