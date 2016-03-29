@@ -16,32 +16,25 @@ import org.apache.wicket.protocol.http.WebApplication;
 public class Initializer implements IInitializer
 {
 	public static final String METRICS_SERVLET_REGISTRY = "com.codahale.metrics.servlets.MetricsServlet.registry";
-	public static final String WICKET_METRICS_SETTINGS = WicketMetricsSettings.class.getName();
 
 	@Override
 	public void init(Application application)
 	{
-		MetricRegistry metricRegistry = new MetricRegistry();
-		WicketMetricsSettings metricsSettings = new WicketMetricsSettings();
-
-		application.setMetaData(WicketMetrics.METRIC_REGISTRY, metricRegistry);
-		application.setMetaData(WicketMetrics.METRIC_SETTINGS, metricsSettings);
-
 		WebApplication webApplication = (WebApplication) application;
+		MetricRegistry metricRegistry = new MetricRegistry();
+		application.setMetaData(WicketMetrics.METRIC_REGISTRY, metricRegistry);
+
 		ServletContext servletContext = webApplication.getServletContext();
 		servletContext.setAttribute(METRICS_SERVLET_REGISTRY, metricRegistry);
-		servletContext.setAttribute(WICKET_METRICS_SETTINGS, metricsSettings);
 	}
 
 	@Override
 	public void destroy(Application application)
 	{
-		application.setMetaData(WicketMetrics.METRIC_REGISTRY, null);
-		application.setMetaData(WicketMetrics.METRIC_SETTINGS, null);
-
 		WebApplication webApplication = (WebApplication) application;
+		webApplication.setMetaData(WicketMetrics.METRIC_REGISTRY, null);
+
 		ServletContext servletContext = webApplication.getServletContext();
 		servletContext.setAttribute(METRICS_SERVLET_REGISTRY, null);
-		servletContext.setAttribute(WICKET_METRICS_SETTINGS, null);
 	}
 }

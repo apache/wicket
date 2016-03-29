@@ -17,12 +17,9 @@
 package org.apache.wicket.metrics.aspects.session;
 
 import org.apache.wicket.metrics.WicketMetrics;
-import org.apache.wicket.metrics.WicketMetricsSettings;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-
-import com.codahale.metrics.MetricRegistry;
 
 /**
  * The Session count listener aspect measures how many sessions are active
@@ -46,11 +43,9 @@ public class SessionCountListenerAspect extends WicketMetrics
 	@Around("execution(* org.apache.wicket.metrics.aspects.session.SessionCountListener.inc(..))")
 	public Object aroundInc(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		Object[] methodArguments = joinPoint.getArgs();
-		MetricRegistry metricRegistry = (MetricRegistry) methodArguments[1];
-		WicketMetricsSettings metricsSettings = (WicketMetricsSettings) methodArguments[2];
-
-		return counter("core/session/count", joinPoint, CounterOperation.INC, 1L, metricRegistry, metricsSettings);
+		Object count = joinPoint.proceed();
+		counter("core/session/count", null, CounterOperation.INC, 1L);
+		return count;
 	}
 	
 	/**
@@ -65,11 +60,9 @@ public class SessionCountListenerAspect extends WicketMetrics
 	@Around("execution(* org.apache.wicket.metrics.aspects.session.SessionCountListener.dec(..))")
 	public Object aroundDec(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		Object[] methodArguments = joinPoint.getArgs();
-		MetricRegistry metricRegistry = (MetricRegistry) methodArguments[1];
-		WicketMetricsSettings metricsSettings = (WicketMetricsSettings) methodArguments[2];
-
-		return counter("core/session/count", joinPoint, CounterOperation.DEC, 1L, metricRegistry, metricsSettings);
+		Object count = joinPoint.proceed();
+		counter("core/session/count", null, CounterOperation.DEC, 1L);
+		return count;
 	}
 
 }

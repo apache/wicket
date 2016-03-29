@@ -17,7 +17,6 @@
 package org.apache.wicket.metrics.aspects.session;
 
 import static org.apache.wicket.metrics.Initializer.METRICS_SERVLET_REGISTRY;
-import static org.apache.wicket.metrics.Initializer.WICKET_METRICS_SETTINGS;
 
 import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebListener;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import com.codahale.metrics.MetricRegistry;
-import org.apache.wicket.metrics.WicketMetricsSettings;
 
 
 /**
@@ -42,10 +40,9 @@ public class SessionCountListener implements HttpSessionListener
 	{
 		ServletContext servletContext = event.getSession().getServletContext();
 		MetricRegistry metricRegistry = (MetricRegistry) servletContext.getAttribute(METRICS_SERVLET_REGISTRY);
-		WicketMetricsSettings metricsSettings = (WicketMetricsSettings) servletContext.getAttribute(WICKET_METRICS_SETTINGS);
 		if (metricRegistry != null)
 		{
-			dec(event, metricRegistry, metricsSettings);
+			dec(event, metricRegistry);
 		}
 	}
 
@@ -54,31 +51,30 @@ public class SessionCountListener implements HttpSessionListener
 	{
 		ServletContext servletContext = event.getSession().getServletContext();
 		MetricRegistry metricRegistry = (MetricRegistry) servletContext.getAttribute(METRICS_SERVLET_REGISTRY);
-		WicketMetricsSettings metricsSettings = (WicketMetricsSettings) servletContext.getAttribute(WICKET_METRICS_SETTINGS);
 		if (metricRegistry != null)
 		{
-			inc(event, metricRegistry, metricsSettings);
+			inc(event, metricRegistry);
 		}
 	}
 
 	/**
 	 * Used to wire an aspect around
-	 *  @param event the http session event
+	 *
+	 * @param event the http session event
 	 * @param metricRegistry
-	 * @param metricsSettings
 	 */
-	public void dec(HttpSessionEvent event, MetricRegistry metricRegistry, WicketMetricsSettings metricsSettings)
+	public void dec(HttpSessionEvent event, MetricRegistry metricRegistry)
 	{
 		// NOOP for aspect usage
 	}
 	
 	/**
 	 * Used to wire an aspect around
-	 *  @param event the http session event
+	 *
+	 * @param event the http session event
 	 * @param metricRegistry
-	 * @param metricsSettings
 	 */
-	public void inc(HttpSessionEvent event, MetricRegistry metricRegistry, WicketMetricsSettings metricsSettings)
+	public void inc(HttpSessionEvent event, MetricRegistry metricRegistry)
 	{
 		// NOOP for aspect usage
 	}

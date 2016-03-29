@@ -163,31 +163,7 @@ public class WicketMetrics
 	{
 		WicketMetricsSettings settings = getSettings();
 		MetricRegistry registry = getMetricRegistry();
-		return counter(name, joinPoint, counterOperation, value, registry, settings);
-	}
 
-	/**
-	 * Creates a histogram of the given arguments
-	 *
-	 * @param name
-	 *            the name of the meter to be marked
-	 * @param joinPoint
-	 *            the join point
-	 * @param counterOperation
-	 *            the operation
-	 * @param value
-	 *            the value to update the counter
-	 * @param registry
-	 *            the registry with the metrics
-	 * @param settings
-	 *            the Wicket metrics settings
-	 * @return the result of the proceeded join point
-	 * @throws Throwable
-	 */
-	public Object counter(String name, ProceedingJoinPoint joinPoint,
-	                      CounterOperation counterOperation, Long value,
-	                      MetricRegistry registry, WicketMetricsSettings settings) throws Throwable
-	{
 		if (settings.isEnabled())
 		{
 			Counter counter = registry
