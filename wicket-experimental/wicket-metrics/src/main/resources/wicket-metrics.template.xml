@@ -5,10 +5,10 @@
         <include within="org.apache.wicket..*"/>
     </weaver>
     <aspects>
-    	<!-- required -->
-    	<aspect name="org.apache.wicket.metrics.aspects.WicketFilterInitAspect" />
-    	
-    	<!-- optional -->
+		<!-- required -->
+		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterInitAspect" />
+
+		<!-- optional -->
 		<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerDetachAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerRespondAspect" />
