@@ -206,6 +206,28 @@ public class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6131
+	 *
+	 * Tests that encrypted URLs for bookmarkable pages are decrypted and passed to the wrapped mapper.
+	 * Extra segments should be ignored.
+	 */
+	@Test
+	public void bookmarkablePageDecrypt2()
+	{
+		String encryptedExtraSegments = "/i87b7/i87b7";
+		Request request = getRequest(Url.parse(ENCRYPTED_BOOKMARKABLE_URL + encryptedExtraSegments));
+		IRequestHandler requestHandler = mapper.mapRequest(request);
+
+		assertNotNull(requestHandler);
+		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
+
+		assertTrue(requestHandler instanceof RenderPageRequestHandler);
+
+		RenderPageRequestHandler handler = (RenderPageRequestHandler) requestHandler;
+		assertEquals(Page2.class, handler.getPageClass());
+	}
+
+	/**
 	 * Tests that encrypted URLs for bookmarkable pages are decrypted and passed to the wrapped mapper when there is more than
 	 * one cryptomapper installed.
 	 */

@@ -500,7 +500,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 		int segNo = 1;
 		for (; segNo < encryptedNumberOfSegments; segNo++)
 		{
-			if (segNo > originalNumberOfSegments)
+			if (segNo >= originalNumberOfSegments)
 			{
 				break;
 			}
