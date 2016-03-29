@@ -22,10 +22,15 @@ There are only a two steps required to write own measurements for life data stat
 <aspectj>
     <weaver options="-nowarn">
     	<include within="org.apache.wicket..*"/>
-        <include within="my.package..*"/>
+        <include within="my.components.package..*"/>
     </weaver>
     <aspects>
-    	<aspect name="my.package.MySpecialAspect" />
+    	<!-- required -->
+    	<aspect name="org.apache.wicket.metrics.aspects.WicketFilterInitAspect" />
+    	
+    	<!-- own aspects -->
+    	<aspect name="my.aspect.package.MySpecialAspect" />
+    	
     	<!-- wickets own metrics -->
     	.....
     </aspects>

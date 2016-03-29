@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.metrics.aspects;
-
-import javax.servlet.http.HttpServletRequest;
+package org.apache.wicket.metrics.aspects.request;
 
 import org.apache.wicket.metrics.WicketMetrics;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -24,16 +22,16 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 /**
- * Aspect to measure request url time
+ * Aspect to handle basic web application information
  * 
  * @author Tobias Soloschenko
  */
 @Aspect
-public class WicketFilterRequestCycleUrlAspect extends WicketMetrics
+public class WicketFilterRequestCycleAspect extends WicketMetrics
 {
+
 	/**
-	 * Collects data how often a request has been made against the webapp and counts the time how
-	 * long the request took. Measures the information with the request url
+	 * Collects the time how long a request took to be processed
 	 * 
 	 * @param joinPoint
 	 *            the joinPoint to be proceed
@@ -43,22 +41,8 @@ public class WicketFilterRequestCycleUrlAspect extends WicketMetrics
 	 *             might occur while invoking process request
 	 */
 	@Around("execution(* org.apache.wicket.protocol.http.WicketFilter.processRequestCycle(..))")
-	public Object aroundRequestProcessedWithURL(ProceedingJoinPoint joinPoint) throws Throwable
+	public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
 	{
-		Object[] args = joinPoint.getArgs();
-		if (args.length >= 3)
-		{
-			Object requestAsObject = args[2];
-			if (requestAsObject != null && requestAsObject instanceof HttpServletRequest)
-			{
-				HttpServletRequest httpServletRequest = (HttpServletRequest)requestAsObject;
-				String requestUrl = httpServletRequest.getRequestURL().toString();
-				String replacedUrl = requestUrl.replace('/', '_');
-				replacedUrl = replacedUrl.replace('.', '_');
-				replacedUrl = replacedUrl.replaceAll(";jsessionid=.*?(?=\\?|$)", "");
-				return measureTime("core/application/request/" + replacedUrl, joinPoint, false);
-			}
-		}
-		return joinPoint.proceed();
+		return measureTime("core/application/requestCycle", joinPoint);
 	}
 }

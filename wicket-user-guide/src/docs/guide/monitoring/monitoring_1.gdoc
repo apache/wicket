@@ -21,10 +21,14 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
         <include within="org.apache.wicket..*"/>
     </weaver>
     <aspects>
+    	<!-- required -->
+    	<aspect name="org.apache.wicket.metrics.aspects.WicketFilterInitAspect" />
+    	
+    	<!-- optional -->
 		<aspect name="org.apache.wicket.metrics.aspects.model.LoadableDetachableModelLoadAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerDetachAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.requesthandler.IRequestHandlerRespondAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.resource.IResourceCreateAspect" />
+ 		<aspect name="org.apache.wicket.metrics.aspects.resource.IResourceCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.behavior.BehaviorCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.component.ComponentOnConfigureAspect" />
@@ -37,25 +41,19 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 		<aspect name="org.apache.wicket.metrics.aspects.ajax.IPartialPageRequestHandlerPrependJavaScriptAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.resource.ResourceReferenceCreateAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.markup.WicketTagCreateAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleUrlAspect" />
-		<aspect name="org.apache.wicket.metrics.aspects.WicketFilterRequestCycleAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.request.WicketFilterRequestCycleUrlAspect" />
+		<aspect name="org.apache.wicket.metrics.aspects.request.WicketFilterRequestCycleAspect" />
 		<aspect name="org.apache.wicket.metrics.aspects.session.SessionCountListenerAspect" />
     </aspects>
 </aspectj>
 {code}
 
-* If you have set wicket-metrics as dependency you can open "wicket-metrics.template.xml" to get a full template of the "aop.xml"
-
-* For the weaver options refer to the "AspectJ LTW configuration documentation":https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html
-
 * If you use the SessionCountListenerAspect you have to ensure that metadata-complete="false" is set otherwise you have to add the listener yourself:
 {code}
 <listener>
-	<listener-class>org.apache.wicket.metrics.aspects.session.SessionCountListener</listenerclass>
+	<listener-class>org.apache.wicket.metrics.aspects.session.SessionCountListener</listener-class>
 </listener>
 {code}
-
-You also have to clear the session store if you restart the server - otherwise physically stored session will corrupt the data, because the count is initialized with 0.
 
 (5 - optional) To enable the JMX measurement write the following line into your init method of your Application (Now you are able to connect with jvisualvm to your server and have a look at the data):
 {code}
@@ -72,10 +70,9 @@ To disable measurement:
 WicketMetrics.getSettings().setEnabled(false);
 {code}
 
-(6 - optional) There are two system flags which can be applied to the start of the server
-
--Dwicket.metrics.staticRegistration=true - If this argument is set the wicket metrics settings and the metrics registry are stored in static variables within the WicketMetrics class - this might cause problems in an OSGi environment
-
--Dwicket.metrics.applicationName=<filtername> - If this argument is set no ThreadLocal access is required, because the Application is looked up via Application#get(String). This property needs to be set if the active sessions counter should be measured with SessionCountListenerAspect because timed out sessions are invalidated in non-HTTP-worker thread and the Wicket thread locals are not available. Caution: this approach could not be used when there are more than one applications in the same web container!
-
-
+*IMPORTANT INFORMATION*
+** It is only possible to collect metrics for *one wicket filter per webapp* - don't declare more then one if you want to use wicket-metrics
+** The WicketFilterInitAspect is required so that the application can be resolved - otherwise runtime exceptions will be thrown
+** If you use the SessionCountListener you have to clear the session store if you restart the server - otherwise physically stored session will corrupt the data, because the count is initialized with 0.
+** If you have set wicket-metrics as dependency you can open "wicket-metrics.template.xml" to get a full template of the "aop.xml"
+** For the weaver options refer to the AspectJ LTW configuration documentation: https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html
