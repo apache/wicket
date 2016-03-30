@@ -53,7 +53,7 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 <listener>
 	<listener-class>
 	   org.apache.wicket.metrics.aspects.session.SessionCountListener
-	</listenerclass>
+	</listener-class>
 </listener>
 {code}
 
