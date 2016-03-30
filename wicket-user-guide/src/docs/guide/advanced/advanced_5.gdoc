@@ -15,7 +15,7 @@ public class AutoMarkupGenPanel extends Panel implements IMarkupResourceStreamPr
 	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass) {
-		String markup = "<div>Panel markup</div>";
+		String markup = "<wicket:panel><div>Panel markup</div></wicket:panel>";
 		StringResourceStream resourceStream = new StringResourceStream(markup);
 		
 		return resourceStream;
@@ -44,8 +44,8 @@ public class NoCacheMarkupPanel extends Panel implements IMarkupCacheKeyProvider
 	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass) {
-		String markup = "<div>Panel with current nanotime: " + System.nanoTime() +
-				 "</div>"; 
+		String markup = "<wicket:panel><div>Panel with current nanotime: " + System.nanoTime() +
+				 "</div></wicket:panel>";
 		StringResourceStream resourceStream = new StringResourceStream(markup);
 		
 		return resourceStream;
