@@ -27,7 +27,10 @@ import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Locale;
 
 public class CssUrlReplacerTest extends WicketTestCase
 {
@@ -56,6 +59,12 @@ public class CssUrlReplacerTest extends WicketTestCase
 					});
 			}
 		};
+	}
+
+	@Before
+	public void before()
+	{
+		tester.getSession().setLocale(Locale.ENGLISH);
 	}
 
 	@Test
