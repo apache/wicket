@@ -51,7 +51,9 @@ This is a little example how to setup wicket-metrics within a Apache Tomcat.
 * If you use the SessionCountListenerAspect you have to ensure that metadata-complete="false" is set otherwise you have to add the listener yourself:
 {code}
 <listener>
-	<listener-class>org.apache.wicket.metrics.aspects.session.SessionCountListener</listener-class>
+	<listener-class>
+	   org.apache.wicket.metrics.aspects.session.SessionCountListener
+	</listenerclass>
 </listener>
 {code}
 
