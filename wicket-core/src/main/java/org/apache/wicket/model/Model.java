@@ -175,6 +175,8 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	 * <code>new LambdaModel<TypeOfObject>(getter, setter)</code>.
 	 *
 	 * @param <T>
+	 * @param getter Used for the getObject() method.
+	 * @param setter Used for the setObject(T object) method.
 	 * @return Model that contains <code>object</code>
 	 */
 	public static <T> IModel<T> of(WicketSupplier<T> getter, WicketConsumer<T> setter)
@@ -187,12 +189,16 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	 * <code>new LoadableDetachableModel<TypeOfObject>(getter)</code>.
 	 *
 	 * @param <T>
+	 * @param getter Used for the getObject() method.
+	 * @param setter Used for the setObject(T object) method.
 	 * @return Model that contains <code>object</code>
 	 */
 	public static <T> IModel<T> loadableDetachable(WicketSupplier<T> getter)
 	{
 		return new LoadableDetachableModel<T>()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected T load()
 			{

@@ -40,6 +40,8 @@ import org.apache.wicket.util.string.StringValue;
  */
 public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * A unique name used for the page window's name
 	 */
@@ -128,6 +130,15 @@ public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjax
 	 */
 	protected abstract void onNewWindow(AjaxRequestTarget target);
 
+	/**
+	 * Creates an {@link AjaxNewWindowNotifyingBehavior} based on lambda expressions
+	 * 
+	 * @param windowName
+	 *            the window name
+	 * @param onNewWindow
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxNewWindowNotifyingBehavior}
+	 */
 	public static AjaxNewWindowNotifyingBehavior onNewWindow(String windowName, WicketConsumer<AjaxRequestTarget> onNewWindow)
 	{
 		return Lambdas.onNewWindow(windowName, onNewWindow);

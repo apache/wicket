@@ -24,7 +24,7 @@ import java.util.function.BiConsumer;
  *
  * @param <T>
  *            - the type of the first input to consume
- * @param <T>
+ * @param <U>
  *            - the type of the second input to consume
  */
 public interface WicketBiConsumer<T, U> extends BiConsumer<T, U>, Serializable

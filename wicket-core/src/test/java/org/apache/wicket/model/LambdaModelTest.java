@@ -31,6 +31,7 @@ import org.junit.Test;
 /**
  * Tests for {@link LambdaModel}
  */
+@SuppressWarnings("javadoc")
 public class LambdaModelTest
 {
 	@Test

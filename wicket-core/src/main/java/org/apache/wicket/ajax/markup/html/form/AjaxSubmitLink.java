@@ -123,6 +123,10 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>before</em> the form's onSubmit method.
+	 * 
+	 * @param target the {@link AjaxRequestTarget}
+	 * 
+	 * @param form the {@link Form}
 	 */
 	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 	{
@@ -131,16 +135,43 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
+	 * 
+	 * @param target the {@link AjaxRequestTarget}
+	 * 
+	 * @param form the {@link Form}
 	 */
 	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
 	{
 	}
 
+	/**
+	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of ajax submit link
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxSubmitLink}
+	 */
 	public static AjaxSubmitLink ajaxSubmitLink(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
 	{
 		return Lambdas.ajaxSubmitLink(id, onSubmit);
 	}
 
+	/**
+	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of ajax submit link
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxSubmitLink}
+	 */
 	public static AjaxSubmitLink ajaxSubmitLink(String id,
 	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
 	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)

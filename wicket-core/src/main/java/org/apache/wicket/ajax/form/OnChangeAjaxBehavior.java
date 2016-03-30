@@ -53,6 +53,9 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	 */
 	public static final String EVENT_NAME = "inputchange change";
 
+	/**
+	 * the change event
+	 */
 	public static final String EVENT_CHANGE = "change";
 
 	/**
@@ -78,11 +81,28 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 		}
 	}
 
+	/**
+	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
+	 * 
+	 * @param onChange
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link OnChangeAjaxBehavior}
+	 */
 	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange)
 	{
 		return Lambdas.onChange(onChange);
 	}
 
+	/**
+	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
+	 * 
+	 * @param onChange
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link RuntimeException}
+	 * @return the {@link OnChangeAjaxBehavior}
+	 */
 	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange,
 	                                            WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{

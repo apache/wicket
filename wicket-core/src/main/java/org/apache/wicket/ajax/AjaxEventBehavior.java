@@ -165,6 +165,15 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
 
+	/**
+	 * Creates an {@link AjaxEventBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onEvent
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxEventBehavior}
+	 */
 	public static AjaxEventBehavior onEvent(String eventName, WicketConsumer<AjaxRequestTarget> onEvent)
 	{
 		return Lambdas.onEvent(eventName, onEvent);

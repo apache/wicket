@@ -194,6 +194,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			return submitBehavior.getForm();
 		}
 
+		/**
+		 * @return the {@link IFormSubmittingComponent} 
+		 */
 		public IFormSubmittingComponent getFormSubmittingComponent()
 		{
 			return submitBehavior.getFormSubmittingComponent();
@@ -227,6 +230,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
+	 * @param target the {@link AjaxRequestTarget}
 	 */
 	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
@@ -235,6 +239,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>before</em> the form's onSubmit method.
+	 * @param target the {@link AjaxRequestTarget}
 	 */
 	protected void onSubmit(AjaxRequestTarget target)
 	{
@@ -269,12 +274,31 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		this.defaultProcessing = defaultProcessing;
 	}
 
-
+	/**
+	 * Creates an {@link AjaxFormSubmitBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onSubmit
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxFormSubmitBehavior}
+	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName, WicketConsumer<AjaxRequestTarget> onSubmit)
 	{
 		return Lambdas.onSubmit(eventName, onSubmit);
 	}
 
+	/**
+	 * Creates an {@link AjaxFormSubmitBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onSubmit
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxFormSubmitBehavior}
+	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
 	                                              WicketConsumer<AjaxRequestTarget> onSubmit,
 	                                              WicketConsumer<AjaxRequestTarget> onError) {

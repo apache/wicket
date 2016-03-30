@@ -163,6 +163,15 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	protected abstract void onTimer(final AjaxRequestTarget target);
 
+	/**
+	 * Creates an {@link AbstractAjaxTimerBehavior} based on lambda expressions
+	 * 
+	 * @param interval
+	 *            the interval the timer
+	 * @param onTimer
+	 *            the consumer which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AbstractAjaxTimerBehavior}
+	 */
 	public static AbstractAjaxTimerBehavior onTimer(Duration interval, WicketConsumer<AjaxRequestTarget> onTimer)
 	{
 		return Lambdas.onTimer(interval, onTimer);

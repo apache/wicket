@@ -211,6 +211,14 @@ internals:
   title: Wicket Internals
   pagestoring: Page storing
   autocomponents: Markup parsing and Autocomponents
+lambdas:
+  title: Lambda Expressions
+monitoring:
+  title: Wicket Metrics Monitoring (Experimental)
+  monitoring_1: Example setup
+  monitoring_2: Visualization with Graphite
+  monitoring_3: Measured data
+  monitoring_4: Write own measurements
 maven:
   title: Working with Maven (Appendix)
   maven_1: Switching Wicket to DEPLOYMENT mode
@@ -224,12 +232,6 @@ wicketstuff:
   wicketstuff_5: Module wicketstuff-inmethod-grid
   wicketstuff_6: Module wicketstuff-rest-annotations
   wicketstuff_7: Module stateless
-monitoring:
-  title: Wicket Metrics Monitoring (Experimental)
-  monitoring_1: Example setup
-  monitoring_2: Visualization with Graphite
-  monitoring_3: Measured data
-  monitoring_4: Write own measurements
 redirects:
   title: Lost In Redirection With Apache Wicket (Appendix)
 contributing:

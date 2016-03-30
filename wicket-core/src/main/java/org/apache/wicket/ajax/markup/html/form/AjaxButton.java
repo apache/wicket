@@ -219,11 +219,34 @@ public abstract class AjaxButton extends Button
 	{
 	}
 
+	/**
+	 * Creates an {@link AjaxButton} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax button
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxButton}
+	 */
 	public static AjaxButton onSubmit(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
 	{
 		return Lambdas.ajaxButton(id, onSubmit);
 	}
 
+	/**
+	 * Creates an {@link AjaxButton} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax button
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxButton}
+	 */
 	public static AjaxButton onSubmit(String id,
 	                                    WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
 	                                    WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)

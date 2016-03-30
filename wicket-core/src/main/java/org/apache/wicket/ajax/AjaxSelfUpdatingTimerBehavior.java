@@ -65,6 +65,15 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	{
 	}
 
+	/**
+	 * Creates an {@link AbstractAjaxTimerBehavior} based on lambda expressions
+	 * 
+	 * @param interval
+	 *            the interval for the self update
+	 * @param onTimer
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AbstractAjaxTimerBehavior}
+	 */
 	public static AbstractAjaxTimerBehavior onSelfUpdate(Duration interval, WicketConsumer<AjaxRequestTarget> onTimer)
 	{
 		return Lambdas.onSelfUpdate(interval, onTimer);

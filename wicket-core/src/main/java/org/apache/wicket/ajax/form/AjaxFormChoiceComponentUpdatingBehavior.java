@@ -114,10 +114,27 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 			(component instanceof CheckGroup);
 	}
 
+	/**
+	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
+	 * 
+	 * @param onUpdateChoice
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
+	 */
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice) {
 		return Lambdas.onUpdateChoice(onUpdateChoice);
 	}
 
+	/**
+	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
+	 * 
+	 * @param onUpdateChoice
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link RuntimeException}
+	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
+	 */
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice,
 	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError) {
 		return Lambdas.onUpdateChoice(onUpdateChoice, onError);

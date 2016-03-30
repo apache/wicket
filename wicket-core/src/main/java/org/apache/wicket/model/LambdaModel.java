@@ -121,12 +121,12 @@ public class LambdaModel<T> implements IModel<T>
 	 * </pre>
 	 * The target model will be detached automatically.
 	 *
-	 * @param targe target for getter and setter
+	 * @param target target for getter and setter
 	 * @param getter used to get a value
-	 * @return model
-	 *
 	 * @param <X> target model object type
 	 * @param <T> model object type
+	 * 
+	 * @return model
 	 */
 	public static <X, T> IModel<T> of(IModel<X> target, WicketFunction<X, T> getter)
 	{
@@ -148,6 +148,8 @@ public class LambdaModel<T> implements IModel<T>
 				throw new UnsupportedOperationException("setObject(Object) not supported");
 			}
 		) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void detach() {
 				target.detach();
@@ -164,13 +166,14 @@ public class LambdaModel<T> implements IModel<T>
 	 * </pre>
 	 * The target model will be detached automatically.
 	 *
-	 * @param targe target for getter and setter
+	 * @param target target for getter and setter
 	 * @param getter used to get a value
 	 * @param setter used to set a value
-	 * @return model
 	 *
 	 * @param <X> target model object type
 	 * @param <T> model object type
+
+	 * @return model
 	 */
 	public static <X, T> IModel<T> of(IModel<X> target, WicketFunction<X, T> getter, WicketBiConsumer<X, T> setter)
 	{
@@ -196,6 +199,8 @@ public class LambdaModel<T> implements IModel<T>
 				}
 			}
 		) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void detach() {
 				target.detach();

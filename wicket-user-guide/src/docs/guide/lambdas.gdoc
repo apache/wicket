@@ -1,0 +1,34 @@
+Lambda functionalities of a lot of components are available since Wicket 8.0.0. 
+
+You are able to see if a component supports lambdas if there are methods / constructor accepting *WicketConsumer*, *WicketBiConsumer* or *WicketSupplier*, *WicketFunction*.
+
+For normal there are static methods which can be accessed to create the desired component.
+
+Here is an example for the classic and the lambda way of defining an ajax link:
+
+Classic way:
+{code}
+new AjaxLink<String>("link")
+{
+	private static final long serialVersionUID = 1L;
+
+	@Override
+	public void onClick(AjaxRequestTarget target)
+	{
+		label.modelChanging();
+		label.setDefaultModelObject("test" + (intx++));
+		label.modelChanged();
+		target.add(label);
+	}
+}
+{code}
+
+Using lambdas:
+{code}
+AjaxLink.<String>onClick("link", target ->{
+	label.modelChanging();
+	label.setDefaultModelObject("newString");
+	label.modelChanged();
+	target.add(label);
+});
+{code}

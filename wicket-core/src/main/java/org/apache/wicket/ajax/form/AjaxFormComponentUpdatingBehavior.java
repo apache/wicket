@@ -203,16 +203,37 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
 
+	/**
+	 * Creates an {@link AjaxFormComponentUpdatingBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onUpdate
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxFormComponentUpdatingBehavior}
+	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName, WicketConsumer<AjaxRequestTarget> onUpdate)
 	{
 		return Lambdas.onUpdate(eventName, onUpdate);
 	}
 
+	/**
+	 * Creates an {@link AjaxFormComponentUpdatingBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onUpdate
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link RuntimeException}
+	 * @return the {@link AjaxFormComponentUpdatingBehavior}
+	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
 	                                                         WicketConsumer<AjaxRequestTarget> onUpdate,
 	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
-		return onUpdate(eventName, onUpdate, onError);
+		return Lambdas.onUpdate(eventName, onUpdate, onError);
 	}
 
 	/**

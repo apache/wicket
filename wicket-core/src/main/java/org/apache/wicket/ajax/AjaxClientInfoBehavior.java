@@ -38,6 +38,8 @@ import org.apache.wicket.util.time.Duration;
  */
 public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor.
 	 *
@@ -49,9 +51,9 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	}
 
 	/**
-	 * Constructor.
-	 *
-	 * Auto fires after {@code duration}.
+	 * Constructor. Auto fires after {@code duration}.
+	 * 
+	 * @param duration the duration of the client info behavior
 	 */
 	public AjaxClientInfoBehavior(Duration duration)
 	{
@@ -120,6 +122,14 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	{
 	}
 
+	/**
+	 * Creates an {@link AjaxClientInfoBehavior} based on lambda expressions
+	 * 
+	 * @param onClientInfo
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link WebClientInfo}
+	 * @return the {@link AjaxClientInfoBehavior}
+	 */
 	public static AjaxClientInfoBehavior onClientInfo(WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
 	{
 		return Lambdas.onClientInfo(onClientInfo);

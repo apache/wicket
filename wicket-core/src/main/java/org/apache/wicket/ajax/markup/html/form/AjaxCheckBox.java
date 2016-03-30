@@ -92,6 +92,15 @@ public abstract class AjaxCheckBox extends CheckBox
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
+	/**
+	 * Creates an {@link AjaxCheckBox} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of ajax check box
+	 * @param onUpdate
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxCheckBox}
+	 */
 	public static AjaxCheckBox onUpdate(String id, WicketConsumer<AjaxRequestTarget> onUpdate)
 	{
 		return Lambdas.ajaxCheckBox(id, onUpdate);

@@ -135,6 +135,15 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
 
+	/**
+	 * Creates an {@link AjaxLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxLink}
+	 */
 	public static <T> AjaxLink<T> onClick(String id, WicketConsumer<AjaxRequestTarget> onClick)
 	{
 		return Lambdas.ajaxLink(id, onClick);

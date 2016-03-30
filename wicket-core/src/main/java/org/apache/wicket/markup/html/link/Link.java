@@ -177,6 +177,15 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	 */
 	public abstract void onClick();
 
+	/**
+	 * Creates a {@link Link} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link Void}
+	 * @return the {@link Link}
+	 */
 	public static <T> Link<T> onClick(String id, WicketConsumer<Void> onClick)
 	{
 		return Lambdas.link(id, onClick);
