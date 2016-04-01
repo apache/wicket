@@ -18,6 +18,7 @@ package org.apache.wicket.lambda;
 
 import java.util.UUID;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxClientInfoBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -32,6 +33,8 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
@@ -620,6 +623,34 @@ public class Lambdas
 			public void onClick()
 			{
 				onClick.accept((Void)null);
+			}
+		};
+	}
+
+	/**
+	 * Creates a {@link Behavior} that uses the given {@link WicketConsumer consumer}
+	 * to do something with the component's tag.
+	 *
+	 * <p>
+	 *     Usage:<br/>
+	 *     <code>component.add(onTag(tag -> tag.put(key, value)));</code>
+	 * </p>
+	 *
+	 * @param onTagConsumer
+	 *              the {@link WicketConsumer} that accepts the {@link ComponentTag}
+	 * @return The created behavior
+	 */
+	public static Behavior onTag(WicketConsumer<ComponentTag> onTagConsumer)
+	{
+		Args.notNull(onTagConsumer, "onTagConsumer");
+
+		return new Behavior()
+		{
+			@Override
+			public void onComponentTag(Component component, ComponentTag tag)
+			{
+				super.onComponentTag(component, tag);
+				onTagConsumer.accept(tag);
 			}
 		};
 	}
