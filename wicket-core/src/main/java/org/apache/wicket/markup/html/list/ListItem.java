@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import org.apache.wicket.DequeueContext;
 import org.apache.wicket.IGenericComponent;
-import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -30,7 +28,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            Model object type
  */
-public class ListItem<T> extends LoopItem implements IGenericComponent<T>,  IQueueRegion
+public class ListItem<T> extends LoopItem implements IGenericComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -98,11 +96,5 @@ public class ListItem<T> extends LoopItem implements IGenericComponent<T>,  IQue
 	public final void setModelObject(T object)
 	{
 		setDefaultModelObject(object);
-	}
-	
-	@Override
-	public DequeueContext newDequeueContext()
-	{
-		return new DequeueContext(getMarkup(), this, true);
 	}
 }
