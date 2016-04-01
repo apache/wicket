@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<wicket:extend xmlns:wicket="http://wicket.apache.org">
+	<div id="hd">
+		<div id="logo">
+			<img src="logo.png" width="50px" height="50px" alt="Wicket Logo" />
+			<h1>Apache Wicket</h1>
+		</div>
+	</div>
+	<div id="bd">
+	
+		<div wicket:id="liste">
+			<wicket:enclosure child="testenc">
+				<span wicket:id="testenc"></span>
+			</wicket:enclosure>
+			<span wicket:id="testlib"></span>
+		</div>
+		<p>
+			Please mention the correct Wicket version: <wicket:container wicket:id="version">1.5-SNAPSHOT</wicket:container>.
+		</p>
+	</div>
+	<div id="ft">
+	</div>
+</wicket:extend>

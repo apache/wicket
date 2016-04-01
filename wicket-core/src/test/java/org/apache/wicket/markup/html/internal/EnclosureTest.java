@@ -445,6 +445,16 @@ public class EnclosureTest extends WicketTestCase
 		tester.startPage(p);
 	}
 	
+	/**
+	 * Test case for https://issues.apache.org/jira/browse/WICKET-6043
+	 */
+	@Test
+	public void enclosureInsideContainererAndInheritance() throws Exception
+	{
+		tester.startPage(ListViewInContainerPage.class);
+		tester.assertRenderedPage(ListViewInContainerPage.class);
+	}
+	
 	private static class TestPageMarkup extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private String markup;
