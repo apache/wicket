@@ -122,19 +122,6 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	{
 	}
 
-	/**
-	 * Creates an {@link AjaxClientInfoBehavior} based on lambda expressions
-	 * 
-	 * @param onClientInfo
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link WebClientInfo}
-	 * @return the {@link AjaxClientInfoBehavior}
-	 */
-	public static AjaxClientInfoBehavior onClientInfo(WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
-	{
-		return Lambdas.onClientInfo(onClientInfo);
-	}
-
 	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
@@ -149,5 +136,18 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 		super.renderHead(component, response);
 
 		response.render(JavaScriptHeaderItem.forReference(BrowserInfoForm.JS));
+	}
+
+	/**
+	 * Creates an {@link AjaxClientInfoBehavior} based on lambda expressions
+	 *
+	 * @param onClientInfo
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link WebClientInfo}
+	 * @return the {@link AjaxClientInfoBehavior}
+	 */
+	public static AjaxClientInfoBehavior onClientInfo(WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
+	{
+		return Lambdas.onClientInfo(onClientInfo);
 	}
 }

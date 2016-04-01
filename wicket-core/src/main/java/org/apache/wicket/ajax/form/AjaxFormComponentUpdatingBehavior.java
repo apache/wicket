@@ -202,6 +202,25 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
+	/**
+	 * Called to handle any error resulting from updating form component. Errors thrown from
+	 * {@link #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)} will not be caught here.
+	 *
+	 * The RuntimeException will be null if it was just a validation or conversion error of the
+	 * FormComponent
+	 *
+	 * @param target
+	 *            the current request handler
+	 * @param e
+	 *            the error that occurred during the update of the component
+	 */
+	protected void onError(AjaxRequestTarget target, RuntimeException e)
+	{
+		if (e != null)
+		{
+			throw e;
+		}
+	}
 
 	/**
 	 * Creates an {@link AjaxFormComponentUpdatingBehavior} based on lambda expressions
@@ -234,25 +253,5 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
 		return Lambdas.onUpdate(eventName, onUpdate, onError);
-	}
-
-	/**
-	 * Called to handle any error resulting from updating form component. Errors thrown from
-	 * {@link #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)} will not be caught here.
-	 * 
-	 * The RuntimeException will be null if it was just a validation or conversion error of the
-	 * FormComponent
-	 * 
-	 * @param target
-	 *            the current request handler
-	 * @param e
-	 *            the error that occurred during the update of the component
-	 */
-	protected void onError(AjaxRequestTarget target, RuntimeException e)
-	{
-		if (e != null)
-		{
-			throw e;
-		}
 	}
 }

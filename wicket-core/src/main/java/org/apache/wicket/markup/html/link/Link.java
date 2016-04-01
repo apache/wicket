@@ -178,20 +178,6 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	public abstract void onClick();
 
 	/**
-	 * Creates a {@link Link} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the link
-	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link Void}
-	 * @return the {@link Link}
-	 */
-	public static <T> Link<T> onClick(String id, WicketConsumer<Void> onClick)
-	{
-		return Lambdas.link(id, onClick);
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR CALL IT.
 	 * 
 	 * Called when a link is clicked. The implementation of this method is currently to simply call
@@ -432,5 +418,19 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 		{
 			disableLink(tag);
 		}
+	}
+
+	/**
+	 * Creates a {@link Link} based on lambda expressions
+	 *
+	 * @param id
+	 *            the id of the link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link Void}
+	 * @return the {@link Link}
+	 */
+	public static <T> Link<T> onClick(String id, WicketConsumer<Void> onClick)
+	{
+		return Lambdas.link(id, onClick);
 	}
 }

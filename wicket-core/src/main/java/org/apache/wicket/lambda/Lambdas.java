@@ -167,7 +167,7 @@ public class Lambdas
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AbstractAjaxTimerBehavior}
 	 */
-	public static AbstractAjaxTimerBehavior onSelfUpdate(Duration interval,
+	public static AjaxSelfUpdatingTimerBehavior onSelfUpdate(Duration interval,
 		WicketConsumer<AjaxRequestTarget> onTimer)
 	{
 		Args.notNull(onTimer, "onTimer");

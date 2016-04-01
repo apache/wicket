@@ -220,6 +220,26 @@ public abstract class AjaxButton extends Button
 	}
 
 	/**
+	 * Listener method invoked on form submit with no errors, after {@link Form#onSubmit()}.
+	 *
+	 * @param target
+	 * @param form
+	 */
+	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+	{
+	}
+
+	/**
+	 * Listener method invoked on form submit with errors
+	 *
+	 * @param target
+	 * @param form
+	 */
+	protected void onError(AjaxRequestTarget target, Form<?> form)
+	{
+	}
+
+	/**
 	 * Creates an {@link AjaxButton} based on lambda expressions
 	 * 
 	 * @param id
@@ -252,25 +272,5 @@ public abstract class AjaxButton extends Button
 	                                    WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
 	{
 		return Lambdas.ajaxButton(id, onSubmit, onError);
-	}
-
-	/**
-	 * Listener method invoked on form submit with no errors, after {@link Form#onSubmit()}.
-	 * 
-	 * @param target
-	 * @param form
-	 */
-	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
-	{
-	}
-
-	/**
-	 * Listener method invoked on form submit with errors
-	 * 
-	 * @param target
-	 * @param form
-	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
-	{
 	}
 }

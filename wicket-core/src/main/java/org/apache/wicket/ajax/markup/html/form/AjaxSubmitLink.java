@@ -144,41 +144,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	{
 	}
 
-	/**
-	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of ajax submit link
-	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @return the {@link AjaxSubmitLink}
-	 */
-	public static AjaxSubmitLink ajaxSubmitLink(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
-	{
-		return Lambdas.ajaxSubmitLink(id, onSubmit);
-	}
-
-	/**
-	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of ajax submit link
-	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @return the {@link AjaxSubmitLink}
-	 */
-	public static AjaxSubmitLink ajaxSubmitLink(String id,
-	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
-	{
-		return Lambdas.ajaxSubmitLink(id, onSubmit, onError);
-	}
-
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
 	}
@@ -256,5 +221,40 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	public final void onAfterSubmit()
 	{
 		logger.warn("unexpected invocation of #onAfterSubmit() on {}", this);
+	}
+
+	/**
+	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
+	 *
+	 * @param id
+	 *            the id of ajax submit link
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxSubmitLink}
+	 */
+	public static AjaxSubmitLink ajaxSubmitLink(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	{
+		return Lambdas.ajaxSubmitLink(id, onSubmit);
+	}
+
+	/**
+	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
+	 *
+	 * @param id
+	 *            the id of ajax submit link
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxSubmitLink}
+	 */
+	public static AjaxSubmitLink ajaxSubmitLink(String id,
+	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
+	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	{
+		return Lambdas.ajaxSubmitLink(id, onSubmit, onError);
 	}
 }
