@@ -17,6 +17,7 @@
 package org.apache.wicket.lambda;
 
 import static org.apache.wicket.lambda.Lambdas.onTag;
+import static org.apache.wicket.lambda.Lambdas.onAttribute;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
@@ -40,6 +41,24 @@ public class LambdasTest extends WicketTestCase
 		String value = "value";
 		String key = "key";
 		component.add(onTag(tag -> tag.put(key, value)));
+		component.add(onAttribute("class", oldValue -> "zzz"));
+
+		tester.startPage(page);
+
+		TagTester tagTester = tester.getTagByWicketId(MockPageWithOneComponent.COMPONENT_ID);
+		assertThat(tagTester.getAttribute(key), is(equalTo(value)));
+		assertThat(tagTester.getAttribute("class"), is(equalTo("zzz")));
+	}
+	
+	@Test
+	public void onAttributeTest()
+	{
+		WebMarkupContainer component = new WebMarkupContainer(MockPageWithOneComponent.COMPONENT_ID);
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		page.add(component);
+		String value = "value";
+		String key = "key";
+		component.add(onAttribute(key, oldValue -> value));
 
 		tester.startPage(page);
 
