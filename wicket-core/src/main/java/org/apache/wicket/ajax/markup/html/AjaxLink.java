@@ -20,11 +20,11 @@ import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.lambda.Lambdas;
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A component that allows a trigger request to be triggered via html anchor tag
@@ -146,6 +146,17 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	 */
 	public static <T> AjaxLink<T> onClick(String id, WicketConsumer<AjaxRequestTarget> onClick)
 	{
-		return Lambdas.ajaxLink(id, onClick);
+		Args.notNull(onClick, "onClick");
+
+		return new AjaxLink<T>(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				onClick.accept(target);
+			}
+		};
 	}
 }

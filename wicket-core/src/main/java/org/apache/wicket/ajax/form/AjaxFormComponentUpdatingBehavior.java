@@ -23,11 +23,11 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.lambda.Lambdas;
 import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -233,7 +233,18 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName, WicketConsumer<AjaxRequestTarget> onUpdate)
 	{
-		return Lambdas.onUpdate(eventName, onUpdate);
+		Args.notNull(onUpdate, "onUpdate");
+
+		return new AjaxFormComponentUpdatingBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onUpdate.accept(target);
+			}
+		};
 	}
 
 	/**
@@ -252,6 +263,24 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	                                                         WicketConsumer<AjaxRequestTarget> onUpdate,
 	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
-		return Lambdas.onUpdate(eventName, onUpdate, onError);
+		Args.notNull(onUpdate, "onUpdate");
+		Args.notNull(onError, "onError");
+
+		return new AjaxFormComponentUpdatingBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onUpdate.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, RuntimeException e)
+			{
+				onError.accept(target, e);
+			}
+		};
 	}
 }

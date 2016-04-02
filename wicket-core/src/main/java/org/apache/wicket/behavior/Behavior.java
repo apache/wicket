@@ -22,10 +22,12 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Behaviors are kind of plug-ins for Components. They allow functionality to be added to a
@@ -262,4 +264,33 @@ public abstract class Behavior
 	public void onRemove(Component component)
 	{
 	}
+
+	/**
+	 * Creates a {@link Behavior} that uses the given {@link WicketConsumer consumer}
+	 * to do something with the component's tag.
+	 *
+	 * <p>
+	 *     Usage:<br/>
+	 *     <code>component.add(onTag(tag -> tag.put(key, value)));</code>
+	 * </p>
+	 *
+	 * @param onTagConsumer
+	 *              the {@link WicketConsumer} that accepts the {@link ComponentTag}
+	 * @return The created behavior
+	 */
+	public static Behavior onTag(WicketConsumer<ComponentTag> onTagConsumer)
+	{
+		Args.notNull(onTagConsumer, "onTagConsumer");
+
+		return new Behavior()
+		{
+			@Override
+			public void onComponentTag(Component component, ComponentTag tag)
+			{
+				super.onComponentTag(component, tag);
+				onTagConsumer.accept(tag);
+			}
+		};
+	}
+
 }

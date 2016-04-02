@@ -19,11 +19,11 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.lambda.Lambdas;
 import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -233,9 +233,20 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 *            {@link Form}
 	 * @return the {@link AjaxSubmitLink}
 	 */
-	public static AjaxSubmitLink ajaxSubmitLink(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	public static AjaxSubmitLink onSubmit(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
 	{
-		return Lambdas.ajaxSubmitLink(id, onSubmit);
+		Args.notNull(onSubmit, "onSubmit");
+
+		return new AjaxSubmitLink(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				onSubmit.accept(target, form);
+			}
+		};
 	}
 
 	/**
@@ -251,10 +262,28 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 *            {@link Form}
 	 * @return the {@link AjaxSubmitLink}
 	 */
-	public static AjaxSubmitLink ajaxSubmitLink(String id,
+	public static AjaxSubmitLink onSubmit(String id,
 	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
 	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
 	{
-		return Lambdas.ajaxSubmitLink(id, onSubmit, onError);
+		Args.notNull(onSubmit, "onSubmit");
+		Args.notNull(onError, "onError");
+
+		return new AjaxSubmitLink(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			{
+				onSubmit.accept(target, form);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form<?> form)
+			{
+				onError.accept(target, form);
+			}
+		};
 	}
 }

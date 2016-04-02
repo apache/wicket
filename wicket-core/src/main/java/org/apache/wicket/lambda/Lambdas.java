@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.lambda;
 
-import java.util.UUID;
-
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxClientInfoBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -38,14 +35,10 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 
 /**
- * Helper class to create components based on lambda expressions. In each component that are
- * returned of the methods of this class, there are static helper methods, so that they can be used
- * for lambdas.
+ * Convenience class for easy static importing of lambda factory methods in several components and behaviors.
  */
 public class Lambdas
 {
@@ -57,48 +50,29 @@ public class Lambdas
 	 * @param onTimer
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AbstractAjaxTimerBehavior}
+	 *
+	 * @see AbstractAjaxTimerBehavior#onTimer(Duration, WicketConsumer)
 	 */
 	public static AbstractAjaxTimerBehavior onTimer(Duration interval,
 		WicketConsumer<AjaxRequestTarget> onTimer)
 	{
-		Args.notNull(onTimer, "onTimer");
-
-		return new AbstractAjaxTimerBehavior(interval)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onTimer(AjaxRequestTarget target)
-			{
-				onTimer.accept(target);
-			}
-		};
+		return AbstractAjaxTimerBehavior.onTimer(interval, onTimer);
 	}
 
 	/**
 	 * Creates an {@link AjaxClientInfoBehavior} based on lambda expressions
-	 * 
+	 *
 	 * @param onClientInfo
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
 	 *            {@link WebClientInfo}
 	 * @return the {@link AjaxClientInfoBehavior}
+	 *
+	 * @see AjaxClientInfoBehavior#onClientInfo(WicketBiConsumer)
 	 */
 	public static AjaxClientInfoBehavior onClientInfo(
 		WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
 	{
-		Args.notNull(onClientInfo, "onClientInfo");
-
-		return new AjaxClientInfoBehavior()
-		{
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onClientInfo(AjaxRequestTarget target, WebClientInfo clientInfo)
-			{
-				onClientInfo.accept(target, clientInfo);
-			}
-		};
+		return AjaxClientInfoBehavior.onClientInfo(onClientInfo);
 	}
 
 	/**
@@ -109,22 +83,13 @@ public class Lambdas
 	 * @param onEvent
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxEventBehavior}
+	 *
+	 * @see AjaxEventBehavior#onEvent(org.apache.wicket.Component, org.apache.wicket.event.IEvent)
 	 */
 	public static AjaxEventBehavior onEvent(String eventName,
 		WicketConsumer<AjaxRequestTarget> onEvent)
 	{
-		Args.notNull(onEvent, "onEvent");
-
-		return new AjaxEventBehavior(eventName)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onEvent(AjaxRequestTarget target)
-			{
-				onEvent.accept(target);
-			}
-		};
+		return AjaxEventBehavior.onEvent(eventName, onEvent);
 	}
 
 	/**
@@ -135,27 +100,13 @@ public class Lambdas
 	 * @param onNewWindow
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxNewWindowNotifyingBehavior}
+	 * 
+	 * @see AjaxNewWindowNotifyingBehavior#onNewWindow(String, WicketConsumer)
 	 */
 	public static AjaxNewWindowNotifyingBehavior onNewWindow(String windowName,
 		WicketConsumer<AjaxRequestTarget> onNewWindow)
 	{
-		Args.notNull(onNewWindow, "onNewWindow");
-
-		if (Strings.isEmpty(windowName))
-		{
-			windowName = UUID.randomUUID().toString();
-		}
-
-		return new AjaxNewWindowNotifyingBehavior(windowName)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onNewWindow(AjaxRequestTarget target)
-			{
-				onNewWindow.accept(target);
-			}
-		};
+		return AjaxNewWindowNotifyingBehavior.onNewWindow(windowName, onNewWindow);
 	}
 
 	/**
@@ -165,23 +116,14 @@ public class Lambdas
 	 *            the interval for the self update
 	 * @param onTimer
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
-	 * @return the {@link AbstractAjaxTimerBehavior}
+	 * @return the {@link AjaxSelfUpdatingTimerBehavior}
+	 * 
+	 * @see AjaxSelfUpdatingTimerBehavior#onSelfUpdate(Duration, WicketConsumer)
 	 */
 	public static AjaxSelfUpdatingTimerBehavior onSelfUpdate(Duration interval,
 		WicketConsumer<AjaxRequestTarget> onTimer)
 	{
-		Args.notNull(onTimer, "onTimer");
-
-		return new AjaxSelfUpdatingTimerBehavior(interval)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onPostProcessTarget(AjaxRequestTarget target)
-			{
-				onTimer.accept(target);
-			}
-		};
+		return AjaxSelfUpdatingTimerBehavior.onSelfUpdate(interval, onTimer);
 	}
 
 	/**
@@ -190,21 +132,13 @@ public class Lambdas
 	 * @param onUpdateChoice
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
+	 * 
+	 * @see AjaxFormChoiceComponentUpdatingBehavior#onUpdateChoice(WicketConsumer)
 	 */
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(
 		WicketConsumer<AjaxRequestTarget> onUpdateChoice)
 	{
-		Args.notNull(onUpdateChoice, "onUpdateChoice");
-		return new AjaxFormChoiceComponentUpdatingBehavior()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdateChoice.accept(target);
-			}
-		};
+		return AjaxFormChoiceComponentUpdatingBehavior.onUpdateChoice(onUpdateChoice);
 	}
 
 	/**
@@ -216,29 +150,14 @@ public class Lambdas
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
 	 *            {@link RuntimeException}
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
+	 * 
+	 * @see AjaxFormChoiceComponentUpdatingBehavior#onUpdateChoice(WicketConsumer, WicketBiConsumer)
 	 */
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(
 		WicketConsumer<AjaxRequestTarget> onUpdateChoice,
 		WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
-		Args.notNull(onUpdateChoice, "onUpdateChoice");
-		Args.notNull(onError, "onError");
-		return new AjaxFormChoiceComponentUpdatingBehavior()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdateChoice.accept(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, RuntimeException e)
-			{
-				onError.accept(target, e);
-			}
-		};
+		return AjaxFormChoiceComponentUpdatingBehavior.onUpdateChoice(onUpdateChoice, onError);
 	}
 
 	/**
@@ -249,22 +168,13 @@ public class Lambdas
 	 * @param onUpdate
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
+	 * 
+	 * @see AjaxFormComponentUpdatingBehavior#onUpdate(String, WicketConsumer) 
 	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
 		WicketConsumer<AjaxRequestTarget> onUpdate)
 	{
-		Args.notNull(onUpdate, "onUpdate");
-
-		return new AjaxFormComponentUpdatingBehavior(eventName)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdate.accept(target);
-			}
-		};
+		return AjaxFormComponentUpdatingBehavior.onUpdate(eventName, onUpdate);
 	}
 
 	/**
@@ -278,30 +188,14 @@ public class Lambdas
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
 	 *            {@link RuntimeException}
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
+	 * 
+	 * @see AjaxFormComponentUpdatingBehavior#onUpdate(String, WicketConsumer, WicketBiConsumer) 
 	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
 		WicketConsumer<AjaxRequestTarget> onUpdate,
 		WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
-		Args.notNull(onUpdate, "onUpdate");
-		Args.notNull(onError, "onError");
-
-		return new AjaxFormComponentUpdatingBehavior(eventName)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdate.accept(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, RuntimeException e)
-			{
-				onError.accept(target, e);
-			}
-		};
+		return AjaxFormComponentUpdatingBehavior.onUpdate(eventName, onUpdate, onError);
 	}
 
 	/**
@@ -312,22 +206,13 @@ public class Lambdas
 	 * @param onSubmit
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormSubmitBehavior}
+	 * 
+	 * @see AjaxFormSubmitBehavior#onSubmit(String, WicketConsumer)
 	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
 		WicketConsumer<AjaxRequestTarget> onSubmit)
 	{
-		Args.notNull(onSubmit, "onSubmit");
-
-		return new AjaxFormSubmitBehavior(eventName)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onSubmit(AjaxRequestTarget target)
-			{
-				onSubmit.accept(target);
-			}
-		};
+		return AjaxFormSubmitBehavior.onSubmit(eventName, onSubmit);
 	}
 
 	/**
@@ -340,29 +225,13 @@ public class Lambdas
 	 * @param onError
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormSubmitBehavior}
+	 * 
+	 * @see AjaxFormSubmitBehavior#onSubmit(String, WicketConsumer, WicketConsumer)
 	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
 		WicketConsumer<AjaxRequestTarget> onSubmit, WicketConsumer<AjaxRequestTarget> onError)
 	{
-		Args.notNull(onSubmit, "onSubmit");
-		Args.notNull(onError, "onError");
-
-		return new AjaxFormSubmitBehavior(eventName)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onSubmit(AjaxRequestTarget target)
-			{
-				onSubmit.accept(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target)
-			{
-				onError.accept(target);
-			}
-		};
+		return AjaxFormSubmitBehavior.onSubmit(eventName, onSubmit, onError);
 	}
 
 	/**
@@ -371,21 +240,12 @@ public class Lambdas
 	 * @param onChange
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link OnChangeAjaxBehavior}
+	 * 
+	 * @see OnChangeAjaxBehavior#onChange(WicketConsumer)
 	 */
 	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange)
 	{
-		Args.notNull(onChange, "onChange");
-
-		return new OnChangeAjaxBehavior()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onChange.accept(target);
-			}
-		};
+		return OnChangeAjaxBehavior.onChange(onChange);
 	}
 
 	/**
@@ -397,234 +257,13 @@ public class Lambdas
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
 	 *            {@link RuntimeException}
 	 * @return the {@link OnChangeAjaxBehavior}
+	 * 
+	 * @see OnChangeAjaxBehavior#onChange(WicketConsumer, WicketBiConsumer)
 	 */
 	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange,
 		WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
-		Args.notNull(onChange, "onChange");
-		Args.notNull(onError, "onError");
-
-		return new OnChangeAjaxBehavior()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onChange.accept(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, RuntimeException e)
-			{
-				onError.accept(target, e);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxLink} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the ajax link
-	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
-	 * @return the {@link AjaxLink}
-	 */
-	public static <T> AjaxLink<T> ajaxLink(String id, WicketConsumer<AjaxRequestTarget> onClick)
-	{
-		Args.notNull(onClick, "onClick");
-
-		return new AjaxLink<T>(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				onClick.accept(target);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxButton} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the ajax button
-	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @return the {@link AjaxButton}
-	 */
-	public static AjaxButton ajaxButton(String id,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-
-		return new AjaxButton(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
-			{
-				onSubmit.accept(target, form);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxButton} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the ajax button
-	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @return the {@link AjaxButton}
-	 */
-	public static AjaxButton ajaxButton(String id,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-		Args.notNull(onError, "onError");
-
-		return new AjaxButton(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
-			{
-				onSubmit.accept(target, form);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
-			{
-				onError.accept(target, form);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxCheckBox} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of ajax check box
-	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
-	 * @return the {@link AjaxCheckBox}
-	 */
-	public static AjaxCheckBox ajaxCheckBox(String id, WicketConsumer<AjaxRequestTarget> onUpdate)
-	{
-		Args.notNull(onUpdate, "onUpdate");
-
-		return new AjaxCheckBox(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdate.accept(target);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of ajax submit link
-	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @return the {@link AjaxSubmitLink}
-	 */
-	public static AjaxSubmitLink ajaxSubmitLink(String id,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-
-		return new AjaxSubmitLink(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
-			{
-				onSubmit.accept(target, form);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of ajax submit link
-	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
-	 * @return the {@link AjaxSubmitLink}
-	 */
-	public static AjaxSubmitLink ajaxSubmitLink(String id,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-		Args.notNull(onError, "onError");
-
-		return new AjaxSubmitLink(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
-			{
-				onSubmit.accept(target, form);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
-			{
-				onError.accept(target, form);
-			}
-		};
-	}
-
-	/**
-	 * Creates a {@link Link} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the link
-	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link Void}
-	 * @return the {@link Link}
-	 */
-	public static <T> Link<T> link(String id, WicketConsumer<Void> onClick)
-	{
-		Args.notNull(onClick, "onClick");
-
-		return new Link<T>(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick()
-			{
-				onClick.accept((Void)null);
-			}
-		};
+		return OnChangeAjaxBehavior.onChange(onChange, onError);
 	}
 
 	/**
@@ -639,19 +278,139 @@ public class Lambdas
 	 * @param onTagConsumer
 	 *              the {@link WicketConsumer} that accepts the {@link ComponentTag}
 	 * @return The created behavior
+	 * 
+	 * @see Behavior#onTag(WicketConsumer)
 	 */
 	public static Behavior onTag(WicketConsumer<ComponentTag> onTagConsumer)
 	{
-		Args.notNull(onTagConsumer, "onTagConsumer");
+		return Behavior.onTag(onTagConsumer);
+	}
 
-		return new Behavior()
-		{
-			@Override
-			public void onComponentTag(Component component, ComponentTag tag)
-			{
-				super.onComponentTag(component, tag);
-				onTagConsumer.accept(tag);
-			}
-		};
+	/**
+	 * Creates an {@link AjaxLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxLink}
+	 * 
+	 * @see AjaxLink#onClick(String, WicketConsumer)
+	 */
+	public static <T> AjaxLink<T> ajaxLink(String id, WicketConsumer<AjaxRequestTarget> onClick)
+	{
+		return AjaxLink.onClick(id, onClick);
+	}
+
+	/**
+	 * Creates an {@link AjaxButton} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax button
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxButton}
+	 * 
+	 * @see AjaxButton#onSubmit(String, WicketBiConsumer)
+	 */
+	public static AjaxButton ajaxButton(String id,
+		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	{
+		return AjaxButton.onSubmit(id, onSubmit);
+	}
+
+	/**
+	 * Creates an {@link AjaxButton} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax button
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxButton}
+	 * 
+	 * @see AjaxButton#onSubmit(String, WicketBiConsumer, WicketBiConsumer)
+	 */
+	public static AjaxButton ajaxButton(String id,
+		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
+		WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	{
+		return AjaxButton.onSubmit(id, onSubmit, onError);
+	}
+
+	/**
+	 * Creates an {@link AjaxCheckBox} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of ajax check box
+	 * @param onUpdate
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxCheckBox}
+	 * 
+	 * @see AjaxCheckBox#onUpdate(String, WicketConsumer)
+	 */
+	public static AjaxCheckBox ajaxCheckBox(String id, WicketConsumer<AjaxRequestTarget> onUpdate)
+	{
+		return AjaxCheckBox.onUpdate(id, onUpdate);
+	}
+
+	/**
+	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of ajax submit link
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxSubmitLink}
+	 * 
+	 * @see AjaxSubmitLink#onSubmit(String, WicketBiConsumer)
+	 */
+	public static AjaxSubmitLink ajaxSubmitLink(String id,
+		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	{
+		return AjaxSubmitLink.onSubmit(id, onSubmit);
+	}
+
+	/**
+	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of ajax submit link
+	 * @param onSubmit
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link Form}
+	 * @return the {@link AjaxSubmitLink}
+	 * 
+	 * @see AjaxSubmitLink#onSubmit(String, WicketBiConsumer, WicketBiConsumer)
+	 */
+	public static AjaxSubmitLink ajaxSubmitLink(String id,
+		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
+		WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	{
+		return AjaxSubmitLink.onSubmit(id,  onSubmit,  onError);
+	}
+
+	/**
+	 * Creates a {@link Link} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link Void}
+	 * @return the {@link Link}
+	 * 
+	 * @see Link#onClick(String, WicketConsumer)
+	 */
+	public static <T> Link<T> link(String id, WicketConsumer<Void> onClick)
+	{
+		return Link.onClick(id, onClick);
 	}
 }

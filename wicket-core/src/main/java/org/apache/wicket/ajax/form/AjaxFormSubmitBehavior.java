@@ -21,12 +21,12 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.lambda.Lambdas;
 import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Ajax event behavior that submits a form via ajax when the event it is attached to, is invoked.
@@ -285,7 +285,18 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName, WicketConsumer<AjaxRequestTarget> onSubmit)
 	{
-		return Lambdas.onSubmit(eventName, onSubmit);
+		Args.notNull(onSubmit, "onSubmit");
+
+		return new AjaxFormSubmitBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(target);
+			}
+		};
 	}
 
 	/**
@@ -302,6 +313,24 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
 	                                              WicketConsumer<AjaxRequestTarget> onSubmit,
 	                                              WicketConsumer<AjaxRequestTarget> onError) {
-		return Lambdas.onSubmit(eventName, onSubmit, onError);
+		Args.notNull(onSubmit, "onSubmit");
+		Args.notNull(onError, "onError");
+
+		return new AjaxFormSubmitBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target)
+			{
+				onError.accept(target);
+			}
+		};
 	}
 }
