@@ -30,6 +30,7 @@ import org.apache.wicket.core.request.handler.RequestSettingRequestHandler;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
@@ -77,7 +78,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	@Before
 	public void before() throws Exception
 	{
-		tester = new WicketTester();
+		tester = new WicketTester(HomePage.class);
 
 		WebApplication application = tester.getApplication();
 		application.mountPage(MOUNTED_URL, Page1.class);
@@ -161,7 +162,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	public void homePageForceEncryptionOfRequestListener()
 	{
-		PageAndComponentProvider provider = new PageAndComponentProvider(tester.getApplication().getHomePage(), "some:link");
+		PageAndComponentProvider provider = new PageAndComponentProvider(tester.getApplication().getHomePage(), "link");
 		IRequestHandler requestHandler = new BookmarkableListenerInterfaceRequestHandler(provider);
 		Url plainUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
 		assertTrue("Plain URL for home page has segments: " + plainUrl.toString(), plainUrl.getSegments().isEmpty());
@@ -263,7 +264,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	public void bookmarkablePageForceEncryptionOfRequestListener()
 	{
-		PageAndComponentProvider provider = new PageAndComponentProvider(Page2.class, "some:link");
+		PageAndComponentProvider provider = new PageAndComponentProvider(Page2.class, "link");
 		IRequestHandler requestHandler = new BookmarkableListenerInterfaceRequestHandler(provider);
 		Url plainUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
 		assertTrue("Plain text request listener URL for bookmarkable page does not start with: "
@@ -354,7 +355,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	@Test
 	public void mountedPageRequestListenerParameter()
 	{
-		final String componentPath = "some:path:to:link";
+		final String componentPath = "link";
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page1.class, componentPath);
 		IRequestHandler requestHandler = new ListenerInterfaceRequestHandler(provider);
@@ -657,14 +658,46 @@ public class CryptoMapperTest extends AbstractMapperTest
 	}
 
 	/**
+	 * Home page
+	 */
+	public static class HomePage extends WebPage
+	{
+		public HomePage()
+		{
+			add(new Link<Void>("link") {
+				@Override
+				public void onClick()
+				{
+				}
+			});
+		}
+		
+		@Override
+		public IMarkupFragment getMarkup()
+		{
+			return Markup.of("<html><body wicket:id=\"link\"></body></html>");
+		}
+	}
+
+	/**
 	 * Page that is mounted
 	 */
 	public static class Page1 extends WebPage
 	{
+		public Page1()
+		{
+			add(new Link<Void>("link") {
+				@Override
+				public void onClick()
+				{
+				}
+			});
+		}
+		
 		@Override
 		public IMarkupFragment getMarkup()
 		{
-			return Markup.of("<html><body></body></html>");
+			return Markup.of("<html><body wicket:id=\"link\"></body></html>");
 		}
 	}
 
@@ -673,10 +706,20 @@ public class CryptoMapperTest extends AbstractMapperTest
 	 */
 	public static class Page2 extends WebPage
 	{
+		public Page2()
+		{
+			add(new Link<Void>("link") {
+				@Override
+				public void onClick()
+				{
+				}
+			});
+		}
+		
 		@Override
 		public IMarkupFragment getMarkup()
 		{
-			return Markup.of("<html><body></body></html>");
+			return Markup.of("<html><body wicket:id=\"link\"></body></html>");
 		}
 	}
 }
