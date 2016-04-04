@@ -73,8 +73,9 @@ public abstract class RequestHandlerStack
 			if (replacer.removeAll)
 			{
 				scheduledAfterCurrent = null;
-				throw exception;
 			}
+			
+			throw replacer;
 		}
 		finally
 		{
