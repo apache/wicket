@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import static org.apache.wicket.ajax.AbstractAjaxTimerBehavior.onTimer;
+
 import java.util.TimeZone;
 
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
@@ -60,21 +62,7 @@ public class WorldClockPage extends BasePage
 
 		// add the timer behavior to the page and make it update all
 		// other components as well
-		final AbstractAjaxTimerBehavior timer = new AbstractAjaxTimerBehavior(Duration.seconds(1))
-		{
-			/**
-			 * @see org.apache.wicket.ajax.AbstractAjaxTimerBehavior#onTimer(org.apache.wicket.ajax.AjaxRequestTarget)
-			 */
-			@Override
-			protected void onTimer(AjaxRequestTarget target)
-			{
-				target.add(la);
-				target.add(ny);
-				target.add(moscow);
-				target.add(prague);
-				target.add(london);
-			}
-		};
+		final AbstractAjaxTimerBehavior timer = onTimer(Duration.seconds(1), target-> target.add(la, ny, moscow, prague, london));
 		add(timer);
 
 		add(new AjaxLink<Void>("stop")
