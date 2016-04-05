@@ -18,6 +18,7 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
@@ -30,6 +31,18 @@ public class BasePage extends WicketExamplePage
 	 */
 	public BasePage()
 	{
+		
+	}
+	
+	public BasePage(PageParameters pageParameters)
+	{
+		super(pageParameters);
+	}
+	
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
 		add(new BookmarkablePageLink<>("back", Index.class).setAutoEnable(true));
 	}
 }

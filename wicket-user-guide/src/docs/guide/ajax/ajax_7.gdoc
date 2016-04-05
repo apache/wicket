@@ -1,7 +1,44 @@
+Wicket makes working with AJAX easy and pleasant with its component-oriented abstraction. However as side effect, AJAX components and behaviors make their hosting page stateful. This can be quite annoying if we are working on a page that must be stateless (for example a login page).
+Starting from version 7.4.0 Wicket has made quite easy forcing existing AJAX components to be stateless. All we have to do is to override component's method @getStatelessHint@ returning true:
+
+{code}
+final Link<?> incrementLink = new AjaxFallbackLink<Void>("incrementLink")
+{
+
+    ...
+    
+    @Override
+    protected boolean getStatelessHint()
+    {
+        return true;
+    }
+};
+{code}
 
 
-AJAX is another example of how Wicket can simplify web technologies providing a good component and object oriented abstraction of them. 
+Just like components also AJAX behaviors can be turned to stateless overriding @getStatelessHint(Component component)@
 
-In this chapter we have seen how to take advantage of the AJAX support provided by Wicket to write AJAX-enhanced applications. Most of the chapter has been dedicated to the built-in components and behaviors that let us adopt AJAX without almost any effort. 
+{code}
+ final AjaxFormSubmitBehavior myBehavior = new AjaxFormSubmitBehavior(form, event)
+ {
+    ...
+    
+    @Override
+    protected boolean getStatelessHint(Component component)
+    {
+        return true;
+    }
+};
+{code}
 
-In the final part of the chapter we have seen how Wicket physically implements an AJAX call on client side using AJAX request attributes. Then, we have learnt how to use call listeners to execute custom JavaScript during AJAX request lifecycle.
+h3. Usage
+
+Stateless components and behaviors follows the same rules and conventions of their standard stateful version shipped with Wicket. Therefore you will find different handler methods like @onSubmit@ or @onClick@ that provide an instance of @AjaxRequestTarget@ to refresh components markup. Such components must have a markup id in order to be manipulated via JavaScript.
+However in this case calling @setOutputMarkupId@ on a component is not enough. Since we are working with a stateless page, the id of the component to refresh must be unique but also static, meaning that it should not depend on page instance. In other words, the id should be constant through different instances of the same page.
+By default Wicket generates markup ids using a session-level counter and this make them not static. Hence, to refresh component in a stateless page we must provide them with static ids, either setting them in Java code (with @Component.setMarkupId@) or simply writing them directly in the markup:
+
+{code}
+   <span id="staticIdToUSe" wicket:id="componentWicketId"></span>
+{code}
+
+See examples site for a full showcase of AJAX-stateless capabilities.
