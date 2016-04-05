@@ -136,7 +136,7 @@
 		<maven.javadoc.version>2.10.3</maven.javadoc.version>
 		<maven.surefire.version>2.18.1</maven.surefire.version>
 		<mockito.version>1.10.19</mockito.version>
-		<slf4j.version>1.7.20</slf4j.version>
+		<slf4j.version>1.7.21</slf4j.version>
 		<hamcrest.version>2.0.0.0</hamcrest.version>
 		<objenesis.version>2.2</objenesis.version>
 		<!-- do not increase the version - wicket-user-guide requires 2.2.4 -->
