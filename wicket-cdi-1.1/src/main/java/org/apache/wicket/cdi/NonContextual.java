@@ -62,6 +62,19 @@ public class NonContextual<T>
 	}
 
 	/**
+	 * Convenience factory method for an instance, see {@link #of(Class).
+	 * 
+	 * @param <T>
+	 * @param clazz
+	 * @return The NonContextual for the instance's class
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> NonContextual<T> of(T t) {
+		// cast is necessary for Eclipse compiler :/
+		return (NonContextual<T>)of(t.getClass());
+	}
+
+	/**
 	 * Factory method for creating non-contextual instances
 	 * 
 	 * @param <T>
