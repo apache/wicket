@@ -81,7 +81,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	@Override
 	protected void onBind()
 	{
-		getComponent().setOutputMarkupId(true);
+		final Component component = getComponent();
+		
+		component.setOutputMarkupId(true);
+		
+		if (getStatelessHint(component))
+		{
+			//generate behavior id
+			component.getBehaviorId(this);
+		}
 	}
 
 	/**

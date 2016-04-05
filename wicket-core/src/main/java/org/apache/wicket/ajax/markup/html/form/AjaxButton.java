@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -141,6 +142,12 @@ public abstract class AjaxButton extends Button
 			public boolean getDefaultProcessing()
 			{
 				return AjaxButton.this.getDefaultFormProcessing();
+			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxButton.this.getStatelessHint();
 			}
 		};
 	}
@@ -288,5 +295,11 @@ public abstract class AjaxButton extends Button
 				onError.accept(this, target);
 			}
 		};
+	}
+	
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
 	}
 }
