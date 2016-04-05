@@ -300,15 +300,20 @@ public abstract class Behavior
 	 *
 	 * <p>
 	 *     Usage:<br/>
-	 *     <code>component.add(onAttribute("class", value -> condition ? "positive" : "negative"));</code>
+	 *     <code>component.add(onAttribute("class",
+	 *              currentValue -> condition(currentValue) ? "positive" : "negative"));</code>
 	 * </p>
 	 *
-	 * @param onTagConsumer
-	 *              the {@link WicketConsumer} that accepts the {@link ComponentTag}
+	 * @param name
+	 *              the name of the attribute to manipulate
+	 * @param onAttribute
+	 *              the {@link WicketFunction} that accepts the old value of the attribute
+	 *              and returns a new value
 	 * @return The created behavior
 	 */
-	public static Behavior onAttribute(String name, WicketFunction<String, String> onAttribute)
+	public static Behavior onAttribute(String name, WicketFunction<String, CharSequence> onAttribute)
 	{
+		Args.notEmpty(name, "name");
 		Args.notNull(onAttribute, "onAttribute");
 
 		return new Behavior()
@@ -316,8 +321,10 @@ public abstract class Behavior
 			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
-				if (tag.getType() != TagType.CLOSE) {
-					tag.put(name, onAttribute.apply(tag.getAttribute(name)));
+				if (tag.getType() != TagType.CLOSE)
+				{
+					String oldValue = tag.getAttribute(name);
+					tag.put(name, onAttribute.apply(oldValue));
 				}
 			}
 		};

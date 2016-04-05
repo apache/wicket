@@ -288,22 +288,24 @@ public class Lambdas
 
 	/**
 	 * Creates a {@link Behavior} that uses the given {@link WicketFunction function}
-	 * to do something with a component's attribute.
+	 * to do something with a component's attributeName.
 	 *
 	 * <p>
 	 *     Usage:<br/>
 	 *     <code>component.add(onAttribute("class", value -> condition ? "positive" : "negative"));</code>
 	 * </p>
 	 *
+	 * @param attributeName
+	 *              the name of the attribute to manipulate
 	 * @param onAttribute
 	 *              the {@link WicketFunction} that is applied to the attribute value
 	 * @return The created behavior
 	 * 
-	 * @see Behavior#onAttribute(WicketConsumer)
+	 * @see Behavior#onAttribute(String, WicketFunction)
 	 */
-	public static Behavior onAttribute(String attribute, WicketFunction<String, String> onAttribute)
+	public static Behavior onAttribute(String attributeName, WicketFunction<String, CharSequence> onAttribute)
 	{
-		return Behavior.onAttribute(attribute, onAttribute);
+		return Behavior.onAttribute(attributeName, onAttribute);
 	}
 	
 	/**
