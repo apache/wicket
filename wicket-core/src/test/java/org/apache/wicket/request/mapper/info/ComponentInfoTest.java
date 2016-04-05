@@ -31,7 +31,7 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test1()
 	{
-		String s = ".-component-path";
+		String s = "-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("component:path", info.getComponentPath());
 		assertNull(info.getBehaviorId());
@@ -45,7 +45,7 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test2()
 	{
-		String s = "-component-path";
+		String s = "component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals(null, info);
 	}
@@ -70,7 +70,7 @@ public class ComponentInfoTest extends Assert
 	{
 		String s = "-";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals(null, info);
+		assertEquals(s, info.toString());
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test6()
 	{
-		String s = ".-compo~~nent-path";
+		String s = "-compo~~nent-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("compo--nent:path", info.getComponentPath());
 		assertNull(info.getBehaviorId());
@@ -103,7 +103,7 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test7()
 	{
-		String s = ".-co~mpo~~nent-path";
+		String s = "-co~mpo~~nent-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals("co-mpo--nent:path", info.getComponentPath());
 		assertNull(info.getBehaviorId());

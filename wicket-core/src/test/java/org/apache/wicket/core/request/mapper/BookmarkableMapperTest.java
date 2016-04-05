@@ -174,7 +174,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	@Test
 	public void decode5()
 	{
-		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15-.-foo-bar");
+		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME + "?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -195,7 +195,7 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 	public void decode6()
 	{
 		Url url = Url.parse("wicket/bookmarkable/" + PAGE_CLASS_NAME
-			+ "/i1/i2?15-.-foo-bar&a=b&b=c");
+			+ "/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));

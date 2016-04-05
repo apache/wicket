@@ -207,7 +207,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void decode5()
 	{
-		Url url = Url.parse("some/mount/path?15-.-foo-bar");
+		Url url = Url.parse("some/mount/path?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -227,7 +227,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void decode6()
 	{
-		Url url = Url.parse("some/mount/path/i1/i2?15-.-foo-bar&a=b&b=c");
+		Url url = Url.parse("some/mount/path/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));

@@ -240,7 +240,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	@Test
 	public void decode5()
 	{
-		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-.-foo-bar");
+		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -260,7 +260,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	@Test
 	public void decode6()
 	{
-		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-.-foo-bar&a=b&b=c");
+		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));

@@ -167,7 +167,9 @@ public class ComponentInfo
 			result.append(renderCount);
 		}
 
-		result.append(BEHAVIOR_INDEX_SEPARATOR);
+		if (renderCount != null || behaviorId != null) {
+			result.append(BEHAVIOR_INDEX_SEPARATOR);
+		}
 		
 		if (behaviorId != null)
 		{
@@ -227,7 +229,11 @@ public class ComponentInfo
 			Integer renderCount = null;
 
 			String listenerParts[] = Strings.split(listenerInterface, BEHAVIOR_INDEX_SEPARATOR);
-			if (listenerParts.length == 2)
+			if (listenerParts.length == 0)
+			{
+				return new ComponentInfo(renderCount, componentPath, behaviorIndex);
+			}
+			else if (listenerParts.length == 2)
 			{
 				if (isNumber(listenerParts[0]))
 				{

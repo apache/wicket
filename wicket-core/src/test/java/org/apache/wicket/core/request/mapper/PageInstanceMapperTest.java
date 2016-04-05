@@ -87,7 +87,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 	@Test
 	public void decode3()
 	{
-		Url url = Url.parse("wicket/page?4-.-a-b-c");
+		Url url = Url.parse("wicket/page?4--a-b-c");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -104,7 +104,7 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 	@Test
 	public void decode4()
 	{
-		Url url = Url.parse("wickett/pagee?4-.-a:b-c");
+		Url url = Url.parse("wickett/pagee?4--a:b-c");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertNull(handler);

@@ -51,7 +51,7 @@ public class PageComponentInfoTest extends TestCase
 	@Test
 	public void test1()
 	{
-		String s = "2-.-foo-bar-baz";
+		String s = "2--foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
 		testPageComponentInfo(info, 2, "foo:bar:baz");
 		assertEquals(s, info.toString());
