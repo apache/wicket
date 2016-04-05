@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -115,6 +116,12 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			{
 				AjaxSubmitLink.this.onAfterSubmit(target, getForm());
 			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxSubmitLink.this.getStatelessHint();
+			}
 		};
 	}
 
@@ -211,5 +218,12 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	public final void onAfterSubmit()
 	{
 		logger.warn("unexpected invocation of #onAfterSubmit() on {}", this);
+	}
+	
+	
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
 	}
 }

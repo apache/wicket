@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -96,6 +97,12 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 				super.updateAjaxAttributes(attributes);
 				attributes.setPreventDefault(true);
 				AjaxFallbackLink.this.updateAjaxAttributes(attributes);
+			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{				
+				return AjaxFallbackLink.this.getStatelessHint();
 			}
 		};
 	}

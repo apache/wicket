@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -90,6 +91,12 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 				super.updateAjaxAttributes(attributes);
 				AjaxLink.this.updateAjaxAttributes(attributes);
 			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxLink.this.getStatelessHint();
+			}
 		};
 	}
 
@@ -159,4 +166,9 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 		setDefaultModelObject(object);
 	}
 
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
+	}
 }
