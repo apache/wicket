@@ -288,7 +288,7 @@ public class Lambdas
 
 	/**
 	 * Creates a {@link Behavior} that uses the given {@link WicketFunction function}
-	 * to do something with a component's attributeName.
+	 * to do something with a component's attribute.
 	 *
 	 * <p>
 	 *     Usage:<br/>
