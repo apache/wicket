@@ -20,7 +20,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
@@ -167,18 +166,6 @@ public abstract class AjaxButton extends Button
 		{
 			return super.getForm();
 		}
-	}
-
-	@Override
-	protected void onComponentTag(ComponentTag tag)
-	{
-		// WICKET-5594 prevent non-Ajax submit
-		if ("submit".equals(tag.getAttribute("type")))
-		{
-			tag.put("type", "button");
-		}
-
-		super.onComponentTag(tag);
 	}
 
 	/**
