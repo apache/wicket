@@ -51,7 +51,11 @@ public abstract class RequestHandlerStack
 	}
 
 	/**
-	 * @param handler
+	 * Execute the given handler.
+	 *
+	 * @param handler handler to be executed
+	 * @return handler to be executed next
+	 * @throws ReplaceHandlerException if another handler should replace the given handler for execution
 	 */
 	public IRequestHandler execute(final IRequestHandler handler)
 	{
@@ -59,23 +63,6 @@ public abstract class RequestHandlerStack
 		try
 		{
 			respond(handler);
-		}
-		catch (RuntimeException exception)
-		{
-			ReplaceHandlerException replacer = Exceptions.findCause(exception,
-				ReplaceHandlerException.class);
-
-			if (replacer == null)
-			{
-				throw exception;
-			}
-
-			if (replacer.removeAll)
-			{
-				scheduledAfterCurrent = null;
-			}
-			
-			throw replacer;
 		}
 		finally
 		{
@@ -94,6 +81,7 @@ public abstract class RequestHandlerStack
 	 * 
 	 * @param exception
 	 * @return request handler or null} if one cannot be resolved
+	 * @deprecated
 	 */
 	public final IRequestHandler resolveHandler(RuntimeException exception)
 	{
@@ -213,6 +201,14 @@ public abstract class RequestHandlerStack
 			this.removeAll = removeAll;
 		}
 		
+		/**
+		 * Should any scheduled handler be removed before replacing the handler
+		 */
+		public boolean isRemoveAll()
+		{
+			return removeAll;
+		}
+
 		/**
 		 * @return the RequestHandler that should be used to continue handling the request
 		 */

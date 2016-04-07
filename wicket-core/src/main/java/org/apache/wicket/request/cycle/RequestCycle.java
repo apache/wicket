@@ -39,6 +39,7 @@ import org.apache.wicket.request.RequestHandlerStack;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
+import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
@@ -47,6 +48,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -270,15 +272,19 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			}
 			catch (RuntimeException e)
 			{
-				IRequestHandler replacement = requestHandlerExecutor.resolveHandler(e);
-				if (replacement != null)
-				{
-					handler = replacement;
-				}
-				else
+				ReplaceHandlerException replacer = Exceptions.findCause(e, ReplaceHandlerException.class);
+
+				if (replacer == null)
 				{
 					throw e;
 				}
+
+				if (replacer.isRemoveAll())
+				{
+					requestHandlerExecutor.schedule(null);
+				}
+
+				handler = replacer.getReplacementRequestHandler();
 			}
 		}
 	}
@@ -861,6 +867,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * 
 	 * @return the found IRequestHandler or {@code null}
 	 */
+	@SuppressWarnings("unchecked")
 	public <T extends IRequestHandler> T find(final Class<T> type)
 	{
 		if (type == null)
