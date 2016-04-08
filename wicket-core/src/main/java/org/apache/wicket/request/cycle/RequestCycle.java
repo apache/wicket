@@ -239,16 +239,18 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			listeners.onBeginRequest(this);
 			onBeginRequest();
 			IRequestHandler handler = resolveRequestHandler();
-			if (handler != null)
+			if (handler == null)
+			{
+				// Did not find any suitable handler, thus not executing the request
+				log.debug(
+					"No suitable handler found for URL {}, falling back to container to process this request",
+					request.getUrl());
+			}
+			else
 			{
 				execute(handler);
 				return true;
 			}
-
-			// Did not find any suitable handler, thus not executing the request
-			log.debug(
-				"No suitable handler found for URL {}, falling back to container to process this request",
-				request.getUrl());
 		}
 		catch (Exception exception)
 		{
@@ -267,6 +269,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		{
 			set(null);
 		}
+
 		return false;
 	}
 
@@ -325,7 +328,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		}
 		catch (Exception e)
 		{
-			if (retryCount > 0)
+			if (retryCount <= 0)
+			{
+				log.error("Error during executing exception request handler", e);
+			}
+			else
 			{
 				IRequestHandler next = handleException(e);
 				if (next != null)
@@ -334,7 +341,6 @@ public class RequestCycle implements IRequestCycle, IEventSink
 					return;
 				}
 			}
-			log.error("Error during executing exception request handler", e);
 		}
 	}
 
