@@ -247,6 +247,8 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		cycle.processRequestAndDetach();
 
 		assertEquals(401, errorCode);
+		assertEquals(2, incrementingListener.resolved);
+		assertEquals(1, incrementingListener.executed);
 		assertEquals(1, incrementingListener.exceptionResolutions);
 		assertEquals(0, incrementingListener.schedules);
 	}
@@ -270,7 +272,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 	 * @throws Exception
 	 */
 	@Test
-	public void exceptionHandingInOnDetach() throws Exception
+	public void exceptionHandlingInOnDetach() throws Exception
 	{
 		// this test is a little flaky because it depends on the ordering of listeners which is not
 		// guaranteed

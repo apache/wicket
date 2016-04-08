@@ -254,15 +254,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		}
 		catch (Exception exception)
 		{
-			IRequestHandler handler = handleException(exception);
-			if (handler != null)
-			{
-				executeExceptionRequestHandler(exception, handler, getExceptionRetryCount());
-			}
-			else
-			{
-				log.error("Error during request processing. URL=" + request.getUrl(), exception);
-			}
+			executeExceptionRequestHandler(exception, getExceptionRetryCount());
 			return true;
 		}
 		finally
@@ -311,14 +303,21 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
+	 * Execute a requestHandler for the given exception.
 	 * 
 	 * @param exception
-	 * @param handler
 	 * @param retryCount
 	 */
-	private void executeExceptionRequestHandler(Exception exception, final IRequestHandler handler, int retryCount)
+	private void executeExceptionRequestHandler(Exception exception, int retryCount)
 	{
 		scheduleRequestHandlerAfterCurrent(null);
+
+		IRequestHandler handler = handleException(exception);
+		if (handler == null)
+		{
+			log.error("Error during request processing. URL=" + request.getUrl(), exception);
+			return;
+		}
 
 		try
 		{
@@ -330,16 +329,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		{
 			if (retryCount <= 0)
 			{
-				log.error("Error during executing exception request handler", e);
+				log.error("Exception retry count exceeded", e);
 			}
 			else
 			{
-				IRequestHandler next = handleException(e);
-				if (next != null)
-				{
-					executeExceptionRequestHandler(exception, next, retryCount - 1);
-					return;
-				}
+				executeExceptionRequestHandler(exception, retryCount - 1);
 			}
 		}
 	}
