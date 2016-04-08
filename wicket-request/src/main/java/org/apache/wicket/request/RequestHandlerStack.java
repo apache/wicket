@@ -17,7 +17,6 @@
 package org.apache.wicket.request;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.wicket.util.lang.Args;
@@ -35,19 +34,20 @@ public abstract class RequestHandlerStack
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestHandlerStack.class);
 
-	// we need both Queue and List interfaces
-	private final LinkedList<IRequestHandler> requestHandlers = new LinkedList<>();
+	private IRequestHandler active;
 
 	private final List<IRequestHandler> inactiveRequestHandlers = new ArrayList<>();
 
 	private IRequestHandler scheduledAfterCurrent = null;
 
 	/**
+	 * Get the handler currently executed.
+	 *
 	 * @return active handler
 	 */
 	public IRequestHandler getActive()
 	{
-		return requestHandlers.peek();
+		return active;
 	}
 
 	/**
@@ -59,14 +59,14 @@ public abstract class RequestHandlerStack
 	 */
 	public IRequestHandler execute(final IRequestHandler handler)
 	{
-		requestHandlers.add(handler);
+		active = handler;
 		try
 		{
 			respond(handler);
 		}
 		finally
 		{
-			requestHandlers.poll();
+			active = null;
 			inactiveRequestHandlers.add(handler);
 		}
 
@@ -127,7 +127,7 @@ public abstract class RequestHandlerStack
 	 */
 	public void replaceAll(final IRequestHandler handler)
 	{
-		if (requestHandlers.isEmpty())
+		if (active == null)
 		{
 			execute(handler);
 		}
@@ -142,13 +142,13 @@ public abstract class RequestHandlerStack
 	 */
 	public void detach()
 	{
-		if (!requestHandlers.isEmpty())
+		if (active != null)
 		{
-			// All requests handlers should be inactive at this point
-			log.warn("Some of the request handlers are still active.");
+			// no request handler should be active at this point
+			log.warn("request handler is still active.");
 
-			inactiveRequestHandlers.addAll(requestHandlers);
-			requestHandlers.clear();
+			inactiveRequestHandlers.add(active);
+			active = null;
 		}
 
 		for (IRequestHandler handler : inactiveRequestHandlers)
