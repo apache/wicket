@@ -235,9 +235,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 			IRequestHandler handler = handleException(e);
 			if (handler != null)
 			{
-				listeners.onExceptionRequestHandlerResolved(this, handler, e);
-				executeExceptionRequestHandler(handler, getExceptionRetryCount());
-				listeners.onRequestHandlerExecuted(this, handler);
+				executeExceptionRequestHandler(e, handler, getExceptionRetryCount());
 			}
 			else
 			{
@@ -312,16 +310,19 @@ public class RequestCycle implements IRequestCycle, IEventSink
 
 	/**
 	 * 
+	 * @param exception
 	 * @param handler
 	 * @param retryCount
 	 */
-	private void executeExceptionRequestHandler(final IRequestHandler handler, final int retryCount)
+	private void executeExceptionRequestHandler(Exception exception, final IRequestHandler handler, int retryCount)
 	{
 		scheduleRequestHandlerAfterCurrent(null);
 
 		try
 		{
-			requestHandlerExecutor.execute(handler);
+			listeners.onExceptionRequestHandlerResolved(this, handler, exception);
+
+			execute(handler);
 		}
 		catch (Exception e)
 		{
@@ -330,7 +331,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 				IRequestHandler next = handleException(e);
 				if (next != null)
 				{
-					executeExceptionRequestHandler(next, retryCount - 1);
+					executeExceptionRequestHandler(exception, next, retryCount - 1);
 					return;
 				}
 			}
