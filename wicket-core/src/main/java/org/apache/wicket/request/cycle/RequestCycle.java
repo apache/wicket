@@ -206,6 +206,26 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
+	 * Convenience method that processes the request and detaches the {@link RequestCycle}.
+	 * 
+	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean processRequestAndDetach()
+	{
+		boolean result;
+		try
+		{
+			result = processRequest();
+		}
+		finally
+		{
+			detach();
+		}
+		return result;
+	}
+
+	/**
 	 * Processes the request.
 	 * 
 	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
@@ -230,16 +250,16 @@ public class RequestCycle implements IRequestCycle, IEventSink
 				"No suitable handler found for URL {}, falling back to container to process this request",
 				request.getUrl());
 		}
-		catch (Exception e)
+		catch (Exception exception)
 		{
-			IRequestHandler handler = handleException(e);
+			IRequestHandler handler = handleException(exception);
 			if (handler != null)
 			{
-				executeExceptionRequestHandler(e, handler, getExceptionRetryCount());
+				executeExceptionRequestHandler(exception, handler, getExceptionRetryCount());
 			}
 			else
 			{
-				log.error("Error during request processing. URL=" + request.getUrl(), e);
+				log.error("Error during request processing. URL=" + request.getUrl(), exception);
 			}
 			return true;
 		}
@@ -288,27 +308,6 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * Convenience method that processes the request and detaches the {@link RequestCycle}.
-	 * 
-	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
-	 *         otherwise.
-	 */
-	public boolean processRequestAndDetach()
-	{
-		boolean result;
-		try
-		{
-			result = processRequest();
-		}
-		finally
-		{
-			detach();
-		}
-		return result;
-	}
-
-
-	/**
 	 * 
 	 * @param exception
 	 * @param handler
@@ -335,7 +334,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 					return;
 				}
 			}
-			log.error("Error during processing error message", e);
+			log.error("Error during executing exception request handler", e);
 		}
 	}
 
