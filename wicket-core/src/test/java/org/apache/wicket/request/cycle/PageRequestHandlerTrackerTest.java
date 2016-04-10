@@ -38,8 +38,20 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 	public void trackPages()
 	{
 		tester.getApplication().getRequestCycleListeners().add(new PageRequestHandlerTracker());
-		tester.startPage(new PageA());
+		tester.getApplication().getRequestCycleListeners().add(new AbstractRequestCycleListener()
+		{
+			@Override
+			public void onDetach(RequestCycle cycle)
+			{
+				IPageRequestHandler firstHandler = PageRequestHandlerTracker.getFirstHandler(cycle);
+				assertEquals(PageA.class, firstHandler.getPageClass());
 
+				IPageRequestHandler lastHandler = PageRequestHandlerTracker.getLastHandler(cycle);
+				assertEquals(PageB.class, lastHandler.getPageClass());
+			}
+		});
+
+		tester.startPage(new PageA());
 	}
 
 	/**
@@ -47,10 +59,17 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 	 */
 	private static class PageA extends WebPage implements IMarkupResourceStreamProvider
 	{
-		@Override
-		protected void onBeforeRender()
+		public PageA()
 		{
-			super.onBeforeRender();
+			// make stateful so it is rendered in first requestCycle (without redirect) 
+			setStatelessHint(false);
+		}
+
+		@Override
+		protected void onConfigure()
+		{
+			super.onConfigure();
+
 			setResponsePage(new PageB());
 		}
 
@@ -66,20 +85,6 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 	 */
 	private static class PageB extends WebPage implements IMarkupResourceStreamProvider
 	{
-		@Override
-		protected void onAfterRender()
-		{
-			super.onAfterRender();
-
-			RequestCycle cycle = getRequestCycle();
-
-			IPageRequestHandler firstHandler = PageRequestHandlerTracker.getFirstHandler(cycle);
-			assertEquals(PageA.class, firstHandler.getPageClass());
-
-			IPageRequestHandler lastHandler = PageRequestHandlerTracker.getLastHandler(cycle);
-			assertEquals(PageB.class, lastHandler.getPageClass());
-		}
-
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
 		{
