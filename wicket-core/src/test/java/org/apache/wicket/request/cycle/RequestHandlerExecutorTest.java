@@ -19,14 +19,14 @@ package org.apache.wicket.request.cycle;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.request.RequestHandlerStack;
+import org.apache.wicket.request.RequestHandlerExecutor;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.UrlRenderer;
 
 /**
  * @author Jeremy Thomerson
  */
-public abstract class BaseRequestHandlerStackTest
+public abstract class RequestHandlerExecutorTest
 {
 	protected Response newResponse()
 	{
@@ -108,9 +108,9 @@ public abstract class BaseRequestHandlerStackTest
 
 	}
 
-	protected RequestHandlerStack newStack(final IRequestCycle requestCycle)
+	protected RequestHandlerExecutor newStack(final IRequestCycle requestCycle)
 	{
-		return new RequestHandlerStack()
+		return new RequestHandlerExecutor()
 		{
 			@Override
 			protected void respond(IRequestHandler handler)

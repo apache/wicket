@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.apache.wicket.authorization.AuthorizationException;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
+import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.util.lang.Classes;

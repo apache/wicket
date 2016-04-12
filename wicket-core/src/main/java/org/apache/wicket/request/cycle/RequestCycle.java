@@ -35,11 +35,11 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.request.RequestHandlerStack;
+import org.apache.wicket.request.RequestHandlerExecutor;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
-import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
+import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
@@ -117,7 +117,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	/** the time that this request cycle object was created. */
 	private final long startTime;
 
-	private final RequestHandlerStack requestHandlerExecutor;
+	private final RequestHandlerExecutor requestHandlerExecutor;
 
 	private Response activeResponse;
 
@@ -835,7 +835,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * @see RequestHandlerStack#getActive()
+	 * @see RequestHandlerExecutor#getActive()
 	 * @return active handler on executor
 	 */
 	public IRequestHandler getActiveRequestHandler()
@@ -844,7 +844,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * @see RequestHandlerStack#next()
+	 * @see RequestHandlerExecutor#next()
 	 * @return the handler scheduled to be executed after current by the executor
 	 */
 	public IRequestHandler getRequestHandlerScheduledAfterCurrent()
@@ -853,7 +853,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * @see RequestHandlerStack#replaceAll(IRequestHandler)
+	 * @see RequestHandlerExecutor#replaceAll(IRequestHandler)
 	 * @param handler
 	 */
 	public void replaceAllRequestHandlers(final IRequestHandler handler)
@@ -890,11 +890,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * Adapts {@link RequestHandlerStack} to this {@link RequestCycle}
+	 * Adapts {@link RequestHandlerExecutor} to this {@link RequestCycle}
 	 * 
 	 * @author Igor Vaynberg
 	 */
-	private class HandlerExecutor extends RequestHandlerStack
+	private class HandlerExecutor extends RequestHandlerExecutor
 	{
 
 		@Override

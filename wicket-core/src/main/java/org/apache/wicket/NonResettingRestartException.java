@@ -22,7 +22,7 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.RequestHandlerStack;
+import org.apache.wicket.request.RequestHandlerExecutor;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
@@ -35,7 +35,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  *
  * @see RestartResponseException
  */
-public class NonResettingRestartException extends RequestHandlerStack.ReplaceHandlerException
+public class NonResettingRestartException extends RequestHandlerExecutor.ReplaceHandlerException
 {
 	private static final long serialVersionUID = 1L;
 

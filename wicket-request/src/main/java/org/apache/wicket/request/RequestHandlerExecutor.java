@@ -25,14 +25,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Manages stack of executions of {@link IRequestHandler}s.
+ * Manages executions of {@link IRequestHandler}s.
  * 
  * @author Matej Knopp
  * @author igor.vaynberg
  */
-public abstract class RequestHandlerStack
+public abstract class RequestHandlerExecutor
 {
-	private static final Logger log = LoggerFactory.getLogger(RequestHandlerStack.class);
+	private static final Logger log = LoggerFactory.getLogger(RequestHandlerExecutor.class);
 
 	private IRequestHandler active;
 

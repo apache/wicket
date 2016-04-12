@@ -28,7 +28,7 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.request.RequestHandlerStack.ReplaceHandlerException;
+import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.DummyApplication;
@@ -39,7 +39,7 @@ import org.junit.Test;
 /**
  * @author Jeremy Thomerson
  */
-public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
+public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 {
 	private IRequestHandler handler;
 
