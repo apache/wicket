@@ -136,12 +136,16 @@ public class SpringBeanWithGenericsTest extends Assert
 	@Test
 	public void listField() throws Exception
 	{
-		AnnotatedListField page = 
+		AnnotatedListField page =
 			tester.startPage(new AnnotatedListField());
 
-		assertNotNull(page.getStringsList());
-		assertEquals(3, page.getStringsList().size());
-
+		List<String> stringsList = page.getStringsList();
+		assertNotNull(stringsList);
+		assertEquals(3, stringsList.size());
+		assertThat(stringsList.get(0), is(equalTo("foo")));
+		assertThat(stringsList.get(1), is(equalTo("bar")));
+		assertThat(stringsList.get(2), is(equalTo("baz")));
+		
 		ArrayList<String> arrayListStrings = page.getArrayListStrings();
 		assertThat(arrayListStrings, is(notNullValue()));
 		assertThat(arrayListStrings.size(), is(3));
@@ -289,7 +293,7 @@ public class SpringBeanWithGenericsTest extends Assert
 		}
 
 		@Bean
-		public List<String> strings()
+		public List<String> stringsList()
 		{
 			return Arrays.asList("foo", "bar", "baz");
 		}

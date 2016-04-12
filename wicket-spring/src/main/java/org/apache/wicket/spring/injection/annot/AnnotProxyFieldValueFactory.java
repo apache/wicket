@@ -17,6 +17,7 @@
 package org.apache.wicket.spring.injection.annot;
 
 import java.lang.reflect.Field;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -81,7 +82,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 	private final ConcurrentMap<SpringBeanLocator, Object> cache = Generics.newConcurrentHashMap();
 
-	private final ConcurrentMap<Class<?>, String> beanNameCache = Generics.newConcurrentHashMap();
+	private final ConcurrentMap<SimpleEntry<Class<?>, Class<?>>, 
+								String> beanNameCache = Generics.newConcurrentHashMap();
 
 	private final boolean wrapInProxies;
 
@@ -188,15 +190,19 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		if (Strings.isEmpty(name))
 		{
 			Class<?> fieldType = field.getType();
+			SimpleEntry<Class<?>, Class<?>> keyPair =
+				new SimpleEntry<Class<?>, Class<?>>(fieldType, generic);
 
 			name = beanNameCache.get(fieldType);
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, generic);
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, 
+					generic, field.getName());
 
 				if (name != null)
 				{
-					String tmpName = beanNameCache.putIfAbsent(fieldType, name);
+					
+					String tmpName = beanNameCache.putIfAbsent(keyPair, name);
 					if (tmpName != null)
 					{
 						name = tmpName;
@@ -216,11 +222,12 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 	 *            spring application context
 	 * @param clazz
 	 *            bean class
+	 * @param fieldName 
 	 * @throws IllegalStateException
 	 * @return spring name of the bean
 	 */
 	private String getBeanNameOfClass(final ApplicationContext ctx, final Class<?> clazz,
-		final Class<?> generic)
+		final Class<?> generic, String fieldName)
 	{
 		// get the list of all possible matching beans
 		List<String> names = new ArrayList<>(
@@ -265,6 +272,14 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				{
 					return primaries.get(0);
 				}
+			}
+			
+			//use field name to find a match
+			int nameIndex = names.indexOf(fieldName);
+			
+			if (nameIndex > -1)
+			{
+				return names.get(nameIndex);
 			}
 			
 			if (generic != null)
