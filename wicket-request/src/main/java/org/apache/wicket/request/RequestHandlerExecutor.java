@@ -184,7 +184,7 @@ public abstract class RequestHandlerExecutor
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final boolean removeAll;
+		private final boolean removeScheduled;
 
 		private final IRequestHandler replacementRequestHandler;
 
@@ -192,21 +192,29 @@ public abstract class RequestHandlerExecutor
 		 * Construct.
 		 * 
 		 * @param replacementRequestHandler
-		 * @param removeAll
+		 * @param removeScheduled should a possibly scheduled handler be removed
 		 */
 		public ReplaceHandlerException(final IRequestHandler replacementRequestHandler,
-			final boolean removeAll)
+			final boolean removeScheduled)
 		{
 			this.replacementRequestHandler = replacementRequestHandler;
-			this.removeAll = removeAll;
+			this.removeScheduled = removeScheduled;
 		}
 		
 		/**
-		 * Should any scheduled handler be removed before replacing the handler
+		 * @deprecated use {@link #getRemoveScheduledl()} instead
 		 */
 		public boolean isRemoveAll()
 		{
-			return removeAll;
+			return removeScheduled;
+		}
+
+		/**
+		 * Should a scheduled handler be removed before replacing the handler
+		 */
+		public boolean getRemoveScheduledl()
+		{
+			return removeScheduled;
 		}
 
 		/**

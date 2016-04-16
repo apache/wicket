@@ -95,9 +95,8 @@ public class NonResettingRestartException extends RequestHandlerExecutor.Replace
 	 *
 	 * @param handler
 	 *      the IRequestHandler to use
-	 * @param removeAll
-	 *      a flag indicating whether to ignore all already scheduled IRequestHandlers before throwing
-	 *      this exception
+	 * @param removeScheduled
+	 *      a flag indicating whether to remove already a scheduled IRequestHandler
 	 */
 	public NonResettingRestartException(final IRequestHandler handler, boolean removeAll)
 	{
