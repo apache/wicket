@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.request;
 
-/**
- * TODO javadoc
- */
 public interface IRequestCycle
 {
 	/**
