@@ -23,14 +23,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("javadoc")
 public class StringsTest
 {
-	private static final Logger log = LoggerFactory.getLogger(StringsTest.class);
-
 	@Test
 	public void stripJSessionId()
 	{
@@ -444,26 +440,5 @@ public class StringsTest
 
 		// empty separator
 		assertEquals("foobarbaz", Strings.join("", fragments));
-	}
-
-	/**
-	 * Converts an array of strings to a String. ["a", "b"] becomes: "[a,b]"
-	 * 
-	 * @param arrayOfStrings
-	 *            the array to convert
-	 * @return the array as a string.
-	 */
-	private String stringValue(final String[] arrayOfStrings)
-	{
-		AppendingStringBuffer sb = new AppendingStringBuffer("[");
-		String komma = "";
-		for (String str : arrayOfStrings)
-		{
-			sb.append(komma);
-			sb.append(str);
-			komma = ",";
-		}
-		sb.append("]");
-		return sb.toString();
 	}
 }
