@@ -115,7 +115,7 @@ public abstract class WebRequest extends Request
 	public boolean isAjax()
 	{
 		return Strings.isTrue(getHeader(HEADER_AJAX)) ||
-			Strings.isTrue(getRequestParameters().getParameterValue(PARAM_AJAX).toString());
+			Strings.isTrue(getQueryParameters().getParameterValue(PARAM_AJAX).toString());
 	}
 
 	/**
