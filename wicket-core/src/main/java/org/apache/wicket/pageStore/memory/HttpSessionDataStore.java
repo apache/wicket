@@ -27,15 +27,15 @@ import org.slf4j.LoggerFactory;
 /**
  * A {@link IDataStore} which stores the pages in the {@link HttpSession}. Uses
  * {@link IDataStoreEvictionStrategy} to keep the memory footprint reasonable.
- * 
+ *
  * <p>
  * Usage:
- * 
+ *
  * <pre>
  * <!--@formatter:off-->
  * MyApp#init()
  * {
- * 
+ *
  * 	setPageManagerProvider(new DefaultPageManagerProvider(this)
  * 	{
  * 		protected IDataStore newDataStore() 
@@ -79,7 +79,7 @@ public class HttpSessionDataStore implements IDataStore
 	@Override
 	public byte[] getData(String sessionId, int pageId)
 	{
-		PageTable pageTable = getPageTable(false);
+		PageTable pageTable = getPageTable(false, false);
 		byte[] pageAsBytes = null;
 		if (pageTable != null)
 		{
@@ -100,7 +100,7 @@ public class HttpSessionDataStore implements IDataStore
 	@Override
 	public void removeData(String sessionId, int pageId)
 	{
-		PageTable pageTable = getPageTable(false);
+		PageTable pageTable = getPageTable(false, true);
 		if (pageTable != null)
 		{
 			byte[] bytes = pageTable.removePage(pageId);
@@ -115,7 +115,7 @@ public class HttpSessionDataStore implements IDataStore
 	@Override
 	public void removeData(String sessionId)
 	{
-		PageTable pageTable = getPageTable(false);
+		PageTable pageTable = getPageTable(false, true);
 		if (pageTable != null)
 		{
 			pageTable.clear();
@@ -126,7 +126,7 @@ public class HttpSessionDataStore implements IDataStore
 	@Override
 	public void storeData(String sessionId, int pageId, byte[] pageAsBytes)
 	{
-		PageTable pageTable = getPageTable(true);
+		PageTable pageTable = getPageTable(true, true);
 		if (pageTable != null)
 		{
 			pageTable.storePage(pageId, pageAsBytes);
@@ -158,7 +158,7 @@ public class HttpSessionDataStore implements IDataStore
 		return true;
 	}
 
-	private PageTable getPageTable(boolean create)
+	private PageTable getPageTable(boolean create, boolean rewriteToSession)
 	{
 		PageTable pageTable = null;
 		if (Session.exists())
@@ -167,6 +167,8 @@ public class HttpSessionDataStore implements IDataStore
 			if (pageTable == null && create)
 			{
 				pageTable = new PageTable();
+				pageManagerContext.setSessionAttribute(PAGE_TABLE_KEY, pageTable);
+			} else if (rewriteToSession) {
 				pageManagerContext.setSessionAttribute(PAGE_TABLE_KEY, pageTable);
 			}
 		}
