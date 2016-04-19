@@ -548,7 +548,7 @@ public abstract class WebApplication extends Application
 	 * {@link #newWebRequest(HttpServletRequest, String)}
 	 * 
 	 * @param servletRequest
-	 *            the current HTTP Sservlet request
+	 *            the current HTTP Servlet request
 	 * @param filterPath
 	 *            the filter mapping read from web.xml
 	 * @return a WebRequest object
