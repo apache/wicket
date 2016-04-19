@@ -70,7 +70,7 @@ public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 	@Override
 	public void onBeforeRespond(final Map<String, Component> map, final AjaxRequestTarget target)
 	{
-		final List<String> keysToRemove = new ArrayList<String>();
+		final List<String> keysToRemove = new ArrayList<>();
 
 		target.getPage().visitChildren(InlineEnclosure.class, new IVisitor<InlineEnclosure, Void>()
 		{
