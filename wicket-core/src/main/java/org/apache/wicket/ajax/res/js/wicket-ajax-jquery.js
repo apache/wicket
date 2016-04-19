@@ -704,6 +704,7 @@
 					if (attrs.wr) {
 						self.processAjaxResponse(data, textStatus, jqXHR, context);
 					} else {
+						self.handleRedirection(jqXHR, context);
 						self._executeHandlers(attrs.sh, attrs, jqXHR, data, textStatus);
 						we.publish(topic.AJAX_CALL_SUCCESS, attrs, jqXHR, data, textStatus);
 					}
@@ -754,6 +755,68 @@
 		},
 
 		/**
+		 * Method checks for 'Ajax-Location' header, if available, handles redirection to that URL.
+		 * 
+		 * @param jqXHR {Object} - the jQuery wrapper around XMLHttpRequest
+		 * @param context {Object} - the request context with the Ajax request attributes and the FunctionExecuter's steps
+		 * 
+		 * @return boolean - returns 'true' if 'Ajax-Location' header is found redirection is handled, 'false' otherwise.
+		 */
+		handleRedirection : function (jqXHR, context) {
+
+			// first try to get the redirect header
+			var redirectUrl;
+			try {
+				redirectUrl = jqXHR.getResponseHeader('Ajax-Location');
+			} catch (ignore) { // might happen in older mozilla
+			}
+
+			// the redirect header was not set, just return
+			if (typeof(redirectUrl) === "undefined" || redirectUrl === null || redirectUrl === "") {
+				return false;
+			}
+
+			// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
+			// A file download popup will appear but the page in the browser won't change.
+			this.success(context);
+
+			var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
+			    rhttps = /^https:\/\//; // checks whether the string starts with https://
+
+			// support/check for non-relative redirectUrl like as provided and needed in a portlet context
+			if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
+				context.isRedirecting = true;
+				Wicket.Ajax.redirect(redirectUrl);
+			}
+			else {
+				var urlDepth = 0;
+				while (redirectUrl.substring(0, 3) === "../") {
+					urlDepth++;
+					redirectUrl = redirectUrl.substring(3);
+				}
+				// Make this a string.
+				var calculatedRedirect = window.location.pathname;
+				while (urlDepth > -1) {
+					urlDepth--;
+					var i = calculatedRedirect.lastIndexOf("/");
+					if (i > -1) {
+						calculatedRedirect = calculatedRedirect.substring(0, i);
+					}
+				}
+				calculatedRedirect += "/" + redirectUrl;
+
+				if (Wicket.Browser.isGecko()) {
+					// firefox 3 has problem with window.location setting relative url
+					calculatedRedirect = window.location.protocol + "//" + window.location.host + calculatedRedirect;
+				}
+
+				context.isRedirecting = true;
+				Wicket.Ajax.redirect(calculatedRedirect);
+			}
+			return context.isRedirecting;
+		},
+
+		/**
 		 * Method that processes the <ajax-response> in the context of an XMLHttpRequest.
 		 *
 		 * @param data {XmlDocument} - the <ajax-response> XML document
@@ -765,65 +828,19 @@
 
 			if (jqXHR.readyState === 4) {
 
-				// first try to get the redirect header
-				var redirectUrl;
-				try {
-					redirectUrl = jqXHR.getResponseHeader('Ajax-Location');
-				} catch (ignore) { // might happen in older mozilla
+				if (this.handleRedirection(jqXHR, context)) {
+					return; // 'Ajax-Location' header is set - redirected to it
 				}
 
-				// the redirect header was set, go to new url
-				if (typeof(redirectUrl) !== "undefined" && redirectUrl !== null && redirectUrl !== "") {
-
-					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
-					// A file download popup will appear but the page in the browser won't change.
-					this.success(context);
-
-					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
-					    rhttps = /^https:\/\//; // checks whether the string starts with https://
-
-					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
-					if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
-						context.isRedirecting = true;
-						Wicket.Ajax.redirect(redirectUrl);
-					}
-					else {
-						var urlDepth = 0;
-						while (redirectUrl.substring(0, 3) === "../") {
-							urlDepth++;
-							redirectUrl = redirectUrl.substring(3);
-						}
-						// Make this a string.
-						var calculatedRedirect = window.location.pathname;
-						while (urlDepth > -1) {
-							urlDepth--;
-							var i = calculatedRedirect.lastIndexOf("/");
-							if (i > -1) {
-								calculatedRedirect = calculatedRedirect.substring(0, i);
-							}
-						}
-						calculatedRedirect += "/" + redirectUrl;
-
-						if (Wicket.Browser.isGecko()) {
-							// firefox 3 has problem with window.location setting relative url
-							calculatedRedirect = window.location.protocol + "//" + window.location.host + calculatedRedirect;
-						}
-
-						context.isRedirecting = true;
-						Wicket.Ajax.redirect(calculatedRedirect);
-					}
+				// no redirect, just regular response
+				if (Wicket.Log.enabled()) {
+					var responseAsText = jqXHR.responseText;
+					Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
+					Wicket.Log.info("\n" + responseAsText);
 				}
-				else {
-					// no redirect, just regular response
-					if (Wicket.Log.enabled()) {
-						var responseAsText = jqXHR.responseText;
-						Wicket.Log.info("Received ajax response (" + responseAsText.length + " characters)");
-						Wicket.Log.info("\n" + responseAsText);
-					}
 
-					// invoke the loaded callback with an xml document
-					return this.loadedCallback(data, context);
-				}
+				// invoke the loaded callback with an xml document
+				return this.loadedCallback(data, context);
 			}
 		},
 
