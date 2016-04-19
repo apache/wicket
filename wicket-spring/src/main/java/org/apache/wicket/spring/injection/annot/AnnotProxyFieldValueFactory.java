@@ -293,7 +293,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			msg.append("] found, you have to specify the name of the bean ");
 			msg.append("(@SpringBean(name=\"foo\")) or (@Named(\"foo\") if using @javax.inject classes) in order to resolve this conflict. ");
 			msg.append("Matched beans: ");
-			msg.append(Strings.join(",", names.toArray(new String[names.size()])));
+			msg.append(Strings.join(",", names));
 			throw new IllegalStateException(msg.toString());
 		}
 		else if(!names.isEmpty())
