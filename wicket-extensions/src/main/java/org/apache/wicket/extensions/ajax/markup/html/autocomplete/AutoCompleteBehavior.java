@@ -114,11 +114,6 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 				}
 				renderer.renderFooter(r, count);
 			}
-
-			@Override
-			public void detach(final IRequestCycle requestCycle)
-			{
-			}
 		};
 
 		requestCycle.scheduleRequestHandlerAfterCurrent(target);

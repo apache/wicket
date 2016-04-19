@@ -62,17 +62,6 @@ public class WebExternalResourceRequestHandler extends ResourceStreamRequestHand
 		return uri;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
-	 */
-	@Override
-	public void detach(IRequestCycle requestCycle)
-	{
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -84,9 +73,6 @@ public class WebExternalResourceRequestHandler extends ResourceStreamRequestHand
 		return false;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
@@ -95,9 +81,6 @@ public class WebExternalResourceRequestHandler extends ResourceStreamRequestHand
 		return 17 * result;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

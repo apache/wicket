@@ -271,20 +271,7 @@ public class RequestCycleListenerTest extends BaseRequestHandlerStackTest
 		@Override
 		public IRequestHandler onException(final RequestCycle cycle, Exception ex)
 		{
-			return new IRequestHandler()
-			{
-				@Override
-				public void respond(IRequestCycle requestCycle)
-				{
-					errorCode = code;
-				}
-
-				@Override
-				public void detach(IRequestCycle requestCycle)
-				{
-				}
-
-			};
+			return requestCycle -> errorCode = code;
 		}
 	}
 

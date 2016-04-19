@@ -341,11 +341,5 @@ public class HttpsMapper implements IRequestMapperDelegate
 			WebResponse response = (WebResponse)requestCycle.getResponse();
 			response.sendRedirect(location);
 		}
-
-		@Override
-		public void detach(IRequestCycle requestCycle)
-		{
-		}
-
 	}
 }

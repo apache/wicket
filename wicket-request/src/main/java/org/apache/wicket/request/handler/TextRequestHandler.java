@@ -120,12 +120,6 @@ public class TextRequestHandler implements IRequestHandler
 		return encoding;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void detach(final IRequestCycle requestCycle)
-	{
-	}
-
 	/**
 	 * Gets the string property.
 	 * 
