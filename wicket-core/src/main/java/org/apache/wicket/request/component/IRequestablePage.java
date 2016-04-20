@@ -43,10 +43,10 @@ public interface IRequestablePage extends IRequestableComponent, IManageablePage
 
 	/**
 	 * Returns the number of times this page has been rendered. The number will be appended to
-	 * listener interface links in order to prevent invoking listeners from staled page version.
+	 * request listener links in order to prevent invoking listeners from staled page version.
 	 * <p>
 	 * For example a same page might have been rendered in two separate tabs. Page render doesn't
-	 * change page id but it can modify component hierarchy. Listener interface links on such page
+	 * change page id but it can modify component hierarchy. Request listeners on such page
 	 * should only work in tab where the page was rendered most recently.
 	 * 
 	 * @return render count

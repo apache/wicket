@@ -19,6 +19,7 @@ package org.apache.wicket.core.request.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -282,12 +283,12 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	}
 
 	/**
-	 * Creates a {@code IRequestHandler} that processes a listener request.
+	 * Creates a {@code IRequestHandler} that notifies an {@link IRequestListener}.
 	 * 
 	 * @param pageComponentInfo
 	 * @param pageClass
 	 * @param pageParameters
-	 * @return a {@code IRequestHandler} that invokes the listener interface
+	 * @return a {@code IRequestHandler} that notifies an {@link IRequestListener}.
 	 */
 	protected IRequestHandler processListener(PageComponentInfo pageComponentInfo,
 		Class<? extends IRequestablePage> pageClass, PageParameters pageParameters)
@@ -338,7 +339,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			}
 			else if (info.getComponentInfo() != null)
 			{
-				// with both page instance and component+listener this is a listener interface URL
+				// with both page instance and component this is a request listener URL
 				return processListener(info, pageClass, pageParameters);
 			}
 			else if (info.getPageInfo().getPageId() == null)
@@ -428,7 +429,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		}
 		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
 		{
-			// listener interface URL with page class information
+			// request listener URL with page class information
 			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
 			Class<? extends IRequestablePage> pageClass = handler.getPageClass();
 

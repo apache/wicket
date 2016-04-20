@@ -20,10 +20,10 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Encodes listener interface and component path in form of
- * &lt;listenerInterface&gt-&lt;componentPath&gt;,
- * &lt;listenerInterface&gt.&lt;behaviorIndex&gt;-&lt;componentPath&gt; or
- * &lt;render-count&gt;.&lt;listenerInterface&gt.&lt;behaviorIndex&gt;-&lt;componentPath&gt;
+ * Encodes listener and component path in form of
+ * {@code <listener>-<componentPath>},
+ * {@code <listener>.<behaviorIndex>-<componentPath>} or
+ * {@code <render-count>.<listener>.<behaviorIndex>-<componentPath>}
  * <p>
  * Component path is escaped (':' characters are replaced by '~')
  * 
@@ -116,7 +116,6 @@ public class ComponentInfo
 	 * Construct.
 	 * 
 	 * @param renderCount
-	 * @param listenerInterface
 	 * @param componentPath
 	 * @param behaviorId
 	 */
@@ -222,13 +221,13 @@ public class ComponentInfo
 		}
 		else
 		{
-			String listenerInterface = string.substring(0, i);
+			String listener = string.substring(0, i);
 			String componentPath = decodeComponentPath(string.substring(i + 1));
 
 			Integer behaviorIndex = null;
 			Integer renderCount = null;
 
-			String listenerParts[] = Strings.split(listenerInterface, BEHAVIOR_INDEX_SEPARATOR);
+			String listenerParts[] = Strings.split(listener, BEHAVIOR_INDEX_SEPARATOR);
 			if (listenerParts.length == 0)
 			{
 				return new ComponentInfo(renderCount, componentPath, behaviorIndex);

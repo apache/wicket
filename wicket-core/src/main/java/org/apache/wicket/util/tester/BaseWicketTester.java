@@ -1072,10 +1072,9 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Simulates processing URL that invokes specified {@link RequestListenerInterface} on
-	 * component.
+	 * Simulates processing URL that invokes an {@link IRequestListener} on	a component.
 	 * 
-	 * After the listener interface is invoked the page containing the component will be rendered
+	 * After the listener is invoked the page containing the component will be rendered
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
 	 * 
 	 * @param component
@@ -1098,10 +1097,10 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Simulates invoking a listener on a component. As opposed to the
+	 * Simulates invoking an {@link IRequestListener} on a component. As opposed to the
 	 * {@link #executeListener(Component)} method, current request/response objects will be used
 	 * 
-	 * After the listener interface is invoked the page containing the component will be rendered
+	 * After the listener is invoked the page containing the component will be rendered
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
 	 * 
 	 * @param component

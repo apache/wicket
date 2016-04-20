@@ -18,6 +18,7 @@ package org.apache.wicket.settings;
 
 import java.util.List;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.lang.Generics;
 
@@ -45,8 +46,8 @@ public class PageSettings
 	private boolean recreateBookmarkablePagesAfterExpiry = true;
 
 	/**
-	 * determines whether component's listener interface can be executed
-	 * when its owner page is freshly created after expiration
+	 * determines whether an {@link IRequestListener} can be executed
+	 * when its owning page is freshly created after expiration
 	 */
 	private boolean callListenerInterfaceAfterExpiry = false;
 
@@ -129,8 +130,8 @@ public class PageSettings
 	}
 
 	/**
-	 * @return {@code true} if Wicket should execute the listener interface of a component
-	 *      which owner page is freshly created after expiration of the old one
+	 * @return {@code true} if Wicket should execute an {@link IRequestListener} on a component
+	 *      which owning page is freshly created after expiration of the old one
 	 * @see #getRecreateBookmarkablePagesAfterExpiry()
 	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerInterfaceAfterExpiry()
 	 */
@@ -140,7 +141,7 @@ public class PageSettings
 	}
 
 	/**
-	 * Sets a setting that determines whether Wicket should execute the listener interface of a component
+	 * Sets a setting that determines whether Wicket should execute the {@link IRequestListener} on a component
 	 * which owner page is freshly created after expiration of the old one
 	 *
 	 * @param callListenerInterfaceAfterExpiry

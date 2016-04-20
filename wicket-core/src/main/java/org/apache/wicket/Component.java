@@ -2066,7 +2066,7 @@ public abstract class Component
 	{
 		if ((isVisibleInHierarchy() && isEnabledInHierarchy()) == false && canCallListenerInterface() == false)
 		{
-			// the component is either invisible or disabled and it can't call listener interfaces
+			// the component is either invisible or disabled and it can't call listeners
 			// then pretend the component is stateless
 			return true;
 		}
@@ -4423,7 +4423,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Checks whether or not a listener method can be invoked on this component. Usually components
+	 * Checks whether or not an {@link IRequestListener} can be invoked on this component. Usually components
 	 * deny these invocations if they are either invisible or disabled in hierarchy.
 	 * <p>
 	 * WARNING: be careful when overriding this method because it may open security holes - such as

@@ -17,6 +17,7 @@
 package org.apache.wicket.request.component;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.model.IDetachable;
@@ -107,7 +108,7 @@ public interface IRequestableComponent
 	void detach();
 
 	/**
-	 * @return {@code true} if it is save to call the listener interface on this component
+	 * @return {@code true} if it is save to call an {@link IRequestListener} on this component
 	 *      when the owner page is freshly created after expiration
 	 */
 	boolean canCallListenerInterfaceAfterExpiry();

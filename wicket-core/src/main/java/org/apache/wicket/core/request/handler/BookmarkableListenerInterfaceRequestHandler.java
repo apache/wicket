@@ -24,7 +24,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Request handler for bookmarkable pages with listener interface. This handler is only used to
+ * Request handler for bookmarkable pages with an {@link IRequestListener}. This handler is only used to
  * generate URLs. Rendering is always handled by {@link ListenerInterfaceRequestHandler}.
  *
  * @author Matej Knopp
@@ -42,7 +42,6 @@ public class BookmarkableListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param listenerInterface
 	 * @param behaviorIndex
 	 */
 	public BookmarkableListenerInterfaceRequestHandler(
@@ -59,7 +58,6 @@ public class BookmarkableListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param listenerInterface
 	 */
 	public BookmarkableListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider)
 	{

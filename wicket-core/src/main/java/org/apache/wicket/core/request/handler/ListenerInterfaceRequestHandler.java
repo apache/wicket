@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Request handler that invokes the listener interface on component and renders page afterwards.
+ * Request handler that invokes an {@link IRequestListener} on component or behavior and renders page afterwards.
  *
  * @author Matej Knopp
  */
@@ -57,7 +57,6 @@ public class ListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param listenerInterface
 	 * @param behaviorIndex
 	 */
 	public ListenerInterfaceRequestHandler(IPageAndComponentProvider pageComponentProvider, Integer behaviorIndex)
@@ -72,7 +71,6 @@ public class ListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param listenerInterface
 	 */
 	public ListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider)
 	{
@@ -187,18 +185,18 @@ public class ListenerInterfaceRequestHandler
 
 		if (!canCallListenerInterfaceAfterExpiry && freshPage && (isStateless == false || component == null))
 		{
-			// A listener interface is invoked on an expired page.
+			// A request listener is invoked on an expired page.
 
-			// If the page is stateful then we cannot assume that the listener interface is
+			// If the page is stateful then we cannot assume that the listener is
 			// invoked on its initial state (right after page initialization) and that its
-			// component and/or behavior will be available. That's why the listener interface
+			// component and/or behavior will be available. That's why the listener
 			// should be ignored and the best we can do is to re-paint the newly constructed
 			// page.
 
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug(
-					"A ListenerInterface assigned to '{}' is executed on an expired stateful page. "
+					"An IRequestListener on '{}' is executed on an expired stateful page. "
 						+ "Scheduling re-create of the page and ignoring the listener interface...",
 					getComponentPath());
 			}

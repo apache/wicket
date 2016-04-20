@@ -202,7 +202,7 @@ public abstract class Behavior
 	}
 
 	/**
-	 * Checks whether or not a listener interface can be invoked on this behavior. For further
+	 * Checks whether or not an {@link IRequestListener} can be invoked on this behavior. For further
 	 * information please read the javadoc on {@link Component#canCallListenerInterface()},
 	 * this method has the same semantics.
 	 * 
