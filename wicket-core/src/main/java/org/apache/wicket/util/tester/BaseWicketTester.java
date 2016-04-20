@@ -322,19 +322,15 @@ public class BaseWicketTester
 
 		this.application = application;
 
-		// If it's provided from the container it's not necessary to set again.
-		if (init)
-		{
-			// FIXME some tests are leaking applications by not calling destroy on them or overriding
-			// teardown() without calling super, for now we work around by making each name unique
-			application.setName("WicketTesterApplication-" + UUID.randomUUID());
-		}
-
 		ThreadContext.setApplication(application);
 
-		// If it's provided from the container it's not necessary to set again and init.
 		if (init)
 		{
+			if (application.getName() == null)
+			{
+				application.setName("WicketTesterApplication-" + UUID.randomUUID());
+			}
+			
 			application.setServletContext(servletContext);
 			// initialize the application
 			application.initApplication();
