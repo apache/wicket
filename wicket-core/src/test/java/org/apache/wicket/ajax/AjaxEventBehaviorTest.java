@@ -90,26 +90,26 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 
 	@Test
 	public void cutLeadingOnPrefix() {
-		AjaxEventBehavior behavior = new EventNamesBehavior("onevent");
+		AjaxEventBehavior behavior = new EventNamesBehavior("event");
 		assertThat(behavior.getEvent(), is("event"));
 
 		behavior = new EventNamesBehavior("event");
 		assertThat(behavior.getEvent(), is("event"));
 
-		behavior = new EventNamesBehavior("onevent onevent2");
-		assertThat(behavior.getEvent(), is("event event2"));
-
-		behavior = new EventNamesBehavior("event onevent2");
+		behavior = new EventNamesBehavior("event event2");
 		assertThat(behavior.getEvent(), is("event event2"));
 
 		behavior = new EventNamesBehavior("event event2");
 		assertThat(behavior.getEvent(), is("event event2"));
 
-		behavior = new EventNamesBehavior("event  onevent2on");
+		behavior = new EventNamesBehavior("event event2");
+		assertThat(behavior.getEvent(), is("event event2"));
+
+		behavior = new EventNamesBehavior("event  event2on");
 		assertThat(behavior.getEvent(), is("event event2on"));
 
-		behavior = new EventNamesBehavior("  event   onevent2on    \t  onevent3on  onon ");
-		assertThat(behavior.getEvent(), is("event event2on event3on on"));
+		behavior = new EventNamesBehavior("  event   event2on    \t  event3on");
+		assertThat(behavior.getEvent(), is("event event2on event3on"));
 	}
 
 	private static class EventNamesBehavior extends AjaxEventBehavior
