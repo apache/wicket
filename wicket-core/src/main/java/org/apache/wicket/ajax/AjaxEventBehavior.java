@@ -80,6 +80,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		Args.notEmpty(event, "event");
 
+		onCheckEvent(event);
+
 		this.event = event;
 	}
 
@@ -104,6 +106,27 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		String evt = getEvent();
 		Checks.notEmpty(evt, "getEvent() should return non-empty event name(s)");
 		attributes.setEventNames(evt);
+	}
+
+	/**
+	 * 
+	 * @param event
+	 *      the event this behavior will be attached to
+	 * @deprecated Wicket 8 Remove this method for Wicket 8.0.0
+	 */
+	@Deprecated
+	protected void onCheckEvent(final String event)
+	{
+		if (event.startsWith("on"))
+		{
+			String shortName = event.substring(2);
+			throw new IllegalArgumentException(
+					String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+									"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
+									"names so the leading 'on' may break your application."
+							, event, shortName));
+		}
+
 	}
 
 	/**

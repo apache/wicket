@@ -93,6 +93,15 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 		AjaxEventBehavior behavior = new EventNamesBehavior("event");
 		assertThat(behavior.getEvent(), is("event"));
 
+		behavior = new EventNamesBehavior("event");
+		assertThat(behavior.getEvent(), is("event"));
+
+		behavior = new EventNamesBehavior("event event2");
+		assertThat(behavior.getEvent(), is("event event2"));
+
+		behavior = new EventNamesBehavior("event event2");
+		assertThat(behavior.getEvent(), is("event event2"));
+
 		behavior = new EventNamesBehavior("event event2");
 		assertThat(behavior.getEvent(), is("event event2"));
 
