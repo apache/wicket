@@ -358,14 +358,7 @@ public class BaseWicketTester
 		}
 
 		// create a new session when the old one is invalidated
-		application.getSessionStore().registerUnboundListener(new UnboundListener()
-		{
-			@Override
-			public void sessionUnbound(String sessionId)
-			{
-				newSession();
-			}
-		});
+		application.getSessionStore().registerUnboundListener(sessionId -> newSession());
 
 		// prepare session
 		setupNextRequestCycle();
@@ -398,9 +391,6 @@ public class BaseWicketTester
 		return lastRenderedPage;
 	}
 
-	/**
-	 *
-	 */
 	private void setupNextRequestCycle()
 	{
 		request = new MockHttpServletRequest(application, httpSession, servletContext, servletRequestLocale());
@@ -487,7 +477,7 @@ public class BaseWicketTester
 
 	/**
 	 * Cleans up feedback messages. This usually happens on detach, but is disabled in unit testing
-	 * so feedback mesasges can be examined.
+	 * so feedback messages can be examined.
 	 */
 	public void cleanupFeedbackMessages()
 	{
@@ -532,8 +522,6 @@ public class BaseWicketTester
 	 */
 	private ServletWebRequest newServletWebRequest()
 	{
-
-
 		return (ServletWebRequest)application.newWebRequest(request, request.getFilterPrefix());
 	}
 
@@ -851,9 +839,6 @@ public class BaseWicketTester
 		preHeader.put(key, value);
 	}
 
-	/**
-	 *
-	 */
 	private void recordRequestResponse()
 	{
 		lastRequest = request;
@@ -2745,16 +2730,13 @@ public class BaseWicketTester
 		processRequest();
 	}
 
-	/**
-	 *
-	 */
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
 	{
 		private final IPageRendererProvider delegate;
 
 		private Page lastPage;
 
-		public LastPageRecordingPageRendererProvider(IPageRendererProvider delegate)
+		private LastPageRecordingPageRendererProvider(IPageRendererProvider delegate)
 		{
 			this.delegate = delegate;
 		}
@@ -2791,14 +2773,11 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestExceptionMapper implements IExceptionMapper
 	{
 		private final IExceptionMapper delegate;
 
-		public TestExceptionMapper(IExceptionMapper delegate)
+		private TestExceptionMapper(IExceptionMapper delegate)
 		{
 			this.delegate = delegate;
 		}
@@ -2828,7 +2807,7 @@ public class BaseWicketTester
 	{
 		private final IRequestCycleProvider delegate;
 
-		public TestRequestCycleProvider(IRequestCycleProvider delegate)
+		private TestRequestCycleProvider(IRequestCycleProvider delegate)
 		{
 			this.delegate = delegate;
 		}
@@ -2847,7 +2826,7 @@ public class BaseWicketTester
 	{
 		private final IRequestMapper delegate;
 
-		public TestRequestMapper(IRequestMapper delegate)
+		private TestRequestMapper(IRequestMapper delegate)
 		{
 			this.delegate = delegate;
 		}
@@ -2895,14 +2874,11 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestFilterConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<String, String>();
 
-		public TestFilterConfig()
+		private TestFilterConfig()
 		{
 			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/servlet/*");
 		}
@@ -2932,17 +2908,14 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private static class WicketTesterServletWebResponse extends ServletWebResponse
 		implements
 			IMetaDataBufferingWebResponse
 	{
 		private List<Cookie> cookies = new ArrayList<Cookie>();
 
-		public WicketTesterServletWebResponse(ServletWebRequest request,
-			MockHttpServletResponse response)
+		private WicketTesterServletWebResponse(ServletWebRequest request,
+		                                       MockHttpServletResponse response)
 		{
 			super(request, response);
 		}
