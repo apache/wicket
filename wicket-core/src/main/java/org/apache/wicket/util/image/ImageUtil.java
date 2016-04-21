@@ -18,9 +18,9 @@ package org.apache.wicket.util.image;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.util.crypt.Base64;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -56,7 +56,7 @@ public class ImageUtil
 		try
 		{
 			byte[] bytes = IOUtils.toByteArray(inputStream);
-			String base64EncodedImage = Base64.encodeBase64String(bytes);
+			String base64EncodedImage = Base64.getEncoder().encodeToString(bytes);
 			return "data:" + resourceStream.getContentType() + ";base64," +
 				(removeWhitespaces ? base64EncodedImage.replaceAll("\\s", "") : base64EncodedImage);
 		}
