@@ -17,7 +17,10 @@
 package org.apache.wicket.protocol.ws.api;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
@@ -29,6 +32,7 @@ import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * A behavior that provides optional callbacks for the WebSocket
@@ -38,8 +42,22 @@ import org.apache.wicket.protocol.ws.api.message.TextMessage;
  */
 public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 {
-	public WebSocketBehavior()
+	private final static MetaDataKey<Object> IS_JAVA_SCRIPT_CONTRIBUTED = new MetaDataKey<Object>()
+	{};
+
+	@Override
+	public void renderHead(Component component, IHeaderResponse response)
 	{
+		RequestCycle cycle = component.getRequestCycle();
+		if (cycle.find(AjaxRequestTarget.class) == null)
+		{
+			Object contributed = cycle.getMetaData(IS_JAVA_SCRIPT_CONTRIBUTED);
+			if (contributed == null)
+			{
+				cycle.setMetaData(IS_JAVA_SCRIPT_CONTRIBUTED, new Object());
+				super.renderHead(component, response);
+			}
+		}
 	}
 
 	@Override
