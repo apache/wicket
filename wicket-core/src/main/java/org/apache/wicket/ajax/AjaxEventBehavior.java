@@ -27,8 +27,6 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -64,8 +62,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AjaxEventBehavior.class);
-
 	private static final long serialVersionUID = 1L;
 
 	private final String event;
