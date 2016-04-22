@@ -202,7 +202,7 @@ public abstract class RequestHandlerExecutor
 		}
 		
 		/**
-		 * @deprecated use {@link #getRemoveScheduledl()} instead
+		 * @deprecated use {@link #getRemoveScheduled()} instead
 		 */
 		public boolean isRemoveAll()
 		{
@@ -212,7 +212,7 @@ public abstract class RequestHandlerExecutor
 		/**
 		 * Should a scheduled handler be removed before replacing the handler
 		 */
-		public boolean getRemoveScheduledl()
+		public boolean getRemoveScheduled()
 		{
 			return removeScheduled;
 		}

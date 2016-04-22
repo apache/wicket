@@ -266,7 +266,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * Executes a request handler and fires pre/post listener methods
+	 * Execute a request handler and notify registered {@link IRequestCycleListener}s.
 	 * 
 	 * @param handler
 	 */
@@ -292,7 +292,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 					throw e;
 				}
 
-				if (replacer.isRemoveAll())
+				if (replacer.getRemoveScheduled())
 				{
 					requestHandlerExecutor.schedule(null);
 				}
@@ -327,13 +327,13 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		}
 		catch (Exception e)
 		{
-			if (retryCount <= 0)
+			if (retryCount > 0)
 			{
-				log.error("Exception retry count exceeded", e);
+				executeExceptionRequestHandler(exception, retryCount - 1);
 			}
 			else
 			{
-				executeExceptionRequestHandler(exception, retryCount - 1);
+				log.error("Exception retry count exceeded", e);
 			}
 		}
 	}
@@ -341,8 +341,11 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	/**
 	 * Return {@link IRequestHandler} for the given exception.
 	 * 
-	 * @param e
+	 * @param e exception to handle
 	 * @return RequestHandler instance
+	 *
+	 * @see IRequestCycleListener#onException(RequestCycle, Exception)
+	 * @see IExceptionMapper#map(Exception)
 	 */
 	protected IRequestHandler handleException(final Exception e)
 	{
