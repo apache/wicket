@@ -169,8 +169,47 @@ public interface IModel<T> extends IDetachable
 	 */
 	default <R> IModel<R> flatMap(WicketFunction<? super T, IModel<R>> mapper) 
     {
-        T object = IModel.this.getObject();
-		return mapper.apply(object);
+        return new IModel<R>() 
+        {
+
+            @Override
+            public R getObject() 
+            {
+                T object = IModel.this.getObject();
+                if (object != null)
+                {
+                    return mapper.apply(object).getObject();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            @Override
+            public void setObject(R object) 
+            {
+                T modelObject = IModel.this.getObject();
+                if (modelObject != null)
+                {
+                    mapper.apply(modelObject).setObject(object);
+                }
+            }
+
+            @Override
+            public void detach() 
+            {
+                T object = IModel.this.getObject();
+                if (object != null)
+                {
+                    IModel<R> model = mapper.apply(object);
+                    if (model != null)
+                    {
+                        model.detach();
+                    }
+                }
+            }
+        };
 	}
 
 	/**
