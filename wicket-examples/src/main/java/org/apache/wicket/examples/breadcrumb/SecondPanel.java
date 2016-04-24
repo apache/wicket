@@ -36,7 +36,7 @@ import org.apache.wicket.model.Model;
 public class SecondPanel extends BreadCrumbPanel
 {
 	/** Test form. */
-	private final class InputForm extends Form
+	private final class InputForm extends Form<InputForm>
 	{
 		/** test input string. */
 		private String input;
@@ -50,7 +50,7 @@ public class SecondPanel extends BreadCrumbPanel
 		public InputForm(String id)
 		{
 			super(id);
-			setDefaultModel(new CompoundPropertyModel(this));
+			setDefaultModel(new CompoundPropertyModel<>(this));
 			add(new TextField("input"));
 			add(new Button("normalButton"));
 
@@ -110,9 +110,6 @@ public class SecondPanel extends BreadCrumbPanel
 		add(new InputForm("form"));
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
-	 */
 	@Override
 	public IModel<String> getTitle()
 	{
