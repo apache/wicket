@@ -20,8 +20,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-import java.io.Serializable;
-
 import org.apache.wicket.lambda.WicketBiFunction;
 import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.model.lambda.Address;
@@ -145,5 +143,25 @@ public class IModelTest extends Assert
 		});
 
 		assertThat(applyModel.getObject().getNumber(), is(person.getAddress().getNumber() * 2));
+	}
+
+	@Test
+	public void orElse()
+	{
+		person.setName(null);
+		String defaultName = "Default name";
+		IModel<String> defaultNameModel = IModel.of(person).map(Person::getName).orElse(defaultName);
+
+		assertThat(defaultNameModel.getObject(), is(equalTo(defaultName)));
+	}
+
+	@Test
+	public void orElseGet()
+	{
+		person.setName(null);
+		String defaultName = "Default name";
+		IModel<String> defaultNameModel = IModel.of(person).map(Person::getName).orElseGet(() -> defaultName);
+
+		assertThat(defaultNameModel.getObject(), is(equalTo(defaultName)));
 	}
 }
