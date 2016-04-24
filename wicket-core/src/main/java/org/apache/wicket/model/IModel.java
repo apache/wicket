@@ -91,13 +91,17 @@ public interface IModel<T> extends IDetachable
 	 * @param predicate a predicate to be used for testing the contained object
 	 * @return a new IModel
 	 */
-	default IModel<T> filter(WicketFunction<? super T, Boolean> predicate) {
-		return (IModel<T>) () -> {
+	default IModel<T> filter(WicketFunction<? super T, Boolean> predicate) 
+    {
+		return (IModel<T>) () -> 
+        {
 			T object = IModel.this.getObject();
-			if (object != null && predicate.apply(object)) {
+			if (object != null && predicate.apply(object)) 
+            {
 				return object;
 			}
-			else {
+			else 
+            {
 				return null;
 			}
 		};
@@ -111,13 +115,17 @@ public interface IModel<T> extends IDetachable
 	 * @param mapper a mapper, to be applied to the contained object
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> map(WicketFunction<? super T, R> mapper) {
-		return (IModel<R>) () -> {
+	default <R> IModel<R> map(WicketFunction<? super T, R> mapper) 
+    {
+		return (IModel<R>) () -> 
+        {
 			T object = IModel.this.getObject();
-			if (object == null) {
+			if (object == null) 
+            {
 				return null;
 			}
-			else {
+			else 
+            {
 				return mapper.apply(object);
 			}
 		};
@@ -134,14 +142,18 @@ public interface IModel<T> extends IDetachable
 	 * @param other another model to be combined with this one
 	 * @return a new IModel
 	 */
-	default <R, U> IModel<R> mapWith(WicketBiFunction<? super T, ? super U, R> combine, IModel<U> other) {
-		return (IModel<R>) () -> {
+	default <R, U> IModel<R> mapWith(WicketBiFunction<? super T, ? super U, R> combine, IModel<U> other) 
+    {
+		return (IModel<R>) () -> 
+        {
 			T t = IModel.this.getObject();
 			U u = other.getObject();
-			if (t != null && u != null) {
+			if (t != null && u != null) 
+            {
 				return combine.apply(t, u);
 			}
-			else {
+			else 
+            {
 				return null;
 			}
 		};
@@ -155,8 +167,9 @@ public interface IModel<T> extends IDetachable
 	 * @param mapper a mapper, to be applied to the contained object
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> flatMap(WicketFunction<? super T, IModel<R>> mapper) {
-		T object = IModel.this.getObject();
+	default <R> IModel<R> flatMap(WicketFunction<? super T, IModel<R>> mapper) 
+    {
+        T object = IModel.this.getObject();
 		return mapper.apply(object);
 	}
 
@@ -169,14 +182,18 @@ public interface IModel<T> extends IDetachable
 	 * to the contained model object.
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> apply(IModel<WicketFunction<? super T, R>> mapper) {
-		return (IModel<R>) () -> {
+	default <R> IModel<R> apply(IModel<WicketFunction<? super T, R>> mapper) 
+    {
+		return (IModel<R>) () -> 
+        {
 			T object = IModel.this.getObject();
 			WicketFunction<? super T, R> f = mapper.getObject();
-			if (object == null || f == null) {
+			if (object == null || f == null) 
+            {
 				return null;
 			}
-			else {
+			else 
+            {
 				return f.apply(object);
 			}
 		};
@@ -190,13 +207,17 @@ public interface IModel<T> extends IDetachable
 	 * @param other a default value
 	 * @return a new IModel
 	 */
-	default IModel<T> orElse(T other) {
-		return (IModel<T>) () -> {
+	default IModel<T> orElse(T other) 
+    {
+		return (IModel<T>) () -> 
+        {
 			T object = IModel.this.getObject();
-			if (object == null) {
+			if (object == null) 
+            {
 				return other;
 			}
-			else {
+			else 
+            {
 				return object;
 			}
 		};
@@ -210,12 +231,15 @@ public interface IModel<T> extends IDetachable
 	 * @return a new IModel
 	 */
 	default IModel<T> orElseGet(WicketSupplier<? extends T> other) {
-		return (IModel<T>) () -> {
+		return (IModel<T>) () -> 
+        {
 			T object = IModel.this.getObject();
-			if (object == null) {
+			if (object == null) 
+            {
 				return other.get();
 			}
-			else {
+			else 
+            {
 				return object;
 			}
 		};
@@ -229,7 +253,8 @@ public interface IModel<T> extends IDetachable
 	 * @param object an object to be lifted into a IModel
 	 * @return a new IModel
 	 */
-	static <T> IModel<T> of(T object) {
+	static <T> IModel<T> of(T object) 
+    {
 		return of((WicketSupplier<T>) () -> object);
 	}
 
@@ -241,7 +266,8 @@ public interface IModel<T> extends IDetachable
 	 * @param supplier a supplier, to be used to get a value
 	 * @return a new IModel
 	 */
-	static <T> IModel<T> of(WicketSupplier<T> supplier) {
+	static <T> IModel<T> of(WicketSupplier<T> supplier) 
+    {
 		return (IModel<T>) () -> supplier.get();
 	}
 
@@ -253,7 +279,8 @@ public interface IModel<T> extends IDetachable
 	 * @param model a model,
 	 * @return a new IModel
 	 */
-	static <T> IModel<T> of(IModel<T> model) {
+	static <T> IModel<T> of(IModel<T> model) 
+    {
 		return (IModel<T>) () -> model.getObject();
 	}
 }
