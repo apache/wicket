@@ -20,11 +20,14 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.io.Serializable;
+
 import org.apache.wicket.lambda.WicketBiFunction;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -111,5 +114,23 @@ public class IModelTest extends Assert
 						person1.getName() + " is in relationship with " + nth;
 		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
 		assertThat(relationShipModel.getObject(), is(nullValue()));
+	}
+
+	@Ignore
+	@Test
+	public void flatMap()
+	{
+		IModel<String> heirModel = IModel.of(person).flatMap(person1 -> new Model<String>() {
+			@Override
+			public String getObject()
+			{
+				return person1.getName() + " is my parent";
+			}
+		});
+		assertThat(heirModel.getObject(), is(equalTo("John is my parent")));
+
+		String newValue = "New Value";
+		heirModel.setObject(newValue);
+		assertThat(heirModel.getObject(), is(equalTo(newValue)));
 	}
 }
