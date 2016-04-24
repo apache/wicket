@@ -178,7 +178,6 @@ public interface IModel<T> extends IDetachable
 	{
 		return new IModel<R>()
 		{
-
 			@Override
 			public R getObject()
 			{
@@ -315,34 +314,7 @@ public interface IModel<T> extends IDetachable
 	 */
 	static <T> IModel<T> of(T object)
 	{
-		return of((WicketSupplier<T>)() -> object);
+		return () -> object;
 	}
 
-	/**
-	 * Returns a IModel applying the given supplier to get the object.
-	 *
-	 * @param <T>
-	 *            the type of the given object
-	 * @param supplier
-	 *            a supplier, to be used to get a value
-	 * @return a new IModel
-	 */
-	static <T> IModel<T> of(WicketSupplier<T> supplier)
-	{
-		return (IModel<T>)() -> supplier.get();
-	}
-
-	/**
-	 * Returns a IModel using the getObject() method of the given model.
-	 *
-	 * @param <T>
-	 *            the type of the contained object
-	 * @param model
-	 *            a model,
-	 * @return a new IModel
-	 */
-	static <T> IModel<T> of(IModel<T> model)
-	{
-		return (IModel<T>)() -> model.getObject();
-	}
 }
