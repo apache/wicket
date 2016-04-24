@@ -25,6 +25,8 @@ public class Person implements Serializable
 {
 	private String name;
 
+	private Address address;
+
 	public String getName()
 	{
 		return name;
@@ -34,4 +36,42 @@ public class Person implements Serializable
 	{
 		this.name = name;
 	}
+
+	public Address getAddress()
+	{
+		return address;
+	}
+
+	public void setAddress(Address address)
+	{
+		this.address = address;
+	}
+
+	public static class Address implements Serializable
+	{
+		private String street;
+
+		private int number;
+
+		public String getStreet()
+		{
+			return street;
+		}
+
+		public void setStreet(String street)
+		{
+			this.street = street;
+		}
+
+		public int getNumber()
+		{
+			return number;
+		}
+
+		public void setNumber(int number)
+		{
+			this.number = number;
+		}
+	}
+
 }

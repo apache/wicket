@@ -17,6 +17,10 @@
 package org.apache.wicket.model;
 
 
+import org.apache.wicket.lambda.WicketBiFunction;
+import org.apache.wicket.lambda.WicketFunction;
+import org.apache.wicket.lambda.WicketSupplier;
+
 /**
  * A IModel wraps the actual model Object used by a Component. IModel implementations are used as a
  * facade for the real model so that users have control over the actual persistence strategy. Note
@@ -78,4 +82,185 @@ public interface IModel<T> extends IDetachable
 
 	@Override
 	default void detach() {}
+
+	/**
+	 * Returns a IModel checking whether the predicate holds for the
+	 * contained object, if it is not null. If the predicate doesn't evaluate
+	 * to true, the contained object will be null.
+	 *
+	 * @param predicate a predicate to be used for testing the contained object
+	 * @return a new IModel
+	 */
+	default IModel<T> filter(WicketFunction<T, Boolean> predicate) {
+		return (IModel<T>) () -> {
+			T object = IModel.this.getObject();
+			if (object != null && predicate.apply(object)) {
+				return object;
+			}
+			else {
+				return null;
+			}
+		};
+	}
+
+	/**
+	 * Returns a IModel applying the given mapper to
+	 * the contained object, if it is not NULL.
+	 *
+	 * @param <R> the new type of the contained object
+	 * @param mapper a mapper, to be applied to the contained object
+	 * @return a new IModel
+	 */
+	default <R> IModel<R> map(WicketFunction<T, R> mapper) {
+		return (IModel<R>) () -> {
+			T object = IModel.this.getObject();
+			if (object == null) {
+				return null;
+			}
+			else {
+				return mapper.apply(object);
+			}
+		};
+	}
+
+	/**
+	 * Returns a IModel applying the given combining function to
+	 * the contained object of this and the given other model, if they are not null.
+	 *
+	 * @param <R> the resulting type
+	 * @param <U> the other models type
+	 * @param combine a function combining this and the others object to
+	 * a result.
+	 * @param other another model to be combined with this one
+	 * @return a new IModel
+	 */
+	default <R, U> IModel<R> mapWith(WicketBiFunction<T, U, R> combine, IModel<U> other) {
+		return (IModel<R>) () -> {
+			T t = IModel.this.getObject();
+			U u = other.getObject();
+			if (t != null && u != null) {
+				return combine.apply(t, u);
+			}
+			else {
+				return null;
+			}
+		};
+	}
+
+	/**
+	 * Returns a IModel applying the given mapper to the contained
+	 * object, if it is not NULL.
+	 *
+	 * @param <R> the new type of the contained object
+	 * @param mapper a mapper, to be applied to the contained object
+	 * @return a new IModel
+	 */
+	default <R> IModel<R> flatMap(WicketFunction<T, IModel<R>> mapper) {
+		return (IModel<R>) () -> {
+			T object = IModel.this.getObject();
+			if (object == null) {
+				return null;
+			}
+			else {
+				return mapper.apply(object).getObject();
+			}
+		};
+	}
+
+	/**
+	 * Returns a IModel applying the {@link WicketFunction} contained
+	 * inside the given model to the object contained inside this model.
+	 *
+	 * @param <R> the type of the new contained object
+	 * @param mapper an {@link IModel} containing a function to be applied
+	 * to the contained model object.
+	 * @return a new IModel
+	 */
+	default <R> IModel<R> apply(IModel<WicketFunction<T, R>> mapper) {
+		return (IModel<R>) () -> {
+			T object = IModel.this.getObject();
+			WicketFunction<T, R> f = mapper.getObject();
+			if (object == null || f == null) {
+				return null;
+			}
+			else {
+				return f.apply(object);
+			}
+		};
+	}
+
+	/**
+	 * Returns a IModel, returning either the contained object
+	 * or the given default value, depending on the nullness of the
+	 * contained object.
+	 *
+	 * @param other a default value
+	 * @return a new IModel
+	 */
+	default IModel<T> orElse(T other) {
+		return (IModel<T>) () -> {
+			T object = IModel.this.getObject();
+			if (object == null) {
+				return other;
+			}
+			else {
+				return object;
+			}
+		};
+	}
+
+	/**
+	 * Returns a IModel, returning either the contained object
+	 * or invoking the given supplier to get a default value.
+	 *
+	 * @param other a supplier to be used as a default
+	 * @return a new IModel
+	 */
+	default IModel<T> orElseGet(WicketSupplier<T> other) {
+		return (IModel<T>) () -> {
+			T object = IModel.this.getObject();
+			if (object == null) {
+				return other.get();
+			}
+			else {
+				return object;
+			}
+		};
+	}
+
+	/**
+	 * Returns a IModel lifting the given object into the
+	 * Model.
+	 *
+	 * @param <T> the type of the given object
+	 * @param object an object to be lifted into a IModel
+	 * @return a new IModel
+	 */
+	static <T> IModel<T> of(T object) {
+		return of((WicketSupplier<T>) () -> object);
+	}
+
+	/**
+	 * Returns a IModel applying the given supplier to
+	 * get the object.
+	 *
+	 * @param <T> the type of the given object
+	 * @param supplier a supplier, to be used to get a value
+	 * @return a new IModel
+	 */
+	static <T> IModel<T> of(WicketSupplier<T> supplier) {
+		return (IModel<T>) () -> supplier.get();
+	}
+
+	/**
+	 * Returns a IModel using the getObject() method
+	 * of the given model.
+	 *
+	 * @param <T> the type of the contained object
+	 * @param model a model,
+	 * @return a new IModel
+	 */
+	static <T> IModel<T> of(IModel<T> model) {
+		return (IModel<T>) () -> model.getObject();
+	}
 }
