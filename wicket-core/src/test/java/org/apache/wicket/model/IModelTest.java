@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import org.apache.wicket.lambda.WicketBiFunction;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
 import org.junit.Assert;
@@ -77,5 +78,38 @@ public class IModelTest extends Assert
 	{
 		IModel<String> streetModel = IModel.of(person).map(Person::getAddress).map(Address::getStreet);
 		assertThat(streetModel.getObject(), is(equalTo(street)));
+	}
+
+	@Test
+	public void withMap()
+	{
+		IModel<String> janeModel = IModel.of("Jane");
+		WicketBiFunction<Person, String, String> function =
+				(WicketBiFunction<Person, String, String>) (person1, nth) ->
+						person1.getName() + " is in relationship with " + nth;
+		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
+		assertThat(relationShipModel.getObject(), is(equalTo("John is in relationship with Jane")));
+	}
+
+	@Test
+	public void withMapWithNullObject()
+	{
+		IModel<String> janeModel = IModel.of(null);
+		WicketBiFunction<Person, String, String> function =
+				(WicketBiFunction<Person, String, String>) (person1, nth) ->
+						person1.getName() + " is in relationship with " + nth;
+		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
+		assertThat(relationShipModel.getObject(), is(nullValue()));
+	}
+
+	@Test
+	public void withMapWithNullModel()
+	{
+		IModel<String> janeModel = null;
+		WicketBiFunction<Person, String, String> function =
+				(WicketBiFunction<Person, String, String>) (person1, nth) ->
+						person1.getName() + " is in relationship with " + nth;
+		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
+		assertThat(relationShipModel.getObject(), is(nullValue()));
 	}
 }

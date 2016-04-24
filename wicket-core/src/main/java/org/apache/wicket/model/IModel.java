@@ -153,7 +153,11 @@ public interface IModel<T> extends IDetachable
 	{
 		return (IModel<R>)() -> {
 			T t = IModel.this.getObject();
-			U u = other.getObject();
+			U u = null;
+			if (other != null)
+			{
+				u = other.getObject();
+			}
 			if (t != null && u != null)
 			{
 				return combine.apply(t, u);
