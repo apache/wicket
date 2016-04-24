@@ -38,24 +38,8 @@ public class LambdaModelTest
 	public void methodReference()
 	{
 		Person person = new Person();
-		person.setName("john");
-		Person.Address address = new Person.Address();
-		person.setAddress(address);
-//		address.setStreet("Street");
-		address.setNumber(123);
-
 		IModel<String> personNameModel = new LambdaModel<>(person::getName, person::setName);
-//		check(personNameModel);
-
-		IModel<Person.Address> addressModel = Model.<Person>of(Model.of(person))
-					.filter((p) -> p.getName().equals("john"))
-					.map(Person::getAddress);
-
-		System.err.println("addressModel= " + addressModel
-					.flatMap(address1 -> Model.loadableDetachable(() -> address1))
-					.map(Person.Address::getStreet)
-					.orElse("N/A")
-					.getObject());
+		check(personNameModel);
 	}
 
 	@Test
