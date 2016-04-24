@@ -109,7 +109,7 @@ public class LambdaModel<T> implements IModel<T>
 	 * @param <T> model object type
 	 */
 	public static <T> IModel<T> of(WicketSupplier<T> getter, WicketConsumer<T> setter) {
-		return new LambdaModel<T>(getter, setter);
+		return new LambdaModel<>(getter, setter);
 	}
 
 	/**

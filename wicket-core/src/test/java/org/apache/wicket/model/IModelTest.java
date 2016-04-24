@@ -26,7 +26,6 @@ import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -132,20 +131,19 @@ public class IModelTest extends Assert
 		IModel.of(person).mapWith(null, Model.of("Jane"));
 	}
 
-	@Ignore
 	@Test
 	public void flatMap()
 	{
-		IModel<String> heirModel = IModel.of(person).flatMap(person1 -> new Model<String>() {
-			@Override
-			public String getObject()
-			{
-				return person1.getName() + " is my parent";
-			}
-		});
+		IModel<String> heirModel = IModel.of(person)
+			.flatMap(john ->
+					LambdaModel.of(
+						() -> john.getName() + " is my parent",
+						john::setName
+					)
+			);
 		assertThat(heirModel.getObject(), is(equalTo("John is my parent")));
 
-		String newValue = "New Value";
+		String newValue = "Matthias";
 		heirModel.setObject(newValue);
 		assertThat(heirModel.getObject(), is(equalTo("Matthias is my parent")));
 	}
