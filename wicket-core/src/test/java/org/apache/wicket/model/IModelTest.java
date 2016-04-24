@@ -68,6 +68,12 @@ public class IModelTest extends Assert
 		assertThat(johnModel.getObject(), is(nullValue()));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void nullFilter()
+	{
+		IModel.of(person).filter(null);
+	}
+
 	@Test
 	public void map()
 	{
@@ -80,6 +86,12 @@ public class IModelTest extends Assert
 	{
 		IModel<String> streetModel = IModel.of(person).map(Person::getAddress).map(Address::getStreet);
 		assertThat(streetModel.getObject(), is(equalTo(street)));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void nullMapper()
+	{
+		IModel.of(person).map(null);
 	}
 
 	@Test
@@ -104,15 +116,20 @@ public class IModelTest extends Assert
 		assertThat(relationShipModel.getObject(), is(nullValue()));
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void withMapWithNullModel()
 	{
 		IModel<String> janeModel = null;
 		WicketBiFunction<Person, String, String> function =
 				(WicketBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
-		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
-		assertThat(relationShipModel.getObject(), is(nullValue()));
+		IModel.of(person).mapWith(function, janeModel);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void withMapWithNullCombiner()
+	{
+		IModel.of(person).mapWith(null, Model.of("Jane"));
 	}
 
 	@Ignore
@@ -130,7 +147,13 @@ public class IModelTest extends Assert
 
 		String newValue = "New Value";
 		heirModel.setObject(newValue);
-		assertThat(heirModel.getObject(), is(equalTo(newValue)));
+		assertThat(heirModel.getObject(), is(equalTo("Matthias is my parent")));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void nullFlatMapper()
+	{
+		IModel.of(person).flatMap(null);
 	}
 
 	@Test
@@ -163,5 +186,11 @@ public class IModelTest extends Assert
 		IModel<String> defaultNameModel = IModel.of(person).map(Person::getName).orElseGet(() -> defaultName);
 
 		assertThat(defaultNameModel.getObject(), is(equalTo(defaultName)));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void orElseGetNullOther()
+	{
+		IModel.of(person).map(Person::getName).orElseGet(null);
 	}
 }
