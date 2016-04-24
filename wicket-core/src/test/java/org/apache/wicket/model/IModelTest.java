@@ -21,7 +21,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import org.apache.wicket.lambda.WicketBiFunction;
-import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
 import org.junit.Assert;
@@ -152,18 +151,6 @@ public class IModelTest extends Assert
 	public void nullFlatMapper()
 	{
 		IModel.of(person).flatMap(null);
-	}
-
-	@Test
-	public void apply()
-	{
-		Address newAddress = new Address();
-		IModel<Address> applyModel = IModel.of(person).apply((WicketFunction<Person, Address>) person1 -> {
-			newAddress.setNumber(person1.getAddress().getNumber() * 2);
-			return newAddress;
-		});
-
-		assertThat(applyModel.getObject().getNumber(), is(person.getAddress().getNumber() * 2));
 	}
 
 	@Test

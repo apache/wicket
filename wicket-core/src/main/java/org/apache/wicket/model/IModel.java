@@ -237,33 +237,6 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a IModel applying the {@link WicketFunction} contained inside the given model to the
-	 * object contained inside this model.
-	 *
-	 * @param <R>
-	 *            the type of the new contained object
-	 * @param mapper
-	 *            an {@link IModel} containing a function to be applied to the contained model
-	 *            object.
-	 * @return a new IModel
-	 */
-	default <R> IModel<R> apply(WicketFunction<? super T, R> mapper)
-	{
-		Args.notNull(mapper, "mapper");
-		return (IModel<R>)() -> {
-			T object = IModel.this.getObject();
-			if (object == null)
-			{
-				return null;
-			}
-			else
-			{
-				return mapper.apply(object);
-			}
-		};
-	}
-
-	/**
 	 * Returns a IModel, returning either the contained object or the given default value, depending
 	 * on the {@code null}ness of the contained object.
 	 *
