@@ -185,7 +185,15 @@ public interface IModel<T> extends IDetachable
 				T object = IModel.this.getObject();
 				if (object != null)
 				{
-					return mapper.apply(object).getObject();
+					IModel<R> model = mapper.apply(object);
+					if (model != null) 
+					{
+						return model.getObject();
+					}
+					else 
+					{
+						return null;
+					}
 				}
 				else
 				{
@@ -199,7 +207,11 @@ public interface IModel<T> extends IDetachable
 				T modelObject = IModel.this.getObject();
 				if (modelObject != null)
 				{
-					mapper.apply(modelObject).setObject(object);
+					IModel<R> model = mapper.apply(modelObject);
+					if (model != null)
+					{
+						model.setObject(object);
+					}
 				}
 			}
 
