@@ -87,8 +87,8 @@ public class IModelTest extends Assert
 	{
 		IModel<String> janeModel = IModel.of("Jane");
 		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, nth) ->
-						person1.getName() + " is in relationship with " + nth;
+				(WicketBiFunction<Person, String, String>) (person1, other) ->
+						person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
 		assertThat(relationShipModel.getObject(), is(equalTo("John is in relationship with Jane")));
 	}
@@ -98,8 +98,8 @@ public class IModelTest extends Assert
 	{
 		IModel<String> janeModel = IModel.of(null);
 		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, nth) ->
-						person1.getName() + " is in relationship with " + nth;
+				(WicketBiFunction<Person, String, String>) (person1, other) ->
+						person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
 		assertThat(relationShipModel.getObject(), is(nullValue()));
 	}
@@ -109,8 +109,8 @@ public class IModelTest extends Assert
 	{
 		IModel<String> janeModel = null;
 		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, nth) ->
-						person1.getName() + " is in relationship with " + nth;
+				(WicketBiFunction<Person, String, String>) (person1, other) ->
+						person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
 		assertThat(relationShipModel.getObject(), is(nullValue()));
 	}
