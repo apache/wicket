@@ -73,253 +73,264 @@ public interface IModel<T> extends IDetachable
 	 *
 	 * @param object
 	 *            The model object
-     * @throws UnsupportedOperationException unless overridden
+	 * @throws UnsupportedOperationException
+	 *             unless overridden
 	 */
 	default void setObject(final T object)
 	{
-		throw new UnsupportedOperationException("Override this method to support setObject(Object)");
+		throw new UnsupportedOperationException(
+			"Override this method to support setObject(Object)");
 	}
 
 	@Override
-	default void detach() {}
+	default void detach()
+	{
+	}
 
 	/**
-	 * Returns a IModel checking whether the predicate holds for the
-	 * contained object, if it is not null. If the predicate doesn't evaluate
-	 * to true, the contained object will be null.
+	 * Returns a IModel checking whether the predicate holds for the contained object, if it is not
+	 * null. If the predicate doesn't evaluate to true, the contained object will be null.
 	 *
-	 * @param predicate a predicate to be used for testing the contained object
+	 * @param predicate
+	 *            a predicate to be used for testing the contained object
 	 * @return a new IModel
 	 */
-	default IModel<T> filter(WicketFunction<? super T, Boolean> predicate) 
-    {
-		return (IModel<T>) () -> 
-        {
+	default IModel<T> filter(WicketFunction<? super T, Boolean> predicate)
+	{
+		return (IModel<T>)() -> {
 			T object = IModel.this.getObject();
-			if (object != null && predicate.apply(object)) 
-            {
+			if (object != null && predicate.apply(object))
+			{
 				return object;
 			}
-			else 
-            {
+			else
+			{
 				return null;
 			}
 		};
 	}
 
 	/**
-	 * Returns a IModel applying the given mapper to
-	 * the contained object, if it is not NULL.
+	 * Returns a IModel applying the given mapper to the contained object, if it is not NULL.
 	 *
-	 * @param <R> the new type of the contained object
-	 * @param mapper a mapper, to be applied to the contained object
+	 * @param <R>
+	 *            the new type of the contained object
+	 * @param mapper
+	 *            a mapper, to be applied to the contained object
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> map(WicketFunction<? super T, R> mapper) 
-    {
-		return (IModel<R>) () -> 
-        {
+	default <R> IModel<R> map(WicketFunction<? super T, R> mapper)
+	{
+		return (IModel<R>)() -> {
 			T object = IModel.this.getObject();
-			if (object == null) 
-            {
+			if (object == null)
+			{
 				return null;
 			}
-			else 
-            {
+			else
+			{
 				return mapper.apply(object);
 			}
 		};
 	}
 
 	/**
-	 * Returns a IModel applying the given combining function to
-	 * the contained object of this and the given other model, if they are not null.
+	 * Returns a IModel applying the given combining function to the contained object of this and
+	 * the given other model, if they are not null.
 	 *
-	 * @param <R> the resulting type
-	 * @param <U> the other models type
-	 * @param combine a function combining this and the others object to
-	 * a result.
-	 * @param other another model to be combined with this one
+	 * @param <R>
+	 *            the resulting type
+	 * @param <U>
+	 *            the other models type
+	 * @param combine
+	 *            a function combining this and the others object to a result.
+	 * @param other
+	 *            another model to be combined with this one
 	 * @return a new IModel
 	 */
-	default <R, U> IModel<R> mapWith(WicketBiFunction<? super T, ? super U, R> combine, IModel<U> other) 
-    {
-		return (IModel<R>) () -> 
-        {
+	default <R, U> IModel<R> mapWith(WicketBiFunction<? super T, ? super U, R> combine,
+		IModel<U> other)
+	{
+		return (IModel<R>)() -> {
 			T t = IModel.this.getObject();
 			U u = other.getObject();
-			if (t != null && u != null) 
-            {
+			if (t != null && u != null)
+			{
 				return combine.apply(t, u);
 			}
-			else 
-            {
+			else
+			{
 				return null;
 			}
 		};
 	}
 
 	/**
-	 * Returns a IModel applying the given mapper to the contained
-	 * object, if it is not NULL.
+	 * Returns a IModel applying the given mapper to the contained object, if it is not NULL.
 	 *
-	 * @param <R> the new type of the contained object
-	 * @param mapper a mapper, to be applied to the contained object
+	 * @param <R>
+	 *            the new type of the contained object
+	 * @param mapper
+	 *            a mapper, to be applied to the contained object
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> flatMap(WicketFunction<? super T, IModel<R>> mapper) 
-    {
-        return new IModel<R>() 
-        {
+	default <R> IModel<R> flatMap(WicketFunction<? super T, IModel<R>> mapper)
+	{
+		return new IModel<R>()
+		{
 
-            @Override
-            public R getObject() 
-            {
-                T object = IModel.this.getObject();
-                if (object != null)
-                {
-                    return mapper.apply(object).getObject();
-                }
-                else
-                {
-                    return null;
-                }
-            }
+			@Override
+			public R getObject()
+			{
+				T object = IModel.this.getObject();
+				if (object != null)
+				{
+					return mapper.apply(object).getObject();
+				}
+				else
+				{
+					return null;
+				}
+			}
 
-            @Override
-            public void setObject(R object) 
-            {
-                T modelObject = IModel.this.getObject();
-                if (modelObject != null)
-                {
-                    mapper.apply(modelObject).setObject(object);
-                }
-            }
+			@Override
+			public void setObject(R object)
+			{
+				T modelObject = IModel.this.getObject();
+				if (modelObject != null)
+				{
+					mapper.apply(modelObject).setObject(object);
+				}
+			}
 
-            @Override
-            public void detach() 
-            {
-                T object = IModel.this.getObject();
-                if (object != null)
-                {
-                    IModel<R> model = mapper.apply(object);
-                    if (model != null)
-                    {
-                        model.detach();
-                    }
-                }
-            }
-        };
+			@Override
+			public void detach()
+			{
+				T object = IModel.this.getObject();
+				if (object != null)
+				{
+					IModel<R> model = mapper.apply(object);
+					if (model != null)
+					{
+						model.detach();
+					}
+				}
+			}
+		};
 	}
 
 	/**
-	 * Returns a IModel applying the {@link WicketFunction} contained
-	 * inside the given model to the object contained inside this model.
+	 * Returns a IModel applying the {@link WicketFunction} contained inside the given model to the
+	 * object contained inside this model.
 	 *
-	 * @param <R> the type of the new contained object
-	 * @param mapper an {@link IModel} containing a function to be applied
-	 * to the contained model object.
+	 * @param <R>
+	 *            the type of the new contained object
+	 * @param mapper
+	 *            an {@link IModel} containing a function to be applied to the contained model
+	 *            object.
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> apply(IModel<WicketFunction<? super T, R>> mapper) 
-    {
-		return (IModel<R>) () -> 
-        {
+	default <R> IModel<R> apply(IModel<WicketFunction<? super T, R>> mapper)
+	{
+		return (IModel<R>)() -> {
 			T object = IModel.this.getObject();
 			WicketFunction<? super T, R> f = mapper.getObject();
-			if (object == null || f == null) 
-            {
+			if (object == null || f == null)
+			{
 				return null;
 			}
-			else 
-            {
+			else
+			{
 				return f.apply(object);
 			}
 		};
 	}
 
 	/**
-	 * Returns a IModel, returning either the contained object
-	 * or the given default value, depending on the nullness of the
-	 * contained object.
+	 * Returns a IModel, returning either the contained object or the given default value, depending
+	 * on the nullness of the contained object.
 	 *
-	 * @param other a default value
+	 * @param other
+	 *            a default value
 	 * @return a new IModel
 	 */
-	default IModel<T> orElse(T other) 
-    {
-		return (IModel<T>) () -> 
-        {
+	default IModel<T> orElse(T other)
+	{
+		return (IModel<T>)() -> {
 			T object = IModel.this.getObject();
-			if (object == null) 
-            {
+			if (object == null)
+			{
 				return other;
 			}
-			else 
-            {
+			else
+			{
 				return object;
 			}
 		};
 	}
 
 	/**
-	 * Returns a IModel, returning either the contained object
-	 * or invoking the given supplier to get a default value.
+	 * Returns a IModel, returning either the contained object or invoking the given supplier to get
+	 * a default value.
 	 *
-	 * @param other a supplier to be used as a default
+	 * @param other
+	 *            a supplier to be used as a default
 	 * @return a new IModel
 	 */
-	default IModel<T> orElseGet(WicketSupplier<? extends T> other) {
-		return (IModel<T>) () -> 
-        {
+	default IModel<T> orElseGet(WicketSupplier<? extends T> other)
+	{
+		return (IModel<T>)() -> {
 			T object = IModel.this.getObject();
-			if (object == null) 
-            {
+			if (object == null)
+			{
 				return other.get();
 			}
-			else 
-            {
+			else
+			{
 				return object;
 			}
 		};
 	}
 
 	/**
-	 * Returns a IModel lifting the given object into the
-	 * Model.
+	 * Returns a IModel lifting the given object into the Model.
 	 *
-	 * @param <T> the type of the given object
-	 * @param object an object to be lifted into a IModel
+	 * @param <T>
+	 *            the type of the given object
+	 * @param object
+	 *            an object to be lifted into a IModel
 	 * @return a new IModel
 	 */
-	static <T> IModel<T> of(T object) 
-    {
-		return of((WicketSupplier<T>) () -> object);
+	static <T> IModel<T> of(T object)
+	{
+		return of((WicketSupplier<T>)() -> object);
 	}
 
 	/**
-	 * Returns a IModel applying the given supplier to
-	 * get the object.
+	 * Returns a IModel applying the given supplier to get the object.
 	 *
-	 * @param <T> the type of the given object
-	 * @param supplier a supplier, to be used to get a value
+	 * @param <T>
+	 *            the type of the given object
+	 * @param supplier
+	 *            a supplier, to be used to get a value
 	 * @return a new IModel
 	 */
-	static <T> IModel<T> of(WicketSupplier<T> supplier) 
-    {
-		return (IModel<T>) () -> supplier.get();
+	static <T> IModel<T> of(WicketSupplier<T> supplier)
+	{
+		return (IModel<T>)() -> supplier.get();
 	}
 
 	/**
-	 * Returns a IModel using the getObject() method
-	 * of the given model.
+	 * Returns a IModel using the getObject() method of the given model.
 	 *
-	 * @param <T> the type of the contained object
-	 * @param model a model,
+	 * @param <T>
+	 *            the type of the contained object
+	 * @param model
+	 *            a model,
 	 * @return a new IModel
 	 */
-	static <T> IModel<T> of(IModel<T> model) 
-    {
-		return (IModel<T>) () -> model.getObject();
+	static <T> IModel<T> of(IModel<T> model)
+	{
+		return (IModel<T>)() -> model.getObject();
 	}
 }
