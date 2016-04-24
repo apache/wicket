@@ -245,18 +245,17 @@ public interface IModel<T> extends IDetachable
 	 *            object.
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> apply(IModel<WicketFunction<? super T, R>> mapper)
+	default <R> IModel<R> apply(WicketFunction<? super T, R> mapper)
 	{
 		return (IModel<R>)() -> {
 			T object = IModel.this.getObject();
-			WicketFunction<? super T, R> f = mapper.getObject();
-			if (object == null || f == null)
+			if (object == null || mapper == null)
 			{
 				return null;
 			}
 			else
 			{
-				return f.apply(object);
+				return mapper.apply(object);
 			}
 		};
 	}
