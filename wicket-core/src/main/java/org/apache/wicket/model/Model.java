@@ -190,7 +190,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	 *
 	 * @param <T>
 	 * @param getter Used for the getObject() method.
-	 * @param setter Used for the setObject(T object) method.
 	 * @return Model that contains <code>object</code>
 	 */
 	public static <T> IModel<T> loadableDetachable(WicketSupplier<T> getter)
