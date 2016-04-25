@@ -82,8 +82,8 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<>(new Model<>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn<>(new Model<>("Cell Phone"), "cellPhone"));
 
 		SortableContactDataProvider dataProvider = new SortableContactDataProvider();
 		DataTable<Contact, String> dataTable = new DefaultDataTable<>("table", columns,

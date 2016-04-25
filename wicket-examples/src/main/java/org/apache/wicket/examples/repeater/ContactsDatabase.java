@@ -33,11 +33,11 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
  */
 public class ContactsDatabase
 {
-	private final Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
-	private final List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private final List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private final List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private final List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<>());
+	private final List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<>());
+	private final List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<>());
+	private final List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<>());
+	private final List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * Constructor

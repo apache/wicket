@@ -71,12 +71,10 @@ public class FormPage extends BasePage
 					@Override
 					protected IModel<Contact> model(Contact object)
 					{
-						return new CompoundPropertyModel<Contact>(
+						return new CompoundPropertyModel<>(
 							new DetachableContactModel(object));
 					}
-
 				};
-
 			}
 
 			@Override

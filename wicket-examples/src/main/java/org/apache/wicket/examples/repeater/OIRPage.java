@@ -128,7 +128,7 @@ public class OIRPage extends BasePage
 		dataView.setItemsPerPage(8L);
 		dataView.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
 
-		add(new OrderByBorder("orderByFirstName", "firstName", dp)
+		add(new OrderByBorder<String>("orderByFirstName", "firstName", dp)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -139,7 +139,7 @@ public class OIRPage extends BasePage
 			}
 		});
 
-		add(new OrderByBorder("orderByLastName", "lastName", dp)
+		add(new OrderByBorder<String>("orderByLastName", "lastName", dp)
 		{
 			private static final long serialVersionUID = 1L;
 

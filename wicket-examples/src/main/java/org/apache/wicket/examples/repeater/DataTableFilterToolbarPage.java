@@ -56,7 +56,7 @@ public class DataTableFilterToolbarPage extends ExamplePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("First Name"), "firstName", "firstName"));
+		columns.add(new PropertyColumn<>(new Model<>("First Name"), "firstName", "firstName"));
 
 		columns.add(new PropertyColumn<Contact, String>(new Model<>("Last Name"), "lastName", "lastName")
 		{
@@ -67,13 +67,13 @@ public class DataTableFilterToolbarPage extends ExamplePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn<>(new Model<>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn<>(new Model<>("Cell Phone"), "cellPhone"));
 
 		
 		SortableContactDataProvider dataProvider = new SortableContactDataProvider();
 		columns = new ArrayList<>(columns);
-		columns.add(new PropertyColumn<Contact, String>(new Model<>("Born Date"), "bornDate"));
+		columns.add(new PropertyColumn<>(new Model<>("Born Date"), "bornDate"));
 		
 		DataTable<Contact, String> tableWithFilterForm = new DataTable<>("tableWithFilterForm", columns,
 			dataProvider, 8);

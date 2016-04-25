@@ -39,11 +39,11 @@ public class DataGridPage extends BasePage
 	{
 		List<ICellPopulator<Contact>> columns = new ArrayList<>();
 
-		columns.add(new PropertyPopulator<Contact>("id"));
-		columns.add(new PropertyPopulator<Contact>("firstName"));
-		columns.add(new PropertyPopulator<Contact>("lastName"));
-		columns.add(new PropertyPopulator<Contact>("homePhone"));
-		columns.add(new PropertyPopulator<Contact>("cellPhone"));
+		columns.add(new PropertyPopulator<>("id"));
+		columns.add(new PropertyPopulator<>("firstName"));
+		columns.add(new PropertyPopulator<>("lastName"));
+		columns.add(new PropertyPopulator<>("homePhone"));
+		columns.add(new PropertyPopulator<>("cellPhone"));
 
 		add(new DataGridView<>("rows", columns, new SortableContactDataProvider()));
 	}
