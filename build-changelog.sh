@@ -117,7 +117,7 @@ echo "done"
 
 echo "  - merging release notes into changelog: \c"
 
-echo "This file contains all changes done in releases for Apache Wicket 7.x.
+echo "This file contains all changes done in releases for Apache Wicket $major_version.x.
 
 =======================================================================
 $(cat /tmp/release-notes-$version.txt)
