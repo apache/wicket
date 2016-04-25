@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.lambda.WicketConsumer;
-import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.model.util.MapModel;
@@ -143,19 +141,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	public static <T extends Serializable> Model<T> of(T object)
 	{
 		return new Model<>(object);
-	}
-
-	/**
-	 * Supresses generics warning when converting model types
-	 * 
-	 * @param <T>
-	 * @param model
-	 * @return <code>model</code>
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> IModel<T> of(IModel<?> model)
-	{
-		return (IModel<T>)model;
 	}
 
 	/**

@@ -282,4 +282,17 @@ public interface IModel<T> extends IDetachable
 			}
 		};
 	}
+
+	/**
+	 * Supresses generics warning when casting model types.
+	 *
+	 * @param <T>
+	 * @param model
+	 * @return cast <code>model</code>
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> IModel<T> of(IModel<?> model)
+	{
+		return (IModel<T>)model;
+	}
 }
