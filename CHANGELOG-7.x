@@ -2,6 +2,64 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.3.0
+
+** Bug
+
+    * [WICKET-6069] - OnChangeAjaxBehavior does not work if the url contains a request parameter with same name as wicket id
+    * [WICKET-6078] - Problem with queued components and auto linking
+    * [WICKET-6079] - Problem with queued components and label
+    * [WICKET-6080] - Encapsulation of 3 enclosures leads to WicketRuntimeException
+    * [WICKET-6084] - ajax request failure handler receives incorrect arguments
+    * [WICKET-6085] - AjaxTimerBehavior with failure handler cause memory leak in browser
+    * [WICKET-6087] - Invalid AbstractRequestWrapperFactory.needsWrapper method scope: package - cannot create a custom implementation
+    * [WICKET-6088] - Problem with queued components and setting the model
+    * [WICKET-6091] - NPE in RequestLoggerRequestCycleListener when using native-websockets
+    * [WICKET-6093] - MarkupException due to ID collision in RelativePathPrefixHandler
+    * [WICKET-6094] - Find adequate ResourceReference with mount parameters
+    * [WICKET-6097] - JsonRequestLogger --> JsonMappingException --> StackOverflowError Infinite recursion
+    * [WICKET-6102] - StackoverflowError related to enclosures
+    * [WICKET-6108] - Closing a ModalWindow with jQuery 2.2.0 produces javascript errors
+    * [WICKET-6109] - Enclosure - "IllegalArgumentException: Argument 'markup' may not be null" after app restart
+    * [WICKET-6111] - Empty redirect on redirect to home page if home page already shown
+    * [WICKET-6116] - Exception 'A child already exists' when backing to a page with some markups in a Border
+    * [WICKET-6131] - IndexOutOfBoundsException in org.apache.wicket.core.request.mapper.CryptoMapper.decryptEntireUrl
+    * [WICKET-6133] - Failing test SpringBeanWithGenericsTest in 7.3.0.0 SNAPSHOT
+    * [WICKET-6134] - NPE when using ListView with missing markup
+    * [WICKET-6135] - There is no good way to get POST body content
+    * [WICKET-6139] - AjaxButton forces rendering type="button" 
+    * [WICKET-6141] - Runtime Exception rendering ComponentTag with RelativePathPrefixHandler
+    * [WICKET-6151] - DebugBar/PageSizeDebugPanel throws NullPointerException (need wrapper exception with more detail)
+
+** Improvement
+
+    * [WICKET-6053] - Allow to reuse the same application instance in several tests
+    * [WICKET-6081] - Add "assertNotRequired" to the WicketTester
+    * [WICKET-6098] - Add logging to HttpSessionDataStore
+    * [WICKET-6100] - Upgrade jQuery to 1.12.3/2.2.3
+    * [WICKET-6103] - Synchronization on JSR 356 connection
+    * [WICKET-6106] - Propagate JSR 356 WebSocket connection error to a page 
+    * [WICKET-6107] - Broadcast onClose event regardless of the JSR 356 WebSocket connection closed state
+    * [WICKET-6110] - Add a message to StalePageException for better debugging
+    * [WICKET-6122] - Add .map to the list of allowed file extensions in SecurePackageResourceGuard
+    * [WICKET-6123] - Remove 'abstract' from ChainingModel
+    * [WICKET-6127] - Add metrics for request duration
+    * [WICKET-6128] - Add metrics for currently active sessions
+    * [WICKET-6130] - Make it easier to override parts of SystemMapper
+    * [WICKET-6144] - Wicket-ajax parameter / header may be used to bypass proper exception handling
+    * [WICKET-6145] - Enable DeltaManager to replicate PageTable in Sessions
+    * [WICKET-6152] - Allow to add more than one WebSocketBehavior in the component tree
+
+** New Feature
+
+    * [WICKET-6120] - Wicket Metrics
+
+** Wish
+
+    * [WICKET-6095] - Multiline headers in DataTable
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.2.0
 
 ** Bug
