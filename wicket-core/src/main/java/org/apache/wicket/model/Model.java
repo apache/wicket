@@ -184,28 +184,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 		return new LambdaModel<>(getter, setter);
 	}
 
-	/**
-	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
-	 * <code>new LoadableDetachableModel<TypeOfObject>(getter)</code>.
-	 *
-	 * @param <T>
-	 * @param getter Used for the getObject() method.
-	 * @return Model that contains <code>object</code>
-	 */
-	public static <T> IModel<T> loadableDetachable(WicketSupplier<T> getter)
-	{
-		return new LoadableDetachableModel<T>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected T load()
-			{
-				return getter.get();
-			}
-		};
-	}
-
 	@Override
 	public T getObject()
 	{

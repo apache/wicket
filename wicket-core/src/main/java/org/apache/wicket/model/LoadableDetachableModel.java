@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.model;
 
+import org.apache.wicket.lambda.WicketSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,5 +192,26 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	{
 		state = InternalState.ATTACHED;
 		transientModelObject = object;
+	}
+	
+	/**
+	 * Create a {@link LoadableDetachableModel} for the given supplier.
+	 *
+	 * @param <T>
+	 * @param getter Used for the getObject() method.
+	 * @return Model
+	 */
+	public static <T> IModel<T> of(WicketSupplier<T> getter)
+	{
+		return new LoadableDetachableModel<T>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected T load()
+			{
+				return getter.get();
+			}
+		};
 	}
 }
