@@ -51,7 +51,7 @@ public class IModelTest extends Assert
 	@Test
 	public void filterMatch()
 	{
-		IModel<Person> johnModel = IModel.of(person)
+		IModel<Person> johnModel = Model.of(person)
 				.filter((p) -> p.getName().equals(name));
 
 		assertThat(johnModel.getObject(), is(person));
@@ -60,7 +60,7 @@ public class IModelTest extends Assert
 	@Test
 	public void filterNoMatch()
 	{
-		IModel<Person> johnModel = IModel.of(person)
+		IModel<Person> johnModel = Model.of(person)
 				.filter((p) -> p.getName().equals("Jane"));
 
 		assertThat(johnModel.getObject(), is(nullValue()));
@@ -69,48 +69,48 @@ public class IModelTest extends Assert
 	@Test(expected = IllegalArgumentException.class)
 	public void nullFilter()
 	{
-		IModel.of(person).filter(null);
+		Model.of(person).filter(null);
 	}
 
 	@Test
 	public void map()
 	{
-		IModel<String> personNameModel = IModel.of(person).map(Person::getName);
+		IModel<String> personNameModel = Model.of(person).map(Person::getName);
 		assertThat(personNameModel.getObject(), is(equalTo(name)));
 	}
 
 	@Test
 	public void map2()
 	{
-		IModel<String> streetModel = IModel.of(person).map(Person::getAddress).map(Address::getStreet);
+		IModel<String> streetModel = Model.of(person).map(Person::getAddress).map(Address::getStreet);
 		assertThat(streetModel.getObject(), is(equalTo(street)));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void nullMapper()
 	{
-		IModel.of(person).map(null);
+		Model.of(person).map(null);
 	}
 
 	@Test
 	public void withMap()
 	{
-		IModel<String> janeModel = IModel.of("Jane");
+		IModel<String> janeModel = Model.of("Jane");
 		WicketBiFunction<Person, String, String> function =
 				(WicketBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
-		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
+		IModel<String> relationShipModel = Model.of(person).mapWith(function, janeModel);
 		assertThat(relationShipModel.getObject(), is(equalTo("John is in relationship with Jane")));
 	}
 
 	@Test
 	public void withMapWithNullObject()
 	{
-		IModel<String> janeModel = IModel.of(null);
+		IModel<String> janeModel = Model.of((String)null);
 		WicketBiFunction<Person, String, String> function =
 				(WicketBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
-		IModel<String> relationShipModel = IModel.of(person).mapWith(function, janeModel);
+		IModel<String> relationShipModel = Model.of(person).mapWith(function, janeModel);
 		assertThat(relationShipModel.getObject(), is(nullValue()));
 	}
 
@@ -121,19 +121,19 @@ public class IModelTest extends Assert
 		WicketBiFunction<Person, String, String> function =
 				(WicketBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
-		IModel.of(person).mapWith(function, janeModel);
+		Model.of(person).mapWith(function, janeModel);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void withMapWithNullCombiner()
 	{
-		IModel.of(person).mapWith(null, Model.of("Jane"));
+		Model.of(person).mapWith(null, Model.of("Jane"));
 	}
 
 	@Test
 	public void flatMap()
 	{
-		IModel<String> heirModel = IModel.of(person)
+		IModel<String> heirModel = Model.of(person)
 			.flatMap(john ->
 					LambdaModel.of(
 						() -> john.getName() + " is my parent",
@@ -150,7 +150,7 @@ public class IModelTest extends Assert
 	@Test(expected = IllegalArgumentException.class)
 	public void nullFlatMapper()
 	{
-		IModel.of(person).flatMap(null);
+		Model.of(person).flatMap(null);
 	}
 
 	@Test
@@ -158,7 +158,7 @@ public class IModelTest extends Assert
 	{
 		person.setName(null);
 		String defaultName = "Default name";
-		IModel<String> defaultNameModel = IModel.of(person).map(Person::getName).orElse(defaultName);
+		IModel<String> defaultNameModel = Model.of(person).map(Person::getName).orElse(defaultName);
 
 		assertThat(defaultNameModel.getObject(), is(equalTo(defaultName)));
 	}
@@ -168,7 +168,7 @@ public class IModelTest extends Assert
 	{
 		person.setName(null);
 		String defaultName = "Default name";
-		IModel<String> defaultNameModel = IModel.of(person).map(Person::getName).orElseGet(() -> defaultName);
+		IModel<String> defaultNameModel = Model.of(person).map(Person::getName).orElseGet(() -> defaultName);
 
 		assertThat(defaultNameModel.getObject(), is(equalTo(defaultName)));
 	}
@@ -176,6 +176,6 @@ public class IModelTest extends Assert
 	@Test(expected = IllegalArgumentException.class)
 	public void orElseGetNullOther()
 	{
-		IModel.of(person).map(Person::getName).orElseGet(null);
+		Model.of(person).map(Person::getName).orElseGet(null);
 	}
 }

@@ -282,19 +282,4 @@ public interface IModel<T> extends IDetachable
 			}
 		};
 	}
-
-	/**
-	 * Returns a IModel lifting the given object into the Model.
-	 *
-	 * @param <T>
-	 *            the type of the given object
-	 * @param object
-	 *            an object to be lifted into a IModel
-	 * @return a new IModel
-	 */
-	static <T> IModel<T> of(T object)
-	{
-		return () -> object;
-	}
-
 }
