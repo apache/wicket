@@ -3066,7 +3066,9 @@ public abstract class Component
 		if (model == null)
 		{
 			throw new IllegalStateException(
-				"Attempt to set model object on null model of component: " + getPageRelativePath());
+				"Attempt to set a model object on a component without a model! " +
+				"Either pass an IModel to the constructor or use #setDefaultModel(new SomeModel(object)). " +
+				"Component: " + getPageRelativePath());
 		}
 
 		// Check authorization
