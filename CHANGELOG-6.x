@@ -2,6 +2,28 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.23.0
+
+** Bug
+
+    * [WICKET-6108] - Closing a ModalWindow with jQuery 2.2.0 produces javascript errors
+    * [WICKET-6111] - Empty redirect on redirect to home page if home page already shown
+    * [WICKET-6131] - IndexOutOfBoundsException in org.apache.wicket.core.request.mapper.CryptoMapper.decryptEntireUrl
+    * [WICKET-6135] - There is no good way to get POST body content
+
+** Improvement
+
+    * [WICKET-6098] - Add logging to HttpSessionDataStore
+    * [WICKET-6100] - Upgrade jQuery to 1.12.3/2.2.3
+    * [WICKET-6110] - Add a message to StalePageException for better debugging
+    * [WICKET-6122] - Add .map to the list of allowed file extensions in SecurePackageResourceGuard
+    * [WICKET-6123] - Remove 'abstract' from ChainingModel
+    * [WICKET-6144] - Wicket-ajax parameter / header may be used to bypass proper exception handling
+    * [WICKET-6145] - Enable DeltaManager to replicate PageTable in Sessions
+    * [WICKET-6152] - Allow to add more than one WebSocketBehavior in the component tree
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.22.0
 
 ** Bug
