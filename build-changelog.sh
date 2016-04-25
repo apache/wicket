@@ -117,7 +117,7 @@ echo "done"
 
 echo "  - merging release notes into changelog: \c"
 
-echo "This file contains all changes done in releases for Apache Wicket 7.x.
+echo "This file contains all changes done in releases for Apache Wicket $major_version.x.
 
 =======================================================================
 $(cat /tmp/release-notes-$version.txt)
@@ -127,21 +127,21 @@ $(tail -n +4 CHANGELOG-$major_version.x)
 " > /tmp/changelog-$version.txt
 cp /tmp/changelog-$version.txt CHANGELOG-$major_version.x
 
-echo "done"
+echo "done
+"
+git diff
+
+echo ""
+
+git add CHANGELOG-$major_version.x
+git commit -m "Added CHANGELOG for release $version"
 
 echo "
-The CHANGELOG-$major_version.x file has been updated. Please check the contents
-and commit the changes.
+The CHANGELOG-$major_version.x file has been updated and committed.
 
-To see the status:
+To revert the changes to the CHANGELOG:
 
-    git status
-    git diff
-
-To add and commit the CHANGELOG:
-
-    git add CHANGELOG-$major_version.x
-    git commit -m \"Added CHANGELOG for release $version
+    git reset HEAD^ --hard
 
 Have fun!
 "
