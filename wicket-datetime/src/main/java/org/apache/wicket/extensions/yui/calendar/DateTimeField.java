@@ -57,19 +57,22 @@ import org.joda.time.format.DateTimeFormat;
  * {@link DateTextField} by overriding {@link #newDateTextField(String, PropertyModel)} and calling
  * {@link #processInput()}:
  * 
- * <pre>
+ * <pre>{@code
  *  DateTimeField dateTimeField = new DateTimeField(...) {
  *    protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
  *    {
  *      DateTextField dateField = super.newDateTextField(id, dateFieldModel);     
- *      dateField.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {
- *        processInput() // let DateTimeField process input too
- *        ...
+ *      dateField.add(new AjaxFormComponentUpdatingBehavior("change") {
+ *        protected void onUpdate(AjaxRequestTarget target) {
+ *          processInput(); // let DateTimeField process input too
+ *
+ *          ...
+ *        }
  *      });
  *      return recorder;
  *    }
  *  }
- * </pre>
+ * }</pre>
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
