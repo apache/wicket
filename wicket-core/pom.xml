@@ -87,7 +87,30 @@
 					</excludes>
 				</configuration>
 			</plugin>
+		<plugin>
+			<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.7</version>
+					<executions>
+						<execution>
+							<id>bundle-manifest</id>
+							<phase>process-classes</phase>
+							<goals>
+								<goal>manifest</goal>
+							</goals>
+							<configuration>
+								<instructions>
+									<Export-Package>*</Export-Package>
+									<Import-Package>org.apache.wicket*,net.sf.cglib.core;resolution:=optional;version="[2.2,3)",net.sf.cglib.proxy;resolution:=optional;version="[2.2,3)",net.sf.cglib.reflect;resolution:=optional;version="[2.2,3)"</Import-Package>
+									<DynamicImport-Package>*</DynamicImport-Package>
+									<_nouses>true</_nouses>
+								</instructions>
+							</configuration>
+						</execution>
+					</executions>
+			</plugin>	
 		</plugins>
+	
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
