@@ -40,8 +40,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -139,6 +137,8 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
@@ -613,8 +613,15 @@ public class BaseWicketTester
 	 */
 	public void destroy()
 	{
-		application.internalDestroy();
-		ThreadContext.detach();
+		try
+		{ 
+			ThreadContext.setApplication(application);
+			application.internalDestroy();	
+		}
+		finally
+		{ 
+			ThreadContext.detach();			
+		}
 	}
 
 	/**
