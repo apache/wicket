@@ -602,8 +602,15 @@ public class BaseWicketTester
 	 */
 	public void destroy()
 	{
-		application.internalDestroy();
-		ThreadContext.detach();
+		try
+		{ 
+			ThreadContext.setApplication(application);
+			application.internalDestroy();	
+		}
+		finally
+		{ 
+			ThreadContext.detach();			
+		}
 	}
 
 	/**
