@@ -21,6 +21,8 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.json.JSONObject;
+import org.apache.wicket.ajax.json.JsonFunction;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -42,7 +44,6 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Modal window component.
@@ -1008,37 +1009,28 @@ public class ModalWindow extends Panel
 	 */
 	protected final String getWindowOpenJavaScript()
 	{
-		AppendingStringBuffer buffer = new AppendingStringBuffer(500);
+		JSONObject settings = new JSONObject();
 
-		if (isCustomComponent())
-		{
-			buffer.append("var element = document.getElementById(\"");
-			buffer.append(getContentMarkupId());
-			buffer.append("\");\n");
-		}
-
-		buffer.append("var settings = new Object();\n");
-
-		appendAssignment(buffer, "settings.minWidth", getMinimalWidth());
-		appendAssignment(buffer, "settings.minHeight", getMinimalHeight());
-		appendAssignment(buffer, "settings.className", getCssClassName());
-		appendAssignment(buffer, "settings.width", getInitialWidth());
+		settings.put("minWidth", getMinimalWidth());
+		settings.put("minHeight", getMinimalHeight());
+		settings.put("className", getCssClassName());
+		settings.put("width", getInitialWidth());
 
 		if ((isUseInitialHeight() == true) || (isCustomComponent() == false))
 		{
-			appendAssignment(buffer, "settings.height", getInitialHeight());
+			settings.put("height", getInitialHeight());
 		}
 		else
 		{
-			buffer.append("settings.height=null;\n");
+			settings.put("height", (Object)null);
 		}
 
-		appendAssignment(buffer, "settings.resizable", isResizable());
+		settings.put("resizable", isResizable());
 
 		if (isResizable() == false)
 		{
-			appendAssignment(buffer, "settings.widthUnit", getWidthUnit());
-			appendAssignment(buffer, "settings.heightUnit", getHeightUnit());
+			settings.put("widthUnit", getWidthUnit());
+			settings.put("heightUnit", getHeightUnit());
 		}
 
 		if (isCustomComponent() == false)
@@ -1062,37 +1054,36 @@ public class ModalWindow extends Panel
 				pageUrl = requestCycle.urlFor(handler);
 			}
 
-			appendAssignment(buffer, "settings.src", pageUrl);
+			settings.put("src", pageUrl);
 		}
 		else
 		{
-			buffer.append("settings.element=element;\n");
+			settings.put("element", new JsonFunction("document.getElementById(\"" + getContentMarkupId() + "\")"));
 		}
 
 		if (getCookieName() != null)
 		{
-			appendAssignment(buffer, "settings.cookieId", getCookieName());
+			settings.put("cookieId", getCookieName());
 		}
 
 		String title = getTitle() != null ? getTitle().getObject() : null;
 		if (title != null)
 		{
-			String escaped = getDefaultModelObjectAsString(title);
-			appendAssignment(buffer, "settings.title", escaped);
+			settings.put("title", getDefaultModelObjectAsString(title));
 		}
 
 		if (getMaskType() == MaskType.TRANSPARENT)
 		{
-			buffer.append("settings.mask=\"transparent\";\n");
+			settings.put("mask", "transparent");
 		}
 		else if (getMaskType() == MaskType.SEMI_TRANSPARENT)
 		{
-			buffer.append("settings.mask=\"semi-transparent\";\n");
+			settings.put("mask", "semi-transparent");
 		}
 
-		appendAssignment(buffer, "settings.autoSize", autoSize);
+		settings.put("autoSize", autoSize);
 
-		appendAssignment(buffer, "settings.unloadConfirmation", showUnloadConfirmation());
+		settings.put("unloadConfirmation", showUnloadConfirmation());
 
 		// set true if we set a windowclosedcallback
 		boolean haveCloseCallback = false;
@@ -1102,9 +1093,7 @@ public class ModalWindow extends Panel
 		if (windowClosedCallback != null)
 		{
 			WindowClosedBehavior behavior = getBehaviors(WindowClosedBehavior.class).get(0);
-			buffer.append("settings.onClose = function() { ");
-			buffer.append(behavior.getCallbackScript());
-			buffer.append(" };\n");
+			settings.put("onClose", new JsonFunction("function() { " + behavior.getCallbackScript() + " }"));
 
 			haveCloseCallback = true;
 		}
@@ -1114,74 +1103,28 @@ public class ModalWindow extends Panel
 		if ((closeButtonCallback != null) || (haveCloseCallback == false))
 		{
 			CloseButtonBehavior behavior = getBehaviors(CloseButtonBehavior.class).get(0);
-			buffer.append("settings.onCloseButton = function() { ");
-			buffer.append(behavior.getCallbackScript());
-			buffer.append(";return false;};\n");
+			settings.put("onCloseButton", new JsonFunction("function() { " + behavior.getCallbackScript() + "; return false; }"));
 		}
 
-		postProcessSettings(buffer);
-
+		postProcessSettings(settings);
+		
+		AppendingStringBuffer buffer = new AppendingStringBuffer(500);
+		buffer.append("var settings = ");
+		buffer.append(settings.toString());
+		buffer.append(";");
+		
 		buffer.append(getShowJavaScript());
 		return buffer.toString();
-	}
-
-	/**
-	 * 
-	 * @param buffer
-	 * @param key
-	 * @param value
-	 */
-	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
-		final int value)
-	{
-		buffer.append(key).append('=');
-		buffer.append(value);
-		buffer.append(";\n");
-	}
-
-	/**
-	 * 
-	 * @param buffer
-	 * @param key
-	 * @param value
-	 */
-	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
-		final boolean value)
-	{
-		buffer.append(key).append('=');
-		buffer.append(Boolean.toString(value));
-		buffer.append(";\n");
-	}
-
-	/**
-	 * 
-	 * @param buffer
-	 * @param key
-	 * @param value
-	 */
-	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key, CharSequence value)
-	{
-		buffer.append(key).append("=\"");
-		
-		if (value != null)
-		{
-			value = Strings.replaceAll(value, "\"", "\\\"");
-			value = Strings.replaceAll(value, "\n", "\\n");
-		}
-		
-		buffer.append(value);
-		buffer.append("\";\n");
 	}
 
 	/**
 	 * Method that allows tweaking the settings
 	 * 
 	 * @param settings
-	 * @return settings javascript
+	 * @return settings json
 	 */
-	protected AppendingStringBuffer postProcessSettings(final AppendingStringBuffer settings)
+	protected void postProcessSettings(JSONObject settings)
 	{
-		return settings;
 	}
 
 	/**
