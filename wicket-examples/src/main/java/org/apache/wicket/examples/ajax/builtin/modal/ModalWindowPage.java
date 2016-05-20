@@ -91,7 +91,7 @@ public class ModalWindowPage extends BasePage
 		add(modal2 = new ModalWindow("modal2"));
 
 		modal2.setContent(new ModalPanel1(modal2.getContentId()));
-		modal2.setTitle("This is modal window with panel content.");
+		modal2.setTitle("Modal window\n'panel\" content.");
 		modal2.setCookieName("modal-2");
 
 		modal2.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
