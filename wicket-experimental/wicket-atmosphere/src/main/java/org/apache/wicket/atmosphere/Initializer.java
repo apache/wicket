@@ -29,7 +29,7 @@ public class Initializer implements IInitializer
 	@Override
 	public void init(Application application)
 	{
-		if (WicketWebjars.isInstalled(application) == false)
+		if (!WicketWebjars.isInstalled(application))
 		{
 			WicketWebjars.install((org.apache.wicket.protocol.http.WebApplication) application);
 		}

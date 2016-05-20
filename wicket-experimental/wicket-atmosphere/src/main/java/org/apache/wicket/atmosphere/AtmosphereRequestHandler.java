@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.util.Iterator;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -30,6 +28,8 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
 
 /**
  * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the

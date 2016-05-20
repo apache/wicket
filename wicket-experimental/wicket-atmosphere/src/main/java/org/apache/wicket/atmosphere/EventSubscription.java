@@ -16,15 +16,14 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.lang.reflect.Method;
-
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
+import java.lang.reflect.Method;
 
 /**
  * The subscription of a method on a component to certain events. This is used by {@link EventBus}
@@ -101,11 +100,7 @@ public class EventSubscription
 		{
 			return filterClass.newInstance();
 		}
-		catch (InstantiationException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-		catch (IllegalAccessException e)
+		catch (InstantiationException | IllegalAccessException e)
 		{
 			throw new WicketRuntimeException(e);
 		}

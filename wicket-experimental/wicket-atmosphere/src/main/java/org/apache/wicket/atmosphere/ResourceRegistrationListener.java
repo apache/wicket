@@ -40,12 +40,12 @@ public interface ResourceRegistrationListener
 	 * @param uuid
 	 * @param page
 	 */
-	public void resourceRegistered(String uuid, Page page);
+	void resourceRegistered(String uuid, Page page);
 
 	/**
 	 * Invoked when a suspended connection is terminated and unregistered.
 	 * 
 	 * @param uuid
 	 */
-	public void resourceUnregistered(String uuid);
+	void resourceUnregistered(String uuid);
 }
