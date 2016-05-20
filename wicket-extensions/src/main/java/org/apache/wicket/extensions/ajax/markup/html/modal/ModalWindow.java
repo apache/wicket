@@ -42,6 +42,7 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Modal window component.
@@ -1158,10 +1159,16 @@ public class ModalWindow extends Panel
 	 * @param key
 	 * @param value
 	 */
-	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
-		final CharSequence value)
+	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key, CharSequence value)
 	{
 		buffer.append(key).append("=\"");
+		
+		if (value != null)
+		{
+			value = Strings.replaceAll(value, "\"", "\\\"");
+			value = Strings.replaceAll(value, "\n", "\\n");
+		}
+		
 		buffer.append(value);
 		buffer.append("\";\n");
 	}
