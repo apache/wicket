@@ -134,8 +134,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	@Override
 	public SessionData[] getLiveSessions()
 	{
-		final SessionData[] sessions = liveSessions.values().toArray(
-			new SessionData[liveSessions.values().size()]);
+		final SessionData[] sessions = liveSessions.values().toArray(new SessionData[0]);
 		Arrays.sort(sessions);
 		return sessions;
 	}
