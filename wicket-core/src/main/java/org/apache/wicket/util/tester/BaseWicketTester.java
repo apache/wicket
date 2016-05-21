@@ -483,7 +483,7 @@ public class BaseWicketTester
 
 	/**
 	 * Cleans up feedback messages. This usually happens on detach, but is disabled in unit testing
-	 * so feedback mesasges can be examined.
+	 * so feedback messages can be examined.
 	 */
 	public void cleanupFeedbackMessages()
 	{
