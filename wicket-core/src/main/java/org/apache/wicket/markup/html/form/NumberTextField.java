@@ -29,7 +29,10 @@ import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
  * A {@link TextField} for HTML5 &lt;input&gt; with type <em>number</em>.
- * 
+ * <p>
+ * The {@code <input>}'s value will be rendered in floating-point representation, as required by
+ * the <a href="https://www.w3.org/TR/html-markup/input.number.html">HTML specification</a>. Use a simple
+ * {@code TextField} to use a locale specific conversion of numbers.
  * <p>
  * Automatically validates the input against the configured {@link #setMinimum(N) min} and
  * {@link #setMaximum(N) max} attributes. If any of them is <code>null</code> then respective

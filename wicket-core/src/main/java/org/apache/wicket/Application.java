@@ -622,9 +622,10 @@ public abstract class Application implements UnboundListener, IEventSink
 			while (resources.hasNext())
 			{
 				final URL url = resources.next();
-				log.warn("Found '{}'. /wicket.properties location is deprecated. Please move the file to" +
-						" /META-INF/wicket/ folder and give it a name that matches your packages' name," +
-						" e.g. com.example.myapp.properties", url);
+				log.warn("Found '{}'. /wicket.properties location is deprecated. " +
+				         "Please see https://issues.apache.org/jira/browse/WICKET-5997 for more " +
+				         "details and report an issue for the library that still uses it.",
+				         url);
 				final Properties properties = new Properties();
 				try (InputStream in = Streams.readNonCaching(url))
 				{

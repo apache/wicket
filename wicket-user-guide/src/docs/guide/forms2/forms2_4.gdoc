@@ -1,4 +1,4 @@
-Standard JSR 303 defines a set of annotations and APIs to validate our domain objects at field-level. Wicket has introduced an experimental support for this standard since version 6.4.0 and with version 6.14.0 it has became an official Wicket model (named @wicket-bean-validation@).
+Standard JSR 303 defines a set of annotations and APIs to validate our domain objects at field-level. Wicket has introduced an experimental support for this standard since version 6.4.0 and with version 6.14.0 it has became an official Wicket module (named @wicket-bean-validation@).
 In this paragraph we will see the basic steps needed to use JSR 303 validation in our Wicket application. Code snippets are from example project @JSR303validation@.
 
 In the example application we have a form to insert the data for a new @Person@ bean and its relative @Address@. The code for class @Person@ is the following

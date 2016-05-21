@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 
@@ -30,12 +35,16 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
  * @since 1.2.1
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @deprecated Use {@link AjaxOrderByLink} instead
+ * 
  */
-@Deprecated
-public abstract class AjaxFallbackOrderByLink<S> extends AjaxOrderByLink<S>
+public abstract class AjaxFallbackOrderByLink<S> extends OrderByLink<S> implements IAjaxLink
 {
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
+
+	private final IAjaxCallListener ajaxCallListener;
 
 	/**
 	 * Constructor
@@ -47,6 +56,82 @@ public abstract class AjaxFallbackOrderByLink<S> extends AjaxOrderByLink<S>
 	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		super(id, sortProperty, stateLocator);
+		this(id, sortProperty, stateLocator, null);
 	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param sortProperty
+	 * @param stateLocator
+	 * @param ajaxCallListener
+	 *
+	 * @deprecated override {@link #updateAjaxAttributes(AjaxRequestAttributes)} instead
+	 */
+	public AjaxFallbackOrderByLink(final String id, final S sortProperty,
+		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
+	{
+		super(id, sortProperty, stateLocator);
+
+		this.ajaxCallListener = ajaxCallListener;
+	}
+
+	@Override
+	public void onInitialize()
+	{
+		super.onInitialize();
+
+		add(newAjaxEventBehavior("click"));
+	}
+
+	/**
+	 * @param event
+	 *            the name of the default event on which this link will listen to
+	 * @return the ajax behavior which will be executed when the user clicks the link
+	 */
+	protected AjaxEventBehavior newAjaxEventBehavior(final String event)
+	{
+		return new AjaxEventBehavior(event)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onEvent(final AjaxRequestTarget target)
+			{
+				onClick();
+				AjaxFallbackOrderByLink.this.onClick(target);
+			}
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+				attributes.setPreventDefault(true);
+
+				if (ajaxCallListener != null) {
+					attributes.getAjaxCallListeners().add(ajaxCallListener);
+				}
+
+				AjaxFallbackOrderByLink.this.updateAjaxAttributes(attributes);
+			}
+
+		};
+
+	}
+
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+	}
+
+	/**
+	 * Callback method when an ajax click occurs. All the behavior of changing the sort, etc is
+	 * already performed before this is called so this method should primarily be used to configure
+	 * the target.
+	 * 
+	 * @param target
+	 */
+	@Override
+	public abstract void onClick(AjaxRequestTarget target);
+
 }

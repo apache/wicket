@@ -310,6 +310,11 @@ public class WicketObjects
 				serializer = new JavaSerializer(WicketObjects.class.getName());
 			}
 			byte[] serialized = serializer.serialize(object);
+			if (serialized == null)
+			{
+				throw new IllegalStateException("A problem occurred while serializing an object. " +
+						"Please check the earlier logs for more details. Problematic object: " + object);
+			}
 			Object deserialized = serializer.deserialize(serialized);
 			return (T) deserialized;
 		}

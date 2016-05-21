@@ -28,7 +28,7 @@ import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Interface for security related settings
+ * Class for security related settings
  *
  * @author Jonathan Locke
  * @author Chris Turner

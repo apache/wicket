@@ -42,15 +42,26 @@ public class UrlEncoder
 	 * encoder types
 	 */
 	public enum Type {
+		/**
+		 * query type
+		 */
 		QUERY,
+		/**
+		 * path type
+		 */
 		PATH,
+		/**
+		 * full path type
+		 */
+		@Deprecated
+		FULL_PATH,
+		/**
+		 * header type
+		 */
 		HEADER
 	}
 
-	/**
-	 * List of what not to encode, i.e. characters (e.g. A-Z) and other allowed signs (e.g. !)
-	 * that are allowed but don't have a special meaning.
-	 */
+	// list of what not to decode
 	protected BitSet dontNeedEncoding;
 
 	// used in decoding
@@ -65,7 +76,7 @@ public class UrlEncoder
 	public static final UrlEncoder QUERY_INSTANCE = new UrlEncoder(Type.QUERY);
 
 	/**
-	 * Encoder used to encode segments of a path.<br/>
+	 * Encoder used to encode components of a path.<br/>
 	 * <br/>
 	 * 
 	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
@@ -73,9 +84,23 @@ public class UrlEncoder
 	public static final UrlEncoder PATH_INSTANCE = new UrlEncoder(Type.PATH);
 
 	/**
-	 * Encoder used to encode a header.
+	 * Encoder used to encode a header.<br/>
+	 * <br/>
+	 * 
+	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
 	 */
 	public static final UrlEncoder HEADER_INSTANCE = new UrlEncoder(Type.HEADER);
+
+	/**
+	 * Encoder used to encode all path segments. Querystring will be excluded.<br/>
+	 * <br/>
+	 * 
+	 * For example: http://org.acme/foo/thispart/orthispart?butnot=thispart
+	 */
+	@Deprecated
+	public static final UrlEncoder FULL_PATH_INSTANCE = new UrlEncoder(Type.FULL_PATH);
+
+	private final Type type;
 
 	/**
 	 * Allow subclass to call constructor.
@@ -133,6 +158,7 @@ public class UrlEncoder
 		 * query =( pchar / "/" / "?" )
 		 */
 
+		this.type = type;
 		// unreserved
 		dontNeedEncoding = new BitSet(256);
 		int i;
@@ -161,6 +187,7 @@ public class UrlEncoder
 		// encoding type-specific
 		switch (type)
 		{
+		// this code consistent with java.net.URLEncoder version
 			case QUERY :
 				// this code consistent with java.net.URLEncoder version#
 				
@@ -187,6 +214,7 @@ public class UrlEncoder
 				// dontNeedEncoding.set('?'); // to allow direct passing of URL in query
 				break;
 
+			// this added to deal with encoding a PATH component
 			case PATH :
 				// this added to deal with encoding a PATH segment
 				
@@ -204,8 +232,26 @@ public class UrlEncoder
 				dontNeedEncoding.set('@');
 
 				break;
+
+			// same as path, but '/' will not be encoded
+			case FULL_PATH :
+				// this added to deal with encoding a PATH segment
 				
-			// this added to deal with encoding a PATH component
+				// sub-delims continued
+				dontNeedEncoding.set('*');
+				dontNeedEncoding.set('&');
+				dontNeedEncoding.set('+');
+				// "'" doesn't need encoding, but it will make it easier to use in in JavaScript  
+				// "(" and ")" don't need encoding, but we'll be conservative
+				dontNeedEncoding.set(',');
+				dontNeedEncoding.set('=');
+				
+				dontNeedEncoding.set(':'); // allowed and used in wicket interface
+				dontNeedEncoding.set('@');
+
+				dontNeedEncoding.set('/');
+				break;
+
 			case HEADER :
 				// this added to deal with encoding of header
 				
@@ -262,12 +308,18 @@ public class UrlEncoder
 			throw new RuntimeException(new UnsupportedEncodingException(charsetName));
 		}
 
+		boolean stopEncoding = false;
 		for (int i = 0; i < s.length();)
 		{
 			int c = s.charAt(i);
 
+			if ((stopEncoding == false) && (c == '?' && type == Type.FULL_PATH))
+			{
+				stopEncoding = true;
+			}
+
 			// System.out.println("Examining character: " + c);
-			if (dontNeedEncoding.get(c))
+			if (stopEncoding || dontNeedEncoding.get(c))
 			{
 				if (c == ' ')
 				{

@@ -16,29 +16,57 @@
  */
 package org.apache.wicket.util.listener;
 
+import org.apache.wicket.util.watch.IModifiable;
+
 /**
  * Holds a set of IChangeListeners.
  * 
  * Note that these classes are not meant to be serializable or for you to hold them in session (see
  * WICKET-2697)
- * @param <T> 
+ * 
+ * @author Jonathan Locke
  */
-public final class ChangeListenerSet<T> extends ListenerCollection<IChangeListener<T>>
+public final class ChangeListenerSet extends ListenerCollection<IChangeListener>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Notifies all change listeners of a change in {@code t}
-	 * @param t the changed object
+	 * Notifies all change listeners.
 	 */
-	public void notifyListeners(final T t)
+	public void notifyListeners()
 	{
-		notify(new INotifier<IChangeListener<T>>()
+		notify(new INotifier<IChangeListener>()
 		{
 			@Override
-			public void notify(final IChangeListener<T> listener)
+			public void notify(final IChangeListener object)
 			{
-				listener.onChange(t);
+				object.onChange();
+			}
+		});
+	}
+
+	/**
+	 * Notifies all change listeners that modifiable was changed.
+	 * 
+	 * @param modifiable
+	 *            the changed object
+	 */
+	public void notifyListeners(final IModifiable modifiable)
+	{
+		notify(new INotifier<IChangeListener>()
+		{
+			@SuppressWarnings("unchecked")
+			@Override
+			public void notify(final IChangeListener listener)
+			{
+				if (listener instanceof IChangeListener2)
+				{
+					IChangeListener2.class.cast(listener).onChange(modifiable);
+				}
+				else
+				{
+					listener.onChange();
+				}
 			}
 		});
 	}

@@ -25,7 +25,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
- * Interface for request related settings
+ * Class for request related settings
  * <p>
  * <i>bufferResponse </i> (defaults to true) - True if the application should buffer responses. This
  * does require some additional memory, but helps keep exception displays accurate because the whole

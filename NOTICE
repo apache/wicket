@@ -1,5 +1,5 @@
 Apache Wicket
-Copyright 2006-2012 The Apache Software Foundation
+Copyright 2006-2016 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -116,4 +116,16 @@ src/./wicket-datetime
 
    This product includes software developed by
    Joda.org (http://www.joda.org/).
+
+---------------------------------------------------------------------------
+src/./wicket-metrics
+---------------------------------------------------------------------------
+
+   Apache Wicket Metrics
+   Copyright 2006-2016 Apache Software Foundation
+
+   This product includes software developed at
+   The Apache Software Foundation (http://www.apache.org/).
    
+   This product uses AspectJ, developed at Eclipse, and licensed
+   under the Eclipse Public License. (https://eclipse.org/aspectj/).

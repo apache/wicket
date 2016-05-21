@@ -22,7 +22,7 @@ import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Interface for markup related settings.
+ * Class for markup related settings.
  * <p>
  * <i>compressWhitespace </i> (defaults to false) - Causes pages to render with redundant whitespace
  * removed. Whitespace stripping is not HTML or JavaScript savvy and can conceivably break pages,

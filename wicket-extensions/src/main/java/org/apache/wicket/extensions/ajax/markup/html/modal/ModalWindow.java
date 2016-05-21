@@ -60,7 +60,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * <code>{@link #setPageCreator(ModalWindow.PageCreator)}</code> method.
  * </ul>
  * In case the content is a component, it is not rendered until the window is shown (method
- * <code>{@link #show(IPartialPageRequestHandler)})</code>. The window can be made
+ * <code>{@link #show(IPartialPageRequestHandler)}</code>. The window can be made
  * visible from an ajax handler using
  * <code>{@link #show(IPartialPageRequestHandler)}</code>.
  * <p>
@@ -70,7 +70,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * right corner of the window closes it. This behavior can be altered using
  * <code>{@link #setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>. If you want to be
  * notified when the window is closed (either using the close button or calling
- * <code>{@link #close(IPartialPageRequestHandler)})</code>, you can use
+ * <code>{@link #close(IPartialPageRequestHandler)}</code>, you can use
  * <code>{@link #setWindowClosedCallback(ModalWindow.WindowClosedCallback)}</code>.
  * <p>
  * Title is specified using {@link #setTitle(String)}. Pass <code>true</code> to
@@ -265,8 +265,13 @@ public class ModalWindow extends Panel
 
 		// install a default callback that will force
 		// WindowClosedBehavior to be executed
-		setWindowClosedCallback((WindowClosedCallback) target -> {
-			// noop
+		setWindowClosedCallback(new WindowClosedCallback()
+		{
+			@Override
+			public void onClose(AjaxRequestTarget target)
+			{
+				// noop
+			}
 		});
 
 	}

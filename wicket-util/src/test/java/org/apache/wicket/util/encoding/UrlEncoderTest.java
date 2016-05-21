@@ -24,49 +24,6 @@ import org.junit.Test;
 @SuppressWarnings("javadoc")
 public class UrlEncoderTest extends Assert
 {
-
-	// starts with &auml;
-	private static final char[] encodingCandidates = "\u00c4!\"§$%&/()=?`*'_:;><,.-#+´\\}][{|".toCharArray();
-	
-	@Test
-	public void pathUnencoded()  {
-		String unencoded = "azAZ09.-_~!$&*+,;=:@";
-		
-		assertEquals(unencoded,  UrlEncoder.PATH_INSTANCE.encode(unencoded, CharEncoding.UTF_8));
-		
-		for (char candidate : encodingCandidates) {
-			if (unencoded.indexOf(candidate) == -1) {
-				assertNotEquals("" + candidate, UrlEncoder.PATH_INSTANCE.encode("" + candidate, CharEncoding.UTF_8));
-			}
-		}
-	}
-	
-	@Test
-	public void queryStringUnencoded()  {
-		String unencoded = "azAZ09.-_~!$*,:@/";
-		
-		assertEquals(unencoded, UrlEncoder.QUERY_INSTANCE.encode(unencoded, CharEncoding.UTF_8));
-
-		for (char candidate : encodingCandidates) {
-			if (unencoded.indexOf(candidate) == -1) {
-				assertNotEquals("" + candidate, UrlEncoder.QUERY_INSTANCE.encode("" + candidate, CharEncoding.UTF_8));
-			}
-		}
-	}
-	
-	@Test
-	public void headerUnencoded()  {
-		String unencoded = "azAZ09.-_~!$&+#^`|";
-		
-		assertEquals(unencoded, UrlEncoder.HEADER_INSTANCE.encode(unencoded, CharEncoding.UTF_8));
-		
-		for (char candidate : encodingCandidates) {
-			if (unencoded.indexOf(candidate) == -1) {
-				assertNotEquals("" + candidate, UrlEncoder.HEADER_INSTANCE.encode("" + candidate, CharEncoding.UTF_8));
-			}
-		}
-	}
-
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3721">WICKET-3721</a> Encode
 	 * apostrophes because otherwise they get XML encoded by ComponentTag#writeOutput() to

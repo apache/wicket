@@ -63,6 +63,8 @@ import org.apache.wicket.request.resource.PackageResource.PackageResourceBlocked
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.session.HttpSessionStore;
+import org.apache.wicket.session.ISessionStore;
+import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
@@ -245,7 +247,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.clickLink("ajaxLinkWithSetResponsePageClass");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionError ex)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -269,7 +271,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "click");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionError ex)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -293,7 +295,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertEnabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be enabled.");
 		}
-		catch (AssertionError ex)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -317,7 +319,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertDisabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be disabled.");
 		}
-		catch (AssertionError ex)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -345,7 +347,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertRequired("createForm:id");
 			fail("Book ID component must not be required anymore!");
 		}
-		catch (AssertionError ex)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -355,7 +357,7 @@ public class WicketTesterTest extends WicketTestCase
 			// test #3: "createForm" is not a FormComponent
 			tester.assertRequired("createForm");
 		}
-		catch (AssertionError ex)
+		catch (AssertionError _)
 		{
 			;
 		}
@@ -1323,7 +1325,14 @@ public class WicketTesterTest extends WicketTestCase
 	 */
 	@Test
 	public void renewSessionIdAfterInvalidation() {
-		tester.getApplication().setSessionStoreProvider(HttpSessionStore::new);
+		tester.getApplication().setSessionStoreProvider(new IProvider<ISessionStore>()
+		{
+			@Override
+			public ISessionStore get()
+			{
+				return new HttpSessionStore();
+			}
+		});
 		tester.getSession().bind();
 		String firstId = tester.getSession().getId();
 

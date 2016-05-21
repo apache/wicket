@@ -40,8 +40,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -139,6 +137,8 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
@@ -322,19 +322,15 @@ public class BaseWicketTester
 
 		this.application = application;
 
-		// If it's provided from the container it's not necessary to set again.
-		if (init)
-		{
-			// FIXME some tests are leaking applications by not calling destroy on them or overriding
-			// teardown() without calling super, for now we work around by making each name unique
-			application.setName("WicketTesterApplication-" + UUID.randomUUID());
-		}
-
 		ThreadContext.setApplication(application);
 
-		// If it's provided from the container it's not necessary to set again and init.
 		if (init)
 		{
+			if (application.getName() == null)
+			{
+				application.setName("WicketTesterApplication-" + UUID.randomUUID());
+			}
+
 			application.setServletContext(servletContext);
 			// initialize the application
 			application.initApplication();
@@ -621,8 +617,15 @@ public class BaseWicketTester
 	 */
 	public void destroy()
 	{
-		application.internalDestroy();
-		ThreadContext.detach();
+		try
+		{ 
+			ThreadContext.setApplication(application);
+			application.internalDestroy();	
+		}
+		finally
+		{ 
+			ThreadContext.detach();			
+		}
 	}
 
 	/**
@@ -732,7 +735,7 @@ public class BaseWicketTester
 
 		try
 		{
-			if (followRedirects && lastResponse.isRedirect())
+			if (isFollowRedirects() && lastResponse.isRedirect())
 			{
 				if (redirectCount++ >= 100)
 				{

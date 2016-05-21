@@ -61,7 +61,7 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 	 *            the parent container.
 	 * @param
 	 * 		  containerMarkup
-	 * 			  the markup of the parent container.
+	 * 			  the markup of the container.           
 	 * @param child
 	 *            The component to find the markup for.
 	 * @return the markup fragment for the child, or {@code null}.
@@ -70,7 +70,7 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 		IMarkupFragment containerMarkup, Component child)
 	{
 		IMarkupFragment childMarkupFound = null;
-		Iterator<Component> childrenIterator = container.iterator();
+		Iterator<Component> siblingsIterator = container.iterator();
 		final List<MarkupContainer> componentResolvers = new ArrayList<>();
 		
 		//collect all "transparent" (i.e. component resolvers) children
@@ -82,11 +82,11 @@ public abstract class AbstractMarkupSourcingStrategy implements IMarkupSourcingS
 				componentResolvers.add(child);
 			}
 		});
-				
-		while (childrenIterator.hasNext() && childMarkupFound == null)
-		{
-			Component sibling = childrenIterator.next();
 
+		while (siblingsIterator.hasNext() && childMarkupFound == null)
+		{
+			Component sibling = siblingsIterator.next();
+			
 			if (sibling == child || !sibling.isVisible() || !(sibling instanceof MarkupContainer))
 			{
 				continue;

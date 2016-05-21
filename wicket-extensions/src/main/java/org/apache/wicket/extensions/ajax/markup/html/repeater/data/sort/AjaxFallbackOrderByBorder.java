@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
@@ -38,6 +39,7 @@ import org.apache.wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 {
 	private static final long serialVersionUID = 1L;
+	private IAjaxCallListener ajaxCallListener;
 
 	/**
 	 * Constructor
@@ -49,14 +51,35 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
 		final ISortStateLocator<S> stateLocator)
 	{
-		super(id, sortProperty, stateLocator);
+		this(id, sortProperty, stateLocator, null);
 	}
 
-	@Override
-	protected OrderByLink<S> newOrderByLink(String id, S property, ISortStateLocator<S> stateLocator)
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param sortProperty
+	 * @param stateLocator
+	 * @param ajaxCallListener
+	 *
+	 * @deprecated override {@link #updateAjaxAttributes(AjaxRequestAttributes)} instead
+	 */
+	public AjaxFallbackOrderByBorder(final String id, final S sortProperty,
+		final ISortStateLocator<S> stateLocator, final IAjaxCallListener ajaxCallListener)
 	{
-		return new AjaxOrderByLink<S>("orderByLink", property, stateLocator)
+		super(id, sortProperty, stateLocator);
+
+		this.ajaxCallListener = ajaxCallListener;
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	protected OrderByLink<S> newOrderByLink(String id, S property,
+		ISortStateLocator<S> stateLocator)
+	{
+		return new AjaxFallbackOrderByLink<S>("orderByLink", property, stateLocator, ajaxCallListener)
 		{
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -75,7 +98,6 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 			public void onClick(final AjaxRequestTarget target)
 			{
 				AjaxFallbackOrderByBorder.this.onAjaxClick(target);
-
 			}
 		};
 	}
@@ -93,4 +115,6 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 	}
 
 	protected abstract void onAjaxClick(AjaxRequestTarget target);
+
+
 }

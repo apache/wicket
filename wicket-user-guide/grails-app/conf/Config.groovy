@@ -94,12 +94,12 @@ log4j = {
 def basePath = System.properties['base.dir']
 
 grails.doc.title = "Apache Wicket User Guide"
-grails.doc.version = "8.x"
+grails.doc.version = "7.x"
 grails.doc.subtitle = "Free Online Guide for Apache Wicket framework"
 grails.doc.authors = "Andrea Del Bene, Martin Grigorov, Carsten Hufe, Christian Kroemer, Daniel Bartl, Paul Borș, Tobias Soloschenko, Igor Vaynberg , Joachim Rohde"
 grails.doc.images = new File("${basePath}/src/docs/img")
 grails.doc.css = new File("${basePath}/src/docs/css")
-grails.doc.logo = """<a href="http://ci.apache.org/projects/wicket/guide/8.x/" target="_self"><img height="80px" src="http://ci.apache.org/projects/wicket/guide/7.x/img/apache-wicket.png"/></a>"""
+grails.doc.logo = """<a href="http://ci.apache.org/projects/wicket/guide/7.x/" target="_self"><img height="80px" src="http://ci.apache.org/projects/wicket/guide/7.x/img/apache-wicket.png"/></a>"""
 grails.doc.sponsorLogo = """<a href="http://www.apache.org/" target="_blank"><img style="width:300px;height:100px" src="http://wicket.apache.org/img/asf_logo_url.svg"/></a>"""
 grails.doc.copyright="""
 Copyright &copy; 2013-2016 — <a href="http://www.apache.org/" target="_blank">The Apache Software Foundation</a> 

@@ -26,7 +26,7 @@ public class AjaxFormValidatingBehaviorTest extends WicketTestCase
 {
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5999
+	 * @throws Exception
 	 */
 	@Test
 	public void ajaxUpdateOrdinaryFeedbackComponents() throws Exception
@@ -39,7 +39,7 @@ public class AjaxFormValidatingBehaviorTest extends WicketTestCase
 	}
 
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5999
+	 * @throws Exception
 	 */
 	@Test
 	public void ajaxUpdateInitiallyInvisibleFeedbackComponents() throws Exception

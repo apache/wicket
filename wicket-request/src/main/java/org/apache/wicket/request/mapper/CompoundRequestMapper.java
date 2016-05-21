@@ -42,9 +42,6 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 {
 	private static final Logger LOG = LoggerFactory.getLogger(CompoundRequestMapper.class);
 
-	/**
-	 * 
-	 */
 	static class MapperWithScore implements Comparable<MapperWithScore>
 	{
 		private final IRequestMapper mapper;

@@ -17,12 +17,14 @@
 package org.apache.wicket.request.resource;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.bundles.ConcatBundleResource;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -32,6 +34,12 @@ import org.junit.Test;
  */
 public class ResouceBundleTest extends WicketTestCase
 {
+	@Before
+	public void before()
+	{
+		tester.getSession().setLocale(Locale.ENGLISH);
+	}
+
 	/**
 	 * Tests the concatenation of 2 javascript files
 	 */

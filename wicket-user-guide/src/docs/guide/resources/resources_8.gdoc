@@ -1,4 +1,4 @@
-Some web developers prefer to put their <script> tags at the end of page body instead of inside the <head> tags:
+Some web developers prefer to put their <script> tags at the end of page body and not inside the <head> tags:
 
 {code:html}
 
@@ -19,7 +19,7 @@ Some web developers prefer to put their <script> tags at the end of page body in
 {code}
 
 
-In Wicket we can achieve this result providing a custom @IHeaderResponseDecorator@ to a our application and using Wicket tag <wicket:container/> to indicate where we want to render our scripts inside the page. Interface @IHeaderResponseDecorator@ defines method @IHeaderResponse decorate(IHeaderResponse response)@ which allows to decorate or add funtionalities to Wicket @IHeaderResponse@. Our custom @IHeaderResponseDecorator@ can be registered in the application with method @setHeaderResponseDecorator@. Anytime Wicket creates an instance of @IHeaderResponse@, it will call the registered @IHeaderResponseDecorator@ to decorate the header response.
+In Wicket we can achieve this result providing a custom @IHeaderResponseDecorator@ to a our application and using Wicket tag <wicket:container/> to indicate where we want to render our scripts inside the page. Interface @IHeaderResponseDecorator@ defines method @IHeaderResponse decorate(IHeaderResponse response)@ which allows to decorate or add functionalities to Wicket @IHeaderResponse@. Our custom @IHeaderResponseDecorator@ can be registered in the application with method @setHeaderResponseDecorator@. Anytime Wicket creates an instance of @IHeaderResponse@, it will call the registered @IHeaderResponseDecorator@ to decorate the header response.
 
 In the example project @ScriptInsideBody@ we can find a custom @IHeaderResponseDecorator@ that renders CSS into the usual <head> tag and put JavaScricpt header items into a specific container (tag <wicket:container/>)
 Wicket already comes with class @JavaScriptFilteredIntoFooterHeaderResponse@ which wraps a @IHeaderResponse@ and renders in a given container all the instances of @JavaScriptHeaderItem@.

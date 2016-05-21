@@ -134,6 +134,9 @@ public interface IAjaxCallListener
 	 * will be executed in a function that receives the following parameters:
 	 * <ol>
 	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
+	 * <li>errorMessage - in case of HTTP error the textual portion of the HTTP status</li>
+	 * <li>textStatus - type of failure: null, "timeout", "error", "abort" or "parsererror"</li>
 	 * </ol>
 	 * 
 	 * @param component

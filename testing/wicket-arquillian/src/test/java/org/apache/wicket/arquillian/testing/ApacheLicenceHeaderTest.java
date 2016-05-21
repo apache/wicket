@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.arquillian.testing;
 
-import java.util.Arrays;
-
 import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 
 /**

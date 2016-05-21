@@ -2,6 +2,181 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.3.0
+
+** Bug
+
+    * [WICKET-6069] - OnChangeAjaxBehavior does not work if the url contains a request parameter with same name as wicket id
+    * [WICKET-6078] - Problem with queued components and auto linking
+    * [WICKET-6079] - Problem with queued components and label
+    * [WICKET-6080] - Encapsulation of 3 enclosures leads to WicketRuntimeException
+    * [WICKET-6084] - ajax request failure handler receives incorrect arguments
+    * [WICKET-6085] - AjaxTimerBehavior with failure handler cause memory leak in browser
+    * [WICKET-6087] - Invalid AbstractRequestWrapperFactory.needsWrapper method scope: package - cannot create a custom implementation
+    * [WICKET-6088] - Problem with queued components and setting the model
+    * [WICKET-6091] - NPE in RequestLoggerRequestCycleListener when using native-websockets
+    * [WICKET-6093] - MarkupException due to ID collision in RelativePathPrefixHandler
+    * [WICKET-6094] - Find adequate ResourceReference with mount parameters
+    * [WICKET-6097] - JsonRequestLogger --> JsonMappingException --> StackOverflowError Infinite recursion
+    * [WICKET-6102] - StackoverflowError related to enclosures
+    * [WICKET-6108] - Closing a ModalWindow with jQuery 2.2.0 produces javascript errors
+    * [WICKET-6109] - Enclosure - "IllegalArgumentException: Argument 'markup' may not be null" after app restart
+    * [WICKET-6111] - Empty redirect on redirect to home page if home page already shown
+    * [WICKET-6116] - Exception 'A child already exists' when backing to a page with some markups in a Border
+    * [WICKET-6131] - IndexOutOfBoundsException in org.apache.wicket.core.request.mapper.CryptoMapper.decryptEntireUrl
+    * [WICKET-6133] - Failing test SpringBeanWithGenericsTest in 7.3.0.0 SNAPSHOT
+    * [WICKET-6134] - NPE when using ListView with missing markup
+    * [WICKET-6135] - There is no good way to get POST body content
+    * [WICKET-6139] - AjaxButton forces rendering type="button" 
+    * [WICKET-6141] - Runtime Exception rendering ComponentTag with RelativePathPrefixHandler
+    * [WICKET-6151] - DebugBar/PageSizeDebugPanel throws NullPointerException (need wrapper exception with more detail)
+
+** Improvement
+
+    * [WICKET-6053] - Allow to reuse the same application instance in several tests
+    * [WICKET-6081] - Add "assertNotRequired" to the WicketTester
+    * [WICKET-6098] - Add logging to HttpSessionDataStore
+    * [WICKET-6100] - Upgrade jQuery to 1.12.3/2.2.3
+    * [WICKET-6103] - Synchronization on JSR 356 connection
+    * [WICKET-6106] - Propagate JSR 356 WebSocket connection error to a page 
+    * [WICKET-6107] - Broadcast onClose event regardless of the JSR 356 WebSocket connection closed state
+    * [WICKET-6110] - Add a message to StalePageException for better debugging
+    * [WICKET-6122] - Add .map to the list of allowed file extensions in SecurePackageResourceGuard
+    * [WICKET-6123] - Remove 'abstract' from ChainingModel
+    * [WICKET-6127] - Add metrics for request duration
+    * [WICKET-6128] - Add metrics for currently active sessions
+    * [WICKET-6130] - Make it easier to override parts of SystemMapper
+    * [WICKET-6144] - Wicket-ajax parameter / header may be used to bypass proper exception handling
+    * [WICKET-6145] - Enable DeltaManager to replicate PageTable in Sessions
+    * [WICKET-6152] - Allow to add more than one WebSocketBehavior in the component tree
+
+** New Feature
+
+    * [WICKET-6120] - Wicket Metrics
+
+** Wish
+
+    * [WICKET-6095] - Multiline headers in DataTable
+
+=======================================================================
+
+Release Notes - Wicket - Version 7.2.0
+
+** Bug
+
+    * [WICKET-6001] - Exception raised while refreshing a page with queued components missing in the markup
+    * [WICKET-6002] - FileUploadField makes form-component models become null on submit
+    * [WICKET-6006] - ModalWindow.closeCurrent() causes 414 status error
+    * [WICKET-6010] - Downloading filenames containing ',' or ';' gives problems
+    * [WICKET-6011] - NPE in case DebugBar is added to AjaxRequestTarget
+    * [WICKET-6013] - CLONE - AjaxFallbackOrderByBorder wicketOrder[Up|Down|None] class missing in 7.1.0
+    * [WICKET-6014] - TransparentWebMarkupContainer breaks OnChangeAjaxBehavior for Select2
+    * [WICKET-6017] - Tests fail when executed with not expected locale
+    * [WICKET-6018] - TransparentWebMarkupContainer is not really "transparent"
+    * [WICKET-6020] - GuiceFieldValueFactory returns the NULL_SENTINEL from the cache
+    * [WICKET-6021] - ConcurrentModificationException in MarkupContainer#iterator#next
+    * [WICKET-6024] - Possible issue with Border and LoadableDetachableModel in 7.1.0
+    * [WICKET-6026] - Problem in detecting child id on nested <wicket:enclosure>
+    * [WICKET-6027] - Nested TransparentWebMarkupContainer, markup of inner component not found
+    * [WICKET-6028] - Detach called on enclosure component while it had a non-empty queue
+    * [WICKET-6031] - NPE in PackageResourceReference#getResource() when there is no request
+    * [WICKET-6032] - Wicket.Ajax.done() called twice on redirect
+    * [WICKET-6034] - AjaxFallbackOrderByBorder does not generate any CSS class in order link
+    * [WICKET-6036] - Failure to process markup with nested tags inside a Label
+    * [WICKET-6037] - ModalWindow vulnerable to Javascript injection through title model
+    * [WICKET-6043] - Cannot set wicket:enclosure on queued component in ListView
+    * [WICKET-6044] - AjaxFormChoiceComponentUpdatingBehavior: Duplicate input values according to WICKET-5948
+    * [WICKET-6045] - ListView NullPointerException when viewSize is set explicitly
+    * [WICKET-6048] - German Translation for EqualInputValidator wrong
+    * [WICKET-6050] - Wicket Ajax (Wicket.From.serializeElement) causes 400 bad request
+    * [WICKET-6052] - CSS header contribution overlap
+    * [WICKET-6058] - Error in calculation of byte ranges
+    * [WICKET-6059] - TransparentWebMarkupContainer can not resolve autocomponents in its parent
+    * [WICKET-6062] - MockHttpSession should renew its id after invalidation
+    * [WICKET-6063] - Add support for WebSocketRequest#getUrl() and other properties which are available in the handshake request
+    * [WICKET-6064] - WebSocketResponse.sendRedirect could be supported with <ajax-response><redirect>...</></>
+    * [WICKET-6065] - Calling http://examples7x.wicket.apache.org/resourceaggregation/ generate Internal error
+    * [WICKET-6068] - The key RangeValidator.exact is not mapped in Application_de.properties
+    * [WICKET-6076] - Problem with queued components and enclosure
+    * [WICKET-6077] - Border's body is not added as a child due to dequeuing
+
+** Improvement
+
+    * [WICKET-5950] - Model and GenericBaseModel could both implement IObjectClassAwareModel
+    * [WICKET-5969] - Please give us access to PageTable.index pageId queue
+    * [WICKET-6015] - AjaxFallbackOrderByBorder/Link should support updateAjaxAttributes() idiom
+    * [WICKET-6019] - Remove 'final' modifier for Localizer#getStringIgnoreSettings() methods
+    * [WICKET-6023] - small tweak for component queuing for the AbstractRepeater
+    * [WICKET-6029] - Make Border's methods consistent with commit f14e03f
+    * [WICKET-6046] - Wicket Quickstart Example Application shows deployment memory leak in Tomcat
+    * [WICKET-6051] - Improve performance of CssUrlReplacer
+    * [WICKET-6054] - Provide a factory method for the WebSocketResponse & WebSocketRequest
+    * [WICKET-6061] - Improved PackageResource#getCacheKey
+    * [WICKET-6070] - Provide factory methods for WizardButtonBar buttons
+    * [WICKET-6072] - Improve the quickstart to make it easier to use JSR-356 web sockets
+
+** New Feature
+
+    * [WICKET-6025] - Read resource files with Java's NIO API
+    * [WICKET-6042] - Implementation of ExternalImage component
+
+** Task
+
+    * [WICKET-6049] - Update the site to point to the new deployments of the examples
+    * [WICKET-6057] - Upgrade commons-collections to 4.1
+    * [WICKET-6071] - Upgrade jQuery to 1.12 / 2.2.0
+
+** Wish
+
+    * [WICKET-6067] - Provide an Ajax Behavior that prevents form submit on ENTER
+
+=======================================================================
+
+Release Notes - Wicket - Version 7.1.0
+
+** Bug
+
+    * [WICKET-5882] - AutoComplete suggestion list disappear when I click on autoComplete scrollbar in IE
+    * [WICKET-5941] - Headers not rendered for components inside TransparentWebMarkupContainer on ajax update
+    * [WICKET-5959] - HTML input placeholder text breaks AutoCompleteTextField in IE11
+    * [WICKET-5960] - Page header isn't rendered for pages where URL has changed during render
+    * [WICKET-5964] - Queuing a component within an enclosure
+    * [WICKET-5965] - Queuing a component in head
+    * [WICKET-5966] - ResourceUtils.getLocaleFromFilename can't handle minimized resources well
+    * [WICKET-5967] - Unable to load i18n minified js
+    * [WICKET-5968] - CachingResourceLocator lookup key doesn't take strict into account
+    * [WICKET-5970] - UrlRenderer does not render fragments
+    * [WICKET-5973] - IllegalArgumentException 'bytes' cannot be negative. on opening Inspector
+    * [WICKET-5975] - AjaxFallbackOrderByBorder wicketOrder[Up|Down|None] class missing
+    * [WICKET-5978] - LazyInitProxyFactory fills permgen space
+    * [WICKET-5980] - When using Servlet 3.0 filter Wicket calculates filter path wrong
+    * [WICKET-5981] - Significant Performance Degradation From Wicket 6.20.0 to Wicket 7.0.0
+    * [WICKET-5983] - O(n^2) complexity in MarkupContainer.add
+    * [WICKET-5988] - WICKET-5981 breaks forms inside borders
+    * [WICKET-5989] - BaseWicketTester#startComponentInPage fails for pages with <wicket:header-items></wicket:header> placeholder
+    * [WICKET-5993] - AjaxButton - image is not shown even though type="image" is in html-template 
+    * [WICKET-5994] - Mounted TemplateResourceReference throws  org.apache.wicket.WicketRuntimeException when https is used
+    * [WICKET-5995] - "Range" header parsing is broken
+    * [WICKET-5996] - Mounted packages throw IllegalArgumentException when visiting base package url.
+    * [WICKET-5997] - Compatibility problem with Websphere liberty profile
+    * [WICKET-5999] - AjaxFormValidatingBehavior not updates initially hidden feedback component
+    * [WICKET-6005] - WicketRuntimeException from AjaxPagingNavigator#onAjaxEvent
+
+** Improvement
+
+    * [WICKET-5948] - wicket-ajax.js probably doesn't traverse the children of <div> or <span>
+    * [WICKET-5971] - Code cleanup in ServletWebResponse
+    * [WICKET-5974] - Change AjaxPagingNavigator#onAjaxEvent() to only consider parent components that have setOutputMarkupId(true)
+    * [WICKET-5976] - Improve the documentation of FeedbackMessages first(int level)
+    * [WICKET-5984] - ReplaceHandlerException lacks an accessor for the replacement RequestHandler
+    * [WICKET-5986] - NumberTextField<N> should use Models for minimum, maximum and step
+
+** Task
+
+    * [WICKET-5951] - Upgrade Atmosphere to 2.2.8
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.0.0
 
 ** Bug

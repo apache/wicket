@@ -19,6 +19,8 @@ package org.apache.wicket.markup.html.internal;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
+import java.util.Locale;
+
 /**
  * Test page for InlineEnclosureTest.
  * Tests methods:
@@ -32,5 +34,10 @@ public class InlineEnclosureWithWicketMessagePage extends WebPage
 	public InlineEnclosureWithWicketMessagePage(boolean childVisible)
 	{
 		add(new Label("child", "A Label").setVisible(childVisible));
+	}
+
+	@Override
+	public Locale getLocale() {
+		return Locale.US;
 	}
 }

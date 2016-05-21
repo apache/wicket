@@ -17,7 +17,7 @@
 package org.apache.wicket.settings;
 
 /**
- * Settings interface for various debug settings
+ * Settings class for various debug settings
  * <p>
  * <i>componentUseCheck </i> (defaults to true in development mode) - causes the framework to do a
  * check after rendering each page to ensure that each component was used in rendering the markup.

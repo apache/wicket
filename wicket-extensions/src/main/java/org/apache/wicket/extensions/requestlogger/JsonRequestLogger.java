@@ -22,6 +22,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.AnnotatedClass;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * <dependency>
  *     <groupId>com.fasterxml.jackson.core</groupId>
  *     <artifactId>jackson-databind</artifactId>
- *     <version>2.7.1</version>
+ *     <version>2.6.5</version>
  * </dependency>
  * }
  * </pre>
@@ -58,8 +59,13 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	private static final class FilteredIntrospector extends JacksonAnnotationIntrospector
 	{
 		@Override
-		public Object findFilterId(Annotated a)
+		public Object findFilterId(AnnotatedClass ac)
 		{
+			return "default";
+		}
+
+		@Override
+		public Object findFilterId(final Annotated a) {
 			return "default";
 		}
 	}

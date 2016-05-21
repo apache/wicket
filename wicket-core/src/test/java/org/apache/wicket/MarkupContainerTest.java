@@ -44,7 +44,7 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
-@SuppressWarnings({ "javadoc", "serial" })
+@SuppressWarnings({ "javadoc", "serial", "deprecation" })
 public class MarkupContainerTest extends WicketTestCase
 {
 	private static final int NUMBER_OF_CHILDREN_FOR_A_MAP = MarkupContainer.MAPIFY_THRESHOLD + 1;
@@ -117,6 +117,95 @@ public class MarkupContainerTest extends WicketTestCase
 		assertNull(a.get("..:a"));
 		assertNull(b.get("..|.."));
 		assertNull(a.get("q"));
+	}
+
+	/**
+	 * Tests the get(int) method of MarkupContainer.
+	 */
+	@Test
+	public void getIndexed()
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		Component c1 = new WebComponent("c1");
+		Component c2 = new WebComponent("c2");
+
+		c.add(c1);
+		c.add(c2);
+
+		assertThat(c.get(0), is(c1));
+		assertThat(c.get(1), is(c2));
+	}
+
+	/**
+	 * Tests the get(int) method of MarkupContainer with non-existing index.
+	 */
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void getIndexedOutOfBounds()
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		Component c1 = new WebComponent("c1");
+
+		c.add(c1);
+
+		assertThat(c.get(0), is(c1));
+		c.get(1);
+	}
+
+	/**
+	 * Tests the get(int) method of MarkupContainer with negative index.
+	 */
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void getIndexedNegative()
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		Component c1 = new WebComponent("c1");
+
+		c.add(c1);
+
+		assertThat(c.get(0), is(c1));
+		c.get(-1);
+	}
+
+	/**
+	 * Tests the get(int) method of MarkupContainer when the index exceeds the number of children.
+	 */
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void getIndexedArrayIndexOutOfBoundsException()
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		c.get(0);
+	}
+
+	/**
+	 * Tests the swap method.
+	 */
+	@Test
+	public void swap()
+	{
+		MarkupContainer c = new WebMarkupContainer("parent");
+		Component c1 = new WebComponent("c1");
+		Component c2 = new WebComponent("c2");
+		Component c3 = new WebComponent("c3");
+
+		c.add(c1);
+		c.add(c2);
+		c.add(c3);
+
+		assertThat(c.get(0), is(c1));
+		assertThat(c.get(1), is(c2));
+		assertThat(c.get(2), is(c3));
+
+		c.swap(0, 1);
+
+		assertThat(c.get(0), is(c2));
+		assertThat(c.get(1), is(c1));
+		assertThat(c.get(2), is(c3));
+
+		c.swap(0, 2);
+
+		assertThat(c.get(0), is(c3));
+		assertThat(c.get(1), is(c1));
+		assertThat(c.get(2), is(c2));
 	}
 
 	/**

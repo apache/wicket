@@ -75,6 +75,4 @@ public class JavaxWebSocketProcessor extends AbstractWebSocketProcessor
 			JavaxWebSocketProcessor.this.onMessage(array, 0, array.length);
 		}
 	}
-
-
 }

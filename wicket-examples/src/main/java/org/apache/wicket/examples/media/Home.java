@@ -49,13 +49,14 @@ public final class Home extends WicketExamplePage
 	{
 		// Internal video with several options
 
-		Video video1 = new Video("video1", new PackageResourceReference(Home.class,
-			"video1.mp4").readBuffered(false));
+		Video video1 = new Video("video1",
+			new PackageResourceReference(Home.class, "video1.mp4").readBuffered(false));
 		video1.setAutoplay(false);
 		video1.setControls(true);
 		video1.setLooping(false);
 		video1.setWidth(320);
 		video1.setHeight(240);
+		video1.setType("video/mp4");
 		video1.setPoster(new PackageResourceReference(Home.class, "novideo.gif"));
 		add(video1);
 
@@ -64,12 +65,12 @@ public final class Home extends WicketExamplePage
 		Video video2 = new Video("video2");
 		video2.setPoster(new PackageResourceReference(Home.class, "novideo.gif"));
 
-		Source source2 = new Source("source2", new PackageResourceReference(Home.class,
-			"video2.mp4"));
+		Source source2 = new Source("source2",
+			new PackageResourceReference(Home.class, "video2.mp4"));
 		// Need to be set to true to show the type
 		source2.setDisplayType(true);
 		// the default type is the mime type of the image with no codec information
-		source2.setType("video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"");
+		source2.setType("video/mp4; codecs='avc1.42E01E, mp4a.40.2'");
 		video2.add(source2);
 
 		add(video2);
@@ -78,27 +79,23 @@ public final class Home extends WicketExamplePage
 		PageParameters pageParameters = new PageParameters();
 		pageParameters.add("random", UUID.randomUUID().toString());
 		pageParameters.add("test", "test");
-		Video video3 = new Video("video3", "http://media.w3.org/2010/05/video/movie_300.mp4",
+		Video video3 = new Video("video3", "https://w3c-test.org/media/movie_300.mp4",
 			pageParameters);
 		video3.setPoster(new PackageResourceReference(Home.class, "novideo.gif"));
+		video3.setType("video/mp4");
 		add(video3);
 
 		/*
-		 * // video with track
-		 * Video video4 = new Video("video4", new PackageResourceReference(Home.class, "dummyVideo.m4a"));
+		 * // video with track Video video4 = new Video("video4", new
+		 * PackageResourceReference(Home.class, "dummyVideo.m4a"));
 		 *
-		 * // source tag
-		 * Source source4 = new Source("source4", "http://www.mytestpage.xc/video.m4a");
-		 * source4.setMedia("screen and (device-width:500px)");
-		 * source4.setType("video/mp4");
-		 * source4.setDisplayType(true); video4.add(source4);
+		 * // source tag Source source4 = new Source("source4",
+		 * "http://www.mytestpage.xc/video.m4a"); source4.setMedia("screen and (device-width:500px)"
+		 * ); source4.setType("video/mp4"); source4.setDisplayType(true); video4.add(source4);
 		 *
-		 * // tack tag
-		 * Track track4 = new Track("track4", new PackageResourceReference(Home.class, "dummySubtitles.vtt"));
-		 * track4.setKind(Kind.subtitles);
-		 * track4.setLabel("Subtitles of video");
-		 * track4.setSrclang(Locale.GERMANY);
-		 * track4.setDefaultTrack(true);
+		 * // tack tag Track track4 = new Track("track4", new PackageResourceReference(Home.class,
+		 * "dummySubtitles.vtt")); track4.setKind(Kind.subtitles); track4.setLabel(
+		 * "Subtitles of video"); track4.setSrclang(Locale.GERMANY); track4.setDefaultTrack(true);
 		 * video4.add(track4);
 		 *
 		 * add(video4);
@@ -109,7 +106,7 @@ public final class Home extends WicketExamplePage
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		response.render(CssHeaderItem.forReference(new PackageResourceReference(Home.class,
-			"Home.css")));
+		response.render(
+			CssHeaderItem.forReference(new PackageResourceReference(Home.class, "Home.css")));
 	}
 }

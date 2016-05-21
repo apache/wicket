@@ -210,6 +210,13 @@ bestpractices:
 internals:
   title: Wicket Internals
   pagestoring: Page storing
+  autocomponents: Markup parsing and Autocomponents
+monitoring:
+  title: Wicket Metrics Monitoring (Experimental)
+  monitoring_1: Example setup
+  monitoring_2: Visualization with Graphite
+  monitoring_3: Measured data
+  monitoring_4: Write own measurements
 maven:
   title: Working with Maven (Appendix)
   maven_1: Switching Wicket to DEPLOYMENT mode
