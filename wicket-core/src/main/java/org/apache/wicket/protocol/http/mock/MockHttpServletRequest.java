@@ -323,7 +323,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		List<String> list = (List<String>)headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList<String>(1);
+			list = new ArrayList<>(1);
 			headers.put(name, list);
 		}
 		list.clear();
@@ -635,6 +635,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return getLocales().nextElement();
 	}
 
+	public void setLocale(Locale locale) {
+		setHeader("Accept-Language", locale.getLanguage() + '-' + locale.getCountry());
+	}
+
 	/**
 	 * 
 	 * @param value
@@ -668,10 +672,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public Enumeration<Locale> getLocales()
 	{
-		List<Locale> list = new ArrayList<Locale>();
-		final String header = getHeader("Accept-Language");
+		List<Locale> list = new ArrayList<>();
+		String header = getHeader("Accept-Language");
 		if (header != null)
 		{
+			int idxOfSemicolon = header.indexOf(';');
+			if (idxOfSemicolon > -1) {
+				header = header.substring(0 , idxOfSemicolon);
+			}
 			final String[] locales = Strings.split(header, ',');
 			for (String value : locales)
 			{
