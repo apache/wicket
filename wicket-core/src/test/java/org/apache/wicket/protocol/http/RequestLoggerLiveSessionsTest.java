@@ -34,7 +34,7 @@ public class RequestLoggerLiveSessionsTest
 {
 	private final RequestLogger requestLogger = new RequestLogger();
 	
-	private final ArrayList<String> sessionIds = new ArrayList<>();
+	private final ArrayList<String> sessionIds = new ArrayList<String>();
 
 	@Test
 	public void concurrentModification() {
