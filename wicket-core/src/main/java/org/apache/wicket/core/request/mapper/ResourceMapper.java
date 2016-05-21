@@ -172,7 +172,12 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 	@Override
 	public int getCompatibilityScore(Request request)
 	{
-		int score = super.getCompatibilityScore(request);
+		Url originalUrl = new Url(request.getUrl());
+		PageParameters parameters = extractPageParameters(request, mountSegments.length, parametersEncoder);
+		removeCachingDecoration(originalUrl, parameters);
+		Request requestWithoutDecoration = request.cloneWithUrl(originalUrl);
+
+		int score = super.getCompatibilityScore(requestWithoutDecoration);
 		if (score > 0)
 		{
 			score--; // pages always have priority over resources
