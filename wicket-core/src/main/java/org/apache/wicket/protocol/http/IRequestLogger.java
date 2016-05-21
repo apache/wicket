@@ -163,14 +163,14 @@ public interface IRequestLogger
 	/**
 	 * Perform the actual logging
 	 */
-	public void performLogging();
+	void performLogging();
 
 	/**
 	 * This class hold the information one request of a session has.
 	 * 
 	 * @author jcompagner
 	 */
-	public static class SessionData implements IClusterable, Comparable<SessionData>
+	class SessionData implements IClusterable, Comparable<SessionData>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -304,7 +304,7 @@ public interface IRequestLogger
 	 * 
 	 * @author jcompagner
 	 */
-	public static class RequestData implements IClusterable
+	class RequestData implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 
