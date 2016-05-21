@@ -376,7 +376,7 @@ public final class StringList extends AbstractStringList
 	@Override
 	public String[] toArray()
 	{
-		return strings.toArray(new String[size()]);
+		return strings.toArray(new String[0]);
 	}
 
 	/**

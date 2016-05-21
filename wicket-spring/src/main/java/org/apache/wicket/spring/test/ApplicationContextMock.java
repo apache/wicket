@@ -249,7 +249,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	@Override
 	public String[] getBeanDefinitionNames()
 	{
-		return beans.keySet().toArray(new String[beans.size()]);
+		return beans.keySet().toArray(new String[0]);
 	}
 
 	@Override

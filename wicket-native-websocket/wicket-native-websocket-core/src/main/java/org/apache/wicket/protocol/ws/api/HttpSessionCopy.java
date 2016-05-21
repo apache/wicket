@@ -117,7 +117,7 @@ public class HttpSessionCopy implements HttpSession
 	@Override
 	public String[] getValueNames()
 	{
-		return Collections.list(attributes.keys()).toArray(new String[attributes.size()]);
+		return Collections.list(attributes.keys()).toArray(new String[0]);
 	}
 
 	@Override
