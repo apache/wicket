@@ -3050,6 +3050,8 @@ public abstract class Component
 	 * @param object
 	 *            The object to set
 	 * @return This
+	 * @throws IllegalStateException If the component has neither its own model nor any of its
+	 * parents uses {@link IComponentInheritedModel}
 	 */
 	@SuppressWarnings("unchecked")
 	public final Component setDefaultModelObject(final Object object)
