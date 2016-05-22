@@ -53,6 +53,8 @@ public class SunJceCrypt extends AbstractCrypt
 	public final static byte[] SALT = { (byte)0x15, (byte)0x8c, (byte)0xa3, (byte)0x4a,
 			(byte)0x66, (byte)0x51, (byte)0x2a, (byte)0xbc };
 
+	private static final PBEParameterSpec PARAMETER_SPEC = new PBEParameterSpec(SALT, COUNT);
+
 	/** The name of encryption method (cipher) */
 	private final String cryptMethod;
 
@@ -141,7 +143,7 @@ public class SunJceCrypt extends AbstractCrypt
 	 */
 	protected AlgorithmParameterSpec createParameterSpec()
 	{
-		return new PBEParameterSpec(SALT, COUNT);
+		return PARAMETER_SPEC;
 	}
 
 	/**
