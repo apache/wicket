@@ -63,10 +63,10 @@ public class SunJceCryptTest extends Assert
 	}
 
 	/**
-	 * Checks whether Oracle Unlimited Strenght Jurisdiction Policy is installed
+	 * Checks whether Oracle Unlimited Strength Jurisdiction Policy is installed
 	 * Based on http://stackoverflow.com/a/8607735
 	 *
-	 * @return {@code true} if Unlimited Strenght Jurisdiction Policy is installed
+	 * @return {@code true} if Unlimited Strength Jurisdiction Policy is installed
 	 * @throws NoSuchAlgorithmException
 	 */
 	static boolean isUnlimitedStrengthJurisdictionPolicyInstalled() throws NoSuchAlgorithmException
