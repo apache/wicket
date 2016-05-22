@@ -64,21 +64,20 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 	{
 		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
 
+		if (Security.getProviders("Cipher." + cryptMethod).length == 0)
+		{
+			try
+			{
+				// Initialize and add a security provider required for encryption
+				final Class<?> clazz = Class.forName("com.sun.crypto.provider.SunJCE");
 
-		if (Security.getProviders("Cipher." + cryptMethod).length > 0)
-		{
-			return; // we are good to go!
-		}
-		try
-		{
-			// Initialize and add a security provider required for encryption
-			final Class<?> clazz = Class.forName("com.sun.crypto.provider.SunJCE");
-
-			Security.addProvider((Provider)clazz.newInstance());
-		}
-		catch (Exception ex)
-		{
-			throw new RuntimeException("Unable to load SunJCE service provider", ex);
+				final Provider provider = (Provider) clazz.newInstance();
+				Security.addProvider(provider);
+			}
+			catch (Exception ex)
+			{
+				throw new RuntimeException("Unable to load SunJCE service provider", ex);
+			}
 		}
 	}
 
