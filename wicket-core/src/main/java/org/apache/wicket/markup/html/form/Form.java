@@ -35,6 +35,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -296,7 +297,13 @@ public class Form<T> extends WebMarkupContainer
 	 * The form has discovered a multipart component before rendering and is marking itself as
 	 * multipart until next render
 	 */
-	private static final short MULTIPART_HINT = 0x02;
+	private static final short MULTIPART_HINT_YES = 0x02;
+
+	/**
+	 * The form has discovered no multipart component before rendering and is marking itself as
+	 * not multipart until next render
+	 */
+	private static final short MULTIPART_HINT_NO = 0x04;
 
 	/**
 	 * Constructs a form with no validation.
@@ -1361,50 +1368,48 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public boolean isMultiPart()
 	{
-		if (multiPart != 0)
+		if (multiPart == 0)
 		{
-			return true;
+			Boolean anyEmbeddedMultipart = visitChildren(Component.class,
+					new IVisitor<Component, Boolean>()
+					{
+						@Override
+						public void component(final Component component, final IVisit<Boolean> visit)
+						{
+							boolean isMultiPart = false;
+							if (component instanceof Form<?>)
+							{
+								Form<?> form = (Form<?>)component;
+								if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
+								{
+									isMultiPart = (form.multiPart & MULTIPART_HARD) != 0;
+								}
+							}
+							else if (component instanceof FormComponent<?>)
+							{
+								FormComponent<?> fc = (FormComponent<?>)component;
+								if (fc.isVisibleInHierarchy() && fc.isEnabledInHierarchy())
+								{
+									isMultiPart = fc.isMultiPart();
+								}
+							}
+
+							if (isMultiPart)
+							{
+								visit.stop(true);
+							}
+						}
+
+					});
+			
+			if (Boolean.TRUE.equals(anyEmbeddedMultipart)) {
+				multiPart |= MULTIPART_HINT_YES;
+			} else {
+				multiPart |= MULTIPART_HINT_NO;
+			}
 		}
 
-		Boolean anyEmbeddedMultipart = visitChildren(Component.class,
-			new IVisitor<Component, Boolean>()
-			{
-				@Override
-				public void component(final Component component, final IVisit<Boolean> visit)
-				{
-					boolean isMultiPart = false;
-					if (component instanceof Form<?>)
-					{
-						Form<?> form = (Form<?>)component;
-						if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
-						{
-							isMultiPart = (form.multiPart != 0);
-						}
-					}
-					else if (component instanceof FormComponent<?>)
-					{
-						FormComponent<?> fc = (FormComponent<?>)component;
-						if (fc.isVisibleInHierarchy() && fc.isEnabledInHierarchy())
-						{
-							isMultiPart = fc.isMultiPart();
-						}
-					}
-
-					if (isMultiPart)
-					{
-						visit.stop(true);
-					}
-				}
-
-			});
-
-		boolean mp = Boolean.TRUE.equals(anyEmbeddedMultipart);
-
-		if (mp)
-		{
-			multiPart |= MULTIPART_HINT;
-		}
-		return mp;
+		return (multiPart & (MULTIPART_HARD | MULTIPART_HINT_YES)) != 0;
 	}
 
 	/**
@@ -1799,10 +1804,18 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	@Override
+	public void onEvent(IEvent<?> event) {
+		if (event.getPayload() instanceof AjaxRequestTarget) {
+			// WICKET-6171 clear multipart hint, it might change during Ajax requests without this form being rendered
+			this.multiPart &= MULTIPART_HARD;
+		}
+	}
+	
+	@Override
 	protected void onBeforeRender()
 	{
-		// clear multipart hint, it will be set if necessary by the visitor
-		this.multiPart &= ~MULTIPART_HINT;
+		// clear multipart hint, it will be reevaluated by #isMultiPart()
+		this.multiPart &= MULTIPART_HARD;
 
 		super.onBeforeRender();
 	}
