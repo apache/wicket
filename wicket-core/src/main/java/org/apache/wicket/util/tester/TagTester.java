@@ -614,7 +614,7 @@ public class TagTester
 				XmlPullParser parser = new XmlPullParser();
 				parser.parse(markup);
 
-				XmlTag elm = null;
+				XmlTag elm;
 				XmlTag openTag = null;
 				XmlTag closeTag = null;
 				int level = 0;
@@ -671,6 +671,13 @@ public class TagTester
 						openTag = null;
 						closeTag = null;
 					}
+					else if (openTag != null)
+					{
+						TagTester tester = new TagTester(parser, openTag, openTag);
+						testers.add(tester);
+						openTag = null;
+						closeTag = null;
+					}
 
 					if (stopAfterFirst && (closeTag != null))
 					{
@@ -680,7 +687,6 @@ public class TagTester
 			}
 			catch (Exception e)
 			{
-				// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
 				throw new WicketRuntimeException(e);
 			}
 		}
