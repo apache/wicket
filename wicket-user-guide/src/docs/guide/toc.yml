@@ -154,7 +154,8 @@ ajax:
   ajax_4: Using an activity indicator
   ajax_5: AJAX request attributes and call listeners
   ajax_6: Creating custom AJAX call listener
-  ajax_7: Summary
+  ajax_7: Stateless AJAX components/behaviors
+  ajax_8: Summary
 jee:
   title: Integration with enterprise containers
   jee_1: Integrating Wicket with EJB
