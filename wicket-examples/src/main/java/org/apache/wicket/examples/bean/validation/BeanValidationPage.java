@@ -25,6 +25,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
@@ -38,7 +39,7 @@ public class BeanValidationPage extends WicketExamplePage
 	{
 		add(new FeedbackPanel("feedbackErrors", new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR)));
 
-		Form<?> form = new Form<Void>("form") {
+		Form<?> form = new StatelessForm<Void>("form") {
 			@Override
 			protected void onSubmit()
 			{

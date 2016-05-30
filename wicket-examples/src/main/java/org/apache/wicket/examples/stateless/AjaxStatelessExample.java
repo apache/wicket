@@ -6,7 +6,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.ajax.markup.html.form.StatelessAjaxSubmitLink;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxButton;
 import org.apache.wicket.extensions.ajax.markup.html.IndicatingAjaxFallbackLink;
@@ -122,7 +122,7 @@ public class AjaxStatelessExample extends WicketExamplePage
 		form.add(feedback.setOutputMarkupId(true));
 		form.add(submittedValues.setOutputMarkupId(true));
 
-		form.add(new AjaxSubmitLink("submit")
+		form.add(new StatelessAjaxSubmitLink("submit")
 		{
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form)
@@ -138,12 +138,6 @@ public class AjaxStatelessExample extends WicketExamplePage
 				String values = "Your name is: " + nameField.getModelObject() + " " + surnameField.getModelObject();
 				submittedValues.setDefaultModelObject(values);
 				target.add(feedback, submittedValues);
-			}
-			
-			@Override
-			protected boolean getStatelessHint()
-			{
-				return true;
 			}
 		});
 
