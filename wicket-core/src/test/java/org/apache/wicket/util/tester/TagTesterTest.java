@@ -21,10 +21,10 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 /**
  * Test of TagTester
@@ -329,5 +329,15 @@ public class TagTesterTest extends Assert
 		// Check that getValue also returns tags if the content of a tag is containing tags
 		TagTester tagTester2 = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertEquals(tagTester.getMarkup(), tagTester2.getValue());
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6173
+	 */
+	@Test
+	public void valueFromTagsByAttribute()
+	{
+		TagTester tagTester = TagTester.createTagsByAttribute(MARKUP_1, "id", "test2");
+		assertEquals("mock", tagTester.getValue());
 	}
 }
