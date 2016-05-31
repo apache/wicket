@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
@@ -671,7 +672,7 @@ public class TagTester
 						openTag = null;
 						closeTag = null;
 					}
-					else if (openTag != null)
+					else if (openTag != null && !HtmlHandler.requiresCloseTag(openTag.getName()))
 					{
 						TagTester tester = new TagTester(parser, openTag, openTag);
 						testers.add(tester);
