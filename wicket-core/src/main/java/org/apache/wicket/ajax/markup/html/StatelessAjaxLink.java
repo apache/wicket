@@ -16,8 +16,18 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.model.IModel;
 
+/**
+ * Stateless version of {@link AjaxSubmitLink}. As such, it must not relay on 
+ * page status and must be provided with a static id (see user guide).
+ * 
+ * @author andrea del bene
+ *
+ * @param <T>
+ *            type of model object
+ */
 public abstract class StatelessAjaxLink<T> extends AjaxLink<T>
 {
 	private static final long serialVersionUID = 5580337001313353237L;

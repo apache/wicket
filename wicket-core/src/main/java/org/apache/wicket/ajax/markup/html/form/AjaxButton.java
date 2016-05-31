@@ -230,4 +230,10 @@ public abstract class AjaxButton extends Button
 	protected void onError(AjaxRequestTarget target, Form<?> form)
 	{
 	}
+	
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
+	}
 }

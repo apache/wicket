@@ -19,7 +19,16 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 
-public class StatelessAjaxButton extends AjaxButton
+/**
+ * Stateless version of {@link AjaxButton}. As such, it must not relay on 
+ * page status and must be provided with a static id (see user guide).
+ * 
+ * @author andrea del bene
+ *
+ * @param <T>
+ *            type of model object
+ */
+public abstract class StatelessAjaxButton extends AjaxButton
 {
 	private static final long serialVersionUID = -3625309953596700148L;
 

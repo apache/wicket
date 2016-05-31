@@ -38,7 +38,7 @@ However in this case calling @setOutputMarkupId@ on a component is not enough. S
 By default calling @setOutputMarkupId@ we generate markup ids using a session-level counter and this make them not static. Hence, to refresh component in a stateless page we must provide them with static ids, either setting them in Java code (with @Component.setMarkupId@) or simply writing them directly in the markup:
 
 {code}
-   <span id="staticIdToUSe" wicket:id="componentWicketId"></span>
+   <span id="staticIdToUse" wicket:id="componentWicketId"></span>
 {code}
 
 [See examples site|http://examples7x.wicket.apache.org/stateless] for a full showcase of AJAX-stateless capabilities.

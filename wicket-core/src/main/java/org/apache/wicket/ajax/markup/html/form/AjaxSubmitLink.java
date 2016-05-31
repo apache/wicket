@@ -219,4 +219,11 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	{
 		logger.warn("unexpected invocation of #onAfterSubmit() on {}", this);
 	}
+	
+	
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
+	}
 }

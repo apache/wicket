@@ -88,7 +88,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		if (getStatelessHint(component))
 		{
 			//generate behavior id
-	        component.getBehaviorId(this);
+			component.getBehaviorId(this);
 		}
 	}
 
