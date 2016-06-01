@@ -49,7 +49,7 @@
 					cookieEnabled = (document.cookie.indexOf("wickettestcookie") !== -1);
 				}
 				info.navigatorCookieEnabled = cookieEnabled;
-				info.navigatorJavaEnabled =  window.navigator.javaEnabled();
+				info.navigatorJavaEnabled = window.navigator.javaEnabled() || false;
 				info.navigatorLanguage = window.navigator.language ? window.navigator.language : window.navigator.userLanguage;
 				info.navigatorPlatform = window.navigator.platform;
 				info.navigatorUserAgent = window.navigator.userAgent;
