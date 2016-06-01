@@ -83,7 +83,12 @@ public class WicketObjects
 		}
 		catch (ClassNotFoundException cnfx)
 		{
-			log.warn("Could not resolve class [" + className + "]", cnfx);
+			try 
+			{
+				resolved = (Class<T>)Class.forName(className);
+			} catch (ClassNotFoundException cnfx2) {
+				log.warn("Could not resolve class [" + className + "]", cnfx);
+			}
 		}
 		return resolved;
 	}
