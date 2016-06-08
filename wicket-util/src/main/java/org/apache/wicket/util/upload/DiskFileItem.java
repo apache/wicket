@@ -710,19 +710,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 */
 	private void writeObject(final ObjectOutputStream out) throws IOException
 	{
-		// Read the data
-		if (dfos.isInMemory())
-		{
-			cachedContent = get();
-		}
-		else
-		{
-			cachedContent = null;
-			dfosFile = dfos.getFile();
-		}
-
-		// write out values
-		out.defaultWriteObject();
 	}
 
 	/**
@@ -738,24 +725,6 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 	 */
 	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		// read values
-		in.defaultReadObject();
-
-		OutputStream output = getOutputStream();
-		if (cachedContent != null)
-		{
-			output.write(cachedContent);
-		}
-		else
-		{
-			FileInputStream input = new FileInputStream(dfosFile);
-			Streams.copy(input, output);
-			Files.remove(dfosFile);
-			dfosFile = null;
-		}
-		output.close();
-
-		cachedContent = null;
 	}
 
 	/**
