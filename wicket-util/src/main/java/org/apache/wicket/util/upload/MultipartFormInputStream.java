@@ -314,11 +314,6 @@ public class MultipartFormInputStream
 	MultipartFormInputStream(final InputStream input, final byte[] boundary, final int bufSize,
 		final ProgressNotifier pNotifier)
 	{
-		this.input = input;
-		this.bufSize = bufSize;
-		buffer = new byte[bufSize];
-		notifier = pNotifier;
-
 		// We prepend CR/LF to the boundary to chop trailng CR/LF from
 		// body-data tokens.
 		boundaryLength = boundary.length + BOUNDARY_PREFIX.length;
@@ -327,6 +322,11 @@ public class MultipartFormInputStream
 			throw new IllegalArgumentException(
 				"The buffer size specified for the MultipartFormInputStream is too small");
 		}
+		this.input = input;
+		this.bufSize = Math.max(bufSize, boundaryLength*2);
+		buffer = new byte[bufSize];
+		notifier = pNotifier;
+
 		this.boundary = new byte[this.boundaryLength];
 		keepRegion = this.boundary.length;
 
