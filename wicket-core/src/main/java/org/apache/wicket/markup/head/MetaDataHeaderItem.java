@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.Response;
@@ -123,7 +122,7 @@ public class MetaDataHeaderItem extends HeaderItem
 			{
 				buffer.append('=')
 					.append('"')
-					.append(JavaScriptUtils.escapeQuotes(value.toString()))
+					.append(Strings.replaceAll(value.toString(), "\"", "\\\""))
 					.append('"');
 			}
 		}
