@@ -42,4 +42,13 @@ public class MetaDataHeaderItemTest
 		
 		assertEquals(expectedString, metaTag.generateString());
 	}
+	
+	@Test
+	public void testEscapeOnlyDoubleQuotes() throws Exception
+	{
+		String expectedString = "<link rel=\"single quote \' double quotes\\\"\" href=\"\" />\n";
+		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("single quote \' double quotes\"", "");
+		
+		assertEquals(expectedString, metaTag.generateString());
+	}
 }
