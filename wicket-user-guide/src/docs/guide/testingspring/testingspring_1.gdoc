@@ -29,8 +29,8 @@ In case you want to get Wicket application up and running while leaving the appl
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
     <context-param>
-        <param-name>contextConfigLocation<param-name>
-        <param-value>/WEB-INF/applicationContext.xml<param-value>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
     </context-param>
 </web-app>
 {code}
@@ -76,7 +76,9 @@ After the WebApplication bean has been successfully retrieved from the Applicati
 public class MyWebApplication extends WebApplication {
     @Override
     protected void init() {
-        addComponentInstantiationListener(new SpringComponentInjector(this));
+        super.init();
+
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this));
     }
 
 }
