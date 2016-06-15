@@ -23,8 +23,8 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.OnAjaxError;
+import org.apache.wicket.lambda.OnAjaxEvent;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.lang.Args;
@@ -228,10 +228,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @param eventName
 	 *            the event name
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
 	 */
-	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName, WicketConsumer<AjaxRequestTarget> onUpdate)
+	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName, OnAjaxEvent onUpdate)
 	{
 		Args.notNull(onUpdate, "onUpdate");
 
@@ -242,7 +242,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
-				onUpdate.accept(target);
+				onUpdate.onEvent(target);
 			}
 		};
 	}
@@ -253,15 +253,15 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @param eventName
 	 *            the event name
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            the lambda that receives the {@link AjaxRequestTarget} and the
 	 *            {@link RuntimeException}
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
 	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
-	                                                         WicketConsumer<AjaxRequestTarget> onUpdate,
-	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	                                                         OnAjaxEvent onUpdate,
+	                                                         OnAjaxError onError)
 	{
 		Args.notNull(onUpdate, "onUpdate");
 		Args.notNull(onError, "onError");
@@ -273,13 +273,13 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
-				onUpdate.accept(target);
+				onUpdate.onEvent(target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, RuntimeException e)
 			{
-				onError.accept(target, e);
+				onError.onError(target, e);
 			}
 		};
 	}

@@ -21,7 +21,7 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.OnAjaxEvent;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
@@ -280,10 +280,10 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @param eventName
 	 *            the event name
 	 * @param onSubmit
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormSubmitBehavior}
 	 */
-	public static AjaxFormSubmitBehavior onSubmit(String eventName, WicketConsumer<AjaxRequestTarget> onSubmit)
+	public static AjaxFormSubmitBehavior onSubmit(String eventName, OnAjaxEvent onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -294,7 +294,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				onSubmit.accept(target);
+				onSubmit.onEvent(target);
 			}
 		};
 	}
@@ -305,14 +305,14 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @param eventName
 	 *            the event name
 	 * @param onSubmit
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormSubmitBehavior}
 	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
-	                                              WicketConsumer<AjaxRequestTarget> onSubmit,
-	                                              WicketConsumer<AjaxRequestTarget> onError) {
+	                                              OnAjaxEvent onSubmit,
+	                                              OnAjaxEvent onError) {
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");
 
@@ -323,13 +323,13 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				onSubmit.accept(target);
+				onSubmit.onEvent(target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				onError.accept(target);
+				onError.onEvent(target);
 			}
 		};
 	}

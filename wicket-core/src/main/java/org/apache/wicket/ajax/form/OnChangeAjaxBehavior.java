@@ -19,9 +19,8 @@ package org.apache.wicket.ajax.form;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.lambda.Lambdas;
-import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.OnAjaxError;
+import org.apache.wicket.lambda.OnAjaxEvent;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
@@ -86,10 +85,10 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
 	 * 
 	 * @param onChange
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @return the {@link OnChangeAjaxBehavior}
 	 */
-	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange)
+	public static OnChangeAjaxBehavior onChange(OnAjaxEvent onChange)
 	{
 		Args.notNull(onChange, "onChange");
 
@@ -100,7 +99,7 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
-				onChange.accept(target);
+				onChange.onEvent(target);
 			}
 		};
 	}
@@ -109,14 +108,14 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
 	 * 
 	 * @param onChange
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            the lambda that receives the {@link AjaxRequestTarget} and the
 	 *            {@link RuntimeException}
 	 * @return the {@link OnChangeAjaxBehavior}
 	 */
-	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange,
-	                                            WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	public static OnChangeAjaxBehavior onChange(OnAjaxEvent onChange,
+	                                            OnAjaxError onError)
 	{
 		Args.notNull(onChange, "onChange");
 		Args.notNull(onError, "onError");
@@ -128,13 +127,13 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
-				onChange.accept(target);
+				onChange.onEvent(target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, RuntimeException e)
 			{
-				onError.accept(target, e);
+				onError.onError(target, e);
 			}
 		};
 	}

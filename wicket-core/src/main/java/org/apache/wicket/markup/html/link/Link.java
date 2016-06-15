@@ -21,7 +21,7 @@ import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.OnEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -425,10 +425,10 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	 * @param id
 	 *            the id of the link
 	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link Void}
+	 *            the lambda to execute when the link is clicked
 	 * @return the {@link Link}
 	 */
-	public static <T> Link<T> onClick(String id, WicketConsumer<Void> onClick)
+	public static <T> Link<T> onClick(String id, OnEvent onClick)
 	{
 		Args.notNull(onClick, "onClick");
 
@@ -439,7 +439,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 			@Override
 			public void onClick()
 			{
-				onClick.accept(null);
+				onClick.onEvent();
 			}
 		};
 	}

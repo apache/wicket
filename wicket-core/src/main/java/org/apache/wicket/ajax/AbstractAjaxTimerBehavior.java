@@ -19,7 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.OnAjaxEvent;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.util.lang.Args;
@@ -256,10 +256,10 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 * @param interval
 	 *            the interval the timer
 	 * @param onTimer
-	 *            the consumer which accepts the {@link AjaxRequestTarget}
+	 *            the lambda which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AbstractAjaxTimerBehavior}
 	 */
-	public static AbstractAjaxTimerBehavior onTimer(Duration interval, WicketConsumer<AjaxRequestTarget> onTimer)
+	public static AbstractAjaxTimerBehavior onTimer(Duration interval, OnAjaxEvent onTimer)
 	{
 		Args.notNull(onTimer, "onTimer");
 
@@ -270,7 +270,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 			@Override
 			protected void onTimer(AjaxRequestTarget target)
 			{
-				onTimer.accept(target);
+				onTimer.onEvent(target);
 			}
 		};
 	}

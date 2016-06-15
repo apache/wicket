@@ -20,7 +20,7 @@ import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.OnAjaxEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
@@ -141,10 +141,10 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	 * @param id
 	 *            the id of the ajax link
 	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxLink}
 	 */
-	public static <T> AjaxLink<T> onClick(String id, WicketConsumer<AjaxRequestTarget> onClick)
+	public static <T> AjaxLink<T> onClick(String id, OnAjaxEvent onClick)
 	{
 		Args.notNull(onClick, "onClick");
 
@@ -155,7 +155,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				onClick.accept(target);
+				onClick.onEvent(target);
 			}
 		};
 	}

@@ -21,8 +21,8 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.OnAjaxError;
+import org.apache.wicket.lambda.OnAjaxEvent;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -118,10 +118,10 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
 	 * 
 	 * @param onUpdateChoice
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 */
-	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice) {
+	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(OnAjaxEvent onUpdateChoice) {
 		Args.notNull(onUpdateChoice, "onUpdateChoice");
 		return new AjaxFormChoiceComponentUpdatingBehavior()
 		{
@@ -130,7 +130,7 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
-				onUpdateChoice.accept(target);
+				onUpdateChoice.onEvent(target);
 			}
 		};
 	}
@@ -139,14 +139,14 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
 	 * 
 	 * @param onUpdateChoice
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            the lambda that receives the {@link AjaxRequestTarget} and the
 	 *            {@link RuntimeException}
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 */
-	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice,
-	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError) {
+	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(OnAjaxEvent onUpdateChoice,
+	                                                                     OnAjaxError onError) {
 		Args.notNull(onUpdateChoice, "onUpdateChoice");
 		Args.notNull(onError, "onError");
 		return new AjaxFormChoiceComponentUpdatingBehavior()
@@ -156,13 +156,13 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
-				onUpdateChoice.accept(target);
+				onUpdateChoice.onEvent(target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, RuntimeException e)
 			{
-				onError.accept(target, e);
+				onError.onError(target, e);
 			}
 		};
 	}

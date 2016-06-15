@@ -19,7 +19,7 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.OnAjaxFormEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
@@ -229,11 +229,11 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @param id
 	 *            the id of ajax submit link
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            the lambda that receives the {@link AjaxRequestTarget} and the
 	 *            {@link Form}
 	 * @return the {@link AjaxSubmitLink}
 	 */
-	public static AjaxSubmitLink onSubmit(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	public static AjaxSubmitLink onSubmit(String id, OnAjaxFormEvent onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -244,7 +244,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			public void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				onSubmit.accept(target, form);
+				onSubmit.onEvent(target, form);
 			}
 		};
 	}
@@ -255,16 +255,16 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @param id
 	 *            the id of ajax submit link
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            the lambda that receives the {@link AjaxRequestTarget} and the
 	 *            {@link Form}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            the lambda that receives the {@link AjaxRequestTarget} and the
 	 *            {@link Form}
 	 * @return the {@link AjaxSubmitLink}
 	 */
 	public static AjaxSubmitLink onSubmit(String id,
-	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	                                      OnAjaxFormEvent onSubmit,
+	                                      OnAjaxFormEvent onError)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");
@@ -276,13 +276,13 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			public void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				onSubmit.accept(target, form);
+				onSubmit.onEvent(target, form);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form)
 			{
-				onError.accept(target, form);
+				onError.onEvent(target, form);
 			}
 		};
 	}

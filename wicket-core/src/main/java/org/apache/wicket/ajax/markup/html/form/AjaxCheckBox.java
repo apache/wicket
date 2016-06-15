@@ -19,7 +19,7 @@ package org.apache.wicket.ajax.markup.html.form;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
-import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.OnAjaxEvent;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
@@ -98,10 +98,10 @@ public abstract class AjaxCheckBox extends CheckBox
 	 * @param id
 	 *            the id of ajax check box
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the lambda that receives the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxCheckBox}
 	 */
-	public static AjaxCheckBox onUpdate(String id, WicketConsumer<AjaxRequestTarget> onUpdate)
+	public static AjaxCheckBox onUpdate(String id, OnAjaxEvent onUpdate)
 	{
 		Args.notNull(onUpdate, "onUpdate");
 
@@ -112,7 +112,7 @@ public abstract class AjaxCheckBox extends CheckBox
 			@Override
 			public void onUpdate(AjaxRequestTarget target)
 			{
-				onUpdate.accept(target);
+				onUpdate.onEvent(target);
 			}
 		};
 	}
