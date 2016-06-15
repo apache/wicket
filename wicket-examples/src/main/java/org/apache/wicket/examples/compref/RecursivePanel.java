@@ -66,14 +66,11 @@ public final class RecursivePanel extends Panel
 			super(name, list);
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
-		 */
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void populateItem(ListItem<Object> listItem)
 		{
-			Object modelObject = listItem.getDefaultModelObject();
+			Object modelObject = listItem.getModelObject();
 
 			if (modelObject instanceof List)
 			{

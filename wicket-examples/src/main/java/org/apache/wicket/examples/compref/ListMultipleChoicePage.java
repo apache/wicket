@@ -18,15 +18,15 @@ package org.apache.wicket.examples.compref;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -56,7 +56,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -106,9 +106,6 @@ public class ListMultipleChoicePage extends WicketExamplePage
 			choices.add("Choice5");
 		}
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString()
 		{
@@ -117,16 +114,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 
 		private String listAsString(List<String> list)
 		{
-		 StringBuilder b = new StringBuilder();
-			for (Iterator<String> i = list.iterator(); i.hasNext();)
-			{
-				b.append(i.next());
-				if (i.hasNext())
-				{
-					b.append(", ");
-				}
-			}
-			return b.toString();
+			return Strings.join(", ", list);
 		}
 	}
 

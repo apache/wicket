@@ -44,7 +44,7 @@ public class KaptchaForm<T> extends AbstractCaptchaForm<T>
 	}
 
 	@Override
-	protected CaptchaImageResource createCaptchImageResource()
+	protected CaptchaImageResource createCaptchaImageResource()
 	{
 		return new CaptchaImageResource()
 		{

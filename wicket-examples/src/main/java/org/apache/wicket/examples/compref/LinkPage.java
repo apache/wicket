@@ -16,11 +16,10 @@
  */
 package org.apache.wicket.examples.compref;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.lambda.Lambdas;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -42,40 +41,21 @@ public class LinkPage extends WicketExamplePage
 
 		// add a link which, when clicked, increases our counter when a link is clicked, its onClick
 		// method is called
-		Link link1 = new Link<Void>("link1")
-		{
-			@Override
-			public void onClick()
-			{
-				count1.increment();
-			}
-		};
+		Link link1 = Link.onClick("link1", count1::increment);
 		add(link1);
 
 		// add a counter label to the link so that we can display it in the body of the link
-		link1.add(new Label("label1", new Model<String>()
-		{
-			@Override
-			public String getObject()
-			{
-				return count1.toString();
-			}
-		}));
+		link1.add(new Label("label1", count1::toString));
 
 		final Count count2 = new Count();
 		// Same idea as above, but now we record a state change. Note that the URL will change
 		// because of this, and pressing the back button and clicking the link again would revert to
 		// the older value. The same thing could have been achieved by using setModelObject,
 		// which implicitly registers a state change (of type ComponentModelChange).
-		Link linkWithStateChange = new Link<Void>("linkWithStateChange")
-		{
-			@Override
-			public void onClick()
-			{
-				count2.increment();
-				addStateChange();
-			}
-		};
+		Link linkWithStateChange = Link.onClick("linkWithStateChange", () -> {
+			count2.increment();
+			addStateChange();
+		});
 		add(linkWithStateChange);
 		linkWithStateChange.add(new Label("label", new PropertyModel<>(count2, "count")));
 
@@ -124,16 +104,7 @@ public class LinkPage extends WicketExamplePage
 			{
 				super(id);
 				count3 = new Count();
-				add(new AttributeModifier("value", new Model<String>()
-				{
-					@Override
-					public String getObject()
-					{
-						// we just replace the whole string. You could use custom AttributeModifiers
-						// to e.g. just replace one part of the string if you want
-						return "this button is clicked " + count3.getCount() + " times";
-					}
-				}));
+				add(Lambdas.onAttribute("value", oldValue -> "this button is clicked " + count3.getCount() + " times"));
 			}
 
 			@Override
@@ -160,30 +131,11 @@ public class LinkPage extends WicketExamplePage
 		 */
 		public ClickCountLabel(String id, final Count clickCount)
 		{
-			// call super with a simple annonymous class model that displays the
+			// call super with a simple lambda model that displays the
 			// current number of clicks
-			super(id, new Model<String>()
-			{
-				@Override
-				public String getObject()
-				{
-					return clickCount.toString();
-				}
-			});
+			super(id, clickCount::toString);
 		}
 	}
-
-	// ----------
-
-	final Count count1 = new Count(); // simple counter object
-	Link link1 = new Link<Void>("link1")
-	{
-		@Override
-		public void onClick()
-		{
-			count1.increment();
-		}
-	};
 
 	/**
 	 * Override base method to provide an explanation

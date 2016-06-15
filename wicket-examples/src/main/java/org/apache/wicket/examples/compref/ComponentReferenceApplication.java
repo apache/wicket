@@ -48,16 +48,6 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 		return personsDB;
 	}
 
-	/**
-	 * Constructor.
-	 */
-	public ComponentReferenceApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
@@ -66,9 +56,6 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.compref;
 
+import org.apache.wicket.PageReference;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 
@@ -33,7 +34,7 @@ public class NonBookmarkablePage extends WebPage
 	 * @param referer
 	 *            the refering page
 	 */
-	public NonBookmarkablePage(final WebPage referer)
+	public NonBookmarkablePage(final PageReference referer)
 	{
 		if (referer == null)
 		{
@@ -42,27 +43,8 @@ public class NonBookmarkablePage extends WebPage
 
 		// Add a link to navigate back to the refering page. We now use the
 		// PageLink
-		// constructor with the Page instance argument, because we allready have
-		// a page instance
-		// at our disposal
-		add(new Link<Void>("navigateBackLink")
-		{
-			@Override
-			public void onClick()
-			{
-				setResponsePage(referer);
-			}
-
-		});
-
-		// Note that this would have had the same effect
-		//
-		// add(new Link("navigateBackLink")
-		// {
-		// public void onClick()
-		// {
-		// setResponsePage(referer);
-		// }
-		// });
+		// constructor with the Page instance argument, because we already have
+		// a page instance at our disposal
+		add(Link.onClick("navigateBackLink", () -> setResponsePage(referer.getPage())));
 	}
 }

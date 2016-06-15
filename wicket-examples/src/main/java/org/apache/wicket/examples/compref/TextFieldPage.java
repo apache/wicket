@@ -42,7 +42,7 @@ public class TextFieldPage extends WicketExamplePage
 		// when components do not have an explicit model, but on of their
 		// parents
 		// has the compound property model set, it will use that parent's model
-		// as the taget for getting and setting the property which is based on
+		// as the target for getting and setting the property which is based on
 		// its own component id. Thus, component with id 'text' will act as if
 		// its
 		// model is property 'text' of the compound property model. And as the
@@ -57,7 +57,7 @@ public class TextFieldPage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form("form")
+		Form<?> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -113,9 +113,6 @@ public class TextFieldPage extends WicketExamplePage
 		/** an integer. */
 		public Integer integer = 12;
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString()
 		{

@@ -59,15 +59,7 @@ public class SecondPanel extends BreadCrumbPanel
 				@Override
 				public void onSubmit()
 				{
-					activate(new IBreadCrumbPanelFactory()
-					{
-						@Override
-						public BreadCrumbPanel create(String componentId,
-							IBreadCrumbModel breadCrumbModel)
-						{
-							return new ResultPanel(componentId, breadCrumbModel, input);
-						}
-					});
+					activate((componentId, breadCrumbModel) -> new ResultPanel(componentId, breadCrumbModel, input));
 				}
 			});
 		}

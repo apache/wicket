@@ -41,7 +41,7 @@ import org.apache.wicket.util.lang.Args;
  * You also cannot modify a components model with a behavior.
  * </p>
  * 
- * @see org.apache.wicket.behavior.IBehaviorListener
+ * @see IRequestListener
  * @see org.apache.wicket.markup.html.IHeaderContributor
  * @see org.apache.wicket.behavior.AbstractAjaxBehavior
  * @see org.apache.wicket.AttributeModifier
