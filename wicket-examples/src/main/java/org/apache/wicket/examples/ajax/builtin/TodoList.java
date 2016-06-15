@@ -137,8 +137,8 @@ public class TodoList extends BasePage
 				protected void populateItem(ListItem<TodoItem> item)
 				{
 					// add an AJAX checkbox to the item
-					item.add(new AjaxCheckBox("check", new PropertyModel<Boolean>(
-						item.getDefaultModel(), "checked"))
+					item.add(new AjaxCheckBox("check", new PropertyModel<>(
+						item.getModel(), "checked"))
 					{
 						@Override
 						protected void onUpdate(AjaxRequestTarget target)
@@ -150,8 +150,7 @@ public class TodoList extends BasePage
 						}
 					});
 					// display the text of the todo item
-					item.add(new Label("text", new PropertyModel<String>(item.getDefaultModel(),
-						"text")));
+					item.add(new Label("text", new PropertyModel<String>(item.getModel(), "text")));
 				}
 			});
 		}
@@ -160,7 +159,7 @@ public class TodoList extends BasePage
 	/**
 	 * Container for showing either the add link, or the addition form.
 	 */
-	public class AddItemsContainer extends WebMarkupContainer
+	private class AddItemsContainer extends WebMarkupContainer
 	{
 		/** Visibility toggle so that either the link or the form is visible. */
 		private boolean linkVisible = true;

@@ -18,10 +18,9 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import static org.apache.wicket.ajax.AbstractAjaxTimerBehavior.onTimer;
 
-import java.util.TimeZone;
+import java.time.ZoneId;
 
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.util.time.Duration;
 
@@ -39,11 +38,11 @@ public class WorldClockPage extends BasePage
 	public WorldClockPage()
 	{
 		// create clock components for different timezones
-		final Clock la = new Clock("la", TimeZone.getTimeZone("America/Los_Angeles"));
-		final Clock ny = new Clock("ny", TimeZone.getTimeZone("America/New_York"));
-		final Clock moscow = new Clock("moscow", TimeZone.getTimeZone("Europe/Moscow"));
-		final Clock prague = new Clock("prague", TimeZone.getTimeZone("Europe/Prague"));
-		final Clock london = new Clock("london", TimeZone.getTimeZone("Europe/London"));
+		final Clock la = new Clock("la", ZoneId.of("America/Los_Angeles"));
+		final Clock ny = new Clock("ny", ZoneId.of("America/New_York"));
+		final Clock moscow = new Clock("moscow", ZoneId.of("Europe/Moscow"));
+		final Clock prague = new Clock("prague", ZoneId.of("Europe/Prague"));
+		final Clock london = new Clock("london", ZoneId.of("Europe/London"));
 
 		// make components print out id attrs so they can be updated via ajax
 		la.setOutputMarkupId(true);
@@ -54,35 +53,15 @@ public class WorldClockPage extends BasePage
 
 		// add the components to the container and add a markup id setter to
 		// each component.
-		add(la);
-		add(ny);
-		add(moscow);
-		add(prague);
-		add(london);
+		add(la, ny, moscow, prague, london);
 
 		// add the timer behavior to the page and make it update all
 		// other components as well
-		final AbstractAjaxTimerBehavior timer = onTimer(Duration.seconds(1), target-> target.add(la, ny, moscow, prague, london));
+		final AbstractAjaxTimerBehavior timer = onTimer(Duration.seconds(1), target -> target.add(la, ny, moscow, prague, london));
 		add(timer);
 
-		add(new AjaxLink<Void>("stop")
-		{
+		add(AjaxLink.onClick("stop", timer::stop));
 
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				timer.stop(target);
-			}
-		});
-
-		add(new AjaxLink<Void>("restart")
-		{
-
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				timer.restart(target);
-			}
-		});
+		add(AjaxLink.onClick("restart", timer::restart));
 	}
 }

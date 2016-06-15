@@ -70,39 +70,25 @@ public class ChoicePage extends BasePage
 		modelsMap.put("CADILLAC", Arrays.asList("CTS", "DTS", "ESCALADE", "SRX", "DEVILLE"));
 		modelsMap.put("FORD", Arrays.asList("CROWN", "ESCAPE", "EXPEDITION", "EXPLORER", "F-150"));
 
-		IModel<List<String>> makeChoices = new IModel<List<String>>()
-		{
-			@Override
-			public List<String> getObject()
+		IModel<List<String>> makeChoices = () -> new ArrayList<>(modelsMap.keySet());
+
+		IModel<List<String>> modelChoices = () -> {
+			List<String> models = modelsMap.get(selectedMake);
+			if (models == null)
 			{
-				return new ArrayList<>(modelsMap.keySet());
+				models = Collections.emptyList();
 			}
-
-		};
-
-		IModel<List<String>> modelChoices = new IModel<List<String>>()
-		{
-			@Override
-			public List<String> getObject()
-			{
-				List<String> models = modelsMap.get(selectedMake);
-				if (models == null)
-				{
-					models = Collections.emptyList();
-				}
-				return models;
-			}
-
+			return models;
 		};
 
 		Form<?> form = new Form("form");
 		add(form);
 
 		final DropDownChoice<String> makes = new DropDownChoice<>("makes",
-			new PropertyModel<String>(this, "selectedMake"), makeChoices);
+			new PropertyModel<>(this, "selectedMake"), makeChoices);
 
 		final DropDownChoice<String> models = new DropDownChoice<>("models",
-			new Model<String>(), modelChoices);
+			new Model<>(), modelChoices);
 		models.setOutputMarkupId(true);
 
 		form.add(makes);

@@ -77,14 +77,7 @@ public class Index extends BasePage
 		// pages that are protected using annotations
 		add(new BookmarkablePageLink<Void>("adminAnnotBookmarkableLink",
 			AdminAnnotationsBookmarkablePage.class));
-		add(new Link<Void>("adminAnnotInternalLink")
-		{
-			@Override
-			public void onClick()
-			{
-				setResponsePage(new AdminAnnotationsInternalPage("bar"));
-			}
-		});
+		add(Link.onClick("adminAnnotInternalLink", (ignoreme) -> setResponsePage(new AdminAnnotationsInternalPage("bar"))));
 		add(new BookmarkablePageLink<>("panelsAnnotPageLink", AnnotationsPanelsPage.class));
 	}
 }

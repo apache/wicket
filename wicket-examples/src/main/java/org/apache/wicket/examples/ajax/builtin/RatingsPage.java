@@ -74,9 +74,6 @@ public class RatingsPage extends BasePage
 			super(id, object);
 		}
 
-		/**
-		 * @see Link#onClick()
-		 */
 		@Override
 		public void onClick()
 		{
@@ -90,7 +87,7 @@ public class RatingsPage extends BasePage
 	/**
 	 * Rating model for storing the ratings, typically this comes from a database.
 	 */
-	public static class RatingModel implements IClusterable
+	private static class RatingModel implements IClusterable
 	{
 		private int nrOfVotes = 0;
 		private int sumOfRatings = 0;
@@ -174,7 +171,7 @@ public class RatingsPage extends BasePage
 	public RatingsPage()
 	{
 		add(new RatingPanel("rating1", new PropertyModel<Integer>(rating1, "rating"), 5,
-			new PropertyModel<Integer>(rating1, "nrOfVotes"), true)
+			new PropertyModel<>(rating1, "nrOfVotes"), true)
 		{
 			@Override
 			public boolean onIsStarActive(int star)
@@ -190,8 +187,8 @@ public class RatingsPage extends BasePage
 		});
 
 		add(new RatingPanel("rating2", new PropertyModel<Integer>(rating2, "rating"),
-			new Model<Integer>(5), new PropertyModel<Integer>(rating2, "nrOfVotes"),
-			new PropertyModel<Boolean>(this, "hasVoted"), true)
+			new Model<>(5), new PropertyModel<>(rating2, "nrOfVotes"),
+			new PropertyModel<>(this, "hasVoted"), true)
 		{
 			@Override
 			protected String getActiveStarUrl(int iteration)

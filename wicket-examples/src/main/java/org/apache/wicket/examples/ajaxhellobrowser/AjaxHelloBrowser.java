@@ -54,46 +54,34 @@ public class AjaxHelloBrowser extends WicketExamplePage
 		clientInfo.setOutputMarkupPlaceholderTag(true);
 		clientInfo.setVisible(false);
 
-		IModel<String> clientTimeModel = new IModel<String>()
-		{
-			@Override
-			public String getObject()
+		IModel<String> clientTimeModel = () -> {
+			ClientProperties properties = getClientProperties();
+			TimeZone timeZone = properties.getTimeZone();
+			if (timeZone != null)
 			{
-				ClientProperties properties = getClientProperties();
-				TimeZone timeZone = properties.getTimeZone();
-				if (timeZone != null)
-				{
-					Calendar cal = Calendar.getInstance(timeZone);
-					Locale locale = getLocale();
-					DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.LONG, locale);
-					String calAsString = dateFormat.format(cal.getTime());
-					StringBuilder b = new StringBuilder("Based on your settings, your time is: ");
-					b.append(calAsString);
-					b.append(" (and your time zone is ");
-					b.append(timeZone.getDisplayName(getLocale()));
-					b.append(')');
-					return b.toString();
-				}
-				return "Unfortunately, we were not able to figure out what your time zone is, so we have"
-						+ " no idea what your time is";
+				Calendar cal = Calendar.getInstance(timeZone);
+				Locale locale = getLocale();
+				DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.LONG, locale);
+				String calAsString = dateFormat.format(cal.getTime());
+				StringBuilder b = new StringBuilder("Based on your settings, your time is: ");
+				b.append(calAsString);
+				b.append(" (and your time zone is ");
+				b.append(timeZone.getDisplayName(getLocale()));
+				b.append(')');
+				return b.toString();
 			}
+			return "Unfortunately, we were not able to figure out what your time zone is, so we have"
+					+ " no idea what your time is";
 		};
 		final Label clientTime = new Label("clienttime", clientTimeModel);
 		clientTime.setOutputMarkupPlaceholderTag(true);
 		clientTime.setVisible(false);
 
-		add(new AjaxClientInfoBehavior()
-		{
-			@Override
-			protected void onClientInfo(AjaxRequestTarget target, WebClientInfo info)
-			{
-				super.onClientInfo(target, info);
-
-				clientInfo.setVisible(true);
-				clientTime.setVisible(true);
-				target.add(clientInfo, clientTime);
-			}
-		});
+		add(AjaxClientInfoBehavior.onClientInfo((AjaxRequestTarget target, WebClientInfo info) -> {
+			clientInfo.setVisible(true);
+			clientTime.setVisible(true);
+			target.add(clientInfo, clientTime);
+		}));
 
 		add(clientInfo, clientTime);
 	}

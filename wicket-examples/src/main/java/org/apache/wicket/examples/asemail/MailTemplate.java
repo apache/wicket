@@ -109,7 +109,7 @@ public class MailTemplate extends WicketExamplePage
 			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
 				CharSequence panelHtml = ComponentRenderer.renderComponent(new MailTemplatePanel("someId",
-						new PropertyModel<String>(MailTemplate.this, "name")));
+						new PropertyModel<>(MailTemplate.this, "name")));
 
 				updateResult(result, panelHtml, target);
 				target.add(feedback);

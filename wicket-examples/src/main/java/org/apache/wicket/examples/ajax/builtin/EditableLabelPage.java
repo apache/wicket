@@ -30,7 +30,7 @@ import org.apache.wicket.model.IModel;
 
 
 /**
- * Page to demo the inplace edit label {@link AjaxEditableLabel}
+ * Page to demo the in-place edit label {@link AjaxEditableLabel}
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
@@ -58,7 +58,7 @@ public class EditableLabelPage extends BasePage
 		form.add(new AjaxEditableMultiLineLabel("text3"));
 		form.add(new AjaxEditableChoiceLabel<>("site", SITES));
 
-		form.add(new Label("refresh-counter", (IModel<String>) () -> "" + refreshCounter));
+		form.add(new Label("refresh-counter", () -> "" + refreshCounter));
 
 		form.add(new Link<Void>("refresh-link")
 		{

@@ -21,7 +21,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import de.agilecoders.wicket.webjars.WicketWebjars;
 import org.apache.wicket.Application;
 import org.apache.wicket.atmosphere.EventBus;
 import org.apache.wicket.atmosphere.config.AtmosphereLogLevel;
@@ -62,21 +61,7 @@ public class AtmosphereApplication extends WebApplication
 		eventBus.getParameters().setLogLevel(AtmosphereLogLevel.DEBUG);
 
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-		final Runnable beeper = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					eventBus.post(new Date());
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		};
+		final Runnable beeper = () -> eventBus.post(new Date());
 		scheduler.scheduleWithFixedDelay(beeper, 2, 2, TimeUnit.SECONDS);
 	}
 }

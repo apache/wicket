@@ -33,7 +33,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 
@@ -70,13 +69,13 @@ public class GuestBook extends BasePage
 
 		// Add commentListView of existing comments
 		comments.add(commentListView = new ListView<Comment>("comments",
-			new PropertyModel<List<Comment>>(this, "commentList"))
+			new PropertyModel<>(this, "commentList"))
 		{
 			@Override
 			public void populateItem(final ListItem<Comment> listItem)
 			{
 				final Comment comment = listItem.getModelObject();
-				listItem.add(new Label("date", new Model<>(comment.getDate())));
+				listItem.add(new Label("date", comment::getDate));
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
 		});
@@ -123,7 +122,7 @@ public class GuestBook extends BasePage
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public final class CommentForm extends Form<Comment>
+	private final class CommentForm extends Form<Comment>
 	{
 		/**
 		 * Constructor
@@ -131,7 +130,7 @@ public class GuestBook extends BasePage
 		 * @param id
 		 *            The name of this component
 		 */
-		public CommentForm(final String id)
+		private CommentForm(final String id)
 		{
 			// Construct form with no validation listener
 			super(id, new CompoundPropertyModel<>(new Comment()));

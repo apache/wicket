@@ -183,8 +183,6 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	 * 
 	 * Called when a link is clicked. The implementation of this method is currently to simply call
 	 * onClick(), but this may be augmented in the future.
-	 * 
-	 * @see ILinkListener
 	 */
 	@Override
 	public void onRequest()
@@ -441,7 +439,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 			@Override
 			public void onClick()
 			{
-				onClick.accept((Void)null);
+				onClick.accept(null);
 			}
 		};
 	}

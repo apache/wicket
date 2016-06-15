@@ -28,16 +28,6 @@ import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
  */
 public class PrototypeApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public PrototypeApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
@@ -48,9 +38,6 @@ public class PrototypeApplication extends WicketExampleApplication
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
