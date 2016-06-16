@@ -428,7 +428,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	 *            the {@link WicketConsumer} which accepts the {@link Void}
 	 * @return the {@link Link}
 	 */
-	public static <T> Link<T> onClick(String id, WicketConsumer<Void> onClick)
+	public static <T> Link<T> onClick(String id, WicketConsumer<Link<T>> onClick)
 	{
 		Args.notNull(onClick, "onClick");
 
@@ -439,7 +439,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 			@Override
 			public void onClick()
 			{
-				onClick.accept(null);
+				onClick.accept(this);
 			}
 		};
 	}

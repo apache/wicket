@@ -319,7 +319,7 @@ public class Lambdas
 	 * 
 	 * @see AjaxLink#onClick(String, WicketConsumer)
 	 */
-	public static <T> AjaxLink<T> ajaxLink(String id, WicketConsumer<AjaxRequestTarget> onClick)
+	public static <T> AjaxLink<T> ajaxLink(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
 	{
 		return AjaxLink.onClick(id, onClick);
 	}
@@ -337,7 +337,7 @@ public class Lambdas
 	 * @see AjaxButton#onSubmit(String, WicketBiConsumer)
 	 */
 	public static AjaxButton ajaxButton(String id,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+		WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
 	{
 		return AjaxButton.onSubmit(id, onSubmit);
 	}
@@ -349,17 +349,17 @@ public class Lambdas
 	 *            the id of the ajax button
 	 * @param onSubmit
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            {@link AjaxButton}
 	 * @param onError
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            {@link AjaxButton}
 	 * @return the {@link AjaxButton}
 	 * 
 	 * @see AjaxButton#onSubmit(String, WicketBiConsumer, WicketBiConsumer)
 	 */
 	public static AjaxButton ajaxButton(String id,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+		WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
+		WicketBiConsumer<AjaxButton, AjaxRequestTarget> onError)
 	{
 		return AjaxButton.onSubmit(id, onSubmit, onError);
 	}
@@ -375,7 +375,7 @@ public class Lambdas
 	 * 
 	 * @see AjaxCheckBox#onUpdate(String, WicketConsumer)
 	 */
-	public static AjaxCheckBox ajaxCheckBox(String id, WicketConsumer<AjaxRequestTarget> onUpdate)
+	public static AjaxCheckBox ajaxCheckBox(String id, WicketBiConsumer<AjaxCheckBox, AjaxRequestTarget> onUpdate)
 	{
 		return AjaxCheckBox.onUpdate(id, onUpdate);
 	}
@@ -393,7 +393,7 @@ public class Lambdas
 	 * @see AjaxSubmitLink#onSubmit(String, WicketBiConsumer)
 	 */
 	public static AjaxSubmitLink ajaxSubmitLink(String id,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+		WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
 	{
 		return AjaxSubmitLink.onSubmit(id, onSubmit);
 	}
@@ -414,8 +414,8 @@ public class Lambdas
 	 * @see AjaxSubmitLink#onSubmit(String, WicketBiConsumer, WicketBiConsumer)
 	 */
 	public static AjaxSubmitLink ajaxSubmitLink(String id,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-		WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+		WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit,
+		WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onError)
 	{
 		return AjaxSubmitLink.onSubmit(id,  onSubmit,  onError);
 	}
@@ -431,7 +431,7 @@ public class Lambdas
 	 * 
 	 * @see Link#onClick(String, WicketConsumer)
 	 */
-	public static <T> Link<T> link(String id, WicketConsumer<Void> onClick)
+	public static <T> Link<T> link(String id, WicketConsumer<Link<T>> onClick)
 	{
 		return Link.onClick(id, onClick);
 	}

@@ -229,11 +229,10 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @param id
 	 *            the id of ajax submit link
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxSubmitLink\ and the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSubmitLink}
 	 */
-	public static AjaxSubmitLink onSubmit(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	public static AjaxSubmitLink onSubmit(String id, WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -244,7 +243,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			public void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				onSubmit.accept(target, form);
+				onSubmit.accept(this, target);
 			}
 		};
 	}
@@ -263,8 +262,8 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @return the {@link AjaxSubmitLink}
 	 */
 	public static AjaxSubmitLink onSubmit(String id,
-	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-	                                            WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	                                            WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit,
+	                                            WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onError)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");
@@ -276,13 +275,13 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			public void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				onSubmit.accept(target, form);
+				onSubmit.accept(this, target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form)
 			{
-				onError.accept(target, form);
+				onError.accept(this, target);
 			}
 		};
 	}

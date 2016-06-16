@@ -236,7 +236,7 @@ public abstract class AjaxButton extends Button
 	 *            {@link Form}
 	 * @return the {@link AjaxButton}
 	 */
-	public static AjaxButton onSubmit(String id, WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit)
+	public static AjaxButton onSubmit(String id, WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -247,7 +247,7 @@ public abstract class AjaxButton extends Button
 			@Override
 			public void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				onSubmit.accept(target, form);
+				onSubmit.accept(this, target);
 			}
 		};
 	}
@@ -259,15 +259,15 @@ public abstract class AjaxButton extends Button
 	 *            the id of the ajax button
 	 * @param onSubmit
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            {@link AjaxButton}
 	 * @param onError
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            {@link AjaxButton}
 	 * @return the {@link AjaxButton}
 	 */
 	public static AjaxButton onSubmit(String id,
-	                                    WicketBiConsumer<AjaxRequestTarget, Form<?>> onSubmit,
-	                                    WicketBiConsumer<AjaxRequestTarget, Form<?>> onError)
+	                                    WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
+	                                    WicketBiConsumer<AjaxButton, AjaxRequestTarget> onError)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");
@@ -279,13 +279,13 @@ public abstract class AjaxButton extends Button
 			@Override
 			public void onSubmit(AjaxRequestTarget target, Form<?> form)
 			{
-				onSubmit.accept(target, form);
+				onSubmit.accept(this, target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target, Form<?> form)
 			{
-				onError.accept(target, form);
+				onError.accept(this, target);
 			}
 		};
 	}
