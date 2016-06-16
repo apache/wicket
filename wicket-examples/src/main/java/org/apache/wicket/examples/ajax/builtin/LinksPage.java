@@ -110,7 +110,7 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(IndicatingAjaxLink.onClick("c3-link", target -> {
+		add(IndicatingAjaxLink.onClick("c3-link", (link, target) -> {
 			counter3++;
 			target.add(c3);
 			try
@@ -205,9 +205,9 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(AjaxLink.onClick("set-response-page", target -> setResponsePage(LinksPage.class)));
+		add(AjaxLink.onClick("set-response-page", (lin, target) -> setResponsePage(LinksPage.class)));
 
-		add(AjaxLink.onClick("exception", target -> {
+		add(AjaxLink.onClick("exception", (link, target) -> {
 			// Set the proper setting to show the error page
 			// note: will be set until the "failure" link is clicked or the application is
 			// restarted

@@ -145,6 +145,31 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxLink}
 	 */
+	public static <T> AjaxLink<T> onClick(String id, WicketConsumer<AjaxRequestTarget> onClick)
+	{
+		Args.notNull(onClick, "onClick");
+
+		return new AjaxLink<T>(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				onClick.accept(target);
+			}
+		};
+	}
+
+	/**
+	 * Creates an {@link AjaxLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxLink}
+	 */
 	public static <T> AjaxLink<T> onClick(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
 	{
 		Args.notNull(onClick, "onClick");
