@@ -79,9 +79,6 @@ public class Initializer implements IInitializer
 	 */
 	private final List<ObjectName> registered = new ArrayList<>();
 
-	/**
-	 * @see org.apache.wicket.IInitializer#destroy(org.apache.wicket.Application)
-	 */
 	@Override
 	public void destroy(final org.apache.wicket.Application application)
 	{
@@ -91,20 +88,13 @@ public class Initializer implements IInitializer
 			{
 				mbeanServer.unregisterMBean(objectName);
 			}
-			catch (InstanceNotFoundException e)
-			{
-				log.error(e.getMessage(), e);
-			}
-			catch (MBeanRegistrationException e)
+			catch (InstanceNotFoundException | MBeanRegistrationException e)
 			{
 				log.error(e.getMessage(), e);
 			}
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.IInitializer#init(org.apache.wicket.Application)
-	 */
 	@Override
 	public void init(final org.apache.wicket.Application application)
 	{
@@ -221,9 +211,6 @@ public class Initializer implements IInitializer
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -290,7 +277,25 @@ public class Initializer implements IInitializer
 				return o.getClass().getName().replace(".wrapper", "");
 			}
 		});
+		e.setClassLoader(resolveClassLoader());
 
 		return e.create();
 	}
+
+	private static ClassLoader resolveClassLoader()
+	{
+		ClassLoader classLoader = null;
+		if (org.apache.wicket.Application.exists())
+		{
+			classLoader = org.apache.wicket.Application.get().getApplicationSettings()
+					.getClassResolver().getClassLoader();
+		}
+
+		if (classLoader == null) {
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+
+		return classLoader;
+	}
+
 }
