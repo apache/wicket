@@ -1462,8 +1462,9 @@ public class Form<T> extends WebMarkupContainer
 		{
 			// Resource key should be <form-id>.uploadTooLarge to
 			// override default message
+			final String defaultValue = "Upload must be less than " + getMaxSize();
 			String msg = getString(getId() + '.' + UPLOAD_TOO_LARGE_RESOURCE_KEY,
-				Model.ofMap(model));
+				Model.ofMap(model), defaultValue);
 			error(msg);
 		}
 		else if (e instanceof FileUploadBase.FileSizeLimitExceededException)
