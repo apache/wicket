@@ -45,6 +45,6 @@ public class NonBookmarkablePage extends WebPage
 		// PageLink
 		// constructor with the Page instance argument, because we already have
 		// a page instance at our disposal
-		add(Link.onClick("navigateBackLink", () -> setResponsePage(referer.getPage())));
+		add(Link.onClick("navigateBackLink", (link) -> setResponsePage(referer.getPage())));
 	}
 }

@@ -38,8 +38,8 @@ public class ConversationPage1 extends CdiExamplePage
 
 		add(new Label("count", new PropertyModel(this, "counter.count")));
 
-		add(Link.onClick("increment", () -> counter.increment()));
+		add(Link.onClick("increment", (link) -> counter.increment()));
 
-		add(Link.onClick("next", () -> setResponsePage(new ConversationPage2())));
+		add(Link.onClick("next", (link) -> setResponsePage(new ConversationPage2())));
 	}
 }

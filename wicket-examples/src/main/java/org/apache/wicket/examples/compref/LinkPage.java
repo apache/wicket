@@ -41,7 +41,7 @@ public class LinkPage extends WicketExamplePage
 
 		// add a link which, when clicked, increases our counter when a link is clicked, its onClick
 		// method is called
-		Link link1 = Link.onClick("link1", count1::increment);
+		Link link1 = Link.onClick("link1", (link) -> count1.increment());
 		add(link1);
 
 		// add a counter label to the link so that we can display it in the body of the link
@@ -52,7 +52,7 @@ public class LinkPage extends WicketExamplePage
 		// because of this, and pressing the back button and clicking the link again would revert to
 		// the older value. The same thing could have been achieved by using setModelObject,
 		// which implicitly registers a state change (of type ComponentModelChange).
-		Link linkWithStateChange = Link.onClick("linkWithStateChange", () -> {
+		Link linkWithStateChange = Link.onClick("linkWithStateChange", (link) -> {
 			count2.increment();
 			addStateChange();
 		});

@@ -31,6 +31,6 @@ public class InjectionPage extends CdiExamplePage
 	{
 		add(new Label("count", new PropertyModel(this, "counter.count")));
 
-		add(Link.onClick("increment", () -> counter.increment()));
+		add(Link.onClick("increment", (link) -> counter.increment()));
 	}
 }
