@@ -81,8 +81,8 @@ import org.slf4j.LoggerFactory;
  * {@link Button} or {@link SubmitLink}), just putting e.g. &lt;input type="submit" value="go"/&gt;
  * suffices.
  * <p>
- * As a {@link IFormSubmitListener} the form gets notified of listener requests in
- * {@link #onFormSubmitted()}. By default, the processing of this submit works like this:
+ * As a {@link IRequestListener} the form gets notified of listener requests in
+ * {@link #onRequest()}. By default, the processing of this submit works like this:
  * <ul>
  * <li>All nested {@link FormComponent}s are notified of new input via
  * {@link FormComponent#inputChanged()}</li>
@@ -1186,7 +1186,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Method for dispatching/calling a interface on a page from the given url. Used by
-	 * {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()} for dispatching events
+	 * {@link Form#onRequest()} for dispatching events
 	 * 
 	 * @param page
 	 *            The page where the event should be called on.
