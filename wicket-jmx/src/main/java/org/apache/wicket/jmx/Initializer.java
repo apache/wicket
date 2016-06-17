@@ -290,7 +290,25 @@ public class Initializer implements IInitializer
 				return o.getClass().getName().replace(".wrapper", "");
 			}
 		});
+		e.setClassLoader(resolveClassLoader());
 
 		return e.create();
 	}
+
+	private static ClassLoader resolveClassLoader()
+	{
+		ClassLoader classLoader = null;
+		if (org.apache.wicket.Application.exists())
+		{
+			classLoader = org.apache.wicket.Application.get().getApplicationSettings()
+					.getClassResolver().getClassLoader();
+		}
+
+		if (classLoader == null) {
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+
+		return classLoader;
+	}
+
 }
