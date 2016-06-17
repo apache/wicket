@@ -95,6 +95,8 @@ def basePath = System.properties['base.dir']
 
 grails.doc.title = "Apache Wicket User Guide"
 grails.doc.version = "8.x"
+wicket.examples.url = "http://examples7x.wicket.apache.org"
+wicket.tutorial.examples.url = "http://examples-wickettutorial.rhcloud.com"
 grails.doc.subtitle = "Free Online Guide for Apache Wicket framework"
 grails.doc.authors = "Andrea Del Bene, Martin Grigorov, Carsten Hufe, Christian Kroemer, Daniel Bartl, Paul Borș, Tobias Soloschenko, Igor Vaynberg , Joachim Rohde"
 grails.doc.images = new File("${basePath}/src/docs/img")

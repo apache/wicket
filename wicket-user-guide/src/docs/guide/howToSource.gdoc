@@ -1,4 +1,4 @@
-Most of the code you will find in this document is available as a "Git repository":https://github.com/bitstorm/Wicket-tutorial-examples and is licensed under the ASF 2.0. To get a local copy of the repository you can run the clone command from shell:
+Most of the code you will find in this document is available as a "Git repository":https://github.com/bitstorm/Wicket-tutorial-examples and is licensed under the ASF 2.0. Examples are hosted live at {externalink:wicket.tutorial.examples.url}. To get a local copy of the repository you can run the clone command from shell:
 
 {code}
 git clone https://github.com/bitstorm/Wicket-tutorial-examples.git
