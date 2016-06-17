@@ -41,4 +41,6 @@ By default calling @setOutputMarkupId@ we generate markup ids using a session-le
    <span id="staticIdToUse" wicket:id="componentWicketId"></span>
 {code}
 
-[See examples site|http://examples7x.wicket.apache.org/stateless] for a full showcase of AJAX-stateless capabilities.
+The following AJAX-stateless components are shipped with Wicket distribution: @StatelessAjaxLink@, @StatelessAjaxButton@, @StatelessAjaxSubmitLink@
+ 
+{externalink:wicket.examples.url@stateless}See examples {externalink} page for a full showcase of AJAX-stateless capabilities.
