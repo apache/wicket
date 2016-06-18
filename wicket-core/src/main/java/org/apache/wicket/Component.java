@@ -3354,8 +3354,7 @@ public abstract class Component
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 
 		if (page.isPageStateless()
-			|| (getApplication().getPageSettings().getRecreateBookmarkablePagesAfterExpiry()
-				&& page.isBookmarkable() && page.wasCreatedBookmarkable()))
+			|| (page.isBookmarkable() && page.wasCreatedBookmarkable()))
 		{
 			return new BookmarkableListenerInterfaceRequestHandler(provider, id);
 		}

@@ -113,7 +113,7 @@ public class MountedPageLinkTest extends WicketTestCase
 			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
-		assertEquals("./wicket/page?0-1.-link", url);
+		assertEquals("./wicket/bookmarkable/org.apache.wicket.markup.html.link.PageWithLink?0-1.-link", url);
 		tester.executeUrl(url);
 	}
 
@@ -128,9 +128,9 @@ public class MountedPageLinkTest extends WicketTestCase
 			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
-		assertEquals("./wicket/page?0-1.-link", url);
+		assertEquals("./wicket/bookmarkable/org.apache.wicket.markup.html.link.PageWithLink?0-1.-link", url);
 		// simulate a page expiry
-		url = url.replace("page?0", "page?3");
+		url = url.replace("PageWithLink?0", "PageWithLink?3");
 		tester.executeUrl(url);
 	}
 }
