@@ -233,7 +233,7 @@ public abstract class AjaxButton extends Button
 	 *            the id of the ajax button
 	 * @param onSubmit
 	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            {@link AjaxButton}
 	 * @return the {@link AjaxButton}
 	 */
 	public static AjaxButton onSubmit(String id, WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
