@@ -120,13 +120,13 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected void onSubmit(Optional<AjaxRequestTarget> target, Form<?> form)
+				protected void onSubmit(Optional<AjaxRequestTarget> target)
 				{
 					submitSequence.add(this);
 				}
 
 				@Override
-				protected void onError(AjaxRequestTarget target, Form<?> form)
+				protected void onError(AjaxRequestTarget target)
 				{
 				}
 			});

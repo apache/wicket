@@ -103,7 +103,7 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 		return new IndicatingAjaxButton(id)
 		{
 			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			public void onSubmit(AjaxRequestTarget target)
 			{
 				onSubmit.accept(this, target);
 			}
@@ -120,13 +120,13 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 		return new IndicatingAjaxButton(id)
 		{
 			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			public void onSubmit(AjaxRequestTarget target)
 			{
 				onSubmit.accept(this, target);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				onError.accept(this, target);
 			}

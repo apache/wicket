@@ -88,7 +88,7 @@ public class HomePage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				info("onSubmit");
 				hitOnSubmit = true;
@@ -96,7 +96,7 @@ public class HomePage extends WebPage
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				error("onError");
 				hitOnError = true;
@@ -127,14 +127,14 @@ public class HomePage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				formSubmitted = formSubmitted | AJAX;
 				target.add(form);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 			}
 

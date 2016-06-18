@@ -84,7 +84,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onError(target, getForm());
+				AjaxSubmitLink.this.onError(target);
 			}
 
 			@Override
@@ -109,13 +109,13 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onSubmit(target, getForm());
+				AjaxSubmitLink.this.onSubmit(target);
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onAfterSubmit(target, getForm());
+				AjaxSubmitLink.this.onAfterSubmit(target);
 			}
 		};
 	}
@@ -128,7 +128,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * 
 	 * @param form the {@link Form}
 	 */
-	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onSubmit(AjaxRequestTarget target)
 	{
 	}
 
@@ -140,7 +140,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * 
 	 * @param form the {@link Form}
 	 */
-	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
 	}
 
@@ -201,7 +201,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @param target
 	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
+	protected void onError(AjaxRequestTarget target)
 	{
 	}
 
@@ -241,7 +241,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			public void onSubmit(AjaxRequestTarget target)
 			{
 				onSubmit.accept(this, target);
 			}
@@ -273,13 +273,13 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			public void onSubmit(AjaxRequestTarget target)
 			{
 				onSubmit.accept(this, target);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				onError.accept(this, target);
 			}

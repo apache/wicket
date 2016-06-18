@@ -58,7 +58,7 @@ public class AddressFormPanel extends GenericPanel<AddressFormPanel.ChildModel>
 		add(new AjaxSubmitLink("childSubmitButton", form)
 		{
 			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			public void onSubmit(AjaxRequestTarget target)
 			{
 				getPanelInstance().getModelObject().submittedCalled(target);
 			}

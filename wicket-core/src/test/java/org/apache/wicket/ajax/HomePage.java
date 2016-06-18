@@ -98,7 +98,7 @@ public class HomePage extends WebPage
 		form.add(new AjaxFallbackButton("addButton", form)
 		{
 			@Override
-			protected void onSubmit(Optional<AjaxRequestTarget> targetOptional, Form<?> form)
+			protected void onSubmit(Optional<AjaxRequestTarget> targetOptional)
 			{
 				rows++;
 				listView.removeAll();
@@ -106,7 +106,7 @@ public class HomePage extends WebPage
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 			}
 		}.setDefaultFormProcessing(false));

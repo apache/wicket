@@ -101,9 +101,8 @@ public class ChoicePage extends BasePage
 		form.add(new AjaxButton("go")
 		{
 			@Override
-			protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				super.onAfterSubmit(target, form);
 				info("You have selected: " + makes.getModelObject() + " " + models.getModelObject());
 				target.add(feedback);
 			}

@@ -94,7 +94,7 @@ public class FileUploadPage extends BasePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				info("This request was processed using AJAX");
 
@@ -103,7 +103,7 @@ public class FileUploadPage extends BasePage
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				// update feedback to display errors
 				target.add(feedback);

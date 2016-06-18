@@ -63,7 +63,7 @@ public class MultiPartFormPage extends WebPage
 		button1 = new AjaxFallbackButton("button1", null)
 		{
 			@Override
-			protected void onSubmit(Optional<AjaxRequestTarget> target, Form<?> form)
+			protected void onSubmit(Optional<AjaxRequestTarget> target)
 			{
 				target.ifPresent(t -> t.add(this));
 			}
@@ -73,7 +73,7 @@ public class MultiPartFormPage extends WebPage
 		button2 = new AjaxFallbackButton("button2", null)
 		{
 			@Override
-			protected void onSubmit(Optional<AjaxRequestTarget> target, Form<?> form)
+			protected void onSubmit(Optional<AjaxRequestTarget> target)
 			{
 				target.ifPresent(t -> t.add(this));
 			}

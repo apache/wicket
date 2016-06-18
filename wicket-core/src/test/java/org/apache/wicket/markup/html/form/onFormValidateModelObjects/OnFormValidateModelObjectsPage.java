@@ -85,9 +85,8 @@ public class OnFormValidateModelObjectsPage extends WebPage
 		parentForm.add(new AjaxSubmitLink("parentSubmitBtn", parentForm)
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
-				super.onSubmit(target, form);
 				target.add(getThePage().get("validations"));
 			}
 		});

@@ -1201,13 +1201,13 @@ public class WicketTesterTest extends WicketTestCase
 		MockFormSubmitsPage page = new MockFormSubmitsPage()
 		{
 			@Override
-			protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target)
 			{
 				ajaxSubmitLinkSubmitted.set(true);
 			}
 
 			@Override
-			protected void onAjaxButtonSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onAjaxButtonSubmit(AjaxRequestTarget target)
 			{
 				ajaxButtonSubmitted.set(true);
 			}

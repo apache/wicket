@@ -111,19 +111,19 @@ public abstract class AjaxButton extends Button
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onSubmit(target, AjaxButton.this.getForm());
+				AjaxButton.this.onSubmit(target);
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onAfterSubmit(target, AjaxButton.this.getForm());
+				AjaxButton.this.onAfterSubmit(target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onError(target, AjaxButton.this.getForm());
+				AjaxButton.this.onError(target);
 			}
 
 			@Override
@@ -202,7 +202,7 @@ public abstract class AjaxButton extends Button
 	 * @param target
 	 * @param form
 	 */
-	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onSubmit(AjaxRequestTarget target)
 	{
 	}
 
@@ -212,7 +212,7 @@ public abstract class AjaxButton extends Button
 	 * @param target
 	 * @param form
 	 */
-	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
 	}
 
@@ -222,7 +222,7 @@ public abstract class AjaxButton extends Button
 	 * @param target
 	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
+	protected void onError(AjaxRequestTarget target)
 	{
 	}
 
@@ -245,7 +245,7 @@ public abstract class AjaxButton extends Button
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			public void onSubmit(AjaxRequestTarget target)
 			{
 				onSubmit.accept(this, target);
 			}
@@ -277,13 +277,13 @@ public abstract class AjaxButton extends Button
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onSubmit(AjaxRequestTarget target, Form<?> form)
+			public void onSubmit(AjaxRequestTarget target)
 			{
 				onSubmit.accept(this, target);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				onError.accept(this, target);
 			}

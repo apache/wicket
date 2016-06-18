@@ -53,7 +53,7 @@ public class MyBorder extends Border
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				info("onSubmit");
 				hitOnSubmit = true;
@@ -61,7 +61,7 @@ public class MyBorder extends Border
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				error("onError");
 				hitOnError = true;

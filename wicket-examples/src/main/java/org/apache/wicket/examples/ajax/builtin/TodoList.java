@@ -253,7 +253,7 @@ public class TodoList extends BasePage
 				add(new AjaxButton("add", this)
 				{
 					@Override
-					protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+					protected void onSubmit(AjaxRequestTarget target)
 					{
 						// retrieve the todo item
 						TodoItem item = (TodoItem)getParent().getDefaultModelObject();
@@ -263,7 +263,7 @@ public class TodoList extends BasePage
 					}
 
 					@Override
-					protected void onError(AjaxRequestTarget target, Form<?> form)
+					protected void onError(AjaxRequestTarget target)
 					{
 					}
 				});
@@ -271,13 +271,13 @@ public class TodoList extends BasePage
 				add(new AjaxButton("cancel", this)
 				{
 					@Override
-					public void onSubmit(AjaxRequestTarget target, Form<?> form)
+					public void onSubmit(AjaxRequestTarget target)
 					{
 						onCancelTodo(target);
 					}
 
 					@Override
-					protected void onError(AjaxRequestTarget target, Form<?> form)
+					protected void onError(AjaxRequestTarget target)
 					{
 					}
 				});
