@@ -255,27 +255,22 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		PageProvider provider = new PageProvider(pageInfo.getPageId(), pageClass, pageParameters,
 			renderCount);
 		provider.setPageSource(getContext());
-		if (provider.isNewPageInstance() && !getRecreateMountedPagesAfterExpiry())
-		{
-			throw new PageExpiredException(String.format("Bookmarkable page id '%d' has expired.",
-				pageInfo.getPageId()));
-		}
-		else
-		{
-			/** 
-			 * https://issues.apache.org/jira/browse/WICKET-5734
-			 * */
-			PageParameters constructionPageParameters = provider.hasPageInstance() ? 
-				provider.getPageInstance().getPageParameters() : new PageParameters();
 
-			if (PageParameters.equals(constructionPageParameters, pageParameters) == false)
-			{
-				// create a fresh page instance because the request page parameters are different than the ones
-				// when the resolved page by id has been created
-				return new RenderPageRequestHandler(new PageProvider(pageClass, pageParameters));
-			}
-			return new RenderPageRequestHandler(provider);
+		checkExpiration(provider, pageInfo);
+
+		/**
+		 * https://issues.apache.org/jira/browse/WICKET-5734
+		 * */
+		PageParameters constructionPageParameters = provider.hasPageInstance() ?
+			provider.getPageInstance().getPageParameters() : new PageParameters();
+
+		if (PageParameters.equals(constructionPageParameters, pageParameters) == false)
+		{
+			// create a fresh page instance because the request page parameters are different than the ones
+			// when the resolved page by id has been created
+			return new RenderPageRequestHandler(new PageProvider(pageClass, pageParameters));
 		}
+		return new RenderPageRequestHandler(provider);
 	}
 
 	boolean getRecreateMountedPagesAfterExpiry()
@@ -312,6 +307,8 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 			provider.setPageSource(getContext());
 
+			checkExpiration(provider, pageInfo);
+
 			return new ListenerInterfaceRequestHandler(provider, listenerInterface,
 				componentInfo.getBehaviorId());
 		}
@@ -334,9 +331,15 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
-	 */
+	private void checkExpiration(PageProvider provider, PageInfo pageInfo)
+	{
+		if (provider.isNewPageInstance() && !getRecreateMountedPagesAfterExpiry())
+		{
+			throw new PageExpiredException(String.format("Bookmarkable page with id '%d' has expired.",
+			                                             pageInfo.getPageId()));
+		}
+	}
+
 	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
