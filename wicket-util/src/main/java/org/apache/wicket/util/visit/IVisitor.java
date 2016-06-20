@@ -34,5 +34,5 @@ public interface IVisitor<T, R>
 	 * @param visit
 	 *            Object used to control the visit/traversal
 	 */
-	public void component(T object, IVisit<R> visit);
+	void component(T object, IVisit<R> visit);
 }
