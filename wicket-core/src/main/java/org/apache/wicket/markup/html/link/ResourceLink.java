@@ -95,9 +95,6 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 		resourceParameters = null;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.link.Link#onClick()
-	 */
 	@Override
 	public void onClick()
 	{
@@ -109,13 +106,9 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 		return false;
 	}
 	
-	/**
-	 * @see org.apache.wicket.IResourceListener#onResourceRequested()
-	 */
 	@Override
 	public final void onRequest()
 	{
-
 		Attributes a = new Attributes(RequestCycle.get().getRequest(), RequestCycle.get()
 			.getResponse(), null);
 		resource.respond(a);
@@ -123,9 +116,6 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 		super.onRequest();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.link.Link#getURL()
-	 */
 	@Override
 	protected final CharSequence getURL()
 	{
