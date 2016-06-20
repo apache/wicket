@@ -20,6 +20,7 @@ package org.apache.wicket.request;
 /**
  * Maps exception to {@link IRequestHandler}.
  */
+@FunctionalInterface
 public interface IExceptionMapper
 {
 	/**
