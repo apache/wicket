@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.feedback;
 
+import java.util.function.Predicate;
+
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -24,17 +26,17 @@ import org.apache.wicket.util.io.IClusterable;
  * @author Jonathan Locke
  */
 @FunctionalInterface
-public interface IFeedbackMessageFilter extends IClusterable
+public interface IFeedbackMessageFilter extends IClusterable, Predicate<FeedbackMessage>
 {
 	/**
 	 * Filter that returns simply all available messages.
 	 */
-	IFeedbackMessageFilter ALL = (IFeedbackMessageFilter) message -> true;
+	IFeedbackMessageFilter ALL = message -> true;
 
 	/**
 	 * Filter that does not match any message
 	 */
-	IFeedbackMessageFilter NONE = (IFeedbackMessageFilter) message -> false;
+	IFeedbackMessageFilter NONE = message -> false;
 
 	/**
 	 * @param message
@@ -42,4 +44,9 @@ public interface IFeedbackMessageFilter extends IClusterable
 	 * @return True if the message should be included, false to exclude it
 	 */
 	boolean accept(FeedbackMessage message);
+
+	@Override
+	default boolean test(FeedbackMessage message) {
+		return accept(message);
+	}
 }
