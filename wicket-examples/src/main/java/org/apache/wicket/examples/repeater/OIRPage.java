@@ -89,33 +89,17 @@ public class OIRPage extends BasePage
 			{
 				Contact contact = item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Link<Void>("toggleHighlite")
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public void onClick()
-					{
-						HighlitableDataItem<Contact> hitem = (HighlitableDataItem<Contact>)item;
-						hitem.toggleHighlite();
-					}
-				});
+				item.add(Link.onClick("toggleHighlite", (link) -> {
+					HighlitableDataItem<Contact> hitem = (HighlitableDataItem<Contact>)item;
+					hitem.toggleHighlite();
+				}));
 				item.add(new Label("contactid", String.valueOf(contact.getId())));
 				item.add(new Label("firstname", contact.getFirstName()));
 				item.add(new Label("lastname", contact.getLastName()));
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(AttributeModifier.replace("class", new IModel<String>()
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public String getObject()
-					{
-						return (item.getIndex() % 2 == 1) ? "even" : "odd";
-					}
-				}));
+				item.add(AttributeModifier.replace("class", () -> (item.getIndex() % 2 == 1) ? "even" : "odd"));
 			}
 
 			@Override

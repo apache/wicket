@@ -84,9 +84,6 @@ public class Comment implements IClusterable
 		this.date = date;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

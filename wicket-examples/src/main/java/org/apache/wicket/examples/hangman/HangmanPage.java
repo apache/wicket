@@ -33,9 +33,6 @@ public class HangmanPage extends WicketExamplePage
 		return ((HangmanSession)getSession()).getGame();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
 	@Override
 	public boolean isVersioned()
 	{

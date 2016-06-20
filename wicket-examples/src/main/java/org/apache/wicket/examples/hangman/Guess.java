@@ -22,7 +22,6 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -43,14 +42,7 @@ public class Guess extends HangmanPage
 		add(new Label("guessesRemaining", new PropertyModel<>(getGame(), "guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label("word", new Model<String>()
-		{
-			@Override
-			public String getObject()
-			{
-				return getGame().getWord().asString(true);
-			}
-		}));
+		add(new Label("word", () -> getGame().getWord().asString(true)));
 
 		// Show the game's letters
 		add(new ListView<Letter>("letters", getGame().getLetters())
@@ -105,8 +97,6 @@ public class Guess extends HangmanPage
 
 				// append id attribute to link for unit tests
 				link.add(AttributeModifier.replace("id", "letter_" + letter.asString()));
-
-
 			}
 		});
 	}

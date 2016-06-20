@@ -56,9 +56,6 @@ public class BasePage extends ExamplePage
 		}
 	}
 
-	/**
-	 * 
-	 */
 	class ActionPanel extends Panel
 	{
 		/**

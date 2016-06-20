@@ -21,12 +21,11 @@ import java.net.URL;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.examples.WicketExampleApplication;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
+import org.apache.wicket.examples.WicketExampleApplication;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,19 +45,10 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	 */
 	private final class CustomResourceStreamLocator extends ResourceStreamLocator
 	{
-		/**
-		 * @see org.apache.wicket.core.util.resource.locator.ResourceStreamLocator#locate(java.lang.Class,
-		 *      java.lang.String)
-		 */
 		@Override
 		public IResourceStream locate(Class<?> clazz, String path)
 		{
-			// Log attempt
-			if (log.isDebugEnabled())
-			{
-				log.debug("Attempting to locate resource '" + path +
-					"' using classloader the servlet context");
-			}
+			log.debug("Attempting to locate resource '{}' using classloader the servlet context", path);
 
 			String location;
 			if (clazz == AlternativePageFromWebContext.class)
@@ -103,18 +93,12 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return Index.class;
 	}
 
-	/**
-	 * @see WebApplication#init()
-	 */
 	@Override
 	protected void init()
 	{

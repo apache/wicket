@@ -31,7 +31,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class BookmarkableFolderContent extends Content
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public BookmarkableFolderContent(final AbstractTree<Foo> tree)

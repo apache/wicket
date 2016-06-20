@@ -136,7 +136,7 @@ public class SourcesPage extends WebPage
 	/**
 	 * Model for retrieving the contents of a package directory from the class path.
 	 */
-	public class PackagedResourcesModel extends LoadableDetachableModel<List<String>>
+	private class PackagedResourcesModel extends LoadableDetachableModel<List<String>>
 	{
 		/**
 		 * Returns the list of resources found in the package of the page.
@@ -274,7 +274,7 @@ public class SourcesPage extends WebPage
 	/**
 	 * Displays the resources embedded in a package in a list.
 	 */
-	public class FilesBrowser extends WebMarkupContainer
+	private class FilesBrowser extends WebMarkupContainer
 	{
 		/**
 		 * Constructor.
@@ -282,7 +282,7 @@ public class SourcesPage extends WebPage
 		 * @param id
 		 *            the component identifier
 		 */
-		public FilesBrowser(String id)
+		private FilesBrowser(String id)
 		{
 			super(id);
 			ListView<String> lv = new ListView<String>("file", new PackagedResourcesModel())
@@ -339,7 +339,7 @@ public class SourcesPage extends WebPage
 	 * Container for displaying the source of the selected page, resource or other element from the
 	 * package.
 	 */
-	public class CodePanel extends WebMarkupContainer
+	private class CodePanel extends WebMarkupContainer
 	{
 		/**
 		 * Constructor.
@@ -347,7 +347,7 @@ public class SourcesPage extends WebPage
 		 * @param id
 		 *            the component id
 		 */
-		public CodePanel(String id)
+		private CodePanel(String id)
 		{
 			super(id);
 			Label code = new Label("code", new SourceModel());
@@ -413,17 +413,7 @@ public class SourcesPage extends WebPage
 	{
 		super(params);
 
-		filename = new Label("filename", new IModel<String>()
-		{
-
-			@Override
-			public String getObject()
-			{
-				return name != null ? name : getPage().getRequest().getRequestParameters()
-					.getParameterValue(SOURCE).toOptionalString();
-			}
-
-		});
+		filename = new Label("filename", () -> name != null ? name : params.get(SOURCE).toOptionalString());
 		filename.setOutputMarkupId(true);
 		add(filename);
 		codePanel = new CodePanel("codepanel").setOutputMarkupId(true);
@@ -465,21 +455,15 @@ public class SourcesPage extends WebPage
 			String pageParam = getPageParameters().get(PAGE_CLASS).toOptionalString();
 			if (pageParam == null)
 			{
-				if (log.isErrorEnabled())
-				{
-					log.error("key: " + PAGE_CLASS + " is null.");
-				}
+				log.error("key: {} is null.", PAGE_CLASS);
 				getRequestCycle().replaceAllRequestHandlers(
 					new ErrorCodeRequestHandler(404,
 						"Could not find sources for the page you requested"));
 			}
 			else if (!pageParam.startsWith("org.apache.wicket.examples"))
 			{
-				if (log.isErrorEnabled())
-				{
-					log.error("user is trying to access class: " + pageParam
-						+ " which is not in the scope of org.apache.wicket.examples");
-				}
+				log.error("user is trying to access class: {} which is not in the scope of org.apache.wicket.examples",
+						pageParam);
 				throw new UnauthorizedInstantiationException(getClass());
 			}
 			page = WicketObjects.resolveClass(pageParam);

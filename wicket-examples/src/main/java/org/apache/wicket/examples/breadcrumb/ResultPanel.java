@@ -45,7 +45,7 @@ public class ResultPanel extends BreadCrumbPanel
 
 		if (Strings.isEmpty(result))
 		{
-			result = "(hey, you didn't even provide some input!)";
+			result = "(hey, you didn't even provide any input!)";
 		}
 
 		add(new Label("result", result));

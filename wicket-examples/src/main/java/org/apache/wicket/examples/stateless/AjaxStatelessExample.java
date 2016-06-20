@@ -43,7 +43,6 @@ import org.apache.wicket.util.string.StringValue;
 
 public class AjaxStatelessExample extends WicketExamplePage
 {
-
 	private static final String COUNTER_PARAM = "counter";
 
 	/**
@@ -60,27 +59,18 @@ public class AjaxStatelessExample extends WicketExamplePage
 		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink<>("indexLink", Index.class));
 		
-		final Label incrementLabel = new Label("incrementLabel", new AbstractReadOnlyModel<Integer>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Integer getObject()
-			{
-				final String counter = getParameter(parameters, COUNTER_PARAM);
-				return counter != null ? Integer.parseInt(counter) : 0;
-			}
-
+		final Label incrementLabel = new Label("incrementLabel", () -> {
+			String counter = getParameter(parameters, COUNTER_PARAM);
+			return counter != null ? Integer.parseInt(counter) : 0;
 		});
 		final Link<?> incrementLink = new AjaxFallbackLink<Void>("incrementLink")
 		{
-
 			@Override
 			public void onClick(final Optional<AjaxRequestTarget> target)
-			{				
+			{
 				Integer counter = (Integer)incrementLabel.getDefaultModelObject();
 				updateParams(getPageParameters(), counter);
-				
+
 				target.ifPresent(ajaxTarget -> ajaxTarget.add(incrementLabel, this));
 			}
 			
@@ -94,27 +84,23 @@ public class AjaxStatelessExample extends WicketExamplePage
 		add(incrementLink);
 		add(incrementLabel.setOutputMarkupId(true));
 
-		final TextField<String> nameField = new TextField<String>("name", new Model<String>(""));
-		final TextField<String> surnameField = new TextField<String>("surname", new Model<String>(""));
+		final TextField<String> nameField = new TextField<>("name", new Model<>(""));
+		final TextField<String> surnameField = new TextField<>("surname", new Model<>(""));
 
 		final Form<String> form = new StatelessForm<String>("inputForm")
 		{
-
 			@Override
 			protected void onSubmit()
 			{
-
 			}
-
 		};
-		final DropDownChoice<String> select = new DropDownChoice<String>("select",
-			new Model<String>("2"), Arrays.asList(new String[] { "1", "2", "3" }));
+		final DropDownChoice<String> select = new DropDownChoice<>("select",
+			new Model<>("2"), Arrays.asList("1", "2", "3"));
 		final Label selectedValue = new Label("selectedValue", "");
 		add(selectedValue.setOutputMarkupId(true));
 
 		select.add(new AjaxFormComponentUpdatingBehavior("change")
 		{
-
 			@Override
 			protected void onUpdate(final AjaxRequestTarget target)
 			{

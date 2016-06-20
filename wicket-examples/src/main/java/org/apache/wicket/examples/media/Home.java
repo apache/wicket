@@ -39,7 +39,6 @@ import org.apache.wicket.request.resource.PackageResourceReference;
  */
 public final class Home extends WicketExamplePage
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**

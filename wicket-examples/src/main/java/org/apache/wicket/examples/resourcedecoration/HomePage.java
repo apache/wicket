@@ -120,7 +120,7 @@ public class HomePage extends WicketExamplePage
 	{
 		private static final long serialVersionUID = 1L;
 
-		public AjaxProofContainer(String id)
+		private AjaxProofContainer(String id)
 		{
 			super(id);
 			setOutputMarkupId(true);

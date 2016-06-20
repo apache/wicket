@@ -48,43 +48,11 @@ public class Index extends WicketExamplePage
 		add(new BookmarkablePageLink<>("linkToStatelessPage3", StatelessPage3.class));
 		// The second with a stateless link, so the onclick will be called but
 		// on a stateless page.
-		add(new StatelessLink<Void>("linkToStatefulPage")
-		{
-			private static final long serialVersionUID = 1L;
-
-			/**
-			 * @see org.apache.wicket.markup.html.link.Link#onClick()
-			 */
-			@Override
-			public void onClick()
-			{
-				setResponsePage(StatefulPage.class);
-			}
-		});
-		add(new StatelessLink<Void>("linkToAjaxExamples")
-		{
-			private static final long serialVersionUID = 1L;
-			
-			/**
-			 * @see org.apache.wicket.markup.html.link.Link#onClick()
-			 */
-			@Override
-			public void onClick()
-			{
-				setResponsePage(AjaxStatelessExample.class);
-			}
-		});
-		add(new StatelessLink<Void>("invalidatesession")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick()
-			{
-				Session.get().invalidate();
-				setResponsePage(Index.class);
-			}
-
-		});
+		add(StatelessLink.onClick("linkToStatefulPage", (link) -> setResponsePage(StatefulPage.class)));
+		add(StatelessLink.onClick("linkToAjaxExamples", (link) -> setResponsePage(AjaxStatelessExample.class)));
+		add(StatelessLink.onClick("invalidatesession", (link) -> {
+			Session.get().invalidate();
+			setResponsePage(Index.class);
+		}));
 	}
 }

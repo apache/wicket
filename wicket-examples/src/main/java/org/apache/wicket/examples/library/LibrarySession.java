@@ -104,9 +104,6 @@ public final class LibrarySession extends AuthenticatedWebSession
 		this.user = user;
 	}
 
-	/**
-	 * @see AuthenticatedWebSession#signOut()
-	 */
 	@Override
 	public void signOut()
 	{
@@ -114,9 +111,6 @@ public final class LibrarySession extends AuthenticatedWebSession
 		user = null;
 	}
 
-	/**
-	 * @see AuthenticatedWebSession#getRoles()
-	 */
 	@Override
 	public Roles getRoles()
 	{

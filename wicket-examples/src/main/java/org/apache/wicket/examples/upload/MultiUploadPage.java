@@ -66,9 +66,6 @@ public class MultiUploadPage extends WicketExamplePage
 			super(name, files);
 		}
 
-		/**
-		 * @see ListView#populateItem(ListItem)
-		 */
 		@Override
 		protected void populateItem(ListItem<File> listItem)
 		{
@@ -120,7 +117,7 @@ public class MultiUploadPage extends WicketExamplePage
 			setMultiPart(true);
 
 			// Add one multi-file upload field
-			add(new MultiFileUploadField("fileInput", new PropertyModel<Collection<FileUpload>>(
+			add(new MultiFileUploadField("fileInput", new PropertyModel<>(
 				this, "uploads"), 5, true));
 
 			// Set maximum size to 100K for demo purposes

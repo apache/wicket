@@ -24,9 +24,8 @@ import javax.validation.ConstraintValidatorContext;
 
 public class ValidPasswordValidator implements ConstraintValidator<ValidPassword, String>
 {
-
-	private final Pattern content = Pattern.compile("[0-9a-zA-Z]*");
-	private final Pattern digits = Pattern.compile("(.*\\d.*){2}");
+	private static final Pattern CONTENT = Pattern.compile("[0-9a-zA-Z]*");
+	private static final Pattern DIGITS = Pattern.compile("(.*\\d.*){2}");
 
 	@Override
 	public void initialize(ValidPassword constraintAnnotation)
@@ -39,11 +38,11 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
 	{
 		boolean validationResult = true;
 
-		if (!content.matcher(value).matches())
+		if (!CONTENT.matcher(value).matches())
 		{
 			validationResult = false;
 		}
-		else if (!digits.matcher(value).matches())
+		else if (!DIGITS.matcher(value).matches())
 		{
 			context.disableDefaultConstraintViolation();
 			context.buildConstraintViolationWithTemplate("{password.needDigits}")

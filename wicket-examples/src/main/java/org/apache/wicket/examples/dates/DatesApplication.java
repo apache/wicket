@@ -24,16 +24,6 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class DatesApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public DatesApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class< ? extends Page> getHomePage()
 	{

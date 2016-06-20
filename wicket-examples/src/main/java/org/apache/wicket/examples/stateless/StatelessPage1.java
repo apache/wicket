@@ -32,9 +32,6 @@ import org.apache.wicket.validation.validator.RangeValidator;
  */
 public class StatelessPage1 extends WicketExamplePage
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final Integer number = 10;
@@ -47,16 +44,13 @@ public class StatelessPage1 extends WicketExamplePage
 		setStatelessHint(true);
 		add(new Label("message", new SessionModel()));
 		add(new BookmarkablePageLink<>("indexLink", Index.class));
-		final TextField<Integer> field = new TextField<Integer>("textfield",
-			new PropertyModel<Integer>(this, "number"));
+		final TextField<Integer> field = new TextField<>("textfield",
+			new PropertyModel<>(this, "number"));
 		field.add(new RangeValidator<>(null, 20));
 		field.setRequired(true);
 
-		StatelessForm<?> statelessForm = new StatelessForm("statelessform")
+		StatelessForm<?> statelessForm = new StatelessForm<Void>("statelessform")
 		{
-			/**
-			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-			 */
 			@Override
 			protected void onSubmit()
 			{

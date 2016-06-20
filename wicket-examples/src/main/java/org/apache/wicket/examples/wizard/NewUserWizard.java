@@ -161,9 +161,6 @@ public class NewUserWizard extends Wizard
 			});
 		}
 
-		/**
-		 * @see org.apache.wicket.extensions.wizard.WizardModel.ICondition#evaluate()
-		 */
 		@Override
 		public boolean evaluate()
 		{

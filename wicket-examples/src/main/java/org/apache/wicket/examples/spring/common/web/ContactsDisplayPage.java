@@ -40,10 +40,10 @@ public abstract class ContactsDisplayPage extends BasePage
 	public ContactsDisplayPage()
 	{
 		List<IColumn<Contact, String>> cols = new ArrayList<>(4);
-		cols.add(new PropertyColumn<Contact, String>(new Model<>("first name"), "firstName", "firstName"));
-		cols.add(new PropertyColumn<Contact, String>(new Model<>("last name"), "lastName", "lastName"));
-		cols.add(new PropertyColumn<Contact, String>(new Model<>("home phone"), "homePhone"));
-		cols.add(new PropertyColumn<Contact, String>(new Model<>("cell phone"), "cellPhone"));
+		cols.add(new PropertyColumn<>(new Model<>("first name"), "firstName", "firstName"));
+		cols.add(new PropertyColumn<>(new Model<>("last name"), "lastName", "lastName"));
+		cols.add(new PropertyColumn<>(new Model<>("home phone"), "homePhone"));
+		cols.add(new PropertyColumn<>(new Model<>("cell phone"), "cellPhone"));
 
 		add(new DefaultDataTable<>("contacts", cols, getDataProvider(), 5));
 	}

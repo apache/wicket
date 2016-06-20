@@ -20,7 +20,6 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.guice.service.IMyService;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.IModel;
 
 import com.google.inject.Inject;
 
@@ -41,17 +40,7 @@ public class HomePage extends WicketExamplePage
 	 */
 	public HomePage()
 	{
-		add(new Link<Void>("link")
-		{
-			/**
-			 * @see org.apache.wicket.markup.html.link.Link#onClick()
-			 */
-			@Override
-			public void onClick()
-			{
-				labelValue = service.getHelloWorldText();
-			}
-		});
-		add(new Label("message", (IModel<String>) () -> labelValue));
+		add(Link.onClick("link", (link) -> labelValue = service.getHelloWorldText()));
+		add(new Label("message", () -> labelValue));
 	}
 }

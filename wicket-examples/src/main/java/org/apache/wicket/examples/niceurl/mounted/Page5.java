@@ -24,6 +24,7 @@ import org.apache.wicket.examples.niceurl.Home;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
 
 
 /**
@@ -72,10 +73,10 @@ public class Page5 extends WicketExamplePage
 	 * @param values
 	 * @return
 	 */
-	private String join(List<org.apache.wicket.util.string.StringValue> values)
+	private String join(List<StringValue> values)
 	{
-	 StringBuilder sb = new StringBuilder();
-		for (org.apache.wicket.util.string.StringValue sv : values)
+	    StringBuilder sb = new StringBuilder();
+		for (StringValue sv : values)
 		{
 			if (sb.length() > 0)
 			{

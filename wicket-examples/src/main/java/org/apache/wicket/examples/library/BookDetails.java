@@ -19,6 +19,7 @@ package org.apache.wicket.examples.library;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.Localizer;
 import org.apache.wicket.examples.library.Book.WritingStyle;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -58,10 +59,11 @@ public final class BookDetails extends AuthenticatedWebPage
 		add(new Label("title", book.getTitle()));
 		add(new Label("author", book.getAuthor()));
 		add(new Label("fiction", Boolean.toString(book.getFiction())));
+		Localizer localizer = getLocalizer();
 		add(BookDetails.link("companion", book.getCompanionBook(),
-			getLocalizer().getString("noBookTitle", this)));
+			localizer.getString("noBookTitle", this)));
 		add(BookDetails.link("related", book.getRelatedBook(),
-			getLocalizer().getString("noBookTitle", this)));
+			localizer.getString("noBookTitle", this)));
 
 		String writingStyles;
 		final boolean hasStyles = (book.getWritingStyles() != null) &&
@@ -73,14 +75,14 @@ public final class BookDetails extends AuthenticatedWebPage
 
 			for (WritingStyle style : book.getWritingStyles())
 			{
-				styles.add(getLocalizer().getString(style.toString(), this));
+				styles.add(localizer.getString(style.toString(), this));
 			}
 
 			writingStyles = styles.toString();
 		}
 		else
 		{
-			writingStyles = getLocalizer().getString("noWritingStyles", this);
+			writingStyles = localizer.getString("noWritingStyles", this);
 		}
 
 		Label writingStylesLabel = new Label("writingStyles", writingStyles);

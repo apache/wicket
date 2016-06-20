@@ -30,7 +30,7 @@ public class Index extends WicketExamplePage
 {
 	/**
 	 * Link to the wizard. It's an internal link instead of a bookmarkable page to help us with
-	 * backbutton surpression. Wizards by default do not partipcate in versioning, which has the
+	 * back button suppression. Wizards by default do not participate in versioning, which has the
 	 * effect that whenever a button is clicked in the wizard, it will never result in a change of
 	 * the redirection url. However, though that'll work just fine when you are already in the
 	 * wizard, there is still the first access to the wizard. But if you link to the page that
@@ -56,9 +56,6 @@ public class Index extends WicketExamplePage
 			this.wizardClass = wizardClass;
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.link.Link#onClick()
-		 */
 		@Override
 		public void onClick()
 		{

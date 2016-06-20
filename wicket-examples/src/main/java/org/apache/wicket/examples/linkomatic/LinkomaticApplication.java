@@ -28,19 +28,12 @@ import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
  */
 public class LinkomaticApplication extends WicketExampleApplication
 {
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#init()
-	 */
 	@Override
 	protected void init()
 	{

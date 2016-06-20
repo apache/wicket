@@ -26,17 +26,6 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class EncodingsApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public EncodingsApplication()
-	{
-
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class< ? extends Page> getHomePage()
 	{

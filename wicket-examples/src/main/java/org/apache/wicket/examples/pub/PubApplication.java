@@ -20,22 +20,12 @@ import org.apache.wicket.Page;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * Application class for the linkomatic example.
+ * Application class for the pub example.
  * 
  * @author Jonathan Locke
  */
 public class PubApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor
-	 */
-	public PubApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class< ? extends Page> getHomePage()
 	{

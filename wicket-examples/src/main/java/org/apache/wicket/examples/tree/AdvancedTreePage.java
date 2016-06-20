@@ -97,8 +97,8 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 		form.add(tree);
 
 		form.add(new DropDownChoice<Content>("content",
-			new PropertyModel<Content>(this, "content"), initContents(),
-			new ChoiceRenderer<Content>("class.simpleName"))
+			new PropertyModel<>(this, "content"), initContents(),
+			new ChoiceRenderer<>("class.simpleName"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -109,8 +109,8 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 			}
 		});
 
-		form.add(new DropDownChoice<Behavior>("theme", new PropertyModel<Behavior>(this, "theme"),
-			initThemes(), new ChoiceRenderer<Behavior>("class.simpleName"))
+		form.add(new DropDownChoice<Behavior>("theme", new PropertyModel<>(this, "theme"),
+			initThemes(), new ChoiceRenderer<>("class.simpleName"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -121,37 +121,11 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 			}
 		});
 
-		form.add(new Link<Void>("expandAll")
-		{
-			private static final long serialVersionUID = 1L;
+		form.add(Link.onClick("expandAll", (link) -> FooExpansion.get().expandAll()));
 
-			@Override
-			public void onClick()
-			{
-				FooExpansion.get().expandAll();
-			}
-		});
+		form.add(Link.onClick("collapseAll", (link) -> FooExpansion.get().collapseAll()));
 
-		form.add(new Link<Void>("collapseAll")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick()
-			{
-				FooExpansion.get().collapseAll();
-			}
-		});
-
-		form.add(new Button("submit")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit()
-			{
-			}
-		});
+		form.add(Button.onSubmit("submit", (btn) -> {}));
 	}
 
 	protected abstract AbstractTree<Foo> createTree(FooProvider provider, IModel<Set<Foo>> state);

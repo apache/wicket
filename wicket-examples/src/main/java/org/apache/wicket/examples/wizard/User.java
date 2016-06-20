@@ -42,9 +42,9 @@ public final class User implements IClusterable
 	private String userName;
 
 	/**
-	 * Gets departement.
+	 * Gets department.
 	 * 
-	 * @return departement
+	 * @return department
 	 */
 	public String getDepartment()
 	{
@@ -112,18 +112,18 @@ public final class User implements IClusterable
 	}
 
 	/**
-	 * Sets departement.
+	 * Sets department.
 	 * 
-	 * @param departement
-	 *            departement
+	 * @param department
+	 *            department
 	 */
-	public void setDepartment(String departement)
+	public void setDepartment(String department)
 	{
-		if (departement == null)
+		if (department == null)
 		{
-			departement = "";
+			department = "";
 		}
-		department = departement;
+		this.department = department;
 	}
 
 	/**

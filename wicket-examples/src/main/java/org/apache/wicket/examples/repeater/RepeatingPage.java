@@ -60,16 +60,7 @@ public class RepeatingPage extends BasePage
 			item.add(new Label("cellphone", contact.getCellPhone()));
 
 			final int idx = index;
-			item.add(AttributeModifier.replace("class", new IModel<String>()
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String getObject()
-				{
-					return (idx % 2 == 1) ? "even" : "odd";
-				}
-			}));
+			item.add(AttributeModifier.replace("class", () -> (idx % 2 == 1) ? "even" : "odd"));
 
 			index++;
 		}

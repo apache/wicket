@@ -79,15 +79,10 @@ public class FormInput extends WicketExamplePage
 			add(new LocaleDropDownChoice("localeSelect"));
 
 			// Link to return to default locale
-			add(new Link<Void>("defaultLocaleLink")
-			{
-				@Override
-				public void onClick()
-				{
-					WebRequest request = (WebRequest)getRequest();
-					setLocale(request.getLocale());
-				}
-			});
+			add(Link.onClick("defaultLocaleLink", (link) -> {
+				WebRequest request = (WebRequest)getRequest();
+				setLocale(request.getLocale());
+			}));
 
 			add(new TextField<String>("stringProperty").setRequired(true).setLabel(
 				new Model<>("String")));
@@ -166,7 +161,6 @@ public class FormInput extends WicketExamplePage
 			// TextField using a mask converter
 			add(new TextField<UsPhoneNumber>("phoneNumberUS", UsPhoneNumber.class)
 			{
-
 				@Override
 				public <C> IConverter<C> getConverter(final Class<C> type)
 				{
@@ -187,20 +181,12 @@ public class FormInput extends WicketExamplePage
 
 			add(new Button("saveButton"));
 
-			add(new Button("resetButton")
-			{
-				@Override
-				public void onSubmit()
-				{
-					// just set a new instance of the page
-					setResponsePage(FormInput.class);
-				}
-			}.setDefaultFormProcessing(false));
+			add(Button.onSubmit("resetButton", (btn) -> {
+				// just set a new instance of the page
+				setResponsePage(FormInput.class);
+			}).setDefaultFormProcessing(false));
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
 		@Override
 		public void onSubmit()
 		{
@@ -212,7 +198,6 @@ public class FormInput extends WicketExamplePage
 	/** list view to be nested in the form. */
 	private static final class LinesListView extends ListView<String>
 	{
-
 		/**
 		 * Construct.
 		 * 
@@ -229,8 +214,7 @@ public class FormInput extends WicketExamplePage
 		protected void populateItem(ListItem<String> item)
 		{
 			// add a text field that works on each list item model (returns
-			// objects of
-			// type FormInputModel.Line) using property text.
+			// objects of type FormInputModel.Line) using property text.
 			item.add(new TextField<>("lineEdit", new PropertyModel<String>(
 				item.getDefaultModel(), "text")));
 		}
@@ -241,16 +225,6 @@ public class FormInput extends WicketExamplePage
 	 */
 	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale>
 	{
-		/**
-		 * Constructor.
-		 */
-		public LocaleChoiceRenderer()
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
-		 */
 		@Override
 		public Object getDisplayValue(Locale locale)
 		{
@@ -275,17 +249,14 @@ public class FormInput extends WicketExamplePage
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
-			setModel(new PropertyModel<Locale>(FormInput.this, "locale"));
+			setModel(new PropertyModel<>(FormInput.this, "locale"));
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
-		 */
 		@Override
 		public void onSelectionChanged(Locale newSelection)
 		{
 			// note that we don't have to do anything here, as our property
-			// model allready calls FormInput.setLocale when the model is
+			// model already calls FormInput.setLocale when the model is
 			// updated
 
 			// force re-render by setting the page to render to the bookmarkable
@@ -300,7 +271,7 @@ public class FormInput extends WicketExamplePage
 		@Override
 		protected boolean wantOnSelectionChangedNotifications()
 		{
-			// we want roundtrips when a the user selects another item
+			// we want round-trips when a the user selects another item
 			return true;
 		}
 	}

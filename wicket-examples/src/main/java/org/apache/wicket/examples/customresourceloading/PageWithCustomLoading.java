@@ -77,7 +77,7 @@ public class PageWithCustomLoading extends WicketExamplePage
 	/**
 	 * Prevent the markup from ever be cached. This is optionally - components that don't implement
 	 * {@link IMarkupCacheKeyProvider} will just have their markup cached - but is useful when
-	 * markup varies. If you don't need such dynamic loading, it is advisible to not implement
+	 * markup varies. If you don't need such dynamic loading, it is advisable to not implement
 	 * {@link IMarkupCacheKeyProvider}.
 	 * 
 	 * @see org.apache.wicket.markup.IMarkupCacheKeyProvider#getCacheKey(org.apache.wicket.MarkupContainer,

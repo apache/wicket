@@ -31,25 +31,12 @@ import org.apache.wicket.request.Response;
  */
 public class HangmanApplication extends WicketExampleApplication
 {
-	/**
-	 * Create the hangman application.
-	 */
-	public HangmanApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
-	 */
 	@Override
 	public Session newSession(Request request, Response response)
 	{

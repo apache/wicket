@@ -20,8 +20,6 @@ import java.util.Locale;
 
 /**
  * A helper class to deal with {@link Locale} as string
- * 
- * @author mgrigorov
  */
 public class LocaleHelper
 {

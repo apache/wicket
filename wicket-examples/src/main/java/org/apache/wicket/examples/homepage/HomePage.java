@@ -19,7 +19,6 @@ package org.apache.wicket.examples.homepage;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.IModel;
 
 /**
  * @author mocleiri
@@ -36,28 +35,21 @@ public class HomePage extends WebPage
 	{
 		super();
 
-		add(new Label("version", new IModel<String>()
-		{
-			private static final long serialVersionUID = 1L;
+		add(new Label("version", () -> {
+			/*
+			 * Read the specification version from the wicket-core MANIFEST.MF file.
+			 */
+			Package p = Application.class.getPackage();
 
-			@Override
-			public String getObject()
+			String version = p.getSpecificationVersion();
+
+			if (version == null || version.length() == 0)
 			{
-				/*
-				 * Read the specification version from the wicket-core MANIFEST.MF file.
-				 */
-				Package p = Application.class.getPackage();
-
-				String version = p.getSpecificationVersion();
-
-				if (version == null || version.length() == 0)
-				{
-					return "Missing Version";
-				}
-				else
-				{
-					return version;
-				}
+				return "Missing Version";
+			}
+			else
+			{
+				return version;
 			}
 		}));
 	}
