@@ -67,6 +67,12 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 	private Deque<ComponentTag> enclosures;
 
 	/**
+	 * InlineEnclosures are not removed after render as other auto-components,
+	 * thus they have to have a stable id.
+	 */
+	private int counter;
+
+	/**
 	 * Construct.
 	 */
 	public InlineEnclosureHandler()
@@ -109,8 +115,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 				{
 					if (Strings.isEmpty(htmlId))
 					{
-						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX + 
-							getRequestUniqueId();
+						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX + (counter++);
 						tag.setId(id);
 					}
 					else
