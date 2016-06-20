@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples;
+package org.apache.wicket.testing.jstest;
 
 import java.lang.management.ManagementFactory;
 
@@ -92,7 +92,7 @@ public class StartJavaScriptTests
 		WebAppContext bb = new WebAppContext();
 		bb.setServer(server);
 		bb.setContextPath("/ajax-tests");
-		bb.setWar("../wicket-core/src");
+		bb.setWar("../../wicket-core/src");
 
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
