@@ -36,15 +36,6 @@ public interface IRequestCycle
 	Response setResponse(Response response);
 
 	/**
-	 * TODO Wicket 7
-	 * Add the following method to the API:
-	 *
-	 * Replaces the current {@link Request} with a new one.
-	 * @return the previous request
-	 */
-//	Request setRequest(Request request);
-
-	/**
 	 * @return the request that originated this cycle
 	 */
 	Request getRequest();
