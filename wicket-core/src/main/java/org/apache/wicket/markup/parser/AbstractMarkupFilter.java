@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.HtmlSpecialTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
@@ -48,8 +49,9 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 
 	/**
 	 *  A key for a request-relative map of counters.
-	 *  As map keys we use the {@link org.apache.wicket.markup.MarkupResourceStream} cacheKey, 
-	 *  meaning that each {@link org.apache.wicket.markup.MarkupResourceStream} has its own counter. 
+	 *  As map keys we use the class name of the {@link org.apache.wicket.markup.MarkupResourceStream}'s owner 
+	 *  container (see {@link org.apache.wicket.markup.MarkupResourceStream#getContainerInfo()}), 
+	 *  meaning that each container has its own counter. 
 	 *  The counters are used by {@link #getRequestUniqueId()} to get unique ids for markup tags.
 	 * **/
 	private final static MetaDataKey<Map<String, AtomicInteger>> REQUEST_COUNTER_KEY = new MetaDataKey<Map<String, AtomicInteger>>()
@@ -204,7 +206,8 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 
 	/**
 	 * Returns an id using the request-relative counter associated with the 
-	 * underlying {@link org.apache.wicket.markup.MarkupResourceStream}. 
+	 * underlying {@link org.apache.wicket.markup.MarkupResourceStream}'s owner container 
+	 * (see {@link org.apache.wicket.markup.MarkupResourceStream#getContainerInfo()}). 
 	 * This can be useful for autocomponent tags that need to get a tag id.
 	 * 
 	 * @return
@@ -214,7 +217,8 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		Map<String, AtomicInteger> markupUniqueCounters = requestCycle.getMetaData(REQUEST_COUNTER_KEY);
-		String cacheKey = getMarkupResourceStream().getCacheKey();
+		ContainerInfo containerInfo = getMarkupResourceStream().getContainerInfo();
+		String cacheKey = containerInfo != null ? containerInfo.getContainerClass().getCanonicalName() : null;
 		
 		if (markupUniqueCounters == null)
 		{
