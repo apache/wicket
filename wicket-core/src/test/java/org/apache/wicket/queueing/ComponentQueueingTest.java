@@ -572,14 +572,14 @@ public class ComponentQueueingTest extends WicketTestCase
 		// A is visible, enclosure renders
 
 		assertEquals(
-				"<div wicket:enclosure=\"a\" id=\"wicket__InlineEnclosure_01\"><div wicket:id=\"a\"></div><div wicket:id=\"b\"></div></div>",
+				"<div wicket:enclosure=\"a\" id=\"wicket__InlineEnclosure_20793898271\"><div wicket:id=\"a\"></div><div wicket:id=\"b\"></div></div>",
 				tester.getLastResponseAsString());
 
 		// A is not visible, inline enclosure render only itself (the placeholder tag)
 
 		a.setVisible(false);
 		tester.startPage(p);
-		assertEquals("<div id=\"wicket__InlineEnclosure_01\" style=\"display:none\"></div>", tester.getLastResponseAsString());
+		assertEquals("<div id=\"wicket__InlineEnclosure_20793898271\" style=\"display:none\"></div>", tester.getLastResponseAsString());
 	}
 	
 	/**
