@@ -275,7 +275,7 @@ public abstract class CssHeaderItem extends HeaderItem
 		boolean hasCondition = Strings.isEmpty(condition) == false; 
 		if (hasCondition)
 		{
-			if (RequestCycle.get().find(IPartialPageRequestHandler.class) != null)
+			if (RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent())
 			{
 				// WICKET-4894
 				logger.warn("IE CSS engine doesn't support dynamically injected links in " +

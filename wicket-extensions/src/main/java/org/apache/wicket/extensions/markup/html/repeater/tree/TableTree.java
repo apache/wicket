@@ -171,13 +171,10 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * For updating of a single branch the whole table is added to the ART.
 	 */
 	@Override
-	public void updateBranch(T node, IPartialPageRequestHandler target)
+	public void updateBranch(T node, Optional<? extends IPartialPageRequestHandler> handler)
 	{
-		if (target != null)
-		{
-			// TableTree always outputs markupId
-			target.add(this);
-		}
+		// TableTree always outputs markupId
+		handler.ifPresent(target -> target.add(this));
 	}
 
 	/**

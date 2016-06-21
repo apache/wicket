@@ -102,12 +102,7 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, 
 		{
 			super.renderHead(component, response);
 
-			IPartialPageRequestHandler target = getRequestCycle().find(IPartialPageRequestHandler.class);
-			if (target != null)
-			{
-				CharSequence callbackScript = getCallbackScript(component);
-				target.appendJavaScript(callbackScript);
-			}
+			getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> target.appendJavaScript(getCallbackScript(component)));
 		}
 
 		@Override

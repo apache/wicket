@@ -248,18 +248,18 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 
 	/**
 	 * Convenience method to update a single branch on an {@link AjaxRequestTarget}. Does nothing if
-	 * the given node is currently not visible or target is <code>null</code>.
+	 * the given node is currently not visible or target is not present.
 	 * 
 	 * @param node
 	 *            node to update
 	 * @param target
 	 *            request target
 	 */
-	public abstract void updateBranch(T node, final IPartialPageRequestHandler target);
+	public abstract void updateBranch(T node, final Optional<? extends IPartialPageRequestHandler> target);
 
 	/**
 	 * Convenience method to update a single node on an {@link AjaxRequestTarget}. Does nothing if
-	 * the given node is currently not visible or target is {@code null}.
+	 * the given node is currently not visible or target is not present.
 	 * 
 	 * @param node
 	 *            node to update

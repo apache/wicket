@@ -540,7 +540,7 @@ public class Image extends WebComponent implements IRequestListener
 	 */
 	protected boolean shouldAddAntiCacheParameter()
 	{
-		return getRequestCycle().find(IPartialPageRequestHandler.class) != null;
+		return getRequestCycle().find(IPartialPageRequestHandler.class).isPresent();
 	}
 
 	/**

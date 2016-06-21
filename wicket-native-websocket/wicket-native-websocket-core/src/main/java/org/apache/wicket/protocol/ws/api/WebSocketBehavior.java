@@ -53,7 +53,7 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 		RequestCycle cycle = component.getRequestCycle();
-		if (cycle.find(IPartialPageRequestHandler.class) == null)
+		if (cycle.find(IPartialPageRequestHandler.class).isPresent() == false)
 		{
 			Object contributed = cycle.getMetaData(IS_JAVA_SCRIPT_CONTRIBUTED);
 			if (contributed == null)

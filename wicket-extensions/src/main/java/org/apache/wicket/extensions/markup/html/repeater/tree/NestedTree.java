@@ -104,10 +104,9 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 * Overridden to update the corresponding {@link BranchItem} only.
 	 */
 	@Override
-	public void updateBranch(T t, final IPartialPageRequestHandler target)
+	public void updateBranch(T t, final Optional<? extends IPartialPageRequestHandler> handler)
 	{
-		if (target != null)
-		{
+		handler.ifPresent(target -> {
 			final IModel<T> model = getProvider().model(t);
 			visitChildren(BranchItem.class, new IVisitor<BranchItem<T>, Void>()
 			{
@@ -123,7 +122,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 				}
 			});
 			model.detach();
-		}
+		});
 	}
 
 	/**

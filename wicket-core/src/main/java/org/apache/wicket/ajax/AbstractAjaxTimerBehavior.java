@@ -91,7 +91,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(component, response);
 
-		if (component.getRequestCycle().find(IPartialPageRequestHandler.class) == null)
+		if (component.getRequestCycle().find(IPartialPageRequestHandler.class).isPresent() == false)
 		{
 			// complete page is rendered, so timeout has to be rendered again
 			hasTimeout = false;
@@ -233,21 +233,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	public void onRemove(Component component)
 	{
-		IPartialPageRequestHandler target = component.getRequestCycle().find(IPartialPageRequestHandler.class);
-		if (target != null)
-		{
-			clearTimeout(target.getHeaderResponse());
-		}
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
 	}
 
 	@Override
 	protected void onUnbind()
 	{
-		IPartialPageRequestHandler target = getComponent().getRequestCycle().find(IPartialPageRequestHandler.class);
-		if (target != null)
-		{
-			clearTimeout(target.getHeaderResponse());
-		}
+		getComponent().getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
 	}
 
 	/**

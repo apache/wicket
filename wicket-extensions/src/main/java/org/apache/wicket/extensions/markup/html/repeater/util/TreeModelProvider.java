@@ -33,7 +33,7 @@ import org.apache.wicket.model.IModel;
 
 /**
  * A provider wrapping a Swing {@link TreeModel}.
- * 
+ * <br>
  * EXPERIMENTAL !
  * 
  * @author svenmeier
@@ -198,7 +198,7 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 			{
 				for (T object : branchUpdates)
 				{
-					tree.updateBranch(object, target);
+					tree.updateBranch(object, Optional.of(target));
 				}
 			}
 		}

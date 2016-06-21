@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.cycle;
 
+import java.util.Optional;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
@@ -36,10 +38,10 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.RequestHandlerExecutor;
+import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
-import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
@@ -868,28 +870,29 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * Finds a IRequestHandler which is either the currently executing handler or is scheduled to be
 	 * executed.
 	 * 
-	 * @return the found IRequestHandler or {@code null}
+	 * @return the found IRequestHandler or {@link Optional#empty()}
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends IRequestHandler> T find(final Class<T> type)
+	public <T extends IRequestHandler> Optional<T> find(final Class<T> type)
 	{
 		if (type == null)
 		{
-			return null;
+			return Optional.empty();
 		}
 
 		IRequestHandler result = getActiveRequestHandler();
-
-		if (result == null || type.isAssignableFrom(result.getClass()) == false)
+		if (type.isInstance(result))
 		{
-			result = getRequestHandlerScheduledAfterCurrent();
-			if (result == null || type.isAssignableFrom(result.getClass()) == false)
-			{
-				result = null;
-			}
+			return (Optional<T>)Optional.of(result);
+		}
+		
+		result = getRequestHandlerScheduledAfterCurrent();
+		if (type.isInstance(result))
+		{
+			return (Optional<T>)Optional.of(result);
 		}
 
-		return (T)result;
+		return Optional.empty();
 	}
 
 	/**

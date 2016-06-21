@@ -21,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.nio.charset.Charset;
+import java.util.Optional;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -82,6 +83,7 @@ public class HeaderResponseTest
 
         RequestCycle requestCycle = mock(RequestCycle.class);
         when(requestCycle.urlFor(any(IRequestHandler.class))).thenReturn(RESOURCE_NAME);
+        when(requestCycle.find(any())).thenReturn(Optional.empty());
 
         Request request = mock(Request.class);
         when(request.getCharset()).thenReturn(Charset.defaultCharset());

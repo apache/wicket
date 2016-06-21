@@ -279,13 +279,13 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		renderHeaderItems();
 
-		if (RequestCycle.get().find(IPartialPageRequestHandler.class) == null)
+		if (RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent())
 		{
-			renderCombinedEventScripts();
+			renderSeperateEventScripts();
 		}
 		else
 		{
-			renderSeperateEventScripts();
+			renderCombinedEventScripts();
 		}
 		super.close();
 	}

@@ -33,7 +33,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
@@ -270,9 +269,7 @@ public class DatePicker extends Behavior
 
 		// remove previously generated markup (see onRendered) via javascript in
 		// ajax requests to not render the yui calendar multiple times
-		IPartialPageRequestHandler target = component.getRequestCycle().find(IPartialPageRequestHandler.class);
-		if (target != null)
-		{
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> {
 			String escapedComponentMarkupId = getEscapedComponentMarkupId();
 			String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
 				"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
@@ -282,7 +279,7 @@ public class DatePicker extends Behavior
 				escapedComponentMarkupId + "DpJs;}";
 
 			target.prependJavaScript(javascript);
-		}
+		});
 	}
 
 	/**

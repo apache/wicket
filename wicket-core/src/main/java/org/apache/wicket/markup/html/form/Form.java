@@ -811,9 +811,7 @@ public class Form<T> extends WebMarkupContainer
 		}
 
 		// update auto labels if we are inside an ajax request
-		final AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
-		if (target != null)
-		{
+		getRequestCycle().find(AjaxRequestTarget.class).ifPresent(target -> {
 			visitChildren(FormComponent.class, new IVisitor<FormComponent<?>, Void>()
 			{
 				@Override
@@ -822,7 +820,7 @@ public class Form<T> extends WebMarkupContainer
 					component.updateAutoLabels(target);
 				}
 			});
-		}
+		});
 	}
 
 	/**

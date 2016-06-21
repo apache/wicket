@@ -126,7 +126,7 @@ public abstract class AjaxFallbackButton extends Button
 	@Override
 	public final void onError()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
 			onError(null);
 		}
@@ -138,7 +138,7 @@ public abstract class AjaxFallbackButton extends Button
 	@Override
 	public final void onSubmit()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
 			onSubmit(Optional.empty());
 		}
@@ -150,7 +150,7 @@ public abstract class AjaxFallbackButton extends Button
 	@Override
 	public final void onAfterSubmit()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
 			onAfterSubmit(null);
 		}

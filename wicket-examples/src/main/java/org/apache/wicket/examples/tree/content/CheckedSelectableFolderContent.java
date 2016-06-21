@@ -63,7 +63,7 @@ public class CheckedSelectableFolderContent extends SelectableFolderContent
 					foo = foo.getParent();
 				}
 
-				tree.updateBranch(foo, target);
+				tree.updateBranch(foo, Optional.of(target));
 			}
 
 			/**

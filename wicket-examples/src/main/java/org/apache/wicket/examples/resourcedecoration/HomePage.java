@@ -129,7 +129,7 @@ public class HomePage extends WicketExamplePage
 		@Override
 		public void renderHead(IHeaderResponse response)
 		{
-			if (getRequestCycle().find(AjaxRequestTarget.class) != null)
+			if (getRequestCycle().find(AjaxRequestTarget.class).isPresent())
 			{
 				response.render(CssHeaderItem.forReference(new PackageResourceReference(
 					HomePage.class, "ajax.css")));

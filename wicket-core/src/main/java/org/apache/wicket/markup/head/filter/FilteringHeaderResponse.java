@@ -287,7 +287,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 
 	protected void render(HeaderItem item, List<HeaderItem> filteredItems)
 	{
-		if (RequestCycle.get().find(IPartialPageRequestHandler.class) != null)
+		if (RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent())
 		{
 			// we're in an ajax request, so we don't filter and separate stuff....
 			getRealResponse().render(item);
