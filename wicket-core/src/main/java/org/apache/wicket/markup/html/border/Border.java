@@ -22,6 +22,7 @@ import org.apache.wicket.DequeueTagAction;
 import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
@@ -34,6 +35,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.BorderMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
+import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
@@ -316,6 +318,13 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	public Border addToBorder(final Component... children)
 	{
 		super.add(children);
+		
+		//if body has not been assigned yet, we queue it
+		if (body.getParent() == null)
+		{
+			dequeue();
+		}
+		
 		return this;
 	}
 
@@ -637,7 +646,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	@Override
 	protected DequeueTagAction canDequeueTag(ComponentTag tag)
 	{
-		if ((tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag())
+		if (canDequeueBody(tag))
 		{
 			return DequeueTagAction.DEQUEUE;
 		}
@@ -648,18 +657,35 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	@Override
 	public Component findComponentToDequeue(ComponentTag tag)
 	{
-		if ((tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag())
+		if (canDequeueBody(tag))
 		{
-			return getBodyContainer();
+			//synch the tag id with the one of the body component
+			tag.setId(body.getId());
+			return body;
 		}
 		return super.findComponentToDequeue(tag);
+	}
+
+	private boolean canDequeueBody(ComponentTag tag)
+	{
+		ContainerInfo containerInfo = (ContainerInfo)tag.getUserData(
+			WicketTagIdentifier.CONTAINER_INFO);
+		Class<?> containerClass = containerInfo != null ? 
+			containerInfo.getContainerClass() : null;
+		
+		boolean isBodyTag = (tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag();
+		
+		//the body tag might belong to an outer body component
+		boolean isBorderBodyTag = containerClass == null || containerClass.equals(getClass());
+		
+		return isBodyTag && isBorderBodyTag;
 	}
 
 	@Override
 	protected void addDequeuedComponent(Component component, ComponentTag tag)
 	{
 		// components queued in border get dequeued into the border not into the body container
-		addToBorder(component);
+		super.add(component);
 	}
 	
 	/**
