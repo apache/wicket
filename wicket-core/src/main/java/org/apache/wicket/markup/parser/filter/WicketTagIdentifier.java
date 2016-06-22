@@ -50,6 +50,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
+	public static final String CONTAINER_INFO = "containerInfo";
 	/** List of well known wicket tag names */
 	private static final Set<String> WELL_KNOWN_TAG_NAMES = new HashSet<>();
 	/** List of raw wicket tag names */
@@ -121,8 +122,9 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			{
 				// Make it a Wicket component.
 				tag.setId(namespace + "_" + tag.getName() + getRequestUniqueId());
+				tag.setUserData(CONTAINER_INFO, getMarkupResourceStream().getContainerInfo());
 				tag.setModified(true);
-
+				
 				if (isRaw(tag)) 
 				{
 					tag.setFlag(ComponentTag.RENDER_RAW, true);

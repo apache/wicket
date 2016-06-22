@@ -2012,24 +2012,29 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private void dequeueChild(Component child, ComponentTag tag, DequeueContext dequeue)
 	{
-		if (child == null)
+		ChildToDequeueType childType = ChildToDequeueType.fromChild(child);
+		
+		if (childType == ChildToDequeueType.QUEUE_REGION ||
+			childType == ChildToDequeueType.BORDER)
 		{
-			// could not dequeue, or is a dequeue container
-			dequeue.skipToCloseTag();
+			((IQueueRegion)child).dequeue();			
 		}
-		else if (child instanceof IQueueRegion) 
-		{
-			((IQueueRegion)child).dequeue();
-			dequeue.skipToCloseTag();
-		}
-		else if (child instanceof MarkupContainer)
+		
+		if (childType == ChildToDequeueType.MARKUP_CONTAINER ||
+			childType == ChildToDequeueType.BORDER)
 		{
 			// propagate dequeuing to containers
 			MarkupContainer childContainer = (MarkupContainer)child;
-
+			
 			dequeue.pushContainer(childContainer);
 			childContainer.dequeue(dequeue);
-			dequeue.popContainer();
+			dequeue.popContainer();			
+		}
+		
+		if (childType == ChildToDequeueType.NULL || 
+			childType == ChildToDequeueType.QUEUE_REGION)
+		{
+				dequeue.skipToCloseTag();
 		}
 
 		// pull the close tag off
