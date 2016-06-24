@@ -19,8 +19,8 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -70,7 +70,7 @@ public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjax
 	}
 
 
-	public static <T> IndicatingAjaxLink<T> indicatingAjaxLink(String id, WicketConsumer<AjaxRequestTarget> onClick)
+	public static <T> IndicatingAjaxLink<T> onClick(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
 	{
 		Args.notNull(onClick, "onClick");
 
@@ -79,7 +79,7 @@ public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjax
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
-				onClick.accept(target);
+				onClick.accept(this, target);
 			}
 		};
 	}
