@@ -236,7 +236,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @param id
 	 *            the id of ajax submit link
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxSubmitLink\ and the {@link AjaxRequestTarget}
+	 *            the consumer which accepts the link and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSubmitLink}
 	 */
 	public static AjaxSubmitLink onSubmit(String id, WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
@@ -261,11 +261,9 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @param id
 	 *            the id of ajax submit link
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            the consumer of the submitted link and an {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            the consumer of the link in error and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSubmitLink}
 	 */
 	public static AjaxSubmitLink onSubmit(String id,

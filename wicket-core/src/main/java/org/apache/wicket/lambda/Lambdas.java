@@ -32,7 +32,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.time.Duration;
@@ -298,7 +297,7 @@ public class Lambdas
 	 * @param attributeName
 	 *              the name of the attribute to manipulate
 	 * @param onAttribute
-	 *              the {@link WicketFunction} that is applied to the attribute value
+	 *              the function that is applied to the attribute value
 	 * @return The created behavior
 	 * 
 	 * @see Behavior#onAttribute(String, WicketFunction)
@@ -314,7 +313,7 @@ public class Lambdas
 	 * @param id
 	 *            the id of the ajax link
 	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the consumer of the clicked link and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxLink}
 	 * 
 	 * @see AjaxLink#onClick(String, WicketConsumer)
@@ -330,8 +329,7 @@ public class Lambdas
 	 * @param id
 	 *            the id of the ajax button
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            the consumer of the submitted button and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxButton}
 	 * 
 	 * @see AjaxButton#onSubmit(String, WicketBiConsumer)
@@ -348,11 +346,9 @@ public class Lambdas
 	 * @param id
 	 *            the id of the ajax button
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link AjaxButton}
+	 *            the consumer of the submitted button and an {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link AjaxButton}
+	 *            the consumer of the button in error and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxButton}
 	 * 
 	 * @see AjaxButton#onSubmit(String, WicketBiConsumer, WicketBiConsumer)
@@ -370,7 +366,7 @@ public class Lambdas
 	 * @param id
 	 *            the id of ajax check box
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the consumer of the updated checkbox and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxCheckBox}
 	 * 
 	 * @see AjaxCheckBox#onUpdate(String, WicketConsumer)
@@ -386,8 +382,7 @@ public class Lambdas
 	 * @param id
 	 *            the id of ajax submit link
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            the consumer of the submitted button and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSubmitLink}
 	 * 
 	 * @see AjaxSubmitLink#onSubmit(String, WicketBiConsumer)
@@ -404,11 +399,9 @@ public class Lambdas
 	 * @param id
 	 *            the id of ajax submit link
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            the consumer of the submitted link and an {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link Form}
+	 *            the consumer of the link in error and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSubmitLink}
 	 * 
 	 * @see AjaxSubmitLink#onSubmit(String, WicketBiConsumer, WicketBiConsumer)
@@ -426,7 +419,7 @@ public class Lambdas
 	 * @param id
 	 *            the id of the link
 	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link Void}
+	 *            the consumer of the clicked link
 	 * @return the {@link Link}
 	 * 
 	 * @see Link#onClick(String, WicketConsumer)

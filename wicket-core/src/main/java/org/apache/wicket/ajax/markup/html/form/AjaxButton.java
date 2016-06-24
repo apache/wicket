@@ -236,8 +236,7 @@ public abstract class AjaxButton extends Button
 	 * @param id
 	 *            the id of the ajax button
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link AjaxButton}
+	 *            the consumer which accepts the button and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxButton}
 	 */
 	public static AjaxButton onSubmit(String id, WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
@@ -262,11 +261,9 @@ public abstract class AjaxButton extends Button
 	 * @param id
 	 *            the id of the ajax button
 	 * @param onSubmit
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link AjaxButton}
+	 *            the consumer of the submitted button and an {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link AjaxButton}
+	 *            the consumer of the button in error and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxButton}
 	 */
 	public static AjaxButton onSubmit(String id,

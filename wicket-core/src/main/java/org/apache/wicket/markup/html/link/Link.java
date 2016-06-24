@@ -425,7 +425,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	 * @param id
 	 *            the id of the link
 	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link Void}
+	 *            the consumer of the clicked link
 	 * @return the {@link Link}
 	 */
 	public static <T> Link<T> onClick(String id, WicketConsumer<Link<T>> onClick)

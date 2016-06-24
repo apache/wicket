@@ -99,7 +99,7 @@ public abstract class AjaxCheckBox extends CheckBox
 	 * @param id
 	 *            the id of ajax check box
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the consumer of the updated checkbox and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxCheckBox}
 	 */
 	public static AjaxCheckBox onUpdate(String id, WicketBiConsumer<AjaxCheckBox, AjaxRequestTarget> onUpdate)

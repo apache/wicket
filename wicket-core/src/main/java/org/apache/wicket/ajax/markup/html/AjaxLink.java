@@ -174,7 +174,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	 * @param id
 	 *            the id of the ajax link
 	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the consumer of the clicked link and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxLink}
 	 */
 	public static <T> AjaxLink<T> onClick(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
