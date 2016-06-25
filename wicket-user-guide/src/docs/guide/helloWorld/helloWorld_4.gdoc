@@ -45,6 +45,18 @@ public void onClick() {
 
 The difference between using the first version of @setResponsePage@ rather than the second one will be illustrated in [chapter 8|guide:versioningCaching], when we will introduce the topic of stateful and stateless pages. For now, we can consider them as equivalent. 
 
+Like many other Wicket components, @Link@ is lambda-friendly and comes with a factory method called @onClick@ which leverages lambda expressions to specify handler method:
+
+{code}
+public class HomePage extends WebPage {
+    public HomePage(){
+        add(Link.onClick("id", () -> setResponsePage(AnotherPage.class));
+    }
+}
+{code}
+
+The lambda expression is converted into a @org.apache.wicket.lambda.WicketConsumer@, which is basically a serializable version of @java.util.function.Consumer<T>@ (we will see later why we need it to be serializable).
+
 Wicket comes with a rich set of link components suited for every need (links to static URL, Ajax-enhanced links, links to a file to download, links to external pages and so on). We will see them in [chapter 10|guide:urls].
 
 {note}
