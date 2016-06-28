@@ -318,18 +318,15 @@ public class BaseWicketTester
 
 		this.application = application;
 
-		// If it's provided from the container it's not necessary to set again.
-		if (init)
-		{
-			// FIXME some tests are leaking applications by not calling destroy on them or overriding
-			// teardown() without calling super, for now we work around by making each name unique
-			application.setName("WicketTesterApplication-" + UUID.randomUUID());
-		}
 		ThreadContext.setApplication(application);
 
-		// If it's provided from the container it's not necessary to set again and init.
 		if (init)
 		{
+			if (application.getName() == null)
+			{
+				application.setName("WicketTesterApplication-" + UUID.randomUUID());
+			}
+
 			application.setServletContext(servletContext);
 			// initialize the application
 			application.initApplication();
@@ -428,10 +425,10 @@ public class BaseWicketTester
 		if (lastResponse != null)
 		{
 			List<Cookie> lastResponseCookies = lastResponse.getCookies();
-			if (lastResponse.isRedirect()) 
+			if (lastResponse.isRedirect())
 			{
 				CookieCollection responseCookies = new CookieCollection();
-				
+
 				// if the last request is a redirect, all cookies from last response should appear in current response
 				// this call will filter duplicates
 				responseCookies.addAll(lastResponseCookies);
@@ -439,7 +436,7 @@ public class BaseWicketTester
 				{
 					response.addCookie(cookie);
 				}
-				
+
 				// copy all request cookies from last request to the new request because of redirect handling
 				// this way, the cookie will be send to the next requested page
 				if (lastRequest != null)
@@ -449,10 +446,10 @@ public class BaseWicketTester
 					requestCookies.addAll(lastRequest.getCookies());
 					request.addCookies(requestCookies.asList());
 				}
-			} 
+			}
 			else
 			{
-				// if the last response is not a redirect 
+				// if the last response is not a redirect
 				// - copy last request cookies to collection
 				// - copy last response cookies to collection
 				// - set only the not expired cookies to the next request
@@ -1169,7 +1166,7 @@ public class BaseWicketTester
 			Form<?> form = formSubmitBehavior.getForm();
 			getRequest().setUseMultiPartContentType(form.isMultiPart());
 			serializeFormToRequest(form);
-			
+
 			// mark behavior's component as the form submitter,
 			String name = Form.getRootFormRelativeId(new PropertyModel<Component>(behavior,
 					"component").getObject());
@@ -1542,15 +1539,15 @@ public class BaseWicketTester
 
 	/**
 	 * A helper method for starting a component for a test without attaching it to a Page.
-	 * 
+	 *
 	 * Components which are somehow dependent on the page structure can not be currently tested with
 	 * this method.
-	 * 
+	 *
 	 * Example:
-	 * 
+	 *
 	 * UserDataView view = new UserDataView("view", new ListDataProvider(userList));
 	 * tester.startComponent(view); assertEquals(4, view.size());
-	 * 
+	 *
 	 * @param component
 	 * @return the processed component
 	 * @see #startComponentInPage(Class)
@@ -2186,7 +2183,7 @@ public class BaseWicketTester
 
 	/**
 	 * Retrieves <code>FeedbackMessages</code>.
-	 * 
+	 *
 	 * @param level
 	 *            level of feedback message, for example:
 	 *            <code>FeedbackMessage.DEBUG or FeedbackMessage.INFO.. etc</code>
