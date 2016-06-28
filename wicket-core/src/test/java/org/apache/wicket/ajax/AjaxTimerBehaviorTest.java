@@ -150,8 +150,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		// ajax update does not set timeout
-		assertMatches("Wicket.Timer.set", 0);
+		assertMatches("Wicket.Timer.set", 1);
 
 		tester.executeBehavior(timer);
 
