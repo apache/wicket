@@ -44,11 +44,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	private boolean stopped = false;
 
 	/**
-	 * Is the timeout present in JavaScript already.
-	 */
-	private boolean hasTimeout = false;
-
-	/**
 	 * Construct.
 	 * 
 	 * @param updateInterval
@@ -89,12 +84,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.renderHead(component, response);
 
-		if (component.getRequestCycle().find(IPartialPageRequestHandler.class) == null)
-		{
-			// complete page is rendered, so timeout has to be rendered again
-			hasTimeout = false;
-		}
-
 		if (isStopped() == false)
 		{
 			addTimeout(response);
@@ -127,9 +116,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 			if (shouldTrigger())
 			{
-				// re-add timeout
-				hasTimeout = false;
-
 				addTimeout(target.getHeaderResponse());
 
 				return;
@@ -190,23 +176,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	private void addTimeout(IHeaderResponse headerResponse)
 	{
-		if (hasTimeout == false)
-		{
-			hasTimeout = true;
-
-			headerResponse.render(
-				OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
-		}
+		headerResponse.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 	}
 
 	private void clearTimeout(IHeaderResponse headerResponse)
 	{
-		if (hasTimeout)
-		{
-			hasTimeout = false;
-
-			headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + getComponent().getMarkupId() + "');"));
-		}
+		headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + getComponent().getMarkupId() + "');"));
 	}
 
 	/**
