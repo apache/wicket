@@ -44,31 +44,6 @@
 			<version>9.3.9.M1</version>
 			<type>POM</type>
 			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>javax.servlet-api</artifactId>
-					<groupId>javax.servlet</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-alpn-server</artifactId>
-			<version>9.3.9.M1</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>javax.servlet-api</artifactId>
-					<groupId>javax.servlet</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.jetty.alpn</groupId>
-			<artifactId>alpn-api</artifactId>
-			<version>1.1.2.v20150522</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

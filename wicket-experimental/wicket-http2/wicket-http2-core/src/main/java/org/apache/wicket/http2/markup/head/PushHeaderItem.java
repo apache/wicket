@@ -61,7 +61,7 @@ public class PushHeaderItem extends HeaderItem
 	/**
 	 * The URLs of resources to be pushed to the client
 	 */
-	private Set<String> urls = new ConcurrentHashSet<>(new TreeSet<>());
+	private Set<String> urls = new ConcurrentHashSet<String>(new TreeSet<String>());
 
 	/**
 	 * Uses the URLs that has already been pushed to the client to ensure not to push them again

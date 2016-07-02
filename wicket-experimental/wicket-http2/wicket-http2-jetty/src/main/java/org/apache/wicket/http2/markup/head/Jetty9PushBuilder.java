@@ -29,16 +29,13 @@ public class Jetty9PushBuilder implements PushBuilder
 	@Override
 	public void push(HttpServletRequest httpServletRequest, String... paths)
 	{
-		// TODO Jetty has to switch to the javax.servlet-api classes and handle
-		// SETTINGS_ENABLE_PUSH settings frame value and implement the default API against
-		// it.
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-//		org.eclipse.jetty.server.PushBuilder pushBuilder = org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
-//		for (String path : paths)
-//		{
-//			pushBuilder.path(path);
-//		}
-//		pushBuilder.push();
+		org.eclipse.jetty.server.PushBuilder pushBuilder = org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
+		for (String path : paths)
+		{
+			pushBuilder.path(path);
+		}
+		pushBuilder.push();
 	}
 }
