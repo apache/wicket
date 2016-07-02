@@ -33,5 +33,6 @@
 	</description>
 	<modules>
 		<module>wicket-http2-core</module>
+		<module>wicket-http2-jetty</module>
 	</modules>
 </project>
