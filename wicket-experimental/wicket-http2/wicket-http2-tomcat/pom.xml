@@ -19,21 +19,30 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.apache.wicket.experimental.wicket8</groupId>
-		<artifactId>wicket-experimental</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<artifactId>wicket-http2</artifactId>
+		<version>0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>wicket-http2</artifactId>
-	<version>0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>Wicket Http/2</name>
+	<artifactId>wicket-http2-tomcat</artifactId>
+	<packaging>jar</packaging>
+	<name>Wicket Http/2 Tomcat 8.5+</name>
 	<description>
 		Wicket’s implementation to use the PushBuilder API
-		to serve resource via http/2 with less requests
+		to serve resource via http/2 with less requests. This
+		is the Apache Tomcat 8.5+ implementation to resolve the PushBuilder API and
+		provide the IInitializer.
 	</description>
-	<modules>
-		<module>wicket-http2-core</module>
-		<module>wicket-http2-jetty</module>
-		<module>wicket-http2-tomcat</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket8</groupId>
+			<artifactId>wicket-http2-core</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-catalina</artifactId>
+			<version>8.5.3</version>
+            <scope>provided</scope>
+		</dependency>
+	</dependencies>
 </project>
