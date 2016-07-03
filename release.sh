@@ -263,7 +263,7 @@ Have fun!
 
 # the branch on which the code base lives for this version (master is
 # always current development version)
-GIT_BRANCH=wicket-7.x
+GIT_BRANCH=master
 
 JAVA_VERSION=$(getJavaVersionFromPom)
 
