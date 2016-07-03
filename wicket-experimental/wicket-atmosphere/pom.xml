@@ -42,7 +42,7 @@
     </repositories>
 	<properties>
 		<atmosphere.version>2.2.8</atmosphere.version>
-		<jquery.atmosphere.version>2.2.7</jquery.atmosphere.version>
+		<jquery.atmosphere.version>2.2.13</jquery.atmosphere.version>
 	</properties>
     <dependencyManagement>
         <dependencies>

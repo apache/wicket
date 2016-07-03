@@ -37,11 +37,10 @@
     </description>
 
 	<properties>
-		<arquillian.version>1.1.10.Final</arquillian.version>
+		<arquillian.version>1.1.11.Final</arquillian.version>
 		<maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
 		<maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<slf4j.version>1.7.12</slf4j.version>
 		<wildfly.version>8.2.1.Final</wildfly.version>
 		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
 		<jee.spec.version>1.0.3.Final</jee.spec.version>
