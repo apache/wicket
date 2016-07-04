@@ -1,101 +1,54 @@
 
 
-Models that implement the interface @org.apache.wicket.model.IChainingModel@ can be used to build a chain of models. These kinds of models are able to recognize whether their model object is itself an implementation of IModel and if so, they will call getObject on the wrapped model and the returned value will be the actual model object. In this way we can combine the action of an arbitrary number of models, making exactly a chain of models. Chaining models allows to combine different data persistence strategies, similarly to what we do with chains of "I/O streams.":http://java.sun.com/developer/technicalArticles/Streams/ProgIOStreams To see model chaining in action we will build a page that implements the List/Detail View pattern, where we have a drop-down list of Person objects and a form to display and edit the data of the current selected Person.
+Class @org.apache.wicket.markup.html.form.DropDownChoice@ is the form component needed to display a list of possible options as a drop-down list where users can select one of the proposed options. This component must be used with <select> tag:
 
-The example page will look like this:
-
-!model-chaining.png!
-
-What we want to do in this example is to chain the model of the DropDownChoice (which contains the selected Person) with the model of the Form. In this way the Form will work with the selected Person as backing object. The DropDownChoice component can be configured to automatically update its model each time we change the selected item on the client side. All we have to do is to override method wantOnSelectionChangedNotifications to make it return true. In practice, when this method returns true, DropDownChoice will submit its value every time JavaScript event onChange occurs, and its model will be consequently updated. To leverage this functionality, DropDownChoice doesn't need to be inside a form.
-
-The following is the resulting markup of the example page:
+Html:
 
 {code:html}
-...
-<body>
-	List of persons <select wicket:id="persons"></select> <br/>
-	<br/>
-	<form wicket:id="form">		
-		<div style="display: table;">
-			<div style="display: table-row;">
-				<div style="display: table-cell;">Name: </div>
-				<div style="display: table-cell;">
-					<input type="text" wicket:id="name"/> 
-				</div>	
-			</div>
-			<div style="display: table-row;">
-				<div style="display: table-cell;">Surname: </div>
-				<div style="display: table-cell;">
-									<input type="text" wicket:id="surname"/>
-								</div>	
-							</div>
-							<div style="display: table-row;">
-								<div style="display: table-cell;">Address: </div>
-								<div style="display: table-cell;">
-									<input type="text" wicket:id="address"/>
-								</div>	
-							</div>
-							<div style="display: table-row;">
-								<div style="display: table-cell;">Email: </div>
-								<div style="display: table-cell;">
-									<input type="text" wicket:id="email"/>
-								</div>
-							</div>
-						</div>	
-						<input type="submit" value="Save"/>
-					</form>
-				</body>				
+<form wicket:id="form">
+	Select a fruit: <select wicket:id="fruits"></select>
+<div><input type="submit" value="submit"/></div>
+</form>
 {code}
 
-The initialization code for DropDownChoice is the following:
+Java code:
 
 {code}
-Model<Person> listModel = new Model<Person>();
-ChoiceRenderer<Person> personRender = new ChoiceRenderer<Person>("fullName");
-personsList = new DropDownChoice<Person>("persons", listModel, loadPersons(), personRender){
-		
-		@Override
-		protected boolean wantOnSelectionChangedNotifications() {
-			return true;
-		}
-		
-};
+List<String> fruits = Arrays.asList("apple", "strawberry", "watermelon"); 
+form.add(new DropDownChoice<String>("fruits", new Model(), fruits));
 {code}
 
-As choice render we have used the basic implementation provided with the org.apache.wicket .markup.html.form.ChoiceRenderer class that we have seen in the previous paragraph. loadPersons() is just an utility method which generates a list of Person instances. The model for DropDownChoice is a simple instance of the Model class.
+Screenshot of generated page:
 
-Here is the whole code of the page (except for the loadPersons() method):
+!dropdown-choice.png!
 
-{code}
-public class PersonListDetails extends WebPage {
-  private Form form;
-  private DropDownChoice<Person> personsList;
-  
-  public PersonListDetails(){
-    Model<Person> listModel = new Model<Person>();
-    ChoiceRenderer<Person> personRender = new ChoiceRenderer<Person>("fullName");
-    
-    personsList = new DropDownChoice<Person>("persons", listModel, loadPersons(),
-                                                         personRender){
-      @Override
-      protected boolean wantOnSelectionChangedNotifications() {
-        return true;
-      }
-	    };    
+In addition to the component id, in order to build a DropDownChoice we need to provide to its constructor two further parameters:
 
-	    add(personsList);
+* a model containing the current selected item. This parameter is not required if we are going to inherit a CompoundPropertyModel for this component.
+* a list of options to display which can be supplied as a model or as a regular java.util.List.
 
-	    form = new Form("form", new CompoundPropertyModel<Person>(listModel));    
-	    form.add(new TextField("name"));
-	    form.add(new TextField("surname"));
-	    form.add(new TextField("address"));
-	    form.add(new TextField("email"));
+In the example above the possible options are provided as a list of String objects. Now let's take a look at the markup generated for them:
 
-	    add(form);
-	  }
-	       //loadPersons()
-	       //...
-	}
+{code:html}
+<select name="fruits" wicket:id="fruits">
+	<option value="" selected="selected">Choose One</option>
+	<option value="0">apple</option>
+	<option value="1">strawberry</option>
+	<option value="2">watermelon</option>
+</select>
 {code}
 
-The two models work together as a pipeline where the output of method getObject of Model is the model object of CompoundPropertyModel. As we have seen, model chaining allows us to combine the actions of two or more models without creating new custom implementations.
+The first option is a placeholder item corresponding to a null model value. By default DropDownChoice cannot have a null value so users are forced to select a not-null option. If we want to change this behavior we can set the nullValid flag to true via the setNullValid method. Please note that the placeholder text (“Chose one”) can be localized, as we will see in chapter 15. The other options are identified by the attribute value. By default the value of this attribute is the index of the single option inside the provided list of choices, while the text displayed to the user is obtained by  calling toString()on the choice object. This default behavior works fine as long as our options are simple objects like strings, but when we move to more complex objects we may need to implement a more sophisticated algorithm to generate the value to use as the option id and the one to display to user. Wicket has solved this problem with @org.apache.wicket.markup.html.form.IChoiceRender@ interface. This interface defines method getDisplayValue(T object) that is called to generate the value to display for the given choice object, and method getIdValue(T object, int index) that is called to generate the option id. The built-in implementation of this interface is class @org.apache.wicket.markup.html.form.ChoiceRenderer@ which renders the two values using property expressions.
+
+In the following code we want to show a list of Person objects using their full name as value to display and using their passport code as option id: 
+
+Java code:
+
+{code}
+List<Person> persons; 
+//Initialize the list of persons here...
+ChoiceRenderer personRenderer = new ChoiceRenderer("fullName", "passportCode");
+form.add(new DropDownChoice<String>("persons", new Model<Person>(), persons, personRenderer));
+{code}
+
+The choice renderer can be assigned to the DropDownChoice using one of its constructor that accepts this type of parameter (like we did in the example above) or after its creation invoking setChoiceRenderer method.

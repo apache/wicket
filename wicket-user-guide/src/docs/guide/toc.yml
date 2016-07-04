@@ -69,14 +69,15 @@ urls:
 modelsforms:
   title: Wicket models and forms
   modelsforms_1: What is a model?
-  modelsforms_2: Models and JavaBeans
-  modelsforms_3: Wicket forms
-  modelsforms_4: Component DropDownChoice
-  modelsforms_5: Model chaining
-  modelsforms_6: Detachable models
-  modelsforms_7: Using more than one model in a component
-  modelsforms_8: Use models!
-  modelsforms_9: Summary
+  modelsforms_2: IModel and Lambda  
+  modelsforms_3: Models and JavaBeans
+  modelsforms_4: Wicket forms
+  modelsforms_5: Component DropDownChoice
+  modelsforms_6: Model chaining
+  modelsforms_7: Detachable models
+  modelsforms_8: Using more than one model in a component
+  modelsforms_9: Use models!
+  modelsforms_10: Summary
 forms2:
   title: Wicket forms in detail
   forms2_1: Default form processing

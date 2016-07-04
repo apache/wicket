@@ -48,21 +48,6 @@ From now on we will use these factory methods in our examples.
 It's quite clear that if our Label must display a static text it doesn't make much sense to build a model by hand like we did in the last code example.
 However is not unusual to have a Label that must display a dynamic value, like the input provided by a user or a value read from a database. Wicket models are designed to solve these kinds of problems.
 
-Let's say we need a label to display the current time stamp each time a page is rendered. We can implement a custom model which returns a new Date instance when the getObject() method is called:
-
-{code}
-IModel timeStampModel = new Model<String>(){
-	@Override
-	public String getObject() {
-		return new Date().toString();
-	}
-};
-
-add(new Label("timeStamp", timeStampModel));
-{code}
-
-Even if sometimes writing a custom model could be a good choice to solve a specific problem, Wicket already provides a set of IModel implementations which should fit most of our needs. In the next paragraph we will see a couple of models that allow us to easily integrate JavaBeans with our web applications and in particular with our forms.
-
 {note}
 By default the class Component escapes HTML sensitive characters (like '<', '>' or '&') from the textual representation of its model object. The term 'escape' means that these characters will be replaced with their corresponding HTML "entity":http://en.wikipedia.org/wiki/Character_entity_reference (for example '<' becomes '&lt; '). This is done for security reasons as a malicious user could attempt to inject markup or JavaScript into our pages. If we want to display the raw content stored inside a model, we can tell the Component class not to escape characters by calling the setEscapeModelStrings(false) method.
 {note}
