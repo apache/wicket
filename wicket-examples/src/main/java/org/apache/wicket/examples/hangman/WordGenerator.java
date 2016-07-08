@@ -59,11 +59,7 @@ public class WordGenerator implements IClusterable
 			words = Arrays.asList(wordlist.split("\\s+"));
 			shuffle();
 		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("Couldn't read word list");
-		}
-		catch (ResourceStreamNotFoundException e)
+		catch (IOException | ResourceStreamNotFoundException e)
 		{
 			throw new RuntimeException("Couldn't read word list");
 		}

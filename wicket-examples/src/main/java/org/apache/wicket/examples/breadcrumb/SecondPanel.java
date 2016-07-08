@@ -19,7 +19,6 @@ package org.apache.wicket.examples.breadcrumb;
 import org.apache.wicket.extensions.breadcrumb.IBreadCrumbModel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanelLink;
-import org.apache.wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
@@ -36,7 +35,7 @@ import org.apache.wicket.model.Model;
 public class SecondPanel extends BreadCrumbPanel
 {
 	/** Test form. */
-	private final class InputForm extends Form
+	private final class InputForm extends Form<InputForm>
 	{
 		/** test input string. */
 		private String input;
@@ -50,7 +49,7 @@ public class SecondPanel extends BreadCrumbPanel
 		public InputForm(String id)
 		{
 			super(id);
-			setDefaultModel(new CompoundPropertyModel(this));
+			setDefaultModel(new CompoundPropertyModel<>(this));
 			add(new TextField("input"));
 			add(new Button("normalButton"));
 
@@ -59,15 +58,7 @@ public class SecondPanel extends BreadCrumbPanel
 				@Override
 				public void onSubmit()
 				{
-					activate(new IBreadCrumbPanelFactory()
-					{
-						@Override
-						public BreadCrumbPanel create(String componentId,
-							IBreadCrumbModel breadCrumbModel)
-						{
-							return new ResultPanel(componentId, breadCrumbModel, input);
-						}
-					});
+					activate((componentId, breadCrumbModel) -> new ResultPanel(componentId, breadCrumbModel, input));
 				}
 			});
 		}
@@ -110,9 +101,6 @@ public class SecondPanel extends BreadCrumbPanel
 		add(new InputForm("form"));
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
-	 */
 	@Override
 	public IModel<String> getTitle()
 	{

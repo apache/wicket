@@ -145,11 +145,6 @@ public class DataTableTest extends WicketTestCase
 				private List<Integer> items = Arrays.asList(1, 3, 5);
 
 				@Override
-				public void detach()
-				{
-				}
-
-				@Override
 				public Iterator<Integer> iterator(long first, long count)
 				{
 					StringValue emptyValue = getPageParameters().get("empty");

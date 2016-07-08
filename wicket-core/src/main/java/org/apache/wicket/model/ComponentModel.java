@@ -42,9 +42,6 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 		throw new RuntimeException("get object call not expected on a IComponentAssignedModel");
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
 	@Override
 	public final void setObject(T object)
 	{
@@ -75,17 +72,6 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	@Override
-	public void detach()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
-	 */
 	@Override
 	public IWrapModel<T> wrapOnAssignment(Component comp)
 	{
@@ -106,41 +92,28 @@ public class ComponentModel<T> implements IModel<T>, IComponentAssignedModel<T>
 			component = comp;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
-		 */
 		@Override
 		public IModel<T> getWrappedModel()
 		{
 			return ComponentModel.this;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IModel#getObject()
-		 */
 		@Override
 		public T getObject()
 		{
 			return ComponentModel.this.getObject(component);
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-		 */
 		@Override
 		public void setObject(T object)
 		{
 			ComponentModel.this.setObject(component, object);
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IDetachable#detach()
-		 */
 		@Override
 		public void detach()
 		{
 			ComponentModel.this.detach();
 		}
-
 	}
 }

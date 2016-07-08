@@ -175,7 +175,6 @@ public class EnclosureTest extends WicketTestCase
 	private void assertResultPage(final String file) throws IOException
 	{
 		String document = tester.getLastResponse().getDocument();
-		document = document.replaceAll("[1-9]+[.]IFormSubmitListener", "1.IFormSubmitListener");
 		DiffUtil.validatePage(document, getClass(), file, true);
 	}
 
@@ -443,6 +442,16 @@ public class EnclosureTest extends WicketTestCase
 		
 		p.add(new Label("labelOuter"), new Label("labelInner"));
 		tester.startPage(p);
+	}
+	
+	/**
+	 * Test case for https://issues.apache.org/jira/browse/WICKET-6043
+	 */
+	@Test
+	public void enclosureInsideContainererAndInheritance() throws Exception
+	{
+		tester.startPage(ListViewInContainerPage.class);
+		tester.assertRenderedPage(ListViewInContainerPage.class);
 	}
 	
 	private static class TestPageMarkup extends WebPage implements IMarkupResourceStreamProvider

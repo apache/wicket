@@ -34,5 +34,5 @@ public interface ITreeColumn<T, S> extends IColumn<T, S>
 	 * @param t
 	 *            tree
 	 */
-	public void setTree(TableTree<T, S> t);
+	void setTree(TableTree<T, S> t);
 }

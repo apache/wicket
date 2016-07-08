@@ -82,7 +82,7 @@ public class StatelessForm<T> extends Form<T>
 	@Override
 	protected CharSequence getActionUrl()
 	{
-		return urlFor(IFormSubmitListener.INTERFACE, getPage().getPageParameters());
+		return urlForListener(getPage().getPageParameters());
 	}
 
 	/**

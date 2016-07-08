@@ -23,14 +23,14 @@ To generate its children, ListView calls its abstract method populateItem(ListIt
 *Java Code (Page Constructor):*
 {code}
 public HomePage(final PageParameters parameters) {
-	   List<Person> persons = Arrays.asList(new Person("John", "Smith"), 
+	List<Person> persons = Arrays.asList(new Person("John", "Smith"), 
                                         new Person("Dan", "Wong"));
 		
-   add(new ListView<Person>("persons", persons) {
-	@Override
-	protected void populateItem(ListItem<Person> item) {
-	   item.add(new Label("fullName", new PropertyModel(item.getModel(), "fullName")));
-	}			
+   	add(new ListView<Person>("persons", persons) {
+		@Override
+		protected void populateItem(ListItem<Person> item) {
+	   		item.add(new Label("fullName", new PropertyModel(item.getModel(), "fullName")));
+		}			
    });
 }
 {code}

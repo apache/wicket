@@ -29,7 +29,6 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -71,39 +70,25 @@ public class ChoicePage extends BasePage
 		modelsMap.put("CADILLAC", Arrays.asList("CTS", "DTS", "ESCALADE", "SRX", "DEVILLE"));
 		modelsMap.put("FORD", Arrays.asList("CROWN", "ESCAPE", "EXPEDITION", "EXPLORER", "F-150"));
 
-		IModel<List<String>> makeChoices = new AbstractReadOnlyModel<List<String>>()
-		{
-			@Override
-			public List<String> getObject()
+		IModel<List<String>> makeChoices = () -> new ArrayList<>(modelsMap.keySet());
+
+		IModel<List<String>> modelChoices = () -> {
+			List<String> models = modelsMap.get(selectedMake);
+			if (models == null)
 			{
-				return new ArrayList<>(modelsMap.keySet());
+				models = Collections.emptyList();
 			}
-
-		};
-
-		IModel<List<String>> modelChoices = new AbstractReadOnlyModel<List<String>>()
-		{
-			@Override
-			public List<String> getObject()
-			{
-				List<String> models = modelsMap.get(selectedMake);
-				if (models == null)
-				{
-					models = Collections.emptyList();
-				}
-				return models;
-			}
-
+			return models;
 		};
 
 		Form<?> form = new Form("form");
 		add(form);
 
 		final DropDownChoice<String> makes = new DropDownChoice<>("makes",
-			new PropertyModel<String>(this, "selectedMake"), makeChoices);
+			new PropertyModel<>(this, "selectedMake"), makeChoices);
 
 		final DropDownChoice<String> models = new DropDownChoice<>("models",
-			new Model<String>(), modelChoices);
+			new Model<>(), modelChoices);
 		models.setOutputMarkupId(true);
 
 		form.add(makes);
@@ -116,9 +101,8 @@ public class ChoicePage extends BasePage
 		form.add(new AjaxButton("go")
 		{
 			@Override
-			protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				super.onAfterSubmit(target, form);
 				info("You have selected: " + makes.getModelObject() + " " + models.getModelObject());
 				target.add(feedback);
 			}

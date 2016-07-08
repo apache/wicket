@@ -40,8 +40,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -50,7 +48,6 @@ import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
@@ -82,12 +79,10 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.list.ListView;
@@ -139,6 +134,8 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import junit.framework.AssertionFailedError;
 
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
@@ -322,19 +319,15 @@ public class BaseWicketTester
 
 		this.application = application;
 
-		// If it's provided from the container it's not necessary to set again.
-		if (init)
-		{
-			// FIXME some tests are leaking applications by not calling destroy on them or overriding
-			// teardown() without calling super, for now we work around by making each name unique
-			application.setName("WicketTesterApplication-" + UUID.randomUUID());
-		}
-
 		ThreadContext.setApplication(application);
 
-		// If it's provided from the container it's not necessary to set again and init.
 		if (init)
 		{
+			if (application.getName() == null)
+			{
+				application.setName("WicketTesterApplication-" + UUID.randomUUID());
+			}
+			
 			application.setServletContext(servletContext);
 			// initialize the application
 			application.initApplication();
@@ -362,14 +355,7 @@ public class BaseWicketTester
 		}
 
 		// create a new session when the old one is invalidated
-		application.getSessionStore().registerUnboundListener(new UnboundListener()
-		{
-			@Override
-			public void sessionUnbound(String sessionId)
-			{
-				newSession();
-			}
-		});
+		application.getSessionStore().registerUnboundListener(sessionId -> newSession());
 
 		// prepare session
 		setupNextRequestCycle();
@@ -402,9 +388,6 @@ public class BaseWicketTester
 		return lastRenderedPage;
 	}
 
-	/**
-	 *
-	 */
 	private void setupNextRequestCycle()
 	{
 		request = new MockHttpServletRequest(application, httpSession, servletContext, servletRequestLocale());
@@ -491,7 +474,7 @@ public class BaseWicketTester
 
 	/**
 	 * Cleans up feedback messages. This usually happens on detach, but is disabled in unit testing
-	 * so feedback mesasges can be examined.
+	 * so feedback messages can be examined.
 	 */
 	public void cleanupFeedbackMessages()
 	{
@@ -536,8 +519,6 @@ public class BaseWicketTester
 	 */
 	private ServletWebRequest newServletWebRequest()
 	{
-
-
 		return (ServletWebRequest)application.newWebRequest(request, request.getFilterPrefix());
 	}
 
@@ -621,8 +602,15 @@ public class BaseWicketTester
 	 */
 	public void destroy()
 	{
-		application.internalDestroy();
-		ThreadContext.detach();
+		try
+		{ 
+			ThreadContext.setApplication(application);
+			application.internalDestroy();	
+		}
+		finally
+		{ 
+			ThreadContext.detach();			
+		}
 	}
 
 	/**
@@ -732,7 +720,7 @@ public class BaseWicketTester
 
 		try
 		{
-			if (followRedirects && lastResponse.isRedirect())
+			if (isFollowRedirects() && lastResponse.isRedirect())
 			{
 				if (redirectCount++ >= 100)
 				{
@@ -855,9 +843,6 @@ public class BaseWicketTester
 		preHeader.put(key, value);
 	}
 
-	/**
-	 *
-	 */
 	private void recordRequestResponse()
 	{
 		lastRequest = request;
@@ -1089,28 +1074,27 @@ public class BaseWicketTester
 	{
 		Args.notNull(link, "link");
 
-		Url url = Url.parse(link.urlFor(ILinkListener.INTERFACE, new PageParameters()).toString());
+		Url url = Url.parse(link.urlForListener(new PageParameters()).toString());
 		return transform(url).toString();
 	}
 
 	/**
-	 * Simulates processing URL that invokes specified {@link RequestListenerInterface} on
-	 * component.
+	 * Simulates processing URL that invokes an {@link IRequestListener} on	a component.
 	 * 
-	 * After the listener interface is invoked the page containing the component will be rendered
+	 * After the listener is invoked the page containing the component will be rendered
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
 	 * 
 	 * @param component
 	 * @param listener
 	 */
-	public void executeListener(final Component component, final RequestListenerInterface listener)
+	public void executeListener(final Component component)
 	{
 		Args.notNull(component, "component");
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
-			component.getPage(), component), listener);
+			component.getPage(), component));
 
 		Url url = urlFor(handler);
 		request.setUrl(url);
@@ -1120,45 +1104,25 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Simulates invoking a listener on a component. As opposed to the
+	 * Simulates invoking an {@link IRequestListener} on a component. As opposed to the
 	 * {@link #executeListener(Component)} method, current request/response objects will be used
 	 * 
-	 * After the listener interface is invoked the page containing the component will be rendered
+	 * After the listener is invoked the page containing the component will be rendered
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
 	 * 
 	 * @param component
 	 * @param listener
 	 */
-	public void invokeListener(final Component component, final RequestListenerInterface listener)
+	public void invokeListener(final Component component)
 	{
 		Args.notNull(component, "component");
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
-			component.getPage(), component), listener);
+			component.getPage(), component));
 
 		processRequest(handler);
-	}
-
-	/**
-	 * Builds and processes a request suitable for invoking a listener. The <code>Component</code>
-	 * must implement any of the known <code>IListener</code> interfaces.
-	 * 
-	 * @param component
-	 *            the listener to invoke
-	 */
-	public void executeListener(final Component component)
-	{
-		Args.notNull(component, "component");
-
-		for (RequestListenerInterface iface : RequestListenerInterface.getRegisteredInterfaces())
-		{
-			if (iface.getListenerInterfaceClass().isAssignableFrom(component.getClass()))
-			{
-				executeListener(component, iface);
-			}
-		}
 	}
 
 	/**
@@ -1924,7 +1888,7 @@ public class BaseWicketTester
 				(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "click"));
 		}
 		// if the link is an IAjaxLink, use it (do check if AJAX is expected)
-		else if (linkComponent instanceof IAjaxLink && isAjax)
+		else if (isAjax && (linkComponent instanceof IAjaxLink || linkComponent instanceof AjaxFallbackLink))
 		{
 			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
 				linkComponent, "click");
@@ -2007,7 +1971,7 @@ public class BaseWicketTester
 			}
 			else
 			{
-				executeListener(link, ILinkListener.INTERFACE);
+				executeListener(link);
 			}
 		}
 		// The link requires AJAX
@@ -2048,7 +2012,7 @@ public class BaseWicketTester
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
 		Url url = Url.parse(
 			form.getRootForm()
-				.urlFor(IFormSubmitListener.INTERFACE, new PageParameters())
+				.urlForListener(new PageParameters())
 				.toString(), Charset.forName(request.getCharacterEncoding()));
 
 		// make url absolute
@@ -2749,29 +2713,26 @@ public class BaseWicketTester
 		processRequest();
 	}
 
-	/**
-	 *
-	 */
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
 	{
 		private final IPageRendererProvider delegate;
 
 		private Page lastPage;
 
-		public LastPageRecordingPageRendererProvider(IPageRendererProvider delegate)
+		private LastPageRecordingPageRendererProvider(IPageRendererProvider delegate)
 		{
 			this.delegate = delegate;
 		}
 
 		@Override
-		public PageRenderer get(final RenderPageRequestHandler handler)
+		public PageRenderer apply(final RenderPageRequestHandler handler)
 		{
 			return new PageRenderer(handler)
 			{
 				@Override
 				public void respond(RequestCycle requestCycle)
 				{
-					delegate.get(handler).respond(requestCycle);
+					delegate.apply(handler).respond(requestCycle);
 
 					// WICKET-5424 record page after wrapped renderer has responded
 					if (handler.getPageProvider().hasPageInstance())
@@ -2795,14 +2756,11 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestExceptionMapper implements IExceptionMapper
 	{
 		private final IExceptionMapper delegate;
 
-		public TestExceptionMapper(IExceptionMapper delegate)
+		private TestExceptionMapper(IExceptionMapper delegate)
 		{
 			this.delegate = delegate;
 		}
@@ -2828,36 +2786,30 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestRequestCycleProvider implements IRequestCycleProvider
 	{
 		private final IRequestCycleProvider delegate;
 
-		public TestRequestCycleProvider(IRequestCycleProvider delegate)
+		private TestRequestCycleProvider(IRequestCycleProvider delegate)
 		{
 			this.delegate = delegate;
 		}
 
 		@Override
-		public RequestCycle get(RequestCycleContext context)
+		public RequestCycle apply(RequestCycleContext context)
 		{
 			context.setRequestMapper(new TestRequestMapper(context.getRequestMapper()));
 			forcedHandler = null;
 			context.setExceptionMapper(new TestExceptionMapper(context.getExceptionMapper()));
-			return delegate.get(context);
+			return delegate.apply(context);
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestRequestMapper implements IRequestMapperDelegate
 	{
 		private final IRequestMapper delegate;
 
-		public TestRequestMapper(IRequestMapper delegate)
+		private TestRequestMapper(IRequestMapper delegate)
 		{
 			this.delegate = delegate;
 		}
@@ -2896,30 +2848,20 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
-
-	/**
-	 *
-	 */
 	private static class TestPageManagerProvider implements IPageManagerProvider
 	{
 		@Override
-		public IPageManager get(IPageManagerContext pageManagerContext)
+		public IPageManager apply(IPageManagerContext pageManagerContext)
 		{
 			return new MockPageManager();
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestFilterConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<String, String>();
 
-		public TestFilterConfig()
+		private TestFilterConfig()
 		{
 			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/servlet/*");
 		}
@@ -2949,17 +2891,14 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private static class WicketTesterServletWebResponse extends ServletWebResponse
 		implements
 			IMetaDataBufferingWebResponse
 	{
 		private List<Cookie> cookies = new ArrayList<Cookie>();
 
-		public WicketTesterServletWebResponse(ServletWebRequest request,
-			MockHttpServletResponse response)
+		private WicketTesterServletWebResponse(ServletWebRequest request,
+		                                       MockHttpServletResponse response)
 		{
 			super(request, response);
 		}

@@ -52,7 +52,7 @@ import org.apache.wicket.util.string.Strings;
  * @param <T>
  *            The model object type
  */
-public class Check<T> extends LabeledWebMarkupContainer implements IGenericComponent<T>
+public class Check<T> extends LabeledWebMarkupContainer implements IGenericComponent<T, Check<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -198,7 +198,7 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 		if (group.wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			CharSequence url = group.urlFor(IOnChangeListener.INTERFACE, new PageParameters());
+			CharSequence url = group.urlForListener(new PageParameters());
 
 			Form<?> form = group.findParent(Form.class);
 			if (form != null)
@@ -232,34 +232,6 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 	public Check<T> setLabel(IModel<String> labelModel)
 	{
 		super.setLabel(labelModel);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final Check<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final Check<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
 		return this;
 	}
 

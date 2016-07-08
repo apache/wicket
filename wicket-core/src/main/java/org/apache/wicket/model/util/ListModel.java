@@ -48,8 +48,6 @@ public class ListModel<T> extends GenericBaseModel<List<T>>
 		setObject(list);
 	}
 
-
-	/** {@inheritDoc} */
 	@Override
 	protected List<T> createSerializableVersionOf(List<T> object)
 	{
@@ -59,7 +57,7 @@ public class ListModel<T> extends GenericBaseModel<List<T>>
 		}
 		else
 		{
-			return new ArrayList<T>(object);
+			return new ArrayList<>(object);
 		}
 	}
 }

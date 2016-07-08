@@ -37,7 +37,7 @@ public class DebugSettingsTest extends WicketTestCase
 		String attributeName = "data-wicket-path";
 		tester.getApplication().getDebugSettings().setComponentPathAttributeName(attributeName);
 		MockPageWithLink page = new MockPageWithLink();
-		Component link = new Link(MockPageWithLink.LINK_ID)
+		Component link = new Link<Void>(MockPageWithLink.LINK_ID)
 		{
 			@Override
 			public void onClick()

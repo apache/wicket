@@ -40,7 +40,7 @@ public class TabbedPanelPage extends BasePage
 	{
 		// create a list of ITab objects used to feed the tabbed panel
 		List<ITab> tabs = new ArrayList<>();
-		tabs.add(new AbstractTab(new Model<String>("first tab"))
+		tabs.add(new AbstractTab(new Model<>("first tab"))
 		{
 			@Override
 			public Panel getPanel(String panelId)
@@ -49,7 +49,7 @@ public class TabbedPanelPage extends BasePage
 			}
 		});
 
-		tabs.add(new AbstractTab(new Model<String>("second tab"))
+		tabs.add(new AbstractTab(new Model<>("second tab"))
 		{
 			@Override
 			public Panel getPanel(String panelId)
@@ -58,7 +58,7 @@ public class TabbedPanelPage extends BasePage
 			}
 		});
 
-		tabs.add(new AbstractTab(new Model<String>("third tab"))
+		tabs.add(new AbstractTab(new Model<>("third tab"))
 		{
 			@Override
 			public Panel getPanel(String panelId)
@@ -67,7 +67,7 @@ public class TabbedPanelPage extends BasePage
 			}
 		});
 
-		add(new AjaxTabbedPanel("tabs", tabs));
+		add(new AjaxTabbedPanel<>("tabs", tabs));
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class TabbedPanelPage extends BasePage
 		{
 			super(id);
 		}
-	};
+	}
 
 	/**
 	 * Panel representing the content panel for the second tab.
@@ -102,7 +102,7 @@ public class TabbedPanelPage extends BasePage
 		{
 			super(id);
 		}
-	};
+	}
 
 	/**
 	 * Panel representing the content panel for the third tab.
@@ -119,5 +119,5 @@ public class TabbedPanelPage extends BasePage
 		{
 			super(id);
 		}
-	};
+	}
 }

@@ -550,14 +550,7 @@ public class ComponentEventsTest
 		protected void init()
 		{
 			super.init();
-			setRequestCycleProvider(new IRequestCycleProvider()
-			{
-				@Override
-				public RequestCycle get(RequestCycleContext context)
-				{
-					return new TestRequestCycle(context);
-				}
-			});
+			setRequestCycleProvider(TestRequestCycle::new);
 		}
 
 		@Override

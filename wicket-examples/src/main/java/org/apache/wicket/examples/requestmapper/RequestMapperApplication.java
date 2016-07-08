@@ -31,20 +31,12 @@ import org.apache.wicket.core.request.mapper.MountedMapper;
  */
 public class RequestMapperApplication extends WicketExampleApplication
 {
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return RequestMapperHomePage.class;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	public void init()
 	{

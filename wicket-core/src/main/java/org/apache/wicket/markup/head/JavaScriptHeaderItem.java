@@ -360,7 +360,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		boolean isAjax = RequestCycle.get().find(IPartialPageRequestHandler.class) != null;
+		boolean isAjax = RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent();
 		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
 		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
 

@@ -23,6 +23,7 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.DynamicJQueryResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 
 /**
@@ -59,7 +60,7 @@ public class WicketEventJQueryResourceReference extends JavaScriptResourceRefere
 		}
 		else
 		{
-			backingLibraryReference = JQueryResourceReference.get();
+			backingLibraryReference = DynamicJQueryResourceReference.get();
 		}
 		List<HeaderItem> dependencies = super.getDependencies();
 		dependencies.add(JavaScriptHeaderItem.forReference(backingLibraryReference));

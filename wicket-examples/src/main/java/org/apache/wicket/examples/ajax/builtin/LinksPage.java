@@ -17,6 +17,8 @@
 package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
@@ -97,38 +99,30 @@ public class LinksPage extends BasePage
 		add(new AjaxFallbackLink<Void>("c2-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				counter2++;
-				// notice that for a fallback link we need to makesure the
+				// notice that for a fallback link we need to make sure the
 				// target is not null. if the target is null ajax failed and the
 				// fallback was used, so there is no need to do any ajax-related
 				// processing.
-				if (target != null)
-				{
-					target.add(c2);
-				}
+				targetOptional.ifPresent(target -> target.add(c2));
 			}
 		});
 
-		add(new IndicatingAjaxLink("c3-link")
-		{
-			@Override
-			public void onClick(AjaxRequestTarget target)
+		add(IndicatingAjaxLink.onClick("c3-link", (link, target) -> {
+			counter3++;
+			target.add(c3);
+			try
 			{
-				counter3++;
-				target.add(c3);
 				// sleep for 5 seconds to show off the busy indicator
-				try
-				{
-					Thread.sleep(5000);
-				}
-				catch (InterruptedException e)
-				{
-					// noop
-				}
+				TimeUnit.SECONDS.sleep(5);
 			}
-		});
+			catch (InterruptedException e)
+			{
+				// noop
+			}
+		}));
 
 		add(new AjaxLink<Void>("success-link")
 		{
@@ -211,28 +205,16 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink<Void>("set-response-page")
-		{
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				setResponsePage(new LinksPage());
-			}
-		});
+		add(AjaxLink.onClick("set-response-page", (lin, target) -> setResponsePage(LinksPage.class)));
 
-		add(new AjaxLink<Void>("exception")
-		{
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				// Set the proper setting to show the error page
-				// note: will be set until the "failure" link is clicked or the application is
-				// restarted
-				getApplication().getExceptionSettings().setAjaxErrorHandlingStrategy(
-					ExceptionSettings.AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE);
+		add(AjaxLink.onClick("exception", (link, target) -> {
+			// Set the proper setting to show the error page
+			// note: will be set until the "failure" link is clicked or the application is
+			// restarted
+			getApplication().getExceptionSettings().setAjaxErrorHandlingStrategy(
+				ExceptionSettings.AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE);
 
-				throw new RuntimeException("test whether the exception handling works");
-			}
-		});
+			throw new RuntimeException("test whether the exception handling works");
+		}));
 	}
 }

@@ -65,14 +65,12 @@ public class AjaxIndicatorAppender extends Behavior
 	{
 		super.renderHead(component, response);
 
-		IPartialPageRequestHandler target = component.getRequestCycle().find(IPartialPageRequestHandler.class);
-		if (target != null)
-		{
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> {
 			final String javascript = "var e = Wicket.$('" + getMarkupId() +
 				"'); if (e != null && typeof(e.parentNode) != 'undefined') e.parentNode.removeChild(e);";
 
 			target.prependJavaScript(javascript);
-		}
+		});
 	}
 
 

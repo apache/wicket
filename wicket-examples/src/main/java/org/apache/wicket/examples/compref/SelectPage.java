@@ -103,7 +103,7 @@ public class SelectPage extends WicketExamplePage
 			}
 
 		};
-		IModel<Collection<String>> model = new CollectionModel<String>(
+		IModel<Collection<String>> model = new CollectionModel<>(
 			MANY_CHOICES);
 		choices.add(new SelectOptions<>("manychoices", model, renderer));
 

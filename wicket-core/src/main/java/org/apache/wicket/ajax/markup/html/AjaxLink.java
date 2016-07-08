@@ -16,13 +16,17 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A component that allows a trigger request to be triggered via html anchor tag
@@ -34,7 +38,7 @@ import org.apache.wicket.model.IModel;
  *            type of model object
  * 
  */
-public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGenericComponent<T>
+public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGenericComponent<T, AjaxLink<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -90,6 +94,12 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 				super.updateAjaxAttributes(attributes);
 				AjaxLink.this.updateAjaxAttributes(attributes);
 			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxLink.this.getStatelessHint();
+			}
 		};
 	}
 
@@ -133,32 +143,58 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
+	/**
+	 * Creates an {@link AjaxLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxLink}
+	 */
+	public static <T> AjaxLink<T> onClick(String id, WicketConsumer<AjaxRequestTarget> onClick)
 	{
-		return (IModel<T>)getDefaultModel();
+		Args.notNull(onClick, "onClick");
+
+		return new AjaxLink<T>(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				onClick.accept(target);
+			}
+		};
 	}
 
-	@Override
-	public final AjaxLink<T> setModel(IModel<T> model)
+	/**
+	 * Creates an {@link AjaxLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax link
+	 * @param onClick
+	 *            the consumer of the clicked link and an {@link AjaxRequestTarget}
+	 * @return the {@link AjaxLink}
+	 */
+	public static <T> AjaxLink<T> onClick(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
 	{
-		setDefaultModel(model);
-		return this;
-	}
+		Args.notNull(onClick, "onClick");
 
+		return new AjaxLink<T>(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				onClick.accept(this, target);
+			}
+		};
+	}
 	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
+	protected boolean getStatelessHint()
 	{
-		return (T)getDefaultModelObject();
+		return false;
 	}
-
-	@Override
-	public final AjaxLink<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
-	}
-
 }

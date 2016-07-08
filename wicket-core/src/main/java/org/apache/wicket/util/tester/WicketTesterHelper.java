@@ -21,18 +21,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Assert;
 import org.apache.wicket.Component;
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Assert;
 
 /**
  * A <code>WicketTester</code>-specific helper class.
@@ -42,8 +40,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WicketTesterHelper
 {
-	private static final Logger LOGGER = LoggerFactory.getLogger(WicketTesterHelper.class);
-
 	/**
 	 * <code>ComponentData</code> class.
 	 * 
@@ -212,13 +208,12 @@ public class WicketTesterHelper
 		{
 			if (eventName.startsWith("on"))
 			{
-				String shortName = eventName.substring(2);
-				// TODO Wicket 8 Change this to throw an error in the milestone/RC versions and remove it for the final version
-				LOGGER.warn("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
-						"'on' in the event name '{}'. Please use just '{}'. Wicket 8.x won't manipulate the provided event " +
-						"names so the leading 'on' may break your application."
-						, eventName, shortName);
-				eventName = shortName;
+				String shortName = event.substring(2);
+				throw new IllegalArgumentException(
+						String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+										"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
+										"names so the leading 'on' may break your application."
+								, event, shortName));
 			}
 
 			for (Behavior behavior : component.getBehaviors())

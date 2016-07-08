@@ -63,7 +63,7 @@
 					<plugin>
 						<groupId>com.github.eirslett</groupId>
 						<artifactId>frontend-maven-plugin</artifactId>
-						<version>0.0.28</version>
+						<version>1.0</version>
 						<executions>
 							<execution>
 								<id>install node and npm</id>
@@ -72,8 +72,8 @@
 								</goals>
 								<phase>generate-resources</phase>
 								<configuration>
-									<npmVersion>3.7.1</npmVersion>
-									<nodeVersion>v5.5.0</nodeVersion>
+									<npmVersion>3.9.6</npmVersion>
+									<nodeVersion>v6.2.2</nodeVersion>
 								</configuration>
 							</execution>
 							<execution>
@@ -91,7 +91,7 @@
 									<goal>grunt</goal>
 								</goals>
 								<configuration>
-							        <!-- <arguments>- -verbose</arguments> -->
+							        <!--arguments> - -verbose </arguments-->
 							    </configuration>
 							</execution>
 						</executions>
@@ -100,4 +100,31 @@
 			</build>
 		</profile>
 	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-util</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jmx</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>

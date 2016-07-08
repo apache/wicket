@@ -20,6 +20,7 @@ import java.util.Date;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -39,19 +40,9 @@ public class LabelPage extends WicketExamplePage
 		// add a static label
 		add(new Label("staticLabel", "static text"));
 
-		// add a dynamic label. For this example, we create an anonymous
-		// subclass
-		// of Model (just because it is less work then directly implementing
-		// IModel)
-		// that returns a new java.util.Date on each invocation
-		add(new Label("dynamicLabel", new Model<Date>()
-		{
-			@Override
-			public Date getObject()
-			{
-				return new Date();
-			}
-		}));
+		// add a dynamic label. For this example, we create an anonymous subclass
+		// of IModel that returns a new java.util.Date on each invocation
+		add(new Label("dynamicLabel", Date::new));
 
 		// add a label with a model that gets its display text from a resource
 		// bundle

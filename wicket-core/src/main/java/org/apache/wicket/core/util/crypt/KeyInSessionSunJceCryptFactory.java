@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.util.crypt;
 
+import java.security.Provider;
+import java.security.Security;
 import java.util.UUID;
 
 import org.apache.wicket.MetaDataKey;
@@ -26,11 +28,11 @@ import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Crypt factory that produces {@link SunJceCrypt} instances based on http session-specific
- * encryption key. This allows each user to have their own encryption key, hardening against CSRF
+ * Crypt factory that produces {@link SunJceCrypt} instances based on session-specific
+ * encryption key. This allows each user to have his own encryption key, hardening against CSRF
  * attacks.
- *
- * Note that the use of this crypt factory will result in an immediate creation of a http session
+ * <br>
+ * Note that the use of this crypt factory will result in an immediate creation of a session.
  *
  * @author igor.vaynberg
  */
@@ -61,6 +63,22 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 	public KeyInSessionSunJceCryptFactory(String cryptMethod)
 	{
 		this.cryptMethod = Args.notNull(cryptMethod, "Crypt method");
+
+		if (Security.getProviders("Cipher." + cryptMethod).length == 0)
+		{
+			try
+			{
+				// Initialize and add a security provider required for encryption
+				final Class<?> clazz = Class.forName("com.sun.crypto.provider.SunJCE");
+
+				final Provider provider = (Provider) clazz.newInstance();
+				Security.addProvider(provider);
+			}
+			catch (Exception ex)
+			{
+				throw new RuntimeException("Unable to load SunJCE service provider", ex);
+			}
+		}
 	}
 
 	@Override

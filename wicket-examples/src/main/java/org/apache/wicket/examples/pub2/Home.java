@@ -62,69 +62,30 @@ public final class Home extends WicketExamplePage
 
 		// Add a couple of links to be able to play around with the session
 		// locale
-		add(new Link("goCanadian")
+		add(new SetLocaleLink("goCanadian", Locale.CANADA));
+		add(new SetLocaleLink("goUS", Locale.US));
+		add(new SetLocaleLink("goDutch", new Locale("nl", "NL")));
+		add(new SetLocaleLink("goGerman", new Locale("de", "DE")));
+		add(new SetLocaleLink("goChinese", new Locale("zh", "CN")));
+		add(new SetLocaleLink("goDanish", new Locale("da", "DK")));
+		add(new SetLocaleLink("goKorean", new Locale("ko", "KR")));
+		add(new SetLocaleLink("goHungarian", new Locale("hu")));
+	}
+
+	private static class SetLocaleLink extends Link<Void> {
+
+		private final Locale locale;
+
+		private SetLocaleLink(String id, Locale locale)
 		{
-			@Override
-			public void onClick()
-			{
-				getSession().setLocale(Locale.CANADA);
-			}
-		});
-		add(new Link("goUS")
+			super(id);
+			this.locale = locale;
+		}
+
+		@Override
+		public void onClick()
 		{
-			@Override
-			public void onClick()
-			{
-				getSession().setLocale(Locale.US);
-			}
-		});
-		add(new Link("goDutch")
-		{
-			@Override
-			public void onClick()
-			{
-				getSession().setLocale(new Locale("nl", "NL"));
-			}
-		});
-		add(new Link("goGerman")
-		{
-			@Override
-			public void onClick()
-			{
-				getSession().setLocale(new Locale("de", "DE"));
-			}
-		});
-		add(new Link("goChinese")
-		{
-			@Override
-			public void onClick()
-			{
-				getSession().setLocale(new Locale("zh", "CN"));
-			}
-		});
-		add(new Link("goDanish")
-		{
-			@Override
-			public void onClick()
-			{
-				getSession().setLocale(new Locale("da", "DK"));
-			}
-		});
-		add(new Link("goKorean")
-		{
-			@Override
-			public void onClick()
-			{
-				getSession().setLocale(new Locale("ko", "KR"));
-			}
-		});
-		add(new Link("goHungarian")
-		{
-			@Override
-			public void onClick()
-			{
-				getSession().setLocale(new Locale("hu"));
-			}
-		});
+			getSession().setLocale(locale);
+		}
 	}
 }

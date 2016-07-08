@@ -36,7 +36,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 /**
@@ -56,9 +56,6 @@ public class DatesPage extends WicketExamplePage
 		{
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
-		 */
 		@Override
 		public Object getDisplayValue(Locale locale)
 		{
@@ -83,7 +80,7 @@ public class DatesPage extends WicketExamplePage
 		{
 			super(id);
 			// sort locales on strings of selected locale
-			setChoices(new AbstractReadOnlyModel<List<Locale>>()
+			setChoices(new IModel<List<Locale>>()
 			{
 				@Override
 				public List<Locale> getObject()
@@ -105,17 +102,11 @@ public class DatesPage extends WicketExamplePage
 			setDefaultModel(new PropertyModel<>(DatesPage.this, "selectedLocale"));
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
-		 */
 		@Override
 		public void onSelectionChanged(Locale newSelection)
 		{
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
-		 */
 		@Override
 		protected boolean wantOnSelectionChangedNotifications()
 		{
@@ -150,7 +141,7 @@ public class DatesPage extends WicketExamplePage
 		selectedLocale = Session.get().getLocale();
 		Form<?> localeForm = new Form<>("localeForm");
 		localeForm.add(new LocaleDropDownChoice("localeSelect"));
-		localeForm.add(new Link("localeUSLink")
+		localeForm.add(new Link<Void>("localeUSLink")
 		{
 			@Override
 			public void onClick()
@@ -159,7 +150,7 @@ public class DatesPage extends WicketExamplePage
 			}
 		});
 		add(localeForm);
-		DateTextField dateTextField = new DateTextField("dateTextField", new PropertyModel<Date>(
+		DateTextField dateTextField = new DateTextField("dateTextField", new PropertyModel<>(
 			this, "date"), new StyleDateConverter("S-", true))
 		{
 			@Override
@@ -201,7 +192,7 @@ public class DatesPage extends WicketExamplePage
 			}
 		};
 		add(form2);
-		form2.add(new DateTimeField("dateTimeField", new PropertyModel<Date>(this, "date2")));
+		form2.add(new DateTimeField("dateTimeField", new PropertyModel<>(this, "date2")));
 
 
 		Form<?> form3 = new Form<Void>("form3")
@@ -213,7 +204,7 @@ public class DatesPage extends WicketExamplePage
 			}
 		};
 		add(form3);
-		form3.add(new TimeField("timeField", new PropertyModel<Date>(this, "time")));
+		form3.add(new TimeField("timeField", new PropertyModel<>(this, "time")));
 	}
 
 	/**

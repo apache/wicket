@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
@@ -33,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Request handler that invokes the listener interface on component and renders page afterwards.
+ * Request handler that invokes an {@link IRequestListener} on component or behavior and renders page afterwards.
  *
  * @author Matej Knopp
  */
@@ -43,12 +44,10 @@ public class ListenerInterfaceRequestHandler
 		IComponentRequestHandler,
 		ILoggableRequestHandler
 {
-
+	
 	private static final Logger LOG = LoggerFactory.getLogger(ListenerInterfaceRequestHandler.class);
 
 	private final IPageAndComponentProvider pageComponentProvider;
-
-	private final RequestListenerInterface listenerInterface;
 
 	private final Integer behaviorId;
 
@@ -58,17 +57,13 @@ public class ListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param listenerInterface
 	 * @param behaviorIndex
 	 */
-	public ListenerInterfaceRequestHandler(IPageAndComponentProvider pageComponentProvider,
-		RequestListenerInterface listenerInterface, Integer behaviorIndex)
+	public ListenerInterfaceRequestHandler(IPageAndComponentProvider pageComponentProvider, Integer behaviorIndex)
 	{
 		Args.notNull(pageComponentProvider, "pageComponentProvider");
-		Args.notNull(listenerInterface, "listenerInterface");
 
 		this.pageComponentProvider = pageComponentProvider;
-		this.listenerInterface = listenerInterface;
 		behaviorId = behaviorIndex;
 	}
 
@@ -76,14 +71,20 @@ public class ListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param listenerInterface
 	 */
-	public ListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider,
-		RequestListenerInterface listenerInterface)
+	public ListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider)
 	{
-		this(pageComponentProvider, listenerInterface, null);
+		this(pageComponentProvider, null);
 	}
 
+	public boolean includeRenderCount() {
+		if (behaviorId == null) {
+			return ((IRequestListener)getComponent()).rendersPage();
+		} else {
+			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).rendersPage();
+		}
+	}
+	
 	@Override
 	public IRequestableComponent getComponent()
 	{
@@ -122,20 +123,9 @@ public class ListenerInterfaceRequestHandler
 	{
 		if (logData == null)
 		{
-			logData = new ListenerInterfaceLogData(pageComponentProvider, listenerInterface,
-				behaviorId);
+			logData = new ListenerInterfaceLogData(pageComponentProvider, behaviorId);
 		}
 		pageComponentProvider.detach();
-	}
-
-	/**
-	 * Returns the listener interface.
-	 *
-	 * @return listener interface
-	 */
-	public RequestListenerInterface getListenerInterface()
-	{
-		return listenerInterface;
 	}
 
 	/**
@@ -188,7 +178,6 @@ public class ListenerInterfaceRequestHandler
 		RedirectPolicy policy = isStateless
 			? RedirectPolicy.NEVER_REDIRECT
 			: RedirectPolicy.AUTO_REDIRECT;
-		final IPageProvider pageProvider = new PageProvider(page);
 
 		final boolean canCallListenerInterfaceAfterExpiry = component != null
 				? component.canCallListenerInterfaceAfterExpiry()
@@ -196,20 +185,20 @@ public class ListenerInterfaceRequestHandler
 
 		if (!canCallListenerInterfaceAfterExpiry && freshPage && (isStateless == false || component == null))
 		{
-			// A listener interface is invoked on an expired page.
+			// A request listener is invoked on an expired page.
 
-			// If the page is stateful then we cannot assume that the listener interface is
+			// If the page is stateful then we cannot assume that the listener is
 			// invoked on its initial state (right after page initialization) and that its
-			// component and/or behavior will be available. That's why the listener interface
+			// component and/or behavior will be available. That's why the listener
 			// should be ignored and the best we can do is to re-paint the newly constructed
 			// page.
 
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug(
-					"A ListenerInterface '{}' assigned to '{}' is executed on an expired stateful page. "
+					"An IRequestListener on '{}' is executed on an expired stateful page. "
 						+ "Scheduling re-create of the page and ignoring the listener interface...",
-					listenerInterface, getComponentPath());
+					getComponentPath());
 			}
 
 			if (isAjax)
@@ -218,34 +207,25 @@ public class ListenerInterfaceRequestHandler
 			}
 
 			requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
-				pageProvider, policy));
+				new PageProvider(page), policy));
 			return;
 		}
 
-		if (isAjax == false && listenerInterface.isRenderPageAfterInvocation())
-		{
-			// schedule page render after current request handler is done. this can be
-			// overridden during invocation of listener
-			// method (i.e. by calling RequestCycle#setResponsePage)
-			requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
-				pageProvider, policy));
-		}
-
-		invokeListener();
+		invokeListener(requestCycle, policy, isAjax);
 	}
 
-	private void invokeListener()
+	private void invokeListener(IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax)
 	{
 		if (getBehaviorIndex() == null)
 		{
-			listenerInterface.invoke(getComponent());
+			invoke(requestCycle, policy, ajax, getComponent());
 		}
 		else
 		{
 			try
 			{
 				Behavior behavior = getComponent().getBehaviorById(behaviorId);
-				listenerInterface.invoke(getComponent(), behavior);
+				invoke(requestCycle, policy, ajax, getComponent(), behavior);
 			}
 			catch (IndexOutOfBoundsException e)
 			{
@@ -253,6 +233,84 @@ public class ListenerInterfaceRequestHandler
 			}
 
 		}
+	}
+	
+	/**
+	 * Invokes a given interface on a component.
+	 * 
+	 * @param rcomponent
+	 *            The component
+	 * 
+	 * @throws ListenerInvocationNotAllowedException
+	 *             when listener invocation attempted on a component that does not allow it
+	 */
+	private final void invoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax, final IRequestableComponent rcomponent)
+	{
+		// we are in Wicket core land
+		final Component component = (Component)rcomponent;
+
+		if (!component.canCallListenerInterface())
+		{
+			// just return so that we have a silent fail and just re-render the
+			// page
+			LOG.info("component not enabled or visible; ignoring call. Component: " + component);
+			throw new ListenerInvocationNotAllowedException(component, null,
+				"Component rejected interface invocation");
+		}
+
+		internalInvoke(requestCycle, policy, ajax, component, component);
+	}
+
+	/**
+	 * Invokes a given interface on a component's behavior.
+	 * 
+	 * @param rcomponent
+	 *            The component
+	 * @param behavior
+	 * @throws ListenerInvocationNotAllowedException
+	 *             when listener invocation attempted on a component that does not allow it
+	 */
+	private final void invoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax, final IRequestableComponent rcomponent, final Behavior behavior)
+	{
+		// we are in Wicket core land
+		final Component component = (Component)rcomponent;
+
+		if (!behavior.canCallListenerInterface(component))
+		{
+			LOG.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
+				component);
+			throw new ListenerInvocationNotAllowedException(component, behavior,
+				"Behavior rejected interface invocation. ");
+		}
+
+		internalInvoke(requestCycle, policy, ajax, component, behavior);
+	}
+
+	private void internalInvoke(final IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax, final Component component, final Object target)
+	{
+		// save a reference to the page because the component can be removed
+		// during the invocation of the listener and thus lose its parent
+		Page page = component.getPage();
+
+		// initialization is required for stateless pages
+		if (!page.isInitialized())
+		{
+			page.internalInitialize();
+		}
+
+		IRequestListener requestListener = (IRequestListener)target;
+		
+		if (requestListener.rendersPage() && !ajax)
+		{
+			// schedule page render after current request handler is done. this can be
+			// overridden during invocation of listener
+			// method (i.e. by calling RequestCycle#setResponsePage)
+			requestCycle.scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(
+				new PageProvider(page), policy));
+		}
+
+
+		requestListener.onRequest();
 	}
 
 	@Override

@@ -33,11 +33,11 @@ import org.apache.wicket.extensions.markup.html.repeater.util.SortParam;
  */
 public class ContactsDatabase
 {
-	private final Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
-	private final List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private final List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private final List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private final List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<>());
+	private final List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<>());
+	private final List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<>());
+	private final List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<>());
+	private final List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<>());
 
 	/**
 	 * Constructor
@@ -158,37 +158,13 @@ public class ContactsDatabase
 
 	private void updateIndecies()
 	{
-		Collections.sort(fnameIdx, new Comparator<Contact>()
-		{
-			public int compare(Contact arg0, Contact arg1)
-			{
-				return (arg0).getFirstName().compareTo((arg1).getFirstName());
-			}
-		});
+		Collections.sort(fnameIdx, (arg0, arg1) -> (arg0).getFirstName().compareTo((arg1).getFirstName()));
 
-		Collections.sort(lnameIdx, new Comparator<Contact>()
-		{
-			public int compare(Contact arg0, Contact arg1)
-			{
-				return (arg0).getLastName().compareTo((arg1).getLastName());
-			}
-		});
+		Collections.sort(lnameIdx, (arg0, arg1) -> (arg0).getLastName().compareTo((arg1).getLastName()));
 
-		Collections.sort(fnameDescIdx, new Comparator<Contact>()
-		{
-			public int compare(Contact arg0, Contact arg1)
-			{
-				return (arg1).getFirstName().compareTo((arg0).getFirstName());
-			}
-		});
+		Collections.sort(fnameDescIdx, (arg0, arg1) -> (arg1).getFirstName().compareTo((arg0).getFirstName()));
 
-		Collections.sort(lnameDescIdx, new Comparator<Contact>()
-		{
-			public int compare(Contact arg0, Contact arg1)
-			{
-				return (arg1).getLastName().compareTo((arg0).getLastName());
-			}
-		});
+		Collections.sort(lnameDescIdx, (arg0, arg1) -> (arg1).getLastName().compareTo((arg0).getLastName()));
 
 	}
 

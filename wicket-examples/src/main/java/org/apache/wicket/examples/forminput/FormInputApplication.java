@@ -44,26 +44,12 @@ public class FormInputApplication extends WicketExampleApplication
 		new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"),
 		new Locale("th", "TH"), new Locale("ru"), new Locale("ko", "KR"));
 
-	/**
-	 * Constructor.
-	 */
-	public FormInputApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return FormInput.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
-	 *      org.apache.wicket.request.Response)
-	 */
 	@Override
 	public Session newSession(Request request, Response response)
 	{
@@ -76,9 +62,6 @@ public class FormInputApplication extends WicketExampleApplication
 		return session;
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#init()
-	 */
 	@Override
 	protected void init()
 	{

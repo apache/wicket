@@ -39,9 +39,6 @@ public abstract class HeaderlessColumn<T, S> extends AbstractColumn<T, S>
 		super(new Model<>("&nbsp;"));
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractColumn#getHeader(java.lang.String)
-	 */
 	@Override
 	public Component getHeader(final String componentId)
 	{

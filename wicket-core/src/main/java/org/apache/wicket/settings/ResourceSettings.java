@@ -61,7 +61,7 @@ import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 
 /**
- * Interface for resource related settings
+ * Class for resource related settings
  * <p>
  * <i>resourcePollFrequency </i> (defaults to no polling frequency) - Frequency at which resources
  * should be polled for changes.

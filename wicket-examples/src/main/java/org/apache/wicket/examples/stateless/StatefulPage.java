@@ -33,9 +33,6 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class StatefulPage extends WicketExamplePage
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** click count for Link. */
@@ -50,25 +47,15 @@ public class StatefulPage extends WicketExamplePage
 		add(new BookmarkablePageLink<>("indexLink", Index.class));
 
 		// Action link counts link clicks
-		final Link actionLink = new Link("actionLink")
-		{
-			@Override
-			public void onClick()
-			{
-				linkClickCount++;
-			}
-		};
+		final Link actionLink = Link.onClick("actionLink", (link) -> linkClickCount++);
 		add(actionLink);
 		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this,
 			"linkClickCount")));
 
 		final TextField<String> field = new TextField<>("textfield", new Model<String>());
 
-		StatelessForm<?> statelessForm = new StatelessForm("statelessform")
+		StatelessForm<Void> statelessForm = new StatelessForm<Void>("statelessform")
 		{
-			/**
-			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-			 */
 			@Override
 			protected void onSubmit()
 			{

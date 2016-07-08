@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.resourcedecoration;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -35,7 +34,6 @@ import org.apache.wicket.request.resource.CssResourceReference;
  */
 public class ResourceDecorationApplication extends WebApplication
 {
-
 	@Override
 	protected void init()
 	{
@@ -45,15 +43,10 @@ public class ResourceDecorationApplication extends WebApplication
 			new CssResourceReference(HomePage.class, "footer.css"),
 			new CssResourceReference(HomePage.class, "header.css"));
 
-		setHeaderResponseDecorator(new IHeaderResponseDecorator()
-		{
-			@Override
-			public IHeaderResponse decorate(IHeaderResponse response)
-			{
-				// use this header resource decorator to load all JavaScript resources in the page
-				// footer (after </body>)
-				return new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS");
-			}
+		setHeaderResponseDecorator(response -> {
+			// use this header resource decorator to load all JavaScript resources in the page
+			// footer (after </body>)
+			return new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS");
 		});
 	}
 

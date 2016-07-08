@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class Counter implements Serializable
 {
-	private AtomicInteger counter = new AtomicInteger();
+	private final AtomicInteger counter = new AtomicInteger();
 
 	public int getCount()
 	{

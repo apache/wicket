@@ -33,6 +33,8 @@ import org.apache.wicket.markup.html.link.Link;
  */
 public class LeftFrame extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Link that, when clicked, changes the frame target's frame class (and as that is a shared
 	 * model which is also being used by the 'master page' {@link BodyFrame}, changes are
@@ -40,7 +42,7 @@ public class LeftFrame extends WebPage
 	 * Tags that use this link should have a <code>target="_parent"</code> attribute, so that the
 	 * top frame will be refreshed.
 	 */
-	private static final class ChangeFramePageLink extends Link
+	private static final class ChangeFramePageLink extends Link<Void>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -52,9 +54,9 @@ public class LeftFrame extends WebPage
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param <C>
-		 * 
+		 *
 		 * @param id
 		 * @param bodyFrame
 		 * @param pageClass
@@ -80,8 +82,6 @@ public class LeftFrame extends WebPage
 			setResponsePage(bodyFrame);
 		}
 	}
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructor

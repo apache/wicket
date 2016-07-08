@@ -30,7 +30,7 @@ public interface IWritableRequestParameters extends IRequestParameters
 	/**
 	 * Clears all parameters.
 	 */
-	public void reset();
+	void reset();
 
 	/**
 	 * Sets the values for given parameter.
@@ -38,5 +38,5 @@ public interface IWritableRequestParameters extends IRequestParameters
 	 * @param key
 	 * @param values
 	 */
-	public void setParameterValues(String key, List<StringValue> values);
+	void setParameterValues(String key, List<StringValue> values);
 }

@@ -108,7 +108,7 @@ public class CdiConfiguration
 		// enable detach event
 		listeners.add(new DetachEventEmitter());
 
-		NonContextual.of(application.getClass()).postConstruct(application);
+		NonContextual.of(application).postConstruct(application);
 
 		// enable injection of various framework components
 		application.getSessionListeners().add(new SessionInjector());

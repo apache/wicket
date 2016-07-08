@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.tree.content;
 
+import java.util.Optional;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.examples.tree.Foo;
@@ -64,11 +66,11 @@ public class SelectableFolderContent extends Content
 		}
 	}
 
-	protected void select(Foo foo, AbstractTree<Foo> tree, final AjaxRequestTarget target)
+	protected void select(Foo foo, AbstractTree<Foo> tree, final Optional<AjaxRequestTarget> targetOptional)
 	{
 		if (selected != null)
 		{
-			tree.updateNode(selected.getObject(), target);
+			tree.updateNode(selected.getObject(), targetOptional);
 
 			selected.detach();
 			selected = null;
@@ -76,7 +78,7 @@ public class SelectableFolderContent extends Content
 
 		selected = provider.model(foo);
 
-		tree.updateNode(foo, target);
+		tree.updateNode(foo, targetOptional);
 	}
 
 	@Override
@@ -96,9 +98,9 @@ public class SelectableFolderContent extends Content
 			}
 
 			@Override
-			protected void onClick(AjaxRequestTarget target)
+			protected void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				SelectableFolderContent.this.select(getModelObject(), tree, target);
+				SelectableFolderContent.this.select(getModelObject(), tree, targetOptional);
 			}
 
 			@Override

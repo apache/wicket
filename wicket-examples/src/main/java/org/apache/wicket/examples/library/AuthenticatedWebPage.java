@@ -32,17 +32,6 @@ import org.apache.wicket.examples.WicketExamplePage;
  */
 public class AuthenticatedWebPage extends WicketExamplePage
 {
-
-
-	/**
-	 * Contruct
-	 */
-	public AuthenticatedWebPage()
-	{
-
-	}
-
-
 	/**
 	 * Get downcast session object
 	 * 

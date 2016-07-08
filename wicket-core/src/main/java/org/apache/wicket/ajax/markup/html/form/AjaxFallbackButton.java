@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -67,23 +69,23 @@ public abstract class AjaxFallbackButton extends Button
 		add(new AjaxFormSubmitBehavior(form, "click")
 		{
 			private static final long serialVersionUID = 1L;
-
+			
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmit(target, AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onSubmit(Optional.ofNullable(target));
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onAfterSubmit(target, AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onAfterSubmit(target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onError(target, AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onError(target);
 			}
 
 			@Override
@@ -117,16 +119,16 @@ public abstract class AjaxFallbackButton extends Button
 	 * @param target
 	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
+	protected void onError(AjaxRequestTarget target)
 	{
 	}
 
 	@Override
 	public final void onError()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onError(null, getForm());
+			onError(null);
 		}
 	}
 
@@ -136,9 +138,9 @@ public abstract class AjaxFallbackButton extends Button
 	@Override
 	public final void onSubmit()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onSubmit(null, getForm());
+			onSubmit(Optional.empty());
 		}
 	}
 
@@ -148,9 +150,9 @@ public abstract class AjaxFallbackButton extends Button
 	@Override
 	public final void onAfterSubmit()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onAfterSubmit(null, getForm());
+			onAfterSubmit(null);
 		}
 	}
 
@@ -173,7 +175,7 @@ public abstract class AjaxFallbackButton extends Button
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
 	 */
-	protected void onSubmit(final AjaxRequestTarget target, final Form<?> form)
+	protected void onSubmit(final Optional<AjaxRequestTarget> target)
 	{
 	}
 
@@ -186,7 +188,7 @@ public abstract class AjaxFallbackButton extends Button
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
 	 */
-	protected void onAfterSubmit(final AjaxRequestTarget target, final Form<?> form)
+	protected void onAfterSubmit(final AjaxRequestTarget target)
 	{
 	}
 

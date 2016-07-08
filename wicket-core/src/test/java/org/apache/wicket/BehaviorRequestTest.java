@@ -17,16 +17,15 @@
 package org.apache.wicket;
 
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.behavior.IBehaviorListener;
+import org.apache.wicket.core.request.handler.IPageAndComponentProvider;
+import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
+import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.core.request.handler.IPageAndComponentProvider;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
-import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -84,8 +83,7 @@ public class BehaviorRequestTest extends WicketTestCase
 		final int index = page.container.getBehaviorId(behaviorUnderTest);
 		final IPageAndComponentProvider provider = new PageAndComponentProvider(page,
 			page.container);
-		final IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
-			IBehaviorListener.INTERFACE, index);
+		final IRequestHandler handler = new ListenerInterfaceRequestHandler(provider, index);
 
 		return tester.urlFor(handler).toString();
 	}
@@ -125,7 +123,7 @@ public class BehaviorRequestTest extends WicketTestCase
 
 	/**
 	 */
-	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
+	private static class TestCallbackBehavior extends Behavior implements IRequestListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -136,8 +134,7 @@ public class BehaviorRequestTest extends WicketTestCase
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			super.onComponentTag(component, tag);
-			tag.put("href",
-				component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters()));
+			tag.put("href", component.urlForListener(this, new PageParameters()));
 		}
 
 		@Override

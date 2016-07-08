@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.stateless;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
@@ -25,16 +25,10 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * 
  * @author Eelco Hillenius
  */
-public class SessionModel extends AbstractReadOnlyModel<String>
+public class SessionModel implements IModel<String>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
-	 */
 	@Override
 	public String getObject()
 	{

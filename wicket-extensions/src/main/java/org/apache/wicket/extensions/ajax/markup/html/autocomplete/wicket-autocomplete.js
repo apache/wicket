@@ -19,7 +19,7 @@
  *
  * @author Janne Hietam&auml;ki
  */
-
+/* jshint latedef: false */
 ;(function (undefined) {
 	'use strict';
 
@@ -95,7 +95,9 @@
 				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
 				if (containerId !== document.activeElement.id) {
 					window.setTimeout(hideAutoComplete, 500);
-				}				
+				} else {
+					jQuery(this).trigger("focus");
+				}
 			});
 
 			Wicket.Event.add(obj, 'focus', function (jqEvent) {

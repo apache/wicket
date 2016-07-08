@@ -42,6 +42,7 @@ import org.apache.wicket.util.convert.converter.ShortConverter;
 import org.apache.wicket.util.convert.converter.SqlDateConverter;
 import org.apache.wicket.util.convert.converter.SqlTimeConverter;
 import org.apache.wicket.util.convert.converter.SqlTimestampConverter;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 
 
@@ -58,7 +59,7 @@ import org.apache.wicket.util.lang.Objects;
 public class ConverterLocator implements IConverterLocator
 {
 	/**
-	 * CoverterLocator that is to be used when no registered converter is found.
+	 * ConverterLocator that is to be used when no registered converter is found.
 	 * 
 	 * @param <C>
 	 *            The object to convert from and to String
@@ -79,10 +80,6 @@ public class ConverterLocator implements IConverterLocator
 			this.type = new WeakReference<>(type);
 		}
 
-		/**
-		 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
-		 *      java.util.Locale)
-		 */
 		@Override
 		public C convertToObject(String value, Locale locale)
 		{
@@ -108,7 +105,7 @@ public class ConverterLocator implements IConverterLocator
 					return converted;
 				}
 
-				if (theType.isInstance(value))
+				if (theType != null && theType.isInstance(value))
 				{
 					return theType.cast(value);
 				}
@@ -122,10 +119,6 @@ public class ConverterLocator implements IConverterLocator
 				theType.getName() + ". Could not find compatible converter.").setSourceValue(value);
 		}
 
-		/**
-		 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
-		 *      java.util.Locale)
-		 */
 		@Override
 		public String convertToString(C value, Locale locale)
 		{
@@ -141,7 +134,7 @@ public class ConverterLocator implements IConverterLocator
 			catch (RuntimeException e)
 			{
 				throw new ConversionException("Could not convert object of type: " +
-					value.getClass() + " to string. Possible its #toString() returned null. " +
+					value.getClass() + " to String. Possible its #toString() returned null. " +
 					"Either install a custom converter (see IConverterLocator) or " +
 					"override #toString() to return a non-null value.", e).setSourceValue(value)
 					.setConverter(this);
@@ -224,7 +217,7 @@ public class ConverterLocator implements IConverterLocator
 		final IConverter<C> converter = get(type);
 		if (converter == null)
 		{
-			return new DefaultConverter<C>(type);
+			return new DefaultConverter<>(type);
 		}
 		return converter;
 	}
@@ -254,14 +247,8 @@ public class ConverterLocator implements IConverterLocator
 	 */
 	public final IConverter<?> set(final Class<?> c, final IConverter<?> converter)
 	{
-		if (converter == null)
-		{
-			throw new IllegalArgumentException("CoverterLocator cannot be null");
-		}
-		if (c == null)
-		{
-			throw new IllegalArgumentException("Class cannot be null");
-		}
+		Args.notNull(c, "Class");
+		Args.notNull(converter, "converter");
 		return classToConverter.put(c.getName(), converter);
 	}
 }

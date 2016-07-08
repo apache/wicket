@@ -61,9 +61,6 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		super(modelObject);
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public T getObject()
@@ -200,9 +197,6 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertyGetter()
-	 */
 	@Override
 	public Method getPropertyGetter()
 	{
@@ -224,9 +218,6 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IPropertyReflectionAwareModel#getPropertySetter()
-	 */
 	@Override
 	public Method getPropertySetter()
 	{

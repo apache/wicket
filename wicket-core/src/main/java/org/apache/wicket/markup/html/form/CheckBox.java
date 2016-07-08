@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.Locale;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -51,7 +52,7 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  * @author Jonathan Locke
  */
-public class CheckBox extends FormComponent<Boolean> implements IOnChangeListener
+public class CheckBox extends FormComponent<Boolean> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -78,7 +79,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	@Override
-	public void onSelectionChanged()
+	public void onRequest()
 	{
 		convertInput();
 		updateModel();
@@ -163,7 +164,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		// checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
 		{
-			CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
+			CharSequence url = urlForListener(new PageParameters());
 
 			Form<?> form = findParent(Form.class);
 			if (form != null)
@@ -184,12 +185,6 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		super.onComponentTag(tag);
 	}
 
-	/**
-	 * Final because we made {@link #convertInput()} final and it no longer delegates to
-	 * {@link #getConverter(Class)}
-	 * 
-	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
-	 */
 	@Override
 	public final <C> IConverter<C> getConverter(Class<C> type)
 	{

@@ -21,10 +21,12 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Ajax event behavior that submits a form via ajax when the event it is attached to, is invoked.
@@ -168,7 +170,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected void onEvent(final AjaxRequestTarget target)
 	{
-		getForm().getRootForm().onFormSubmitted(new AjaxFormSubmitter(this, target));
+		getForm().getRootForm().onFormSubmitted(new AjaxFormSubmitBehavior.AjaxFormSubmitter(this, target));
 	}
 
 	/**
@@ -192,6 +194,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			return submitBehavior.getForm();
 		}
 
+		/**
+		 * @return the {@link IFormSubmittingComponent} 
+		 */
 		public IFormSubmittingComponent getFormSubmittingComponent()
 		{
 			return submitBehavior.getFormSubmittingComponent();
@@ -225,6 +230,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
+	 * @param target the {@link AjaxRequestTarget}
 	 */
 	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
@@ -233,6 +239,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>before</em> the form's onSubmit method.
+	 * @param target the {@link AjaxRequestTarget}
 	 */
 	protected void onSubmit(AjaxRequestTarget target)
 	{
@@ -265,5 +272,65 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	public void setDefaultProcessing(boolean defaultProcessing)
 	{
 		this.defaultProcessing = defaultProcessing;
+	}
+
+	/**
+	 * Creates an {@link AjaxFormSubmitBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onSubmit
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxFormSubmitBehavior}
+	 */
+	public static AjaxFormSubmitBehavior onSubmit(String eventName, WicketConsumer<AjaxRequestTarget> onSubmit)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+
+		return new AjaxFormSubmitBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(target);
+			}
+		};
+	}
+
+	/**
+	 * Creates an {@link AjaxFormSubmitBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onSubmit
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxFormSubmitBehavior}
+	 */
+	public static AjaxFormSubmitBehavior onSubmit(String eventName,
+	                                              WicketConsumer<AjaxRequestTarget> onSubmit,
+	                                              WicketConsumer<AjaxRequestTarget> onError) {
+		Args.notNull(onSubmit, "onSubmit");
+		Args.notNull(onError, "onError");
+
+		return new AjaxFormSubmitBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target)
+			{
+				onError.accept(target);
+			}
+		};
 	}
 }

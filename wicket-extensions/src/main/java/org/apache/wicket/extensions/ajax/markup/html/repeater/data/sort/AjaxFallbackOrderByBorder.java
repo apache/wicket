@@ -55,7 +55,7 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 	@Override
 	protected OrderByLink<S> newOrderByLink(String id, S property, ISortStateLocator<S> stateLocator)
 	{
-		return new AjaxFallbackOrderByLink<S>("orderByLink", property, stateLocator)
+		return new AjaxOrderByLink<S>("orderByLink", property, stateLocator)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -93,6 +93,4 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 	}
 
 	protected abstract void onAjaxClick(AjaxRequestTarget target);
-
-
 }

@@ -104,7 +104,7 @@ public class PageIdPoliticTest extends Assert
 				return new IPageManagerProvider()
 				{
 					@Override
-					public IPageManager get(IPageManagerContext pageManagerContext)
+					public IPageManager apply(IPageManagerContext pageManagerContext)
 					{
 						IPageStore pageStore = new DefaultPageStore(new JavaSerializer(
 							application.getApplicationKey()), dataStore, 4);

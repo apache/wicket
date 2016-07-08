@@ -51,7 +51,7 @@ class NonContextualManager implements INonContextualManager
 	public <T> void inject(T instance)
 	{
 		Args.notNull(instance, "instance");
-		NonContextual.of(instance.getClass(), beanManager).inject(instance);
+		NonContextual.of(instance, beanManager).inject(instance);
 	}
 
 	/**
@@ -62,7 +62,7 @@ class NonContextualManager implements INonContextualManager
 	public <T> void postConstruct(T instance)
 	{
 		Args.notNull(instance, "instance");
-		NonContextual.of(instance.getClass(), beanManager).postConstruct(instance);
+		NonContextual.of(instance, beanManager).postConstruct(instance);
 	}
 
 	/**
@@ -72,7 +72,7 @@ class NonContextualManager implements INonContextualManager
 	public <T> void preDestroy(T instance)
 	{
 		Args.notNull(instance, "instance");
-		NonContextual.of(instance.getClass(), beanManager).preDestroy(instance);
+		NonContextual.of(instance, beanManager).preDestroy(instance);
 	}
 
 }

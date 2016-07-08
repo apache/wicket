@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -28,7 +29,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
@@ -63,7 +64,7 @@ public class HomePage extends WebPage
 
 		};
 		add(form);
-		form.add(new TextField<String>("textfield", new Model<String>()));
+		form.add(new TextField<>("textfield", new Model<>()));
 		form.add(new Button("submit"));
 
 		final WebMarkupContainer listViewContainer = new WebMarkupContainer("listViewContainer");
@@ -72,12 +73,12 @@ public class HomePage extends WebPage
 
 		final ListView<Object> listView;
 		listViewContainer.add(listView = new ListView<Object>("listView",
-			new AbstractReadOnlyModel<List<Object>>()
+			new IModel<List<Object>>()
 			{
 				@Override
 				public List<Object> getObject()
 				{
-					List<Object> objects = new LinkedList<Object>();
+					List<Object> objects = new LinkedList<>();
 					for (int i = 0; i < rows; i++)
 					{
 						objects.add(new Object());
@@ -97,15 +98,15 @@ public class HomePage extends WebPage
 		form.add(new AjaxFallbackButton("addButton", form)
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(Optional<AjaxRequestTarget> targetOptional)
 			{
 				rows++;
 				listView.removeAll();
-				target.add(listViewContainer);
+				targetOptional.ifPresent(target -> target.add(listViewContainer));
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 			}
 		}.setDefaultFormProcessing(false));

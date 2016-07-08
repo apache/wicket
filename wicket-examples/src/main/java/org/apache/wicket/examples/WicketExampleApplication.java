@@ -39,17 +39,6 @@ public abstract class WicketExampleApplication extends WebApplication
 		System.setProperty("java.awt.headless", "true");
 	}
 
-
-	/**
-	 * Constructor.
-	 */
-	public WicketExampleApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#init()
-	 */
 	@Override
 	protected void init()
 	{

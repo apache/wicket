@@ -30,10 +30,12 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -79,8 +81,8 @@ import org.slf4j.LoggerFactory;
  * {@link Button} or {@link SubmitLink}), just putting e.g. &lt;input type="submit" value="go"/&gt;
  * suffices.
  * <p>
- * As a {@link IFormSubmitListener} the form gets notified of listener requests in
- * {@link #onFormSubmitted()}. By default, the processing of this submit works like this:
+ * As a {@link IRequestListener} the form gets notified of listener requests in
+ * {@link #onRequest()}. By default, the processing of this submit works like this:
  * <ul>
  * <li>All nested {@link FormComponent}s are notified of new input via
  * {@link FormComponent#inputChanged()}</li>
@@ -146,8 +148,8 @@ import org.slf4j.LoggerFactory;
  */
 public class Form<T> extends WebMarkupContainer
 	implements
-		IFormSubmitListener,
-		IGenericComponent<T>
+		IRequestListener,
+		IGenericComponent<T, Form<T>>
 {
 	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
 
@@ -295,7 +297,13 @@ public class Form<T> extends WebMarkupContainer
 	 * The form has discovered a multipart component before rendering and is marking itself as
 	 * multipart until next render
 	 */
-	private static final short MULTIPART_HINT = 0x02;
+	private static final short MULTIPART_HINT_YES = 0x02;
+
+	/**
+	 * The form has discovered no multipart component before rendering and is marking itself as
+	 * not multipart until next render
+	 */
+	private static final short MULTIPART_HINT_NO = 0x04;
 
 	/**
 	 * Constructs a form with no validation.
@@ -406,7 +414,6 @@ public class Form<T> extends WebMarkupContainer
 					formComponent.clearInput();
 				}
 			}
-
 		});
 	}
 
@@ -683,7 +690,7 @@ public class Form<T> extends WebMarkupContainer
 	 * @see #onFormSubmitted(IFormSubmitter)
 	 */
 	@Override
-	public final void onFormSubmitted()
+	public final void onRequest()
 	{
 		// check methods match
 		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
@@ -804,9 +811,7 @@ public class Form<T> extends WebMarkupContainer
 		}
 
 		// update auto labels if we are inside an ajax request
-		final AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
-		if (target != null)
-		{
+		getRequestCycle().find(AjaxRequestTarget.class).ifPresent(target -> {
 			visitChildren(FormComponent.class, new IVisitor<FormComponent<?>, Void>()
 			{
 				@Override
@@ -815,7 +820,7 @@ public class Form<T> extends WebMarkupContainer
 					component.updateAutoLabels(target);
 				}
 			});
-		}
+		});
 	}
 
 	/**
@@ -1179,7 +1184,7 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Method for dispatching/calling a interface on a page from the given url. Used by
-	 * {@link org.apache.wicket.markup.html.form.Form#onFormSubmitted()} for dispatching events
+	 * {@link Form#onRequest()} for dispatching events
 	 * 
 	 * @param page
 	 *            The page where the event should be called on.
@@ -1361,50 +1366,48 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public boolean isMultiPart()
 	{
-		if (multiPart != 0)
+		if (multiPart == 0)
 		{
-			return true;
+			Boolean anyEmbeddedMultipart = visitChildren(Component.class,
+					new IVisitor<Component, Boolean>()
+					{
+						@Override
+						public void component(final Component component, final IVisit<Boolean> visit)
+						{
+							boolean isMultiPart = false;
+							if (component instanceof Form<?>)
+							{
+								Form<?> form = (Form<?>)component;
+								if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
+								{
+									isMultiPart = (form.multiPart & MULTIPART_HARD) != 0;
+								}
+							}
+							else if (component instanceof FormComponent<?>)
+							{
+								FormComponent<?> fc = (FormComponent<?>)component;
+								if (fc.isVisibleInHierarchy() && fc.isEnabledInHierarchy())
+								{
+									isMultiPart = fc.isMultiPart();
+								}
+							}
+
+							if (isMultiPart)
+							{
+								visit.stop(true);
+							}
+						}
+
+					});
+			
+			if (Boolean.TRUE.equals(anyEmbeddedMultipart)) {
+				multiPart |= MULTIPART_HINT_YES;
+			} else {
+				multiPart |= MULTIPART_HINT_NO;
+			}
 		}
 
-		Boolean anyEmbeddedMultipart = visitChildren(Component.class,
-			new IVisitor<Component, Boolean>()
-			{
-				@Override
-				public void component(final Component component, final IVisit<Boolean> visit)
-				{
-					boolean isMultiPart = false;
-					if (component instanceof Form<?>)
-					{
-						Form<?> form = (Form<?>)component;
-						if (form.isVisibleInHierarchy() && form.isEnabledInHierarchy())
-						{
-							isMultiPart = (form.multiPart != 0);
-						}
-					}
-					else if (component instanceof FormComponent<?>)
-					{
-						FormComponent<?> fc = (FormComponent<?>)component;
-						if (fc.isVisibleInHierarchy() && fc.isEnabledInHierarchy())
-						{
-							isMultiPart = fc.isMultiPart();
-						}
-					}
-
-					if (isMultiPart)
-					{
-						visit.stop(true);
-					}
-				}
-
-			});
-
-		boolean mp = Boolean.TRUE.equals(anyEmbeddedMultipart);
-
-		if (mp)
-		{
-			multiPart |= MULTIPART_HINT;
-		}
-		return mp;
+		return (multiPart & (MULTIPART_HARD | MULTIPART_HINT_YES)) != 0;
 	}
 
 	/**
@@ -1647,7 +1650,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	protected CharSequence getActionUrl()
 	{
-		return urlFor(IFormSubmitListener.INTERFACE, new PageParameters());
+		return urlForListener(new PageParameters());
 	}
 
 	/**
@@ -1799,10 +1802,18 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	@Override
+	public void onEvent(IEvent<?> event) {
+		if (event.getPayload() instanceof AjaxRequestTarget) {
+			// WICKET-6171 clear multipart hint, it might change during Ajax requests without this form being rendered
+			this.multiPart &= MULTIPART_HARD;
+		}
+	}
+	
+	@Override
 	protected void onBeforeRender()
 	{
-		// clear multipart hint, it will be set if necessary by the visitor
-		this.multiPart &= ~MULTIPART_HINT;
+		// clear multipart hint, it will be reevaluated by #isMultiPart()
+		this.multiPart &= MULTIPART_HARD;
 
 		super.onBeforeRender();
 	}
@@ -2067,34 +2078,6 @@ public class Form<T> extends WebMarkupContainer
 	protected String getInputNamePrefix()
 	{
 		return "";
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final Form<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final Form<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
 	}
 
 	/**

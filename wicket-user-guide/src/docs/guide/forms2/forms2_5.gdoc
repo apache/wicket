@@ -33,12 +33,12 @@ In the following snippet we have a form with two submit buttons bound to an <inp
 
 {code:html}
 <body>
-		<form wicket:id="form">
-			Username: <input type="text" wicket:id="username"/>
-			<br/>
-			<input type="submit" wicket:id="submit1"/>
-			<input type="submit" wicket:id="submit2"/>
-		</form>
+	<form wicket:id="form">
+		Username: <input type="text" wicket:id="username"/>
+		<br/>
+		<input type="submit" wicket:id="submit1"/>
+		<input type="submit" wicket:id="submit2"/>
+	</form>
 </body>
 {code}
 
@@ -47,17 +47,17 @@ In the following snippet we have a form with two submit buttons bound to an <inp
 {code}
 public class HomePage extends WebPage {
 	
-    public HomePage(final PageParameters parameters) {		
+	public HomePage(final PageParameters parameters) {		
 		Form form = new Form("form");
-
-     	form.add(new TextField("username", Model.of("")));
-    	form.add(new Button("submit1", Model.of("First submitter")));
+	
+	     	form.add(new TextField("username", Model.of("")));
+	    	form.add(new Button("submit1", Model.of("First submitter")));
 		Button secondSubmitter;
 		form.add(secondSubmitter = new Button("submit2", Model.of("Second submitter")));
-	
-    	form.setDefaultButton(secondSubmitter);
+		
+	    	form.setDefaultButton(secondSubmitter);
 		add(form);
-    }
+	}
 }
 {code}
 
@@ -85,10 +85,10 @@ A notable difference between this component and Button is that SubmitLink can be
 
 {code:html}
 <html xmlns:wicket="http://wicket.apache.org">
-<head>
+	<head>
 	</head>
 	<body>
-	<form wicket:id="form">
+		<form wicket:id="form">
 			Password: <input type="password" wicket:id="password"/>
 			<br/>					
 		</form>
@@ -104,14 +104,14 @@ A notable difference between this component and Button is that SubmitLink can be
 {code}
 public class HomePage extends WebPage {
 	
-    public HomePage(final PageParameters parameters) {		
+	public HomePage(final PageParameters parameters) {		
 		Form form = new Form("form");
-    	
+	    
 		form.add(new PasswordTextField("password", Model.of("")));
 		//specify the form to submit
 		add(new SubmitLink("externalSubmitter", form));
 		add(form);
-    }
+	}
 }
 {code}
 

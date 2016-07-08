@@ -42,9 +42,6 @@ public class ComponentFeedbackMessageFilter implements IFeedbackMessageFilter
 		this.component = component;
 	}
 
-	/**
-	 * @see org.apache.wicket.feedback.IFeedbackMessageFilter#accept(org.apache.wicket.feedback.FeedbackMessage)
-	 */
 	@Override
 	public boolean accept(FeedbackMessage message)
 	{

@@ -30,23 +30,14 @@ package org.apache.wicket.model;
  */
 public abstract class AbstractWrapModel<T> implements IWrapModel<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
 	@Override
 	public void setObject(T object)
 	{

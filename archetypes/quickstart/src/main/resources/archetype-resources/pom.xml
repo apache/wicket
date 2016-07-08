@@ -42,9 +42,9 @@
 		</license>
 	</licenses>
 	<properties>
-		<wicket.version>7.0.0-SNAPSHOT</wicket.version>
-		<jetty9.version>9.3.5.v20151012</jetty9.version>
-		<log4j.version>2.5</log4j.version>
+		<wicket.version>8.0.0-SNAPSHOT</wicket.version>
+		<jetty9.version>9.3.8.v20160314</jetty9.version>
+		<log4j.version>2.6.1</log4j.version>
 		<junit.version>4.12</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -90,6 +90,7 @@
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-all</artifactId>
 			<version>${jetty9.version}</version>
+			<classifier>uber</classifier>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

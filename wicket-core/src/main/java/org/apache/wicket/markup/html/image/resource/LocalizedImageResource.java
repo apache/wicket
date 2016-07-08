@@ -20,9 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.IResourceFactory;
-import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
@@ -33,6 +31,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.parse.metapattern.Group;
 import org.apache.wicket.util.parse.metapattern.MetaPattern;
@@ -333,7 +332,7 @@ public final class LocalizedImageResource implements IClusterable
 		else
 		{
 			// Create URL to component
-			url = component.urlFor(IResourceListener.INTERFACE, resourceParameters);
+			url = component.urlForListener(resourceParameters);
 		}
 
 		// Set the SRC attribute to point to the component or shared resource

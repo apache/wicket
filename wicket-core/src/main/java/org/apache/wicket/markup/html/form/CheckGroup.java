@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -58,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * @param <T>
  *            The model object type
  */
-public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnChangeListener
+public class CheckGroup<T> extends FormComponent<Collection<T>> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -204,7 +205,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 * Called when a selection changes.
 	 */
 	@Override
-	public final void onSelectionChanged()
+	public final void onRequest()
 	{
 		convertInput();
 		updateModel();

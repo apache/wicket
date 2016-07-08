@@ -53,7 +53,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * An enumeration of possible positions of the label for a choice
 	 */
-	public static enum LabelPosition
+	public enum LabelPosition
 	{
 		/**
 		 * will render the label before the choice
@@ -134,7 +134,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices)
 	{
-		this(id, model, new ListModel<>(choices), new ChoiceRenderer<E>());
+		this(id, model, new ListModel<>(choices), new ChoiceRenderer<>());
 	}
 
 	/**
@@ -199,7 +199,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	public AbstractChoice(final String id, IModel<T> model,
 		final IModel<? extends List<? extends E>> choices)
 	{
-		this(id, model, choices, new ChoiceRenderer<E>());
+		this(id, model, choices, new ChoiceRenderer<>());
 	}
 
 	/**
@@ -225,9 +225,10 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * @return The collection of object that this choice has
 	 */
-	public List<? extends E> getChoices()
+	public final List<? extends E> getChoices()
 	{
-		List<? extends E> choices = (this.choices != null) ? this.choices.getObject() : null;
+		IModel<? extends List<? extends E>> choicesModel = getChoicesModel();
+		List<? extends E> choices = (choicesModel != null) ? choicesModel.getObject() : null;
 		if (choices == null)
 		{
 			throw new NullPointerException(

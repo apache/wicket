@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
@@ -65,7 +66,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	 * 
 	 * @author Jeremy Thomerson
 	 */
-	public static interface IHeaderResponseFilter
+	public interface IHeaderResponseFilter extends Predicate<HeaderItem>
 	{
 		/**
 		 * @return name of the filter (used by the container that renders these resources)
@@ -81,6 +82,11 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		 * @return true if it should be bucketed with other things in this filter
 		 */
 		boolean accepts(HeaderItem item);
+
+		@Override
+		default boolean test(HeaderItem item) {
+			return accepts(item);
+		}
 	}
 
 	/**
@@ -281,7 +287,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 
 	protected void render(HeaderItem item, List<HeaderItem> filteredItems)
 	{
-		if (RequestCycle.get().find(IPartialPageRequestHandler.class) != null)
+		if (RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent())
 		{
 			// we're in an ajax request, so we don't filter and separate stuff....
 			getRealResponse().render(item);

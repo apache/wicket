@@ -1,0 +1,86 @@
+To visualize the metrics with Graphite a little additional configuration is required:
+
+(1) Add the additional maven dependency to your project:
+{code}
+<dependency>
+	<groupId>io.dropwizard.metrics</groupId>
+	<artifactId>metrics-graphite</artifactId>
+	<version>${metrics.graphite.version}</version>
+</dependency>
+{code}
+
+* the metrics.graphite.version should be the same as the metrics version of the wicket-metrics dependency. Check the Maven dependencies to ensure
+this.
+
+(2) Add the following code to your Application's init method:
+{code}
+	private GraphiteReporter reporter;
+	
+	@Override
+	protected void init()
+	{
+		MetricRegistry metricRegistry = WicketMetrics.getMetricRegistry();
+		final Graphite graphite = new Graphite(new InetSocketAddress("127.0.0.1", 2003));
+		reporter = GraphiteReporter.forRegistry(metricRegistry).prefixedWith("WebApplications")
+			.convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.MILLISECONDS)
+			.filter(MetricFilter.ALL).build(graphite);
+		
+		// Collects data every 5 seconds
+		reporter.start(5, TimeUnit.SECONDS);
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		reporter.stop();
+	}
+{code}
+
+(3) Install and setup graphite on your system. Example installation for Mac (beware that this is only a quickstart setup!):
+
+- (1) Install homebrew: "brew":http://brew.sh/
+
+- (2) Install "Git":https://git-scm.com/ 
+
+- (3) brew install python
+
+- (4) brew install cairo
+
+- (5) brew install py2cairo
+
+- (6) pip install Django==1.5
+
+- (7) pip install "django-tagging<0.4"
+
+- (8) sudo pip install carbon
+
+- (9) pip install whisper
+
+- (10) sudo pip install graphite-web
+
+- (11) sudo pip install Twisted==11.1.0 
+
+- (12) sudo chown -R <your username>:staff /opt/graphite
+
+- (13) cp /opt/graphite/conf/carbon.conf{.example,}
+
+- (14) cp /opt/graphite/conf/storage-schemas.conf{.example,}
+
+- (15) cd /opt/graphite/webapp/graphite
+
+- (16) cp local_settings.py{.example,}
+
+- (17) python manage.py syncdb
+
+- (18) python /opt/graphite/bin/carbon-cache.py start
+
+- (19) python /opt/graphite/bin/run-graphite-devel-server.py /opt/graphite
+
+- (20) Go to http://localhost:8080
+
+* (18) and (19) have to be executed if the mac has been restarted 
+
+(4) Now start your tomcat server configured like mentioned in the previous chapter.
+
+!wicket_metrics_graphite.png!

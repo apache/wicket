@@ -1,82 +1,101 @@
 
 
-In chapter 6 we have seen how Wicket uses serialization to store page instances. When an object is serialized, all its referenced objects are recursively serialized. For a page this means that all its children components, their related models as well as the model objects inside them will be serialized. 
-For model objects this could be a serious issue for (at least) two main reasons:
+Models that implement the interface @org.apache.wicket.model.IChainingModel@ can be used to build a chain of models. These kinds of models are able to recognize whether their model object is itself an implementation of IModel and if so, they will call getObject on the wrapped model and the returned value will be the actual model object. In this way we can combine the action of an arbitrary number of models, making exactly a chain of models. Chaining models allows to combine different data persistence strategies, similarly to what we do with chains of "I/O streams.":http://java.sun.com/developer/technicalArticles/Streams/ProgIOStreams To see model chaining in action we will build a page that implements the List/Detail View pattern, where we have a drop-down list of Person objects and a form to display and edit the data of the current selected Person.
 
-# The model object could be a very large instance, hence serialization would become very expensive in terms of time and memory.
-# We simply may not be able to use a serializable object as model object. In paragraphs 1.4 and 9.2 we stated that Wicket allows us to use a POJO as backing object, but "POJOs":http://en.wikipedia.org/wiki/Plain_Old_Java_Object#Definition are ordinary objects with no prespecified interface, annotation or superclass, hence they are not required to implement the standard Serializable interface.
+The example page will look like this:
 
-To cope with these problems IModel extends another interface called IDetachable.
+!model-chaining.png!
 
-!detachable-models.png!
+What we want to do in this example is to chain the model of the DropDownChoice (which contains the selected Person) with the model of the Form. In this way the Form will work with the selected Person as backing object. The DropDownChoice component can be configured to automatically update its model each time we change the selected item on the client side. All we have to do is to override method wantOnSelectionChangedNotifications to make it return true. In practice, when this method returns true, DropDownChoice will submit its value every time JavaScript event onChange occurs, and its model will be consequently updated. To leverage this functionality, DropDownChoice doesn't need to be inside a form.
 
-This interface provides a method called detach() which is invoked by Wicket at the end of web request processing when data model is no more needed but before serialization occurs. Overriding this method we can clean any reference to data object keeping just the information needed to retrieve it later (for example the id of the table row where our data are stored). In this way we can avoid the serialization of the object wrapped into the model overcoming both the problem with non-serializable objects and the one with large data objects.
+The following is the resulting markup of the example page:
 
-Since IModel inherits from IDetachable, every model of Wicket is “detachable”, although not all of them implement a detaching policy (like the Model class). 
-Usually detaching operations are strictly dependent on the persistence technology adopted for model objects (like a relational db, a NoSQL db, a queue, etc), so it's not unusual to write a custom detachable model suited for the persistence technology chosen for a given project. To ease this task Wicket provides abstract model LoadableDetachableModel. This class internally holds a transient reference to a model object which is initialized the first time getObject()is called to precess a request. The concrete data loading is delegated to abstract method T load(). The reference to a model object is automatically set to null at the end of the request by the detach() method.
+{code:html}
+...
+<body>
+	List of persons <select wicket:id="persons"></select> <br/>
+	<br/>
+	<form wicket:id="form">		
+		<div style="display: table;">
+			<div style="display: table-row;">
+				<div style="display: table-cell;">Name: </div>
+				<div style="display: table-cell;">
+					<input type="text" wicket:id="name"/> 
+				</div>	
+			</div>
+			<div style="display: table-row;">
+				<div style="display: table-cell;">Surname: </div>
+				<div style="display: table-cell;">
+									<input type="text" wicket:id="surname"/>
+								</div>	
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell;">Address: </div>
+								<div style="display: table-cell;">
+									<input type="text" wicket:id="address"/>
+								</div>	
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell;">Email: </div>
+								<div style="display: table-cell;">
+									<input type="text" wicket:id="email"/>
+								</div>
+							</div>
+						</div>	
+						<input type="submit" value="Save"/>
+					</form>
+				</body>				
+{code}
 
-The following class diagram summarizes the methods defined inside LoadableDetachableModel.
-
-!loadable-detachable-model.png!
-
-onDetach and onAttach can be overridden in order to obtain further control over the detaching procedure.
-
-Now as example of a possible use of LoadableDetachableModel, we will build a model designed to work with entities managed via "JPA.":http://en.wikipedia.org/wiki/Java_Persistence_API To understand the following code a basic knowledge of JPA is required even if we won't go into the detail of this standard.
-
-{warning}
-The following model is provided for example purposes only and is not intended to be used in production environment. Important aspects such as transaction management are not taken into account and you should rework the code before considering to use it.
-{warning}
+The initialization code for DropDownChoice is the following:
 
 {code}
-public class JpaLoadableModel<T> extends LoadableDetachableModel<T> {
+Model<Person> listModel = new Model<Person>();
+ChoiceRenderer<Person> personRender = new ChoiceRenderer<Person>("fullName");
+personsList = new DropDownChoice<Person>("persons", listModel, loadPersons(), personRender){
+		
+		@Override
+		protected boolean wantOnSelectionChangedNotifications() {
+			return true;
+		}
+		
+};
+{code}
+
+As choice render we have used the basic implementation provided with the org.apache.wicket .markup.html.form.ChoiceRenderer class that we have seen in the previous paragraph. loadPersons() is just an utility method which generates a list of Person instances. The model for DropDownChoice is a simple instance of the Model class.
+
+Here is the whole code of the page (except for the loadPersons() method):
+
+{code}
+public class PersonListDetails extends WebPage {
+  private Form form;
+  private DropDownChoice<Person> personsList;
   
-  private EntityManagerFactory entityManagerFactory;
-  private Class<T> entityClass;
-  private Serializable identifier;
-  private List<Object> constructorParams;
-  
-  public JpaLoadableModel(EntityManagerFactory entityManagerFactory, T entity) {
-     
-	super();
-     
-	PersistenceUnitUtil util = entityManagerFactory.getPersistenceUnitUtil();
-	      
-		this.entityManagerFactory = entityManagerFactory;
-	    this.entityClass = (Class<T>) entity.getClass();
-	    this.identifier = (Serializable) util.getIdentifier(entity);
+  public PersonListDetails(){
+    Model<Person> listModel = new Model<Person>();
+    ChoiceRenderer<Person> personRender = new ChoiceRenderer<Person>("fullName");
+    
+    personsList = new DropDownChoice<Person>("persons", listModel, loadPersons(),
+                                                         personRender){
+      @Override
+      protected boolean wantOnSelectionChangedNotifications() {
+        return true;
+      }
+	    };    
 
-	    setObject(entity);
-	}
+	    add(personsList);
 
-	@Override
-	protected T load() {
-	   T entity = null;
+	    form = new Form("form", new CompoundPropertyModel<Person>(listModel));    
+	    form.add(new TextField("name"));
+	    form.add(new TextField("surname"));
+	    form.add(new TextField("address"));
+	    form.add(new TextField("email"));
 
-	   if(identifier != null) {  
-	       EntityManager entityManager = entityManagerFactory.createEntityManager();
-	       entity = entityManager.find(entityClass, identifier);
-	     }
-	     return entity;
-	   }
-
-	@Override
-	protected void onDetach() {
-	   super.onDetach();
-
-	     T entity = getObject();
-	     PersistenceUnitUtil persistenceUtil = entityManagerFactory.getPersistenceUnitUtil();
-
-	     if(entity == null) return;
-
-	     identifier = (Serializable) persistenceUtil.getIdentifier(entity);    
+	    add(form);
 	  }
+	       //loadPersons()
+	       //...
 	}
 {code}
 
-The constructor of the model takes as input two parameters: an implementation of the JPA interface  javax.persistence.EntityManagerFactory to manage JPA entities and the entity that must be handled by this model. Inside its constructor the model saves the class of the entity and its id (which could be null if the entity has not been persisted yet). These two informations are required to retrieve the entity at a later time and are used by the load method.
-
-onDetach is responsible for updating the entity id before detachment occurs. The id can change the first time an entity is persisted (JPA generates a new id and assigns it to the entity). Please note that this model is not responsible for saving any changes occurred to the entity object before it is detached. If we don't want to loose these changes we must explicitly persist the entity before the detaching phase occurs.
-
-{warning}
-Since the model of this example holds a reference to the EntityManager Factory, the implementation in use must be serializable.
-{warning}
+The two models work together as a pipeline where the output of method getObject of Model is the model object of CompoundPropertyModel. As we have seen, model chaining allows us to combine the actions of two or more models without creating new custom implementations.

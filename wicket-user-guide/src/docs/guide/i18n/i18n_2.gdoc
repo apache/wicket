@@ -81,10 +81,10 @@ Along with this file we can also find a bundle for German (WicketApplication_de.
 The label displaying the greeting message has a custom read-only model which returns the message with method getString. The initialization code for this label is this:
 
 {code}
-AbstractReadOnlyModel<String> model = new AbstractReadOnlyModel<String>() {			
+IModel<String> model = new AbstractReadOnlyModel<String>() {
 			@Override
 			public String getObject() {
-				return getString("greetingMessage");			
+				return getString("greetingMessage");
 			}
 };
 

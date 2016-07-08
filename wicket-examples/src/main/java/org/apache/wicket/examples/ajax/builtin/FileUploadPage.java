@@ -26,7 +26,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -58,9 +57,6 @@ public class FileUploadPage extends BasePage
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-			 */
 			@Override
 			protected void onSubmit()
 			{
@@ -82,22 +78,13 @@ public class FileUploadPage extends BasePage
 		add(form);
 
 		// create a textfield to demo non-file content
-		form.add(text = new TextField<>("text", new Model<String>()));
+		form.add(text = new TextField<>("text", Model.of()));
 		text.add(StringValidator.minimumLength(2));
 
 		// create the file upload field
 		form.add(file = new FileUploadField("file"));
 
-		form.add(new Label("max", new AbstractReadOnlyModel<String>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getObject()
-			{
-				return form.getMaxSize().toString();
-			}
-		}));
+		form.add(new Label("max", form::getMaxSize));
 
 		form.add(new UploadProgressBar("progress", form, file));
 
@@ -107,7 +94,7 @@ public class FileUploadPage extends BasePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				info("This request was processed using AJAX");
 
@@ -116,7 +103,7 @@ public class FileUploadPage extends BasePage
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				// update feedback to display errors
 				target.add(feedback);

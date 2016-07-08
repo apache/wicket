@@ -17,9 +17,9 @@
 package org.apache.wicket.extensions.markup.html.repeater.tree;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
@@ -109,7 +109,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * Factory method for the wrapped {@link DataTable}.
 	 * 
 	 * Note: If overwritten, the DataTable's row items have to output their markupId, or
-	 * {@link #updateNode(Object, IPartialPageRequestHandler)} will fail.
+	 * {@link #updateNode(Object, Optional)} will fail.
 	 * 
 	 * @param id
 	 * @param columns
@@ -171,23 +171,19 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * For updating of a single branch the whole table is added to the ART.
 	 */
 	@Override
-	public void updateBranch(T node, IPartialPageRequestHandler target)
+	public void updateBranch(T node, Optional<? extends IPartialPageRequestHandler> handler)
 	{
-		if (target != null)
-		{
-			// TableTree always outputs markupId
-			target.add(this);
-		}
+		// TableTree always outputs markupId
+		handler.ifPresent(target -> target.add(this));
 	}
 
 	/**
 	 * For an update of a node the complete row item is added to the ART.
 	 */
 	@Override
-	public void updateNode(T t, final IPartialPageRequestHandler target)
+	public void updateNode(T t, final Optional<? extends IPartialPageRequestHandler> targetOptional)
 	{
-		if (target != null)
-		{
+		targetOptional.ifPresent(target -> {
 			final IModel<T> model = getProvider().model(t);
 			visitChildren(Item.class, new IVisitor<Item<T>, Void>()
 			{
@@ -207,7 +203,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 				}
 			});
 			model.detach();
-		}
+		});
 	}
 
 	/**

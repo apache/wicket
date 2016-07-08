@@ -27,6 +27,7 @@ import org.apache.wicket.Component;
  * 
  * @author Eelco Hillenius
  */
+@FunctionalInterface
 public interface IComponentInstantiationListener
 {
 	/**

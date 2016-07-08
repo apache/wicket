@@ -1,22 +1,30 @@
 
 
-Like many people new to Wicket, you may need a little time to fully understand the power and the advantages of using models. Taking your first steps with Wicket you may be tempted to pass row objects to your components instead of using models:
+Sometimes our custom components may need to use more than a single model to work properly. In such a case we must manually detach the additional models used by our components. In order to do this we can overwrite the Component's onDetach method that is called at the end of the current request. The following is the generic code of a component that uses two models:
 
 {code}
 /**
  * 
- * NOT TO DO: passing row objects to components instead of using models!
+ * fooModel is used as main model while beeModel must be manually detached
  *
  */
-public class CustomComponent extends Component{
-	private FooBean fooBean;
+public class ComponetTwoModels extends Component{
 
-	public CustomComponent(String id, FooBean fooBean) {
-		super(id);
-		this.fooBean = fooBean;
+	private IModel<Bee> beeModel;
+
+	public ComponetTwoModels(String id, IModel<Foo> fooModel, IModel<Bee> beeModel) {
+		super(id, fooModel);
+		this.beeModel = beeModel;
 	}
-	//...some other ugly code :)...
+
+	@Override
+	public void onDetach() {
+               if(beeModel != null)
+	   beeModel.detach();
+             
+              super.onDetach();
+	}
 }
 {code}
 
-That's a bad practice and you must avoid it. Using models we do not only decouple our components from the data source, but we can also relay on them (if they are dynamic) to work with the most up-to-date version of our model object. If we decide to bypass models we lose all these advantages and we force model objects to be serialized.
+When we overwrite onDetach we must call the super class implementation of this method, usually as last line in our custom implementation.

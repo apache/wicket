@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -34,9 +35,9 @@ import org.apache.wicket.util.visit.IVisitor;
  * <pre>
  *    &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
  *      ...
- *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
+ *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;/&gt;choice 1
  *      ...
- *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
+ *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;/&gt;choice 2
  *      ...
  *    &lt;/span&gt;
  * </pre>
@@ -47,7 +48,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * @param <T>
  *            The model object type
  */
-public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
+public class RadioGroup<T> extends FormComponent<T> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -167,7 +168,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	 * Called when a selection changes.
 	 */
 	@Override
-	public final void onSelectionChanged()
+	public final void onRequest()
 	{
 		convertInput();
 		updateModel();

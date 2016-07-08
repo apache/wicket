@@ -57,9 +57,6 @@ final class Count implements IClusterable
 		count--;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

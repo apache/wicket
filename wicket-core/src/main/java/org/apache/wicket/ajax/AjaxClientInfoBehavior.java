@@ -19,6 +19,7 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.pages.BrowserInfoForm;
@@ -26,6 +27,7 @@ import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
@@ -36,6 +38,8 @@ import org.apache.wicket.util.time.Duration;
  */
 public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor.
 	 *
@@ -47,9 +51,9 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	}
 
 	/**
-	 * Constructor.
-	 *
-	 * Auto fires after {@code duration}.
+	 * Constructor. Auto fires after {@code duration}.
+	 * 
+	 * @param duration the duration of the client info behavior
 	 */
 	public AjaxClientInfoBehavior(Duration duration)
 	{
@@ -132,5 +136,30 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 		super.renderHead(component, response);
 
 		response.render(JavaScriptHeaderItem.forReference(BrowserInfoForm.JS));
+	}
+
+	/**
+	 * Creates an {@link AjaxClientInfoBehavior} based on lambda expressions
+	 *
+	 * @param onClientInfo
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link WebClientInfo}
+	 * @return the {@link AjaxClientInfoBehavior}
+	 */
+	public static AjaxClientInfoBehavior onClientInfo(WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
+	{
+		Args.notNull(onClientInfo, "onClientInfo");
+
+		return new AjaxClientInfoBehavior()
+		{
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onClientInfo(AjaxRequestTarget target, WebClientInfo clientInfo)
+			{
+				onClientInfo.accept(target, clientInfo);
+			}
+		};
 	}
 }

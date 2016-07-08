@@ -88,7 +88,7 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 					throws Exception
 				{
 					CharSequence result;
-					if (getRequestCycle().find(AjaxRequestTarget.class) != null)
+					if (getRequestCycle().find(AjaxRequestTarget.class).isPresent())
 					{
 						result = "ajax request";
 					}

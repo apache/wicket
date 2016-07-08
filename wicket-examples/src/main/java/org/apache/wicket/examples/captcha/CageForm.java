@@ -41,7 +41,7 @@ public class CageForm<T> extends AbstractCaptchaForm<T>
 	}
 
 	@Override
-	protected CaptchaImageResource createCaptchImageResource()
+	protected CaptchaImageResource createCaptchaImageResource()
 	{
 		return new CaptchaImageResource()
 		{

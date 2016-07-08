@@ -67,17 +67,17 @@ The standard implementation of @AjaxRequestTarget@ used by Wicket is class @org.
 
 {code}
 setAjaxRequestTargetProvider(
-		IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
+		Function<Page, AjaxRequestTarget> ajaxRequestTargetProvider)
 {code}
 
-The provider is an implementation of interface @org.apache.wicket.util.IContextProvider@, hence to use custom implementations of @AjaxRequestTarget@ we must register a custom provider that returns the desired implementation: 
+The provider is an implementation of interface @java.util.function.Function@, hence to use custom implementations of @AjaxRequestTarget@ we must register a custom provider that returns the desired implementation:
 
 {code}
 private static class MyCustomAjaxRequestTargetProvider implements
-		IContextProvider<AjaxRequestTarget, Page>
+		Function<Page, AjaxRequestTarget>
 	{
 		@Override
-		public AjaxRequestTarget get(Page page)
+		public AjaxRequestTarget apply(Page page)
 		{
 			return new MyCustomAjaxRequestTarget();
 		}

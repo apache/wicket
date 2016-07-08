@@ -39,7 +39,7 @@ public class ButtonPage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()

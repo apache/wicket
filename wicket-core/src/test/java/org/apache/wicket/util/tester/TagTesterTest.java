@@ -21,6 +21,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,12 +44,26 @@ public class TagTesterTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5874
 	 */
 	@Test
-	public void getTagTestedForNonClosedTag()
+	public void getTagTesterForNonClosedTag()
 	{
 		TagTester tester = TagTester.createTagByAttribute(NON_CLOSED_INPUT, "wicket:id", "wicketId");
 		assertThat(tester, is(notNullValue()));
 
 		String type = tester.getAttribute("type");
+		assertThat(type, is(equalTo("text")));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6172
+	 */
+	@Test
+	public void getTagTestersForNonClosedTag()
+	{
+		List<TagTester> testers = TagTester.createTagsByAttribute(NON_CLOSED_INPUT, "wicket:id", "wicketId", false);
+		assertThat(testers, is(notNullValue()));
+		assertThat(testers.size(), is(1));
+
+		String type = testers.get(0).getAttribute("type");
 		assertThat(type, is(equalTo("text")));
 	}
 
@@ -313,5 +329,15 @@ public class TagTesterTest extends Assert
 		// Check that getValue also returns tags if the content of a tag is containing tags
 		TagTester tagTester2 = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertEquals(tagTester.getMarkup(), tagTester2.getValue());
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6173
+	 */
+	@Test
+	public void valueFromTagsByAttribute()
+	{
+		TagTester tagTester = TagTester.createTagsByAttribute(MARKUP_1, "id", "test2");
+		assertEquals("mock", tagTester.getValue());
 	}
 }

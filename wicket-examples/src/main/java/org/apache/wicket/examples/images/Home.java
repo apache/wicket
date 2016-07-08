@@ -94,8 +94,7 @@ public final class Home extends WicketExamplePage
 		add(new Image("imageModelResourceReference", new Model<>(RESOURCE_REF)));
 
 		// image loaded as resource via model.
-		add(new Image("imageModelResource", new Model<CircleDynamicImageResource>(
-			new CircleDynamicImageResource(100, 100))));
+		add(new Image("imageModelResource", new Model<>(new CircleDynamicImageResource(100, 100))));
 
 		// responsive images (only for img tag)
 		// the first package resource reference is used for the src attribute all following for the

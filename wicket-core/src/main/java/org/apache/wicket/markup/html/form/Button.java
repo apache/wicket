@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A form button.
@@ -233,5 +236,66 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	@Override
 	public void onAfterSubmit()
 	{
+	}
+	
+	/**
+	 * Creates a {@link Button} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the button
+	 * @param onSubmit
+	 *            the {@link WicketConsumer} which accepts the {@link Button}
+	 * @return the {@link Button}
+	 */
+	public static Button onSubmit(String id, WicketConsumer<Button> onSubmit)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+
+		return new Button(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSubmit()
+			{
+				onSubmit.accept(this);
+			}
+		};
+	}
+
+	/**
+	 * Creates a {@link Button} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the button
+	 * @param onSubmit
+	 *            the {@link WicketConsumer} which accepts the {@link Button}
+	 * @param onError
+	 *            the {@link WicketConsumer} which accepts the {@link Button}
+	 * @return the {@link AjaxButton}
+	 */
+	public static Button onSubmit(String id,
+	                                    WicketConsumer<Button> onSubmit,
+	                                    WicketConsumer<Button> onError)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+		Args.notNull(onError, "onError");
+
+		return new Button(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSubmit()
+			{
+				onSubmit.accept(this);
+			}
+
+			@Override
+			public void onError()
+			{
+				onError.accept(this);
+			}
+		};
 	}
 }

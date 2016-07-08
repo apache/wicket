@@ -69,14 +69,15 @@ urls:
 modelsforms:
   title: Wicket models and forms
   modelsforms_1: What is a model?
-  modelsforms_2: Models and JavaBeans
-  modelsforms_3: Wicket forms
-  modelsforms_4: Component DropDownChoice
-  modelsforms_5: Model chaining
-  modelsforms_6: Detachable models
-  modelsforms_7: Using more than one model in a component
-  modelsforms_8: Use models!
-  modelsforms_9: Summary
+  modelsforms_2: IModel and Lambda  
+  modelsforms_3: Models and JavaBeans
+  modelsforms_4: Wicket forms
+  modelsforms_5: Component DropDownChoice
+  modelsforms_6: Model chaining
+  modelsforms_7: Detachable models
+  modelsforms_8: Using more than one model in a component
+  modelsforms_9: Use models!
+  modelsforms_10: Summary
 forms2:
   title: Wicket forms in detail
   forms2_1: Default form processing
@@ -154,7 +155,8 @@ ajax:
   ajax_4: Using an activity indicator
   ajax_5: AJAX request attributes and call listeners
   ajax_6: Creating custom AJAX call listener
-  ajax_7: Summary
+  ajax_7: Stateless AJAX components/behaviors
+  ajax_8: Summary
 jee:
   title: Integration with enterprise containers
   jee_1: Integrating Wicket with EJB
@@ -210,6 +212,15 @@ bestpractices:
 internals:
   title: Wicket Internals
   pagestoring: Page storing
+  autocomponents: Markup parsing and Autocomponents
+lambdas:
+  title: Lambda Expressions
+monitoring:
+  title: Wicket Metrics Monitoring (Experimental)
+  monitoring_1: Example setup
+  monitoring_2: Visualization with Graphite
+  monitoring_3: Measured data
+  monitoring_4: Write own measurements
 maven:
   title: Working with Maven (Appendix)
   maven_1: Switching Wicket to DEPLOYMENT mode

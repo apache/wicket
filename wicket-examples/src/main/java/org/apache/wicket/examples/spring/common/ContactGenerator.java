@@ -76,7 +76,7 @@ public class ContactGenerator
 	}
 
 	/**
-	 * generats <code>count</code> number contacts and puts them into <code>collection</code>
+	 * generates <code>count</code> number contacts and puts them into <code>collection</code>
 	 * collection
 	 * 
 	 * @param collection

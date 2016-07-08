@@ -73,9 +73,6 @@ public class BodyFrame extends WebPage
 		return frameTarget;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
 	@Override
 	public boolean isVersioned()
 	{

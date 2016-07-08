@@ -84,9 +84,6 @@ public final class SignInSession extends AuthenticatedWebSession
 		this.user = user;
 	}
 
-	/**
-	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#getRoles()
-	 */
 	@Override
 	public Roles getRoles()
 	{

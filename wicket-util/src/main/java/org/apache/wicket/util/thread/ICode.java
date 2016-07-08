@@ -24,6 +24,7 @@ import org.slf4j.Logger;
  * @author Jonathan Locke
  * @since 1.2.6
  */
+@FunctionalInterface
 public interface ICode
 {
 	/**

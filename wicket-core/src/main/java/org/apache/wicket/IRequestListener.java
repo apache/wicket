@@ -17,20 +17,30 @@
 package org.apache.wicket;
 
 
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
- * Base interface for all interfaces that listen for requests from the client browser. All
- * sub-interfaces of this interface must have a single method which takes no arguments.
- * <p>
- * New listener interfaces must be registered with Wicket by constructing a
- * {@link RequestListenerInterface} object for the given interface class. The best way to do this is
- * to create a public static final constant field in your request listener interface. Doing this
- * will cause the interface to automatically register whenever it is used. For example, see
- * {@link org.apache.wicket.IRedirectListener#INTERFACE}.
+ * Interface to be implemented by {@link Component}s or {@link org.apache.wicket.behavior.Behavior}s
+ * that listen for requests from the client browser.
  * 
  * @author Jonathan Locke
  */
 public interface IRequestListener extends IClusterable
 {
+
+	/**
+	 * Does invocation of this listener render the page. 
+	 * 
+	 * @return default {@code true}, i.e. a {@link RenderPageRequestHandler} is schedules after invocation 
+	 */
+	default boolean rendersPage()
+	{
+		return true;
+	}
+	
+	/**
+	 * Called when a request is received.
+	 */
+	void onRequest();
 }

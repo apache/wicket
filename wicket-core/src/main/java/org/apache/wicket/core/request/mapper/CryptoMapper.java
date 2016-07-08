@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  *
  * <p>
  * <strong>Important</strong>: for better security it is recommended to use
- * {@link org.apache.wicket.core.request.mapper.CryptoMapper#CryptoMapper(org.apache.wicket.request.IRequestMapper, org.apache.wicket.util.Supplier)}
+ * {@link org.apache.wicket.core.request.mapper.CryptoMapper#CryptoMapper(IRequestMapper, Supplier)}
  * constructor with {@link org.apache.wicket.util.crypt.ICrypt} implementation that generates a
  * separate key for each user. {@link org.apache.wicket.core.util.crypt.KeyInSessionSunJceCryptFactory} provides such an
  * implementation that stores the key in the HTTP session.
@@ -500,7 +500,7 @@ public class CryptoMapper implements IRequestMapperDelegate
 		int segNo = 1;
 		for (; segNo < encryptedNumberOfSegments; segNo++)
 		{
-			if (segNo > originalNumberOfSegments)
+			if (segNo >= originalNumberOfSegments)
 			{
 				break;
 			}

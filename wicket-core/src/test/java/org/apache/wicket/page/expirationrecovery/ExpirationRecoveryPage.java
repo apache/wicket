@@ -75,9 +75,8 @@ public class ExpirationRecoveryPage extends WebPage
 		return new AjaxSubmitLink(id)
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
-				super.onSubmit(target, form);
 				ajaxSubmitLinkSubmitted.set(true);
 			}
 

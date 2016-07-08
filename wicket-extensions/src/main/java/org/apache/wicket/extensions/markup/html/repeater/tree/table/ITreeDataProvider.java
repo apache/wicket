@@ -36,5 +36,5 @@ public interface ITreeDataProvider<T> extends IDataProvider<T>
 	 *            node
 	 */
 	@Override
-	public NodeModel<T> model(T node);
+	NodeModel<T> model(T node);
 }

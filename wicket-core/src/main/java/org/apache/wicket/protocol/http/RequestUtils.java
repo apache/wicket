@@ -115,7 +115,7 @@ public final class RequestUtils
 				}
 			}
 		}
-		String newpath = Strings.join("/", newcomponents.toArray(new String[newcomponents.size()]));
+		String newpath = Strings.join("/", newcomponents);
 		if (path.endsWith("/"))
 		{
 			return newpath + "/";

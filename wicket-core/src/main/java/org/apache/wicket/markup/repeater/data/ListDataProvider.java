@@ -87,30 +87,15 @@ public class ListDataProvider<T extends Serializable> implements IDataProvider<T
 		return list.subList((int)first, (int)toIndex).listIterator();
 	}
 
-	/**
-	 * @see IDataProvider#size()
-	 */
 	@Override
 	public long size()
 	{
 		return getData().size();
 	}
 
-	/**
-	 * @see IDataProvider#model(Object)
-	 */
 	@Override
 	public IModel<T> model(T object)
 	{
-		return new Model<T>(object);
+		return new Model<>(object);
 	}
-
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	@Override
-	public void detach()
-	{
-	}
-
 }

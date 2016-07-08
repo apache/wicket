@@ -31,7 +31,7 @@ public interface IPackageResourceGuard
 	 * Whether the package resource that can be reached using the provided parameters may be
 	 * accessed.
 	 * 
-	 * @param path
+	 * @param absolutePath
 	 *            The absolute path, starting from the class root (packages are separated with
 	 *            forward slashes instead of dots).
 	 * 

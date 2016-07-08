@@ -20,7 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Test cases for this object
+ * Test cases for {@link TimeOfDay}.
  * 
  * @author Jonathan Locke
  */

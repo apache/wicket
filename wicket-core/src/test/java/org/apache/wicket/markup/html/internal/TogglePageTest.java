@@ -23,6 +23,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 import org.junit.Test;
 
 
@@ -129,7 +131,16 @@ public class TogglePageTest extends WicketTestCase
 			InlineEnclosureWithAdditionalAjaxTargetPage ajaxPage = (InlineEnclosureWithAdditionalAjaxTargetPage)tester.getLastRenderedPage();
 			// WICKET-5302 - only the InlineEnclosure is in the Ajax response
 			// Label1 is inside the InlineEncosure
-			tester.assertComponentOnAjaxResponse("wicket_InlineEnclosure-0");
+			InlineEnclosure children = ajaxPage.visitChildren(InlineEnclosure.class, new IVisitor<InlineEnclosure, InlineEnclosure>()
+			{
+				@Override
+				public void component(InlineEnclosure component, IVisit<InlineEnclosure> visit)
+				{
+					visit.stop(component);					
+				}
+			});
+			
+			tester.assertComponentOnAjaxResponse(children.getId());
 			tester.assertComponentOnAjaxResponse(ajaxPage.getLabel2());
 			assertVisible(ajaxPage.getLabel1());
 			assertVisible(ajaxPage.getLabel2());

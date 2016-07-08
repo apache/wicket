@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import java.util.Optional;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -46,10 +48,10 @@ public class AjaxFallbackLinkTest extends WicketTestCase
 	{
 		private OnlyAnchorAreaAndLinkPage()
 		{
-			add(new AjaxFallbackLink("l") {
+			add(new AjaxFallbackLink<Void>("l") {
 
 				@Override
-				public void onClick(AjaxRequestTarget target)
+				public void onClick(Optional<AjaxRequestTarget> optional)
 				{
 				}
 			});

@@ -83,13 +83,7 @@ public class RedirectRequestHandler implements IRequestHandler
 	{
 		return status;
 	}
-
-	/** {@inheritDoc} */
-	public void detach(final IRequestCycle requestCycle)
-	{
-	}
-
-	/** {@inheritDoc} */
+	
 	public void respond(final IRequestCycle requestCycle)
 	{
 		final String location;

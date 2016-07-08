@@ -19,11 +19,9 @@ package org.apache.wicket.markup.html.internal;
 import java.util.Iterator;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.DequeueContext;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
@@ -302,17 +300,5 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 			throw new WicketRuntimeException(
 				"Programming error: childComponent == enclose component; endless loop");
 		}
-	}
-	
-	@Override
-	public DequeueContext newDequeueContext()
-	{
-		IMarkupFragment markup = getMarkupSourcingStrategy().getMarkup(this, null);
-		if (markup == null)
-		{
-			return null;
-		}
-
-		return new DequeueContext(markup, this, true);
 	}
 }

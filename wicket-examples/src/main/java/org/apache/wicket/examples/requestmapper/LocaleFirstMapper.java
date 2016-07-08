@@ -35,7 +35,6 @@ import org.apache.wicket.util.string.Strings;
  */
 public class LocaleFirstMapper extends AbstractComponentMapper
 {
-
 	private final IRequestMapper chain;
 
 	/**
@@ -48,9 +47,6 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 		this.chain = chain;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
 	@Override
 	public int getCompatibilityScore(Request request)
 	{
@@ -85,9 +81,6 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapRequest(org.apache.wicket.request.Request)
-	 */
 	@Override
 	public IRequestHandler mapRequest(Request request)
 	{
@@ -104,13 +97,9 @@ public class LocaleFirstMapper extends AbstractComponentMapper
 		return chain.mapRequest(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestMapper#mapHandler(org.apache.wicket.request.IRequestHandler)
-	 */
 	@Override
 	public Url mapHandler(IRequestHandler handler)
 	{
-
 		// let the chain create the url
 		Url url = chain.mapHandler(handler);
 

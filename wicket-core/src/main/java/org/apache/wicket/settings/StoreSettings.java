@@ -26,7 +26,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * An interface for settings related to the the storages where page instances are persisted -
+ * A class for settings related to the the storages where page instances are persisted -
  * {@link org.apache.wicket.pageStore.IPageStore},
  * {@link org.apache.wicket.pageStore.IDataStore} and {@link org.apache.wicket.page.IPageManager}.
  * <p>

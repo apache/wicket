@@ -47,9 +47,6 @@ public class Home extends WicketExamplePage
 		add(new BookmarkablePageLink<>("page5Link", Page5.class));
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
 	@Override
 	public boolean isVersioned()
 	{

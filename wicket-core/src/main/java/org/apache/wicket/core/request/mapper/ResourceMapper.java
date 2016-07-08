@@ -27,7 +27,6 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
-import org.apache.wicket.request.mapper.AbstractMapper;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -71,7 +70,7 @@ import org.apache.wicket.util.string.Strings;
  *
  * @author Peter Ertl
  */
-public class ResourceMapper extends AbstractMapper implements IRequestMapper
+public class ResourceMapper extends AbstractBookmarkableMapper
 {
 	// encode page parameters into url + decode page parameters from url
 	private final IPageParametersEncoder parametersEncoder;
@@ -111,9 +110,8 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 	public ResourceMapper(String path, ResourceReference resourceReference,
 		IPageParametersEncoder encoder)
 	{
-		Args.notEmpty(path, "path");
+		super(path, encoder);
 		Args.notNull(resourceReference, "resourceReference");
-		Args.notNull(encoder, "encoder");
 
 		this.resourceReference = resourceReference;
 		mountSegments = getMountSegments(path);
@@ -157,9 +155,38 @@ public class ResourceMapper extends AbstractMapper implements IRequestMapper
 	}
 
 	@Override
+	protected final UrlInfo parseRequest(final Request request) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected final Url buildUrl(final UrlInfo info) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected final boolean pageMustHaveBeenCreatedBookmarkable() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public int getCompatibilityScore(Request request)
 	{
-		return 0; // pages always have priority over resources
+		Url originalUrl = new Url(request.getUrl());
+		PageParameters parameters = extractPageParameters(request, mountSegments.length, parametersEncoder);
+		removeCachingDecoration(originalUrl, parameters);
+		Request requestWithoutDecoration = request.cloneWithUrl(originalUrl);
+
+		int score = super.getCompatibilityScore(requestWithoutDecoration);
+		if (score > 0)
+		{
+			score--; // pages always have priority over resources
+		}
+		else
+		{
+			score = -1;
+		}
+		return score;
 	}
 
 	@Override

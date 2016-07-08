@@ -27,16 +27,6 @@ import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
  */
 public class AjaxApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public AjaxApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{

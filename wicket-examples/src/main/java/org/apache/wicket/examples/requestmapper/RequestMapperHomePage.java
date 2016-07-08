@@ -19,14 +19,9 @@ package org.apache.wicket.examples.requestmapper;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-/**
- * @author mgrigorov
- */
 public class RequestMapperHomePage extends WicketExamplePage
 {
-
 	/**
-	 * 
 	 * Construct.
 	 * 
 	 * @param pageParameters

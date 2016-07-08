@@ -57,9 +57,6 @@ public class Letter implements IClusterable
 		return Character.toString(letter);
 	}
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(final Object object)
 	{
@@ -77,9 +74,6 @@ public class Letter implements IClusterable
 	static ResourceReference LETTER_RESOURCE_REFERENCE = new ResourceReference(Letter.class,
 		"letter")
 	{
-		/**
-		 * @see org.apache.wicket.request.resource.ResourceReference#getResource()
-		 */
 		@Override
 		public IResource getResource()
 		{
@@ -95,9 +89,6 @@ public class Letter implements IClusterable
 	 */
 	private static class ButtonResource implements IResource
 	{
-		/**
-		 * @see org.apache.wicket.request.resource.IResource#respond(org.apache.wicket.request.resource.IResource.Attributes)
-		 */
 		public void respond(Attributes attributes)
 		{
 			// request parameter for the resource
@@ -128,9 +119,6 @@ public class Letter implements IClusterable
 		guessed = true;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
@@ -153,9 +141,6 @@ public class Letter implements IClusterable
 		guessed = false;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

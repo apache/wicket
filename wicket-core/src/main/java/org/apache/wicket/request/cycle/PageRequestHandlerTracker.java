@@ -21,14 +21,19 @@ import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 
 /**
- * Registers and retrieves first and last IPageRequestHandler in a request cycle.
+ * Registers and retrieves first and last executed {@link IPageRequestHandler} in a request cycle.
  * Can be used to find out what is the requested page and what is the actual response page.
- *
- * <p>To use it an application needs to register it with:
+ * <p>
+ * To use it an application needs to register it with:
  *     <pre><code>
  *          application.getRequestCycleListeners().add(new PageRequestHandlerTracker());
  *     </code></pre>
- * </p>
+ * <p>
+ * The result can then be accessed at the end of each {@link RequestCycle} with:
+ *     <pre><code>
+ *          IPageRequestHandler first = PageRequestHandlerTracker.getFirstHandler(RequestCycle.get());
+ *          IPageRequestHandler last = PageRequestHandlerTracker.getLastHandler(RequestCycle.get());
+ *     </code></pre>
  *
  * @since 1.5.8
  */
@@ -49,20 +54,6 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 	{
 		super.onRequestHandlerResolved(cycle, handler);
 		registerFirstHandler(cycle,handler);
-		registerLastHandler(cycle,handler);
-	}
-
-	@Override
-	public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
-	{
-		super.onRequestHandlerResolved(cycle, handler);
-		registerLastHandler(cycle,handler);
-	}
-
-	@Override
-	public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler, Exception exception)
-	{
-		super.onExceptionRequestHandlerResolved(cycle, handler, exception);
 		registerLastHandler(cycle,handler);
 	}
 

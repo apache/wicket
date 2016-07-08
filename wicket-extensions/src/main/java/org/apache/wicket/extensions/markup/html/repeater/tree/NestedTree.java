@@ -16,14 +16,13 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.tree;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.markup.html.repeater.tree.nested.BranchItem;
 import org.apache.wicket.extensions.markup.html.repeater.tree.nested.Subtree;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -37,7 +36,6 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public abstract class NestedTree<T> extends AbstractTree<T>
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -89,7 +87,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	/**
 	 * Overridden to let the node output its markup id.
 	 * 
-	 * @see #updateNode(Object, IPartialPageRequestHandler)
+	 * @see #updateNode(Object, Optional<IPartialPageRequestHandler>)
 	 * @see Component#setOutputMarkupId(boolean)
 	 */
 	@Override
@@ -106,10 +104,9 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	 * Overridden to update the corresponding {@link BranchItem} only.
 	 */
 	@Override
-	public void updateBranch(T t, final IPartialPageRequestHandler target)
+	public void updateBranch(T t, final Optional<? extends IPartialPageRequestHandler> handler)
 	{
-		if (target != null)
-		{
+		handler.ifPresent(target -> {
 			final IModel<T> model = getProvider().model(t);
 			visitChildren(BranchItem.class, new IVisitor<BranchItem<T>, Void>()
 			{
@@ -125,17 +122,16 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 				}
 			});
 			model.detach();
-		}
+		});
 	}
 
 	/**
 	 * Overridden to update the corresponding {@link Node} only.
 	 */
 	@Override
-	public void updateNode(T node, final IPartialPageRequestHandler target)
+	public void updateNode(T node, final Optional<? extends IPartialPageRequestHandler> targetOptional)
 	{
-		if (target != null)
-		{
+		targetOptional.ifPresent(target -> {
 			final IModel<T> model = getProvider().model(node);
 			visitChildren(Node.class, new IVisitor<Node<T>, Void>()
 			{
@@ -152,10 +148,10 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 				}
 			});
 			model.detach();
-		}
+		});
 	}
 
-	private class RootsModel extends AbstractReadOnlyModel<T>
+	private class RootsModel implements IModel<T>
 	{
 		private static final long serialVersionUID = 1L;
 

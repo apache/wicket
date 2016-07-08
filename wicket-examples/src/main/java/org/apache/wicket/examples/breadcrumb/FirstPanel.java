@@ -41,9 +41,6 @@ public class FirstPanel extends BreadCrumbPanel
 		add(new BreadCrumbPanelLink("linkToSecond", this, SecondPanel.class));
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
-	 */
 	@Override
 	public IModel<String> getTitle()
 	{

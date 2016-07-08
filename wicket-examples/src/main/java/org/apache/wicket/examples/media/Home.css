@@ -16,14 +16,14 @@
  */
 video{
 	float:left;
-	height:240px;
+	height:auto;
 	width:320px;
 	margin-bottom:10px;
 	margin-right:10px;
 }
 .videoDescription{
 	float:left;
-	height:240px;
+	height:auto;
 	width:300px;
 	margin-bottom:10px;
 }

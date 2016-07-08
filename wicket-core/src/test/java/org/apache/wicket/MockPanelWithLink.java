@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.IMarkupCacheKeyProvider;
@@ -46,9 +48,9 @@ public abstract class MockPanelWithLink extends Panel
 		add(new AjaxFallbackLink<Void>("link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				MockPanelWithLink.this.onLinkClick(target);
+				MockPanelWithLink.this.onLinkClick(targetOptional.orElse(null));
 			}
 		});
 	}

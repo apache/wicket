@@ -59,4 +59,12 @@ public interface IWebSocketProcessor
 	 * @param message
 	 */
 	void onClose(int closeCode, String message);
+
+	/**
+	 * A notification after a communication error.
+	 *
+	 * @param t
+	 *      The throwable for the communication problem
+	 */
+	void onError(Throwable t);
 }

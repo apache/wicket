@@ -19,7 +19,6 @@ package org.apache.wicket.examples.authorization.pages;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -160,23 +159,18 @@ public class AnnotationsPanelsPage extends BasePage
 		outer.setOutputMarkupId(true);
 
 		outer.add(new WebMarkupContainer("test").setOutputMarkupId(true));
-		add(new AjaxLink<Void>("link")
-		{
-			@Override
-			public void onClick(AjaxRequestTarget target)
+		add(AjaxLink.onClick("link", target -> {
+			showDummy = !showDummy;
+			if (showDummy)
 			{
-				showDummy = !showDummy;
-				if (showDummy)
-				{
-					outer.replace(new WebMarkupContainer("test"));
-				}
-				else
-				{
-					outer.replace(new Test("test"));
-				}
-				target.add(outer);
+				outer.replace(new WebMarkupContainer("test"));
 			}
-		});
+			else
+			{
+				outer.replace(new Test("test"));
+			}
+			target.add(outer);
+		}));
 	}
 
 }

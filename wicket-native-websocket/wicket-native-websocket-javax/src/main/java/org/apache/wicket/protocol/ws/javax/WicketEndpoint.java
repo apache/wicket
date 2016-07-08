@@ -76,6 +76,8 @@ public class WicketEndpoint extends Endpoint
 	{
 		LOG.error("An error occurred in web socket connection with id : " + session.getId(), t);
 		super.onError(session, t);
+
+		javaxWebSocketProcessor.onError(t);
 	}
 
 	private String getApplicationName(Session session)

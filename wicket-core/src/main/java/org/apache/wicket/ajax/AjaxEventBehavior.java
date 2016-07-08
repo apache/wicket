@@ -21,13 +21,12 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -63,8 +62,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AjaxEventBehavior.class);
-
 	private static final long serialVersionUID = 1L;
 
 	private final String event;
@@ -111,9 +108,21 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @param event
 	 *      the event this behavior will be attached to
+	 * @deprecated Wicket 8 Remove this method for Wicket 8.0.0
 	 */
+	@Deprecated
 	protected void onCheckEvent(final String event)
 	{
+		if (event.startsWith("on"))
+		{
+			String shortName = event.substring(2);
+			throw new IllegalArgumentException(
+					String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+									"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
+									"names so the leading 'on' may break your application."
+							, event, shortName));
+		}
+
 	}
 
 	/**
@@ -128,16 +137,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		{
 			if (Strings.isEmpty(evt) == false)
 			{
-				if (evt.startsWith("on"))
-				{
-					String shortName = evt.substring(2);
-					// TODO Wicket 8 Change this to throw an error in the milestone/RC versions and remove it for the final version
-					LOGGER.warn("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
-							"'on' in the event name '{}'. Please use just '{}'. Wicket 8.x won't manipulate the provided event " +
-							"names so the leading 'on' may break your application."
-							, evt, shortName);
-					evt = shortName;
-				}
 				cleanedEvents.add(evt);
 			}
 		}
@@ -145,10 +144,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return Strings.join(" ", cleanedEvents);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(AjaxRequestTarget)
-	 */
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
@@ -162,4 +157,29 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 *      the current request handler
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
+
+	/**
+	 * Creates an {@link AjaxEventBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onEvent
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxEventBehavior}
+	 */
+	public static AjaxEventBehavior onEvent(String eventName, WicketConsumer<AjaxRequestTarget> onEvent)
+	{
+		Args.notNull(onEvent, "onEvent");
+
+		return new AjaxEventBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onEvent(AjaxRequestTarget target)
+			{
+				onEvent.accept(target);
+			}
+		};
+	}
 }

@@ -20,7 +20,9 @@ package org.apache.wicket.protocol.http.documentvalidation;
  * Marker interface indicating a document element.
  * 
  * @author Chris Turner
+ * @deprecated Will be removed in Wicket 9.0 together with {@link HtmlDocumentValidator}
  */
+@Deprecated
 public interface DocumentElement
 {
 }

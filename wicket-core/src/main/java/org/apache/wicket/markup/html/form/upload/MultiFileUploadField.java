@@ -34,7 +34,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
@@ -172,7 +171,18 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		this.max = max;
 		this.useMultipleAttr = useMultipleAttr;
 
-		upload = new WebComponent("upload");
+		upload = new WebComponent("upload") {
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+
+				if (!isEnabledInHierarchy())
+				{
+					onDisabled(tag);
+				}
+			}
+		};
 		upload.setOutputMarkupId(true);
 		add(upload);
 
@@ -371,14 +381,10 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	 * 
 	 * @author ivaynberg
 	 */
-	private class CaptionModel extends AbstractReadOnlyModel<String>
+	private class CaptionModel implements IModel<String>
 	{
-
 		private static final long serialVersionUID = 1L;
 
-		/**
-		 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
-		 */
 		@Override
 		public String getObject()
 		{

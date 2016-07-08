@@ -34,10 +34,10 @@ public class AjaxButtonTest extends WicketTestCase
 		tester.startPage(HomePage.class);
 		// assert rendered page class
 		tester.assertRenderedPage(HomePage.class);
-		// assert button type unmodified, WICKET-5993W
+		// assert button type unmodified, WICKET-5993
 		assertEquals("image", tester.getTagById("cancel3").getAttribute("type"));
-		// assert button type for AjaxButtons, WICKET-5594
-		assertEquals("button", tester.getTagById("submit2").getAttribute("type"));
+		// assert button type unmodified for AjaxButtons, WICKET-6139
+		assertEquals("submit", tester.getTagById("submit2").getAttribute("type"));
 		// assert rendered label component
 		tester.assertLabel("message",
 			"If you see this message wicket is properly configured and running");

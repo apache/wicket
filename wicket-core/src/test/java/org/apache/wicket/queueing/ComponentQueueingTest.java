@@ -572,14 +572,14 @@ public class ComponentQueueingTest extends WicketTestCase
 		// A is visible, enclosure renders
 
 		assertEquals(
-				"<div wicket:enclosure=\"a\" id=\"wicket__InlineEnclosure_01\"><div wicket:id=\"a\"></div><div wicket:id=\"b\"></div></div>",
+				"<div wicket:enclosure=\"a\" id=\"wicket__InlineEnclosure_20793898271\"><div wicket:id=\"a\"></div><div wicket:id=\"b\"></div></div>",
 				tester.getLastResponseAsString());
 
 		// A is not visible, inline enclosure render only itself (the placeholder tag)
 
 		a.setVisible(false);
 		tester.startPage(p);
-		assertEquals("<div id=\"wicket__InlineEnclosure_01\" style=\"display:none\"></div>", tester.getLastResponseAsString());
+		assertEquals("<div id=\"wicket__InlineEnclosure_20793898271\" style=\"display:none\"></div>", tester.getLastResponseAsString());
 	}
 	
 	/**
@@ -793,6 +793,40 @@ public class ComponentQueueingTest extends WicketTestCase
 		container.add(new WebMarkupContainer("inner"));
 		
 		page.add(container);
+		
+		tester.startPage(page);	
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6088
+	 */
+	@Test
+	public void queueComponentInsideWcAndEnclosure()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup(" <div wicket:id=\"container\">\n" +
+			"    <div wicket:enclosure=\"child\">\n" +
+			"      <p wicket:id=\"child\">1</p>\n" +
+			"      <a wicket:id=\"child2\">2</a>\n" +
+			"    </div>\n" +
+			"  </div>");
+		
+		WebMarkupContainer container = new WebMarkupContainer("container");
+
+		container.queue(new Label("child")
+		{
+			@Override
+			protected void onInitialize()
+			{
+				super.onInitialize();
+
+				setDefaultModel(Model.of("test"));
+			}
+		});
+		
+	    container.queue(new WebMarkupContainer("child2").setVisible(false));
+
+	    page.queue(container);
 		
 		tester.startPage(page);	
 	}

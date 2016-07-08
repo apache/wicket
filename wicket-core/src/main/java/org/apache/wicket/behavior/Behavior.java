@@ -16,16 +16,19 @@
  */
 package org.apache.wicket.behavior;
 
-import java.lang.reflect.Method;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
+import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Behaviors are kind of plug-ins for Components. They allow functionality to be added to a
@@ -38,7 +41,7 @@ import org.apache.wicket.util.io.IClusterable;
  * You also cannot modify a components model with a behavior.
  * </p>
  * 
- * @see org.apache.wicket.behavior.IBehaviorListener
+ * @see IRequestListener
  * @see org.apache.wicket.markup.html.IHeaderContributor
  * @see org.apache.wicket.behavior.AbstractAjaxBehavior
  * @see org.apache.wicket.AttributeModifier
@@ -149,7 +152,7 @@ public abstract class Behavior
 	 */
 	public boolean getStatelessHint(Component component)
 	{
-		if (this instanceof IBehaviorListener)
+		if (this instanceof IRequestListener)
 		{
 			// this behavior implements a callback interface, so it cannot be stateless
 			return false;
@@ -199,22 +202,20 @@ public abstract class Behavior
 	}
 
 	/**
-	 * Checks whether or not a listener interface can be invoked on this behavior. For further
-	 * information please read the javadoc on {@link Component#canCallListenerInterface(Method)},
+	 * Checks whether or not an {@link IRequestListener} can be invoked on this behavior. For further
+	 * information please read the javadoc on {@link Component#canCallListenerInterface()},
 	 * this method has the same semantics.
 	 * 
-	 * WARNING: Read the javadoc of {@link Component#canCallListenerInterface(Method)} for important
+	 * WARNING: Read the javadoc of {@link Component#canCallListenerInterface()} for important
 	 * security-related information.
 	 * 
 	 * @param component
 	 *            component this behavior is attached to
-	 * @param method
-	 *            listener method being invoked
 	 * @return {@literal true} iff the listener method can be invoked
 	 */
-	public boolean canCallListenerInterface(Component component, Method method)
+	public boolean canCallListenerInterface(Component component)
 	{
-		return isEnabled(component) && component.canCallListenerInterface(method);
+		return isEnabled(component) && component.canCallListenerInterface();
 	}
 
 
@@ -262,4 +263,68 @@ public abstract class Behavior
 	public void onRemove(Component component)
 	{
 	}
+
+	/**
+	 * Creates a {@link Behavior} that uses the given {@link WicketConsumer consumer}
+	 * to do something with the component's tag.
+	 *
+	 * <p>
+	 *     Usage:<br/>
+	 *     <code>component.add(onTag(tag -> tag.put(key, value)));</code>
+	 * </p>
+	 *
+	 * @param onTagConsumer
+	 *              the {@link WicketConsumer} that accepts the {@link ComponentTag}
+	 * @return The created behavior
+	 */
+	public static Behavior onTag(WicketConsumer<ComponentTag> onTagConsumer)
+	{
+		Args.notNull(onTagConsumer, "onTagConsumer");
+
+		return new Behavior()
+		{
+			@Override
+			public void onComponentTag(Component component, ComponentTag tag)
+			{
+				onTagConsumer.accept(tag);
+			}
+		};
+	}
+
+	/**
+	 * Creates a {@link Behavior} that uses the given {@link WicketFunction function}
+	 * to do something with a component's attribute.
+	 *
+	 * <p>
+	 *     Usage:<br/>
+	 *     <code>component.add(onAttribute("class",
+	 *              currentValue -> condition(currentValue) ? "positive" : "negative"));</code>
+	 * </p>
+	 *
+	 * @param name
+	 *              the name of the attribute to manipulate
+	 * @param onAttribute
+	 *              the {@link WicketFunction} that accepts the old value of the attribute
+	 *              and returns a new value
+	 * @return The created behavior
+	 */
+	public static Behavior onAttribute(String name, WicketFunction<String, CharSequence> onAttribute)
+	{
+		Args.notEmpty(name, "name");
+		Args.notNull(onAttribute, "onAttribute");
+
+		return new Behavior()
+		{
+			@Override
+			public void onComponentTag(Component component, ComponentTag tag)
+			{
+				if (tag.getType() != TagType.CLOSE)
+				{
+					String oldValue = tag.getAttribute(name);
+					tag.put(name, onAttribute.apply(oldValue));
+				}
+			}
+		};
+	}
+
 }

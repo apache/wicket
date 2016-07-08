@@ -17,7 +17,6 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -58,7 +57,6 @@ import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.DefaultMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -456,7 +454,7 @@ public abstract class Component
 	private transient short requestFlags = 0;
 
 	/** Component id. */
-	private String id;
+	private final String id;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -680,13 +678,15 @@ public abstract class Component
 	 */
 	public Component(final String id, final IModel<?> model)
 	{
-		setId(id);
+		checkId(id);
+		this.id = id;
 
 		init();
 
-		getApplication().getComponentInstantiationListeners().onInstantiation(this);
+		Application application = getApplication();
+		application.getComponentInstantiationListeners().onInstantiation(this);
 
-		final DebugSettings debugSettings = getApplication().getDebugSettings();
+		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
@@ -850,7 +850,7 @@ public abstract class Component
 	 * 
 	 * @return {@code true} if component has been initialized
 	 */
-	final boolean isInitialized()
+	public final boolean isInitialized()
 	{
 		return getFlag(FLAG_INITIALIZED);
 	}
@@ -932,9 +932,6 @@ public abstract class Component
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void internalBeforeRender()
 	{
 		configure();
@@ -944,10 +941,11 @@ public abstract class Component
 		{
 			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
-			getApplication().getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
+			Application application = getApplication();
+			application.getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
 
 			onBeforeRender();
-			getApplication().getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
+			application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
 			if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
 			{
@@ -2066,13 +2064,9 @@ public abstract class Component
 	 */
 	public final boolean isStateless()
 	{
-		if (
-		// the component is either invisible or disabled
-		(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
-
-		// and it can't call listener interfaces
-			canCallListenerInterface(null) == false)
+		if ((isVisibleInHierarchy() && isEnabledInHierarchy()) == false && canCallListenerInterface() == false)
 		{
+			// the component is either invisible or disabled and it can't call listeners
 			// then pretend the component is stateless
 			return true;
 		}
@@ -3056,6 +3050,8 @@ public abstract class Component
 	 * @param object
 	 *            The object to set
 	 * @return This
+	 * @throws IllegalStateException If the component has neither its own model nor any of its
+	 * parents uses {@link IComponentInheritedModel}
 	 */
 	@SuppressWarnings("unchecked")
 	public final Component setDefaultModelObject(final Object object)
@@ -3066,7 +3062,9 @@ public abstract class Component
 		if (model == null)
 		{
 			throw new IllegalStateException(
-				"Attempt to set model object on null model of component: " + getPageRelativePath());
+				"Attempt to set a model object on a component without a model! " +
+				"Either pass an IModel to the constructor or use #setDefaultModel(new SomeModel(object)). " +
+				"Component: " + getPageRelativePath());
 		}
 
 		// Check authorization
@@ -3330,44 +3328,39 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
-	 * AjaxPagingNavigationBehavior).
+	 * Gets a URL for the listener interface on a behavior (e.g. {@link IRequestListener} on
+	 * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationBehavior}).
 	 * 
 	 * @param behaviour
 	 *            The behavior that the URL should point to
-	 * @param listener
-	 *            The listener interface that the URL should call
 	 * @param parameters
 	 *            The parameters that should be rendered into the urls
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final Behavior behaviour,
-		final RequestListenerInterface listener, final PageParameters parameters)
+	public final CharSequence urlForListener(final Behavior behaviour, final PageParameters parameters)
 	{
 		int id = getBehaviorId(behaviour);
-		IRequestHandler handler = createRequestHandler(listener, parameters, id);
+		IRequestHandler handler = createRequestHandler(parameters, id);
 		return getRequestCycle().urlFor(handler);
 	}
 
 	/**
 	 * Create a suitable request handler depending whether the page is stateless or bookmarkable.
 	 */
-	private IRequestHandler createRequestHandler(RequestListenerInterface listener,
-		PageParameters parameters, Integer id)
+	private IRequestHandler createRequestHandler(PageParameters parameters, Integer id)
 	{
 		Page page = getPage();
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 
 		if (page.isPageStateless()
-			|| (getApplication().getPageSettings().getRecreateBookmarkablePagesAfterExpiry()
-				&& page.isBookmarkable() && page.wasCreatedBookmarkable()))
+			|| (page.isBookmarkable() && page.wasCreatedBookmarkable()))
 		{
-			return new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
+			return new BookmarkableListenerInterfaceRequestHandler(provider, id);
 		}
 		else
 		{
-			return new ListenerInterfaceRequestHandler(provider, listener, id);
+			return new ListenerInterfaceRequestHandler(provider, id);
 		}
 	}
 
@@ -3387,20 +3380,17 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets a URL for the listener interface (e.g. ILinkListener).
+	 * Gets a URL for this {@link IRequestListener}.
 	 * 
 	 * @see RequestCycle#urlFor(IRequestHandler)
 	 * 
-	 * @param listener
-	 *            The listener interface that the URL should call
 	 * @param parameters
-	 *            The parameters that should be rendered into the urls
+	 *            The parameters that should be rendered into the URL
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final RequestListenerInterface listener,
-		final PageParameters parameters)
+	public final CharSequence urlForListener(final PageParameters parameters)
 	{
-		IRequestHandler handler = createRequestHandler(listener, parameters, null);
+		IRequestHandler handler = createRequestHandler(parameters, null);
 		return getRequestCycle().urlFor(handler);
 	}
 
@@ -4294,7 +4284,7 @@ public abstract class Component
 	 * @param id
 	 *            The non-null id of this component
 	 */
-	final Component setId(final String id)
+	private void checkId(final String id)
 	{
 		if (!(this instanceof Page))
 		{
@@ -4308,9 +4298,6 @@ public abstract class Component
 		{
 			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
-
-		this.id = id;
-		return this;
 	}
 
 	/**
@@ -4437,10 +4424,8 @@ public abstract class Component
 	}
 
 	/**
-	 * Checks whether or not a listener method can be invoked on this component. Usually components
-	 * deny these invocations if they are either invisible or disabled in hierarchy. Components can
-	 * examine which listener interface is being invoked by examining the declaring class of the
-	 * passed in {@literal method} parameter.
+	 * Checks whether or not an {@link IRequestListener} can be invoked on this component. Usually components
+	 * deny these invocations if they are either invisible or disabled in hierarchy.
 	 * <p>
 	 * WARNING: be careful when overriding this method because it may open security holes - such as
 	 * allowing a user to click on a link that should be disabled.
@@ -4449,18 +4434,14 @@ public abstract class Component
 	 * Example usecase for overriding: Suppose you are building an component that displays images.
 	 * The component generates a callback to itself using {@link IRequestListener} interface and
 	 * uses this callback to stream image data. If such a component is placed inside a disabled
-	 * webmarkupcontainer we still want to allow the invocation of the request listener callback
+	 * {@code WebMarkupContainer} we still want to allow the invocation of the request listener callback
 	 * method so that image data can be streamed. Such a component would override this method and
-	 * return {@literal true} if the listener method belongs to {@link IRequestListener}.
+	 * return {@literal true}.
 	 * </p>
-	 * 
-	 * @param method
-	 *            listener method about to be invoked on this component. Could be {@code null} - in
-	 *            this case it means <em>any</em> method.
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
-	public boolean canCallListenerInterface(Method method)
+	public boolean canCallListenerInterface()
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
 	}

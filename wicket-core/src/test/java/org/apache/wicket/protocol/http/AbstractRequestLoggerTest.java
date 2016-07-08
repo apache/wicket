@@ -25,7 +25,6 @@ import org.junit.Test;
  */
 public class AbstractRequestLoggerTest extends WicketTestCase
 {
-
 	private int counter;
 	
 	@Test

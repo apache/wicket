@@ -53,9 +53,6 @@ public class DetachableContactModel extends LoadableDetachableModel<Contact>
 		this.id = id;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{

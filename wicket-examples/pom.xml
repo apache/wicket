@@ -44,9 +44,9 @@
     			<version>1.0</version>
     		</dependency>
     		<dependency>
-    			<groupId>com.uwyn</groupId>
+    			<groupId>org.codelibs</groupId>
     			<artifactId>jhighlight</artifactId>
-    			<version>1.0</version>
+    			<version>1.0.3</version>
     			<exclusions>
     				<exclusion>
     					<groupId>javax.servlet</groupId>
@@ -102,10 +102,6 @@
 			<artifactId>cage</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.uwyn</groupId>
-			<artifactId>jhighlight</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<scope>compile</scope>
@@ -159,8 +155,12 @@
 			<artifactId>wicket-velocity</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket7</groupId>
+			<groupId>org.apache.wicket.experimental.wicket8</groupId>
 			<artifactId>wicket-atmosphere</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codelibs</groupId>
+			<artifactId>jhighlight</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>

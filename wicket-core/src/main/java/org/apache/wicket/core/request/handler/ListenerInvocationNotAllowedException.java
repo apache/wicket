@@ -17,7 +17,6 @@
 package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.behavior.Behavior;
 
 /**
@@ -36,20 +35,18 @@ public class ListenerInvocationNotAllowedException extends RuntimeException
 	/**
 	 * Constructor
 	 *
-	 * @param iface
 	 * @param component
 	 * @param behavior
 	 * @param message
 	 */
-	public ListenerInvocationNotAllowedException(RequestListenerInterface iface,
-		Component component, Behavior behavior, String message)
+	public ListenerInvocationNotAllowedException(Component component, Behavior behavior, String message)
 	{
-		super(message + detail(iface, component, behavior));
+		super(message + detail(component, behavior));
 		this.component = component;
 		this.behavior = behavior;
 	}
 
-	private static String detail(RequestListenerInterface iface, Component component,
+	private static String detail(Component component,
 		Behavior behavior)
 	{
 		StringBuilder detail = new StringBuilder("Component: ").append(component.toString(false));
@@ -57,7 +54,6 @@ public class ListenerInvocationNotAllowedException extends RuntimeException
 		{
 			detail.append(" Behavior: ").append(behavior.toString());
 		}
-		detail.append(" Listener: ").append(iface.toString());
 		return detail.toString();
 	}
 

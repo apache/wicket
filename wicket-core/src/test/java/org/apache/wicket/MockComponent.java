@@ -26,7 +26,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author Matej Knopp
  */
-public class MockComponent implements IRequestableComponent
+public class MockComponent implements IRequestableComponent, IRequestListener
 {
 	private String markupId;
 	private String id;
@@ -173,6 +173,22 @@ public class MockComponent implements IRequestableComponent
 	@Override
 	public Behavior getBehaviorById(int id)
 	{
+		if (id == 4) {
+			return new MockBehavior();
+		}
 		return null;
+	}
+	
+	@Override
+	public void onRequest()
+	{
+	}
+	
+	private class MockBehavior extends Behavior implements IRequestListener {
+
+		@Override
+		public void onRequest()
+		{
+		}
 	}
 }

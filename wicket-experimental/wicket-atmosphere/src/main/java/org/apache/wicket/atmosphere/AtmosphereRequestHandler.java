@@ -138,9 +138,4 @@ public class AtmosphereRequestHandler implements IRequestHandler
 		};
 		eventSubscriptionInvoker.invoke(target, subscription, base, event, initializer);
 	}
-
-	@Override
-	public void detach(IRequestCycle requestCycle)
-	{
-	}
 }

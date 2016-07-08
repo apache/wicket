@@ -42,24 +42,16 @@ public class TemplateBorder extends Border
 	{
 		super(id);
 		addToBorder(currentBanner = new Banner1("ad"));
-		addToBorder(new Link("changeAdLink")
-		{
-			/**
-			 * @see org.apache.wicket.markup.html.link.Link#onClick()
-			 */
-			@Override
-			public void onClick()
+		addToBorder(Link.onClick("changeAdLink", (link) -> {
+			if (currentBanner.getClass() == Banner1.class)
 			{
-				if (currentBanner.getClass() == Banner1.class)
-				{
-					TemplateBorder.this.replaceInBorder(currentBanner = new Banner2("ad"));
-				}
-				else
-				{
-					TemplateBorder.this.replaceInBorder(currentBanner = new Banner1("ad"));
-				}
+				TemplateBorder.this.replaceInBorder(currentBanner = new Banner2("ad"));
 			}
-		});
+			else
+			{
+				TemplateBorder.this.replaceInBorder(currentBanner = new Banner1("ad"));
+			}
+		}));
 		addToBorder(new BookmarkablePageLink<>("page1Link", Page1.class));
 		addToBorder(new BookmarkablePageLink<>("page2Link", Page2.class));
 	}

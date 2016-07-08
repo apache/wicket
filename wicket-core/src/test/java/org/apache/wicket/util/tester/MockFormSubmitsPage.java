@@ -51,9 +51,9 @@ public class MockFormSubmitsPage extends WebPage
 		form.add(new AjaxButton("ajaxButton")
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
-				MockFormSubmitsPage.this.onAjaxButtonSubmit(target, form);
+				MockFormSubmitsPage.this.onAjaxButtonSubmit(target);
 			}
 		});
 
@@ -62,18 +62,18 @@ public class MockFormSubmitsPage extends WebPage
 		form.add(new AjaxSubmitLink("ajaxlink")
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
-				MockFormSubmitsPage.this.onAjaxSubmitLinkSubmit(target, form);
+				MockFormSubmitsPage.this.onAjaxSubmitLinkSubmit(target);
 			}
 		});
 	}
 
-	protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target)
 	{
 	}
 
-	protected void onAjaxButtonSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onAjaxButtonSubmit(AjaxRequestTarget target)
 	{
 	}
 }

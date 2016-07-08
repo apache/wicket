@@ -29,7 +29,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -82,9 +81,9 @@ public class StatelessFormUrlTest extends WicketTestCase
 		public TestPage(PageParameters pageParameters)
 		{
 			super(pageParameters);
-			StatelessForm<Void> form = new StatelessForm<Void>("form");
+			StatelessForm<Void> form = new StatelessForm<>("form");
 			add(form);
-			TextField textField = new TextField("text", Model.of("textValue"));
+			TextField<String> textField = new TextField<>("text", Model.of("textValue"));
 			form.add(textField);
 			SubmitLink submitLink = new SubmitLink("submitLink");
 			form.add(submitLink);

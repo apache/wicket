@@ -31,9 +31,8 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test1()
 	{
-		String s = "listener-component-path";
+		String s = "-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals("listener", info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
 		assertNull(info.getBehaviorId());
 
@@ -46,7 +45,7 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test2()
 	{
-		String s = "-component-path";
+		String s = "component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
 		assertEquals(null, info);
 	}
@@ -57,10 +56,9 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test3()
 	{
-		String s = "listener-";
+		String s = ".-";
 		ComponentInfo info = ComponentInfo.parse(s);
 		// empty component path is allowed - listener invoked on page
-		assertEquals("listener", info.getListenerInterface());
 		assertEquals("", info.getComponentPath());
 	}
 
@@ -72,7 +70,7 @@ public class ComponentInfoTest extends Assert
 	{
 		String s = "-";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals(null, info);
+		assertEquals(s, info.toString());
 	}
 
 	/**
@@ -91,9 +89,8 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test6()
 	{
-		String s = "listener-compo~~nent-path";
+		String s = "-compo~~nent-path";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals("listener", info.getListenerInterface());
 		assertEquals("compo--nent:path", info.getComponentPath());
 		assertNull(info.getBehaviorId());
 
@@ -106,9 +103,8 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test7()
 	{
-		String s = "listener-co~mpo~~nent-path";
+		String s = "-co~mpo~~nent-path";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals("listener", info.getListenerInterface());
 		assertEquals("co-mpo--nent:path", info.getComponentPath());
 		assertNull(info.getBehaviorId());
 
@@ -121,9 +117,8 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test8()
 	{
-		String s = "listener.12-component-path";
+		String s = ".12-component-path";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals("listener", info.getListenerInterface());
 		assertEquals("component:path", info.getComponentPath());
 		assertEquals((Object)12, info.getBehaviorId());
 
@@ -136,9 +131,8 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test9()
 	{
-		String s = "4.listener-a-b";
+		String s = "4.-a-b";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals("listener", info.getListenerInterface());
 		assertEquals((Integer)4, info.getRenderCount());
 
 		assertEquals(s, info.toString());
@@ -150,9 +144,8 @@ public class ComponentInfoTest extends Assert
 	@Test
 	public void test10()
 	{
-		String s = "4.listener.5-a-b";
+		String s = "4.5-a-b";
 		ComponentInfo info = ComponentInfo.parse(s);
-		assertEquals("listener", info.getListenerInterface());
 		assertEquals((Integer)4, info.getRenderCount());
 		assertEquals((Integer)5, info.getBehaviorId());
 
@@ -166,19 +159,16 @@ public class ComponentInfoTest extends Assert
 	public void encodeDecode()
 	{
 		final Integer renderCount = 1;
-		final String listenerInterface = "ILinkListener";
 		final String componentPath = "-nav-container-:-nav:1:link";
 		final Integer behaviorId = null;
 
-		ComponentInfo info = new ComponentInfo(renderCount, listenerInterface, componentPath,
-			behaviorId);
+		ComponentInfo info = new ComponentInfo(renderCount, componentPath, behaviorId);
 
 		final String encoded = info.toString();
-		assertEquals("1.ILinkListener-~nav~container~-~nav-1-link", encoded);
+		assertEquals("1.-~nav~container~-~nav-1-link", encoded);
 
 		ComponentInfo decoded = ComponentInfo.parse(encoded);
 		assertEquals(renderCount, decoded.getRenderCount());
-		assertEquals(listenerInterface, decoded.getListenerInterface());
 		assertEquals(componentPath, decoded.getComponentPath());
 		assertEquals(behaviorId, decoded.getBehaviorId());
 	}

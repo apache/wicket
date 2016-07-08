@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.util.CollectionModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.model.util.MapModel;
@@ -145,19 +144,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	}
 
 	/**
-	 * Supresses generics warning when converting model types
-	 * 
-	 * @param <T>
-	 * @param model
-	 * @return <code>model</code>
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> IModel<T> of(IModel<?> model)
-	{
-		return (IModel<T>)model;
-	}
-
-	/**
 	 * Factory methods for Model which uses type inference to make code shorter. Equivalent to
 	 * <code>new Model<TypeOfObject>()</code>.
 	 * 
@@ -169,9 +155,6 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 		return new Model<>();
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
@@ -189,19 +172,9 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	@Override
 	public void setObject(final T object)
 	{
-		if (object != null)
-		{
-			if (!(object instanceof Serializable))
-			{
-				throw new WicketRuntimeException("Model object must be Serializable");
-			}
-		}
 		this.object = object;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
 	public void detach()
 	{
@@ -211,15 +184,12 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder("Model:classname=[");
-		sb.append(getClass().getName()).append("]");
-		sb.append(":object=[").append(object).append("]");
+		sb.append(getClass().getName()).append(']');
+		sb.append(":object=[").append(object).append(']');
 		return sb.toString();
 	}
 
@@ -244,6 +214,7 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 		return Objects.equal(object, that.object);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Class<T> getObjectClass()
 	{

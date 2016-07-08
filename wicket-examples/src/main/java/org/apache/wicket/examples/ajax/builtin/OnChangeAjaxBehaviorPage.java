@@ -32,7 +32,7 @@ import org.apache.wicket.util.string.Strings;
 public class OnChangeAjaxBehaviorPage extends BasePage
 {
 
-	protected String getValue(String input)
+	private String getValue(String input)
 	{
 		if (Strings.isEmpty(input))
 		{
@@ -50,7 +50,7 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 			if (country.toUpperCase().startsWith(input.toUpperCase()))
 			{
 				buffer.append(country);
-				buffer.append(" ");
+				buffer.append(' ');
 			}
 		}
 
@@ -65,7 +65,7 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 		Form<Void> form = new Form<>("form");
 		add(form);
 
-		final TextField<String> field = new TextField<String>("field", new Model<>(""));
+		final TextField<String> field = new TextField<>("field", new Model<>(""));
 		form.add(field);
 
 		final Label label = new Label("selectedValue", new Model<>(""));

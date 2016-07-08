@@ -27,7 +27,6 @@ import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -208,7 +207,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void decode5()
 	{
-		Url url = Url.parse("some/mount/path?15-ILinkListener-foo-bar");
+		Url url = Url.parse("some/mount/path?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -218,7 +217,6 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 		assertNull(h.getBehaviorIndex());
 	}
@@ -229,7 +227,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void decode6()
 	{
-		Url url = Url.parse("some/mount/path/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse("some/mount/path/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -238,7 +236,6 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
 		PageParameters p = page.getPageParameters();
@@ -253,7 +250,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void decode7()
 	{
-		Url url = Url.parse("some/mount/path?param1=value1&15-ILinkListener.4-foo-bar");
+		Url url = Url.parse("some/mount/path?param1=value1&15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -263,7 +260,6 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 		assertEquals((Object)4, h.getBehaviorIndex());
 	}
@@ -274,7 +270,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void decode8()
 	{
-		Url url = Url.parse("some/mmount/path?15-ILinkListener.4-foo-bar");
+		Url url = Url.parse("some/mmount/path?15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertNull(handler);
@@ -298,7 +294,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void decode10()
 	{
-		Url url = Url.parse("some/mount/path?15-5.ILinkListener.4-foo-bar");
+		Url url = Url.parse("some/mount/path?15-5.4-foo-bar");
 		context.setNextPageRenderCount(5);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
@@ -316,7 +312,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test(expected = StalePageException.class)
 	public void decode11()
 	{
-		Url url = Url.parse("some/mount/path?15-5.ILinkListener.4-foo-bar");
+		Url url = Url.parse("some/mount/path?15-5.4-foo-bar");
 		context.setNextPageRenderCount(7);
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -330,7 +326,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void decode12()
 	{
-		Url url = Url.parse("some/mount/path/i1/i2?-1.ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse("some/mount/path/i1/i2?-1.-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
 		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
@@ -339,7 +335,6 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestablePage page = h.getPage();
 		checkPage(page, 1);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 		assertNull(h.getBehaviorIndex());
 
@@ -467,12 +462,11 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE);
+		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals("some/mount/path/i1/i2?15-4.ILinkListener-foo-bar&a=b&b=c", url.toString());
+		assertEquals("some/mount/path/i1/i2?15-4.-foo-bar&a=b&b=c", url.toString());
 	}
 
 	/**
@@ -503,12 +497,11 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE);
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals("some/mount/path/i1/i2?15-4.ILinkListener-foo-bar&a=b&b=c", url.toString());
+		assertEquals("some/mount/path/i1/i2?15-4.-foo-bar&a=b&b=c", url.toString());
 	}
 
 	/**
@@ -532,12 +525,11 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE, 4);
+		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider, 4);
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals("some/mount/path/i1/i2?15-5.ILinkListener.4-foo-bar&a=b&b=c", url.toString());
+		assertEquals("some/mount/path/i1/i2?15-5.4-foo-bar&a=b&b=c", url.toString());
 	}
 
 	/**
@@ -563,12 +555,11 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE, 4);
+		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider, 4);
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals("some/mount/path/i1/i2?15-5.ILinkListener.4-foo-bar&a=b&b=c", url.toString());
+		assertEquals("some/mount/path/i1/i2?15-5.4-foo-bar&a=b&b=c", url.toString());
 	}
 
 	/**

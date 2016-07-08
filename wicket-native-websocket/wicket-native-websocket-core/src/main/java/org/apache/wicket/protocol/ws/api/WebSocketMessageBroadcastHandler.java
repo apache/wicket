@@ -96,9 +96,4 @@ public class WebSocketMessageBroadcastHandler implements IRequestHandler
 		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
 		webSocketSettings.getSendPayloadExecutor().run(action);
 	}
-
-	@Override
-	public void detach(IRequestCycle requestCycle)
-	{
-	}
 }

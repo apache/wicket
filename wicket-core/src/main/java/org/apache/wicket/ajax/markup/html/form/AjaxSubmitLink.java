@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +85,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onError(target, getForm());
+				AjaxSubmitLink.this.onError(target);
 			}
 
 			@Override
@@ -107,13 +110,19 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onSubmit(target, getForm());
+				AjaxSubmitLink.this.onSubmit(target);
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onAfterSubmit(target, getForm());
+				AjaxSubmitLink.this.onAfterSubmit(target);
+			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxSubmitLink.this.getStatelessHint();
 			}
 		};
 	}
@@ -121,16 +130,24 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>before</em> the form's onSubmit method.
+	 * 
+	 * @param target the {@link AjaxRequestTarget}
+	 * 
+	 * @param form the {@link Form}
 	 */
-	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onSubmit(AjaxRequestTarget target)
 	{
 	}
 
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
+	 * 
+	 * @param target the {@link AjaxRequestTarget}
+	 * 
+	 * @param form the {@link Form}
 	 */
-	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
 	}
 
@@ -191,7 +208,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @param target
 	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
+	protected void onError(AjaxRequestTarget target)
 	{
 	}
 
@@ -211,5 +228,72 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	public final void onAfterSubmit()
 	{
 		logger.warn("unexpected invocation of #onAfterSubmit() on {}", this);
+	}
+
+	/**
+	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
+	 *
+	 * @param id
+	 *            the id of ajax submit link
+	 * @param onSubmit
+	 *            the consumer which accepts the link and an {@link AjaxRequestTarget}
+	 * @return the {@link AjaxSubmitLink}
+	 */
+	public static AjaxSubmitLink onSubmit(String id, WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+
+		return new AjaxSubmitLink(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(this, target);
+			}
+		};
+	}
+
+	/**
+	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
+	 *
+	 * @param id
+	 *            the id of ajax submit link
+	 * @param onSubmit
+	 *            the consumer of the submitted link and an {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the consumer of the link in error and an {@link AjaxRequestTarget}
+	 * @return the {@link AjaxSubmitLink}
+	 */
+	public static AjaxSubmitLink onSubmit(String id,
+	                                            WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit,
+	                                            WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onError)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+		Args.notNull(onError, "onError");
+
+		return new AjaxSubmitLink(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(this, target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target)
+			{
+				onError.accept(this, target);
+			}
+		};
+	}
+	
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
 	}
 }

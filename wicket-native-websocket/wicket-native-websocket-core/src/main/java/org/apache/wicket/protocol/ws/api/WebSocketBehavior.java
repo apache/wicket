@@ -17,11 +17,15 @@
 package org.apache.wicket.protocol.ws.api;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.protocol.ws.api.event.WebSocketAbortedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketBinaryPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketClosedPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketConnectedPayload;
+import org.apache.wicket.protocol.ws.api.event.WebSocketErrorPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketPushPayload;
 import org.apache.wicket.protocol.ws.api.event.WebSocketTextPayload;
@@ -29,8 +33,10 @@ import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+import org.apache.wicket.protocol.ws.api.message.ErrorMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * A behavior that provides optional callbacks for the WebSocket
@@ -40,8 +46,22 @@ import org.apache.wicket.protocol.ws.api.message.TextMessage;
  */
 public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 {
-	public WebSocketBehavior()
+	private final static MetaDataKey<Object> IS_JAVA_SCRIPT_CONTRIBUTED = new MetaDataKey<Object>()
+	{};
+
+	@Override
+	public void renderHead(Component component, IHeaderResponse response)
 	{
+		RequestCycle cycle = component.getRequestCycle();
+		if (cycle.find(IPartialPageRequestHandler.class).isPresent() == false)
+		{
+			Object contributed = cycle.getMetaData(IS_JAVA_SCRIPT_CONTRIBUTED);
+			if (contributed == null)
+			{
+				cycle.setMetaData(IS_JAVA_SCRIPT_CONTRIBUTED, new Object());
+				super.renderHead(component, response);
+			}
+		}
 	}
 
 	@Override
@@ -78,6 +98,12 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 				WebSocketClosedPayload closedPayload = (WebSocketClosedPayload) wsPayload;
 				ClosedMessage message = closedPayload.getMessage();
 				onClose(message);
+			}
+			else if (wsPayload instanceof WebSocketErrorPayload)
+			{
+				WebSocketErrorPayload errorPayload = (WebSocketErrorPayload) wsPayload;
+				ErrorMessage message = errorPayload.getMessage();
+				onError(webSocketHandler, message);
 			}
 			else if (wsPayload instanceof WebSocketAbortedPayload)
 			{
@@ -129,14 +155,26 @@ public abstract class WebSocketBehavior extends BaseWebSocketBehavior
 	{
 	}
 
-    /**
-     * A callback method called when the server has aborted the connection
-     *
-     * @param message
-     *          the aborted message with the info about the client
-     */
-    protected void onAbort(AbortedMessage message) {
-    }
+	/**
+	 * A callback method called when there is a communication error
+	 *
+	 * @param handler
+	 *          The request handler that can be used to send messages to the client
+	 * @param message
+	 *          The error message that that brings information about the communication error
+	 */
+	protected void onError(WebSocketRequestHandler handler, ErrorMessage message)
+	{
+	}
+
+	/**
+	 * A callback method called when the server has aborted the connection
+	 *
+	 * @param message
+	 *          the aborted message with the info about the client
+	 */
+	protected void onAbort(AbortedMessage message) {
+	}
 
 	/**
 	 * A callback method called when there is a text message sent by the client

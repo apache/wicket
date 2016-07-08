@@ -61,7 +61,7 @@ public class RemoveTest extends WicketTestCase
 			tester.clickLink(PATH);
 			fail("Missing Exception");
 		}
-		catch (WicketRuntimeException wre)
+		catch (IllegalStateException wre)
 		{
 			// do nothing.
 			// This exception was expected.

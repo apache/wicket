@@ -27,9 +27,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayDeque;
 import java.util.Date;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -424,12 +422,13 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 							return;
 						}
 
-						checked.put(streamObj, null);
 						CharSequence arrayPos = new StringBuilder(10).append("[write:").append(count++).append(']');
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
 
 						check(streamObj);
+						
+						checked.put(streamObj, null);
 					}
 				});
 			}
@@ -492,11 +491,11 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 							return null;
 						}
 
-						checked.put(streamObj, null);
 						CharSequence arrayPos = new StringBuilder(10).append("[write:").append(counter).append(']');
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
 						check(streamObj);
+						checked.put(streamObj, null);
 						return streamObj;
 					}
 				}

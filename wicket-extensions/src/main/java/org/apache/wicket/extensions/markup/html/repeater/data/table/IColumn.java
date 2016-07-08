@@ -56,5 +56,22 @@ public interface IColumn<T, S> extends ICellPopulator<T>
 	 * 
 	 * @return true if header should be sortable
 	 */
-	boolean isSortable();
+	default boolean isSortable()
+	{
+		return getSortProperty() != null;
+	}
+
+	/**
+	 * @return The number of rows the header of this column should span
+	 */
+	default int getHeaderRowspan() {
+		return 1;
+	}
+
+	/**
+	 * @return The number of columns the header of this column should span
+	 */
+	default int getHeaderColspan() {
+		return 1;
+	}
 }

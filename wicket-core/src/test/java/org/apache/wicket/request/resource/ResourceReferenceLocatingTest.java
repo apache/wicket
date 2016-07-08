@@ -27,6 +27,7 @@ import java.util.Locale;
 
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -183,6 +184,12 @@ public class ResourceReferenceLocatingTest extends WicketTestCase
 	public ResourceReferenceLocatingTest(TestCase test)
 	{
 		this.test = test;
+	}
+
+	@Before
+	public void before()
+	{
+		tester.getSession().setLocale(Locale.ENGLISH);
 	}
 
 	/**

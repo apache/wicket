@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * TODO javadoc
+ * A {@link AbstractResource resource} that loads its data from {@link IResourceStream}
  */
 public class ResourceStreamResource extends AbstractResource
 {
@@ -42,7 +42,7 @@ public class ResourceStreamResource extends AbstractResource
 
 	private static final Logger logger = LoggerFactory.getLogger(ResourceStreamResource.class);
 
-	private IResourceStream stream;
+	private final IResourceStream stream;
 	private String fileName;
 	private ContentDisposition contentDisposition = ContentDisposition.INLINE;
 	private String textEncoding;
@@ -119,24 +119,27 @@ public class ResourceStreamResource extends AbstractResource
 
 	/**
 	 * Lazy or dynamic initialization of the wrapped IResourceStream(Writer)
+	 *
+	 * @param attributes
+	 *          The request attributes
 	 * @return the underlying IResourceStream. May be {@code null}.
 	 */
-	protected IResourceStream getResourceStream()
+	protected IResourceStream getResourceStream(Attributes attributes)
 	{
 		return stream;
 	}
 
-	private IResourceStream internalGetResourceStream()
+	private IResourceStream internalGetResourceStream(Attributes attributes)
 	{
-		final IResourceStream resourceStream = getResourceStream();
-		Checks.notNull(resourceStream, "%s#getResourceStream() should not return null!", getClass().getName());
+		final IResourceStream resourceStream = getResourceStream(attributes);
+		Checks.notNull(resourceStream, "%s#getResourceStream(attributes) should not return null!", getClass().getName());
 		return resourceStream;
 	}
 
 	@Override
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
-		final IResourceStream resourceStream = internalGetResourceStream();
+		final IResourceStream resourceStream = internalGetResourceStream(attributes);
 		ResourceResponse data = new ResourceResponse();
 		Time lastModifiedTime = resourceStream.lastModifiedTime();
 		if (lastModifiedTime != null)

@@ -17,11 +17,9 @@
 package org.apache.wicket.core.request.handler.logger;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPageAndComponentProvider;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.request.component.IRequestableComponent;
 
@@ -38,8 +36,6 @@ public class ListenerInterfaceLogData extends PageLogData
 	private final String componentPath;
 	private final Integer behaviorIndex;
 	private Class<? extends Behavior> behaviorClass;
-	private final String interfaceName;
-	private final String interfaceMethod;
 	private Class<? extends IRequestableComponent> submittingComponentClass;
 	private String submittingComponentPath;
 
@@ -50,8 +46,7 @@ public class ListenerInterfaceLogData extends PageLogData
 	 * @param listenerInterface
 	 * @param behaviorIndex
 	 */
-	public ListenerInterfaceLogData(IPageAndComponentProvider pageAndComponentProvider,
-		RequestListenerInterface listenerInterface, Integer behaviorIndex)
+	public ListenerInterfaceLogData(IPageAndComponentProvider pageAndComponentProvider, Integer behaviorIndex)
 	{
 		super(pageAndComponentProvider);
 		componentClass = tryToGetComponentClass(pageAndComponentProvider);
@@ -74,16 +69,12 @@ public class ListenerInterfaceLogData extends PageLogData
 		{
 			behaviorClass = null;
 		}
-		interfaceName = listenerInterface.getName();
-		interfaceMethod = listenerInterface.getMethod().getName();
-		if (listenerInterface.getListenerInterfaceClass().equals(IFormSubmitListener.class))
+		
+		final Component formSubmitter = tryToGetFormSubmittingComponent(pageAndComponentProvider);
+		if (formSubmitter != null)
 		{
-			final Component formSubmitter = tryToGetFormSubmittingComponent(pageAndComponentProvider);
-			if (formSubmitter != null)
-			{
-				submittingComponentClass = formSubmitter.getClass();
-				submittingComponentPath = formSubmitter.getPageRelativePath();
-			}
+			submittingComponentClass = formSubmitter.getClass();
+			submittingComponentPath = formSubmitter.getPageRelativePath();
 		}
 	}
 
@@ -168,22 +159,6 @@ public class ListenerInterfaceLogData extends PageLogData
 	}
 
 	/**
-	 * @return interfaceName
-	 */
-	public final String getInterfaceName()
-	{
-		return interfaceName;
-	}
-
-	/**
-	 * @return interfaceMethod
-	 */
-	public final String getInterfaceMethod()
-	{
-		return interfaceMethod;
-	}
-
-	/**
 	 * @return submittingComponentClass
 	 */
 	public Class<? extends IRequestableComponent> getSubmittingComponentClass()
@@ -223,10 +198,6 @@ public class ListenerInterfaceLogData extends PageLogData
 			sb.append(",behaviorClass=");
 			sb.append(getBehaviorClass().getName());
 		}
-		sb.append(",interfaceName=");
-		sb.append(getInterfaceName());
-		sb.append(",interfaceMethod=");
-		sb.append(getInterfaceMethod());
 		if (getSubmittingComponentClass() != null)
 		{
 			sb.append(",submittingComponentClass=");

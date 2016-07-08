@@ -44,9 +44,5 @@ public class ModalContent2Page extends WebPage
 				window.close(target);
 			}
 		});
-
-
 	}
-
-
 }

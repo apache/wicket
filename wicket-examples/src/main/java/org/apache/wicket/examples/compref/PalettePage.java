@@ -49,7 +49,7 @@ public class PalettePage extends WicketExamplePage
 
 		final Palette<Person> palette = new Palette<Person>("palette", new ListModel<>(
 
-			new ArrayList<Person>()), new CollectionModel<>(persons), renderer, 10, true, true);
+			new ArrayList<>()), new CollectionModel<>(persons), renderer, 10, true, true);
 
 		palette.add(new DefaultTheme());
 

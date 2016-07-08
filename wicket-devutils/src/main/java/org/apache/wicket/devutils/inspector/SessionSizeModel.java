@@ -18,13 +18,13 @@ package org.apache.wicket.devutils.inspector;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.core.util.lang.WicketObjects;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Calculates
  */
-public class SessionSizeModel extends AbstractReadOnlyModel<Bytes>
+public class SessionSizeModel implements IModel<Bytes>
 {
 	private static final long serialVersionUID = 1L;
 

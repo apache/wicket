@@ -26,21 +26,9 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class NavomaticApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public NavomaticApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return Page1.class;
 	}
-
-
 }

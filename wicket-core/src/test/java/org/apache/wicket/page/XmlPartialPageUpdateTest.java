@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.page;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
@@ -23,13 +25,15 @@ import org.junit.Test;
 /**
  * Test for {@link XmlPartialPageUpdate}.
  */
-public class XmlPartialPageUpdateTest extends WicketTestCase {
+public class XmlPartialPageUpdateTest extends WicketTestCase 
+{
 
 	/**
 	 * CData start "]]>" has to be encoded in "]]]]><![CDATA[>".
 	 */
 	@Test
-	public void encodeCdataEnd() {
+	public void encodeCdataEnd() 
+	{
 		PageForPartialUpdate page = new PageForPartialUpdate();
 		
 		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page);
@@ -47,5 +51,28 @@ public class XmlPartialPageUpdateTest extends WicketTestCase {
 				"</script>\n" + 
 				"</head>]]></header-contribution></ajax-response>";
 		assertEquals(expected, response.getTextResponse().toString());
+	}
+	/**
+	 * 
+	 * see https://issues.apache.org/jira/browse/WICKET-6162
+	 */
+	@Test
+	public void keepTheSameHeaderContainer() throws Exception
+	{
+		PageForPartialUpdate page = new PageForPartialUpdate();
+		
+		tester.startPage(page);
+		
+		Component originalHeader = page.get(HtmlHeaderSectionHandler.HEADER_ID);
+		
+		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page);		
+		
+		update.add(page.container, page.container.getMarkupId());
+		
+		MockWebResponse response = new MockWebResponse();
+		
+		update.writeTo(response, "UTF-8");
+		
+		assertEquals(originalHeader, page.get(HtmlHeaderSectionHandler.HEADER_ID));
 	}
 }

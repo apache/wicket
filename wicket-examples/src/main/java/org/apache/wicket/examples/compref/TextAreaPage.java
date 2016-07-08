@@ -44,7 +44,7 @@ public class TextAreaPage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -64,9 +64,6 @@ public class TextAreaPage extends WicketExamplePage
 		/** some plain text. */
 		public String text = "line 1\nline 2\nline 3";
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString()
 		{

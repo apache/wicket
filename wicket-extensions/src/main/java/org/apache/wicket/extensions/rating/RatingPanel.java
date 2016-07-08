@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.rating;
 
+import java.util.Optional;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -38,7 +40,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * Rating component that generates a number of stars where a user can click on to rate something.
- * Subclasses should implement {@link #onRated(int, org.apache.wicket.ajax.AjaxRequestTarget)} to provide the calculation
+ * Subclasses should implement {@link #onRated(int, Optional)} to provide the calculation
  * of the rating, and {@link #onIsStarActive(int)} to indicate whether to render an active star or
  * an inactive star.
  * <p>
@@ -119,7 +121,7 @@ public abstract class RatingPanel extends Panel
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public void onClick(final AjaxRequestTarget target)
+				public void onClick(Optional<AjaxRequestTarget> targetOptional)
 				{
 					LoopItem item = (LoopItem)getParent();
 
@@ -127,13 +129,11 @@ public abstract class RatingPanel extends Panel
 					// of our rating component, so other components can also get
 					// updated in case of an AJAX event.
 
-					onRated(item.getIndex() + 1, target);
+					onRated(item.getIndex() + 1, targetOptional);
 
 					// if we process an AJAX event, update this panel
-					if (target != null)
-					{
-						target.add(RatingPanel.this.get("rater"));
-					}
+					targetOptional.ifPresent(target -> target.add(RatingPanel.this.get("rater")));
+
 				}
 
 				@Override
@@ -427,11 +427,9 @@ public abstract class RatingPanel extends Panel
 	 * Notification of a click on a rating star. Add your own components to the request target when
 	 * you want to have them updated in the Ajax request. <strong>NB</strong> the target may be null
 	 * when the click isn't handled using AJAX, but using a fallback scenario.
-	 * 
-	 * @param rating
+	 *  @param rating
 	 *            the number of the star that is clicked, ranging from 1 to nrOfStars
 	 * @param target
-	 *            the request target, null if the request is a regular, non-AJAX request.
 	 */
-	protected abstract void onRated(int rating, AjaxRequestTarget target);
+	protected abstract void onRated(int rating, Optional<AjaxRequestTarget> target);
 }

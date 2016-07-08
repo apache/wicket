@@ -18,6 +18,7 @@ package org.apache.wicket.util.crypt;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.Base64;
 import java.util.UUID;
 
 import javax.crypto.Cipher;
@@ -62,7 +63,7 @@ public abstract class AbstractCrypt implements ICrypt
 	{
 		try
 		{
-			byte[] decoded = new Base64(true).decode(text);
+			byte[] decoded = java.util.Base64.getUrlDecoder().decode(text);
 			return new String(decryptByteArray(decoded), CHARACTER_ENCODING);
 		}
 		catch (Exception ex)
@@ -85,8 +86,8 @@ public abstract class AbstractCrypt implements ICrypt
 		try
 		{
 			byte[] encrypted = encryptStringToByteArray(plainText);
-			Base64 base64 = new Base64(-1, null, true);
-			byte[] encoded = base64.encode(encrypted);
+			Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+			byte[] encoded = encoder.encode(encrypted);
 			return new String(encoded, CHARACTER_ENCODING);
 		}
 		catch (GeneralSecurityException e)

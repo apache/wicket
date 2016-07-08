@@ -72,9 +72,6 @@ public final class EditBook extends AuthenticatedWebPage
 	{
 		return new Link<Void>(name)
 		{
-			/**
-			 * @see org.apache.wicket.markup.html.link.Link#onClick()
-			 */
 			@Override
 			public void onClick()
 			{
@@ -135,7 +132,7 @@ public final class EditBook extends AuthenticatedWebPage
 			add(relatedBook);
 
 			// Multi-select among writing styles
-			add(new ListMultipleChoice<EnumeratedType>("writingStyles",
+			add(new ListMultipleChoice<>("writingStyles",
 				EnumeratedType.getValues(Book.WritingStyle.class)));
 		}
 
@@ -149,8 +146,6 @@ public final class EditBook extends AuthenticatedWebPage
 			BookDetails details = new BookDetails(book);
 
 			setResponsePage(details);
-
-			// setRedirect(true);
 		}
 	}
 }

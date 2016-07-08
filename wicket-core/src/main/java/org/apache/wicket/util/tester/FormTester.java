@@ -35,7 +35,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
-import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
@@ -517,7 +516,7 @@ public class FormTester
 				boolean wantOnSelectionChangedNotifications = (Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component);
 				if (wantOnSelectionChangedNotifications)
 				{
-					tester.invokeListener(component, IOnChangeListener.INTERFACE);
+					tester.invokeListener(component);
 				}
 			}
 			catch (final Exception x)

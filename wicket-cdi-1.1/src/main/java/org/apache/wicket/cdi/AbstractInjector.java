@@ -29,11 +29,11 @@ class AbstractInjector
 
 	protected <T> void postConstruct(T instance)
 	{
-		NonContextual.of(instance.getClass()).postConstruct(instance);
+		NonContextual.of(instance).postConstruct(instance);
 	}
 
 	protected <T> void inject(T instance)
 	{
-		NonContextual.of(instance.getClass()).inject(instance);
+		NonContextual.of(instance).inject(instance);
 	}
 }

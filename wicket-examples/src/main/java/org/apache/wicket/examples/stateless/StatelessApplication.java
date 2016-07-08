@@ -26,25 +26,12 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class StatelessApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public StatelessApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return Index.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{

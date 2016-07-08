@@ -40,6 +40,7 @@ public class StalePageException extends WicketRuntimeException implements IWicke
 	 */
 	public StalePageException(IRequestablePage page)
 	{
+		super(String.format("A request to page '%s' has been made with stale 'renderCount'. The page will be re-rendered.", page));
 		this.page = page;
 	}
 

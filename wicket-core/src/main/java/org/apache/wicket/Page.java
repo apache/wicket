@@ -228,9 +228,6 @@ public abstract class Page extends MarkupContainer
 		super.detachModels();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#internalPrepareForRender(boolean)
-	 */
 	@Override
 	public void internalPrepareForRender(boolean setRenderingFlag)
 	{
@@ -334,9 +331,6 @@ public abstract class Page extends MarkupContainer
 		return autoIndex++;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#getId()
-	 */
 	@Override
 	public final String getId()
 	{
@@ -721,9 +715,6 @@ public abstract class Page extends MarkupContainer
 		stateless = null;
 	}
 
-	/**
-	 * 
-	 */
 	private void setNextAvailableId()
 	{
 		setNumericId(getSession().nextPageId());
@@ -785,10 +776,6 @@ public abstract class Page extends MarkupContainer
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -809,9 +796,6 @@ public abstract class Page extends MarkupContainer
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onAfterRender()
-	 */
 	@Override
 	protected void onAfterRender()
 	{
@@ -852,9 +836,6 @@ public abstract class Page extends MarkupContainer
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onDetach()
-	 */
 	@Override
 	protected void onDetach()
 	{
@@ -868,9 +849,6 @@ public abstract class Page extends MarkupContainer
 		super.onDetach();
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#onRender()
-	 */
 	@Override
 	protected void onRender()
 	{
@@ -940,9 +918,6 @@ public abstract class Page extends MarkupContainer
 		this.stateless = stateless;
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
-	 */
 	@Override
 	public MarkupType getMarkupType()
 	{
@@ -965,9 +940,6 @@ public abstract class Page extends MarkupContainer
 		return new PageReference(numericId);
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IManageablePage#getPageId()
-	 */
 	@Override
 	public int getPageId()
 	{
@@ -1004,9 +976,6 @@ public abstract class Page extends MarkupContainer
 		return getFlag(FLAG_WAS_CREATED_BOOKMARKABLE);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.component.IRequestablePage#renderPage()
-	 */
 	@Override
 	public void renderPage()
 	{

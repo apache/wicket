@@ -20,7 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * 
@@ -35,7 +35,7 @@ public class VersionDebugContributor implements IDebugBarContributor
 	@Override
 	public Component createComponent(final String id, final DebugBar debugBar)
 	{
-		Label label = new Label(id, new AbstractReadOnlyModel<String>()
+		Label label = new Label(id, new IModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 

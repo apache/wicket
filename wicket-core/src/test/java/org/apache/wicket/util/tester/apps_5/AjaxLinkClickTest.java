@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.tester.apps_5;
 
+import java.util.Optional;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -89,11 +91,10 @@ public class AjaxLinkClickTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
-			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				linkClicked = true;
-				ajaxRequestTarget = target;
+				targetOptional.ifPresent(target -> ajaxRequestTarget = target);
 			}
 		});
 
@@ -119,10 +120,10 @@ public class AjaxLinkClickTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
 				linkClicked = true;
-				ajaxRequestTarget = target;
+				targetOptional.ifPresent(target -> ajaxRequestTarget = target);
 			}
 		});
 

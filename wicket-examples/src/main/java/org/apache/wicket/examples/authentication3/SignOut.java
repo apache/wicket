@@ -17,7 +17,6 @@
 package org.apache.wicket.examples.authentication3;
 
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Simple logout page.
@@ -28,11 +27,8 @@ public class SignOut extends WicketExamplePage
 {
 	/**
 	 * Constructor
-	 * 
-	 * @param parameters
-	 *            Page parameters (ignored since this is the home page)
 	 */
-	public SignOut(final PageParameters parameters)
+	public SignOut()
 	{
 		getSession().invalidate();
 	}

@@ -35,7 +35,7 @@ import org.apache.wicket.util.lang.Classes;
  * @param <T>
  *            enum type
  */
-public class EnumLabel<T extends Enum<T>> extends WebComponent implements IGenericComponent<T>
+public class EnumLabel<T extends Enum<T>> extends WebComponent implements IGenericComponent<T, EnumLabel<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -120,33 +120,4 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent implements IGener
 		// always transform the tag to <span></span> so even labels defined as <span/> render
 		tag.setType(TagType.OPEN);
 	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final EnumLabel<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final EnumLabel<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
-	}
-
 }

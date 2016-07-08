@@ -24,7 +24,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.junit.Test;
@@ -67,7 +67,7 @@ public abstract class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
 					c.setVisible(false);
 				}
 			}));
-			add(new Label("isPageStateless", new AbstractReadOnlyModel<Boolean>()
+			add(new Label("isPageStateless", new IModel<Boolean>()
 			{
 				@Override
 				public Boolean getObject()

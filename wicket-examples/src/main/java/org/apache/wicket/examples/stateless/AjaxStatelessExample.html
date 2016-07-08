@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+	<head>
+	 <title>Stateless Wicket</title>
+	 <link rel="stylesheet" type="text/css" href="style.css"/>
+	</head>
+	<body>
+		<span wicket:id="mainNavigation"></span>
+		<span wicket:id="message" id="message">Message goes here</span>
+		<br />
+		<a wicket:id="indexLink" href="#">go to index</a>
+		<br />
+		<h2>Statless ajax fallback link</h2>
+		<div>This link uses ajax when it is available, and a regular
+			wicket roundtrip when ajax or javascript are not available and the
+			page should be stateless.</div>
+
+		<b>Counter: </b>
+		<span id="c2" wicket:id="incrementLabel"></span>
+		<a href="#" id="c2-link" wicket:id="incrementLink">increment</a>
+		<br />
+		<br />
+
+		<h2>Stateless form submit example</h2>
+		<p>Submit form via AJAX. Each field is required.</p>
+		<form wicket:id="inputForm">
+			<label for="name">Name:</label> <input wicket:id="name" id="name"
+				type="text" size="15" /><br /> <label for="surname">Surname:</label>
+			<input wicket:id="surname" id="surname" type="text" size="15" /><br />
+			<button id="submitButton" wicket:id="submit">Submit</button>
+
+			<div id="feedbackPanel" wicket:id="feedback"></div>
+			<br /> <span id="submittedValues" wicket:id="submittedValues"></span>
+
+		</form>
+		
+		<h2>Form component updating behavior example</h2>
+		<p>The select component submits its value via AJAX on 'change'
+			event.</p>
+		<select id="select" wicket:id="select"></select>
+		<span id="selectedValue" wicket:id="selectedValue"></span>
+		
+		<br />
+		<br />
+		<h2>AJAX indicator link example</h2>
+		<p>AJAX indicator link and button which show their indicator for
+			5 seconds.</p>
+		<a id="indicatingLink" wicket:id="indicatingLink">link</a>
+		<br />
+
+		<form wicket:id="indicatingForm"></form>
+		<button id="indicatingButton" wicket:id="indicatingButton">Button</button>
+	</body>
+</html>

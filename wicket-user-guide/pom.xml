@@ -184,18 +184,7 @@
 							<grailsVersion>${grails.version}</grailsVersion>
 						</configuration>
 						<executions>
-							<!-- HTML guide -->
-							<execution>
-								<id>doc</id>
-								<phase>package</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<command>doc</command>
-								</configuration>
-							</execution>
-							<!-- PDF guide -->
+							<!-- HTML & PDF guide -->
 							<execution>
 								<id>pdf</id>
 								<phase>package</phase>

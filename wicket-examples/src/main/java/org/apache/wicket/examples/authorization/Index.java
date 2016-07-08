@@ -50,7 +50,7 @@ public class Index extends BasePage
 			protected void populateItem(ListItem<User> item)
 			{
 				final User user = item.getModelObject();
-				item.add(new Link("selectUserLink")
+				item.add(new Link<Void>("selectUserLink")
 				{
 					@Override
 					public void onClick()
@@ -64,7 +64,7 @@ public class Index extends BasePage
 
 		// pages that are protected using wicket meta data
 		add(new BookmarkablePageLink<>("adminBookmarkableLink", AdminBookmarkablePage.class));
-		add(new Link("adminInternalLink")
+		add(new Link<Void>("adminInternalLink")
 		{
 			@Override
 			public void onClick()
@@ -77,14 +77,8 @@ public class Index extends BasePage
 		// pages that are protected using annotations
 		add(new BookmarkablePageLink<Void>("adminAnnotBookmarkableLink",
 			AdminAnnotationsBookmarkablePage.class));
-		add(new Link("adminAnnotInternalLink")
-		{
-			@Override
-			public void onClick()
-			{
-				setResponsePage(new AdminAnnotationsInternalPage("bar"));
-			}
-		});
+		add(Link.onClick("adminAnnotInternalLink", link -> setResponsePage(new AdminAnnotationsInternalPage("bar"))));
+
 		add(new BookmarkablePageLink<>("panelsAnnotPageLink", AnnotationsPanelsPage.class));
 	}
 }

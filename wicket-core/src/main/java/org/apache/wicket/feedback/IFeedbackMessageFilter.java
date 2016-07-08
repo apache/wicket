@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.feedback;
 
+import java.util.function.Predicate;
+
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -23,35 +25,18 @@ import org.apache.wicket.util.io.IClusterable;
  * 
  * @author Jonathan Locke
  */
-public interface IFeedbackMessageFilter extends IClusterable
+@FunctionalInterface
+public interface IFeedbackMessageFilter extends IClusterable, Predicate<FeedbackMessage>
 {
 	/**
 	 * Filter that returns simply all available messages.
 	 */
-	IFeedbackMessageFilter ALL = new IFeedbackMessageFilter()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public boolean accept(FeedbackMessage message)
-		{
-			return true;
-		}
-	};
+	IFeedbackMessageFilter ALL = message -> true;
 
 	/**
 	 * Filter that does not match any message
 	 */
-	IFeedbackMessageFilter NONE = new IFeedbackMessageFilter()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public boolean accept(FeedbackMessage message)
-		{
-			return false;
-		}
-	};
+	IFeedbackMessageFilter NONE = message -> false;
 
 	/**
 	 * @param message
@@ -59,4 +44,9 @@ public interface IFeedbackMessageFilter extends IClusterable
 	 * @return True if the message should be included, false to exclude it
 	 */
 	boolean accept(FeedbackMessage message);
+
+	@Override
+	default boolean test(FeedbackMessage message) {
+		return accept(message);
+	}
 }
