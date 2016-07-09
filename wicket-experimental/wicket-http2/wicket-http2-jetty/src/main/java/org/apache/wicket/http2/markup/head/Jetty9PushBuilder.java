@@ -22,10 +22,16 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- *
+ * Allows to push resources with the jetty specific push builder API
+ * 
+ * @author Martin Grigorov
+ * @author Tobias Soloschenko
  */
 public class Jetty9PushBuilder implements PushBuilder
 {
+	/**
+	 * @see {@link org.apache.wicket.http2.markup.head.PushBuilder}
+	 */
 	@Override
 	public void push(HttpServletRequest httpServletRequest, String... paths)
 	{

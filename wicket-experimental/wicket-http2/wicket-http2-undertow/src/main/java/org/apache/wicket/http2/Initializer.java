@@ -14,24 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2.markup.head;
+package org.apache.wicket.http2;
 
-import javax.servlet.http.HttpServletRequest;
+import org.apache.wicket.Application;
+import org.apache.wicket.IInitializer;
+import org.apache.wicket.http2.markup.head.UndertowPushBuilder;
 
 /**
- * Used to delegate the push call to the vendor specific push builder API
+ * Initializes the undertow specific push builder API and makes it available through the http2
+ * settings
  * 
- * @author Martin Grigorov
+ * @author Tobias Soloschenko
  */
-public interface PushBuilder
+public class Initializer implements IInitializer
 {
 	/**
-	 * Pushes the given paths with the push builder received from the http servlet request
-	 * 
-	 * @param httpServletRequest
-	 *            the http servlet request to get the push builder from
-	 * @param paths
-	 *            the paths of the resources to be pushed
+	 * Initializes the push builder API of undertow
 	 */
-	void push(HttpServletRequest httpServletRequest, String... paths);
+	@Override
+	public void init(Application application)
+	{
+		Http2Settings http2Settings = Http2Settings.Holder.get(application);
+		http2Settings.setPushBuilder(new UndertowPushBuilder());
+	}
+
+	@Override
+	public void destroy(Application application)
+	{
+		// NOOP
+	}
 }

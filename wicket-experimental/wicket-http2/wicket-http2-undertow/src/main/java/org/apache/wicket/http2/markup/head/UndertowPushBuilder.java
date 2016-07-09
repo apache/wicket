@@ -22,11 +22,11 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * Allows to push resources with the tomcat specific push builder API
+ * Allows to push resources with the undertow specific push builder API
  * 
- * @author Martin Grigorov
+ * @author Tobias Soloschenko
  */
-public class Tomcat85PushBuilder implements PushBuilder
+public class UndertowPushBuilder implements PushBuilder
 {
 	/**
 	 * @see {@link org.apache.wicket.http2.markup.head.PushBuilder}
@@ -36,8 +36,9 @@ public class Tomcat85PushBuilder implements PushBuilder
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-		org.apache.catalina.connector.Request tomcatRequest = (org.apache.catalina.connector.Request) httpRequest;
-		org.apache.catalina.servlet4preview.http.PushBuilder pushBuilder = tomcatRequest.getPushBuilder();
+		io.undertow.servlet.spec.HttpServletRequestImpl undertowRequest = (io.undertow.servlet.spec.HttpServletRequestImpl) httpRequest;
+		// Added explicit cast here to ensure this is the implementation of undertow
+		io.undertow.servlet.spec.PushBuilderImpl pushBuilder = (io.undertow.servlet.spec.PushBuilderImpl)undertowRequest.getPushBuilder();
 		for (String path : paths)
 		{
 			pushBuilder.path(path);

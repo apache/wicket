@@ -87,6 +87,7 @@ public class PushHeaderItem extends HeaderItem
 		// Check if the protocol is http/2 or http/2.0 to only push the resources in this case
 		if (isHttp2(request))
 		{
+			// Receives the vendor specific push builder
 			Http2Settings http2Settings = Http2Settings.Holder.get(Application.get());
 			PushBuilder pushBuilder = http2Settings.getPushBuilder();
 			pushBuilder.push(request, urls.toArray(new String[urls.size()]));
@@ -114,7 +115,7 @@ public class PushHeaderItem extends HeaderItem
 				if (object == null)
 				{
 					throw new WicketRuntimeException(
-					    "Please provide an object to the items to be pushed, so that the url can be created for the given resource.");
+						"Please provide an object to the items to be pushed, so that the url can be created for the given resource.");
 				}
 
 				CharSequence url = null;
@@ -183,8 +184,8 @@ public class PushHeaderItem extends HeaderItem
 	 * {@link WicketRuntimeException} is thrown.
 	 * 
 	 * @param request
-	 *            the request to get the container request from. The container request is checked if it
-	 *            is instance of {@link HttpServletRequest}
+	 *            the request to get the container request from. The container request is checked if
+	 *            it is instance of {@link HttpServletRequest}
 	 * @return the container request get from the given request casted to {@link HttpServletRequest}
 	 * @throw {@link WicketRuntimeException} if the container request is not a
 	 *        {@link HttpServletRequest}
@@ -195,8 +196,8 @@ public class PushHeaderItem extends HeaderItem
 		if (!(assumedHttpServletRequest instanceof HttpServletRequest))
 		{
 			throw new WicketRuntimeException(
-			    "The request is not a HttpServletRequest - the usage of PushHeaderItem is not support in the current environment: "
-			        + request.getClass().getName());
+				"The request is not a HttpServletRequest - the usage of PushHeaderItem is not support in the current environment: " +
+					request.getClass().getName());
 		}
 		return (HttpServletRequest)assumedHttpServletRequest;
 	}

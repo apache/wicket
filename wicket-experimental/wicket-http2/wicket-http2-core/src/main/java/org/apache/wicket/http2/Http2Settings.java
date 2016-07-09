@@ -23,20 +23,33 @@ import org.apache.wicket.http2.markup.head.PushBuilder;
 import org.apache.wicket.util.lang.Args;
 
 /**
- *
+ * The http2 settings used to get the vendor specific push builder API
+ * 
+ * @author Martin Grigorov
  */
 public class Http2Settings
 {
+	/**
+	 * The meta data key of the http2 settings
+	 */
 	private static final MetaDataKey<Http2Settings> KEY = new MetaDataKey<Http2Settings>()
 	{
+		private static final long serialVersionUID = 1L;
 	};
 
 	/**
-	 * Holds this Http2Settings in the Application's metadata.
-	 * This way wicket-core module doesn't have reference to wicket-http2-core
+	 * Holds this Http2Settings in the Application's meta data. This way wicket-core module doesn't
+	 * have reference to wicket-http2-core
 	 */
 	public static final class Holder
 	{
+		/**
+		 * Gets the http2 settings from the given application
+		 * 
+		 * @param application
+		 *            the application to get the meta data from
+		 * @return the http2 settings
+		 */
 		public static Http2Settings get(Application application)
 		{
 			Http2Settings settings = application.getMetaData(KEY);
@@ -54,6 +67,14 @@ public class Http2Settings
 			return settings;
 		}
 
+		/**
+		 * Sets the given http2 settings to the given application
+		 * 
+		 * @param application
+		 *            the application to set the meta data key to
+		 * @param settings
+		 *            the http2 settings to be set to the application
+		 */
 		public static void set(Application application, Http2Settings settings)
 		{
 			application.setMetaData(KEY, settings);
@@ -62,12 +83,26 @@ public class Http2Settings
 
 	private PushBuilder pushBuilder = NoopPushBuilder.INSTANCE;
 
-	public Http2Settings setPushBuilder(PushBuilder pushBuilder) {
+	/**
+	 * Sets the push builder that has been initialized
+	 * 
+	 * @param pushBuilder
+	 *            the push builder to be used after the initialization
+	 * @return the push builder
+	 */
+	public Http2Settings setPushBuilder(PushBuilder pushBuilder)
+	{
 		this.pushBuilder = Args.notNull(pushBuilder, "pushBuilder");
 		return this;
 	}
 
-	public PushBuilder getPushBuilder() {
+	/**
+	 * Gets the push builder which has been initialized
+	 * 
+	 * @return the push builder
+	 */
+	public PushBuilder getPushBuilder()
+	{
 		return pushBuilder;
 	}
 }

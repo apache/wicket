@@ -21,10 +21,16 @@ import org.apache.wicket.IInitializer;
 import org.apache.wicket.http2.markup.head.Jetty9PushBuilder;
 
 /**
- *
+ * Initializes the jetty specific push builder API and makes it available through the http2
+ * settings
+ * 
+ * @author Martin Grigorov
  */
 public class Initializer implements IInitializer
 {
+	/**
+	 * Initializes the push builder API of jetty
+	 */
 	@Override
 	public void init(Application application)
 	{
@@ -35,5 +41,6 @@ public class Initializer implements IInitializer
 	@Override
 	public void destroy(Application application)
 	{
+		// NOOP
 	}
 }
