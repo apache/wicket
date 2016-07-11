@@ -418,7 +418,19 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
-				<artifactId>wicket-http2</artifactId>
+				<artifactId>wicket-http2-jetty</artifactId>
+				<version>0.1-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket.experimental.wicket8</groupId>
+				<artifactId>wicket-http2-tomcat</artifactId>
+				<version>0.1-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket.experimental.wicket8</groupId>
+				<artifactId>wicket-http2-undertow</artifactId>
 				<version>0.1-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
