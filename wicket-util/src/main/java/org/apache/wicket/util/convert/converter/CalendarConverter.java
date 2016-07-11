@@ -53,10 +53,6 @@ public class CalendarConverter implements IConverter<Calendar>
 		this.dateConverter = dateConverter;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToObject(java.lang.String,
-	 *      java.util.Locale)
-	 */
 	@Override
 	public Calendar convertToObject(final String value, final Locale locale)
 	{
@@ -71,10 +67,6 @@ public class CalendarConverter implements IConverter<Calendar>
 		return calendar;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.convert.IConverter#convertToString(java.lang.Object,
-	 *      java.util.Locale)
-	 */
 	@Override
 	public String convertToString(final Calendar value, final Locale locale)
 	{

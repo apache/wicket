@@ -19,6 +19,10 @@ package org.apache.wicket;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,11 +41,15 @@ import org.apache.wicket.util.convert.converter.DateConverter;
 import org.apache.wicket.util.convert.converter.DoubleConverter;
 import org.apache.wicket.util.convert.converter.FloatConverter;
 import org.apache.wicket.util.convert.converter.IntegerConverter;
+import org.apache.wicket.util.convert.converter.LocalDateConverter;
+import org.apache.wicket.util.convert.converter.LocalDateTimeConverter;
 import org.apache.wicket.util.convert.converter.LongConverter;
+import org.apache.wicket.util.convert.converter.OffsetDateTimeConverter;
 import org.apache.wicket.util.convert.converter.ShortConverter;
 import org.apache.wicket.util.convert.converter.SqlDateConverter;
 import org.apache.wicket.util.convert.converter.SqlTimeConverter;
 import org.apache.wicket.util.convert.converter.SqlTimestampConverter;
+import org.apache.wicket.util.convert.converter.ZonedDateTimeConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 
@@ -145,7 +153,7 @@ public class ConverterLocator implements IConverterLocator
 	private static final long serialVersionUID = 1L;
 
 	/** Maps Classes to ITypeConverters. */
-	private final Map<String, IConverter<?>> classToConverter = new HashMap<String, IConverter<?>>();
+	private final Map<String, IConverter<?>> classToConverter = new HashMap<>();
 
 	/**
 	 * Constructor
@@ -175,6 +183,10 @@ public class ConverterLocator implements IConverterLocator
 		set(java.sql.Time.class, new SqlTimeConverter());
 		set(java.sql.Timestamp.class, new SqlTimestampConverter());
 		set(Calendar.class, new CalendarConverter());
+		set(LocalDate.class, new LocalDateConverter());
+		set(LocalDateTime.class, new LocalDateTimeConverter());
+		set(OffsetDateTime.class, new OffsetDateTimeConverter());
+		set(ZonedDateTime.class, new ZonedDateTimeConverter());
 	}
 
 	/**
