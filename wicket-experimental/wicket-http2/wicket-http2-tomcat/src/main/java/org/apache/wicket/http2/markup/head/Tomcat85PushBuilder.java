@@ -22,9 +22,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * Allows to push resources with the tomcat specific push builder API
- * 
- * @author Martin Grigorov
+ * Allows to push resources with the Tomcat 8.5+ specific push builder API
  */
 public class Tomcat85PushBuilder implements PushBuilder
 {

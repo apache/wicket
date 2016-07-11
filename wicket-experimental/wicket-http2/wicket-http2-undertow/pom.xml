@@ -29,7 +29,7 @@
 	<description>
 		Wicket’s implementation to use the PushBuilder API
 		to serve resource via http/2 with less requests. This
-		is the Apache Tomcat 8.5+ implementation to resolve the PushBuilder API and
+		is the Undertow 2+ implementation to resolve the PushBuilder API and
 		provide the IInitializer.
 	</description>
 	<dependencies>

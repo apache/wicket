@@ -21,10 +21,8 @@ import org.apache.wicket.IInitializer;
 import org.apache.wicket.http2.markup.head.Tomcat85PushBuilder;
 
 /**
- * Initializes the tomcat specific push builder API and makes it available through the http2
+ * Initializes the tomcat specific push builder API and makes it available through the HTTP2
  * settings
- * 
- * @author Martin Grigorov
  */
 public class Initializer implements IInitializer
 {

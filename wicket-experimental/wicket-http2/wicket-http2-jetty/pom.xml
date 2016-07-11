@@ -42,8 +42,8 @@
 			<groupId>org.eclipse.jetty.aggregate</groupId>
 			<artifactId>jetty-all</artifactId>
 			<version>9.3.9.M1</version>
-			<type>POM</type>
-			<scope>compile</scope>
+			<type>pom</type>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

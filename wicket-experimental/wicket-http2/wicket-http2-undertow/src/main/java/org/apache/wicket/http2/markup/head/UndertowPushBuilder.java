@@ -22,7 +22,7 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * Allows to push resources with the undertow specific push builder API
+ * Allows to push resources with the Undertow 2+ specific push builder API
  * 
  * @author Tobias Soloschenko
  */

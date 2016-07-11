@@ -20,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Used to delegate the push call to the vendor specific push builder API
- * 
- * @author Martin Grigorov
  */
 public interface PushBuilder
 {
