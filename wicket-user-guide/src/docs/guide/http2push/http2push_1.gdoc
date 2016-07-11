@@ -1,0 +1,37 @@
+Currently there are different implementations for each server to be used until the Servlet 4.0 (JSR 369) specification reaches the final state.
+
+Current supported servers are:
+* Eclipse Jetty
+* Apache Tomcat
+* redhat undertow
+
+
+For the setup you need to follow those steps:
+
+1. Setup your server to use HTTP/2 and follow the instructions provided by the vendor specific documentation
+
+2. Add two dependencies to provide the push functionality - one core dependency and one for the custom server implementation.
+{code}
+<dependency>
+	<groupId>org.apache.wicket.experimental.wicket8</groupId>
+	<artifactId>wicket-http2-core</artifactId>
+	<version>0.X-SNAPSHOT</version>
+</dependency>
+<dependency>
+	<groupId>org.apache.wicket.experimental.wicket8</groupId>
+	<artifactId>wicket-http2-jetty</artifactId>
+	<!--<artifactId>wicket-http2-tomcat</artifactId>
+	<artifactId>wicket-http2-undertow</artifactId>-->
+	<version>0.X-SNAPSHOT</version>
+</dependency>
+{code}
+
+3. Add the following PushHeaderItem to the renderHead method in your component.
+Example:
+{code}
+TestResourceReference instance = TestResourceReference.getInstance();
+response.render(CssHeaderItem.forReference(instance));
+response.render(new PushHeaderItem().push(Arrays.asList(new PushItem(instance))));
+{code}
+
+Basically the resource is pushed before the actual response of the component is send to the client (browser) and because of this the client does not need to send an additional request.

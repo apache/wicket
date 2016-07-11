@@ -215,6 +215,9 @@ internals:
   autocomponents: Markup parsing and Autocomponents
 lambdas:
   title: Lambda Expressions
+http2push:
+  title: Wicket HTTP/2 Support (Experimental)
+  http2push_1: Example Usage
 monitoring:
   title: Wicket Metrics Monitoring (Experimental)
   monitoring_1: Example setup
