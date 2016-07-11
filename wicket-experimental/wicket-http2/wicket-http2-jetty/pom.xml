@@ -39,10 +39,9 @@
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.jetty.aggregate</groupId>
-			<artifactId>jetty-all</artifactId>
-			<version>9.3.9.M1</version>
-			<type>pom</type>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>9.3.10.v20160621</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
