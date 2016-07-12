@@ -22,6 +22,8 @@ import java.io.OutputStream;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Url;
@@ -51,8 +53,12 @@ public class SessionCheckerTest extends WicketTestCase
 			}
 		};
 
-		WebComponent component = new ComponentWithAReferenceToTheSession("id");
-		byte[] serialized = serializer.serialize(component);
+		WebMarkupContainer container = new WebMarkupContainer("container");
+		// WICKET-6196 force container#children to be an array
+		container.add(new Label("id1"));
+		container.add(new ComponentWithAReferenceToTheSession("id2"));
+		
+		byte[] serialized = serializer.serialize(container);
 		assertNull("The produced byte[] must be null if there was an error", serialized);
 	}
 

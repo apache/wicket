@@ -50,11 +50,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class NestedStringResourceLoader implements IStringResourceLoader
 {
-	private Pattern pattern;
+	private final Pattern pattern;
 
-	private List<IStringResourceLoader> loaders;
+	private final List<IStringResourceLoader> loaders;
 
-	private ResourceSettings resourceSettings;
+	private final ResourceSettings resourceSettings;
 
 	/**
 	 * Creates a nested string resource loader
