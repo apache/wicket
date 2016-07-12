@@ -57,7 +57,7 @@ Actions about to be performed:
 
 ------------------------------------------"
 
-read --prompt "Press enter to continue or CTRL-C to abort"
+read -p "Press enter to continue or CTRL-C to abort"
 
 # push the release tag to ASF git repo
 
@@ -67,7 +67,7 @@ git push origin $tag
 
 svn mv https://dist.apache.org/repos/dist/dev/wicket/$version https://dist.apache.org/repos/dist/release/wicket -m "Upload release to the mirrors"
 
-mvn org.sonatype.plugins:nexus-staging-maven-plugin:LATEST:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release vote has passed"
+mvn org.sonatype.plugins:nexus-staging-maven-plugin:1.6.7:rc-release -DstagingRepositoryId=$stagingrepoid -DnexusUrl=https://repository.apache.org -DserverId=apache.releases.https -Ddescription="Release vote has passed"
 
 # Renumber the next development iteration $next_version:
 
