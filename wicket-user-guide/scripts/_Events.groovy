@@ -45,6 +45,26 @@ eventDocStart = { kind ->
           }
         })
         
+        org.radeox.macro.MacroLoader.newInstance().add(
+            org.radeox.macro.MacroRepository.instance,
+            new org.radeox.macro.Preserved() {
+    
+              @Override
+              String getName() {
+                'divcontainer'
+              }
+              
+              @Override
+              void execute(Writer writer, org.radeox.macro.parameter.MacroParameter params) {
+                def content = params.content
+                def tagValue = params.get("0")
+                
+                writer << "<div class=\"" + tagValue + "\">"
+                writer << content
+                writer << "</div>"
+              }
+            })
+        
         println "macro externalink added"
     }
 }

@@ -9,7 +9,7 @@ add(new Label("timeStamp", () -> new Date().toString()));
 
 As mentioned above, method @setObject()@ comes with a default implementation. The code is the following:
  
-{code}
+{code:java}
 default void setObject(final T object)
 {
   throw new UnsupportedOperationException(
@@ -18,3 +18,26 @@ default void setObject(final T object)
 {code}
 
 This means that models obtained using @IModel@ as lambda expressions are _read-only_. When we work with forms we need to use a model that support also data storing. In the next paragraph we will see a couple of models shipped with Wicket that allow us to easily use JavaBeans as backing objects.
+
+h3. Lambda Goodies
+
+Most of the default methods we find in @IModel@ are meant to leverage Lambda expressions to transform model object. The following is a short reference for such methods:
+
+* *filter(predicateFilter)*: Returns a @IModel@ checking whether the predicate holds for the contained object, if it is not null. If the predicate doesn't evaluate to true, the contained object will be null. Example:
+    {divcontainer:li-nested-content}   
+       {code:java}
+       //the filtered model will have a null model object if person's name 
+       //is not "Jane"
+       IModel<Person> janeModel = Model.of(person)
+                       .filter((p) -> p.getName().equals("Jane"));
+       {code}
+    {divcontainer}
+* *map(mapperFunction)*: Returns a @IModel@ applying the given mapper to the contained object, if it is not null. Example:
+    {divcontainer:li-nested-content}   
+        {code:java}
+        //the new model will contain the person's first name
+        IModel<String> personNameModel = Model.of(person).map(Person::getName);
+        {code}
+    {divcontainer}
+    
+ TODO:add other methods   
