@@ -35,9 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * NOTE: THIS CLASS IS NOT PART OF THE WICKET PUBLIC API, DO NOT USE IT UNLESS YOU KNOW WHAT YOU ARE
- * DOING.
- * <p>
  * This class parses expressions to lookup or set a value on the object that is given. <br/>
  * The supported expressions are:
  * <dl>
@@ -88,7 +85,7 @@ public final class PropertyResolver
 	private final static int CREATE_NEW_VALUE = 1;
 	private final static int RESOLVE_CLASS = 2;
 
-	private final static ConcurrentHashMap<Object, IGetAndSetLocator> applicationToLocators = Generics.newConcurrentHashMap(2);
+	private final static ConcurrentHashMap<Object, IPropertyLocator> applicationToLocators = Generics.newConcurrentHashMap(2);
 
 	private static final String GET = "get";
 	private static final String IS = "is";
@@ -389,9 +386,15 @@ public final class PropertyResolver
 
 	private static IGetAndSet getGetAndSet(String exp, final Class<?> clz)
 	{
-		IGetAndSetLocator locator = getLocator();
+		IPropertyLocator locator = getLocator();
 		
-		return locator.getAndSet(clz, exp);
+		IGetAndSet getAndSet = locator.get(clz, exp);
+		if (getAndSet == null) {
+			throw new WicketRuntimeException(
+					"Property could not be resolved for class: " + clz + " expression: " + exp);
+		}
+		
+		return getAndSet;
 	}
 
 	/**
@@ -473,7 +476,7 @@ public final class PropertyResolver
 	/**
 	 * @author jcompagner
 	 */
-	public static interface IGetAndSet
+	public interface IGetAndSet
 	{
 		/**
 		 * @param object
@@ -520,7 +523,7 @@ public final class PropertyResolver
 		public Method getSetter();
 	}
 
-	private static abstract class AbstractGetAndSet implements IGetAndSet
+	public static abstract class AbstractGetAndSet implements IGetAndSet
 	{
 		/**
 		 * {@inheritDoc}
@@ -1238,10 +1241,10 @@ public final class PropertyResolver
 	}
 
 	/**
-	 * Sets the {@link IGetAndSetLocator} for the given application.
+	 * Sets the {@link IPropertyLocator} for the given application.
 	 *
 	 * If the Application is null then it will be the default if no application is found. So if you
-	 * want to be sure that your {@link IGetAndSetLocator} is handled in all situations then call this
+	 * want to be sure that your {@link IPropertyLocator} is handled in all situations then call this
 	 * method twice with your implementations. One time for the application and the second time with
 	 * null.
 	 *
@@ -1252,12 +1255,12 @@ public final class PropertyResolver
 	@Deprecated
 	public static void setClassCache(final Application application, final IClassCache classCache)
 	{
-		setLocator(application, new IGetAndSetLocator() {
+		setLocator(application, new IPropertyLocator() {
 			
 			private DefaultGetAndSetLocator locator = new DefaultGetAndSetLocator();
 			
 			@Override
-			public IGetAndSet getAndSet(Class<?> clz, String name) {
+			public IGetAndSet get(Class<?> clz, String name) {
 				Map<String, IGetAndSet> map = classCache.get(clz);
 				if (map == null) {
 					map = new ConcurrentHashMap<String, IGetAndSet>(8);
@@ -1266,7 +1269,7 @@ public final class PropertyResolver
 				
 				IGetAndSet getAndSetter = map.get(name);
 				if (getAndSetter == null) {
-					getAndSetter = locator.getAndSet(clz, name);
+					getAndSetter = locator.get(clz, name);
 					map.put(name, getAndSetter);
 				}
 				
@@ -1276,12 +1279,12 @@ public final class PropertyResolver
 	}
 
 	/**
-	 * Get the current {@link IGetAndSetLocator}.
+	 * Get the current {@link IPropertyLocator}.
 	 * 
 	 * @return locator for the current {@link Application} or a general one if no current application is present
 	 * @see Application#get()
 	 */
-	public static IGetAndSetLocator getLocator()
+	public static IPropertyLocator getLocator()
 	{
 		Object key;
 		if (Application.exists())
@@ -1292,10 +1295,10 @@ public final class PropertyResolver
 		{
 			key = PropertyResolver.class;
 		}
-		IGetAndSetLocator result = applicationToLocators.get(key);
+		IPropertyLocator result = applicationToLocators.get(key);
 		if (result == null)
 		{
-			IGetAndSetLocator tmpResult = applicationToLocators.putIfAbsent(key, result = new CachingGetAndSetLocator(new DefaultGetAndSetLocator()));
+			IPropertyLocator tmpResult = applicationToLocators.putIfAbsent(key, result = new CachingGetAndSetLocator(new DefaultGetAndSetLocator()));
 			if (tmpResult != null)
 			{
 				result = tmpResult;
@@ -1310,7 +1313,7 @@ public final class PropertyResolver
 	 * @param application application, may be {@code null}
 	 * @param locator locator
 	 */
-	public static void setLocator(final Application application, final IGetAndSetLocator locator)
+	public static void setLocator(final Application application, final IPropertyLocator locator)
 	{
 		if (application == null)
 		{
@@ -1323,7 +1326,7 @@ public final class PropertyResolver
 	}
 
 	/**
-	 * Specify an {@link IGetAndSetLocator} instead.
+	 * Specify an {@link IPropertyLocator} instead.
 	 */
 	@Deprecated
 	public static interface IClassCache
@@ -1346,58 +1349,81 @@ public final class PropertyResolver
 	}
 
 	/**
-	 * A locator of {@link IGetAndSet}s.
+	 * A locator of properties.
 	 * 
-	 * @param clz owning class
-	 * @param exp identifying expression
-	 *  
 	 * @see https://issues.apache.org/jira/browse/WICKET-5623
 	 */
-	public static interface IGetAndSetLocator
+	public static interface IPropertyLocator
 	{
 		/**
-		 * Get {@link IGetAndSet}.
+		 * Get {@link IGetAndSet} for a property.
 		 * 
 		 * @param clz owning class
-		 * @param exp identifying expression
-		 * @return get and set
+		 * @param exp identifying the property
+		 * @return getAndSet or {@code null} if non located
 		 */
-		IGetAndSet getAndSet(Class<?> clz, String exp);
+		IGetAndSet get(Class<?> clz, String exp);
 	}
 
-	public static class CachingGetAndSetLocator implements IGetAndSetLocator
+	public static class CachingGetAndSetLocator implements IPropertyLocator
 	{
 		private final ConcurrentHashMap<String, IGetAndSet> map = Generics.newConcurrentHashMap(16);
 		
-		private IGetAndSetLocator locator;
+		/**
+		 * Special token to put into the cache representing no located {@link IGetAndSet}. 
+		 */
+		private IGetAndSet NONE = new AbstractGetAndSet() {
 
-		public CachingGetAndSetLocator(IGetAndSetLocator locator) {
+			@Override
+			public Object getValue(Object object) {
+				return null;
+			}
+
+			@Override
+			public Object newValue(Object object) {
+				return null;
+			}
+
+			@Override
+			public void setValue(Object object, Object value, PropertyResolverConverter converter) {
+			}
+		};
+
+		private IPropertyLocator locator;
+
+		public CachingGetAndSetLocator(IPropertyLocator locator) {
 			this.locator = locator;
 		}
 
 		@Override
-		public IGetAndSet getAndSet(Class<?> clz, String exp) {
+		public IGetAndSet get(Class<?> clz, String exp) {
 			String key = clz.getName() + "#" + exp;
 			
-			IGetAndSet accessor = map.get(key);
-			if (accessor == null) {
-				accessor = locator.getAndSet(clz, exp);
-
-				map.put(key, accessor);
+			IGetAndSet located = map.get(key);
+			if (located == null) {
+				located = locator.get(clz, exp);
+				if (located == null) {
+					located = NONE;
+				}
+				map.put(key, located);
 			}
 			
-			return accessor;
+			if (located == NONE) {
+				located = null;
+			}
+			
+			return located;
 		}
 	}
 
 	/**
 	 * Default implementation supporting <em>Java Beans</em> properties, maps, lists and method invocations.
 	 */
-	public static class DefaultGetAndSetLocator implements IGetAndSetLocator
+	public static class DefaultGetAndSetLocator implements IPropertyLocator
 	{
 		@Override
-		public IGetAndSet getAndSet(Class<?> clz, String exp) {
-			IGetAndSet getAndSet;
+		public IGetAndSet get(Class<?> clz, String exp) {
+			IGetAndSet getAndSet = null;
 			
 			Method method = null;
 			Field field;
@@ -1507,14 +1533,6 @@ public final class PropertyResolver
 										"No get method defined for class: " + clz +
 											" expression: " + propertyName);
 								}
-							}
-							else
-							{
-								// We do not look for a public FIELD because
-								// that is not good programming with beans patterns
-								throw new WicketRuntimeException(
-									"No get method defined for class: " + clz + " expression: " +
-										exp);
 							}
 						}
 						else
