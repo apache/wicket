@@ -263,13 +263,13 @@ public final class PropertyResolver
 
 	/**
 	 * Receives the class parameter also, since this method can resolve the type for some
-	 * expression, only knowing the target class
+	 * expression, only knowing the target class.
 	 *
-	 * @param expression
-	 * @param object
-	 * @param tryToCreateNull
-	 * @param clz
-	 * @return {@link ObjectWithGetAndSet}
+	 * @param expression property expression
+	 * @param object root object
+	 * @param tryToCreateNull how should null values be handled
+	 * @param clz owning clazz
+	 * @return final getAndSet and the target to apply it on, or {@code null} if expression results in an intermediate null
 	 */
 	private static ObjectWithGetAndSet getObjectWithGetAndSet(final String expression, final Object object, final int tryToCreateNull, Class<?> clz)
 	{
