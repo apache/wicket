@@ -65,11 +65,11 @@ MyApp#init()
 {
    super.init();
  
-   setPageManagerProvider(new DefaultPageManagerProvider()
+   setPageManagerProvider(new DefaultPageManagerProvider(this)
    {
        protected IDataStore newDataStore()
        {
-           return  new HttpSessionDataStore(pageManagerContext, new PageNumberEvictionStrategy(20));
+           return  new HttpSessionDataStore(getPageManagerContext(), new PageNumberEvictionStrategy(20));
        }
    }
 }
