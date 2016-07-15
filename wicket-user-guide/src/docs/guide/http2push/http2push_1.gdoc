@@ -1,27 +1,22 @@
 Currently there are different implementations for each server to be used until the Servlet 4.0 (JSR 369) specification reaches the final state.
 
 Current supported servers are:
-* Eclipse Jetty
-* Apache Tomcat
-* redhat undertow
+* Eclipse Jetty 9.3+
+* Apache Tomcat 8.5+
+* RedHat Undertow 2+
 
 
 For the setup you need to follow those steps:
 
 1. Setup your server to use HTTP/2 and follow the instructions provided by the vendor specific documentation
 
-2. Add two dependencies to provide the push functionality - one core dependency and one for the custom server implementation.
+2. Add the respective dependency for your web server to provide the push functionality.
 {code}
 <dependency>
 	<groupId>org.apache.wicket.experimental.wicket8</groupId>
-	<artifactId>wicket-http2-core</artifactId>
-	<version>0.X-SNAPSHOT</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.wicket.experimental.wicket8</groupId>
 	<artifactId>wicket-http2-jetty</artifactId>
-	<!--<artifactId>wicket-http2-tomcat</artifactId>
-	<artifactId>wicket-http2-undertow</artifactId>-->
+	<!--<artifactId>wicket-http2-tomcat</artifactId>-->
+	<!--<artifactId>wicket-http2-undertow</artifactId>-->
 	<version>0.X-SNAPSHOT</version>
 </dependency>
 {code}
