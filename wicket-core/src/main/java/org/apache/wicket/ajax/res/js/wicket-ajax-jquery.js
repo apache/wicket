@@ -2117,11 +2117,11 @@
 						// create link element
 						var css = Wicket.Head.createElement("link");
 
-						// copy required attributes
-						css.id = node.getAttribute("id");
-						css.rel = node.getAttribute("rel");
-						css.href = node.getAttribute("href");
-						css.type = node.getAttribute("type");
+						// copy supplied attributes only.
+						for (var attrIdx = 0; attrIdx < node.attributes.length; attrIdx++) {
+							var attr = node.attributes[attrIdx];
+							css.setAttribute(attr.name, attr.value)
+						}
 
 						// add element to head
 						Wicket.Head.addElement(css);
