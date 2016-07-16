@@ -1,10 +1,10 @@
 With Wicket 8 @IModel@ has been extended with new methods to fully leverage lambdas. The most interesting thing of the new version of @IModel@ is that it provides a default implementation for all of its methods (included @setObject()@), with the only exception of @getObject()@. 
-In this way @IModel@ is eligible as functional interface and this greatly simplify the creation of cutom models. As long as we need to display a static test it doesn't make much sense building a custom model, but if we need to display a dynamic value (like the input provided by a user or a value read from a database), defining a model with a lambda expression comes quite in handy. 
+In this way @IModel@ is eligible as functional interface and this greatly simplify the creation of custom models. As long as we need to display a static text it doesn't make much sense building a custom model, but if we need to display a dynamic value (like the input provided by a user or a value read from a database), defining a model with a lambda expression comes quite in handy.
 
 Let's say we need a label to display the current time stamp each time a page is rendered. This could be a possible solution:
 
 {code}
-add(new Label("timeStamp", () -> new Date().toString()));
+add(new Label("timeStamp", () -> java.time.LocalDate.now()));
 {code}
 
 As mentioned above, method @setObject()@ comes with a default implementation. The code is the following:
@@ -23,7 +23,7 @@ h3. Lambda Goodies
 
 Most of the default methods we find in @IModel@ are meant to leverage Lambda expressions to transform model object. The following is a short reference for such methods:
 
-* *filter(predicateFilter)*: Returns a @IModel@ checking whether the predicate holds for the contained object, if it is not null. If the predicate doesn't evaluate to true, the contained object will be null. Example:
+* *filter(predicate)*: Returns a @IModel@ checking whether the predicate holds for the contained object, if it is not null. If the predicate doesn't evaluate to true, the contained object will be null. Example:
     {divcontainer:li-nested-content}   
        {code:java}
        //the filtered model will have a null model object if person's name 
@@ -40,4 +40,4 @@ Most of the default methods we find in @IModel@ are meant to leverage Lambda exp
         {code}
     {divcontainer}
     
- TODO:add other methods   
+ TODO:add other methods
