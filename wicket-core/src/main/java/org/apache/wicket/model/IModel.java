@@ -113,8 +113,7 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a IModel applying the given mapper to the contained object, if it is not {@code null}
-	 * .
+	 * Returns a IModel applying the given mapper to the contained object, if it is not {@code null}.
 	 *
 	 * @param <R>
 	 *            the new type of the contained object
