@@ -17,101 +17,36 @@
 #
 
 import sys
-import xml.etree.ElementTree as ET
-import re
+from xml.dom.minidom import parse
 
-relVersions = list()
-devVersions = list()
+groupId = "org.apache.wicket"
 
-NS = {"maven":"http://maven.apache.org/POM/4.0.0"}
+if len(sys.argv) != 3:
+    print "Usage: %s <release-version> <dev-version>" % sys.argv[0]
+    sys.exit(1)
 
-def get(pom, tag):
-    return list(pom.iterfind('maven:' + tag, NS))[0].text
+relVersion = sys.argv[1]
+devVersion = sys.argv[2]
 
-def addVersions(groupId, artifactId, releaseVersion, developVersion):
-    relVersions.append("project.rel." + groupId + "\\:" + artifactId + "=" + releaseVersion)
-    devVersions.append("project.dev." + groupId + "\\:" + artifactId + "=" + developVersion)
+relVersions = []
+devVersions = []
 
-def determineNextWicketVersion():
-    # Regular expression for matching a semver version identifier
-    SV = re.compile(
-        "^(?P<major>[0-9]+)\."
-        "(?P<minor>[0-9]+)\."
-        "(?P<patch>[0-9]+)"
-        "(?:-(?P<prerel>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?"
-        "(?:\+(?P<build>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$")
-
-    pom = ET.parse("pom.xml")
-
-    if get(pom, 'groupId') == 'org.apache.wicket' and get(pom, 'artifactId') == 'wicket-parent':
-        projectVersion = list(pom.iterfind('maven:version', NS))[0].text
-        versionInfo = SV.match(projectVersion).groupdict();
-        releaseVersion = "" + versionInfo["major"] + "." + versionInfo["minor"] + "." + versionInfo["patch"]
-        developVersion = "" + versionInfo["major"] + "." + str(int(versionInfo["minor"]) + 1) + "." + versionInfo["patch"] + "-SNAPSHOT"
-        
-        return releaseVersion, developVersion
-    else:
-        print >> sys.stderr, "This script can only be run in the folder of the wicket-parent pom"
-        sys.exit(1)
-
-def determineNextExperimentalVersion(module):
-    # Regular expression for matching experimental version identifier that don't
-    # conform to the semver standard of x.y.z versioning.
-    EV = re.compile(
-        "^0\."
-        "(?P<minor>[0-9]+)"
-        "-SNAPSHOT$")
-
-    pom = ET.parse("wicket-experimental/" + module + "/pom.xml")
-
-    if get(pom, 'artifactId') == module:
-        projectVersion = list(pom.iterfind('maven:version', NS))[0].text
-        versionInfo = EV.match(projectVersion).groupdict();
-        releaseVersion = "0." + versionInfo["minor"]
-        developVersion = "0." + str(int(versionInfo["minor"]) + 1) + "-SNAPSHOT"
-        
-        return releaseVersion, developVersion
-    else:
-        print >> sys.stderr, "This function only works for experimental wicket 6 modules"
-        sys.exit(1)
+def addVersions(groupId, module):
+    relVersions.append("project.rel." + groupId + "\\:" + module + "=" + relVersion)
+    devVersions.append("project.dev." + groupId + "\\:" + module + "=" + devVersion)
 
 def getModulesFromParent(parentPomFile):
-    pom = ET.parse(parentPomFile)
+    pom = parse(parentPomFile)
 
-    res = list()
-    modules = pom.findall('maven:modules/maven:module', NS)
-    for module in modules :
-        # rebuild the module name for quickstart and the testing/ projects
-        # because in the generated properties file, they have the same groupId
-        # as wicket-core and wicket-parent (are not under a sub-groupId)
-        res.append(module.text.replace("testing/", "").replace("archetypes/quickstart", "wicket-archetype-quickstart"))
-    return res
+    for moduleTag in pom.getElementsByTagName('module'):
+        module = moduleTag.childNodes[0].nodeValue.replace("testing/", "").replace("archetypes/quickstart", "wicket-archetype-quickstart")
+        addVersions(groupId, module)
 
-#
-# All wicket core projects have the same groupId and version, and they are only
-# specified in the parent POM. Therefore we need to generate for each normal
-# module lines that upgrade their versions.
-#
-wicketReleaseVersion, wicketDevelopVersion = determineNextWicketVersion()
-    
-print "# " + wicketReleaseVersion + "-SNAPSHOT -> " + wicketReleaseVersion + " -> " + wicketDevelopVersion
+addVersions(groupId, "wicket-parent")
+addVersions("org.apache.wicket.experimental.wicket6", "wicket-experimental")
 
-modules = getModulesFromParent("pom.xml")
-modules.insert(0, 'wicket-parent')
-
-for module in modules:
-    addVersions('org.apache.wicket', module, wicketReleaseVersion, wicketDevelopVersion)
-
-#
-# Experimental modules are versioned independently, so we need to grab the
-# version from each POM and update that specifically. This will fail when we
-# get a multi-module experimental project, but until then, this suffices.
-#
-
-modules = getModulesFromParent("wicket-experimental/pom.xml")
-for module in modules:
-    releaseVersion, developVersion = determineNextExperimentalVersion(module)
-    addVersions('org.apache.wicket.experimental.wicket6', module, releaseVersion, developVersion)
+getModulesFromParent("pom.xml")
+getModulesFromParent("wicket-native-websocket/pom.xml")
 
 for version in relVersions:
     print version
