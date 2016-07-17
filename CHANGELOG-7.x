@@ -2,6 +2,44 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.4.0
+
+** Bug
+
+    * [WICKET-6154] - Performance bottleneck when using KeyInSessionSunJceCryptFactory
+    * [WICKET-6155] - Newline in ModalWindow title 
+    * [WICKET-6157] - WicketTester and application servers are destroying app differently
+    * [WICKET-6160] - Missing type for MediaComponent causing iOS devices not to be able to play videos
+    * [WICKET-6162] - Reload leads to unexpected RuntimeException 'Unable to find component with id'
+    * [WICKET-6169] - NullPointerException accessing AbstractRequestLogger.getLiveSessions
+    * [WICKET-6170] - Wrong requestmapper used for cache decorated resources
+    * [WICKET-6172] - Inconsistent results from getTag[s]ByWicketId
+    * [WICKET-6173] - WICKET-6172 makes TagTester.createTagsByAttribute stop working
+    * [WICKET-6174] - Browser/Client info navigatorJavaEnabled property returns undefined
+    * [WICKET-6175] - Aautocomplete suggestion window is not closing in IE11
+    * [WICKET-6180] - JMX Initializer's usage of CGLIB makes it impossible to upgrade to CGLIB 3.2.3
+    * [WICKET-6185] - Border body not reachable for visitors
+    * [WICKET-6187] - Enclosures rendered twice in derived component
+    * [WICKET-6191] - AjaxTimerBehavior will stop after ajax update of component it is attached to
+    * [WICKET-6196] - CheckingObjectOutputStream broken in Wicket 7
+    * [WICKET-6198] - Unable to disable a MultiFileUploadField
+    * [WICKET-6202] - Guide: 26.1 Page storing, section HttpSessionDataStore - example code is not correct
+    * [WICKET-6204] - Copy only the provided attributes for Ajax link inclusion
+
+** Improvement
+
+    * [WICKET-6153] - WicketTester's MockHttpServletRequest doesn't expose setLocale(aLocale) method
+    * [WICKET-6178] - MetaDataHeaderItem # generateString() should return specials characters escaped like StringEscapeUtils.escapeHtml(s) does
+    * [WICKET-6182] - Remove recreateBookmarkablePagesAfterExpiry check in Component#createRequestHandler
+    * [WICKET-6183] - Improve stateless support for AJAX
+    * [WICKET-6186] - Upgrade JQuery to 1.12.4/2.2.4
+
+** New Feature
+
+    * [WICKET-6193] - NestedStringResourceLoader - replaces nested keys within property files
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.3.0
 
 ** Bug
