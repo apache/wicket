@@ -25,7 +25,7 @@
 	</parent>
 	<artifactId>wicket-http2-undertow</artifactId>
 	<packaging>jar</packaging>
-	<name>Wicket Http/2 Tomcat 8.5+</name>
+	<name>Wicket Http/2 Undertow 2+</name>
 	<description>
 		Wicket’s implementation to use the PushBuilder API
 		to serve resource via http/2 with less requests. This
