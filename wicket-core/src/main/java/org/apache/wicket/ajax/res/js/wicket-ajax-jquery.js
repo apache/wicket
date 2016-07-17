@@ -2151,17 +2151,18 @@
 						// create link element
 						var css = Wicket.Head.createElement("link");
 
-						// copy required attributes
-						css.id = node.getAttribute("id");
-						css.rel = node.getAttribute("rel");
-						css.href = node.getAttribute("href");
-						css.type = node.getAttribute("type");
+						// copy supplied attributes only.
+						var attributes = $(node).prop("attributes");
+						var $css = $(css);
+						$.each(attributes, function() {
+							$css.attr(this.name, this.value);
+						});
 
 						// add element to head
 						Wicket.Head.addElement(css);
 
 						// cross browser way to check when the css is loaded
-						// taked from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
+						// taken from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
 						// this makes a second GET request to the css but it gets it either from the cache or
 						// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
 						var img = document.createElement('img');
