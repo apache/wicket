@@ -61,7 +61,7 @@ public class MultiLineLabel extends WebComponent
 	 */
 	public MultiLineLabel(final String id, String label)
 	{
-		this(id, new Model<String>(label));
+		this(id, new Model<>(label));
 	}
 
 	/**

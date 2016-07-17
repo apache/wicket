@@ -115,9 +115,6 @@ public class ListenerInterfaceRequestHandler
 		return pageComponentProvider.getPageParameters();
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
-	 */
 	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
@@ -138,9 +135,6 @@ public class ListenerInterfaceRequestHandler
 		return behaviorId;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
-	 */
 	@Override
 	public void respond(final IRequestCycle requestCycle)
 	{
@@ -179,9 +173,7 @@ public class ListenerInterfaceRequestHandler
 			? RedirectPolicy.NEVER_REDIRECT
 			: RedirectPolicy.AUTO_REDIRECT;
 
-		final boolean canCallListenerInterfaceAfterExpiry = component != null
-				? component.canCallListenerInterfaceAfterExpiry()
-				: false;
+		final boolean canCallListenerInterfaceAfterExpiry = component != null && component.canCallListenerInterfaceAfterExpiry();
 
 		if (!canCallListenerInterfaceAfterExpiry && freshPage && (isStateless == false || component == null))
 		{
@@ -309,7 +301,6 @@ public class ListenerInterfaceRequestHandler
 				new PageProvider(page), policy));
 		}
 
-
 		requestListener.onRequest();
 	}
 
@@ -331,7 +322,6 @@ public class ListenerInterfaceRequestHandler
 		return pageComponentProvider.getRenderCount();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public ListenerInterfaceLogData getLogData()
 	{
