@@ -2,6 +2,28 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.24.0
+
+** Bug
+
+    * [WICKET-6154] - Performance bottleneck when using KeyInSessionSunJceCryptFactory
+    * [WICKET-6169] - NullPointerException accessing AbstractRequestLogger.getLiveSessions
+    * [WICKET-6172] - Inconsistent results from getTag[s]ByWicketId
+    * [WICKET-6174] - Browser/Client info navigatorJavaEnabled property returns undefined
+    * [WICKET-6175] - Aautocomplete suggestion window is not closing in IE11
+    * [WICKET-6181] - Revert the removal of the default error message when uploading too big files
+    * [WICKET-6191] - AjaxTimerBehavior will stop after ajax update of component it is attached to
+    * [WICKET-6202] - Guide: 26.1 Page storing, section HttpSessionDataStore - example code is not correct
+    * [WICKET-6204] - Copy only the provided attributes for Ajax link inclusion
+
+** Improvement
+
+    * [WICKET-6053] - Allow to reuse the same application instance in several tests
+    * [WICKET-6178] - MetaDataHeaderItem # generateString() should return specials characters escaped like StringEscapeUtils.escapeHtml(s) does
+    * [WICKET-6186] - Upgrade JQuery to 1.12.4/2.2.4
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.23.0
 
 ** Bug
