@@ -16,34 +16,31 @@
  */
 package org.apache.wicket.util.convert.converter;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 
 /**
- * Converts from Object to {@link OffsetDateTime}.
+ * Converts from Object to {@link LocalTime}.
  */
-public class OffsetDateTimeConverter extends AbstractJavaTimeConverter<OffsetDateTime>
+public class LocalTimeConverter extends AbstractJavaTimeConverter<LocalTime>
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
 	@Override
-	protected Class<OffsetDateTime> getTargetType()
+	protected Class<LocalTime> getTargetType()
 	{
-		return OffsetDateTime.class;
+		return LocalTime.class;
 	}
 
 	@Override
-	protected OffsetDateTime createTemporal(TemporalAccessor temporalAccessor)
+	protected LocalTime createTemporal(TemporalAccessor temporalAccessor)
 	{
-		return OffsetDateTime.from(temporalAccessor);
+		return LocalTime.from(temporalAccessor);
 	}
 
 	@Override
 	protected DateTimeFormatter getDateTimeFormatter() {
-		return DATE_TIME_FORMATTER.withZone(ZoneOffset.UTC);
+		return DateTimeFormatter.ISO_LOCAL_TIME;
 	}
 }

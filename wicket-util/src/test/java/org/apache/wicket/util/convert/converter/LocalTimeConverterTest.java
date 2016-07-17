@@ -19,31 +19,28 @@ package org.apache.wicket.util.convert.converter;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests for {@link ZonedDateTimeConverter}
+ * Tests for {@link LocalTimeConverter}
  */
-public class ZonedDateTimeConverterTest extends Assert
+public class LocalTimeConverterTest extends Assert
 {
 	@Test
 	public void convertToString() {
-		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
-		ZonedDateTime zonedDateTime = ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, ZoneOffset.ofHours(2));
-		String dateTime = converter.convertToString(zonedDateTime, Locale.ENGLISH);
-		assertThat(dateTime, is(equalTo("2016-07-10T23:02:03Z")));
+		LocalTimeConverter converter = new LocalTimeConverter();
+		String time = converter.convertToString(LocalTime.of(1, 2, 3), Locale.ENGLISH);
+		assertThat(time, is(equalTo("01:02:03")));
 	}
 
 	@Test
 	public void convertToObject() {
-		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
-		ZonedDateTime dateTime = converter.convertToObject("2016-07-10T23:02:03Z", Locale.ENGLISH);
-		ZonedDateTime offsetDateTime = ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, ZoneOffset.ofHours(2));
-		assertThat(dateTime, is(equalTo(offsetDateTime)));
+		LocalTimeConverter converter = new LocalTimeConverter();
+		LocalTime time = converter.convertToObject("01:02:03", Locale.ENGLISH);
+		assertThat(time, is(equalTo(LocalTime.of(1, 2, 3))));
 	}
 }
