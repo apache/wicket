@@ -55,12 +55,14 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.file.WebXmlFile;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -126,6 +128,7 @@ public class WicketFilterTest extends Assert
 	 * testFilterPath1()
 	 */
 	@Test
+	@Category(SlowTests.class)
 	public void filterPath1()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web1.xml");
@@ -137,6 +140,7 @@ public class WicketFilterTest extends Assert
 	 * testFilterPath2()
 	 */
 	@Test
+	@Category(SlowTests.class)
 	public void filterPath2()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web2.xml");
