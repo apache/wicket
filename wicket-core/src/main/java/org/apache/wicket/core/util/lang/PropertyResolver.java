@@ -1241,44 +1241,6 @@ public final class PropertyResolver
 	}
 
 	/**
-	 * Sets the {@link IPropertyLocator} for the given application.
-	 *
-	 * If the Application is null then it will be the default if no application is found. So if you
-	 * want to be sure that your {@link IPropertyLocator} is handled in all situations then call this
-	 * method twice with your implementations. One time for the application and the second time with
-	 * null.
-	 *
-	 * @param application
-	 *            to use or null if the default must be set.
-	 * @param classCache
-	 */
-	@Deprecated
-	public static void setClassCache(final Application application, final IClassCache classCache)
-	{
-		setLocator(application, new IPropertyLocator() {
-			
-			private DefaultGetAndSetLocator locator = new DefaultGetAndSetLocator();
-			
-			@Override
-			public IGetAndSet get(Class<?> clz, String name) {
-				Map<String, IGetAndSet> map = classCache.get(clz);
-				if (map == null) {
-					map = new ConcurrentHashMap<String, IGetAndSet>(8);
-					classCache.put(clz, map);
-				}
-				
-				IGetAndSet getAndSetter = map.get(name);
-				if (getAndSetter == null) {
-					getAndSetter = locator.get(clz, name);
-					map.put(name, getAndSetter);
-				}
-				
-				return getAndSetter;
-			}
-		});
-	}
-
-	/**
 	 * Get the current {@link IPropertyLocator}.
 	 * 
 	 * @return locator for the current {@link Application} or a general one if no current application is present
@@ -1323,29 +1285,6 @@ public final class PropertyResolver
 		{
 			applicationToLocators.put(application, locator);
 		}
-	}
-
-	/**
-	 * Specify an {@link IPropertyLocator} instead.
-	 */
-	@Deprecated
-	public static interface IClassCache
-	{
-		/**
-		 * Put the class into the cache, or if that class shouldn't be cached do nothing.
-		 *
-		 * @param clz
-		 * @param values
-		 */
-		void put(Class<?> clz, Map<String, IGetAndSet> values);
-
-		/**
-		 * Returns the class map from the cache.
-		 *
-		 * @param clz
-		 * @return the map of the given class
-		 */
-		Map<String, IGetAndSet> get(Class<?> clz);
 	}
 
 	/**
