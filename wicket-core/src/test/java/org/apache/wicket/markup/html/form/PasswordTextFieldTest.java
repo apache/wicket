@@ -22,7 +22,7 @@ import org.junit.Test;
 
 /**
  * Test for {@link PasswordTextField}.
- * 
+ *
  * @author svenmeier
  */
 public class PasswordTextFieldTest extends WicketTestCase
