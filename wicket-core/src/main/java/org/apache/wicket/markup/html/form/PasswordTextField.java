@@ -18,8 +18,6 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -28,6 +26,10 @@ import org.slf4j.LoggerFactory;
  * <p>
  * By default this text field is required. If it is not, call {@link #setRequired(boolean)} with
  * value of <code>false</code>.
+ * <p>
+ * Note that by default the model object is nullified after each request to prevent the entered
+ * password to be serialized along with the containing page, see {@link #setResetPassword(boolean)}
+ * for details.
  * 
  * @author Jonathan Locke
  */
@@ -35,14 +37,8 @@ public class PasswordTextField extends TextField<String>
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(PasswordTextField.class);
-
 	/**
-	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
-	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful for
-	 * login forms. If <code>false</code>, the contents of the model are put into the field. This is
-	 * useful for entry forms where the contents of the model should be editable, or resubmitted.
+	 * Should password be reset, see {@link #setResetPassword(boolean)}.
 	 */
 	private boolean resetPassword = true;
 
@@ -67,12 +63,9 @@ public class PasswordTextField extends TextField<String>
 	}
 
 	/**
-	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
-	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful for
-	 * login forms. If <code>false</code>, the contents of the model are put into the field. This is
-	 * useful for entry forms where the contents of the model should be editable, or resubmitted.
+	 * Should password be reset, see {@link #setResetPassword(boolean)}.
 	 * 
-	 * @return Returns the resetPassword.
+	 * @return should password be resetted
 	 */
 	public final boolean getResetPassword()
 	{
@@ -80,10 +73,14 @@ public class PasswordTextField extends TextField<String>
 	}
 
 	/**
-	 * Flag indicating whether the contents of the field should be reset each time it is rendered.
-	 * If <code>true</code>, the contents are emptied when the field is rendered. This is useful for
-	 * login forms. If <code>false</code>, the contents of the model are put into the field. This is
-	 * useful for entry forms where the contents of the model should be editable, or resubmitted.
+	 * Flag indicating whether the password should be reset after each request.
+	 * Additionally any present value is not rendered into the markup.
+	 * <br>
+	 * If <code>true</code>, the model object is set to null after each request to prevent it
+	 * being serialized along with the containing page. This is default and highly recommended
+	 * for login forms. If <code>false</code> the model value is handled as in a standard
+	 * {@link TextField}, this is useful for entry forms where the contents of the model should
+	 * be editable, or resubmitted.
 	 * 
 	 * @param resetPassword
 	 *            The resetPassword to set.
@@ -116,5 +113,22 @@ public class PasswordTextField extends TextField<String>
 	protected String[] getInputTypes()
 	{
 		return new String[] {"password"};
+	}
+
+	/**
+	 * Overriden to nullify the password.
+	 */
+	@Override
+	protected void onDetach()
+	{
+		if (resetPassword) {
+			clearInput();
+
+			if (getModel() != null) {
+				setModelObject(null);
+			}
+		}
+
+		super.onDetach();
 	}
 }
