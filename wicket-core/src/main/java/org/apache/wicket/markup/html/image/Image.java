@@ -267,7 +267,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * 
 	 * @param tag
 	 */
-	protected final void addAntiCacheParameter(final ComponentTag tag)
+	protected void addAntiCacheParameter(final ComponentTag tag)
 	{
 		String url = tag.getAttributes().getString("src");
 		url = url + (url.contains("?") ? "&" : "?");
