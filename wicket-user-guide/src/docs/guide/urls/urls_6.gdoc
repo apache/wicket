@@ -205,5 +205,5 @@ public void init() {
 As pointed out in the code above, pages and resources must be mounted after having set @CryptoMapper@ as root mapper, otherwise the mounted paths will not work.
 
 {warning}
-By default @CryptoMapper@ encrypts page URLs with a cipher that might not be strong enough for production environment. Paragraph 21.4 will provide a more detailed description of how Wicket encrypts page URLs and we will see how to use stronger ciphers.
+By default @CryptoMapper@ encrypts page URLs with a cipher that might not be strong enough for production environment. Paragraph ["Security with Wicket"|guide:security] will provide a more detailed description of how Wicket encrypts page URLs and we will see how to use stronger ciphers.
 {warning}
