@@ -1358,17 +1358,36 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the converter that should be used by this component.
-	 * 
+	 * Get the converter that should be used by this component, delegates to
+	 * {@link #createConverter(Class)} and then to the application's
+	 * {@link IConverterLocator}.
+	 *
 	 * @param type
 	 *            The type to convert to
-	 * 
+	 *
 	 * @return The converter that should be used by this component
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> type)
-	{
+	public <C> IConverter<C> getConverter(Class<C> type) {
+		IConverter<?> converter = createConverter(type);
+		if (converter != null) {
+			return (IConverter<C>) converter;
+		}
 		return getApplication().getConverterLocator().getConverter(type);
+	}
+
+	/**
+	 * Factory method for converters to be used by this component,
+	 * returns {@code null} by default.
+	 *
+	 * @param type
+	 *            The type to convert to
+	 *
+	 * @return a converter to be used by this component
+	 */
+	protected IConverter<?> createConverter(Class<?> type) {
+		return null;
 	}
 
 	/**

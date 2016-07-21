@@ -257,18 +257,13 @@ public class DateLabel extends Label implements IGenericComponent<Date, DateLabe
 	 * Returns the specialized converter.
 	 */
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> clazz)
+	public IConverter<?> createConverter(Class<?> type)
 	{
-		if (Date.class.isAssignableFrom(clazz))
+		if (Date.class.isAssignableFrom(type))
 		{
-			@SuppressWarnings("unchecked")
-			IConverter<C> result = (IConverter<C>)converter;
-			return result;
+			return converter;
 		}
-		else
-		{
-			return super.getConverter(clazz);
-		}
+		return null;
 	}
 
 	/**
