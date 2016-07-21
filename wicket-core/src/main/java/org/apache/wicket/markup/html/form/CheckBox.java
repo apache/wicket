@@ -191,18 +191,13 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
 	 */
 	@Override
-	public final <C> IConverter<C> getConverter(Class<C> type)
+	public IConverter<?> createConverter(Class<?> type)
 	{
 		if (Boolean.class.equals(type))
 		{
-			@SuppressWarnings("unchecked")
-			IConverter<C> converter = (IConverter<C>)CheckBoxConverter.INSTANCE;
-			return converter;
+			return CheckBoxConverter.INSTANCE;
 		}
-		else
-		{
-			return super.getConverter(type);
-		}
+		return null;
 	}
 
 	/**

@@ -148,18 +148,14 @@ public class FormInput extends WicketExamplePage
 			// TextField using a custom converter.
 			add(new TextField<URL>("urlProperty", URL.class)
 			{
-				@SuppressWarnings("unchecked")
 				@Override
-				public <C> IConverter<C> getConverter(final Class<C> type)
+				public IConverter<?> createConverter(Class<?> type)
 				{
 					if (URL.class.isAssignableFrom(type))
 					{
-						return (IConverter<C>)URLConverter.INSTANCE;
+						return URLConverter.INSTANCE;
 					}
-					else
-					{
-						return super.getConverter(type);
-					}
+					return null;
 				}
 			});
 
@@ -168,17 +164,14 @@ public class FormInput extends WicketExamplePage
 			{
 
 				@Override
-				public <C> IConverter<C> getConverter(final Class<C> type)
+				public IConverter<?> createConverter(Class<?> type)
 				{
 					if (UsPhoneNumber.class.isAssignableFrom(type))
 					{
 						// US telephone number mask
 						return new MaskConverter<>("(###) ###-####", UsPhoneNumber.class);
 					}
-					else
-					{
-						return super.getConverter(type);
-					}
+					return null;
 				}
 			});
 
