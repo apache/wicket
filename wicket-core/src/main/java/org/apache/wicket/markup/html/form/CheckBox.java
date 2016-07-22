@@ -186,7 +186,7 @@ public class CheckBox extends FormComponent<Boolean> implements IRequestListener
 	}
 
 	@Override
-	public IConverter<?> createConverter(Class<?> type)
+	protected IConverter<?> createConverter(Class<?> type)
 	{
 		if (Boolean.class.equals(type))
 		{

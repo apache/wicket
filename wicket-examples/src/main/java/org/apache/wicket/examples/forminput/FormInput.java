@@ -144,7 +144,7 @@ public class FormInput extends WicketExamplePage
 			add(new TextField<URL>("urlProperty", URL.class)
 			{
 				@Override
-				public IConverter<?> createConverter(Class<?> type)
+				protected IConverter<?> createConverter(Class<?> type)
 				{
 					if (URL.class.isAssignableFrom(type))
 					{
@@ -158,7 +158,7 @@ public class FormInput extends WicketExamplePage
 			add(new TextField<UsPhoneNumber>("phoneNumberUS", UsPhoneNumber.class)
 			{
 				@Override
-				public IConverter<?> createConverter(Class<?> type)
+				protected IConverter<?> createConverter(Class<?> type)
 				{
 					if (UsPhoneNumber.class.isAssignableFrom(type))
 					{
