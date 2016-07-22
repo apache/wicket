@@ -148,7 +148,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 * @see org.apache.wicket.markup.html.form.TextField
 	 */
 	@Override
-	public IConverter<?> createConverter(Class<?> type)
+	protected IConverter<?> createConverter(Class<?> type)
 	{
 		if (Date.class.isAssignableFrom(type))
 		{

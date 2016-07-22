@@ -227,7 +227,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public IConverter<?> createConverter(Class<?> type)
+			protected IConverter<?> createConverter(Class<?> type)
 			{
 				if (Integer.class.isAssignableFrom(type))
 				{

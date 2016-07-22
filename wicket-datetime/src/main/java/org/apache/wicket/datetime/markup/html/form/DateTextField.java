@@ -223,7 +223,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 	 * @see org.apache.wicket.Component#createConverter(java.lang.Class)
 	 */
 	@Override
-	public IConverter<?> createConverter(Class<?> clazz)
+	protected IConverter<?> createConverter(Class<?> clazz)
 	{
 		if (Date.class.isAssignableFrom(clazz))
 		{
