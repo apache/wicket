@@ -125,7 +125,7 @@ public class PasswordTextField extends TextField<String>
 			clearInput();
 
 			if (getModel() != null) {
-				setModelObject(null);
+				getModel().setObject(null);
 			}
 		}
 
