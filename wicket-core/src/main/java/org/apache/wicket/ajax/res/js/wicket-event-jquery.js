@@ -199,7 +199,7 @@
 			 * If no event is given as argument (IE), window.event is returned.
 			 */
 			fix: function (evt) {
-				return evt || jQuery.event.fix(window.event);
+				return jQuery.event.fix(evt || window.event);
 			},
 
 			fire: function (element, event) {
