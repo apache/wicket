@@ -648,7 +648,22 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		assertThat(p, hasPath(new Path(a, border, r, s, border.getBodyContainer(), b)));
 	}
+	
+	@Test
+	public void queueBorderBody() throws Exception
+	{
 
+		TestBorder border = new TestBorder("border");
+		border.setBorderMarkup("<wicket:border><wicket:body/></wicket:border>");
+
+		TestPage p = new TestPage();
+		p.setPageMarkup("<div wicket:id=\"border\"><span wicket:id=\"label\"></span></div>");
+		
+		p.add(border);
+		border.queue(new Label("label", "test"));
+		
+		tester.startPage(p);
+	}
 
 	@Test
 	public void border_nested()
