@@ -845,6 +845,30 @@ public class ComponentQueueingTest extends WicketTestCase
 		
 		tester.startPage(page);	
 	}
+	@Test
+	public void queueComponentInsideBorderAndEnclosure()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup(" <div wicket:id=\"panel\"></div>");
+		
+		TestPanel panel = new TestPanel("panel");
+		panel.setPanelMarkup("<wicket:panel>\n"
+			+ "<div wicket:id=\"border\">\n" +
+			"    <div wicket:enclosure=\"child\">\n" +
+			"      <p wicket:id=\"child\">1</p>\n" +			
+			"    </div>\n" +
+			"  </div>\n" +
+			"</wicket:panel>");
+		
+		TestBorder border = new TestBorder("border");
+		border.setBorderMarkup("<wicket:border><wicket:body/></wicket:border>");
+		
+		panel.add(border);
+		page.add(panel);
+		border.add(new Label("child"));
+				
+		tester.startPage(page);	
+	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6036
