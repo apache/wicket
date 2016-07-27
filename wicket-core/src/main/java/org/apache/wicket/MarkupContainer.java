@@ -2014,7 +2014,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		ChildToDequeueType childType = ChildToDequeueType.fromChild(child);
 		
-		if (childType == ChildToDequeueType.QUEUE_REGION)
+		if (childType == ChildToDequeueType.QUEUE_REGION ||
+			childType == ChildToDequeueType.BORDER)
 		{
 			((IQueueRegion)child).dequeue();			
 		}
@@ -2022,8 +2023,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		if (childType == ChildToDequeueType.MARKUP_CONTAINER)
 		{
 			// propagate dequeuing to containers
-			MarkupContainer childContainer = childType == ChildToDequeueType.BORDER ? 
-				((Border)child).getBodyContainer() : (MarkupContainer)child;
+			MarkupContainer childContainer = (MarkupContainer)child;
 			
 			dequeue.pushContainer(childContainer);
 			childContainer.dequeue(dequeue);
