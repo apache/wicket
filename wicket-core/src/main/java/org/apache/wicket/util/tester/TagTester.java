@@ -359,6 +359,10 @@ public class TagTester
 	 */
 	public String getValue()
 	{
+		if (openTag == closeTag) {
+			return null;
+		}
+
 		int openPos = openTag.getPos() + openTag.getLength();
 		int closePos = closeTag.getPos();
 

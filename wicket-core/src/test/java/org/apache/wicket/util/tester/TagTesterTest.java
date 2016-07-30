@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.util.List;
 
@@ -51,6 +52,8 @@ public class TagTesterTest extends Assert
 
 		String type = tester.getAttribute("type");
 		assertThat(type, is(equalTo("text")));
+
+		assertThat(tester.getValue(), is(nullValue()));
 	}
 
 	/**
@@ -65,6 +68,8 @@ public class TagTesterTest extends Assert
 
 		String type = testers.get(0).getAttribute("type");
 		assertThat(type, is(equalTo("text")));
+
+		assertThat(testers.get(0).getValue(), is(nullValue()));
 	}
 
 	/**
