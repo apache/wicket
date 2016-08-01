@@ -218,6 +218,7 @@ lambdas:
 http2push:
   title: Wicket HTTP/2 Support (Experimental)
   http2push_1: Example Usage
+  http2push_2: Create server specific http/2 push support
 monitoring:
   title: Wicket Metrics Monitoring (Experimental)
   monitoring_1: Example setup
