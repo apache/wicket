@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import java.util.Objects;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.DequeueContext;
 import org.apache.wicket.DequeueTagAction;
 import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupException;
@@ -675,15 +676,14 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 
 	private boolean canDequeueBody(ComponentTag tag)
 	{
-		ContainerInfo containerInfo = (ContainerInfo)tag.getUserData(
-			WicketTagIdentifier.CONTAINER_INFO);
-		Class<?> containerClass = containerInfo != null ? 
-			containerInfo.getContainerClass() : null;
+		String tagCacheKey = (String)tag.getUserData(
+			WicketTagIdentifier.MARKUP_CACHE_KEY);
+		String borderCacheKey = getAssociatedMarkup().getMarkupResourceStream().getCacheKey();
 		
 		boolean isBodyTag = (tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag();
 		
 		//the body tag might belong to an outer body component
-		boolean isBorderBodyTag = containerClass == null || containerClass.equals(getClass());
+		boolean isBorderBodyTag = Objects.equals(tagCacheKey, borderCacheKey);
 		
 		return isBodyTag && isBorderBodyTag;
 	}

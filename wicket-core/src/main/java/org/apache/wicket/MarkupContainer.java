@@ -2033,7 +2033,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		if (childType == ChildToDequeueType.NULL || 
 			childType == ChildToDequeueType.QUEUE_REGION)
 		{
-				dequeue.skipToCloseTag();
+			dequeue.skipToCloseTag();
 		}
 
 		// pull the close tag off
