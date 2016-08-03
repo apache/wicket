@@ -59,6 +59,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	public static final String CHILD = "child";
 
 	public static final String EXTEND = "extend";
+	public static final String MARKUP_CACHE_KEY = "markupCacheKey";
 
 	static {
 		WELL_KNOWN_TAG_NAMES.add(Border.BORDER);
@@ -123,6 +124,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 				// Make it a Wicket component.
 				tag.setId(namespace + "_" + tag.getName() + getRequestUniqueId());
 				tag.setUserData(CONTAINER_INFO, getMarkupResourceStream().getContainerInfo());
+				tag.setUserData(MARKUP_CACHE_KEY, getMarkupResourceStream().getCacheKey());
 				tag.setModified(true);
 				
 				if (isRaw(tag)) 
