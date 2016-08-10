@@ -601,6 +601,10 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 			File tempDir = repository;
 			if (tempDir == null)
 			{
+				if (repository != null)
+				{
+					Streams.checkFileName(repository.getPath());
+				}
 				String systemTmp = null;
 				try
 				{
