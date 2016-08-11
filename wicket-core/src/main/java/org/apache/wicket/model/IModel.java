@@ -138,8 +138,8 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a IModel applying the given combining function to the contained object of this and
-	 * the given other model, if they are not null.
+	 * Returns a @IModel@ applying the given combining function to the current model object and 
+	 * to the one from the other model, if they are not null.
 	 *
 	 * @param <R>
 	 *            the resulting type
@@ -171,7 +171,7 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a IModel applying the given mapper to the contained object, if it is not NULL.
+	 * Returns a IModel applying the given IModel-bearing mapper to the contained object, if it is not NULL.
 	 *
 	 * @param <R>
 	 *            the new type of the contained object
