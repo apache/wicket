@@ -111,12 +111,7 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 			{
 				for (FileItem item : fileItems)
 				{
-					// Only update the model when there is a file (larger than zero
-					// bytes)
-					if (item != null && item.getSize() > 0)
-					{
-						fileUploads.add(new FileUpload(item));
-					}
+					fileUploads.add(new FileUpload(item));
 				}
 			}
 		}
