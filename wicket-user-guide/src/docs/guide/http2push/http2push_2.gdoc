@@ -22,7 +22,8 @@ public class Jetty9PushBuilder implements PushBuilder
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-		org.eclipse.jetty.server.PushBuilder pushBuilder = org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
+		org.eclipse.jetty.server.PushBuilder pushBuilder =
+		      org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
 		for (String path : paths)
 		{
 			pushBuilder.path(path);

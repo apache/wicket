@@ -26,39 +26,39 @@ Most of the default methods we find in @IModel@ are meant to leverage Lambda exp
 * *filter(predicate)*: Returns a @IModel@ checking whether the predicate holds for the contained object, if it is not null. If the predicate doesn't evaluate to true, the contained object will be null. Example:
     {divcontainer:li-nested-content}   
        {code:java}
-       //the filtered model will have a null model object if person's name 
-       //is not "Jane"
-       IModel<Person> janeModel = Model.of(person)
-              .filter((p) -> p.getName().equals("Jane"));
+//the filtered model will have a null model object if person's name 
+//is not "Jane"
+IModel<Person> janeModel = Model.of(person)
+	.filter((p) -> p.getName().equals("Jane"));
        {code}
     {divcontainer}
 * *map(mapperFunction)*: Returns a @IModel@ applying the given mapper to the contained object, if it is not null. Example:
     {divcontainer:li-nested-content}   
         {code:java}
-         //the new read-only model will contain the person's first name
-         IModel<String> personNameModel = Model.of(person).map(Person::getName);
+//the new read-only model will contain the person's first name
+IModel<String> personNameModel = Model.of(person).map(Person::getName);
         {code}
     {divcontainer}
 * *flatMap(mapperFunction)*: Returns a @IModel@ applying the given @IModel@-bearing mapper to the contained object, if it is not null. Example:
-    {divcontainer:li-nested-content}   
-        {code:java}
-         //returns a read/write model for person's first name
-         //NOTE: LambdaModel will be discussed later.
-         IModel<String> personNameModel = Model.of(person).flatMap(targetPerson ->
-            LambdaModel.of(
-                () -> targetPerson::getName, targetPerson::setName
-            ));
-        {code}
-    {divcontainer}
+	{divcontainer:li-nested-content}   
+		{code:java}
+//returns a read/write model for person's first name
+//NOTE: LambdaModel will be discussed later.
+IModel<String> personNameModel = Model.of(person).flatMap(targetPerson ->
+LambdaModel.of(
+	() -> targetPerson::getName, targetPerson::setName
+));
+		{code}
+	{divcontainer}
  * *flatMap(otherModel, combiner)*: Returns a @IModel@ applying the given combining function to the current model object and to the one from the other model, if they are not null. Example:
     {divcontainer:li-nested-content}   
         {code:java}
-         Model<String> hello = Model.of("hello");
-         Model<String> world = Model.of("world");
-         IModel<String> combinedModel = hello.combineWith(
-                world, (thisObj, otherObj) -> thisObj + " " + otherObj);
-        
-         assertEquals("hello world", combinedModel.getObject());
+IModel<String> hello = Model.of("hello");
+IModel<String> world = Model.of("world");
+IModel<String> combinedModel = hello.combineWith(
+	world, (thisObj, otherObj) -> thisObj + " " + otherObj);
+
+assertEquals("hello world", combinedModel.getObject());
         {code}
     {divcontainer}
        
