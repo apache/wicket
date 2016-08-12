@@ -45,7 +45,7 @@ public class HTTP2Page extends WebPage
 		super.renderHead(response);
 		TestResourceReference instance = TestResourceReference.getInstance();
 		response.render(CssHeaderItem.forReference(instance));
-		response.render(new PushHeaderItem(this, webPageResponse, webPageRequest)
+		response.render(new PushHeaderItem(this, webPageRequest, webPageResponse)
 		    .push(Arrays.asList(new PushItem(instance))));
 	}
 

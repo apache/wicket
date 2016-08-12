@@ -113,12 +113,12 @@ public class PushHeaderItem extends HeaderItem
 			!(pageResponse instanceof WebResponse))
 		{
 			throw new WicketRuntimeException(
-				"Please hand over the web page, the web response and the web request to the push header item like \"new PushHeaderItem(this, yourWebPageReponse, yourWebPageRequest)\" - " +
-					"The webPageResponse / webPageRequest can be obtained via \"getRequestCycle().getResponse()\" and placed into the page as field " +
+				"Please hand over the web page, the web request and the web response to the push header item like \"new PushHeaderItem(this, yourWebPageRequest, yourWebPageResponse)\" - " +
+					"The webPageResponse / webPageRequest can be obtained via \"getRequestCycle().getRequest()\" / \"getRequestCycle().getResponse()\" and placed into the page as fields " +
 					"\"private transient Response webPageResponse;\" / \"private transient Request webPageRequest;\"");
 		}
-		this.pageWebResponse = (WebResponse)pageResponse;
 		this.pageWebRequest = (WebRequest)pageRequest;
+		this.pageWebResponse = (WebResponse)pageResponse;
 		this.page = page;
 	}
 
