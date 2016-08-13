@@ -61,5 +61,10 @@ IModel<String> combinedModel = hello.combineWith(
 assertEquals("hello world", combinedModel.getObject());
         {code}
     {divcontainer}
-       
- TODO:add other methods
+ * *orElseGet(supplier)*:  Returns a read-only @IModel@ using either the contained object or invoking the given supplier to get a default value. Example:
+    {divcontainer:li-nested-content}   
+        {code:java}
+IModel<String> nullObj = new Model();
+assertEquals("hello!", nullObj.orElseGet(() -> "hello!");
+        {code}
+    {divcontainer}       
