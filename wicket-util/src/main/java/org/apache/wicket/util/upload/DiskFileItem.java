@@ -617,11 +617,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 			File tempDir = repository;
 			if (tempDir == null)
 			{
-				if (repository != null)
-				{
-					Streams.checkFileName(repository.getPath());
-				}
-				String systemTmp = null;
+				String systemTmp;
 				try
 				{
 					systemTmp = System.getProperty("java.io.tmpdir");
@@ -635,6 +631,8 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 				}
 				tempDir = new File(systemTmp);
 			}
+
+			Files.checkFileName(tempDir.getPath());
 
 			try
 			{

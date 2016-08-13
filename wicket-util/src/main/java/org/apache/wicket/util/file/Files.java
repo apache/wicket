@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.InvalidParameterException;
 
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.io.IOUtils;
@@ -461,5 +462,40 @@ public class Files
 		}
 		logger.error("Failed to create directory: " + folder);
 		return false;
+	}
+
+	/**
+	 * Checks, whether the given file name is valid in the sense, that it
+	 * doesn't contain any NUL characters. If the file name is valid, it will be
+	 * returned without any modifications. Otherwise, an
+	 * {@link InvalidParameterException} will be thrown.
+	 *
+	 * @param fileName
+	 *            The file name to check
+	 * @return Unmodified file name, if valid.
+	 * @throws InvalidParameterException
+	 *             If the file name was found to be invalid.
+	 */
+	public static String checkFileName(String fileName)
+	{
+		if (fileName != null && fileName.indexOf('\u0000') != -1)
+		{
+			final StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < fileName.length(); i++)
+			{
+				char c = fileName.charAt(i);
+				switch (c)
+				{
+					case 0 :
+						sb.append("\\0");
+						break;
+					default :
+						sb.append(c);
+						break;
+				}
+			}
+			throw new InvalidParameterException("Invalid file name: " + sb);
+		}
+		return fileName;
 	}
 }
