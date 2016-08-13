@@ -48,8 +48,8 @@ import org.slf4j.LoggerFactory;
  * 
  * <p>
  * After retrieving an instance of this class from a
- * {@link org.apache.wicket.util.upload.DiskFileUpload DiskFileUpload} instance (see
- * {@link org.apache.wicket.util.upload.DiskFileUpload #parseRequest(javax.servlet.http.HttpServletRequest)}
+ * {@link org.apache.wicket.util.upload.FileUpload DiskFileUpload} instance (see
+ * {@link org.apache.wicket.util.upload.FileUpload#parseRequest(RequestContext)}
  * ), you may either request all contents of file at once using {@link #get()} or request an
  * {@link java.io.InputStream InputStream} with {@link #getInputStream()} and process the file
  * without attempting to load it into memory, which may come handy with large files.
@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * Temporary files are automatically deleted as soon as they are no longer needed. (More precisely,
  * when the corresponding instance of {@link java.io.File} is garbage collected.) This is done by
  * the so-called reaper thread, which is started automatically when the class
- * {@link org.apache.commons.io.FileCleaner} is loaded. It might make sense to terminate that
+ * {@link org.apache.wicket.util.file.FileCleaner} is loaded. It might make sense to terminate that
  * thread, for example, if your web application ends. See the section on "Resource cleanup" in the
  * users guide of commons-fileupload.
  * </p>
@@ -601,11 +601,7 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 			File tempDir = repository;
 			if (tempDir == null)
 			{
-				if (repository != null)
-				{
-					Streams.checkFileName(repository.getPath());
-				}
-				String systemTmp = null;
+				String systemTmp;
 				try
 				{
 					systemTmp = System.getProperty("java.io.tmpdir");
@@ -619,6 +615,8 @@ public class DiskFileItem implements FileItem, FileItemHeadersSupport
 				}
 				tempDir = new File(systemTmp);
 			}
+
+			Files.checkFileName(tempDir.getPath());
 
 			try
 			{
