@@ -17,7 +17,9 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A form button.
@@ -195,10 +197,13 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 
 		try
 		{
-			String value = getDefaultModelObjectAsString();
-			if (value != null && !"".equals(value))
+			if ("input".equals(tag.getName()))
 			{
-				tag.put("value", value);
+				String value = getDefaultModelObjectAsString();
+				if (Strings.isEmpty(value) == false)
+				{
+					tag.put("value", value);
+				}
 			}
 		}
 		catch (Exception e)
@@ -214,9 +219,20 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()
-	 */
+	@Override
+	public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	{
+		if ("button".equals(openTag.getName()))
+		{
+			String modelObjectAsString = getDefaultModelObjectAsString();
+			replaceComponentTagBody(markupStream, openTag, modelObjectAsString);
+		}
+		else
+		{
+			super.onComponentTagBody(markupStream, openTag);
+		}
+	}
+
 	@Override
 	public void onError()
 	{
