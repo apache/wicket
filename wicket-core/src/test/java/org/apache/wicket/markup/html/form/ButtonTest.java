@@ -81,6 +81,33 @@ public class ButtonTest extends WicketTestCase
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6225
+	 */
+	@Test
+	public void whenButtonElementWithoutModelObject_thenUseTextContentFromHtml()
+	{
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
+		String text = "some text & another text";
+		final String textInHtml = "Button label in HTML";
+		TestPage testPage = new TestPage(Model.of("")) {
+			@Override
+			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+			{
+				return new StringResourceStream("<html><body>"
+				                                + "<form wicket:id=\"form\"><button wicket:id=\"button\">"
+				                                + textInHtml
+				                                + "</button></form></body></html>");
+			}
+		};
+		tester.startPage(testPage);
+
+		TagTester buttonTagTester = tester.getTagByWicketId("button");
+		assertThat(buttonTagTester, is(notNullValue()));
+		assertThat(buttonTagTester.getAttribute("value"), is(nullValue()));
+		assertThat(buttonTagTester.getValue(), is(equalTo(textInHtml)));
+	}
+
+	/**
 	 * WICKET-5235 button does not use an inherited model
 	 */
 	@Test
