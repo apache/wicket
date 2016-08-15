@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -24,7 +29,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -38,12 +43,41 @@ public class ButtonTest extends WicketTestCase
 	 * WICKET-4734 Asserting that the value attribute on tag input is escaped once by default
 	 */
 	@Test
-	public void valueAttribute()
+	public void whenInputElement_thenModelObjectIsUsedForValueAttribute()
 	{
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
 		TestPage testPage = new TestPage(Model.of(text));
 		tester.startPage(testPage);
-		assertTrue(tester.getLastResponseAsString().contains(Strings.escapeMarkup(text)));
+
+		TagTester buttonTagTester = tester.getTagByWicketId("button");
+		assertThat(buttonTagTester, is(notNullValue()));
+		assertThat(buttonTagTester.getAttribute("value"), is(equalTo(text)));
+		assertThat(buttonTagTester.getValue(), is(nullValue()));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6225
+	 */
+	@Test
+	public void whenButtonElement_thenModelObjectIsUsedAsTextContent()
+	{
+		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
+		String text = "some text & another text";
+		TestPage testPage = new TestPage(Model.of(text)) {
+			@Override
+			public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+			{
+				return new StringResourceStream("<html><body>"
+						+ "<form wicket:id=\"form\"><button wicket:id=\"button\"></button></form></body></html>");
+			}
+		};
+		tester.startPage(testPage);
+
+		TagTester buttonTagTester = tester.getTagByWicketId("button");
+		assertThat(buttonTagTester, is(notNullValue()));
+		assertThat(buttonTagTester.getAttribute("value"), is(nullValue()));
+		assertThat(buttonTagTester.getValue(), is(equalTo(text)));
 	}
 
 	/**
