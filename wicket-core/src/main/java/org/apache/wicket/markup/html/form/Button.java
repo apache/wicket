@@ -218,12 +218,13 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 		if ("button".equals(openTag.getName()))
 		{
 			String modelObjectAsString = getDefaultModelObjectAsString();
-			replaceComponentTagBody(markupStream, openTag, Strings.defaultIfEmpty(modelObjectAsString, ""));
+			if (Strings.isEmpty(modelObjectAsString) == false) {
+				replaceComponentTagBody(markupStream, openTag, modelObjectAsString);
+				return;
+			}
 		}
-		else
-		{
-			super.onComponentTagBody(markupStream, openTag);
-		}
+
+		super.onComponentTagBody(markupStream, openTag);
 	}
 
 	@Override
