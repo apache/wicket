@@ -44,6 +44,8 @@ import org.apache.wicket.markup.html.form.AutoLabelResolver.AutoLabelMarker;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
@@ -57,6 +59,7 @@ import org.apache.wicket.util.visit.IVisitFilter;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visits;
 import org.apache.wicket.validation.IErrorMessageSource;
+import org.apache.wicket.validation.IExpensiveOperationValidator;
 import org.apache.wicket.validation.INullAcceptingValidator;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
@@ -1112,8 +1115,24 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	 * Performs full validation of the form component, which consists of calling validateRequired(),
 	 * convertInput(), and validateValidators(). This method should only be used if the form
 	 * component needs to be fully validated outside the form process.
+	 * 
+	 * @see #validate(boolean)
 	 */
 	public void validate()
+	{
+		validate(false);
+	}
+	
+	/**
+	 * Performs full validation of the form component, which consists of calling validateRequired(),
+	 * convertInput(), and validateValidators(). This method should only be used if the form
+	 * component needs to be fully validated outside the form process.
+	 * 
+	 * Method allow to skip expensive validators {@link  org.apache.wicket.validation.IExpensiveOperationValidator}
+	 * 
+	 * @param skipExpensiveValidators
+	 */
+	public void validate(boolean skipExpensiveValidators)
 	{
 		// clear any previous feedback messages
 
@@ -1136,7 +1155,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 				}
 				else
 				{
-					validateValidators();
+					validateValidators(skipExpensiveValidators);
 				}
 			}
 		}
@@ -1490,9 +1509,11 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 
 	/**
 	 * Validates this component using the component's validators.
+	 * 
+	 * @param skipExpensiveValidators
 	 */
 	@SuppressWarnings("unchecked")
-	protected final void validateValidators()
+	protected final void validateValidators(boolean skipExpensiveValidators)
 	{
 		final IValidatable<T> validatable = newValidatable();
 
@@ -1516,7 +1537,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			{
 				validator = (IValidator<T>)behavior;
 			}
-			if (validator != null)
+			if (validator != null && !(validator instanceof IExpensiveOperationValidator<?> && skipExpensiveValidators ))
 			{
 				if (isNull == false || validator instanceof INullAcceptingValidator<?>)
 				{
