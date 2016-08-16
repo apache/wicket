@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.nio.charset.Charset;
+
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * An {@link org.apache.wicket.request.resource.IResource} for CharSequences.
@@ -26,6 +29,9 @@ import org.apache.wicket.request.Response;
 public class CharSequenceResource extends BaseDataResource<CharSequence>
 {
 	private static final long serialVersionUID = 1L;
+
+	/** Charset name for resource */
+	private String charsetName;
 
 	/**
 	 * Creates a {@link org.apache.wicket.request.resource.CharSequenceResource} which will provide its data dynamically with
@@ -76,6 +82,27 @@ public class CharSequenceResource extends BaseDataResource<CharSequence>
 	@Override
 	protected Long getLength(CharSequence data)
 	{
-		return (long) data.length();
+		return (long) Strings.lengthInBytes(data.toString(), getCharset());
 	}
+
+	/**
+	 * @return Charset for resource
+	 */
+	protected Charset getCharset()
+	{
+		return (charsetName != null) ? Charset.forName(charsetName) : null;
+	}
+
+	/**
+	 * Sets the character set used for reading this resource.
+	 *
+	 * @param charset
+	 *            Charset for component
+	 */
+	public void setCharset(final Charset charset)
+	{
+		// java.nio.Charset itself is not serializable so we can only store the name
+		charsetName = (charset != null) ? charset.name() : null;
+	}
+
 }

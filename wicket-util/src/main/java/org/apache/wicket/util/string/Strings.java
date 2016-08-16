@@ -1317,10 +1317,7 @@ public final class Strings
 	 */
 	public static int lengthInBytes(final String string, final Charset charset)
 	{
-		if (string == null)
-		{
-			throw new NullPointerException("Argument `string` cannot be null");
-		}
+		Args.notNull(string, "string");
 		if (charset != null)
 		{
 			try
