@@ -142,7 +142,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		try
 		{
 			formComponent.inputChanged();
-			formComponent.validate();
+			formComponent.validate(true); //skip expensive validators
 			if (formComponent.isValid())
 			{
 				if (getUpdateModel())
