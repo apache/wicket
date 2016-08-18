@@ -18,8 +18,10 @@ package org.apache.wicket.http2.markup.head;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -48,10 +50,13 @@ import org.apache.wicket.util.time.Time;
 
 /**
  * A push header item to be used in the http/2 context and to reduce the latency of the web
- * application. Follow these steps for your page:<br><br>
+ * application. Follow these steps for your page:<br>
+ * <br>
  * - Override the setHeaders method and don't call super.setHeaders to disable caching<br>
- * - Get the page request / response and store them as transient fields that are given into the PushHeaderItem<br>
- * - Ensure a valid https connection (not self signed), because otherwise no caching information are accepted from Chrome or other browsers
+ * - Get the page request / response and store them as transient fields that are given into the
+ * PushHeaderItem<br>
+ * - Ensure a valid https connection (not self signed), because otherwise no caching information are
+ * accepted from Chrome or other browsers
  * 
  * @author Tobias Soloschenko
  *
@@ -63,8 +68,8 @@ public class PushHeaderItem extends HeaderItem
 	/**
 	 * The header date format for if-modified-since / last-modified
 	 */
-	private static final SimpleDateFormat headerDateFormat = new SimpleDateFormat(
-		"EEE, dd MMM yyyy HH:mm:ss zzz");
+	private static final DateTimeFormatter headerDateFormat = DateTimeFormatter
+		.ofPattern("EEE, dd MMM yyyy HH:mm:ss zzz");
 
 	/**
 	 * The http2 protocol string
@@ -137,11 +142,23 @@ public class PushHeaderItem extends HeaderItem
 	}
 
 	/**
-	 * Gets the time the page of this header item has been modified
+	 * Gets the time the page of this header item has been modified. The default implementation is
+	 * to get the last modification date of the HTML file of the corresponding page, but it can be
+	 * overridden to apply a custom behavior. For example place in a properties-file into the class
+	 * path which contains the compile time. <br>
+	 * Example: <code>
+	 * <pre>
+	 * protected Time getPageModificationTime(){
+	 * 	Time time = getPageModificationTime();
+	 * 	// read properties file with build time and place it into a second time variable
+	 * 	return time.before(buildTime) ? buildTime : time;
+	 * }
+	 * </pre>
+	 * </code>
 	 * 
 	 * @return the time the page of this header item has been modified
 	 */
-	private Time getPageModificationTime()
+	protected Time getPageModificationTime()
 	{
 		URL resource = page.getClass().getResource(page.getClass().getSimpleName() + ".html");
 		if (resource == null)
@@ -165,15 +182,22 @@ public class PushHeaderItem extends HeaderItem
 	/**
 	 * Applies the cache header item to the response
 	 */
-	private void applyPageCacheHeader()
+	protected void applyPageCacheHeader()
 	{
-		Time pageModificationTime = getPageModificationTime();
 		// check modification of page html
+		Time pageModificationTime = getPageModificationTime();
+		// The date of the page is now
+		pageWebResponse.setDateHeader("Date", Time.now());
+		// Set the modification time so that the browser sends a "If-Modified-Since" header which
+		// can be compared
 		pageWebResponse.setLastModifiedTime(pageModificationTime);
-		pageWebResponse.setDateHeader("Expires", pageModificationTime);
+		// Make the resource stale so that it gets revalidated even if a cache entry is set
+		// (see http://stackoverflow.com/questions/11357430/http-expires-header-values-0-and-1)
+		pageWebResponse.setHeader("Expires", "-1");
+		// Set a cache but set it to max-age=0 / must-revalidate so that the request to the page is
+		// done
 		pageWebResponse.setHeader("Cache-Control",
-			"max-age=31536000, public, must-revalidate, proxy-revalidate");
-		pageWebResponse.setHeader("Pragma", "public");
+			"max-age=0, public, must-revalidate, proxy-revalidate");
 	}
 
 	/**
@@ -184,7 +208,7 @@ public class PushHeaderItem extends HeaderItem
 	{
 		// applies the caching header to the actual page request
 		applyPageCacheHeader();
-		
+
 		HttpServletRequest request = getContainerRequest(RequestCycle.get().getRequest());
 		// Check if the protocol is http/2 or http/2.0 to only push the resources in this case
 		if (isHttp2(request))
@@ -194,26 +218,32 @@ public class PushHeaderItem extends HeaderItem
 				Time pageModificationTime = getPageModificationTime();
 				String ifModifiedSinceHeader = pageWebRequest.getHeader("If-Modified-Since");
 
+				// Check if the if-modified-since header is set - if not push all resources
 				if (ifModifiedSinceHeader != null)
 				{
-					Time ifModifiedSinceFromRequestTime = Time
-						.valueOf(headerDateFormat.parse(ifModifiedSinceHeader));
+					// Get the time of the if-modified-since header
+					Time ifModifiedSinceFromRequestTime = Time.valueOf(Date.from(LocalDateTime
+						.parse(ifModifiedSinceHeader, headerDateFormat).toInstant(ZoneOffset.UTC)));
+
 					// If the client modification time is before the page modification time -
 					// don't push
 					if (ifModifiedSinceFromRequestTime.before(pageModificationTime))
 					{
+						// Push only if the "if-modified-since" time is before the page modification
 						push(request);
 					}
 				}
 				else
 				{
-
+					// Push the resources if the "if-modified-since" is not available
+					push(request);
 				}
 			}
-			catch (ParseException e)
+			catch (DateTimeParseException e)
 			{
-				// If the If-Modified-Since time can't be parsed - the push handling is going to be
-				// skipped
+				// If the "if-modified-since" time can't be parsed - the push handling is going to
+				// be processed
+				push(request);
 			}
 		}
 	}
@@ -224,7 +254,7 @@ public class PushHeaderItem extends HeaderItem
 	 * @param request
 	 *            the request to push the URLs to
 	 */
-	private void push(HttpServletRequest request)
+	protected void push(HttpServletRequest request)
 	{
 		// Receives the vendor specific push builder
 		Http2Settings http2Settings = Http2Settings.Holder.get(Application.get());
