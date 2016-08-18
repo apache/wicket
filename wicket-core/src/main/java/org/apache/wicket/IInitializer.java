@@ -16,12 +16,14 @@
  */
 package org.apache.wicket;
 
+import java.util.ServiceLoader;
+
 import org.apache.wicket.request.resource.PackageResource;
 
 /**
  * Initializes something when application loads.
- * 
- * Initializer is there for clustering. Lets say you access a page that has a link to a resource on
+ * <p>
+ * Initializer can be used for clustering. Lets say you access a page that has a link to a resource on
  * node A now the url for the resource gets forwarded to node B, but node B doesn't have the
  * resource registered yet because maybe the page class hasn't been loaded and so its static block
  * hasn't run yet. So the initializer is a place for you to register all those resources and do all
@@ -29,12 +31,10 @@ import org.apache.wicket.request.resource.PackageResource;
  * <p>
  * You don't have to pre-register {@link PackageResource package resources}, as they can be
  * initialized lazily.
- * </p>
  * <p>
- * Initializers can be configured by having a /META-INF/wicket/com.example.myapp.properties file in the
- * class path root, with property 'initializer=${initializer class name}'. You can have one such
- * properties per jar file, but the initializer that property denotes can delegate to other initializers
- * of that library.
+ * Initializers can be configured via {@link ServiceLoader}, i.e. by having a file
+ * /META-INF/services/org.apache.wicket.IInitializer in the class path root, with each line containing the
+ * full class name of an {@link IInitializer}.
  * </p>
  * 
  * @author Jonathan Locke
