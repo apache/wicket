@@ -21,6 +21,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.markup.resolver.IComponentResolver;
@@ -54,7 +55,7 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
-		if ("wicket".equals(tag.getNamespace()) && "fragment".equals(tag.getName()))
+		if (tag instanceof WicketTag && ((WicketTag)tag).isFragementTag())
 		{
 			// even having a wicket:id it isn't a component's markup
 			return null;
