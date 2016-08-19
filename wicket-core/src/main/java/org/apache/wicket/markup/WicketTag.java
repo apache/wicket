@@ -175,7 +175,7 @@ public class WicketTag extends ComponentTag
 	}
 
 	/**
-	 * @return true if &lt;wicket:enclsoure&gt;
+	 * @return true if &lt;wicket:enclosure&gt;
 	 */
 	public final boolean isEnclosureTag()
 	{
