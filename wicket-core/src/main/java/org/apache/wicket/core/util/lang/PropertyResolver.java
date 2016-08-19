@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
  * If the property is a Map then the following expression can be a key in that map like: 'myMap.key'.
  * </dd>
  * </dl>
- * <strong>Note that the {@link DefaultGetAndSetLocator} by default provides access to private members
+ * <strong>Note that the {@link DefaultPropertyLocator} by default provides access to private members
  * and methods. If guaranteeing encapsulation of the target objects is a big concern, you should consider
  * using an alternative implementation.</strong>
  * <p>
@@ -474,6 +474,8 @@ public final class PropertyResolver
 	}
 
 	/**
+	 * A property to get and set.
+	 * 
 	 * @author jcompagner
 	 */
 	public interface IGetAndSet
@@ -1260,7 +1262,7 @@ public final class PropertyResolver
 		IPropertyLocator result = applicationToLocators.get(key);
 		if (result == null)
 		{
-			IPropertyLocator tmpResult = applicationToLocators.putIfAbsent(key, result = new CachingGetAndSetLocator(new DefaultGetAndSetLocator()));
+			IPropertyLocator tmpResult = applicationToLocators.putIfAbsent(key, result = new CachingPropertyLocator(new DefaultPropertyLocator()));
 			if (tmpResult != null)
 			{
 				result = tmpResult;
@@ -1304,7 +1306,10 @@ public final class PropertyResolver
 		IGetAndSet get(Class<?> clz, String exp);
 	}
 
-	public static class CachingGetAndSetLocator implements IPropertyLocator
+	/**
+	 * A wrapper for another {@link IPropertyLocator} that caches results of {@link #get(Class, String)}.
+	 */
+	public static class CachingPropertyLocator implements IPropertyLocator
 	{
 		private final ConcurrentHashMap<String, IGetAndSet> map = Generics.newConcurrentHashMap(16);
 		
@@ -1330,7 +1335,7 @@ public final class PropertyResolver
 
 		private IPropertyLocator locator;
 
-		public CachingGetAndSetLocator(IPropertyLocator locator) {
+		public CachingPropertyLocator(IPropertyLocator locator) {
 			this.locator = locator;
 		}
 
@@ -1356,9 +1361,9 @@ public final class PropertyResolver
 	}
 
 	/**
-	 * Default implementation supporting <em>Java Beans</em> properties, maps, lists and method invocations.
+	 * Default locator supporting <em>Java Beans</em> properties, maps, lists and method invocations.
 	 */
-	public static class DefaultGetAndSetLocator implements IPropertyLocator
+	public static class DefaultPropertyLocator implements IPropertyLocator
 	{
 		@Override
 		public IGetAndSet get(Class<?> clz, String exp) {
