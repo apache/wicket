@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import static org.apache.wicket.markup.resolver.FragmentResolver.FRAGMENT;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
@@ -125,7 +127,7 @@ public class FragmentMarkupSourcingStrategy extends AbstractMarkupSourcingStrate
 		}
 
 		// Search for the fragment markup
-		IMarkupFragment childMarkup = TagUtils.findTagMarkup(markup, markupId, "fragment", 1 );
+		IMarkupFragment childMarkup = TagUtils.findTagMarkup(markup, markupId, FRAGMENT, 1 );
 		if (childMarkup == null)
 		{
 			// There is one more option if the markup provider has associated markup
