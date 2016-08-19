@@ -32,8 +32,8 @@ import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.PropertyResolver.AbstractGetAndSet;
-import org.apache.wicket.core.util.lang.PropertyResolver.CachingGetAndSetLocator;
-import org.apache.wicket.core.util.lang.PropertyResolver.DefaultGetAndSetLocator;
+import org.apache.wicket.core.util.lang.PropertyResolver.CachingPropertyLocator;
+import org.apache.wicket.core.util.lang.PropertyResolver.DefaultPropertyLocator;
 import org.apache.wicket.core.util.lang.PropertyResolver.IGetAndSet;
 import org.apache.wicket.core.util.lang.PropertyResolver.IPropertyLocator;
 import org.apache.wicket.core.util.lang.PropertyResolverConverter;
@@ -760,7 +760,7 @@ public class PropertyResolverTest extends WicketTestCase
 		nestedCustom.setProperty("string", "string2");
 		document.setProperty("nested", nestedCustom);
 		
-		PropertyResolver.setLocator(tester.getApplication(), new CachingGetAndSetLocator(new CustomGetAndSetLocator()));
+		PropertyResolver.setLocator(tester.getApplication(), new CachingPropertyLocator(new CustomGetAndSetLocator()));
 		
 		assertEquals("type", PropertyResolver.getValue("type", document));
 		assertEquals("string", PropertyResolver.getValue("string", document));
@@ -769,7 +769,7 @@ public class PropertyResolverTest extends WicketTestCase
 	
 	class CustomGetAndSetLocator implements IPropertyLocator {
 
-		private IPropertyLocator locator = new DefaultGetAndSetLocator();
+		private IPropertyLocator locator = new DefaultPropertyLocator();
 		
 		@Override
 		public IGetAndSet get(Class<?> clz, String exp) {
