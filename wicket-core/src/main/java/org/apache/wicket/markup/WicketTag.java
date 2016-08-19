@@ -168,14 +168,24 @@ public class WicketTag extends ComponentTag
 
 	/**
 	 * @return True if &lt;wicket:fragment&gt;
+	 * @deprecated Use {@link #isFragmentTag()} instead
 	 */
+	@Deprecated
 	public final boolean isFragementTag()
+	{
+		return isFragmentTag();
+	}
+
+	/**
+	 * @return True if &lt;wicket:fragment&gt;
+	 */
+	public final boolean isFragmentTag()
 	{
 		return FragmentResolver.FRAGMENT.equalsIgnoreCase(getName());
 	}
 
 	/**
-	 * @return true if &lt;wicket:enclsoure&gt;
+	 * @return true if &lt;wicket:enclosure&gt;
 	 */
 	public final boolean isEnclosureTag()
 	{
