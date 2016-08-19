@@ -54,6 +54,12 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
+		if ("wicket".equals(tag.getNamespace()) && "fragment".equals(tag.getName()))
+		{
+			// even having a wicket:id it isn't a component's markup
+			return null;
+		}
+
 		Component resolvedComponent = getParent().get(tag.getId());
 		if (resolvedComponent != null && getPage().wasRendered(resolvedComponent))
 		{
