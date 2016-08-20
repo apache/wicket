@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.WebComponent;
  * must be ignored. It is only indirectly referenced by component.
  * 
  * @author Juergen Donnerstag
+ * @deprecated no auto component is needed for a fragment tag
  */
 public class FragmentResolver implements IComponentResolver
 {

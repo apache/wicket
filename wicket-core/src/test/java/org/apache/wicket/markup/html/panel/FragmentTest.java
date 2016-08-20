@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
-import org.apache.wicket.markup.MarkupNotFoundException;
+import static org.hamcrest.Matchers.containsString;
+
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -37,14 +38,7 @@ public class FragmentTest extends WicketTestCase
 	@Test
 	public void testComponentAndFragmentWithSameId()
 	{
-		try
-		{
-			tester.startComponentInPage(FragmentTestPanel_2.class);
-			fail();
-		}
-		catch (MarkupNotFoundException ex)
-		{
-			assertTrue(ex.getMessage().contains("is not a <wicket:fragment> tag"));
-		}
+		tester.startComponentInPage(FragmentTestPanel_2.class);
+		assertThat(tester.getLastResponseAsString(), containsString("fragment body"));
 	}
 }

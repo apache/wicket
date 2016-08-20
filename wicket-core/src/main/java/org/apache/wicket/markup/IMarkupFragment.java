@@ -55,13 +55,13 @@ public interface IMarkupFragment extends Iterable<MarkupElement>
 	int size();
 
 	/**
-	 * Find the markup fragment of the component with 'path'
+	 * Finds a markup fragment that spans a tag
 	 * 
 	 * @param id
-	 *            The component's id to search for
-	 * @return -1, if not found
+	 *            the wicket:id attribute in the tag
+	 * @return the markup fragment that spans the complete found tag
 	 */
-	IMarkupFragment find(final String id);
+	IMarkupFragment find(final String wicketId);
 
 	/**
 	 * 
