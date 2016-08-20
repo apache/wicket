@@ -751,7 +751,7 @@ public class Form<T> extends WebMarkupContainer
 		if (handleMultiPart())
 		{
 			// Tells FormComponents that a new user input has come
-			formToProcess.inputChanged();
+			inputChanged();
 
 			String url = getRequest().getRequestParameters()
 				.getParameterValue(getHiddenFieldId())
