@@ -23,7 +23,6 @@ import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketRemoveTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
-import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
@@ -171,7 +170,7 @@ public class WicketTag extends ComponentTag
 	 */
 	public final boolean isFragmentTag()
 	{
-		return FragmentResolver.FRAGMENT.equalsIgnoreCase(getName());
+		return WicketTagIdentifier.FRAGMENT.equalsIgnoreCase(getName());
 	}
 
 	/**
