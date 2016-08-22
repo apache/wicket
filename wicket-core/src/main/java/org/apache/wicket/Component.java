@@ -2725,7 +2725,7 @@ public abstract class Component
 					RequestCycle.get().setResponse(oldResponse);
 				}
 				// Then let the component itself to contribute to the header
-				renderHead(this, response);
+				renderHead(response);
 
 				response.markRendered(this);
 			}
@@ -4463,25 +4463,6 @@ public abstract class Component
 	public boolean canCallListenerInterface()
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
-	}
-
-	/**
-	 * CAUTION: this method is not meant to be overridden like it was in wicket 1.4 when
-	 * implementing {@link IHeaderContributor}. overload
-	 * {@link Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)} instead to
-	 * contribute to the response header.
-	 * 
-	 * @param component
-	 * @param response
-	 */
-	public final void renderHead(Component component, IHeaderResponse response)
-	{
-		if (component != this)
-		{
-			throw new IllegalStateException(
-				"This method is only meant to be invoked on the component where the parameter component==this");
-		}
-		renderHead(response);
 	}
 
 	/**
