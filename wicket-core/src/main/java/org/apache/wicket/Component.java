@@ -79,6 +79,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
@@ -2555,19 +2556,34 @@ public abstract class Component
 		try
 		{
 			// Render open tag
-			if (getRenderBodyOnly())
+			boolean renderBodyOnly = getRenderBodyOnly();
+			if (renderBodyOnly)
 			{
+				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
+				if (Application.exists())
+				{
+					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+				}
+
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
-					log.warn(String.format(
-						"Markup id set on a component that renders its body only. "
-							+ "Markup id: %s, component id: %s.", getMarkupId(), getId()));
+					String message = String.format("Markup id set on a component that renders its body only. " +
+					                               "Markup id: %s, component id: %s.", getMarkupId(), getId());
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
-					log.warn(String.format(
-						"Placeholder tag set on a component that renders its body only. "
-							+ "Component id: %s.", getId()));
+					String message = String.format("Placeholder tag set on a component that renders its body only. " +
+					                               "Component id: %s.", getId());
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 			}
 			else
@@ -2586,9 +2602,9 @@ public abstract class Component
 				// Render close tag
 				if (openTag.isOpen())
 				{
-					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+					renderClosingComponentTag(markupStream, tag, renderBodyOnly);
 				}
-				else if (getRenderBodyOnly() == false)
+				else if (renderBodyOnly == false)
 				{
 					if (needToRenderTag(openTag))
 					{
@@ -4037,18 +4053,35 @@ public abstract class Component
 			if ((tag instanceof WicketTag) && !tag.isClose() &&
 				!getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER))
 			{
+				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
+				if (Application.exists())
+				{
+					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+				}
+
+				String tagName = tag.getNamespace() + ":" + tag.getName();
+				String componentId = getId();
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
-					log.warn(String.format(
-						"Markup id set on a component that is usually not rendered into markup. "
-							+ "Markup id: %s, component id: %s, component tag: %s.", getMarkupId(),
-						getId(), tag.getName()));
+					String message = String.format("Markup id set on a component that is usually not rendered into markup. " +
+					                               "Markup id: %s, component id: %s, component tag: %s.",
+					                               getMarkupId(), componentId, tagName);
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
-					log.warn(String.format(
-						"Placeholder tag set on a component that is usually not rendered into markup. "
-							+ "Component id: %s, component tag: %s.", getId(), tag.getName()));
+					String message = String.format(
+							"Placeholder tag set on a component that is usually not rendered into markup. " +
+							"Component id: %s, component tag: %s.", componentId, tagName);
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 			}
 

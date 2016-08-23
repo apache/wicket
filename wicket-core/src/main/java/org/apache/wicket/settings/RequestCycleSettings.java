@@ -85,7 +85,7 @@ public class RequestCycleSettings
 	/**
 	 * Enum type for different render strategies
 	 */
-	public static enum RenderStrategy {
+	public enum RenderStrategy {
 		/**
 		 * All logical parts of a request (the action and render part) are handled within the same
 		 * request.
