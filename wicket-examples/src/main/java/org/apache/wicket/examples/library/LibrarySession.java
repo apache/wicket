@@ -105,9 +105,9 @@ public final class LibrarySession extends AuthenticatedWebSession
 	}
 
 	@Override
-	public void signOut()
+	public void invalidate()
 	{
-		super.signOut();
+		super.invalidate();
 		user = null;
 	}
 

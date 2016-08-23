@@ -110,10 +110,11 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 
 	/**
 	 * Sign the user out.
+	 * <p>This method is an alias of {@link #invalidate()}</p>
 	 */
 	public void signOut()
 	{
-		signedIn = false;
+		invalidate();
 	}
 
 	/**
@@ -123,7 +124,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	@Override
 	public void invalidate()
 	{
-		signOut();
+		signedIn = false;
 		super.invalidate();
 	}
 }
