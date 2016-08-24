@@ -290,14 +290,14 @@ public class UrlRenderer
 		String renderedUrl = relativeUrl.toString();
 
 		// sanitize start
-		if (!renderedUrl.startsWith("..") && !renderedUrl.equals("."))
+		if (renderedUrl.startsWith("...") || (!renderedUrl.startsWith("..") && !renderedUrl.equals(".")))
 		{
 			// WICKET-4260
 			renderedUrl = "./" + renderedUrl;
 		}
 
 		// add trailing slash if the url has no query string and ends with ..
-		if (renderedUrl.indexOf('?') == -1 && renderedUrl.endsWith(".."))
+		if (renderedUrl.indexOf('?') == -1 && (renderedUrl.endsWith("..") && renderedUrl.endsWith("...") == false))
 		{
 			// WICKET-4401
 			renderedUrl = renderedUrl + '/';
