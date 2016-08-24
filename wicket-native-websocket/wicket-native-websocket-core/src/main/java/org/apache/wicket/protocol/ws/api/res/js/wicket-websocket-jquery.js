@@ -75,7 +75,7 @@
 				self.ws.onmessage = function (event) {
 
 					var message = event.data;
-					if (message && message.indexOf('<ajax-response>') > -1) {
+					if (typeof(message) === 'string' && message.indexOf('<ajax-response>') > -1) {
 						var call = new Wicket.Ajax.Call();
 						call.process(message);
 					}
