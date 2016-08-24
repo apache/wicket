@@ -629,4 +629,53 @@ public class UrlRendererTest extends Assert
 		String renderedUrl = renderer.renderUrl(urlWithFragment);
 		assertEquals("http://localhost:8080/redirect#access_token=123456", renderedUrl);
 	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6230
+	 */
+	@Test
+	public void renderUrlWithManyDotsAtTheBeginning1()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("...abc"));
+		assertEquals("./...abc", renderedUrl);
+	}
+
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6230
+	 */
+	@Test
+	public void renderUrlWithManyDotsAtTheBeginning2()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a/b")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("...abc"));
+		assertEquals("../...abc", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6230
+	 */
+	@Test
+	public void renderUrlWithManyDotsAtTheEnd1()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("abc..."));
+		assertEquals("./abc...", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6230
+	 */
+	@Test
+	public void renderUrlWithManyDotsAtTheEnd2()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a/b")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("abc..."));
+		assertEquals("../abc...", renderedUrl);
+	}
 }
