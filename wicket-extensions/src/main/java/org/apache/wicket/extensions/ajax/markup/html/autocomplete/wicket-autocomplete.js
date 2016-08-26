@@ -604,6 +604,9 @@
 				elementCount=selectableElements.length;
 
 				var clickFunc = function(event) {
+					// mouseOver might not be called, so select here at least
+					setSelected(getElementIndex(this));
+
 					var value = getSelectedValue();
 					value = handleSelection(value);
 					
