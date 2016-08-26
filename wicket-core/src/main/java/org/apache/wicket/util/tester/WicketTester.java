@@ -328,14 +328,15 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertComponentOnAjaxResponse(String componentPath)
 	{
-		assertComponentOnAjaxResponse(getComponentFromLastRenderedPage(componentPath, false));
+		Component component = getComponentFromLastRenderedPage(componentPath, false);
+		assertComponentOnAjaxResponse(component);
 	}
 
 	/**
 	 * Asserts the content of last rendered page contains (matches) a given regex pattern.
 	 * 
 	 * @param pattern
-	 *            a reqex pattern to match
+	 *            a regex pattern to match
 	 */
 	public void assertContains(String pattern)
 	{
