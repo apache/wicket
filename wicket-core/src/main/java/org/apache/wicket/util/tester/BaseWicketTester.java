@@ -1529,7 +1529,7 @@ public class BaseWicketTester
 	 * @param path
 	 *            Path to component
 	 * @param wantVisibleInHierarchy
-	 *            if true component needs to be VisibleInHierarchy else null is returned
+	 *            if true component needs to be visible in hierarchy else {@code null} is returned
 	 * @return The component at the path
 	 * @see org.apache.wicket.MarkupContainer#get(String)
 	 */
@@ -2229,10 +2229,12 @@ public class BaseWicketTester
 		Result result;
 
 		// test that the component renders the placeholder tag if it's not visible
+		String componentInfo = component.toString();
 		if (!component.isVisible())
 		{
 			failMessage = "A component which is invisible and doesn't render a placeholder tag"
-				+ " will not be rendered at all and thus won't be accessible for subsequent AJAX interaction";
+				+ " will not be rendered at all and thus won't be accessible for subsequent AJAX interaction. " +
+					componentInfo;
 			result = isTrue(failMessage, component.getOutputMarkupPlaceholderTag());
 			if (result.wasFailed())
 			{
@@ -2244,8 +2246,9 @@ public class BaseWicketTester
 		String ajaxResponse = getLastResponseAsString();
 
 		// Test that the previous response was actually a AJAX response
-		failMessage = "The Previous response was not an AJAX response. "
-			+ "You need to execute an AJAX event, using clickLink, before using this assert";
+		failMessage = "The previous response was not an AJAX response. "+
+				"You need to execute an AJAX event, using #clickLink() or " +
+				"#executeAjaxEvent(), before using this assertion method";
 		boolean isAjaxResponse = Pattern.compile(
 			"^<\\?xml version=\"1.0\" encoding=\".*?\"\\?><ajax-response>")
 			.matcher(ajaxResponse)
@@ -2259,8 +2262,9 @@ public class BaseWicketTester
 		// See if the component has a markup id
 		String markupId = component.getMarkupId();
 
-		failMessage = "The component doesn't have a markup id, "
-			+ "which means that it can't have been added to the AJAX response";
+		failMessage = "The component doesn't have a markup id, " +
+				"which means that it can't have been added to the AJAX response. " +
+				componentInfo;
 		result = isTrue(failMessage, !Strings.isEmpty(markupId));
 		if (result.wasFailed())
 		{
@@ -2270,7 +2274,7 @@ public class BaseWicketTester
 		// Look for that the component is on the response, using the markup id
 		boolean isComponentInAjaxResponse = ajaxResponse.matches("(?s).*<component id=\"" +
 			markupId + "\"[^>]*?>.*");
-		failMessage = "Component wasn't found in the AJAX response";
+		failMessage = "Component wasn't found in the AJAX response. " + componentInfo;
 		return isTrue(failMessage, isComponentInAjaxResponse);
 	}
 
