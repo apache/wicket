@@ -68,13 +68,6 @@ public class ISecuritySettingsTest extends WicketTestCase
 		tester.startPage(pageWithLink);
 		tester.assertRenderedPage(MockPageWithLink.class);
 		tester.clickLink(MockPageWithLink.LINK_ID);
-		tester.assertRenderedPage(UnknownPage.class);
-
-		tester.getApplication().mountPackage("unknown", UnknownPage.class);
-
-		tester.startPage(pageWithLink);
-		tester.assertRenderedPage(MockPageWithLink.class);
-		tester.clickLink(MockPageWithLink.LINK_ID);
 		Assert.assertNull(tester.getLastRenderedPage());
 
 		/*
