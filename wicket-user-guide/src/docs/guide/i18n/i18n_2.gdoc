@@ -44,13 +44,13 @@ If you want to use UTF-8 with your text files, make sure that your editor/IDE is
 
 h3. Using XML files as resource bundles
 
-Starting from version 1.5, Java introduced the support for XML files as resource bundles. XML files are generally encoded with character sets UTF-8 or UTF-16 which support every symbol of the Unicode standard. In order to be a valid resource bundle the XML file must conform to the DTD available at "http://www.oracle.com/webfolder/technetwork/jsc/dtd/properties.dtd":http://www.oracle.com/webfolder/technetwork/jsc/dtd/properties.dtd .
+Starting from version 1.5, Java introduced the support for XML files as resource bundles. XML files are generally encoded with character sets UTF-8 or UTF-16 which support every symbol of the Unicode standard. In order to be a valid resource bundle the XML file must conform to the DTD available at "http://java.sun.com/dtd/properties.dtd":http://java.sun.com/dtd/properties.dtd .
 
 Here is an example of XML resource bundle taken from project LocalizedGreetings (file WicketApplication_zh.properties.xml) containing the translation in simplified Chinese of the greeting message “Welcome to the website!”:
 
 {code:xml}
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://www.oracle.com/webfolder/technetwork/jsc/dtd/properties.dtd">
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<entry key="greetingMessage">欢迎光临本网站！</entry>
 </properties>
