@@ -178,7 +178,8 @@ security:
   security_3: Using HTTPS protocol
   security_4: URLs encryption in detail 
   security_5: Package Resource Guard
-  security_6: Summary
+  security_6: External Security Checks
+  security_7: Summary
 testing:
   title: Test Driven Development with Wicket
   testing_1: Utility class WicketTester
