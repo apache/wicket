@@ -19,18 +19,7 @@ For better security it is recommended to install Java Cryptography Extension (JC
 
 By using @CryptoMapper(IRequestMapper wrappedMapper, Application application)@ constructor the mapper will use the configured @org.apache.wicket.util.crypt.ICryptFactory@ from @org.apache.wicket.settings.SecuritySettings#getCryptFactory()@. To use a stronger cryptography mechanism there are the following options:
 
-* The first option is to use constructor @CryptoMapper(IRequestMapper wrappedMapper, IProvider<ICrypt> cryptProvider)@ and give it an implementation of @org.apache.wicket.util.IProvider@ that returns a custom @org.apache.wicket.util.crypt.ICrypt@. 
-
-{note}
-@org.apache.wicket.util.IProvider@ is a single-method interface that acts as object supplier:
-{note}
-
-{code}
-public interface IProvider<T>
-{
-	T get();
-}
-{code}
+* The first option is to use constructor @CryptoMapper(IRequestMapper wrappedMapper, Supplier<ICrypt> cryptProvider)@ and give it an implementation of @java.util.function.Supplier@ that returns a custom @org.apache.wicket.util.crypt.ICrypt@.
 
 * The second option is to register a cipher factory at application level with method @setCryptFactory(ICryptFactory cryptFactory)@ of class @SecuritySettings@:
 

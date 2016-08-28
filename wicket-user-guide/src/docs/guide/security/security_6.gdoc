@@ -13,12 +13,12 @@ protected void init()
       @Override
       public void onEndRequest(RequestCycle cycle)
       {
-         ((WebResponse)cycle.getResponse()).setHeader("X-XSS-Protection", "1; mode=block");
-         ((WebResponse)cycle.getResponse()).setHeader("Strict-Transport-Security", "max-age=31536000;"
-         + " includeSubDomains; preload");
-         ((WebResponse)cycle.getResponse()).setHeader("X-Content-Type-Options", "nosniff");
-         ((WebResponse)cycle.getResponse()).setHeader("X-Frame-Options", "DENY");
-         ((WebResponse)cycle.getResponse()).setHeader("Content-Security-Policy", "default-src https:");
+         WebResponse response = (WebResponse) cycle.getResponse();
+         response.setHeader("X-XSS-Protection", "1; mode=block");
+         response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+         response.setHeader("X-Content-Type-Options", "nosniff");
+         response.setHeader("X-Frame-Options", "DENY");
+         response.setHeader("Content-Security-Policy", "default-src https:");
       }
    });
 }
@@ -38,4 +38,4 @@ Add this configuration to your web.xml (or let your server redirect to https):
 </security-constraint>
 {code}
 
-After this changes you have to check if your web application continues to work because it fits the requirements given with this header files. For example that resources must not requested from other domains anymore.
+After this changes you have to check if your web application continues to work because it fits the requirements given with these headers. For example that resources could not be requested from other domains anymore.

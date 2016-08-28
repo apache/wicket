@@ -3,9 +3,9 @@
 The authorization support provided by Wicket is built around the concept of authorization strategy which is represented by interface @IAuthorizationStrategy@ (in package @org.apache.wicket.authorization@):
 
 {code}
-public interface IAuthorizationStrategy
-{
-  //interface methods 
+public interface IAuthorizationStrategy {
+
+ //interface methods
  <T extends IRequestableComponent> boolean isInstantiationAuthorized(Class<T> componentClass);
  boolean isActionAuthorized(Component component, Action action);
  
@@ -28,8 +28,8 @@ public interface IAuthorizationStrategy
 
 This interface defines two methods:
 
-* isInstantiationAuthorized checks if user is allowed to instantiate a given component.
-* isActionAuthorized checks if user is authorized to perform a given action on a component's instance. The standard actions checked by this method are defined into class Action and are Action.ENABLE and Action.RENDER.
+* @isInstantiationAuthorized()@ checks if user is allowed to instantiate a given component.
+* @isActionAuthorized()@ checks if user is authorized to perform a given action on a component's instance. The standard actions checked by this method are defined into class Action and are Action.ENABLE and Action.RENDER.
 
 Inside @IAuthorizationStrategy@ we can also find a default implementation of the interface (called ALLOW_ALL) that allows everyone to instantiate every component and perform every possible action on it. This is the default strategy adopted by class @Application@.
 
@@ -42,8 +42,8 @@ To change the authorization strategy in use we must register the desired impleme
   {
     super.init();
     getSecuritySettings().
-	setAuthorizationStrategy(myAuthorizationStrategy);
-  }	
+    setAuthorizationStrategy(myAuthorizationStrategy);
+  }
 //...
 {code}
 
@@ -60,17 +60,17 @@ SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizat
                                                   PageClassToCheck.class, SignInPage.class)
 {
   protected boolean isAuthorized()
-  {		                
+  {
     //Authentication code...
   }
 };
 {code}
 
-By default @SimplePageAuthorizationStrategy@ checks for permissions only on pages. If we want to change this behavior and check also other kinds of components, we must override method @isActionAuthorized@ and implement our custom logic inside it.
+By default @SimplePageAuthorizationStrategy@ checks for permissions only on pages. If we want to change this behavior and check also other kinds of components, we must override method @isActionAuthorized()@ and implement our custom logic inside it.
 
 h3. Role-based strategies
 
-At the end of [paragraph 22.1|guide:security_1] we have introduced AbstractAuthenticatedWebSession's method getRoles which is provided to support role-based authorization returning the set of roles granted to the current user.
+At the end of [paragraph 22.1|guide:security_1] we have introduced AbstractAuthenticatedWebSession's method getRoles() which is provided to support role-based authorization returning the set of roles granted to the current user.
 
 In Wicket roles are simple strings like “BASIC_USER” or “ADMIN” (they don't need to be capitalized) and they are handled with class @org.apache.wicket.authroles.authorization.strategies.role.Roles@. This class extends standard HashSet collection adding some functionalities to check whether the set contains one or more roles. Class @Roles@ already defines roles Roles.USER and Roles.ADMIN.
 
@@ -81,7 +81,7 @@ class BasicAuthenticationRolesSession extends AuthenticatedWebSession {
 	private String userName;
 	
 	public BasicAuthenticationRolesSession(Request request) {
-		super(request);		
+		super(request);
 	}
 
 	@Override
@@ -130,7 +130,7 @@ The following code snippet reports both application and session classes from pro
 *Application class:*
 
 {code}
-public class WicketApplication extends AuthenticatedWebApplication{    		
+public class WicketApplication extends AuthenticatedWebApplication {
    @Override
    public Class<? extends WebPage> getHomePage(){
       return HomePage.class;
@@ -196,11 +196,11 @@ public class BasicAuthenticationSession extends AuthenticatedWebSession {
 }
 {code}
 
-The code that instantiates @MetaDataRoleAuthorizationStrategy@ and set it as application's strategy is inside application class method init. 
+The code that instantiates @MetaDataRoleAuthorizationStrategy@ and set it as application's strategy is inside application class method @init()@.
 
 Any subclass of @AbstractRoleAuthorizationStrategyWicket@ needs an implementation of interface @IRoleCheckingStrategy@ to be instantiated. For this purpose in the code above we used the application class itself because its base class @AuthenticatedWebApplication@ already implements interface @IRoleCheckingStrategy@. By default @AuthenticatedWebApplication@ checks for authorizations using the roles returned by the current @AbstractAuthenticatedWebSession@. As final step inside init we grant the access to page @AdminOnlyPage@ to ADMIN role calling method authorize.
 
-The code from session class has three interesting methods. The first is authenticate which considers as valid credentials every pair of username and password having the same value. The second notable method is getRoles which returns role SIGNED_IN if user is authenticated and it adds role ADMIN if username is equal to superuser. Finally, we have method signOut which has been overridden in order to clean the username field used internally to generate roles.
+The code from session class has three interesting methods. The first is @authenticate()@ which considers as valid credentials every pair of username and password having the same value. The second notable method is @getRoles()@ which returns role SIGNED_IN if user is authenticated and it adds role ADMIN if username is equal to superuser. Finally, we have method @signOut()@ which has been overridden in order to clean the username field used internally to generate roles.
 
 Now if we run the project and we try to access to @AdminOnlyPage@ from the home page without having the ADMIN role, we will be redirected to the default access-denied page used by Wicket:
 
@@ -246,7 +246,7 @@ public class AdminOnlyPage extends WebPage {
 
 h3. Catching an unauthorized component instantiation
 
-Interface IUnauthorizedComponentInstantiationListener (in package @org.apache.wicket.authorization@) is provided to give the chance to handle the case in which a user tries to instantiate a component without having the permissions to do it. The method defined inside this interface is @onUnauthorizedInstantiation(Component)@ and it is executed whenever a user attempts to execute an unauthorized instantiation.
+Interface @IUnauthorizedComponentInstantiationListener@ (in package @org.apache.wicket.authorization@) is provided to give the chance to handle the case in which a user tries to instantiate a component without having the permissions to do it. The method defined inside this interface is @onUnauthorizedInstantiation(Component)@ and it is executed whenever a user attempts to execute an unauthorized instantiation.
 
 This listener must be registered into application's security settings with method @setUnauthorizedComponentInstantiationListener@ defined by setting class @SecuritySettings@. In the following code snippet we register a listener that redirect user to a warning page if he tries to do a not-allowed instantiation:
 
