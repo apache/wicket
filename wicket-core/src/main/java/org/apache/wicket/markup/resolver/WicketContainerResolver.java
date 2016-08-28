@@ -71,7 +71,7 @@ public class WicketContainerResolver implements IComponentResolver
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		if (tag instanceof WicketTag)
+		if (tag instanceof WicketTag && ((WicketTag)tag).isContainerTag())
 		{
 			return container.get(tag.getId());
 		}

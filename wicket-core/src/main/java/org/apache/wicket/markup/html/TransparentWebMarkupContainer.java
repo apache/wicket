@@ -55,7 +55,7 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	@Override
 	public Component resolve(MarkupContainer container, MarkupStream markupStream, ComponentTag tag)
 	{
-		if (tag instanceof WicketTag && ((WicketTag)tag).isFragementTag())
+		if (tag instanceof WicketTag && ((WicketTag)tag).isFragmentTag())
 		{
 			// even having a wicket:id it isn't a component's markup
 			return null;

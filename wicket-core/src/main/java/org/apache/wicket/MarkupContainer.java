@@ -1367,7 +1367,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			// Get element as tag
 			final ComponentTag tag = (ComponentTag)element;
-
+			if (tag instanceof WicketTag && ((WicketTag)tag).isFragmentTag())
+			{
+				return false;
+			}
 			// Get component id
 			final String id = tag.getId();
 

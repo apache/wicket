@@ -28,11 +28,11 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
 import org.apache.wicket.application.ComponentInitializationListenerCollection;
 import org.apache.wicket.application.ComponentInstantiationListenerCollection;
 import org.apache.wicket.application.ComponentOnAfterRenderListenerCollection;
 import org.apache.wicket.application.ComponentOnBeforeRenderListenerCollection;
+import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
 import org.apache.wicket.application.HeaderContributorListenerCollection;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
@@ -54,7 +54,6 @@ import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
-import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
@@ -698,7 +697,6 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageSettings.addComponentResolver(new HtmlHeaderResolver());
 		pageSettings.addComponentResolver(new WicketLinkTagHandler());
 		pageSettings.addComponentResolver(new WicketMessageResolver());
-		pageSettings.addComponentResolver(new FragmentResolver());
 		pageSettings.addComponentResolver(new RelativePathPrefixHandler());
 		pageSettings.addComponentResolver(new EnclosureHandler());
 		pageSettings.addComponentResolver(new InlineEnclosureHandler());

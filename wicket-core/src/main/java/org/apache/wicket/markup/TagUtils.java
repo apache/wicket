@@ -268,7 +268,7 @@ public class TagUtils
 							{
 								canFind = true;
 							}
-							else if (wtag.isFragementTag() || wtag.isContainerTag())
+							else if (wtag.isFragmentTag() || wtag.isContainerTag())
 							{
 								canFind = false;
 							}
