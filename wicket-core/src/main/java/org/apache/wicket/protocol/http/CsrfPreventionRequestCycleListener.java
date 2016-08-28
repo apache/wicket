@@ -87,7 +87,7 @@ import org.slf4j.LoggerFactory;
  * &#064;Override
  * protected boolean isChecked(IRequestablePage requestedPage)
  * {
- * 	return requestedPage.getPage() instanceof SecurePage;
+ * 	return requestedPage instanceof SecurePage;
  * }
  * </pre>
  * <p>
