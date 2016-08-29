@@ -980,6 +980,9 @@ public abstract class Component
 	 */
 	public final void beforeRender()
 	{
+		//clear any possible markup loaded before rendering phase
+		setMarkup(null);
+		
 		if (this instanceof IFeedback)
 		{
 			// this component is a feedback. Feedback must be initialized last, so that
