@@ -185,7 +185,7 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	{
 		targetOptional.ifPresent(target -> {
 			final IModel<T> model = getProvider().model(t);
-			visitChildren(Item.class, new IVisitor<Item<T>, Void>()
+			table.getBody().visitChildren(Item.class, new IVisitor<Item<T>, Void>()
 			{
 				@Override
 				public void component(Item<T> item, IVisit<Void> visit)
