@@ -131,8 +131,8 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	private void renderHeadForInnerSiblings(HtmlHeaderContainer container)
 	{
 		MarkupStream stream = new MarkupStream(getMarkup());
-		
-		while (stream.hasMore())
+
+		while (stream.isCurrentIndexInsideTheStream())
 		{
 			MarkupElement childOpenTag = stream.nextOpenTag();
 			

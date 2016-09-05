@@ -195,7 +195,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 			int orgIndex = markupStream.getCurrentIndex();
 			try
 			{
-				while (markupStream.hasMore())
+				while (markupStream.isCurrentIndexInsideTheStream())
 				{
 					markupStream.next();
 					if (markupStream.skipUntil(ComponentTag.class))

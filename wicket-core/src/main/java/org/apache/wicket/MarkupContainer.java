@@ -1544,7 +1544,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	protected final void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		while (markupStream.hasMore())
+		while (markupStream.isCurrentIndexInsideTheStream())
 		{
 			// In case of Page we need to render the whole file. For all other components just what
 			// is in between the open and the close tag.

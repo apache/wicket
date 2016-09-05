@@ -218,7 +218,7 @@ public class WicketMessageResolver implements IComponentResolver
 				log.warn("No value found for wicket:message tag with key: {}", key);
 
 				// If open tag was open-close
-				if (markupStream.hasMore() == false)
+				if (markupStream.isCurrentIndexInsideTheStream() == false)
 				{
 					String formatedNotFound = String.format(NOT_FOUND, key);
 					getResponse().write(formatedNotFound);
@@ -346,7 +346,7 @@ public class WicketMessageResolver implements IComponentResolver
 			// child component and save their tag index
 			if (!tag.isOpenClose())
 			{
-				while (markupStream.hasMore() && !markupStream.get().closes(openTag))
+				while (markupStream.isCurrentIndexInsideTheStream() && !markupStream.get().closes(openTag))
 				{
 					MarkupElement element = markupStream.get();
 

@@ -242,7 +242,7 @@ public class TagUtils
 
 		MarkupStream stream = new MarkupStream(fragment);
 		stream.setCurrentIndex(streamOffset);
-		while (stream.hasMore())
+		while (stream.isCurrentIndexInsideTheStream())
 		{
 			MarkupElement elem = stream.get();
 
