@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.util.file;
 
+import static java.lang.System.currentTimeMillis;
+import static org.hamcrest.Matchers.lessThan;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -61,6 +66,21 @@ public class FilesTest extends Assert
 		assertFalse("Should not be able to delete a folder, even empty one.", Files.remove(folder));
 		assertTrue("Should not be able to delete a folder.", Files.removeFolder(folder));
 	}
+
+	/**
+	 * WICKET-6236 - honoring the javadoc by putting a wait only after the 10th failed attempt to delete a file
+	 */
+	@Test
+	public void dontWaitTooMuchIfCantDelete(){
+		java.io.File f = mock(java.io.File.class);
+		when(f.isFile()).thenReturn(true);
+		when(f.delete()).thenReturn(false);
+		long start = currentTimeMillis();
+		Files.remove(f);
+		long end = currentTimeMillis();
+		assertThat(end - start,  lessThan(5000l));
+	}
+
 
 	/**
 	 * Tests for {@link Files#removeFolder(java.io.File)}
