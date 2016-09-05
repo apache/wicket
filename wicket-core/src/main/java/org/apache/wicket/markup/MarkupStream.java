@@ -134,7 +134,7 @@ public class MarkupStream
 	public boolean equalTo(final MarkupStream that)
 	{
 		// While a has more markup elements
-		while (hasMore())
+		while (isCurrentIndexInsideTheStream())
 		{
 			// Get an element from each
 			final MarkupElement thisElement = this.get();
@@ -163,7 +163,7 @@ public class MarkupStream
 		}
 
 		// If we've run out of markup elements in b
-		if (!that.hasMore())
+		if (!that.isCurrentIndexInsideTheStream())
 		{
 			// then the two streams match perfectly
 			return true;
@@ -271,8 +271,18 @@ public class MarkupStream
 	}
 
 	/**
-	 * @return True if this markup stream has more MarkupElement elements
+	 * @return True if this markup stream is moved to a MarkupElement element
 	 */
+	public boolean isCurrentIndexInsideTheStream()
+	{
+		return currentIndex < markup.size();
+	}
+
+	/**
+	 * @return True if this markup stream has more MarkupElement elements
+	 * @deprecated use {@link MarkupStream#isCurrentIndexInsideTheStream()} instead
+	 */
+	@Deprecated
 	public boolean hasMore()
 	{
 		return currentIndex < markup.size();
@@ -417,7 +427,7 @@ public class MarkupStream
 	 */
 	public boolean skipUntil(final Class<? extends MarkupElement> clazz)
 	{
-		while (hasMore())
+		while (isCurrentIndexInsideTheStream())
 		{
 			if (clazz.isInstance(current))
 			{
@@ -462,7 +472,7 @@ public class MarkupStream
 	public void skipToMatchingCloseTag(final ComponentTag openTag)
 	{
 		// Loop through the markup in this container
-		while (hasMore())
+		while (isCurrentIndexInsideTheStream())
 		{
 			// If the current markup tag closes the openTag
 			if (get().closes(openTag))
