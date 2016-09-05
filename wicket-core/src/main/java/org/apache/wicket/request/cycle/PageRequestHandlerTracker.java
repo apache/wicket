@@ -115,7 +115,7 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 	}
 
    /**
-	* retrieves last handler from requestcycle
+	* retrieves last handler from request cycle
 	*
 	* @param cycle
 	* @return last handler
