@@ -128,15 +128,14 @@ public class Files
 					{
 						return true;
 					}
-
-					try
-					{
-						Thread.sleep(100);
-					}
-					catch (InterruptedException ix)
-					{
-						Thread.currentThread().interrupt();
-					}
+				}
+				try
+				{
+					Thread.sleep(100);
+				}
+				catch (InterruptedException ix)
+				{
+					Thread.currentThread().interrupt();
 				}
 			}
 		}
