@@ -61,7 +61,7 @@ public class BorderBehavior extends Behavior
 		stream.setCurrentIndex(0);
 
 		boolean insideBorderMarkup = false;
-		while (stream.hasMore())
+		while (stream.isCurrentIndexInsideTheStream())
 		{
 			MarkupElement elem = stream.get();
 			stream.next();
@@ -104,7 +104,7 @@ public class BorderBehavior extends Behavior
 			}
 		}
 
-		if (!stream.hasMore())
+		if (!stream.isCurrentIndexInsideTheStream())
 		{
 			throw new WicketRuntimeException("Markup for component border " + getClass().getName() +
 				" ended prematurely, was expecting </wicket:border>");
@@ -117,7 +117,7 @@ public class BorderBehavior extends Behavior
 		final MarkupStream stream = getMarkupStream(component);
 		final Response response = component.getResponse();
 
-		while (stream.hasMore())
+		while (stream.isCurrentIndexInsideTheStream())
 		{
 			MarkupElement elem = stream.get();
 			stream.next();
