@@ -133,7 +133,7 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 	{
 		MarkupStream stream = new MarkupStream(getMarkup());
 
-		while (stream.hasMore())
+		while (stream.isCurrentIndexInsideTheStream())
 		{
 			MarkupElement childOpenTag = stream.nextOpenTag();
 
