@@ -130,6 +130,11 @@ public class DatePicker extends Behavior
 	private boolean autoHide = false;
 
 	/**
+	 *  The string to use for the close button label.
+	 */
+	private String closeLabel = "";
+
+	/**
 	 * Construct.
 	 */
 	public DatePicker()
@@ -235,6 +240,7 @@ public class DatePicker extends Behavior
 		variables.put("hideOnSelect", hideOnSelect());
 		variables.put("showOnFieldClick", showOnFieldClick());
 		variables.put("autoHide", autoHide());
+		variables.put("closeLabel", closeLabel());
 
 		String script = getAdditionalJavaScript();
 		if (script != null)
@@ -760,6 +766,25 @@ public class DatePicker extends Behavior
 	{
 		this.autoHide = autoHide;
 		return this;
+	}
+
+	/**
+	 * The string to use for the close button label.
+	 *
+	 * @return label
+	 */
+	protected String closeLabel()
+	{
+		return closeLabel;
+	}
+
+	/**
+	 * @param closeLabel
+	 *            The string to use for the close button label.
+	 */
+	public void setCloseLabel(String closeLabel)
+	{
+		this.closeLabel = closeLabel;
 	}
 
 	/**

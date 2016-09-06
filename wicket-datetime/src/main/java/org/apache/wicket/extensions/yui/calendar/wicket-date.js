@@ -275,6 +275,8 @@
 			YAHOO.util.Event.addListener(cfg.widgetId, "click", showCalendar, YAHOO.wicket[cfg.dpJs], true);
 		}
 
+		YAHOO.wicket[cfg.dpJs].cfg.setProperty(YAHOO.widget.Calendar.DEFAULT_CONFIG.STRINGS.key, {"close": cfg.closeLabel});
+
 		function selectHandler(type, args, cal) {
 			YAHOO.util.Dom.get(cfg.componentId).value = Wicket.DateTime.substituteDate(cfg, args[0][0]);
 			if (cal.isVisible()) {
@@ -398,7 +400,7 @@
 
 	// init method variant that needs less character to invoke
 	Wicket.DateTime.init2 = function(widgetId, componentId, calendarInit, datePattern,
-			alignWithIcon, fireChangeEvent, hideOnSelect, showOnFieldClick, i18n, autoHide) {
+			alignWithIcon, fireChangeEvent, hideOnSelect, showOnFieldClick, i18n, autoHide, closeLabel) {
 		calendarInit.MONTHS_SHORT = i18n.MONTHS_SHORT;
 		calendarInit.MONTHS_LONG = i18n.MONTHS_LONG;
 		calendarInit.WEEKDAYS_MEDIUM = i18n.WEEKDAYS_MEDIUM;
@@ -416,7 +418,8 @@
 			fireChangeEvent: fireChangeEvent,
 			hideOnSelect: hideOnSelect,
 			showOnFieldClick: showOnFieldClick,
-			autoHide: autoHide
+			autoHide: autoHide,
+			closeLabel: closeLabel
 		});
 	};
 
