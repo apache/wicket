@@ -78,7 +78,7 @@ class AtmosphereWebResponse extends WebResponse
 	@Override
 	public void setContentLength(long length)
 	{
-		response.setContentLength((int)length);
+		response.addHeader("Content-Length", Long.toString(length));
 	}
 
 	@Override
