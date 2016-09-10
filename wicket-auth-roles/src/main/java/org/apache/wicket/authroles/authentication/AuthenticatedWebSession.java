@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.authroles.authentication;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.wicket.Session;
 import org.apache.wicket.request.Request;
-
 
 /**
  * Basic authenticated web session. Subclasses must provide a method that authenticates the session
@@ -39,7 +40,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	}
 
 	/** True when the user is signed in */
-	private volatile boolean signedIn;
+	private final AtomicBoolean signedIn = new AtomicBoolean(false);
 
 	/**
 	 * Construct.
@@ -62,12 +63,16 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	 */
 	public final boolean signIn(final String username, final String password)
 	{
-		signedIn = authenticate(username, password);
-		if (signedIn)
+		if (signedIn.compareAndSet(false, true))
 		{
-			bind();
+			boolean authenticated = authenticate(username, password);
+			if (authenticated)
+			{
+				bind();
+			}
+			signedIn.set(authenticated);
 		}
-		return signedIn;
+		return signedIn.get();
 	}
 
 	/**
@@ -96,7 +101,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	 */
 	protected final void signIn(boolean value)
 	{
-		signedIn = value;
+		signedIn.set(value);
 	}
 
 	/**
@@ -105,7 +110,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	@Override
 	public final boolean isSignedIn()
 	{
-		return signedIn;
+		return signedIn.get();
 	}
 
 	/**
@@ -124,7 +129,7 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	@Override
 	public void invalidate()
 	{
-		signedIn = false;
+		signedIn.set(false);
 		super.invalidate();
 	}
 }
