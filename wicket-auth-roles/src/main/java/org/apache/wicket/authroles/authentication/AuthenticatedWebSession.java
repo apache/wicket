@@ -70,7 +70,10 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 			{
 				bind();
 			}
-			signedIn.set(authenticated);
+			else
+			{
+				signedIn.set(false);
+			}
 		}
 		return signedIn.get();
 	}
