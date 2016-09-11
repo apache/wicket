@@ -603,8 +603,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (PackageResource.exists(clazz, href, getLocale(), getStyle(), getVariation()))
 			{
 				// Create the component implementing the link
-				resourceReference = new PackageResourceReference(clazz, href, getLocale(),
-					getStyle(), getVariation());
+				resourceReference = new PackageResourceReference(clazz, href, null, null, null);
 				}
 				else
 				{
