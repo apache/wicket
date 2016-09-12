@@ -63,17 +63,11 @@ public abstract class AuthenticatedWebSession extends AbstractAuthenticatedWebSe
 	 */
 	public final boolean signIn(final String username, final String password)
 	{
-		if (signedIn.compareAndSet(false, true))
+		boolean authenticated = authenticate(username, password);
+
+		if (authenticated && signedIn.compareAndSet(false, true))
 		{
-			boolean authenticated = authenticate(username, password);
-			if (authenticated)
-			{
-				bind();
-			}
-			else
-			{
-				signedIn.set(false);
-			}
+			bind();
 		}
 		return signedIn.get();
 	}
