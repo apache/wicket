@@ -17,11 +17,14 @@
 package org.apache.wicket.extensions.markup.html.form.palette.component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
@@ -163,7 +166,7 @@ public class Recorder<T> extends HiddenField<String>
 		final IChoiceRenderer<? super T> renderer = getPalette().getChoiceRenderer();
 		final Collection<? extends T> choices = getPalette().getChoices();
 		final List<T> unselected = new ArrayList<>(choices.size());
-		final String ids = getValue();
+		final Set<String> ids = new TreeSet<>(Arrays.asList(Strings.split(getValue(), ',')));
 
 		for (final T choice : choices)
 		{
