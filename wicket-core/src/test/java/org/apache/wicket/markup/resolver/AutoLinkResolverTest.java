@@ -16,29 +16,53 @@
  */
 package org.apache.wicket.markup.resolver;
 
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
 
 import java.util.Locale;
 
-import org.apache.wicket.util.tester.WicketTester;
-import org.hamcrest.CoreMatchers;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
-public class AutoLinkResolverTest
+/**
+ * @author Pedro Santos
+ */
+public class AutoLinkResolverTest extends WicketTestCase
 {
+	private static final Locale DEFAULT_LOCALE = Locale.US;
+	private static final Locale EXISTENT_RESOURCE_LOCALE = Locale.CANADA;
+	private static final Locale NON_EXISTENT_RESOURCE_LOCALE = Locale.FRANCE;
 
 	@Test
 	public void shouldAutoLinkLocalizedResources()
 	{
-		Locale.setDefault(Locale.US);
+		PageWithAutoLinkedLocalResource instance = new PageWithAutoLinkedLocalResource();
 
-		WicketTester tester = new WicketTester();
+		tester.getSession().setLocale(DEFAULT_LOCALE);
 
-		tester.getSession().setLocale(Locale.CANADA);
+		tester.startPage(instance);
+
+		tester.getSession().setLocale(EXISTENT_RESOURCE_LOCALE);
+
+		tester.startPage(instance);
+
+		assertThat(tester.getLastResponseAsString(),
+			containsString(EXISTENT_RESOURCE_LOCALE.getCountry()));
+	}
+
+	@Test
+	public void shouldAutoLinkExistentLocalizedResources()
+	{
+		tester.getSession().setLocale(NON_EXISTENT_RESOURCE_LOCALE);
 
 		tester.startPage(PageWithAutoLinkedLocalResource.class);
 
-		assertThat(tester.getLastResponseAsString(), CoreMatchers.containsString("en_CA"));
-	}
+		tester.getSession().setLocale(EXISTENT_RESOURCE_LOCALE);
 
+		// works if the page is recreated only
+		// TODO: render existent resource's URL if previously not shown by this page instance?
+		tester.startPage(PageWithAutoLinkedLocalResource.class);
+
+		assertThat(tester.getLastResponseAsString(),
+			containsString(EXISTENT_RESOURCE_LOCALE.getCountry()));
+	}
 }
