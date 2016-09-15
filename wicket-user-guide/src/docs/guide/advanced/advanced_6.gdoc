@@ -1,17 +1,62 @@
 
 
-In this chapter we have introduced some advanced topics we didn't have the chance to cover yet. We have started talking about behaviors and we have seen how they can be used to enrich existing components (promoting a component-oriented approach). Behaviors are also fundamental to work with AJAX in Wicket, as we will see in the next chapter.
+So far, as markup source for our pages/panels we have used a static markup file, no matter if it was inherited or directly associated to the component. Now we want to investigate a more complex use case where we want to dynamical generate the markup directly inside component code.
 
-After behaviors we have learnt how to generate callback URLs to execute a custom method on server side defined inside a specific callback interface.
+To become a markup producer, a component must simply implement interface @org.apache.wicket.markup.IMarkupResourceStreamProvider@. The only method defined in this interface is @getMarkupResourceStream(MarkupContainer, Class<?>)@ which returns an utility interface called @IResourceStream@ representing the actual markup.
 
-The third topic of the chapter has been the event infrastructure provided in Wicket for inter-component communication which brings to our components a desktop-like event-driven architecture.
+In the following example we have a custom panel without a related markup file that generates a simple <div> tag as markup: 
 
-Then, we have introduced a new entity called initializer which can be used to configure resources and component in a modular and self-contained way.
+{code}
+public class AutoMarkupGenPanel extends Panel implements IMarkupResourceStreamProvider {
+	public AutoMarkupGenPanel(String id, IModel<?> model) {
+		super(id, model);		
+	}
 
-We have also looked at Wicket support for JMX and we have seen how to use this technology for monitoring and managing our running applications.
+	@Override
+	public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass) {
+		String markup = "<wicket:panel><div>Panel markup</div></wicket:panel>";
+		StringResourceStream resourceStream = new StringResourceStream(markup);
+		
+		return resourceStream;
+	}
+}
+{code}
 
-Finally we have introduced a new technique to generate the markup of a component from its Java code.
+Class StringResourceStream is a resource stream that uses a String instance as backing object.
 
+h3. Avoiding markup caching
 
+As we have seen in the previous paragraph, Wicket uses an internal cache for components markup. This can be a problem if our component dynamical generates its markup when it is rendered because once the markup has been cached, Wicket will always use the cached version for the specific component. To overwrite this default caching policy, a component can implement interface @IMarkupCacheKeyProvider@. 
 
+This interface defines method @getCacheKey(MarkupContainer, Class<?>)@ which returns a string value representing the key used by Wicket to retrieve the markup of the component from the cache. If this value is null the markup will not be cached, allowing the component to display the last generated markup each time it is rendered:
 
+{code}
+public class NoCacheMarkupPanel extends Panel implements IMarkupCacheKeyProvider {
+	public NoCacheMarkupPanel(String id, IModel<?> model) {
+		super(id, model);		
+	}
+	
+	/**
+	* Generate a dynamic HTML markup that changes every time
+	* the component is rendered
+	*/
+	@Override
+	public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass) {
+		String markup = "<wicket:panel><div>Panel with current nanotime: " + System.nanoTime() +
+				 "</div></wicket:panel>";
+		StringResourceStream resourceStream = new StringResourceStream(markup);
+		
+		return resourceStream;
+	}
+
+	/**
+	* Avoid markup caching for this component
+	*/
+	@Override
+	public String getCacheKey(MarkupContainer arg0, Class<?> arg1) {
+		return null;
+	}
+}
+{code}

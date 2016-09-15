@@ -1,38 +1,37 @@
+Starting from version 1.5 Wicket offers an event-based infrastructure for inter-component communication. The infrastructure is based on two simple interfaces (both in package @org.apache.wicket.event@) : @IEventSource@ and @IEventSink@. 
 
+The first interface must be implemented by those entities that want to broadcast en event while the second interface must be implemented by those entities that want to receive a broadcast event.
 
-Some components or resources may need to be configured before being used in our applications. While so far we used Application's init method to initialize these kinds of entities, Wicket offers a more flexible and modular way to configure our classes. 
+The following entities already implement both these two interfaces (i.e. they can be either sender or receiver): @Component@, @Session@, @RequestCycle@ and @Application@.
+@IEventSource@ exposes a single method named send which takes in input three parameters:
 
-During application's bootstrap Wicket searches for any properties file placed in one of the '/META-INF/wicket/' folder visible to the application classpath. When one of these files is found, the initializer defined inside it will be executed. An initializer is an implementation of interface @org.apache.wicket.IInitializer@ and is defined inside a properties with a line like this:
+* *sink*: an implementation of @IEventSink@ that will be the receiver of the event. 
+* *broadcast*: a @Broadcast@ enum which defines the broadcast method used to dispatch the event to the sink and to other entities such as sink children, sink containers, session object, application object and the current request cycle. It has four possible values:
+{table}
+*Value* | *Description*
+BREADTH | The event is sent first to the specified sink and then to all its children components following a breadth-first order.
+DEPTH | The event is sent to the specified sink only after it has been dispatched to all its children components following a depth-first order.
+BUBBLE | The event is sent first to the specified sink and then to its parent containers.
+EXACT | The event is sent only to the specified sink.
+{table}
+* *payload*: a generic object representing the data sent with the event.
+
+Each broadcast mode has its own traversal order for @Session@, @RequestCycle@ and @Application@. See JavaDoc of class @Broadcast@ for further details about this order.
+
+Interface @IEventSink@ exposes callback method @onEvent(IEvent<?> event)@ which is triggered when a sink receives an event. The interface @IEvent@ represents the received event and provides getter methods to retrieve the event broadcast type, the source of the event and its payload. Typically the received event is used checking the type of its payload object:
 
 {code}
-initializer=org.wicketTutorial.MyInitializer
-{code}
-
-The fully qualified class name corresponds to the initializer that must be executed. Interface @IInitializer@ defines method init(Application) which should contain our initialization code, and method @destroy(Application)@ which is invoked when application is terminated:
-
-{code}
-public class MyInitializer implements IInitializer{
-
-	public void init(Application application) {
-		//initialization code 
-	}
-
-	public void destroy(Application application) {
-		//code to execute when application is terminated
-	}	
+@Override
+public void onEvent(IEvent event) {
+  //if the type of payload is MyPayloadClass perform some actions 
+  if(event.getPayload() instanceof MyPayloadClass) {
+     //execute some business code.
+  }else{
+     //other business code
+  }         
 }
 {code}
 
-Only one initializer can be defined in a single properties file. To overcome this limit we can create a main initializer that in turn executes every initializer we need:
+Project @InterComponetsEventsExample@ provides a concrete example of sending an event to a component (named 'container in the middle') using all the available broadcast methods:
 
-{code}
-public class MainInitializer implements IInitializer{
-
-	public void init(Application application) {
-		new AnotherInitializer().init(application);
-		new YetAnotherInitializer().init(application);
-		//... 
-	}
-	//destroy... 
-}
-{code}
+!InterComponentsEventsExample-screenshot.png!
