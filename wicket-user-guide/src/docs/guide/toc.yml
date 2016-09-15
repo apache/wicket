@@ -143,10 +143,11 @@ advanced:
   title: Wicket advanced topics
   advanced_1: Enriching components with behaviors
   advanced_2: Generating callback URLs with IRequestListener
-  advanced_3: Initializers
-  advanced_4: Using JMX with Wicket
-  advanced_5: Generating HTML markup from code
-  advanced_6: Summary
+  advanced_3: Wicket events infrastructure
+  advanced_4: Initializers
+  advanced_5: Using JMX with Wicket
+  advanced_6: Generating HTML markup from code
+  advanced_7: Summary
 ajax:
   title: Working with AJAX
   ajax_1: How to use AJAX components and behaviors
