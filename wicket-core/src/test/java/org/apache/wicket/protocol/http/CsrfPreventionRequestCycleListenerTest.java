@@ -78,13 +78,12 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		tester.assertRenderedPage(SecondPage.class);
 	}
 
-	/** Tests the default setting of allowing a missing Origin. */
+	/** Tests the default setting of aborting a missing Origin. */
 	@Test
 	public void withoutOriginAllowed()
 	{
 		tester.clickLink("link");
-		assertConflictingOriginsRequestAllowed();
-		tester.assertRenderedPage(SecondPage.class);
+		assertConflictingOriginsRequestAborted();
 	}
 
 	/** Tests the alternative action of suppressing a request without Origin header */
