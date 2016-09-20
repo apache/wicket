@@ -106,6 +106,8 @@ public abstract class AbstractAjaxResponse
 
 	protected HtmlHeaderContainer header = null;
 
+	private Component originalHeaderContainer  = null;
+
 	// whether a header contribution is being rendered
 	private boolean headerRendering = false;
 
@@ -125,6 +127,7 @@ public abstract class AbstractAjaxResponse
 	public AbstractAjaxResponse(final Page page)
 	{
 		this.page = page;
+		this.originalHeaderContainer = page.get(HtmlHeaderSectionHandler.HEADER_ID);
 
 		WebResponse response = (WebResponse) page.getResponse();
 		encodingBodyResponse = new AjaxResponse(response);
@@ -165,9 +168,9 @@ public abstract class AbstractAjaxResponse
 
 			writeFooter(response, encoding);
 		} finally {
-			if (header != null) {
+			if (header != null && originalHeaderContainer!= null) {
 				// restore a normal header
-				page.replace(new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID));
+				page.replace(originalHeaderContainer);
 				header = null;
 			}
 		}
