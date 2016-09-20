@@ -677,7 +677,12 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * @return the exception mapper provider
+	 * Returns a supplier of {@link IExceptionMapper} that will be used to
+	 * handle exceptions which were not handled by any
+	 * {@link IRequestCycleListener#onException(RequestCycle, Exception) request cycle listener}.
+	 *
+	 * @return the exception mapper supplier
+	 * @see IRequestCycleListener#onException(RequestCycle, Exception)
 	 */
 	public Supplier<IExceptionMapper> getExceptionMapperProvider()
 	{

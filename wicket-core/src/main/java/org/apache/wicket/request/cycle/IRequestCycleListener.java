@@ -144,15 +144,19 @@ public interface IRequestCycleListener
 	 * 
 	 * Note that in the event of an exception, {@link #onEndRequest(RequestCycle)} will still be called after
 	 * these listeners have {@link #onException(RequestCycle, Exception)} called
-	 * 
-	 * @param cycle
-	 * 
-	 * @return request handler that will be executed or {@code null} if none. If a request handler
-	 *         is returned, it will override any configured exception mapper
-	 * 
+	 * <p>
+	 * <strong>Important</strong>: Custom implementations are recommended to <strong>not</strong> try to
+	 * handle exceptions implementing {@link org.apache.wicket.IWicketInternalException} interface.
+	 * Usually such kind of exceptions should be handled by the framework.
+	 * </p>
+	 *
+	 * @param cycle The current {@link RequestCycle request cycle}
 	 * @param ex
 	 *            the exception that was passed in to
 	 *            {@link RequestCycle#handleException(Exception)}
+	 * @return request handler that will be executed or {@code null} if none. If a request handler
+	 *         is returned, it will override any configured
+	 *         {@link Application#getExceptionMapperProvider() exception mapper}.
 	 */
 	IRequestHandler onException(RequestCycle cycle, Exception ex);
 
