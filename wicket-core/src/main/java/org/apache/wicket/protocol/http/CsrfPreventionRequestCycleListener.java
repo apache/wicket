@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -358,8 +357,11 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 			}
 			else
 			{
-				log.debug("Targeted page {} was opted out of the CSRF origin checks, allowed",
-					targetedPage.getClass().getName());
+				if (log.isDebugEnabled())
+				{
+					log.debug("Targeted page {} was opted out of the CSRF origin checks, allowed",
+							targetedPage.getClass().getName());
+				}
 				allowHandler(containerRequest, sourceUri, targetedPage);
 			}
 		}
