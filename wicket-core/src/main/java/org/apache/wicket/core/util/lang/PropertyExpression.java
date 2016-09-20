@@ -19,6 +19,7 @@ package org.apache.wicket.core.util.lang;
 public class PropertyExpression
 {
 	Property property;
+	CharSequence index;
 	PropertyExpression next;
 
 	static class Property

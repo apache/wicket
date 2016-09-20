@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.lang;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -55,7 +57,10 @@ public class PropertyResolverTest extends WicketTestCase
 	private static final PropertyResolverConverter CONVERTER = new PropertyResolverConverter(
 		new ConverterLocator(), Locale.US);
 
+	private static final int AN_INTEGER = 10;
 	private Person person;
+	private Map<String, Integer> integerMap = new HashMap<String, Integer>();
+	private WeirdList integerList = new WeirdList();
 
 	/**
 	 * @throws Exception
@@ -81,7 +86,7 @@ public class PropertyResolverTest extends WicketTestCase
 	@Test
 	public void simpleExpression() throws Exception
 	{
-		String name = (String) PropertyResolver.getValue("name", person);
+		String name = (String)PropertyResolver.getValue("name", person);
 		assertNull(name);
 
 		PropertyResolver.setValue("name", person, "wicket", CONVERTER);
@@ -217,8 +222,64 @@ public class PropertyResolverTest extends WicketTestCase
 		assertNotNull(hm.get("address.test"));
 		PropertyResolver.setValue("addressMap[address.test].street", person, "wicket-street",
 			CONVERTER);
-		String street = (String)PropertyResolver.getValue("addressMap[address.test].street", person);
+		String street = (String)PropertyResolver.getValue("addressMap[address.test].street",
+			person);
 		assertEquals(street, "wicket-street");
+	}
+
+
+	static class WeirdList extends ArrayList<Integer>
+	{
+		private static final long serialVersionUID = 1L;
+		private Integer integer;
+
+		public void set0(Integer integer)
+		{
+			this.integer = integer;
+
+		}
+
+		public Integer get0()
+		{
+			return integer;
+		}
+	}
+
+	@Test
+	public void shouldMapKeysWithSpecialCharacters() throws Exception
+	{
+		String expression = "[!@#$%^&*()_+-=[{}|]";
+		PropertyResolver.setValue(expression, integerMap, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue(expression, integerMap), is(AN_INTEGER));
+		assertThat(integerMap.get(expression), is(AN_INTEGER));
+
+	}
+
+	@Test
+	public void shouldPriorityzeListIndex() throws Exception
+	{
+		integerList.set0(AN_INTEGER);
+		assertThat(PropertyResolver.getValue("integerList.0", this), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldPriorityzeMapKeyInSquareBrakets() throws Exception
+	{
+		PropertyResolver.setValue("[class]", integerMap, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue("[class]", integerMap), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldPriorityzeMapKeyInSquareBraketsAfterAnExpresison() throws Exception
+	{
+		PropertyResolver.setValue("integerMap[class]", this, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue("integerMap[class]", this), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldPriorityzeMethodCallWhenEndedByParentises() throws Exception
+	{
+		assertThat(PropertyResolver.getValue("integerMap.getClass()", this), is(HashMap.class));
 	}
 
 	/**
@@ -746,63 +807,73 @@ public class PropertyResolverTest extends WicketTestCase
 		Object actual = converter.convert(date, Long.class);
 		assertEquals(date.getTime(), actual);
 	}
-	
+
 	/**
 	 * WICKET-5623 custom properties
 	 */
 	@Test
-	public void custom() {
+	public void custom()
+	{
 		Document document = new Document();
 		document.setType("type");
 		document.setProperty("string", "string");
-		
+
 		Document nestedCustom = new Document();
 		nestedCustom.setProperty("string", "string2");
 		document.setProperty("nested", nestedCustom);
-		
-		PropertyResolver.setLocator(tester.getApplication(), new CachingPropertyLocator(new CustomGetAndSetLocator()));
-		
+
+		PropertyResolver.setLocator(tester.getApplication(),
+			new CachingPropertyLocator(new CustomGetAndSetLocator()));
+
 		assertEquals("type", PropertyResolver.getValue("type", document));
 		assertEquals("string", PropertyResolver.getValue("string", document));
 		assertEquals("string2", PropertyResolver.getValue("nested.string", document));
 	}
-	
-	class CustomGetAndSetLocator implements IPropertyLocator {
+
+	class CustomGetAndSetLocator implements IPropertyLocator
+	{
 
 		private IPropertyLocator locator = new DefaultPropertyLocator();
-		
+
 		@Override
-		public IGetAndSet get(Class<?> clz, String exp) {
+		public IGetAndSet get(Class<?> clz, String exp)
+		{
 			// first try default properties
 			IGetAndSet getAndSet = locator.get(clz, exp);
-			if (getAndSet == null && Document.class.isAssignableFrom(clz)) {
+			if (getAndSet == null && Document.class.isAssignableFrom(clz))
+			{
 				// fall back to document properties
 				getAndSet = new DocumentPropertyGetAndSet(exp);
 			}
 			return getAndSet;
 		}
-		
-		public class DocumentPropertyGetAndSet extends AbstractGetAndSet {
+
+		public class DocumentPropertyGetAndSet extends AbstractGetAndSet
+		{
 
 			private String name;
 
-			public DocumentPropertyGetAndSet(String name) {
+			public DocumentPropertyGetAndSet(String name)
+			{
 				this.name = name;
 			}
 
 			@Override
-			public Object getValue(Object object) {
-				return ((Document) object).getProperty(name);
+			public Object getValue(Object object)
+			{
+				return ((Document)object).getProperty(name);
 			}
 
 			@Override
-			public Object newValue(Object object) {
+			public Object newValue(Object object)
+			{
 				return new Document();
 			}
 
 			@Override
-			public void setValue(Object object, Object value, PropertyResolverConverter converter) {
-				((Document) object).setProperty(name, value);
+			public void setValue(Object object, Object value, PropertyResolverConverter converter)
+			{
+				((Document)object).setProperty(name, value);
 			}
 		}
 	}

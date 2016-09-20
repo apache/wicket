@@ -31,11 +31,14 @@ import org.apache.wicket.core.util.lang.PropertyExpression.Property;
  *  index char				= char - "]"
  *  
  *  java identifier			= java letter , {java letter or digit}
- *  method sign				= "(" , ")"
+ *  property name			= java letter or digit , {java letter or digit}
+ *  method sign				= "(" , { " " } , ")"
  *  index					= "[" , index char , {index char} , "]" ;
  *  
- *  property				= java identifier , [ index | method sign ];
- *  property expression		= property , { "." , property expression } ;
+ *  bean property			= property name, [ index ]
+ *  java property			= java identifier , [ index | method sign ]
+ *  map property			= index
+ *  property expression		= [ bean property | java property | map property ], { "." , property expression } ;
  *  
  * </code>
  * 
@@ -55,12 +58,17 @@ public class PropertyExpressionParser
 	{
 		currentPosition = nextPosition;
 		currentToken = lookaheadToken;
-
 		nextPosition += 1;
 		if (nextPosition >= text.length())
+		{
+
 			lookaheadToken = END_OF_EXPRESSION;
+		}
 		else
+		{
+
 			lookaheadToken = text.charAt(nextPosition);
+		}
 		return currentToken;
 	}
 
@@ -71,7 +79,8 @@ public class PropertyExpressionParser
 		{
 			throw new ParserException("No expression was given to be parsed.");
 		}
-		else if (text.length() == 1)
+		currentToken = text.charAt(0);
+		if (text.length() == 1)
 		{
 			lookaheadToken = END_OF_EXPRESSION;
 		}
@@ -79,7 +88,6 @@ public class PropertyExpressionParser
 		{
 			lookaheadToken = text.charAt(1);
 		}
-		currentToken = text.charAt(0);
 		return expression();
 
 	}
@@ -87,7 +95,14 @@ public class PropertyExpressionParser
 	private PropertyExpression expression()
 	{
 		PropertyExpression expression = new PropertyExpression();
-		expression.property = property();
+		if (currentToken == '[')
+		{
+			expression.index = index();
+		}
+		else
+		{
+			expression.property = property();
+		}
 		switch (lookaheadToken)
 		{
 			case '.' :
@@ -98,33 +113,27 @@ public class PropertyExpressionParser
 			case END_OF_EXPRESSION :
 				return expression;
 			default :
-				throw new ParserException("expecting a new expression but got: '" + currentToken + "'");
+				throw new ParserException(
+					"Expecting a new expression but got: '" + lookaheadToken + "'");
 		}
 	}
 
 	private Property property()
 	{
 		Property property = new Property();
-		if (currentToken == '[')
+		property.javaIdentifier = javaIdentifier();
+		switch (lookaheadToken)
 		{
-			property.index = index();
-			return property;
-		}
-		else
-		{
-			property.javaIdentifier = javaIdentifier();
-			if (lookaheadToken == '[')
-			{
+			case '[' :
 				advance();// skips left bracket
 				property.index = index();
-			}
-			else if (lookaheadToken == '(')
-			{
+				break;
+			case '(' :
 				advance(); // skips left bracket
 				property.hasMethodSign = methodSign();
-			}
-			return property;
+				break;
 		}
+		return property;
 	}
 
 
@@ -162,9 +171,14 @@ public class PropertyExpressionParser
 
 	private boolean methodSign()
 	{
+		while (lookaheadToken == ' ')
+		{
+			advance();// skips empty spaces
+		}
 		if (lookaheadToken != ')')
 		{
-			throw new ParserException("expecting a method sign but got: '" + currentToken + "'");
+			throw new ParserException(format("The expression can't have method parameters: '%s<--'",
+				text.substring(0, nextPosition)));
 		}
 		advance();// skips right bracket
 		return true;

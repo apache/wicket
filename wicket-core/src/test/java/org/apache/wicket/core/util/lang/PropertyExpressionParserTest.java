@@ -5,7 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.core.util.lang.PropertyExpression.Property;
 import org.hamcrest.CoreMatchers;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -16,34 +15,52 @@ public class PropertyExpressionParserTest
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 	private PropertyExpressionParser parser = new PropertyExpressionParser();
-
+	
 	@Test
 	public void shouldParsePropertyExpressions()
 	{
-		PropertyExpression parse = parser.parse("a");
-		assertThat(parse.property, is(new Property("a", null, false)));
-		assertThat(parse.next, CoreMatchers.nullValue());
+		PropertyExpression expression = parser.parse("person");
+		assertThat(expression.index, CoreMatchers.nullValue());
+		assertThat(expression.property, is(new Property("person", null, false)));
+		assertThat(expression.next, CoreMatchers.nullValue());
 	}
 
+	@Test
+	public void shouldParsePropertyExpressionStartingWithDigits()
+	{
+		PropertyExpression expression = parser.parse("1person");
+		assertThat(expression.index, CoreMatchers.nullValue());
+		assertThat(expression.property, is(new Property("person", null, false)));
+		assertThat(expression.next, CoreMatchers.nullValue());
+	}
+	
 	@Test
 	public void shouldParseShortPropertyExpressions()
 	{
-		PropertyExpression parse = parser.parse("person");
-		assertThat(parse.property, is(new Property("person", null, false)));
-		assertThat(parse.next, CoreMatchers.nullValue());
+		PropertyExpression expression = parser.parse("a");
+		assertThat(expression.index, CoreMatchers.nullValue());
+		assertThat(expression.property, is(new Property("a", null, false)));
+		assertThat(expression.next, CoreMatchers.nullValue());
 	}
 
-	// TODO mgrigorov: @pedrosans: I'd expect the error message to complain about the space, not 'r'
 	@Test
-	public void shouldFailParsePropertyExpressionsWithSpace()
+	public void shouldParseIndexedPropertyExpressions()
 	{
-		expectedException.expect(ParserException.class);
-		expectedException
-				.expectMessage("expecting a new expression but got: ' '");
-		parser.parse("per son");
+		PropertyExpression expression = parser.parse("person[age]");
+		assertThat(expression.index, CoreMatchers.nullValue());
+		assertThat(expression.property, is(new Property("person", "age", false)));
+		assertThat(expression.next, CoreMatchers.nullValue());
 	}
 
-	// TODO mgrigorov: @pedrosans: IMO this should pass. Or otherwise should complain about the space, not '('
+	@Test
+	public void shouldParseMethodExpressions()
+	{
+		PropertyExpression expression = parser.parse("person()");
+		assertThat(expression.index, CoreMatchers.nullValue());
+		assertThat(expression.property, is(new Property("person", null, true)));
+		assertThat(expression.next, CoreMatchers.nullValue());
+	}
+
 	@Test
 	public void shouldParsePropertyExpressionsWithSpaceInMethod()
 	{
@@ -52,68 +69,61 @@ public class PropertyExpressionParserTest
 	}
 
 	@Test
-	public void shouldParseIndexedPropertyExpressions()
-	{
-		PropertyExpression parse = parser.parse("person[age]");
-		assertThat(parse.property, is(new Property("person", "age", false)));
-		assertThat(parse.next, CoreMatchers.nullValue());
-	}
-
-	@Test
-	public void shouldParseMethodExpressions()
-	{
-		PropertyExpression parse = parser.parse("person()");
-		assertThat(parse.property, is(new Property("person", null, true)));
-		assertThat(parse.next, CoreMatchers.nullValue());
-	}
-
-	@Test
 	public void shouldParseIndexExpressions()
 	{
-		PropertyExpression parse = parser.parse("[person#name]");
-		assertThat(parse.property, is(new Property(null, "person#name", false)));
-		assertThat(parse.next, CoreMatchers.nullValue());
+		PropertyExpression expression = parser.parse("[person#name]");
+		assertThat(expression.index, is("person#name"));
+		assertThat(expression.property, CoreMatchers.nullValue());
+		assertThat(expression.next, CoreMatchers.nullValue());
 	}
 
 	@Test
 	public void shouldParseChainedPropertyExpressions()
 	{
-		PropertyExpression parse = parser.parse("person.child");
-		assertThat(parse.property, is(new Property("person", null, false)));
-		assertThat(parse.next.property, is(new Property("child", null, false)));
+		PropertyExpression expression = parser.parse("person.child");
+		assertThat(expression.property, is(new Property("person", null, false)));
+		assertThat(expression.next.property, is(new Property("child", null, false)));
 	}
 
 	@Test
 	public void shouldParseShortChainedPropertyExpressions()
 	{
-		PropertyExpression parse = parser.parse("a.b");
-		assertThat(parse.property, is(new Property("a", null, false)));
-		assertThat(parse.next.property, is(new Property("b", null, false)));
+		PropertyExpression expression = parser.parse("a.b");
+		assertThat(expression.property, is(new Property("a", null, false)));
+		assertThat(expression.next.property, is(new Property("b", null, false)));
 	}
 
 	@Test
 	public void shouldParseChainedIndexedPropertyExpressions()
 	{
-		PropertyExpression parse = parser.parse("person[1].child");
-		assertThat(parse.property, is(new Property("person", "1", false)));
-		assertThat(parse.next.property, is(new Property("child", null, false)));
+		PropertyExpression expression = parser.parse("person[1].child");
+		assertThat(expression.property, is(new Property("person", "1", false)));
+		assertThat(expression.next.property, is(new Property("child", null, false)));
 	}
 
 	@Test
 	public void shouldParseChainedMethodExpressions()
 	{
-		PropertyExpression parse = parser.parse("person().child");
-		assertThat(parse.property, is(new Property("person", null, true)));
-		assertThat(parse.next.property, is(new Property("child", null, false)));
+		PropertyExpression expression = parser.parse("person().child");
+		assertThat(expression.property, is(new Property("person", null, true)));
+		assertThat(expression.next.property, is(new Property("child", null, false)));
+	}
+
+	@Test
+	public void shouldParseChainedIndexExpressions()
+	{
+		PropertyExpression expression = parser.parse("[person].child");
+		assertThat(expression.index, is("person"));
+		assertThat(expression.next.property, is(new Property("child", null, false)));
 	}
 
 	@Test
 	public void shouldParseDeeperChainedPropertyExpressions()
 	{
-		PropertyExpression parse = parser.parse("person.child.name");
-		assertThat(parse.property, is(new Property("person", null, false)));
-		assertThat(parse.next.property, is(new Property("child", null, false)));
-		assertThat(parse.next.next.property, is(new Property("name", null, false)));
+		PropertyExpression expression = parser.parse("person.child.name");
+		assertThat(expression.property, is(new Property("person", null, false)));
+		assertThat(expression.next.property, is(new Property("child", null, false)));
+		assertThat(expression.next.next.property, is(new Property("name", null, false)));
 	}
 
 
@@ -126,12 +136,48 @@ public class PropertyExpressionParserTest
 	}
 
 	@Test
+	public void shouldFailParsePropertyExpressionsWithSpace()
+	{
+		expectedException.expect(ParserException.class);
+		expectedException.expectMessage("Expecting a new expression but got: ' '");
+		parser.parse("per son");
+	}
+
+	@Test
 	public void shouldReportEmptyIndexBrackets()
 	{
 		expectedException.expect(ParserException.class);
 		expectedException
 			.expectMessage("Expecting a property index but found empty brakets: 'person[]<--'");
 		parser.parse("person[]");
+	}
+
+	@Test
+	public void shouldReportMethodsCantHaveParameters()
+	{
+		expectedException.expect(ParserException.class);
+		expectedException.expectMessage(
+			"The expression can't have method parameters: 'repository.getPerson(<--'");
+		parser.parse("repository.getPerson(filter)");
+	}
+
+	//TODO: better exception message
+	@Test
+	public void shouldFailParseInvalidMethodName()
+	{
+		expectedException.expect(ParserException.class);
+		// expectedException.expectMessage(
+		// "The expression can't have method parameters: 'repository.getPerson(<--'");
+		parser.parse("repository.get#name()");
+	}
+
+	@Test
+	public void shouldFailParseMethodsStartingWithInvalidCharacter()
+	{
+		expectedException.expect(ParserException.class);
+		// expectedException.expectMessage(
+		// "The expression can't have method parameters: 'repository.getPerson(<--'");
+		parser.parse("repository.0method()");
 	}
 
 }
