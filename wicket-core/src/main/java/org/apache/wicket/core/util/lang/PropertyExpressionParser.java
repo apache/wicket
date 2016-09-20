@@ -98,7 +98,7 @@ public class PropertyExpressionParser
 			case END_OF_EXPRESSION :
 				return expression;
 			default :
-				throw new ParserException("expecting a new expression but got: " + currentToken);
+				throw new ParserException("expecting a new expression but got: '" + currentToken + "'");
 		}
 	}
 
@@ -164,7 +164,7 @@ public class PropertyExpressionParser
 	{
 		if (lookaheadToken != ')')
 		{
-			throw new ParserException("expecting a method sign but got: " + currentToken);
+			throw new ParserException("expecting a method sign but got: '" + currentToken + "'");
 		}
 		advance();// skips right bracket
 		return true;

@@ -3,11 +3,9 @@ package org.apache.wicket.core.util.lang;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.apache.wicket.core.util.lang.ParserException;
-import org.apache.wicket.core.util.lang.PropertyExpression;
-import org.apache.wicket.core.util.lang.PropertyExpressionParser;
 import org.apache.wicket.core.util.lang.PropertyExpression.Property;
 import org.hamcrest.CoreMatchers;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -33,6 +31,24 @@ public class PropertyExpressionParserTest
 		PropertyExpression parse = parser.parse("person");
 		assertThat(parse.property, is(new Property("person", null, false)));
 		assertThat(parse.next, CoreMatchers.nullValue());
+	}
+
+	// TODO mgrigorov: @pedrosans: I'd expect the error message to complain about the space, not 'r'
+	@Test
+	public void shouldFailParsePropertyExpressionsWithSpace()
+	{
+		expectedException.expect(ParserException.class);
+		expectedException
+				.expectMessage("expecting a new expression but got: ' '");
+		parser.parse("per son");
+	}
+
+	// TODO mgrigorov: @pedrosans: IMO this should pass. Or otherwise should complain about the space, not '('
+	@Test
+	public void shouldParsePropertyExpressionsWithSpaceInMethod()
+	{
+		final PropertyExpression parse = parser.parse("person( )");
+		assertThat(parse.property, is(new Property("person", null, true)));
 	}
 
 	@Test
