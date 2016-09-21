@@ -18,21 +18,76 @@ package org.apache.wicket.core.util.lang;
 
 public class PropertyExpression
 {
-	Property property;
+	JavaProperty javaProperty;
+	BeanProperty beanProperty;
 	CharSequence index;
 	PropertyExpression next;
 
-	static class Property
+	static class BeanProperty
+	{
+		CharSequence propertyName;
+		CharSequence index;
+
+		public BeanProperty()
+		{
+		}
+
+		public BeanProperty(String name, String index)
+		{
+			this.propertyName = name;
+			this.index = index;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((index == null) ? 0 : index.hashCode());
+			result = prime * result + ((propertyName == null) ? 0 : propertyName.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			BeanProperty other = (BeanProperty)obj;
+			if (index == null)
+			{
+				if (other.index != null)
+					return false;
+			}
+			else if (!index.equals(other.index))
+				return false;
+			if (propertyName == null)
+			{
+				if (other.propertyName != null)
+					return false;
+			}
+			else if (!propertyName.equals(other.propertyName))
+				return false;
+			return true;
+		}
+
+	}
+
+	static class JavaProperty
 	{
 		CharSequence javaIdentifier;
 		CharSequence index;
 		public boolean hasMethodSign;
 
-		public Property()
+		public JavaProperty()
 		{
 		}
 
-		public Property(String javaIdentifier, String index, boolean hasMethodSign)
+		public JavaProperty(String javaIdentifier, String index, boolean hasMethodSign)
 		{
 			this.javaIdentifier = javaIdentifier;
 			this.index = index;
@@ -59,7 +114,7 @@ public class PropertyExpression
 				return false;
 			if (getClass() != obj.getClass())
 				return false;
-			Property other = (Property)obj;
+			JavaProperty other = (JavaProperty)obj;
 			if (hasMethodSign != other.hasMethodSign)
 				return false;
 			if (index == null)
@@ -79,11 +134,6 @@ public class PropertyExpression
 			return true;
 		}
 
-		@Override
-		public String toString()
-		{
-			return javaIdentifier + (index == null ? "" : "[" + index + "]");
-		}
 	}
 
 }

@@ -20,25 +20,25 @@ import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
 import static java.lang.String.format;
 
-import org.apache.wicket.core.util.lang.PropertyExpression.Property;
+import org.apache.wicket.core.util.lang.PropertyExpression.BeanProperty;
+import org.apache.wicket.core.util.lang.PropertyExpression.JavaProperty;
 
 /**
  * EBNF like description of the property expression syntax <code>
  * 
- *  java letter				= "_" | "$" | "A" | "a" | "B" | "b" | (...) ;
+ *  java letter				= "_" | "$" | "A" | "a" | "B" | "b" | (...);
  *  java letter or digit	= java letter | "0" | "1" | (...) ;
  *  char					= java letter or digit | "." | "(" | ")" | "[" | "]" | "!" | "@" | "#" | (...);
- *  index char				= char - "]"
+ *  index char				= char - "]";
  *  
- *  java identifier			= java letter , {java letter or digit}
- *  property name			= java letter or digit , {java letter or digit}
- *  method sign				= "(" , { " " } , ")"
- *  index					= "[" , index char , {index char} , "]" ;
+ *  java identifier			= java letter , {java letter or digit};
+ *  property name			= java letter or digit , {java letter or digit};
+ *  method sign				= "(" , { " " } , ")";
+ *  index					= "[" , index char , { index char } , "]";
  *  
- *  bean property			= property name, [ index ]
- *  java property			= java identifier , [ index | method sign ]
- *  map property			= index
- *  property expression		= [ bean property | java property | map property ], { "." , property expression } ;
+ *  bean property			= property name, [ index ];
+ *  java property			= java identifier , [ index | method sign ];
+ *  property expression		= [ bean property | java property | index ] , { "." , property expression };
  *  
  * </code>
  * 
@@ -99,9 +99,17 @@ public class PropertyExpressionParser
 		{
 			expression.index = index();
 		}
+		else if (Character.isJavaIdentifierStart(currentToken))
+		{
+			expression.javaProperty = javaProperty();
+		}
+		else if (Character.isJavaIdentifierPart(currentToken))
+		{
+			expression.beanProperty = beanProperty();
+		}
 		else
 		{
-			expression.property = property();
+			throw new ParserException("Expecting an expression but got: " + currentToken);
 		}
 		switch (lookaheadToken)
 		{
@@ -113,14 +121,27 @@ public class PropertyExpressionParser
 			case END_OF_EXPRESSION :
 				return expression;
 			default :
-				throw new ParserException(
-					"Expecting a new expression but got: '" + lookaheadToken + "'");
+				throw new ParserException(format(
+					"Expecting a new expression but got the invalid character '%s' at: '%s<--'",
+					lookaheadToken, text.substring(0, nextPosition + 1)));
 		}
 	}
 
-	private Property property()
+	private BeanProperty beanProperty()
 	{
-		Property property = new Property();
+		BeanProperty property = new BeanProperty();
+		property.propertyName = propertyName();
+		if (lookaheadToken == '[')
+		{
+			advance();// skips left bracket
+			property.index = index();
+		}
+		return property;
+	}
+
+	private JavaProperty javaProperty()
+	{
+		JavaProperty property = new JavaProperty();
 		property.javaIdentifier = javaIdentifier();
 		switch (lookaheadToken)
 		{
@@ -136,6 +157,15 @@ public class PropertyExpressionParser
 		return property;
 	}
 
+	private CharSequence propertyName()
+	{
+		int begin = currentPosition;
+		while (isJavaIdentifierPart(lookaheadToken))
+		{
+			advance();
+		}
+		return text.substring(begin, nextPosition);
+	}
 
 	private CharSequence javaIdentifier()
 	{
@@ -143,12 +173,7 @@ public class PropertyExpressionParser
 		{
 			throw new ParserException("Expeting a java identifier but got a :" + currentToken);
 		}
-		int begin = currentPosition;
-		while (isJavaIdentifierPart(lookaheadToken))
-		{
-			advance();
-		}
-		return text.substring(begin, nextPosition);
+		return propertyName();
 	}
 
 	private CharSequence index()

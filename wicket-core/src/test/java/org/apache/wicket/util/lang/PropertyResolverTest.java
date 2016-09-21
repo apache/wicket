@@ -246,13 +246,21 @@ public class PropertyResolverTest extends WicketTestCase
 	}
 
 	@Test
-	public void shouldMapKeysWithSpecialCharacters() throws Exception
+	public void shouldAllowMapKeysWithSpecialCharacters() throws Exception
 	{
 		String expression = "[!@#$%^&*()_+-=[{}|]";
 		PropertyResolver.setValue(expression, integerMap, AN_INTEGER, CONVERTER);
 		assertThat(PropertyResolver.getValue(expression, integerMap), is(AN_INTEGER));
 		assertThat(integerMap.get(expression), is(AN_INTEGER));
+	}
 
+	@Test
+	public void shouldAllowMapKeysHavingQuotes() throws Exception
+	{
+		String expression = "the\"key\"";
+		PropertyResolver.setValue(expression, integerMap, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue(expression, integerMap), is(AN_INTEGER));
+		assertThat(integerMap.get(expression), is(AN_INTEGER));
 	}
 
 	@Test
