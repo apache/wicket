@@ -31,9 +31,10 @@ import org.apache.wicket.core.util.lang.PropertyExpression.JavaProperty;
  *  char					= java letter or digit | "." | "(" | ")" | "[" | "]" | "!" | "@" | "#" | (...);
  *  index char				= char - "]";
  *  
+ *  empty space				= { " " };
  *  java identifier			= java letter , {java letter or digit};
  *  property name			= java letter or digit , {java letter or digit};
- *  method sign				= "(" , { " " } , ")";
+ *  method sign				= "(" , empty space	 , ")";
  *  index					= "[" , index char , { index char } , "]";
  *  
  *  bean property			= property name, [ index ];
@@ -120,6 +121,9 @@ public class PropertyExpressionParser
 				return expression;
 			case END_OF_EXPRESSION :
 				return expression;
+			case '(' :
+				throw new ParserException(format("Expecting a valid method name but got: '%s<--'",
+					text.substring(0, nextPosition + 1)));
 			default :
 				throw new ParserException(format(
 					"Expecting a new expression but got the invalid character '%s' at: '%s<--'",
@@ -157,7 +161,7 @@ public class PropertyExpressionParser
 		return property;
 	}
 
-	private CharSequence propertyName()
+	private String propertyName()
 	{
 		int begin = currentPosition;
 		while (isJavaIdentifierPart(lookaheadToken))
@@ -167,7 +171,7 @@ public class PropertyExpressionParser
 		return text.substring(begin, nextPosition);
 	}
 
-	private CharSequence javaIdentifier()
+	private String javaIdentifier()
 	{
 		if (!isJavaIdentifierStart(currentToken))
 		{
@@ -176,7 +180,7 @@ public class PropertyExpressionParser
 		return propertyName();
 	}
 
-	private CharSequence index()
+	private String index()
 	{
 		advance();// escape bracket
 		if (currentToken == ']')
@@ -196,10 +200,7 @@ public class PropertyExpressionParser
 
 	private boolean methodSign()
 	{
-		while (lookaheadToken == ' ')
-		{
-			advance();// skips empty spaces
-		}
+		emptySpace();
 		if (lookaheadToken != ')')
 		{
 			throw new ParserException(format("The expression can't have method parameters: '%s<--'",
@@ -207,5 +208,13 @@ public class PropertyExpressionParser
 		}
 		advance();// skips right bracket
 		return true;
+	}
+
+	private void emptySpace()
+	{
+		while (lookaheadToken == ' ')
+		{
+			advance();// skips empty spaces
+		}
 	}
 }

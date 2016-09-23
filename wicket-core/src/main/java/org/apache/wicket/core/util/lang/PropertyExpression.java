@@ -16,17 +16,22 @@
  */
 package org.apache.wicket.core.util.lang;
 
+/**
+ * Abstract syntax tree of a expression property
+ *
+ * @author Pedro Santos
+ */
 public class PropertyExpression
 {
 	JavaProperty javaProperty;
 	BeanProperty beanProperty;
-	CharSequence index;
+	String index;
 	PropertyExpression next;
 
 	static class BeanProperty
 	{
-		CharSequence propertyName;
-		CharSequence index;
+		String propertyName;
+		String index;
 
 		public BeanProperty()
 		{
@@ -79,8 +84,8 @@ public class PropertyExpression
 
 	static class JavaProperty
 	{
-		CharSequence javaIdentifier;
-		CharSequence index;
+		String javaIdentifier;
+		String index;
 		public boolean hasMethodSign;
 
 		public JavaProperty()

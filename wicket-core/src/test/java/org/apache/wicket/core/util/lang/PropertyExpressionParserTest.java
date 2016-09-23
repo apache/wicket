@@ -181,8 +181,8 @@ public class PropertyExpressionParserTest
 	public void shouldFailParseMethodsStartingWithInvalidCharacter()
 	{
 		expectedException.expect(ParserException.class);
-		// expectedException.expectMessage(
-		// "The expression can't have method parameters: 'repository.getPerson(<--'");
+		expectedException
+			.expectMessage("Expecting a valid method name but got: 'repository.0method(<--'");
 		parser.parse("repository.0method()");
 	}
 
