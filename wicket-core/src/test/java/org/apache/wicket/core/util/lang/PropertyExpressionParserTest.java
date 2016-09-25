@@ -169,12 +169,12 @@ public class PropertyExpressionParserTest
 	}
 
 	@Test
-	public void shouldFailParseInvalidMethodName()
+	public void shouldFailParseInvalidBeanProperty()
 	{
 		expectedException.expect(ParserException.class);
 		expectedException.expectMessage(
-			"Expecting a new expression but got the invalid character '#' at: 'repository.get#<--'");
-		parser.parse("repository.get#name()");
+			"Expecting a new expression but got the invalid character '#' at: 'repository.prop#<--'");
+		parser.parse("repository.prop#name");
 	}
 
 	@Test
