@@ -191,7 +191,7 @@ public class ApplicationSettings
 		Args.notNull(internalErrorPage, "internalErrorPage");
 		checkPageClass(internalErrorPage);
 
-		this.internalErrorPage = new WeakReference<>(internalErrorPage);
+		this.internalErrorPage = new WeakReference<Class<? extends Page>>(internalErrorPage);
 		return this;
 	}
 
@@ -207,7 +207,7 @@ public class ApplicationSettings
 		Args.notNull(pageExpiredErrorPage, "pageExpiredErrorPage");
 		checkPageClass(pageExpiredErrorPage);
 
-		this.pageExpiredErrorPage = new WeakReference<>(pageExpiredErrorPage);
+		this.pageExpiredErrorPage = new WeakReference<Class<? extends Page>>(pageExpiredErrorPage);
 		return this;
 	}
 
