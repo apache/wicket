@@ -322,7 +322,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 *            The handler to unwrap
 	 * @return the deepest handler that does not implement {@code IRequestHandlerDelegate}
 	 */
-	protected final IRequestHandler unwrap(IRequestHandler handler)
+	protected IRequestHandler unwrap(IRequestHandler handler)
 	{
 		while (handler instanceof IRequestHandlerDelegate)
 			handler = ((IRequestHandlerDelegate)handler).getDelegateHandler();
@@ -461,7 +461,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 *            the contents of the {@code Origin} or {@code Referer} HTTP header
 	 * @return {@code true} when the source domain was whitelisted
 	 */
-	protected final boolean isWhitelistedHost(final String sourceUri)
+	protected boolean isWhitelistedHost(final String sourceUri)
 	{
 		try
 		{
@@ -625,7 +625,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * @param page
 	 *            the page that is targeted with this request
 	 */
-	protected final void whitelistedHandler(HttpServletRequest request, String origin,
+	protected void whitelistedHandler(HttpServletRequest request, String origin,
 		IRequestablePage page)
 	{
 		onWhitelisted(request, origin, page);
@@ -662,7 +662,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * @param page
 	 *            the page that is targeted with this request
 	 */
-	protected final void matchingOrigin(HttpServletRequest request, String origin,
+	protected void matchingOrigin(HttpServletRequest request, String origin,
 		IRequestablePage page)
 	{
 		onMatchingOrigin(request, origin, page);
@@ -701,7 +701,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * @param page
 	 *            the page that is targeted with this request
 	 */
-	protected final void allowHandler(HttpServletRequest request, String origin,
+	protected void allowHandler(HttpServletRequest request, String origin,
 		IRequestablePage page)
 	{
 		onAllowed(request, origin, page);
@@ -737,7 +737,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * @param page
 	 *            the page that is targeted with this request
 	 */
-	protected final void suppressHandler(HttpServletRequest request, String origin,
+	protected void suppressHandler(HttpServletRequest request, String origin,
 		IRequestablePage page)
 	{
 		onSuppressed(request, origin, page);
@@ -774,7 +774,7 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 * @param page
 	 *            the page that is targeted with this request
 	 */
-	protected final void abortHandler(HttpServletRequest request, String origin,
+	protected void abortHandler(HttpServletRequest request, String origin,
 		IRequestablePage page)
 	{
 		onAborted(request, origin, page);
