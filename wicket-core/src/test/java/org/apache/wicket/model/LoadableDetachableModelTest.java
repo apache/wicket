@@ -62,6 +62,35 @@ public class LoadableDetachableModelTest extends WicketTestCase
 		assertThat(ldm.isAttached(), is(true));
 	}
 
+	@Test
+	public void onAttachCalled()
+	{
+		class AttachingLoadableModel extends LoadableDetachableModel<Integer>
+		{
+			private static final long serialVersionUID = 1L;
+
+			private boolean attachCalled = false;
+
+			@Override
+			protected Integer load()
+			{
+				return null;
+			}
+
+			@Override
+			protected void onAttach()
+			{
+				attachCalled = true;
+			}
+		}
+
+		AttachingLoadableModel m = new AttachingLoadableModel();
+		m.getObject();
+
+		assertThat(m.isAttached(), is(true));
+		assertThat(m.attachCalled, is(true));
+	}
+
 	/**
 	 * Checks whether the LDM can escape recursive calls.
 	 */
@@ -72,10 +101,18 @@ public class LoadableDetachableModelTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
+			private boolean detachCalled = false;
+
 			@Override
 			protected Integer load()
 			{
 				throw new RuntimeException();
+			}
+
+			@Override
+			protected void onDetach()
+			{
+				detachCalled = true;
 			}
 		}
 
@@ -89,8 +126,10 @@ public class LoadableDetachableModelTest extends WicketTestCase
 		}
 		catch (RuntimeException e)
 		{
-			assertThat(ldm.isAttached(), is(false));
 		}
+		ldm.detach();
+		assertThat(ldm.isAttached(), is(false));
+		assertThat(ldm.detachCalled, is(true));
 	}
 
 	private static class SerializedLoad extends LoadableDetachableModel<Integer>
@@ -131,8 +170,8 @@ public class LoadableDetachableModelTest extends WicketTestCase
 
 	/** Serialization helper */
 	@SuppressWarnings("unchecked")
-	private <T> LoadableDetachableModel<T> deserialize(byte[] serialized) throws IOException,
-		ClassNotFoundException
+	private <T> LoadableDetachableModel<T> deserialize(byte[] serialized)
+		throws IOException, ClassNotFoundException
 	{
 		LoadableDetachableModel<T> deserialized = null;
 
