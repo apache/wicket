@@ -43,6 +43,7 @@ import java.util.Map;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.DispatcherType;
+import javax.servlet.ReadListener;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -53,8 +54,10 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockRequestParameters;
@@ -67,7 +70,6 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.upload.FileUploadBase;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,13 +172,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final ServletContext context;
 
-	private final Map<Cookies.Key, Cookie> cookies = new LinkedHashMap<Cookies.Key, Cookie>();
+	private final Map<Cookies.Key, Cookie> cookies = new LinkedHashMap<>();
 
 	private final ValueMap headers = new ValueMap();
 
 	private String method;
 
-	private final LinkedHashMap<String, String[]> parameters = new LinkedHashMap<String, String[]>();
+	private final LinkedHashMap<String, String[]> parameters = new LinkedHashMap<>();
+
+	private final LinkedHashMap<String, Part> parts = new LinkedHashMap<>();
 
 	private String path;
 
@@ -208,14 +212,22 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 *            The session object
 	 * @param context
 	 *            The current servlet context
+	 * @param locale
+	 *            The current locale 			  
 	 */
 	public MockHttpServletRequest(final Application application, final HttpSession session,
-		final ServletContext context)
+		final ServletContext context, Locale locale)
 	{
 		this.application = application;
 		this.session = session;
 		this.context = context;
-		initialize();
+		initialize(locale);
+	}
+	
+	public MockHttpServletRequest(final Application application, final HttpSession session,
+			final ServletContext context) 
+	{
+		this(application, session, context, Locale.getDefault());
 	}
 
 	/**
@@ -270,7 +282,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		if (uploadedFiles == null)
 		{
-			uploadedFiles = new HashMap<String, List<UploadedFile>>();
+			uploadedFiles = new HashMap<>();
 		}
 
 		UploadedFile uf = new UploadedFile(fieldName, file, contentType);
@@ -278,7 +290,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		List<UploadedFile> filesPerField = uploadedFiles.get(fieldName);
 		if (filesPerField == null)
 		{
-			filesPerField = new ArrayList<UploadedFile>();
+			filesPerField = new ArrayList<>();
 			uploadedFiles.put(fieldName, filesPerField);
 		}
 
@@ -300,7 +312,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		List<String> list = (List<String>)headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList<String>(1);
+			list = new ArrayList<>(1);
 			headers.put(name, list);
 		}
 		list.add(value);
@@ -321,7 +333,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		List<String> list = (List<String>)headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList<String>(1);
+			list = new ArrayList<>(1);
 			headers.put(name, list);
 		}
 		list.clear();
@@ -424,6 +436,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 
 		return -1;
+	}
+
+	@Override
+	public long getContentLengthLong()
+	{
+		return getContentLength();
 	}
 
 	/**
@@ -593,9 +611,31 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		return new ServletInputStream()
 		{
+			private boolean isFinished = false;
+			private boolean isReady = true;
+
+			@Override
+			public boolean isFinished()
+			{
+				return isFinished;
+			}
+
+			@Override
+			public boolean isReady()
+			{
+				return isReady;
+			}
+
+			@Override
+			public void setReadListener(ReadListener readListener)
+			{
+			}
+
 			@Override
 			public int read()
 			{
+				isFinished = true;
+				isReady = false;
 				return bais.read();
 			}
 		};
@@ -633,6 +673,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return getLocales().nextElement();
 	}
 
+	public void setLocale(Locale locale) {
+		setHeader("Accept-Language", locale.getLanguage() + '-' + locale.getCountry());
+	}
+
 	/**
 	 * 
 	 * @param value
@@ -666,10 +710,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public Enumeration<Locale> getLocales()
 	{
-		List<Locale> list = new ArrayList<Locale>();
-		final String header = getHeader("Accept-Language");
+		List<Locale> list = new ArrayList<>();
+		String header = getHeader("Accept-Language");
 		if (header != null)
 		{
+			int idxOfSemicolon = header.indexOf(';');
+			if (idxOfSemicolon > -1) {
+				header = header.substring(0 , idxOfSemicolon);
+			}
 			final String[] locales = Strings.split(header, ',');
 			for (String value : locales)
 			{
@@ -729,7 +777,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public Map<String, String[]> getParameterMap()
 	{
-		Map<String, String[]> params = new HashMap<String, String[]>(parameters);
+		Map<String, String[]> params = new HashMap<>(parameters);
 
 		for (String name : post.getParameterNames())
 		{
@@ -1108,6 +1156,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 		return getSession(true);
 	}
 
+	@Override
+	public String changeSessionId()
+	{
+		final HttpSession oldSession = getSession(false);
+		if (oldSession == null)
+		{
+			throw new IllegalStateException("There is no active session associated with the current request");
+		}
+		oldSession.invalidate();
+
+		final HttpSession newSession = getSession(true);
+
+		return newSession.getId();
+	}
+
 	/**
 	 * Get the session.
 	 * 
@@ -1172,13 +1235,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	/**
 	 * Reset the request back to a default state.
+	 * @param locale 
 	 */
-	public void initialize()
+	public void initialize(Locale locale)
 	{
 		authType = null;
 		method = "post";
 		cookies.clear();
-		setDefaultHeaders();
+		setDefaultHeaders(locale);
 		path = null;
 		url = null;
 		characterEncoding = "UTF-8";
@@ -1228,13 +1292,24 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public Collection<Part> getParts() throws IOException, ServletException
 	{
-		return null;
+		return parts.values();
 	}
 
 	@Override
 	public Part getPart(String name) throws IOException, ServletException
 	{
+		return parts.get(name);
+	}
+
+	@Override
+	public <T extends HttpUpgradeHandler> T upgrade(Class<T> aClass) throws IOException, ServletException
+	{
 		return null;
+	}
+
+	public MockHttpServletRequest setPart(String name, Part part) {
+		parts.put(name, part);
+		return this;
 	}
 
 	/**
@@ -1440,182 +1515,20 @@ public class MockHttpServletRequest implements HttpServletRequest
 		setUrl(Url.parse(url));
 	}
 
-	// /**
-	// * Initialize the request parameters to point to the given bookmarkable page.
-	// *
-	// * @param page
-	// * The page to point to
-	// * @param params
-	// * Additional parameters
-	// */
-	// public void setRequestToBookmarkablePage(final Page page, final Map<String, Object> params)
-	// {
-	// parameters.putAll(params);
-	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
-	// .getName());
-	// }
-	//
-	// /**
-	// * Initialize the request parameters to point to the given component.
-	// *
-	// * @param component
-	// * The component
-	// */
-	// public void setRequestToComponent(final Component component)
-	// {
-	// final IPageMap pageMap = component.getPage().getPageMap();
-	// final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
-	// if (component instanceof BookmarkablePageLink)
-	// {
-	// final Class<? extends Page> clazz = ((BookmarkablePageLink<?>)component).getPageClass();
-	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName +
-	// ':' + clazz.getName());
-	// }
-	// else
-	// {
-	// int version = component.getPage().getCurrentVersionNumber();
-	// Class<?> clazz = null;
-	// if (component instanceof IRedirectListener)
-	// {
-	// clazz = IRedirectListener.class;
-	// }
-	// else if (component instanceof IResourceListener)
-	// {
-	// clazz = IResourceListener.class;
-	// }
-	// else if (component instanceof IFormSubmitListener)
-	// {
-	// clazz = IFormSubmitListener.class;
-	// }
-	// else if (component instanceof ILinkListener)
-	// {
-	// clazz = ILinkListener.class;
-	// }
-	// else if (component instanceof IOnChangeListener)
-	// {
-	// clazz = IOnChangeListener.class;
-	// }
-	// else
-	// {
-	// throw new IllegalArgumentException(
-	// "The component class doesn't seem to implement any of the known *Listener interfaces: " +
-	// component.getClass());
-	// }
-	//
-	// // manually create the url using default strategy and format
-	// parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' +
-	// component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' +
-	// Classes.simpleName(clazz) + "::");
-	//
-	// // see if we can replace our manual listener url with a properly generated one...
-	//
-	// try
-	// {
-	// RequestListenerInterface rli = (RequestListenerInterface)clazz.getField("INTERFACE")
-	// .get(clazz);
-	//
-	// String auto = component.getRequestCycle().urlFor(component, rli).toString();
-	//
-	// // check for crypted strategy
-	// if (auto.startsWith("?x="))
-	// {
-	// auto = auto.substring(3);
-	// parameters.put("x", auto);
-	// parameters.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
-	// }
-	// else
-	// {
-	// int idx = auto.indexOf(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
-	// if (idx >= 0)
-	// {
-	// auto = auto.substring(idx +
-	// WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME.length() + 1);
-	// }
-	// else
-	// {
-	// idx = auto.indexOf("&");
-	// if (idx >= 0)
-	// {
-	// auto = auto.substring(0, idx);
-	// }
-	// }
-	// parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, auto);
-	// }
-	// }
-	// catch (Exception e)
-	// {
-	// // noop
-	// }
-	//
-	// if (component.isStateless() && component.getPage().isBookmarkable())
-	// {
-	// parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-	// pageMapName + ':' + component.getPage().getClass().getName());
-	// }
-	// }
-	// }
-
-	// /**
-	// * Initialize the request parameters to point to the given form component. The additional map
-	// * should contain mappings between individual components that appear in the form and the
-	// string
-	// * value that should be submitted for each of these components.
-	// *
-	// * @param form
-	// * The for to send the request to
-	// * @param values
-	// * The values for each of the form components
-	// */
-	// public void setRequestToFormComponent(final Form<?> form, final Map<String, Object> values)
-	// {
-	// setRequestToComponent(form);
-	//
-	// final Map<String, Object> valuesApplied = new HashMap<String, Object>();
-	// form.visitChildren(FormComponent.class, new IVisitor<FormComponent<?>>()
-	// {
-	// public Object component(final FormComponent<?> component)
-	// {
-	// String value = (String)values.get(component);
-	// if (value != null)
-	// {
-	// parameters.put(component.getInputName(), values.get(component));
-	// valuesApplied.put(component.getId(), component);
-	// }
-	// return CONTINUE_TRAVERSAL;
-	// }
-	// });
-	//
-	// if (values.size() != valuesApplied.size())
-	// {
-	// Map<String, Object> diff = new HashMap<String, Object>();
-	// diff.putAll(values);
-	//
-	// Iterator<String> iter = valuesApplied.keySet().iterator();
-	// while (iter.hasNext())
-	// {
-	// diff.remove(iter.next());
-	// }
-	//
-	// log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
-	// +
-	// diff.keySet());
-	// }
-	// }
-
 	/**
 	 * Helper method to create some default headers for the request
+	 * @param l 
 	 */
-	private void setDefaultHeaders()
+	private void setDefaultHeaders(Locale l)
 	{
 		headers.clear();
 		addHeader("Accept", "text/xml,application/xml,application/xhtml+xml,"
 			+ "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
 		addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		Locale l = Locale.getDefault();
 		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-"
 			+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
 		addHeader("User-Agent",
-			"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
+			"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox/41.0");
 	}
 
 	private static final String crlf = "\r\n";
@@ -1672,7 +1585,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 					out.write("\"".getBytes());
 					out.write(crlf.getBytes());
 					out.write(crlf.getBytes());
-					out.write(post.getParameterValue(parameterName).toString().getBytes());
+					out.write(value.toString().getBytes());
 					out.write(crlf.getBytes());
 				}
 			}
@@ -1680,9 +1593,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 			// Add files
 			if (uploadedFiles != null)
 			{
-				for (String fieldName : uploadedFiles.keySet())
+				for (Map.Entry<String, List<UploadedFile>> entry : uploadedFiles.entrySet())
 				{
-					List<UploadedFile> files = uploadedFiles.get(fieldName);
+					String fieldName = entry.getKey();
+					List<UploadedFile> files = entry.getValue();
 
 					for (UploadedFile uf : files)
 					{

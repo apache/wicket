@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.wicket.request.IRequestMapper;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
 
@@ -31,26 +32,62 @@ import org.apache.wicket.util.string.StringValue;
 public interface INamedParameters
 {
 	/**
+	 * A hint where the parameter is read/parsed from.
+	 */
+	enum Type
+	{
+		/**
+		 * The named parameter is set manually in the application code
+		 */
+		MANUAL,
+
+		/**
+		 * The named parameter is read/parsed from the query string
+		 */
+		QUERY_STRING,
+
+		/**
+		 * The named parameter is read/parsed from the url path
+		 */
+		PATH
+	}
+
+	/**
 	 * Represents a named parameter entry. There can be multiple {@link NamedPair}s in
 	 * {@link PageParameters} that have same key.
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static class NamedPair
+	@SuppressWarnings("serial")
+	public static class NamedPair implements IClusterable
 	{
 		private final String key;
 		private final String value;
+		private final Type type;
 
 		/**
-		 * Constructor
+		 * Creates a named parameter entry that is set manually in the application code.
 		 * 
 		 * @param key
 		 * @param value
 		 */
 		public NamedPair(final String key, final String value)
 		{
-			this.key = Args.notNull(key, "key");;
+			this(key, value, Type.MANUAL);
+		}
+
+		/**
+		 * Creates a named parameter entry
+		 * 
+		 * @param key
+		 * @param value
+		 * @param type
+		 */
+		public NamedPair(final String key, final String value, Type type)
+		{
+			this.key = Args.notEmpty(key, "key");
 			this.value = Args.notNull(value, "value");
+			this.type = Args.notNull(type, "type");
 		}
 
 		/**
@@ -67,6 +104,14 @@ public interface INamedParameters
 		public String getValue()
 		{
 			return value;
+		}
+
+		/**
+		 * @return type
+		 */
+		public Type getType()
+		{
+			return type;
 		}
 
 		@Override
@@ -91,7 +136,6 @@ public interface INamedParameters
 			return result;
 		}
 	}
-
 
 	/**
 	 * Return set of all named parameter names.
@@ -122,6 +166,13 @@ public interface INamedParameters
 	List<NamedPair> getAllNamed();
 
 	/**
+	 * @param type
+	 *          The type to filter
+	 * @return All named parameters with the given type. If the type is {@code null} then returns all named parameters.
+	 */
+	List<NamedPair> getAllNamedByType(Type type);
+
+	/**
 	 * Returns the position of a named parameter.
 	 * 
 	 * @param name
@@ -147,9 +198,10 @@ public interface INamedParameters
 	 * 
 	 * @param name
 	 * @param value
+	 * @param type
 	 * @return this
 	 */
-	INamedParameters add(final String name, final Object value);
+	INamedParameters add(final String name, final Object value, Type type);
 
 	/**
 	 * Adds named parameter to a specified position. The {@link IRequestMapper}s may or may not take
@@ -158,9 +210,10 @@ public interface INamedParameters
 	 * @param name
 	 * @param value
 	 * @param index
+	 * @param type
 	 * @return this
 	 */
-	INamedParameters add(final String name, final Object value, final int index);
+	INamedParameters add(final String name, final Object value, final int index, Type type);
 
 	/**
 	 * Sets the named parameter on specified position. The {@link IRequestMapper}s may or may not
@@ -169,18 +222,20 @@ public interface INamedParameters
 	 * @param name
 	 * @param value
 	 * @param index
+	 * @param type
 	 * @return this
 	 */
-	INamedParameters set(final String name, final Object value, final int index);
+	INamedParameters set(final String name, final Object value, final int index, Type type);
 
 	/**
 	 * Sets the value for named parameter with given name.
 	 * 
 	 * @param name
 	 * @param value
+	 * @param type
 	 * @return this
 	 */
-	INamedParameters set(final String name, final Object value);
+	INamedParameters set(final String name, final Object value, Type type);
 
 	/**
 	 * Removes all named parameters.

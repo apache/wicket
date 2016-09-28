@@ -21,7 +21,7 @@ import static org.apache.wicket.ajax.attributes.CallbackParameter.converted;
 import static org.apache.wicket.ajax.attributes.CallbackParameter.explicit;
 import static org.apache.wicket.ajax.attributes.CallbackParameter.resolved;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 
@@ -33,12 +33,22 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
 			"function () {\n" //
-				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
-				+ "var params = {};\n" //
-				+ "attrs.ep = params;\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.0-\"};\n" //
+				+ "var params = [];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
-			page.getBehavior().getCallbackFunction().toString());
+			page.getBehavior1().getCallbackFunction().toString());
+
+		assertEquals(//
+			"function () {\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.1-\"," //
+				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
+				+ "var params = [];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
+				+ "Wicket.Ajax.ajax(attrs);\n" //
+				+ "}\n", //
+			page.getBehavior2().getCallbackFunction().toString());
 	}
 
 	@Test
@@ -47,12 +57,22 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
 			"function (context) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
-				+ "var params = {};\n" //
-				+ "attrs.ep = params;\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.0-\"};\n" //
+				+ "var params = [];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
-			page.getBehavior().getCallbackFunction(context("context")).toString());
+			page.getBehavior1().getCallbackFunction(context("context")).toString());
+
+		assertEquals(//
+			"function (context) {\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.1-\"," //
+				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
+				+ "var params = [];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
+				+ "Wicket.Ajax.ajax(attrs);\n" //
+				+ "}\n", //
+			page.getBehavior2().getCallbackFunction(context("context")).toString());
 	}
 
 	@Test
@@ -61,12 +81,21 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
 			"function (explicit) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
-				+ "var params = {'explicit': explicit};\n" //
-				+ "attrs.ep = params;\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.0-\"};\n" //
+				+ "var params = [{\"name\":\"explicit\",\"value\":explicit}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
-			page.getBehavior().getCallbackFunction(explicit("explicit")).toString());
+			page.getBehavior1().getCallbackFunction(explicit("explicit")).toString());
+
+		assertEquals(//
+			"function (explicit) {\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.1-\",\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
+				+ "var params = [{\"name\":\"explicit\",\"value\":explicit}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
+				+ "Wicket.Ajax.ajax(attrs);\n" //
+				+ "}\n", //
+			page.getBehavior2().getCallbackFunction(explicit("explicit")).toString());
 	}
 
 	@Test
@@ -75,12 +104,24 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		AjaxCallbackPage page = tester.startPage(AjaxCallbackPage.class);
 		assertEquals(//
 			"function () {\n" //
-				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
-				+ "var params = {'resolved': window.location.href};\n" //
-				+ "attrs.ep = params;\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.0-\"};\n" //
+				+ "var params = [{\"name\":\"resolved\",\"value\":window.location.href}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
-			page.getBehavior()
+			page.getBehavior1()
+				.getCallbackFunction(resolved("resolved", "window.location.href"))
+				.toString());
+
+		assertEquals(//
+			"function () {\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.1-\"," //
+				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
+				+ "var params = [{\"name\":\"resolved\",\"value\":window.location.href}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
+				+ "Wicket.Ajax.ajax(attrs);\n" //
+				+ "}\n", //
+			page.getBehavior2()
 				.getCallbackFunction(resolved("resolved", "window.location.href"))
 				.toString());
 	}
@@ -92,12 +133,25 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		assertEquals(
 			//
 			"function (converted) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
-				+ "var params = {'converted': converted.substring(0, 3)};\n" //
-				+ "attrs.ep = params;\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.0-\"};\n" //
+				+ "var params = [{\"name\":\"converted\",\"value\":converted.substring(0, 3)}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
-			page.getBehavior()
+			page.getBehavior1()
+				.getCallbackFunction(converted("converted", "converted.substring(0, 3)"))
+				.toString());
+
+		assertEquals(
+			//
+			"function (converted) {\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.1-\"," //
+				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
+				+ "var params = [{\"name\":\"converted\",\"value\":converted.substring(0, 3)}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
+				+ "Wicket.Ajax.ajax(attrs);\n" //
+				+ "}\n", //
+			page.getBehavior2()
 				.getCallbackFunction(converted("converted", "converted.substring(0, 3)"))
 				.toString());
 	}
@@ -109,12 +163,31 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		assertEquals(
 			//
 			"function (context,explicit,converted) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
-				+ "var params = {'explicit': explicit,'resolved': window.location.href,'converted': converted.substring(0, 3)};\n" //
-				+ "attrs.ep = params;\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.0-\"};\n" //
+				+ "var params = [{\"name\":\"explicit\",\"value\":explicit},"
+				+ "{\"name\":\"resolved\",\"value\":window.location.href},"
+				+ "{\"name\":\"converted\",\"value\":converted.substring(0, 3)}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
-			page.getBehavior()
+			page.getBehavior1()
+				.getCallbackFunction(context("context"), explicit("explicit"),
+					resolved("resolved", "window.location.href"),
+					converted("converted", "converted.substring(0, 3)"))
+				.toString());
+
+		assertEquals(
+			//
+			"function (context,explicit,converted) {\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.1-\"," //
+				+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
+				+ "var params = [{\"name\":\"explicit\",\"value\":explicit},"
+				+ "{\"name\":\"resolved\",\"value\":window.location.href},"
+				+ "{\"name\":\"converted\",\"value\":converted.substring(0, 3)}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
+				+ "Wicket.Ajax.ajax(attrs);\n" //
+				+ "}\n", //
+			page.getBehavior2()
 				.getCallbackFunction(context("context"), explicit("explicit"),
 					resolved("resolved", "window.location.href"),
 					converted("converted", "converted.substring(0, 3)"))
@@ -128,12 +201,32 @@ public class AjaxCallbackFunctionTest extends WicketTestCase
 		assertEquals(
 			//
 			"function (event,ui) {\n" //
-				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.IBehaviorListener.0-\"};\n" //
-				+ "var params = {'sortIndex': $(this).find(':data(sortable-item)').index(ui.item),'sortItemId': $(ui.item).attr('id'),'sortSenderId': $(ui.sender).attr('id')};\n" //
-				+ "attrs.ep = params;\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.0-\"};\n" //
+				+ "var params = [{\"name\":\"sortIndex\",\"value\":$(this).find(':data(sortable-item)').index(ui.item)}," //
+				+ "{\"name\":\"sortItemId\",\"value\":$(ui.item).attr('id')}," //
+				+ "{\"name\":\"sortSenderId\",\"value\":$(ui.sender).attr('id')}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
 				+ "Wicket.Ajax.ajax(attrs);\n" //
 				+ "}\n", //
-			page.getBehavior()
+			page.getBehavior1()
+				.getCallbackFunction(context("event"), context("ui"),
+					resolved("sortIndex", "$(this).find(':data(sortable-item)').index(ui.item)"),
+					resolved("sortItemId", "$(ui.item).attr('id')"),
+					resolved("sortSenderId", "$(ui.sender).attr('id')"))
+				.toString());
+
+		assertEquals(
+			//
+			"function (event,ui) {\n" //
+				+ "var attrs = {\"u\":\"./wicket/bookmarkable/org.apache.wicket.ajax.AjaxCallbackPage?0-1.1-\"," //
+					+ "\"ep\":[{\"name\":\"param1\",\"value\":123},{\"name\":\"param2\",\"value\":\"zh_CN\"}]};\n" //
+				+ "var params = [{\"name\":\"sortIndex\",\"value\":$(this).find(':data(sortable-item)').index(ui.item)}," //
+				+ "{\"name\":\"sortItemId\",\"value\":$(ui.item).attr('id')}," //
+				+ "{\"name\":\"sortSenderId\",\"value\":$(ui.sender).attr('id')}];\n" //
+				+ "attrs.ep = params.concat(attrs.ep || []);\n" //
+				+ "Wicket.Ajax.ajax(attrs);\n" //
+				+ "}\n", //
+			page.getBehavior2()
 				.getCallbackFunction(context("event"), context("ui"),
 					resolved("sortIndex", "$(this).find(':data(sortable-item)').index(ui.item)"),
 					resolved("sortItemId", "$(ui.item).attr('id')"),

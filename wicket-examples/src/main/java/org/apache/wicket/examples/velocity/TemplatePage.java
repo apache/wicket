@@ -45,7 +45,7 @@ public class TemplatePage extends WicketExamplePage
 	/**
 	 * Form for changing the template contents.
 	 */
-	private final class TemplateForm extends Form
+	private final class TemplateForm extends Form<Void>
 	{
 		private TextArea<IStringResourceStream> templateTextArea;
 
@@ -59,16 +59,8 @@ public class TemplatePage extends WicketExamplePage
 		{
 			super(name);
 			add(templateTextArea = new TextArea<>("templateInput",
-				new PropertyModel<IStringResourceStream>(
+				new PropertyModel<>(
 					new Model<>(TemplatePage.this), "template")));
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
-		@Override
-		protected void onSubmit()
-		{
 		}
 	}
 

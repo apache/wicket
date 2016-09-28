@@ -17,14 +17,17 @@
 package org.apache.wicket.protocol.http.mock;
 
 import java.util.Enumeration;
+import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.Session;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import static org.hamcrest.Matchers.is;
 
 /**
  * test features of {@link MockHttpServletRequest}
@@ -34,7 +37,6 @@ public class MockHttpServletRequestTest extends WicketTestCase
 	@Test
 	public void setAbsoluteUrlWithHost()
 	{
-		WicketTester tester = new WicketTester();
 		MockHttpServletRequest request = tester.getRequest();
 		assertEquals("http", request.getScheme());
 		assertEquals("localhost", request.getServerName());
@@ -59,7 +61,6 @@ public class MockHttpServletRequestTest extends WicketTestCase
 	@Test
 	public void setAbsoluteUrlWithoutHost()
 	{
-		WicketTester tester = new WicketTester();
 		MockHttpServletRequest request = tester.getRequest();
 		assertEquals("http", request.getScheme());
 		assertEquals("localhost", request.getServerName());
@@ -84,7 +85,6 @@ public class MockHttpServletRequestTest extends WicketTestCase
 	@Test
 	public void setRelativeUrl()
 	{
-		WicketTester tester = new WicketTester();
 		MockHttpServletRequest request = tester.getRequest();
 		assertEquals("http", request.getScheme());
 		assertEquals("localhost", request.getServerName());
@@ -112,7 +112,6 @@ public class MockHttpServletRequestTest extends WicketTestCase
     @Test
     public void testNoQueryString_returnsNull()
     {
-        WicketTester tester = new WicketTester();
         MockHttpServletRequest request = tester.getRequest();
         request.setURL("my/servlet/without/query/param");
         
@@ -175,5 +174,16 @@ public class MockHttpServletRequestTest extends WicketTestCase
 		headers = request.getHeaders(headerName);
 		assertEquals("completelyNewValue", headers.nextElement());
 		assertFalse(headers.hasMoreElements());
+	}
+
+	@Test
+	public void setLocale() {
+		Session session = tester.getSession();
+		session.setLocale(Locale.US);
+		tester.getRequest().setLocale(Locale.CANADA_FRENCH);
+
+		session.invalidateNow();
+
+		assertThat(tester.getSession().getLocale(), is(Locale.CANADA_FRENCH));
 	}
 }

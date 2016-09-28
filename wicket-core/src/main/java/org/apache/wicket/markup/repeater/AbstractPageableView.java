@@ -41,7 +41,7 @@ import org.apache.wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  * @param <T>
- *            Model object type
+ *            type of elements contained in the model's list
  */
 public abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPageableItems
 {
@@ -282,7 +282,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * @see org.apache.wicket.markup.html.navigation.paging.IPageable#getPageCount()
 	 */
 	@Override
-	public final long getPageCount()
+	public long getPageCount()
 	{
 		long total = getRowCount();
 		long itemsPerPage = getItemsPerPage();

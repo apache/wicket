@@ -28,9 +28,10 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IExceptionSettings;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public class DefaultExceptionMapperTest extends WicketTestCase
 			protected void init()
 			{
 				getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
+					ExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
 			}
 		};
 	}

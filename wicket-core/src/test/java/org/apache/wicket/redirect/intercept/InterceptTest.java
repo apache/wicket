@@ -18,11 +18,11 @@ package org.apache.wicket.redirect.intercept;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.component.IRequestableComponent;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

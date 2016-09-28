@@ -16,17 +16,15 @@
  */
 package org.apache.wicket.core.request.handler;
 
-import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Request handler for bookmarkable pages with listener interface. This handler is only used to
+ * Request handler for bookmarkable pages with an {@link IRequestListener}. This handler is only used to
  * generate URLs. Rendering is always handled by {@link ListenerInterfaceRequestHandler}.
  *
  * @author Matej Knopp
@@ -36,11 +34,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 		IPageRequestHandler,
 		IComponentRequestHandler
 {
-	private static final Logger logger = LoggerFactory.getLogger(BookmarkableListenerInterfaceRequestHandler.class);
-
 	private final IPageAndComponentProvider pageComponentProvider;
-
-	private final RequestListenerInterface listenerInterface;
 
 	private final Integer behaviorIndex;
 
@@ -48,18 +42,15 @@ public class BookmarkableListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param listenerInterface
 	 * @param behaviorIndex
 	 */
 	public BookmarkableListenerInterfaceRequestHandler(
 		IPageAndComponentProvider pageComponentProvider,
-		RequestListenerInterface listenerInterface, Integer behaviorIndex)
+		Integer behaviorIndex)
 	{
 		Args.notNull(pageComponentProvider, "pageComponentProvider");
-		Args.notNull(listenerInterface, "listenerInterface");
 
 		this.pageComponentProvider = pageComponentProvider;
-		this.listenerInterface = listenerInterface;
 		this.behaviorIndex = behaviorIndex;
 	}
 
@@ -67,12 +58,18 @@ public class BookmarkableListenerInterfaceRequestHandler
 	 * Construct.
 	 *
 	 * @param pageComponentProvider
-	 * @param listenerInterface
 	 */
-	public BookmarkableListenerInterfaceRequestHandler(
-		PageAndComponentProvider pageComponentProvider, RequestListenerInterface listenerInterface)
+	public BookmarkableListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider)
 	{
-		this(pageComponentProvider, listenerInterface, null);
+		this(pageComponentProvider, null);
+	}
+
+	public boolean includeRenderCount() {
+		if (behaviorIndex == null) {
+			return ((IRequestListener)getComponent()).rendersPage();
+		} else {
+			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).rendersPage();
+		}
 	}
 
 	/**
@@ -133,16 +130,6 @@ public class BookmarkableListenerInterfaceRequestHandler
 	public void detach(IRequestCycle requestCycle)
 	{
 		pageComponentProvider.detach();
-	}
-
-	/**
-	 * Returns the listener interface.
-	 *
-	 * @return listener interface
-	 */
-	public RequestListenerInterface getListenerInterface()
-	{
-		return listenerInterface;
 	}
 
 	/**

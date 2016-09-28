@@ -20,6 +20,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Internal {@link IRequestMapper} to map {@link AtmosphereWebRequest} to
@@ -29,10 +30,9 @@ import org.apache.wicket.request.Url;
  */
 public class AtmosphereRequestMapper implements IRequestMapper
 {
-	private EventSubscriptionInvoker eventSubscriptionInvoker;
+	private final EventSubscriptionInvoker eventSubscriptionInvoker;
 
 	/**
-	 * 
 	 * Construct with {@link SubscribeAnnotationEventSubscriptionInvoker}
 	 */
 	public AtmosphereRequestMapper()
@@ -41,14 +41,13 @@ public class AtmosphereRequestMapper implements IRequestMapper
 	}
 
 	/**
-	 * 
 	 * Construct.
 	 * 
 	 * @param eventSubscriptionInvoker
 	 */
 	public AtmosphereRequestMapper(EventSubscriptionInvoker eventSubscriptionInvoker)
 	{
-		this.eventSubscriptionInvoker = eventSubscriptionInvoker;
+		this.eventSubscriptionInvoker = Args.notNull(eventSubscriptionInvoker, "eventSubscriptionInvoker");
 	}
 
 	@Override

@@ -58,23 +58,23 @@ public final class JsonUtils
 						}
 					}
 				}
-				else if (value.getClass().isArray())
+				else if (value != null)
 				{
-					Object[] array = (Object[]) value;
-					for (Object v : array)
+					if (value.getClass().isArray())
 					{
-						if (v != null)
+						Object[] array = (Object[]) value;
+						for (Object v : array)
 						{
-							JSONObject object = new JSONObject();
-							object.put("name", name);
-							object.put("value", v);
-							jsonArray.put(object);
+							if (v != null)
+							{
+								JSONObject object = new JSONObject();
+								object.put("name", name);
+								object.put("value", v);
+								jsonArray.put(object);
+							}
 						}
 					}
-				}
-				else
-				{
-					if (value != null)
+					else
 					{
 						JSONObject object = new JSONObject();
 						object.put("name", name);

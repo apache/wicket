@@ -158,10 +158,17 @@ public class SubmitLink extends AbstractSubmitLink
 
 		if (isEnabledInHierarchy())
 		{
-			if (tag.getName().equalsIgnoreCase("a"))
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+				|| tag.getName().equalsIgnoreCase("area"))
 			{
 				tag.put("href", "javascript:;");
 			}
+			else if (tag.getName().equalsIgnoreCase("button"))
+			{
+				// WICKET-5597 prevent default submit
+				tag.put("type", "button");
+			}
+
 			tag.put("onclick", getTriggerJavaScript());
 		}
 		else

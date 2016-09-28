@@ -88,7 +88,7 @@ public class WebExternalResourceStream extends AbstractResourceStream
 			if (resourceURL == null)
 			{
 				throw new FileNotFoundException("Unable to find resource '" + url +
-					"' in the serlvet context");
+					"' in the servlet context");
 			}
 
 			return Connections.getLastModified(resourceURL);

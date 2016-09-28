@@ -36,9 +36,11 @@ import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.Localizer;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.form.AutoLabelResolver.AutoLabelMarker;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.model.Model;
@@ -98,11 +100,8 @@ import org.slf4j.LoggerFactory;
  *            The model object type
  * 
  */
-public abstract class FormComponent<T> extends LabeledWebMarkupContainer
-	implements
-		IFormVisitorParticipant,
-		IFormModelUpdateListener,
-		IGenericComponent<T>
+public abstract class FormComponent<T> extends LabeledWebMarkupContainer implements
+	IFormVisitorParticipant, IFormModelUpdateListener, IGenericComponent<T, FormComponent<T>>
 {
 	private static final Logger logger = LoggerFactory.getLogger(FormComponent.class);
 
@@ -216,27 +215,21 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 				protected String getValue(String variableName)
 				{
 					Object value = vars.get(variableName);
-					if (value == null)
+					
+					if (value == null ||value instanceof String)
 					{
-						return null;
+						return String.valueOf(value);
 					}
-					else if (value instanceof String)
+					
+					IConverter converter = getConverter(value.getClass());
+					
+					if (converter == null)
 					{
-						// small optimization - no need to bother with conversion
-						// for String vars, e.g. {label}
-						return (String)value;
+						return Strings.toString(value);
 					}
 					else
 					{
-						IConverter converter = getConverter(value.getClass());
-						if (converter == null)
-						{
-							return Strings.toString(value);
-						}
-						else
-						{
-							return converter.convertToString(value, getLocale());
-						}
+						return converter.convertToString(value, getLocale());
 					}
 				}
 			}.toString();
@@ -383,7 +376,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 *            The visitor to call
 	 * @return the visitor's result
 	 */
-	public static final <R> R visitFormComponentsPostOrder(Component component,
+	public static <R> R visitFormComponentsPostOrder(Component component,
 		final IVisitor<? extends FormComponent<?>, R> visitor)
 	{
 		return Visits.visitPostOrder(component, visitor, new IVisitFilter()
@@ -422,7 +415,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 *            The visitor to call
 	 * @return the visitor's result
 	 */
-	public static final <R> R visitComponentsPostOrder(Component component,
+	public static <R> R visitComponentsPostOrder(Component component,
 		final org.apache.wicket.util.visit.IVisitor<Component, R> visitor)
 	{
 		Args.notNull(visitor, "visitor");
@@ -641,7 +634,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	/**
 	 * Clears the user input.
 	 */
-	public final void clearInput()
+	public void clearInput()
 	{
 		rawInput = NO_RAW_INPUT;
 	}
@@ -852,7 +845,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	@SuppressWarnings("unchecked")
 	public final List<IValidator<? super T>> getValidators()
 	{
-		final List<IValidator<? super T>> list = new ArrayList<IValidator<? super T>>();
+		final List<IValidator<? super T>> list = new ArrayList<>();
 
 		for (Behavior behavior : getBehaviors())
 		{
@@ -1095,8 +1088,8 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * setModelObject(getConvertedInput());
 	 * </pre>
 	 * 
-	 * DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING. USUALLY UPDATING
-	 * YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.
+	 * <strong>DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING. USUALLY UPDATING
+	 * YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.</strong>
 	 */
 	@Override
 	public void updateModel()
@@ -1159,13 +1152,16 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * registering it with the application by overriding {@link Application#getConverterLocator()},
 	 * or at the component level by overriding {@link #getConverter(Class)} .
 	 * </p>
-	 * 
+	 *
+	 * <strong>DO NOT CALL THIS METHOD DIRECTLY UNLESS YOU ARE SURE WHAT YOU ARE DOING. USUALLY UPDATING
+	 * YOUR MODEL IS HANDLED BY THE FORM, NOT DIRECTLY BY YOU.</strong>
+	 *
 	 * @see IConverterLocator
 	 * @see Application#newConverterLocator()
 	 * @see IConverter#convertToObject(String, Locale)
 	 * @see #newValidationError(ConversionException)
 	 */
-	protected void convertInput()
+	public void convertInput()
 	{
 		if (typeName == null)
 		{
@@ -1218,7 +1214,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 */
 	protected ValidationError newValidationError(ConversionException cause)
 	{
-		ValidationError error = new ValidationError();
+		ValidationError error = new ValidationError(cause.getMessage());
 
 		if (cause.getResourceKey() != null)
 		{
@@ -1502,39 +1498,44 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 
 		boolean isNull = getConvertedInput() == null;
 
-		IValidator<T> validator = null;
+		IValidator<T> validator;
 
-		try
+		for (Behavior behavior : getBehaviors())
 		{
-			for (Behavior behavior : getBehaviors())
+			if (isBehaviorAccepted(behavior) == false)
 			{
-				validator = null;
-				if (behavior instanceof ValidatorAdapter)
+				continue;
+			}
+
+			validator = null;
+			if (behavior instanceof ValidatorAdapter)
+			{
+				validator = ((ValidatorAdapter<T>)behavior).getValidator();
+			}
+			else if (behavior instanceof IValidator)
+			{
+				validator = (IValidator<T>)behavior;
+			}
+			if (validator != null)
+			{
+				if (isNull == false || validator instanceof INullAcceptingValidator<?>)
 				{
-					validator = ((ValidatorAdapter<T>)behavior).getValidator();
-				}
-				else if (behavior instanceof IValidator)
-				{
-					validator = (IValidator<T>)behavior;
-				}
-				if (validator != null)
-				{
-					if (isNull == false || validator instanceof INullAcceptingValidator<?>)
+					try
 					{
 						validator.validate(validatable);
 					}
-					if (!isValid())
+					catch (Exception e)
 					{
-						break;
+						throw new WicketRuntimeException("Exception '" + e.getMessage() +
+								"' occurred during validation " + validator.getClass().getName() +
+								" on component " + getPath(), e);
 					}
 				}
+				if (!isValid())
+				{
+					break;
+				}
 			}
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("Exception '" + e.getMessage() +
-				"' occurred during validation " + validator.getClass().getName() +
-				" on component " + getPath(), e);
 		}
 	}
 
@@ -1552,30 +1553,23 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 		return new ValidatableAdapter();
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
+	/**
+	 * Updates auto label css classes such as error/required during ajax updates when the labels may
+	 * not be directly repainted in the response.
+	 * 
+	 * @param target
+	 */
+	public final void updateAutoLabels(AjaxRequestTarget target)
 	{
-		return (IModel<T>)getDefaultModel();
-	}
+		AutoLabelMarker marker = getMetaData(AutoLabelResolver.MARKER_KEY);
+	
+		if (marker == null)
+		{
+			// this component does not have an auto label
+			return;
+		}
 
-	@Override
-	public final void setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final void setModelObject(T object)
-	{
-		setDefaultModelObject(object);
+		marker.updateFrom(this, target);
 	}
 
 	/**
@@ -1592,39 +1586,63 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer
 	 * @param formComponent
 	 *            the form component to update
 	 * @see FormComponent#updateModel()
-	 * @throws UnsupportedOperationException
-	 *             if the existing model object Collection cannot be modified
+	 * @throws WicketRuntimeException
+	 *             if the existing model object collection is unmodifiable and no setter exists
 	 */
 	public static <S> void updateCollectionModel(FormComponent<Collection<S>> formComponent)
 	{
 		Collection<S> convertedInput = formComponent.getConvertedInput();
+		if (convertedInput == null) {
+			convertedInput = Collections.emptyList();
+		}
 
 		Collection<S> collection = formComponent.getModelObject();
 		if (collection == null)
 		{
 			collection = new ArrayList<>(convertedInput);
-			formComponent.setDefaultModelObject(collection);
+			formComponent.setModelObject(collection);
 		}
 		else
 		{
-			formComponent.modelChanging();
-			collection.clear();
-			if (convertedInput != null)
-			{
-				collection.addAll(convertedInput);
-			}
-			formComponent.modelChanged();
+			boolean modified = false;
 
+			formComponent.modelChanging();
+
+			try
+			{
+				collection.clear();
+				collection.addAll(convertedInput);
+				modified = true;
+			}
+			catch (UnsupportedOperationException unmodifiable)
+			{
+				if (logger.isDebugEnabled())
+				{
+					logger.debug("An error occurred while trying to modify the collection attached to "
+							+ formComponent, unmodifiable);
+				}
+				collection = new ArrayList<>(convertedInput); 
+			}
+			
 			try
 			{
 				formComponent.getModel().setObject(collection);
 			}
-			catch (Exception e)
+			catch (Exception noSetter)
 			{
-				// ignore this exception because it could be that there
-				// is not setter for this collection.
-				logger.info("An error occurred while trying to set the new value for the property attached to " + formComponent, e);
+				if (!modified)
+				{
+					throw new WicketRuntimeException("An error occurred while trying to set the collection attached to "
+							+ formComponent, noSetter);
+				}
+				else if (logger.isDebugEnabled())
+				{
+					logger.debug("An error occurred while trying to set the collection attached to "
+							+ formComponent, noSetter);
+				}
 			}
+			
+			formComponent.modelChanged();
 		}
 	}
 }

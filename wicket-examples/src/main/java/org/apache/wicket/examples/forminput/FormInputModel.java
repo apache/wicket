@@ -364,9 +364,6 @@ public final class FormInputModel implements IClusterable
 		this.urlProperty = urlProperty;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -397,10 +394,10 @@ public final class FormInputModel implements IClusterable
 			b.append(i.next());
 			if (i.hasNext())
 			{
-				b.append(",");
+				b.append(',');
 			}
 		}
-		b.append("]");
+		b.append(']');
 		b.append(", lines [");
 		for (Iterator<Line> i = lines.iterator(); i.hasNext();)
 		{
@@ -410,8 +407,8 @@ public final class FormInputModel implements IClusterable
 				b.append(", ");
 			}
 		}
-		b.append("]");
-		b.append("]");
+		b.append(']');
+		b.append(']');
 		return b.toString();
 	}
 }

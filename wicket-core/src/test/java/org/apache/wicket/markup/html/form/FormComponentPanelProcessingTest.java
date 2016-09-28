@@ -16,10 +16,11 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.hamcrest.Matchers.is;
+
 import java.io.Serializable;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
@@ -27,6 +28,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -50,6 +52,19 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 		ft.submit();
 	}
 
+	@Test
+	public void clearInput()
+	{
+		tester.startPage(new TestPage());
+		tester.assertRenderedPage(TestPage.class);
+
+		TestFormComponentPanel fcp = (TestFormComponentPanel) tester.getComponentFromLastRenderedPage("form:panel");
+		assertThat(fcp.isChildClearInputCalled(), is(false));
+
+		fcp.clearInput();
+		assertThat(fcp.isChildClearInputCalled(), is(true));
+	}
+
 	private static class TestFormComponentPanel extends FormComponentPanel<Serializable>
 		implements
 			IMarkupResourceStreamProvider
@@ -58,16 +73,17 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 
 		private boolean childValidated = false;
 		private boolean childModelUpdated = false;
+		private boolean childClearInputCalled = false;
 
 		private TestFormComponentPanel(String id, IModel<Serializable> model)
 		{
 			super(id, model);
-			add(new TextField<Serializable>("text", new Model<Serializable>())
+			add(new TextField<Serializable>("text", new Model<>())
 			{
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected void convertInput()
+				public void convertInput()
 				{
 					super.convertInput();
 					childValidated = true;
@@ -79,7 +95,18 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 					super.updateModel();
 					childModelUpdated = true;
 				}
+
+				@Override
+				public void clearInput()
+				{
+					super.clearInput();
+					childClearInputCalled = true;
+				}
 			});
+		}
+
+		private boolean isChildClearInputCalled() {
+			return childClearInputCalled;
 		}
 
 		@Override
@@ -92,7 +119,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 		}
 
 		@Override
-		protected void convertInput()
+		public void convertInput()
 		{
 			if (childValidated == false)
 			{
@@ -127,9 +154,9 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 
 		public TestPage()
 		{
-			Form<Void> form = new Form<Void>("form");
+			Form<Void> form = new Form<>("form");
 			add(form);
-			form.add(new TestFormComponentPanel("panel", new Model<Serializable>()));
+			form.add(new TestFormComponentPanel("panel", new Model<>()));
 		}
 
 		@Override

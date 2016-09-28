@@ -16,15 +16,19 @@
  */
 package org.apache.wicket;
 
-import java.util.AbstractList;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.string.ComponentStrings;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ComponentTag.IAutoComponentFactory;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
@@ -35,14 +39,12 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.border.Border;
-import org.apache.wicket.markup.html.internal.InlineEnclosure;
+import org.apache.wicket.markup.html.form.AutoLabelResolver;
 import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.model.IComponentInheritedModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
-import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.util.io.IClusterable;
-import org.apache.wicket.util.iterator.ComponentHierarchyIterator;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
@@ -93,46 +95,96 @@ import org.slf4j.LoggerFactory;
  * 
  * @see MarkupStream
  * @author Jonathan Locke
- * 
  */
 public abstract class MarkupContainer extends Component implements Iterable<Component>
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final int INITIAL_CHILD_LIST_CAPACITY = 12;
+
+	/**
+	 * The threshold where we start using a Map to store children in, replacing a List. Adding
+	 * components to a list is O(n), and to a map O(1). The magic number is 24, due to a Map using
+	 * more memory to store its elements and below 24 children there's no discernible difference
+	 * between adding to a Map or a List.
+	 * 
+	 * We have focused on adding elements to a list, instead of indexed lookups because adding is an
+	 * action that is performed very often, and lookups often are done by component IDs, not index.
+	 */
+	static final int MAPIFY_THRESHOLD = 24; // 32 * 0.75
+
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(MarkupContainer.class);
 
-	/** List of children or single child */
-	private Object children;
+	/**
+	 * Metadata key for looking up the list of removed children necessary for tracking modifications
+	 * during iteration of the children of this markup container.
+	 * 
+	 * This is stored in meta data because it only is necessary when a child is removed, and this
+	 * saves the memory necessary for a field on a widely used class.
+	 */
+	private static final MetaDataKey<LinkedList<RemovedChild>> REMOVALS_KEY = new MetaDataKey<LinkedList<RemovedChild>>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
-	 * @see org.apache.wicket.Component#Component(String)
+	 * Administrative class for detecting removed children during child iteration. Not intended to
+	 * be serializable but for e.g. determining the size of the component it has to be serializable.
 	 */
+	private static class RemovedChild implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private transient final Component removedChild;
+		private transient final Component previousSibling;
+
+		private RemovedChild(Component removedChild, Component previousSibling)
+		{
+			this.removedChild = removedChild;
+			this.previousSibling = previousSibling;
+		}
+	}
+
+	/**
+	 * Administrative counter to keep track of modifications to the list of children during
+	 * iteration.
+	 * 
+	 * When the {@link #children_size()} changes due to an addition or removal of a child component,
+	 * the modCounter is increased. This way iterators that iterate over the children of this
+	 * container can keep track when they need to change their iteration strategy.
+	 */
+	private transient int modCounter = 0;
+
+	/**
+	 * The children of this markup container, if any. Can be a Component when there's only one
+	 * child, a List when the number of children is fewer than {@link #MAPIFY_THRESHOLD} or a Map
+	 * when there are more children.
+	 */
+	private Object children;
+
 	public MarkupContainer(final String id)
 	{
 		this(id, null);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#Component(String, IModel)
-	 */
 	public MarkupContainer(final String id, IModel<?> model)
 	{
 		super(id, model);
 	}
 
 	/**
-	 * Adds a child component to this container.
+	 * Adds the child component(s) to this container.
 	 * 
-	 * @param childs
+	 * @param children
 	 *            The child(ren) to add.
 	 * @throws IllegalArgumentException
 	 *             Thrown if a child with the same id is replaced by the add operation.
 	 * @return This
 	 */
-	public MarkupContainer add(final Component... childs)
+	public MarkupContainer add(final Component... children)
 	{
-		for (Component child : childs)
+		for (Component child : children)
 		{
 			Args.notNull(child, "child");
 
@@ -170,13 +222,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				log.debug("Add " + child.getId() + " to " + this);
 			}
 
-			// Add to map
-			addedComponent(child);
-			if (put(child) != null)
+			// Add the child to my children
+			Component previousChild = children_put(child);
+			if (previousChild != null && previousChild != child)
 			{
-				throw new IllegalArgumentException(exceptionMessage("A child with id '" +
-					child.getId() + "' already exists"));
+				throw new IllegalArgumentException(
+					exceptionMessage("A child '" + previousChild.getClass().getSimpleName() +
+						"' with id '" + child.getId() + "' already exists"));
 			}
+
+			addedComponent(child);
+
 		}
 		return this;
 	}
@@ -185,18 +241,15 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * Replaces a child component of this container with another or just adds it in case no child
 	 * with the same id existed yet.
 	 * 
-	 * @param childs
-	 *            The child(s) to be added or replaced
-	 * @return This
+	 * @param children
+	 *            The child(ren) to be added or replaced
+	 * @return this markup container
 	 */
-	public MarkupContainer addOrReplace(final Component... childs)
+	public MarkupContainer addOrReplace(final Component... children)
 	{
-		for (Component child : childs)
+		for (Component child : children)
 		{
-			if (child == null)
-			{
-				throw new IllegalArgumentException("argument child must be not null");
-			}
+			Args.notNull(child, "child");
 
 			checkHierarchyChange(child);
 
@@ -250,11 +303,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		// that's all what most auto-components need. Unfortunately child.onDetach() will not / can
 		// not be invoked, since the parent doesn't known its one of his children. Hence we need to
 		// properly add it.
-		int index = children_indexOf(component);
-		if (index >= 0)
-		{
-			children_remove(index);
-		}
+		children_remove(component.getId());
 		add(component);
 
 		return true;
@@ -269,10 +318,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	public boolean contains(final Component component, final boolean recurse)
 	{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("argument component may not be null");
-		}
+		Args.notNull(component, "component");
 
 		if (recurse)
 		{
@@ -436,14 +482,14 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * Get the childs markup
+	 * Get the markup of the child.
 	 * 
 	 * @see Component#getMarkup()
 	 * 
 	 * @param child
 	 *            The child component. If null, the container's markup will be returned. See Border,
 	 *            Panel or Enclosure where getMarkup(null) != getMarkup().
-	 * @return The childs markup
+	 * @return The child's markup
 	 */
 	public IMarkupFragment getMarkup(final Component child)
 	{
@@ -452,12 +498,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * Get the type of associated markup for this component.
+	 * Get the type of associated markup for this component. The markup type for a component is
+	 * independent of whether or not the component actually has an associated markup resource file
+	 * (which is determined at runtime).
 	 * 
 	 * @return The type of associated markup for this component (for example, "html", "wml" or
-	 *         "vxml"). The markup type for a component is independent of whether or not the
-	 *         component actually has an associated markup resource file (which is determined at
-	 *         runtime). If there is no markup type for a component, null may be returned, but this
+	 *         "vxml"). If there is no markup type for a component, null may be returned, but this
 	 *         means that no markup can be loaded for the class. Null is also returned if the
 	 *         component, or any of its parents, has not been added to a Page.
 	 */
@@ -489,77 +535,142 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 		// Add to map
+		children_put(child);
 		addedComponent(child);
-		put(child);
 	}
 
 	/**
+	 * Gives an iterator that allow you to iterate through the children of this markup container in
+	 * the order the children were added. The iterator supports additions and removals from the list
+	 * of children during iteration.
+	 * 
 	 * @return Iterator that iterates through children in the order they were added
 	 */
 	@Override
 	public Iterator<Component> iterator()
 	{
-		return new Iterator<Component>()
+		/**
+		 * Iterator that knows how to change between a single child, list of children and map of
+		 * children. Keeps track when the iterator was last sync'd with the markup container's
+		 * tracking of changes to the list of children.
+		 */
+		class MarkupChildIterator implements Iterator<Component>
 		{
-			int index = 0;
+			private int indexInRemovalsSinceLastUpdate = removals_size();
+			private int expectedModCounter = -1;
+			private Component currentComponent = null;
+			private Iterator<Component> internalIterator = null;
 
 			@Override
 			public boolean hasNext()
 			{
-				return index < children_size();
+				refreshInternalIteratorIfNeeded();
+				return internalIterator.hasNext();
 			}
 
 			@Override
 			public Component next()
 			{
-				return children_get(index++);
+				refreshInternalIteratorIfNeeded();
+				return currentComponent = internalIterator.next();
 			}
 
 			@Override
 			public void remove()
 			{
-				final Component removed = children_remove(--index);
-				checkHierarchyChange(removed);
-				removedComponent(removed);
+				MarkupContainer.this.remove(currentComponent);
+				refreshInternalIteratorIfNeeded();
+			}
+
+			private void refreshInternalIteratorIfNeeded()
+			{
+				if (modCounter != 0 && expectedModCounter >= modCounter)
+					return;
+
+				if (children == null)
+				{
+					internalIterator = Collections.emptyIterator();
+				}
+				else if (children instanceof Component)
+				{
+					internalIterator = Collections.singleton((Component)children).iterator();
+				}
+				else if (children instanceof List)
+				{
+					List<Component> childrenList = children();
+					internalIterator = childrenList.iterator();
+				}
+				else
+				{
+					Map<String, Component> childrenMap = children();
+					internalIterator = childrenMap.values().iterator();
+				}
+
+				// since we now have a new iterator, we need to set it to the last known position
+				currentComponent = findLastExistingChildAlreadyReturned(currentComponent);
+				expectedModCounter = modCounter;
+				indexInRemovalsSinceLastUpdate = removals_size();
+
+				if (currentComponent != null)
+				{
+					// move the new internal iterator to the place of the last processed component
+					while (internalIterator.hasNext() &&
+						internalIterator.next() != currentComponent)
+						// noop
+						;
+				}
+			}
+
+			private Component findLastExistingChildAlreadyReturned(Component target)
+			{
+				while (true)
+				{
+					if (target == null)
+						return null;
+
+					RemovedChild removedChild = null;
+					for (int i = indexInRemovalsSinceLastUpdate; i < removals_size(); i++)
+					{
+						RemovedChild curRemovedChild = removals_get(i);
+						if (curRemovedChild.removedChild == target ||
+							curRemovedChild.removedChild == null)
+						{
+							removedChild = curRemovedChild;
+							break;
+						}
+					}
+					if (removedChild == null)
+					{
+						return target;
+					}
+					else
+					{
+						target = removedChild.previousSibling;
+					}
+				}
 			}
 		};
+		return new MarkupChildIterator();
 	}
 
 	/**
+	 * Creates an iterator that iterates over children in the order specified by comparator. This
+	 * works on a copy of the children list.
+	 * 
 	 * @param comparator
 	 *            The comparator
 	 * @return Iterator that iterates over children in the order specified by comparator
 	 */
 	public final Iterator<Component> iterator(Comparator<Component> comparator)
 	{
-		final List<Component> sorted;
-		if (children == null)
-		{
-			sorted = Collections.emptyList();
-		}
-		else
-		{
-			if (children instanceof Component)
-			{
-				sorted = new ArrayList<Component>(1);
-				sorted.add((Component)children);
-			}
-			else
-			{
-				int size = children_size();
-				sorted = new ArrayList<Component>(size);
-				for (int i = 0; i < size; i++)
-				{
-					sorted.add(children_get(i));
-				}
-
-			}
-		}
+		final List<Component> sorted = copyChildren();
 		Collections.sort(sorted, comparator);
 		return sorted.iterator();
 	}
 
 	/**
+	 * Removes a component from the children identified by the {@code component.getId()}
+	 * 
 	 * @param component
 	 *            Component to remove from this container
 	 * @return {@code this} for chaining
@@ -570,7 +681,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		Args.notNull(component, "component");
 
-		children_remove(component);
+		children_remove(component.getId());
 		removedComponent(component);
 
 		return this;
@@ -615,25 +726,17 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			addStateChange();
 
-			// Loop through child components
-			int size = children_size();
-			for (int i = 0; i < size; i++)
+			for (Component child : this)
 			{
-				Object childObject = children_get(i, false);
-				if (childObject instanceof Component)
-				{
-					// Get next child
-					final Component child = (Component)childObject;
-
-					// Do not call remove() because the state change would than be
-					// recorded twice.
-					child.internalOnRemove();
-					child.detach();
-					child.setParent(null);
-				}
+				// Do not call remove() because the state change would then be
+				// recorded twice.
+				child.internalOnRemove();
+				child.detach();
+				child.setParent(null);
 			}
 
 			children = null;
+			removals_add(null, null);
 		}
 
 		return this;
@@ -663,7 +766,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		// Check for required open tag name
 		ComponentTag associatedMarkupOpenTag = (ComponentTag)elem;
-		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
+		if (!(associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -725,8 +828,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		if (child.getParent() != this)
 		{
-			// Add to map
-			final Component replaced = put(child);
+			final Component replaced = children_put(child);
 
 			// Look up to make sure it was already in the map
 			if (replaced == null)
@@ -749,9 +851,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return this;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
-	 */
 	@Override
 	public MarkupContainer setDefaultModel(final IModel<?> model)
 	{
@@ -794,9 +893,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return children_size();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -820,14 +916,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			buffer.append(", children = ");
 
 			// Loop through child components
-			final int size = children_size();
-			for (int i = 0; i < size; i++)
+			boolean first = true;
+			for (Component child : this)
 			{
-				// Get next child
-				final Component child = children_get(i);
-				if (i != 0)
+				if (first)
 				{
 					buffer.append(' ');
+					first = false;
 				}
 				buffer.append(child.toString());
 			}
@@ -876,25 +971,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
-	 * @return A iterator which iterators over all children and grand-children the Component
-	 */
-	public final ComponentHierarchyIterator visitChildren()
-	{
-		return new ComponentHierarchyIterator(this);
-	}
-
-	/**
-	 * @param clazz
-	 *            Filter condition
-	 * @return A iterator which iterators over all children and grand-children the Component,
-	 *         returning only components which implement (instanceof) the provided clazz.
-	 */
-	public final ComponentHierarchyIterator visitChildren(final Class<?> clazz)
-	{
-		return new ComponentHierarchyIterator(this).filterByClass(clazz);
-	}
-
-	/**
 	 * @param child
 	 *            Component being added
 	 */
@@ -904,7 +980,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		Args.notNull(child, "child");
 
 		MarkupContainer parent = child.getParent();
-		if (parent != null)
+		if (parent != null && parent != this)
 		{
 			parent.remove(child);
 		}
@@ -912,15 +988,27 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		// Set child's parent
 		child.setParent(this);
 
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled() &&
-			debugSettings.getComponentUseCheck())
+		final DebugSettings debugSettings = Application.get().getDebugSettings();
+		if (debugSettings.isLinePreciseReportingOnAddComponentEnabled()
+			&& debugSettings.getComponentUseCheck())
 		{
 			child.setMetaData(ADDED_AT_KEY,
 				ComponentStrings.toString(child, new MarkupException("added")));
 		}
 
-		final Page page = findPage();
+		Page page = findPage();
+		
+		// if we have a path to page, dequeue any container children.
+		if (page != null && child instanceof MarkupContainer)
+		{
+		    MarkupContainer childContainer = (MarkupContainer)child;
+		    // if we are already dequeueing there is no need to dequeue again
+		    if (!childContainer.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
+			{				
+				childContainer.dequeue();
+			}
+		}
+
 		if (page != null)
 		{
 			// tell the page a component has been added first, to allow it to initialize
@@ -963,326 +1051,147 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		});
 	}
 
-	/**
-	 * @param child
-	 *            Child to add
+	/*
+	 * === Internal management for keeping track of child components ===
+	 * 
+	 * A markup container is the base component for containing child objects. It is one of the most
+	 * heavily used components so we should keep it's (memory and CPU) footprint small.
+	 * 
+	 * The goals for the internal management of the list of child components are:
+	 * 
+	 * - as low big-O complexity as possible, preferrably O(1)
+	 * 
+	 * - as low memory consumption as possible (don't use more memory than strictly necessary)
+	 * 
+	 * - ensure that iterating through the (list of) children be as consistent as possible
+	 * 
+	 * - retain the order of addition in the iteration
+	 * 
+	 * These goals are attained by storing the children in a single field that is implemented using:
+	 * 
+	 * - a component when there's only one child
+	 * 
+	 * - a list of components when there are more than 1 children
+	 * 
+	 * - a map of components when the number of children makes looking up children by id more costly
+	 * than an indexed search (see MAPIFY_THRESHOLD)
+	 * 
+	 * To ensure that iterating through the list of children keeps working even when children are
+	 * added, replaced and removed without throwing a ConcurrentModificationException a special
+	 * iterator is used. The markup container tracks removals from and additions to the children
+	 * during the request, enabling the iterator to skip over those items and adjust to changing
+	 * internal data structures.
 	 */
-	private void children_add(final Component child)
+
+	/**
+	 * A type washing accessor method for getting the children without having to cast the field
+	 * explicitly.
+	 * 
+	 * @return the children as a T
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> T children()
 	{
-		if (children == null)
-		{
-			children = child;
-		}
-		else
-		{
-			if (!(children instanceof ChildList))
-			{
-				// Save new children
-				children = new ChildList(children);
-			}
-			((ChildList)children).add(child);
-		}
+		return (T)children;
 	}
 
 	/**
-	 * Returns child component at the specified index
+	 * Gets the child with the given {@code childId}
 	 * 
-	 * @param index
-	 * @throws ArrayIndexOutOfBoundsException
-	 * @return child component at the specified index
+	 * @param childId
+	 *            the component identifier
+	 * @return The child component or {@code null} when no child with the given identifier exists
 	 */
-	public final Component get(int index)
-	{
-		return children_get(index);
-	}
-
-	/**
-	 * 
-	 * @param index
-	 * @return The child component
-	 */
-	private Component children_get(int index)
-	{
-		return (Component)children_get(index, true);
-	}
-
-	/**
-	 * 
-	 * @param index
-	 * @param reconstruct
-	 * @return the child component
-	 */
-	private Object children_get(int index, boolean reconstruct)
-	{
-		Object component = null;
-		if (children != null)
-		{
-			if (children instanceof Object[] == false && children instanceof ChildList == false)
-			{
-				if (index != 0)
-				{
-					throw new ArrayIndexOutOfBoundsException("index " + index +
-						" is greater then 0");
-				}
-				component = children;
-				if (children != component)
-				{
-					children = component;
-				}
-			}
-			else
-			{
-				Object[] children;
-				if (this.children instanceof ChildList)
-				{
-					// we have a list
-					children = ((ChildList)this.children).childs;
-				}
-				else
-				{
-					// we have a object array
-					children = (Object[])this.children;
-				}
-				component = children[index];
-			}
-		}
-		return component;
-	}
-
-	/**
-	 * Returns the wicket:id of the given object if it is a {@link Component}
-	 * 
-	 * @param object
-	 * @return The id of the object (object can be component)
-	 */
-	private String getId(Object object)
-	{
-		if (object instanceof Component)
-		{
-			return ((Component)object).getId();
-		}
-		else
-		{
-			throw new IllegalArgumentException("Unknown type of object " + object);
-		}
-	}
-
-	/**
-	 * 
-	 * @param id
-	 * @return The child component
-	 */
-	private Component children_get(final String id)
+	private Component children_get(final String childId)
 	{
 		if (children == null)
 		{
 			return null;
 		}
-		Component component = null;
-		if ((children instanceof Object[] == false) && (children instanceof List == false))
-		{
-			if (getId(children).equals(id))
-			{
-				component = (Component)children;
-			}
-		}
-		else
-		{
-			Object[] children;
-			int size = 0;
-			if (this.children instanceof ChildList)
-			{
-				children = ((ChildList)this.children).childs;
-				size = ((ChildList)this.children).size;
-			}
-			else
-			{
-				children = (Object[])this.children;
-				size = children.length;
-			}
-			for (int i = 0; i < size; i++)
-			{
-				if (getId(children[i]).equals(id))
-				{
-					component = (Component)children[i];
-					break;
-				}
-			}
-		}
-		return component;
-	}
-
-	/**
-	 * 
-	 * @param child
-	 * @return The index of the given child component
-	 */
-	private int children_indexOf(Component child)
-	{
-		if (children == null)
-		{
-			return -1;
-		}
-		if (children instanceof Object[] == false && children instanceof ChildList == false)
-		{
-			if (getId(children).equals(child.getId()))
-			{
-				return 0;
-			}
-		}
-		else
-		{
-			int size = 0;
-			Object[] children;
-			if (this.children instanceof Object[])
-			{
-				children = (Object[])this.children;
-				size = children.length;
-			}
-			else
-			{
-				children = ((ChildList)this.children).childs;
-				size = ((ChildList)this.children).size;
-			}
-
-			for (int i = 0; i < size; i++)
-			{
-				if (getId(children[i]).equals(child.getId()))
-				{
-					return i;
-				}
-			}
-		}
-		return -1;
-	}
-
-	/**
-	 * 
-	 * @param component
-	 * @return The component that is removed.
-	 */
-	private Component children_remove(Component component)
-	{
-		int index = children_indexOf(component);
-		if (index != -1)
-		{
-			return children_remove(index);
-		}
-		return null;
-	}
-
-	/**
-	 * 
-	 * @param index
-	 * @return The component that is removed
-	 */
-	private Component children_remove(int index)
-	{
-		if (children == null)
-		{
-			return null;
-		}
-
 		if (children instanceof Component)
 		{
-			if (index == 0)
+			Component child = children();
+			return child.getId().equals(childId) ? child : null;
+		}
+		if (children instanceof List)
+		{
+			List<Component> kids = children();
+			for (Component child : kids)
 			{
-				final Component removed = (Component)children;
+				if (child.getId().equals(childId))
+				{
+					return child;
+				}
+			}
+			return null;
+		}
+		Map<String, Component> kids = children();
+		return kids.get(childId);
+	}
+
+	/**
+	 * Removes the child component identified by {@code childId} from the list of children.
+	 * 
+	 * Will change the internal list or map to a single component when the number of children hits
+	 * 1, but not change the internal map to a list when the threshold is reached (the memory was
+	 * already claimed, so there's little to be gained other than wasting CPU cycles for the
+	 * conversion).
+	 * 
+	 * @param childId
+	 *            the id of the child component to remove
+	 */
+	private void children_remove(String childId)
+	{
+		if (children instanceof Component)
+		{
+			Component oldChild = children();
+			if (oldChild.getId().equals(childId))
+			{
 				children = null;
-				return removed;
-			}
-			else
-			{
-				throw new IndexOutOfBoundsException();
+				removals_add(oldChild, null);
 			}
 		}
-		else
+		else if (children instanceof List)
 		{
-			if (children instanceof Object[])
+			List<Component> childrenList = children();
+			Iterator<Component> it = childrenList.iterator();
+			Component prevChild = null;
+			while (it.hasNext())
 			{
-				Object[] c = ((Object[])children);
-				final Object removed = c[index];
-				if (c.length == 2)
+				Component child = it.next();
+				if (child.getId().equals(childId))
 				{
-					if (index == 0)
+					it.remove();
+					removals_add(child, prevChild);
+					if (childrenList.size() == 1)
 					{
-						children = c[1];
+						children = childrenList.get(0);
 					}
-					else if (index == 1)
-					{
-						children = c[0];
-					}
-					else
-					{
-						throw new IndexOutOfBoundsException();
-					}
-					return (Component)removed;
+					return;
 				}
-				children = new ChildList(children);
+				prevChild = child;
 			}
-
-			ChildList lst = (ChildList)children;
-			Object removed = lst.remove(index);
-			if (lst.size == 1)
+		}
+		else if (children instanceof LinkedMap)
+		{
+			LinkedMap<String, Component> childrenMap = children();
+			if (childrenMap.containsKey(childId))
 			{
-				children = lst.get(0);
+				String prevSiblingId = childrenMap.previousKey(childId);
+				Component oldChild = childrenMap.remove(childId);
+				removals_add(oldChild, childrenMap.get(prevSiblingId));
+				if (childrenMap.size() == 1)
+				{
+					children = childrenMap.values().iterator().next();
+				}
 			}
-			return (Component)removed;
 		}
 	}
 
 	/**
+	 * Gets the number of child components of this markup container.
 	 * 
-	 * @param index
-	 * @param child
-	 * @param reconstruct
-	 * @return The replaced child
-	 */
-	private Object children_set(int index, Object child, boolean reconstruct)
-	{
-		Object replaced;
-		if (index >= 0 && index < children_size())
-		{
-			if (children instanceof Component)
-			{
-				replaced = children;
-				children = child;
-			}
-			else
-			{
-				if (children instanceof ChildList)
-				{
-					replaced = ((ChildList)children).set(index, child);
-				}
-				else
-				{
-					final Object[] children = (Object[])this.children;
-					replaced = children[index];
-					children[index] = child;
-				}
-			}
-		}
-		else
-		{
-			throw new IndexOutOfBoundsException();
-		}
-		return replaced;
-	}
-
-	/**
-	 * 
-	 * @param index
-	 * @param child
-	 * @return The component that is replaced
-	 */
-	private Component children_set(int index, Component child)
-	{
-		return (Component)children_set(index, child, true);
-	}
-
-	/**
-	 * 
-	 * @return The size of the children
+	 * @return The number of children
 	 */
 	private int children_size()
 	{
@@ -1290,39 +1199,194 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		{
 			return 0;
 		}
-		else
+		if (children instanceof Component)
 		{
-			if (children instanceof Component)
-			{
-				return 1;
-			}
-			else if (children instanceof ChildList)
-			{
-				return ((ChildList)children).size;
-			}
-			return ((Object[])children).length;
+			return 1;
 		}
+		if (children instanceof List)
+		{
+			List<?> kids = children();
+			return kids.size();
+		}
+		return ((Map<?, ?>)children).size();
 	}
 
 	/**
-	 * Ensure that there is space in childForId map for a new entry before adding it.
+	 * Puts the {@code child} component into the list of children of this markup container. If a
+	 * component existed with the same {@code child.getId()} it is replaced and the old component is
+	 * returned.
+	 * 
+	 * When a component is replaced, the internal structure of the children is not modified, so we
+	 * don't have to update the internal {@link #modCounter} in those circumstances. When a
+	 * component is added, we do have to increase the {@link #modCounter} to notify iterators of
+	 * this change.
 	 * 
 	 * @param child
-	 *            The child to put into the map
+	 *            The child
 	 * @return Any component that was replaced
 	 */
-	private Component put(final Component child)
+	private Component children_put(final Component child)
 	{
-		int index = children_indexOf(child);
-		if (index == -1)
+		if (children == null)
 		{
-			children_add(child);
+			children = child;
+
+			// it is an addtion, so we need to notify the iterators of this change.
+			modCounter++;
+
 			return null;
 		}
-		else
+
+		if (children instanceof Component)
 		{
-			return children_set(index, child);
+			/* first see if the child replaces the existing child */
+			Component oldChild = children();
+			if (oldChild.getId().equals(child.getId()))
+			{
+				children = child;
+				return oldChild;
+			}
+			else
+			{
+				/*
+				 * the put doesn't replace the existing child, so we need to increase the children
+				 * storage to a list and add the existing and new child to it
+				 */
+				Component originalChild = children();
+				List<Component> newChildren = new ArrayList<>(INITIAL_CHILD_LIST_CAPACITY);
+				newChildren.add(originalChild);
+				newChildren.add(child);
+				children = newChildren;
+
+				// it is an addtion, so we need to notify the iterators of this change.
+				modCounter++;
+				return null;
+			}
 		}
+
+		if (children instanceof List)
+		{
+			List<Component> childrenList = children();
+
+			// first see if the child replaces an existing child
+			for (int i = 0; i < childrenList.size(); i++)
+			{
+				Component curChild = childrenList.get(i);
+				if (curChild.getId().equals(child.getId()))
+				{
+					return childrenList.set(i, child);
+				}
+			}
+
+			// it is an addtion, so we need to notify the iterators of this change.
+			modCounter++;
+
+			/*
+			 * If it still fits in the allotted number of items of a List, just add it, otherwise
+			 * change the internal data structure to a Map for speedier lookups.
+			 */
+			if (childrenList.size() < MAPIFY_THRESHOLD)
+			{
+				childrenList.add(child);
+			}
+			else
+			{
+				Map<String, Component> newChildren = new LinkedMap<>(MAPIFY_THRESHOLD * 2);
+				for (Component curChild : childrenList)
+				{
+					newChildren.put(curChild.getId(), curChild);
+				}
+				newChildren.put(child.getId(), child);
+				children = newChildren;
+			}
+			return null;
+		}
+
+		Map<String, Component> childrenMap = children();
+		Component oldChild = childrenMap.put(child.getId(), child);
+
+		if (oldChild == null)
+		{
+			// it is an addtion, so we need to notify the iterators of this change.
+			modCounter++;
+		}
+		return oldChild;
+	}
+
+	/**
+	 * Retrieves the during the request removed children. These are stored in the metadata and
+	 * cleared at the end of the request {@link #onDetach()}
+	 * 
+	 * @return the list of removed children, may be {@code null}
+	 */
+	private LinkedList<RemovedChild> removals_get()
+	{
+		return getMetaData(REMOVALS_KEY);
+	}
+
+	/**
+	 * Sets the during the request removed children. These are stored in the metadata and cleared at
+	 * the end of the request, see {@link #onDetach()}.
+	 * 
+	 * @param removals
+	 *            the new list of removals
+	 */
+	private void removals_set(LinkedList<RemovedChild> removals)
+	{
+		setMetaData(REMOVALS_KEY, removals);
+	}
+
+	/**
+	 * Removes the list of removals from the metadata.
+	 */
+	private void removals_clear()
+	{
+		setMetaData(REMOVALS_KEY, null);
+	}
+
+	/**
+	 * Adds the {@code removedChild} to the list of removals and links it to the
+	 * {@code previousSibling}
+	 * 
+	 * @param removedChild
+	 *            the child that was removed
+	 * @param prevSibling
+	 *            the child that was the previous sibling of the removed child
+	 */
+	private void removals_add(Component removedChild, Component prevSibling)
+	{
+		modCounter++;
+
+		LinkedList<RemovedChild> removals = removals_get();
+		if (removals == null)
+		{
+			removals = new LinkedList<>();
+			removals_set(removals);
+		}
+		removals.add(new RemovedChild(removedChild, prevSibling));
+	}
+
+	/**
+	 * Gets the {@link RemovedChild} from the list of removals at given position.
+	 * 
+	 * @param i
+	 *            the position
+	 * @return the removed child
+	 */
+	private RemovedChild removals_get(int i)
+	{
+		return getMetaData(REMOVALS_KEY).get(i);
+	}
+
+	/**
+	 * Gets the number of removals that happened during the request.
+	 * 
+	 * @return the number of removals
+	 */
+	private int removals_size()
+	{
+		LinkedList<RemovedChild> removals = removals_get();
+		return removals == null ? 0 : removals.size();
 	}
 
 	/**
@@ -1366,11 +1430,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// Get element as tag
 			final ComponentTag tag = (ComponentTag)element;
 
+			if (tag instanceof WicketTag && ((WicketTag)tag).isFragmentTag()){
+				return false;
+			}
+
 			// Get component id
 			final String id = tag.getId();
 
 			// Get the component for the id from the given container
 			Component component = get(id);
+
 			if (component == null)
 			{
 				component = ComponentResolvers.resolve(this, markupStream, tag, null);
@@ -1383,7 +1452,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 					component.setMarkup(markupStream.getMarkupFragment());
 				}
 			}
-
+		
 			// Failed to find it?
 			if (component != null)
 			{
@@ -1392,57 +1461,96 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			else if (tag.getFlag(ComponentTag.RENDER_RAW))
 			{
 				// No component found, but "render as raw markup" flag found
-				getResponse().write(element.toCharSequence());
+				if (canRenderRawTag(tag))
+				{					
+					getResponse().write(element.toCharSequence());
+				} 
 				return true;
 			}
 			else
 			{
-				if (tag instanceof WicketTag)
-				{
-					if (((WicketTag)tag).isChildTag())
-					{
-						markupStream.throwMarkupException("Found " + tag.toString() +
-							" but no <wicket:extend>");
-					}
-					else
-					{
-						markupStream.throwMarkupException("Failed to handle: " +
-							tag.toString() +
-							". It might be that no resolver has been registered to handle this special tag. " +
-							" But it also could be that you declared wicket:id=" + id +
-							" in your markup, but that you either did not add the " +
-							"component to your page at all, or that the hierarchy does not match.");
-					}
-				}
-
-				List<String> names = findSimilarComponents(id);
-
-				// No one was able to handle the component id
-				StringBuffer msg = new StringBuffer(500);
-				msg.append("Unable to find component with id '");
-				msg.append(id);
-				msg.append("' in ");
-				msg.append(this.toString());
-				msg.append("\n\tExpected: '");
-				msg.append(getPageRelativePath());
-				msg.append(PATH_SEPARATOR);
-				msg.append(id);
-				msg.append("'.\n\tFound with similar names: '");
-				msg.append(Strings.join("', ", names));
-				msg.append("'");
-
-				log.error(msg.toString());
-				markupStream.throwMarkupException(msg.toString());
+				throwException(markupStream, tag);
 			}
 		}
 		else
 		{
 			// Render as raw markup
-			getResponse().write(element.toCharSequence());
+			if (canRenderRawTag(element))
+			{
+				getResponse().write(element.toCharSequence());
+			}
 			return true;
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Says if the given tag can be handled as a raw markup.
+	 * 
+	 * @param tag
+	 * 			the current tag.
+	 * @return true if the tag can be handled as raw markup, false otherwise.
+	 */
+	private boolean canRenderRawTag(MarkupElement tag)
+	{
+		boolean isWicketTag = tag instanceof WicketTag;
+		
+		boolean stripTag = isWicketTag ? Application.get().getMarkupSettings().getStripWicketTags() : false; 
+		
+		return !stripTag;
+	}
+	
+	/**
+	 * Throws a {@code org.apache.wicket.markup.MarkupException} when the
+	 * component markup is not consistent.
+	 * 
+	 * @param markupStream
+	 * 			the source stream for the component markup.
+	 * @param tag
+	 * 			the tag that can not be handled.
+	 */
+	private void throwException(final MarkupStream markupStream, final ComponentTag tag)
+	{
+		final String id = tag.getId();
+		
+		if (tag instanceof WicketTag)
+		{
+			if (((WicketTag)tag).isChildTag())
+			{
+				markupStream.throwMarkupException("Found " + tag.toString() +
+					" but no <wicket:extend>. Container: " + toString());
+			}
+			else
+			{
+				markupStream.throwMarkupException("Failed to handle: " +
+					tag.toString() +
+					". It might be that no resolver has been registered to handle this special tag. " +
+					" But it also could be that you declared wicket:id=" + id +
+					" in your markup, but that you either did not add the " +
+					"component to your page at all, or that the hierarchy does not match. " +
+					"Container: " + toString());
+			}
+		}
+
+		List<String> names = findSimilarComponents(id);
+
+		// No one was able to handle the component id
+		StringBuilder msg = new StringBuilder(500);
+		msg.append("Unable to find component with id '");
+		msg.append(id);
+		msg.append("' in ");
+		msg.append(this.toString());
+		msg.append("\n\tExpected: '");
+		msg.append(getPageRelativePath());
+		msg.append(PATH_SEPARATOR);
+		msg.append(id);
+		msg.append("'.\n\tFound with similar names: '");
+		msg.append(Strings.join("', ", names));
+		msg.append('\'');
+
+		log.error(msg.toString());
+		markupStream.throwMarkupException(msg.toString());
 	}
 
 	private List<String> findSimilarComponents(final String id)
@@ -1484,9 +1592,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		renderComponentTagBody(markupStream, openTag);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onRender()
-	 */
 	@Override
 	protected void onRender()
 	{
@@ -1524,7 +1629,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			render = !openTag.hasNoCloseTag();
 		}
 
-		if (render == true)
+		if (render)
 		{
 			renderAll(markupStream, openTag);
 		}
@@ -1538,7 +1643,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	protected final void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		while (markupStream.hasMore())
+		while (markupStream.isCurrentIndexInsideTheStream())
 		{
 			// In case of Page we need to render the whole file. For all other components just what
 			// is in between the open and the close tag.
@@ -1573,22 +1678,14 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#removeChildren()
-	 */
 	@Override
 	void removeChildren()
 	{
 		super.removeChildren();
 
-		for (int i = children_size(); i-- > 0;)
+		for (Component component : this)
 		{
-			Object child = children_get(i, false);
-			if (child instanceof Component)
-			{
-				Component component = (Component)child;
-				component.internalOnRemove();
-			}
+			component.internalOnRemove();
 		}
 	}
 
@@ -1597,45 +1694,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		super.detachChildren();
 
-		for (int i = children_size(); i-- > 0;)
+		for (Component component : this)
 		{
-			Object child = children_get(i, false);
-			if (child instanceof Component)
-			{
-				Component component = (Component)child;
-				component.detach();
-
-				// We need to keep InlineEnclosures for Ajax request handling.
-				// TODO this is really ugly. Feature request for 1.5: change auto-component that
-				// they don't need to be removed anymore.
-				if (component.isAuto() && !(component instanceof InlineEnclosure))
-				{
-					children_remove(i);
-				}
-			}
-		}
-
-		if (children instanceof ChildList)
-		{
-			ChildList lst = (ChildList)children;
-			Object[] tmp = new Object[lst.size];
-			System.arraycopy(lst.childs, 0, tmp, 0, lst.size);
-			children = tmp;
+			component.detach();
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#internalMarkRendering(boolean)
-	 */
 	@Override
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
 		super.internalMarkRendering(setRenderingFlag);
-		final int size = children_size();
-		for (int i = 0; i < size; i++)
+
+		for (Component child : this)
 		{
-			final Component child = children_get(i);
 			child.internalMarkRendering(setRenderingFlag);
 		}
 	}
@@ -1643,33 +1714,36 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	/**
 	 * @return a copy of the children array.
 	 */
-	private Component[] copyChildren()
+	@SuppressWarnings("unchecked")
+	private List<Component> copyChildren()
 	{
-		int size = children_size();
-		Component result[] = new Component[size];
-		for (int i = 0; i < size; ++i)
+		if (children == null)
 		{
-			result[i] = children_get(i);
+			return Collections.emptyList();
 		}
-		return result;
+		else if (children instanceof Component)
+		{
+			return Collections.singletonList((Component)children);
+		}
+		else if (children instanceof List)
+		{
+			return new ArrayList<>((List<Component>)children);
+		}
+		else
+		{
+			return new ArrayList<>(((Map<String, Component>)children).values());
+		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRenderChildren()
-	 */
 	@Override
 	void onBeforeRenderChildren()
 	{
 		super.onBeforeRenderChildren();
 
-		// We need to copy the children list because the children components can
-		// modify the hierarchy in their onBeforeRender.
-		Component[] children = copyChildren();
 		try
 		{
 			// Loop through child components
-			for (final Component child : children)
+			for (final Component child : this)
 			{
 				// Get next child
 				// Call begin request on the child
@@ -1735,213 +1809,351 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		super.onAfterRenderChildren();
 	}
 
-	/**
-	 * 
-	 */
-	private static class ChildList extends AbstractList<Object> implements IClusterable
+	@Override
+	protected void onDetach()
 	{
-		private static final long serialVersionUID = -7861580911447631127L;
-		private int size;
-		private Object[] childs;
+		super.onDetach();
 
-		/**
-		 * Construct.
-		 * 
-		 * @param children
-		 */
-		public ChildList(Object children)
+		modCounter = 0;
+		removals_clear();
+
+		if (queue != null && !queue.isEmpty() && hasBeenRendered())
 		{
-			if (children instanceof Object[])
-			{
-				childs = (Object[])children;
-				size = childs.length;
-			}
-			else
-			{
-				childs = new Object[3];
-				add(children);
-			}
-		}
-
-		@Override
-		public Object get(int index)
-		{
-			return childs[index];
-		}
-
-		@Override
-		public int size()
-		{
-			return size;
-		}
-
-		@Override
-		public boolean add(Object o)
-		{
-			ensureCapacity(size + 1);
-			childs[size++] = o;
-			return true;
-		}
-
-		@Override
-		public void add(int index, Object element)
-		{
-			if (index > size || index < 0)
-			{
-				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-			}
-
-			ensureCapacity(size + 1);
-			System.arraycopy(childs, index, childs, index + 1, size - index);
-			childs[index] = element;
-			size++;
-		}
-
-		@Override
-		public Object set(int index, Object element)
-		{
-			if (index >= size)
-			{
-				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-			}
-
-			Object oldValue = childs[index];
-			childs[index] = element;
-			return oldValue;
-		}
-
-		@Override
-		public Object remove(int index)
-		{
-			if (index >= size)
-			{
-				throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-			}
-
-			Object oldValue = childs[index];
-
-			int numMoved = size - index - 1;
-			if (numMoved > 0)
-			{
-				System.arraycopy(childs, index + 1, childs, index, numMoved);
-			}
-			childs[--size] = null; // Let gc do its work
-
-			return oldValue;
-		}
-
-		/**
-		 * @param minCapacity
-		 */
-		public void ensureCapacity(int minCapacity)
-		{
-			int oldCapacity = childs.length;
-			if (minCapacity > oldCapacity)
-			{
-				Object oldData[] = childs;
-				int newCapacity = oldCapacity * 2;
-				if (newCapacity < minCapacity)
-				{
-					newCapacity = minCapacity;
-				}
-				childs = new Object[newCapacity];
-				System.arraycopy(oldData, 0, childs, 0, size);
-			}
+			throw new WicketRuntimeException(
+					String.format("Detach called on component with id '%s' while it had a non-empty queue: %s",
+							getId(), queue));
 		}
 	}
 
+	private transient ComponentQueue queue;
+
 	/**
-	 * Swaps position of children. This method is particularly useful for adjusting positions of
-	 * repeater's items without rebuilding the component hierarchy
+	 * Queues one or more components to be dequeued later. The advantage of this method over the
+	 * {@link #add(Component...)} method is that the component does not have to be added to its
+	 * direct parent, only to a parent upstream; it will be dequeued into the correct parent using
+	 * the hierarchy defined in the markup. This allows the component hierarchy to be maintained only
+	 * in markup instead of in markup and in java code; affording designers and developers more
+	 * freedom when moving components in markup.
 	 * 
-	 * @param idx1
-	 *            index of first component to be swapped
-	 * @param idx2
-	 *            index of second component to be swapped
+	 * @param components
+	 *             the components to queue
+	 * @return {@code this} for method chaining             
 	 */
-	public final void swap(int idx1, int idx2)
+	public MarkupContainer queue(Component... components)
 	{
-		int size = children_size();
-		if (idx1 < 0 || idx1 >= size)
+		if (queue == null)
 		{
-			throw new IndexOutOfBoundsException("Argument idx is out of bounds: " + idx1 + "<>[0," +
-				size + ")");
+			queue = new ComponentQueue();
+		}
+		queue.add(components);
+		
+		Page page = findPage();
+
+		if (page != null)
+		{
+			dequeue();			
 		}
 
-		if (idx2 < 0 || idx2 >= size)
-		{
-			throw new IndexOutOfBoundsException("Argument idx is out of bounds: " + idx2 + "<>[0," +
-				size + ")");
-		}
+		return this;
+	}
 
-		if (idx1 == idx2)
+	/**
+	 * @see IQueueRegion#dequeue()
+	 */
+	public void dequeue()
+	{
+		if (this instanceof IQueueRegion)
 		{
-			return;
-		}
-
-		if (children instanceof Object[])
-		{
-			final Object[] array = (Object[])children;
-			Object tmp = array[idx1];
-			array[idx1] = array[idx2];
-			array[idx2] = tmp;
+			DequeueContext dequeue = newDequeueContext();
+			dequeuePreamble(dequeue);
 		}
 		else
 		{
-			ChildList list = (ChildList)children;
-			Object tmp = list.childs[idx1];
-			list.childs[idx1] = list.childs[idx2];
-			list.childs[idx2] = tmp;
+			MarkupContainer containerWithQueue = this;
+
+			// check if there are any parent containers that have queued components, up till our
+			// queue region
+			while (containerWithQueue.isQueueEmpty() &&
+				!(containerWithQueue instanceof IQueueRegion))
+			{
+				containerWithQueue = containerWithQueue.getParent();
+				if (containerWithQueue == null)
+				{
+					// no queued components are available for dequeuing, so we can stop
+					return;
+				}
+			}
+
+			// when there are no components to be dequeued, just stop
+			if (containerWithQueue.isQueueEmpty())
+				return;
+
+			// get the queue region where we are going to dequeue components in
+			MarkupContainer queueRegion = containerWithQueue;
+
+			// the container with queued components could be a queue region, if not, find the region
+			// to dequeue in
+			if (!queueRegion.isQueueRegion())
+			{
+				queueRegion = (MarkupContainer)queueRegion.findParent(IQueueRegion.class);
+			}
+
+			if (queueRegion != null && !queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
+			{
+				queueRegion.dequeue();
+			}
 		}
 	}
 
 	/**
-	 * Automatically create components for <wicket:xxx> tag.
+	 * @return {@code true} when one or more components are queued
 	 */
-	// to use it call it from #onInitialize()
-	private void createAndAddComponentsForWicketTags()
+	private boolean isQueueEmpty()
 	{
-		// Markup must be available
-		IMarkupFragment markup = getMarkup();
-		if ((markup != null) && (markup.size() > 1))
+		return queue == null || queue.isEmpty();
+	}
+
+	/**
+	 * @return {@code true} when this markup container is a queue region
+	 */
+	private boolean isQueueRegion() 
+	{
+		return IQueueRegion.class.isInstance(this);
+	}
+
+	/**
+	 * Run preliminary operations before running {@link #dequeue(DequeueContext)}. More in detail it
+	 * throws an exception if the container is already dequeuing, and it also takes care of setting
+	 * flag {@code RFLAG_CONTAINER_DEQUEING} to true before running {@link #dequeue(DequeueContext)}
+	 * and setting it back to false after dequeuing is completed.
+	 * 
+	 * @param dequeue
+	 *            the dequeue context to use
+	 */
+	protected void dequeuePreamble(DequeueContext dequeue)
+	{
+		if (getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 		{
-			MarkupStream stream = new MarkupStream(markup);
+			throw new IllegalStateException("This container is already dequeing: " + this);
+		}
 
-			// Skip the first component tag which already belongs to 'this' container
-			if (stream.skipUntil(ComponentTag.class))
+		setRequestFlag(RFLAG_CONTAINER_DEQUEING, true);
+		try
+		{
+			if (dequeue == null)
 			{
-				stream.next();
+				return;
 			}
 
-			// Search for <wicket:xxx> in the remaining markup and try to resolve the component
-			while (stream.skipUntil(ComponentTag.class))
+			if (dequeue.peekTag() != null)
 			{
-				ComponentTag tag = stream.getTag();
-				if (tag.isOpen() || tag.isOpenClose())
-				{
-					if (tag instanceof WicketTag)
-					{
-						Component component = ComponentResolvers.resolve(this, stream, tag, null);
-						if ((component != null) && (component.getParent() == null))
-						{
-							if (component.getId().equals(tag.getId()) == false)
-							{
-								// make sure we are able to get() the component during rendering
-								tag.setId(component.getId());
-								tag.setModified(true);
-							}
-							add(component);
-						}
-					}
-
-					if (tag.isOpen())
-					{
-						stream.skipToMatchingCloseTag(tag);
-					}
-				}
-				stream.next();
+				dequeue(dequeue);
 			}
+		}
+		finally
+		{
+			setRequestFlag(RFLAG_CONTAINER_DEQUEING, false);
 		}
 	}
 
+	/**
+	 * Dequeues components. The default implementation iterates direct children of this container
+	 * found in its markup and tries to find matching
+	 * components in queues filled by a call to {@link #queue(Component...)}. It then delegates the
+	 * dequeueing to these children.
+	 * 
+	 * 
+	 * Certain components that implement custom markup behaviors (such as repeaters and borders)
+	 * override this method to bring dequeueing in line with their custom markup handling.
+	 * 
+	 * @param dequeue
+	 *             the dequeue context to use     
+	 */
+	public void dequeue(DequeueContext dequeue)
+	{
+		while (dequeue.isAtOpenOrOpenCloseTag())
+		{
+			ComponentTag tag = dequeue.takeTag();
+	
+			// see if child is already added to parent
+			Component child = get(tag.getId());
+
+			if (child == null)
+			{
+				// the container does not yet have a child with this id, see if we can
+				// dequeue
+				child = dequeue.findComponentToDequeue(tag);
+				
+				//if tag has an autocomponent factory let's use it
+				if (child == null && tag.getAutoComponentFactory() != null)
+				{
+					IAutoComponentFactory autoComponentFactory = tag.getAutoComponentFactory();
+					child = autoComponentFactory.newComponent(this, tag);
+				}
+				
+				if (child != null)
+				{
+					addDequeuedComponent(child, tag);
+				}
+			}
+			
+			if (tag.isOpen() && !tag.hasNoCloseTag())
+            {
+			    dequeueChild(child, tag, dequeue);
+            }
+		}
+
+	}
+	
+	/**
+	 * Propagates dequeuing to child component.
+	 * 
+	 * @param child
+	 *             the child component
+	 * @param tag
+	 *             the child tag
+	 * @param dequeue
+	 *             the dequeue context to use
+	 */
+	private void dequeueChild(Component child, ComponentTag tag, DequeueContext dequeue)
+	{
+		ChildToDequeueType childType = ChildToDequeueType.fromChild(child);
+		
+		if (childType == ChildToDequeueType.QUEUE_REGION ||
+			childType == ChildToDequeueType.BORDER)
+		{
+			((IQueueRegion)child).dequeue();			
+		}
+		
+		if (childType == ChildToDequeueType.MARKUP_CONTAINER)
+		{
+			// propagate dequeuing to containers
+			MarkupContainer childContainer = (MarkupContainer)child;
+			
+			dequeue.pushContainer(childContainer);
+			childContainer.dequeue(dequeue);
+			dequeue.popContainer();			
+		}
+		
+		if (childType == ChildToDequeueType.NULL || 
+			childType == ChildToDequeueType.QUEUE_REGION)
+		{
+			dequeue.skipToCloseTag();
+		}
+
+		// pull the close tag off
+		ComponentTag close = dequeue.takeTag();
+		do
+		{
+			if (close != null && close.closes(tag))
+			{
+				return;
+			}
+		} while ((close = dequeue.takeTag()) != null);
+
+		throw new IllegalStateException(String.format("Could not find the closing tag for '%s'", tag));
+	}
+
+    /** @see IQueueRegion#newDequeueContext() */
+	public DequeueContext newDequeueContext()
+	{
+		IMarkupFragment markup = getRegionMarkup();
+		if (markup == null)
+		{
+			return null;
+		}
+
+		return new DequeueContext(markup, this, false);
+	}
+
+	/** @see IQueueRegion#getRegionMarkup() */
+	public IMarkupFragment getRegionMarkup()
+	{
+		return getAssociatedMarkup();
+	}
+
+	/**
+	 * Checks if this container can dequeue a child represented by the specified tag. This method
+	 * should be overridden when containers can dequeue components represented by non-standard tags.
+	 * For example, borders override this method and dequeue their body container when processing
+	 * the body tag.
+	 * 
+	 * By default all {@link ComponentTag}s are supported as well as {@link WicketTag}s that return
+	 * a non-null value from {@link WicketTag#getAutoComponentFactory()} method.
+	 * 
+	 * @param tag
+	 */
+	protected DequeueTagAction canDequeueTag(ComponentTag tag)
+	{
+		if (tag instanceof WicketTag)
+		{
+			WicketTag wicketTag = (WicketTag)tag;
+			if (wicketTag.isContainerTag())
+			{
+				return DequeueTagAction.DEQUEUE;
+			}
+			else if (wicketTag.getAutoComponentFactory() != null)
+			{
+				return DequeueTagAction.DEQUEUE;
+			}
+			else if (wicketTag.isFragmentTag())
+			{
+				return DequeueTagAction.SKIP;
+			}
+			else if (wicketTag.isChildTag())
+			{
+				return DequeueTagAction.IGNORE;
+			}
+			else if (wicketTag.isHeadTag())
+			{
+				return DequeueTagAction.SKIP;
+			}
+			else if (wicketTag.isLinkTag())
+			{
+				return DequeueTagAction.DEQUEUE;
+			}
+			else
+			{
+				return null; // don't know
+			}
+		}
+		
+		//if is a label tag, ignore it
+		if (tag.isAutoComponentTag() 
+			&& tag.getId().startsWith(AutoLabelResolver.LABEL_ATTR))
+		{
+			return DequeueTagAction.IGNORE;
+		}
+		
+		return DequeueTagAction.DEQUEUE;
+	}
+
+	/**
+	 * Queries this container to find a child that can be dequeued that matches the specified tag.
+	 * The default implementation will check if there is a component in the queue that has the same
+	 * id as a tag, but sometimes custom tags can be dequeued and in those situations this method
+	 * should be overridden.
+	 * 
+	 * @param tag
+	 * @return
+	 */
+	public Component findComponentToDequeue(ComponentTag tag)
+	{
+		return queue == null ? null : queue.remove(tag.getId());
+	}
+
+	/**
+	 * Adds a dequeued component to this container. This method should rarely be overridden because
+	 * the common case of simply forwarding the component to
+	 * {@link MarkupContainer#add(Component...))} method should cover most cases. Components that
+	 * implement a custom hierarchy, such as borders, may wish to override it to support edge-case
+	 * non-standard behavior.
+	 * 
+	 * @param component
+	 * @param tag
+	 */
+	protected void addDequeuedComponent(Component component, ComponentTag tag)
+	{
+		add(component);
+	}
 }

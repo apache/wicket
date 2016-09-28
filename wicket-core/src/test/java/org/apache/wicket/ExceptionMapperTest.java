@@ -16,17 +16,19 @@
  */
 package org.apache.wicket;
 
+import java.util.function.Supplier;
+
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Exceptions;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Ignore;
 
 /**
@@ -55,16 +57,16 @@ public class ExceptionMapperTest extends WicketTestCase
 
 	/**
 	 */
-	public static class WrapperProvider implements IProvider<IExceptionMapper>
+	public static class WrapperProvider implements Supplier<IExceptionMapper>
 	{
-		private IProvider<IExceptionMapper> wrapped;
+		private Supplier<IExceptionMapper> wrapped;
 		WrapperExceptionMapper wrapperExceptionMapper;
 
 		/**
 		 * @param wrapped
 		 *            exception mapper provider
 		 */
-		public WrapperProvider(IProvider<IExceptionMapper> wrapped)
+		public WrapperProvider(Supplier<IExceptionMapper> wrapped)
 		{
 			this.wrapped = wrapped;
 		}

@@ -55,7 +55,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public FeedbackMessages()
 	{
-		messages = new CopyOnWriteArrayList<FeedbackMessage>();
+		messages = new CopyOnWriteArrayList<>();
 	}
 
 	/**
@@ -190,7 +190,6 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 
 		List<FeedbackMessage> toDelete = messages(filter);
 
-
 		for (FeedbackMessage message : toDelete)
 		{
 			message.detach();
@@ -223,11 +222,13 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
-	 * Checks if a message of the specified {@code level} was registered
+	 * Checks if a message of the specified {@code level} or greater was registered.<br />
+	 * To check for a precise {@code level} use {@link #hasMessage(IFeedbackMessageFilter)}
+	 * and pass it a reference to {@link org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter}.
 	 * 
 	 * @param level
 	 *            The level of the message
-	 * @return {code true} iff a message with the specified {@code level} was registered
+	 * @return {@code true} if a message with the specified {@code level} or greater was registered
 	 */
 	public final boolean hasMessage(final int level)
 	{
@@ -252,11 +253,11 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	}
 
 	/**
-	 * Retrieves the first message matching the specified {@code level}
+	 * Retrieves the first message that level is greater than or equal to the given level
 	 * 
 	 * @param level
-	 *            The level of the message
-	 * @return matching message or {@code null} if none
+	 *            The minimum level of the message
+	 * @return a message with the same or a higher level, or {@code null} if none
 	 */
 	public final FeedbackMessage first(final int level)
 	{

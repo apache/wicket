@@ -462,7 +462,7 @@ class Entities
 	{
 		private final Map<String, Integer> mapNameToValue = Generics.newHashMap();
 
-		private final IntHashMap<String> mapValueToName = new IntHashMap<String>();
+		private final IntHashMap<String> mapValueToName = new IntHashMap<>();
 
 		// TODO not thread-safe as there is a window between changing the two maps
 		@Override

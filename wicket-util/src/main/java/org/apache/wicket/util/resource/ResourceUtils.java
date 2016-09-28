@@ -17,12 +17,12 @@
 package org.apache.wicket.util.resource;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.wicket.util.collections.ConcurrentHashSet;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -31,23 +31,61 @@ import org.apache.wicket.util.string.Strings;
  */
 public class ResourceUtils
 {
-	private static final Pattern LOCALE_PATTERN = Pattern.compile("_([a-z]{2})(_([A-Z]{2})(_([^_]+))?)?$");
-
-	private final static Set<String> isoCountries = new ConcurrentHashSet<String>(
+	/** The default postfix for minified names (ex: /css/mystyle.min.css) **/
+	public static final String MIN_POSTFIX_DEFAULT = "min";
+	/** The default postfix for minified names (ex: /css/mystyle.min.css) **/
+	public static final String MIN_POSTFIX_DEFAULT_AS_EXTENSION = ".min.";
+	/** Regular expression patter to extract the locale from the filename (ex: de_DE) **/
+	private static final Pattern LOCALE_MIN_PATTERN = Pattern
+		.compile("_([a-z]{2})(_([A-Z]{2})(_([^_\\.]+))?)?(\\.min)?$");
+	/** Stores standard ISO country codes from {@code java.util.Locale} **/
+	private final static Set<String> isoCountries = new HashSet<>(
 		Arrays.asList(Locale.getISOCountries()));
-
-	private final static Set<String> isoLanguages = new ConcurrentHashSet<String>(
+	/** Stores standard ISO language codes from {@code java.util.Locale} **/
+	private final static Set<String> isoLanguages = new HashSet<>(
 		Arrays.asList(Locale.getISOLanguages()));
-
+	
 	/**
-	 * Construct.
+	 * Return the minified version for a given resource name.
+	 * For example '/css/coolTheme.css' becomes '/css/coolTheme.min.css'
+	 * 
+	 * @param name
+	 * 			The original resource name
+	 * @param minPostfix
+	 * 			The postfix to use for minified name
+	 * @return The minified resource name
 	 */
-	private ResourceUtils()
+	public static String getMinifiedName(String name, String minPostfix)
 	{
+		String minifiedName;
+		int idxOfExtension = name.lastIndexOf('.');
+		final String dottedPostfix = "." + minPostfix;
+		
+		if (idxOfExtension > -1)
+		{
+			String extension = name.substring(idxOfExtension);
+			final String baseName = name.substring(0, name.length() - extension.length() + 1);
+			if (!dottedPostfix.equals(extension) && !baseName.endsWith(dottedPostfix + "."))
+			{
+				minifiedName = baseName + minPostfix + extension;
+			} else
+			{
+				minifiedName = name;
+			}
+		} else
+		{
+			minifiedName = name + dottedPostfix;
+		}
+		return minifiedName;
 	}
-
+	
 	/**
-	 * Extract the locale from the filename
+	 * Extract the locale from the filename taking into account possible minimized resource name.
+	 * 
+	 * E.g. {@code file_us_EN.min.js} will correctly determine a locale of {@code us_EN} by
+	 * stripping the {@code .min} from the filename, the filename returned will be
+	 * {@code file.min.js}, if you want the {@code .min} to be removed as well, use
+	 * {@link #getLocaleFromFilename(String)} instead.
 	 * 
 	 * @param path
 	 *            The file path
@@ -56,7 +94,8 @@ public class ResourceUtils
 	public static PathLocale getLocaleFromFilename(String path)
 	{
 		String extension = "";
-		int pos = path.indexOf('.');
+
+		final int pos = path.lastIndexOf('.');
 		if (pos != -1)
 		{
 			extension = path.substring(pos);
@@ -64,12 +103,13 @@ public class ResourceUtils
 		}
 
 		String filename = Strings.lastPathComponent(path, '/');
-		Matcher matcher = LOCALE_PATTERN.matcher(filename);
+		Matcher matcher = LOCALE_MIN_PATTERN.matcher(filename);
 		if (matcher.find())
 		{
 			String language = matcher.group(1);
 			String country = matcher.group(3);
 			String variant = matcher.group(5);
+			String min = matcher.group(6);
 
 			// did we find a language?
 			if (language != null)
@@ -94,8 +134,9 @@ public class ResourceUtils
 
 			if (language != null)
 			{
-				pos = path.length() - filename.length() + matcher.start();
-				String basePath = path.substring(0, pos) + extension;
+				int languagePos = path.length() - filename.length() + matcher.start();
+				String basePath = path.substring(0, languagePos) + (min == null ? "" : min) +
+					extension;
 
 				Locale locale = new Locale(language, country != null ? country : "",
 					variant != null ? variant : "");
@@ -104,7 +145,7 @@ public class ResourceUtils
 			}
 		} // else skip the whole thing... probably user specific underscores used
 
-		return new PathLocale(path, null);
+		return new PathLocale(path + extension, null);
 	}
 
 	/**

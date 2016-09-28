@@ -173,29 +173,49 @@ public class ServletWebResponse extends WebResponse
 	{
 		Args.notNull(url, "url");
 
+		UrlRenderer urlRenderer = getUrlRenderer();
+
+		Url originalUrl = Url.parse(url);
+
 		/*
 		  WICKET-4645 - always pass absolute url to the web container for encoding
 		  because when REDIRECT_TO_BUFFER is in use Wicket may render PageB when
 		  PageA is actually the requested one and the web container cannot resolve
 		  the base url properly
 		 */
-		UrlRenderer urlRenderer = RequestCycle.get().getUrlRenderer();
-		Url relativeUrl = Url.parse(url);
-		String fullUrl = urlRenderer.renderFullUrl(relativeUrl);
+		String fullUrl = urlRenderer.renderFullUrl(originalUrl);
 		String encodedFullUrl = httpServletResponse.encodeURL(fullUrl);
-		final String encodedRelativeUrl;
-		if (fullUrl.equals(encodedFullUrl))
+
+		final String encodedUrl;
+		if (originalUrl.isFull())
 		{
-			// no encoding happened so just reuse the relative url
-			encodedRelativeUrl = url.toString();
+			encodedUrl = encodedFullUrl;
 		}
 		else
 		{
-			// get the relative url with the jsessionid encoded in it
-			Url _encoded = Url.parse(encodedFullUrl);
-			encodedRelativeUrl = urlRenderer.renderRelativeUrl(_encoded);
+			if (fullUrl.equals(encodedFullUrl))
+			{
+				// no encoding happened so just reuse the original url
+				encodedUrl = url.toString();
+			}
+			else
+			{
+				// get the relative url with the jsessionid encoded in it
+				Url _encoded = Url.parse(encodedFullUrl);
+				encodedUrl = urlRenderer.renderRelativeUrl(_encoded);
+			}
 		}
-		return encodedRelativeUrl;
+		return encodedUrl;
+	}
+
+	private UrlRenderer getUrlRenderer()
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		if (requestCycle == null)
+		{
+			return new UrlRenderer(webRequest);
+		}
+		return requestCycle.getUrlRenderer();
 	}
 
 	@Override
@@ -203,29 +223,38 @@ public class ServletWebResponse extends WebResponse
 	{
 		Args.notNull(url, "url");
 
+		UrlRenderer urlRenderer = getUrlRenderer();
+
+		Url originalUrl = Url.parse(url);
+
 		/*
-		  WICKET-4854 - always pass absolute url to the web container for encoding
-		  because when REDIRECT_TO_BUFFER is in use Wicket may render PageB when
-		  PageA is actually the requested one and the web container cannot resolve
-		  the base url properly
+		 * WICKET-4645 - always pass absolute url to the web container for encoding because when
+		 * REDIRECT_TO_BUFFER is in use Wicket may render PageB when PageA is actually the requested
+		 * one and the web container cannot resolve the base url properly
 		 */
-		UrlRenderer urlRenderer = new UrlRenderer(webRequest);
-		Url relativeUrl = Url.parse(url);
-		String fullUrl = urlRenderer.renderFullUrl(relativeUrl);
+		String fullUrl = urlRenderer.renderFullUrl(originalUrl);
 		String encodedFullUrl = httpServletResponse.encodeRedirectURL(fullUrl);
-		final String encodedRelativeUrl;
-		if (fullUrl.equals(encodedFullUrl))
+
+		final String encodedUrl;
+		if (originalUrl.isFull())
 		{
-			// no encoding happened so just reuse the relative url
-			encodedRelativeUrl = url.toString();
+			encodedUrl = encodedFullUrl;
 		}
 		else
 		{
-			// get the relative url with the jsessionid encoded in it
-			Url _encoded = Url.parse(encodedFullUrl);
-			encodedRelativeUrl = urlRenderer.renderRelativeUrl(_encoded);
+			if (fullUrl.equals(encodedFullUrl))
+			{
+				// no encoding happened so just reuse the original url
+				encodedUrl = url.toString();
+			}
+			else
+			{
+				// get the relative url with the jsessionid encoded in it
+				Url _encoded = Url.parse(encodedFullUrl);
+				encodedUrl = urlRenderer.renderRelativeUrl(_encoded);
+			}
 		}
-		return encodedRelativeUrl;
+		return encodedUrl;
 	}
 
 	@Override
@@ -241,7 +270,9 @@ public class ServletWebResponse extends WebResponse
 
 			if (webRequest.isAjax())
 			{
-				httpServletResponse.setHeader("Ajax-Location", url);
+				setHeader("Ajax-Location", url);
+				setContentType("text/xml;charset=" +
+					webRequest.getContainerRequest().getCharacterEncoding());
 
 				/*
 				 * usually the Ajax-Location header is enough and we do not need to the redirect url
@@ -251,21 +282,9 @@ public class ServletWebResponse extends WebResponse
 				 */
 				httpServletResponse.getWriter().write(
 					"<ajax-response><redirect><![CDATA[" + url + "]]></redirect></ajax-response>");
-
-				setContentType("text/xml;charset=" +
-					webRequest.getContainerRequest().getCharacterEncoding());
-				disableCaching();
 			}
 			else
 			{
-				if (url.startsWith("./"))
-				{
-					/*
-					 * WICKET-4260 Tomcat does not canonalize urls, which leads to problems with IE
-					 * when url is relative and starts with a dot
-					 */
-					url = url.substring(2);
-				}
 				httpServletResponse.sendRedirect(url);
 			}
 		}

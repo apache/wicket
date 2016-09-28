@@ -102,7 +102,7 @@ public class FeedbackCollector
 	 */
 	public final List<FeedbackMessage> collect(final IFeedbackMessageFilter filter)
 	{
-		final List<FeedbackMessage> messages = new ArrayList<FeedbackMessage>();
+		final List<FeedbackMessage> messages = new ArrayList<>();
 
 		if (includeSession && Session.exists())
 		{
@@ -118,7 +118,6 @@ public class FeedbackCollector
 		{
 			((MarkupContainer)component).visitChildren(new IVisitor<Component, Void>()
 			{
-
 				@Override
 				public void component(Component object, IVisit<Void> visit)
 				{

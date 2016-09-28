@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.net.SocketException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -79,7 +81,8 @@ public class ResponseIOExceptionTest extends Assert
 		TestRequestCycleListener testRequestCycleListener = new TestRequestCycleListener();
 		tester.getApplication().getRequestCycleListeners().add(testRequestCycleListener);
 		tester.startResource(new ResourceStreamResource(new StringResourceStream("asdf")));
-		assertTrue(testRequestCycleListener.lastExceptionRquestHandlerResolved instanceof EmptyRequestHandler);
+		assertThat(testRequestCycleListener.lastExceptionRquestHandlerResolved,
+			instanceOf(EmptyRequestHandler.class));
 	}
 
 	class TestRequestCycleListener extends AbstractRequestCycleListener

@@ -29,8 +29,7 @@ public class ConversationCounter extends Counter
 {
 	private static final Logger logger = LoggerFactory.getLogger(ConversationCounter.class);
 
-	void onDetach(@Observes(notifyObserver = Reception.IF_EXISTS)
-	DetachEvent detach)
+	void onDetach(@Observes(notifyObserver = Reception.IF_EXISTS) DetachEvent detach)
 	{
 		logger.info("Detaching conversational counter");
 	}

@@ -16,11 +16,17 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Checks;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -41,10 +47,18 @@ import org.apache.wicket.util.lang.Args;
  * This behavior will be linked to the <em>click</em> javascript event of the div WebMarkupContainer
  * represents, and so anytime a user clicks this div the {@link #onEvent(AjaxRequestTarget)} of the
  * behavior is invoked.
- * 
+ *
+ * <p>
+ * <strong>Note</strong>: {@link #getEvent()} method cuts any <em>on</em> prefix from the given event name(s).
+ * This is being done for easier migration of applications coming from Wicket 1.5.x where Wicket used
+ * inline attributes like 'onclick=...'. If the application needs to use custom events with names starting with
+ * <em>on</em> then {@link #getEvent()} should be overridden.
+ * </p>
+ *
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @see #onEvent(AjaxRequestTarget)
  */
 public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 {
@@ -63,12 +77,6 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		Args.notEmpty(event, "event");
 
 		onCheckEvent(event);
-
-		event = event.toLowerCase();
-		if (event.startsWith("on"))
-		{
-			event = event.substring(2);
-		}
 
 		this.event = event;
 	}
@@ -91,32 +99,51 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	{
 		super.updateAjaxAttributes(attributes);
 
-		attributes.setEventNames(event);
+		String evt = getEvent();
+		Checks.notEmpty(evt, "getEvent() should return non-empty event name(s)");
+		attributes.setEventNames(evt);
 	}
 
 	/**
 	 * 
 	 * @param event
 	 *      the event this behavior will be attached to
+	 * @deprecated Wicket 8 Remove this method for Wicket 8.0.0
 	 */
+	@Deprecated
 	protected void onCheckEvent(final String event)
 	{
+		if (event.startsWith("on"))
+		{
+			String shortName = event.substring(2);
+			throw new IllegalArgumentException(
+					String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+									"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
+									"names so the leading 'on' may break your application."
+							, event, shortName));
+		}
+
 	}
 
 	/**
-	 * 
 	 * @return event
 	 *      the event this behavior is attached to
 	 */
-	public final String getEvent()
+	public String getEvent()
 	{
-		return event;
+		String[] splitEvents = event.split("\\s+");
+		List<String> cleanedEvents = new ArrayList<>(splitEvents.length);
+		for (String evt : splitEvents)
+		{
+			if (Strings.isEmpty(evt) == false)
+			{
+				cleanedEvents.add(evt);
+			}
+		}
+
+		return Strings.join(" ", cleanedEvents);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(AjaxRequestTarget)
-	 */
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
@@ -130,4 +157,29 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 *      the current request handler
 	 */
 	protected abstract void onEvent(final AjaxRequestTarget target);
+
+	/**
+	 * Creates an {@link AjaxEventBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onEvent
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxEventBehavior}
+	 */
+	public static AjaxEventBehavior onEvent(String eventName, WicketConsumer<AjaxRequestTarget> onEvent)
+	{
+		Args.notNull(onEvent, "onEvent");
+
+		return new AjaxEventBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onEvent(AjaxRequestTarget target)
+			{
+				onEvent.accept(target);
+			}
+		};
+	}
 }

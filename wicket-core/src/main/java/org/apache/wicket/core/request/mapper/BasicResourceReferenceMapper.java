@@ -18,6 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Supplier;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestHandler;
@@ -33,8 +34,8 @@ import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.request.resource.caching.IResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
+import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
@@ -65,7 +66,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	protected final IPageParametersEncoder pageParametersEncoder;
 
 	/** resource caching strategy */
-	protected final IProvider<? extends IResourceCachingStrategy> cachingStrategy;
+	protected final Supplier<? extends IResourceCachingStrategy> cachingStrategy;
 
 	/**
 	 * Construct.
@@ -74,7 +75,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	 * @param cachingStrategy
 	 */
 	public BasicResourceReferenceMapper(IPageParametersEncoder pageParametersEncoder,
-		IProvider<? extends IResourceCachingStrategy> cachingStrategy)
+		Supplier<? extends IResourceCachingStrategy> cachingStrategy)
 	{
 		this.pageParametersEncoder = Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 		this.cachingStrategy = cachingStrategy;
@@ -124,7 +125,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 				name.append(segment);
 			}
 
-			ResourceReference.UrlAttributes attributes = getResourceReferenceAttributes(url);
+			ResourceReference.UrlAttributes attributes = ResourceUtil.decodeResourceReferenceAttributes(url);
 
 			Class<?> scope = resolveClass(className);
 
@@ -212,7 +213,8 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 				// need to remove indexed parameters otherwise the URL won't be able to decode
 				parameters.clearIndexed();
 			}
-			encodeResourceReferenceAttributes(url, reference);
+
+			ResourceUtil.encodeResourceReferenceAttributes(url, reference);
 
 			StringTokenizer tokens = new StringTokenizer(reference.getName(), "/");
 
@@ -278,8 +280,11 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 	 */
 	protected boolean canBeHandled(final Url url)
 	{
-		return (url.getSegments().size() >= 4 &&
-				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()));
+		List<String> segments = url.getSegments();
+		return (segments.size() >= 4 &&
+				urlStartsWith(url, getContext().getNamespace(), getContext().getResourceIdentifier()) &&
+				Strings.isEmpty(segments.get(3)) == false
+		);
 
 	}
 }

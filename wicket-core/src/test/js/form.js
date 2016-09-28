@@ -134,6 +134,40 @@ jQuery(document).ready(function() {
 		Wicket.Form.excludeFromAjaxSerialization = null;
 	});
 
+	test("Wicket.Form.serializeElement should serialize the HTMLFormElement's which a children of a non-HTMLFormElement", function() {
+		expect(1);
+
+		var actual = Wicket.Form.serializeElement('nonHtmlFormElement', true);
+
+		var expected = [
+			{ name: "textInput",      value: "textValue"          },
+			{ name: "textUTFInput",      value: "нещо на български"          },
+			{ name: "checkBoxInput1", value: "cbValue1"           },
+			{ name: "checkBoxInput3", value: "cbValue3"           },
+			{ name: "radioInput",     value: "radioValue1"        },
+			{ name: "emailInput",     value: "m@g.com"            },
+			{ name: "urlInput",       value: "http://example.com" },
+			{ name: "searchInput",    value: "wicket"             },
+			{ name: "rangeInput",     value: "67"                 },
+			{ name: "numberInput",    value: "16"                 },
+			{ name: "colorInput",     value: "#123456"            },
+			{ name: "multipleSelect", value: "0"                  },
+			{ name: "multipleSelect", value: "2"                  },
+			{ name: "select",         value: "0"                  },
+			{ name: "textArea",       value: "some text"          }
+		];
+		deepEqual(actual, expected);
+	});
+
+	test("Wicket.Form.serializeElement should serialize the HTMLFormElement's which a children of a non-HTMLFormElement", function() {
+		expect(1);
+
+		var actual = Wicket.Form.serializeElement('nonHtmlFormElement', false);
+
+		var expected = [];
+		deepEqual(actual, expected);
+	});
+
 	module('Wicket.Form.serializeForm');
 
 	test('Wicket.Form.serialize - form element WITHOUT searching for the parent form', function() {

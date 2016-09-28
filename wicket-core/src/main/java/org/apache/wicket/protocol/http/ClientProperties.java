@@ -65,8 +65,8 @@ public class ClientProperties implements IClusterable
 	private int browserVersionMajor = -1;
 	private int browserVersionMinor = -1;
 	private int browserWidth = -1;
-	private boolean cookiesEnabled;
-	private boolean javaEnabled;
+	private boolean navigatorCookieEnabled;
+	private boolean navigatorJavaEnabled;
 	private String navigatorAppCodeName;
 	private String navigatorAppName;
 	private String navigatorAppVersion;
@@ -84,6 +84,8 @@ public class ClientProperties implements IClusterable
 	private String utcOffset;
 
 	private String hostname;
+
+	private boolean javaScriptEnabled;
 
 	/**
 	 * @return The browser height at the time it was measured
@@ -257,7 +259,7 @@ public class ClientProperties implements IClusterable
 					{
 						utc = utc.substring(1);
 					}
-					timeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") + utc);
+					timeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? '+' : '-') + utc);
 				}
 
 				String dstOffset = getUtcDSTOffset();
@@ -284,7 +286,7 @@ public class ClientProperties implements IClusterable
 						AppendingStringBuffer sb = new AppendingStringBuffer("GMT");
 						sb.append(offsetHours > 0 ? '+' : '-');
 						sb.append(Math.abs(offsetHours));
-						sb.append(":");
+						sb.append(':');
 						if (offsetMins < 10)
 						{
 							sb.append('0');
@@ -299,7 +301,7 @@ public class ClientProperties implements IClusterable
 						{
 							dstOffset = dstOffset.substring(1);
 						}
-						dstTimeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? "+" : "-") +
+						dstTimeZone = TimeZone.getTimeZone("GMT" + ((offset > 0) ? '+' : '-') +
 							dstOffset);
 					}
 					// if the dstTimezone (1 July) has a different offset then
@@ -331,7 +333,7 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * @return The client's time DST offset from UTC in minutes (note: if you do this yourself, use
+	 * @return The client's time DST offset from UTC in hours (note: if you do this yourself, use
 	 *         'new Date(new Date().getFullYear(), 0, 6, 0, 0, 0, 0).getTimezoneOffset() / -60'
 	 *         (note the -)).
 	 */
@@ -342,13 +344,22 @@ public class ClientProperties implements IClusterable
 
 
 	/**
-	 * @return The client's time offset from UTC in minutes (note: if you do this yourself, use 'new
+	 * @return The client's time offset from UTC in hours (note: if you do this yourself, use 'new
 	 *         Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60' (note the
 	 *         -)).
 	 */
 	public String getUtcOffset()
 	{
 		return utcOffset;
+	}
+
+	/**
+	 * Flag indicating support of JavaScript in the browser.
+	 * 
+	 * @return True if JavaScript is enabled
+	 */
+	public boolean isJavaScriptEnabled() {
+		return javaScriptEnabled;
 	}
 
 	/**
@@ -428,22 +439,22 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @return The client's navigator.cookieEnabled property.
 	 */
-	public boolean isCookiesEnabled()
+	public boolean isNavigatorCookieEnabled()
 	{
-		if (!cookiesEnabled && RequestCycle.get() != null)
+		if (!navigatorCookieEnabled && RequestCycle.get() != null)
 		{
 			Collection<Cookie> cookies = ((WebRequest)RequestCycle.get().getRequest()).getCookies();
-			cookiesEnabled = cookies != null && cookies.size() > 0;
+			navigatorCookieEnabled = cookies != null && cookies.size() > 0;
 		}
-		return cookiesEnabled;
+		return navigatorCookieEnabled;
 	}
 
 	/**
 	 * @return The client's navigator.javaEnabled property.
 	 */
-	public boolean isJavaEnabled()
+	public boolean isNavigatorJavaEnabled()
 	{
-		return javaEnabled;
+		return navigatorJavaEnabled;
 	}
 
 	/**
@@ -565,18 +576,18 @@ public class ClientProperties implements IClusterable
 	 * @param cookiesEnabled
 	 *            The client's navigator.cookieEnabled property.
 	 */
-	public void setCookiesEnabled(boolean cookiesEnabled)
+	public void setNavigatorCookieEnabled(boolean cookiesEnabled)
 	{
-		this.cookiesEnabled = cookiesEnabled;
+		this.navigatorCookieEnabled = cookiesEnabled;
 	}
 
 	/**
 	 * @param navigatorJavaEnabled
 	 *            The client's navigator.javaEnabled property.
 	 */
-	public void setJavaEnabled(boolean navigatorJavaEnabled)
+	public void setNavigatorJavaEnabled(boolean navigatorJavaEnabled)
 	{
-		javaEnabled = navigatorJavaEnabled;
+		this.navigatorJavaEnabled = navigatorJavaEnabled;
 	}
 
 	/**
@@ -704,6 +715,14 @@ public class ClientProperties implements IClusterable
 	public void setUtcOffset(String utcOffset)
 	{
 		this.utcOffset = utcOffset;
+	}
+
+	/**
+	 * @param javaScriptEnabled
+	 *            is JavaScript supported in the browser
+	 */
+	public void setJavaScriptEnabled(boolean javaScriptEnabled) {
+		this.javaScriptEnabled = javaScriptEnabled;
 	}
 
 	@Override

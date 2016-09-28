@@ -24,7 +24,6 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.file.WebApplicationPath;
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -36,18 +35,20 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Locate Wicket resource.
+ * Locates Wicket resources.
+ *
  * <p>
- * Contains the logic to locate a resource based on a path, a style (see
+ * Contains the logic to locate a resource based on a path, a variation, a style (see
  * {@link org.apache.wicket.Session}), a locale and an extension string. The full filename will be
- * built like: &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
+ * built like: &lt;path&gt;_&lt;variation&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;.
  * <p>
  * Resource matches will be attempted in the following order:
  * <ol>
- * <li>1. &lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>2. &lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
- * <li>3. &lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
- * <li>4. &lt;path&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;variation&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;style&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;locale&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;_&lt;style&gt;.&lt;extension&gt;</li>
+ * <li>&lt;path&gt;.&lt;extension&gt;</li>
  * </ol>
  * <p>
  * Locales may contain a language, a country and a region or variant. Combinations of these
@@ -61,7 +62,7 @@ import org.slf4j.LoggerFactory;
  * Resources will be actually loaded by the {@link IResourceFinder}s defined in the resource
  * settings. By default there are finders that look in the classpath and in the classpath in
  * META-INF/resources. You can add more by adding {@link WebApplicationPath}s or {@link Path}s to
- * {@link IResourceSettings#getResourceFinders()}.
+ * {@link org.apache.wicket.settings.ResourceSettings#getResourceFinders()}.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -196,7 +197,17 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 				// it could be an attack, so ignore it and pretend there are no resources
 				return new EmptyResourceNameIterator();
 			}
-			extensions = Collections.singleton(realExtension);
+
+			// add a minimized file to the resource lookup if necessary
+			if (Application.exists() &&
+				Application.get().getResourceSettings().getUseMinifiedResources())
+			{
+				extensions = Arrays.asList("min." + realExtension, realExtension);
+			}
+			else
+			{
+				extensions = Collections.singleton(realExtension);
+			}
 		}
 		else
 		{
@@ -208,7 +219,24 @@ public class ResourceStreamLocator implements IResourceStreamLocator
 			else
 			{
 				String[] commaSeparated = Strings.split(extension, ',');
-				extensions = Arrays.asList(commaSeparated);
+				List<String> nonMinifiedExtensions = Arrays.asList(commaSeparated);
+
+				// add a minimized file to the resource lookup if necessary
+				if (Application.exists() &&
+					Application.get().getResourceSettings().getUseMinifiedResources())
+				{
+					ArrayList<String> minifiedExtensions = new ArrayList<>();
+					for (String nonMinifiedExtension : nonMinifiedExtensions)
+					{
+						minifiedExtensions.add("min." + nonMinifiedExtension);
+						minifiedExtensions.add(nonMinifiedExtension);
+					}
+					extensions = minifiedExtensions;
+				}
+				else
+				{
+					extensions = nonMinifiedExtensions;
+				}
 			}
 		}
 

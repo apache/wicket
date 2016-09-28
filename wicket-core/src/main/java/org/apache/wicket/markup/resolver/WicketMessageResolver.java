@@ -35,6 +35,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.string.interpolator.MapVariableInterpolator;
+import org.apache.wicket.util.value.IValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,7 +85,7 @@ import org.slf4j.LoggerFactory;
  * It is possible to switch between logging a warning and throwing an exception if either the
  * property key/value or any of the variables can not be found.
  *
- * @see org.apache.wicket.settings.IResourceSettings#setThrowExceptionOnMissingResource(boolean)
+ * @see org.apache.wicket.settings.ResourceSettings#setThrowExceptionOnMissingResource(boolean)
  * @author Juergen Donnerstag
  * @author John Ray
  */
@@ -104,6 +105,16 @@ public class WicketMessageResolver implements IComponentResolver
 	 */
 	private static final String DEFAULT_VALUE = "DEFAULT_WICKET_MESSAGE_RESOLVER_VALUE";
 
+	/**
+	 * The name of the attribute that defines the resource key
+	 */
+	public static final String KEY_ATTRIBUTE = "key";
+
+	/**
+	 * The name of the attribute that defines whether the resource value should be HTML escaped
+	 */
+	public static final String ESCAPE_ATTRIBUTE = "escape";
+
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
@@ -113,15 +124,18 @@ public class WicketMessageResolver implements IComponentResolver
 			WicketTag wtag = (WicketTag)tag;
 			if (wtag.isMessageTag())
 			{
-				String messageKey = wtag.getAttributes().getString("key");
-				if ((messageKey == null) || (messageKey.trim().length() == 0))
+				IValueMap attributes = wtag.getAttributes();
+				String messageKey = attributes.getString(KEY_ATTRIBUTE);
+				if (Strings.isEmpty(messageKey))
 				{
 					throw new MarkupException(
 						"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 				}
 
-				final String id = "_message_" + container.getPage().getAutoIndex();
-				MessageContainer label = new MessageContainer(id, messageKey);
+				boolean escape = attributes.getBoolean(ESCAPE_ATTRIBUTE);
+
+				final String id = wtag.getId();
+				MessageContainer label = new MessageContainer(id, messageKey, escape);
 				label.setRenderBodyOnly(container.getApplication()
 					.getMarkupSettings()
 					.getStripWicketTags());
@@ -157,16 +171,20 @@ public class WicketMessageResolver implements IComponentResolver
 
 		private static final String NOT_FOUND = "[Warning: Property for '%s' not found]";
 
+		private final boolean escapeValue;
+
 		/**
 		 * Construct.
 		 * 
 		 * @param id
 		 * @param messageKey
+		 * @param escapeValue
 		 */
-		public MessageContainer(final String id, final String messageKey)
+		private MessageContainer(final String id, final String messageKey, boolean escapeValue)
 		{
 			// The message key becomes the model
-			super(id, new Model<String>(messageKey));
+			super(id, new Model<>(messageKey));
+			this.escapeValue = escapeValue;
 
 			setEscapeModelStrings(false);
 		}
@@ -212,7 +230,7 @@ public class WicketMessageResolver implements IComponentResolver
 				log.warn("No value found for wicket:message tag with key: {}", key);
 
 				// If open tag was open-close
-				if (markupStream.hasMore() == false)
+				if (markupStream.isCurrentIndexInsideTheStream() == false)
 				{
 					String formatedNotFound = String.format(NOT_FOUND, key);
 					getResponse().write(formatedNotFound);
@@ -240,7 +258,7 @@ public class WicketMessageResolver implements IComponentResolver
 			final Map<String, Object> variablesReplaced = new HashMap<String, Object>();
 
 			// Replace all ${var} within the property value with real values
-			String text = new MapVariableInterpolator(value, childTags)
+			CharSequence text = new MapVariableInterpolator(value, childTags)
 			{
 				@Override
 				protected String getValue(final String variableName)
@@ -291,6 +309,11 @@ public class WicketMessageResolver implements IComponentResolver
 				}
 			}.toString();
 
+			if (escapeValue) 
+			{
+				text = Strings.escapeMarkup(text);
+			}
+
 			getResponse().write(text);
 
 			// Make sure all of the children were rendered
@@ -335,7 +358,7 @@ public class WicketMessageResolver implements IComponentResolver
 			// child component and save their tag index
 			if (!tag.isOpenClose())
 			{
-				while (markupStream.hasMore() && !markupStream.get().closes(openTag))
+				while (markupStream.isCurrentIndexInsideTheStream() && !markupStream.get().closes(openTag))
 				{
 					MarkupElement element = markupStream.get();
 

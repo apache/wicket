@@ -21,8 +21,8 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -119,6 +119,8 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
 			"first.onRequestHandlerScheduled", "second.onRequestHandlerScheduled",
 			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted", 
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 		List<String> redirectRequest = asList("first.onBeginRequest", "second.onBeginRequest",
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
@@ -150,6 +152,8 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
 			"first.onRequestHandlerScheduled", "second.onRequestHandlerScheduled",
 			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted",
+			"first.onRequestHandlerResolved", "second.onRequestHandlerResolved",
+			"first.onRequestHandlerExecuted", "second.onRequestHandlerExecuted", 
 			"second.onEndRequest", "first.onEndRequest", "second.onDetach", "first.onDetach");
 
 		// with ajax requests we don't expect a redirect

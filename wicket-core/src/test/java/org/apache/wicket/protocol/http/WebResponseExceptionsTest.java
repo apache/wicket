@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
-import org.apache.wicket.settings.IExceptionSettings;
-import org.apache.wicket.settings.IRequestCycleSettings;
+import org.apache.wicket.settings.ExceptionSettings;
+import org.apache.wicket.settings.RequestCycleSettings;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 
@@ -40,10 +40,10 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	{
 		tester.getApplication()
 			.getRequestCycleSettings()
-			.setRenderStrategy(IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
+			.setRenderStrategy(RequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
 		tester.getApplication()
 			.getExceptionSettings()
-			.setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+			.setUnexpectedExceptionDisplay(ExceptionSettings.SHOW_EXCEPTION_PAGE);
 		internalErrorPage();
 	}
 
@@ -55,7 +55,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	{
 		tester.getApplication()
 			.getExceptionSettings()
-			.setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_EXCEPTION_PAGE);
+			.setUnexpectedExceptionDisplay(ExceptionSettings.SHOW_EXCEPTION_PAGE);
 		internalErrorPage();
 	}
 
@@ -91,7 +91,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 		tester.setExposeExceptions(false);
 		AjaxLink<?> link = (AjaxLink<?>)tester.getComponentFromLastRenderedPage("link");
 
-		tester.executeAjaxEvent(link, "onclick");
+		tester.executeAjaxEvent(link, "click");
 		assertEquals(500, tester.getLastResponse().getStatus());
 	}
 }

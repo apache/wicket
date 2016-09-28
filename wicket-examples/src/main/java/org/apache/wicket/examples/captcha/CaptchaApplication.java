@@ -26,16 +26,6 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class CaptchaApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public CaptchaApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class< ? extends Page> getHomePage()
 	{

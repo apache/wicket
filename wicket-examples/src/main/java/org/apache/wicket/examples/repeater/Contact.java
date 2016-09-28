@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.repeater;
 
+import java.util.Date;
+
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -35,7 +37,9 @@ public class Contact implements IClusterable
 	private String homePhone;
 
 	private String cellPhone;
-
+	
+	private Date bornDate;
+	
 	/**
 	 * Constructor
 	 */
@@ -44,9 +48,6 @@ public class Contact implements IClusterable
 
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -54,10 +55,6 @@ public class Contact implements IClusterable
 				" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
 	}
 
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -82,6 +79,16 @@ public class Contact implements IClusterable
 		{
 			return false;
 		}
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = firstName.hashCode();
+		result = 31 * result + lastName.hashCode();
+		result = 31 * result + homePhone.hashCode();
+		result = 31 * result + cellPhone.hashCode();
+		return result;
 	}
 
 	/**
@@ -174,6 +181,24 @@ public class Contact implements IClusterable
 	public void setLastName(String lastName)
 	{
 		this.lastName = lastName;
+	}
+
+	/**
+	 * 
+	 * @return bornDate
+	 */
+	public Date getBornDate()
+	{
+	    return bornDate;
+	}
+
+	/**
+	 * 
+	 * @param bornDate
+	 */
+	public void setBornDate(Date bornDate)
+	{
+	    this.bornDate = bornDate;
 	}
 
 }

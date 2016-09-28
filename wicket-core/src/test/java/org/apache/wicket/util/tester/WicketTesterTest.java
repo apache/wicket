@@ -18,6 +18,7 @@ package org.apache.wicket.util.tester;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,7 +29,6 @@ import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.MockPanelWithLink;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -43,6 +43,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
@@ -61,6 +62,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.PackageResource.PackageResourceBlockedException;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.DummyPage;
+import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage.TestLink;
 import org.apache.wicket.util.tester.MockPageParameterPage.MockInnerClassPage;
@@ -243,7 +245,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.clickLink("ajaxLinkWithSetResponsePageClass");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -264,10 +266,10 @@ public class WicketTesterTest extends WicketTestCase
 			false);
 		try
 		{
-			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "onclick");
+			tester.executeAjaxEvent("ajaxLinkWithSetResponsePageClass", "click");
 			throw new RuntimeException("Disabled link should not be clickable.");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -291,7 +293,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertEnabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be enabled.");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -315,7 +317,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertDisabled("ajaxLinkWithSetResponsePageClass");
 			fail("The link must not be disabled.");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -343,7 +345,7 @@ public class WicketTesterTest extends WicketTestCase
 			tester.assertRequired("createForm:id");
 			fail("Book ID component must not be required anymore!");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -353,7 +355,7 @@ public class WicketTesterTest extends WicketTestCase
 			// test #3: "createForm" is not a FormComponent
 			tester.assertRequired("createForm");
 		}
-		catch (AssertionError _)
+		catch (AssertionError ex)
 		{
 			;
 		}
@@ -524,11 +526,6 @@ public class WicketTesterTest extends WicketTestCase
 			{
 				value = object;
 			}
-
-			@Override
-			public void detach()
-			{
-			}
 		};
 
 		labelModel.setObject("Label 1");
@@ -576,7 +573,7 @@ public class WicketTesterTest extends WicketTestCase
 		final MockPageWithOneComponent page = new MockPageWithOneComponent();
 
 		Label label = new Label("component", "Dblclick This To See Magick");
-		label.add(new AjaxEventBehavior("ondblclick")
+		label.add(new AjaxEventBehavior("dblclick")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -594,7 +591,7 @@ public class WicketTesterTest extends WicketTestCase
 // tester.setupRequestAndResponse();
 
 		// Execute the event
-		tester.executeAjaxEvent(label, "ondblclick");
+		tester.executeAjaxEvent(label, "dblclick");
 
 		assertTrue(eventExecuted);
 	}
@@ -671,8 +668,7 @@ public class WicketTesterTest extends WicketTestCase
 		tester.getRequest().getPostParameters().setParameterValue(name.getInputName(), "Mock name");
 
 		// Execute the ajax event
-		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
-			"onclick");
+		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT, "click");
 
 		assertTrue("AjaxFormSubmitBehavior.onSubmit() has not been executed in " +
 			MockPageWithFormAndAjaxFormSubmitBehavior.class, page.isExecuted());
@@ -697,8 +693,7 @@ public class WicketTesterTest extends WicketTestCase
 		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
 		FormTester form = tester.newFormTester("form");
 		form.setValue("name", "New name");
-		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT,
-				"onclick");
+		tester.executeAjaxEvent(MockPageWithFormAndAjaxFormSubmitBehavior.EVENT_COMPONENT, "click");
 
 		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester.getLastRenderedPage();
 		Pojo pojo = page.getPojo();
@@ -1200,18 +1195,39 @@ public class WicketTesterTest extends WicketTestCase
 	@Test
 	public void formSubmitSendsFormInputInRequest()
 	{
-		MockFormSubmitsPage page = new MockFormSubmitsPage();
+		final AtomicBoolean ajaxButtonSubmitted = new AtomicBoolean(false);
+		final AtomicBoolean ajaxSubmitLinkSubmitted = new AtomicBoolean(false);
+
+		MockFormSubmitsPage page = new MockFormSubmitsPage()
+		{
+			@Override
+			protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target)
+			{
+				ajaxSubmitLinkSubmitted.set(true);
+			}
+
+			@Override
+			protected void onAjaxButtonSubmit(AjaxRequestTarget target)
+			{
+				ajaxButtonSubmitted.set(true);
+			}
+		};
 
 		tester.startPage(page);
 
 		tester.newFormTester("form").submit();
 		assertEquals("a text value", page.text);
 
-		tester.executeAjaxEvent(page.get("form:ajaxButton"), "click");
+		assertFalse(ajaxButtonSubmitted.get());
+		tester.newFormTester("form").submit("ajaxButton");
 		assertEquals("a text value", page.text);
+		assertTrue(ajaxButtonSubmitted.get());
 
-		tester.clickLink("form:ajaxlink");
+		assertFalse(ajaxSubmitLinkSubmitted.get());
+		Component submitter = page.form.get("ajaxlink");
+		tester.newFormTester("form").submit(submitter);
 		assertEquals("a text value", page.text);
+		assertTrue(ajaxSubmitLinkSubmitted.get());
 
 		tester.clickLink("form:link");
 		assertEquals("a text value", page.text);
@@ -1265,5 +1281,50 @@ public class WicketTesterTest extends WicketTestCase
 		}
 
 		tester.startPage(new MockPageParameterPage(new PageParameters()));
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5665
+	 */
+	@Test
+	public void assertInvisibleComponentInAjaxResponse()
+	{
+		MockPageWithLinkAndLabel page = new MockPageWithLinkAndLabel();
+		final Label label = new Label(MockPageWithLinkAndLabel.LABEL_ID, "Some text");
+		label.setOutputMarkupPlaceholderTag(true);
+		AjaxLink link = new AjaxLink<Void>(MockPageWithLinkAndLabel.LINK_ID)
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				label.setVisible(false);
+				target.add(label);
+			}
+		};
+		link.add(label);
+		page.add(link);
+
+		tester.startPage(page);
+
+		tester.assertRenderedPage(MockPageWithLinkAndLabel.class);
+
+		tester.clickLink("link", true);
+
+		tester.assertComponentOnAjaxResponse(label.getPageRelativePath());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6062
+	 */
+	@Test
+	public void renewSessionIdAfterInvalidation() {
+		tester.getApplication().setSessionStoreProvider(HttpSessionStore::new);
+		tester.getSession().bind();
+		String firstId = tester.getSession().getId();
+
+		tester.getSession().invalidateNow();
+
+		String secondId = tester.getSession().getId();
+		assertNotEquals(firstId, secondId);
 	}
 }

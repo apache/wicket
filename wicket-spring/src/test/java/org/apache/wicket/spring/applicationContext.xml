@@ -15,9 +15,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<beans>
 	<bean class="org.apache.wicket.spring.SpringWebApplicationFactoryTest$Application" />
 	
 	<bean id="watcher" class="org.apache.wicket.spring.SpringWebApplicationFactoryTest$Destroyable" destroy-method="destroy" />

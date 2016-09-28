@@ -19,7 +19,6 @@ package org.apache.wicket;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.behavior.IBehaviorListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -30,6 +29,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 
@@ -124,7 +124,7 @@ public class BehaviorUrlTest extends WicketTestCase
 
 	/**
 	 */
-	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
+	private static class TestCallbackBehavior extends Behavior implements IRequestListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -133,7 +133,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		{
 			super.onComponentTag(component, tag);
 			tag.put("href",
-				component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters()));
+				component.urlForListener(this, new PageParameters()));
 		}
 
 		@Override
@@ -152,7 +152,7 @@ public class BehaviorUrlTest extends WicketTestCase
 //		System.err.println(response);
 		assertTrue(response.contains(EscapeTestPage.TEST_QUERY_STRING));
 
-		tester.executeAjaxEvent("form:textfield", "onchange");
+		tester.executeAjaxEvent("form:textfield", "change");
 
 		EscapeTestPage testPage = (EscapeTestPage)tester.getLastRenderedPage();
 		IRequestParameters lastParameters = testPage.getLastQueryParameters();
@@ -169,7 +169,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		/** */
 		public EscapeTestPage()
 		{
-			getTextField().add(new AjaxEventBehavior("onchange")
+			getTextField().add(new AjaxEventBehavior("change")
 			{
 				private static final long serialVersionUID = 1L;
 

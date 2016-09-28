@@ -171,6 +171,7 @@ public class WicketFilter implements Filter
 				log.debug("Ignoring request {}", httpServletRequest.getRequestURL());
 				if (chain != null)
 				{
+					// invoke next filter from within Wicket context
 					chain.doFilter(request, response);
 				}
 				return false;
@@ -258,17 +259,18 @@ public class WicketFilter implements Filter
 		// Assume we are able to handle the request
 		boolean res = true;
 
-		if (!requestCycle.processRequestAndDetach())
+		if (requestCycle.processRequestAndDetach())
 		{
-			if (chain != null)
-			{
-				chain.doFilter(httpServletRequest, httpServletResponse);
-			}
-			res = false;
+			webResponse.flush();
 		}
 		else
 		{
-			webResponse.flush();
+			if (chain != null)
+			{
+				// invoke next filter from within Wicket context
+				chain.doFilter(httpServletRequest, httpServletResponse);
+			}
+			res = false;
 		}
 		return res;
 	}
@@ -387,7 +389,10 @@ public class WicketFilter implements Filter
 				application = applicationFactory.createApplication(this);
 			}
 
-			application.setName(filterConfig.getFilterName());
+			if (application.getName() == null)
+			{
+				application.setName(filterConfig.getFilterName());
+			}
 			application.setWicketFilter(this);
 
 			// Allow the filterPath to be preset via setFilterPath()
@@ -516,6 +521,10 @@ public class WicketFilter implements Filter
 				pattern = "";
 			}
 
+			if (pattern.endsWith("*"))
+			{
+				pattern = pattern.substring(0, pattern.length() - 1);
+			}
 			return pattern;
 		}
 		return null;
@@ -558,7 +567,7 @@ public class WicketFilter implements Filter
 	 * 
 	 * @return The configured filterPath.
 	 */
-	protected String getFilterPath()
+	public String getFilterPath()
 	{
 		return filterPath;
 	}

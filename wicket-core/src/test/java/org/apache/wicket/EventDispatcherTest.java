@@ -26,6 +26,7 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebComponent;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

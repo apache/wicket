@@ -24,6 +24,7 @@ import org.apache.wicket.Component;
  * 
  * @author Matej Knopp
  */
+@FunctionalInterface
 public interface IComponentOnBeforeRenderListener
 {
 	/**
@@ -32,5 +33,5 @@ public interface IComponentOnBeforeRenderListener
 	 * @param component
 	 *            the component that is about to be rendered
 	 */
-	public void onBeforeRender(Component component);
+	void onBeforeRender(Component component);
 }

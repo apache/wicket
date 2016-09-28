@@ -20,12 +20,13 @@ import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
 
-import org.apache.wicket.util.time.Duration;
 import org.eclipse.jetty.jmx.MBeanContainer;
-import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.server.ssl.SslSocketConnector;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -37,10 +38,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class StartExamples
 {
 	/**
-	 * Used for logging.
-	 */
-
-	/**
 	 * Main function, starts the jetty server.
 	 * 
 	 * @param args
@@ -50,16 +47,21 @@ public class StartExamples
 		System.setProperty("wicket.configuration", "development");
 
 		Server server = new Server();
-		SelectChannelConnector connector = new SelectChannelConnector();
 
-		// Set some timeout options to make debugging easier.
-		connector.setMaxIdleTime(1000 * 60 * 60);
-		connector.setSoLingerTime(-1);
-		connector.setPort(8080);
-		server.setConnectors(new Connector[] { connector });
+		HttpConfiguration http_config = new HttpConfiguration();
+		http_config.setSecureScheme("https");
+		http_config.setSecurePort(8443);
+		http_config.setOutputBufferSize(32768);
+
+		ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
+		http.setPort(8080);
+		http.setIdleTimeout(1000 * 60 * 60);
+
+		server.addConnector(http);
 
 		Resource keystore = Resource.newClassPathResource("/keystore");
-		if (keystore != null && keystore.exists()) {
+		if (keystore != null && keystore.exists())
+		{
 			// if a keystore for a SSL certificate is available, start a SSL
 			// connector on port 8443.
 			// By default, the quickstart comes with a Apache Wicket Quickstart
@@ -67,22 +69,23 @@ public class StartExamples
 			// use this certificate anywhere important as the passwords are
 			// available in the source.
 
-			connector.setConfidentialPort(8443);
+			SslContextFactory sslContextFactory = new SslContextFactory();
+			sslContextFactory.setKeyStoreResource(keystore);
+			sslContextFactory.setKeyStorePassword("wicket");
+			sslContextFactory.setKeyManagerPassword("wicket");
 
-			SslContextFactory factory = new SslContextFactory();
-			factory.setKeyStoreResource(keystore);
-			factory.setKeyStorePassword("wicket");
-			factory.setTrustStoreResource(keystore);
-			factory.setKeyManagerPassword("wicket");
-			SslSocketConnector sslConnector = new SslSocketConnector(factory);
-			int timeout = (int) Duration.ONE_HOUR.getMilliseconds();
-			sslConnector.setMaxIdleTime(timeout);
-			sslConnector.setPort(8443);
-			sslConnector.setAcceptors(4);
-			server.addConnector(sslConnector);
+			HttpConfiguration https_config = new HttpConfiguration(http_config);
+			https_config.addCustomizer(new SecureRequestCustomizer());
 
+			ServerConnector https = new ServerConnector(server, new SslConnectionFactory(
+					sslContextFactory, "http/1.1"), new HttpConnectionFactory(https_config));
+			https.setPort(8443);
+			https.setIdleTimeout(500000);
+
+			server.addConnector(https);
 			System.out.println("SSL access to the examples has been enabled on port 8443");
-			System.out.println("You can access the application using SSL on https://localhost:8443");
+			System.out
+					.println("You can access the application using SSL on https://localhost:8443");
 			System.out.println();
 		}
 
@@ -92,17 +95,18 @@ public class StartExamples
 		bb.setWar("src/main/webapp");
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
-		// ((AbstractSessionManager) bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
+		// ((AbstractSessionManager)
+		// bb.getSessionHandler().getSessionManager()).setUsingCookies(false);
 
 		server.setHandler(bb);
 
 		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 		MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
-		server.getContainer().addEventListener(mBeanContainer);
+		server.addEventListener(mBeanContainer);
+		server.addBean(mBeanContainer);
 
 		try
 		{
-			mBeanContainer.start();
 			server.start();
 			server.join();
 		}

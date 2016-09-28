@@ -32,6 +32,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.PageHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
@@ -48,8 +49,8 @@ import org.apache.wicket.response.StringResponse;
  * &lt;head&gt; regions may contain additional wicket components, which can be added by means of
  * add(Component) as usual.
  * <p>
- * &lt;wicket:head&gt; tags are handled by simple WebMarkupContainers also created by a
- * HtmlHeaderResolver.
+ * &lt;wicket:head&gt; tags are handled by simple {@link WebMarkupContainer}s also created by
+ * {@link org.apache.wicket.markup.resolver.HtmlHeaderResolver}.
  * <p>
  * <ul>
  * <li>&lt;head&gt; will be inserted in output automatically if required</li>
@@ -63,7 +64,7 @@ import org.apache.wicket.response.StringResponse;
  * <li>components within &lt;wicket:head&gt; must be added by means of add(), like always with
  * Wicket. No difference.</li>
  * <li>&lt;wicket:head&gt; and it's content is copied to the output. Components contained in
- * &lt;org.apache.wicket.head&gt; are rendered as usual</li>
+ * &lt;wicket:head&gt; are rendered as usual</li>
  * </ul>
  * 
  * @author Juergen Donnerstag
@@ -313,9 +314,8 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	}
 
 	@Override
-	protected void onDetach()
-	{
-		super.onDetach();
+	protected void onAfterRender() {
+		super.onAfterRender();
 
 		renderedComponentsPerScope = null;
 		headerResponse = null;
@@ -371,7 +371,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 		// Find the markup fragment
 		MarkupStream stream = new MarkupStream(markup);
 		IMarkupFragment headerMarkup = null;
-		while (stream.skipUntil(ComponentTag.class) && (headerMarkup == null))
+		while (stream.skipUntil(ComponentTag.class))
 		{
 			ComponentTag tag = stream.getTag();
 			if (tag.isOpen() || tag.isOpenClose())
@@ -379,17 +379,16 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 				if (tag instanceof WicketTag)
 				{
 					WicketTag wtag = (WicketTag)tag;
-					if (wtag.isHeadTag())
+					if (wtag.isHeadTag() || wtag.isHeaderItemsTag())
 					{
-						if (tag.getMarkupClass() == null)
-						{
-							headerMarkup = stream.getMarkupFragment();
-						}
+						headerMarkup = stream.getMarkupFragment();
+						break;
 					}
 				}
-				else if (tag.getName().equalsIgnoreCase("head"))
+				else if (tag.getName().equalsIgnoreCase("head") && tag.isAutoComponentTag())
 				{
 					headerMarkup = stream.getMarkupFragment();
+					break;
 				}
 			}
 

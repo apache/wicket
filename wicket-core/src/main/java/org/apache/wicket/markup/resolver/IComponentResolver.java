@@ -20,13 +20,15 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.settings.def.PageSettings;
+import org.apache.wicket.settings.PageSettings;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
  * IComponentResolvers are responsible for mapping component names to Wicket components. Resolvers
  * are first looked up in a component's hierarchy before falling back to a list of
  * IComponentResolvers maintained in {@link PageSettings}.
+ * 
+ * NOTE: implementations for this interface must be thread-safe!
  * 
  * @see ComponentResolvers
  * 
@@ -45,6 +47,6 @@ public interface IComponentResolver extends IClusterable
 	 *            The current component tag while parsing the markup
 	 * @return component or {@code null} if not found
 	 */
-	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
+	Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag);
 }

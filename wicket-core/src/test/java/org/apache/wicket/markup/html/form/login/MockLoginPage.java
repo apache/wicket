@@ -26,8 +26,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.form.login.InterceptTest.MySession;
 import org.apache.wicket.model.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -36,8 +34,6 @@ import org.slf4j.LoggerFactory;
 public class MockLoginPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger log = LoggerFactory.getLogger(MockLoginPage.class);
 
 	private Form<Void> form;
 
@@ -60,7 +56,7 @@ public class MockLoginPage extends WebPage
 				login(get("username").getDefaultModelObjectAsString());
 			}
 		});
-		form.add(textField = new TextField<Serializable>("username", new Model<Serializable>()));
+		form.add(textField = new TextField<>("username", new Model<>()));
 	}
 
 	/**

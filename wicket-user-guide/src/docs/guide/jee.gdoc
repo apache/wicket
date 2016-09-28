@@ -1,0 +1,11 @@
+Writing a web application is not just about producing a good layout and a bunch of “cool” pages. We must also integrate our presentation code with enterprise resources like data sources, message queues, business objects, etc...
+
+The first decade of 2000s has seen the rising of new frameworks (like "Spring":http://spring.io/ ) and new specifications (like "EJB 3.1":http://en.wikipedia.org/wiki/Enterprise_JavaBeans ) aimed to simplify the management of enterprise resources and (among other things) their integration with presentation code. 
+
+All these new technologies are based on the concepts of container and dependency injection. Container is the environment where our enterprise resources are created and configured while  "dependency injection":http://en.wikipedia.org/wiki/Dependency_Injection is a pattern implemented by containers to inject into an object the resources it depends on.
+
+Wicket can be easily integrated with enterprise containers using component instantiation listeners. These entities are instances of interface @org.apache.wicket.application.IComponentInstantiationListener@ and can be registered during application's initialization.   IComponentInstantiationListener defines callback method onInstantiation(Component component) which can be used to provide custom instantiation logic for Wicket components. 
+
+Wicket distribution and project "WicketStuff":https://github.com/wicketstuff already provide a set of built-in listeners to integrate our applications with EJB 3.1 compliant containers (like JBoss Seam) or with some of the most popular enterprise frameworks like "Guice":http://code.google.com/p/google-guice/ or Spring.
+
+In this chapter we will see two basic examples of injecting a container-defined object into a page using first an implementation of the EJB 3.1 specifications (project "OpenEJB":http://openejb.apache.org/ ) and then using Spring.

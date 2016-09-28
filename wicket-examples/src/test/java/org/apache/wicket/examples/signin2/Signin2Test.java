@@ -51,7 +51,7 @@ public class Signin2Test extends Assert
 			FormTester formTester = tester.newFormTester("signInPanel:signInForm");
 			formTester.setValue("username", "wicket");
 			formTester.setValue("password", "wicket");
-			formTester.setValue("rememberMeRow:rememberMe", "true");
+			formTester.setValue("rememberMeContainer:rememberMe", "true");
 			formTester.submit();
 			tester.assertRenderedPage(Home.class);
 

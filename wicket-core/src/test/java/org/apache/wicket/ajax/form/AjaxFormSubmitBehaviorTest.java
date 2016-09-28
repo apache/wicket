@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax.form;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -37,7 +37,7 @@ public class AjaxFormSubmitBehaviorTest extends WicketTestCase
 		// assert rendered page class
 		AjaxFormSubmitBehaviorTestPage homePage = (AjaxFormSubmitBehaviorTestPage)tester.getLastRenderedPage();
 		TestForm testForm = homePage.getForm();
-		tester.executeAjaxEvent(testForm.getTextField(), "onchange");
+		tester.executeAjaxEvent(testForm.getTextField(), "change");
 		assertTrue(testForm.isSubmitedByAjaxBehavior());
 	}
 }

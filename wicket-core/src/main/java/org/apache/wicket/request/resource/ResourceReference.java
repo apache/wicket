@@ -336,7 +336,7 @@ public abstract class ResourceReference implements IClusterable
 	/**
 	 * A (re-usable) data store for all relevant ResourceReference data
 	 */
-	public final static class Key implements Serializable
+	public static class Key implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 

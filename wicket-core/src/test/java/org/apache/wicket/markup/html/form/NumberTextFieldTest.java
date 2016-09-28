@@ -20,13 +20,13 @@ import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -43,9 +43,9 @@ public class NumberTextFieldTest extends WicketTestCase
 	@Test
 	public void convertBigDecimal()
 	{
-		TestPage<BigDecimal> testPage = new TestPage<BigDecimal>();
+		TestPage<BigDecimal> testPage = new TestPage<>();
 		testPage.textField.setType(BigDecimal.class);
-		testPage.textField.setMinimum(new BigDecimal("0.00"));
+		testPage.textField.setMinimum(Model.of(new BigDecimal("0.00")));
 		testPage.textField.setMaximum(new BigDecimal("100.00"));
 		testPage.textField.setModelObject(new BigDecimal("0.00"));
 		tester.startPage(testPage);
@@ -104,6 +104,38 @@ public class NumberTextFieldTest extends WicketTestCase
 	}
 
 	/**
+	 * WICKET-5467
+	 */
+	@Test
+	public void respectStepAny()
+	{
+		TestPage<Double> testPage = new TestPage<Double>();
+		testPage.textField.setType(Double.class);
+		testPage.textField.setStep(Model.of(NumberTextField.ANY));
+		testPage.textField.setModelObject(new Double("1000.0"));
+		tester.startPage(testPage);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("<input wicket:id=\"number\" step=\"any\" type=\"number\" value=\"1000.0\" name=\"number\"/>"));
+	}
+
+	/**
+	 * WICKET-5467
+	 */
+	@Test
+	public void respectStepWithNumberValue()
+	{
+		TestPage<Double> testPage = new TestPage<Double>();
+		testPage.textField.setType(Double.class);
+		testPage.textField.setStep(Double.valueOf(0.3d));
+		testPage.textField.setModelObject(new Double("1000.0"));
+		tester.startPage(testPage);
+
+		String response = tester.getLastResponseAsString();
+		assertTrue(response.contains("<input wicket:id=\"number\" step=\"0.3\" type=\"number\" value=\"1000.0\" name=\"number\"/>"));
+	}
+
+	/**
 	 * @param <N>
 	 *            type parameter
 	 */
@@ -138,7 +170,7 @@ public class NumberTextFieldTest extends WicketTestCase
 		{
 			return new StringResourceStream(
 				"<html><body>"
-					+ "<form wicket:id=\"form\"><input wicket:id=\"number\" type=\"number\" /></form></body></html>");
+					+ "<form wicket:id=\"form\"><input wicket:id=\"number\" step=\"any\" type=\"number\" /></form></body></html>");
 		}
 	}
 }

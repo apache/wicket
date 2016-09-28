@@ -17,6 +17,8 @@
 package org.apache.wicket.util.crypt;
 
 
+import org.apache.wicket.util.lang.Args;
+
 /**
  * {@link ICryptFactory} decorator that caches the call to {@link ICryptFactory#newCrypt()}
  * 
@@ -35,16 +37,10 @@ public class CryptFactoryCachingDecorator implements ICryptFactory
 	 */
 	public CryptFactoryCachingDecorator(final ICryptFactory delegate)
 	{
-		if (delegate == null)
-		{
-			throw new IllegalArgumentException("delegate cannot be null");
-		}
+		Args.notNull(delegate, "delegate");
 		this.delegate = delegate;
 	}
 
-	/**
-	 * @see org.apache.wicket.util.crypt.ICryptFactory#newCrypt()
-	 */
 	@Override
 	public final ICrypt newCrypt()
 	{

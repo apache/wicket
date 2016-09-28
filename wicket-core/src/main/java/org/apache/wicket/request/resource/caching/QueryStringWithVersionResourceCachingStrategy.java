@@ -20,6 +20,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.AbstractResource;
+import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
 import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
@@ -100,7 +101,7 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 
 		if (version != null)
 		{
-			url.getParameters().set(versionParameter, version);
+			url.getParameters().set(versionParameter, version, INamedParameters.Type.MANUAL);
 		}
 	}
 
@@ -127,7 +128,21 @@ public class QueryStringWithVersionResourceCachingStrategy implements IResourceC
 	@Override
 	public void decorateResponse(AbstractResource.ResourceResponse response, IStaticCacheableResource resource)
 	{
-		response.setCacheDurationToMaximum();
-		response.setCacheScope(WebResponse.CacheScope.PUBLIC);
+		String requestedVersion = RequestCycle.get().getMetaData(URL_VERSION);
+		String calculatedVersion = this.resourceVersion.getVersion(resource);
+		if (calculatedVersion != null && calculatedVersion.equals(requestedVersion))
+		{
+			response.setCacheDurationToMaximum();
+			response.setCacheScope(WebResponse.CacheScope.PUBLIC);
+		}
+	}
+
+	@Override
+	public void clearCache()
+	{
+		if (resourceVersion instanceof CachingResourceVersion)
+		{
+			((CachingResourceVersion) resourceVersion).invalidateAll();
+		}
 	}
 }

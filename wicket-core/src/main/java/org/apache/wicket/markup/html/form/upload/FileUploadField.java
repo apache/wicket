@@ -20,13 +20,13 @@ package org.apache.wicket.markup.html.form.upload;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.upload.FileItem;
 
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;. When a FileInput
@@ -62,9 +62,10 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	 * @param model
 	 *            the model holding the uploaded {@link FileUpload}s
 	 */
-	public FileUploadField(final String id, IModel<List<FileUpload>> model)
+	@SuppressWarnings("unchecked")
+	public FileUploadField(final String id, IModel<? extends List<FileUpload>> model)
 	{
-		super(id, model);
+		super(id, (IModel<List<FileUpload>>)model);
 	}
 
 	/**
@@ -77,11 +78,11 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	{
 		List<FileUpload> fileUploads = getFileUploads();
 
-		return (fileUploads != null && !fileUploads.isEmpty()) ? fileUploads.get(0) : null;
+		return fileUploads.isEmpty() ? null : fileUploads.get(0) ;
 	}
 
 	/**
-	 * @return a list of all uploaded files. It will return more than one files if:
+	 * @return a list of all uploaded files. The list is empty if no files were selected. It will return more than one files if:
 	 *         <ul>
 	 *         <li>HTML5 &lt;input type="file" <strong>multiple</strong> /&gt; is used</li>
 	 *         <li>the browser supports <em>multiple</em> attribute</li>
@@ -94,6 +95,8 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		{
 			return fileUploads;
 		}
+
+		fileUploads = new ArrayList<>();
 
 		// Get request
 		final Request request = getRequest();
@@ -108,25 +111,14 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 			{
 				for (FileItem item : fileItems)
 				{
-					// Only update the model when there is a file (larger than zero
-					// bytes)
-					if (item != null && item.getSize() > 0)
-					{
-						if (fileUploads == null)
-						{
-							fileUploads = new ArrayList<FileUpload>();
-						}
-						fileUploads.add(new FileUpload(item));
-					}
+					fileUploads.add(new FileUpload(item));
 				}
 			}
 		}
+		
 		return fileUploads;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#updateModel()
-	 */
 	@Override
 	public void updateModel()
 	{
@@ -136,16 +128,13 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#getInputAsArray()
-	 */
 	@Override
 	public String[] getInputAsArray()
 	{
 		List<FileUpload> fileUploads = getFileUploads();
-		if (fileUploads != null)
+		if (fileUploads.isEmpty() == false)
 		{
-			List<String> clientFileNames = new ArrayList<String>();
+			List<String> clientFileNames = new ArrayList<>();
 			for (FileUpload fu : fileUploads)
 			{
 				clientFileNames.add(fu.getClientFileName());
@@ -155,10 +144,6 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		return null;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(java.lang.String[])
-	 */
 	@Override
 	protected List<FileUpload> convertValue(String[] value) throws ConversionException
 	{
@@ -170,18 +155,12 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 		return getFileUploads();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#isMultiPart()
-	 */
 	@Override
 	public boolean isMultiPart()
 	{
 		return true;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onComponentTag(org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{

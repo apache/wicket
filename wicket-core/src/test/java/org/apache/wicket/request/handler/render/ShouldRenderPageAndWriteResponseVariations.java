@@ -17,6 +17,7 @@
 package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.Url;
 
 public class ShouldRenderPageAndWriteResponseVariations extends AbstractVariations
 {
@@ -40,9 +41,16 @@ public class ShouldRenderPageAndWriteResponseVariations extends AbstractVariatio
 	public boolean getResult()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(null);
-		return renderer.shouldRenderPageAndWriteResponse(ajax.next(), onePassRender.next(),
-				redirectToRender.next(), redirectPolicy.next(), shouldPreserveClientUrl.next(),
-				targetEqualsCurrentUrl.next(), newPageInstance.next(), pageStateless.next());
+		renderer.ajax = ajax.current();
+		renderer.onePassRender = onePassRender.current();
+		renderer.redirectToRender = redirectToRender.current();
+		renderer.redirectPolicy = redirectPolicy.current();
+		renderer.shouldPreserveClientUrl = shouldPreserveClientUrl.current();
+		renderer.newPageInstance = newPageInstance.current();
+		renderer.pageStateless = pageStateless.current();
+
+		return renderer.shouldRenderPageAndWriteResponse(null, Url.parse("test"),
+			targetEqualsCurrentUrl.current() ? Url.parse("test") : Url.parse("test2"));
 	}
 
 	@Override

@@ -51,7 +51,7 @@ class CdiShutdownCleaner implements IApplicationListener
 	{
 		if (preDestroyApplication)
 		{
-			NonContextual.of(application.getClass(), beanManager).preDestroy(application);
+			NonContextual.of(application, beanManager).preDestroy(application);
 		}
 		NonContextual.undeploy(beanManager);
 	}

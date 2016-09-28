@@ -18,9 +18,9 @@ package org.apache.wicket.ajax.markup.html.navigation.paging;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
@@ -129,25 +129,25 @@ public class AjaxPagingNavigator extends PagingNavigator
 
 	/**
 	 * Override this method to specify the markup container where your IPageable is part of. This
-	 * implementation is a default implementation that tries to find a parent markup container and
-	 * update that container. This is necessary as ListViews can't be updated themselves.
+	 * default implementation tries to find a parent which is not an {@link AbstractRepeater} and outputs
+	 * its markup id. This is necessary as ListViews can't be updated themselves.
 	 * 
 	 * @param target
 	 *            the request target to add the components that need to be updated in the ajax
 	 *            event.
+	 * @see Component#getOutputMarkupId(boolean)
 	 */
 	protected void onAjaxEvent(AjaxRequestTarget target)
 	{
-		// update the container (parent) of the pageable, this assumes that
-		// the pageable is a component, and that it is a child of a web
-		// markup container.
-
+		// Update a parental container of the pageable, this assumes that the pageable is a component.
 		Component container = ((Component)pageable);
-		// no need for a nullcheck as there is bound to be a non-repeater
-		// somewhere higher in the hierarchy
-		while (container instanceof AbstractRepeater)
+		while (container instanceof AbstractRepeater || container.getOutputMarkupId() == false)
 		{
-			container = container.getParent();
+			Component parent = container.getParent();
+			if (parent == null) {
+				break;
+			}
+			container = parent;
 		}
 		target.add(container);
 

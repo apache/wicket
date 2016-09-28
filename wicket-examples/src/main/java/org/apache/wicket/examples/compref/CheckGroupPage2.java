@@ -27,6 +27,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 
@@ -63,15 +64,15 @@ public class CheckGroupPage2 extends WicketExamplePage
 		ListView<Person> persons = new ListView<Person>("persons",
 			ComponentReferenceApplication.getPersons())
 		{
-
 			@Override
 			protected void populateItem(ListItem<Person> item)
 			{
-				item.add(new Check<>("checkbox", item.getModel(), group));
-				item.add(new Check<>("checkbox2", item.getModel(), group2));
+				IModel<Person> personModel = item.getModel();
+				item.add(new Check<>("checkbox", personModel, group));
+				item.add(new Check<>("checkbox2", personModel, group2));
 				item.add(new Label("name",
 					new PropertyModel<>(item.getDefaultModel(), "name")));
-				item.add(new Label("lastName", new PropertyModel<String>(item.getDefaultModel(),
+				item.add(new Label("lastName", new PropertyModel<String>(personModel,
 					"lastName")));
 			}
 

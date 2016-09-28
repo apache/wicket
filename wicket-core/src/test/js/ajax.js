@@ -31,6 +31,11 @@
 
 		 </Directory>
 
+	... or tweak wicket-examples' StartExamples.java like so:
+
+		bb.setContextPath("/ajax-tests");
+		bb.setWar("../wicket-core/src");
+
 	then run it by opening "http://localhost/ajax-tests/test/js/all.html" in the browser
 
  */
@@ -100,7 +105,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('processEvaluation with identifier|code.', function () {
 
-			expect(3);
+			expect(5);
 
 			var attrs = {
 				u: 'data/ajax/evaluationIdentifierAndCodeId.xml',
@@ -116,18 +121,11 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('processEvaluation*s* with identifier|code.', function () {
 
-			expect(7);
+			expect(6);
 
 			var attrs = {
 				u: 'data/ajax/twoEvaluationsWithIdentifier.xml',
-				c: 'twoEvaluationsWithIdentifier',
-				counter: 0,
-				coh: [
-					function(attrs) {
-						start();
-						equal(attrs.counter, 3, "The counter is incremented in both evaluations with and without manual notifying");
-					}
-				]
+				c: 'twoEvaluationsWithIdentifier'
 			};
 			execute(attrs);
 		});
@@ -322,13 +320,15 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to IAjaxCallListener handlers. Success scenario.', function () {
 
-			expect(11);
+			expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
 				e: 'event1',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
+				ih: [function() {ok('Init handler should be called');}],
+				dh: [function() {ok('Done handler should be called');}],
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
 						start();
@@ -378,22 +378,27 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to IAjaxCallListener handlers. Failure scenario.', function () {
 
-			expect(8);
+			expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
 				e: 'event1',
 				dt: 'json', // datatype
 				wr: false, // not Wicket's <ajax-response>
+				ih: [function() {ok('Init handler should be called');}],
+				dh: [function() {ok('Done handler should be called');}],
 				sh: [
 					function(attributes, jqXHR, data, textStatus) {
 						ok(false, 'Should not be called');
 					}
 				],
 				fh: [
-					function(attributes) {
+					function(attributes, jqXHR, errorMessage, textStatus) {
 						start();
 						equal(attrs.u, attributes.u);
+						ok(typeof(jqXHR.success) === "function", "jqXHR should be passed");
+						equal(errorMessage, "Not Found", "Error message should be passed");
+						equal(textStatus, "error", "Text status should be passed");
 					}
 				],
 				bsh: [
@@ -430,7 +435,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('verify default attributes.', function () {
 
-			expect(23);
+			expect(26);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -440,6 +445,7 @@ jQuery(document).ready(function() {
 						equal(textStatus, "parsererror", "textStatus");
 						equal(attributes.u, attrs.u, "url");
 						deepEqual(attributes.e, [ "domready" ], "events");
+						equal(attributes.event, null, "No event for 'domready'");
 						equal(attributes.ch, '0|s', 'channel');
 						equal(attributes.dt, 'xml', 'data type');
 						equal(attributes.wr, true, 'wicket ajax response');
@@ -450,11 +456,13 @@ jQuery(document).ready(function() {
 						ok(attributes.sc === undefined, 'submitting component');
 						ok(attributes.i === undefined, 'indicator');
 						ok(attributes.pre === undefined, 'preconditions');
+						ok(attributes.ih === undefined, 'init handlers');
 						ok(attributes.bh === undefined, 'before handlers');
 						ok(attributes.ah === undefined, 'after handler');
 						ok(attributes.sh === undefined, 'success handlers');
 						ok(attributes.fh === undefined, 'failure handlers');
 						deepEqual(attrs.coh, attributes.coh, 'complete handlers');
+						ok(attributes.dh === undefined, 'done handlers');
 						ok(attributes.ep === undefined, 'extra parameters');
 						ok(attributes.dep === undefined, 'dynamic extra parameters');
 						equal(attributes.async, true, 'asynchronous');
@@ -469,7 +477,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to global listeners. Success scenario.', function () {
 
-			expect(11);
+			expect(14);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -478,6 +486,10 @@ jQuery(document).ready(function() {
 				wr: false // not Wicket's <ajax-response>
 			};
 
+			Wicket.Event.subscribe('/ajax/call/init', function(jqEvent, attributes) {
+				equal(attrs.u, attributes.u, 'Complete: attrs');
+			});
+
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attributes, jqXHR, data, textStatus) {
 				start();
 				var expected = {
@@ -485,6 +497,7 @@ jQuery(document).ready(function() {
 					two: '2',
 					three: true
 				};
+				ok(attributes.event instanceof jQuery.Event, "There must be an event for non-'domready' events");
 				deepEqual(data, expected, 'Success: data');
 				equal('success', textStatus, 'Success: textStatus');
 				equal(attrs.u, attributes.u, 'Success: attrs');
@@ -509,6 +522,10 @@ jQuery(document).ready(function() {
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				equal('success', textStatus, 'Complete: textStatus');
 				equal(attrs.u, attributes.u, 'Complete: attrs');
+			});
+
+			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attributes) {
+				equal(attrs.u, attributes.u, 'Done: attrs');
 
 				// unregister all subscribers
 				Wicket.Event.unsubscribe();
@@ -523,7 +540,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to global listeners. Failure scenario.', function () {
 
-			expect(11);
+			expect(13);
 
 			var attrs = {
 				u: 'data/ajax/nonExisting.json',
@@ -531,6 +548,10 @@ jQuery(document).ready(function() {
 				dt: 'json', // datatype
 				wr: false // not Wicket's <ajax-response>
 			};
+
+			Wicket.Event.subscribe('/ajax/call/init', function(jqEvent, attributes) {
+				equal(attrs.u, attributes.u, 'Complete: attrs');
+			});
 
 			Wicket.Event.subscribe('/ajax/call/success', function(jqEvent, attributes, jqXHR, data, textStatus) {
 				ok(false, 'Success handles should not be called');
@@ -558,6 +579,10 @@ jQuery(document).ready(function() {
 				ok(jQuery.isFunction(jqXHR.getResponseHeader), 'Complete: Assert that jqXHR is a XMLHttpRequest');
 				equal('error', textStatus, 'Complete: textStatus');
 				equal(attrs.u, attributes.u, 'Complete: attrs');
+			});
+
+			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attributes) {
+				equal(attrs.u, attributes.u, 'Complete: attrs');
 
 				// unregister all subscribers
 				Wicket.Event.unsubscribe();
@@ -573,7 +598,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('show/hide incrementally (WICKET-4364)', function() {
 
-			expect(4);
+			expect(6);
 
 			var $indicator = jQuery('<div id="indicator"></div>');
 			var $el = jQuery('<div id="elementId"></div>');
@@ -591,6 +616,7 @@ jQuery(document).ready(function() {
 			var successFailureHandler = function () {
 				var count = getCurrentCount();
 				ok(count === 1 || count === 2, "'showIncrementallyCount' must be 1 or 2. Value is: " + count);
+				equal('block', $indicator.css('display'), "Indicator's display must be 'block'");
 			};
 
 			var attrs = {
@@ -745,18 +771,18 @@ jQuery(document).ready(function() {
 
 		/**
 		 * Verifies the order of execution of the callbacks.
-		 * The order must be: before, precondition, beforeSend, after, success, complete.
+		 * The order must be: before, precondition, beforeSend, after, success, complete, done.
 		 * Three consecutive executions are made on the same Ajax channel validating
 		 * that they do not overlap.
 		 */
 		asyncTest('callbacks order - success scenario.', function () {
 
-			expect(36);
+			expect(42);
 
 			var order = 0,
 
 			// the number of assertions per iteration
-			numberOfTests = 12,
+			numberOfTests = 14,
 
 			// calculates the offset for the order depending on the execution number
 			offset = function(extraData) {
@@ -801,6 +827,11 @@ jQuery(document).ready(function() {
 					function(attrs) {
 						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
+				],
+				dh: [
+					function(attrs) {
+						equal((13 + offset(attrs.event.extraData)), ++order, "Done handler");
+					}
 				]
 			};
 
@@ -832,6 +863,10 @@ jQuery(document).ready(function() {
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
 				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attrs) {
+				equal((14 + offset(attrs.event.extraData)), ++order, "Global done handler");
 
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
@@ -858,12 +893,12 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('callbacks order - failure scenario.', function () {
 
-			expect(36);
+			expect(42);
 
 			var order = 0,
 
 			// the number of assertions per iteration
-			numberOfTests = 12,
+			numberOfTests = 14,
 
 			// calculates the offset for the order depending on the execution number
 			offset = function(extraData) {
@@ -908,6 +943,11 @@ jQuery(document).ready(function() {
 					function(attrs) {
 						equal((11 + offset(attrs.event.extraData)), ++order, "Complete handler");
 					}
+				],
+				dh: [
+					function(attrs) {
+						equal((13 + offset(attrs.event.extraData)), ++order, "Done handler");
+					}
 				]
 			};
 
@@ -939,6 +979,10 @@ jQuery(document).ready(function() {
 
 			Wicket.Event.subscribe('/ajax/call/complete', function(jqEvent, attrs) {
 				equal((12 + offset(attrs.event.extraData)), ++order, "Global complete handler");
+			});
+
+			Wicket.Event.subscribe('/ajax/call/done', function(jqEvent, attrs) {
+				equal((14 + offset(attrs.event.extraData)), ++order, "Global done handler");
 
 				if (attrs.event.extraData.round === 2) {
 					// unregister all global subscribers
@@ -1101,6 +1145,37 @@ jQuery(document).ready(function() {
 			jQuery('#'+ attrs.c).triggerHandler("nestedFormSubmit");
 		});
 
+
+		/**
+		 * Tests that submitting a of multipart form calls failure and complete handlers
+		 * when the server is not reachable.
+		 */
+		asyncTest('Submit multipart form (server down).', function () {
+
+			expect(6);
+
+			var attrs = {
+				f:  "multipartForm", // the id of the form to submit
+				mp: true,  // multipart
+				u:  "http://non-existing.tld/some.xml", // emulate server down by using non-existing address
+				e:  "multipartFormSubmitEvent", // the event
+				c:  "multipartFormSubmit", // the component that submits the form
+				m:  "POST", // submit method,
+				rt: 100, // 100ms request timeout
+				bh: [ function(attrs) { ok(true, "Before handler executed"); } ],
+				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
+				bsh: [ function(attrs) { ok(true, "BeforeSend handler executed"); } ],
+				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
+				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],
+				fh: [ function(attrs) { start(); ok(true, "Failure handler executed"); } ],
+				coh: [ function(attrs) { ok(true, "Complete handler executed"); } ]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+
+			jQuery('#'+ attrs.c).triggerHandler("multipartFormSubmitEvent");
+		});
+
 		/**
 		 * Tests that a huge response with more than 1000 evaluations is properly executed.
 		 * FunctionsExecuter can execute at most 1000 functions in one go, the rest are executed
@@ -1229,5 +1304,85 @@ jQuery(document).ready(function() {
 
 			Wicket.Ajax.ajax(attrs);
 		});
+
+		/**
+		 * 'null' values passed to _asParamArray() should be spliced
+		 * See http://markmail.org/message/khuc2v37aakzyfth
+		 * WICKET-5759
+		 */
+		asyncTest('_asParamArray() should drop nulls.', function () {
+
+			expect(1);
+
+			var attrs = {
+				e: 'event1',
+				ep: [null, {name: "name", value: "value"}, null, null],
+				bsh: [function(attributes) {
+					var ep = attributes.ep;
+					equal(1, ep.length, 'The null values in the extra parameters should be dropped');
+					start();
+				}]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+		});
+
+		asyncTest('Do not hide the indicator if redirecting.', function () {
+
+			expect(2);
+
+			var oldRedirect = Wicket.Ajax.redirect;
+			Wicket.Ajax.redirect = function() {};
+
+			var attrs = {
+				u: 'data/ajax/redirectAjaxResponse.xml',
+				e: 'event1',
+				i: 'ajaxIndicator',
+				sh: [function(attrs, jqXHR, data, textStatus) {
+					var indicatorEl = Wicket.$(attrs.i);
+					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+				}],
+				coh: [function(attrs, jqXHR, textStatus) {
+					var indicatorEl = Wicket.$(attrs.i);
+					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+					Wicket.Ajax.redirect = oldRedirect;
+					start();
+				}]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+		});
+
+		asyncTest('Do hide the indicator if not redirecting.', function () {
+
+			expect(2);
+
+			var attrs = {
+				u: 'data/ajax/emptyAjaxResponse.xml',
+				e: 'event1',
+				i: 'ajaxIndicator',
+				sh: [function(attrs, jqXHR, data, textStatus) {
+					var indicatorEl = Wicket.$(attrs.i);
+					equal("1", indicatorEl.getAttribute("showIncrementallyCount"));
+				}],
+				coh: [function(attrs, jqXHR, textStatus) {
+					var indicatorEl = Wicket.$(attrs.i);
+					equal("0", indicatorEl.getAttribute("showIncrementallyCount"));
+					start();
+				}]
+			};
+
+			Wicket.Ajax.ajax(attrs);
+			var target = jQuery(window);
+			target.triggerHandler("event1");
+			target.off("event1");
+		});
+
 	}
 });

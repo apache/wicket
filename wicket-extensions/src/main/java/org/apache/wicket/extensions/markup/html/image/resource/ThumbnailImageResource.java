@@ -32,8 +32,6 @@ import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Image resource that dynamically scales the given original resource to a thumbnail. It is scaled
@@ -47,9 +45,6 @@ import org.slf4j.LoggerFactory;
 public class ThumbnailImageResource extends DynamicImageResource
 {
 	private static final long serialVersionUID = 1L;
-
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(ThumbnailImageResource.class);
 
 	/** the unscaled, original image resource. */
 	private final IResource unscaledImageResource;
@@ -98,7 +93,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	 * 
 	 * @return BufferedImage
 	 */
-	protected final BufferedImage getScaledImageInstance(final Attributes attributes)
+	protected BufferedImage getScaledImageInstance(final Attributes attributes)
 	{
 		InputStream is = null;
 		BufferedImage originalImage = null;

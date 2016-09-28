@@ -16,13 +16,17 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A component that allows a trigger request to be triggered via html anchor tag
@@ -34,7 +38,7 @@ import org.apache.wicket.model.IModel;
  *            type of model object
  * 
  */
-public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGenericComponent<T>
+public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGenericComponent<T, AjaxLink<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +68,7 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		add(newAjaxEventBehavior("onclick"));
+		add(newAjaxEventBehavior("click"));
 	}
 
 	/**
@@ -90,6 +94,12 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 				super.updateAjaxAttributes(attributes);
 				AjaxLink.this.updateAjaxAttributes(attributes);
 			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxLink.this.getStatelessHint();
+			}
 		};
 	}
 
@@ -104,11 +114,18 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 
 		if (isEnabledInHierarchy())
 		{
-			// disable any href attr in markup
-			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link") ||
-				tag.getName().equalsIgnoreCase("area"))
+			String tagName = tag.getName();
+			
+			if (tagName.equalsIgnoreCase("a") || tagName.equalsIgnoreCase("link") ||
+				tagName.equalsIgnoreCase("area"))
 			{
+				// disable any href attr in markup
 				tag.put("href", "javascript:;");
+			}
+			else if (tagName.equalsIgnoreCase("button"))
+			{
+				// WICKET-5597 prevent submit
+				tag.put("type", "button");
 			}
 		}
 		else
@@ -126,30 +143,58 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
+	/**
+	 * Creates an {@link AjaxLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxLink}
+	 */
+	public static <T> AjaxLink<T> onClick(String id, WicketConsumer<AjaxRequestTarget> onClick)
 	{
-		return (IModel<T>)getDefaultModel();
+		Args.notNull(onClick, "onClick");
+
+		return new AjaxLink<T>(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				onClick.accept(target);
+			}
+		};
 	}
 
-	@Override
-	public final void setModel(IModel<T> model)
+	/**
+	 * Creates an {@link AjaxLink} based on lambda expressions
+	 * 
+	 * @param id
+	 *            the id of the ajax link
+	 * @param onClick
+	 *            the consumer of the clicked link and an {@link AjaxRequestTarget}
+	 * @return the {@link AjaxLink}
+	 */
+	public static <T> AjaxLink<T> onClick(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
 	{
-		setDefaultModel(model);
-	}
+		Args.notNull(onClick, "onClick");
 
+		return new AjaxLink<T>(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				onClick.accept(this, target);
+			}
+		};
+	}
 	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
+	protected boolean getStatelessHint()
 	{
-		return (T)getDefaultModelObject();
+		return false;
 	}
-
-	@Override
-	public final void setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-	}
-
 }

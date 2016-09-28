@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.tree.content;
 
+import java.util.Optional;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.examples.tree.Foo;
@@ -30,7 +32,6 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class CheckedSelectableFolderContent extends SelectableFolderContent
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public CheckedSelectableFolderContent(ITreeProvider<Foo> provider)
@@ -62,7 +63,7 @@ public class CheckedSelectableFolderContent extends SelectableFolderContent
 					foo = foo.getParent();
 				}
 
-				tree.updateBranch(foo, target);
+				tree.updateBranch(foo, Optional.of(target));
 			}
 
 			/**
@@ -75,9 +76,9 @@ public class CheckedSelectableFolderContent extends SelectableFolderContent
 			}
 
 			@Override
-			protected void onClick(AjaxRequestTarget target)
+			protected void onClick(Optional<AjaxRequestTarget> targetOptional)
 			{
-				CheckedSelectableFolderContent.this.select(getModelObject(), tree, target);
+				CheckedSelectableFolderContent.this.select(getModelObject(), tree, targetOptional);
 			}
 
 			@Override

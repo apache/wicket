@@ -19,17 +19,16 @@ package org.apache.wicket.markup.html;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.MarkupType;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.markup.renderStrategy.AbstractHeaderRenderStrategy;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -61,7 +60,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WebPage extends Page
 {
-	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
@@ -74,16 +72,11 @@ public class WebPage extends Page
 	 */
 	protected WebPage()
 	{
-		commonInit();
 	}
 
-	/**
-	 * @see Page#Page(IModel)
-	 */
 	protected WebPage(final IModel<?> model)
 	{
 		super(model);
-		commonInit();
 	}
 
 	/**
@@ -104,7 +97,6 @@ public class WebPage extends Page
 	protected WebPage(final PageParameters parameters)
 	{
 		super(parameters);
-		commonInit();
 	}
 
 	/**
@@ -119,14 +111,6 @@ public class WebPage extends Page
 	public MarkupType getMarkupType()
 	{
 		return MarkupType.HTML_MARKUP_TYPE;
-	}
-
-	/**
-	 * Common code executed by constructors.
-	 */
-	private void commonInit()
-	{
-		// so far a noop
 	}
 
 	@Override
@@ -212,23 +196,17 @@ public class WebPage extends Page
 	@Override
 	protected void onAfterRender()
 	{
-		super.onAfterRender();
-
 		// only in development mode validate the headers
 		if (getApplication().usesDevelopmentConfig())
 		{
-			// Ignore if an exception and a redirect happened in between (e.g.
-			// RestartResponseAtInterceptPageException)
-			IRequestHandler activeHandler = getRequestCycle().getActiveRequestHandler();
-			if (activeHandler instanceof IPageRequestHandler)
+			// check headers only when page was completely rendered
+			if (wasRendered(this))
 			{
-				IPageRequestHandler h = (IPageRequestHandler)activeHandler;
-				if (h.getPage() == this)
-				{
-					validateHeaders();
-				}
+				validateHeaders();
 			}
 		}
+
+		super.onAfterRender();
 	}
 
 	/**
@@ -264,24 +242,22 @@ public class WebPage extends Page
 			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
 			add(header);
 
-			Response orgResponse = getRequestCycle().getResponse();
+			RequestCycle requestCycle = getRequestCycle();
+			Response orgResponse = requestCycle.getResponse();
 			try
 			{
-				final StringResponse response = new StringResponse();
-				getRequestCycle().setResponse(response);
+				StringResponse tempResponse = new StringResponse();
+				requestCycle.setResponse(tempResponse);
 
 				// Render all header sections of all components on the page
 				AbstractHeaderRenderStrategy.get().renderHeader(header, null, getPage());
-				response.close();
 
-				if (response.getBuffer().length() > 0)
+				IHeaderResponse headerResponse = header.getHeaderResponse();
+				headerResponse.close();
+				CharSequence collectedHeaderOutput = tempResponse.getBuffer();
+				if (collectedHeaderOutput.length() > 0)
 				{
-					// @TODO it is not yet working properly. JDo to fix it
-					log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-					log.error("You probably forgot to add a <body> or <head> tag to your markup since no Header Container was \n" +
-						"found but components were found which want to write to the <head> section.\n" +
-						response.getBuffer());
-					log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+					reportMissingHead(collectedHeaderOutput);
 				}
 			}
 			catch (Exception e)
@@ -292,9 +268,26 @@ public class WebPage extends Page
 			finally
 			{
 				this.remove(header);
-				getRequestCycle().setResponse(orgResponse);
+				requestCycle.setResponse(orgResponse);
 			}
 		}
+	}
+
+	/**
+	 * Reports an error that there is no &lt;head&gt; and/or &lt;body&gt; in the page and
+	 * there is no where to write the header response.
+	 * 
+	 * @param collectedHeaderOutput
+	 *          The collected response that should have been written to the &lt;head&gt;
+	 * @see #validateHeaders()
+	 */
+	protected void reportMissingHead(final CharSequence collectedHeaderOutput)
+	{
+		log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+		log.error("You probably forgot to add a <body> or <head> tag to your markup since no Header Container was \n" +
+				"found but components were found which want to write to the <head> section.\n" +
+				collectedHeaderOutput);
+		log.error("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 	}
 
 	/**

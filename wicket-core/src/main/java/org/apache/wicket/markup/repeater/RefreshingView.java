@@ -45,7 +45,7 @@ import org.apache.wicket.util.lang.Generics;
  * @author Igor Vaynberg (ivaynberg)
  * 
  * @param <T>
- *            Model object type
+ *            type of elements contained in the model's list
  */
 public abstract class RefreshingView<T> extends RepeatingView
 {
@@ -128,7 +128,7 @@ public abstract class RefreshingView<T> extends RepeatingView
 	/**
 	 * Populate the given Item container.
 	 * <p>
-	 * <b>be carefull</b> to add any components to the item and not the view itself. So, don't do:
+	 * <b>be careful</b> to add any components to the item and not the view itself. So, don't do:
 	 * 
 	 * <pre>
 	 * add(new Label(&quot;foo&quot;, &quot;bar&quot;));
@@ -163,7 +163,7 @@ public abstract class RefreshingView<T> extends RepeatingView
 	 */
 	protected Item<T> newItem(final String id, int index, final IModel<T> model)
 	{
-		return new Item<T>(id, index, model);
+		return new Item<>(id, index, model);
 	}
 
 	/**

@@ -1,0 +1,21 @@
+{
+  "name": "wicket-js-unit-tests",
+  "description": "Apache Wicket JavaScript unit tests",
+  "version": "0.2.0",
+  "license": "Apache-2.0",
+  "repository" : { 
+    "type" : "git",
+    "url" : "http://git-wip-us.apache.org/repos/asf/wicket.git"
+  },
+  "devDependencies": {
+    "grunt": "~1.0.1",
+    "grunt-cli": "~1.2.0",
+    "grunt-contrib-jshint": "~1.0.0",
+    "grunt-contrib-qunit": "~1.2.0",
+    "grunt-contrib-connect": "~1.0.2",
+    "grunt-contrib-nodeunit": "~1.0.0"
+  },
+  "scripts": {
+    "test": "grunt --verbose"
+  }
+}

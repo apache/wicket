@@ -40,10 +40,6 @@ public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 		super(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#authenticate(java.lang.String,
-	 *      java.lang.String)
-	 */
 	@Override
 	public boolean authenticate(final String username, final String password)
 	{
@@ -53,9 +49,6 @@ public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 		return WICKET.equals(username) && WICKET.equals(password);
 	}
 
-	/**
-	 * @see org.apache.wicket.authentication.AuthenticatedWebSession#getRoles()
-	 */
 	@Override
 	public Roles getRoles()
 	{

@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.util.function.Supplier;
+
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
-import org.apache.wicket.util.IProvider;
 
 /**
  * A mapper that is used when a request to the home page ("/") is made
@@ -45,7 +46,7 @@ public class HomePageMapper extends MountedMapper
 	 * @param pageClassProvider
 	 *            the class of the page which should handle requests to "/"
 	 */
-	public HomePageMapper(IProvider<Class<? extends IRequestablePage>> pageClassProvider)
+	public HomePageMapper(Supplier<Class<? extends IRequestablePage>> pageClassProvider)
 	{
 		super("/", pageClassProvider);
 	}

@@ -17,11 +17,13 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ComponentTag.IAutoComponentFactory;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
@@ -30,6 +32,7 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -42,7 +45,6 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
  * enclosure is identified by the 'child' attribute value which must be equal to the relative child
  * id path.
  * 
- * @see EnclosureResolver
  * @see Enclosure
  * 
  * @author Juergen Donnerstag
@@ -51,6 +53,16 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final IAutoComponentFactory FACTORY = new IAutoComponentFactory()
+	{
+		@Override
+		public Component newComponent(MarkupContainer container, ComponentTag tag)
+		{
+			return new Enclosure(tag.getId(), tag
+				.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
+		}
+	};
+
 	/** */
 	public static final String ENCLOSURE = "enclosure";
 
@@ -58,7 +70,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 	public static final String CHILD_ATTRIBUTE = "child";
 
 	/** Stack of <wicket:enclosure> tags */
-	private Stack<ComponentTag> stack;
+	private Deque<ComponentTag> stack;
 
 	/** The id of the first wicket tag inside the enclosure */
 	private String childId;
@@ -88,9 +100,13 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 			// If open tag, than put the tag onto the stack
 			if (tag.isOpen())
 			{
+				tag.setId(tag.getId() + getRequestUniqueId());
+				tag.setModified(true);
+				tag.setAutoComponentFactory(FACTORY);
+
 				if (stack == null)
 				{
-					stack = new Stack<ComponentTag>();
+					stack = new ArrayDeque<>();
 				}
 				stack.push(tag);
 			}
@@ -128,10 +144,10 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 		// Are we inside a wicket:enclosure tag?
 		else if (stack != null)
 		{
-			ComponentTag lastEnclosure = stack.lastElement();
+			ComponentTag lastEnclosure = stack.getFirst();
 
 			// If the enclosure tag has NO child attribute, then ...
-			if (lastEnclosure.getAttribute(CHILD_ATTRIBUTE) == null)
+			if (Strings.isEmpty(lastEnclosure.getAttribute(CHILD_ATTRIBUTE)))
 			{
 				String id = tag.getAttribute(getWicketNamespace() + ":id");
 				if (id != null)
@@ -162,8 +178,7 @@ public final class EnclosureHandler extends AbstractMarkupFilter implements ICom
 		if ((tag instanceof WicketTag) && ((WicketTag)tag).isEnclosureTag())
 		{
 			// Yes, we handled the tag
-			return new Enclosure(tag.getId() + container.getPage().getAutoIndex(),
-				tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
+			return new Enclosure(tag.getId(), tag.getAttribute(EnclosureHandler.CHILD_ATTRIBUTE));
 		}
 
 		// We were not able to handle the tag

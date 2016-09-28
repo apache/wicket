@@ -25,6 +25,7 @@ import org.junit.Test;
 /**
  * @since 1.5.8
  */
+@SuppressWarnings("javadoc")
 public class NumbersTest extends Assert
 {
 	/**

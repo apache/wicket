@@ -18,9 +18,9 @@ package org.apache.wicket.util.reference;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.util.function.Supplier;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
-import org.apache.wicket.util.IProvider;
 
 /**
  * A serialization-safe reference to a {@link Class}
@@ -30,7 +30,7 @@ import org.apache.wicket.util.IProvider;
  * @param <T>
  *            type of class
  */
-public class ClassReference<T> implements Serializable, IProvider<Class<T>>
+public class ClassReference<T> implements Serializable, Supplier<Class<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +41,7 @@ public class ClassReference<T> implements Serializable, IProvider<Class<T>>
 	 * Constructor
 	 * 
 	 * @param clazz
+	 *          The referenced class
 	 */
 	public ClassReference(Class<T> clazz)
 	{
@@ -68,17 +69,18 @@ public class ClassReference<T> implements Serializable, IProvider<Class<T>>
 
 	private void cache(Class<T> clazz)
 	{
-		cache = new WeakReference<Class<T>>(clazz);
+		cache = new WeakReference<>(clazz);
 	}
 
 	/**
 	 * Diamond operator factory
 	 * 
 	 * @param clazz
+	 *          The referenced class
 	 * @return class reference
 	 */
 	public static <T> ClassReference<T> of(Class<T> clazz)
 	{
-		return new ClassReference<T>(clazz);
+		return new ClassReference<>(clazz);
 	}
 }

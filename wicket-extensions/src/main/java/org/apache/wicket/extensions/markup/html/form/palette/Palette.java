@@ -26,8 +26,8 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Choices;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Recorder;
 import org.apache.wicket.extensions.markup.html.form.palette.component.Selection;
+import org.apache.wicket.extensions.markup.html.form.palette.theme.DefaultTheme;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -38,9 +38,8 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.JQueryPluginResourceReference;
 
 
 /**
@@ -55,19 +54,24 @@ import org.apache.wicket.request.resource.ResourceReference;
  * {@link Recorder} by overriding {@link #newRecorderComponent()} and calling
  * {@link #processInput()}:
  * 
- * <pre>
+ * <pre>{@code
  *  Palette palette=new Palette(...) {
  *    protected Recorder newRecorderComponent()
  *    {
  *      Recorder recorder=super.newRecorderComponent();     
- *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {
- *        processInput() // let palette process input too
- *        ...
+ *      recorder.add(new AjaxFormComponentUpdatingBehavior("change") {
+ *        protected void onUpdate(AjaxRequestTarget target) {
+ *          processInput(); // let Palette process input too
+ *
+ *          ...
+ *        }
  *      });
  *      return recorder;
  *    }
  *  }
- * </pre>
+ * }</pre>
+ * 
+ * You can add a {@link DefaultTheme} to style this component in a left to right fashion.
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * @param <T>
@@ -88,13 +92,16 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	/**
 	 * choice render used to render the choices in both available and selected collections
 	 */
-	private final IChoiceRenderer<T> choiceRenderer;
+	private final IChoiceRenderer<? super T> choiceRenderer;
 
 	/** number of rows to show in the select boxes */
 	private final int rows;
 
 	/** if reordering of selected items is allowed in */
 	private final boolean allowOrder;
+
+	/** if add all and remove all are allowed */
+	private final boolean allowMoveAll;
 
 	/**
 	 * recorder component used to track user's selection. it is updated by javascript on changes.
@@ -114,12 +121,8 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final ResourceReference JAVASCRIPT = new JavaScriptResourceReference(
+	private static final ResourceReference JAVASCRIPT = new JQueryPluginResourceReference(
 		Palette.class, "palette.js");
-
-	/** reference to the palette's css resource */
-	private static final ResourceReference CSS = new CssResourceReference(Palette.class,
-		"palette.css");
 
 	/**
 	 * @param id
@@ -135,7 +138,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 *            Allow user to move selections up and down
 	 */
 	public Palette(final String id, final IModel<? extends Collection<T>> choicesModel,
-		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
+		final IChoiceRenderer<? super T> choiceRenderer, final int rows, final boolean allowOrder)
 	{
 		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
 	}
@@ -155,10 +158,34 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	 * @param allowOrder
 	 *            Allow user to move selections up and down
 	 */
-	@SuppressWarnings("unchecked")
 	public Palette(final String id, final IModel<? extends Collection<T>> model,
 		final IModel<? extends Collection<? extends T>> choicesModel,
-		final IChoiceRenderer<T> choiceRenderer, final int rows, final boolean allowOrder)
+		final IChoiceRenderer<? super T> choiceRenderer, final int rows, final boolean allowOrder)
+	{
+		this(id, model, choicesModel, choiceRenderer, rows, allowOrder, false);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param id
+	 *            Component id
+	 * @param choicesModel
+	 *            Model representing collection of all available choices
+	 * @param choiceRenderer
+	 *            Render used to render choices. This must use unique IDs for the objects, not the
+	 *            index.
+	 * @param rows
+	 *            Number of choices to be visible on the screen with out scrolling
+	 * @param allowOrder
+	 *            Allow user to move selections up and down
+	 * @param allowMoveAll
+	 *            Allow user to add or remove all items at once
+	 */
+	public Palette(final String id, final IModel<? extends Collection<T>> model,
+		final IModel<? extends Collection<? extends T>> choicesModel,
+		final IChoiceRenderer<? super T> choiceRenderer, final int rows, final boolean allowOrder,
+		boolean allowMoveAll)
 	{
 		super(id, (IModel<Collection<T>>)model);
 
@@ -166,6 +193,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		this.choiceRenderer = choiceRenderer;
 		this.rows = rows;
 		this.allowOrder = allowOrder;
+		this.allowMoveAll = allowMoveAll;
 	}
 
 	@Override
@@ -199,20 +227,11 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		add(newRemoveComponent());
 		add(newUpComponent().setVisible(allowOrder));
 		add(newDownComponent().setVisible(allowOrder));
+		add(newAddAllComponent().setVisible(allowMoveAll));
+		add(newRemoveAllComponent().setVisible(allowMoveAll));
 
 		add(newAvailableHeader(AVAILABLE_HEADER_ID));
 		add(newSelectedHeader(SELECTED_HEADER_ID));
-	}
-
-	/**
-	 * Returns the resource reference of the default stylesheet. You may return null to avoid using
-	 * any stylesheet.
-	 * 
-	 * @return A resource reference
-	 */
-	protected ResourceReference getCSS()
-	{
-		return CSS;
 	}
 
 	/**
@@ -251,7 +270,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	protected Recorder<T> newRecorderComponent()
 	{
 		// create component that will keep track of selections
-		return new Recorder<T>("recorder", this);
+		return new Recorder<>("recorder", this);
 	}
 
 	/**
@@ -387,6 +406,45 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	}
 
 	/**
+	 * factory method for the addAll component
+	 * 
+	 * @return addAll component
+	 */
+	protected Component newAddAllComponent()
+	{
+		return new PaletteButton("addAllButton")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.getAttributes().put("onclick", Palette.this.getAddAllOnClickJS());
+			}
+		};
+	}
+
+
+	/**
+	 * factory method for the removeAll component
+	 * 
+	 * @return removeAll component
+	 */
+	protected Component newRemoveAllComponent()
+	{
+		return new PaletteButton("removeAllButton")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+				tag.getAttributes().put("onclick", Palette.this.getRemoveAllOnClickJS());
+			}
+		};
+	}
+
+	/**
 	 * @param choice
 	 * @return null
 	 * @see org.apache.wicket.extensions.markup.html.form.palette.component.Selection#getAdditionalAttributes(Object)
@@ -484,7 +542,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	/**
 	 * @return choice renderer
 	 */
-	public IChoiceRenderer<T> getChoiceRenderer()
+	public IChoiceRenderer<? super T> getChoiceRenderer()
 	{
 		return choiceRenderer;
 	}
@@ -499,7 +557,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	}
 
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		List<T> selectedList = getRecorderComponent().getSelectedList();
 		if (selectedList.isEmpty())
@@ -589,6 +647,22 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		return buildJSCall("Wicket.Palette.moveDown");
 	}
 
+	/**
+	 * @return addAll action javascript handler
+	 */
+	public String getAddAllOnClickJS()
+	{
+		return buildJSCall("Wicket.Palette.addAll");
+	}
+
+	/**
+	 * @return removeAll action javascript handler
+	 */
+	public String getRemoveAllOnClickJS()
+	{
+		return buildJSCall("Wicket.Palette.removeAll");
+	}
+
 	@Override
 	protected void onDetach()
 	{
@@ -636,13 +710,6 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 	@Override
 	public void renderHead(final IHeaderResponse response)
 	{
-		ResourceReference css = getCSS();
-		if (css != null)
-		{
-			response.render(CssHeaderItem.forReference(css));
-		}
 		response.render(JavaScriptHeaderItem.forReference(JAVASCRIPT));
 	}
-
-
 }

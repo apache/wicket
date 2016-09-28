@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
@@ -101,7 +100,7 @@ import org.apache.wicket.util.collections.ReadOnlyIterator;
  * @author Eelco Hillenius
  * 
  * @param <T>
- *            Model object type
+ *            type of elements contained in the model's list
  */
 public abstract class ListView<T> extends AbstractRepeater
 {
@@ -131,11 +130,11 @@ public abstract class ListView<T> extends AbstractRepeater
 	}
 
 	/**
-	 * @param id
-	 * @param model
+	 * @param id component id
+	 * @param model model containing a list of
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final IModel<? extends List<? extends T>> model)
+	public ListView(final String id, final IModel<? extends List<T>> model)
 	{
 		super(id, model);
 
@@ -157,7 +156,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            List to cast to Serializable
 	 * @see org.apache.wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final List<? extends T> list)
+	public ListView(final String id, final List<T> list)
 	{
 		this(id, Model.ofList(list));
 	}
@@ -170,9 +169,9 @@ public abstract class ListView<T> extends AbstractRepeater
 	 * @return The list of items in this list view.
 	 */
 	@SuppressWarnings("unchecked")
-	public final List<? extends T> getList()
+	public final List<T> getList()
 	{
-		final List<? extends T> list = (List<? extends T>)getDefaultModelObject();
+		final List<T> list = (List<T>)getDefaultModelObject();
 		if (list == null)
 		{
 			return Collections.emptyList();
@@ -219,7 +218,7 @@ public abstract class ListView<T> extends AbstractRepeater
 		final Object modelObject = getDefaultModelObject();
 		if (modelObject == null)
 		{
-			return size == Integer.MAX_VALUE ? 0 : size;
+			return 0;
 		}
 
 		// Adjust view size to model object's list size
@@ -304,7 +303,7 @@ public abstract class ListView<T> extends AbstractRepeater
 			@Override
 			public void onClick()
 			{
-				final int index = (int)item.getIndex();
+				final int index = item.getIndex();
 				if (index != -1)
 				{
 
@@ -365,7 +364,7 @@ public abstract class ListView<T> extends AbstractRepeater
 	 *            The list for the new model. The list must implement {@link Serializable}.
 	 * @return This for chaining
 	 */
-	public ListView<T> setList(List<? extends T> list)
+	public ListView<T> setList(List<T> list)
 	{
 		setDefaultModel(Model.ofList(list));
 		return this;
@@ -652,15 +651,5 @@ public abstract class ListView<T> extends AbstractRepeater
 	public final void setModelObject(List<T> object)
 	{
 		setDefaultModelObject(object);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.repeater.AbstractRepeater#getMarkup(org.apache.wicket.Component)
-	 */
-	@Override
-	public IMarkupFragment getMarkup(Component child)
-	{
-		// The childs markup is always equal to the parents markup.
-		return getMarkup();
 	}
 }

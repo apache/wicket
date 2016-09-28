@@ -16,15 +16,19 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.text.ParseException;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
+import org.apache.wicket.util.tester.WicketTestCase;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 /**
@@ -44,27 +48,27 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5237
+	 * 
 	 * @throws ParseException
 	 */
 	@Test
 	public void doNotExpandVoidElements() throws ParseException
 	{
-		String[] htmlVoidElements = new String[] {
-			"area", "base", "br", "col", "command", "embed", "hr", "img", "input",
-			"keygen", "link", "meta", "param", "source", "track", "wbr"
-		};
+		String[] htmlVoidElements = new String[] { "area", "base", "br", "col", "command", "embed",
+				"hr", "img", "input", "keygen", "link", "meta", "param", "source", "track", "wbr" };
 
 		for (String htmlVoidElement : htmlVoidElements)
 		{
-
-			OpenCloseTagExpander expander = new OpenCloseTagExpander() {
+			OpenCloseTagExpander expander = new OpenCloseTagExpander()
+			{
 				@Override
 				public IMarkupFilter getNextFilter()
 				{
 					return new AbstractMarkupFilter()
 					{
 						@Override
-						protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+						protected MarkupElement onComponentTag(ComponentTag tag)
+							throws ParseException
 						{
 							return null;
 						}
@@ -84,12 +88,13 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 			MarkupElement markupElement = expander.nextElement();
 
 			// assert the next element is returned by the parent
-			assertTrue(markupElement instanceof TestMarkupElement);
+			assertThat(markupElement, instanceOf(TestMarkupElement.class));
 		}
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5237
+	 * 
 	 * @throws ParseException
 	 */
 	@Test
@@ -97,14 +102,16 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 	{
 		for (String htmlNonVoidElement : OpenCloseTagExpander.REPLACE_FOR_TAGS)
 		{
-			OpenCloseTagExpander expander = new OpenCloseTagExpander() {
+			OpenCloseTagExpander expander = new OpenCloseTagExpander()
+			{
 				@Override
 				public IMarkupFilter getNextFilter()
 				{
 					return new AbstractMarkupFilter()
 					{
 						@Override
-						protected MarkupElement onComponentTag(ComponentTag tag) throws ParseException
+						protected MarkupElement onComponentTag(ComponentTag tag)
+							throws ParseException
 						{
 							return null;
 						}
@@ -121,12 +128,43 @@ public class OpenCloseTagExpanderTest extends WicketTestCase
 			ComponentTag tag = new ComponentTag(htmlNonVoidElement, XmlTag.TagType.OPEN_CLOSE);
 			expander.onComponentTag(tag);
 
-			ComponentTag markupElement = (ComponentTag) expander.nextElement();
+			ComponentTag markupElement = (ComponentTag)expander.nextElement();
 
 			// assert the next element is returned by the parent
 			assertEquals(htmlNonVoidElement, markupElement.getName());
 			assertTrue(markupElement.closes(tag));
 		}
+	}
+
+	/**
+	 * Verifies that the namespace of the created closing tag is the same
+	 * as of the opening one
+	 *
+	 * @throws ParseException
+	 */
+	@Test
+	public void expandWicketTagWithSameNamespace() throws ParseException
+	{
+		final String namespace = "customNS";
+
+		OpenCloseTagExpander expander = new OpenCloseTagExpander()
+		{
+			@Override
+			protected String getWicketNamespace()
+			{
+				return namespace;
+			}
+		};
+
+		ComponentTag tag = new ComponentTag(HtmlHeaderResolver.HEADER_ITEMS, XmlTag.TagType.OPEN_CLOSE);
+		tag.setNamespace(namespace);
+		expander.onComponentTag(tag);
+
+		MarkupElement markupElement = expander.nextElement();
+
+		assertThat(markupElement, CoreMatchers.instanceOf(WicketTag.class));
+		assertTrue(markupElement.closes(tag));
+		assertEquals(namespace, ((ComponentTag) markupElement).getNamespace());
 	}
 
 	private static class TestMarkupElement extends WicketTag

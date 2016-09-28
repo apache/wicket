@@ -19,12 +19,12 @@ package org.apache.wicket.extensions.markup.html.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

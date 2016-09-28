@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import org.apache.wicket.protocol.http.documentvalidation.Tag;
 import org.apache.wicket.protocol.http.documentvalidation.TextContent;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

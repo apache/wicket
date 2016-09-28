@@ -27,5 +27,5 @@ public interface ITextResourceCompressor
 	 * @param original
 	 * @return compressed text resource
 	 */
-	public String compress(String original);
+	String compress(String original);
 }

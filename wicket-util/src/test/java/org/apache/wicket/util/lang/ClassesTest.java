@@ -24,6 +24,7 @@ import org.junit.Test;
 /**
  * @since 1.5.8
  */
+@SuppressWarnings({"javadoc", "serial"})
 public class ClassesTest extends Assert
 {
 	@Test
@@ -51,6 +52,4 @@ public class ClassesTest extends Assert
 		// anonymous interface impl
 		assertEquals("java.lang.Object", Classes.name(new Cloneable() {}.getClass()));
 	}
-
-
 }

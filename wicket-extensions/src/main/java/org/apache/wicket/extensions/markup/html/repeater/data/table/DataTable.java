@@ -113,6 +113,8 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 
 	private final Caption caption;
 
+	private final ColGroup colGroup;
+
 	private long toolbarIdCounter;
 
 	/**
@@ -132,45 +134,15 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	{
 		super(id);
 
-		Args.notEmpty(columns, "columns");
-
+		Args.notNull(columns, "columns");
 
 		this.columns = columns;
 		this.caption = new Caption("caption", getCaptionModel());
 		add(caption);
+		this.colGroup = new ColGroup("colGroup");
+		add(colGroup);
 		body = newBodyContainer("body");
-		datagrid = new DataGridView<T>("rows", columns, dataProvider)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@SuppressWarnings({ "rawtypes", "unchecked" })
-			@Override
-			protected Item newCellItem(final String id, final int index, final IModel model)
-			{
-				Item item = DataTable.this.newCellItem(id, index, model);
-				final IColumn<T, S> column = DataTable.this.columns.get(index);
-				if (column instanceof IStyledColumn)
-				{
-					item.add(new CssAttributeBehavior()
-					{
-						private static final long serialVersionUID = 1L;
-
-						@Override
-						protected String getCssClass()
-						{
-							return ((IStyledColumn<T, S>)column).getCssClass();
-						}
-					});
-				}
-				return item;
-			}
-
-			@Override
-			protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
-			{
-				return DataTable.this.newRowItem(id, index, model);
-			}
-		};
+		datagrid = newDataGridView("rows", columns, dataProvider);
 		datagrid.setItemsPerPage(rowsPerPage);
 		body.add(datagrid);
 		add(body);
@@ -178,6 +150,22 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		bottomToolbars = new ToolbarsContainer("bottomToolbars");
 		add(topToolbars);
 		add(bottomToolbars);
+	}
+
+	/**
+	 * Factory method for the DataGridView
+	 *
+	 * @param id
+	 *          The component id
+	 * @param columns
+	 *            list of IColumn objects
+	 * @param dataProvider
+	 *            imodel for data provider
+	 * @return the data grid view
+	 */
+	protected DataGridView<T> newDataGridView(String id, List<? extends IColumn<T, S>> columns, IDataProvider<T> dataProvider)
+	{
+		return new DefaultDataGridView(id, columns, dataProvider);
 	}
 
 	/**
@@ -189,6 +177,11 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	protected IModel<String> getCaptionModel()
 	{
 		return null;
+	}
+
+	public final ColGroup getColGroup()
+	{
+		return colGroup;
 	}
 
 	/**
@@ -447,6 +440,13 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		return String.valueOf(toolbarIdCounter).intern();
 	}
 
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		checkComponentTag(tag, "table");
+		super.onComponentTag(tag);
+	}
+
 	/**
 	 * This class acts as a repeater that will contain the toolbar. It makes sure that the table row
 	 * group (e.g. thead) tags are only visible when they contain rows in accordance with the HTML
@@ -512,7 +512,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 * A caption for the table. It renders itself only if {@link DataTable#getCaptionModel()} has
 	 * non-empty value.
 	 */
-	private static class Caption extends Label
+	public static class Caption extends Label
 	{
 		/**
 		 */
@@ -544,6 +544,42 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 		{
 			// don't try to find the model in the parent
 			return null;
+		}
+	}
+
+	private class DefaultDataGridView extends DataGridView<T>
+	{
+		public DefaultDataGridView(String id, List<? extends IColumn<T, S>> columns, IDataProvider<T> dataProvider)
+		{
+			super(id, columns, dataProvider);
+		}
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@Override
+		protected Item newCellItem(final String id, final int index, final IModel model)
+		{
+			Item item = DataTable.this.newCellItem(id, index, model);
+			final IColumn<T, S> column = DataTable.this.columns.get(index);
+			if (column instanceof IStyledColumn)
+			{
+				item.add(new CssAttributeBehavior()
+				{
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					protected String getCssClass()
+					{
+						return ((IStyledColumn<T, S>)column).getCssClass();
+					}
+				});
+			}
+			return item;
+		}
+
+		@Override
+		protected Item<T> newRowItem(final String id, final int index, final IModel<T> model)
+		{
+			return DataTable.this.newRowItem(id, index, model);
 		}
 	}
 }

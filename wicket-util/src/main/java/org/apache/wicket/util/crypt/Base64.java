@@ -38,7 +38,9 @@ import java.math.BigInteger;
  * @author Juergen Donnerstag
  * 
  * @since 1.2
+ * @deprecated Use {@link java.util.Base64} instead.
  */
+@Deprecated
 public class Base64
 {
 	private static final int DEFAULT_BUFFER_RESIZE_FACTOR = 2;
@@ -880,7 +882,7 @@ public class Base64
 		{
 			throw new IllegalArgumentException(
 				"Input array too big, the output array would be bigger (" + len +
-					") than the specified maxium size of " + maxResultSize);
+					") than the specified maximum size of " + maxResultSize);
 		}
 
 		Base64 b64 = isChunked ? new Base64(urlSafe) : new Base64(0, CHUNK_SEPARATOR, urlSafe);

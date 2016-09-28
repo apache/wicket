@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.core.request.handler.ComponentNotFoundException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.WicketTag;
@@ -195,7 +196,7 @@ public class AutoLabelTextResolver implements IComponentResolver
 					String text = labeled.getString(resourceKey);
 					if (!Strings.isEmpty(text))
 					{
-						return new StringResourceModel(resourceKey, labeled, null);
+						return new StringResourceModel(resourceKey, labeled);
 					}
 				}
 			}
@@ -229,10 +230,10 @@ public class AutoLabelTextResolver implements IComponentResolver
 			// We need to find a FormComponent...
 			Component related = null;
 			// ...which could be explicitly specified...
-			if (tag.getAttribute("for") != null)
+			String forAttributeValue = tag.getAttribute("for");
+			if (forAttributeValue != null)
 			{
-				Component component = AutoLabelResolver.findRelatedComponent(container,
-					tag.getAttribute("for"));
+				Component component = AutoLabelResolver.findRelatedComponent(container, forAttributeValue);
 				related = component;
 			}
 			if (related == null)
@@ -255,12 +256,13 @@ public class AutoLabelTextResolver implements IComponentResolver
 			if (related == null)
 			{
 				// ...or it might just not be available.
-				throw new IllegalStateException("no related component found for <wicket:label>");
+				String forAttr = forAttributeValue != null ? " for=\"" + forAttributeValue + "\"" : "";
+				throw new ComponentNotFoundException("no related component found for <wicket:label"+forAttr+">");
 			}
 			else
 			{
 				// ...found the form component, so we can return our label.
-				return new TextLabel("label" + container.getPage().getAutoIndex(), related);
+				return new TextLabel(tag.getId(), related);
 			}
 		}
 		return null;

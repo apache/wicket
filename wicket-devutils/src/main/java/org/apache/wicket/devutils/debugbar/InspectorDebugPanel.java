@@ -51,6 +51,7 @@ public class InspectorDebugPanel extends StandardDebugPanel
 	 * Construct.
 	 * 
 	 * @param id
+	 *          The component id
 	 */
 	public InspectorDebugPanel(final String id)
 	{

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.head;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -39,9 +39,35 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	 */
 	private final String condition;
 
+	/**
+	 * An optional markup id to set on the rendered &lt;script&gt; HTML element for
+	 * this header item
+	 */
+	private String markupId;
+
 	protected JavaScriptHeaderItem(String condition)
 	{
 		this.condition = condition;
+	}
+
+	/**
+	 * @return unique id for the javascript element.
+	 */
+	public String getId()
+	{
+		return markupId;
+	}
+
+	/**
+	 * Sets the markup id for this header item
+	 * @param markupId
+	 *            the markup id
+	 * @return {@code this} object, for method chaining
+	 */
+	public JavaScriptHeaderItem setId(String markupId)
+	{
+		this.markupId = markupId;
+		return this;
 	}
 
 	/**
@@ -322,7 +348,7 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	}
 
 	protected final void internalRenderJavaScriptReference(Response response, String url,
-		String id, boolean defer, String charset, String condition)
+		String id, boolean defer, String charset, String condition, boolean async)
 	{
 		Args.notEmpty(url, "url");
 
@@ -334,11 +360,11 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		boolean isAjax = RequestCycle.get().find(AjaxRequestTarget.class) != null;
+		boolean isAjax = RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent();
 		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
 		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
 
-		JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset);
+		JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset, async);
 
 		if (hasCondition)
 		{

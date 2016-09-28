@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/*global DOMParser: true, ActiveXObject: true */
+/*global DOMParser: true, ActiveXObject: true, console: true */
 
 /*
  * Wicket Ajax Support
@@ -24,7 +24,7 @@
  * @author Matej Knopp
  */
 
-;(function (undefined) {
+;(function (jQuery, undefined) {
 
 	'use strict';
 
@@ -49,7 +49,8 @@
 		getAjaxBaseUrl,
 		isUndef,
 		replaceAll,
-		htmlToDomDocument;
+		htmlToDomDocument,
+		nodeListToArray;
 
 	isUndef = function (target) {
 		return (typeof(target) === 'undefined' || target === null);
@@ -98,20 +99,51 @@
 	};
 
 	/**
-	 * Functions executer takes array of functions and executes them. Each function gets
-	 * the notify object, which needs to be called for the next function to be executed.
-	 * This way the functions can be executed synchronously.
+	 * Converts a NodeList to an Array
+	 *
+	 * @param nodeList The NodeList to convert
+	 * @returns {Array} The array with document nodes
+	 */
+	nodeListToArray = function (nodeList) {
+		var arr = [],
+			nodeId;
+		if (nodeList && nodeList.length) {
+			for (nodeId = 0; nodeId < nodeList.length; nodeId++) {
+				arr.push(nodeList.item(nodeId));
+			}
+		}
+		return arr;
+	};
+
+	/**
+	 * Functions executer takes array of functions and executes them.
+	 * The functions are executed one by one as far as the return value is FunctionsExecuter.DONE.
+	 * If the return value is FunctionsExecuter.ASYNC or undefined then the execution of
+	 * the functions will be resumed once the `notify` callback function is called.
 	 * This is needed because header contributions need to do asynchronous download of JS and/or CSS
 	 * and they have to let next function to run only after the download.
-	 * Each function has to call the notify object at some point, otherwise the functions after it wont be executed.
-	 * After the FunctionsExecuter is initiatialized, the start methods triggers the first function.
+	 * After the FunctionsExecuter is initialized, the start methods triggers the first function.
+	 *
+	 * @param functions {Array} - an array of functions to execute
 	 */
 	var FunctionsExecuter = function (functions) {
 
 		this.functions = functions;
 
+		/**
+		 * The index of the currently executed function
+		 * @type {number}
+		 */
 		this.current = 0;
 
+		/**
+		 * Tracks the depth of the call stack when `notify` is used for
+		 * asynchronous notification that a function execution has finished.
+		 * Should be reset to 0 when at some point to avoid problems like
+		 * "too much recursion". The reset may break the atomicity by allowing
+		 * another instance of FunctionExecuter to run its functions
+		 * @type {number}
+		 */
 		this.depth = 0; // we need to limit call stack depth
 
 		this.processNext = function () {
@@ -122,35 +154,71 @@
 				run = function () {
 					try {
 						var n = jQuery.proxy(this.notify, this);
-						f(n);
+						return f(n);
 					}
 					catch (e) {
 						Wicket.Log.error("FunctionsExecuter.processNext: " + e);
+						return FunctionsExecuter.FAIL;
 					}
 				};
 				run = jQuery.proxy(run, this);
 				this.current++;
 
-				if (this.depth > 1000) {
+				if (this.depth > FunctionsExecuter.DEPTH_LIMIT) {
 					// to prevent stack overflow (see WICKET-4675)
 					this.depth = 0;
 					window.setTimeout(run, 1);
 				} else {
-					this.depth ++;
-					run();
+					var retValue = run();
+					if (isUndef(retValue) || retValue === FunctionsExecuter.ASYNC) {
+						this.depth++;
+					}
+					return retValue;
 				}
 			}
 		};
 
 		this.start = function () {
-			this.processNext();
+			var retValue = FunctionsExecuter.DONE;
+			while (retValue === FunctionsExecuter.DONE) {
+				retValue = this.processNext();
+			}
 		};
 
 		this.notify = function () {
-			this.processNext();
+			this.start();
 		};
 	};
 
+	/**
+	 * Response that should be used by a function when it finishes successfully
+	 * in synchronous manner
+	 * @type {number}
+	 */
+	FunctionsExecuter.DONE = 1;
+
+	/**
+	 * Response that should be used by a function when it finishes abnormally
+	 * in synchronous manner
+	 * @type {number}
+	 */
+	FunctionsExecuter.FAIL = 2;
+
+	/**
+	 * Response that may be used by a function when it executes asynchronous
+	 * code and must wait `notify()` to be executed.
+	 * @type {number}
+	 */
+	FunctionsExecuter.ASYNC = 3;
+
+	/**
+	 * An artificial number used as a limit of the call stack depth to avoid
+	 * problems like "too much recursion" in the browser.
+	 * The depth is not easy to be calculated because the memory used by the
+	 * stack depends on many factors
+	 * @type {number}
+	 */
+	FunctionsExecuter.DEPTH_LIMIT = 1000;
 
 	// API start
 
@@ -180,6 +248,8 @@
 		error: function (msg) {
 			if (Wicket.Log.enabled()) {
 				Wicket.Ajax.DebugWindow.logError(msg);
+			} else if (typeof(console) !== "undefined" && typeof(console.error) === 'function') {
+				console.error('Wicket.Ajax: ', msg);
 			}
 		},
 
@@ -211,7 +281,7 @@
 			var res = name.match(/^([^|]+)\|(d|s|a)$/);
 			if (isUndef(res)) {
 				this.name = '0'; // '0' is the default channel name
-				this.type = 's'; // default to stack
+				this.type = 's'; // default to stack/queue
 			}
 			else {
 				this.name = res[1];
@@ -232,14 +302,14 @@
 				}
 			} else {
 				var busyChannel = "Channel '"+ this.name+"' is busy";
-				if (this.type === 's') { // stack
+				if (this.type === 's') { // stack/queue
 					Wicket.Log.info(busyChannel + " - scheduling the callback to be executed when the previous request finish.");
 					this.callbacks.push(callback);
 				}
 				else if (this.type === 'd') { // drop
-					Wicket.Log.info(busyChannel + " - dropping all previous scheduled callbacks and scheduled a new one to be executed when the current request finish.");
+					Wicket.Log.info(busyChannel + " - dropping all previous scheduled callbacks and scheduling a new one to be executed when the current request finish.");
 					this.callbacks = [];
-					this.callbacks[0] = callback;
+					this.callbacks.push(callback);
 				} else if (this.type === 'a') { // active
 					Wicket.Log.info(busyChannel + " - ignoring the Ajax call because there is a running request.");
 				}
@@ -248,17 +318,17 @@
 		},
 
 		done: function () {
-			var c = null;
+			var callback = null;
 
 			if (this.callbacks.length > 0) {
-				c = this.callbacks.shift();
+				callback = this.callbacks.shift();
 			}
 
-			if (c !== null && typeof(c) !== "undefined") {
+			if (callback !== null && typeof(callback) !== "undefined") {
 				Wicket.Log.info("Calling postponed function...");
 				// we can't call the callback from this call-stack
 				// therefore we set it on timer event
-				window.setTimeout(c, 1);
+				window.setTimeout(callback, 1);
 			} else {
 				this.busy = false;
 			}
@@ -365,6 +435,10 @@
 			if (!attrs.sp) {
 				attrs.sp = "bubble";
 			}
+
+			if (!attrs.sr) {
+				attrs.sr = false;
+			}
 		},
 
 		/**
@@ -434,8 +508,17 @@
 			}
 			else if (jQuery.isPlainObject(parameters)) {
 				for (name in parameters) {
-					value = parameters[name];
-					result.push({name: name, value: value});
+					if (name && parameters.hasOwnProperty(name)) {
+						value = parameters[name];
+						result.push({name: name, value: value});
+					}
+				}
+			}
+
+			for (var i = 0; i < result.length; i++) {
+				if (result[i] === null) {
+					result.splice(i, 1);
+					i--;
 				}
 			}
 
@@ -488,9 +571,6 @@
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
 		 */
 		doAjax: function (attrs) {
-
-			// keep channel for done()
-			this.channel = attrs.ch;
 
 			var
 				// the headers to use for each Ajax request
@@ -550,7 +630,7 @@
 					}
 					if (result === false) {
 						Wicket.Log.info("Ajax request stopped because of precondition check, url: " + attrs.u);
-						self.done();
+						self.done(attrs);
 						return false;
 					}
 				}
@@ -577,7 +657,7 @@
 			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
-				data = data.concat(Wicket.Form.serializeElement(el));
+				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
 
 			// convert to URL encoded string
@@ -634,15 +714,15 @@
 				complete: function (jqXHR, textStatus) {
 
 					context.steps.push(jQuery.proxy(function (notify) {
-						if (attrs.i) {
+						if (attrs.i && context.isRedirecting !== true) {
 							Wicket.DOM.hideIncrementally(attrs.i);
 						}
 
 						self._executeHandlers(attrs.coh, attrs, jqXHR, textStatus);
 						we.publish(topic.AJAX_CALL_COMPLETE, attrs, jqXHR, textStatus);
 
-						self.done();
-
+						self.done(attrs);
+						return FunctionsExecuter.DONE;
 					}, self));
 
 					var executer = new FunctionsExecuter(context.steps);
@@ -698,14 +778,14 @@
 					// In case the page isn't really redirected. For example say the redirect is to an octet-stream.
 					// A file download popup will appear but the page in the browser won't change.
 					this.success(context);
-					this.done();
 
 					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
 					    rhttps = /^https:\/\//; // checks whether the string starts with https://
 
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
 					if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
-						window.location = redirectUrl;
+						context.isRedirecting = true;
+						Wicket.Ajax.redirect(redirectUrl);
 					}
 					else {
 						var urlDepth = 0;
@@ -729,7 +809,8 @@
 							calculatedRedirect = window.location.protocol + "//" + window.location.host + calculatedRedirect;
 						}
 
-						window.location = calculatedRedirect;
+						context.isRedirecting = true;
+						Wicket.Ajax.redirect(calculatedRedirect);
 					}
 				}
 				else {
@@ -779,11 +860,12 @@
 
 			if (form.onsubmit && !form.getAttribute(submittingAttribute)) {
 				form.setAttribute(submittingAttribute, submittingAttribute);
-				var retValue = form.onsubmit();
-				if (typeof(retValue) === "undefined") {
-					retValue = true;
+				var retValue = true;
+				try {
+					retValue = form.onsubmit();
+				} finally {
+					form.removeAttribute(submittingAttribute);
 				}
-				form.removeAttribute(submittingAttribute);
 				if (!retValue) {
 					return;
 				}
@@ -822,8 +904,7 @@
 					form.action = form.action + '&' + dynamicExtraParameters;
 				}
 			}
-			// PhantomJS cannot submit with POST to iframe
-			form.method = /PhantomJS/.test(navigator.userAgent) ? 'get' : 'post';
+			form.method = 'post';
 			form.enctype = "multipart/form-data";
 			form.encoding = "multipart/form-data";
 
@@ -850,9 +931,45 @@
 			this._executeHandlers(attrs.ah, attrs);
 			we.publish(topic.AJAX_CALL_AFTER, attrs);
 
+			// a step to execute in both successful and erroneous completion
+			context.endStep = jQuery.proxy(function(notify) {
+				// remove the iframe and button elements
+				setTimeout(function() {
+					jQuery('#'+iframe.id + '-btn').remove();
+					jQuery(iframe).remove();
+				}, 0);
+
+				var attrs = context.attrs;
+				if (attrs.i && context.isRedirecting !== true) {
+					// hide the indicator
+					Wicket.DOM.hideIncrementally(attrs.i);
+				}
+
+				this._executeHandlers(attrs.coh, attrs, null, null);
+				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
+
+				this.done(attrs);
+				return FunctionsExecuter.DONE;
+			}, this);
+
+			// an error handler that is used when the connection to the server fails for any reason
+			if (attrs.rt) {
+				context.errorHandle = setTimeout(jQuery.proxy(function () {
+					this.failure(context, null, "No XML response in the IFrame document", "Failure");
+
+					context.steps.push(context.endStep);
+					var executer = new FunctionsExecuter(context.steps);
+					executer.start();
+				}, this), attrs.rt);
+			} else {
+				Wicket.Log.info("Submitting a multipart form without a timeout. " +
+					"Use AjaxRequestAttributes.setRequestTimeout(duration) if need to handle connection timeouts.");
+			}
+
 			// install handler to deal with the ajax response
 			// ... we add the onload event after form submit because chrome fires it prematurely
 			we.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), context);
+
 
 			// handled, restore state and return true
 			form.action = originalFormAction;
@@ -873,6 +990,10 @@
 			var context = event.data,
 				iframe = event.target,
 				envelope;
+
+			if (!isUndef(context.errorHandle)) {
+				clearTimeout(context.errorHandle);
+			}
 
 			// stop the event
 			event.stopPropagation();
@@ -898,25 +1019,7 @@
 				this.loadedCallback(envelope, context);
 			}
 
-			context.steps.push(jQuery.proxy(function(notify) {
-				// remove the iframe and button elements
-				setTimeout(function() {
-					jQuery('#'+iframe.id + '-btn').remove();
-					jQuery(iframe).remove();
-				}, 0);
-
-				var attrs = context.attrs;
-				if (attrs.i) {
-					// hide the indicator
-					Wicket.DOM.hideIncrementally(attrs.i);
-				}
-
-				this._executeHandlers(attrs.coh, attrs, null, null);
-				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
-
-				this.done();
-			}, this));
-
+			context.steps.push(context.endStep);
 			var executer = new FunctionsExecuter(context.steps);
 			executer.start();
 		},
@@ -995,11 +1098,10 @@
 				this._executeHandlers(attrs.sh, attrs, null, null, 'success');
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_SUCCESS, attrs, null, null, 'success');
 
-				// set the focus to the last component
-				window.setTimeout("Wicket.Focus.requestFocus();", 0);
+				Wicket.Focus.requestFocus();
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
-				notify();
+				return FunctionsExecuter.DONE;
 			}, this));
 		},
 
@@ -1010,15 +1112,18 @@
 					Wicket.Log.error("Wicket.Ajax.Call.failure: Error while parsing response: " + errorMessage);
 				}
 				var attrs = context.attrs;
-				this._executeHandlers(attrs.fh, attrs, errorMessage);
+				this._executeHandlers(attrs.fh, attrs, jqXHR, errorMessage, textStatus);
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_FAILURE, attrs, jqXHR, errorMessage, textStatus);
 
-				notify();
+				return FunctionsExecuter.DONE;
 			}, this));
 		},
 
-		done: function () {
-			Wicket.channelManager.done(this.channel);
+		done: function (attrs) {
+			this._executeHandlers(attrs.dh, attrs);
+			Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_DONE, attrs);
+
+			Wicket.channelManager.done(attrs.ch);
 		},
 
 		// Adds a closure that replaces a component
@@ -1026,14 +1131,6 @@
 			context.steps.push(function (notify) {
 				// get the component id
 				var compId = node.getAttribute("id");
-				var text = jQuery(node).text();
-
-				// if the text was escaped, unascape it
-				// (escaping is done when the component body contains a CDATA section)
-				var encoding = node.getAttribute("encoding");
-				if (encoding) {
-					text = Wicket.Head.Contributor.decode(encoding, text);
-				}
 
 				// get existing component
 				var element = Wicket.$(compId);
@@ -1043,11 +1140,13 @@
 						compId + "]] was not found while trying to perform markup update. " +
 						"Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
 				} else {
+					var text = Wicket.DOM.text(node);
+
 					// replace the component
 					Wicket.DOM.replace(element, text);
 				}
 				// continue to next step
-				notify();
+				return FunctionsExecuter.DONE;
 			});
 		},
 
@@ -1066,16 +1165,10 @@
 			 * when there are scripts which require manual call of 'FunctionExecutor#notify()'
 			 * @type {RegExp}
 			 */
-			var scriptSplitterR = new RegExp("\\(function\\(\\)\\{.*?}\\)\\(\\);", 'gi');
+			var scriptSplitterR = new RegExp("\\(function\\(\\)\\{[\\s\\S]*?}\\)\\(\\);", 'gi');
 
 			// get the javascript body
 			var text = Wicket.DOM.text(node);
-
-			// unescape it if necessary
-			var encoding = node.getAttribute("encoding");
-			if (encoding) {
-				text = Wicket.Head.Contributor.decode(encoding, text);
-			}
 
 			// aliases to improve performance
 			var steps = context.steps;
@@ -1083,16 +1176,16 @@
 
 			var evaluateWithManualNotify = function (parameters, body) {
 				return function(notify) {
-					var f = jQuery.noop;
-					var toExecute = "f = function(" + parameters + ") {" + body + "};";
+					var toExecute = "(function(" + parameters + ") {" + body + "})";
 
 					try {
-						// do the evaluation
-						eval(toExecute);
+						// do the evaluation in global scope
+						var f = window.eval(toExecute);
 						f(notify);
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
+					return FunctionsExecuter.ASYNC;
 				};
 			};
 
@@ -1100,13 +1193,13 @@
 				return function(notify) {
 					// just evaluate the javascript
 					try {
-						// do the evaluation
-						eval(script);
+						// do the evaluation in global scope
+						window.eval(script);
 					} catch (exception) {
 						log.error("Wicket.Ajax.Call.processEvaluation: Exception evaluating javascript: " + exception + ", text: " + text);
 					}
 					// continue to next step
-					notify();
+					return FunctionsExecuter.DONE;
 				};
 			};
 
@@ -1146,9 +1239,10 @@
 
 		// Adds a closure that processes a redirect
 		processRedirect: function (context, node) {
-			var text = jQuery(node).text();
+			var text = Wicket.DOM.text(node);
 			Wicket.Log.info("Redirecting to: " + text);
-			window.location = text;
+			context.isRedirecting = true;
+			Wicket.Ajax.redirect(text);
 		},
 
 		// mark the focused component so that we know if it has been replaced by response
@@ -1157,7 +1251,7 @@
 				Wicket.Focus.markFocusedComponent();
 
 				// continue to next step
-				notify();
+				return FunctionsExecuter.DONE;
 			});
 		},
 
@@ -1168,7 +1262,7 @@
 				Wicket.Focus.checkFocusedComponentReplaced();
 
 				// continue to next step
-				notify();
+				return FunctionsExecuter.DONE;
 			});
 		}
 	};
@@ -1413,9 +1507,12 @@
 			 * <em>Wicket.Form.excludeFromAjaxSerialization</em>
 			 *
 			 * @param element {HTMLFormElement} - the form element to serialize. E.g. HTMLInputElement
+			 * @param serializeRecursively {Boolean} - a flag indicating whether to collect (submit) the
+			 * 			name/value pairs for all HTML form elements children of the HTML element with
+			 * 			the JavaScript listener
 			 * @return An array with a single element - an object with two keys - <em>name</em> and <em>value</em>.
 			 */
-			serializeElement: function(element) {
+			serializeElement: function(element, serializeRecursively) {
 
 				if (!element) {
 					return [];
@@ -1434,25 +1531,26 @@
 				} else if (tag === "input" || tag === "textarea") {
 					return Wicket.Form.serializeInput(element);
 				} else {
-					return [];
+					var result = [];
+					if (serializeRecursively) {
+						var elements = nodeListToArray(element.getElementsByTagName("input"));
+						elements = elements.concat(nodeListToArray(element.getElementsByTagName("select")));
+						elements = elements.concat(nodeListToArray(element.getElementsByTagName("textarea")));
+
+						for (var i = 0; i < elements.length; ++i) {
+							var el = elements[i];
+							if (el.name && el.name !== "") {
+								result = result.concat(Wicket.Form.serializeElement(el, serializeRecursively));
+							}
+						}
+					}
+					return result;
 				}
 			},
 
 			serializeForm: function (form) {
 				var result = [],
-					elements,
-					nodeListToArray,
-					nodeId;
-
-				nodeListToArray = function (nodeList) {
-					var arr = [];
-					if (nodeList && nodeList.length) {
-						for (nodeId = 0; nodeId < nodeList.length; nodeId++) {
-							arr.push(nodeList.item(nodeId));
-						}
-					}
-					return arr;
-				};
+					elements;
 
 				if (form) {
 					if (form.tagName.toLowerCase() === 'form') {
@@ -1471,7 +1569,7 @@
 				for (var i = 0; i < elements.length; ++i) {
 					var el = elements[i];
 					if (el.name && el.name !== "") {
-						result = result.concat(Wicket.Form.serializeElement(el));
+						result = result.concat(Wicket.Form.serializeElement(el, false));
 					}
 				}
 				return result;
@@ -1521,11 +1619,23 @@
 		 */
 		DOM: {
 
-			/** shows an element */
-			show: function (e) {
+			/**
+			 * Shows an element
+			 * @param {HTMLElement | String} e   The HTML element (or its id) to show
+			 * @param {String} display  The value of CSS display property to use,
+			 *      e.g. 'block', 'inline'. Optional
+			 */
+			show: function (e, display) {
 				e = Wicket.$(e);
 				if (e !== null) {
-					e.style.display = "";
+					if (isUndef(display)) {
+						// no explicit 'display' value is requested so
+						// use jQuery. It has special logic to decide which is the
+						// best value for an HTMLElement
+						jQuery(e).show();
+					} else {
+						e.style.display = display;
+					}
 				}
 			},
 
@@ -1533,8 +1643,23 @@
 			hide: function (e) {
 				e = Wicket.$(e);
 				if (e !== null) {
-					e.style.display = "none";
+					jQuery(e).hide();
 				}
+			},
+
+			/**
+			 * Add or remove one or more classes from each element in the
+			 * set of matched elements, depending on either the class's presence
+			 * or the value of the switch argument.
+			 *
+			 * @param {String} elementId The markup id of the element that will be manipulated.
+			 * @param {String} cssClass One or more class names (separated by spaces)
+			 *        to be toggled for each element in the matched set.
+			 * @param {Boolean} Switch A Boolean (not just truthy/falsy) value to
+			 *        determine whether the class should be added or removed.
+			 */
+			toggleClass: function(elementId, cssClass, Switch) {
+				jQuery('#'+elementId).toggleClass(cssClass, Switch);
 			},
 
 			/** call-counting implementation of Wicket.DOM.show() */
@@ -1728,8 +1853,10 @@
 			},
 
 			/**
-			 * Reads the text from the node's children nodes
-			 * @param node the root node
+			 * Reads the text from the node's children nodes.
+			 * Used instead of jQuery.text() because it is very slow in IE10/11.
+			 * WICKET-5132, WICKET-5510
+			 * @param node {DOMElement} the root node
 			 */
 			text: function (node) {
 				if (isUndef(node)) {
@@ -1822,10 +1949,16 @@
 					Wicket.Event.add(attrs.c, evt, function (jqEvent, data) {
 						var call = new Wicket.Ajax.Call();
 						var attributes = jQuery.extend({}, attrs);
-						attributes.event = Wicket.Event.fix(jqEvent);
-						if (data) {
-							attributes.event.extraData = data;
+
+						if (evt !== "domready") {
+							attributes.event = Wicket.Event.fix(jqEvent);
+							if (data) {
+								attributes.event.extraData = data;
+							}
 						}
+
+						call._executeHandlers(attributes.ih, attributes);
+						Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_INIT, attributes);
 
 						var throttlingSettings = attributes.tr;
 						if (throttlingSettings) {
@@ -1839,14 +1972,25 @@
 						else {
 							call.ajax(attributes);
 						}
-						Wicket.Ajax._handleEventCancelation(attributes);
-					});
+						if (evt !== "domready") {
+							Wicket.Ajax._handleEventCancelation(attributes);
+						}
+					}, null, attrs.sel);
 				});
 			},
 			
 			process: function(data) {
 				var call = new Wicket.Ajax.Call();
 				call.process(data);
+			},
+
+			/**
+			 * An abstraction over native window.location.replace() to be able to suppress it for unit tests
+			 *
+			 * @param url The url to redirect to
+			 */
+			redirect: function(url) {
+				window.location = url;
 			}
 		},
 
@@ -1866,24 +2010,6 @@
 		Head: {
 			Contributor: {
 
-				/**
-				 * Decoding functionality
-				 *
-				 * Wicket sends rendered components and javascript as CDATA section of XML document. When the
-				 * component body itself contains a CDATA section, Wicket needs to escape it properly.
-				 */
-				decode: function (encoding, text) {
-
-					var decode1 = function (text) {
-						return replaceAll(text, "]^", "]");
-					};
-
-					if (encoding === "wicket1") {
-						text = decode1(text);
-					}
-					return text;
-				},
-
 				// Parses the header contribution element (returns a DOM tree with the contribution)
 				parse: function (headerNode) {
 					// the header contribution is stored as CDATA section in the header-contribution element.
@@ -1893,12 +2019,7 @@
 					// need to replace that first
 
 					// get the header contribution text and unescape it if necessary
-					var text = jQuery(headerNode).text();
-					var encoding = headerNode.getAttribute("encoding");
-
-					if (encoding !== null && encoding !== "") {
-						text = this.decode(encoding, text);
-					}
+					var text = Wicket.DOM.text(headerNode);
 
 					if (Wicket.Browser.isKHTML()) {
 						// konqueror crashes if there is a <script element in the xml, but <SCRIPT is fine.
@@ -1977,25 +2098,31 @@
 				// Process an external stylesheet element
 				processLink: function (context, node) {
 					context.steps.push(function (notify) {
-						// if the element is already in head, skip it
-						if (Wicket.Head.containsElement(node, "href")) {
-							notify();
-							return;
+						var res = Wicket.Head.containsElement(node, "href");
+						var oldNode = res.oldNode;
+						if (res.contains) {
+							// an element with same href attribute is in document, skip it
+							return FunctionsExecuter.DONE;
+						} else if (oldNode) {
+							// remove another external element with the same id but different href
+							oldNode.parentNode.removeChild(oldNode);
 						}
+
 						// create link element
 						var css = Wicket.Head.createElement("link");
 
-						// copy required attributes
-						css.id = node.getAttribute("id");
-						css.rel = node.getAttribute("rel");
-						css.href = node.getAttribute("href");
-						css.type = node.getAttribute("type");
+						// copy supplied attributes only.
+						var attributes = $(node).prop("attributes");
+						var $css = $(css);
+						$.each(attributes, function() {
+							$css.attr(this.name, this.value);
+						});
 
 						// add element to head
 						Wicket.Head.addElement(css);
 
 						// cross browser way to check when the css is loaded
-						// taked from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
+						// taken from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
 						// this makes a second GET request to the css but it gets it either from the cache or
 						// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
 						var img = document.createElement('img');
@@ -2013,6 +2140,8 @@
 							notify();
 						  }
 						}
+
+						return FunctionsExecuter.ASYNC;
 					});
 				},
 
@@ -2021,22 +2150,16 @@
 					context.steps.push(function (notify) {
 						// if element with same id is already in document, skip it
 						if (Wicket.DOM.containsElement(node)) {
-							notify();
-							return;
+							return FunctionsExecuter.DONE;
 						}
 						// serialize the style to string
 						var content = Wicket.DOM.serializeNodeChildren(node);
 
-						// create style element
-						var style = Wicket.Head.createElement("style");
-
-						// copy id attribute
-						style.id = node.getAttribute("id");
-
 						// create stylesheet
-						if (Wicket.Browser.isIE()) {
+						if (Wicket.Browser.isIELessThan11()) {
 							try  {
 								document.createStyleSheet().cssText = content;
+								return FunctionsExecuter.DONE;
 							}
 							catch (ignore) {
 								var run = function() {
@@ -2046,29 +2169,46 @@
 									catch(e) {
 										Wicket.Log.error("Wicket.Head.Contributor.processStyle: " + e);
 									}
+									notify();
 								};
 								window.setTimeout(run, 1);
+								return FunctionsExecuter.ASYNC;
 							}
 						} else {
+							// create style element
+							var style = Wicket.Head.createElement("style");
+
+							// copy id attribute
+							style.id = node.getAttribute("id");
+
 							var textNode = document.createTextNode(content);
 							style.appendChild(textNode);
+
+							Wicket.Head.addElement(style);
 						}
-						Wicket.Head.addElement(style);
 
 						// continue to next step
-						notify();
+						return FunctionsExecuter.DONE;
 					});
 				},
 
 				// Process a script element (both inline and external)
 				processScript: function (context, node) {
 					context.steps.push(function (notify) {
-						// if element with same id is already in document,
-						// or element with same src attribute is in document, skip it
-						if (Wicket.DOM.containsElement(node) ||
-							Wicket.Head.containsElement(node, "src")) {
-							notify();
-							return;
+
+						if (!node.getAttribute("src") && Wicket.DOM.containsElement(node)) {
+							// if an inline element with same id is already in document, skip it
+							return FunctionsExecuter.DONE;
+						} else {
+							var res = Wicket.Head.containsElement(node, "src");
+							var oldNode = res.oldNode;
+							if (res.contains) {
+								// an element with same src attribute is in document, skip it
+								return FunctionsExecuter.DONE;
+							} else if (oldNode) {
+								// remove another external element with the same id but different src
+								oldNode.parentNode.removeChild(oldNode);
+							}
 						}
 
 						// determine whether it is external javascript (has src attribute set)
@@ -2108,6 +2248,7 @@
 
 							Wicket.Head.addElement(scriptDomNode);
 
+							return FunctionsExecuter.ASYNC;
 						} else {
 							// serialize the element content to string
 							var text = Wicket.DOM.serializeNodeChildren(node);
@@ -2123,14 +2264,15 @@
 								Wicket.Head.addJavascript(text, id, "", type);
 							} else {
 								try {
-									eval(text);
+									// do the evaluation in global scope
+									window.eval(text);
 								} catch (e) {
 									Wicket.Log.error("Wicket.Head.Contributor.processScript: " + e + ": eval -> " + text);
 								}
 							}
 
 							// continue to next step
-							notify();
+							return FunctionsExecuter.DONE;
 						}
 					});
 				},
@@ -2140,7 +2282,7 @@
 					context.steps.push(function (notify) {
 						var comment = document.createComment(node.nodeValue);
 						Wicket.Head.addElement(comment);
-						notify();
+						return FunctionsExecuter.DONE;
 					});
 				}
 			},
@@ -2172,16 +2314,20 @@
 			containsElement: function (element, mandatoryAttribute) {
 				var attr = element.getAttribute(mandatoryAttribute);
 				if (isUndef(attr) || attr === "") {
-					return false;
+					return {
+						contains: false
+					};
 				}
 
+				var elementTagName = element.tagName.toLowerCase();
+				var elementId = element.getAttribute("id");
 				var head = document.getElementsByTagName("head")[0];
 
-				if (element.tagName === "script") {
+				if (elementTagName === "script") {
 					head = document;
 				}
 
-				var nodes = head.getElementsByTagName(element.tagName);
+				var nodes = head.getElementsByTagName(elementTagName);
 
 				for (var i = 0; i < nodes.length; ++i) {
 					var node = nodes[i];
@@ -2189,16 +2335,25 @@
 					// check node names and mandatory attribute values
 					// we also have to check for attribute name that is suffixed by "_".
 					// this is necessary for filtering script references
-					if (node.tagName.toLowerCase() === element.tagName.toLowerCase()) {
+					if (node.tagName.toLowerCase() === elementTagName) {
 
 						var loadedUrl = node.getAttribute(mandatoryAttribute);
 						var loadedUrl_ = node.getAttribute(mandatoryAttribute+"_");
 						if (loadedUrl === attr || loadedUrl_ === attr) {
-							return true;
+							return {
+								contains: true
+							};
+						} else if (elementId && elementId === node.getAttribute("id")) {
+							return {
+								contains: false,
+								oldNode: node
+							};
 						}
 					}
 				}
-				return false;
+				return {
+					contains: false
+				};
 			},
 
 			// Adds a javascript element to page header.
@@ -2451,9 +2606,11 @@
 
 				var target = event.target;
 				if (target) {
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
-					Wicket.Focus.lastFocusId = target.id;
-					Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId);
+					var WF = Wicket.Focus;
+					WF.refocusLastFocusedComponentAfterResponse = false;
+					var id = target.id;
+					WF.lastFocusId = id;
+					Wicket.Log.info("focus set on " + id);
 				}
 			},
 
@@ -2461,65 +2618,69 @@
 				event = Wicket.Event.fix(event);
 
 				var target = event.target;
-				if (target && Wicket.Focus.lastFocusId === target.id) {
-					if (Wicket.Focus.refocusLastFocusedComponentAfterResponse) {
+				var WF = Wicket.Focus;
+				if (target && WF.lastFocusId === target.id) {
+					var id = target.id;
+					if (WF.refocusLastFocusedComponentAfterResponse) {
 						// replaced components seem to blur when replaced only on Safari - so do not modify lastFocusId so it gets refocused
-						Wicket.Log.info("focus removed from " + target.id + " but ignored because of component replacement");
+						Wicket.Log.info("focus removed from " + id + " but ignored because of component replacement");
 					} else {
-						Wicket.Focus.lastFocusId=null;
-						Wicket.Log.info("focus removed from " + target.id);
+						WF.lastFocusId = null;
+						Wicket.Log.info("focus removed from " + id);
 					}
 				}
 			},
 
 			getFocusedElement: function () {
-				if (typeof(Wicket.Focus.lastFocusId) !== "undefined" && Wicket.Focus.lastFocusId !== "" && Wicket.Focus.lastFocusId !== null)
-				{
-					Wicket.Log.info("returned focused element: " + Wicket.$(Wicket.Focus.lastFocusId));
-					return Wicket.$(Wicket.Focus.lastFocusId);
+				var lastFocusId = Wicket.Focus.lastFocusId;
+				if (lastFocusId) {
+					var focusedElement = Wicket.$(lastFocusId);
+					Wicket.Log.info("returned focused element: " + focusedElement);
+					return  focusedElement;
 				}
 			},
 
 			setFocusOnId: function (id) {
-				if (typeof(id) !== "undefined" && id !== "" && id !== null) {
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = true;
-					Wicket.Focus.focusSetFromServer = true;
-					Wicket.Focus.lastFocusId = id;
-					Wicket.Log.info("focus set on " + Wicket.Focus.lastFocusId + " from serverside");
+				var WF = Wicket.Focus;
+				if (id) {
+					WF.refocusLastFocusedComponentAfterResponse = true;
+					WF.focusSetFromServer = true;
+					WF.lastFocusId = id;
+					Wicket.Log.info("focus set on " + id + " from server side");
 				} else {
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
-					Wicket.Log.info("refocus focused component after request stopped from serverside");
+					WF.refocusLastFocusedComponentAfterResponse = false;
+					Wicket.Log.info("refocus focused component after request stopped from server side");
 				}
 			},
 
 			// mark the focused component so that we know if it has been replaced or not by response
 			markFocusedComponent: function () {
-				var focusedElement = Wicket.Focus.getFocusedElement();
-				if (typeof(focusedElement) !== "undefined" && focusedElement !== null) {
+				var WF = Wicket.Focus;
+				var focusedElement = WF.getFocusedElement();
+				if (focusedElement) {
 					// create a property of the focused element that would not remain there if component is replaced
 					focusedElement.wasFocusedBeforeComponentReplacements = true;
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = true;
-					Wicket.Focus.focusSetFromServer = false;
+					WF.refocusLastFocusedComponentAfterResponse = true;
+					WF.focusSetFromServer = false;
 				} else {
-					Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+					WF.refocusLastFocusedComponentAfterResponse = false;
 				}
 			},
 
 			// detect if the focused component was replaced
 			checkFocusedComponentReplaced: function () {
-				var focusedElement = Wicket.Focus.getFocusedElement();
-				if (Wicket.Focus.refocusLastFocusedComponentAfterResponse === true)
-				{
-					if (typeof(focusedElement) !== "undefined" && focusedElement !== null) {
-						if (typeof(focusedElement.wasFocusedBeforeComponentReplacements) !== "undefined")
-						{
+				var WF = Wicket.Focus;
+				if (WF.refocusLastFocusedComponentAfterResponse) {
+					var focusedElement = WF.getFocusedElement();
+					if (focusedElement) {
+						if (typeof(focusedElement.wasFocusedBeforeComponentReplacements) !== "undefined") {
 							// focus component was not replaced - no need to refocus it
-							Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+							WF.refocusLastFocusedComponentAfterResponse = false;
 						}
 					} else {
 						// focused component dissapeared completely - no use to try to refocus it
-						Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
-						Wicket.Focus.lastFocusId = "";
+						WF.refocusLastFocusedComponentAfterResponse = false;
+						WF.lastFocusId = "";
 					}
 				}
 			},
@@ -2529,44 +2690,73 @@
 				// (if focus was not changed from server) but if not, and the focus component should
 				// remain the same, do not re-focus - fixes problem on IE6 for combos that have
 				// the popup open (refocusing closes popup)
-				if (Wicket.Focus.refocusLastFocusedComponentAfterResponse &&
-					typeof(Wicket.Focus.lastFocusId) !== "undefined" &&
-					Wicket.Focus.lastFocusId !== "" &&
-					Wicket.Focus.lastFocusId !== null)
-				{
-					var toFocus = Wicket.$(Wicket.Focus.lastFocusId);
+				var WF = Wicket.Focus;
+				if (WF.refocusLastFocusedComponentAfterResponse && WF.lastFocusId) {
+					var toFocus = Wicket.$(WF.lastFocusId);
 
-					if (toFocus !== null && typeof(toFocus) !== "undefined") {
-						Wicket.Log.info("Calling focus on " + Wicket.Focus.lastFocusId);
-						try {
-							if (Wicket.Focus.focusSetFromServer) {
+					if (toFocus) {
+						Wicket.Log.info("Calling focus on " + WF.lastFocusId);
+
+						var safeFocus = function() {
+							try {
 								toFocus.focus();
-							} else {
-								// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
-								var temp = toFocus.onfocus;
-								toFocus.onfocus = null;
-								toFocus.focus();
-								// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
-								window.setTimeout(function () {toFocus.onfocus = temp; }, 0);
+							} catch (ignore) {
+								// WICKET-6209 IE fails if toFocus is disabled
 							}
-						} catch (ignore) {
+						};
+
+						if (WF.focusSetFromServer) {
+							// WICKET-5858
+							window.setTimeout(safeFocus, 0);
+						} else {
+							// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
+							var temp = toFocus.onfocus;
+							toFocus.onfocus = null;
+
+							// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
+							window.setTimeout(function () { safeFocus(); toFocus.onfocus = temp; }, 0);
 						}
+					} else {
+						WF.lastFocusId = "";
+						Wicket.Log.info("Couldn't set focus on element with id '" + WF.lastFocusId + "' because it is not in the page anymore");
 					}
-					else
-					{
-						Wicket.Focus.lastFocusId = "";
-						Wicket.Log.info("Couldn't set focus on " + Wicket.Focus.lastFocusId + " not on the page anymore");
-					}
-				}
-				else if (Wicket.Focus.refocusLastFocusedComponentAfterResponse)
-				{
+				} else if (WF.refocusLastFocusedComponentAfterResponse) {
 					Wicket.Log.info("last focus id was not set");
-				}
-				else
-				{
+				} else {
 					Wicket.Log.info("refocus last focused component not needed/allowed");
 				}
 				Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;
+			}
+		},
+
+		/**
+		 * Manages the functionality needed by AbstractAjaxTimerBehavior and its subclasses
+		 */
+		Timer: {
+			/**
+			 * Schedules a timer
+			 * @param {string} timerId - the identifier for the timer
+			 * @param {function|string} js - the JavaScript to execute after the timeout
+			 * @param {number} delay - the timeout
+			 */
+			'set': function(timerId, js, delay) {
+				if (typeof(Wicket.TimerHandles) === 'undefined') {
+					Wicket.TimerHandles = {};
+				}
+
+				Wicket.Timer.clear(timerId);
+				Wicket.TimerHandles[timerId] = setTimeout(js, delay);
+			},
+
+			/**
+			 * Un-schedules a timer by its id
+			 * @param {string} timerId - the identifier of the timer
+			 */
+			clear: function(timerId) {
+				if (Wicket.TimerHandles && Wicket.TimerHandles[timerId]) {
+					clearTimeout(Wicket.TimerHandles[timerId]);
+					delete Wicket.TimerHandles[timerId];
+				}
 			}
 		}
 	});
@@ -2597,6 +2787,8 @@
 		setup: function () {
 
 			if (Wicket.Browser.isIE()) {
+				// WICKET-5959: IE >= 11 supports "input" events, but triggers too often
+				// to be reliable
 
 				jQuery(this).on('keydown', function (event) {
 					jQuery.event.special.inputchange.keyDownPressed = true;
@@ -2664,6 +2856,21 @@
 	Wicket.Event.add(window, 'focusout', Wicket.Focus.focusout);
 
 	/**
+	 * Clear any scheduled Ajax timers when leaving the current page
+	 */
+	Wicket.Event.add(window, "unload", function() {
+		var WTH = Wicket.TimerHandles;
+		if (WTH) {
+			for (var th in WTH) {
+				if (WTH.hasOwnProperty(th)) {
+					window.clearTimeout(WTH[th]);
+					delete WTH[th];
+				}
+			}
+		}
+	});
+
+	/**
 	 * Remove any scheduled timers on the removed element.
 	 * This wont remove the timer for elements which are children of the removed one.
 	 */
@@ -2690,4 +2897,4 @@
 		}
 	});
 
-})();
+})(jQuery);

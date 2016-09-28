@@ -29,7 +29,7 @@ import org.apache.wicket.util.io.IClusterable;
  * 
  * <pre>
  * <code>
- * public static MetaDataKey&lt;Role&gt; ROLE = new MetaDataKey&lt;Role&gt;() { };
+ * public static final MetaDataKey&lt;Role&gt; ROLE = new MetaDataKey&lt;Role&gt;() { };
  * </code>
  * </pre>
  * 

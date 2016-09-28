@@ -35,7 +35,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The method to be used when submitting a form
 	 */
-	public static enum Method
+	public enum Method
 	{
 		/** get */
 		GET,
@@ -53,7 +53,7 @@ public final class AjaxRequestAttributes
 	/**
 	 * The JavaScript event propagation type
 	 */
-	public static enum EventPropagation
+	public enum EventPropagation
 	{
 		/**
 		 * Stops the propagation of the JavaScript event to the parent of its target
@@ -131,6 +131,40 @@ public final class AjaxRequestAttributes
 	 * feedback without overloading the server with ajax calls.
 	 */
 	private ThrottlingSettings throttlingSettings;
+
+	/**
+	 * A selector string to filter the descendants of the selected
+	 * elements that trigger the event. If the selector is null or empty,
+	 * the event is always triggered when it reaches the selected HTML element.
+	 *
+	 * @see <a href="http://api.jquery.com/on/">jQuery#on's selector</a>
+	 */
+	private CharSequence childSelector;
+
+	/**
+	 * A flag indicating whether to collect (submit) the name/value pairs for all HTML form elements
+	 * children of the HTML element with the JavaScript listener
+	 */
+	private boolean serializeRecursively;
+
+	/**
+	 * @see #childSelector
+	 * @return The selector string that filters the descendants
+	 */
+	public CharSequence getChildSelector()
+	{
+		return childSelector;
+	}
+
+	/**
+	 * @see #childSelector
+	 * @param childSelector
+	 *            The selector string that filters the descendants
+	 */
+	public void setChildSelector(CharSequence childSelector)
+	{
+		this.childSelector = childSelector;
+	}
 
 	/**
 	 * Returns whether the form submit is multipart.
@@ -225,7 +259,7 @@ public final class AjaxRequestAttributes
 	{
 		if (ajaxCallListeners == null)
 		{
-			ajaxCallListeners = new ArrayList<IAjaxCallListener>();
+			ajaxCallListeners = new ArrayList<>();
 		}
 		return ajaxCallListeners;
 	}
@@ -242,7 +276,7 @@ public final class AjaxRequestAttributes
 	{
 		if (extraParameters == null)
 		{
-			extraParameters = new HashMap<String, Object>();
+			extraParameters = new HashMap<>();
 		}
 		return extraParameters;
 	}
@@ -283,24 +317,40 @@ public final class AjaxRequestAttributes
 	{
 		if (dynamicExtraParameters == null)
 		{
-			dynamicExtraParameters = new ArrayList<CharSequence>();
+			dynamicExtraParameters = new ArrayList<>();
 		}
 		return dynamicExtraParameters;
 	}
 
 	/**
-	 * Only applies for event behaviors. Returns whether the behavior should allow the default event
+	 * Only applies for event behaviors. Returns whether the behavior should prevent the default event
 	 * handler to be invoked. For example if the behavior is attached to a link and
-	 * {@link #isPreventDefault()} returns <code>false</code> (which is default value), the link's
+	 * isPreventDefault() returns <code>true</code>, the link's
 	 * URL will not be followed. If the Ajax behavior is attached to a checkbox or a radio button
 	 * then the default behavior should be allowed to actually check the box or radio button, i.e.
-	 * this method should return <code>true</code>.
+	 * this method should return <code>false</code>.
 	 * 
-	 * @return {@code true} if the default event handler should be invoked, {@code false} otherwise.
+	 * @return {@code false} if the default event handler should be invoked
 	 */
 	public boolean isPreventDefault()
 	{
 		return preventDefault;
+	}
+
+	/**
+	 * Only applies for event behaviors. Determines whether the behavior should prevent the default
+	 * event handler to be invoked.
+	 *
+	 * @see #isPreventDefault()
+	 *
+	 * @param preventDefault
+	 * @return {@code this} object for chaining
+	 * @see #isPreventDefault()
+	 */
+	public AjaxRequestAttributes setPreventDefault(boolean preventDefault)
+	{
+		this.preventDefault = preventDefault;
+		return this;
 	}
 
 	/**
@@ -310,22 +360,6 @@ public final class AjaxRequestAttributes
 	public EventPropagation getEventPropagation()
 	{
 		return eventPropagation;
-	}
-
-	/**
-	 * Only applies for event behaviors. Determines whether the behavior should allow the default
-	 * event handler to be invoked.
-	 * 
-	 * @see #isPreventDefault()
-	 * 
-	 * @param preventDefault
-	 * @return {@code this} object for chaining
-	 * @see #isPreventDefault()
-	 */
-	public AjaxRequestAttributes setPreventDefault(boolean preventDefault)
-	{
-		this.preventDefault = preventDefault;
-		return this;
 	}
 
 	/**
@@ -502,4 +536,21 @@ public final class AjaxRequestAttributes
 		return this;
 	}
 
+	/**
+	 * @return whether to collect (submit) the name/value pairs for all HTML form elements
+	 *      children of the HTML element with the JavaScript listener
+	 */
+	public boolean isSerializeRecursively() {
+		return serializeRecursively;
+	}
+
+	/**
+	 * @param serializeRecursively
+	 *          a flag indicating whether to collect (submit) the name/value pairs for all HTML form elements
+	 * children of the HTML element with the JavaScript listener
+	 */
+	public AjaxRequestAttributes setSerializeRecursively(final boolean serializeRecursively) {
+		this.serializeRecursively = serializeRecursively;
+		return this;
+	}
 }

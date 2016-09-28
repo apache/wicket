@@ -30,12 +30,10 @@ import javax.servlet.ServletResponse;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.util.IProvider;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.time.Duration;
 import org.junit.Assert;
@@ -58,14 +56,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 				super.init();
 
 				// use HttpSessionStore because we need to test it
-				setSessionStoreProvider(new IProvider<ISessionStore>()
-				{
-					@Override
-					public ISessionStore get()
-					{
-						return new HttpSessionStore();
-					}
-				});
+				setSessionStoreProvider(() -> new HttpSessionStore());
 			}
 		};
 	}

@@ -17,7 +17,6 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -58,7 +57,6 @@ import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.DefaultMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -78,12 +76,14 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
-import org.apache.wicket.settings.IDebugSettings;
+import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -377,8 +377,8 @@ public abstract class Component
 	protected static final int FLAG_RESERVED5 = 0x10000;
 	/** onInitialize called */
 	protected static final int FLAG_INITIALIZED = 0x20000;
-	/** Reserved subclass-definable flag bit */
-	private static final int FLAG_NOTUSED7 = 0x40000;
+	/** Set when a component is removed from the hierarchy */
+	private static final int FLAG_REMOVED = 0x40000;
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
@@ -397,9 +397,9 @@ public abstract class Component
 	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
 	 * invoked (right before invoking beforeRender on children)
 	 */
-	private static final int FLAG_RENDERING = 0x2000000;
-	private static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
-	private static final int FLAG_AFTER_RENDERING = 0x8000000;
+	protected static final int FLAG_RENDERING = 0x2000000;
+	protected static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
+	protected static final int FLAG_AFTER_RENDERING = 0x8000000;
 
 	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
@@ -410,7 +410,7 @@ public abstract class Component
 	private static final int FLAG_VISIBILITY_ALLOWED = 0x40000000;
 
 	private static final int FLAG_DETACHING = 0x80000000;
-
+	
 	/**
 	 * The name of attribute that will hold markup id
 	 */
@@ -446,6 +446,8 @@ public abstract class Component
 	private static final short RFLAG_CONFIGURED = 0x10;
 	private static final short RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED = 0x20;
 	private static final short RFLAG_INITIALIZE_SUPER_CALL_VERIFIED = 0x40;
+	protected static final short RFLAG_CONTAINER_DEQUEING = 0x80;
+	private static final short RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED = 0x100;
 
 	/**
 	 * Flags that only keep their value during the request. Useful for cache markers, etc. At the
@@ -454,7 +456,7 @@ public abstract class Component
 	private transient short requestFlags = 0;
 
 	/** Component id. */
-	private String id;
+	private final String id;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -678,10 +680,15 @@ public abstract class Component
 	 */
 	public Component(final String id, final IModel<?> model)
 	{
-		setId(id);
-		getApplication().getComponentInstantiationListeners().onInstantiation(this);
+		checkId(id);
+		this.id = id;
 
-		final IDebugSettings debugSettings = getApplication().getDebugSettings();
+		init();
+
+		Application application = getApplication();
+		application.getComponentInstantiationListeners().onInstantiation(this);
+
+		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
@@ -692,6 +699,15 @@ public abstract class Component
 		{
 			setModelImpl(wrap(model));
 		}
+	}
+
+	/**
+	 * Let subclasses initialize this instance, before constructors are executed. <br>
+	 * This method is intentionally <b>not</b> declared protected, to limit overriding to classes in
+	 * this package.
+	 */
+	void init()
+	{
 	}
 
 	/**
@@ -711,7 +727,7 @@ public abstract class Component
 	public IMarkupFragment getMarkup()
 	{
 		// Markup already determined or preset?
-		if (markup != null)
+		if (markup != null && markupHasCurrentVariation())
 		{
 			return markup;
 		}
@@ -743,6 +759,18 @@ public abstract class Component
 	}
 
 	/**
+	 * Check if the loaded markup has the current 
+	 * variation.
+	 * 
+	 * @return true if the markup has the current variation
+	 */
+	private boolean markupHasCurrentVariation()
+	{
+		return Objects.equal(getVariation(), 
+			markup.getMarkupResourceStream().getVariation());
+	}
+
+	/**
 	 * @return The 'id' attribute from the associated markup tag
 	 */
 	public final String getMarkupIdFromMarkup()
@@ -767,9 +795,10 @@ public abstract class Component
 	 * 
 	 * @param markup
 	 */
-	public final void setMarkup(final IMarkupFragment markup)
+	public final Component setMarkup(final IMarkupFragment markup)
 	{
 		this.markup = markup;
+		return this;
 	}
 
 	/**
@@ -835,7 +864,7 @@ public abstract class Component
 	 * 
 	 * @return {@code true} if component has been initialized
 	 */
-	final boolean isInitialized()
+	public final boolean isInitialized()
 	{
 		return getFlag(FLAG_INITIALIZED);
 	}
@@ -871,6 +900,19 @@ public abstract class Component
 
 			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
+		else if (getFlag(FLAG_REMOVED))
+		{
+			setFlag(FLAG_REMOVED, false);
+			setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, false);
+			onReAdd();
+			if (!getRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED))
+			{
+				throw new IllegalStateException(Component.class.getName() +
+						" has not been properly added. Something in the hierarchy of " +
+						getClass().getName() +
+						" has not called super.onReAdd() in the override of onReAdd() method");
+			}
+		}
 	}
 
 	/**
@@ -900,14 +942,11 @@ public abstract class Component
 		finally
 		{
 			// this flag must always be set to false.
-			setFlag(FLAG_RENDERING, false);
+			markRendering(false);
 		}
 	}
 
-	/**
-	 * 
-	 */
-	private final void internalBeforeRender()
+	private void internalBeforeRender()
 	{
 		configure();
 
@@ -916,10 +955,11 @@ public abstract class Component
 		{
 			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
-			getApplication().getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
+			Application application = getApplication();
+			application.getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
 
 			onBeforeRender();
-			getApplication().getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
+			application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
 			if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
 			{
@@ -958,7 +998,7 @@ public abstract class Component
 			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
 			if (feedbacks == null)
 			{
-				feedbacks = new ArrayList<Component>();
+				feedbacks = new ArrayList<>();
 				getRequestCycle().setMetaData(FEEDBACK_LIST, feedbacks);
 			}
 
@@ -1038,6 +1078,8 @@ public abstract class Component
 
 			internalOnAfterConfigure();
 
+			getApplication().getComponentOnConfigureListeners().onConfigure(this);
+
 			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
 	}
@@ -1107,6 +1149,7 @@ public abstract class Component
 	{
 		setFlag(FLAG_REMOVING_FROM_HIERARCHY, true);
 		onRemove();
+		setFlag(FLAG_REMOVED, true);
 		if (getFlag(FLAG_REMOVING_FROM_HIERARCHY))
 		{
 			throw new IllegalStateException(Component.class.getName() +
@@ -1125,23 +1168,30 @@ public abstract class Component
 	@Override
 	public final void detach()
 	{
-		setFlag(FLAG_DETACHING, true);
-		onDetach();
-		if (getFlag(FLAG_DETACHING))
+		try
 		{
-			throw new IllegalStateException(Component.class.getName() +
-				" has not been properly detached. Something in the hierarchy of " +
-				getClass().getName() +
-				" has not called super.onDetach() in the override of onDetach() method");
+			setFlag(FLAG_DETACHING, true);
+			onDetach();
+			if (getFlag(FLAG_DETACHING))
+			{
+				throw new IllegalStateException(Component.class.getName() +
+						" has not been properly detached. Something in the hierarchy of " +
+						getClass().getName() +
+						" has not called super.onDetach() in the override of onDetach() method");
+			}
+
+			// always detach models because they can be attached without the
+			// component. eg component has a compoundpropertymodel and one of its
+			// children component's getmodelobject is called
+			detachModels();
+
+			// detach any behaviors
+			new Behaviors(this).detach();
 		}
-
-		// always detach models because they can be attached without the
-		// component. eg component has a compoundpropertymodel and one of its
-		// children component's getmodelobject is called
-		detachModels();
-
-		// detach any behaviors
-		new Behaviors(this).detach();
+		catch (Exception x)
+		{
+			throw new WicketRuntimeException("An error occurred while detaching component: " + toString(true), x);
+		}
 
 		// always detach children because components can be attached
 		// independently of their parents
@@ -1159,7 +1209,20 @@ public abstract class Component
 		clearEnabledInHierarchyCache();
 		clearVisibleInHierarchyCache();
 
+		boolean beforeRenderSuperCallVerified = getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
+		boolean initializeSuperCallVerified = getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED);
+
 		requestFlags = 0;
+
+		// preserve the super_call_verified flags if they were set. WICKET-5417
+		if (beforeRenderSuperCallVerified)
+		{
+			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
+		}
+		if (initializeSuperCallVerified)
+		{
+			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
+		}
 
 		detachFeedback();
 
@@ -1179,7 +1242,7 @@ public abstract class Component
 		FeedbackMessages feedback = getMetaData(FEEDBACK_KEY);
 		if (feedback != null)
 		{
-			final int removed = feedback.clear(getApplication().getApplicationSettings()
+			feedback.clear(getApplication().getApplicationSettings()
 				.getFeedbackMessageCleanupFilter());
 
 			if (feedback.isEmpty())
@@ -1309,17 +1372,36 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the converter that should be used by this component.
-	 * 
+	 * Get the converter that should be used by this component, delegates to
+	 * {@link #createConverter(Class)} and then to the application's
+	 * {@link IConverterLocator}.
+	 *
 	 * @param type
 	 *            The type to convert to
-	 * 
+	 *
 	 * @return The converter that should be used by this component
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> type)
-	{
+	public <C> IConverter<C> getConverter(Class<C> type) {
+		IConverter<?> converter = createConverter(type);
+		if (converter != null) {
+			return (IConverter<C>) converter;
+		}
 		return getApplication().getConverterLocator().getConverter(type);
+	}
+
+	/**
+	 * Factory method for converters to be used by this component,
+	 * returns {@code null} by default.
+	 *
+	 * @param type
+	 *            The type to convert to
+	 *
+	 * @return a converter to be used by this component
+	 */
+	protected IConverter<?> createConverter(Class<?> type) {
+		return null;
 	}
 
 	/**
@@ -1382,7 +1464,7 @@ public abstract class Component
 	 * 
 	 * @return first component tag
 	 */
-	private final ComponentTag getMarkupTag()
+	private ComponentTag getMarkupTag()
 	{
 		IMarkupFragment markup = getMarkup();
 		if (markup != null)
@@ -1469,57 +1551,8 @@ public abstract class Component
 	 */
 	public String getMarkupId(boolean createIfDoesNotExist)
 	{
-		Object storedMarkupId = getMarkupIdImpl();
-		if (storedMarkupId instanceof String)
-		{
-			return (String)storedMarkupId;
-		}
-
-		if (storedMarkupId == null && createIfDoesNotExist == false)
-		{
-			return null;
-		}
-
-		int generatedMarkupId = storedMarkupId instanceof Integer ? (Integer)storedMarkupId
-			: getSession().nextSequenceValue();
-
-		if (generatedMarkupId == 0xAD)
-		{
-			// WICKET-4559 skip suffix 'ad' because some ad-blocking solutions may hide the
-// component
-			generatedMarkupId = getSession().nextSequenceValue();
-		}
-
-		if (storedMarkupId == null)
-		{
-			setMarkupIdImpl(generatedMarkupId);
-		}
-
-		String markupIdPrefix = "id";
-		if (getApplication().usesDevelopmentConfig())
-		{
-			// in non-deployment mode we make the markup id include component id
-			// so it is easier to debug
-			markupIdPrefix = getId();
-		}
-
-		String markupIdPostfix = Integer.toHexString(generatedMarkupId).toLowerCase();
-
-		String markupId = markupIdPrefix + markupIdPostfix;
-
-		// make sure id is compliant with w3c requirements (starts with a letter)
-		char c = markupId.charAt(0);
-		if (!Character.isLetter(c))
-		{
-			markupId = "id" + markupId;
-		}
-
-		// escape some noncompliant characters
-		markupId = Strings.replaceAll(markupId, "_", "__").toString();
-		markupId = markupId.replace('.', '_');
-		markupId = markupId.replace('-', '_');
-		markupId = markupId.replace(' ', '_');
-
+		IMarkupIdGenerator markupIdGenerator = getApplication().getMarkupSettings().getMarkupIdGenerator();
+		String markupId = markupIdGenerator.generateMarkupId(this, createIfDoesNotExist);
 		return markupId;
 	}
 
@@ -1559,8 +1592,9 @@ public abstract class Component
 	}
 
 	/**
-	 * 
-	 * @return meta data entry
+	 * Gets the meta data entries for this component as an array of {@link MetaDataEntry} objects.
+         *
+	 * @return the meta data entries for this component
 	 */
 	private MetaDataEntry<?>[] getMetaData()
 	{
@@ -1833,13 +1867,13 @@ public abstract class Component
 	}
 
 	/**
-	 * @return Size of this Component in bytes
+	 * @return Size of this Component in bytes. Returns {@code 0} - if the size cannot be calculated for some reason
 	 */
 	public long getSizeInBytes()
 	{
 		final MarkupContainer originalParent = parent;
 		parent = null;
-		long size = -1;
+		long size = 0;
 		try
 		{
 			size = WicketObjects.sizeof(this);
@@ -2063,13 +2097,9 @@ public abstract class Component
 	 */
 	public final boolean isStateless()
 	{
-		if (
-		// the component is either invisible or disabled
-		(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
-
-		// and it can't call listener interfaces
-			canCallListenerInterface(null) == false)
+		if ((isVisibleInHierarchy() && isEnabledInHierarchy()) == false && canCallListenerInterface() == false)
 		{
+			// the component is either invisible or disabled and it can't call listeners
 			// then pretend the component is stateless
 			return true;
 		}
@@ -2215,7 +2245,7 @@ public abstract class Component
 		{
 			// only process feedback panel when we are about to be rendered.
 			// setRenderingFlag is false in case prepareForRender is called only to build component
-			// hierarchy (i.e. in BookmarkableListenerInterfaceRequestTarget).
+			// hierarchy (i.e. in BookmarkableListenerInterfaceRequestHandler).
 			// prepareForRender(true) is always called before the actual rendering is done so
 			// that's where feedback panels gather the messages
 
@@ -2336,7 +2366,7 @@ public abstract class Component
 	/**
 	 * Performs a render of this component as part of a Page level render process.
 	 */
-	private final void internalRender()
+	private void internalRender()
 	{
 		// Make sure there is a markup available for the Component
 		IMarkupFragment markup = getMarkup();
@@ -2418,7 +2448,7 @@ public abstract class Component
 				{
 					behavior.onException(this, ex);
 				}
-				catch (Throwable ex2)
+				catch (Exception ex2)
 				{
 					log.error("Error while cleaning up after exception", ex2);
 				}
@@ -2533,7 +2563,37 @@ public abstract class Component
 		try
 		{
 			// Render open tag
-			if (getRenderBodyOnly() == false)
+			boolean renderBodyOnly = getRenderBodyOnly();
+			if (renderBodyOnly)
+			{
+				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
+				if (Application.exists())
+				{
+					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+				}
+
+				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
+				{
+					String message = String.format("Markup id set on a component that renders its body only. " +
+					                               "Markup id: %s, component id: %s.", getMarkupId(), getId());
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
+				}
+				if (getFlag(FLAG_PLACEHOLDER))
+				{
+					String message = String.format("Placeholder tag set on a component that renders its body only. " +
+					                               "Component id: %s.", getId());
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
+				}
+			}
+			else
 			{
 				renderComponentTag(tag);
 			}
@@ -2545,16 +2605,13 @@ public abstract class Component
 				// Render the body. The default strategy will simply call the component's
 				// onComponentTagBody() implementation.
 				getMarkupSourcingStrategy().onComponentTagBody(this, markupStream, tag);
-			}
 
-			// Render close tag
-			if (tag.isOpen())
-			{
+				// Render close tag
 				if (openTag.isOpen())
 				{
-					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+					renderClosingComponentTag(markupStream, tag, renderBodyOnly);
 				}
-				else if (getRenderBodyOnly() == false)
+				else if (renderBodyOnly == false)
 				{
 					if (needToRenderTag(openTag))
 					{
@@ -2697,7 +2754,7 @@ public abstract class Component
 					RequestCycle.get().setResponse(oldResponse);
 				}
 				// Then let the component itself to contribute to the header
-				renderHead(this, response);
+				renderHead(response);
 
 				response.markRendered(this);
 			}
@@ -2924,7 +2981,7 @@ public abstract class Component
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
+	public final <M extends Serializable> Component setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		MetaDataEntry<?>[] old = getMetaData();
 
@@ -2949,6 +3006,7 @@ public abstract class Component
 		{
 			data_remove(index);
 		}
+		return this;
 	}
 
 	/**
@@ -2965,11 +3023,6 @@ public abstract class Component
 	public Component setDefaultModel(final IModel<?> model)
 	{
 		IModel<?> prevModel = getModelImpl();
-		// Detach current model
-		if (prevModel != null)
-		{
-			prevModel.detach();
-		}
 
 		IModel<?> wrappedModel = prevModel;
 		if (prevModel instanceof IWrapModel)
@@ -2980,9 +3033,18 @@ public abstract class Component
 		// Change model
 		if (wrappedModel != model)
 		{
+			// Detach the old/current model
+			if (prevModel != null)
+			{
+				prevModel.detach();
+			}
+
 			modelChanging();
 			setModelImpl(wrap(model));
 			modelChanged();
+
+			// WICKET-3413 reset 'inherited model' when model is explicitely set
+			setFlag(FLAG_INHERITABLE_MODEL, false);
 		}
 
 		return this;
@@ -3011,12 +3073,6 @@ public abstract class Component
 			if (model != null)
 			{
 				data_set(0, model);
-				// WICKET-3413 reset 'inherited model' flag if model changed
-				// and a new one is not IComponentInheritedModel
-				if (getFlag(FLAG_INHERITABLE_MODEL) && !(model instanceof IComponentInheritedModel))
-				{
-					setFlag(FLAG_INHERITABLE_MODEL, false);
-				}
 			}
 			else
 			{
@@ -3042,6 +3098,8 @@ public abstract class Component
 	 * @param object
 	 *            The object to set
 	 * @return This
+	 * @throws IllegalStateException If the component has neither its own model nor any of its
+	 * parents uses {@link IComponentInheritedModel}
 	 */
 	@SuppressWarnings("unchecked")
 	public final Component setDefaultModelObject(final Object object)
@@ -3052,7 +3110,9 @@ public abstract class Component
 		if (model == null)
 		{
 			throw new IllegalStateException(
-				"Attempt to set model object on null model of component: " + getPageRelativePath());
+				"Attempt to set a model object on a component without a model! " +
+				"Either pass an IModel to the constructor or use #setDefaultModel(new SomeModel(object)). " +
+				"Component: " + getPageRelativePath());
 		}
 
 		// Check authorization
@@ -3150,7 +3210,7 @@ public abstract class Component
 	 */
 	public final <C extends IRequestablePage> void setResponsePage(final Class<C> cls)
 	{
-		getRequestCycle().setResponsePage(cls, null);
+		getRequestCycle().setResponsePage(cls, (PageParameters)null);
 	}
 
 	/**
@@ -3316,34 +3376,40 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
-	 * AjaxPagingNavigationBehavior).
+	 * Gets a URL for the listener interface on a behavior (e.g. {@link IRequestListener} on
+	 * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationBehavior}).
 	 * 
 	 * @param behaviour
 	 *            The behavior that the URL should point to
-	 * @param listener
-	 *            The listener interface that the URL should call
 	 * @param parameters
 	 *            The parameters that should be rendered into the urls
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final Behavior behaviour,
-		final RequestListenerInterface listener, final PageParameters parameters)
+	public final CharSequence urlForListener(final Behavior behaviour, final PageParameters parameters)
 	{
 		int id = getBehaviorId(behaviour);
+		IRequestHandler handler = createRequestHandler(parameters, id);
+		return getRequestCycle().urlFor(handler);
+	}
+
+	/**
+	 * Create a suitable request handler depending whether the page is stateless or bookmarkable.
+	 */
+	private IRequestHandler createRequestHandler(PageParameters parameters, Integer id)
+	{
 		Page page = getPage();
+
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
-		IRequestHandler handler;
-		if (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry() &&
-			((page.isBookmarkable() && page.wasCreatedBookmarkable()) || page.isPageStateless()))
+
+		if (page.isPageStateless()
+			|| (page.isBookmarkable() && page.wasCreatedBookmarkable()))
 		{
-			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
+			return new BookmarkableListenerInterfaceRequestHandler(provider, id);
 		}
 		else
 		{
-			handler = new ListenerInterfaceRequestHandler(provider, listener, id);
+			return new ListenerInterfaceRequestHandler(provider, id);
 		}
-		return getRequestCycle().urlFor(handler);
 	}
 
 	/**
@@ -3362,31 +3428,17 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets a URL for the listener interface (e.g. ILinkListener).
+	 * Gets a URL for this {@link IRequestListener}.
 	 * 
 	 * @see RequestCycle#urlFor(IRequestHandler)
 	 * 
-	 * @param listener
-	 *            The listener interface that the URL should call
 	 * @param parameters
-	 *            The parameters that should be rendered into the urls
+	 *            The parameters that should be rendered into the URL
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final RequestListenerInterface listener,
-		final PageParameters parameters)
+	public final CharSequence urlForListener(final PageParameters parameters)
 	{
-		Page page = getPage();
-		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
-		IRequestHandler handler;
-		if (getApplication().getPageSettings().getRecreateMountedPagesAfterExpiry() &&
-			((page.isBookmarkable() && page.wasCreatedBookmarkable()) || page.isPageStateless()))
-		{
-			handler = new BookmarkableListenerInterfaceRequestHandler(provider, listener);
-		}
-		else
-		{
-			handler = new ListenerInterfaceRequestHandler(provider, listener);
-		}
+		IRequestHandler handler = createRequestHandler(parameters, null);
 		return getRequestCycle().urlFor(handler);
 	}
 
@@ -3604,7 +3656,7 @@ public abstract class Component
 	protected void checkHierarchyChange(final Component component)
 	{
 		// Throw exception if modification is attempted during rendering
-		if (!component.isAuto() && getFlag(FLAG_RENDERING))
+		if (getFlag(FLAG_RENDERING) && !component.isAuto())
 		{
 			throw new WicketRuntimeException(
 				"Cannot modify component hierarchy after render phase has started (page version cant change then anymore)");
@@ -3760,7 +3812,7 @@ public abstract class Component
 	 * {@link IComponentInheritedModel#wrapOnInheritance(Component)}.
 	 * <p>
 	 * For example a {@link FormComponent} has the opportunity to instantiate a model on the fly
-	 * usings its {@code id} and the containing {@link Form}'s model, if the form holds a
+	 * using its {@code id} and the containing {@link Form}'s model, if the form holds a
 	 * {@link CompoundPropertyModel}.
 	 * 
 	 * @return The model
@@ -3768,13 +3820,13 @@ public abstract class Component
 	protected IModel<?> initModel()
 	{
 		IModel<?> foundModel = null;
-		// Search parents for CompoundPropertyModel
+		// Search parents for IComponentInheritedModel (i.e. CompoundPropertyModel)
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			// Don't call the getModel() that could initialize many inbetween
+			// Don't call the getModel() that could initialize many in between
 			// completely useless models.
-			// IModel model = current.getModel();
+			// IModel model = current.getDefaultModel();
 			IModel<?> model = current.getModelImpl();
 
 			if (model instanceof IWrapModel && !(model instanceof IComponentInheritedModel))
@@ -3843,7 +3895,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Called just before a component is rendered.
+	 * Called just before a component is rendered only if the component is visible.
 	 * <p>
 	 * <strong>NOTE</strong>: If you override this, you *must* call super.onBeforeRender() within
 	 * your implementation.
@@ -3851,6 +3903,11 @@ public abstract class Component
 	 * Because this method is responsible for cascading {@link #onBeforeRender()} call to its
 	 * children it is strongly recommended that super call is made at the end of the override.
 	 * </p>
+	 *
+	 * Changes to the component tree can be made only <strong>before</strong> calling
+	 * super.onBeforeRender().
+	 *
+	 * @see org.apache.wicket.MarkupContainer#addOrReplace(Component...) 
 	 */
 	protected void onBeforeRender()
 	{
@@ -3878,12 +3935,14 @@ public abstract class Component
 			tag.putInternal(MARKUP_ID_ATTR_NAME, getMarkupId());
 		}
 
-		if (getApplication().getDebugSettings().isOutputComponentPath())
+		DebugSettings debugSettings = getApplication().getDebugSettings();
+		String componentPathAttributeName = debugSettings.getComponentPathAttributeName();
+		if (Strings.isEmpty(componentPathAttributeName) == false)
 		{
 			String path = getPageRelativePath();
 			path = path.replace("_", "__");
-			path = path.replace(":", "_");
-			tag.put("wicketpath", path);
+			path = path.replace(':', '_');
+			tag.put(componentPathAttributeName, path);
 		}
 
 		// The markup sourcing strategy may also want to work on the tag
@@ -3989,18 +4048,35 @@ public abstract class Component
 			if ((tag instanceof WicketTag) && !tag.isClose() &&
 				!getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER))
 			{
+				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
+				if (Application.exists())
+				{
+					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+				}
+
+				String tagName = tag.getNamespace() + ":" + tag.getName();
+				String componentId = getId();
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
-					log.warn(String.format(
-						"Markup id set on a component that is usually not rendered into markup. "
-							+ "Markup id: %s, component id: %s, component tag: %s.", getMarkupId(),
-						getId(), tag.getName()));
+					String message = String.format("Markup id set on a component that is usually not rendered into markup. " +
+					                               "Markup id: %s, component id: %s, component tag: %s.",
+					                               getMarkupId(), componentId, tagName);
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
-					log.warn(String.format(
-						"Placeholder tag set on a component that is usually not rendered into markup. "
-							+ "Component id: %s, component tag: %s.", getId(), tag.getName()));
+					String message = String.format(
+							"Placeholder tag set on a component that is usually not rendered into markup. " +
+							"Component id: %s, component tag: %s.", componentId, tagName);
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 			}
 
@@ -4068,9 +4144,10 @@ public abstract class Component
 	 * @param auto
 	 *            True to put component into auto-add mode
 	 */
-	protected final void setAuto(final boolean auto)
+	protected final Component setAuto(final boolean auto)
 	{
 		setFlag(FLAG_AUTO, auto);
+		return this;
 	}
 
 	/**
@@ -4081,7 +4158,7 @@ public abstract class Component
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	protected final void setFlag(final int flag, final boolean set)
+	protected final Component setFlag(final int flag, final boolean set)
 	{
 		if (set)
 		{
@@ -4091,6 +4168,7 @@ public abstract class Component
 		{
 			flags &= ~flag;
 		}
+		return this;
 	}
 
 	/**
@@ -4101,7 +4179,7 @@ public abstract class Component
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	protected final void setRequestFlag(final short flag, final boolean set)
+	protected final Component setRequestFlag(final short flag, final boolean set)
 	{
 		if (set)
 		{
@@ -4111,6 +4189,7 @@ public abstract class Component
 		{
 			requestFlags &= ~flag;
 		}
+		return this;
 	}
 
 	/**
@@ -4182,15 +4261,10 @@ public abstract class Component
 	 */
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
-		if (setRenderingFlag)
-		{
-			setFlag(FLAG_PREPARED_FOR_RENDER, false);
-			setFlag(FLAG_RENDERING, true);
-		}
-		else
-		{
-			setFlag(FLAG_RENDERING, false);
-		}
+		// WICKET-5460 no longer prepared for render
+		setFlag(FLAG_PREPARED_FOR_RENDER, false);
+
+		setFlag(FLAG_RENDERING, setRenderingFlag);
 	}
 
 	/**
@@ -4270,14 +4344,12 @@ public abstract class Component
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
 	 * Sets the id of this component.
 	 * 
 	 * @param id
 	 *            The non-null id of this component
 	 */
-	final void setId(final String id)
+	private void checkId(final String id)
 	{
 		if (!(this instanceof Page))
 		{
@@ -4291,8 +4363,6 @@ public abstract class Component
 		{
 			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
-
-		this.id = id;
 	}
 
 	/**
@@ -4385,7 +4455,7 @@ public abstract class Component
 	 * 
 	 * @return <code>true</code> if this component is enabled</code>
 	 */
-	public final boolean isEnabledInHierarchy()
+	public boolean isEnabledInHierarchy()
 	{
 		if (getRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_SET))
 		{
@@ -4407,12 +4477,20 @@ public abstract class Component
 		setRequestFlag(RFLAG_ENABLED_IN_HIERARCHY_VALUE, state);
 		return state;
 	}
+	
+	/**
+	 * Says if the component is rendering or not checking the corresponding flag.
+	 * 
+	 * @return true if this component is rendering, false otherwise.
+	 */
+	public final boolean isRendering()
+	{
+		return getFlag(FLAG_RENDERING);
+	}
 
 	/**
-	 * Checks whether or not a listener method can be invoked on this component. Usually components
-	 * deny these invocations if they are either invisible or disabled in hierarchy. Components can
-	 * examine which listener interface is being invoked by examining the declaring class of the
-	 * passed in {@literal method} parameter.
+	 * Checks whether or not an {@link IRequestListener} can be invoked on this component. Usually components
+	 * deny these invocations if they are either invisible or disabled in hierarchy.
 	 * <p>
 	 * WARNING: be careful when overriding this method because it may open security holes - such as
 	 * allowing a user to click on a link that should be disabled.
@@ -4421,39 +4499,16 @@ public abstract class Component
 	 * Example usecase for overriding: Suppose you are building an component that displays images.
 	 * The component generates a callback to itself using {@link IRequestListener} interface and
 	 * uses this callback to stream image data. If such a component is placed inside a disabled
-	 * webmarkupcontainer we still want to allow the invocation of the request listener callback
+	 * {@code WebMarkupContainer} we still want to allow the invocation of the request listener callback
 	 * method so that image data can be streamed. Such a component would override this method and
-	 * return {@literal true} if the listener method belongs to {@link IRequestListener}.
+	 * return {@literal true}.
 	 * </p>
-	 * 
-	 * @param method
-	 *            listener method about to be invoked on this component. Could be {@code null} - in
-	 *            this case it means <em>any</em> method.
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
-	public boolean canCallListenerInterface(Method method)
+	public boolean canCallListenerInterface()
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
-	}
-
-	/**
-	 * CAUTION: this method is not meant to be overridden like it was in wicket 1.4 when
-	 * implementing {@link IHeaderContributor}. overload
-	 * {@link Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)} instead to
-	 * contribute to the response header.
-	 * 
-	 * @param component
-	 * @param response
-	 */
-	public final void renderHead(Component component, IHeaderResponse response)
-	{
-		if (component != this)
-		{
-			throw new IllegalStateException(
-				"This method is only meant to be invoked on the component where the parameter component==this");
-		}
-		renderHead(response);
 	}
 
 	/**
@@ -4538,4 +4593,33 @@ public abstract class Component
 		return getBehaviors(null);
 	}
 
+	@Override
+	public boolean canCallListenerInterfaceAfterExpiry()
+	{
+        	return getApplication().getPageSettings()
+        		.getCallListenerInterfaceAfterExpiry() || isStateless();
+	}
+	/**
+	 * This method is called whenever a component is re-added to the page's component tree, if it
+	 * had been removed at some earlier time, i.e., if it is already initialized
+	 * (see {@link org.apache.wicket.Component#isInitialized()}).
+	 *
+	 * This is similar to onInitialize, but only comes after the component has been removed and
+	 * then added again:
+	 *
+	 * <ul>
+	 * <li>onInitialize is only called the very first time a component is added</li>
+	 * <li>onReAdd is not called the first time, but every time it is re-added after having been
+	 * removed</li>
+	 * </ul>
+	 *
+	 * You can think of it as the opposite of onRemove. A component that was once removed will
+	 * not be re-initialized but only re-added.
+	 *
+	 * Subclasses that override this must call super.onReAdd().
+	 */
+	protected void onReAdd()
+	{
+		setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, true);
+	}
 }

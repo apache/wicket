@@ -50,10 +50,9 @@ public class MapModel<K, V> extends GenericBaseModel<Map<K, V>>
 		setObject(map);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	protected Map<K, V> createSerializableVersionOf(Map<K, V> object)
 	{
-		return new HashMap<K, V>(object);
+		return new HashMap<>(object);
 	}
 }

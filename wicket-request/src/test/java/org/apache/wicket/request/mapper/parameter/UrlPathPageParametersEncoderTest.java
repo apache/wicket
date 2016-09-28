@@ -33,8 +33,8 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	public void encodeNamedParameters()
 	{
 		PageParameters params = new PageParameters();
-		params.add("name1", "value1");
-		params.add("name2", "value2");
+		params.add("name1", "value1", INamedParameters.Type.MANUAL);
+		params.add("name2", "value2", INamedParameters.Type.MANUAL);
 
 		UrlPathPageParametersEncoder encoder = new UrlPathPageParametersEncoder();
 		Url url = encoder.encodePageParameters(params);
@@ -51,8 +51,8 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	{
 		// the non-ASCII characters are randomly chosen
 		PageParameters params = new PageParameters();
-		params.add("name1", "valueএ");
-		params.add("nameㄘ", "value2");
+		params.add("name1", "valueএ", INamedParameters.Type.MANUAL);
+		params.add("nameㄘ", "value2", INamedParameters.Type.MANUAL);
 
 		UrlPathPageParametersEncoder encoder = new UrlPathPageParametersEncoder();
 		Url url = encoder.encodePageParameters(params);

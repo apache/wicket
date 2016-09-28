@@ -29,7 +29,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -142,7 +141,7 @@ public class WizardStep extends Panel implements IWizardStep
 		/**
 		 * @return whether the step this wrapper is part of is the current step
 		 */
-		private final boolean isActiveStep()
+		private boolean isActiveStep()
 		{
 			return (wizardModel.getActiveStep().equals(WizardStep.this));
 		}
@@ -167,26 +166,8 @@ public class WizardStep extends Panel implements IWizardStep
 		{
 			super(id);
 			setDefaultModel(new CompoundPropertyModel<>(wizard));
-			add(new Label("title", new AbstractReadOnlyModel<String>()
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String getObject()
-				{
-					return getTitle();
-				}
-			}));
-			add(new Label("summary", new AbstractReadOnlyModel<String>()
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public String getObject()
-				{
-					return getSummary();
-				}
-			}));
+			add(new Label("title", WizardStep.this::getTitle));
+			add(new Label("summary", WizardStep.this::getSummary));
 		}
 	}
 

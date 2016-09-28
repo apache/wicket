@@ -17,8 +17,9 @@
 package org.apache.wicket.markup.html.pages;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.IRedirectListener;
 import org.apache.wicket.Page;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
@@ -57,7 +58,7 @@ public class RedirectPage extends WebPage
 	{
 		final WebMarkupContainer redirect = new WebMarkupContainer("redirect");
 		final String content = waitBeforeRedirectInSeconds + ";URL=" + url;
-		redirect.add(new AttributeModifier("content", new Model<String>(content)));
+		redirect.add(new AttributeModifier("content", new Model<>(content)));
 		add(redirect);
 	}
 
@@ -69,7 +70,7 @@ public class RedirectPage extends WebPage
 	 */
 	public RedirectPage(final Page page)
 	{
-		this(page.urlFor(IRedirectListener.INTERFACE, page.getPageParameters()), 0);
+		this(page, 0);
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class RedirectPage extends WebPage
 	 */
 	public RedirectPage(final Page page, final int waitBeforeRedirectInSeconds)
 	{
-		this(page.urlFor(IRedirectListener.INTERFACE, page.getPageParameters()),
+		this(page.urlFor(new RenderPageRequestHandler(new PageProvider(page))),
 			waitBeforeRedirectInSeconds);
 	}
 

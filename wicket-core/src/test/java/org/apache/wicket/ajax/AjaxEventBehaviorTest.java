@@ -19,12 +19,12 @@ package org.apache.wicket.ajax;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -45,21 +45,55 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 
 		assertEquals(0, counter.get());
 
-		// execute the first event (without the leading 'on')
+		// execute the first event
 		tester.executeAjaxEvent("comp", "eventOne");
 		assertEquals(1, counter.get());
 
-		// execute the first event (with the leading 'on')
-		tester.executeAjaxEvent("comp", "oneventOne");
-		assertEquals(2, counter.get());
-
-		// execute the second event (without the leading 'on')
+		// execute the second event
 		tester.executeAjaxEvent("comp", "eventTwo");
-		assertEquals(3, counter.get());
+		assertEquals(2, counter.get());
+	}
 
-		// execute the second event (with the leading 'on')
-		tester.executeAjaxEvent("comp", "oneventTwo");
-		assertEquals(4, counter.get());
+	@Test(expected = IllegalArgumentException.class)
+	public void nullName()
+	{
+		new EventNamesBehavior(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void emptyName()
+	{
+		new EventNamesBehavior("");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void spacesName()
+	{
+		new EventNamesBehavior("  ");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void tabName()
+	{
+		new EventNamesBehavior("\t");
+	}
+
+	private static class EventNamesBehavior extends AjaxEventBehavior
+	{
+		/**
+		 * Construct.
+		 *
+		 * @param event the event this behavior will be attached to
+		 */
+		public EventNamesBehavior(String event)
+		{
+			super(event);
+		}
+
+		@Override
+		protected void onEvent(AjaxRequestTarget target)
+		{
+		}
 	}
 
 	/**
@@ -72,9 +106,8 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 			WebComponent comp = new WebComponent("comp");
 			add(comp);
 
-			// register a behavior that listens on two events and the
-			// tested one also has a prefix 'on'
-			comp.add(new AjaxEventBehavior("eventOne oneventTwo")
+			// register a behavior that listens on two events
+			comp.add(new AjaxEventBehavior("eventOne eventTwo")
 			{
 				@Override
 				protected void onEvent(AjaxRequestTarget target)

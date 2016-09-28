@@ -19,9 +19,9 @@ package org.apache.wicket.markup.html.form.upload;
 import java.util.Locale;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -125,9 +125,8 @@ public class FileUploadErrorTest extends WicketTestCase
 			formTester.submit();
 			fail("Value not succesfully submitted.");
 		}
-		catch (WicketRuntimeException rex)
+		catch (RuntimeException ex)
 		{
-			Throwable ex = rex.getCause().getCause();
 			assertEquals("Special value: " + FileUploadError.THIS_VALUE_SHOULD_THROW_EXCEPTION,
 				ex.getMessage());
 		}

@@ -55,26 +55,13 @@ public class AtmosphereApplication extends WebApplication
 	public void init()
 	{
 		super.init();
+
 		eventBus = new EventBus(this);
 		eventBus.getParameters().setTransport(AtmosphereTransport.STREAMING);
 		eventBus.getParameters().setLogLevel(AtmosphereLogLevel.DEBUG);
 
 		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-		final Runnable beeper = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				try
-				{
-					eventBus.post(new Date());
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		};
+		final Runnable beeper = () -> eventBus.post(new Date());
 		scheduler.scheduleWithFixedDelay(beeper, 2, 2, TimeUnit.SECONDS);
 	}
 }

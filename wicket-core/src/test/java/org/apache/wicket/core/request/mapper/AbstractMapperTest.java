@@ -19,13 +19,10 @@ package org.apache.wicket.core.request.mapper;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.junit.Assert;
-import org.junit.Before;
 
 /**
  * @author Matej Knopp
@@ -40,16 +37,6 @@ public abstract class AbstractMapperTest extends Assert
 	}
 
 	protected TestMapperContext context = new TestMapperContext();
-
-	/**
-	 * @throws Exception
-	 */
-	@Before
-	public void before() throws Exception
-	{
-		// inititalize the interface
-		RequestListenerInterface i = ILinkListener.INTERFACE;
-	}
 
 	protected Request getRequest(final Url url)
 	{

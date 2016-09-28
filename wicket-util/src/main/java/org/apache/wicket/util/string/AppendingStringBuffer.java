@@ -831,7 +831,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *             <tt>length()</tt>, or if <tt>start</tt> is greater than <tt>end</tt>
 	 * 
 	 * @since 1.4
-	 * @spec JSR-51
+	 * Specification: JSR-51
 	 */
 	@Override
 	public CharSequence subSequence(final int start, final int end)

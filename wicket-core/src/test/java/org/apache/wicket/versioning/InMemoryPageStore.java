@@ -40,7 +40,7 @@ public class InMemoryPageStore implements IDataStore
 	 */
 	public InMemoryPageStore()
 	{
-		store = new ConcurrentHashMap<String, Map<Integer, byte[]>> ();
+		store = new ConcurrentHashMap<> ();
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class InMemoryPageStore implements IDataStore
 		Map<Integer, byte[]> sessionPages = store.get(sessionId);
 		if (sessionPages == null)
 		{
-			sessionPages = new ConcurrentHashMap<Integer, byte[]>();
+			sessionPages = new ConcurrentHashMap<>();
 			Map<Integer, byte[]> tmpSessionPages = store.putIfAbsent(sessionId, sessionPages);
 			if (tmpSessionPages != null)
 			{

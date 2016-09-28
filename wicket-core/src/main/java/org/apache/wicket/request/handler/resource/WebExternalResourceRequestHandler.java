@@ -16,11 +16,9 @@
  */
 package org.apache.wicket.request.handler.resource;
 
+import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.resource.ContentDisposition;
-import org.apache.wicket.core.util.resource.WebExternalResourceStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,9 +36,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WebExternalResourceRequestHandler extends ResourceStreamRequestHandler
 {
-	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceRequestHandler.class);
-
 	/** the relative url of the external resource. */
 	private final String uri;
 
@@ -67,17 +62,6 @@ public class WebExternalResourceRequestHandler extends ResourceStreamRequestHand
 		return uri;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
-	 */
-	@Override
-	public void detach(IRequestCycle requestCycle)
-	{
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -89,9 +73,6 @@ public class WebExternalResourceRequestHandler extends ResourceStreamRequestHand
 		return false;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
@@ -100,9 +81,6 @@ public class WebExternalResourceRequestHandler extends ResourceStreamRequestHand
 		return 17 * result;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

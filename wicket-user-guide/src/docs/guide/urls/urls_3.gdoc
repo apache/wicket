@@ -1,0 +1,68 @@
+
+
+Bookmarkable pages can be linked directly inside markup files without writing any Java code. Using <wicket:link> tag we ask Wicket to automatically add bookmarkable links for the anchors wrapped inside it. Here is an example of usage of <wicket:link> tag taken from the home page of the project BookmarkablePageAutoLink:
+
+{code:html}
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>Apache Wicket Quickstart</title>
+	</head>
+	<body>		
+	   <div id="bd">
+	      <wicket:link>
+			<a href="HomePage.html">HomePage</a><br/>
+			<a href="anotherPackage/SubPackagePage.html">SubPackagePage</a>	
+	      </wicket:link>
+	   </div>		
+	</body>
+</html>
+{code}
+
+The key part of the markup above is the href attribute which must contain the package-relative path to a page. The home page is inside package org.wicketTutorial which in turns contains the sub package anotherPackage. This package hierarchy is reflected by the href attributes: in the first anchor we have a link to the home page itself while the second anchor points to page SubPackagePage which is placed into sub package anotherPackage. Absolute paths are supported as well and we can use them if we want to specify the full package of a given page. For example the link to SubPackagePage could have been written in the following (more verbose) way:
+
+{code:html}
+<a href="/org/wicketTutorial/anotherPackage/SubPackagePage.html"> SubPackagePage</a>
+{code}
+
+If we take a look also at the markup of SubPackagePage we can see that it contains a link to the home page which uses the parent directory selector (relative path):
+
+{code:html}
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>Apache Wicket Quickstart</title>
+	</head>
+	<body>		
+		<div id="bd">
+			<wicket:link>
+				<a href="../HomePage.html">HomePage</a><br/>
+				<a href="SubPackagePage.html">SubPackagePage</a>			
+			</wicket:link>
+		</div>		
+	</body>
+</html>
+{code}
+
+Please note that any link to the current page (aka self link) is disabled. For example in the home page the self link is rendered like this:
+
+{code:html}
+<span><em>HomePage</em></span>
+{code}
+
+The markup used to render disabled links can be customized using the markup settings (class org.apache.wicket.settings.MarkupSettings) available in the application class:
+
+{code}
+@Override
+public void init()
+{
+	super.init();
+	//wrap disabled links with <b> tag
+	getMarkupSettings().setDefaultBeforeDisabledLink("<b>");
+	getMarkupSettings().setDefaultAfterDisabledLink("</b>");		
+}
+{code}
+
+The purpose of <wicket:link> tag is not limited to just simplifying the usage of bookmarkable pages. As we will see in chapter 13, this tag can also be adopted to manage web resources like pictures, CSS files, JavaScript files and so on.

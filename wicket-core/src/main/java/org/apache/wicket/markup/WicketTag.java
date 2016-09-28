@@ -22,9 +22,8 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketRemoveTagHandler;
-import org.apache.wicket.markup.resolver.FragmentResolver;
+import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
-import org.apache.wicket.markup.resolver.MarkupInheritanceResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
 
@@ -70,7 +69,9 @@ public class WicketTag extends ComponentTag
 	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
 	 * 
 	 * @return The tag's name attribute
+	 * @deprecated This method is obsolete since a long time
 	 */
+	@Deprecated
 	public final String getNameAttribute()
 	{
 		return getAttributes().getString("name");
@@ -113,7 +114,7 @@ public class WicketTag extends ComponentTag
 	 */
 	public final boolean isChildTag()
 	{
-		return MarkupInheritanceResolver.CHILD.equalsIgnoreCase(getName());
+		return WicketTagIdentifier.CHILD.equalsIgnoreCase(getName());
 	}
 
 	/**
@@ -121,7 +122,7 @@ public class WicketTag extends ComponentTag
 	 */
 	public final boolean isExtendTag()
 	{
-		return MarkupInheritanceResolver.EXTEND.equalsIgnoreCase(getName());
+		return WicketTagIdentifier.EXTEND.equalsIgnoreCase(getName());
 	}
 
 	/**
@@ -130,6 +131,14 @@ public class WicketTag extends ComponentTag
 	public final boolean isHeadTag()
 	{
 		return HtmlHeaderResolver.HEAD.equalsIgnoreCase(getName());
+	}
+
+	/**
+	 * @return True, if tag name equals 'wicket:header-items'
+	 */
+	public final boolean isHeaderItemsTag()
+	{
+		return HtmlHeaderResolver.HEADER_ITEMS.equalsIgnoreCase(getName());
 	}
 
 	/**
@@ -159,13 +168,13 @@ public class WicketTag extends ComponentTag
 	/**
 	 * @return True if &lt;wicket:fragment&gt;
 	 */
-	public final boolean isFragementTag()
+	public final boolean isFragmentTag()
 	{
-		return FragmentResolver.FRAGMENT.equalsIgnoreCase(getName());
+		return WicketTagIdentifier.FRAGMENT.equalsIgnoreCase(getName());
 	}
 
 	/**
-	 * @return true if &lt;wicket:enclsoure&gt;
+	 * @return true if &lt;wicket:enclosure&gt;
 	 */
 	public final boolean isEnclosureTag()
 	{
@@ -195,8 +204,8 @@ public class WicketTag extends ComponentTag
 		else
 		{
 			final WicketTag tag = new WicketTag(xmlTag.mutable());
-			tag.setId(getId());
-			tag.setAutoComponentTag(isAutoComponentTag());
+			copyPropertiesTo(tag);
+
 			return tag;
 		}
 	}

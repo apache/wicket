@@ -17,11 +17,14 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.Iterator;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ComponentTag.IAutoComponentFactory;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
@@ -86,13 +89,22 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 			{
 				String attrValue = tag.getAttributes().getString(attrName);
 
-				if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
-					(!attrValue.contains(":")) && !(attrValue.startsWith("#")))
+				if ((attrValue != null) && (attrValue.startsWith("/") == false)
+					&& (!attrValue.contains(":")) && !(attrValue.startsWith("#")))
 				{
 					tag.getAttributes().put(attrName,
 						UrlUtils.rewriteToContextRelative(attrValue, RequestCycle.get()));
 				}
 			}
+		}
+	};
+	
+	private static final IAutoComponentFactory FACTORY = new IAutoComponentFactory()
+	{
+		@Override
+		public Component newComponent(MarkupContainer container, ComponentTag tag)
+		{
+			return new TransparentWebMarkupContainer(tag.getId());
 		}
 	};
 
@@ -106,8 +118,9 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 
 	/**
 	 * Constructor for the IMarkupFilter role
+	 * 
 	 * @param markup
-	 *      The markup created by reading the markup file
+	 *            The markup created by reading the markup file
 	 */
 	public RelativePathPrefixHandler(final MarkupResourceStream markup)
 	{
@@ -125,50 +138,81 @@ public final class RelativePathPrefixHandler extends AbstractMarkupFilter
 		String wicketIdAttr = getWicketNamespace() + ":" + "id";
 
 		// Don't touch any wicket:id component and any auto-components
-		if ((tag instanceof WicketTag) || (tag.isAutolinkEnabled() == true) ||
-			(tag.getAttributes().get(wicketIdAttr) != null))
+		if ((tag instanceof WicketTag) || (tag.isAutolinkEnabled() == true)
+			|| (tag.getAttributes().get(wicketIdAttr) != null))
 		{
 			return tag;
 		}
-
+		
 		// Work out whether we have any attributes that require us to add a
 		// behavior that prepends the relative path.
 		for (String attrName : attributeNames)
 		{
 			String attrValue = tag.getAttributes().getString(attrName);
-			if ((attrValue != null) && (attrValue.startsWith("/") == false) &&
-				(!attrValue.contains(":")) && !(attrValue.startsWith("#")))
+			if ((attrValue != null) && (attrValue.startsWith("/") == false)
+				&& (!attrValue.contains(":")) && !(attrValue.startsWith("#")))
 			{
 				if (tag.getId() == null)
 				{
-					tag.setId(getWicketRelativePathPrefix(null));
+					tag.setId(getWicketRelativePathPrefix(null)
+						+ getRequestUniqueId());
 					tag.setAutoComponentTag(true);
 				}
+
 				tag.addBehavior(RELATIVE_PATH_BEHAVIOR);
 				tag.setModified(true);
+				
 				break;
 			}
 		}
 
 		return tag;
 	}
-
+		
 	@Override
 	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag)
 	{
-		if ((tag != null) && (tag.getId().equals(getWicketRelativePathPrefix(markupStream))))
+		if ((tag != null) && (tag.getId().startsWith(getWicketRelativePathPrefix(markupStream))))
 		{
-			String id = tag.getId() + container.getPage().getAutoIndex();
-
 			// we do not want to mess with the hierarchy, so the container has to be
 			// transparent as it may have wicket components inside. for example a raw anchor tag
 			// that contains a label.
-			return new TransparentWebMarkupContainer(id);
+			return new TransparentWebMarkupContainer(tag.getId());
 		}
 		return null;
 	}
+	
+	@Override
+	public void postProcess(Markup markup)
+	{
+		/**
+		 * https://issues.apache.org/jira/browse/WICKET-5724
+		 * 
+		 * Transparent component inside page body must allow queued children components.
+		 */
+		Iterator<MarkupElement> markupIterator = markup.iterator();
+		while (markupIterator.hasNext())
+		{
+			MarkupElement next = markupIterator.next();
 
+			if (next instanceof ComponentTag)
+			{
+				ComponentTag componentTag = (ComponentTag)next;
+
+				/**
+				 * if component tag is for a transparent component and contains "wicket:id", must be
+				 * queueable.
+				 */
+				if (componentTag.containsWicketId()
+					&& componentTag.getId().startsWith(getWicketRelativePathPrefix(null)))
+				{
+					componentTag.setAutoComponentFactory(FACTORY);
+				}
+			}
+		}
+	}
+	
 	private String getWicketRelativePathPrefix(final MarkupStream markupStream)
 	{
 		return getWicketNamespace(markupStream) + WICKET_RELATIVE_PATH_PREFIX_CONTAINER_ID;

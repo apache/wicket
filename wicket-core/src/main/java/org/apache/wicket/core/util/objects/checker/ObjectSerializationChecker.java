@@ -23,6 +23,11 @@ import java.lang.reflect.Proxy;
 /**
  * An implementation of IObjectChecker that checks whether the object
  * implements {@link java.io.Serializable} interface
+ *
+ * <p>
+ * Note: There is a system property <em>-Dsun.io.serialization.extendedDebugInfo=true</em> that could give
+ * even more debug information.
+ * </p>
  */
 public class ObjectSerializationChecker extends AbstractObjectChecker
 {

@@ -26,12 +26,15 @@ SOFTWARE.
 
 import java.util.Iterator;
 
+import org.apache.wicket.ajax.json.JSONArray;
+import org.apache.wicket.ajax.json.JSONException;
+
 
 /**
  * This provides static methods to convert an XML text into a JSONArray or
  * JSONObject, and to covert a JSONArray or JSONObject into an XML text using
  * the JsonML transform.
- * 
+ *
  * @author JSON.org
  * @version 2012-03-28
  */
@@ -49,8 +52,9 @@ public class JSONML {
     private static Object parse(
         XMLTokener x,
         boolean    arrayForm,
-        JSONArray  ja
-    ) throws JSONException {
+        JSONArray ja
+    ) throws JSONException
+    {
         String     attribute;
         char       c;
         String       closeTag = null;
@@ -174,7 +178,7 @@ public class JSONML {
                             if (!(token instanceof String)) {
                                 throw x.syntaxError("Missing value");
                             }
-                            newjo.accumulate(attribute, XML.stringToValue((String)token));
+                            newjo.accumulate(attribute, XML.stringToValue((String) token));
                             token = null;
                         } else {
                             newjo.accumulate(attribute, "");
@@ -227,7 +231,7 @@ public class JSONML {
             } else {
                 if (ja != null) {
                     ja.put(token instanceof String
-                        ? XML.stringToValue((String)token)
+                        ? XML.stringToValue((String) token)
                         : token);
                 }
             }
@@ -313,7 +317,7 @@ public class JSONML {
      */
     public static String toString(JSONArray ja) throws JSONException {
         int             i;
-        JSONObject   jo;
+        JSONObject jo;
         String       key;
         Iterator     keys;
         int             length;

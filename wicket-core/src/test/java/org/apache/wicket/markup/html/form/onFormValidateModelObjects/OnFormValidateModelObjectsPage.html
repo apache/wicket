@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+  <head>
+    <meta charset="utf-8" />
+    <title>QUICKSTART APPLICATION for JIRA issue WICKET-4344</title>
+    <link href='https://issues.apache.org/jira/browse/WICKET-4344' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen" title="Stylesheet" />
+  </head>
+  <body>
+    <div id="hd">
+      <div id="logo">
+        <img src="logo.png" width="50px" height="50px" alt="Wicket Logo" />
+        <h1>Apache Wicket</h1>
+      </div>
+    </div>
+    <div id="bd">
+      <h2>Issue</h2>
+      <p>
+        Implementation of onValidateModelObjects() only works for the form that had its submit
+        button clicked.  This makes it difficult to have nested forms in the case where a child
+        form has implemented the onValidateModelObjects() to do extra validation after the model
+        has been updated from a submit (see Form.process() ).  Note within this project both the
+        parent form and the child form have overridden the onValidateModelObjects().  
+        
+        To test:  
+          click on the child submit to see what got validated
+          hit reset to reset the validation values
+          click on the parent submit and see what got validated
+          hit reset to reset the validation values
+          do as many times as you wish :-)
+          
+        A correct result would be that when the parent submit gets called the result is that both
+        the child form got validated as well as the parent form.
+      </p>
+      <h3>Form</h3>
+      <div>
+         <form wicket:id="parentForm">
+            <label>Name: 
+              <input type="text" wicket:id="name"/> 
+            </label>
+            <label>Company: 
+              <input type="text" wicket:id="company"/>
+            </label>
+            <div wicket:id="addressInfo"></div>
+             <input type="button" wicket:id="parentSubmitBtn" value="Submit Parent Form"/>
+         </form>
+         <br/>
+         <br/>
+
+         <input type="button" wicket:id="resetSubmits" value="Reset Submissions"/>
+         <br/>
+         <br/>
+         <div wicket:id="validations">
+           <p>
+              <label>Parent Form Validated:<wicket:label wicket:id="parentValidated"/> </label>
+           </p>
+           <p>
+              <label>Child Form Validated: <wicket:label wicket:id="childValidated"/></label>
+           </p>
+         </div>
+      </div>
+    </div>
+    <div id="ft">
+    </div>
+    </body>
+</html>

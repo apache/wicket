@@ -39,7 +39,9 @@ import org.apache.wicket.util.visit.IVisitor;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @see #onSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see #onAfterSubmit(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see #onError(org.apache.wicket.ajax.AjaxRequestTarget)
  */
 public class AjaxFormValidatingBehavior extends Behavior
 {
@@ -142,7 +144,15 @@ public class AjaxFormValidatingBehavior extends Behavior
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
-				target.add(component);
+				component.configure(); // feedback component might change its visibility
+				if (component.isVisibleInHierarchy())
+				{
+					target.add(component);
+				}
+				else
+				{
+					visit.dontGoDeeper();
+				}
 			}
 		});
 	}
@@ -153,6 +163,8 @@ public class AjaxFormValidatingBehavior extends Behavior
 
 	private class FormValidateVisitor implements IVisitor<FormComponent, Void>, IClusterable
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void component(final FormComponent component, final IVisit<Void> visit)
 		{

@@ -19,6 +19,8 @@ package org.apache.wicket.util.file;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileDeleteStrategy;
+
 /**
  * A {@link FileDeleteStrategy} that can delete folders.
  */
@@ -26,8 +28,6 @@ public class FolderDeleteStrategy extends FileDeleteStrategy
 {
 	/**
 	 * Construct.
-	 * 
-	 * @param name
 	 */
 	protected FolderDeleteStrategy()
 	{

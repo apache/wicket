@@ -27,16 +27,16 @@ import org.slf4j.LoggerFactory;
 /**
  * A {@link IDataStore} which stores the pages in the {@link HttpSession}. Uses
  * {@link IDataStoreEvictionStrategy} to keep the memory footprint reasonable.
- * 
+ *
  * <p>
  * Usage:
- * 
+ *
  * <pre>
  * <!--@formatter:off-->
  * MyApp#init()
  * {
- * 
- * 	setPageManagerProvider(new DefaultPageManagerProvider() 
+ *
+ * 	setPageManagerProvider(new DefaultPageManagerProvider(this)
  * 	{
  * 		protected IDataStore newDataStore() 
  * 		{ 
@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpSessionDataStore implements IDataStore
 {
-	private static final Logger log = LoggerFactory.getLogger(HttpSessionDataStore.class);
+	private static final Logger LOG = LoggerFactory.getLogger(HttpSessionDataStore.class);
 
 	/** the session attribute key. auto-prefixed with application.getSessionAttributePrefix() */
 	private static final String PAGE_TABLE_KEY = "page:store:memory";
@@ -79,47 +79,67 @@ public class HttpSessionDataStore implements IDataStore
 	@Override
 	public byte[] getData(String sessionId, int pageId)
 	{
-		PageTable pageTable = getPageTable(false);
+		PageTable pageTable = getPageTable(false, false);
 		byte[] pageAsBytes = null;
 		if (pageTable != null)
 		{
 			pageAsBytes = pageTable.getPage(pageId);
 		}
+
+		if (LOG.isDebugEnabled())
+		{
+			int bytesLength = pageAsBytes != null ? pageAsBytes.length : -1;
+			LOG.debug("Loaded '{}' bytes for page with id '{}' in session '{}'",
+					bytesLength, pageId, sessionId);
+		}
+
+
 		return pageAsBytes;
 	}
 
 	@Override
 	public void removeData(String sessionId, int pageId)
 	{
-		PageTable pageTable = getPageTable(false);
+		PageTable pageTable = getPageTable(false, true);
 		if (pageTable != null)
 		{
-			pageTable.removePage(pageId);
+			byte[] bytes = pageTable.removePage(pageId);
+
+			if (LOG.isDebugEnabled() && bytes != null)
+			{
+				LOG.debug("Removed page '{}' in session '{}'", pageId, sessionId);
+			}
 		}
 	}
 
 	@Override
 	public void removeData(String sessionId)
 	{
-		PageTable pageTable = getPageTable(false);
+		PageTable pageTable = getPageTable(false, true);
 		if (pageTable != null)
 		{
 			pageTable.clear();
+			LOG.debug("Removed all pages in session '{}'", sessionId);
 		}
 	}
 
 	@Override
 	public void storeData(String sessionId, int pageId, byte[] pageAsBytes)
 	{
-		PageTable pageTable = getPageTable(true);
+		PageTable pageTable = getPageTable(true, true);
 		if (pageTable != null)
 		{
 			pageTable.storePage(pageId, pageAsBytes);
+			if (LOG.isDebugEnabled())
+			{
+				LOG.debug("Stored '{}' bytes for page '{}' in session '{}'",
+						pageAsBytes.length, pageId, sessionId);
+			}
 			evictionStrategy.evict(pageTable);
 		}
 		else
 		{
-			log.error("Cannot store the data for page with id '{}' in session with id '{}'",
+			LOG.error("Cannot store the data for page with id '{}' in session with id '{}'",
 				pageId, sessionId);
 		}
 	}
@@ -138,7 +158,7 @@ public class HttpSessionDataStore implements IDataStore
 		return true;
 	}
 
-	private PageTable getPageTable(boolean create)
+	private PageTable getPageTable(boolean create, boolean rewriteToSession)
 	{
 		PageTable pageTable = null;
 		if (Session.exists())
@@ -147,6 +167,8 @@ public class HttpSessionDataStore implements IDataStore
 			if (pageTable == null && create)
 			{
 				pageTable = new PageTable();
+				pageManagerContext.setSessionAttribute(PAGE_TABLE_KEY, pageTable);
+			} else if (rewriteToSession) {
 				pageManagerContext.setSessionAttribute(PAGE_TABLE_KEY, pageTable);
 			}
 		}

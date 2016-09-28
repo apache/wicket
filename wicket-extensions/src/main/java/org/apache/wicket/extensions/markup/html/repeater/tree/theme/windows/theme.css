@@ -36,7 +36,7 @@
 
 /* node */
 
-.tree-theme-windows a.tree-junction {
+.tree-theme-windows .tree-junction {
   display: block;
   float: left;
   width: 18px;
@@ -45,7 +45,7 @@
   background-repeat: no-repeat;
 }
 
-.tree-theme-windows a.tree-junction-expanded {
+.tree-theme-windows .tree-junction-expanded {
   display: block;
   float: left;
   width: 18px;
@@ -55,7 +55,7 @@
   text-decoration: none;
 }
 
-.tree-theme-windows a.tree-junction-collapsed {
+.tree-theme-windows .tree-junction-collapsed {
   display: block;
   float: left;
   width: 18px;

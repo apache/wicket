@@ -69,12 +69,9 @@ public final class SignIn extends WicketExamplePage
 
 			// Attach textfield components that edit properties map model
 			add(new TextField<>(USERNAME, new PropertyModel<String>(properties, USERNAME)));
-			add(new PasswordTextField(PASSWORD, new PropertyModel<String>(properties, PASSWORD)));
+			add(new PasswordTextField(PASSWORD, new PropertyModel<>(properties, PASSWORD)));
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
 		@Override
 		public final void onSubmit()
 		{

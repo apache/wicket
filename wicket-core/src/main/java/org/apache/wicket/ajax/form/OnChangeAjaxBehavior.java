@@ -16,7 +16,16 @@
  */
 package org.apache.wicket.ajax.form;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.lambda.Lambdas;
+import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A behavior that updates the hosting {@link FormComponent} via Ajax when value of the component is
@@ -31,7 +40,8 @@ import org.apache.wicket.markup.html.form.FormComponent;
  * @author Janne Hietam&auml;ki (janne)
  * 
  * @since 1.3
- * @see AjaxFormComponentUpdatingBehavior
+ * @see org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior#onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior#onError(org.apache.wicket.ajax.AjaxRequestTarget, RuntimeException)
  */
 public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBehavior
 {
@@ -45,11 +55,88 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	public static final String EVENT_NAME = "inputchange change";
 
 	/**
+	 * the change event
+	 */
+	public static final String EVENT_CHANGE = "change";
+
+	/**
 	 * Constructor.
 	 */
 	public OnChangeAjaxBehavior()
 	{
 		super(EVENT_NAME);
+	}
+
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) 
+	{
+		super.updateAjaxAttributes(attributes);
+
+		Component component = getComponent();
+
+		// textfiels and textareas will trigger this behavior with either 'inputchange' or 'change' events
+		// all the other components will use just 'change'
+		if (!(component instanceof TextField || component instanceof TextArea))
+		{
+			attributes.setEventNames(EVENT_CHANGE);
+		}
+	}
+
+	/**
+	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
+	 * 
+	 * @param onChange
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link OnChangeAjaxBehavior}
+	 */
+	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange)
+	{
+		Args.notNull(onChange, "onChange");
+
+		return new OnChangeAjaxBehavior()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onChange.accept(target);
+			}
+		};
+	}
+
+	/**
+	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
+	 * 
+	 * @param onChange
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link RuntimeException}
+	 * @return the {@link OnChangeAjaxBehavior}
+	 */
+	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange,
+	                                            WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	{
+		Args.notNull(onChange, "onChange");
+		Args.notNull(onError, "onError");
+
+		return new OnChangeAjaxBehavior()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onChange.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, RuntimeException e)
+			{
+				onError.accept(target, e);
+			}
+		};
 	}
 
 }

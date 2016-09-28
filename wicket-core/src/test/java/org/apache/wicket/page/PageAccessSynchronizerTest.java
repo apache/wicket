@@ -20,6 +20,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MockPage;
@@ -46,7 +47,7 @@ public class PageAccessSynchronizerTest extends Assert
 
 	/**	 */
 	@Rule
-	public Timeout globalTimeout = new Timeout((int)Duration.seconds(30).getMilliseconds());
+	public Timeout globalTimeout = new Timeout(30, TimeUnit.SECONDS);
 
 	/**
 	 * @throws Exception
@@ -55,7 +56,6 @@ public class PageAccessSynchronizerTest extends Assert
 	public void testReentrant() throws Exception
 	{
 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(5));
-		final Duration hold = Duration.seconds(1);
 		sync.lockPage(0);
 		sync.lockPage(0);
 	}
@@ -298,7 +298,7 @@ public class PageAccessSynchronizerTest extends Assert
 
 		// make sure we can serialize the synchronizer
 
-		final PageAccessSynchronizer sync2 = (PageAccessSynchronizer)WicketObjects.cloneObject(sync);
+		final PageAccessSynchronizer sync2 = WicketObjects.cloneObject(sync);
 		assertTrue(sync != sync2);
 
 		// make sure the clone does not retain locks by attempting to lock page locked by locker1 in
@@ -338,9 +338,14 @@ public class PageAccessSynchronizerTest extends Assert
 	@Test
 	public void failToReleaseUnderLoad() throws Exception
 	{
+		final Duration duration = Duration.seconds(20); /* seconds */
 		final ConcurrentLinkedQueue<Exception> errors = new ConcurrentLinkedQueue<Exception>();
-		final long endTime = System.currentTimeMillis() + Duration.seconds(20).getMilliseconds();
-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(10));
+		final long endTime = System.currentTimeMillis() + duration.getMilliseconds();
+
+		// set the synchronizer timeout one second longer than the test runs to prevent 
+		// starvation to become an issue
+		final PageAccessSynchronizer sync = new PageAccessSynchronizer(duration.add(Duration.ONE_SECOND));
+
 		final CountDownLatch latch = new CountDownLatch(100);
 		for (int count = 0; count < 100; count++)
 		{
@@ -383,6 +388,9 @@ public class PageAccessSynchronizerTest extends Assert
 		}
 		latch.await();
 		if (!errors.isEmpty())
+		{
+			logger.error("Number of lock errors that occurred: {}", errors.size());
 			throw errors.remove();
+		}
 	}
 }

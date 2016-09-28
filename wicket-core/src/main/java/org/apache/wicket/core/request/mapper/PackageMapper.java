@@ -17,6 +17,7 @@
 package org.apache.wicket.core.request.mapper;
 
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
@@ -28,6 +29,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.PackageName;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A request mapper that mounts all bookmarkable pages in a given package.
@@ -66,38 +68,32 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	 */
 	private final PackageName packageName;
 
-	/** the encoder used to encode/decode the page parameters */
-	private final IPageParametersEncoder pageParametersEncoder;
-
 	/**
-	 * Construct.
+	 * Constructor.
 	 *
 	 * @param packageName
 	 */
-	public PackageMapper(final PackageName packageName)
+	public PackageMapper(String mountPath, final PackageName packageName)
 	{
-		this(packageName, new PageParametersEncoder());
+		this(mountPath, packageName, new PageParametersEncoder());
 	}
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 *
 	 * @param packageName
 	 * @param pageParametersEncoder
 	 */
-	public PackageMapper(final PackageName packageName,
+	public PackageMapper(String mountPath, final PackageName packageName,
 		final IPageParametersEncoder pageParametersEncoder)
 	{
+		super(mountPath, pageParametersEncoder);
+
 		Args.notNull(packageName, "packageName");
-		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
 
 		this.packageName = packageName;
-		this.pageParametersEncoder = pageParametersEncoder;
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.mapper.AbstractBookmarkableMapper#buildUrl(UrlInfo)
-	 */
 	@Override
 	protected Url buildUrl(UrlInfo info)
 	{
@@ -106,6 +102,10 @@ public class PackageMapper extends AbstractBookmarkableMapper
 		if (pageClassPackageName.equals(packageName))
 		{
 			Url url = new Url();
+			for (String s : mountSegments)
+			{
+				url.getSegments().add(s);
+			}
 
 			String fullyQualifiedClassName = pageClass.getName();
 			String packageRelativeClassName = fullyQualifiedClassName;
@@ -117,26 +117,44 @@ public class PackageMapper extends AbstractBookmarkableMapper
 			packageRelativeClassName = transformForUrl(packageRelativeClassName);
 			url.getSegments().add(packageRelativeClassName);
 			encodePageComponentInfo(url, info.getPageComponentInfo());
-			return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);
+
+			PageParameters copy = new PageParameters(info.getPageParameters());
+			if (setPlaceholders(copy, url) == false)
+			{
+				// mandatory parameter is not provided => cannot build Url
+				return null;
+			}
+
+			return encodePageParameters(url, copy, pageParametersEncoder);
 		}
 
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.mapper.AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
-	 */
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
 		Url url = request.getUrl();
-		if (url.getSegments().size() >= 1)
+		if (urlStartsWithMountedSegments(url))
 		{
 			// try to extract page and component information from URL
 			PageComponentInfo info = getPageComponentInfo(url);
 
+			final List<String> segments = url.getSegments();
+			if (segments.size() <= mountSegments.length)
+			{
+				return null;
+			}
+
 			// load the page class
-			String className = url.getSegments().get(0);
+			String name = segments.get(mountSegments.length);
+
+			if (Strings.isEmpty(name))
+			{
+				return null;
+			}
+
+			String className = cleanClassName(name);
 
 			if (isValidClassName(className) == false)
 			{
@@ -151,8 +169,10 @@ public class PackageMapper extends AbstractBookmarkableMapper
 				IRequestablePage.class.isAssignableFrom(pageClass))
 			{
 				// extract the PageParameters from URL if there are any
-				PageParameters pageParameters = extractPageParameters(request, 1,
-					pageParametersEncoder);
+				Url urlWithoutPageSegment = new Url(url);
+				urlWithoutPageSegment.getSegments().remove(mountSegments.length);
+				Request requestWithoutPageSegment = request.cloneWithUrl(urlWithoutPageSegment);
+				PageParameters pageParameters = extractPageParameters(requestWithoutPageSegment, urlWithoutPageSegment);
 
 				return new UrlInfo(info, pageClass, pageParameters);
 			}
@@ -172,7 +192,7 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	private boolean isValidClassName(String className)
 	{
 		// darn simple check - feel free to enhance this method to your needs
-		if (className == null)
+		if (Strings.isEmpty(className))
 		{
 			return false;
 		}
@@ -210,22 +230,16 @@ public class PackageMapper extends AbstractBookmarkableMapper
 		return className;
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.mapper.AbstractBookmarkableMapper#pageMustHaveBeenCreatedBookmarkable()
-	 */
 	@Override
 	protected boolean pageMustHaveBeenCreatedBookmarkable()
 	{
-		return true;
+		return false;
 	}
-
-	/**
-	 * @see org.apache.wicket.core.request.mapper.AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
+	
 	@Override
-	public int getCompatibilityScore(Request request)
+	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
-		// always return 0 here so that the mounts have higher priority
-		return 0;
+		PackageName pageClassPackageName = PackageName.forClass(pageClass);
+		return packageName.equals(pageClassPackageName);
 	}
 }

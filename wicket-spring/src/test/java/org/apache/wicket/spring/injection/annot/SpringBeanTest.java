@@ -30,11 +30,9 @@ import org.junit.Test;
 
 /**
  * Test for SpringBean.
- * 
- * 
+ *
  * @author Andrea Del Bene
  */
-
 public class SpringBeanTest extends Assert
 {
 	private WicketTester tester;
@@ -98,6 +96,11 @@ public class SpringBeanTest extends Assert
 		AnnotatedBeanNotRequired page;
 		tester.startPage(page = new AnnotatedBeanNotRequired());
 		assertNull(page.getBean());
+
+		// with name = something, required = false everything is fine
+		AnnotatedBeanWithSameNameRequired page2;
+		tester.startPage(page2 = new AnnotatedBeanWithSameNameRequired());
+		assertNull(page2.getBean());
 	}
 
 	/**
@@ -138,7 +141,7 @@ public class SpringBeanTest extends Assert
 
 		// with no name specified we get IllegalStateException
 		Page page = tester.startPage(new AnnotatedFieldInBehaviorPage());
-		TestBehavior behavior = (TestBehavior)page.getBehaviorById(0);
+		TestBehavior behavior = page.getBehaviors(TestBehavior.class).get(0);
 		assertNotNull(behavior.getBean());
 	}
 }
@@ -146,6 +149,17 @@ public class SpringBeanTest extends Assert
 class AnnotatedBeanRequired extends DummyHomePage
 {
 	@SpringBean
+	private Bean bean;
+
+	public Bean getBean()
+	{
+		return bean;
+	}
+}
+
+class AnnotatedBeanWithSameNameRequired extends DummyHomePage
+{
+	@SpringBean(name = "bean", required = false)
 	private Bean bean;
 
 	public Bean getBean()

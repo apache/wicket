@@ -367,6 +367,15 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		}
 	}
 
+	private static class DisableCachingAction extends MetaDataAction
+	{
+		@Override
+		protected void invoke(WebResponse response)
+		{
+			response.disableCaching();;
+		}
+	}
+
 	private static class SendErrorAction extends Action
 	{
 		private final int sc;
@@ -463,6 +472,11 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	public void addHeader(String name, String value)
 	{
 		actions.add(new AddHeaderAction(name, value));
+	}
+
+	@Override
+	public void disableCaching() {
+		actions.add(new DisableCachingAction());
 	}
 
 	@Override
@@ -608,7 +622,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 		actions.add(new FlushAction());
 	}
 
-	private static final void writeStream(final Response response, ByteArrayOutputStream stream)
+	private static void writeStream(final Response response, ByteArrayOutputStream stream)
 	{
 		final boolean copied[] = { false };
 		try

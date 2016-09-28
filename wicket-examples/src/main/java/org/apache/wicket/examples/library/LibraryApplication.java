@@ -23,7 +23,7 @@ import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationSt
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
+import org.apache.wicket.settings.RequestCycleSettings;
 
 
 /**
@@ -33,41 +33,25 @@ import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
  */
 public final class LibraryApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public LibraryApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
-	 */
 	@Override
 	public Session newSession(Request request, Response response)
 	{
 		return new LibrarySession(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
 		super.init();
 
 		getResourceSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
+		getRequestCycleSettings().setRenderStrategy(RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER);
 
 		// Install a simple page authorization strategy, that checks all pages
 		// of type AuthenticatedWebPage.
@@ -82,11 +66,5 @@ public final class LibraryApplication extends WicketExampleApplication
 			}
 		};
 		getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
-
-		// install crypto mapper to encrypt all application urls
-		// getSecuritySettings().setCryptFactory(new KeyInSessionSunJceCryptFactory());
-		// ThreadsafeCompoundRequestMapper root = new ThreadsafeCompoundRequestMapper();
-		// root.register(new CryptoMapper(getRootRequestMapper(), this));
-		// setRootRequestMapper(root);
 	}
 }

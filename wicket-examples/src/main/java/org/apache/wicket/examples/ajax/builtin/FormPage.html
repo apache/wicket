@@ -5,17 +5,34 @@
     xml:lang="en" lang="en">
     <wicket:extend>
         <br/>
-		Start typing in the textfields and see the form being validated as you type. Ajax requests are throttled down to once per second, so they will not overload the server.
+		Start typing in the textfields and see the form being validated as you type. If there are no validation errors the form is automatically submitted. Ajax requests are throttled down to once per second, so they will not overload the server.
 		<br/>
-		<div wicket:id="feedback">[[ feedback ]]</div>
+		<div wicket:id="feedbackErrors">[[ feedback ]]</div>
 
-        <form wicket:id="form">
+        <form wicket:id="form" class="validation">
             <label wicket:id="name-label">[name label]</label>: <input type="text" wicket:id="name"/>
             <br/><label wicket:id="email-label">[email label]</label>: <input type="text" wicket:id="email"/>
             <br/>
             <br/>
-			<input type="submit" value="submit via ajax" wicket:id="ajax-button"/>
-            <input type="submit" value="submit"/>
         </form>
+        
+        <div wicket:id="feedbackSuccess"></div>
+
+        <hr/>
+        <p>
+            This form uses <em>org.apache.wicket.ajax.AjaxPreventSubmitBehavior</em> to prevent the submit event
+            when <em>ENTER</em> key is pressed.<br/>
+            Without this special behavior the browser will trigger the <em>submit</em> JavaScript event on the first
+            &lt;input type="submit"/&gt; form element.
+        </p>
+        <form wicket:id="preventEnterForm" class="preventEnter">
+            <label wicket:id="name-label">[name label]</label>: <input type="text" wicket:id="name"/>
+            <br/><label wicket:id="email-label">[email label]</label>: <input type="text" wicket:id="email"/>
+            <br/>
+            <input type="submit" value="Submit"/>
+            <br/>
+        </form>
+
+
     </wicket:extend>
 </html>

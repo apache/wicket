@@ -19,13 +19,13 @@ package org.apache.wicket.examples.compref;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**
@@ -54,7 +54,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -75,7 +75,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// which can be found in DropDownChoicePage.properties
 		form.add(new DropDownChoice<>("site", SITES));
 
-		// Allthough the default behavior of displaying the string
+		// Although the default behavior of displaying the string
 		// representations of the choices
 		// by calling toString on the object might be alright in some cases, you
 		// usually want to have
@@ -84,7 +84,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// like the example below. Don't forget to check out the default
 		// implementation of
 		// IChoiceRenderer, ChoiceRenderer.
-		form.add(new DropDownChoice<Integer>("integer", INTEGERS, new IChoiceRenderer<Integer>()
+		form.add(new DropDownChoice<>("integer", INTEGERS, new ChoiceRenderer<Integer>()
 		{
 			/**
 			 * Gets the display value that is visible to the end user.
@@ -139,9 +139,6 @@ public class DropDownChoicePage extends WicketExamplePage
 		/** the selected integer. */
 		public Integer integer = INTEGERS.get(0);
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString()
 		{

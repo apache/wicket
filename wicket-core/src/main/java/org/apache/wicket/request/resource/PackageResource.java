@@ -16,26 +16,34 @@
  */
 package org.apache.wicket.request.resource;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
+import org.apache.wicket.mock.MockWebRequest;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.resource.ResourceStreamWrapper;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
@@ -55,12 +63,13 @@ import org.slf4j.LoggerFactory;
  * </p>
  * 
  * Access to resources can be granted or denied via a {@link IPackageResourceGuard}. Please see
- * {@link IResourceSettings#getPackageResourceGuard()} as well.
+ * {@link org.apache.wicket.settings.ResourceSettings#getPackageResourceGuard()} as well.
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  * @author Matej Knopp
+ * @author Tobias Soloschenko
  */
 public class PackageResource extends AbstractResource implements IStaticCacheableResource
 {
@@ -72,6 +81,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * Exception thrown when the creation of a package resource is not allowed.
 	 */
 	public static final class PackageResourceBlockedException extends WicketRuntimeException
+		implements
+			IWicketInternalException
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -118,9 +129,9 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private final String variation;
 
 	/**
-	 * A flag indicating whether {@code ITextResourceCompressor} can be used to compress this resource.
-	 * Default is {@code false} because this resource may be used for binary data (e.g. an image).
-	 * Specializations of this class should change this flag appropriately.
+	 * A flag indicating whether {@code ITextResourceCompressor} can be used to compress this
+	 * resource. Default is {@code false} because this resource may be used for binary data (e.g. an
+	 * image). Specializations of this class should change this flag appropriately.
 	 */
 	private boolean compress = false;
 
@@ -128,15 +139,18 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 * controls whether {@link org.apache.wicket.request.resource.caching.IResourceCachingStrategy}
 	 * should be applied to resource
 	 */
-	
 	private boolean cachingEnabled = true;
-	
+
 	/**
 	 * text encoding (may be null) - only makes sense for character-based resources
 	 */
-	
 	private String textEncoding = null;
-	
+
+	/**
+	 * Reads the resource buffered - the content is copied into memory
+	 */
+	private boolean readBuffered = true;
+
 	/**
 	 * Hidden constructor.
 	 * 
@@ -177,20 +191,41 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	private Locale getCurrentLocale()
 	{
-		return locale != null ? locale : Session.get().getLocale();
+		if (locale == null && Session.exists())
+		{
+			return Session.get().getLocale();
+		}
+
+		return locale;
 	}
 
 	private String getCurrentStyle()
 	{
-		return style != null ? style : Session.get().getStyle();
+		if (style == null && Session.exists())
+		{
+			return Session.get().getStyle();
+		}
+
+		return style;
 	}
 
+	/**
+	 * Returns true if the caching for this resource is enabled
+	 * 
+	 * @return if the caching is enabled
+	 */
 	@Override
 	public boolean isCachingEnabled()
 	{
 		return cachingEnabled;
 	}
 
+	/**
+	 * Sets the caching for this resource to be enabled
+	 * 
+	 * @param enabled
+	 *            if the cacheing should be enabled
+	 */
 	public void setCachingEnabled(final boolean enabled)
 	{
 		this.cachingEnabled = enabled;
@@ -198,7 +233,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 	/**
 	 * get text encoding (intented for character-based resources)
-	 
+	 *
 	 * @return custom encoding or {@code null} to use default
 	 */
 	public String getTextEncoding()
@@ -220,16 +255,22 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	@Override
 	public Serializable getCacheKey()
 	{
-		IResourceStream stream = getCacheableResourceStream();
-
+		Class<?> scope = getScope();
+		String currentStyle = getCurrentStyle();
+		Locale currentLocale = getCurrentLocale();
+		
+		 IResourceStream packageResource = Application.get()
+			.getResourceSettings()
+			.getResourceStreamLocator()
+			.locate(scope, absolutePath, currentStyle, variation, currentLocale, null, false);
+		 
 		// if resource stream can not be found do not cache
-		if (stream == null)
+		if (packageResource != null)
 		{
-			return null;
+			return new CacheKey(scopeName, absolutePath, currentLocale, currentStyle, variation);
 		}
 
-		return new CacheKey(scopeName, absolutePath, stream.getLocale(), stream.getStyle(),
-			stream.getVariation());
+		return null;
 	}
 
 	/**
@@ -270,7 +311,7 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		if (resourceStream == null)
 		{
 			return sendResourceError(resourceResponse, HttpServletResponse.SC_NOT_FOUND,
-					"Unable to find resource");
+				"Unable to find resource");
 		}
 
 		// add Last-Modified header (to support HEAD requests and If-Modified-Since)
@@ -289,31 +330,43 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 			// set Content-Type (may be null)
 			resourceResponse.setContentType(contentType);
-			
+
 			// set content encoding (may be null)
 			resourceResponse.setTextEncoding(getTextEncoding());
 
+			// supports accept range
+			resourceResponse.setAcceptRange(ContentRangeType.BYTES);
+
 			try
 			{
-				// read resource data
-				final byte[] bytes;
+				// read resource data to get the content length
+				InputStream inputStream = resourceStream.getInputStream();
 
-				bytes = IOUtils.toByteArray(resourceStream.getInputStream());
-
-				final byte[] processed = processResponse(attributes, bytes);
-
+				byte[] bytes = null;
 				// send Content-Length header
-				resourceResponse.setContentLength(processed.length);
+				if (readBuffered)
+				{
+					bytes = IOUtils.toByteArray(inputStream);
+					resourceResponse.setContentLength(bytes.length);
+				}
+				else
+				{
+					resourceResponse.setContentLength(resourceStream.length().bytes());
+				}
+
+				// get content range information
+				RequestCycle cycle = RequestCycle.get();
+				Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
+				Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
 
 				// send response body with resource data
-				resourceResponse.setWriteCallback(new WriteCallback()
-				{
-					@Override
-					public void writeData(Attributes attributes)
-					{
-						attributes.getResponse().write(processed);
-					}
-				});
+				PartWriterCallback partWriterCallback = new PartWriterCallback(bytes != null
+					? new ByteArrayInputStream(bytes) : inputStream,
+					resourceResponse.getContentLength(), startbyte, endbyte);
+
+				// If read buffered is set to false ensure the part writer callback is going to
+				// close the input stream
+				resourceResponse.setWriteCallback(partWriterCallback.setClose(!readBuffered));
 			}
 			catch (IOException e)
 			{
@@ -329,7 +382,10 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			{
 				try
 				{
-					resourceStream.close();
+					if (readBuffered)
+					{
+						IOUtils.close(resourceStream);
+					}
 				}
 				catch (IOException e)
 				{
@@ -379,35 +435,20 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 		return resourceResponse;
 	}
 
-
-	/**
-	 * be aware that method takes the current wicket session's locale and style into account when
-	 * locating the stream.
-	 *
-	 * @return resource stream
-	 *
-	 * @see org.apache.wicket.request.resource.caching.IStaticCacheableResource#getCacheableResourceStream()
-	 * @see #getResourceStream()
-	 */
-	@Override
-	public IResourceStream getCacheableResourceStream()
-	{
-		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
-	}
-	
 	/**
 	 * locate resource stream for current resource
 	 * 
 	 * @return resource stream or <code>null</code> if not found
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
-		return internalGetResourceStream(style, locale);
-	}
+		return internalGetResourceStream(getCurrentStyle(), getCurrentLocale());
+ 	}
 
 	/**
-	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to compress the
-	 *         resource.
+	 * @return whether {@link org.apache.wicket.resource.ITextResourceCompressor} can be used to
+	 *         compress the resource.
 	 */
 	public boolean getCompress()
 	{
@@ -426,11 +467,11 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	private IResourceStream internalGetResourceStream(final String style, final Locale locale)
 	{
 		IResourceStreamLocator resourceStreamLocator = Application.get()
-				.getResourceSettings()
-				.getResourceStreamLocator();
-		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath, style, variation, locale, null, false);
+			.getResourceSettings()
+			.getResourceStreamLocator();
+		IResourceStream resourceStream = resourceStreamLocator.locate(getScope(), absolutePath,
+			style, variation, locale, null, false);
 
-		Class<?> realScope = getScope();
 		String realPath = absolutePath;
 		if (resourceStream instanceof IFixedLocationResourceStream)
 		{
@@ -442,11 +483,6 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 				{
 					realPath = realPath.substring(index);
 				}
-				else
-				{
-					// just fall back on the full path without a scope..
-					realScope = null;
-				}
 			}
 			else
 			{
@@ -455,35 +491,94 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 		}
 
-		if (accept(realScope, realPath) == false)
+		if (accept(realPath) == false)
 		{
 			throw new PackageResourceBlockedException(
-					"Access denied to (static) package resource " + absolutePath +
-						". See IPackageResourceGuard");
+				"Access denied to (static) package resource " + absolutePath +
+					". See IPackageResourceGuard");
 		}
 
+		if (resourceStream != null)
+		{
+			resourceStream = new ProcessingResourceStream(resourceStream);
+		}
 		return resourceStream;
+	}
+
+	/**
+	 * An IResourceStream that processes the input stream of the original IResourceStream
+	 */
+	private class ProcessingResourceStream extends ResourceStreamWrapper
+	{
+		private static final long serialVersionUID = 1L;
+
+		private ProcessingResourceStream(IResourceStream delegate)
+		{
+			super(delegate);
+		}
+
+		@Override
+		public InputStream getInputStream() throws ResourceStreamNotFoundException
+		{
+			byte[] bytes = null;
+			InputStream inputStream = super.getInputStream();
+
+			if (readBuffered)
+			{
+				try
+				{
+					bytes = IOUtils.toByteArray(inputStream);
+				}
+				catch (IOException iox)
+				{
+					throw new WicketRuntimeException(iox);
+				}
+				finally
+				{
+					IOUtils.closeQuietly(this);
+				}
+			}
+
+			RequestCycle cycle = RequestCycle.get();
+			Attributes attributes;
+			if (cycle != null)
+			{
+				attributes = new Attributes(cycle.getRequest(), cycle.getResponse());
+			}
+			else
+			{
+				// use empty request and response in case of non-http thread. WICKET-5532
+				attributes = new Attributes(new MockWebRequest(Url.parse("")), new StringResponse());
+			}
+			if (bytes != null)
+			{
+				byte[] processedBytes = processResponse(attributes, bytes);
+				return new ByteArrayInputStream(processedBytes);
+			}
+			else
+			{
+				return inputStream;
+			}
+		}
 	}
 
 	/**
 	 * Checks whether access is granted for this resource.
 	 *
-	 * By default IPackageResourceGuard is used to check the permissions but
-	 * the resource itself can also make the check.
+	 * By default IPackageResourceGuard is used to check the permissions but the resource itself can
+	 * also make the check.
 	 *
-	 * @param scope
-	 *            resource scope
 	 * @param path
 	 *            resource path
 	 * @return <code>true<code> if resource access is granted
 	 */
-	protected boolean accept(Class<?> scope, String path)
+	protected boolean accept(String path)
 	{
 		IPackageResourceGuard guard = Application.get()
 			.getResourceSettings()
 			.getPackageResourceGuard();
 
-		return guard.accept(scope, path);
+		return guard.accept(path);
 	}
 
 	/**
@@ -495,7 +590,8 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 	 */
 	public static boolean exists(final ResourceReference.Key key)
 	{
-		return exists(key.getScopeClass(), key.getName(), key.getLocale(), key.getStyle(), key.getVariation());
+		return exists(key.getScopeClass(), key.getName(), key.getLocale(), key.getStyle(),
+			key.getVariation());
 	}
 
 	/**
@@ -569,50 +665,13 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+
 		PackageResource other = (PackageResource)obj;
-		if (absolutePath == null)
-		{
-			if (other.absolutePath != null)
-				return false;
-		}
-		else if (!absolutePath.equals(other.absolutePath))
-			return false;
-		if (locale == null)
-		{
-			if (other.locale != null)
-				return false;
-		}
-		else if (!locale.equals(other.locale))
-			return false;
-		if (path == null)
-		{
-			if (other.path != null)
-				return false;
-		}
-		else if (!path.equals(other.path))
-			return false;
-		if (scopeName == null)
-		{
-			if (other.scopeName != null)
-				return false;
-		}
-		else if (!scopeName.equals(other.scopeName))
-			return false;
-		if (style == null)
-		{
-			if (other.style != null)
-				return false;
-		}
-		else if (!style.equals(other.style))
-			return false;
-		if (variation == null)
-		{
-			if (other.variation != null)
-				return false;
-		}
-		else if (!variation.equals(other.variation))
-			return false;
-		return true;
+
+		return Objects.equals(absolutePath, other.absolutePath) &&
+			Objects.equals(locale, other.locale) && Objects.equals(path, other.path) &&
+			Objects.equals(scopeName, other.scopeName) && Objects.equals(style, other.style) &&
+			Objects.equals(variation, other.variation);
 	}
 
 	String getParentFolderPlaceholder()
@@ -658,19 +717,10 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 
 			CacheKey cacheKey = (CacheKey)o;
 
-			if (locale != null ? !locale.equals(cacheKey.locale) : cacheKey.locale != null)
-				return false;
-			if (!path.equals(cacheKey.path))
-				return false;
-			if (!scopeName.equals(cacheKey.scopeName))
-				return false;
-			if (style != null ? !style.equals(cacheKey.style) : cacheKey.style != null)
-				return false;
-			if (variation != null ? !variation.equals(cacheKey.variation)
-				: cacheKey.variation != null)
-				return false;
-
-			return true;
+			return Objects.equals(locale, cacheKey.locale) && Objects.equals(path, cacheKey.path) &&
+				Objects.equals(scopeName, cacheKey.scopeName) &&
+				Objects.equals(style, cacheKey.style) &&
+				Objects.equals(variation, cacheKey.variation);
 		}
 
 		@Override
@@ -697,5 +747,24 @@ public class PackageResource extends AbstractResource implements IStaticCacheabl
 			sb.append('}');
 			return sb.toString();
 		}
+	}
+
+	/**
+	 * If the package resource should be read buffered.<br>
+	 * <br>
+	 * WARNING - if the stream is not read buffered compressors will not work, because they require
+	 * the whole content to be read into memory.<br>
+	 * ({@link org.apache.wicket.javascript.IJavaScriptCompressor}, <br>
+	 * {@link org.apache.wicket.css.ICssCompressor}, <br>
+	 * {@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
+	 * 
+	 * @param readBuffered
+	 *            if the package resource should be read buffered
+	 * @return the current package resource
+	 */
+	public PackageResource readBuffered(boolean readBuffered)
+	{
+		this.readBuffered = readBuffered;
+		return this;
 	}
 }

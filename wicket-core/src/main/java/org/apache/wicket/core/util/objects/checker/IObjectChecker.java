@@ -30,9 +30,9 @@ public interface IObjectChecker
 	/**
 	 * Represents the result of a check.
 	 */
-	public static class Result
+	class Result
 	{
-		public static enum Status
+		public enum Status
 		{
 			/**
 			 * The check is successful

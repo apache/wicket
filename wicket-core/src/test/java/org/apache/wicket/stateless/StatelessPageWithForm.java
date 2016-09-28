@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.stateless;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -27,6 +29,8 @@ public class StatelessPageWithForm extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	static final AtomicBoolean FORM_SUBMITTED = new AtomicBoolean(false);
+
 	/**
 	 * Construct.
 	 * 
@@ -35,6 +39,14 @@ public class StatelessPageWithForm extends WebPage
 	public StatelessPageWithForm(PageParameters parameters)
 	{
 		super(parameters);
-		add(new StatelessForm<Void>("form"));
+		add(new StatelessForm<Void>("form")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				super.onSubmit();
+				FORM_SUBMITTED.set(true);
+			}
+		});
 	}
 }

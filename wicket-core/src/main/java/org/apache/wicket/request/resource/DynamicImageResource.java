@@ -148,8 +148,6 @@ public abstract class DynamicImageResource extends AbstractResource
 
 		if (response.dataNeedsToBeWritten(attributes))
 		{
-			response.setContentType("image/" + getFormat());
-
 			response.setContentDisposition(ContentDisposition.INLINE);
 
 			final byte[] imageData = getImageData(attributes);
@@ -159,6 +157,7 @@ public abstract class DynamicImageResource extends AbstractResource
 			}
 			else
 			{
+				response.setContentType("image/" + getFormat());
 				response.setWriteCallback(new WriteCallback()
 				{
 					@Override

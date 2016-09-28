@@ -32,5 +32,5 @@ public interface IStyledColumn<T, S> extends IColumn<T, S>
 	 * 
 	 * @return CSS class name
 	 */
-	public String getCssClass();
+	String getCssClass();
 }

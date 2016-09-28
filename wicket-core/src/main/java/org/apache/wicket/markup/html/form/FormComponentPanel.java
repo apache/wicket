@@ -16,10 +16,12 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.IQueueRegion;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.PanelMarkupSourcingStrategy;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * Panel (has it's own markup, defined between <wicket:panel> tags), that can act as a form
@@ -108,14 +110,15 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            The model object type
  */
-public abstract class FormComponentPanel<T> extends FormComponent<T>
+public abstract class FormComponentPanel<T> extends FormComponent<T> implements IQueueRegion
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param id
+	 *          The component id
 	 */
 	public FormComponentPanel(String id)
 	{
@@ -123,37 +126,30 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 	}
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param id
+	 *          The component id
 	 * @param model
+	 *          The component model
 	 */
 	public FormComponentPanel(String id, IModel<T> model)
 	{
 		super(id, model);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean checkRequired()
 	{
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected IMarkupSourcingStrategy newMarkupSourcingStrategy()
 	{
 		return new PanelMarkupSourcingStrategy(false);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
@@ -162,5 +158,19 @@ public abstract class FormComponentPanel<T> extends FormComponent<T>
 		// remove unapplicable attributes that might have been set by the call to super
 		tag.remove("name");
 		tag.remove("disabled");
+	}
+
+	@Override
+	public void clearInput()
+	{
+		super.clearInput();
+
+		// Visit all the (visible) form components and clear the input on each.
+		visitFormComponentsPostOrder(this, (IVisitor<FormComponent<?>, Void>) (formComponent, visit) -> {
+			if (formComponent != FormComponentPanel.this && formComponent.isVisibleInHierarchy())
+			{
+				formComponent.clearInput();
+			}
+		});
 	}
 }

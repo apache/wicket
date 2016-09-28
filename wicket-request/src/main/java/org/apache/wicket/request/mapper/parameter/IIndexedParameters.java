@@ -26,18 +26,20 @@ import org.apache.wicket.util.string.StringValue;
  */
 public interface IIndexedParameters
 {
-
 	/**
 	 * Sets the indexed parameter on given index
 	 * 
 	 * @param index
+	 *          The position of the parameter
 	 * @param object
-	 * @return this
+	 *          The parameter at this position
+	 * @return this instance, for chaining
 	 */
 	IIndexedParameters set(final int index, final Object object);
 
 	/**
 	 * @param index
+	 *          The position of the parameter
 	 * @return indexed parameter on given index
 	 */
 	StringValue get(final int index);
@@ -46,15 +48,15 @@ public interface IIndexedParameters
 	 * Removes indexed parameter on given index
 	 * 
 	 * @param index
-	 * @return this
+	 *          The position of the parameter
+	 * @return this instance, for chaining
 	 */
 	IIndexedParameters remove(final int index);
 
 	/**
 	 * Removes all indexed parameters.
 	 * 
-	 * @return this
+	 * @return this instance, for chaining
 	 */
 	IIndexedParameters clearIndexed();
-
 }

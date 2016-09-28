@@ -1,0 +1,9 @@
+...but we all hate spaghetti code! That's why in the first half of the 2000s we have seen the birth of so many web frameworks. Their mission was to separate our business code from presentation layer (like JSP pages).
+
+Some of theme (like Struts, Spring MVC, Velocity, etc...) have become widely adopted and they made the MVC pattern very popular among developers.
+However, none of these frameworks offers a real object-oriented (OO) abstraction for web pages and we still have to take care of web-related tasks such as HTTP request/response handling, URLs mapping, storing data into user session and so on.
+
+The biggest limit of MVC frameworks is that they don't do much to overcome the impedance mismatch between the stateless nature of HTTP protocol and the need of our web applications of handling a (very complex) state.
+
+To overcome these limits developers have started to adopt a new generation of component oriented web frameworks designed to provide a completely different approach to web development.
+

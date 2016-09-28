@@ -20,10 +20,10 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.settings.IExceptionSettings.ThreadDumpStrategy;
-import org.apache.wicket.util.IProvider;
+import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
 import org.apache.wicket.util.time.Duration;
@@ -43,14 +43,14 @@ public class PageAccessSynchronizer implements Serializable
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizer.class);
 
 	/** map of which pages are owned by which threads */
-	private final IProvider<ConcurrentMap<Integer, PageLock>> locks = new LazyInitializer<ConcurrentMap<Integer, PageLock>>()
+	private final Supplier<ConcurrentMap<Integer, PageLock>> locks = new LazyInitializer<ConcurrentMap<Integer, PageLock>>()
 	{
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected ConcurrentMap<Integer, PageLock> createInstance()
 		{
-			return new ConcurrentHashMap<Integer, PageLock>();
+			return new ConcurrentHashMap<>();
 		}
 	};
 
@@ -74,6 +74,16 @@ public class PageAccessSynchronizer implements Serializable
 	}
 
 	/**
+	 * @param pageId
+	 *            the id of the page to be locked
+	 * @return the duration for acquiring a page lock
+	 */
+	public Duration getTimeout(int pageId)
+	{
+		return timeout;
+	}
+
+	/**
 	 * Acquire a lock to a page
 	 * 
 	 * @param pageId
@@ -92,6 +102,8 @@ public class PageAccessSynchronizer implements Serializable
 		final boolean isDebugEnabled = logger.isDebugEnabled();
 
 		PageLock previous = null;
+
+		Duration timeout = getTimeout(pageId);
 
 		while (!locked && start.elapsedSince().lessThan(timeout))
 		{
@@ -130,9 +142,10 @@ public class PageAccessSynchronizer implements Serializable
 			if (logger.isWarnEnabled())
 			{
 				logger.warn(
-					"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}. The thread that holds the lock has name '{}'.",
-					new Object[] { thread.getName(), pageId, start.elapsedSince(), timeout,
-							previous.thread.getName() });
+					"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}." +
+							" The thread that holds the lock has name '{}'.",
+					thread.getName(), pageId, start.elapsedSince(), timeout,
+							previous.thread.getName());
 				if (Application.exists())
 				{
 					ThreadDumpStrategy strategy = Application.get()
@@ -209,7 +222,7 @@ public class PageAccessSynchronizer implements Serializable
 	/*
 	 * used by tests
 	 */
-	IProvider<ConcurrentMap<Integer, PageLock>> getLocks()
+	Supplier<ConcurrentMap<Integer, PageLock>> getLocks()
 	{
 		return locks;
 	}
@@ -326,7 +339,7 @@ public class PageAccessSynchronizer implements Serializable
 			if (isDebugEnabled)
 			{
 				logger.debug("{} waiting for lock to page {} for {}",
-					new Object[] { thread.getName(), pageId, Duration.milliseconds(remaining) });
+					thread.getName(), pageId, Duration.milliseconds(remaining));
 			}
 			try
 			{
@@ -334,7 +347,6 @@ public class PageAccessSynchronizer implements Serializable
 			}
 			catch (InterruptedException e)
 			{
-				// TODO better exception
 				throw new RuntimeException(e);
 			}
 		}

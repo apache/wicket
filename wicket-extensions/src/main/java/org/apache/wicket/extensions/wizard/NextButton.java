@@ -45,7 +45,7 @@ public class NextButton extends WizardButton
 	@Override
 	public boolean isEnabled()
 	{
-		return getWizardModel().isNextAvailable();
+		return super.isEnabled() && getWizardModel().isNextAvailable();
 	}
 
 	/**

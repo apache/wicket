@@ -80,9 +80,6 @@ public class TreeApplication extends WebApplication
 		foos.add(fooC);
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
@@ -91,9 +88,6 @@ public class TreeApplication extends WebApplication
 		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{

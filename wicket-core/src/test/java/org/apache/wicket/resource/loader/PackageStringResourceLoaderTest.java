@@ -17,8 +17,8 @@
 package org.apache.wicket.resource.loader;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.loader.pages.Test1;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A variant of the {@link AjaxLink} that displays a busy indicator while the ajax request is in
@@ -66,4 +69,18 @@ public abstract class IndicatingAjaxLink<T> extends AjaxLink<T> implements IAjax
 		return indicatorAppender.getMarkupId();
 	}
 
+
+	public static <T> IndicatingAjaxLink<T> onClick(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
+	{
+		Args.notNull(onClick, "onClick");
+
+		return new IndicatingAjaxLink<T>(id)
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				onClick.accept(this, target);
+			}
+		};
+	}
 }

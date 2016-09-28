@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import java.util.regex.Pattern;
+
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.lang.Args;
 
@@ -29,6 +31,7 @@ import org.apache.wicket.util.lang.Args;
 public class StaticResourceVersion implements IResourceVersion
 {
 	private final String version;
+	private final Pattern pattern;
 
 	/**
 	 * create static version provider
@@ -39,11 +42,18 @@ public class StaticResourceVersion implements IResourceVersion
 	public StaticResourceVersion(String version)
 	{
 		this.version = Args.notNull(version, "version");
+		this.pattern = Pattern.compile(Pattern.quote(version));
 	}
 
 	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
 		return version;
+	}
+
+	@Override
+	public Pattern getVersionPattern()
+	{
+		return pattern;
 	}
 }

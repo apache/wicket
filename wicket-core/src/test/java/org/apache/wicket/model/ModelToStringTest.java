@@ -18,7 +18,7 @@ package org.apache.wicket.model;
 
 import java.util.Properties;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 
@@ -46,9 +46,6 @@ public class ModelToStringTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		/**
-		 * @see AbstractReadOnlyModel#getObject()
-		 */
 		@Override
 		public String getObject()
 		{
@@ -73,7 +70,7 @@ public class ModelToStringTest extends WicketTestCase
 	@Test
 	public void abstractReadOnlyModel()
 	{
-		AbstractReadOnlyModel<String> model = new MyAbstractReadOnlyModel();
+		MyAbstractReadOnlyModel model = new MyAbstractReadOnlyModel();
 		String expected = "Model:classname=[" + model.getClass().getName() + "]";
 		assertEquals(expected, model.toString());
 	}

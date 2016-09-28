@@ -41,12 +41,4 @@ public interface ICompoundRequestMapper extends IRequestMapper, Iterable<IReques
 	 * @return {@code this} for chaining
 	 */
 	ICompoundRequestMapper remove(IRequestMapper mapper);
-
-	/**
-	 * Unregisters all {@link IRequestMapper}s which would match on a this path
-	 * 
-	 * @param path
-	 *            the path to unmount
-	 */
-	void unmount(String path);
 }

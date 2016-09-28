@@ -39,7 +39,6 @@ import org.apache.wicket.util.string.Strings;
  */
 public class AutoCompletePage extends BasePage
 {
-
 	private StringBuilder values = new StringBuilder();
 
 	/**
@@ -65,13 +64,8 @@ public class AutoCompletePage extends BasePage
 			{
 				value = object;
 
-				values.append("\n");
+				values.append('\n');
 				values.append(value);
-			}
-
-			@Override
-			public void detach()
-			{
 			}
 		};
 

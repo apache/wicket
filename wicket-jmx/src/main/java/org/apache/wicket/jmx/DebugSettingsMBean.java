@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.jmx;
 
-import org.apache.wicket.settings.IDebugSettings;
-
 /**
  * Debug settings.
  * 
@@ -31,7 +29,7 @@ public interface DebugSettingsMBean
 	boolean getComponentUseCheck();
 
 	/**
-	 * Returns status of ajax debug mode. See {@link IDebugSettings} for details
+	 * Returns status of ajax debug mode.
 	 * 
 	 * @return true if ajax debug mode is enabled, false otherwise
 	 * 
@@ -39,7 +37,7 @@ public interface DebugSettingsMBean
 	boolean isAjaxDebugModeEnabled();
 
 	/**
-	 * Enables or disables ajax debug mode. See {@link IDebugSettings} for details
+	 * Enables or disables ajax debug mode.
 	 * 
 	 * @param enable
 	 * 
@@ -55,19 +53,19 @@ public interface DebugSettingsMBean
 
 
 	/**
-	 * If set to <code>true</code> wicket will output component path in a <code>wicket:path</code>
-	 * attribute of the component tag. This can be useful for debugging and automating tests.
+	 * If the parameter value is non-empty then Wicket will use it as the name of an attribute of the
+	 * component tag to print the {@link org.apache.wicket.Component}'s path.
 	 * 
 	 * @param enabled
 	 */
-	public void setOutputComponentPath(boolean enabled);
+	public void setComponentPathAttributeName(String name);
 
 	/**
-	 * @see #setOutputComponentPath(boolean)
-	 * @return <code>true</code> if output component path feature is enabled, <code>false</code>
-	 *         otherwise
+	 * @see #setComponentPathAttributeName(String)
+	 * @return The name of the attribute for the {@link org.apache.wicket.markup.ComponentTag}.
+	 *         If {@code null} or empty then the attribute won't be rendered
 	 */
-	public boolean isOutputComponentPath();
+	public String getComponentPathAttributeName();
 
 	/**
 	 * Enables wrapping output of markup container in html comments that contain markup container's

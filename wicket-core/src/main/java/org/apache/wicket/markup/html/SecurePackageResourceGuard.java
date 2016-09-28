@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
-import org.apache.wicket.settings.IResourceSettings;
 import org.apache.wicket.util.collections.ReverseListIterator;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
@@ -65,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * </table>
  * 
  * @see IPackageResourceGuard
- * @see IResourceSettings#getPackageResourceGuard
+ * @see org.apache.wicket.settings.ResourceSettings#getPackageResourceGuard
  * @see PackageResourceGuard
  * 
  * @author Juergen Donnerstag
@@ -113,6 +112,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.gif");
 		addPattern("+*.ico");
 		addPattern("+*.cur");
+		addPattern("+*.map");
 
 		// WICKET-208 non page templates may be served
 		addPattern("+*.html");
@@ -126,6 +126,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		addPattern("+*.eot");
 		addPattern("+*.ttf");
 		addPattern("+*.woff");
+		addPattern("+*.woff2");
 
 	}
 
@@ -149,7 +150,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 	 * @return True if accepted, false otherwise.
 	 */
 	@Override
-	protected boolean acceptAbsolutePath(String path)
+	public boolean accept(String path)
 	{
 		// First check the cache
 		if (cache != null)
@@ -162,7 +163,7 @@ public class SecurePackageResourceGuard extends PackageResourceGuard
 		}
 
 		// Check typical files such as log4j.xml etc.
-		if (super.acceptAbsolutePath(path) == false)
+		if (super.accept(path) == false)
 		{
 			return false;
 		}

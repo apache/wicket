@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class HomePageTest extends WicketTestCase
 	@Test
 	public void withoutBorder()
 	{
-		tester.executeAjaxEvent("form:submit", "onclick");
+		tester.executeAjaxEvent("form:submit", "click");
 		assertEquals("Expected one error message",
 			tester.getMessages(FeedbackMessage.ERROR).size(), 2);
 		assertTrue(((HomePage)tester.getLastRenderedPage()).hitOnError);
@@ -60,7 +60,7 @@ public class HomePageTest extends WicketTestCase
 	{
 		FormTester formTester = tester.newFormTester("form");
 		formTester.setValue("textfield1", "testxxx");
-		tester.executeAjaxEvent("form:submit", "onclick");
+		tester.executeAjaxEvent("form:submit", "click");
 		tester.assertNoErrorMessage();
 		assertFalse(((HomePage)tester.getLastRenderedPage()).hitOnError);
 		assertTrue(((HomePage)tester.getLastRenderedPage()).hitOnSubmit);
@@ -72,7 +72,7 @@ public class HomePageTest extends WicketTestCase
 	@Test
 	public void withBorder()
 	{
-		tester.executeAjaxEvent("border:form2:submit", "onclick");
+		tester.executeAjaxEvent("border:form2:submit", "click");
 		assertEquals("Expected one error message",
 			tester.getMessages(FeedbackMessage.ERROR).size(), 2);
 		assertTrue(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnError);
@@ -90,7 +90,7 @@ public class HomePageTest extends WicketTestCase
 		tester.getRequest()
 			.getPostParameters()
 			.setParameterValue(textfield.getInputName(), "abcde");
-		tester.executeAjaxEvent("border:form2:submit", "onclick");
+		tester.executeAjaxEvent("border:form2:submit", "click");
 		tester.assertNoErrorMessage();
 		assertFalse(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnError);
 		assertTrue(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnSubmit);
@@ -102,7 +102,7 @@ public class HomePageTest extends WicketTestCase
 	@Test
 	public void withPanelAjax()
 	{
-		tester.executeAjaxEvent("form3:submit", "onclick");
+		tester.executeAjaxEvent("form3:submit", "click");
 
 		HomePage page = (HomePage)tester.getLastRenderedPage();
 		assertFalse((page.getFormSubmitted() & HomePage.AJAX) == HomePage.AJAX);

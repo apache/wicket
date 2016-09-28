@@ -30,14 +30,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public final class SignIn2 extends WicketExamplePage
 {
 	/**
-	 * Construct
-	 */
-	public SignIn2()
-	{
-		this(null);
-	}
-
-	/**
 	 * Constructor
 	 * 
 	 * @param parameters
@@ -45,6 +37,8 @@ public final class SignIn2 extends WicketExamplePage
 	 */
 	public SignIn2(final PageParameters parameters)
 	{
+		super(parameters);
+
 		// Take our standard Logon Panel from the auth-role module and add it to the Page. That is
 		// all what is necessary.
 		add(new SignInPanel("signInPanel", false));

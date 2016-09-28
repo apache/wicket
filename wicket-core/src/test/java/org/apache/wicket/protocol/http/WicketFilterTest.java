@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
@@ -54,12 +55,14 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.file.WebXmlFile;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -88,9 +91,44 @@ public class WicketFilterTest extends Assert
 	}
 
 	/**
+	 * Test for WICKET-5980 When using Servlet 3.0 filter Wicket calculates filter path wrong.
+	 * 
+	 * When using a servlet 3.0 filter with annotations Wicket calculates the filter path wrong
+	 * causing it to not match any pages other than the home page. e.g.
+	 * 
+	 * <pre>
+	 * &#64;WebFilter(value = "/web/*", initParams = {
+	 * 		&#64;WebInitParam(name = "applicationClassName", value = "com.example.CheesrApplication") })
+	 * public class CheesrFilter extends WicketFilter
+	 * {
+	 * }
+	 * </pre>
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void parsingOfAnnotatedServlet3FiltersWorks() throws Exception
+	{
+		FilterTestingConfig config = new FilterTestingConfig();
+		config.initParameters.clear();
+		config.initParameters.put("applicationClassName", "org.apache.wicket.mock.MockApplication");
+
+		WicketFilter filter = new AnnotatedServlet3Filter();
+		// creates an Application
+		filter.init(config);
+
+		// get a reference to the application, so that @After is able to clean it up
+		application = filter.getApplication();
+
+		// assert that the filter path is not /web/*/
+		assertThat(filter.getFilterPath(), is("web/"));
+	}
+
+	/**
 	 * testFilterPath1()
 	 */
 	@Test
+	@Category(SlowTests.class)
 	public void filterPath1()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web1.xml");
@@ -102,6 +140,7 @@ public class WicketFilterTest extends Assert
 	 * testFilterPath2()
 	 */
 	@Test
+	@Category(SlowTests.class)
 	public void filterPath2()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web2.xml");
@@ -259,15 +298,7 @@ public class WicketFilterTest extends Assert
 		{
 			return new WebXmlFile().getUniqueFilterPath(false, filterName, in);
 		}
-		catch (ParserConfigurationException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-		catch (SAXException ex)
-		{
-			throw new RuntimeException(ex);
-		}
-		catch (IOException ex)
+		catch (ParserConfigurationException | IOException | SAXException ex)
 		{
 			throw new RuntimeException(ex);
 		}
@@ -275,7 +306,7 @@ public class WicketFilterTest extends Assert
 
 	private static class FilterTestingConfig implements FilterConfig
 	{
-		private final Map<String, String> initParameters = new HashMap<String, String>();
+		private final Map<String, String> initParameters = new HashMap<>();
 
 		public FilterTestingConfig()
 		{

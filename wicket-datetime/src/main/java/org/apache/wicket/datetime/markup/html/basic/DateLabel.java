@@ -19,6 +19,7 @@ package org.apache.wicket.datetime.markup.html.basic;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.datetime.DateConverter;
 import org.apache.wicket.datetime.PatternDateConverter;
 import org.apache.wicket.datetime.StyleDateConverter;
@@ -50,7 +51,7 @@ import org.joda.time.format.DateTimeFormat;
  * 
  * @author eelcohillenius
  */
-public class DateLabel extends Label
+public class DateLabel extends Label implements IGenericComponent<Date, DateLabel>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -256,18 +257,13 @@ public class DateLabel extends Label
 	 * Returns the specialized converter.
 	 */
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> clazz)
+	protected IConverter<?> createConverter(Class<?> type)
 	{
-		if (Date.class.isAssignableFrom(clazz))
+		if (Date.class.isAssignableFrom(type))
 		{
-			@SuppressWarnings("unchecked")
-			IConverter<C> result = (IConverter<C>)converter;
-			return result;
+			return converter;
 		}
-		else
-		{
-			return super.getConverter(clazz);
-		}
+		return null;
 	}
 
 	/**

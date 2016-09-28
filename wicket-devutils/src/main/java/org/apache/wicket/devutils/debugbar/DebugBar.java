@@ -27,11 +27,12 @@ import org.apache.wicket.devutils.DevUtilsPanel;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -103,7 +104,7 @@ public class DebugBar extends DevUtilsPanel
 		super(id);
 		setMarkupId("wicketDebugBar");
 		setOutputMarkupId(true);
-		add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
+		add(AttributeModifier.replace("class", new IModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -117,6 +118,17 @@ public class DebugBar extends DevUtilsPanel
 		add(new Image("logo", new PackageResourceReference(DebugBar.class, "wicket.png")));
 		
 		add(contentSection("content", initiallyExpanded));
+	}
+
+
+	/**
+	 * Positions the DebugBar at the bottom of the page
+	 * @return
+	 */
+	public DebugBar positionBottom()
+	{
+		add(AttributeModifier.append("class", "bottom"));
+		return this;
 	}
 
 	private Component contentSection(final String id, boolean initiallyExpanded)
@@ -169,6 +181,7 @@ public class DebugBar extends DevUtilsPanel
 			"wicket-debugbar.css")));
 		response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
 			DebugBar.class, "wicket-debugbar.js")));
+		response.render(OnDomReadyHeaderItem.forScript("wicketDebugBarCheckState()"));
 	}
 
 	/**

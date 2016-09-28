@@ -46,7 +46,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * The user agent string from the User-Agent header, app. Theoretically, this might differ from
-	 * {@link org.apache.wicket.protocol.http.ClientProperties#isJavaEnabled()} property, which is
+	 * {@link org.apache.wicket.protocol.http.ClientProperties#isNavigatorJavaEnabled()} property, which is
 	 * not set until an actual reply from a browser (e.g. using {@link BrowserInfoPage} is set.
 	 */
 	private final String userAgent;

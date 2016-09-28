@@ -20,7 +20,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * Toolbar that displays links used to navigate the pages of the datatable as well as a message
@@ -44,14 +44,12 @@ public class NavigationToolbar extends AbstractToolbar
 
 		WebMarkupContainer span = new WebMarkupContainer("span");
 		add(span);
-		span.add(AttributeModifier.replace("colspan", new AbstractReadOnlyModel<String>()
+		span.add(AttributeModifier.replace("colspan", new IModel<String>()
 		{
-			private static final long serialVersionUID = 1L;
-
 			@Override
 			public String getObject()
 			{
-				return String.valueOf(table.getColumns().size());
+				return String.valueOf(table.getColumns().size()).intern();
 			}
 		}));
 

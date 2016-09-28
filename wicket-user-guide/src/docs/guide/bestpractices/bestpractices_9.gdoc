@@ -1,0 +1,3 @@
+
+
+Validators should just validate. Consider a bank account form which has a @BankFormValidator@. This validator checks the bank data over a webservice and corrects the bank name. Nobody would expect that a validator modifies information. Such logic has to be located in @Form.onSubmit()@ or in the event logic of a button.

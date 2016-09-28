@@ -43,7 +43,7 @@ public class CheckGroupPage extends WicketExamplePage
 	public CheckGroupPage()
 	{
 		final CheckGroup<Person> group = new CheckGroup<>("group", new ArrayList<Person>());
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -58,9 +58,6 @@ public class CheckGroupPage extends WicketExamplePage
 		ListView<Person> persons = new ListView<Person>("persons",
 			ComponentReferenceApplication.getPersons())
 		{
-			/**
-			 * @see org.apache.wicket.markup.html.list.ListView#populateItem(org.apache.wicket.markup.html.list.ListItem)
-			 */
 			@Override
 			protected void populateItem(ListItem<Person> item)
 			{

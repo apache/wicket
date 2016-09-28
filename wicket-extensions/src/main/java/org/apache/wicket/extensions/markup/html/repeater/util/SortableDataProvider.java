@@ -35,16 +35,10 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.ISortableDat
  */
 public abstract class SortableDataProvider<T, S> implements ISortableDataProvider<T, S>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final SingleSortState<S> state = new SingleSortState<>();
 
-	/**
-	 * @see ISortableDataProvider#getSortState()
-	 */
 	@Override
 	public final ISortState<S> getSortState()
 	{
@@ -84,14 +78,4 @@ public abstract class SortableDataProvider<T, S> implements ISortableDataProvide
 	{
 		state.setPropertySortOrder(property, order);
 	}
-
-	/**
-	 * @see ISortableDataProvider#detach()
-	 */
-	@Override
-	public void detach()
-	{
-	}
-
-
 }

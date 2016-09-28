@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.markup.html.basic;
 
-import org.apache.wicket.WicketTestCase;
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -40,6 +42,6 @@ public class SimpleResponsePageClassTest extends WicketTestCase
 		tester.submitForm(form);
 
 		// assertion failed, getLastRenderedPage() return null.
-		assertTrue(tester.getLastRenderedPage() instanceof SimplePage);
+		assertThat(tester.getLastRenderedPage(), instanceOf(SimplePage.class));
 	}
 }

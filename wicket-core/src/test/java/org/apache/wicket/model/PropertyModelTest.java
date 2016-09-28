@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.model;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -114,26 +116,8 @@ public class PropertyModelTest extends WicketTestCase
 		PropertyModel<String> model = new PropertyModel<String>(person, "concreteAddress.street");
 		model.setObject("foo");
 		assertNotNull("concreteAddress", person.concreteAddress);
-		assertTrue(person.concreteAddress instanceof ConcreteAddress);
+		assertThat(person.concreteAddress, instanceOf(ConcreteAddress.class));
 		assertEquals("foo", person.concreteAddress.street);
-	}
-
-	/**
-	 * Tests setting a value on a {@link PropertyModel} when a final (constant!) property is
-	 * <code>null</code> and a concrete type. This should end in an exception because Wicket can't
-	 * assign to the property, since it is final.
-	 * 
-	 * This test has been disabled as it doesn't work on Mac OS X's 1.4 jdk (assignment doesn't
-	 * fail).
-	 */
-	@Test(expected = WicketRuntimeException.class)
-	@Ignore
-	public void setWithNullPathFinalJdk14()
-	{
-		Person person = new Person();
-		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");
-		model.setObject("foo");
-		fail("Expected exception");
 	}
 
 	/**
@@ -147,8 +131,7 @@ public class PropertyModelTest extends WicketTestCase
 		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");
 
 		model.setObject("foo");
-		assertNotNull("finalAddress", person.finalAddress);
-		assertTrue(person.finalAddress instanceof ConcreteAddress);
+		assertThat(person.finalAddress, instanceOf(ConcreteAddress.class));
 		assertEquals("foo", person.finalAddress.street);
 	}
 }

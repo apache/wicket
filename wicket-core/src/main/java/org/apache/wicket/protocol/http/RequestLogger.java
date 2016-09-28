@@ -67,21 +67,21 @@ public class RequestLogger extends AbstractRequestLogger
 		sb.append(rd.getTimeTaken());
 		sb.append(",url=\"");
 		sb.append(rd.getRequestedUrl());
-		sb.append("\"");
+		sb.append('"');
 		sb.append(",event={");
 		sb.append(getRequestHandlerString(rd.getEventTarget()));
 		sb.append("},response={");
 		sb.append(getRequestHandlerString(rd.getResponseTarget()));
 		sb.append("},sessionid=\"");
 		sb.append(rd.getSessionId());
-		sb.append("\"");
+		sb.append('"');
 		sb.append(",sessionsize=");
 		sb.append(rd.getSessionSize());
 		if (rd.getSessionInfo() != null && !Strings.isEmpty(rd.getSessionInfo().toString()))
 		{
 			sb.append(",sessioninfo={");
 			sb.append(rd.getSessionInfo());
-			sb.append("}");
+			sb.append('}');
 		}
 		if (sd != null)
 		{
@@ -105,7 +105,7 @@ public class RequestLogger extends AbstractRequestLogger
 		sb.append(total);
 		sb.append("M,used=");
 		sb.append(used);
-		sb.append("M");
+		sb.append('M');
 
 		return sb.toString();
 	}

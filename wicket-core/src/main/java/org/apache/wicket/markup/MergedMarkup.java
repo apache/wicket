@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.markup;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,6 +135,10 @@ public class MergedMarkup extends Markup
 		// into <wicket:child> and add it as well.
 		WicketTag childTag = null;
 		int baseIndex = 0;
+		MarkupResourceStream markupResourceStream = baseMarkup.getMarkupResourceStream();
+		IResourceStream resource = markupResourceStream.getResource();
+		Class<? extends Component> markupClass = markupResourceStream.getMarkupClass();
+
 		for (; baseIndex < baseMarkup.size(); baseIndex++)
 		{
 			MarkupElement element = baseMarkup.get(baseIndex);
@@ -147,21 +153,19 @@ public class MergedMarkup extends Markup
 
 			// Make sure all tags of the base markup remember where they are
 			// from
-			if ((baseMarkup.getMarkupResourceStream().getResource() != null) &&
-				(tag.getMarkupClass() == null))
+			if (resource != null && tag.getMarkupClass() == null)
 			{
-				tag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
+				tag.setMarkupClass(markupClass);
 			}
 
 			if (element instanceof WicketTag)
 			{
 				WicketTag wtag = (WicketTag)element;
 
-				// Found org.apache.wicket.child in base markup. In case of 3+
+				// Found wicket:child in the base markup. In case of 3+
 				// level inheritance make sure the child tag is not from one of
 				// the deeper levels
-				if (wtag.isChildTag() &&
-					(tag.getMarkupClass() == baseMarkup.getMarkupResourceStream().getMarkupClass()))
+				if (wtag.isChildTag() && tag.getMarkupClass() == markupClass)
 				{
 					if (wtag.isOpenClose())
 					{
@@ -169,8 +173,7 @@ public class MergedMarkup extends Markup
 						childTag = wtag;
 						WicketTag childOpenTag = (WicketTag)wtag.mutable();
 						childOpenTag.getXmlTag().setType(TagType.OPEN);
-						childOpenTag.setMarkupClass(baseMarkup.getMarkupResourceStream()
-							.getMarkupClass());
+						childOpenTag.setMarkupClass(markupClass);
 						addMarkupElement(childOpenTag);
 						break;
 					}
@@ -201,8 +204,7 @@ public class MergedMarkup extends Markup
 						// Add the <wicket:head> body from the derived markup.
 						copyWicketHead(markup, extendIndex);
 
-						// Do not add the current tag. It has already been
-						// added.
+						// Do not add the current tag. It has already been added.
 						continue;
 					}
 
@@ -228,6 +230,7 @@ public class MergedMarkup extends Markup
 
 				// if <head> in base markup
 				if ((tag.isClose() && TagUtils.isHeadTag(tag)) ||
+				    (tag.isClose() && TagUtils.isWicketHeaderItemsTag(tag)) ||
 					(tag.isOpen() && TagUtils.isBodyTag(tag)))
 				{
 					wicketHeadProcessed = true;
@@ -282,7 +285,7 @@ public class MergedMarkup extends Markup
 					if (tag.isChildTag() && tag.isClose())
 					{
 						// Ok, skipped the childs content
-						tag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
+						tag.setMarkupClass(markupClass);
 						addMarkupElement(tag);
 						break;
 					}
@@ -314,7 +317,8 @@ public class MergedMarkup extends Markup
 			// But first add </wicket:child>
 			WicketTag childCloseTag = (WicketTag)childTag.mutable();
 			childCloseTag.getXmlTag().setType(TagType.CLOSE);
-			childCloseTag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
+			childCloseTag.setMarkupClass(markupClass);
+			childCloseTag.setOpenTag(childTag);
 			addMarkupElement(childCloseTag);
 		}
 
@@ -325,11 +329,12 @@ public class MergedMarkup extends Markup
 
 			// Make sure all tags of the base markup remember where they are
 			// from
-			if ((element instanceof ComponentTag) &&
-				(baseMarkup.getMarkupResourceStream().getResource() != null))
+			if (element instanceof ComponentTag && resource != null)
 			{
 				ComponentTag tag = (ComponentTag)element;
-				tag.setMarkupClass(baseMarkup.getMarkupResourceStream().getMarkupClass());
+				if (tag.getMarkupClass() == null){
+					tag.setMarkupClass(markupClass);
+				}
 			}
 		}
 
@@ -348,13 +353,12 @@ public class MergedMarkup extends Markup
 			{
 				MarkupElement element = get(i);
 
-				if ((hasOpenWicketHead == -1) && (element instanceof WicketTag) &&
-					((WicketTag)element).isHeadTag())
+				boolean isHeadTag = (element instanceof WicketTag) && ((WicketTag) element).isHeadTag();
+				if ((hasOpenWicketHead == -1) && isHeadTag)
 				{
 					hasOpenWicketHead = i;
 				}
-				else if ((element instanceof WicketTag) && ((WicketTag)element).isHeadTag() &&
-					((WicketTag)element).isClose())
+				else if (isHeadTag && ((ComponentTag)element).isClose())
 				{
 					hasCloseWicketHead = i;
 				}
@@ -396,6 +400,7 @@ public class MergedMarkup extends Markup
 	 * Append the wicket:head regions from the extended markup to the current markup
 	 * 
 	 * @param markup
+	 *              The markup of the child/inherited container
 	 * @param extendIndex
 	 */
 	private void copyWicketHead(final IMarkupFragment markup, int extendIndex)
@@ -421,7 +426,7 @@ public class MergedMarkup extends Markup
 				}
 			}
 
-			if (copy == true)
+			if (copy)
 			{
 				addMarkupElement(elem);
 			}

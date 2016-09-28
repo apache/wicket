@@ -18,7 +18,6 @@ package org.apache.wicket.util.tester;
 
 import java.util.Locale;
 
-import org.apache.wicket.WicketTestCase;
 import org.junit.Test;
 
 /**

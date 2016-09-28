@@ -39,9 +39,6 @@ public class ThirdPanel extends BreadCrumbPanel
 		super(id, breadCrumbModel);
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
-	 */
 	@Override
 	public IModel<String> getTitle()
 	{

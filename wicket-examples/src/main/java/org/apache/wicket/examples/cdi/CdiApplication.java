@@ -18,7 +18,6 @@ package org.apache.wicket.examples.cdi;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.cdi.CdiConfiguration;
-import org.apache.wicket.cdi.ConversationPropagation;
 import org.apache.wicket.protocol.http.WebApplication;
 
 public class CdiApplication extends WebApplication
@@ -35,12 +34,12 @@ public class CdiApplication extends WebApplication
 	{
 		super.init();
 
-		CdiConfiguration.get()
-				.setPropagation(ConversationPropagation.NONBOOKMARKABLE)
-				.configure(this);
+		// configure wicket/cdi
+		new CdiConfiguration().configure(this);
 
 		mountPage("injection", InjectionPage.class);
 		mountPage("conversation", ConversationPage1.class);
+		mountPage("autoConversation", AutoConversationPage1.class);
 	}
 
 }

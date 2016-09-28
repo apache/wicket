@@ -33,8 +33,8 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.extensions.yui.YuiLib;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -127,6 +127,11 @@ public class DatePicker extends Behavior
 	 * on the document.
 	 */
 	private boolean autoHide = false;
+
+	/**
+	 *  The string to use for the close button label.
+	 */
+	private String closeLabel = "";
 
 	/**
 	 * Construct.
@@ -234,6 +239,7 @@ public class DatePicker extends Behavior
 		variables.put("hideOnSelect", hideOnSelect());
 		variables.put("showOnFieldClick", showOnFieldClick());
 		variables.put("autoHide", autoHide());
+		variables.put("closeLabel", closeLabel());
 
 		String script = getAdditionalJavaScript();
 		if (script != null)
@@ -269,9 +275,7 @@ public class DatePicker extends Behavior
 
 		// remove previously generated markup (see onRendered) via javascript in
 		// ajax requests to not render the yui calendar multiple times
-		AjaxRequestTarget target = component.getRequestCycle().find(AjaxRequestTarget.class);
-		if (target != null)
-		{
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> {
 			String escapedComponentMarkupId = getEscapedComponentMarkupId();
 			String javascript = "var e = Wicket.$('" + escapedComponentMarkupId + "Dp" +
 				"'); if (e != null && typeof(e.parentNode) != 'undefined' && " +
@@ -281,7 +285,7 @@ public class DatePicker extends Behavior
 				escapedComponentMarkupId + "DpJs;}";
 
 			target.prependJavaScript(javascript);
-		}
+		});
 	}
 
 	/**
@@ -331,7 +335,7 @@ public class DatePicker extends Behavior
 	 * @throws UnableToDetermineFormatException
 	 *             if this date picker is unable to determine a format.
 	 */
-	private final void checkComponentProvidesDateFormat(final Component component)
+	private void checkComponentProvidesDateFormat(final Component component)
 	{
 		if (getDatePattern() == null)
 		{
@@ -762,6 +766,25 @@ public class DatePicker extends Behavior
 	}
 
 	/**
+	 * The string to use for the close button label.
+	 *
+	 * @return label
+	 */
+	protected String closeLabel()
+	{
+		return closeLabel;
+	}
+
+	/**
+	 * @param closeLabel
+	 *            The string to use for the close button label.
+	 */
+	public void setCloseLabel(String closeLabel)
+	{
+		this.closeLabel = closeLabel;
+	}
+
+	/**
 	 * Indicates whether the calendar should be rendered after it has been loaded.
 	 * 
 	 * @return <code>true</code> if the calendar should be rendered after it has been loaded.<br/>
@@ -813,7 +836,7 @@ public class DatePicker extends Behavior
 	 */
 	private void appendMapping(final Map<String, Object> map, final StringBuilder json)
 	{
-		json.append("{");
+		json.append('{');
 		for (Iterator<Entry<String, Object>> i = map.entrySet().iterator(); i.hasNext();)
 		{
 			Entry<String, Object> entry = i.next();
@@ -823,7 +846,7 @@ public class DatePicker extends Behavior
 			{
 				json.append(":\"");
 				json.append(Strings.toEscapedUnicode(value.toString()));
-				json.append("\"");
+				json.append('"');
 			}
 			else if (value instanceof CharSequence[])
 			{
@@ -834,34 +857,34 @@ public class DatePicker extends Behavior
 					CharSequence tmpValue = valueArray[j];
 					if (j > 0)
 					{
-						json.append(",");
+						json.append(',');
 					}
 					if (tmpValue != null)
 					{
-						json.append("\"");
+						json.append('"');
 						json.append(Strings.toEscapedUnicode(tmpValue.toString()));
-						json.append("\"");
+						json.append('"');
 					}
 				}
-				json.append("]");
+				json.append(']');
 			}
 			else if (value instanceof Map)
 			{
-				json.append(":");
+				json.append(':');
 				@SuppressWarnings("unchecked")
 				Map<String, Object> nmap = (Map<String, Object>)value;
 				appendMapping(nmap, json);
 			}
 			else
 			{
-				json.append(":");
+				json.append(':');
 				json.append(Strings.toEscapedUnicode(String.valueOf(value)));
 			}
 			if (i.hasNext())
 			{
-				json.append(",");
+				json.append(',');
 			}
 		}
-		json.append("}");
+		json.append('}');
 	}
 }

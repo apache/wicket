@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Objects;
@@ -28,7 +29,10 @@ import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
  * A {@link TextField} for HTML5 &lt;input&gt; with type <em>number</em>.
- * 
+ * <p>
+ * The {@code <input>}'s value will be rendered in floating-point representation, as required by
+ * the <a href="https://www.w3.org/TR/html-markup/input.number.html">HTML specification</a>. Use a simple
+ * {@code TextField} to use a locale specific conversion of numbers.
  * <p>
  * Automatically validates the input against the configured {@link #setMinimum(N) min} and
  * {@link #setMaximum(N) max} attributes. If any of them is <code>null</code> then respective
@@ -42,32 +46,54 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Use this as a marker of step attribute value "any"
+	 * Because the w3c spec requires step to be a non-negative digit
+	 * greater than zero we use zero as delegate for "any" keyword.
+	 */
+	public static final Double ANY = Double.valueOf(0d);
+
 	private RangeValidator<N> validator;
 
-	private N minimum;
+	private IModel<N> minimum;
 
-	private N maximum;
+	private IModel<N> maximum;
 
-	private N step;
+	private IModel<N> step;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 *            The component id
 	 */
 	public NumberTextField(String id)
 	{
-		this(id, null);
+		this(id, null, null);
 	}
+
+
+	/**
+	 * Construct.
+	 *
+	 * @param id
+	 *            The component id
+	 * @param type
+	 *            The type to use when updating the model for this text field
+	 */
+	public NumberTextField(String id, Class<N> type)
+	{
+		this(id, null, type);
+	}
+
 
 	/**
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 *            The component id
 	 * @param model
-	 *            the input value
+	 *            The input value
 	 */
 	public NumberTextField(String id, IModel<N> model)
 	{
@@ -78,9 +104,9 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 * Construct.
 	 * 
 	 * @param id
-	 *            component id
+	 *            The component id
 	 * @param model
-	 *            the input value
+	 *            The input value
 	 * @param type
 	 *            The type to use when updating the model for this text field
 	 */
@@ -89,20 +115,21 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 		super(id, model, type);
 
 		validator = null;
-		minimum = null;
-		maximum = null;
+		minimum = Model.of((N)null);
+		maximum = Model.of((N)null);
+		step = Model.of((N)null);
 	}
-
+	
 	/**
 	 * Sets the minimum allowed value
-	 * 
+	 *
 	 * @param minimum
 	 *            the minimum allowed value
 	 * @return this instance
 	 */
 	public NumberTextField<N> setMinimum(final N minimum)
 	{
-		this.minimum = minimum;
+		this.minimum = Model.of(minimum);
 		return this;
 	}
 
@@ -115,7 +142,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 */
 	public NumberTextField<N> setMaximum(final N maximum)
 	{
-		this.maximum = maximum;
+		this.maximum = Model.of(maximum);
 		return this;
 	}
 
@@ -128,12 +155,51 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 */
 	public NumberTextField<N> setStep(final N step)
 	{
+		this.step = Model.of(step);
+		return this;
+	}
+
+	/**
+	 * Sets the minimum allowed value
+	 * 
+	 * @param minimum
+	 *            the minimum allowed value
+	 * @return this instance
+	 */
+	public NumberTextField<N> setMinimum(final IModel<N> minimum)
+	{
+		this.minimum = minimum;
+		return this;
+	}
+
+	/**
+	 * Sets the maximum allowed value
+	 *
+	 * @param maximum
+	 *            the maximum allowed value
+	 * @return this instance
+	 */
+	public NumberTextField<N> setMaximum(final IModel<N> maximum)
+	{
+		this.maximum = maximum;
+		return this;
+	}
+
+	/**
+	 * Sets the step attribute
+	 *
+	 * @param step
+	 *            the step attribute
+	 * @return this instance
+	 */
+	public NumberTextField<N> setStep(final IModel<N> step)
+	{
 		this.step = step;
 		return this;
 	}
 
 	@Override
-	public void onConfigure()
+	protected void onConfigure()
 	{
 		super.onConfigure();
 
@@ -143,13 +209,16 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 			validator = null;
 		}
 
-		if (minimum != null || maximum != null)
+		final N min = minimum.getObject();
+		final N max = maximum.getObject();
+		if (min != null || max != null)
 		{
-			validator = RangeValidator.range(minimum, maximum);
+			validator = RangeValidator.range(min, max);
 			add(validator);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private Class<N> getNumberType()
 	{
 		Class<N> numberType = getType();
@@ -167,27 +236,37 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 
 		IValueMap attributes = tag.getAttributes();
 
-		if (minimum != null)
+		final N min = minimum.getObject();
+		if (min != null)
 		{
-			attributes.put("min", Objects.stringValue(minimum));
+			attributes.put("min", Objects.stringValue(min));
 		}
 		else
 		{
 			attributes.remove("min");
 		}
 
-		if (maximum != null)
+		final N max = maximum.getObject();
+		if (max != null)
 		{
-			attributes.put("max", Objects.stringValue(maximum));
+			attributes.put("max", Objects.stringValue(max));
 		}
 		else
 		{
 			attributes.remove("max");
 		}
 
-		if (step != null)
+		final N _step = step.getObject();
+		if (_step != null)
 		{
-			attributes.put("step", Objects.stringValue(step));
+			if (_step.doubleValue() == ANY)
+			{
+				attributes.put("step", "any");
+			}
+			else
+			{
+				attributes.put("step", Objects.stringValue(_step));
+			}
 		}
 		else
 		{
@@ -225,7 +304,7 @@ public class NumberTextField<N extends Number & Comparable<N>> extends TextField
 	 * Always use {@link Locale#ENGLISH} to parse the input.
 	 */
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		IConverter<N> converter = getConverter(getNumberType());
 

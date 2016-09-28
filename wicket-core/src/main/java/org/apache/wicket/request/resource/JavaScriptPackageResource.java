@@ -16,15 +16,19 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.apache.wicket.util.resource.ResourceUtils.MIN_POSTFIX_DEFAULT_AS_EXTENSION;
+
 import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
+import org.apache.wicket.resource.IScopeAwareTextResourceProcessor;
+import org.apache.wicket.util.resource.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Package resource for javascript files. It strips comments and whitespace from javascript.
+ * Package resource for javascript files.
  */
 public class JavaScriptPackageResource extends PackageResource
 {
@@ -32,22 +36,33 @@ public class JavaScriptPackageResource extends PackageResource
 
 	private static final Logger log = LoggerFactory.getLogger(JavaScriptPackageResource.class);
 
+	private final String name;
+
 	/**
 	 * Construct.
 	 * 
 	 * @param scope
+	 *            This argument will be used to get the class loader for loading the package
+	 *            resource, and to determine what package it is in
 	 * @param name
+	 *            The relative path to the resource
 	 * @param locale
+	 *            The locale of the resource
 	 * @param style
+	 *            The style of the resource
 	 * @param variation
+	 *            The component's variation (of the style)
 	 */
 	public JavaScriptPackageResource(Class<?> scope, String name, Locale locale, String style,
 		String variation)
 	{
 		super(scope, name, locale, style, variation);
 
-		// JS resources can be compressed if there is configured IJavaScriptCompressor
-		setCompress(true);
+		this.name = name;
+
+		// JS resources can be compressed if there is configured IJavaScriptCompressor, and the
+		// resource isn't already minified (the file already has .min. in its name).
+		setCompress(!name.contains(MIN_POSTFIX_DEFAULT_AS_EXTENSION));
 	}
 
 	@Override
@@ -61,8 +76,19 @@ public class JavaScriptPackageResource extends PackageResource
 		{
 			try
 			{
-				String nonCompressed = new String(processedResponse, "UTF-8");
-				return compressor.compress(nonCompressed).getBytes("UTF-8");
+				String charsetName = "UTF-8";
+				String nonCompressed = new String(processedResponse, charsetName);
+				String output;
+				if (compressor instanceof IScopeAwareTextResourceProcessor)
+				{
+					IScopeAwareTextResourceProcessor scopeAwareProcessor = (IScopeAwareTextResourceProcessor)compressor;
+					output = scopeAwareProcessor.process(nonCompressed, getScope(), name);
+				}
+				else
+				{
+					output = compressor.compress(nonCompressed);
+				}
+				return output.getBytes(charsetName);
 			}
 			catch (Exception e)
 			{

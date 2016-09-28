@@ -31,7 +31,6 @@ import org.apache.wicket.util.string.Strings;
 public class CssContentHeaderItem extends CssHeaderItem
 {
 	private final CharSequence css;
-	private final String id;
 
 	/**
 	 * Creates a new {@code CSSContentHeaderItem}.
@@ -46,7 +45,7 @@ public class CssContentHeaderItem extends CssHeaderItem
 	{
 		super(condition);
 		this.css = css;
-		this.id = id;
+		setId(id);
 	}
 
 	/**
@@ -55,14 +54,6 @@ public class CssContentHeaderItem extends CssHeaderItem
 	public CharSequence getCss()
 	{
 		return css;
-	}
-
-	/**
-	 * @return unique id for the &lt;style&gt; element.
-	 */
-	public String getId()
-	{
-		return id;
 	}
 
 	@Override

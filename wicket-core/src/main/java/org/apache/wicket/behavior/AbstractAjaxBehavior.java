@@ -17,10 +17,13 @@
 package org.apache.wicket.behavior;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.RequestListenerInterface;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
+
+import java.util.List;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for javascript specific
@@ -30,7 +33,7 @@ import org.apache.wicket.util.lang.Args;
  * @author Ralf Ebert
  * @author Igor Vaynberg
  */
-public abstract class AbstractAjaxBehavior extends Behavior implements IBehaviorListener
+public abstract class AbstractAjaxBehavior extends Behavior implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -75,32 +78,28 @@ public abstract class AbstractAjaxBehavior extends Behavior implements IBehavior
 	 */
 	public CharSequence getCallbackUrl()
 	{
-		if (getComponent() == null)
+		Component component = getComponent();
+		if (component == null)
 		{
 			throw new IllegalArgumentException(
 				"Behavior must be bound to a component to create the URL");
 		}
 
-		final RequestListenerInterface rli;
-
-		rli = IBehaviorListener.INTERFACE;
-
-		return getComponent().urlFor(this, rli, new PageParameters());
+		PageParameters parameters = new PageParameters();
+		PageParameters pageParameters = component.getPage().getPageParameters();
+		List<INamedParameters.NamedPair> allNamedInPath = pageParameters.getAllNamedByType(INamedParameters.Type.PATH);
+		for (INamedParameters.NamedPair namedPair : allNamedInPath) {
+			parameters.add(namedPair.getKey(), namedPair.getValue(), INamedParameters.Type.PATH);
+		}
+		return getComponent().urlForListener(this, parameters);
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.Behavior#onComponentTag(org.apache.wicket.Component,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
 	@Override
 	public final void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		onComponentTag(tag);
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.Behavior#afterRender(org.apache.wicket.Component)
-	 */
 	@Override
 	public final void afterRender(final Component hostComponent)
 	{

@@ -26,31 +26,19 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class HelloBrowserApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public HelloBrowserApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return HelloBrowser.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
 		super.init();
 
 		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+
 		mountPage("howdy", HelloBrowser.class);
 	}
 }

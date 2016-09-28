@@ -23,33 +23,20 @@
 <body>
   <wicket:panel>
     <span wicket:id="feedback"/>
-		<form wicket:id="signInForm">
-			<table>
-				<tr>
-					<td align="right">&#29992;&#25143;&#21517;</td>
-					<td>
-						<input wicket:id="username" type="text" value="foo@goo.moo" size="30"/>
-					</td>
-				</tr>
-				<tr>
-					<td align="right">&#23494;&#30721;</td>
-					<td>
-						<input wicket:id="password" type="password" value="password" size="30"/>
-					</td>
-				</tr>
-				<tr wicket:id="rememberMeRow">
-					<td></td>
-					<td> <input wicket:id="rememberMe" type="checkbox" /> &#35760;&#20303;&#25105;</td>
-				</tr>
-				<tr>
-					<td></td>
-					<td>
-						<input type="submit" name="submit" value="&#31614;&#21040;"/>
-						<input type="reset" value="&#37325;&#26032;&#35774;&#32622;"/>
-					</td>
-				</tr>
-			</table>
-		</form>
+    
+	<form wicket:id="signInForm">
+		<dl>
+			<dt>用户名:</dt>
+			<dd><input wicket:id="username" type="text" size="30"/></dd>
+			<dt>密码:</dt>
+			<dd><input wicket:id="password" type="password" size="30"/></dd>
+			<dd wicket:id="rememberMeContainer"><input wicket:id="rememberMe" type="checkbox" /> 记住我 </dd>
+			<dd>
+				<input type="submit" name="submit" value="到"/>
+				<input type="reset" value="重新设置"/>
+			</dd>
+		</dl>
+	</form>
   </wicket:panel>
 </body>
 </html>

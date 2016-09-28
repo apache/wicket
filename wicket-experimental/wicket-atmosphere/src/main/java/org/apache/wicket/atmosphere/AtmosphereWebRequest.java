@@ -17,13 +17,15 @@
 package org.apache.wicket.atmosphere;
 
 import java.nio.charset.Charset;
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
@@ -31,8 +33,6 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.time.Time;
-import org.apache.wicket.util.upload.FileItemFactory;
-import org.apache.wicket.util.upload.FileUploadException;
 
 /**
  * Internal request to signal the processing of an event. This request will be mapped by
@@ -43,16 +43,16 @@ import org.apache.wicket.util.upload.FileUploadException;
  */
 class AtmosphereWebRequest extends ServletWebRequest
 {
-	private ServletWebRequest wrappedRequest;
+	private final ServletWebRequest wrappedRequest;
 
-	private PageKey pageKey;
+	private final PageKey pageKey;
 
-	private Collection<EventSubscription> subscriptions;
+	private final Iterator<EventSubscription> subscriptions;
 
-	private AtmosphereEvent event;
+	private final AtmosphereEvent event;
 
 	AtmosphereWebRequest(ServletWebRequest wrappedRequest, PageKey pageKey,
-		Collection<EventSubscription> subscriptions, AtmosphereEvent event)
+		Iterator<EventSubscription> subscriptions, AtmosphereEvent event)
 	{
 		super(wrappedRequest.getContainerRequest(), wrappedRequest.getFilterPrefix());
 		this.wrappedRequest = wrappedRequest;
@@ -66,7 +66,7 @@ class AtmosphereWebRequest extends ServletWebRequest
 		return pageKey;
 	}
 
-	public Collection<EventSubscription> getSubscriptions()
+	public Iterator<EventSubscription> getSubscriptions()
 	{
 		return subscriptions;
 	}

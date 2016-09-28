@@ -80,7 +80,7 @@ public class HTML5Attributes extends Behavior
 
 		for (IValidator<?> validator : input.getValidators())
 		{
-			if (validator instanceof ValidatorAdapter)
+			while (validator instanceof ValidatorAdapter)
 			{
 				validator = ((ValidatorAdapter<?>)validator).getValidator();
 			}

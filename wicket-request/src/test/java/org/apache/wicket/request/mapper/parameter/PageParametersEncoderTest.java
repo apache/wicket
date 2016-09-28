@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import org.apache.wicket.request.Url;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,9 +37,11 @@ public class PageParametersEncoderTest extends Assert
 	{
 		PageParametersEncoder encoder = new PageParametersEncoder();
 
-		Url url = Url.parse("idx1/idx2?named1=value1&named2=value2");
+		Url url = Url.parse("idx1/idx2?named1=value1&=&named2=value2");
 
 		PageParameters pageParameters = encoder.decodePageParameters(url);
+		assertThat(pageParameters.getIndexedCount(), is(2));
+		assertThat(pageParameters.getNamedKeys().size(), is(2));
 		assertEquals("idx1", pageParameters.get(0).toOptionalString());
 		assertEquals("idx2", pageParameters.get(1).toOptionalString());
 		assertEquals("value1", pageParameters.get("named1").toOptionalString());

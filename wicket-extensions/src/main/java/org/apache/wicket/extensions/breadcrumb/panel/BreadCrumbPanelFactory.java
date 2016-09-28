@@ -84,7 +84,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 * 
 	 * @return The constructor.
 	 */
-	private final Constructor<? extends BreadCrumbPanel> getConstructor()
+	private Constructor<? extends BreadCrumbPanel> getConstructor()
 	{
 		try
 		{

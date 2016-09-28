@@ -40,13 +40,6 @@ public class BufferedResponseRequestHandler implements IRequestHandler
 		this.bufferedWebResponse = bufferedWebResponse;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void detach(IRequestCycle requestCycle)
-	{
-	}
-
-	/** {@inheritDoc} */
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{

@@ -20,33 +20,19 @@
 <wicket:panel>
     <span wicket:id="feedback" />
 
-    <form wicket:id="signInForm">
-        <table>
-            <tr>
-                <td align="right">Логин:</td>
-                <td>
-                    <input wicket:id="username" type="text" value="foo@goo.moo" size="30" />
-                </td>
-            </tr>
-            <tr>
-                <td align="right">Пароль:</td>
-                <td>
-                    <input wicket:id="password" type="password" value="password" size="30" />
-                </td>
-            </tr>
-            <tr wicket:id="rememberMeRow">
-                <td></td>
-                <td><input wicket:id="rememberMe" type="checkbox" /> Запомнить меня</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="submit" name="submit" value="Вход" />
-                    <input type="reset" value="Сброс" />
-                </td>
-            </tr>
-        </table>
-    </form>
+	<form wicket:id="signInForm">
+		<dl>
+			<dt>Логин:</dt>
+			<dd><input wicket:id="username" type="text" size="30"/></dd>
+			<dt>Пароль:</dt>
+			<dd><input wicket:id="password" type="password" size="30"/></dd>
+			<dd wicket:id="rememberMeContainer"><input wicket:id="rememberMe" type="checkbox" /> Запомнить меня </dd>
+			<dd>
+				<input type="submit" name="submit" value="Вход"/>
+				<input type="reset" value="Сброс"/>
+			</dd>
+		</dl>
+	</form>
 </wicket:panel>
 </body>
 </html>

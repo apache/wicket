@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import java.util.Iterator;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.EnclosureContainer;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
@@ -29,8 +32,6 @@ import org.apache.wicket.markup.resolver.ComponentResolvers;
 import org.apache.wicket.markup.resolver.ComponentResolvers.ResolverFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -80,6 +81,7 @@ import org.slf4j.LoggerFactory;
  * @see EnclosureHandler
  * @see EnclosureContainer
  * 
+ * @author igor
  * @author Juergen Donnerstag
  * @since 1.3
  */
@@ -87,13 +89,11 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = LoggerFactory.getLogger(Enclosure.class);
-
 	/** The child component to delegate the isVisible() call to */
 	private Component childComponent;
 
 	/** Id of the child component that will control visibility of the enclosure */
-	private final CharSequence childId;
+	private final String childId;
 
 	/**
 	 * Construct.
@@ -101,7 +101,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	 * @param id
 	 * @param childId
 	 */
-	public Enclosure(final String id, final CharSequence childId)
+	public Enclosure(final String id, final String childId)
 	{
 		super(id);
 
@@ -123,26 +123,75 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 		return childId.toString();
 	}
 
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-
-		// get Child Component. If not "added", ask a resolver to find it.
-		childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
-	}
-
 	protected final Component getChild()
 	{
+		if (childComponent == null)
+		{
+			// try to find child when queued
+			childComponent = resolveChild(this);
+		}
+		if (childComponent == null)
+		{
+			// try to find child when resolved
+			childComponent = getChildComponent(new MarkupStream(getMarkup()), getEnclosureParent());
+		}
 		return childComponent;
+	}
+	
+	/**
+	 * Searches for the controlling child component looking also 
+	 * through transparent components.
+	 * 
+	 * @param container
+	 * 			the current container
+	 * @return the controlling child component, null if no one is found 
+	 */
+	private Component resolveChild(MarkupContainer container)
+	{
+		Component childController = container.get(childId);
+		
+		Iterator<Component> children = container.iterator();
+		
+		while (children.hasNext() && childController == null)
+		{
+			Component transparentChild = children.next();
+			
+			if(transparentChild instanceof TransparentWebMarkupContainer)
+			{
+				childController = resolveChild((MarkupContainer)transparentChild);
+			}
+		}
+		
+		return childController;
 	}
 
 	@Override
 	public boolean isVisible()
 	{
-		return childComponent.determineVisibility() && super.isVisible();
+		return getChild().determineVisibility();
+	}
+	
+	@Override
+	protected void onConfigure()
+	{
+		super.onConfigure();
+		final Component child = getChild();
+		
+		child.configure();
+		boolean childVisible = child.determineVisibility();
+		
+		setVisible(childVisible);
 	}
 
+	@Override
+	protected void onDetach()
+	{
+		super.onDetach();
+
+		// necessary when queued and lives with the page instead of just during render
+		childComponent = null;
+	}
+	
 	/**
 	 * Get the real parent container
 	 * 
@@ -151,11 +200,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 	protected MarkupContainer getEnclosureParent()
 	{
 		MarkupContainer parent = getParent();
-		while ((parent != null) && parent.isAuto())
-		{
-			parent = parent.getParent();
-		}
-
+		
 		if (parent == null)
 		{
 			throw new WicketRuntimeException(
@@ -184,7 +229,7 @@ public class Enclosure extends WebMarkupContainer implements IComponentResolver
 			int orgIndex = markupStream.getCurrentIndex();
 			try
 			{
-				while (markupStream.hasMore())
+				while (markupStream.isCurrentIndexInsideTheStream())
 				{
 					markupStream.next();
 					if (markupStream.skipUntil(ComponentTag.class))

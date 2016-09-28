@@ -36,7 +36,7 @@ import org.apache.wicket.Component;
  * chain to throw exceptions that must be caught and handled each time until the correct loader in
  * the chain is reached.
  * 
- * @see org.apache.wicket.settings.IResourceSettings
+ * @see org.apache.wicket.settings.ResourceSettings
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag

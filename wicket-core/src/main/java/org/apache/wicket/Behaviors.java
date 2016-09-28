@@ -63,7 +63,7 @@ final class Behaviors implements IDetachable
 	private void internalAdd(final Behavior behavior)
 	{
 		component.data_add(behavior);
-		if (behavior.getStatelessHint(component))
+		if (behavior.getStatelessHint(component) == false)
 		{
 			getBehaviorId(behavior);
 		}

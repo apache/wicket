@@ -25,7 +25,6 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.mock.Cookies;
 import org.apache.wicket.util.tester.apps_1.CreateBook;
 import org.apache.wicket.util.tester.cookies.CollectAllRequestCookiesPage;

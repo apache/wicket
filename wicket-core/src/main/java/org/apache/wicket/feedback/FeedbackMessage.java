@@ -137,7 +137,6 @@ public class FeedbackMessage implements IDetachable
 		return rendered;
 	}
 
-
 	/**
 	 * Marks this message as rendered.
 	 */
@@ -145,7 +144,6 @@ public class FeedbackMessage implements IDetachable
 	{
 		rendered = true;
 	}
-
 
 	/**
 	 * Gets the message level; can be used by rendering components. Note that what actually happens
@@ -270,9 +268,6 @@ public class FeedbackMessage implements IDetachable
 		return (getLevel() == UNDEFINED);
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -281,7 +276,6 @@ public class FeedbackMessage implements IDetachable
 			getLevelAsString() + ']';
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void detach()
 	{

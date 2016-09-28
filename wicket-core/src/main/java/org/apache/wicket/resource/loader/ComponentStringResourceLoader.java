@@ -309,9 +309,26 @@ public class ComponentStringResourceLoader implements IStringResourceLoader
 		while (component != null)
 		{
 			path.add(0, component);
+			if (isStopResourceSearch(component))
+			{
+				break;
+			}
 			component = component.getParent();
 		}
 		return path;
+	}
+
+	/**
+	 * Check the supplied component to see if it is one that we shouldn't bother further searches up
+	 * the component hierarchy for properties.
+	 * 
+	 * @param component
+	 *            The component to check
+	 * @return Whether to stop the search
+	 */
+	protected boolean isStopResourceSearch(Component component)
+	{
+		return false;
 	}
 
 	/**

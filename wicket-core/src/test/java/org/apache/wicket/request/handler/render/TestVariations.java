@@ -26,13 +26,15 @@ public class TestVariations
 	{
 		VariationIterator<Boolean> single = VariationIterator.of(Variation.ofBoolean());
 		Assert.assertTrue(single.hasNext());
-		single.nextVariation();
+		single.next();
+		Assert.assertTrue(single.hasNext());
+		single.next();
 		Assert.assertFalse(single.hasNext());
 
 		Exception ex = null;
 		try
 		{
-			single.nextVariation();
+			single.next();
 		}
 		catch (Exception e)
 		{
@@ -49,21 +51,23 @@ public class TestVariations
 		VariationIterator<?> last=flag;
 
 		Assert.assertTrue(last.hasNext());
-		last.nextVariation();
+		last.next();
 		Assert.assertTrue(last.hasNext());
-		last.nextVariation();
+		last.next();
 		Assert.assertTrue(last.hasNext());
-		last.nextVariation();
+		last.next();
 		Assert.assertTrue(last.hasNext());
-		last.nextVariation();
+		last.next();
 		Assert.assertTrue(last.hasNext());
-		last.nextVariation();
+		last.next();
+		Assert.assertTrue(last.hasNext());
+		last.next();
 		Assert.assertFalse(last.hasNext());
 
 		Exception ex = null;
 		try
 		{
-			last.nextVariation();
+			last.next();
 		}
 		catch (Exception e)
 		{

@@ -32,7 +32,6 @@ import org.apache.wicket.util.convert.IConverter;
  */
 public abstract class AbstractConverter<C> implements IConverter<C>
 {
-	/** */
 	private static final long serialVersionUID = 1L;
 
 	/**

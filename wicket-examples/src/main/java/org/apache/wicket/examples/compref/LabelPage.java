@@ -20,6 +20,7 @@ import java.util.Date;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -39,19 +40,9 @@ public class LabelPage extends WicketExamplePage
 		// add a static label
 		add(new Label("staticLabel", "static text"));
 
-		// add a dynamic label. For this example, we create an annonymous
-		// subclass
-		// of Model (just because it is less work then directly implementing
-		// IModel)
-		// that returns a new java.util.Date on each invocation
-		add(new Label("dynamicLabel", new Model<Date>()
-		{
-			@Override
-			public Date getObject()
-			{
-				return new Date();
-			}
-		}));
+		// add a dynamic label. For this example, we create an anonymous subclass
+		// of IModel that returns a new java.util.Date on each invocation
+		add(new Label("dynamicLabel", Date::new));
 
 		// add a label with a model that gets its display text from a resource
 		// bundle
@@ -60,13 +51,13 @@ public class LabelPage extends WicketExamplePage
 		// for
 		// parameter substitution.
 		StringResourceModel stringResourceModel = new StringResourceModel("label.current.locale",
-			this, null, getLocale());
+			this).setParameters(getLocale());
 		add(new Label("resourceLabel", stringResourceModel));
 
 		// and here we add a label that contains markup. Normally, this markup
 		// would be converted
-		// to HTML escape characters so that e.g. a & really dislays as that
-		// literal char wihout
+		// to HTML escape characters so that e.g. a & really displays as that
+		// literal char without
 		// our browser trying to resolve it to an HTML entity. But it this case
 		// we actually want
 		// our browser to interpret it as real markup, so we set the

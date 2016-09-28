@@ -20,13 +20,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.IColumn;
+import org.apache.wicket.extensions.markup.html.repeater.data.table.IStyledColumn;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -47,27 +51,21 @@ public class FilterToolbar extends AbstractToolbar
 	 *            data table this toolbar will be added to
 	 * @param form
 	 *            the filter form
-	 * @param stateLocator
-	 *            locator responsible for finding object used to store filter's state
 	 * @param <T>
-	 *            type of filter state object
+	 *            the type of the DataTable's model object
+	 * @param <S>
+	 *            the type of the DataTable's sorting parameter
+	 * @param <F>
+	 *            the type of filter state object
 	 * 
 	 */
-	public <T, S> FilterToolbar(final DataTable<T, S> table, final FilterForm<T> form,
-		final IFilterStateLocator<T> stateLocator)
+	public <T, S, F> FilterToolbar(final DataTable<T, S> table, final FilterForm<F> form)
 	{
 		super(table);
 
-		if (table == null)
-		{
-			throw new IllegalArgumentException("argument [table] cannot be null");
-		}
-		if (stateLocator == null)
-		{
-			throw new IllegalArgumentException("argument [stateLocator] cannot be null");
-		}
+		Args.notNull(table, "table");
 		
-		IModel<List<IColumn<T, S>>> model = new AbstractReadOnlyModel<List<IColumn<T,S>>>() {
+		IModel<List<IColumn<T, S>>> model = new IModel<List<IColumn<T,S>>>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -120,6 +118,27 @@ public class FilterToolbar extends AbstractToolbar
 					}
 				}
 
+				if (col instanceof IStyledColumn)
+				{
+					filter.add(new Behavior()
+					{
+						private static final long serialVersionUID = 1L;
+
+						/**
+						 * @see Behavior#onComponentTag(Component, ComponentTag)
+						 */
+						@Override
+						public void onComponentTag(final Component component, final ComponentTag tag)
+						{
+							String className = ((IStyledColumn<?, S>)col).getCssClass();
+							if (!Strings.isEmpty(className))
+							{
+								tag.append("class", className, " ");
+							}
+						}
+					});
+				}
+
 				item.add(filter);
 			}
 		};
@@ -133,7 +152,7 @@ public class FilterToolbar extends AbstractToolbar
 	{
 		if (findParent(FilterForm.class) == null)
 		{
-			throw new IllegalStateException("FilterToolbar must be contained within a Form");
+			throw new IllegalStateException("FilterToolbar must be contained within a FilterForm");
 		}
 		super.onBeforeRender();
 	}

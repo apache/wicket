@@ -25,6 +25,7 @@ import javax.servlet.http.Cookie;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Time;
 
@@ -114,8 +115,12 @@ public abstract class WebRequest extends Request
 	 */
 	public boolean isAjax()
 	{
-		return Strings.isTrue(getHeader(HEADER_AJAX)) ||
-			Strings.isTrue(getRequestParameters().getParameterValue(PARAM_AJAX).toString());
+		try {
+			return Strings.isTrue(getHeader(HEADER_AJAX)) ||
+				Strings.isTrue(getQueryParameters().getParameterValue(PARAM_AJAX).toString());
+		} catch (StringValueConversionException invalidValue) {
+			return false;
+		}
 	}
 
 	/**

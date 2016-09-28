@@ -18,7 +18,7 @@ package org.apache.wicket.pageStore.memory;
 
 import static org.junit.Assert.assertArrayEquals;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

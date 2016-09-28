@@ -18,14 +18,13 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.core.util.lang.WicketObjects;
 
 /**
  * A panel for the debug bar that shows the size of the currently shown page.
@@ -85,7 +84,7 @@ public class PageSizeDebugPanel extends StandardDebugPanel
 	@Override
 	protected IModel<String> getDataModel()
 	{
-		return new AbstractReadOnlyModel<String>()
+		return new IModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 

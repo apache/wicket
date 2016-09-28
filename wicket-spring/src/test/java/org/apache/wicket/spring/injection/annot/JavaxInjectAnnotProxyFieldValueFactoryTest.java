@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import org.apache.wicket.spring.injection.util.JavaxInjectable;
+import java.lang.reflect.Field;
+
+import org.apache.wicket.spring.injection.util.JavaxInjectInjectable;
+import org.junit.Test;
 
 
 /**
- * Tests for javax.inject.Inject when used with spring
+ * Tests for Spring injection with {@literal @javax.inject.Inject} annotation
  */
 public class JavaxInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFieldValueFactoryTest
 {
@@ -29,6 +32,26 @@ public class JavaxInjectAnnotProxyFieldValueFactoryTest extends AnnotProxyFieldV
 	 */
 	public JavaxInjectAnnotProxyFieldValueFactoryTest()
 	{
-		super(new JavaxInjectable());
+		super(new JavaxInjectInjectable());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5686
+	 * @throws Exception
+	 */
+	@Test
+	public void required() throws Exception
+	{
+		Field field = obj.getClass().getDeclaredField("nonExisting");
+		try
+		{
+			factory.getFieldValue(field, obj);
+			fail("Fields annotated with @Inject are required!");
+		}
+		catch (IllegalStateException isx)
+		{
+			// expected
+			assertTrue(true);
+		}
 	}
 }

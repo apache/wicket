@@ -114,6 +114,12 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 		return wrapped.equals(o);
 	}
 
+	@Override
+	public int hashCode()
+	{
+		return wrapped.hashCode();
+	}
+
 	/**
 	 * @see java.util.Map#get(Object)
 	 */
@@ -341,15 +347,6 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 	public Collection<Object> values()
 	{
 		return wrapped.values();
-	}
-
-	/**
-	 * @see IValueMap#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return super.toString();
 	}
 
 	// //

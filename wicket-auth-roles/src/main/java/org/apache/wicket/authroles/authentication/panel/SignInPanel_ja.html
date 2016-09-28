@@ -15,24 +15,24 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<HTML xmlns:wicket="http://wicket.apache.org"><HEAD>
-<META http-equiv="Content-Type" content="text/html; charset=windows-1252" />
-<META content="MSHTML 6.00.2900.3354" name="GENERATOR" /></HEAD>
-<BODY><wicket:panel><SPAN wicket:id="feedback"></SPAN>
-<FORM wicket:id="signInForm">
-<TABLE>
-  <TBODY>
-  <TR>
-    <TD align="right">&#12518;&#12540;&#12470;&#12540;&#21517;:</TD>
-    <TD><INPUT size="30" value="foo@goo.moo" wicket:id="username"/> </TD></TR>
-  <TR>
-    <TD align="right">&#12497;&#12473;&#12527;&#12540;&#12489;:</TD>
-    <TD><INPUT type="password" size="30" value="password" wicket:id="password"/> 
-  </TD></TR>
-  <TR wicket:id="rememberMeRow">
-    <TD></TD>
-    <TD><INPUT type="checkbox" wicket:id="rememberMe"/> &#12518;&#12540;&#12470;&#12540;&#21517;&#12434;&#35352;&#25014;&#12377;&#12427; </TD></TR>
-  <TR>
-    <TD></TD>
-    <TD><INPUT type="submit" value="&#12469;&#12452;&#12531;&#12452;&#12531;" name="submit"/> <INPUT type="reset" value="&#12522;&#12475;&#12483;&#12488;"/> 
-</TD></TR></TBODY></TABLE></FORM></wicket:panel></BODY></HTML>
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+  <wicket:panel>
+    <span wicket:id="feedback"/>
+    
+	<form wicket:id="signInForm">
+		<dl>
+			<dt>ユーザー名:</dt>
+			<dd><input wicket:id="username" type="text" size="30"/></dd>
+			<dt>パスワード:</dt>
+			<dd><input wicket:id="password" type="password" size="30"/></dd>
+			<dd wicket:id="rememberMeContainer"><input wicket:id="rememberMe" type="checkbox" /> ユーザー名を記憶する </dd>
+			<dd>
+				<input type="submit" name="submit" value="サインイン"/>
+				<input type="reset" value="リセット"/>
+			</dd>
+		</dl>
+	</form>
+  </wicket:panel>
+</body>
+</html>

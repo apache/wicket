@@ -16,11 +16,7 @@
  */
 package org.apache.wicket.request.resource;
 
-import java.net.URLConnection;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.wicket.util.time.Time;
+import org.apache.wicket.request.Response;
 
 /**
  * An {@link IResource} for byte arrays. The byte array can be static - passed to the constructor,
@@ -29,20 +25,9 @@ import org.apache.wicket.util.time.Time;
  * 
  * @author Matej Knopp
  */
-public class ByteArrayResource extends AbstractResource
+public class ByteArrayResource extends BaseDataResource<byte[]>
 {
 	private static final long serialVersionUID = 1L;
-
-	/** the content type. */
-	private final String contentType;
-
-	/** the binary data. */
-	private byte[] array;
-
-	/** the time that this resource was last modified; same as construction time. */
-	private final Time lastModified = Time.now();
-
-	private final String filename;
 
 	/**
 	 * Creates a {@link ByteArrayResource} which will provide its data dynamically with
@@ -53,7 +38,7 @@ public class ByteArrayResource extends AbstractResource
 	 */
 	public ByteArrayResource(final String contentType)
 	{
-		this(contentType, null, null);
+		super(contentType);
 	}
 
 	/**
@@ -66,7 +51,7 @@ public class ByteArrayResource extends AbstractResource
 	 */
 	public ByteArrayResource(final String contentType, final byte[] array)
 	{
-		this(contentType, array, null);
+		super(contentType, array);
 	}
 
 	/**
@@ -81,89 +66,18 @@ public class ByteArrayResource extends AbstractResource
 	 */
 	public ByteArrayResource(final String contentType, final byte[] array, final String filename)
 	{
-		this.contentType = contentType;
-		this.array = array;
-		this.filename = filename;
+		super(contentType, array, filename);
 	}
 
-	protected void configureResponse(final ResourceResponse response, final Attributes attributes)
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.request.resource.AbstractResource#newResourceResponse(org.apache.wicket.request.resource.IResource.Attributes)
-	 */
 	@Override
-	protected ResourceResponse newResourceResponse(final Attributes attributes)
+	protected void writeData(Response response, byte[] data)
 	{
-		final ResourceResponse response = new ResourceResponse();
-
-		String contentType = this.contentType;
-
-		if (contentType == null)
-		{
-			if (filename != null)
-			{
-				contentType = URLConnection.getFileNameMap().getContentTypeFor(filename);
-			}
-
-			if (contentType == null)
-			{
-				contentType = "application/octet-stream";
-			}
-		}
-
-
-		response.setContentType(contentType);
-		response.setLastModified(lastModified);
-
-		final byte[] data = getData(attributes);
-		if (data == null)
-		{
-			response.setError(HttpServletResponse.SC_NOT_FOUND);
-		}
-		else
-		{
-			response.setContentLength(data.length);
-
-			if (response.dataNeedsToBeWritten(attributes))
-			{
-				if (filename != null)
-				{
-					response.setFileName(filename);
-					response.setContentDisposition(ContentDisposition.ATTACHMENT);
-				}
-				else
-				{
-					response.setContentDisposition(ContentDisposition.INLINE);
-				}
-
-				response.setWriteCallback(new WriteCallback()
-				{
-					@Override
-					public void writeData(final Attributes attributes)
-					{
-						attributes.getResponse().write(data);
-					}
-				});
-
-				configureResponse(response, attributes);
-			}
-		}
-
-		return response;
+		response.write(data);
 	}
 
-	/**
-	 * Gets the data for this resource.
-	 * 
-	 * @param attributes
-	 *            the context bringing the request, response and the parameters
-	 * 
-	 * @return The byte array data for this resource
-	 */
-	protected byte[] getData(final Attributes attributes)
+	@Override
+	protected Long getLength(byte[] data)
 	{
-		return array;
+		return (long) data.length;
 	}
 }

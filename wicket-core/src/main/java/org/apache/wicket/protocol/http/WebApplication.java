@@ -17,6 +17,11 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.function.Function;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.IPageRendererProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
@@ -32,7 +36,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxRequestTargetListenerCollection;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.request.mapper.PackageMapper;
 import org.apache.wicket.core.request.mapper.ResourceMapper;
@@ -58,19 +61,16 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.render.WebPageRenderer;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.mapper.mount.MountMapper;
+import org.apache.wicket.request.mapper.ICompoundRequestMapper;
+import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.resource.bundles.ResourceBundleReference;
+import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.session.HttpSessionStore;
-import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.util.IContextProvider;
-import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.crypt.CharEncoding;
 import org.apache.wicket.util.file.FileCleaner;
 import org.apache.wicket.util.file.IFileCleaner;
@@ -106,14 +106,14 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * 
  * @see WicketFilter
- * @see org.apache.wicket.settings.IApplicationSettings
- * @see org.apache.wicket.settings.IDebugSettings
- * @see org.apache.wicket.settings.IExceptionSettings
- * @see org.apache.wicket.settings.IMarkupSettings
- * @see org.apache.wicket.settings.IPageSettings
- * @see org.apache.wicket.settings.IRequestCycleSettings
- * @see org.apache.wicket.settings.IResourceSettings
- * @see org.apache.wicket.settings.ISecuritySettings
+ * @see org.apache.wicket.settings.ApplicationSettings
+ * @see org.apache.wicket.settings.DebugSettings
+ * @see org.apache.wicket.settings.ExceptionSettings
+ * @see org.apache.wicket.settings.MarkupSettings
+ * @see org.apache.wicket.settings.PageSettings
+ * @see org.apache.wicket.settings.RequestCycleSettings
+ * @see org.apache.wicket.settings.ResourceSettings
+ * @see org.apache.wicket.settings.SecuritySettings
  * @see javax.servlet.Filter
  * @see javax.servlet.FilterConfig
  * @see javax.servlet.ServletContext
@@ -135,7 +135,7 @@ public abstract class WebApplication extends Application
 
 	private final AjaxRequestTargetListenerCollection ajaxRequestTargetListeners;
 
-	private IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider;
+	private Function<Page, AjaxRequestTarget> ajaxRequestTargetProvider;
 
 	private FilterFactoryManager filterFactoryManager;
 
@@ -314,7 +314,7 @@ public abstract class WebApplication extends Application
 	 * @param mapper
 	 *            the encoder that will be used for this mount
 	 */
-	public final void mount(final IRequestMapper mapper)
+	public void mount(final IRequestMapper mapper)
 	{
 		Args.notNull(mapper, "mapper");
 		getRootRequestMapperAsCompound().add(mapper);
@@ -331,9 +331,11 @@ public abstract class WebApplication extends Application
 	 * @param pageClass
 	 *            the page class to be mounted
 	 */
-	public final <T extends Page> void mountPage(final String path, final Class<T> pageClass)
+	public <T extends Page> MountedMapper mountPage(final String path, final Class<T> pageClass)
 	{
-		mount(new MountedMapper(path, pageClass));
+		MountedMapper mapper = new MountedMapper(path, pageClass);
+		mount(mapper);
+		return mapper;
 	}
 
 	/**
@@ -344,13 +346,15 @@ public abstract class WebApplication extends Application
 	 * @param reference
 	 *            resource reference to be mounted
 	 */
-	public final void mountResource(final String path, final ResourceReference reference)
+	public ResourceMapper mountResource(final String path, final ResourceReference reference)
 	{
 		if (reference.canBeRegistered())
 		{
 			getResourceReferenceRegistry().registerResourceReference(reference);
 		}
-		mount(new ResourceMapper(path, reference));
+		ResourceMapper mapper = new ResourceMapper(path, reference);
+		mount(mapper);
+		return mapper;
 	}
 
 	/**
@@ -364,11 +368,11 @@ public abstract class WebApplication extends Application
 	 * @param pageClass
 	 *            the page class to be mounted
 	 */
-	public final <P extends Page> void mountPackage(final String path, final Class<P> pageClass)
+	public <P extends Page> PackageMapper mountPackage(final String path, final Class<P> pageClass)
 	{
-		PackageMapper packageMapper = new PackageMapper(PackageName.forClass(pageClass));
-		MountMapper mountMapper = new MountMapper(path, packageMapper);
-		mount(mountMapper);
+		PackageMapper packageMapper = new PackageMapper(path, PackageName.forClass(pageClass));
+		mount(packageMapper);
+		return packageMapper;
 	}
 
 	/**
@@ -380,7 +384,7 @@ public abstract class WebApplication extends Application
 	 * @param path
 	 *            the path to unmount
 	 */
-	public final void unmount(String path)
+	public void unmount(String path)
 	{
 		Args.notNull(path, "path");
 
@@ -388,16 +392,107 @@ public abstract class WebApplication extends Application
 		{
 			path = path.substring(1);
 		}
-		getRootRequestMapperAsCompound().unmount(path);
+
+		IRequestMapper mapper = getRootRequestMapper();
+
+		while (mapper instanceof IRequestMapperDelegate)
+		{
+			mapper = ((IRequestMapperDelegate) mapper).getDelegateMapper();
+		}
+
+		/*
+		 * Only attempt to unmount if root request mapper is either a compound, or wraps a compound to avoid leaving the
+		 * application with no mappers installed.
+		 */
+		if (mapper instanceof ICompoundRequestMapper)
+		{
+			final Url url = Url.parse(path);
+
+			Request request = new Request()
+			{
+				@Override
+				public Url getUrl()
+				{
+					return url;
+				}
+
+				@Override
+				public Url getClientUrl()
+				{
+					return url;
+				}
+
+				@Override
+				public Locale getLocale()
+				{
+					return null;
+				}
+
+				@Override
+				public Charset getCharset()
+				{
+					return null;
+				}
+
+				@Override
+				public Object getContainerRequest()
+				{
+					return null;
+				}
+			};
+
+			unmountFromCompound((ICompoundRequestMapper) mapper, request);
+		}
+	}
+
+	/**
+	 * Descends the tree of {@link ICompoundRequestMapper}s and {@link IRequestMapperDelegate}s to find the correct descendant
+	 * to remove.
+	 *
+	 * @param parent
+	 *		The {@link ICompoundRequestMapper} from which to unmount the matching mapper.
+	 * @param request
+	 *		The request used to find the mapper to remove.
+	 */
+	private void unmountFromCompound(ICompoundRequestMapper parent, Request request)
+	{
+		Collection<IRequestMapper> toRemove = new LinkedList<>();
+
+		for (IRequestMapper mapper : parent)
+		{
+			if (mapper.mapRequest(request) != null)
+			{
+				IRequestMapper actualMapper = mapper;
+
+				while (actualMapper instanceof IRequestMapperDelegate)
+				{
+					actualMapper = ((IRequestMapperDelegate) actualMapper).getDelegateMapper();
+				}
+
+				if (actualMapper instanceof ICompoundRequestMapper)
+				{
+					unmountFromCompound((ICompoundRequestMapper) actualMapper, request);
+				}
+				else
+				{
+					toRemove.add(mapper);
+				}
+			}
+		}
+
+		for (IRequestMapper mapper : toRemove)
+		{
+			parent.remove(mapper);
+		}
 	}
 
 	/**
 	 * Registers a replacement resource for the given javascript resource. This replacement can be
 	 * another {@link JavaScriptResourceReference} for a packaged resource, but it can also be an
-	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
-	 * Registering a replacement will cause the resource to replaced by the given resource
-	 * throughout the application: if {@code base} is added, {@code replacement} will be added
-	 * instead.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a
+	 * resource hosted on a CDN. Registering a replacement will cause the resource to replaced by
+	 * the given resource throughout the application: if {@code base} is added, {@code replacement}
+	 * will be added instead.
 	 * 
 	 * @param base
 	 *            The resource to replace
@@ -407,7 +502,7 @@ public abstract class WebApplication extends Application
 	public final void addResourceReplacement(JavaScriptResourceReference base,
 		ResourceReference replacement)
 	{
-		ResourceBundleReference bundle = new ResourceBundleReference(replacement);
+		ReplacementResourceBundleReference bundle = new ReplacementResourceBundleReference(replacement);
 		bundle.addProvidedResources(JavaScriptHeaderItem.forReference(base));
 		getResourceBundles().addBundle(JavaScriptHeaderItem.forReference(bundle));
 	}
@@ -415,10 +510,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Registers a replacement resource for the given CSS resource. This replacement can be another
 	 * {@link CssResourceReference} for a packaged resource, but it can also be an
-	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a resource hosted on a CDN.
-	 * Registering a replacement will cause the resource to replaced by the given resource
-	 * throughout the application: if {@code base} is added, {@code replacement} will be added
-	 * instead.
+	 * {@link org.apache.wicket.request.resource.UrlResourceReference} to replace the resource by a
+	 * resource hosted on a CDN. Registering a replacement will cause the resource to replaced by
+	 * the given resource throughout the application: if {@code base} is added, {@code replacement}
+	 * will be added instead.
 	 * 
 	 * @param base
 	 *            The resource to replace
@@ -428,7 +523,7 @@ public abstract class WebApplication extends Application
 	public final void addResourceReplacement(CssResourceReference base,
 		ResourceReference replacement)
 	{
-		ResourceBundleReference bundle = new ResourceBundleReference(replacement);
+		ReplacementResourceBundleReference bundle = new ReplacementResourceBundleReference(replacement);
 		bundle.addProvidedResources(CssHeaderItem.forReference(base));
 		getResourceBundles().addBundle(CssHeaderItem.forReference(bundle));
 	}
@@ -453,7 +548,7 @@ public abstract class WebApplication extends Application
 	 * {@link #newWebRequest(HttpServletRequest, String)}
 	 * 
 	 * @param servletRequest
-	 *            the current HTTP Sservlet request
+	 *            the current HTTP Servlet request
 	 * @param filterPath
 	 *            the filter mapping read from web.xml
 	 * @return a WebRequest object
@@ -648,9 +743,9 @@ public abstract class WebApplication extends Application
 				getResourceSettings().getResourceFinders().add(new Path(resourceFolder));
 			}
 		}
-		setPageRendererProvider(new WebPageRendererProvider());
-		setSessionStoreProvider(new WebSessionStoreProvider());
-		setAjaxRequestTargetProvider(new DefaultAjaxRequestTargetProvider());
+		setPageRendererProvider(WebPageRenderer::new);
+		setSessionStoreProvider(HttpSessionStore::new);
+		setAjaxRequestTargetProvider(AjaxRequestHandler::new);
 
 		getAjaxRequestTargetListeners().add(new AjaxEnclosureListener());
 
@@ -665,7 +760,7 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param configurationType
 	 */
-	public void setConfigurationType(RuntimeConfigurationType configurationType)
+	public Application setConfigurationType(RuntimeConfigurationType configurationType)
 	{
 		if (this.configurationType != null)
 		{
@@ -674,6 +769,7 @@ public abstract class WebApplication extends Application
 					"Current value='" + configurationType + "'");
 		}
 		this.configurationType = Args.notNull(configurationType, "configurationType");
+		return this;
 	}
 
 	/**
@@ -691,7 +787,8 @@ public abstract class WebApplication extends Application
 			}
 			catch (SecurityException e)
 			{
-				// Ignore - we're not allowed to read system properties.
+				log.warn("SecurityManager doesn't allow to read the configuration type from " +
+						"the system properties. The configuration type will be read from the web.xml.");
 			}
 
 			// If no system parameter check filter/servlet <init-param> and <context-param>
@@ -802,7 +899,7 @@ public abstract class WebApplication extends Application
 	 */
 	public final AjaxRequestTarget newAjaxRequestTarget(final Page page)
 	{
-		AjaxRequestTarget target = getAjaxRequestTargetProvider().get(page);
+		AjaxRequestTarget target = getAjaxRequestTargetProvider().apply(page);
 		for (AjaxRequestTarget.IListener listener : ajaxRequestTargetListeners)
 		{
 			target.addListener(listener);
@@ -871,10 +968,12 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * 
-	 * @param sessionId
+	 * Retrieves a stored buffered response for a given sessionId and url.
+	 *
 	 * @param url
-	 * @return buffered response
+	 *          The url used as a key
+	 * @return the stored buffered response. {@code null} if there is no stored response for the given url
+	 * @see org.apache.wicket.settings.RequestCycleSettings.RenderStrategy#REDIRECT_TO_BUFFER
 	 */
 	public BufferedWebResponse getAndRemoveBufferedResponse(String sessionId, Url url)
 	{
@@ -883,13 +982,21 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
-	 * 
+	 * Store the buffered response at application level to use it at a later time.
+	 *
 	 * @param sessionId
 	 * @param url
 	 * @param response
 	 */
 	public void storeBufferedResponse(String sessionId, Url url, BufferedWebResponse response)
 	{
+		if (Strings.isEmpty(sessionId))
+		{
+			log.error("storeBufferedResponse needs a valid session id to store the response, but a null one was found. "
+					+ "Please report the problem to dev team and try to reproduce it in a quickstart project.");
+			return;
+		}
+
 		String key = sessionId + url.toString();
 		storedResponses.put(key, response);
 	}
@@ -901,30 +1008,12 @@ public abstract class WebApplication extends Application
 		return mimeType != null ? mimeType : super.getMimeType(fileName);
 	}
 
-	private static class WebPageRendererProvider implements IPageRendererProvider
-	{
-		@Override
-		public PageRenderer get(RenderPageRequestHandler handler)
-		{
-			return new WebPageRenderer(handler);
-		}
-	}
-
-	private static class WebSessionStoreProvider implements IProvider<ISessionStore>
-	{
-		@Override
-		public ISessionStore get()
-		{
-			return new HttpSessionStore();
-		}
-	}
-
 	/**
 	 * Returns the provider for {@link org.apache.wicket.ajax.AjaxRequestTarget} objects.
 	 * 
 	 * @return the provider for {@link org.apache.wicket.ajax.AjaxRequestTarget} objects.
 	 */
-	public IContextProvider<AjaxRequestTarget, Page> getAjaxRequestTargetProvider()
+	public Function<Page, AjaxRequestTarget> getAjaxRequestTargetProvider()
 	{
 		return ajaxRequestTargetProvider;
 	}
@@ -935,10 +1024,11 @@ public abstract class WebApplication extends Application
 	 * @param ajaxRequestTargetProvider
 	 *            the new provider
 	 */
-	public void setAjaxRequestTargetProvider(
-		IContextProvider<AjaxRequestTarget, Page> ajaxRequestTargetProvider)
+	public Application setAjaxRequestTargetProvider(
+		Function<Page, AjaxRequestTarget> ajaxRequestTargetProvider)
 	{
 		this.ajaxRequestTargetProvider = ajaxRequestTargetProvider;
+		return this;
 	}
 
 	/**
@@ -949,17 +1039,6 @@ public abstract class WebApplication extends Application
 	public AjaxRequestTargetListenerCollection getAjaxRequestTargetListeners()
 	{
 		return ajaxRequestTargetListeners;
-	}
-
-	private static class DefaultAjaxRequestTargetProvider
-		implements
-			IContextProvider<AjaxRequestTarget, Page>
-	{
-		@Override
-		public AjaxRequestTarget get(Page page)
-		{
-			return new AjaxRequestHandler(page);
-		}
 	}
 
 	/**
@@ -980,5 +1059,20 @@ public abstract class WebApplication extends Application
 			filterFactoryManager = new FilterFactoryManager();
 		}
 		return filterFactoryManager;
+	}
+
+	/**
+	 * If true, auto label css classes such as {@code error} and {@code required} will be updated
+	 * after form component processing during an ajax request. This allows auto labels to correctly
+	 * reflect the state of the form component even if they are not part of the ajax markup update.
+	 * 
+	 * TODO in wicket-7 this should move into a settings object. cannot move in 6.x because it
+	 * requires a change to a setting interface.
+	 * 
+	 * @return {@code true} iff enabled
+	 */
+	public boolean getUpdateAutoLabelsOnAjaxRequests()
+	{
+		return true;
 	}
 }

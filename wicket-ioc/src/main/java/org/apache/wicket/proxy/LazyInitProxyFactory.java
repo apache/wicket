@@ -18,23 +18,29 @@ package org.apache.wicket.proxy;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
 import net.sf.cglib.core.DefaultNamingPolicy;
 import net.sf.cglib.core.Predicate;
+import net.sf.cglib.proxy.Callback;
+import net.sf.cglib.proxy.CallbackFilter;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import net.sf.cglib.proxy.NoOp;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.proxy.objenesis.ObjenesisProxyFactory;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -111,6 +117,11 @@ public class LazyInitProxyFactory
 		Float.class, double.class, Double.class, char.class, Character.class, boolean.class,
 		Boolean.class);
 
+	private static final int CGLIB_CALLBACK_NO_OVERRIDE = 0;
+	private static final int CGLIB_CALLBACK_HANDLER = 1;
+
+	private static final boolean IS_OBJENESIS_AVAILABLE = isObjenesisAvailable();
+
 	/**
 	 * Create a lazy init proxy for the specified type. The target object will be located using the
 	 * provided locator upon first method invocation.
@@ -137,20 +148,7 @@ public class LazyInitProxyFactory
 
 			try
 			{
-				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-				if (Application.exists())
-				{
-					IClassResolver classResolver = Application.get()
-							.getApplicationSettings()
-							.getClassResolver();
-
-					if (classResolver != null)
-					{
-						classLoader = classResolver.getClassLoader();
-					}
-				}
-
-				return Proxy.newProxyInstance(classLoader,
+				return Proxy.newProxyInstance(resolveClassLoader(),
 					new Class[] { type, Serializable.class, ILazyInitProxy.class,
 							IWriteReplace.class }, handler);
 			}
@@ -170,39 +168,58 @@ public class LazyInitProxyFactory
 		}
 		else
 		{
+			if (IS_OBJENESIS_AVAILABLE && !hasNoArgConstructor(type))
+			{
+				return ObjenesisProxyFactory.createProxy(type, locator, WicketNamingPolicy.INSTANCE);
+			}
+
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
+			Callback[] callbacks = new Callback[2];
+			callbacks[CGLIB_CALLBACK_NO_OVERRIDE] = SerializableNoOpCallback.INSTANCE;
+			callbacks[CGLIB_CALLBACK_HANDLER] = handler;
+
 			Enhancer e = new Enhancer();
+			e.setClassLoader(resolveClassLoader());
 			e.setInterfaces(new Class[] { Serializable.class, ILazyInitProxy.class,
 					IWriteReplace.class });
 			e.setSuperclass(type);
-			e.setCallback(handler);
-			e.setNamingPolicy(new DefaultNamingPolicy()
-			{
-				@Override
-				public String getClassName(final String prefix, final String source,
-					final Object key, final Predicate names)
-				{
-					return super.getClassName("WICKET_" + prefix, source, key, names);
-				}
-			});
+			e.setCallbackFilter(NoOpForProtectedMethodsCGLibCallbackFilter.INSTANCE);
+			e.setCallbacks(callbacks);
+			e.setNamingPolicy(WicketNamingPolicy.INSTANCE);
 
 			return e.create();
 		}
 	}
 
-	/**
+	private static ClassLoader resolveClassLoader()
+	{
+		ClassLoader classLoader = null;
+		if (Application.exists())
+		{
+			classLoader = Application.get().getApplicationSettings()
+					.getClassResolver().getClassLoader();
+		}
+
+		if (classLoader == null) {
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+
+		return classLoader;
+	}
+
+    /**
 	 * This interface is used to make the proxy forward writeReplace() call to the handler instead
 	 * of invoking it on itself. This allows us to serialize the replacement object instead of the
 	 * proxy itself in case the proxy subclass is deserialized on a VM that does not have it
 	 * created.
 	 * 
-	 * @see ProxyReplacement
+	 * @see LazyInitProxyFactory.ProxyReplacement
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static interface IWriteReplace
+	public interface IWriteReplace
 	{
 		/**
 		 * write replace method as defined by Serializable
@@ -256,12 +273,12 @@ public class LazyInitProxyFactory
 
 	/**
 	 * Method interceptor for proxies representing concrete object not backed by an interface. These
-	 * proxies are representing by cglib proxies.
+	 * proxies are represented by cglib proxies.
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	private static class CGLibInterceptor
+	public abstract static class AbstractCGLibInterceptor
 		implements
 			MethodInterceptor,
 			ILazyInitProxy,
@@ -270,9 +287,9 @@ public class LazyInitProxyFactory
 	{
 		private static final long serialVersionUID = 1L;
 
-		private final IProxyTargetLocator locator;
+		protected final IProxyTargetLocator locator;
 
-		private final String typeName;
+		protected final String typeName;
 
 		private transient Object target;
 
@@ -285,7 +302,7 @@ public class LazyInitProxyFactory
 		 * @param locator
 		 *            object locator used to locate the object this proxy represents
 		 */
-		public CGLibInterceptor(final Class<?> type, final IProxyTargetLocator locator)
+		public AbstractCGLibInterceptor(final Class<?> type, final IProxyTargetLocator locator)
 		{
 			super();
 			typeName = type.getName();
@@ -341,6 +358,20 @@ public class LazyInitProxyFactory
 		{
 			return locator;
 		}
+	}
+
+	/**
+	 * Method interceptor for proxies representing concrete object not backed by an interface. These
+	 * proxies are representing by cglib proxies.
+	 *
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	protected static class CGLibInterceptor extends AbstractCGLibInterceptor
+	{
+		public CGLibInterceptor(Class<?> type, IProxyTargetLocator locator)
+		{
+			super(type, locator);
+		}
 
 		/**
 		 * @see org.apache.wicket.proxy.LazyInitProxyFactory.IWriteReplace#writeReplace()
@@ -349,6 +380,47 @@ public class LazyInitProxyFactory
 		public Object writeReplace() throws ObjectStreamException
 		{
 			return new ProxyReplacement(typeName, locator);
+		}
+	}
+
+	/**
+	 * Serializable implementation of the NoOp callback.
+	 */
+	public static class SerializableNoOpCallback implements NoOp, Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private static final NoOp INSTANCE = new SerializableNoOpCallback();
+	}
+
+	/**
+	 * CGLib callback filter which does not intercept protected methods.
+	 * 
+	 * Protected methods need to be called with invokeSuper() instead of invoke().
+	 * When invoke() is called on a protected method, it throws an "IllegalArgumentException:
+	 * Protected method" exception.
+	 * That being said, we do not need to intercept the protected methods so this callback filter
+	 * is designed to use a NoOp callback for protected methods.
+	 * 
+	 * @see <a href="http://comments.gmane.org/gmane.comp.java.cglib.devel/720">Discussion about
+	 * this very issue in Spring AOP</a>
+	 * @see <a href="https://github.com/wicketstuff/core/wiki/SpringReference">The WicketStuff
+	 * SpringReference project which worked around this issue</a>
+	 */
+	private static class NoOpForProtectedMethodsCGLibCallbackFilter implements CallbackFilter
+	{
+		private static final CallbackFilter INSTANCE = new NoOpForProtectedMethodsCGLibCallbackFilter();
+
+		@Override
+		public int accept(Method method) {
+			if (Modifier.isProtected(method.getModifiers()))
+			{
+				return CGLIB_CALLBACK_NO_OVERRIDE;
+			}
+			else
+			{
+				return CGLIB_CALLBACK_HANDLER;
+			}
 		}
 	}
 
@@ -523,5 +595,44 @@ public class LazyInitProxyFactory
 	{
 		return (method.getReturnType() == Object.class) &&
 			(method.getParameterTypes().length == 0) && method.getName().equals("writeReplace");
+	}
+
+	public static final class WicketNamingPolicy extends DefaultNamingPolicy
+	{
+		public static final WicketNamingPolicy INSTANCE = new WicketNamingPolicy();
+
+		private WicketNamingPolicy()
+		{
+			super();
+		}
+
+		@Override
+		public String getClassName(final String prefix, final String source, final Object key,
+				final Predicate names)
+		{
+			return super.getClassName("WICKET_" + prefix, source, key, names);
+		}
+	}
+
+
+	private static boolean hasNoArgConstructor(Class<?> type)
+	{
+		for (Constructor<?> constructor : type.getDeclaredConstructors())
+		{
+			if (constructor.getParameterTypes().length == 0)
+				return true;
+		}
+
+		return false;
+	}
+
+	private static boolean isObjenesisAvailable()
+	{
+		try {
+			Class.forName("org.objenesis.ObjenesisStd");
+			return true;
+		} catch (Exception ignored) {
+			return false;
+		}
 	}
 }

@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.watch.IModifiable;
@@ -40,9 +39,9 @@ import org.slf4j.LoggerFactory;
  * removed from the cache and reloaded when needed.
  * <p>
  * MarkupCache is registered with {@link MarkupFactory} which in turn is registered with
- * {@link IMarkupSettings} and thus can be replaced with a subclassed version.
+ * {@link org.apache.wicket.settings.MarkupSettings} and thus can be replaced with a sub-classed version.
  * 
- * @see IMarkupSettings
+ * @see org.apache.wicket.settings.MarkupSettings
  * @see MarkupFactory
  * 
  * @author Jonathan Locke
@@ -81,7 +80,7 @@ public class MarkupCache implements IMarkupCache
 	 * 
 	 * @return The markup cache registered with the {@link Application}
 	 */
-	public final static IMarkupCache get()
+	public static IMarkupCache get()
 	{
 		return Application.get().getMarkupSettings().getMarkupFactory().getMarkupCache();
 	}
@@ -331,7 +330,7 @@ public class MarkupCache implements IMarkupCache
 	 * @param markup
 	 *            Markup.NO_MARKUP
 	 * @return Same as parameter "markup"
-	 * @see org.apache.wicket.settings.IResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
+	 * @see org.apache.wicket.settings.ResourceSettings#setResourceStreamLocator(org.apache.wicket.core.util.resource.locator.IResourceStreamLocator)
 	 */
 	protected Markup onMarkupNotFound(final String cacheKey, final MarkupContainer container,
 		final Markup markup)
@@ -433,7 +432,7 @@ public class MarkupCache implements IMarkupCache
 	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup. Markup.NO_MARKUP, if not found.
 	 */
-	private final Markup loadMarkup(final MarkupContainer container,
+	private Markup loadMarkup(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		String cacheKey = markupResourceStream.getCacheKey();
@@ -487,7 +486,7 @@ public class MarkupCache implements IMarkupCache
 	 *            reloaded. Whatever is in the cache, it will be ignored
 	 * @return The markup in the stream
 	 */
-	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
+	private Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
 		final MarkupResourceStream markupResourceStream, final boolean enforceReload)
 	{
 		// @TODO the following code sequence looks very much like in loadMarkup. Can it be
@@ -518,10 +517,10 @@ public class MarkupCache implements IMarkupCache
 				.getResourceWatcher(true);
 			if (watcher != null)
 			{
-				watcher.add(markupResourceStream, new IChangeListener()
+				watcher.add(markupResourceStream, new IChangeListener<IModifiable>()
 				{
 					@Override
-					public void onChange()
+					public void onChange(IModifiable modifiable)
 					{
 						if (log.isDebugEnabled())
 						{

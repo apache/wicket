@@ -18,6 +18,9 @@ package org.apache.wicket.markup.head.filter;
 
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnEventHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 
 /**
  * This filter accepts all {@link JavaScriptHeaderItem}s.
@@ -45,6 +48,10 @@ public class JavaScriptAcceptingHeaderResponseFilter extends AbstractHeaderRespo
 	@Override
 	protected boolean acceptsWrapped(HeaderItem item)
 	{
-		return item instanceof JavaScriptHeaderItem;
+		return (item instanceof JavaScriptHeaderItem ||
+				item instanceof OnDomReadyHeaderItem ||
+				item instanceof OnLoadHeaderItem     ||
+				item instanceof OnEventHeaderItem
+		);
 	}
 }

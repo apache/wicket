@@ -40,7 +40,7 @@ public class TabbedPanelVisibilityTestPage extends WebPage
 			tabs.add(new DummyTab(i < nbTabsVisible));
 		}
 
-		tabbedPanel = new TabbedPanel("tabbedPanel", tabs);
+		tabbedPanel = new TabbedPanel<>("tabbedPanel", tabs);
 		add(tabbedPanel);
 	}
 

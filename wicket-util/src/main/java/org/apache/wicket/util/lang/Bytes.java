@@ -108,7 +108,7 @@ public final class Bytes extends LongValue
 
 		if (bytes < 0)
 		{
-			throw new IllegalArgumentException("'bytes' cannot be negative.");
+			throw new IllegalArgumentException("'bytes' cannot be negative: " + bytes);
 		}
 	}
 

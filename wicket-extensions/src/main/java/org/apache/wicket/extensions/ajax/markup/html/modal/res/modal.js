@@ -119,7 +119,7 @@
 
 					var dx = 0;
 					var dy = 0;
-					if (Wicket.Browser.isIE() || Wicket.Browser.isGecko) {
+					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 						dx = Wicket.Window.getScrollX();
 						dy = Wicket.Window.getScrollY();
 					}
@@ -137,7 +137,7 @@
 
 					var dx = 0;
 					var dy = 0;
-					if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 						dx = Wicket.Window.getScrollX();
 						dy = Wicket.Window.getScrollY();
 					}
@@ -369,9 +369,9 @@
 			this.bottom = _(idBottom);
 			this.captionText = _(idCaptionText);
 
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				// IE stupid 3px bug - not fixed even in IE7 quirks!
-				if (Wicket.Browser.isIE7() === false || Wicket.Browser.isIEQuirks()) {
+				if (Wicket.Browser.isIEQuirks()) {
 					this.topLeft.style.marginRight = "-3px";
 					this.topRight.style.marginLeft = "-3px";
 					this.bottomLeft.style.marginRight = "-3px";
@@ -382,7 +382,7 @@
 			// HACK - IE doesn't support position:fixed. Gecko does, however for a reason
 			// we need to have background position: absolute, which makes the movement of
 			// the window really jerky if the window stays position: fixed
-			if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 				this.window.style.position = "absolute";
 			}
 
@@ -479,7 +479,7 @@
 			var scTop = 0;
 			var scLeft = 0;
 
-			if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+			if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 				scLeft = Wicket.Window.getScrollX();
 				scTop = Wicket.Window.getScrollY();
 			}
@@ -731,18 +731,16 @@
 				}
 			}, this);
 
-			// preserve old beforeunload handler
-			this.old_onbeforeunload = window.onbeforeunload;
-
 			if (this.settings.unloadConfirmation) {
-				// new beforeunload handler - ask user before reloading window
-				window.onbeforeunload = function() {
-					return "Reloading this page will cause the modal window to disappear.";
-				};
+				Wicket.Event.add(window, 'beforeunload',this.onbeforeunload);
 			}
 
 			// create the mask that covers the background
 			this.createMask();
+		},
+
+		onbeforeunload: function() {
+			return "Reloading this page will cause the modal window to disappear.";
 		},
 
 		adjustOpenWindowZIndexesOnShow: function() {
@@ -828,9 +826,7 @@
 			window.onunload = this.old_onunload;
 			this.old_onunload = null;
 
-			// restore old beforeunload handler
-			window.onbeforeunload = this.old_onbeforeunload;
-			this.old_onbeforeunload = null;
+			Wicket.Event.remove(window, 'beforeunload',this.onbeforeunload);
 
 			// hids and cleanup the mask
 			this.destroyMask();
@@ -842,7 +838,7 @@
 
 			this.adjustOpenWindowsStatusAndZIndexesOnClose();
 
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				// There's a strange focus problem in IE that disables focus on entire page,
 				// unless something focuses an input
 				var e = document.createElement("input");
@@ -906,7 +902,7 @@
 		 * Called when dragging has started.
 		 */
 		onBegin: function(object) {
-			if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIE() || Wicket.Browser.isSafari())) {
+			if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIELessThan11() || Wicket.Browser.isSafari())) {
 				this.revertList = [];
 				Wicket.Iframe.documentFix(document, this.revertList);
 			}
@@ -1168,7 +1164,7 @@
 	 */
 	Wicket.Window.getMarkup = function(idWindow, idClassElement, idCaption, idContent, idTop, idTopLeft, idTopRight, idLeft, idRight, idBottomLeft, idBottomRight, idBottom, idCaptionText, isFrame) {
 		var s =
-				"<div class=\"wicket-modal\" id=\""+idWindow+"\" role=\"dialog\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='background-color:transparent;padding:0px;margin:0px;border-width:0px;position:static'>"+
+				"<div class=\"wicket-modal\" id=\""+idWindow+"\" role=\"dialog\" aria-labelledBy=\""+idCaptionText+"\" style=\"top: 10px; left: 10px; width: 100px;\"><form style='background-color:transparent;padding:0px;margin:0px;border-width:0px;position:static'>"+
 				"<div id=\""+idClassElement+"\">"+
 
 					"<div class=\"w_top_1\">"+
@@ -1197,11 +1193,7 @@
 									"<div class=\"w_content_3\">"+
 			                            "<div class=\"w_content\">";
 					if (isFrame) {
-						s+= "<iframe";
-						if (Wicket.Browser.isIELessThan7()) {
-							s+= " src=\"about:blank\"";
-						}
-						s+= " frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
+						s+= "<iframe frameborder=\"0\" id=\""+idContent+"\" allowtransparency=\"false\" style=\"height: 200px\" class=\"wicket_modal\"></iframe>";
 					} else {
 						s+= "<div id='"+idContent+"' class='w_content_container'></div>";
 					}
@@ -1292,7 +1284,7 @@
 				// HACK - it really sucks that we have to set this to absolute even for gecko.
 				// however background with position:fixed makes the text cursor in textfieds
 				// in modal window disappear
-				if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+				if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
 					e.style.position = "absolute";
 				}
 
@@ -1452,7 +1444,7 @@
 				return;
 			}
 
-			if (Wicket.Browser.isIE() && Wicket.Browser.isIE7() === false) {
+			if (Wicket.Browser.isIELessThan11()) {
 				this.boxes = [];
 				var selects = doc.getElementsByTagName("select");
 				for (var i = 0; i < selects.length; i++) {
@@ -1510,7 +1502,7 @@
 			}
 			// explorer doesn't need this, because for IE disableTabs() is called.
 			// plus in IE this causes problems because it scrolls document		);
-			if (Wicket.Browser.isIE() === false) {
+			if (Wicket.Browser.isIELessThan11() === false) {
 				this.focusRevertList = [];
 				var body = doc.getElementsByTagName("body")[0];
 				for (var i = 0; i < body.childNodes.length; ++i) {
@@ -1548,7 +1540,7 @@
 			if (typeof (this.tabbableTags) === "undefined") {
 				this.tabbableTags = ["A", "BUTTON", "TEXTAREA", "INPUT", "IFRAME", "SELECT"];
 			}
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				this.disabledTabsRevertList = [];
 				for (var j = 0; j < this.tabbableTags.length; j++) {
 					var tagElements = doc.getElementsByTagName(this.tabbableTags[j]);

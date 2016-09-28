@@ -29,7 +29,6 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.IConverter;
@@ -51,7 +50,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	private IModel<? extends List<? extends T>> choices;
 
 	/** The renderer used to generate display/id values for the objects. */
-	private IChoiceRenderer<T> renderer;
+	private IChoiceRenderer<? super T> renderer;
 
 	/**
 	 * Construct.
@@ -120,7 +119,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
-		final IModel<? extends List<? extends T>> choices, final IChoiceRenderer<T> renderer)
+		final IModel<? extends List<? extends T>> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		super(id, model);
 		this.choices = choices;
@@ -156,7 +155,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	 *            The rendering engine
 	 */
 	public AjaxEditableChoiceLabel(final String id, final IModel<T> model,
-		final List<? extends T> choices, final IChoiceRenderer<T> renderer)
+		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		this(id, model, Model.ofList(choices), renderer);
 	}
@@ -168,9 +167,8 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 	protected FormComponent<T> newEditor(final MarkupContainer parent, final String componentId,
 		final IModel<T> model)
 	{
-		IModel<List<? extends T>> choiceModel = new AbstractReadOnlyModel<List<? extends T>>()
+		IModel<List<? extends T>> choiceModel = new IModel<List<? extends T>>()
 		{
-
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -178,7 +176,6 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 			{
 				return choices.getObject();
 			}
-
 		};
 
 		DropDownChoice<T> editor = new DropDownChoice<T>(componentId, model, choiceModel, renderer)
@@ -269,7 +266,7 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 				String displayValue = getDefaultModelObjectAsString();
 				if (renderer != null)
 				{
-					Object displayObject = renderer.getDisplayValue((T)getDefaultModelObject());
+					Object displayObject = renderer.getDisplayValue(getModelObject());
 					Class<?> objectClass = (displayObject == null ? null : displayObject.getClass());
 
 					if ((objectClass != null) && (objectClass != String.class))

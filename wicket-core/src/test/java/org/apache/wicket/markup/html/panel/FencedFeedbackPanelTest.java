@@ -171,6 +171,23 @@ public class FencedFeedbackPanelTest
 
 	}
 
+	@Test
+	public void reAdding()
+	{
+		TestPage page = scope.getTester().startPage(TestPage.class);
+		MarkupContainer container = page.containerFeedback.getParent();
+
+		page.containerFeedback.remove();
+		page.containerFeedback2.remove();
+
+		container.add(page.containerFeedback);
+		page.containerInput.error("error");
+
+		assertTrue(page.containerFeedback.anyMessage());
+		assertFalse(page.formFeedback.anyMessage());
+	}
+
+
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		FencedFeedbackPanel externalFeedback, formFeedback, containerFeedback, containerFeedback2;

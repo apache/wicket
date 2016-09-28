@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.html.navigation.paging;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.html.link.DisabledAttributeLinkBehavior;
 import org.apache.wicket.markup.html.link.Link;
 
 /**
@@ -55,6 +56,8 @@ public class PagingNavigationLink<T> extends Link<T>
 		setAutoEnable(true);
 		this.pageNumber = pageNumber;
 		this.pageable = pageable;
+		
+		add(new DisabledAttributeLinkBehavior());
 	}
 
 	/**
@@ -126,7 +129,7 @@ public class PagingNavigationLink<T> extends Link<T>
 	 * @param page
 	 *            The page
 	 * @return True if this link links to the given page
-	 * @see org.apache.wicket.markup.html.link.PageLink#linksTo(org.apache.wicket.Page)
+	 * @see org.apache.wicket.markup.html.link.Link#linksTo(org.apache.wicket.Page)
 	 */
 	@Override
 	public final boolean linksTo(final Page page)

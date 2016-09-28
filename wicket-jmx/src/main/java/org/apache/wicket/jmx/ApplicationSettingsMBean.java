@@ -17,7 +17,6 @@
 package org.apache.wicket.jmx;
 
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
@@ -31,7 +30,7 @@ public interface ApplicationSettingsMBean
 	 * Gets the access denied page class.
 	 * 
 	 * @return Returns the accessDeniedPage.
-	 * @see IApplicationSettings#setAccessDeniedPage(Class)
+	 * @see org.apache.wicket.settings.ApplicationSettings#getAccessDeniedPage()
 	 */
 	String getAccessDeniedPage();
 
@@ -54,7 +53,7 @@ public interface ApplicationSettingsMBean
 	 * Gets internal error page class.
 	 * 
 	 * @return Returns the internalErrorPage.
-	 * @see IApplicationSettings#setInternalErrorPage(Class)
+	 * @see org.apache.wicket.settings.ApplicationSettings#getInternalErrorPage()
 	 */
 	String getInternalErrorPage();
 
@@ -62,7 +61,7 @@ public interface ApplicationSettingsMBean
 	 * Gets the page expired page class.
 	 * 
 	 * @return Returns the pageExpiredErrorPage.
-	 * @see IApplicationSettings#setPageExpiredErrorPage(Class)
+	 * @see org.apache.wicket.settings.ApplicationSettings#getPageExpiredErrorPage()
 	 */
 	String getPageExpiredErrorPage();
 

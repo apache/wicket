@@ -26,7 +26,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.lang.Classes;
 
 /**
- * A Label component that is used to render an enum value. The value renderered will be the result
+ * A Label component that is used to render an enum value. The value rendered will be the result
  * of a i18n resource lookup of the following form:
  * {@code <value.getClass().getSimpleName()>.<value.name()>}, this format can be changed by
  * overriding {@link #resourceKey(Enum)}
@@ -35,7 +35,7 @@ import org.apache.wicket.util.lang.Classes;
  * @param <T>
  *            enum type
  */
-public class EnumLabel<T extends Enum<T>> extends WebComponent implements IGenericComponent<T>
+public class EnumLabel<T extends Enum<T>> extends WebComponent implements IGenericComponent<T, EnumLabel<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -120,31 +120,4 @@ public class EnumLabel<T extends Enum<T>> extends WebComponent implements IGener
 		// always transform the tag to <span></span> so even labels defined as <span/> render
 		tag.setType(TagType.OPEN);
 	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final void setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final void setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-	}
-
 }

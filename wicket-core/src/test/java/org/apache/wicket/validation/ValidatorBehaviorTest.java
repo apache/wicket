@@ -18,7 +18,6 @@ package org.apache.wicket.validation;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.FeedbackCollector;
 import org.apache.wicket.markup.ComponentTag;
@@ -30,6 +29,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -44,7 +44,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 	 * Tests validators are treated as behaviors
 	 */
 	@Test
-	public void testActAsBehavior()
+	public void actAsBehavior()
 	{
 		TestPage page = new TestPage();
 
@@ -61,11 +61,33 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		assertFalse(tester.getLastResponseAsString().contains("foo=\"bar\""));
 	}
 
+
+	/**
+	 * Tests that disabled validators are not used
+	 * https://issues.apache.org/jira/browse/WICKET-5897
+	 */
+	@Test
+	public void disabledValidator()
+	{
+		TestPage page = new TestPage();
+		page.name.add(new DisabledValidator());
+
+		tester.startPage(page);
+		assertTrue(page.name.isValid());
+
+		FormTester ft = tester.newFormTester("form");
+		ft.setValue("name", "22");
+		ft.submit();
+
+		assertTrue(page.name.isValid());
+	}
+
+
 	/**
 	 * Tests validators are treated as validators
 	 */
 	@Test
-	public void testActAsValidator()
+	public void actAsValidator()
 	{
 		TestPage page = new TestPage();
 
@@ -170,9 +192,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 				error.setMessage("MINIMUM");
 				validatable.error(error);
 			}
-
 		}
-
 	}
 
 	/**
@@ -187,9 +207,9 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		 */
 		public TestPage()
 		{
-			Form<Void> form = new Form<Void>("form");
+			Form<Void> form = new Form<>("form");
 			add(form);
-			name = new TextField<String>("name", Model.of(""));
+			name = new TextField<>("name", Model.of(""));
 			form.add(name);
 		}
 
@@ -199,6 +219,25 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		{
 			return new StringResourceStream(
 				"<form wicket:id='form'><input wicket:id='name' type='text'/></form>");
+		}
+	}
+
+	public static class DisabledValidator extends Behavior implements IValidator<String>
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void validate(IValidatable<String> validatable)
+		{
+			ValidationError error = new ValidationError();
+			error.setMessage("validate() method should not be executed");
+			validatable.error(error);
+		}
+
+		@Override
+		public boolean isEnabled(Component component)
+		{
+			return false;
 		}
 	}
 }

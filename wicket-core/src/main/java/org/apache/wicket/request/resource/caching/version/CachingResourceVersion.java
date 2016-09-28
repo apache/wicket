@@ -19,6 +19,7 @@ package org.apache.wicket.request.resource.caching.version;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
@@ -134,6 +135,11 @@ public class CachingResourceVersion implements IResourceVersion
 		return version;
 	}
 
+	@Override
+	public Pattern getVersionPattern() {
+		return delegate.getVersionPattern();
+	}
+
 	/**
 	 * remove cacheable resource from cache
 	 * 
@@ -151,4 +157,8 @@ public class CachingResourceVersion implements IResourceVersion
 			cache.remove(key);
 		}
 	}
+
+  public void invalidateAll() {
+    cache.clear();
+  }
 }

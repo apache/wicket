@@ -39,7 +39,7 @@ public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRe
 	 * @return the single instance
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <T> IAutoCompleteRenderer<T> instance()
+	public static <T> IAutoCompleteRenderer<T> instance()
 	{
 		return INSTANCE;
 	}

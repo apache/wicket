@@ -25,17 +25,6 @@ import java.security.GeneralSecurityException;
  */
 public class TrivialCrypt extends AbstractCrypt
 {
-	/**
-	 * Constructor
-	 */
-	public TrivialCrypt()
-	{
-		super();
-	}
-
-	/**
-	 * @see org.apache.wicket.util.crypt.AbstractCrypt#crypt(byte[], int)
-	 */
 	@Override
 	protected byte[] crypt(final byte[] input, final int mode) throws GeneralSecurityException
 	{

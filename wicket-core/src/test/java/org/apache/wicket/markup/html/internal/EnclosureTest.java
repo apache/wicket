@@ -21,7 +21,6 @@ import java.io.IOException;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -35,6 +34,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
@@ -175,7 +175,6 @@ public class EnclosureTest extends WicketTestCase
 	private void assertResultPage(final String file) throws IOException
 	{
 		String document = tester.getLastResponse().getDocument();
-		document = document.replaceAll("[1-9]+[.]IFormSubmitListener", "1.IFormSubmitListener");
 		DiffUtil.validatePage(document, getClass(), file, true);
 	}
 
@@ -431,5 +430,59 @@ public class EnclosureTest extends WicketTestCase
 		tester.startPage(new ChildWithDeeperPathInTransparentContainerPage(enclosureChildVisible));
 
 		tester.assertContainsNot(ChildWithDeeperPathInTransparentContainerPage.LABEL_TEXT);
+	}
+	
+	@Test
+	public void nestedEnclousers()
+	{
+		TestPageMarkup p = new TestPageMarkup();
+		p.setPageMarkup("<wicket:enclosure child='labelOuter'>tOuter Enclosure <span wicket:id='labelOuter'/>"
+				+ "<wicket:enclosure>Inner Enclosure <span wicket:id='labelInner' /></wicket:enclosure>"
+				+ "</wicket:enclosure>");
+		
+		p.add(new Label("labelOuter"), new Label("labelInner"));
+		tester.startPage(p);
+	}
+	
+	/**
+	 * Test case for https://issues.apache.org/jira/browse/WICKET-6043
+	 */
+	@Test
+	public void enclosureInsideContainererAndInheritance() throws Exception
+	{
+		tester.startPage(ListViewInContainerPage.class);
+		tester.assertRenderedPage(ListViewInContainerPage.class);
+	}
+	
+	private static class TestPageMarkup extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private String markup;
+
+		public TestPageMarkup()
+		{
+		}
+
+		public TestPageMarkup(String markup)
+		{
+			this.markup = markup;
+		}
+
+		protected String getPageMarkup()
+		{
+			return markup;
+		}
+
+		public void setPageMarkup(String markup)
+		{
+			this.markup = markup;
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream(getPageMarkup());
+		}
+
 	}
 }

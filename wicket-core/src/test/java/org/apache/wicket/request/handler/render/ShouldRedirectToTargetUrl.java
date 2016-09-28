@@ -17,6 +17,7 @@
 package org.apache.wicket.request.handler.render;
 
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.Url;
 
 public class ShouldRedirectToTargetUrl extends AbstractVariations
 {
@@ -55,8 +56,15 @@ public class ShouldRedirectToTargetUrl extends AbstractVariations
 	public boolean getResult()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(null);
-		return renderer.shouldRedirectToTargetUrl(ajax.next(), redirectPolicy.next(),
-				redirectToRender.next(), targetEqualsCurrentUrl.next(), newPageInstance.next(),
-				pageStateless.next(), sessionTemporary.next());
+		renderer.ajax = ajax.current();
+		renderer.redirectPolicy = redirectPolicy.current();
+		renderer.redirectToRender = redirectToRender.current();
+		renderer.newPageInstance = newPageInstance.current();
+		renderer.pageStateless = pageStateless.current();
+		renderer.sessionTemporary = sessionTemporary.current();
+
+
+		return renderer.shouldRedirectToTargetUrl(null, Url.parse("test1"),
+			targetEqualsCurrentUrl.current() ? Url.parse("test1") : Url.parse("test2"));
 	}
 }

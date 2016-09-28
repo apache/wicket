@@ -18,11 +18,14 @@ package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IGenericComponent;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -73,7 +76,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @param <T>
  *            type of model object
  */
-public abstract class Link<T> extends AbstractLink implements ILinkListener, IGenericComponent<T>
+public abstract class Link<T> extends AbstractLink implements IRequestListener, IGenericComponent<T, Link<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -180,11 +183,9 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	 * 
 	 * Called when a link is clicked. The implementation of this method is currently to simply call
 	 * onClick(), but this may be augmented in the future.
-	 * 
-	 * @see ILinkListener
 	 */
 	@Override
-	public final void onLinkClicked()
+	public void onRequest()
 	{
 		// Invoke subclass handler
 		onClick();
@@ -324,7 +325,7 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 	 */
 	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.INTERFACE, new PageParameters());
+		return urlForListener(new PageParameters());
 	}
 
 	/**
@@ -418,30 +419,28 @@ public abstract class Link<T> extends AbstractLink implements ILinkListener, IGe
 		}
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
+	/**
+	 * Creates a {@link Link} based on lambda expressions
+	 *
+	 * @param id
+	 *            the id of the link
+	 * @param onClick
+	 *            the consumer of the clicked link
+	 * @return the {@link Link}
+	 */
+	public static <T> Link<T> onClick(String id, WicketConsumer<Link<T>> onClick)
 	{
-		return (IModel<T>)getDefaultModel();
-	}
+		Args.notNull(onClick, "onClick");
 
-	@Override
-	public final void setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-	}
+		return new Link<T>(id)
+		{
+			private static final long serialVersionUID = 1L;
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
+			@Override
+			public void onClick()
+			{
+				onClick.accept(this);
+			}
+		};
 	}
-
-	@Override
-	public final void setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-	}
-
 }

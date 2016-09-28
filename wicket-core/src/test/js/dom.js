@@ -22,6 +22,7 @@ jQuery(document).ready(function() {
 	"use strict";
 
 	var existingId = 'testElement',
+		existingBlockId = 'testBlockElement',
 		nonExistingId = 'nonExistingElement',
 		iframeId = 'testInDocIFrame',
 		complexElementId = 'complexElement',
@@ -100,15 +101,47 @@ jQuery(document).ready(function() {
 	test("show() an element", function() {
 		var el = Wicket.$(existingId);
 		Wicket.DOM.hide(el);
-		Wicket.DOM.show(el);
+		Wicket.DOM.show(el, '');
 		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
 	});
 
 	test("show() an element by id ", function() {
 		Wicket.DOM.hide(existingId);
-		Wicket.DOM.show(existingId);
+		Wicket.DOM.show(existingId, '');
 		var el = Wicket.$(existingId);
 		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
+	});
+
+	test("toggleClass() - single CSS class", function() {
+		var cssClass = 'testCssClass';
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(true, element.hasClass(cssClass), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+	});
+
+	test("toggleClass() - multiple CSS classes", function() {
+		var cssClass1 = 'testCssClass1';
+		var cssClass2 = 'testCssClass2';
+		var cssClass = cssClass1 + ' ' + cssClass2;
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass1), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(true, element.hasClass(cssClass1), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass);
+		equal(false, element.hasClass(cssClass1), "The element doesn't have the CSS class");
+	});
+
+	test("toggleClass() - switch argument", function() {
+		var cssClass = 'testCssClass';
+		var element = jQuery('#' + existingId);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass, true);
+		equal(true, element.hasClass(cssClass), "The element does have the CSS class");
+		Wicket.DOM.toggleClass(existingId, cssClass, false);
+		equal(false, element.hasClass(cssClass), "The element doesn't have the CSS class");
 	});
 
 	test("(show|hide)Incrementally() an element", function() {
@@ -120,7 +153,7 @@ jQuery(document).ready(function() {
 		Wicket.DOM.showIncrementally(el);
 		equal( el.style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(el);
-		equal( el.style.display, '', "Wicket.DOM.show should set .style.display to ''." );
+		equal( el.style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'." );
 	});
 
 	test("(show|hide)Incrementally() an element by id ", function() {
@@ -131,7 +164,19 @@ jQuery(document).ready(function() {
 		Wicket.DOM.showIncrementally(existingId);
 		equal( Wicket.$(existingId).style.display, 'none', ".style.display should still be 'none'." );
 		Wicket.DOM.showIncrementally(existingId);
-		equal( Wicket.$(existingId).style.display, '', "Wicket.DOM.show should set .style.display to ''." );
+		equal( Wicket.$(existingId).style.display, 'inline', "Wicket.DOM.show should set .style.display to 'inline'." );
+	});
+
+	test("(show|hide)Incrementally() a block element by id ", function() {
+		var elId = existingBlockId;
+		Wicket.DOM.hideIncrementally(elId);
+		equal( Wicket.$(elId).style.display, 'none', "Wicket.DOM.hideIncrementally should set .style.display to 'none'." );
+		Wicket.DOM.hideIncrementally(elId);
+		equal( Wicket.$(elId).style.display, 'none', ".style.display should be 'none'." );
+		Wicket.DOM.showIncrementally(elId);
+		equal( Wicket.$(elId).style.display, 'none', ".style.display should still be 'none'." );
+		Wicket.DOM.showIncrementally(elId);
+		equal( Wicket.$(elId).style.display, 'block', "Wicket.DOM.show should set .style.display to 'block'." );
 	});
 
 	test("hide() an element", function() {

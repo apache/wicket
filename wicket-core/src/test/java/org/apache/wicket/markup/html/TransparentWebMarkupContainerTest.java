@@ -16,20 +16,29 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.hamcrest.Matchers.containsString;
+
+import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.TagTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
@@ -108,14 +117,14 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				return new IPageManagerProvider()
 				{
 					@Override
-					public IPageManager get(IPageManagerContext context)
+					public IPageManager apply(IPageManagerContext context)
 					{
 						return new MockPageManager()
 						{
 							@Override
 							public void touchPage(IManageablePage page)
 							{
-								page = (IManageablePage)WicketObjects.cloneObject(page);
+								page = WicketObjects.cloneObject(page);
 								super.touchPage(page);
 							}
 						};
@@ -129,6 +138,144 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		wicketTester.clickLink("link", true);
 		wicketTester.destroy();
 	}
+
+
+	/**
+	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
+	 * TransparentWebMarkupContainers is updated. This particular test case is caused by Wicket's
+	 * insertion of a TransparentWebMarkupContainer automatically due to a {@code src} attribute
+	 * that might need rewriting.
+	 */
+	@Test
+	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow()
+	{
+		tester.startPage(SingleNestedTransparentContainerPage.class);
+
+		// the page renders normally using normal web requests
+		tester.assertRenderedPage(SingleNestedTransparentContainerPage.class);
+
+		// without WICKET-5898 fixed the statement below causes a StackOverflowError
+		tester.clickLink("link", true);
+		tester.assertComponentOnAjaxResponse("label");
+	}
+
+	/**
+	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
+	 * TransparentWebMarkupContainers is updated. This particular test case is caused by having two
+	 * TransparentWebMarkupContainers nested and trying to update a label that was added to the
+	 * outer TWMC.
+	 */
+	@Test
+	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow2()
+	{
+		tester.startPage(DoubleNestedTransparentContainerPage.class);
+
+		// the page renders normally using normal web requests
+		tester.assertRenderedPage(DoubleNestedTransparentContainerPage.class);
+
+		// without WICKET-5898 fixed the statement below causes a StackOverflowError
+		tester.clickLink("link", true);
+		tester.assertComponentOnAjaxResponse("label");
+	}
+
+	/**
+	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
+	 * TransparentWebMarkupContainers is updated. This particular test case is caused by having two
+	 * TransparentWebMarkupContainers nested, and where a TWMC exist inside a sibling web markup
+	 * container and trying to update a label that was added to the outer TWMC.
+	 */
+	@Test
+	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow3()
+	{
+		tester.startPage(DoubleNestedTransparentContainerWithSiblingTransparentContainerPage.class);
+
+		// the page renders normally using normal web requests
+		tester.assertRenderedPage(DoubleNestedTransparentContainerWithSiblingTransparentContainerPage.class);
+
+		// without WICKET-5898 fixed the statement below causes a StackOverflowError
+		tester.clickLink("link", true);
+		tester.assertComponentOnAjaxResponse("label");
+	}
+
+	/**
+	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
+	 * TransparentWebMarkupContainers is updated. This particular test case is caused by having
+	 * introduce automatic transparent containers inside some link components due to a
+	 * {@code <img src="">} tag inside the link tags, and trying to update a label that was added to
+	 * the outer TWMC.
+	 */
+	@Test
+	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow4()
+	{
+		tester.startPage(TransparentContainerWithAutoTransparentContainerPage.class);
+
+		// the page renders normally using normal web requests
+		tester.assertRenderedPage(TransparentContainerWithAutoTransparentContainerPage.class);
+
+		// without WICKET-5898 fixed the statement below causes a StackOverflowError
+		tester.clickLink("link", true);
+		tester.assertComponentOnAjaxResponse("label");
+	}
+
+	/**
+	 * Tests the WICKET-5898 issue of triggering a StackOverflowError when a component inside nested
+	 * TransparentWebMarkupContainers is updated. This particular test case is caused by having
+	 * manually added transparent containers inside some link components, and trying to update a
+	 * label that was added to the outer TWMC.
+	 */
+	@Test
+	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow5()
+	{
+		tester.startPage(TransparentContainerWithManualTransparentContainerPage.class);
+
+		// the page renders normally using normal web requests
+		tester.assertRenderedPage(TransparentContainerWithManualTransparentContainerPage.class);
+
+		// without WICKET-5898 fixed the statement below causes a StackOverflowError
+		tester.clickLink("link", true);
+		tester.assertComponentOnAjaxResponse("label");
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5941
+	 * 
+	 * Headers not rendered for components inside TransparentWebMarkupContainer on ajax update
+	 */
+	@Test
+	public void updateEmbeddedAjaxComponent() throws Exception
+	{
+		tester.startPage(TestEmbeddedAjaxComponet.class);
+		tester.clickLink("ajaxLink", true);
+		
+		TagTester scriptTag = TagTester.createTagByAttribute(
+			tester.getLastResponseAsString(), "header-contribution");
+		
+		//check if our response contains headers
+		assertNotNull(scriptTag);
+	}
+	
+	@Test
+	public void nestedTransparentContainer() throws Exception
+	{
+		tester.startPage(TestEmbeddedTransparentMarkupContainer.class);
+		tester.assertRenderedPage(TestEmbeddedTransparentMarkupContainer.class);
+		
+		final Page page = tester.getLastRenderedPage();
+		final Component label = page.get("label");
+		
+		assertEquals(TestEmbeddedTransparentMarkupContainer.LABEL_MARKUP,
+			label.getMarkup().toString(true));
+	}
+
+    /**
+     * https://issues.apache.org/jira/browse/WICKET-6219
+     */
+    @Test
+    public void shouldAllowAFragmentIdConflictingToASibilingTagWicketId() throws Exception
+    {
+            tester.startPage(SubPageWithAFragment.class);
+            assertThat(tester.getLastResponseAsString(), containsString("content"));
+    }
 
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -224,6 +371,119 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				"		<wicket:message key=\"null\" />" + //
 				"	</div>" + //
 				"</body></html>");
+		}
+	}
+	
+	public static class TestEmbeddedAjaxComponet extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** */
+		public TestEmbeddedAjaxComponet()
+		{
+			final Component container;
+			add(container = new TransparentWebMarkupContainer("container")
+					.setOutputMarkupId(true));
+			add(new AjaxLink<Void>("ajaxLink"){
+
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					target.add(container);
+				}
+				
+			});
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+				"<html><body>" + //
+				"	<div wicket:id=\"container\">" + //
+				"		<a wicket:id=\"ajaxLink\"></a>" + //
+				"	</div>" + //
+				"</body></html>");
+		}
+	}
+	
+	public static class TestEmbeddedTransparentMarkupContainer extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+		
+		public static final String LABEL_MARKUP = "<span wicket:id=\"label\"></span>";
+		
+		/** */
+		public TestEmbeddedTransparentMarkupContainer()
+		{
+			add(new TransparentWebMarkupContainer("outer"));
+			add(new TransparentWebMarkupContainer("inner"));
+			add(new Label("label"));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+				"<html><body>" + //
+				"	<div wicket:id=\"outer\">" + //
+				"		<div wicket:id=\"inner\">" + //
+				"			" + LABEL_MARKUP + //
+				"		</div>" + //
+				"	</div>" + //
+				"</body></html>");
+		}
+	}
+	public static class PageWithAChildInsideATransparentContainer extends WebPage
+			implements
+				IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		public PageWithAChildInsideATransparentContainer(PageParameters parameters)
+		{
+			super(parameters);
+			add(new TransparentWebMarkupContainer("wrapper"));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+					"<html><body>" + //
+					" <div wicket:id=\"wrapper\">" + //
+					"	<wicket:child/>" + //
+					" </div>" + //
+					"</body></html>");
+		}
+	}
+	public static class SubPageWithAFragment extends PageWithAChildInsideATransparentContainer
+	{
+		private static final long serialVersionUID = 1L;
+
+		public SubPageWithAFragment(PageParameters parameters)
+		{
+			super(parameters);
+			Fragment fragment = new Fragment("header", "header", this);
+			add(fragment);
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+		{
+			if (PageWithAChildInsideATransparentContainer.class.equals(containerClass))
+				return super.getMarkupResourceStream(container, containerClass);
+			return new StringResourceStream("" + //
+					"<html><body>" + //
+					"<wicket:extend>" + //
+					"	<div wicket:id=\"header\"></div>" + //
+					"	<wicket:fragment wicket:id=\"header\">content</wicket:fragment>" + //
+					"</wicket:extend>" + //
+					"</body></html>");
 		}
 	}
 }

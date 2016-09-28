@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 
 /**
@@ -36,12 +38,12 @@ public class Clock extends Label
 	 * 
 	 * @param id
 	 *            Component id
-	 * @param tz
+	 * @param zoneId
 	 *            Timezone
 	 */
-	public Clock(String id, TimeZone tz)
+	public Clock(String id, ZoneId zoneId)
 	{
-		super(id, new ClockModel(tz));
+		super(id, new ClockModel(zoneId));
 
 	}
 
@@ -50,26 +52,25 @@ public class Clock extends Label
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private static class ClockModel extends AbstractReadOnlyModel<String>
+	private static class ClockModel implements IModel<String>
 	{
-		private final DateFormat df;
+		private final ZoneId zoneId;
 
 		/**
-		 * @param tz
+		 * @param zoneId
 		 */
-		public ClockModel(TimeZone tz)
+		public ClockModel(ZoneId zoneId)
 		{
-			df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.LONG);
-			df.setTimeZone(tz);
+			this.zoneId = zoneId;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
-		 */
 		@Override
 		public String getObject()
 		{
-			return df.format(new Date());
+			DateTimeFormatter formatter = DateTimeFormatter
+					.ofLocalizedDateTime(FormatStyle.FULL)
+					.withZone(zoneId);
+			return formatter.format(LocalDateTime.now().atOffset(ZoneOffset.UTC));
 		}
 	}
 }

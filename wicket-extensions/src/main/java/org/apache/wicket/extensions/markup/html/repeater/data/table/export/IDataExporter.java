@@ -71,6 +71,6 @@ public interface IDataExporter
 	 *      The {@link OutputStream} to which to write the exported data.
 	 * @throws IOException If an error occurs.
 	 */
-	<T> void exportData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?, ?>> columns, OutputStream outputStream)
+	<T> void exportData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?>> columns, OutputStream outputStream)
 		throws IOException;
 }

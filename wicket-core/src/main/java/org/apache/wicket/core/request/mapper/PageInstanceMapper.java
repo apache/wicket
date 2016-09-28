@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -86,11 +85,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 
 					provider.setPageSource(getContext());
 
-					// listener interface
-					RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
-
-					return new ListenerInterfaceRequestHandler(provider, listenerInterface,
-						componentInfo.getBehaviorId());
+					return new ListenerInterfaceRequestHandler(provider, componentInfo.getBehaviorId());
 				}
 			}
 		}
@@ -117,18 +112,15 @@ public class PageInstanceMapper extends AbstractComponentMapper
 			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
 			IRequestablePage page = handler.getPage();
 			String componentPath = handler.getComponentPath();
-			RequestListenerInterface listenerInterface = handler.getListenerInterface();
 
 			Integer renderCount = null;
-			if (listenerInterface.isIncludeRenderCount())
+			if (handler.includeRenderCount())
 			{
 				renderCount = page.getRenderCount();
 			}
 
 			PageInfo pageInfo = new PageInfo(page.getPageId());
-			ComponentInfo componentInfo = new ComponentInfo(renderCount,
-				requestListenerInterfaceToString(listenerInterface), componentPath,
-				handler.getBehaviorIndex());
+			ComponentInfo componentInfo = new ComponentInfo(renderCount, componentPath, handler.getBehaviorIndex());
 			info = new PageComponentInfo(pageInfo, componentInfo);
 		}
 

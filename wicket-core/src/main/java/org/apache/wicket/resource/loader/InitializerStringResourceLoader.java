@@ -41,9 +41,6 @@ import org.slf4j.LoggerFactory;
  */
 public class InitializerStringResourceLoader extends ComponentStringResourceLoader
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(InitializerStringResourceLoader.class);
-
 	private List<IInitializer> initializers;
 
 	/**

@@ -16,16 +16,11 @@
  */
 package org.apache.wicket.mock;
 
-import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.Session;
-import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
-import org.apache.wicket.session.ISessionStore;
-import org.apache.wicket.util.IProvider;
 
 /**
  * {@link WebApplication} used for testing.
@@ -71,28 +66,10 @@ public class MockApplication extends WebApplication
 		super.internalInit();
 
 		// set page and session store providers
-		setSessionStoreProvider(new MockSessionStoreProvider());
-		setPageManagerProvider(new MockPageManagerProvider());
+		setSessionStoreProvider(MockSessionStore::new);
+		setPageManagerProvider((pageManagerContext) -> new MockPageManager());
 
 		// for test cases we usually want stable resource names
 		getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);
-	}
-
-	private static class MockSessionStoreProvider implements IProvider<ISessionStore>
-	{
-		@Override
-		public ISessionStore get()
-		{
-			return new MockSessionStore();
-		}
-	}
-
-	private static class MockPageManagerProvider implements IPageManagerProvider
-	{
-		@Override
-		public IPageManager get(IPageManagerContext pageManagerContext)
-		{
-			return new MockPageManager();
-		}
 	}
 }

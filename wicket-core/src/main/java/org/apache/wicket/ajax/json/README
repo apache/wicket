@@ -1,5 +1,10 @@
 All JSON** classes are copied from https://github.com/douglascrockford/JSON-java.
-Last update: May 18 2012
+Last update: February 18 2014
+
+IMPORTANT: JSONObject#map field is manually changed to LinkedHashMap (from HashMap) to keep
+the order of the ajax attributes consistent for WicketTester based unit tests
+
+
 
 Json** are our custom.
 JsonFunction is borrowed from https://github.com/ivaynberg/wicket-select2.

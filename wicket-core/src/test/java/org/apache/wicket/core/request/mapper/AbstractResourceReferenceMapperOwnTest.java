@@ -19,6 +19,7 @@ package org.apache.wicket.core.request.mapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.resource.ResourceUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ public class AbstractResourceReferenceMapperOwnTest extends Assert
 	public void testEscapeAttributesSeparator() throws Exception
 	{
 		AbstractResourceReferenceMapper mapper = new Mapper();
-		CharSequence escaped = mapper.escapeAttributesSeparator("my-style~is~~cool");
+		CharSequence escaped = ResourceUtil.escapeAttributesSeparator("my-style~is~~cool");
 		assertEquals("my~style~~is~~~~cool", escaped.toString());
 	}
 
@@ -39,7 +40,7 @@ public class AbstractResourceReferenceMapperOwnTest extends Assert
 	public void testUnescapeAttributesSeparator() throws Exception
 	{
 		AbstractResourceReferenceMapper mapper = new Mapper();
-		CharSequence escaped = mapper.unescapeAttributesSeparator("my~style~~is~~~~cool");
+		CharSequence escaped = ResourceUtil.unescapeAttributesSeparator("my~style~~is~~~~cool");
 		assertEquals("my-style~is~~cool", escaped.toString());
 	}
 

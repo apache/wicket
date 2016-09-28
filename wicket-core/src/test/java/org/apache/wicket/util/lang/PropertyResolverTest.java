@@ -30,12 +30,17 @@ import java.util.Vector;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver.AbstractGetAndSet;
+import org.apache.wicket.core.util.lang.PropertyResolver.CachingPropertyLocator;
+import org.apache.wicket.core.util.lang.PropertyResolver.DefaultPropertyLocator;
+import org.apache.wicket.core.util.lang.PropertyResolver.IGetAndSet;
+import org.apache.wicket.core.util.lang.PropertyResolver.IPropertyLocator;
 import org.apache.wicket.core.util.lang.PropertyResolverConverter;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.AbstractConverter;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +51,7 @@ import org.junit.Test;
  */
 public class PropertyResolverTest extends WicketTestCase
 {
+
 	private static final PropertyResolverConverter CONVERTER = new PropertyResolverConverter(
 		new ConverterLocator(), Locale.US);
 
@@ -599,8 +605,8 @@ public class PropertyResolverTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * 
 		 */
+		@SuppressWarnings("unused")
 		public String testValue = "vector";
 	}
 
@@ -629,6 +635,7 @@ public class PropertyResolverTest extends WicketTestCase
 	{
 		private int value;
 
+		@SuppressWarnings("unused")
 		public String getValue()
 		{
 			return String.valueOf(value);
@@ -738,5 +745,65 @@ public class PropertyResolverTest extends WicketTestCase
 
 		Object actual = converter.convert(date, Long.class);
 		assertEquals(date.getTime(), actual);
+	}
+	
+	/**
+	 * WICKET-5623 custom properties
+	 */
+	@Test
+	public void custom() {
+		Document document = new Document();
+		document.setType("type");
+		document.setProperty("string", "string");
+		
+		Document nestedCustom = new Document();
+		nestedCustom.setProperty("string", "string2");
+		document.setProperty("nested", nestedCustom);
+		
+		PropertyResolver.setLocator(tester.getApplication(), new CachingPropertyLocator(new CustomGetAndSetLocator()));
+		
+		assertEquals("type", PropertyResolver.getValue("type", document));
+		assertEquals("string", PropertyResolver.getValue("string", document));
+		assertEquals("string2", PropertyResolver.getValue("nested.string", document));
+	}
+	
+	class CustomGetAndSetLocator implements IPropertyLocator {
+
+		private IPropertyLocator locator = new DefaultPropertyLocator();
+		
+		@Override
+		public IGetAndSet get(Class<?> clz, String exp) {
+			// first try default properties
+			IGetAndSet getAndSet = locator.get(clz, exp);
+			if (getAndSet == null && Document.class.isAssignableFrom(clz)) {
+				// fall back to document properties
+				getAndSet = new DocumentPropertyGetAndSet(exp);
+			}
+			return getAndSet;
+		}
+		
+		public class DocumentPropertyGetAndSet extends AbstractGetAndSet {
+
+			private String name;
+
+			public DocumentPropertyGetAndSet(String name) {
+				this.name = name;
+			}
+
+			@Override
+			public Object getValue(Object object) {
+				return ((Document) object).getProperty(name);
+			}
+
+			@Override
+			public Object newValue(Object object) {
+				return new Document();
+			}
+
+			@Override
+			public void setValue(Object object, Object value, PropertyResolverConverter converter) {
+				((Document) object).setProperty(name, value);
+			}
+		}
 	}
 }

@@ -29,12 +29,12 @@ public abstract class AbstractVariations
 
 	public void nextVariation()
 	{
-		last().nextVariation();
+		last().next();
 	}
 
 	protected void toString(StringBuilder sb, String label, VariationIterator<?> iterator)
 	{
-		sb.append(label).append('=').append(iterator.next()).append(',');
+		sb.append(label).append('=').append(iterator.current()).append(',');
 	}
 
 }

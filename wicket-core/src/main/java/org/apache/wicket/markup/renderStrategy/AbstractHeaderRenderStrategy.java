@@ -54,7 +54,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 		String className = System.getProperty("Wicket_HeaderRenderStrategy");
 		if (className != null)
 		{
-			Class<?> clazz = null;
+			Class<?> clazz;
 			try
 			{
 				clazz = Application.get()
@@ -67,15 +67,7 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 					return (IHeaderRenderStrategy)clazz.newInstance();
 				}
 			}
-			catch (ClassNotFoundException ex)
-			{
-				// ignore
-			}
-			catch (InstantiationException ex)
-			{
-				// ignore
-			}
-			catch (IllegalAccessException ex)
+			catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex)
 			{
 				// ignore
 			}

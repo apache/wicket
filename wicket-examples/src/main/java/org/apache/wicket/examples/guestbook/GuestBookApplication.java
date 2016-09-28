@@ -26,17 +26,6 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class GuestBookApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor
-	 */
-	public GuestBookApplication()
-	{
-
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class< ? extends Page> getHomePage()
 	{

@@ -17,7 +17,6 @@
 package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
@@ -48,32 +47,6 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	}
 
 	/**
-	 * Converts the specified listener interface to String.
-	 *
-	 * @param listenerInterface
-	 * @return listenerInterface name as string
-	 */
-	protected String requestListenerInterfaceToString(RequestListenerInterface listenerInterface)
-	{
-		Args.notNull(listenerInterface, "listenerInterface");
-
-		return getContext().requestListenerInterfaceToString(listenerInterface);
-	}
-
-	/**
-	 * Creates listener interface from the specified string
-	 *
-	 * @param interfaceName
-	 * @return listener interface
-	 */
-	protected RequestListenerInterface requestListenerInterfaceFromString(String interfaceName)
-	{
-		Args.notEmpty(interfaceName, "interfaceName");
-
-		return getContext().requestListenerInterfaceFromString(interfaceName);
-	}
-
-	/**
 	 * Extracts the {@link PageComponentInfo} from the URL. The {@link PageComponentInfo} is encoded
 	 * as the very first query parameter and the parameter consists of name only (no value).
 	 *
@@ -83,25 +56,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 */
 	protected PageComponentInfo getPageComponentInfo(final Url url)
 	{
-		if (url == null)
-		{
-			throw new IllegalStateException("Argument 'url' may not be null.");
-		}
-		else
-		{
-			for (QueryParameter queryParameter : url.getQueryParameters())
-			{
-				if (Strings.isEmpty(queryParameter.getValue()))
-				{
-					PageComponentInfo pageComponentInfo = PageComponentInfo.parse(queryParameter.getName());
-					if (pageComponentInfo != null)
-					{
-						return pageComponentInfo;
-					}
-				}
-			}
-		}
-		return null;
+		return MapperUtils.getPageComponentInfo(url);
 	}
 
 	/**
@@ -134,9 +89,28 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	 */
 	protected Class<? extends IRequestablePage> getPageClass(String name)
 	{
-		Args.notEmpty(name, "name");
+		String cleanedClassName = cleanClassName(name);
+		return WicketObjects.resolveClass(cleanedClassName);
+	}
 
-		return WicketObjects.resolveClass(name);
+	/**
+	 * Cleans the class name from any extra information that may be there.
+	 *
+	 * @param className
+	 *              The raw class name parsed from the url
+	 * @return The cleaned class name
+	 */
+	protected String cleanClassName(String className)
+	{
+		Args.notEmpty(className, "className");
+
+		if (Strings.indexOf(className, ';') > -1)
+		{
+			// remove any path parameters set manually by the user. WICKET-5500
+			className = Strings.beforeFirst(className, ';');
+		}
+
+		return className;
 	}
 
 	/**
@@ -148,8 +122,7 @@ public abstract class AbstractComponentMapper extends AbstractMapper implements 
 	@Override
 	protected void removeMetaParameter(final Url urlCopy)
 	{
-		String pageComponentInfoCandidate = urlCopy.getQueryParameters().get(0).getName();
-		if (PageComponentInfo.parse(pageComponentInfoCandidate) != null)
+		if (MapperUtils.parsePageComponentInfoParameter(urlCopy.getQueryParameters().get(0)) != null)
 		{
 			urlCopy.getQueryParameters().remove(0);
 		}

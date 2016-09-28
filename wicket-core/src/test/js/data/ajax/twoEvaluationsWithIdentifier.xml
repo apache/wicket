@@ -15,4 +15,4 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<ajax-response><evaluate>(function(){notify|context.attrs.counter++; ok(true, 'Evaluation1 with identifier must be executed!'); equal(typeof(notify), 'function', 'The passed identifier1 must be a function'); notify();})();(function(){context.attrs.counter++;ok(true, 'Evaluation2 without identifier must be executed!');})();(function(){notify|context.attrs.counter++;ok(true, 'Evaluation3 with identifier must be executed!'); equal(typeof(notify), 'function', 'The passed identifier3 must be a function'); notify();})();</evaluate></ajax-response>
+<ajax-response><evaluate>(function(){notify|ok(true, 'Evaluation1 with identifier must be executed!'); equal(typeof(notify), 'function', 'The passed identifier1 must be a function'); notify();})();(function(){ok(true, 'Evaluation2 without identifier must be executed!');})();(function(){notify|start();ok(true, 'Evaluation3 with identifier must be executed!'); equal(typeof(notify), 'function', 'The passed identifier3 must be a function'); notify();})();</evaluate></ajax-response>

@@ -16,15 +16,15 @@
  */
 package org.apache.wicket.model;
 
-import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.lambda.WicketSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
  * Model that makes working with detachable models a breeze. LoadableDetachableModel holds a
- * temporary, transient model object, that is set when {@link #getObject()} is called by
- * calling abstract method 'load', and that will be reset/ set to null on {@link #detach()}.
+ * temporary, transient model object, that is set when {@link #getObject()} is called by calling
+ * abstract method 'load', and that will be reset/ set to null on {@link #detach()}.
  * 
  * A usage example:
  * 
@@ -52,22 +52,30 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class LoadableDetachableModel<T> implements IModel<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	/** Logger. */
 	private static final Logger log = LoggerFactory.getLogger(LoadableDetachableModel.class);
 
-	/** keeps track of whether this model is attached or detached */
-	private transient boolean attached = false;
+	/** Internal state of the LoadableDetachableModel. */
+	private enum InternalState {
+		DETACHED, ATTACHING, ATTACHED;
+
+		@Override
+		public String toString()
+		{
+			return name().toLowerCase();
+		}
+	}
+
+	/** Keeps track of whether this model is attached or detached */
+	private transient InternalState state = InternalState.DETACHED;
 
 	/** temporary, transient object. */
 	private transient T transientModelObject;
 
 	/**
-	 * Construct.
+	 * Default constructor, constructs the model in detached state with no data associated with the
+	 * model.
 	 */
 	public LoadableDetachableModel()
 	{
@@ -75,7 +83,8 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 
 	/**
 	 * This constructor is used if you already have the object retrieved and want to wrap it with a
-	 * detachable model.
+	 * detachable model. Constructs the model in attached state. Calls to {@link #getObject()} will
+	 * return {@code object} until {@link #detach()} is called.
 	 * 
 	 * @param object
 	 *            retrieved instance of the detachable object
@@ -83,16 +92,14 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	public LoadableDetachableModel(T object)
 	{
 		this.transientModelObject = object;
-		attached = true;
+		state = InternalState.ATTACHED;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
 	public void detach()
 	{
-		if (attached)
+		// even if LDM is in partial attached state (ATTACHING) it should be detached
+		if (state != null && state != InternalState.DETACHED)
 		{
 			try
 			{
@@ -100,32 +107,30 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 			}
 			finally
 			{
-				attached = false;
+				state = InternalState.DETACHED;
 				transientModelObject = null;
 
-				log.debug("removed transient object for {}, requestCycle {}", this,
-					RequestCycle.get());
+				log.debug("removed transient object for '{}'", this);
 			}
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public final T getObject()
 	{
-		if (!attached)
+		if (state == null || state == InternalState.DETACHED)
 		{
-			attached = true;
+			// prevent infinite attachment loops
+			state = InternalState.ATTACHING;
+
 			transientModelObject = load();
 
 			if (log.isDebugEnabled())
 			{
-				log.debug("loaded transient object " + transientModelObject + " for " + this +
-					", requestCycle " + RequestCycle.get());
+				log.debug("loaded transient object '{}' for '{}'", transientModelObject, this);
 			}
 
+			state = InternalState.ATTACHED;
 			onAttach();
 		}
 		return transientModelObject;
@@ -138,18 +143,18 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	 */
 	public final boolean isAttached()
 	{
-		return attached;
+		return state == InternalState.ATTACHED;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
-	 StringBuilder sb = new StringBuilder(super.toString());
-		sb.append(":attached=").append(attached).append(":tempModelObject=[").append(
-			this.transientModelObject).append("]");
+		StringBuilder sb = new StringBuilder(super.toString());
+		sb.append(":attached=")
+			.append(isAttached())
+			.append(":tempModelObject=[")
+			.append(this.transientModelObject)
+			.append(']');
 		return sb.toString();
 	}
 
@@ -176,7 +181,6 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	{
 	}
 
-
 	/**
 	 * Manually loads the model with the specified object. Subsequent calls to {@link #getObject()}
 	 * will return {@code object} until {@link #detach()} is called.
@@ -187,8 +191,28 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	@Override
 	public void setObject(final T object)
 	{
-		attached = true;
+		state = InternalState.ATTACHED;
 		transientModelObject = object;
 	}
+	
+	/**
+	 * Create a {@link LoadableDetachableModel} for the given supplier.
+	 *
+	 * @param <T>
+	 * @param getter Used for the getObject() method.
+	 * @return Model
+	 */
+	public static <T> IModel<T> of(WicketSupplier<T> getter)
+	{
+		return new LoadableDetachableModel<T>()
+		{
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			protected T load()
+			{
+				return getter.get();
+			}
+		};
+	}
 }

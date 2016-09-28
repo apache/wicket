@@ -23,8 +23,11 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
+import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
+import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +46,8 @@ import org.slf4j.LoggerFactory;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @see #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see #onError(org.apache.wicket.ajax.AjaxRequestTarget, RuntimeException)
  */
 public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavior
 {
@@ -143,9 +148,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			formComponent.validate();
 			if (formComponent.isValid())
 			{
-				formComponent.valid();
 				if (getUpdateModel())
 				{
+					formComponent.valid();
 					formComponent.updateModel();
 				}
 
@@ -161,11 +166,15 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		catch (RuntimeException e)
 		{
 			onError(target, e);
-
 		}
+		formComponent.updateAutoLabels(target);
 	}
 
 	/**
+	 * Gives the control to the application to decide whether the form component model should
+	 * be updated automatically or not. Make sure to call {@link org.apache.wicket.markup.html.form.FormComponent#valid()}
+	 * additionally in case the application want to update the model manually.
+	 *
 	 * @return true if the model of form component should be updated, false otherwise
 	 */
 	protected boolean getUpdateModel()
@@ -196,10 +205,10 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	/**
 	 * Called to handle any error resulting from updating form component. Errors thrown from
 	 * {@link #onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)} will not be caught here.
-	 * 
+	 *
 	 * The RuntimeException will be null if it was just a validation or conversion error of the
 	 * FormComponent
-	 * 
+	 *
 	 * @param target
 	 *            the current request handler
 	 * @param e
@@ -211,5 +220,67 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 		{
 			throw e;
 		}
+	}
+
+	/**
+	 * Creates an {@link AjaxFormComponentUpdatingBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onUpdate
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxFormComponentUpdatingBehavior}
+	 */
+	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName, WicketConsumer<AjaxRequestTarget> onUpdate)
+	{
+		Args.notNull(onUpdate, "onUpdate");
+
+		return new AjaxFormComponentUpdatingBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onUpdate.accept(target);
+			}
+		};
+	}
+
+	/**
+	 * Creates an {@link AjaxFormComponentUpdatingBehavior} based on lambda expressions
+	 * 
+	 * @param eventName
+	 *            the event name
+	 * @param onUpdate
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link RuntimeException}
+	 * @return the {@link AjaxFormComponentUpdatingBehavior}
+	 */
+	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
+	                                                         WicketConsumer<AjaxRequestTarget> onUpdate,
+	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	{
+		Args.notNull(onUpdate, "onUpdate");
+		Args.notNull(onError, "onError");
+
+		return new AjaxFormComponentUpdatingBehavior(eventName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onUpdate.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, RuntimeException e)
+			{
+				onError.accept(target, e);
+			}
+		};
 	}
 }

@@ -27,7 +27,7 @@ import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.filter.RootMarkupFilter;
-import org.apache.wicket.settings.IMarkupSettings;
+import org.apache.wicket.settings.MarkupSettings;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @see IMarkupFilter
  * @see MarkupFactory
- * @see IMarkupSettings
+ * @see MarkupSettings
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
@@ -57,6 +57,8 @@ public abstract class AbstractMarkupParser
 	public static final Pattern CONDITIONAL_COMMENT_OPENING = Pattern.compile("(s?)^[^>]*?<!--\\[if.*?\\]>(-->)?(<!.*?-->)?");
 
 	private static final Pattern PRE_BLOCK = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
+	private static final Pattern SPACE_OR_TAB_PATTERN = Pattern.compile("[ \\t]+");
+	private static final Pattern NEW_LINE_PATTERN = Pattern.compile("( ?[\\r\\n] ?)+");
 
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
@@ -68,7 +70,7 @@ public abstract class AbstractMarkupParser
 	private final Markup markup;
 
 	/** Temporary variable: Application.get().getMarkupSettings() */
-	private final IMarkupSettings markupSettings;
+	private final MarkupSettings markupSettings;
 
 	private final List<IMarkupFilter> filters;
 
@@ -380,8 +382,8 @@ public abstract class AbstractMarkupParser
 			boolean matched = m.find();
 			String nonPre = matched ? rawMarkup.substring(lastend, m.start())
 				: rawMarkup.substring(lastend);
-			nonPre = nonPre.replaceAll("[ \\t]+", " ");
-			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
+			nonPre = SPACE_OR_TAB_PATTERN.matcher(nonPre).replaceAll(" ");
+			nonPre = NEW_LINE_PATTERN.matcher(nonPre).replaceAll("\n");
 
 			// Don't create a StringBuilder if we don't actually need one.
 			// This optimizes the trivial common case where there is no <pre>

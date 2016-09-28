@@ -16,21 +16,29 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.apache.wicket.util.resource.ResourceUtils.MIN_POSTFIX_DEFAULT_AS_EXTENSION;
+
 import java.util.Locale;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.resource.ResourceUtil;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
+import org.apache.wicket.util.resource.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is a ResourceReference that knows how to find and serve resources located in the
- * Java package (i.e. next to the class files).
+ * This is a ResourceReference that knows how to find and serve resources located in the Java
+ * package (i.e. next to the class files).
+ * 
+ * @author Tobias Soloschenko
  */
 public class PackageResourceReference extends ResourceReference
 {
@@ -44,18 +52,9 @@ public class PackageResourceReference extends ResourceReference
 	private transient ConcurrentMap<UrlAttributes, UrlAttributes> urlAttributesCacheMap;
 
 	/**
-	 * Cache for existence of minified version of the resource to avoid repetitive calls
-	 * to org.apache.wicket.util.resource.locator.IResourceStreamLocator#locate() and
-	 * #getMinifiedName().
+	 * Reads the resource buffered - the content is copied into memory
 	 */
-	private static final ConcurrentMap<PackageResourceReference, String> MINIFIED_NAMES_CACHE
-			= Generics.newConcurrentHashMap();
-
-	/**
-	 * A constant used to indicate that there is no minified version of the resource.
-	 */
-	// WARNING: always compare by identity!
-	private static final String NO_MINIFIED_NAME = new String();
+	private boolean readBuffered = true;
 
 	/**
 	 * Construct.
@@ -113,21 +112,37 @@ public class PackageResourceReference extends ResourceReference
 
 		final PackageResource resource;
 
+		RequestCycle requestCycle = RequestCycle.get();
+		UrlAttributes urlAttributes = null;
+		if (requestCycle != null)
+		{
+			//resource attributes (locale, style, variation) might be encoded in the URL
+			final Url url = requestCycle.getRequest().getUrl();
+			urlAttributes = ResourceUtil.decodeResourceReferenceAttributes(url);
+		}
+
+		final String currentVariation = getCurrentVariation(urlAttributes);
+		final String currentStyle = getCurrentStyle(urlAttributes);
+		final Locale currentLocale = getCurrentLocale(urlAttributes);
+		final Class<?> scope = getScope();
+		final String name = getName();
+
 		if (CSS_EXTENSION.equals(extension))
 		{
-			resource = new CssPackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation());
+			resource = new CssPackageResource(scope, name, currentLocale,
+					currentStyle, currentVariation);
 		}
 		else if (JAVASCRIPT_EXTENSION.equals(extension))
 		{
-			resource = new JavaScriptPackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation());
+			resource = new JavaScriptPackageResource(scope, name, currentLocale,
+					currentStyle, currentVariation);
 		}
 		else
 		{
-			resource = new PackageResource(getScope(), getName(), getLocale(), getStyle(),
-				getVariation());
+			resource = new PackageResource(scope, name, currentLocale,
+					currentStyle, currentVariation);
 		}
+		resource.readBuffered(readBuffered);
 
 		removeCompressFlagIfUnnecessary(resource);
 
@@ -135,24 +150,26 @@ public class PackageResourceReference extends ResourceReference
 	}
 
 	/**
-	 * Method allowing to remove the compress flag if the resource has been detected as a minified one
-	 * (i.e. ending with .min.EXT)
-	 * This method is to be called by subclasses overriding <code>getResource</code>
-	 * if they want to rely on default minification detection handling
+	 * Method allowing to remove the compress flag if the resource has been detected as a minified
+	 * one (i.e. ending with .min.EXT) This method is to be called by subclasses overriding
+	 * <code>getResource</code> if they want to rely on default minification detection handling
 	 *
 	 * see WICKET-5250 for further explanation
-	 * @param resource resource to check
+	 * 
+	 * @param resource
+	 *            resource to check
 	 */
 	protected final void removeCompressFlagIfUnnecessary(final PackageResource resource)
 	{
-		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
-		if (minifiedName != null && minifiedName != NO_MINIFIED_NAME)
+		String minifiedName = getName();
+		if (minifiedName != null && minifiedName.contains(MIN_POSTFIX_DEFAULT_AS_EXTENSION))
 		{
 			resource.setCompress(false);
 		}
 	}
 
-	private ResourceReference.UrlAttributes getUrlAttributes(Locale locale, String style, String variation)
+	private ResourceReference.UrlAttributes getUrlAttributes(Locale locale, String style,
+		String variation)
 	{
 		IResourceStreamLocator locator = Application.get()
 			.getResourceSettings()
@@ -166,48 +183,75 @@ public class PackageResourceReference extends ResourceReference
 		if (stream == null)
 			return new ResourceReference.UrlAttributes(null, null, null);
 
-		return new ResourceReference.UrlAttributes(stream.getLocale(), stream.getStyle(), stream.getVariation());
+		return new ResourceReference.UrlAttributes(stream.getLocale(), stream.getStyle(),
+			stream.getVariation());
+	}
+
+	private Locale getCurrentLocale(UrlAttributes attributes)
+	{
+		Locale currentLocale = getCurrentLocale();
+
+		return currentLocale != null
+				? currentLocale
+				: attributes != null
+					? attributes.getLocale()
+					: null;
 	}
 
 	private Locale getCurrentLocale()
 	{
-		return getLocale() != null ? getLocale() : Session.get().getLocale();
+		final Locale locale = getLocale();
+
+		if (locale != null)
+		{
+			return locale;
+		}
+
+		if (Session.exists())
+		{
+			return Session.get().getLocale();
+		}
+
+		return locale;
 	}
 
+	private String getCurrentStyle(UrlAttributes attributes)
+	{
+		String currentStyle = getCurrentStyle();
+
+		return currentStyle != null
+				? currentStyle
+				: attributes != null
+					? attributes.getStyle()
+					: null;
+	}
+	
 	private String getCurrentStyle()
 	{
-		return getStyle() != null ? getStyle() : Session.get().getStyle();
+		final String style = getStyle();
+
+		if (style != null)
+		{
+			return style;
+		}
+
+		if (Session.exists())
+		{
+			return Session.get().getStyle();
+		}
+
+		return style;
 	}
-
-	/**
-	 * Initializes the cache for the existence of the minified resource.
-	 * @return the name of the minified resource or the special constant {@link #NO_MINIFIED_NAME}
-	 * if there is no minified version
-	 */
-	private String internalGetMinifiedName()
+	
+	private String getCurrentVariation(UrlAttributes attributes)
 	{
-		String minifiedName = MINIFIED_NAMES_CACHE.get(this);
-		if (minifiedName != null)
-		{
-			return minifiedName;
-		}
+		final String variation = getVariation();
 
-		String name = getMinifiedName();
-		IResourceStreamLocator locator = Application.get()
-				.getResourceSettings()
-				.getResourceStreamLocator();
-		String absolutePath = Packages.absolutePath(getScope(), name);
-		IResourceStream stream = locator.locate(getScope(), absolutePath, getStyle(),
-				getVariation(), getLocale(), null, true);
-
-		minifiedName = stream != null ? name : NO_MINIFIED_NAME;
-		MINIFIED_NAMES_CACHE.put(this, minifiedName);
-		if (minifiedName == NO_MINIFIED_NAME && log.isDebugEnabled())
-		{
-			log.debug("No minified version of '" + super.getName() +
-					"' found, expected a file with the name '" + name + "', using full version");
-		}
-		return minifiedName;
+		return variation != null
+				? variation
+				: attributes != null
+					? attributes.getVariation()
+					: null;
 	}
 
 	/**
@@ -216,51 +260,7 @@ public class PackageResourceReference extends ResourceReference
 	protected String getMinifiedName()
 	{
 		String name = super.getName();
-		String minifiedName;
-		int idxOfExtension = name.lastIndexOf('.');
-		if (idxOfExtension > -1)
-		{
-			String extension = name.substring(idxOfExtension);
-			final String baseName = name.substring(0, name.length() - extension.length() + 1);
-			if (!".min".equals(extension) && !baseName.endsWith(".min."))
-			{
-				minifiedName = baseName + "min" + extension;
-			} else
-			{
-				minifiedName = name;
-			}
-		} else
-		{
-			minifiedName = name + ".min";
-		}
-		return minifiedName;
-	}
-
-	/**
-	 * Returns the name of the file: minified or full version. This method is called in a
-	 * multithreaded context, so it has to be thread safe.
-	 *
-	 * @see org.apache.wicket.request.resource.ResourceReference#getName()
-	 */
-	@Override
-	public String getName()
-	{
-		String name = null;
-
-		if (Application.exists() && Application.get().getResourceSettings().getUseMinifiedResources())
-		{
-			String minifiedName = internalGetMinifiedName();
-			if (minifiedName != NO_MINIFIED_NAME)
-			{
-				name = minifiedName;
-			}
-		}
-
-		if (name == null)
-		{
-			name = super.getName();
-		}
-		return name;
+		return ResourceUtils.getMinifiedName(name, ResourceUtils.MIN_POSTFIX_DEFAULT);
 	}
 
 	@Override
@@ -270,7 +270,8 @@ public class PackageResourceReference extends ResourceReference
 		String style = getCurrentStyle();
 		String variation = getVariation();
 
-		ResourceReference.UrlAttributes key = new ResourceReference.UrlAttributes(locale, style, variation);
+		ResourceReference.UrlAttributes key = new ResourceReference.UrlAttributes(locale, style,
+			variation);
 
 		if (urlAttributesCacheMap == null)
 		{
@@ -288,5 +289,24 @@ public class PackageResourceReference extends ResourceReference
 		}
 
 		return value;
+	}
+
+	/**
+	 * If the package resource should be read buffered.<br>
+	 * <br>
+	 * WARNING - if the stream is not read buffered compressors will not work, because they require the
+	 * whole content to be read into memory.<br>
+	 * ({@link org.apache.wicket.javascript.IJavaScriptCompressor}, <br>
+	 * {@link org.apache.wicket.css.ICssCompressor}, <br>
+	 * {@link org.apache.wicket.resource.IScopeAwareTextResourceProcessor})
+	 * 
+	 * @param readBuffered
+	 *            if the package resource should be read buffered
+	 * @return the current package resource
+	 */
+	public PackageResourceReference readBuffered(boolean readBuffered)
+	{
+		this.readBuffered = readBuffered;
+		return this;
 	}
 }

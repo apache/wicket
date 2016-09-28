@@ -31,5 +31,5 @@ public interface IMyService
 	 * 
 	 * @return "Hello World"
 	 */
-	public String getHelloWorldText();
+	String getHelloWorldText();
 }

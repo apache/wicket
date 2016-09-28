@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.examples.guestbook.Comment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -32,7 +33,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 
@@ -69,28 +69,20 @@ public class GuestBook extends BasePage
 
 		// Add commentListView of existing comments
 		comments.add(commentListView = new ListView<Comment>("comments",
-			new PropertyModel<List<Comment>>(this, "commentList"))
+			new PropertyModel<>(this, "commentList"))
 		{
 			@Override
 			public void populateItem(final ListItem<Comment> listItem)
 			{
 				final Comment comment = listItem.getModelObject();
-				listItem.add(new Label("date", new Model<>(comment.getDate())));
+				listItem.add(new Label("date", comment::getDate));
 				listItem.add(new MultiLineLabel("text", comment.getText()));
 			}
 		});
 
-		// we need to cancel the standard submit of the form in the onsubmit
-		// handler,
-		// otherwise we'll get double submits. To do so, we return false after
-		// the
-		// ajax submit has occurred.
-
 		// The AjaxFormSubmitBehavior already calls the onSubmit of the form,
-		// all
-		// we need to do in the onSubmit(AjaxRequestTarget) handler is do our
-		// Ajax
-		// specific stuff, like rendering our components.
+		// all we need to do in the onSubmit(AjaxRequestTarget) handler is do our
+		// Ajax specific stuff, like rendering our components.
 		commentForm.add(new AjaxFormSubmitBehavior(commentForm, "submit")
 		{
 			@Override
@@ -109,6 +101,19 @@ public class GuestBook extends BasePage
 			protected void onError(AjaxRequestTarget target)
 			{
 			}
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				super.updateAjaxAttributes(attributes);
+
+				// we need to cancel the standard submit of the form in the onsubmit
+				// handler,
+				// otherwise we'll get double submits. To do so, we return false after
+				// the
+				// ajax submit has occurred.
+				attributes.setPreventDefault(true);
+			}
 		});
 	}
 
@@ -117,7 +122,7 @@ public class GuestBook extends BasePage
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public final class CommentForm extends Form<Comment>
+	private final class CommentForm extends Form<Comment>
 	{
 		/**
 		 * Constructor
@@ -125,7 +130,7 @@ public class GuestBook extends BasePage
 		 * @param id
 		 *            The name of this component
 		 */
-		public CommentForm(final String id)
+		private CommentForm(final String id)
 		{
 			// Construct form with no validation listener
 			super(id, new CompoundPropertyModel<>(new Comment()));

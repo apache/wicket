@@ -69,7 +69,7 @@ public class MailTemplate extends WicketExamplePage
 		final Form<Void> form = new Form<>("form");
 		add(form);
 
-		TextField<String> nameTextField = new TextField<String>("name", new PropertyModel<String>(
+		TextField<String> nameTextField = new TextField<>("name", new PropertyModel<String>(
 			MailTemplate.this, "name"));
 		nameTextField.setOutputMarkupId(true);
 		form.add(nameTextField);
@@ -83,7 +83,7 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				PageParameters parameters = new PageParameters();
 				parameters.set("name", name);
@@ -95,7 +95,7 @@ public class MailTemplate extends WicketExamplePage
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				target.add(feedback);
 			}
@@ -106,17 +106,17 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				CharSequence panelHtml = ComponentRenderer.renderComponent(new MailTemplatePanel("someId",
-						new PropertyModel<String>(MailTemplate.this, "name")));
+						new PropertyModel<>(MailTemplate.this, "name")));
 
 				updateResult(result, panelHtml, target);
 				target.add(feedback);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				target.add(feedback);
 			}
@@ -127,7 +127,7 @@ public class MailTemplate extends WicketExamplePage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				Map<String, Object> variables = new HashMap<>();
 				variables.put("name", name);
@@ -145,7 +145,7 @@ public class MailTemplate extends WicketExamplePage
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				target.add(feedback);
 			}

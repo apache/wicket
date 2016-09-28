@@ -59,7 +59,6 @@ public final class LibrarySession extends AuthenticatedWebSession
 	{
 		final String WICKET = "wicket";
 
-		// Trivial password "db"
 		if (WICKET.equalsIgnoreCase(username) && WICKET.equalsIgnoreCase(password))
 		{
 			// Create User object
@@ -105,19 +104,13 @@ public final class LibrarySession extends AuthenticatedWebSession
 		this.user = user;
 	}
 
-	/**
-	 * @see AuthenticatedWebSession#signOut()
-	 */
 	@Override
-	public void signOut()
+	public void invalidate()
 	{
-		super.signOut();
+		super.invalidate();
 		user = null;
 	}
 
-	/**
-	 * @see AuthenticatedWebSession#getRoles()
-	 */
 	@Override
 	public Roles getRoles()
 	{

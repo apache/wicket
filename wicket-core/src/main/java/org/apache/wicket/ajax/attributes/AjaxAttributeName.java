@@ -174,6 +174,20 @@ public enum AjaxAttributeName {
 	BEFORE_HANDLER("bh"),
 
 	/**
+	 * init handler (ih)
+	 * 
+	 * @see AjaxCallListener#getInitHandler(org.apache.wicket.Component)
+	 */
+	INIT_HANDLER("ih"),
+
+	/**
+	 * done handler (dh)
+	 *
+	 * @see AjaxCallListener#getDoneHandler(org.apache.wicket.Component)
+	 */
+	DONE_HANDLER("dh"),
+
+	/**
 	 * the indicator id, if any found (i)
 	 * 
 	 * @see AbstractDefaultAjaxBehavior#findIndicatorId()
@@ -218,11 +232,21 @@ public enum AjaxAttributeName {
 	/**
 	 * @see AbstractDefaultAjaxBehavior#getCallbackUrl();
 	 */
-	URL("u");
+	URL("u"),
+
+	/**
+	 * @see AjaxRequestAttributes#childSelector
+	 */
+	CHILD_SELECTOR("sel"),
+
+	/**
+	 * @see AjaxRequestAttributes#serializeRecursively
+	 */
+	SERIALIZE_RECURSIVELY("sr");
 
 	private final String jsonName;
 
-	private AjaxAttributeName(String jsonName)
+	AjaxAttributeName(String jsonName)
 	{
 		this.jsonName = Args.notNull(jsonName, "jsonName");
 	}

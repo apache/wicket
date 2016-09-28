@@ -21,6 +21,7 @@ import org.apache.wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -42,17 +43,14 @@ public class ResultPanel extends BreadCrumbPanel
 	{
 		super(id, breadCrumbModel);
 
-		if (result == null || "".equals(result.trim()))
+		if (Strings.isEmpty(result))
 		{
-			result = "(hey, you didn't even provide some input!)";
+			result = "(hey, you didn't even provide any input!)";
 		}
 
 		add(new Label("result", result));
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.breadcrumb.IBreadCrumbParticipant#getTitle()
-	 */
 	@Override
 	public IModel<String> getTitle()
 	{

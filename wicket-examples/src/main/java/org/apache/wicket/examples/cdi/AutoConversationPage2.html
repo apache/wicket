@@ -1,0 +1,17 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:extend>
+	<p>
+		This page is not marked with ConversationalComponent. Therefore, the conversation that was
+		started on the previous page is ended. Notice the conversational counter injected into this
+		page initially has the same value as in the	previous page, this is because the conversation
+		was still active in the request that rendered this page. However, clicking 'refresh' below,
+		will reset the counter to 0.
+	</p>
+	<p>
+		Current counter value is: <span wicket:id="count">100</span>
+		<a wicket:id="refresh">refresh</a>
+	</p>
+</wicket:extend>
+</body>
+</html>

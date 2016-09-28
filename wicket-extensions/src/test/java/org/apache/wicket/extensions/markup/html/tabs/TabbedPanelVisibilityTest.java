@@ -18,8 +18,8 @@ package org.apache.wicket.extensions.markup.html.tabs;
 
 import java.util.List;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.TagTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

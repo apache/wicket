@@ -66,7 +66,6 @@ import org.slf4j.LoggerFactory;
  * @author Matthew Hawthorne
  * @author Stephen Colebourne
  * @author Gareth Davis
- * @version CVS $Revision$ $Date$
  */
 public final class IOUtils
 {

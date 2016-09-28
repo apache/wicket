@@ -30,6 +30,7 @@ import org.apache.wicket.util.collections.UrlExternalFormComparator;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.watch.IModifiable;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
@@ -46,13 +47,11 @@ public class ReloadingClassLoader extends URLClassLoader
 {
 	private static final Logger log = LoggerFactory.getLogger(ReloadingClassLoader.class);
 
-	private static final Set<URL> urls = new TreeSet<URL>(new UrlExternalFormComparator());
+	private static final Set<URL> urls = new TreeSet<>(new UrlExternalFormComparator());
 
-	private static final List<String> patterns = new ArrayList<String>();
+	private static final List<String> patterns = new ArrayList<>();
 
-	private IChangeListener listener;
-
-	private final Duration pollFrequency = Duration.seconds(3);
+	private IChangeListener<Class<?>> listener;
 
 	private final IModificationWatcher watcher;
 
@@ -204,6 +203,7 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			addURL(url);
 		}
+		Duration pollFrequency = Duration.seconds(3);
 		watcher = new ModificationWatcher(pollFrequency);
 	}
 
@@ -302,7 +302,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * @param listener
 	 *            the listener to notify upon class change
 	 */
-	public void setListener(IChangeListener listener)
+	public void setListener(IChangeListener<Class<?>> listener)
 	{
 		this.listener = listener;
 	}
@@ -314,7 +314,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	 * @param clz
 	 *            the class to watch
 	 */
-	private void watchForModifications(Class<?> clz)
+	private void watchForModifications(final Class<?> clz)
 	{
 		// Watch class in the future
 		Iterator<URL> locationsIterator = urls.iterator();
@@ -332,15 +332,15 @@ public class ReloadingClassLoader extends URLClassLoader
 			if (clzFile.exists())
 			{
 				log.info("Watching changes of class " + clzFile);
-				watcher.add(clzFile, new IChangeListener()
+				watcher.add(clzFile, new IChangeListener<IModifiable>()
 				{
 					@Override
-					public void onChange()
+					public void onChange(IModifiable modifiable)
 					{
 						log.info("Class file " + finalClzFile + " has changed, reloading");
 						try
 						{
-							listener.onChange();
+							listener.onChange(clz);
 						}
 						catch (Exception e)
 						{

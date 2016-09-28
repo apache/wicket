@@ -20,9 +20,9 @@ import static org.apache.wicket.util.resource.ResourceStreamLocatorTest.*;
 
 import java.io.File;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 public class ClassPathResourceFinderTest extends WicketTestCase

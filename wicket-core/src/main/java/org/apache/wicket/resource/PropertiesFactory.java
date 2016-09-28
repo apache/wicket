@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.settings.IResourceSettings;
+import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
-import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.util.value.ValueMap;
+import org.apache.wicket.util.watch.IModifiable;
 import org.apache.wicket.util.watch.IModificationWatcher;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
@@ -40,11 +40,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of {@link IPropertiesFactory} which uses the
- * {@link IResourceStreamLocator} as defined by {@link IResourceSettings#getResourceStreamLocator()}
+ * {@link IResourceStreamLocator} as defined by
+ * {@link org.apache.wicket.settings.ResourceSettings#getResourceStreamLocator()}
  * to load the {@link Properties} objects. Depending on the settings, it will assign
  * {@link ModificationWatcher}s to the loaded resources to support reloading.
  * 
- * @see org.apache.wicket.settings.IResourceSettings#getPropertiesFactory()
+ * @see org.apache.wicket.settings.ResourceSettings#getPropertiesFactory()
  * 
  * @author Juergen Donnerstag
  */
@@ -204,9 +205,9 @@ public class PropertiesFactory implements IPropertiesFactory
 	protected ValueMap loadFromLoader(final IPropertiesLoader loader,
 		final IResourceStream resourceStream)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
-			log.info("Loading properties files from " + resourceStream + " with loader " + loader);
+			log.debug("Loading properties files from '{}' with loader '{}'", resourceStream, loader);
 		}
 
 		BufferedInputStream in = null;
@@ -233,11 +234,7 @@ public class PropertiesFactory implements IPropertiesFactory
 			}
 			return data;
 		}
-		catch (ResourceStreamNotFoundException e)
-		{
-			log.warn("Unable to find resource " + resourceStream, e);
-		}
-		catch (IOException e)
+		catch (ResourceStreamNotFoundException | IOException e)
 		{
 			log.warn("Unable to find resource " + resourceStream, e);
 		}
@@ -260,10 +257,10 @@ public class PropertiesFactory implements IPropertiesFactory
 	protected void addToWatcher(final String path, final IResourceStream resourceStream,
 		final IModificationWatcher watcher)
 	{
-		watcher.add(resourceStream, new IChangeListener()
+		watcher.add(resourceStream, new IChangeListener<IModifiable>()
 		{
 			@Override
-			public void onChange()
+			public void onChange(IModifiable modifiable)
 			{
 				log.info("A properties files has changed. Removing all entries " +
 					"from the cache. Resource: " + resourceStream);

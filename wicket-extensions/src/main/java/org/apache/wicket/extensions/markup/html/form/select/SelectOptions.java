@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.util.WildcardCollectionModel;
+import org.apache.wicket.model.util.CollectionModel;
 
 
 /**
@@ -39,6 +39,7 @@ import org.apache.wicket.model.util.WildcardCollectionModel;
  * </pre>
  * 
  * @param <T>
+ *            type of elements contained in the model's collection
  * @author Igor Vaynberg (ivaynberg)
  */
 public class SelectOptions<T> extends RepeatingView
@@ -74,14 +75,21 @@ public class SelectOptions<T> extends RepeatingView
 	public SelectOptions(final String id, final Collection<? extends T> elements,
 		final IOptionRenderer<T> renderer)
 	{
-		this(id, new WildcardCollectionModel<>(elements), renderer);
+		this(id, new CollectionModel<>(elements), renderer);
 	}
 
 	/**
-	 * Controls whether or not SelectChoice objects are recreated every request
+	 * Controls whether {@link SelectOption}s are recreated on each render.
+	 * <p>
+	 * Note: When recreating on each render, {@link #newOption(String, IModel)} should return
+	 * {@link SelectOption}s with stable values, i.e. {@link SelectOption#getValue()} should
+	 * return a value based on its model object instead of the default auto index.
+	 * Otherwise the current selection will be lost on form errors.
 	 * 
 	 * @param refresh
 	 * @return this for chaining
+	 * 
+	 * @see SelectOption#getValue()
 	 */
 	public SelectOptions<T> setRecreateChoices(final boolean refresh)
 	{

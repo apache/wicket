@@ -35,7 +35,6 @@ import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.http.WebRequest;
-import org.apache.wicket.request.http.handler.RedirectRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
@@ -84,6 +83,36 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 	}
 
 	/**
+	 * @return the url of the request when the interception happened or {@code null}
+	 * or {@code null} if there was no interception yet
+	 */
+	public static Url getOriginalUrl()
+	{
+		Url originalUrl = null;
+		InterceptData data = InterceptData.get();
+		if (data != null)
+		{
+			originalUrl = data.getOriginalUrl();
+		}
+		return originalUrl;
+	}
+
+	/**
+	 * @return the post parameters of thе request when the interception happened
+	 * or {@code null} if there was no interception yet
+	 */
+	public static Map<String, List<StringValue>> getOriginalPostParameters()
+	{
+		Map<String, List<StringValue>> postParameters = null;
+		InterceptData data = InterceptData.get();
+		if (data != null)
+		{
+			postParameters = data.getPostParameters();
+		}
+		return postParameters;
+	}
+
+	/**
 	 * INTERNAL CLASS, DO NOT USE
 	 * 
 	 * @author igor.vaynberg
@@ -94,7 +123,6 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 
 		private Url originalUrl;
 		private Map<String, List<StringValue>> postParameters;
-		private boolean continueOk;
 
 		public Url getOriginalUrl()
 		{
@@ -137,7 +165,6 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 				data.postParameters.put(s, new ArrayList<StringValue>(request.getPostParameters()
 					.getParameterValues(s)));
 			}
-			data.continueOk = false;
 			session.setMetaData(key, data);
 		}
 
@@ -169,9 +196,8 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 		InterceptData data = InterceptData.get();
 		if (data != null)
 		{
-			data.continueOk = true;
 			String url = RequestCycle.get().getUrlRenderer().renderUrl(data.originalUrl);
-			RequestCycle.get().replaceAllRequestHandlers(new RedirectRequestHandler(url));
+			throw new NonResettingRestartException(url);
 		}
 	}
 

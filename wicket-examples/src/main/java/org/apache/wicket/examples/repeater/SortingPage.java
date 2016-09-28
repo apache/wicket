@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * page that demonstrates dataview and sorting
@@ -55,22 +55,13 @@ public class SortingPage extends BasePage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public String getObject()
-					{
-						return (item.getIndex() % 2 == 1) ? "even" : "odd";
-					}
-				}));
+				item.add(AttributeModifier.replace("class", () -> (item.getIndex() % 2 == 1) ? "even" : "odd"));
 			}
 		};
 
 		dataView.setItemsPerPage(8L);
 
-		add(new OrderByBorder("orderByFirstName", "firstName", dp)
+		add(new OrderByBorder<String>("orderByFirstName", "firstName", dp)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -81,7 +72,7 @@ public class SortingPage extends BasePage
 			}
 		});
 
-		add(new OrderByBorder("orderByLastName", "lastName", dp)
+		add(new OrderByBorder<String>("orderByLastName", "lastName", dp)
 		{
 			private static final long serialVersionUID = 1L;
 

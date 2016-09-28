@@ -16,10 +16,7 @@
  */
 package org.apache.wicket.request.mapper;
 
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.mapper.CompoundRequestMapper.MapperWithScore;
-import org.apache.wicket.request.mapper.mount.MountMapper;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,38 +25,6 @@ import org.junit.Test;
  */
 public class CompoundRequestMapperTest extends Assert
 {
-
-	private static final String MOUNT_PATH_3 = "mount/path/3";
-	private static final String MOUNT_PATH_2 = "mount/path/2";
-	private static final String MOUNT_PATH_1 = "mount/path/1";
-
-	/**
-	 * 
-	 */
-	@Test
-	public void unmount()
-	{
-		CompoundRequestMapper compound = new CompoundRequestMapper();
-
-		compound.add(new MountMapper(MOUNT_PATH_1, new EmptyRequestHandler()));
-		compound.add(new MountMapper(MOUNT_PATH_2, new EmptyRequestHandler()));
-		compound.add(new MountMapper(MOUNT_PATH_3, new EmptyRequestHandler()));
-
-		assertEquals(3, compound.size());
-
-		compound.unmount(MOUNT_PATH_2);
-		assertEquals(2, compound.size());
-
-		assertTrue(
-			"Mount path 1 should match",
-			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_1))) instanceof EmptyRequestHandler);
-		assertNull("Mount path 2 should not match",
-			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_2))));
-		assertTrue(
-			"Mount path 3 should match",
-			compound.mapRequest(compound.createRequest(Url.parse(MOUNT_PATH_3))) instanceof EmptyRequestHandler);
-	}
-
 	/**
 	 * Test {@link MapperWithScore#compareTo(MapperWithScore)}.
 	 */

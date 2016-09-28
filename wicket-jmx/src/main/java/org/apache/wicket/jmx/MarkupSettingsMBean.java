@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.jmx;
 
-import org.apache.wicket.settings.IMarkupSettings;
+import java.io.UnsupportedEncodingException;
+
+import org.apache.wicket.jmx.wrapper.MarkupSettings;
 
 /**
  * Markup settings.
@@ -36,7 +38,7 @@ public interface MarkupSettingsMBean
 
 	/**
 	 * @return Returns the compressWhitespace.
-	 * @see IMarkupSettings#setCompressWhitespace(boolean)
+	 * @see MarkupSettings#setCompressWhitespace(boolean)
 	 */
 	boolean getCompressWhitespace();
 
@@ -49,7 +51,7 @@ public interface MarkupSettingsMBean
 
 	/**
 	 * @return Returns the stripComments.
-	 * @see IMarkupSettings#setStripComments(boolean)
+	 * @see MarkupSettings#setStripComments(boolean)
 	 */
 	boolean getStripComments();
 
@@ -94,8 +96,10 @@ public interface MarkupSettingsMBean
 	 * will be used.
 	 * 
 	 * @param encoding
+	 * @throws UnsupportedEncodingException
+	 *             if encoding is not supported
 	 */
-	void setDefaultMarkupEncoding(final String encoding);
+	void setDefaultMarkupEncoding(final String encoding) throws UnsupportedEncodingException;
 
 	/**
 	 * Enables stripping of markup comments denoted in markup by HTML comment tagging.

@@ -214,6 +214,17 @@ public class UrlRendererTest extends Assert
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5468
+	 */
+	@Test
+	public void renderUrlWithTrailingDotsInQueryString()
+	{
+		UrlRenderer r1 = new UrlRenderer(new MockWebRequest(Url.parse("some/path")));
+
+		assertEquals("./path?a=b..", r1.renderUrl(Url.parse("some/path?a=b..")));
+	}
+
+	/**
 	 * Verify that absolute urls are rendered as is, ignoring the current client url and base url
 	 * completely.
 	 * 
@@ -561,7 +572,8 @@ public class UrlRendererTest extends Assert
 	@Test
 	public void removeCommonPrefixesWithJSessionId()
 	{
-		Url baseUrl = new Url(Arrays.asList("", "SomePage;jsessionid=1234"), Arrays.<Url.QueryParameter>asList());
+		Url baseUrl = new Url(Arrays.asList("", "SomePage;jsessionid=1234"),
+			Arrays.<Url.QueryParameter> asList());
 
 		MockWebRequest request = new MockWebRequest(baseUrl);
 		request.setContextPath("/");
@@ -571,5 +583,135 @@ public class UrlRendererTest extends Assert
 
 		String rendered = renderer.renderRelativeUrl(Url.parse("/filter;jsessionid=1234"));
 		assertEquals("../", rendered);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5774
+	 */
+	@Test
+	public void renderFullUrlWithNoOpLeadingSegments()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("any/thing")));
+
+		String fullUrl = renderer.renderFullUrl(Url.parse("http://www.example.com:8888/./../one/two/three"));
+		assertEquals("http://www.example.com:8888/one/two/three", fullUrl);
+
+		fullUrl = renderer.renderFullUrl(Url.parse("http://www.example.com:8888/.././one/two/three"));
+		assertEquals("http://www.example.com:8888/one/two/three", fullUrl);
+
+		fullUrl = renderer.renderFullUrl(Url.parse("http://www.example.com:8888/one/.././two/three"));
+		assertEquals("http://www.example.com:8888/two/three", fullUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5774
+	 */
+	@Test
+	public void renderContextAbsoluteUrlWithNoOpLeadingSegments()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("any/thing")));
+
+		String fullUrl = renderer.renderFullUrl(Url.parse("/./../one/two/three"));
+		assertEquals("/one/two/three", fullUrl);
+
+		fullUrl = renderer.renderFullUrl(Url.parse("/.././one/two/three"));
+		assertEquals("/one/two/three", fullUrl);
+
+		fullUrl = renderer.renderFullUrl(Url.parse("/one/.././two/three"));
+		assertEquals("/two/three", fullUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5970
+	 */
+	@Test
+	public void renderFullUrlWithFragment()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
+
+		Url urlWithFragment = Url.parse("http://localhost:8080/redirect#access_token=123456");
+		assertEquals("access_token=123456", urlWithFragment.getFragment());
+
+		String renderedUrl = renderer.renderFullUrl(urlWithFragment);
+		assertEquals("http://localhost:8080/redirect#access_token=123456", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5970
+	 */
+	@Test
+	public void renderRelativeUrlWithFragment()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
+
+		Url urlWithFragment = Url.parse("http://localhost:8080/redirect#access_token=123456");
+		assertEquals("access_token=123456", urlWithFragment.getFragment());
+
+		String renderedUrl = renderer.renderRelativeUrl(urlWithFragment);
+		assertEquals("./redirect#access_token=123456", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-5970
+	 */
+	@Test
+	public void renderUrlWithFragment()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("authorize")));
+
+		Url urlWithFragment = Url.parse("http://localhost:8080/redirect#access_token=123456");
+		assertEquals("access_token=123456", urlWithFragment.getFragment());
+
+		String renderedUrl = renderer.renderUrl(urlWithFragment);
+		assertEquals("http://localhost:8080/redirect#access_token=123456", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6230
+	 */
+	@Test
+	public void renderUrlWithManyDotsAtTheBeginning1()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("...abc"));
+		assertEquals("./...abc", renderedUrl);
+	}
+
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6230
+	 */
+	@Test
+	public void renderUrlWithManyDotsAtTheBeginning2()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a/b")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("...abc"));
+		assertEquals("../...abc", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6230
+	 */
+	@Test
+	public void renderUrlWithManyDotsAtTheEnd1()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("abc..."));
+		assertEquals("./abc...", renderedUrl);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6230
+	 */
+	@Test
+	public void renderUrlWithManyDotsAtTheEnd2()
+	{
+		UrlRenderer renderer = new UrlRenderer(new MockWebRequest(Url.parse("a/b")));
+
+		String renderedUrl = renderer.renderUrl(Url.parse("abc..."));
+		assertEquals("../abc...", renderedUrl);
 	}
 }

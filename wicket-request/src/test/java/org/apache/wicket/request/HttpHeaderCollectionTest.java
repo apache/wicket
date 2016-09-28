@@ -30,6 +30,7 @@ import java.util.TimeZone;
 import org.apache.wicket.util.time.Time;
 import org.junit.Test;
 
+@SuppressWarnings("javadoc")
 public class HttpHeaderCollectionTest
 {
 	@Test

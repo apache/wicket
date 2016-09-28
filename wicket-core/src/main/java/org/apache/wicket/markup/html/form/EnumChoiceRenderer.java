@@ -19,7 +19,6 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link IChoiceRenderer} implementation that makes it easy to work with java 5 enums. This
@@ -37,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @param <T>
  */
-public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
+public class EnumChoiceRenderer<T extends Enum<T>> extends ChoiceRenderer<T>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -54,7 +53,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 	 */
 	public EnumChoiceRenderer()
 	{
-		resourceSource = null;
+		this(null);
 	}
 
 	/**
@@ -69,7 +68,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 
 	/** {@inheritDoc} */
 	@Override
-	public final Object getDisplayValue(T object)
+	public Object getDisplayValue(T object)
 	{
 		final String value;
 
@@ -84,7 +83,7 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 			value = Application.get().getResourceSettings().getLocalizer().getString(key, null);
 		}
 
-		return postprocess(value);
+		return value;
 	}
 
 	/**
@@ -99,23 +98,10 @@ public class EnumChoiceRenderer<T extends Enum<T>> implements IChoiceRenderer<T>
 		return Classes.simpleName(object.getDeclaringClass()) + '.' + object.name();
 	}
 
-	/**
-	 * Postprocesses the {@code value} after it is retrieved from the localizer. Default
-	 * implementation escapes any markup found in the {@code value}.
-	 * 
-	 * @param value
-	 * @return postprocessed value
-	 */
-	protected CharSequence postprocess(String value)
-	{
-		return Strings.escapeMarkup(value);
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public String getIdValue(T object, int index)
 	{
 		return object.name();
 	}
-
 }

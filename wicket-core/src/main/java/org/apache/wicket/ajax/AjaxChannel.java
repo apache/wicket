@@ -57,6 +57,21 @@ public class AjaxChannel implements IClusterable
 		ACTIVE
 	}
 
+	/**
+	 * The name of the default channel
+	 */
+	public static final String DEFAULT_NAME = "0";
+
+	/**
+	 * The type of the default channel
+	 */
+	public static final Type DEFAULT_TYPE = Type.QUEUE;
+
+	/**
+	 * The default channel for all Ajax calls
+	 */
+	public static final AjaxChannel DEFAULT = new AjaxChannel(DEFAULT_NAME, DEFAULT_TYPE);
+
 	private final String name;
 
 	private final Type type;
@@ -65,6 +80,7 @@ public class AjaxChannel implements IClusterable
 	 * Construct.
 	 * 
 	 * @param name
+	 *            the name of the channel
 	 */
 	public AjaxChannel(final String name)
 	{
@@ -133,9 +149,30 @@ public class AjaxChannel implements IClusterable
 			case QUEUE:
 			default:
 				// 's' comes from 'stack', but it really acts as a queue.
-				// TODO Wicket 1.6 - consider renaming it to 'q'
 				shortType = "s";
 		}
 		return shortType;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AjaxChannel that = (AjaxChannel) o;
+
+		if (!name.equals(that.name)) return false;
+		if (type != that.type) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = name.hashCode();
+		result = 31 * result + type.hashCode();
+		return result;
 	}
 }

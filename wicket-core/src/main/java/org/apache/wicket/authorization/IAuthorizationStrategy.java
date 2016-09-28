@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.settings.ISecuritySettings;
 
 /**
  * Authorization strategies specify aspect-like constraints on significant actions taken by the
@@ -35,7 +34,7 @@ import org.apache.wicket.settings.ISecuritySettings;
  */
 public interface IAuthorizationStrategy
 {
-	public static class AllowAllAuthorizationStrategy implements IAuthorizationStrategy
+	class AllowAllAuthorizationStrategy implements IAuthorizationStrategy
 	{
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
@@ -66,12 +65,12 @@ public interface IAuthorizationStrategy
 	/**
 	 * Implementation of {@link IAuthorizationStrategy} that allows everything.
 	 */
-	public static final IAuthorizationStrategy ALLOW_ALL = new AllowAllAuthorizationStrategy();
+	IAuthorizationStrategy ALLOW_ALL = new AllowAllAuthorizationStrategy();
 
 	/**
 	 * Checks whether an instance of the given component class may be created. If this method
 	 * returns false, the {@link IUnauthorizedComponentInstantiationListener} that is configured in
-	 * the {@link ISecuritySettings security settings} will be called. The default implementation of
+	 * the {@link org.apache.wicket.settings.SecuritySettings security settings} will be called. The default implementation of
 	 * that listener throws a {@link UnauthorizedInstantiationException}.
 	 * <p>
 	 * If you wish to implement a strategy that authenticates users which cannot access a given Page

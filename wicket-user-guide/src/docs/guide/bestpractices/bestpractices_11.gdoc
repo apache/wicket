@@ -1,0 +1,24 @@
+
+
+The Wicket session is your own extension of Wicket's base session. It is fully typed. There is no map structure to store information unlike the servlet session. You just should use Wicket's session for global data. Authentication is a good example for global data. The login and user information is required on nearly each page. For a blog application it would be good to know whether the user is an author who is allowed to compose blog entries. So you are able to hide or or show links to edit a blog entry. In general you should store the whole authorization logic in Wicket's session, because it is a global thing and you would expect it there. Data of forms and flows which only span certain pages should not stored in the session. This data can be passed from one page to the next via the constructor (see listing 14). As a consequence of this, the models and data have a clearly defined lifecycle that reflects the corresponding the page flow.
+
+*Listing 14:*
+
+{code}
+public class MyPage extends WebPage {
+    IModel<MyData> myDataModel;
+
+    public MyPage(IModel<MyData> myDataModel) {
+        this.myDataModel = myDataModel;
+        Link<Void> next = new Link<Void>("next") {
+             public void onClick() {
+                  // do something
+                  setResponsePage(new NextPage(myDataModel));
+             }
+        }
+        add(next);
+    }
+}
+{code}
+
+You should pass concrete information to the page. All models can simply be stored in fields because Wicket pages are user-specific instances and no singletons in contrast to Struts. The big advantage of this approach is that the data gets automatically cleaned up when a user completes or exits the page flow. No manual cleanup anymore! This is basically an automatic garbage collector for your session.

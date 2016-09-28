@@ -17,17 +17,21 @@
 package org.apache.wicket.extensions.markup.html.form.palette.component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.extensions.markup.html.form.palette.Palette;
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -86,7 +90,7 @@ public class Recorder<T> extends HiddenField<String>
 	private void initIds()
 	{
 		// construct the model string based on selection collection
-		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		IChoiceRenderer<? super T> renderer = getPalette().getChoiceRenderer();
 		StringBuilder modelStringBuffer = new StringBuilder();
 		Collection<T> modelCollection = getPalette().getModelCollection();
 		if (modelCollection == null)
@@ -103,7 +107,7 @@ public class Recorder<T> extends HiddenField<String>
 			modelStringBuffer.append(renderer.getIdValue(selection.next(), i++));
 			if (selection.hasNext())
 			{
-				modelStringBuffer.append(",");
+				modelStringBuffer.append(',');
 			}
 		}
 
@@ -122,7 +126,7 @@ public class Recorder<T> extends HiddenField<String>
 	 */
 	public List<T> getSelectedList()
 	{
-		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		final IChoiceRenderer<? super T> renderer = getPalette().getChoiceRenderer();
 		final Collection<? extends T> choices = getPalette().getChoices();
 		final List<T> selected = new ArrayList<>(choices.size());
 
@@ -133,7 +137,7 @@ public class Recorder<T> extends HiddenField<String>
 			idForChoice.put(choice, renderer.getIdValue(choice, 0));
 		}
 
-		for (final String id : getValue().split(","))
+		for (final String id : Strings.split(getValue(), ','))
 		{
 			for (final T choice : choices)
 			{
@@ -159,10 +163,10 @@ public class Recorder<T> extends HiddenField<String>
 	 */
 	public List<T> getUnselectedList()
 	{
-		final IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
+		final IChoiceRenderer<? super T> renderer = getPalette().getChoiceRenderer();
 		final Collection<? extends T> choices = getPalette().getChoices();
-		final List<T> unselected = new ArrayList<T>(choices.size());
-		final String ids = getValue();
+		final List<T> unselected = new ArrayList<>(choices.size());
+		final Set<String> ids = new TreeSet<>(Arrays.asList(Strings.split(getValue(), ',')));
 
 		for (final T choice : choices)
 		{

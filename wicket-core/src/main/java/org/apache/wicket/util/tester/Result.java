@@ -24,16 +24,17 @@ package org.apache.wicket.util.tester;
  */
 public class Result
 {
-	private static final Result PASS = new Result(false);
+	public static final Result PASS = new Result(false);
+
 	private final boolean failed;
 	private final String message;
 
-	private Result(boolean failed)
+	public Result(boolean failed)
 	{
 		this(failed, "");
 	}
 
-	private Result(boolean failed, String message)
+	public Result(boolean failed, String message)
 	{
 		this.failed = failed;
 		this.message = message;
@@ -46,7 +47,7 @@ public class Result
 	 *            an error message
 	 * @return a <code>Result</code> which failed
 	 */
-	static Result fail(String message)
+	public static Result fail(String message)
 	{
 		return new Result(true, message);
 	}
@@ -56,7 +57,7 @@ public class Result
 	 * 
 	 * @return a <code>Result</code> which passed
 	 */
-	static Result pass()
+	public static Result pass()
 	{
 		return PASS;
 	}

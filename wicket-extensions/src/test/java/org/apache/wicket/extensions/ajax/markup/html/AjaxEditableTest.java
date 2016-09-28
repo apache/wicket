@@ -16,10 +16,11 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+
 import java.util.Arrays;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -28,6 +29,7 @@ import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,11 +64,9 @@ public class AjaxEditableTest extends WicketTestCase
 		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
 
 		AbstractAjaxBehavior labelBehavior = (AbstractAjaxBehavior)ajaxLabel.get("label")
-			.getBehaviors()
-			.get(0);
+			.getBehaviors().get(0);
 		AbstractAjaxBehavior editorBehavior = (AbstractAjaxBehavior)ajaxLabel.get("editor")
-			.getBehaviors()
-			.get(0);
+			.getBehaviors().get(0);
 
 		// "click" on the label and check for valid visibility
 		tester.executeBehavior(labelBehavior);
@@ -110,8 +110,8 @@ public class AjaxEditableTest extends WicketTestCase
 		// check for the *presence* of the ajax onclick call
 
 		// TODO Wicket.next - re-enable
-// markup = tester.getTagById(ajaxLabel.getMarkupId()).getMarkup();
-// assertTrue(markup.matches(".*onclick=\"var wcall=Wicket.Ajax.get.*"));
+		// markup = tester.getTagById(ajaxLabel.getMarkupId()).getMarkup();
+		// assertTrue(markup.matches(".*onclick=\"var wcall=Wicket.Ajax.get.*"));
 	}
 
 	/**
@@ -123,7 +123,6 @@ public class AjaxEditableTest extends WicketTestCase
 	{
 		Page page = tester.getLastRenderedPage();
 		AjaxEditableLabel<String> ajaxLabel = (AjaxEditableLabel<String>)page.get("ajaxLabel");
-		AjaxLink<Void> toggle = (AjaxLink<Void>)page.get("toggle");
 
 		tester.assertInvisible("ajaxLabel:editor");
 		tester.assertVisible("ajaxLabel:label");
@@ -131,7 +130,7 @@ public class AjaxEditableTest extends WicketTestCase
 		tester.assertLabel("ajaxLabel:label", "ajaxTest");
 
 		// click on the label to go to edit mode
-		tester.executeAjaxEvent("ajaxLabel:label", "onclick");
+		tester.executeAjaxEvent("ajaxLabel:label", "click");
 
 		tester.assertVisible("ajaxLabel:editor");
 		tester.assertInvisible("ajaxLabel:label");
@@ -166,14 +165,12 @@ public class AjaxEditableTest extends WicketTestCase
 			integerModel);
 		editableLabel.getEditor().setVisible(true);
 
-		IWritableRequestParameters postParameters = (IWritableRequestParameters)tester.getRequestCycle()
-			.getRequest()
-			.getPostParameters();
+		IWritableRequestParameters postParameters = (IWritableRequestParameters)tester
+			.getRequestCycle().getRequest().getPostParameters();
 		postParameters.setParameterValues(editableLabel.getEditor().getInputName(),
 			Arrays.asList(new StringValue[] { StringValue.valueOf("5") }));
 		editableLabel.getEditor().processInput();
 
-		assertNotNull(integerModel.getObject());
-		assertTrue(integerModel.getObject() instanceof Integer);
+		assertThat(integerModel.getObject(), instanceOf(Integer.class));
 	}
 }

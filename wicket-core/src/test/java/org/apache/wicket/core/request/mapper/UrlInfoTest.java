@@ -17,8 +17,8 @@
 package org.apache.wicket.core.request.mapper;
 
 import org.apache.wicket.MockPage;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.core.request.mapper.AbstractBookmarkableMapper.UrlInfo;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Assert;
 import org.junit.Test;

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -34,9 +35,9 @@ import org.apache.wicket.util.visit.IVisitor;
  * <pre>
  *    &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
  *      ...
- *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
+ *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;/&gt;choice 1
  *      ...
- *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
+ *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;/&gt;choice 2
  *      ...
  *    &lt;/span&gt;
  * </pre>
@@ -47,7 +48,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * @param <T>
  *            The model object type
  */
-public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
+public class RadioGroup<T> extends FormComponent<T> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -92,24 +93,19 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	@Override
 	protected String getModelValue()
 	{
-		final StringBuilder builder = new StringBuilder();
-
-		final T t = getModelObject();
-
-		visitChildren(Radio.class, new IVisitor<Radio<T>, Void>()
+		String radioValue = visitChildren(Radio.class, new IVisitor<Radio<T>, String>()
 		{
 			@Override
-			public void component(Radio<T> radio, IVisit<Void> visit)
+			public void component(Radio<T> radio, IVisit<String> visit)
 			{
 				if (getModelComparator().compare(RadioGroup.this, radio.getDefaultModelObject()))
 				{
-					builder.append(radio.getValue());
-					visit.stop();
+					visit.stop(radio.getValue());
 				}
 			}
 		});
 
-		return builder.toString();
+		return radioValue;
 	}
 
 	/**
@@ -172,11 +168,11 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	 * Called when a selection changes.
 	 */
 	@Override
-	public final void onSelectionChanged()
+	public final void onRequest()
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged(getDefaultModelObject());
+		onSelectionChanged(getModelObject());
 	}
 
 	/**
@@ -189,8 +185,10 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	 * @param newSelection
 	 *            The newly selected object of the backing model NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
+	 * 
+	 * @see #wantOnSelectionChangedNotifications()
 	 */
-	protected void onSelectionChanged(final Object newSelection)
+	protected void onSelectionChanged(final T newSelection)
 	{
 	}
 }

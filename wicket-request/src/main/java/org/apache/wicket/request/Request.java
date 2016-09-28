@@ -133,7 +133,7 @@ public abstract class Request
 	 */
 	public IRequestParameters getRequestParameters()
 	{
-		return new CombinedRequestParametersAdapter(getQueryParameters(), getPostParameters());
+		return new CombinedRequestParametersAdapter(getPostParameters(), getQueryParameters());
 	}
 
 	/**

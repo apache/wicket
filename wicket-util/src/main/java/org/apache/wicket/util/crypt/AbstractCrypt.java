@@ -18,6 +18,8 @@ package org.apache.wicket.util.crypt;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.Base64;
+import java.util.UUID;
 
 import javax.crypto.Cipher;
 
@@ -32,9 +34,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractCrypt implements ICrypt
 {
-	/** Default encryption key */
-	private static final String DEFAULT_ENCRYPTION_KEY = "WiCkEt-CrYpT";
-
 	/** Encoding used to convert java String from and to byte[] */
 	private static final String CHARACTER_ENCODING = "UTF-8";
 
@@ -42,13 +41,14 @@ public abstract class AbstractCrypt implements ICrypt
 	private static final Logger log = LoggerFactory.getLogger(AbstractCrypt.class);
 
 	/** Key used to de-/encrypt the data */
-	private String encryptionKey = DEFAULT_ENCRYPTION_KEY;
+	private String encryptionKey;
 
 	/**
 	 * Constructor
 	 */
 	public AbstractCrypt()
 	{
+		this.encryptionKey = UUID.randomUUID().toString();
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class AbstractCrypt implements ICrypt
 	{
 		try
 		{
-			byte[] decoded = new Base64(true).decode(text);
+			byte[] decoded = java.util.Base64.getUrlDecoder().decode(text);
 			return new String(decryptByteArray(decoded), CHARACTER_ENCODING);
 		}
 		catch (Exception ex)
@@ -86,7 +86,9 @@ public abstract class AbstractCrypt implements ICrypt
 		try
 		{
 			byte[] encrypted = encryptStringToByteArray(plainText);
-			return new String(new Base64(-1, null, true).encode(encrypted), CHARACTER_ENCODING);
+			Base64.Encoder encoder = Base64.getUrlEncoder().withoutPadding();
+			byte[] encoded = encoder.encode(encrypted);
+			return new String(encoded, CHARACTER_ENCODING);
 		}
 		catch (GeneralSecurityException e)
 		{
@@ -142,7 +144,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 *            byte array to decrypt
 	 * @return the decrypted text
 	 */
-	private final byte[] decryptByteArray(final byte[] encrypted)
+	private byte[] decryptByteArray(final byte[] encrypted)
 	{
 		try
 		{
@@ -163,7 +165,7 @@ public abstract class AbstractCrypt implements ICrypt
 	 * @return the string encrypted
 	 * @throws GeneralSecurityException
 	 */
-	private final byte[] encryptStringToByteArray(final String plainText)
+	private byte[] encryptStringToByteArray(final String plainText)
 		throws GeneralSecurityException
 	{
 		try

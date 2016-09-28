@@ -23,7 +23,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.form.AutoLabelTagHandler;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
-import org.apache.wicket.markup.parser.filter.ConditionalCommentFilter;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.HeadForceTagIdHandler;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
@@ -177,7 +176,6 @@ public class MarkupParser extends AbstractMarkupParser
 
 		// Append it. See WICKET-4390
 		filters.add(new StyleAndScriptIdentifier(), StyleAndScriptIdentifier.class);
-		filters.add(new ConditionalCommentFilter());
 		filters.add(new WicketContainerTagHandler(markupResourceStream, Application.get().usesDevelopmentConfig()));
 
 		return filters;

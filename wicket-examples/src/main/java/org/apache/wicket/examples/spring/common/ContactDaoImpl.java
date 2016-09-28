@@ -18,7 +18,6 @@ package org.apache.wicket.examples.spring.common;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -163,41 +162,13 @@ public class ContactDaoImpl implements ContactDao
 
 	private void updateIndecies()
 	{
-		Collections.sort(fnameIdx, new Comparator<Contact>()
-		{
-			@Override
-			public int compare(Contact arg0, Contact arg1)
-			{
-				return (arg0).getFirstName().compareTo((arg1).getFirstName());
-			}
-		});
+		Collections.sort(fnameIdx, (arg0, arg1) -> (arg0).getFirstName().compareTo((arg1).getFirstName()));
 
-		Collections.sort(lnameIdx, new Comparator<Contact>()
-		{
-			@Override
-			public int compare(Contact arg0, Contact arg1)
-			{
-				return (arg0).getLastName().compareTo((arg1).getLastName());
-			}
-		});
+		Collections.sort(lnameIdx, (arg0, arg1) -> (arg0).getLastName().compareTo((arg1).getLastName()));
 
-		Collections.sort(fnameDescIdx, new Comparator<Contact>()
-		{
-			@Override
-			public int compare(Contact arg0, Contact arg1)
-			{
-				return (arg1).getFirstName().compareTo((arg0).getFirstName());
-			}
-		});
+		Collections.sort(fnameDescIdx, (arg0, arg1) -> (arg1).getFirstName().compareTo((arg0).getFirstName()));
 
-		Collections.sort(lnameDescIdx, new Comparator<Contact>()
-		{
-			@Override
-			public int compare(Contact arg0, Contact arg1)
-			{
-				return (arg1).getLastName().compareTo((arg0).getLastName());
-			}
-		});
+		Collections.sort(lnameDescIdx, (arg0, arg1) -> (arg1).getLastName().compareTo((arg0).getLastName()));
 
 	}
 

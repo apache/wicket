@@ -18,6 +18,9 @@ package org.apache.wicket.util.file;
 
 import java.io.File;
 
+import org.apache.commons.io.FileCleaningTracker;
+import org.apache.commons.io.FileDeleteStrategy;
+
 /**
  * Default implementation of {@link IFileCleaner} that uses Apache commons-io
  * {@link FileCleaningTracker} to track and clean the temporary created files.

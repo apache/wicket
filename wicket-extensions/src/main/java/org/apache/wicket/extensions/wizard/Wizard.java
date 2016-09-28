@@ -18,14 +18,11 @@ package org.apache.wicket.extensions.wizard;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.request.resource.CssResourceReference;
 
 
 /**
@@ -79,8 +76,6 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/** The wizard model. */
 	private IWizardModel wizardModel;
 
-	private final boolean addDefaultCssStyle;
-
 	/**
 	 * Construct. Adds the default style.
 	 * <p>
@@ -97,29 +92,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	public Wizard(final String id)
 	{
-		this(id, true);
-	}
-
-	/**
-	 * Construct.
-	 * <p>
-	 * If you override this class, it makes sense to call this constructor (super(id)), then - in
-	 * your constructor - construct a transition model and then call {@link #init(IWizardModel)} to
-	 * initialize the wizard.
-	 * </p>
-	 * <p>
-	 * This constructor is not meant for normal clients of this class
-	 * </p>
-	 * 
-	 * @param id
-	 *            The component model
-	 * @param addDefaultCssStyle
-	 *            Whether to add the {@link #addDefaultCssStyle(org.apache.wicket.markup.head.IHeaderResponse) default style}
-	 */
-	public Wizard(final String id, final boolean addDefaultCssStyle)
-	{
 		super(id);
-		this.addDefaultCssStyle = addDefaultCssStyle;
 	}
 
 	/**
@@ -135,51 +108,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 */
 	public Wizard(final String id, final IWizardModel wizardModel)
 	{
-		this(id, wizardModel, true);
-	}
-
-	/**
-	 * Construct with a transition model.
-	 * <p>
-	 * For most clients, this is typically the right constructor to use.
-	 * </p>
-	 * 
-	 * @param id
-	 *            The component id
-	 * @param wizardModel
-	 *            The transitions model
-	 * @param addDefaultCssStyle
-	 *            Whether to add the {@link #addDefaultCssStyle(org.apache.wicket.markup.head.IHeaderResponse) default style}
-	 */
-	public Wizard(final String id, final IWizardModel wizardModel, final boolean addDefaultCssStyle)
-	{
 		super(id);
 
 		init(wizardModel);
-		this.addDefaultCssStyle = addDefaultCssStyle;
-
-	}
-
-	/**
-	 * Will let the wizard contribute a CSS include to the page's header. It will add Wizard.css
-	 * from this package. This method is typically called by the class that creates the wizard.
-	 * 
-	 * @param response
-	 */
-	public void addDefaultCssStyle(final IHeaderResponse response)
-	{
-		response.render(CssHeaderItem.forReference(new CssResourceReference(Wizard.class,
-			"Wizard.css")));
-	}
-
-	@Override
-	public void renderHead(final IHeaderResponse response)
-	{
-		super.renderHead(response);
-		if (addDefaultCssStyle)
-		{
-			addDefaultCssStyle(response);
-		}
 	}
 
 	/**

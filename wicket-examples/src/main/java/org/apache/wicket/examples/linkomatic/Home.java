@@ -37,8 +37,8 @@ import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -66,27 +66,13 @@ public class Home extends WicketExamplePage
 	public Home()
 	{
 		// Action link counts link clicks
-		final Link actionLink = new Link("actionLink")
-		{
-			@Override
-			public void onClick()
-			{
-				linkClickCount++;
-			}
-		};
+		final Link<Void> actionLink = Link.onClick("actionLink", (link) -> linkClickCount++);
 		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this,
 			"linkClickCount")));
 		add(actionLink);
 
 		// Action link counts link clicks on works with onclick handler
-		final Link actionOnClickLink = new Link("actionOnClickLink")
-		{
-			@Override
-			public void onClick()
-			{
-				onClickLinkClickCount++;
-			}
-		};
+		final Link<Void> actionOnClickLink = Link.onClick("actionOnClickLink", (link) -> onClickLinkClickCount++);
 
 		add(actionOnClickLink);
 		add(new Label("onClickLinkClickCount", new PropertyModel<Integer>(this,
@@ -103,24 +89,10 @@ public class Home extends WicketExamplePage
 		add(page3Link);
 
 		// Link to BookDetails page
-		add(new Link<Void>("bookDetailsLink")
-		{
-			@Override
-			public void onClick()
-			{
-				setResponsePage(new BookDetails(new Book("The Hobbit")));
-			}
-		});
+		add(Link.onClick("bookDetailsLink", (link) -> setResponsePage(new BookDetails(new Book("The Hobbit")))));
 
 		// Delayed link to BookDetails page
-		add(new Link<Void>("bookDetailsLink2")
-		{
-			@Override
-			public void onClick()
-			{
-				setResponsePage(new BookDetails(new Book("Inside The Matrix")));
-			}
-		});
+		add(Link.onClick("bookDetailsLink2", (link) -> setResponsePage(new BookDetails(new Book("Inside The Matrix")))));
 
 		// Image map link example
 		Image imageForMap = new Image("imageForMap", new PackageResourceReference(Home.class,
@@ -153,7 +125,7 @@ public class Home extends WicketExamplePage
 		// Shared resource link
 		add(new ResourceLink<>("cancelButtonLink", new SharedResourceReference("cancelButton")));
 
-		add(new DownloadLink("downloadLink", new AbstractReadOnlyModel<File>()
+		add(new DownloadLink("downloadLink", new IModel<File>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -183,35 +155,16 @@ public class Home extends WicketExamplePage
 		add(feedbackPanel);
 		add(new RedirectForm("redirectForm"));
 
-		Link linkToAnchor = new Link("linkToAnchor")
-		{
-			@Override
-			public void onClick()
-			{
-			}
-		};
+		Link<Void> linkToAnchor = Link.onClick("linkToAnchor", (link) -> {});
 		add(linkToAnchor);
-		Link anotherlinkToAnchor = new Link("anotherlinkToAnchor")
-		{
-			@Override
-			public void onClick()
-			{
-			}
-		};
+		Link<Void> anotherlinkToAnchor = Link.onClick("anotherlinkToAnchor", (link) -> {});
 		add(anotherlinkToAnchor);
 		Component anchorLabel = new Label("anchorLabel",
 			"this label is here to function as an anchor for a link").setOutputMarkupId(true);
 		add(anchorLabel);
 		linkToAnchor.setAnchor(anchorLabel);
 
-		Link<Void> linkWithLabel = new Link<Void>("linkWithLabel")
-		{
-
-			@Override
-			public void onClick()
-			{
-			}
-		};
+		Link<Void> linkWithLabel = Link.onClick("linkWithLabel", (link) -> {});
 		linkWithLabel.setBody(Model.of("A link that provides its body with Link.setBody(someModel)"));
 		add(linkWithLabel);
 	}
@@ -237,9 +190,6 @@ public class Home extends WicketExamplePage
 			add(new TextField<>("redirectUrl"));
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
 		@Override
 		protected void onSubmit()
 		{
@@ -306,9 +256,6 @@ public class Home extends WicketExamplePage
 		this.onClickLinkClickCount = onClickLinkClickCount;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
 	@Override
 	public boolean isVersioned()
 	{

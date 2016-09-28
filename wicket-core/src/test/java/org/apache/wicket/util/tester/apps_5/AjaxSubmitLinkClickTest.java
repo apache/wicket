@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.util.tester.apps_5;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.apps_5.MockPageWithFormAndLink.MockPojo;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,14 +58,13 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
-				assertNotNull(form);
 				linkClicked = true;
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 			}
 		});
@@ -104,14 +103,13 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
-				assertNotNull(form);
 				linkClicked = true;
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 			}
 		};

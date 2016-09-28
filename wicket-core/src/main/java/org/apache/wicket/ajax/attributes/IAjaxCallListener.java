@@ -37,6 +37,20 @@ import org.apache.wicket.Component;
 public interface IAjaxCallListener
 {
 	/**
+	 * The JavaScript that will be executed on initialization of the Ajax call, immediately after the causing event.
+	 * The script will be executed in a function that receives the following
+	 * parameters:
+	 * <ol>
+	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
+	 * 
+	 * @param component
+	 *            the Component with the Ajax behavior
+	 * @return the JavaScript that will be executed on initialization of the Ajax call.
+	 */
+	CharSequence getInitHandler(Component component);
+
+	/**
 	 * The JavaScript that will be executed before the Ajax call, as early as possible. Even before
 	 * the preconditions. The script will be executed in a function that receives the following
 	 * parameters:
@@ -120,6 +134,9 @@ public interface IAjaxCallListener
 	 * will be executed in a function that receives the following parameters:
 	 * <ol>
 	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * <li>jqXHR - the jQuery XMLHttpRequest object</li>
+	 * <li>errorMessage - in case of HTTP error the textual portion of the HTTP status</li>
+	 * <li>textStatus - type of failure: null, "timeout", "error", "abort" or "parsererror"</li>
 	 * </ol>
 	 * 
 	 * @param component
@@ -143,4 +160,18 @@ public interface IAjaxCallListener
 	 *         the Ajax call.
 	 */
 	CharSequence getCompleteHandler(Component component);
+
+	/**
+	 * The JavaScript that will be executed after the Ajax call is done, regardless whether it was
+	 * sent or not. The script will be executed in a function that receives the following
+	 * parameters:
+	 * <ol>
+	 * <li>attrs - the AjaxRequestAttributes as JSON</li>
+	 * </ol>
+	 *
+	 * @param component
+	 *            the Component with the Ajax behavior
+	 * @return the JavaScript that will be executed after the Ajax call is done.
+	 */
+	CharSequence getDoneHandler(Component component);
 }

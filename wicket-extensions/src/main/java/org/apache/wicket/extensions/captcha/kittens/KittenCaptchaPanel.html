@@ -23,7 +23,11 @@
 			if (event.offsetX != null) {
 				result = event.offsetX;
 			} else {
-				result = event.pageX - element.offsetLeft;
+				result = event.pageX;
+				do {
+					result = result - element.offsetLeft;
+					element = element.offsetParent;
+				} while (element != null)
 			}
 			return parseInt(result, 10);
 		}
@@ -32,7 +36,11 @@
 			if (event.offsetY != null) {
 				result = event.offsetY;
 			} else {
-				result = event.pageY - element.offsetTop;
+				result = event.pageY;
+				do {
+					result = result - element.offsetTop;
+					element = element.offsetParent;
+				} while (element != null)
 			}
 			return parseInt(result, 10);
 		}

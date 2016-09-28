@@ -17,6 +17,9 @@
 package org.apache.wicket.markup.html.link;
 
 
+import org.apache.wicket.lambda.WicketConsumer;
+import org.apache.wicket.util.lang.Args;
+
 /**
  * This link is stateless that means that the url to this link could generate a new page before the
  * link onClick is called. Because of this you can't depend on model data in the onClick method.
@@ -42,7 +45,6 @@ public abstract class StatelessLink<T> extends Link<T>
 		super(id);
 	}
 
-
 	@Override
 	protected boolean getStatelessHint()
 	{
@@ -52,6 +54,31 @@ public abstract class StatelessLink<T> extends Link<T>
 	@Override
 	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.INTERFACE, getPage().getPageParameters());
+		return urlForListener(getPage().getPageParameters());
+	}
+
+	/**
+	 * Creates a {@link Link} based on lambda expressions
+	 *
+	 * @param id
+	 *            the id of the link
+	 * @param onClick
+	 *            the {@link WicketConsumer} which accepts the {@link Void}
+	 * @return the {@link Link}
+	 */
+	public static <T> StatelessLink<T> onClick(String id, WicketConsumer<Link<T>> onClick)
+	{
+		Args.notNull(onClick, "onClick");
+
+		return new StatelessLink<T>(id)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+				onClick.accept(this);
+			}
+		};
 	}
 }

@@ -19,11 +19,14 @@ package org.apache.wicket.markup.html.form;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
@@ -44,7 +47,7 @@ import org.apache.wicket.util.value.IValueMap;
  * HTML:
  * 
  * <pre>
- *    &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *    &lt;span style=&quot;vertical-align: top;&quot; wicket:id=&quot;site&quot;&gt;
  *   	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
  *   	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
  *    &lt;/span&gt;
@@ -53,7 +56,7 @@ import org.apache.wicket.util.value.IValueMap;
  * </p>
  * 
  * <p>
- * You can can extend this class and override method wantOnSelectionChangedNotifications() to force
+ * You can extend this class and override method wantOnSelectionChangedNotifications() to force
  * server roundtrips on each selection change.
  * </p>
  * 
@@ -63,12 +66,14 @@ import org.apache.wicket.util.value.IValueMap;
  * @param <T>
  *            The model object type
  */
-public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
+public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
 	private String prefix = "";
-	private String suffix = "<br />\n";
+	private String suffix = "";
+
+	private LabelPosition labelPosition = LabelPosition.AFTER;
 
 	/**
 	 * Constructor
@@ -244,11 +249,11 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	@Override
-	public void onSelectionChanged()
+	public void onRequest()
 	{
 		convertInput();
 		updateModel();
-		onSelectionChanged(getDefaultModelObject());
+		onSelectionChanged(getModelObject());
 	}
 
 	/**
@@ -261,8 +266,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @param newSelection
 	 *            The newly selected object of the backing model NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
+	 * @see #wantOnSelectionChangedNotifications()
 	 */
-	protected void onSelectionChanged(Object newSelection)
+	protected void onSelectionChanged(T newSelection)
 	{
 	}
 
@@ -362,6 +368,20 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	}
 
 	/**
+	 * Sets the preferred position of the &lt;label&gt; for each choice
+	 *
+	 * @param labelPosition
+	 *              The preferred position for the label
+	 * @return {@code this} instance, for chaining
+	 */
+	public RadioChoice<T> setLabelPosition(LabelPosition labelPosition)
+	{
+		Args.notNull(labelPosition, "labelPosition");
+		this.labelPosition = labelPosition;
+		return this;
+	}
+
+	/**
 	 * @see org.apache.wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	@Override
@@ -437,6 +457,60 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			boolean enabled = isEnabledInHierarchy() && !isDisabled(choice, index, selected);
 
+			// Add label for radio button
+			String display = label;
+			if (localizeDisplayValues())
+			{
+				display = getLocalizer().getString(label, this, label);
+			}
+
+			CharSequence escaped = display;
+			if (getEscapeModelStrings())
+			{
+				escaped = Strings.escapeMarkup(display);
+			}
+
+			// Allows user to add attributes to the <label..> tag
+			IValueMap labelAttrs = getAdditionalAttributesForLabel(index, choice);
+			StringBuilder extraLabelAttributes = new StringBuilder();
+			if (labelAttrs != null)
+			{
+				for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
+				{
+					extraLabelAttributes.append(' ')
+							.append(Strings.escapeMarkup(attr.getKey()))
+							.append("=\"")
+							.append(Strings.escapeMarkup(attr.getValue().toString()))
+							.append('"');
+				}
+			}
+
+			switch (labelPosition)
+			{
+				case BEFORE:
+
+					buffer.append("<label for=\"")
+							.append(Strings.escapeMarkup(idAttr))
+							.append('"')
+							.append(extraLabelAttributes)
+							.append('>')
+							.append(escaped)
+							.append("</label>");
+					break;
+				case WRAP_BEFORE:
+					buffer.append("<label")
+							.append(extraLabelAttributes)
+							.append('>')
+							.append(escaped)
+							.append(' ');
+					break;
+				case WRAP_AFTER:
+					buffer.append("<label")
+							.append(extraLabelAttributes)
+							.append('>');
+					break;
+			}
+
 			// Add radio tag
 			buffer.append("<input name=\"")
 				.append(getInputName())
@@ -445,16 +519,16 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				.append((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
 				.append((enabled ? "" : " disabled=\"disabled\""))
 				.append(" value=\"")
-				.append(id)
+				.append(Strings.escapeMarkup(id))
 				.append("\" id=\"")
-				.append(idAttr)
+				.append(Strings.escapeMarkup(idAttr))
 				.append('"');
 
 			// Should a roundtrip be made (have onSelectionChanged called)
 			// when the option is clicked?
 			if (wantOnSelectionChangedNotifications())
 			{
-				CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
+				CharSequence url = urlForListener(new PageParameters());
 
 				Form<?> form = findParent(Form.class);
 				if (form != null)
@@ -471,7 +545,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 						.append(url)
 						.append((url.toString().indexOf('?') > -1 ? '&' : '?') + getInputName())
 						.append('=')
-						.append(id)
+						.append(Strings.escapeMarkup(id))
 						.append("';\"");
 				}
 			}
@@ -484,20 +558,22 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					for (Map.Entry<String, Object> attr : attrs.entrySet())
 					{
 						buffer.append(' ')
-							.append(attr.getKey())
+							.append(Strings.escapeMarkup(attr.getKey()))
 							.append("=\"")
-							.append(attr.getValue())
+							.append(Strings.escapeMarkup(attr.getValue().toString()))
 							.append('"');
 					}
 				}
 			}
 
-			if (getApplication().getDebugSettings().isOutputComponentPath())
+			DebugSettings debugSettings = getApplication().getDebugSettings();
+			String componentPathAttributeName = debugSettings.getComponentPathAttributeName();
+			if (Strings.isEmpty(componentPathAttributeName) == false)
 			{
 				CharSequence path = getPageRelativePath();
 				path = Strings.replaceAll(path, "_", "__");
 				path = Strings.replaceAll(path, ":", "_");
-				buffer.append(" wicketpath=\"")
+				buffer.append(' ').append(componentPathAttributeName).append("=\"")
 					.append(path)
 					.append("_input_")
 					.append(index)
@@ -506,24 +582,26 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			buffer.append("/>");
 
-			// Add label for radio button
-			String display = label;
-			if (localizeDisplayValues())
+			switch (labelPosition)
 			{
-				display = getLocalizer().getString(label, this, label);
+				case AFTER:
+					buffer.append("<label for=\"")
+							.append(Strings.escapeMarkup(idAttr))
+							.append('"')
+							.append(extraLabelAttributes)
+							.append('>')
+							.append(escaped)
+							.append("</label>");
+					break;
+				case WRAP_BEFORE:
+					buffer.append("</label>");
+					break;
+				case WRAP_AFTER:
+					buffer.append(' ')
+							.append(escaped)
+							.append("</label>");
+					break;
 			}
-
-			CharSequence escaped = display;
-			if (getEscapeModelStrings())
-			{
-				escaped = Strings.escapeMarkup(display);
-			}
-
-			buffer.append("<label for=\"")
-				.append(idAttr)
-				.append("\">")
-				.append(escaped)
-				.append("</label>");
 
 			// Append option suffix
 			buffer.append(getSuffix(index, choice));
@@ -531,10 +609,26 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	}
 
 	/**
+	 * You may subclass this method to provide additional attributes to the &lt;label ..&gt; tag.
+	 *
+	 @param index
+	  *            index of the choice
+	  * @param choice
+	 *            the choice itself
+	 * @return tag attribute name/value pairs.
+	 */
+	protected IValueMap getAdditionalAttributesForLabel(int index, T choice)
+	{
+		return null;
+	}
+
+	/**
 	 * You may subclass this method to provide additional attributes to the &lt;input ..&gt; tag.
 	 * 
 	 * @param index
+	 *            index of the choice
 	 * @param choice
+	 *            the choice itself
 	 * @return tag attribute name/value pairs.
 	 */
 	protected IValueMap getAdditionalAttributes(final int index, final T choice)

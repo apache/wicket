@@ -34,8 +34,8 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.http.handler.ErrorCodeRequestHandler;
-import org.apache.wicket.settings.IExceptionSettings;
-import org.apache.wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import org.apache.wicket.request.resource.PackageResource;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,14 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			return new ErrorCodeRequestHandler(500);
 		}
 	}
-
+	
+	/**
+	 * Maps exceptions to their corresponding {@link IRequestHandler}.
+	 * 
+	 * @param e
+	 * 			the current exception
+	 * @return the {@link IRequestHandler} for the current exception
+	 */
 	private IRequestHandler internalMap(Exception e)
 	{
 		final Application application = Application.get();
@@ -90,6 +97,29 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			}
 		}
 
+		IRequestHandler handleExpectedExceptions = mapExpectedExceptions(e, application);
+		
+		if (handleExpectedExceptions != null)
+		{
+			return handleExpectedExceptions;
+		}
+
+		return mapUnexpectedExceptions(e, application);
+	
+	}
+	
+	/**
+	 * Maps expected exceptions (i.e. those internally used by Wicket) to their corresponding
+	 * {@link IRequestHandler}.
+	 * 
+	 * @param e
+	 * 			the current exception
+	 * @param application
+	 * 			the current application object
+	 * @return the {@link IRequestHandler} for the current exception
+	 */
+	protected IRequestHandler mapExpectedExceptions(Exception e, final Application application)
+	{
 		if (e instanceof StalePageException)
 		{
 			// If the page was stale, just re-render it
@@ -114,34 +144,58 @@ public class DefaultExceptionMapper implements IExceptionMapper
 			logger.error("Connection lost, give up responding.", e);
 			return new EmptyRequestHandler();
 		}
-		else
+		else if (e instanceof PackageResource.PackageResourceBlockedException && application.usesDeploymentConfig())
 		{
-
-			final UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
-				.getUnexpectedExceptionDisplay();
-
-			logger.error("Unexpected error occurred", e);
-
-			if (IExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
-			{
-				Page currentPage = extractCurrentPage();
-				return createPageRequestHandler(new PageProvider(new ExceptionErrorPage(e,
-					currentPage)));
-			}
-			else if (IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
-			{
-				return createPageRequestHandler(new PageProvider(
-					application.getApplicationSettings().getInternalErrorPage()));
-			}
-			else
-			{
-				// IExceptionSettings.SHOW_NO_EXCEPTION_PAGE
-				return new ErrorCodeRequestHandler(500);
-			}
+			logger.debug(e.getMessage(), e);
+			return new ErrorCodeRequestHandler(404);
 		}
+		
+		return null;
 	}
 
-	private RenderPageRequestHandler createPageRequestHandler(PageProvider pageProvider)
+	/**
+	 * Maps unexpected exceptions to their corresponding {@link IRequestHandler}.
+	 * 
+	 * @param e
+	 * 			the current exception
+	 * @param application
+	 * 			the current application object
+	 * @return the {@link IRequestHandler} for the current exception
+	 */
+	protected IRequestHandler mapUnexpectedExceptions(Exception e, final Application application)
+	{
+		final ExceptionSettings.UnexpectedExceptionDisplay unexpectedExceptionDisplay = application.getExceptionSettings()
+			.getUnexpectedExceptionDisplay();
+
+		logger.error("Unexpected error occurred", e);
+
+		if (ExceptionSettings.SHOW_EXCEPTION_PAGE.equals(unexpectedExceptionDisplay))
+		{
+			Page currentPage = extractCurrentPage();
+			return createPageRequestHandler(new PageProvider(new ExceptionErrorPage(e,
+				currentPage)));
+		}
+		else if (ExceptionSettings.SHOW_INTERNAL_ERROR_PAGE.equals(unexpectedExceptionDisplay))
+		{
+			return createPageRequestHandler(new PageProvider(
+				application.getApplicationSettings().getInternalErrorPage()));
+		}
+		
+		// IExceptionSettings.SHOW_NO_EXCEPTION_PAGE
+		return new ErrorCodeRequestHandler(500);
+	}
+
+	/**
+	 * Creates a {@link RenderPageRequestHandler} for the target page provided by {@code pageProvider}.
+	 * 
+	 * Uses {@link RenderPageRequestHandler.RedirectPolicy#NEVER_REDIRECT} policy to preserve the original page's URL
+	 * for non-Ajax requests and {@link RenderPageRequestHandler.RedirectPolicy#AUTO_REDIRECT} for AJAX requests.
+	 * 
+	 * @param pageProvider
+	 * 			the page provider for the target page
+	 * @return the request handler for the target page
+	 */
+	protected RenderPageRequestHandler createPageRequestHandler(PageProvider pageProvider)
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 
@@ -151,10 +205,6 @@ public class DefaultExceptionMapper implements IExceptionMapper
 				"there is no current request cycle attached to this thread");
 		}
 
-		/*
-		 * Use NEVER_REDIRECT policy to preserve the original page's URL for non-Ajax requests and
-		 * always redirect for ajax requests
-		 */
 		RenderPageRequestHandler.RedirectPolicy redirect = RenderPageRequestHandler.RedirectPolicy.NEVER_REDIRECT;
 
 		if (isProcessingAjaxRequest())
@@ -164,8 +214,11 @@ public class DefaultExceptionMapper implements IExceptionMapper
 
 		return new RenderPageRequestHandler(pageProvider, redirect);
 	}
-
-	private boolean isProcessingAjaxRequest()
+	
+	/**
+	 * @return true if current request is an AJAX request, false otherwise.
+	 */
+	protected boolean isProcessingAjaxRequest()
 	{
 		RequestCycle rc = RequestCycle.get();
 		Request request = rc.getRequest();
@@ -180,7 +233,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 	 * @return the page being rendered when the exception was thrown, or {@code null} if it cannot
 	 *         be extracted
 	 */
-	private Page extractCurrentPage()
+	protected Page extractCurrentPage()
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
 

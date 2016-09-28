@@ -33,7 +33,7 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.settings.IApplicationSettings;
+import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.util.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,13 +134,9 @@ public class JavaSerializer implements ISerializer
 				}
 			}
 		}
-		catch (ClassNotFoundException e)
+		catch (ClassNotFoundException | IOException cnfx)
 		{
-			throw new RuntimeException("Could not deserialize object using: " + ois.getClass(), e);
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException("Could not deserialize object using: " + ois.getClass(), e);
+			throw new RuntimeException("Could not deserialize object from byte[]", cnfx);
 		}
 		finally
 		{
@@ -212,7 +208,7 @@ public class JavaSerializer implements ISerializer
 				// Should be if serialization happened in thread with application set
 				// (WICKET-2195)
 				Application application = Application.get();
-				IApplicationSettings applicationSettings = application.getApplicationSettings();
+				ApplicationSettings applicationSettings = application.getApplicationSettings();
 				IClassResolver classResolver = applicationSettings.getClassResolver();
 
 				candidate = classResolver.resolveClass(className);
@@ -263,10 +259,25 @@ public class JavaSerializer implements ISerializer
 			{
 				if (CheckingObjectOutputStream.isAvailable())
 				{
-					// trigger serialization again, but this time gather some more info
-					CheckingObjectOutputStream checkingObjectOutputStream =
+					try
+					{
+						// trigger serialization again, but this time gather some more info
+						CheckingObjectOutputStream checkingObjectOutputStream =
 							new CheckingObjectOutputStream(outputStream, new ObjectSerializationChecker(nsx));
-					checkingObjectOutputStream.writeObject(obj);
+						checkingObjectOutputStream.writeObject(obj);
+					} 
+					catch (Exception x)
+					{
+						if (x instanceof CheckingObjectOutputStream.ObjectCheckException)
+						{
+							throw (CheckingObjectOutputStream.ObjectCheckException) x;
+						}
+						else
+						{
+							x.initCause(nsx);
+							throw new WicketRuntimeException("A problem occurred while trying to collect debug information about not serializable object", x);
+						}
+					}
 
 					// if we get here, we didn't fail, while we should
 					throw nsx;

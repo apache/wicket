@@ -21,6 +21,8 @@ package org.apache.wicket.util;
  * 
  * @author igor.vaynberg
  * @param <T>
+ * 
+ * @deprecated  Use {@code java.util.function.Supplier<T>} instead
  */
 public interface IProvider<T>
 {

@@ -107,7 +107,8 @@ public class JSONWriter {
      * @return this
      * @throws JSONException If the value is out of sequence.
      */
-    private JSONWriter append(String string) throws JSONException {
+    private JSONWriter append(String string) throws JSONException
+    {
         if (string == null) {
             throw new JSONException("Null pointer");
         }
@@ -269,7 +270,7 @@ public class JSONWriter {
 
     /**
      * Push an array or object scope.
-     * @param c The scope to open.
+     * @param jo The scope to open.
      * @throws JSONException If nesting is too deep.
      */
     private void push(JSONObject jo) throws JSONException {

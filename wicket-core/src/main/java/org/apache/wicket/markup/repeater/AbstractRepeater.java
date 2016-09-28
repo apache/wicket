@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.markup.repeater;
 
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.DequeueContext;
+import org.apache.wicket.DequeueContext.Bookmark;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -35,7 +38,14 @@ import org.slf4j.LoggerFactory;
  * the beginning of this component. Each child is rendered by a call to
  * {@link #renderChild(Component)}. A typical implementation simply does
  * <code>child.render();</code>.
- * 
+ *
+ * <strong>Note</strong>: the children are added during the render phase (in {@linkplain #beforeRender()} so
+ * most of the specializations of this class should not be used as parents of
+ * {@link org.apache.wicket.markup.html.form.FormComponent}s in stateless pages because the form components
+ * will not be available during the action phase (i.e. at
+ * {@link org.apache.wicket.markup.html.form.StatelessForm#onSubmit()}). Use
+ * {@link org.apache.wicket.markup.repeater.RepeatingView} in these cases.
+ *
  * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class AbstractRepeater extends WebMarkupContainer
@@ -43,8 +53,6 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractRepeater.class);
-
-	private static Pattern SAFE_CHILD_ID_PATTERN = Pattern.compile("^\\d+$");
 
 	/**
 	 * Constructor
@@ -117,20 +125,19 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 
 		if (getApplication().usesDevelopmentConfig())
 		{
+			Set<String> usedComponentIds = new HashSet<>();
 			Iterator<? extends Component> i = iterator();
 			while (i.hasNext())
 			{
 				Component c = i.next();
-				Matcher matcher = SAFE_CHILD_ID_PATTERN.matcher(c.getId());
-				if (!matcher.matches())
+				String componentId = c.getId();
+				if (usedComponentIds.add(componentId) == false)
 				{
-					log.warn("Child component of repeater " + getClass().getName() + ":" + getId() +
-						" has a non-safe child id of " + c.getId() +
-						". Safe child ids must be composed of digits only.");
+					log.warn("Repeater '{}' has multiple children with the same component id: '{}'",
+							getPageRelativePath(), componentId);
 					// do not flood the log
 					break;
 				}
-
 			}
 		}
 		super.onBeforeRender();
@@ -150,4 +157,32 @@ public abstract class AbstractRepeater extends WebMarkupContainer
 	 * Callback to let the repeater know it should populate itself with its items.
 	 */
 	protected abstract void onPopulate();
+
+	@Override
+	public void dequeue(DequeueContext dequeue)
+	{
+		if (size() > 0)
+		{
+			// essentially what we do is for every child replace the repeater with the child in
+			// dequeue container stack and run the dequeue on the child. we also take care to reset
+			// the state of the dequeue context after we process every child.
+
+			Bookmark bookmark = dequeue.save();
+
+			for (Component child : this)
+			{
+				if (child instanceof MarkupContainer)
+				{
+					dequeue.popContainer(); // pop the repeater
+					MarkupContainer container = (MarkupContainer) child;
+					dequeue.pushContainer(container);
+					container.dequeue(dequeue);
+					dequeue.restore(bookmark);
+				}
+			}
+		}
+
+		dequeue.skipToCloseTag();
+
+	}
 }

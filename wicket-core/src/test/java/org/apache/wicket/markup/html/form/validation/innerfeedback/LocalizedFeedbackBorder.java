@@ -17,13 +17,13 @@
 package org.apache.wicket.markup.html.form.validation.innerfeedback;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackCollector;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.validation.FormComponentFeedbackBorder;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 @SuppressWarnings("serial")
 class LocalizedFeedbackBorder extends FormComponentFeedbackBorder
@@ -36,7 +36,7 @@ class LocalizedFeedbackBorder extends FormComponentFeedbackBorder
 		WebMarkupContainer brdr = new WebMarkupContainer("border");
 		brdr.add(feedback = new FeedbackPanel("feedback", getMessagesFilter()));
 		brdr.add(getBodyContainer());
-		brdr.add(AttributeModifier.replace("style", new AbstractReadOnlyModel<String>()
+		brdr.add(AttributeModifier.replace("style", new IModel<String>()
 		{
 			@Override
 			public String getObject()

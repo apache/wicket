@@ -33,18 +33,12 @@ import org.apache.wicket.validation.validator.RangeValidator;
  */
 public class StatelessPage3 extends WicketExamplePage
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private Integer number;
 
 	private static final String PARAMETER_NAME = "value";
 
-	/**
-	 * @see org.apache.wicket.Page#onBeforeRender()
-	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -67,11 +61,8 @@ public class StatelessPage3 extends WicketExamplePage
 		field.add(new RangeValidator<>(0, 20));
 		field.setRequired(true);
 
-		StatelessForm<?> statelessForm = new StatelessForm("statelessform")
+		StatelessForm<?> statelessForm = new StatelessForm<Void>("statelessform")
 		{
-			/**
-			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-			 */
 			@Override
 			protected void onSubmit()
 			{

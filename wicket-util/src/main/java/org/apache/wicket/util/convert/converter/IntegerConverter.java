@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.convert.converter;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.IConverter;
@@ -31,6 +32,9 @@ public class IntegerConverter extends AbstractIntegerConverter<Integer>
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final BigDecimal MIN_VALUE = new BigDecimal(Integer.MIN_VALUE);
+	private static final BigDecimal MAX_VALUE = new BigDecimal(Integer.MAX_VALUE);
+
 	/**
 	 * The singleton instance for a integer converter
 	 */
@@ -42,7 +46,7 @@ public class IntegerConverter extends AbstractIntegerConverter<Integer>
 	@Override
 	public Integer convertToObject(final String value, final Locale locale)
 	{
-		final Number number = parse(value, Integer.MIN_VALUE, Integer.MAX_VALUE, locale);
+		final BigDecimal number = parse(value, MIN_VALUE, MAX_VALUE, locale);
 
 		if (number == null)
 		{

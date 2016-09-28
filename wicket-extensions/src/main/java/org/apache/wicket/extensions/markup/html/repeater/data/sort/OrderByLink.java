@@ -16,11 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
-import org.apache.wicket.core.util.string.CssUtils;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * A component that represents a sort header. When the link is clicked it will toggle the state of a
@@ -34,14 +31,6 @@ import org.apache.wicket.util.string.Strings;
 public class OrderByLink<S> extends Link<Void>
 {
 	private static final long serialVersionUID = 1L;
-
-	public static final String SORT_ASCENDING_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class,
-			"ascending");
-
-	public static final String SORT_DESCENDING_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class,
-			"descending");
-
-	public static final String SORT_NONE_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class, "none");
 
 	/** sortable property */
 	private final S property;
@@ -133,34 +122,5 @@ public class OrderByLink<S> extends Link<Void>
 		{
 			return order == SortOrder.ASCENDING ? SortOrder.DESCENDING : SortOrder.ASCENDING;
 		}
-	}
-
-	@Override
-	public void onComponentTag(final ComponentTag tag)
-	{
-		super.onComponentTag(tag);
-
-		final ISortState<S> sortState = stateLocator.getSortState();
-
-		SortOrder dir = sortState.getPropertySortOrder(property);
-		String cssClass;
-		if (dir == SortOrder.ASCENDING)
-		{
-			cssClass = getString(SORT_ASCENDING_CSS_CLASS_KEY);
-		}
-		else if (dir == SortOrder.DESCENDING)
-		{
-			cssClass = getString(SORT_DESCENDING_CSS_CLASS_KEY);
-		}
-		else
-		{
-			cssClass = getString(SORT_NONE_CSS_CLASS_KEY);
-		}
-
-		if (!Strings.isEmpty(cssClass))
-		{
-			tag.append("class", cssClass, " ");
-		}
-
 	}
 }

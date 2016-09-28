@@ -29,7 +29,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class DefaultPageManagerContext implements IPageManagerContext
 {
-	private final MetaDataKey<Object> requestCycleMetaDataKey = new MetaDataKey<Object>()
+	private static final MetaDataKey<Object> requestCycleMetaDataKey = new MetaDataKey<Object>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

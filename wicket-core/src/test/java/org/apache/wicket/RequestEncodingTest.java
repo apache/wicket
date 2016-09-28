@@ -17,6 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.After;
 import org.junit.Assert;
@@ -37,7 +38,7 @@ public class RequestEncodingTest extends Assert
 	private WicketTester tester;
 
 	/**
-	 * @see org.apache.wicket.WicketTestCase#setUp()
+	 * @see WicketTestCase#commonBefore()
 	 */
 	@Before
 	public void setUp()

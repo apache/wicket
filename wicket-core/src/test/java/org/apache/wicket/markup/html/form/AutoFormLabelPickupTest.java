@@ -20,10 +20,10 @@ import java.util.Locale;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,14 +65,14 @@ public class AutoFormLabelPickupTest extends WicketTestCase
 	public void labelIsPrintedFromModel() throws Exception
 	{
 		tester.startPage(new PrintLabelPage(Model.of("label from model")));
-		tester.assertContains("<label wicket:for=\"input\" for=\"input2\">\\|label from model\\|</label>");
+		tester.assertContains("<label wicket:for=\"input\" id=\"input2-w-lbl\" for=\"input2\">\\|label from model\\|</label>");
 	}
 
 	@Test
 	public void labelIsPrintedFromProperties() throws Exception
 	{
 		tester.startPage(new PrintLabelPage(Model.of((String)null)));
-		tester.assertContains("<label wicket:for=\"input\" for=\"input2\">\\|label from properties\\|</label>");
+		tester.assertContains("<label wicket:for=\"input\" id=\"input2-w-lbl\" for=\"input2\">\\|label from properties\\|</label>");
 	}
 
 	@Test

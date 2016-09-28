@@ -60,7 +60,7 @@ class TestForm extends Form<Void>
 	{
 		super(id);
 		textField = new TextField<String>("textField", new Model<String>());
-		textField.add(new AjaxFormSubmitBehavior("onchange")
+		textField.add(new AjaxFormSubmitBehavior("change")
 		{
 			private static final long serialVersionUID = 1L;
 

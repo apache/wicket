@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.tester.apps_7;
 
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -37,6 +37,6 @@ public class TestHomePage extends WicketTestCase
 			"If you see this message wicket is properly configured and running");
 
 		// execute ajax
-		tester.executeAjaxEvent("form:ajaxButton", "onclick");
+		tester.executeAjaxEvent("form:ajaxButton", "click");
 	}
 }

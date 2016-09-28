@@ -632,7 +632,7 @@ public final class Strings
 	 * @param separator
 	 * @param fragments
 	 * @return combined fragments
-	 */
+     */
 	public static String join(final String separator, final List<String> fragments)
 	{
 		if (fragments == null)
@@ -641,7 +641,6 @@ public final class Strings
 		}
 		return join(separator, fragments.toArray(new String[fragments.size()]));
 	}
-
 
 	/**
 	 * Joins string fragments using the specified separator
@@ -677,7 +676,7 @@ public final class Strings
 				{
 					boolean lhsClosed = fragments[i - 1].endsWith(separator);
 					boolean rhsClosed = fragment.startsWith(separator);
-					if (lhsClosed && rhsClosed)
+					if (!Strings.isEmpty(separator) && lhsClosed && rhsClosed)
 					{
 						buff.append(fragment.substring(1));
 					}
@@ -1312,10 +1311,7 @@ public final class Strings
 	 */
 	public static int lengthInBytes(final String string, final Charset charset)
 	{
-		if (string == null)
-		{
-			throw new NullPointerException("Argument `string` cannot be null");
-		}
+		Args.notNull(string, "string");
 		if (charset != null)
 		{
 			try
@@ -1404,17 +1400,17 @@ public final class Strings
 	 * </p>
 	 * 
 	 * <pre>
-	 * StringUtils.getLevenshteinDistance(null, *)             = IllegalArgumentException
-	 * StringUtils.getLevenshteinDistance(*, null)             = IllegalArgumentException
-	 * StringUtils.getLevenshteinDistance("","")               = 0
-	 * StringUtils.getLevenshteinDistance("","a")              = 1
-	 * StringUtils.getLevenshteinDistance("aaapppp", "")       = 7
-	 * StringUtils.getLevenshteinDistance("frog", "fog")       = 1
-	 * StringUtils.getLevenshteinDistance("fly", "ant")        = 3
-	 * StringUtils.getLevenshteinDistance("elephant", "hippo") = 7
-	 * StringUtils.getLevenshteinDistance("hippo", "elephant") = 7
-	 * StringUtils.getLevenshteinDistance("hippo", "zzzzzzzz") = 8
-	 * StringUtils.getLevenshteinDistance("hello", "hallo")    = 1
+	 * Strings.getLevenshteinDistance(null, *)             = IllegalArgumentException
+	 * Strings.getLevenshteinDistance(*, null)             = IllegalArgumentException
+	 * Strings.getLevenshteinDistance("","")               = 0
+	 * Strings.getLevenshteinDistance("","a")              = 1
+	 * Strings.getLevenshteinDistance("aaapppp", "")       = 7
+	 * Strings.getLevenshteinDistance("frog", "fog")       = 1
+	 * Strings.getLevenshteinDistance("fly", "ant")        = 3
+	 * Strings.getLevenshteinDistance("elephant", "hippo") = 7
+	 * Strings.getLevenshteinDistance("hippo", "elephant") = 7
+	 * Strings.getLevenshteinDistance("hippo", "zzzzzzzz") = 8
+	 * Strings.getLevenshteinDistance("hello", "hallo")    = 1
 	 * </pre>
 	 * 
 	 * Copied from Apache commons-lang StringUtils 3.0
@@ -1538,6 +1534,8 @@ public final class Strings
 	/**
 	 * Return this value as en enum value.
 	 *
+	 * @param value
+	 *            the value to convert to an enum value
 	 * @param enumClass
 	 *            the enum type
 	 * @return an enum value
@@ -1554,7 +1552,22 @@ public final class Strings
 		catch (Exception e)
 		{
 			throw new StringValueConversionException(
-					String.format("Cannot convert '{}' to enum constant of type '{}'.", value, enumClass),					e);
+					String.format("Cannot convert '%s' to enum constant of type '%s'.", value, enumClass), e);
 		}
+	}
+
+	/**
+	 * Returns the original string if this one is not empty (i.e. {@link #isEmpty(CharSequence)} returns false), 
+	 * otherwise the default one is returned. The default string might be itself an empty one.
+	 * 
+	 * @param originalString
+	 * 				the original sting value
+	 * @param defaultValue
+	 * 				the default string to return if the original is empty
+	 * @return 	the original string value if not empty, the default one otherwise
+	 */
+	public static String defaultIfEmpty(String originalString, String defaultValue)
+	{
+		return isEmpty(originalString) ? defaultValue : originalString;		
 	}
 }

@@ -66,9 +66,6 @@ public class MultiUploadPage extends WicketExamplePage
 			super(name, files);
 		}
 
-		/**
-		 * @see ListView#populateItem(ListItem)
-		 */
 		@Override
 		protected void populateItem(ListItem<File> listItem)
 		{
@@ -120,11 +117,14 @@ public class MultiUploadPage extends WicketExamplePage
 			setMultiPart(true);
 
 			// Add one multi-file upload field
-			add(new MultiFileUploadField("fileInput", new PropertyModel<Collection<FileUpload>>(
+			add(new MultiFileUploadField("fileInput", new PropertyModel<>(
 				this, "uploads"), 5, true));
 
 			// Set maximum size to 100K for demo purposes
 			setMaxSize(Bytes.kilobytes(100));
+
+			// Set maximum size per file to 90K for demo purposes
+			setFileMaxSize(Bytes.kilobytes(90));
 		}
 
 		/**
@@ -138,7 +138,7 @@ public class MultiUploadPage extends WicketExamplePage
 				// Create a new file
 				File newFile = new File(getUploadFolder(), upload.getClientFileName());
 
-				// Check new file, delete if it allready existed
+				// Check new file, delete if it already existed
 				checkFileExists(newFile);
 				try
 				{

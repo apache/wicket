@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.AbstractSingleSelectChoice;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.markup.html.form.Check;
@@ -35,7 +35,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
-import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
@@ -48,6 +47,7 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.junit.Assert;
 
 /**
  * A helper class for testing validation and submission of <code>FormComponent</code>s.
@@ -516,7 +516,7 @@ public class FormTester
 				boolean wantOnSelectionChangedNotifications = (Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component);
 				if (wantOnSelectionChangedNotifications)
 				{
-					tester.invokeListener(component, IOnChangeListener.INTERFACE);
+					tester.invokeListener(component);
 				}
 			}
 			catch (final Exception x)
@@ -741,8 +741,13 @@ public class FormTester
 	 */
 	public FormTester submit(final String buttonComponentId)
 	{
-		setValue(buttonComponentId, "marked");
-		return submit();
+		Component submitter = getForm().get(buttonComponentId);
+		if (submitter == null)
+		{
+			fail("Cannot submit the form because there is no submitting component with id: " + buttonComponentId);
+		}
+
+		return submit(submitter);
 	}
 
 	/**
@@ -765,7 +770,21 @@ public class FormTester
 		Args.notNull(buttonComponent, "buttonComponent");
 
 		setValue(buttonComponent, "marked");
-		return submit();
+
+		if (buttonComponent instanceof AjaxButton || buttonComponent instanceof AjaxSubmitLink)
+		{
+			if (clearFeedbackMessagesBeforeSubmit)
+			{
+				tester.clearFeedbackMessages();
+			}
+			tester.getRequest().setUseMultiPartContentType(workingForm.isMultiPart());
+			tester.executeAjaxEvent(buttonComponent, "click");
+			return this;
+		}
+		else
+		{
+			return submit();
+		}
 	}
 
 	/**

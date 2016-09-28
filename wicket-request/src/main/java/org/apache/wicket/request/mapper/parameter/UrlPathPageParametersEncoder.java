@@ -37,10 +37,10 @@ import org.apache.wicket.util.string.Strings;
  * migrations of 1.4.x application to 1.5.x+ codebase.
  * <p>
  * Example usage:
- * {@code mount(new MountedMapper("/myPage", MyPage.class, new UrlPathPageParametersEncoder()); }
+ * {@code mount(new MountedMapper("/myPage", MyPage.class, new UrlPathPageParametersEncoder())); }
  * 
  * @author Chris Colman
- * @author Luniv (on Stack Overflow)
+ * @author James Gilbertson
  * @author ivaynberg
  */
 public class UrlPathPageParametersEncoder implements IPageParametersEncoder
@@ -83,7 +83,7 @@ public class UrlPathPageParametersEncoder implements IPageParametersEncoder
 			{
 				String value = segment.next();
 
-				params.add(key, value);
+				params.add(key, value, INamedParameters.Type.PATH);
 			}
 		}
 

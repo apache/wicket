@@ -57,7 +57,7 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -69,11 +69,11 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 
 		// add a couple of checkbox multiple choice components, notice the model
 		// used is a compound model set on the page
-		CheckBoxMultipleChoice<String> siteChoice = new CheckBoxMultipleChoice<String>("sites",
+		CheckBoxMultipleChoice<String> siteChoice = new CheckBoxMultipleChoice<>("sites",
 			SITES);
 		form.add(siteChoice);
 
-		CheckBoxMultipleChoice<String> manyChoice = new CheckBoxMultipleChoice<String>("choices",
+		CheckBoxMultipleChoice<String> manyChoice = new CheckBoxMultipleChoice<>("choices",
 			MANY_CHOICES);
 		form.add(manyChoice);
 	}

@@ -18,8 +18,8 @@ package org.apache.wicket.extensions.yui.calendar;
 
 import java.util.TimeZone;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Assert;

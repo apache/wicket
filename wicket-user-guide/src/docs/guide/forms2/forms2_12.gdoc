@@ -1,0 +1,106 @@
+
+
+Checkboxes work well when we have a small amount of options to display, but they quickly become chaotic as the number of options increases. To overcome this limit we can use the <select> tag switching it to multiple-choice mode with attribute multiple="multiple":
+
+!list-multiple-choices.png!
+
+Now the user can select multiple options by holding down Ctrl key (or Command key for Mac) and selecting them. 
+
+To work with multiple choice list Wicket provides the @org.apache.wicket.markup.html.form.ListMultipleChoice@ component:
+
+*HTML:*
+
+{code:html}
+<select wicket:id="fruits">
+	<option>choice 1</option>
+	<option>choice 2</option>
+</select>
+{code}
+
+*Java code:*
+
+{code}
+List<String> fruits = Arrays.asList("apple", "strawberry", "watermelon"); 
+form.add(new ListMultipleChoice("fruits", new ListModel<String>(new ArrayList<String>()), fruits));
+{code}
+
+*Screenshot:*
+
+!list-multiple-choices2.png!
+
+This component must be bound to a <select> tag but the attribute multiple="multiple" is not required as it will automatically be added by the component. 
+
+The number of visible rows can be set with the setMaxRows(int maxRows) method.
+
+h3. Component Palette
+
+While multiple choice list solves the problem of handling a big number of multiple choices, it is not much intuitive for end users. That's why desktop GUIs have introduced a more complex component which can be generally referred to as multi select transfer component (it doesn't have an actual official name): 
+
+!multi-select-transfer-component.png!
+
+This kind of component is composed by two multiple-choice lists, one on the left displaying the available options and the other one on the right displaying the selected options. User can move options from a list to another by double clicking on them or using the buttons placed between the two list.
+
+Built-in @org.apache.wicket.extensions.markup.html.form.palette.Palette@ component provides an out-of-the-box implementation of a multi select transfer component. It works in a similar way to ListMultipleChoice:
+
+*HTML:*
+
+{code:html}
+<div wicket:id="palette">
+   Select will be replaced by the actual content...
+	   <select multiple="multiple">
+     <option>option1</option>
+     <option>option2</option>
+     <option>option3</option>
+</div>
+{code}
+
+*Java code:*
+
+{code}
+Person john = new Person("John", "Smith");
+Person bob = new Person("Bob", "Smith");
+Person jill = new Person("Jill", "Smith");
+Person andrea = new Person("Andrea", "Smith");
+
+List<Person> theSmiths = Arrays.asList(john, bob, jill, andrea); 
+ChoiceRenderer render = new ChoiceRenderer("name"); 
+
+form.add(new Palette("palette", Model.of(new ArrayList<String>()), new ListModel<String> (theSmiths), render, 5, true));
+{code}
+
+*Screenshot:*
+
+!multi-select-transfer-component-wicket.png!
+
+The last two parameters of the Palette's constructor (an integer value and a boolean value) are, respectively, the number of visible rows for the two lists and a flag to choose if we want to display the two optional buttons which move selected options up and down. The descriptions of the two lists (“Available” and “Selected”) can be customized providing two resources with keys palette.available and palette.selected. 
+
+The markup of this component uses a number of CSS classes which can be extended/overriden to customize the style of the component. We can find these classes and see which tags they decorate in the default markup file of the component:
+
+{code:html}
+<table cellspacing="0" cellpadding="2" class="palette">
+<tr>
+	<td class="header headerAvailable"><span wicket:id="availableHeader">[available header]</span></td>
+	<td>&#160;</td>
+	<td class="header headerSelected"><span wicket:id="selectedHeader">[selected header]</span>                                           
+        </td> 
+</tr>
+<tr>
+	<td class="pane choices">
+		<select wicket:id="choices" class="choicesSelect">[choices]</select>	
+	</td>
+	<td class="buttons">
+		<button type="button" wicket:id="addButton" class="button add"><div/> 
+               </button><br/>
+		<button type="button" wicket:id="removeButton" class="button remove"><div/> 
+               </button><br/>
+		<button type="button" wicket:id="moveUpButton" class="button up"><div/>  
+               </button><br/>
+		<button type="button" wicket:id="moveDownButton" class="button down"><div/>  
+               </button><br/>
+	</td>
+	<td class="pane selection">
+		<select class="selectionSelect" wicket:id="selection">[selection]</select>	
+	</td>
+</tr>
+</table>
+{code}

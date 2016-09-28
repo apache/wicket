@@ -42,41 +42,64 @@ public class ChoiceFilter<T> extends AbstractFilter
 	private final DropDownChoice<T> choice;
 
 	/**
+	 * Constructor.
+	 *
 	 * @param id
+	 *            component id
 	 * @param model
+	 *            model for the drop down choice component
 	 * @param form
+	 *            filter form this component will be attached to
 	 * @param choices
+	 *            list of choices, see {@link DropDownChoice}
 	 * @param autoSubmit
+	 *            if true this filter will submit the form on selection change
 	 */
 	public ChoiceFilter(final String id, final IModel<T> model, final FilterForm<?> form,
-		final IModel<List<? extends T>> choices, final boolean autoSubmit)
+		final IModel<? extends List<? extends T>> choices, final boolean autoSubmit)
 	{
-		this(id, model, form, choices, new ChoiceRenderer<T>(), autoSubmit);
+		this(id, model, form, choices, new ChoiceRenderer<>(), autoSubmit);
 	}
 
 	/**
+	 * Constructor
+	 *
 	 * @param id
+	 *            component id
 	 * @param model
+	 *            model for the drop down choice component
 	 * @param form
+	 *            filter form this component will be attached to
 	 * @param choices
+	 *            list of choices, see {@link DropDownChoice}
 	 * @param autoSubmit
+	 *            if true this filter will submit the form on selection change
 	 */
 	public ChoiceFilter(final String id, final IModel<T> model, final FilterForm<?> form,
 		final List<? extends T> choices, final boolean autoSubmit)
 	{
-		this(id, model, form, Model.ofList(choices), new ChoiceRenderer<T>(), autoSubmit);
+		this(id, model, form, Model.ofList(choices), new ChoiceRenderer<>(), autoSubmit);
 	}
 
 	/**
+	 * Constructor
+	 *
 	 * @param id
+	 *            component id
 	 * @param model
+	 *            model for the drop down choice component
 	 * @param form
+	 *            filter form this component will be attached to
 	 * @param choices
+	 *            list of choices, see {@link DropDownChoice}
 	 * @param renderer
+	 *            choice renderer, see {@link DropDownChoice}
 	 * @param autoSubmit
+	 *            if true this filter will submit the form on selection change
 	 */
 	public ChoiceFilter(final String id, final IModel<T> model, final FilterForm<?> form,
-		final List<? extends T> choices, final IChoiceRenderer<T> renderer, final boolean autoSubmit)
+		final List<? extends T> choices, final IChoiceRenderer<? super T> renderer,
+		final boolean autoSubmit)
 	{
 		this(id, model, form, Model.ofList(choices), renderer, autoSubmit);
 	}
@@ -97,7 +120,8 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 * @see DropDownChoice
 	 */
 	public ChoiceFilter(final String id, final IModel<T> model, final FilterForm<?> form,
-		final IModel<List<? extends T>> choices, final IChoiceRenderer<T> renderer,
+		final IModel<? extends List<? extends T>> choices,
+		final IChoiceRenderer<? super T> renderer,
 		final boolean autoSubmit)
 	{
 		super(id, form);
@@ -127,7 +151,7 @@ public class ChoiceFilter<T> extends AbstractFilter
 	 * @return created drop down component
 	 */
 	protected DropDownChoice<T> newDropDownChoice(final String id, final IModel<T> model,
-		final IModel<List<? extends T>> choices, final IChoiceRenderer<T> renderer)
+		final IModel<? extends List<? extends T>> choices, final IChoiceRenderer<? super T> renderer)
 	{
 		DropDownChoice<T> dropDownChoice = new DropDownChoice<>(id, model, choices, renderer);
 		dropDownChoice.setNullValid(true);

@@ -35,15 +35,12 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author papegaaij
  */
-public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
+public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHeaderItem
 	implements
 		IReferenceHeaderItem
 {
 	private final ResourceReference reference;
-	private final String id;
 	private final PageParameters pageParameters;
-	private final boolean defer;
-	private final String charset;
 
 	/**
 	 * Creates a new {@code JavaScriptReferenceHeaderItem}.
@@ -66,12 +63,10 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	public JavaScriptReferenceHeaderItem(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer, String charset, String condition)
 	{
-		super(condition);
+		super(condition, defer, charset);
 		this.reference = Args.notNull(reference, "reference");
 		this.pageParameters = pageParameters;
-		this.id = id;
-		this.defer = defer;
-		this.charset = charset;
+		setId(id);
 	}
 
 	/**
@@ -84,36 +79,11 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	}
 
 	/**
-	 * @return the id that will be used to filter duplicate reference
-	 */
-	public String getId()
-	{
-		return id;
-	}
-
-	/**
 	 * @return the parameters for this Javascript resource reference
 	 */
 	public PageParameters getPageParameters()
 	{
 		return pageParameters;
-	}
-
-	/**
-	 * @return if the execution of a script should be deferred (delayed) until after the page has
-	 *         been loaded.
-	 */
-	public boolean isDefer()
-	{
-		return defer;
-	}
-
-	/**
-	 * @return the optional value of the charset attribute of the script tag
-	 */
-	public String getCharset()
-	{
-		return charset;
 	}
 
 	@Override
@@ -134,7 +104,7 @@ public class JavaScriptReferenceHeaderItem extends JavaScriptHeaderItem
 	public void render(Response response)
 	{
 		internalRenderJavaScriptReference(response, getUrl(), getId(), isDefer(), getCharset(),
-			getCondition());
+			getCondition(), isAsync());
 	}
 
 	@Override

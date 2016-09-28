@@ -16,12 +16,10 @@
  */
 package org.apache.wicket.request.mapper;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.wicket.request.IRequestHandler;
@@ -44,9 +42,6 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 {
 	private static final Logger LOG = LoggerFactory.getLogger(CompoundRequestMapper.class);
 
-	/**
-	 * 
-	 */
 	static class MapperWithScore implements Comparable<MapperWithScore>
 	{
 		private final IRequestMapper mapper;
@@ -241,61 +236,5 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	public Iterator<IRequestMapper> iterator()
 	{
 		return mappers.iterator();
-	}
-
-	@Override
-	public void unmount(String path)
-	{
-		final Url url = Url.parse(path);
-		final Request request = createRequest(url);
-
-		for (IRequestMapper mapper : this)
-		{
-			if (mapper.mapRequest(request) != null)
-			{
-				remove(mapper);
-			}
-		}
-	}
-
-	int size()
-	{
-		return mappers.size();
-	}
-
-	Request createRequest(final Url url)
-	{
-		return new Request()
-		{
-			@Override
-			public Url getUrl()
-			{
-				return url;
-			}
-
-			@Override
-			public Locale getLocale()
-			{
-				return null;
-			}
-
-			@Override
-			public Object getContainerRequest()
-			{
-				return null;
-			}
-
-			@Override
-			public Url getClientUrl()
-			{
-				return url;
-			}
-
-			@Override
-			public Charset getCharset()
-			{
-				return null;
-			}
-		};
 	}
 }

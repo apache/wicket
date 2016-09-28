@@ -18,9 +18,8 @@
 ;(function($) {
 	'use strict';
 
-	jQuery.fn.wicketAtmosphere = function(params) {
+	$.fn.wicketAtmosphere = function(params) {
 		var callbackAdded = false;
-		var response;
 
 		// jquery.atmosphere.response
 		function callback(response) {
@@ -37,7 +36,6 @@
 		var connectedEndpoint = $.atmosphere.subscribe(params.url,
 				!callbackAdded ? callback : null, $.atmosphere.request = params);
 		callbackAdded = true;
-		response = $.atmosphere.response;
 
 		$(window).on("beforeunload", function() {
 			callbackAdded = false;

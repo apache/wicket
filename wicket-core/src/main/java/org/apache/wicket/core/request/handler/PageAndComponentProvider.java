@@ -91,7 +91,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 	}
 
 	/**
-	 * @see PageProvider#PageProvider(int, Class, Integer)
+	 * @see PageProvider#PageProvider(Integer, Class, Integer)
 	 *
 	 * @param pageId
 	 * @param pageClass

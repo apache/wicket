@@ -70,11 +70,11 @@ public final class XmlReader extends Reader
 
 		if (!inputStream.markSupported())
 		{
-			this.inputStream = new BufferedInputStream(inputStream);
+			this.inputStream = new BufferedInputStream(new BOMInputStream(inputStream));
 		}
 		else
 		{
-			this.inputStream = inputStream;
+			this.inputStream = new BOMInputStream(inputStream);
 		}
 		encoding = defaultEncoding;
 
@@ -134,7 +134,7 @@ public final class XmlReader extends Reader
 	 *            The xmlDecl string
 	 * @return The encoding. Null, if not found
 	 */
-	private final String determineEncoding(final CharSequence string)
+	private String determineEncoding(final CharSequence string)
 	{
 		// Does the string match the <?xml .. ?> pattern
 		final Matcher matcher = encodingPattern.matcher(string);
@@ -172,7 +172,7 @@ public final class XmlReader extends Reader
 	 * @return true, if &lt;?xml ..?&gt; has been found
 	 * @throws IOException
 	 */
-	private final String getXmlDeclaration(final InputStream in, final int readAheadSize)
+	private String getXmlDeclaration(final InputStream in, final int readAheadSize)
 		throws IOException
 	{
 		// Max one line

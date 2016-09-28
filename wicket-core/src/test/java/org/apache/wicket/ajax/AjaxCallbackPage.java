@@ -16,15 +16,19 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.Locale;
+
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.html.WebPage;
 
 public class AjaxCallbackPage extends WebPage
 {
-	private AbstractDefaultAjaxBehavior behavior;
+	private AbstractDefaultAjaxBehavior behavior1;
+	private AbstractDefaultAjaxBehavior behavior2;
 
 	public AjaxCallbackPage()
 	{
-		add(behavior = new AbstractDefaultAjaxBehavior()
+		add(behavior1 = new AbstractDefaultAjaxBehavior()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -33,10 +37,31 @@ public class AjaxCallbackPage extends WebPage
 			{
 			}
 		});
+		add(behavior2 = new AbstractDefaultAjaxBehavior()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+				super.updateAjaxAttributes(attributes);
+				attributes.getExtraParameters().put("param1", 123);
+				attributes.getExtraParameters().put("param2", Locale.SIMPLIFIED_CHINESE);
+			}
+
+			@Override
+			protected void respond(AjaxRequestTarget target)
+			{
+			}
+		});
 	}
 
-	public AbstractDefaultAjaxBehavior getBehavior()
+	public AbstractDefaultAjaxBehavior getBehavior1()
 	{
-		return behavior;
+		return behavior1;
+	}
+
+	public AbstractDefaultAjaxBehavior getBehavior2()
+	{
+		return behavior2;
 	}
 }

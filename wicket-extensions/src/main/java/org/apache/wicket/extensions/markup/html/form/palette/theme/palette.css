@@ -1,0 +1,81 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+.palette-theme-default .palette-choices {
+ 	float: left;
+ 	width: 40%;
+}
+.palette-theme-default .palette-choices select {
+ 	width: 100%;
+}
+
+.palette-theme-default .palette-selected {
+ 	float: left;
+ 	width: 40%;
+}
+.palette-theme-default .palette-selected select {
+ 	width: 100%;
+}
+ 
+.palette-theme-default .palette-header {
+	display: block;
+	text-align: center;
+	font-weight: bold;
+	font-size: 9pt;
+	background-color: #eef7ff;
+	padding: 2px;
+	border-top: 1px solid #729ac2;
+	border-bottom: 1px solid #729ac2;
+}
+
+.palette-theme-default .palette-buttons { 
+ 	float: left;
+	text-align: center;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.palette-theme-default .palette-buttons button {
+	display: block;
+	padding: 5px;
+}
+.palette-theme-default .palette-buttons button div {
+	height: 15px;
+	width: 15px;
+}
+.palette-theme-default .palette-buttons button.palette-add div:after {
+	content: '\21D2';
+}
+.palette-theme-default .palette-buttons button.palette-remove div:after {
+	content: '\21D0';
+}
+.palette-theme-default .palette-buttons button.palette-up div:after {
+	content: '\21D1';
+}
+.palette-theme-default .palette-buttons button.palette-down div:after {
+	content: '\21D3';
+}
+.palette-theme-default .palette-buttons button.palette-addAll div:after {
+	content: '\21DB';
+}
+.palette-theme-default .palette-buttons button.palette-removeAll div:after {
+	content: '\21DA';
+}
+
+.palette-theme-default .palette-clearer {
+	clear: both;
+}

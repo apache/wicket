@@ -94,7 +94,7 @@ class UploadStatusResource extends AbstractResource
 
 		UploadInfo info = MultipartServletWebRequestImpl.getUploadInfo(req, upload);
 
-		String status = null;
+		String status;
 		if ((info == null) || (info.getTotalBytes() < 1))
 		{
 			status = "100|";

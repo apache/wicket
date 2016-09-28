@@ -207,7 +207,6 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	@Override
 	@Before
 	public void before() throws Exception
 	{

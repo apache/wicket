@@ -16,72 +16,107 @@
  */
 package org.apache.wicket.atmosphere;
 
-import java.util.Collection;
+import java.util.Iterator;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.lang.Args;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles pseudo requests triggered by an event. An {@link AjaxRequestTarget} is scheduled and the
  * subscribed methods are invoked.
- * 
+ *
  * @author papegaaij
  */
 public class AtmosphereRequestHandler implements IRequestHandler
 {
-	private PageKey pageKey;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AtmosphereRequestHandler.class);
 
-	private AtmosphereEvent event;
+	private final PageKey pageKey;
 
-	private Collection<EventSubscription> subscriptions;
+	private final AtmosphereEvent event;
 
-	private EventSubscriptionInvoker eventSubscriptionInvoker;
+	private final Iterator<EventSubscription> subscriptions;
+
+	private final EventSubscriptionInvoker eventSubscriptionInvoker;
 
 	private boolean ajaxRequestScheduled = false;
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param pageKey
 	 * @param subscriptions
 	 * @param event
 	 * @param eventSubscriptionInvoker
 	 */
-	public AtmosphereRequestHandler(PageKey pageKey, Collection<EventSubscription> subscriptions,
+	public AtmosphereRequestHandler(PageKey pageKey, Iterator<EventSubscription> subscriptions,
 		AtmosphereEvent event, EventSubscriptionInvoker eventSubscriptionInvoker)
 	{
 		this.pageKey = pageKey;
 		this.subscriptions = subscriptions;
 		this.event = event;
-		this.eventSubscriptionInvoker = eventSubscriptionInvoker;
+		this.eventSubscriptionInvoker = Args.notNull(eventSubscriptionInvoker, "eventSubscriptionInvoker");
 	}
 
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		Page page = (Page)Application.get().getMapperContext().getPageInstance(pageKey.getPageId());
-		AjaxRequestTarget target = WebApplication.get().newAjaxRequestTarget(page);
-		executeHandlers(target, page);
+		WebApplication application = WebApplication.get();
+		Integer pageId = pageKey.getPageId();
+		Page page = (Page) Session.get().getPageManager().getPage(pageId);
+		if (page != null)
+		{
+			page.dirty();
+			AjaxRequestTarget target = application.newAjaxRequestTarget(page);
+			executeHandlers(target, page);
+		}
+		else
+		{
+			LOGGER.warn("Could not find a page with id '{}' for session with id '{}' in the page stores. It will be unregistered",
+					pageId, pageKey.getSessionId());
+			EventBus.get(application).unregister(pageKey);
+
+		}
 	}
 
 	private void executeHandlers(AjaxRequestTarget target, Page page)
 	{
-		for (EventSubscription curSubscription : subscriptions)
+		while (subscriptions.hasNext())
 		{
+			EventSubscription curSubscription = subscriptions.next();
 			if (curSubscription.getContextAwareFilter().apply(event))
 			{
-				Component component = page.get(curSubscription.getComponentPath());
-				if (curSubscription.getBehaviorIndex() == null)
-					invokeMethod(target, curSubscription, component);
+				String componentPath = curSubscription.getComponentPath();
+				Component component = page.get(componentPath);
+				if (component != null)
+				{
+					Integer behaviorIndex = curSubscription.getBehaviorIndex();
+					if (behaviorIndex == null)
+					{
+						invokeMethod(target, curSubscription, component);
+					}
+					else
+					{
+						Behavior behavior = component.getBehaviorById(behaviorIndex);
+						invokeMethod(target, curSubscription, behavior);
+					}
+				}
 				else
-					invokeMethod(target, curSubscription,
-						component.getBehaviorById(curSubscription.getBehaviorIndex()));
+				{
+					LOGGER.debug("Cannot find component with path '{}' in page '{}'. Maybe it has been removed.",
+							componentPath, page);
+					EventBus.get().unregister(page, curSubscription);
+				}
 			}
 		}
 	}
@@ -102,10 +137,5 @@ public class AtmosphereRequestHandler implements IRequestHandler
 			}
 		};
 		eventSubscriptionInvoker.invoke(target, subscription, base, event, initializer);
-	}
-
-	@Override
-	public void detach(IRequestCycle requestCycle)
-	{
 	}
 }

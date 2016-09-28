@@ -72,9 +72,6 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 		return component.getId();
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)
-	 */
 	@Override
 	public <C> IWrapModel<C> wrapOnInheritance(Component component)
 	{
@@ -119,33 +116,24 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 		 * @param owner
 		 *            component that this model has been attached to
 		 */
-		public AttachedCompoundPropertyModel(Component owner)
+		AttachedCompoundPropertyModel(Component owner)
 		{
 			super(CompoundPropertyModel.this);
 			this.owner = owner;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.AbstractPropertyModel#propertyExpression()
-		 */
 		@Override
 		protected String propertyExpression()
 		{
 			return CompoundPropertyModel.this.propertyExpression(owner);
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
-		 */
 		@Override
 		public IModel<T> getWrappedModel()
 		{
 			return CompoundPropertyModel.this;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.AbstractPropertyModel#detach()
-		 */
 		@Override
 		public void detach()
 		{

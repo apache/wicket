@@ -27,7 +27,8 @@ import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.settings.IStoreSettings;
+import org.apache.wicket.settings.StoreSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
@@ -39,21 +40,22 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	protected final Application application;
 
 	/**
-	 * Construct.
+	 * Constructor.
 	 * 
 	 * @param application
+	 *          The application instance
 	 */
 	public DefaultPageManagerProvider(Application application)
 	{
-		this.application = application;
+		this.application = Args.notNull(application, "application");
 	}
 
 	@Override
-	public IPageManager get(IPageManagerContext pageManagerContext)
+	public IPageManager apply(IPageManagerContext pageManagerContext)
 	{
 		IDataStore dataStore = newDataStore();
 
-		IStoreSettings storeSettings = getStoreSettings();
+		StoreSettings storeSettings = getStoreSettings();
 
 		if (dataStore.canBeAsynchronous())
 		{
@@ -71,18 +73,19 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		int inmemoryCacheSize = getStoreSettings().getInmemoryCacheSize();
 		ISerializer pageSerializer = application.getFrameworkSettings().getSerializer();
 		return new DefaultPageStore(pageSerializer, dataStore, inmemoryCacheSize);
+//		return new PerSessionPageStore(pageSerializer, dataStore, inmemoryCacheSize);
 	}
 
 	protected IDataStore newDataStore()
 	{
-		IStoreSettings storeSettings = getStoreSettings();
+		StoreSettings storeSettings = getStoreSettings();
 		Bytes maxSizePerSession = storeSettings.getMaxSizePerSession();
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 
 		return new DiskDataStore(application.getName(), fileStoreFolder, maxSizePerSession);
 	}
 
-	IStoreSettings getStoreSettings()
+	StoreSettings getStoreSettings()
 	{
 		return application.getStoreSettings();
 	}

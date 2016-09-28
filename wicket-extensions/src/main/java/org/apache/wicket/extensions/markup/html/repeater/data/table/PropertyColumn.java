@@ -46,7 +46,7 @@ import org.apache.wicket.model.PropertyModel;
  * @param <S>
  *            the type of the sort property
  */
-public class PropertyColumn<T, S> extends AbstractColumn<T, S> implements IExportableColumn<T, S, Object>
+public class PropertyColumn<T, S> extends AbstractColumn<T, S> implements IExportableColumn<T, S>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -113,9 +113,9 @@ public class PropertyColumn<T, S> extends AbstractColumn<T, S> implements IExpor
 	 * @return model
 	 */
 	@Override
-	public IModel<Object> getDataModel(IModel<T> rowModel)
+	public IModel<?> getDataModel(IModel<T> rowModel)
 	{
-		PropertyModel<Object> propertyModel = new PropertyModel<>(rowModel, propertyExpression);
+		PropertyModel<?> propertyModel = new PropertyModel<>(rowModel, propertyExpression);
 		return propertyModel;
 	}
 }

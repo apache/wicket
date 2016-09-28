@@ -21,11 +21,12 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.settings.IJavaScriptLibrarySettings;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for event triggered scripts.
@@ -56,6 +57,19 @@ public class OnEventHeaderItem extends HeaderItem
 	private final CharSequence javaScript;
 
 	/**
+	 * Constructor.
+	 *
+	 * The JavaScript should be provided by overloaded #getJavaScript
+	 *
+	 * @param target
+	 * @param event
+	 */
+	public OnEventHeaderItem(String target, String event)
+	{
+		this(target, event, null);
+	}
+
+	/**
 	 * Construct.
 	 * 
 	 * @param target
@@ -70,11 +84,16 @@ public class OnEventHeaderItem extends HeaderItem
 		event = event.toLowerCase(Locale.ENGLISH);
 		if (event.startsWith("on"))
 		{
-			event = event.substring(2);
+			String shortName = event.substring(2);
+			throw new IllegalArgumentException(
+					String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+									"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
+									"names so the leading 'on' may break your application."
+							, event, shortName));
 		}
 		this.event = event;
 
-		this.javaScript = Args.notEmpty(javaScript, "javaScript");
+		this.javaScript = javaScript;
 	}
 
 	/**
@@ -104,7 +123,10 @@ public class OnEventHeaderItem extends HeaderItem
 	@Override
 	public void render(Response response)
 	{
-		JavaScriptUtils.writeJavaScript(response, getCompleteJavaScript());
+		if (Strings.isEmpty(getJavaScript()) == false)
+		{
+			JavaScriptUtils.writeJavaScript(response, getCompleteJavaScript());
+		}
 	}
 
 	/**
@@ -157,7 +179,7 @@ public class OnEventHeaderItem extends HeaderItem
 	@Override
 	public List<HeaderItem> getDependencies()
 	{
-		IJavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
+		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
 		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
 		List<HeaderItem> dependencies = super.getDependencies();
 		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));

@@ -21,10 +21,10 @@ import java.io.IOException;
 import org.apache.wicket.util.io.StringBufferWriter;
 
 /**
- * An efficient implementation of a JSON stringer. The efficiency comes from the fact that istead of
+ * An efficient implementation of a JSON stringer. The efficiency comes from the fact that instead of
  * a {@link String} this class can return a {@link CharSequence}. This is better for downstream
- * method that can accept a {@link CharSequence} becuase it requires one less memory copy of the
- * internal {@link AppendingStringBufferWriter} to a {@link String} to get the JSON.
+ * method that can accept a {@link CharSequence} because it requires one less memory copy of the
+ * internal {@link StringBufferWriter} to a {@link String} to get the JSON.
  * 
  * @author igor
  */

@@ -86,6 +86,23 @@ public class AttributeAppender extends AttributeModifier
 	}
 
 	/**
+	 * Creates an AttributeModifier that appends the value to the current value of the
+	 * attribute, and will add the attribute when it is not there already.
+	 *
+	 * @param attribute
+	 *            the attribute to append the appendModels value to
+	 * @param value
+	 *            the value to append
+	 * @param separator
+	 *            the separator string, comes between the original value and the append value
+	 */
+	public AttributeAppender(String attribute, Serializable value, String separator)
+	{
+		super(attribute, value);
+		setSeparator(separator);
+	}
+
+	/**
 	 * Creates an AttributeModifier that appends the appendModel's value to the current value of the
 	 * attribute, and will add the attribute when it is not there already.
 	 * 

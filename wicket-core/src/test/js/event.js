@@ -133,6 +133,26 @@ jQuery(document).ready(function() {
 		$el.remove();
 	});
 
+	test('remove - any event', function () {
+
+		expect(1);
+
+		var $el = jQuery('<div id="addTestId">element body</div>');
+		$el.appendTo(jQuery('#qunit-fixture'));
+
+		var handler = function() {
+			ok(true, 'This event must be fired!');
+		};
+
+		var el = $el[0];
+		Wicket.Event.add(el, 'click', handler);
+
+		Wicket.Event.fire(el, 'click');
+
+		Wicket.Event.remove(el, 'click', handler);
+
+		Wicket.Event.fire(el, 'click');
+	});
 	
 	test('add - mousewheel', function () {
 
@@ -307,7 +327,7 @@ jQuery(document).ready(function() {
 
 		stop();
 
-		if (Wicket.Browser.isIE()) {
+		if (Wicket.Browser.isIELessThan11()) {
 			expect(3);
 		} else {
 			expect(1);
@@ -318,7 +338,7 @@ jQuery(document).ready(function() {
 			ok(true, "inputchange event is triggered!");
 		});
 
-		if (Wicket.Browser.isIE()) {
+		if (Wicket.Browser.isIELessThan11()) {
 			$input.trigger("paste");
 			$input.trigger("keyup");
 			$input.trigger("cut");

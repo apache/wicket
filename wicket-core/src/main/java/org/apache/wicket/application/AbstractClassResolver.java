@@ -33,7 +33,7 @@ import org.apache.wicket.util.collections.UrlExternalFormComparator;
  * An abstract implementation of a {@link IClassResolver} which uses a {@link ClassLoader} for
  * resolving classes.
  * 
- * @see org.apache.wicket.settings.IApplicationSettings#getClassResolver()
+ * @see org.apache.wicket.settings.ApplicationSettings#getClassResolver()
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -51,7 +51,7 @@ public abstract class AbstractClassResolver implements IClassResolver
 	 * 
 	 * This problem has gone since we synchronize the access.
 	 */
-	private final ConcurrentMap<String, WeakReference<Class<?>>> classes = new ConcurrentHashMap<String, WeakReference<Class<?>>>();
+	private final ConcurrentMap<String, WeakReference<Class<?>>> classes = new ConcurrentHashMap<>();
 
 	@Override
 	public final Class<?> resolveClass(final String className) throws ClassNotFoundException
@@ -67,51 +67,45 @@ public abstract class AbstractClassResolver implements IClassResolver
 		}
 		if (clazz == null)
 		{
-			if (className.equals("byte"))
+			switch (className)
 			{
-				clazz = byte.class;
-			}
-			else if (className.equals("short"))
-			{
-				clazz = short.class;
-			}
-			else if (className.equals("int"))
-			{
-				clazz = int.class;
-			}
-			else if (className.equals("long"))
-			{
-				clazz = long.class;
-			}
-			else if (className.equals("float"))
-			{
-				clazz = float.class;
-			}
-			else if (className.equals("double"))
-			{
-				clazz = double.class;
-			}
-			else if (className.equals("boolean"))
-			{
-				clazz = boolean.class;
-			}
-			else if (className.equals("char"))
-			{
-				clazz = char.class;
-			}
-			else
-			{
-				// synchronize on the only class member to load only one class at a time and
-				// prevent LinkageError. See above for more info
-				synchronized (classes)
-				{
-					clazz = Class.forName(className, false, getClassLoader());
-					if (clazz == null)
+				case "byte":
+					clazz = byte.class;
+					break;
+				case "short":
+					clazz = short.class;
+					break;
+				case "int":
+					clazz = int.class;
+					break;
+				case "long":
+					clazz = long.class;
+					break;
+				case "float":
+					clazz = float.class;
+					break;
+				case "double":
+					clazz = double.class;
+					break;
+				case "boolean":
+					clazz = boolean.class;
+					break;
+				case "char":
+					clazz = char.class;
+					break;
+				default:
+					// synchronize on the only class member to load only one class at a time and
+					// prevent LinkageError. See above for more info
+					synchronized (classes)
 					{
-						throw new ClassNotFoundException(className);
+						clazz = Class.forName(className, false, getClassLoader());
+						if (clazz == null)
+						{
+							throw new ClassNotFoundException(className);
+						}
 					}
-				}
-				classes.put(className, new WeakReference<Class<?>>(clazz));
+					classes.put(className, new WeakReference<Class<?>>(clazz));
+					break;
 			}
 		}
 		return clazz;
@@ -120,7 +114,7 @@ public abstract class AbstractClassResolver implements IClassResolver
 	@Override
 	public Iterator<URL> getResources(final String name)
 	{
-		Set<URL> resultSet = new TreeSet<URL>(new UrlExternalFormComparator());
+		Set<URL> resultSet = new TreeSet<>(new UrlExternalFormComparator());
 
 		try
 		{

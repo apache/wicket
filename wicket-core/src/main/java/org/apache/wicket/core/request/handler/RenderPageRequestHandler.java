@@ -17,6 +17,7 @@
 package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Session;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
@@ -102,6 +103,15 @@ public class RenderPageRequestHandler
 
 		this.redirectPolicy = redirectPolicy;
 		this.pageProvider = pageProvider;
+
+		if (pageProvider.hasPageInstance())
+		{
+			if (Session.exists())
+			{
+				// WICKET-5499
+				Session.get().getPageManager().touchPage(pageProvider.getPageInstance());
+			}
+		}
 	}
 
 	/**
@@ -161,7 +171,7 @@ public class RenderPageRequestHandler
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
-		PageRenderer renderer = Application.get().getPageRendererProvider().get(this);
+		PageRenderer renderer = Application.get().getPageRendererProvider().apply(this);
 		renderer.respond((RequestCycle)requestCycle);
 	}
 

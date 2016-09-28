@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.string.Strings;
@@ -76,11 +78,11 @@ public final class RequestUtils
 			if (bits.length == 2)
 			{
 				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset),
-					UrlDecoder.QUERY_INSTANCE.decode(bits[1], currentCharset));
+					UrlDecoder.QUERY_INSTANCE.decode(bits[1], currentCharset), INamedParameters.Type.QUERY_STRING);
 			}
 			else
 			{
-				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset), "");
+				params.add(UrlDecoder.QUERY_INSTANCE.decode(bits[0], currentCharset), "", INamedParameters.Type.QUERY_STRING);
 			}
 		}
 	}
@@ -113,7 +115,7 @@ public final class RequestUtils
 				}
 			}
 		}
-		String newpath = Strings.join("/", newcomponents.toArray(new String[newcomponents.size()]));
+		String newpath = Strings.join("/", newcomponents);
 		if (path.endsWith("/"))
 		{
 			return newpath + "/";
@@ -204,8 +206,11 @@ public final class RequestUtils
 
 	/**
 	 * @param request
-	 *      the http servlet request to extract the charset from
-	 * @return the request's charset
+	 *            the http servlet request to extract the charset from
+	 * @return the request's charset or a default it request is {@code null} or has an unsupported
+	 *         character encoding
+	 * 
+	 * @see org.apache.wicket.settings.RequestCycleSettings#getResponseRequestEncoding()
 	 */
 	public static Charset getCharset(HttpServletRequest request)
 	{
@@ -215,7 +220,13 @@ public final class RequestUtils
 			String charsetName = request.getCharacterEncoding();
 			if (charsetName != null)
 			{
-				charset = Charset.forName(charsetName);
+				try
+				{
+					charset = Charset.forName(charsetName);
+				}
+				catch (UnsupportedCharsetException useDefault)
+				{
+				}
 			}
 		}
 		if (charset == null)

@@ -20,20 +20,18 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>7.0.0-SNAPSHOT</version>
+		<version>8.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
+	<groupId>org.apache.wicket.experimental.wicket8</groupId>
 	<artifactId>wicket-experimental</artifactId>
 	<packaging>pom</packaging>
 	<name>Wicket-Experimental</name>
 	<description>Wicket-Experimental contains experimental Wicket modules that may or may not be supported in the future.</description>
 	<modules>
 		<module>wicket-atmosphere</module>
-		<module>wicket-native-websocket</module>
-		<module>wicket-bootstrap</module>
-		<module>wicket-examples-parent</module>
-		<module>wicket-bean-validation</module>
-		<module>wicket-cdi-1.1</module>
+		<module>wicket-http2</module>
+		<module>wicket-metrics</module>
 	</modules>
 	<build>
 		<pluginManagement>

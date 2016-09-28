@@ -17,10 +17,10 @@
 package org.apache.wicket.extensions.markup.html;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanelTester;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

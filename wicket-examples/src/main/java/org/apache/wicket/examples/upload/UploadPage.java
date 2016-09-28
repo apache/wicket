@@ -37,8 +37,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.file.Folder;
 import org.apache.wicket.util.lang.Bytes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Upload example.
@@ -74,15 +72,10 @@ public class UploadPage extends WicketExamplePage
 		{
 			final File file = listItem.getModelObject();
 			listItem.add(new Label("file", file.getName()));
-			listItem.add(new Link<Void>("delete")
-			{
-				@Override
-				public void onClick()
-				{
-					Files.remove(file);
-					info("Deleted " + file);
-				}
-			});
+			listItem.add(Link.onClick("delete", (link) -> {
+				Files.remove(file);
+				info("Deleted " + file);
+			}));
 		}
 	}
 
@@ -103,7 +96,7 @@ public class UploadPage extends WicketExamplePage
 		{
 			super(name);
 
-			// set this form to multipart mode (allways needed for uploads!)
+			// set this form to multipart mode (always needed for uploads!)
 			setMultiPart(true);
 
 			// Add one file input field
@@ -111,11 +104,11 @@ public class UploadPage extends WicketExamplePage
 
 			// Set maximum size to 100K for demo purposes
 			setMaxSize(Bytes.kilobytes(100));
+
+			// Set maximum size per file to 90K for demo purposes
+			setFileMaxSize(Bytes.kilobytes(90));
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
 		@Override
 		protected void onSubmit()
 		{
@@ -145,9 +138,6 @@ public class UploadPage extends WicketExamplePage
 			}
 		}
 	}
-
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(UploadPage.class);
 
 	/** Reference to listview for easy access. */
 	private final FileListView fileListView;

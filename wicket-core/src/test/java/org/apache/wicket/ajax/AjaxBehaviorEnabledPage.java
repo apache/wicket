@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.ajax;
 
-import org.junit.Assert;
-
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.junit.Assert;
 
 /**
  * @author marrink
@@ -35,7 +34,7 @@ public class AjaxBehaviorEnabledPage extends WebPage
 	public AjaxBehaviorEnabledPage()
 	{
 		Label enabled = new Label("enabled", "this label is ajax enabled");
-		enabled.add(new AjaxEventBehavior("onclick")
+		enabled.add(new AjaxEventBehavior("click")
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -49,7 +48,7 @@ public class AjaxBehaviorEnabledPage extends WebPage
 		add(enabled);
 		Label disabled = new Label("disabled", "this label is not ajax enabled");
 		disabled.setEnabled(false);
-		disabled.add(new AjaxEventBehavior("onclick")
+		disabled.add(new AjaxEventBehavior("click")
 		{
 			private static final long serialVersionUID = 1L;
 

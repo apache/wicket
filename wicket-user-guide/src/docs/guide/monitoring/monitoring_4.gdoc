@@ -1,0 +1,38 @@
+There are only a two steps required to write own measurements for life data statistics in Wicket:
+
+(1) Write a class which is named very close to what it measures. This class should extends WicketMetrics and should annotated with @Aspect and provide one method with a join point scanning for the target signature.
+{code}
+	@Aspect
+	public class MySpecialAspect extends WicketMetrics
+	{
+		@Around("execution(* my.package.MyClass.myMethod(..))")
+		public Object aroundRequestProcessed(ProceedingJoinPoint joinPoint) throws Throwable
+		{
+			return measureTime("mycategory/someinformation/", joinPoint);
+		}
+	}
+{code}
+* To measure time you need @Around because measureTime of WicketMetrics requires the joinPoint - the class name is appended with a slash at the end
+
+* To only mark that a method is called you can use mark of WicketMetrics and apply null as a second parameter - if you apply a join point to mark the class name is appended with a slash at the end
+
+(2) Add the class to your aop.xml and of course the package to scan for classes that are target for your measurements:
+{code}
+<!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+    <weaver options="-nowarn">
+    	<include within="org.apache.wicket..*"/>
+        <include within="my.components.package..*"/>
+    </weaver>
+    <aspects>
+    	<!-- required -->
+    	<aspect name="org.apache.wicket.metrics.aspects.WicketFilterInitAspect" />
+    	
+    	<!-- own aspects -->
+    	<aspect name="my.aspect.package.MySpecialAspect" />
+    	
+    	<!-- wickets own metrics -->
+    	.....
+    </aspects>
+</aspectj>
+{code}

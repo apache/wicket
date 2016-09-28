@@ -19,11 +19,11 @@ package org.apache.wicket.markup.html.link;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.request.mapper.PageInstanceMapper;
 import org.apache.wicket.protocol.http.PageExpiredException;
+import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IPageSettings;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,11 +74,9 @@ public class MountedPageLinkTest extends WicketTestCase
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
 		if (mount)
-			assertTrue("URL for link should contain 'mount/value/part2': " + url, url.toString()
-				.contains("mount/value/part2"));
+			assertTrue("URL for link should contain 'mount/value/part2': " + url, url.contains("mount/value/part2"));
 		else
-			assertTrue("URL for link should contain 'param=value': " + url, url.toString()
-				.contains("param=value"));
+			assertTrue("URL for link should contain 'param=value': " + url, url.contains("param=value"));
 		tester.executeUrl(url);
 	}
 
@@ -99,24 +97,23 @@ public class MountedPageLinkTest extends WicketTestCase
 		url = url.replace("?0", "?3");
 		tester.executeUrl(url);
 
-		// request parameters to callback urls should be ignored for the re-created page
-		// (WICKET-4594)
-		tester.assertContainsNot("param=value");
+		tester.assertContains("param=value");
 	}
 
 	/**
 	 * Tests if the {@link PageInstanceMapper} is used if
-	 * {@link IPageSettings#getRecreateMountedPagesAfterExpiry()} is disabled
+	 * {@link org.apache.wicket.settings.PageSettings#getRecreateBookmarkablePagesAfterExpiry()}
+	 * is disabled
 	 */
 	@Test
 	public void testLinkOnPageWithRecreationDisabled()
 	{
-		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
+		tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
 		PageWithLink page = tester.startPage(PageWithLink.class,
-			new PageParameters().add("param", "value"));
+			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
-		assertEquals("./wicket/page?0-1.ILinkListener-link", url);
+		assertEquals("./wicket/bookmarkable/org.apache.wicket.markup.html.link.PageWithLink?0-1.-link", url);
 		tester.executeUrl(url);
 	}
 
@@ -126,14 +123,14 @@ public class MountedPageLinkTest extends WicketTestCase
 	@Test(expected = PageExpiredException.class)
 	public void testExpiredPageWithRecreationDisabled()
 	{
-		tester.getApplication().getPageSettings().setRecreateMountedPagesAfterExpiry(false);
+		tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
 		PageWithLink page = tester.startPage(PageWithLink.class,
-			new PageParameters().add("param", "value"));
+			new PageParameters().add("param", "value", INamedParameters.Type.MANUAL));
 		Link<?> link = (Link<?>)page.get("link");
 		String url = link.getURL().toString();
-		assertEquals("./wicket/page?0-1.ILinkListener-link", url);
+		assertEquals("./wicket/bookmarkable/org.apache.wicket.markup.html.link.PageWithLink?0-1.-link", url);
 		// simulate a page expiry
-		url = url.replace("page?0", "page?3");
+		url = url.replace("PageWithLink?0", "PageWithLink?3");
 		tester.executeUrl(url);
 	}
 }

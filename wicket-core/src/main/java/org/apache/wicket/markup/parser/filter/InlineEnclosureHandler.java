@@ -17,7 +17,9 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Iterator;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -62,13 +64,7 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 	public final static String INLINE_ENCLOSURE_ATTRIBUTE_NAME = "enclosure";
 
 	/** enclosures inside enclosures */
-	private Stack<ComponentTag> enclosures;
-
-	/**
-	 * InlineEnclosures are not removed after render as other auto-components,
-	 * thus they have to have a stable id.
-	 */
-	private int counter;
+	private Deque<ComponentTag> enclosures;
 
 	/**
 	 * Construct.
@@ -113,7 +109,8 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 				{
 					if (Strings.isEmpty(htmlId))
 					{
-						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX + (counter++);
+						String id = getWicketNamespace() + "_" + INLINE_ENCLOSURE_ID_PREFIX + 
+							getRequestUniqueId();
 						tag.setId(id);
 					}
 					else
@@ -122,13 +119,23 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 					}
 
 					tag.setAutoComponentTag(true);
+					tag.setAutoComponentFactory(new ComponentTag.IAutoComponentFactory()
+					{
+						@Override
+						public Component newComponent(MarkupContainer container, ComponentTag tag)
+						{
+							String attributeName = getInlineEnclosureAttributeName(null);
+							String childId = tag.getAttribute(attributeName);
+							return new InlineEnclosure(tag.getId(), childId);
+						}
+					});
 					tag.setModified(true);
 				}
 
 				// Put the enclosure on the stack. The most current one will be on top
 				if (enclosures == null)
 				{
-					enclosures = new Stack<ComponentTag>();
+					enclosures = new ArrayDeque<>();
 				}
 				enclosures.push(tag);
 			}
@@ -147,9 +154,10 @@ public final class InlineEnclosureHandler extends AbstractMarkupFilter
 			if (tag.isOpen() && (tag.getId() != null) && !(tag instanceof WicketTag) &&
 				!tag.isAutoComponentTag())
 			{
-				for (int i = enclosures.size() - 1; i >= 0; i--)
+				Iterator<ComponentTag> componentTagIterator = enclosures.descendingIterator();
+				while (componentTagIterator.hasNext())
 				{
-					ComponentTag lastEnclosure = enclosures.get(i);
+					ComponentTag lastEnclosure = componentTagIterator.next();
 					String attr = getAttribute(lastEnclosure, null);
 					if (Strings.isEmpty(attr) == true)
 					{

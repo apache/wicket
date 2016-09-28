@@ -26,17 +26,6 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class EchoApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public EchoApplication()
-	{
-
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class< ? extends Page> getHomePage()
 	{

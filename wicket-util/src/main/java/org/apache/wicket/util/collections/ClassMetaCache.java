@@ -97,8 +97,7 @@ public class ClassMetaCache<T>
 					/*
 					 * don't write to current cache, copy instead
 					 */
-					Map<ClassLoader, ConcurrentHashMap<String, T>> newCache = new WeakHashMap<ClassLoader, ConcurrentHashMap<String, T>>(
-						cache);
+					Map<ClassLoader, ConcurrentHashMap<String, T>> newCache = new WeakHashMap<>(cache);
 					newCache.put(classLoader, container);
 					cache = Collections.unmodifiableMap(newCache);
 				}

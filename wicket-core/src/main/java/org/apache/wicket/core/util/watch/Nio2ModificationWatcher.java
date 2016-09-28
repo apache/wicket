@@ -17,6 +17,8 @@
 package org.apache.wicket.core.util.watch;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +66,15 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 	/** the <code>Task</code> to run */
 	private Task task;
 
-	public Nio2ModificationWatcher(final Application application)
+	/**
+	 * Constructor.
+	 *
+	 * @param application
+	 *              The application that manages the caches
+	 * @param pollFrequency
+	 *              How often to check on <code>IModifiable</code>s
+	 */
+	public Nio2ModificationWatcher(final Application application, Duration pollFrequency)
 	{
 		try
 		{
@@ -73,7 +83,7 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 			this.watchService = FileSystems.getDefault().newWatchService();
 			registerWatchables(watchService);
 
-			start(Duration.seconds(2));
+			start(pollFrequency);
 
 		} catch (IOException iox)
 		{
@@ -91,7 +101,7 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 			@Override
 			public void run(final Logger log)
 			{
-				checkCreated();
+				checkCreated(log);
 				checkModified();
 			}
 		});
@@ -102,8 +112,10 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 	 * New folders are registered to be watched.
 	 * New files are removed from the MarkupCache because there could be
 	 * {@link org.apache.wicket.markup.Markup#NO_MARKUP} (Not Found) entries for them already.
+	 * @param log
+	 *              a logger that can be used to log the events
 	 */
-	protected void checkCreated()
+	protected void checkCreated(Logger log)
 	{
 		WatchKey watchKey = watchService.poll();
 		if (watchKey != null)
@@ -116,32 +128,15 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 
 				if (eventKind == ENTRY_CREATE)
 				{
-					if (Files.isDirectory(eventPath))
-					{
-						try
-						{
-							// a directory is created. register it for notifications
-							register(eventPath, watchService);
-						} catch (IOException iox)
-						{
-							LOG.warn("Cannot register folder '" + eventPath + "' to be watched.", iox);
-						}
-					}
-					else
-					{
-						// a new file appeared. we need to clear the NOT_FOUND entry that may be added earlier.
-						// MarkupCache keys are fully qualified URIs
-						String absolutePath = eventPath.toAbsolutePath().toFile().toURI().toString();
-
-						try
-						{
-							ThreadContext.setApplication(application);
-							application.getMarkupSettings()
-									.getMarkupFactory().getMarkupCache().removeMarkup(absolutePath);
-						} finally {
-							ThreadContext.setApplication(null);
-						}
-					}
+					entryCreated(eventPath, log);
+				}
+				else if (eventKind == ENTRY_DELETE)
+				{
+					entryDeleted(eventPath, log);
+				}
+				else if (eventKind == ENTRY_MODIFY)
+				{
+					entryModified(eventPath, log);
 				}
 			}
 
@@ -149,14 +144,83 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 		}
 	}
 
+	/**
+	 * A callback method called when a new Path entry is modified
+	 *
+	 * @param path
+	 *              the modified path
+	 * @param log
+	 *              a logger that can be used to log the events
+	 */
+	protected void entryModified(Path path, Logger log)
+	{
+	}
+
+	/**
+	 * A callback method called when a new Path entry is deleted
+	 *
+	 * @param path
+	 *              the deleted path
+	 * @param log
+	 *              a logger that can be used to log the events
+	 */
+	protected void entryDeleted(Path path, Logger log)
+	{
+	}
+
+	/**
+	 * A callback method called when a new Path entry is created
+	 *
+	 * @param path
+	 *              the new path entry
+	 * @param log
+	 *              a logger that can be used to log the events
+	 */
+	protected void entryCreated(Path path, Logger log)
+	{
+		if (Files.isDirectory(path))
+		{
+			try
+			{
+				// a directory is created. register it for notifications
+				register(path, watchService);
+			} catch (IOException iox)
+			{
+				log.warn("Cannot register folder '" + path + "' to be watched.", iox);
+			}
+		}
+		else
+		{
+			// A new file is created. We need to clear the NOT_FOUND entry that may have been added earlier.
+			// MarkupCache keys are fully qualified URIs
+			String absolutePath = path.toAbsolutePath().toFile().toURI().toString();
+
+			try
+			{
+				ThreadContext.setApplication(application);
+				application.getMarkupSettings()
+						.getMarkupFactory().getMarkupCache().removeMarkup(absolutePath);
+			} finally {
+				ThreadContext.setApplication(null);
+			}
+		}
+	}
+
 	@Override
 	public void destroy()
 	{
-		if (task != null)
+		try
 		{
-			task.interrupt();
+			super.destroy();
+
+			if (task != null)
+			{
+				task.interrupt();
+			}
+		} finally
+		{
+			IOUtils.closeQuietly(watchService);
 		}
-		IOUtils.closeQuietly(watchService);
 	}
 
 	/**
@@ -195,7 +259,18 @@ public class Nio2ModificationWatcher extends ModificationWatcher
 	
 	private void register(final Path folder, final WatchService watchService) throws IOException
 	{
-		LOG.debug("Registering folder '{}'", folder);
-		folder.register(watchService, ENTRY_CREATE);
+		WatchEvent.Kind[] watchedKinds = getWatchedKinds(folder);
+		LOG.debug("Registering folder '{}' to the watching service with kinds: {}", folder, watchedKinds);
+		folder.register(watchService, watchedKinds);
+	}
+
+	/**
+	 * @param folder
+	 *          the folder that will be watched
+	 * @return an array of watch event kinds to use for the watching of the given folder
+	 */
+	protected WatchEvent.Kind[] getWatchedKinds(Path folder)
+	{
+		return new WatchEvent.Kind[] {ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY};
 	}
 }

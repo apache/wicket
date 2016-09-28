@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.tree;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
 /**
  * @author Sven Meier
  */
-public class Foo
+public class Foo implements Serializable
 {
 
 	private static final long serialVersionUID = 1L;

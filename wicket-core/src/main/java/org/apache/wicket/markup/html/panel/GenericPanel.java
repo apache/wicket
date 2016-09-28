@@ -25,7 +25,7 @@ import org.apache.wicket.model.IModel;
  * @param <T>
  *            the type of the panel's model object
  */
-public class GenericPanel<T> extends Panel implements IGenericComponent<T>
+public class GenericPanel<T> extends Panel implements IGenericComponent<T, GenericPanel<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,53 +47,5 @@ public class GenericPanel<T> extends Panel implements IGenericComponent<T>
 	public GenericPanel(final String id, final IModel<T> model)
 	{
 		super(id, model);
-	}
-
-	/**
-	 * Typesafe getter for the model's object
-	 * 
-	 * @return the model object
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	/**
-	 * Typesafe setter for the model object
-	 * 
-	 * @param modelObject
-	 *            the new model object
-	 */
-	@Override
-	public final void setModelObject(final T modelObject)
-	{
-		setDefaultModelObject(modelObject);
-	}
-
-	/**
-	 * Typesafe getter for the page's model
-	 * 
-	 * @return the model
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	/**
-	 * Typesafe setter for the model
-	 * 
-	 * @param model
-	 *            the new model
-	 */
-	@Override
-	public final void setModel(final IModel<T> model)
-	{
-		setDefaultModel(model);
 	}
 }

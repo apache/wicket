@@ -19,16 +19,14 @@ package org.apache.wicket.extensions.requestlogger;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.wicket.protocol.http.AbstractRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig.Feature;
-import org.codehaus.jackson.map.introspect.AnnotatedClass;
-import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
-import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
-import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,9 +37,9 @@ import org.slf4j.LoggerFactory;
  * <pre>
  * {@literal
  * <dependency>
- *     <groupId>org.codehaus.jackson</groupId>
- *     <artifactId>jackson-mapper-asl</artifactId>
- *     <version>1.8.5</version>
+ *     <groupId>com.fasterxml.jackson.core</groupId>
+ *     <artifactId>jackson-databind</artifactId>
+ *     <version>2.7.1</version>
  * </dependency>
  * }
  * </pre>
@@ -57,10 +55,10 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	 * Specify that the 'default' filter should be used for serialization. This filter will prevent
 	 * jackson from serializing the request handlers.
 	 */
-	private final class FilteredIntrospector extends JacksonAnnotationIntrospector
+	private static final class FilteredIntrospector extends JacksonAnnotationIntrospector
 	{
 		@Override
-		public Object findFilterId(AnnotatedClass ac)
+		public Object findFilterId(Annotated a)
 		{
 			return "default";
 		}
@@ -69,7 +67,7 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	/**
 	 * A simple tuple for request and session.
 	 */
-	private final class RequestSessionTuple implements Serializable
+	private static final class RequestSessionTuple implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -101,11 +99,11 @@ public class JsonRequestLogger extends AbstractRequestLogger
 	public JsonRequestLogger()
 	{
 		mapper = new ObjectMapper();
-		mapper.configure(Feature.FAIL_ON_EMPTY_BEANS, false);
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		SimpleFilterProvider filters = new SimpleFilterProvider();
 		filters.addFilter("default",
 			SimpleBeanPropertyFilter.serializeAllExcept("eventTarget", "responseTarget"));
-		mapper.setFilters(filters);
+		mapper.setFilterProvider(filters);
 		mapper.setAnnotationIntrospector(new FilteredIntrospector());
 	}
 
@@ -131,14 +129,6 @@ public class JsonRequestLogger extends AbstractRequestLogger
 		try
 		{
 			return getMapper().writeValueAsString(new RequestSessionTuple(rd, sd));
-		}
-		catch (JsonGenerationException e)
-		{
-			throw new RuntimeException(e);
-		}
-		catch (JsonMappingException e)
-		{
-			throw new RuntimeException(e);
 		}
 		catch (IOException e)
 		{

@@ -19,7 +19,7 @@
  *
  * @author Janne Hietam&auml;ki
  */
-
+/* jshint latedef: false */
 ;(function (undefined) {
 	'use strict';
 
@@ -35,7 +35,7 @@
 		enterHidesWithNoSelection : false
 	};
 
-	Wicket.AutoComplete=function(elementId, callbackUrl, cfg, indicatorId){
+	Wicket.AutoComplete=function(elementId, ajaxAttributes, cfg, indicatorId){
 		var KEY_TAB=9;
 		var KEY_ENTER=13;
 		var KEY_ESC=27;
@@ -51,10 +51,9 @@
 		var elementCount=0; // number of items on the auto complete list
 		var visible=0;		// is the list visible
 		
-		var ignoreFocus = false;		// ignore focus and gain because menu is showing
-		var	ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
+		var ignoreKeyEnter = false;		// ignore key ENTER because is already hid the autocomplete list
 		var ignoreOneFocusGain = false; // on FF, clicking an option in the pop-up would make field loose focus; focus() call only has effect in FF after popup is hidden, so the re-focusing must not show popup again in this case
-		var ignoreChange = false;		// ignore change event because TAB or ENTER event already triggered a change
+		var triggerChangeOnHide = false;		// should a change be triggered on hiding of the popup
 
 		var initialElement;
 
@@ -79,8 +78,7 @@
 			var isShowing = false;
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again (using the new stateful 'ignoreFocus'
-			// variable which just gets created)
+			// the mouse event handler again 
 			var choiceDiv = document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				isShowing = choiceDiv.showingAutocomplete;
@@ -91,20 +89,18 @@
 			initialElement = obj;
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
-				if (ignoreFocus) {
-					ignoreOneFocusGain = true;
-					Wicket.$(elementId).focus();
-					return jqEvent.stopPropagation();
+				var containerId=getMenuId()+"-container";
+				
+				//workaround for IE. Clicks on scrollbar trigger
+				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
+				if (containerId !== document.activeElement.id) {
+					window.setTimeout(hideAutoComplete, 500);
+				} else {
+					jQuery(this).trigger("focus");
 				}
-
-				window.setTimeout(hideAutoComplete, 500);
 			});
 
 			Wicket.Event.add(obj, 'focus', function (jqEvent) {
-				if (ignoreFocus) {
-					ignoreOneFocusGain = false;
-					return jqEvent.stopPropagation();
-				}
 				var input = jqEvent.target;
 				if (!ignoreOneFocusGain && (cfg.showListOnFocusGain || (cfg.showListOnEmptyInput && (!input.value))) && visible === 0) {
 					getAutocompleteMenu().showingAutocomplete = true;
@@ -143,7 +139,7 @@
 							// select the first element
 							setSelected(0);
 						}
-						if (visible===0) {
+						if (visible === 0) {
 							updateChoices();
 						} else {
 							render(true, false);
@@ -161,20 +157,18 @@
 						break;
 					case KEY_TAB:
 					case KEY_ENTER:
-						ignoreChange = false;
 						ignoreKeyEnter = false;
 						
 						if (selected > -1) {
 							var value = getSelectedValue();
 							value = handleSelection(value);
 							
-							hideAutoComplete();
-							
 							if (value) {
 								obj.value = value;
-								jQuery(obj).triggerHandler('change');
-								ignoreChange = true;
+								triggerChangeOnHide = true;
 							}
+							
+							hideAutoComplete();
 							
 							ignoreKeyEnter = true;
 						} else if (Wicket.AutoCompleteSettings.enterHidesWithNoSelection) {
@@ -190,9 +184,11 @@
 			});
 
 			Wicket.Event.add(obj, 'change', function (jqEvent) {
-				if (ignoreFocus || ignoreChange) {
+				if (visible === 1) {
 					// don't let any other change handler get this
 					jqEvent.stopImmediatePropagation();
+					
+					triggerChangeOnHide = true;
 				}
 			});
 
@@ -240,8 +236,7 @@
 		{
 			// Remove the autocompletion menu if still present from
 			// a previous call. This is required to properly register
-			// the mouse event handler again (using the new stateful 'ignoreFocus'
-			// variable which just gets created)
+			// the mouse event handler again 
 			var choiceDiv=document.getElementById(getMenuId());
 			if (choiceDiv !== null) {
 				choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
@@ -324,10 +319,6 @@
 				choiceDiv.id=getMenuId();
 				choiceDiv.className="wicket-aa";
 
-
-				// WICKET-1350/WICKET-1351
-				container.onmouseout = function() {ignoreFocus = false;};
-				container.onmousemove = function() {ignoreFocus = true;};
 			}
 
 
@@ -350,53 +341,41 @@
 		}
 
 		function actualUpdateChoicesShowAll() {
-			showIndicator();
-
-			var paramName = cfg.parameterName;
-			var attrs = {
-				u: callbackUrl,
-				pre: [ function (attributes) {
-					var activeIsInitial = (document.activeElement === initialElement);
-					var elementVal =  Wicket.$(elementId).value;
-					var hasMinimumLength = elementVal.length >= minInputLength;
-
-					var result = hasMinimumLength && activeIsInitial;
-					if (!result) {
-						hideAutoComplete();
-					}
-					return result;
-				}],
-				ep: {},
-				wr: false,
-				dt: 'html',
-				sh: [ doUpdateAllChoices ]
-			};
-			attrs.ep[paramName] = '';
-			Wicket.Ajax.ajax(attrs);
+			prepareAndExecuteAjaxUpdate(doUpdateAllChoices, '');
 		}
 
 		function actualUpdateChoices() {
+			prepareAndExecuteAjaxUpdate(doUpdateChoices, Wicket.$(elementId).value);
+		}
+		
+		function prepareAndExecuteAjaxUpdate(successHandler, currentInput){
 			showIndicator();
 
-			var paramName = cfg.parameterName;
-			var attrs = {
-				u: callbackUrl,
-				pre: [ function (attributes) {
-					var activeIsInitial = (document.activeElement === initialElement);
-					var elementVal =  Wicket.$(elementId).value;
-					var hasMinimumLength = elementVal.length >= minInputLength;
-					var result = hasMinimumLength && activeIsInitial;
-					if (!result) {
-						hideAutoComplete();
-					}
-					return result;
-				}],
-				ep: {},
-				wr: false,
-				dt: 'html',
-				sh: [ doUpdateChoices ]
-			};
-			attrs.ep[paramName] = Wicket.$(elementId).value;
+			var attrs = jQuery.extend({}, ajaxAttributes);
+
+			attrs.c = undefined;
+
+			attrs.pre = attrs.pre || [];
+			attrs.pre.push(function (attributes) {
+				var activeIsInitial = (document.activeElement === initialElement);
+				var elementVal = Wicket.$(elementId).value;
+				var hasMinimumLength = elementVal.length >= minInputLength;
+			
+				var result = hasMinimumLength && activeIsInitial;
+					
+				if (!result) {
+					hideAutoComplete();
+				}
+				
+				return result;
+			});	
+
+			attrs.sh = attrs.sh || [];
+			attrs.sh.push(successHandler);
+				
+			attrs.ep = attrs.ep || [];
+			attrs.ep.push({'name' : cfg.parameterName, 'value' : currentInput});
+				
 			Wicket.Ajax.ajax(attrs);
 		}
 
@@ -408,7 +387,7 @@
 			Wicket.DOM.hide(indicatorId);
 		}
 
-		function showAutoComplete(){
+		function showAutoComplete() {
 			var input = Wicket.$(elementId);
 			var container = getAutocompleteContainer();
 			var index=getOffsetParentZIndex(elementId);
@@ -428,6 +407,7 @@
 			calculateAndSetPopupBounds(input, container);
 
 			visible = 1;
+			triggerChangeOnHide = false;			
 		}
 
 		function initializeUsefulDimensions(input, container) {
@@ -450,7 +430,7 @@
 		function hideAutoComplete(){
 			visible = 0;
 			setSelected(-1);
-			ignoreFocus = false;
+			
 			//WICKET-5382
 			hideIndicator();
 			
@@ -461,6 +441,12 @@
 				if (!cfg.adjustInputWidth && container.style.width !== "auto") {
 					container.style.width = "auto"; // let browser auto-set width again next time it is shown
 				}
+			}
+			
+			if (triggerChangeOnHide) {
+				var input = Wicket.$(elementId);
+				jQuery(input).triggerHandler('change');
+				triggerChangeOnHide = false;
 			}
 		}
 
@@ -576,7 +562,7 @@
 		}
 
 		function getPosition(obj) {
-			var rectangle = obj.getBoundingClientRect();
+			var rectangle = jQuery(obj).offset();
 			
 			var leftPosition = rectangle.left || 0;
 			var topPosition = rectangle.top || 0;
@@ -618,18 +604,20 @@
 				elementCount=selectableElements.length;
 
 				var clickFunc = function(event) {
-					ignoreFocus = false;
-					ignoreChange = false;
-					
+					// mouseOver might not be called, so select here at least
+					setSelected(getElementIndex(this));
+
 					var value = getSelectedValue();
 					value = handleSelection(value);
-					hideAutoComplete();
 					
 					var input = Wicket.$(elementId);
 					if (value) {
 						input.value = value;
-						jQuery(input).triggerHandler('change');
+						triggerChangeOnHide = true;
 					}
+
+					hideAutoComplete();
+					
 					if (document.activeElement !== input) {
 						ignoreOneFocusGain = true;
 						input.focus();
@@ -683,7 +671,7 @@
 			hideIndicator();
 
 			// hack for a focus issue in IE, WICKET-2279
-			if (Wicket.Browser.isIE()) {
+			if (Wicket.Browser.isIELessThan11()) {
 				var range = document.selection.createRange();
 				if (range !== null) {
 					range.select();

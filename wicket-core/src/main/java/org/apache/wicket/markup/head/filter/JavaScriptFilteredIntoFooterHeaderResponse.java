@@ -28,13 +28,8 @@ import org.apache.wicket.markup.head.IHeaderResponse;
  * 
  * @author Jeremy Thomerson
  */
-public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringHeaderResponse
+public class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringHeaderResponse
 {
-	/**
-	 * The name of the filter that renders the head section of the page
-	 */
-	@Deprecated // Remove in Wicket 8.0
-	public static final String HEADER_FILTER_NAME = DEFAULT_HEADER_FILTER_NAME;
 
 	/**
 	 * Construct.
@@ -59,12 +54,12 @@ public final class JavaScriptFilteredIntoFooterHeaderResponse extends FilteringH
 		return Arrays.asList(header, footer);
 	}
 
-	private IHeaderResponseFilter createFooterFilter(String footerBucketName)
+	protected IHeaderResponseFilter createFooterFilter(String footerBucketName)
 	{
 		return new JavaScriptAcceptingHeaderResponseFilter(footerBucketName);
 	}
 
-	private IHeaderResponseFilter createHeaderFilter(String headerFilterName, IHeaderResponseFilter footerFilter)
+	protected IHeaderResponseFilter createHeaderFilter(String headerFilterName, IHeaderResponseFilter footerFilter)
 	{
 		return new OppositeHeaderResponseFilter(headerFilterName, footerFilter);
 	}

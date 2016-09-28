@@ -17,8 +17,8 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -46,7 +46,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 		// mark the button as the one being pressed. there is a ':' infront of name because wicket
 		// escapes "submit" input names as they break browsers
 		tester.getRequest().getPostParameters().setParameterValue(":submit", "x");
-		tester.executeAjaxEvent("form:submit", "onclick");
+		tester.executeAjaxEvent("form:submit", "click");
 		AjaxFormSubmitTestPage page = (AjaxFormSubmitTestPage)tester.getLastRenderedPage();
 		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM) == AjaxFormSubmitTestPage.FORM);
 		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON) == AjaxFormSubmitTestPage.BUTTON);

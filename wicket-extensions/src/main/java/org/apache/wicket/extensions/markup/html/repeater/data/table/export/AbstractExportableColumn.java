@@ -29,11 +29,10 @@ import org.apache.wicket.model.IModel;
  * @author Jesse Long
  * @param <T> The type of each row in the table.
  * @param <S> The type of the sort property of the table.
- * @param <D> The type of the data displayed in this column.
  */
-public abstract class AbstractExportableColumn<T, S, D>
+public abstract class AbstractExportableColumn<T, S>
         extends AbstractColumn<T, S>
-        implements IExportableColumn<T, S, D>
+        implements IExportableColumn<T, S>
 {
 	/**
 	 * Creates a new {@link AbstractExportableColumn} with the provided display model, and without a sort property.
@@ -64,7 +63,7 @@ public abstract class AbstractExportableColumn<T, S, D>
 	 *	    of the display component.
 	 * @return a {@link Component} which will be used to display the content of the column in this row.
 	 */
-	protected Component createDisplayComponent(String componentId, IModel<D> dataModel)
+	protected Component createDisplayComponent(String componentId, IModel<?> dataModel)
 	{
 		return new Label(componentId, dataModel);
 	}

@@ -22,6 +22,7 @@ package org.apache.wicket.util.string.interpolator;
  * @author Jonathan Locke
  * @since 1.2.6
  */
+@SuppressWarnings("serial")
 public final class SystemVariableInterpolator extends MapVariableInterpolator
 {
 	/**

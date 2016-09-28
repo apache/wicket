@@ -17,7 +17,6 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.HTML5Attributes;
 import org.apache.wicket.markup.html.WebPage;
@@ -28,6 +27,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.TagTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.junit.Test;
 

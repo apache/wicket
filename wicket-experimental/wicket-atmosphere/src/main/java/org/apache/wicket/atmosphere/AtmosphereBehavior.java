@@ -16,24 +16,24 @@
  */
 package org.apache.wicket.atmosphere;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
-import org.apache.wicket.IResourceListener;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
-import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.resource.CoreLibrariesContributor;
+import org.apache.wicket.util.string.Strings;
+import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListener;
@@ -50,9 +50,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author papegaaij
  */
-public class AtmosphereBehavior extends Behavior
+public class AtmosphereBehavior extends AbstractAjaxBehavior
 	implements
-		IResourceListener,
 		AtmosphereResourceEventListener
 {
 	private static final Logger log = LoggerFactory.getLogger(AtmosphereBehavior.class);
@@ -69,8 +68,6 @@ public class AtmosphereBehavior extends Behavior
 
 	private String applicationKey;
 
-	private Component component;
-
 
 	/**
 	 * Construct.
@@ -83,12 +80,6 @@ public class AtmosphereBehavior extends Behavior
 	private EventBus findEventBus()
 	{
 		return EventBus.get(Application.get(applicationKey));
-	}
-
-	@Override
-	public void bind(Component component)
-	{
-		this.component = component;
 	}
 
 	@Override
@@ -107,8 +98,9 @@ public class AtmosphereBehavior extends Behavior
 	{
 	}
 
+
 	@Override
-	public void onResourceRequested()
+	public void onRequest()
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		ServletWebRequest request = (ServletWebRequest)requestCycle.getRequest();
@@ -120,8 +112,9 @@ public class AtmosphereBehavior extends Behavior
 		meteor.suspend(-1);
 
 		String uuid = meteor.getAtmosphereResource().uuid();
-		component.getPage().setMetaData(ATMOSPHERE_UUID, uuid);
-		findEventBus().registerPage(uuid, component.getPage());
+		Page page = getComponent().getPage();
+		page.setMetaData(ATMOSPHERE_UUID, uuid);
+		findEventBus().registerPage(uuid, page);
 	}
 
 	@Override
@@ -143,77 +136,121 @@ public class AtmosphereBehavior extends Behavior
 			Meteor meteor = Meteor.lookup(event.getResource().getRequest());
 			meteor.resume();
 		}
+		EventBus eventBus = findEventBus();
+		if (eventBus.isWantAtmosphereNotifications())
+		{
+			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Broadcast, event));
+		}
 	}
 
 	@Override
 	public void onSuspend(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
-			String transport = event.getResource()
-				.getRequest()
-				.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
-			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("Suspending the %s response from ip %s:%s", transport == null
-				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
+			String transport = atmosphereRequest.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
+			log.debug(String.format("Suspending the %s response from ip %s:%s", transport == null
+				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
 	}
 
 	@Override
 	public void onResume(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
-			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
-			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("Resuming the %s response from ip %s:%s", transport == null
-				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
+			String transport = atmosphereRequest.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
+			log.debug(String.format("Resuming the %s response from ip %s:%s", transport == null
+				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
+		}
+		EventBus eventBus = findEventBus();
+		if (eventBus.isWantAtmosphereNotifications())
+		{
+			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Resume, event));
 		}
 	}
 
 	@Override
 	public void onDisconnect(AtmosphereResourceEvent event)
 	{
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
-			String transport = event.getResource().getRequest().getHeader("X-Atmosphere-Transport");
-			HttpServletRequest req = event.getResource().getRequest();
-			log.info(String.format("%s connection dropped from ip %s:%s", transport == null
-				? "websocket" : transport, req.getRemoteAddr(), req.getRemotePort()));
+			AtmosphereRequest atmosphereRequest = event.getResource().getRequest();
+			String transport = atmosphereRequest.getHeader(HeaderConfig.X_ATMOSPHERE_TRANSPORT);
+			log.debug(String.format("%s connection dropped from ip %s:%s", transport == null
+				? "websocket" : transport, atmosphereRequest.getRemoteAddr(), atmosphereRequest.getRemotePort()));
 		}
 		// It is possible that the application has already been destroyed, in which case
 		// unregistration is no longer needed
+		EventBus eventBus = findEventBus();
 		if (Application.get(applicationKey) != null)
 		{
-			findEventBus().unregisterConnection(event.getResource().uuid());
+			eventBus.unregisterConnection(event.getResource().uuid());
+		}
+
+		if (eventBus.isWantAtmosphereNotifications())
+		{
+			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Disconnect, event));
 		}
 	}
 
 	@Override
 	public void onThrowable(AtmosphereResourceEvent event)
 	{
-		log.error(event.throwable().getMessage(), event.throwable());
+		Throwable throwable = event.throwable();
+		log.error(throwable.getMessage(), throwable);
+
+		EventBus eventBus = findEventBus();
+		if (eventBus.isWantAtmosphereNotifications())
+		{
+			eventBus.post(new AtmosphereInternalEvent(AtmosphereInternalEvent.Type.Throwable, event));
+		}
+	}
+	
+	@Override
+	public void onHeartbeat(AtmosphereResourceEvent event)
+	{
 	}
 
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
+		super.renderHead(component, response);
 		try
 		{
 			CoreLibrariesContributor.contributeAjax(component.getApplication(), response);
 
 			response.render(JavaScriptHeaderItem.forReference(JQueryWicketAtmosphereResourceReference.get()));
 			JSONObject options = findEventBus().getParameters().toJSON();
-			options.put("url",
-				component.urlFor(this, IResourceListener.INTERFACE, new PageParameters())
-					.toString());
-			response.render(OnDomReadyHeaderItem.forScript("$('#" + component.getMarkupId() +
-				"').wicketAtmosphere(" + options.toString() + ")"));
+			options.put("url", getCallbackUrl());
+			response.render(OnDomReadyHeaderItem.forScript("jQuery('#" + component.getMarkupId() +
+					"').wicketAtmosphere(" + options.toString() + ")"));
 		}
 		catch (JSONException e)
 		{
 			throw new WicketRuntimeException(e);
 		}
+	}
+
+	/**
+	 * Make it look like a normal Ajax call so the page id/renderCount are not incremented when Atmosphere makes
+	 * the "upgrade" request
+	 *
+	 * @return the url to this behavior's listener interface
+	 */
+	@Override
+	public CharSequence getCallbackUrl()
+	{
+		RequestCycle requestCycle = getComponent().getRequestCycle();
+		Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
+		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
+
+		return new StringBuilder(256)
+				.append(super.getCallbackUrl())
+				.append('&').append(WebRequest.PARAM_AJAX).append("=true&")
+				.append(WebRequest.PARAM_AJAX_BASE_URL).append('=').append(ajaxBaseUrl);
 	}
 
 	/**

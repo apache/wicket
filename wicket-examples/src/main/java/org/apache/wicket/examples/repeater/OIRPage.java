@@ -25,7 +25,6 @@ import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 /**
@@ -90,33 +89,17 @@ public class OIRPage extends BasePage
 			{
 				Contact contact = item.getModelObject();
 				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Link<Void>("toggleHighlite")
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public void onClick()
-					{
-						HighlitableDataItem<Contact> hitem = (HighlitableDataItem<Contact>)item;
-						hitem.toggleHighlite();
-					}
-				});
+				item.add(Link.onClick("toggleHighlite", (link) -> {
+					HighlitableDataItem<Contact> hitem = (HighlitableDataItem<Contact>)item;
+					hitem.toggleHighlite();
+				}));
 				item.add(new Label("contactid", String.valueOf(contact.getId())));
 				item.add(new Label("firstname", contact.getFirstName()));
 				item.add(new Label("lastname", contact.getLastName()));
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(AttributeModifier.replace("class", new AbstractReadOnlyModel<String>()
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public String getObject()
-					{
-						return (item.getIndex() % 2 == 1) ? "even" : "odd";
-					}
-				}));
+				item.add(AttributeModifier.replace("class", () -> (item.getIndex() % 2 == 1) ? "even" : "odd"));
 			}
 
 			@Override
@@ -129,7 +112,7 @@ public class OIRPage extends BasePage
 		dataView.setItemsPerPage(8L);
 		dataView.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
 
-		add(new OrderByBorder("orderByFirstName", "firstName", dp)
+		add(new OrderByBorder<String>("orderByFirstName", "firstName", dp)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -140,7 +123,7 @@ public class OIRPage extends BasePage
 			}
 		});
 
-		add(new OrderByBorder("orderByLastName", "lastName", dp)
+		add(new OrderByBorder<String>("orderByLastName", "lastName", dp)
 		{
 			private static final long serialVersionUID = 1L;
 

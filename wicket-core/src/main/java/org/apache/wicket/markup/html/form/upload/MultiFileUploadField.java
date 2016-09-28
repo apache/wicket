@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -33,7 +34,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
@@ -42,7 +42,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.upload.FileItem;
 
 
 /**
@@ -53,8 +52,7 @@ import org.apache.wicket.util.upload.FileItem;
  * be processed within the request they were uploaded.
  * 
  * Uses javascript implementation from
- * http://the-stickman.com/web-development/javascript/upload-multiple
- * -files-with-a-single-file-element/
+ * http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
  * 
  * For customizing caption text see {@link #RESOURCE_LIMITED} and {@link #RESOURCE_UNLIMITED}
  * 
@@ -173,7 +171,18 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		this.max = max;
 		this.useMultipleAttr = useMultipleAttr;
 
-		upload = new WebComponent("upload");
+		upload = new WebComponent("upload") {
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+
+				if (!isEnabledInHierarchy())
+				{
+					onDisabled(tag);
+				}
+			}
+		};
 		upload.setOutputMarkupId(true);
 		add(upload);
 
@@ -297,7 +306,7 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		{
 			final IMultipartWebRequest request = (IMultipartWebRequest)getRequest();
 
-			uploads = new ArrayList<FileUpload>(filenames.length);
+			uploads = new ArrayList<>(filenames.length);
 
 			for (String filename : filenames)
 			{
@@ -329,27 +338,42 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	@Override
 	protected void onDetach()
 	{
-		// cleanup any opened filestreams
-		Collection<FileUpload> uploads = getConvertedInput();
-		if (uploads != null)
+		if (forceCloseStreamsOnDetach())
 		{
-			for (FileUpload upload : uploads)
+			// cleanup any opened filestreams
+			Collection<FileUpload> uploads = getConvertedInput();
+			if (uploads != null)
 			{
-				upload.closeStreams();
+				for (FileUpload upload : uploads)
+				{
+					upload.closeStreams();
+				}
+			}
+
+			// cleanup any caches
+			inputArrayCache = null;
+
+			// clean up the model because we don't want FileUpload objects in session
+			Collection<FileUpload> modelObject = getModelObject();
+			if (modelObject != null)
+			{
+				modelObject.clear();
 			}
 		}
 
-		// cleanup any caches
-		inputArrayCache = null;
-
-		// clean up the model because we don't want FileUpload objects in session
-		Collection<FileUpload> modelObject = getModelObject();
-		if (modelObject != null)
-		{
-			modelObject.clear();
-		}
-
 		super.onDetach();
+	}
+
+	/**
+	 * The FileUploadField will close any input streams you have opened in its FileUpload by
+	 * default. If you wish to manage the stream yourself (e.g. you want to use it in another
+	 * thread) then you can override this method to prevent this behavior.
+	 *
+	 * @return <code>true</code> if stream should be closed at the end of request
+	 */
+	protected boolean forceCloseStreamsOnDetach()
+	{
+		return true;
 	}
 
 	/**
@@ -357,14 +381,10 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 	 * 
 	 * @author ivaynberg
 	 */
-	private class CaptionModel extends AbstractReadOnlyModel<String>
+	private class CaptionModel implements IModel<String>
 	{
-
 		private static final long serialVersionUID = 1L;
 
-		/**
-		 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
-		 */
 		@Override
 		public String getObject()
 		{
@@ -374,9 +394,9 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 			}
 			else
 			{
-				HashMap<String, Object> vars = new HashMap<String, Object>(1);
+				HashMap<String, Object> vars = new HashMap<>(1);
 				vars.put("max", max);
-				return getString(RESOURCE_LIMITED, new Model<HashMap<String, Object>>(vars));
+				return getString(RESOURCE_LIMITED, new Model<>(vars));
 			}
 		}
 

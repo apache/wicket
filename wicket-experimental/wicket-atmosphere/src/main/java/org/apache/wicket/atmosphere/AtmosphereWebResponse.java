@@ -30,7 +30,7 @@ import org.atmosphere.cpr.AtmosphereResponse;
  */
 class AtmosphereWebResponse extends WebResponse
 {
-	private AtmosphereResponse response;
+	private final AtmosphereResponse response;
 	private final AppendingStringBuffer out;
 	private boolean redirect;
 
@@ -78,7 +78,7 @@ class AtmosphereWebResponse extends WebResponse
 	@Override
 	public void setContentLength(long length)
 	{
-		response.setContentLength((int)length);
+		response.addHeader("Content-Length", Long.toString(length));
 	}
 
 	@Override

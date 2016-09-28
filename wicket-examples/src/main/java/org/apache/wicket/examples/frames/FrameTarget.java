@@ -36,13 +36,6 @@ public final class FrameTarget implements IClusterable
 
 	/**
 	 * Construct.
-	 */
-	public FrameTarget()
-	{
-	}
-
-	/**
-	 * Construct.
 	 * 
 	 * @param <C>
 	 * 

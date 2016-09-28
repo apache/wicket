@@ -49,11 +49,10 @@ class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 		try
 		{
 			String header = extractLicenseHeader(file, 0, 1);
-			return header.startsWith("<?xml") == true;
+			return header.startsWith("<?xml");
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
 		return true;

@@ -39,7 +39,7 @@ public class NullResponse extends Response
 	/**
 	 * @return The one and only instance of NullResponse
 	 */
-	public static final NullResponse getInstance()
+	public static NullResponse getInstance()
 	{
 		return instance;
 	}

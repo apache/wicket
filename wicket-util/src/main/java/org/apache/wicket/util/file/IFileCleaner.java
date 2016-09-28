@@ -18,6 +18,8 @@ package org.apache.wicket.util.file;
 
 import java.io.File;
 
+import org.apache.commons.io.FileDeleteStrategy;
+
 /**
  * Keeps track of files awaiting deletion, and deletes them when an associated marker object is
  * reclaimed by the garbage collector.

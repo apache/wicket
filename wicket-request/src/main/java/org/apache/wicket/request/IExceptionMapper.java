@@ -19,7 +19,11 @@ package org.apache.wicket.request;
 
 /**
  * Maps exception to {@link IRequestHandler}.
+ * <p>
+ * Also see org.apache.wicket.request.cycle.IRequestCycleListener#onException(RequestCycle cycle, Exception ex)
+ * </p>
  */
+@FunctionalInterface
 public interface IExceptionMapper
 {
 	/**

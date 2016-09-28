@@ -1,0 +1,22 @@
+A common task for web applications is to display a set of items. The most typical scenario where we need such kind of visualization is when we have to display some kind of search result. With the old template-based technologies (like JSP) we used to accomplish this task using classic for or while loops:
+
+{code:html}
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+  <%
+    for(int i = 12; i<=32; i++) {
+      %>
+      <div>Hello! I'm index n°<%= %></div>
+  <% 
+    }
+  %>
+</body>
+{code}
+
+To ease this task Wicket provides a number of special-purpose components called repeaters which are designed to use their related markup to display the items of a given set in a more natural and less chaotic way.
+
+In this chapter we will see some of the built-in repeaters that come with Wicket.

@@ -129,7 +129,7 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect stream.
 	 */
-	protected final static Map<String, String> loadStream(final InputStream input)
+	protected static Map<String, String> loadStream(final InputStream input)
 		throws IOException
 	{
 		return createMap(input);
@@ -162,7 +162,7 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect file.
 	 */
-	protected final static Map<String, String> loadFile(final File file) throws IOException
+	protected static Map<String, String> loadFile(final File file) throws IOException
 	{
 		return loadStream(new FileInputStream(file));
 	}
@@ -176,7 +176,7 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect file.
 	 */
-	protected final static Map<String, String> loadPath(final String path) throws IOException
+	protected static Map<String, String> loadPath(final String path) throws IOException
 	{
 		return loadFile(new File(path));
 	}
@@ -188,7 +188,7 @@ public final class CharSetMap
 	 *            a resource name.
 	 * @return the mappings.
 	 */
-	protected final static Map<String, String> loadResource(final String name)
+	protected static Map<String, String> loadResource(final String name)
 	{
 		final InputStream input = CharSetMap.class.getResourceAsStream(name);
 		if (input != null)

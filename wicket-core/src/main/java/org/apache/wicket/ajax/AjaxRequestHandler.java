@@ -33,6 +33,8 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.logger.PageLogData;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.page.PartialPageUpdate;
+import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -81,10 +83,9 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 {
 
 	/**
-	 * A POJO-like that collects the data for the Ajax response written to the client and serializes
-	 * it to specific String-based format (XML, JSON, ...).
+	 * Collector of page updates.
 	 */
-	private final AbstractAjaxResponse responseObject;
+	private final PartialPageUpdate update;
 
 	/** a list of listeners */
 	private List<AjaxRequestTarget.IListener> listeners = null;
@@ -111,8 +112,28 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	{
 		this.page = Args.notNull(page, "page");
 
-		responseObject = new XmlAjaxResponse(page)
+		update = new XmlPartialPageUpdate(page)
 		{
+			/**
+			 * Freezes the {@link AjaxRequestHandler#listeners} before firing the event and
+			 * un-freezes them afterwards to allow components to add more
+			 * {@link AjaxRequestTarget.IListener}s for the second event.
+			 */
+			@Override
+			protected void onBeforeRespond(final Response response)
+			{
+				listenersFrozen = true;
+
+				if (listeners != null)
+				{
+					for (AjaxRequestTarget.IListener listener : listeners)
+					{
+						listener.onBeforeRespond(markupIdToComponent, AjaxRequestHandler.this);
+					}
+				}
+
+				listenersFrozen = false;
+			}
 
 			/**
 			 * Freezes the {@link AjaxRequestHandler#listeners}, and does not un-freeze them as the
@@ -122,7 +143,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			 *      the response to write to
 			 */
 			@Override
-			protected void fireOnAfterRespondListeners(final Response response)
+			protected void onAfterRespond(final Response response)
 			{
 				listenersFrozen = true;
 
@@ -148,28 +169,6 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 					}
 				}
 			}
-
-			/**
-			 * Freezes the {@link AjaxRequestHandler#listeners} before firing the event and
-			 * un-freezes them afterwards to allow components to add more
-			 * {@link AjaxRequestTarget.IListener}s for the second event.
-			 */
-			@Override
-			protected void fireOnBeforeRespondListeners()
-			{
-				listenersFrozen = true;
-
-				if (listeners != null)
-				{
-					for (AjaxRequestTarget.IListener listener : listeners)
-					{
-						listener.onBeforeRespond(markupIdToComponent, AjaxRequestHandler.this);
-					}
-				}
-
-				listenersFrozen = false;
-			}
-
 		};
 	}
 
@@ -226,7 +225,14 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			if (component.getOutputMarkupId() == false && !(component instanceof Page))
 			{
 				throw new IllegalArgumentException(
-					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+					"Cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+						component.toString());
+			}
+			else if (component.getPage() != getPage())
+			{
+				throw new IllegalArgumentException(
+					"Cannot update component because its page is not the same as " +
+					"the one this handler has been created for. Component: " +
 						component.toString());
 			}
 			add(component, component.getMarkupId());
@@ -236,13 +242,13 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	@Override
 	public void add(Component component, String markupId)
 	{
-		responseObject.add(component, markupId);
+		update.add(component, markupId);
 	}
 
 	@Override
 	public final Collection<? extends Component> getComponents()
 	{
-		return responseObject.getComponents();
+		return update.getComponents();
 	}
 
 	@Override
@@ -261,7 +267,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	@Override
 	public final void appendJavaScript(CharSequence javascript)
 	{
-		responseObject.appendJavaScript(javascript);
+		update.appendJavaScript(javascript);
 	}
 
 	/**
@@ -275,7 +281,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			logData = new PageLogData(page);
 		}
 
-		responseObject.detach(requestCycle);
+		update.detach(requestCycle);
 	}
 
 	/**
@@ -287,7 +293,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		if (obj instanceof AjaxRequestHandler)
 		{
 			AjaxRequestHandler that = (AjaxRequestHandler)obj;
-			return responseObject.equals(that.responseObject);
+			return update.equals(that.update);
 		}
 		return false;
 	}
@@ -299,14 +305,14 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	public int hashCode()
 	{
 		int result = "AjaxRequestHandler".hashCode();
-		result += responseObject.hashCode() * 17;
+		result += update.hashCode() * 17;
 		return result;
 	}
 
 	@Override
 	public final void prependJavaScript(CharSequence javascript)
 	{
-		responseObject.prependJavaScript(javascript);
+		update.prependJavaScript(javascript);
 	}
 
 	@Override
@@ -325,7 +331,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		final RequestCycle rc = (RequestCycle)requestCycle;
 		final WebResponse response = (WebResponse)requestCycle.getResponse();
 
-		if (responseObject.containsPage())
+		if (shouldRedirectToPage(requestCycle))
 		{
 			// the page itself has been added to the request target, we simply issue a redirect
 			// back to the page
@@ -350,15 +356,33 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
 		// Set content type based on markup type for page
-		responseObject.setContentType(response, encoding);
+		update.setContentType(response, encoding);
 
 		// Make sure it is not cached by a client
 		response.disableCaching();
 
 		final StringResponse bodyResponse = new StringResponse();
-		responseObject.writeTo(bodyResponse, encoding);
+		update.writeTo(bodyResponse, encoding);
 		CharSequence filteredResponse = invokeResponseFilters(bodyResponse);
 		response.write(filteredResponse);
+	}
+
+	private boolean shouldRedirectToPage(IRequestCycle requestCycle)
+	{
+		if (update.containsPage())
+		{
+			return true;
+		}
+
+		if (((WebRequest)requestCycle.getRequest()).isAjax() == false)
+		{
+			// the request was not sent by wicket-ajax.js - this can happen when an Ajax request was
+			// intercepted with #redirectToInterceptPage() and then the original request is re-sent
+			// by the browser on a subsequent #continueToOriginalDestination()
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -393,13 +417,13 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	@Override
 	public String toString()
 	{
-		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + responseObject + "]";
+		return "[AjaxRequestHandler@" + hashCode() + " responseObject [" + update + "]";
 	}
 
 	@Override
 	public IHeaderResponse getHeaderResponse()
 	{
-		return responseObject.getHeaderResponse();
+		return update.getHeaderResponse();
 	}
 
 	/**
@@ -413,27 +437,18 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		return Strings.isEmpty(id) ? null : id;
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageClass()
-	 */
 	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return page.getPageClass();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageId()
-	 */
 	@Override
 	public Integer getPageId()
 	{
 		return page.getPageId();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageParameters()
-	 */
 	@Override
 	public PageParameters getPageParameters()
 	{
@@ -452,7 +467,6 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		return page.getRenderCount();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public PageLogData getLogData()
 	{

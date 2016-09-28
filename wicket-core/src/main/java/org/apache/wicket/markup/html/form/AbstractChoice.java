@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.util.WildcardListModel;
+import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -50,6 +50,32 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * An enumeration of possible positions of the label for a choice
+	 */
+	public enum LabelPosition
+	{
+		/**
+		 * will render the label before the choice
+		 */
+		BEFORE,
+
+		/**
+		 * will render the label after the choice
+		 */
+		AFTER,
+
+		/**
+		 * render the label around and the text will be before the the choice
+		 */
+		WRAP_BEFORE,
+
+		/**
+		 * render the label around and the text will be after the the choice
+		 */
+		WRAP_AFTER
+	}
+
 	/** The list of objects. */
 	private IModel<? extends List<? extends E>> choices;
 
@@ -64,7 +90,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id)
 	{
-		this(id, new WildcardListModel<E>(new ArrayList<E>()), new ChoiceRenderer<E>());
+		this(id, new ListModel<>(new ArrayList<E>()), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -77,7 +103,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, final List<? extends E> choices)
 	{
-		this(id, new WildcardListModel<E>(choices), new ChoiceRenderer<E>());
+		this(id, new ListModel<>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -93,7 +119,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	public AbstractChoice(final String id, final List<? extends E> choices,
 		final IChoiceRenderer<? super E> renderer)
 	{
-		this(id, new WildcardListModel<E>(choices), renderer);
+		this(id, new ListModel<>(choices), renderer);
 	}
 
 	/**
@@ -108,7 +134,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 */
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices)
 	{
-		this(id, model, new WildcardListModel<E>(choices), new ChoiceRenderer<E>());
+		this(id, model, new ListModel<>(choices), new ChoiceRenderer<>());
 	}
 
 	/**
@@ -126,7 +152,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	public AbstractChoice(final String id, IModel<T> model, final List<? extends E> choices,
 		final IChoiceRenderer<? super E> renderer)
 	{
-		this(id, model, new WildcardListModel<E>(choices), renderer);
+		this(id, model, new ListModel<>(choices), renderer);
 	}
 
 	/**
@@ -173,7 +199,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	public AbstractChoice(final String id, IModel<T> model,
 		final IModel<? extends List<? extends E>> choices)
 	{
-		this(id, model, choices, new ChoiceRenderer<E>());
+		this(id, model, choices, new ChoiceRenderer<>());
 	}
 
 	/**
@@ -199,15 +225,24 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	/**
 	 * @return The collection of object that this choice has
 	 */
-	public List<? extends E> getChoices()
+	public final List<? extends E> getChoices()
 	{
-		List<? extends E> choices = (this.choices != null) ? this.choices.getObject() : null;
+		IModel<? extends List<? extends E>> choicesModel = getChoicesModel();
+		List<? extends E> choices = (choicesModel != null) ? choicesModel.getObject() : null;
 		if (choices == null)
 		{
 			throw new NullPointerException(
 				"List of choices is null - Was the supplied 'Choices' model empty?");
 		}
 		return choices;
+	}
+
+	/**
+	 * @return The model with the choices for this component
+	 */
+	public IModel<? extends List<? extends  E>> getChoicesModel()
+	{
+		return this.choices;
 	}
 
 	/**
@@ -237,7 +272,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 *            the list of choices
 	 * @return this for chaining
 	 */
-	public final AbstractChoice<T, E> setChoices(List<E> choices)
+	public final AbstractChoice<T, E> setChoices(List<? extends E> choices)
 	{
 		if ((this.choices != null))
 		{
@@ -246,7 +281,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 				addStateChange();
 			}
 		}
-		this.choices = new WildcardListModel<E>(choices);
+		this.choices = new ListModel<>(choices);
 		return this;
 	}
 
@@ -262,13 +297,14 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 	 * Set the choice renderer to be used.
 	 * 
 	 * @param renderer
+	 *              The IChoiceRenderer used for rendering the data objects
 	 * @return this for chaining
 	 */
 	public final AbstractChoice<T, E> setChoiceRenderer(IChoiceRenderer<? super E> renderer)
 	{
 		if (renderer == null)
 		{
-			renderer = new ChoiceRenderer<E>();
+			renderer = new ChoiceRenderer<>();
 		}
 		this.renderer = renderer;
 		return this;
@@ -351,7 +387,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 			appendOptionHtml(buffer, choice, index, selectedValue);
 		}
 
-		buffer.append("\n");
+		buffer.append('\n');
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
@@ -388,7 +424,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 
 		buffer.append("\n<option ");
 		setOptionAttributes(buffer, choice, index, selected);
-		buffer.append(">");
+		buffer.append('>');
 
 		String display = displayValue;
 		if (localizeDisplayValues())
@@ -432,7 +468,7 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 
 		buffer.append("value=\"");
 		buffer.append(Strings.escapeMarkup(renderer.getIdValue(choice, index)));
-		buffer.append("\"");
+		buffer.append('"');
 	}
 
 	/**

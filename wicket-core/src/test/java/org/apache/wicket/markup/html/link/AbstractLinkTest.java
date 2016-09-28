@@ -19,10 +19,10 @@ package org.apache.wicket.markup.html.link;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MockPageWithLink;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.TagTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Assert;
 import org.junit.Test;
 

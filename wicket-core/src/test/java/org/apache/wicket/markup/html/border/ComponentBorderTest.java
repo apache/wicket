@@ -17,9 +17,11 @@
 package org.apache.wicket.markup.html.border;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -27,6 +29,8 @@ import org.junit.Test;
  */
 public class ComponentBorderTest extends WicketTestCase
 {
+	private static final String TEST_TEXT = "Meaning of life? 42!";
+
 	/**
 	 * Tests component use check does not fail when border starts out hidden
 	 * 
@@ -78,5 +82,58 @@ public class ComponentBorderTest extends WicketTestCase
 		tester.clickLink("hideable:hideLink");
 		ajaxResponse = tester.getLastResponseAsString();
 		tester.assertComponentOnAjaxResponse(wrapper);
+	}
+	
+	@Test
+	public void borderWithForm() throws Exception
+	{
+		/*
+		 * Suppose we have a border like this:
+		 * 
+		 * <div wicket:id="border">
+		 * 	<form>
+		 * 		<body/>
+		 * 	</form>
+		 * </div>
+		 * 
+		 * Any form components inside its body must be correctly 
+		 * submitted with the outer form.
+		 */
+		Model<String> model = Model.of("");
+		BorderWithFormPage page = new BorderWithFormPage(model);
+		
+		tester.startPage(page);
+		
+		FormTester formTester = tester.
+			newFormTester("borderContainer:formBorder:borderContainer:form");
+		
+		formTester.setValue("formBorder_body:text", TEST_TEXT);
+		formTester.submit();
+		
+		assertEquals(TEST_TEXT, model.getObject());
+	}
+	
+	@Test
+	public void borderWithEnclosurePage() throws Exception
+	{
+		tester.startPage(BorderWithEnclosurePage.class);
+		tester.assertRenderedPage(BorderWithEnclosurePage.class);
+	}
+	
+	@Test
+	public void borderWithAutoLabel() throws Exception
+	{
+		tester.startPage(BorderWithAutoLabelPage.class);
+		tester.assertRenderedPage(BorderWithAutoLabelPage.class);
+	}
+	
+	@Test
+	public void borderWithBodyInsideAnotherBody() throws Exception
+	{
+		Border borderTest = tester.startComponentInPage(new BorderWithNestedBody("test"));
+		Border nestedBorder = (Border)borderTest.get("nestedBorder");
+		
+		assertNotNull(borderTest.getBodyContainer().getParent());
+		assertNotNull(nestedBorder.getBodyContainer().getParent());
 	}
 }

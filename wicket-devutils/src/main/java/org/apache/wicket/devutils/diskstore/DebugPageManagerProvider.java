@@ -22,7 +22,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
-import org.apache.wicket.settings.IStoreSettings;
+import org.apache.wicket.settings.StoreSettings;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
@@ -53,7 +53,7 @@ public class DebugPageManagerProvider extends DefaultPageManagerProvider
 	@Override
 	protected IDataStore newDataStore()
 	{
-		IStoreSettings storeSettings = application.getStoreSettings();
+		StoreSettings storeSettings = application.getStoreSettings();
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 		Bytes maxSizePerSession = storeSettings.getMaxSizePerSession();
 		dataStore = new DebugDiskDataStore(application.getName(), fileStoreFolder,

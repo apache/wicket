@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.yui.calendar;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,7 +39,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.convert.IConverter;
-import org.apache.wicket.util.convert.converter.ZeroPaddingIntegerConverter;
+import org.apache.wicket.util.convert.converter.IntegerConverter;
 import org.apache.wicket.validation.validator.RangeValidator;
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
@@ -55,19 +57,22 @@ import org.joda.time.format.DateTimeFormat;
  * {@link DateTextField} by overriding {@link #newDateTextField(String, PropertyModel)} and calling
  * {@link #processInput()}:
  * 
- * <pre>
+ * <pre>{@code
  *  DateTimeField dateTimeField = new DateTimeField(...) {
  *    protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
  *    {
  *      DateTextField dateField = super.newDateTextField(id, dateFieldModel);     
- *      dateField.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {
- *        processInput() // let DateTimeField process input too
- *        ...
+ *      dateField.add(new AjaxFormComponentUpdatingBehavior("change") {
+ *        protected void onUpdate(AjaxRequestTarget target) {
+ *          processInput(); // let DateTimeField process input too
+ *
+ *          ...
+ *        }
  *      });
  *      return recorder;
  *    }
  *  }
- * </pre>
+ * }</pre>
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
@@ -113,7 +118,11 @@ public class DateTimeField extends FormComponentPanel<Date>
 	// PropertyModel string to access getAmOrPm
 	private static final String AM_OR_PM = "amOrPm";
 
-	private static final IConverter<Integer> MINUTES_CONVERTER = new ZeroPaddingIntegerConverter(2);
+	private static final IConverter<Integer> MINUTES_CONVERTER = new IntegerConverter() {
+		protected NumberFormat newNumberFormat(Locale locale) {
+			return new DecimalFormat("00");
+		}
+	};
 
 	// The dropdown list for AM/PM and it's associated model object
 	private DropDownChoice<AM_PM> amOrPmChoice;
@@ -163,33 +172,12 @@ public class DateTimeField extends FormComponentPanel<Date>
 		dateField.add(newDatePicker());
 
 		// Create and add the "hours" TextField
-		add(hoursField = new TextField<Integer>(HOURS, new PropertyModel<Integer>(this, HOURS),
+		add(hoursField = newHoursTextField(HOURS, new PropertyModel<Integer>(this, HOURS),
 			Integer.class));
-		hoursField.add(new HoursValidator());
-		hoursField.setLabel(new Model<>(HOURS));
 
 		// Create and add the "minutes" TextField
-		add(minutesField = new TextField<Integer>(MINUTES,
-			new PropertyModel<Integer>(this, MINUTES), Integer.class)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public <C> IConverter<C> getConverter(Class<C> type)
-			{
-				if (Integer.class.isAssignableFrom(type))
-				{
-					return (IConverter<C>)MINUTES_CONVERTER;
-				}
-				else
-				{
-					return super.getConverter(type);
-				}
-			}
-		});
-		minutesField.add(new RangeValidator<>(0, 59));
-		minutesField.setLabel(new Model<>(MINUTES));
+		add(minutesField = newMinutesTextField(MINUTES, new PropertyModel<Integer>(this, MINUTES),
+			Integer.class));
 
 		// Create and add the "AM/PM" Listbox
 		add(amOrPmChoice = new DropDownChoice<AM_PM>(AM_OR_PM_CHOICE, new PropertyModel<AM_PM>(
@@ -208,6 +196,58 @@ public class DateTimeField extends FormComponentPanel<Date>
 	}
 
 	/**
+	 * create a new {@link TextField} instance for hours to be added to this panel.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            model that should be used by the {@link TextField}
+	 * @param type
+	 *            the type of the text field
+	 * @return a new text field instance
+	 */
+	protected TextField<Integer> newHoursTextField(final String id, IModel<Integer> model, Class<Integer> type) {
+		TextField<Integer> hoursTextField = new TextField<>(id, model, type);
+		hoursTextField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator
+			.range(1, 12));
+		hoursTextField.setLabel(new Model<>(HOURS));
+		return hoursTextField;
+	}
+
+	/**
+	 * create a new {@link TextField} instance for minutes to be added to this panel.
+	 *
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            model that should be used by the {@link TextField}
+	 * @param type
+	 *            the type of the text field
+	 * @return a new text field instance
+	 */
+	protected TextField<Integer> newMinutesTextField(final String id, IModel<Integer> model,
+		Class<Integer> type)
+	{
+		TextField<Integer> minutesField = new TextField<Integer>(id, model, type)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected IConverter<?> createConverter(Class<?> type)
+			{
+				if (Integer.class.isAssignableFrom(type))
+				{
+					return MINUTES_CONVERTER;
+				}
+				return null;
+			}
+		};
+		minutesField.add(new RangeValidator<>(0, 59));
+		minutesField.setLabel(new Model<>(MINUTES));
+		return minutesField;
+	}
+
+	/**
 	 * 
 	 * @return The date TextField
 	 */
@@ -220,6 +260,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * Gets the amOrPm model object of the drop down choice.
 	 * 
 	 * @return amOrPm
+	 * 
+	 * @deprecated valid during rendering only
 	 */
 	public final AM_PM getAmOrPm()
 	{
@@ -231,6 +273,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * ignored.
 	 * 
 	 * @return date
+	 * 
+	 * @deprecated valid during rendering only
 	 */
 	public final Date getDate()
 	{
@@ -241,6 +285,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * Gets the hours model object for the TextField
 	 * 
 	 * @return hours
+	 * 
+	 * @deprecated valid during rendering only
 	 */
 	public final Integer getHours()
 	{
@@ -251,6 +297,8 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * Gets the minutes model object for the TextField
 	 * 
 	 * @return minutes
+	 * 
+	 * @deprecated valid during rendering only
 	 */
 	public final Integer getMinutes()
 	{
@@ -351,7 +399,7 @@ public class DateTimeField extends FormComponentPanel<Date>
 	 * have to override that anymore).
 	 */
 	@Override
-	protected void convertInput()
+	public void convertInput()
 	{
 		try
 		{
@@ -541,34 +589,6 @@ public class DateTimeField extends FormComponentPanel<Date>
 	private int getMaximumHours(boolean use12HourFormat)
 	{
 		return use12HourFormat ? 12 : 24;
-	}
-
-	/**
-	 * Validator for the {@link DateTimeField}'s hours field. Behaves like
-	 * <code>RangeValidator</code>, setting appropriate range according to
-	 * {@link DateTimeField#getMaximumHours()}
-	 * 
-	 * @see DateTimeField#getMaximumHours()
-	 * @author Gerolf Seitz
-	 */
-	private class HoursValidator extends RangeValidator<Integer>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Constructor
-		 */
-		public HoursValidator()
-		{
-			if (getMaximumHours() == 24)
-			{
-				setRange(0, 23);
-			}
-			else
-			{
-				setRange(1, 12);
-			}
-		}
 	}
 
 	/**

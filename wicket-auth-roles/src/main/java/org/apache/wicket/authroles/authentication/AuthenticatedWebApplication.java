@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.authroles.authentication;
 
-import java.lang.ref.WeakReference;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -44,19 +42,6 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		IRoleCheckingStrategy,
 		IUnauthorizedComponentInstantiationListener
 {
-	/** Subclass of authenticated web session to instantiate */
-	private final WeakReference<Class<? extends AbstractAuthenticatedWebSession>> webSessionClassRef;
-
-	/**
-	 * Constructor
-	 */
-	public AuthenticatedWebApplication()
-	{
-		// Get web session class to instantiate
-		webSessionClassRef = new WeakReference<Class<? extends AbstractAuthenticatedWebSession>>(
-			getWebSessionClass());
-	}
-
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#init()
 	 */
@@ -97,7 +82,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			}
 			else
 			{
-				onUnauthorizedPage((Page)component);
+				onUnauthorizedPage(component);
 			}
 		}
 		else
@@ -124,16 +109,17 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	@Override
 	public Session newSession(final Request request, final Response response)
 	{
+		Class<? extends AbstractAuthenticatedWebSession> webSessionClass = getWebSessionClass();
 		try
 		{
-			return webSessionClassRef.get()
+			return webSessionClass
 				.getDeclaredConstructor(Request.class)
 				.newInstance(request);
 		}
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("Unable to instantiate web session " +
-				webSessionClassRef.get(), e);
+				webSessionClass, e);
 		}
 	}
 
@@ -153,11 +139,10 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 * application's home page.
 	 * 
 	 * @param page
-	 *            The page
+	 *            The partially constructed page (only the component id is guaranteed to be valid).
 	 */
-	protected void onUnauthorizedPage(final Page page)
+	protected void onUnauthorizedPage(final Component page)
 	{
-		// The component was not a page, so throw an exception
 		throw new UnauthorizedInstantiationException(page.getClass());
 	}
 }

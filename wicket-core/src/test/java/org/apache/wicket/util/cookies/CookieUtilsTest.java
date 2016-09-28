@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.cookies;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,9 +27,9 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,11 +39,8 @@ import org.junit.Test;
  */
 public class CookieUtilsTest extends WicketTestCase
 {
-	/**
-	 * @throws Exception
-	 */
 	@Before
-	public void before() throws Exception
+	public void before()
 	{
 		tester.startPage(CookieValuePersisterTestPage.class);
 	}
@@ -54,7 +54,7 @@ public class CookieUtilsTest extends WicketTestCase
 	public void test1() throws Exception
 	{
 		// How does the test work: Make sure you have a page, form and form component properly set
-		// up (getRelativePath() etc.). See setUp().
+		// up (getRelativePath() etc.). See #before().
 		final Page page = tester.getLastRenderedPage();
 
 		// Get the form and form component created
@@ -124,6 +124,36 @@ public class CookieUtilsTest extends WicketTestCase
 		assertEquals(1, getResponseCookies().size());
 		assertEquals("form.input", (getResponseCookies().get(0)).getName());
 		assertEquals(0, (getResponseCookies().get(0)).getMaxAge());
+	}
+
+	@Test
+	public void saveLoadValue()
+	{
+		CookieUtils utils = new CookieUtils();
+		String value1 = "value one";
+		String key = "key";
+		utils.save(key, value1);
+		before(); // execute a request cycle, so the response cookie is send with the next request
+		String result = utils.load(key);
+		assertThat(result, is(equalTo(value1)));
+	}
+
+	@Test
+	public void defaults()
+	{
+		CookieDefaults defaults = new CookieDefaults();
+		defaults.setComment("A comment");
+		defaults.setDomain("A domain");
+		defaults.setMaxAge(123);
+		defaults.setSecure(true);
+		defaults.setVersion(456);
+		CookieUtils utils = new CookieUtils(defaults);
+		String value1 = "value one";
+		String key = "key";
+		utils.save(key, value1);
+		before(); // execute a request cycle, so the response cookie is send with the next request
+		Cookie result = utils.getCookie(key);
+		assertThat(result.getComment(), is(equalTo(defaults.getComment())));
 	}
 
 	private void copyCookieFromResponseToRequest()

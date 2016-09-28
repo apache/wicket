@@ -19,12 +19,14 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.io.Serializable;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
@@ -73,7 +75,7 @@ import org.apache.wicket.validation.IValidator;
  * @param <T>
  */
 // TODO wonder if it makes sense to refactor this into a formcomponentpanel
-public class AjaxEditableLabel<T> extends Panel
+public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, AjaxEditableLabel<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -100,12 +102,7 @@ public class AjaxEditableLabel<T> extends Panel
 		{
 			super.renderHead(component, response);
 
-			AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class);
-			if (target != null)
-			{
-				CharSequence callbackScript = getCallbackScript(component);
-				target.appendJavaScript(callbackScript);
-			}
+			getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> target.appendJavaScript(getCallbackScript(component)));
 		}
 
 		@Override
@@ -348,10 +345,10 @@ public class AjaxEditableLabel<T> extends Panel
 				AjaxCallListener ajaxCallListener = new AjaxCallListener();
 				ajaxCallListener.onPrecondition(precondition);
 
-				CharSequence dynamicExtraParameters = "var result = [],"
+				CharSequence dynamicExtraParameters = "var result,"
 					+ "evtType=attrs.event.type;"
-					+ "if (evtType === 'keyup') { result.push( { name: 'save', value: false } ); }"
-					+ "else { result = Wicket.Form.serializeElement(attrs.c); result.push( { name: 'save', value: true } ); }"
+					+ "if (evtType === 'keyup') { result = { 'save': false }; }"
+					+ "else { result = { 'save': true }; }"
 					+ "return result;";
 				attributes.getDynamicExtraParameters().add(dynamicExtraParameters);
 
@@ -411,7 +408,7 @@ public class AjaxEditableLabel<T> extends Panel
 	}
 
 	/**
-	 * By default this returns "onclick" uses can overwrite this on which event the label behavior
+	 * By default this returns "click", users can overwrite this on which event the label behavior
 	 * should be triggered
 	 * 
 	 * @return The event name
@@ -474,6 +471,7 @@ public class AjaxEditableLabel<T> extends Panel
 	{
 		label.setVisible(true);
 		editor.setVisible(false);
+		editor.clearInput();
 		target.add(AjaxEditableLabel.this);
 	}
 
@@ -568,7 +566,6 @@ public class AjaxEditableLabel<T> extends Panel
 		public void detach()
 		{
 			getParentModel().detach();
-
 		}
 
 		@Override
@@ -588,14 +585,13 @@ public class AjaxEditableLabel<T> extends Panel
 	/**
 	 * @return Gets the parent model in case no explicit model was specified.
 	 */
-	@SuppressWarnings("unchecked")
 	private IModel<T> getParentModel()
 	{
 		// the #getModel() call below will resolve and assign any inheritable
 		// model this component can use. Set that directly to the label and
 		// editor so that those components work like this enclosing panel
 		// does not exist (must have that e.g. with CompoundPropertyModels)
-		IModel<T> m = (IModel<T>)getDefaultModel();
+		IModel<T> m = getModel();
 
 		// check that a model was found
 		if (m == null)

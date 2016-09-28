@@ -17,16 +17,20 @@
 package org.apache.wicket.markup.parser;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.ContainerInfo;
 import org.apache.wicket.markup.HtmlSpecialTag;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 
 /**
@@ -37,14 +41,23 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractMarkupFilter implements IMarkupFilter
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(AbstractMarkupFilter.class);
-
 	/** The markup created by reading the markup file */
 	private final MarkupResourceStream markupResourceStream;
 
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
+
+	/**
+	 *  A key for a request-relative map of counters.
+	 *  As map keys we use the class name of the {@link org.apache.wicket.markup.MarkupResourceStream}'s owner 
+	 *  container (see {@link org.apache.wicket.markup.MarkupResourceStream#getContainerInfo()}), 
+	 *  meaning that each container has its own counter. 
+	 *  The counters are used by {@link #getRequestUniqueId()} to get unique ids for markup tags.
+	 * **/
+	private final static MetaDataKey<Map<String, AtomicInteger>> REQUEST_COUNTER_KEY = new MetaDataKey<Map<String, AtomicInteger>>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
 	 * Construct.
@@ -189,5 +202,43 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 			wicketNamespace = markupResourceStream.getWicketNamespace();
 		}
 		return wicketNamespace;
+	}
+
+	/**
+	 * Returns an id using the request-relative counter associated with the 
+	 * underlying {@link org.apache.wicket.markup.MarkupResourceStream}'s owner container 
+	 * (see {@link org.apache.wicket.markup.MarkupResourceStream#getContainerInfo()}). 
+	 * This can be useful for autocomponent tags that need to get a tag id.
+	 * 
+	 * @return
+	 * 		the request-relative id
+	 */
+	protected int getRequestUniqueId()
+	{
+		RequestCycle requestCycle = RequestCycle.get();
+		Map<String, AtomicInteger> markupUniqueCounters = requestCycle.getMetaData(REQUEST_COUNTER_KEY);
+		ContainerInfo containerInfo = getMarkupResourceStream().getContainerInfo();
+		String cacheKey = containerInfo != null ? containerInfo.getContainerClass().getCanonicalName() : null;
+		
+		if (markupUniqueCounters == null)
+		{
+			markupUniqueCounters = new HashMap<>();
+			
+			requestCycle.setMetaData(REQUEST_COUNTER_KEY, markupUniqueCounters);
+		}
+		
+		AtomicInteger counter = markupUniqueCounters.get(cacheKey);
+		
+		if (counter == null)
+		{
+			counter = new AtomicInteger();
+			markupUniqueCounters.put(cacheKey, counter);
+		}
+		
+ 	    int cacheHash = cacheKey == null ? 0 : cacheKey.hashCode();
+		
+ 	    //add the counter value to the string hash 
+ 	    //using the same algorithm of String#hashCode() 
+ 	    return  cacheHash * 31 + counter.getAndIncrement();
 	}
 }

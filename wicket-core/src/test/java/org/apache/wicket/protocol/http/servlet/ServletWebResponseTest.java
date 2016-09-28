@@ -27,9 +27,12 @@ import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.UrlRenderer;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Matchers;
@@ -112,7 +115,7 @@ public class ServletWebResponseTest extends Assert
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		webResponse.sendRedirect(url);
 
-		verify(httpServletResponse).sendRedirect("relative/path");
+		verify(httpServletResponse).sendRedirect("./relative/path");
 		assertTrue(webResponse.isRedirect());
 	}
 
@@ -127,10 +130,10 @@ public class ServletWebResponseTest extends Assert
 		HttpServletResponse httpResponse = new MockHttpServletResponse(httpRequest);
 		ServletWebResponse response = new ServletWebResponse(webRequest, httpResponse);
 
-		response.setInlineHeader("name with spaces");
+		response.setInlineHeader("name with spaces and;,");
 		String header = httpResponse.getHeader("Content-Disposition");
 		assertEquals(
-			"inline; filename=\"name%20with%20spaces\"; filename*=UTF-8''name%20with%20spaces",
+			"inline; filename=\"name%20with%20spaces%20and%3B%2C\"; filename*=UTF-8''name%20with%20spaces%20and%3B%2C",
 			header);
 
 		// says: "name with bulgarian"
@@ -152,5 +155,63 @@ public class ServletWebResponseTest extends Assert
 		assertEquals(
 			"attachment; filename=\"name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8\"; filename*=UTF-8''name%20with%20%D0%B1%D1%8A%D0%BB%D0%B3%D0%B0%D1%80%D1%81%D0%BA%D0%B8",
 			header);
+	}
+
+	/**
+	 * WICKET-5582 absolute URLs stay absolute after encoding
+	 */
+	@Test
+	public void encodeAbsoluteUrl()
+	{
+		final String url = "http://localhost:8080/path";
+
+		ServletWebRequest webRequest = mock(ServletWebRequest.class);
+		when(webRequest.isAjax()).thenReturn(Boolean.FALSE);
+		Url baseUrl = Url.parse("./baseUrl");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("someHost");
+		baseUrl.setPort(80);
+		when(webRequest.getClientUrl()).thenReturn(baseUrl);
+
+		UrlRenderer renderer = new UrlRenderer(webRequest);
+
+		RequestCycle requestCycle = mock(RequestCycle.class);
+		ThreadContext.setRequestCycle(requestCycle);
+		when(requestCycle.getUrlRenderer()).thenReturn(renderer);
+
+		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
+		when(httpServletResponse.encodeURL(Matchers.eq(url))).thenReturn(url + ";foo");
+
+		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
+		assertEquals(url + ";foo", webResponse.encodeURL(url));
+	}
+
+	/**
+	 * WICKET-5582 absolute URLs stay absolute after encoding
+	 */
+	@Test
+	public void encodeRedirectAbsoluteUrl()
+	{
+		final String url = "http://localhost:8080/path";
+
+		ServletWebRequest webRequest = mock(ServletWebRequest.class);
+		when(webRequest.isAjax()).thenReturn(Boolean.FALSE);
+		Url baseUrl = Url.parse("./baseUrl");
+		baseUrl.setProtocol("http");
+		baseUrl.setHost("someHost");
+		baseUrl.setPort(80);
+		when(webRequest.getClientUrl()).thenReturn(baseUrl);
+
+		UrlRenderer renderer = new UrlRenderer(webRequest);
+
+		RequestCycle requestCycle = mock(RequestCycle.class);
+		ThreadContext.setRequestCycle(requestCycle);
+		when(requestCycle.getUrlRenderer()).thenReturn(renderer);
+
+		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
+		when(httpServletResponse.encodeRedirectURL(Matchers.eq(url))).thenReturn(url + ";foo");
+
+		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
+		assertEquals(url + ";foo", webResponse.encodeRedirectURL(url));
 	}
 }

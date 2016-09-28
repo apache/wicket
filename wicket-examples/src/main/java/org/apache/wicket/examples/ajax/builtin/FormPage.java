@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxPreventSubmitBehavior;
 import org.apache.wicket.ajax.form.AjaxFormValidatingBehavior;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RequiredTextField;
@@ -46,23 +47,73 @@ public class FormPage extends BasePage
 	public FormPage()
 	{
 		// create feedback panel to show errors
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-		feedback.setOutputMarkupId(true);
-		add(feedback);
-
+		final FeedbackPanel feedbackErrors = new FeedbackPanel("feedbackErrors", new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR));
+		feedbackErrors.setOutputMarkupId(true);
+		add(feedbackErrors);
+		
+		// create feedback panel to show info message
+		final FeedbackPanel feedbackSuccess = new FeedbackPanel("feedbackSuccess", new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO));
+		feedbackSuccess.setOutputMarkupId(true);
+		add(feedbackSuccess);
+		
 		// add form with markup id setter so it can be updated via ajax
+		addInstantValidationForm();
+
+		addPreventEnterSubmitForm();
+	}
+
+	private void addPreventEnterSubmitForm() {
 		Bean bean = new Bean();
-		Form<Bean> form = new Form<>("form", new CompoundPropertyModel<>(bean));
+		Form<Bean> form = new Form<Bean>("preventEnterForm", new CompoundPropertyModel<>(bean))
+		{
+			@Override
+			protected void onSubmit()
+			{
+				super.onSubmit();
+				info("Form successfully submitted!");
+			}
+		};
+
 		add(form);
 		form.setOutputMarkupId(true);
 
-		FormComponent fc;
+		addFormComponents(form);
 
-		// add form components to the form as usual
+		form.add(new AjaxPreventSubmitBehavior());
+	}
 
-		fc = new RequiredTextField<>("name");
+	private void addInstantValidationForm() {
+		Bean bean = new Bean();
+		Form<Bean> form = new Form<Bean>("form", new CompoundPropertyModel<>(bean))
+		{
+			@Override
+			protected void onSubmit()
+			{
+				super.onSubmit();
+				info("Form successfully submitted!");
+			}
+		};
+
+		add(form);
+		form.setOutputMarkupId(true);
+
+		addFormComponents(form);
+
+		// attach an ajax validation behavior to all form component's keydown
+		// event and throttle it down to once per second
+
+		form.add(new AjaxFormValidatingBehavior("keydown", Duration.ONE_SECOND));
+	}
+
+	private void addFormComponents(final Form<Bean> form) {
+
+		FormComponent<String> fc = new RequiredTextField<>("name");
 		fc.add(new StringValidator(4, null));
 		fc.setLabel(new ResourceModel("label.name"));
+
+		// add AjaxPreventSubmitBehavior to the text field if it mustn't submit
+		// the form when ENTER is pressed
+//		fc.add(new AjaxPreventSubmitBehavior());
 
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("name-label", fc));
@@ -74,28 +125,6 @@ public class FormPage extends BasePage
 		form.add(fc);
 		form.add(new SimpleFormComponentLabel("email-label", fc));
 
-		// attach an ajax validation behavior to all form component's keydown
-		// event and throttle it down to once per second
-
-		form.add(new AjaxFormValidatingBehavior("keydown", Duration.ONE_SECOND));
-
-		// add a button that can be used to submit the form via ajax
-		form.add(new AjaxButton("ajax-button", form)
-		{
-			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
-			{
-				// repaint the feedback panel so that it is hidden
-				target.add(feedback);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
-			{
-				// repaint the feedback panel so errors are shown
-				target.add(feedback);
-			}
-		});
 	}
 
 	/** simple java bean. */

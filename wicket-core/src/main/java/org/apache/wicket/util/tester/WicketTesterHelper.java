@@ -21,16 +21,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.junit.Assert;
 import org.apache.wicket.Component;
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.junit.Assert;
 
 /**
  * A <code>WicketTester</code>-specific helper class.
@@ -58,6 +58,12 @@ public class WicketTesterHelper
 
 		/** Component value. */
 		public String value;
+
+		/** Component visibility */
+		public boolean isVisible;
+
+		/** Whether Component is Enabled */
+		public boolean isEnabled;
 	}
 
 	/**
@@ -93,6 +99,8 @@ public class WicketTesterHelper
 
 					object.path = component.getPageRelativePath();
 					object.type = name;
+					object.isVisible = component.isVisible();
+					object.isEnabled = component.isEnabled();
 					try
 					{
 						object.value = component.getDefaultModelObjectAsString();
@@ -200,7 +208,12 @@ public class WicketTesterHelper
 		{
 			if (eventName.startsWith("on"))
 			{
-				eventName = eventName.substring(2);
+				String shortName = event.substring(2);
+				throw new IllegalArgumentException(
+						String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
+										"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
+										"names so the leading 'on' may break your application."
+								, event, shortName));
 			}
 
 			for (Behavior behavior : component.getBehaviors())

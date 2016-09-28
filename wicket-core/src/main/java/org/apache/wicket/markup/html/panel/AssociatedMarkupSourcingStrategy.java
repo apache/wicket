@@ -28,6 +28,7 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.TagUtils;
 import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.HeaderPartContainer;
+import org.apache.wicket.markup.html.MarkupUtil;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.lang.Args;
@@ -99,7 +100,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		}
 
 		// Find <wicket:panel>
-		IMarkupFragment markup = findStartTag(associatedMarkup);
+		IMarkupFragment markup = MarkupUtil.findStartTag(associatedMarkup, tagName);
 		if (markup == null)
 		{
 			throw new MarkupNotFoundException("Expected to find <wicket:" + tagName +
@@ -119,46 +120,13 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 			return associatedMarkup;
 		}
 
-		associatedMarkup = searchMarkupInTransparentResolvers(parent, child);
+		associatedMarkup = searchMarkupInTransparentResolvers(parent, markup, child);
 		if (associatedMarkup != null)
 		{
 			return associatedMarkup;
 		}
 
 		return findMarkupInAssociatedFileHeader(parent, child);
-	}
-
-	/**
-	 * Search for &lt;wicket:panel ...&gt; on the same level.
-	 * 
-	 * @param markup
-	 * @return null, if not found
-	 */
-	private final IMarkupFragment findStartTag(final IMarkupFragment markup)
-	{
-		MarkupStream stream = new MarkupStream(markup);
-
-		while (stream.skipUntil(ComponentTag.class))
-		{
-			ComponentTag tag = stream.getTag();
-			if (tag.isOpen() || tag.isOpenClose())
-			{
-				if (tag instanceof WicketTag)
-				{
-					WicketTag wtag = (WicketTag)tag;
-					if (tagName.equalsIgnoreCase(wtag.getName()))
-					{
-						return stream.getMarkupFragment();
-					}
-				}
-
-				stream.skipToMatchingCloseTag(tag);
-			}
-
-			stream.next();
-		}
-
-		return null;
 	}
 
 	/**
@@ -310,7 +278,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 * @param markup
 	 * @return the header part for this panel/border or null if it doesn't have a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(final WebMarkupContainer container,
+	private HeaderPartContainer getHeaderPart(final WebMarkupContainer container,
 		final String id, final IMarkupFragment markup)
 	{
 		// Create a HtmlHeaderContainer for the header tag found
@@ -335,7 +303,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 * @param associatedMarkupStream
 	 * @return index or -1 when done
 	 */
-	private final int nextHeaderMarkup(final MarkupStream associatedMarkupStream)
+	private int nextHeaderMarkup(final MarkupStream associatedMarkupStream)
 	{
 		// No associated markup => no header section
 		if (associatedMarkupStream == null)

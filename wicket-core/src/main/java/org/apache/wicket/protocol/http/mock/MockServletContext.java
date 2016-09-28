@@ -21,11 +21,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +43,7 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import javax.servlet.ServletRegistration.Dynamic;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.SessionCookieConfig;
@@ -44,6 +51,7 @@ import javax.servlet.SessionTrackingMode;
 import javax.servlet.descriptor.JspConfigDescriptor;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 import org.slf4j.Logger;
@@ -72,6 +80,8 @@ public class MockServletContext implements ServletContext
 	private final ValueMap attributes = new ValueMap();
 
 	private final ValueMap initParameters = new ValueMap();
+	
+	private final Map<String, ServletRegistration.Dynamic> servletRegistration = new HashMap<>();
 
 	/** Map of mime types */
 	private final ValueMap mimeTypes = new ValueMap();
@@ -465,13 +475,16 @@ public class MockServletContext implements ServletContext
 		{
 			File[] files = current.listFiles();
 			boolean match = false;
-			for (File file : files)
+			if (files != null)
 			{
-				if (file.getName().equals(element) && file.isDirectory())
+				for (File file : files)
 				{
-					current = file;
-					match = true;
-					break;
+					if (file.getName().equals(element) && file.isDirectory())
+					{
+						current = file;
+						match = true;
+						break;
+					}
 				}
 			}
 			if (!match)
@@ -481,16 +494,19 @@ public class MockServletContext implements ServletContext
 		}
 
 		File[] files = current.listFiles();
-		Set<String> result = new HashSet<String>();
-		int stripLength = webappRoot.getPath().length();
-		for (File file : files)
+		Set<String> result = new HashSet<>();
+		if (files != null)
 		{
-			String s = file.getPath().substring(stripLength).replace('\\', '/');
-			if (file.isDirectory())
+			int stripLength = webappRoot.getPath().length();
+			for (File file : files)
 			{
-				s = s + "/";
+				String s = file.getPath().substring(stripLength).replace('\\', '/');
+				if (file.isDirectory())
+				{
+					s = s + "/";
+				}
+				result.add(s);
 			}
-			result.add(s);
 		}
 		return result;
 	}
@@ -535,37 +551,63 @@ public class MockServletContext implements ServletContext
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, String className)
 	{
-		return null;
+		try
+		{
+			return addServlet(servletName, Class.forName(className).asSubclass(Servlet.class));
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet)
 	{
-		return null;
+		Dynamic mockRegistration = (Dynamic)Proxy.newProxyInstance(Dynamic.class.getClassLoader(),
+			new Class<?>[]{Dynamic.class}, new MockedServletRegistationHandler(servletName));
+		
+		servletRegistration.put(servletName, mockRegistration);
+		
+		return mockRegistration;
 	}
 
 	@Override
 	public ServletRegistration.Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass)
 	{
-		return null;
+		try
+		{
+			return addServlet(servletName, servletClass.newInstance());
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	@Override
 	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException
 	{
-		return null;
+		try
+		{
+			return clazz.newInstance();
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	@Override
 	public ServletRegistration getServletRegistration(String servletName)
 	{
-		return null;
+		return servletRegistration.get(servletName);
 	}
 
 	@Override
 	public Map<String, ? extends ServletRegistration> getServletRegistrations()
 	{
-		return null;
+		return servletRegistration;
 	}
 
 	@Override
@@ -665,6 +707,12 @@ public class MockServletContext implements ServletContext
 	{
 	}
 
+	@Override
+	public String getVirtualServerName()
+	{
+		return "WicketTester 8.x";
+	}
+
 	/**
 	 * NOT USED - Servlet spec requires that this always returns null.
 	 * 
@@ -761,136 +809,35 @@ public class MockServletContext implements ServletContext
 	{
 		return "";
 	}
-
-	// @formatter:off
-	/* TODO JAVA6,SERVLET3.0
-	 * servlet 3.0 stuff
+	
+	
+	/**
+	 * Invocation handler for proxy interface of {@link javax.servlet.ServletRegistration.Dynamic}.
+	 * This class intercepts invocation for method {@link javax.servlet.ServletRegistration.Dynamic#getMappings} 
+	 * and returns the servlet name.
 	 * 
-	public int getEffectiveMajorVersion()
+	 * @author andrea del bene
+	 *
+	 */
+	class MockedServletRegistationHandler implements InvocationHandler
 	{
-		return 0;
+		
+		private final Collection<String> servletName;
+		
+		public MockedServletRegistationHandler(String servletName)
+		{
+			this.servletName = Arrays.asList(servletName);
+		}
+		
+		@Override
+		public Object invoke(Object object, Method method, Object[] args) throws Throwable
+		{
+			if (method.getName().equals("getMappings"))
+			{
+				return servletName;
+			}
+			
+			return null;
+		}
 	}
-
-	public int getEffectiveMinorVersion()
-	{
-		return 0;
-	}
-
-	public boolean setInitParameter(String name, String value)
-	{
-		return false;
-	}
-
-	public Dynamic addServlet(String servletName, String className)
-	{
-		return null;
-	}
-
-	public Dynamic addServlet(String servletName, Servlet servlet)
-	{
-		return null;
-	}
-
-	public Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass)
-	{
-		return null;
-	}
-
-	public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException
-	{
-		return null;
-	}
-
-	public ServletRegistration getServletRegistration(String servletName)
-	{
-		return null;
-	}
-
-	public Map<String, ? extends ServletRegistration> getServletRegistrations()
-	{
-		return null;
-	}
-
-	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className)
-	{
-		return null;
-	}
-
-	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter)
-	{
-		return null;
-	}
-
-	public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName,
-		Class<? extends Filter> filterClass)
-	{
-		return null;
-	}
-
-	public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException
-	{
-		return null;
-	}
-
-	public FilterRegistration getFilterRegistration(String filterName)
-	{
-		return null;
-	}
-
-	public Map<String, ? extends FilterRegistration> getFilterRegistrations()
-	{
-		return null;
-	}
-
-	public SessionCookieConfig getSessionCookieConfig()
-	{
-		return null;
-	}
-
-	public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes)
-	{
-	}
-
-	public Set<SessionTrackingMode> getDefaultSessionTrackingModes()
-	{
-		return null;
-	}
-
-	public Set<SessionTrackingMode> getEffectiveSessionTrackingModes()
-	{
-		return null;
-	}
-
-	public void addListener(String className)
-	{
-	}
-
-	public <T extends EventListener> void addListener(T t)
-	{
-	}
-
-	public void addListener(Class<? extends EventListener> listenerClass)
-	{
-	}
-
-	public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException
-	{
-		return null;
-	}
-
-	public JspConfigDescriptor getJspConfigDescriptor()
-	{
-		return null;
-	}
-
-	public ClassLoader getClassLoader()
-	{
-		return null;
-	}
-
-	public void declareRoles(String... roleNames)
-	{
-	}
-	*/
-	// @formatter:on
 }

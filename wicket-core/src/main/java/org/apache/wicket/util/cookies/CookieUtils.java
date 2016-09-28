@@ -20,6 +20,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -53,6 +54,7 @@ public class CookieUtils
 	 * Construct.
 	 * 
 	 * @param settings
+	 *          the default settings for the saved cookies
 	 */
 	public CookieUtils(final CookieDefaults settings)
 	{
@@ -71,6 +73,7 @@ public class CookieUtils
 	 * Remove the cookie identified by the key
 	 * 
 	 * @param key
+	 *          The cookie name
 	 */
 	public final void remove(final String key)
 	{
@@ -105,8 +108,9 @@ public class CookieUtils
 
 	/**
 	 * Retrieve the cookie value by means of its key.
-	 * 
+	 *
 	 * @param key
+	 *          The cookie name
 	 * @return The cookie value associated with the key
 	 */
 	public final String load(final String key)
@@ -132,43 +136,22 @@ public class CookieUtils
 		if (value != null)
 		{
 			// Assign the retrieved/persisted value to the component
-			formComponent.setModelValue(splitValue(value));
+			formComponent.setModelValue(new String[] {value});
 		}
 		return value;
-	}
-
-	/**
-	 * Split the loaded Cookie value
-	 * 
-	 * @param value
-	 * @return The cookie's value split into fragments
-	 */
-	protected String[] splitValue(final String value)
-	{
-		return value.split(FormComponent.VALUE_SEPARATOR);
-	}
-
-	/**
-	 * Join all fragments into one Cookie value
-	 * 
-	 * @param values
-	 * @return The cookie's value splitted into its constituent parts
-	 */
-	protected String joinValues(final String... values)
-	{
-		return Strings.join(FormComponent.VALUE_SEPARATOR, values);
 	}
 
 	/**
 	 * Create a Cookie with key and value and save it in the browser with the next response
 	 * 
 	 * @param key
-	 * @param values
+	 *          The cookie name
+	 * @param value
+	 *          The cookie value
 	 */
-	public final void save(String key, final String... values)
+	public final void save(String key, final String value)
 	{
 		key = getSaveKey(key);
-		String value = joinValues(values);
 		Cookie cookie = getCookie(key);
 		if (cookie == null)
 		{
@@ -178,9 +161,6 @@ public class CookieUtils
 		{
 			cookie.setValue(value);
 		}
-		cookie.setSecure(false);
-		cookie.setMaxAge(settings.getMaxAge());
-
 		save(cookie);
 	}
 
@@ -210,8 +190,8 @@ public class CookieUtils
 
 		// cookie names cannot contain ':',
 		// we replace ':' with '.' but first we have to encode '.' as '..'
-		key = key.replace(".", "..");
-		key = key.replace(":", ".");
+		key = Strings.replaceAll(key, ".", "..").toString();
+		key = key.replace(':', '.');
 		return key;
 	}
 
@@ -226,11 +206,11 @@ public class CookieUtils
 	{
 		if (cookie != null)
 		{
+			save(cookie);
+
 			// Delete the cookie by setting its maximum age to zero
 			cookie.setMaxAge(0);
 			cookie.setValue(null);
-
-			save(cookie);
 
 			if (log.isDebugEnabled())
 			{
@@ -247,24 +227,25 @@ public class CookieUtils
 	 * 
 	 * @return Any cookies for this request
 	 */
-	private Cookie getCookie(final String name)
+	public Cookie getCookie(final String name)
 	{
 		String key = getSaveKey(name);
 
 		try
 		{
-			Cookie cookie = getWebRequest().getCookie(key);
+			WebRequest webRequest = getWebRequest();
+			Cookie cookie = webRequest.getCookie(key);
 			if (log.isDebugEnabled())
 			{
 				if (cookie != null)
 				{
 					log.debug("Found Cookie with name=" + key + " and request URI=" +
-						getWebRequest().getUrl().toString());
+							webRequest.getUrl().toString());
 				}
 				else
 				{
 					log.debug("Unable to find Cookie with name=" + key + " and request URI=" +
-						getWebRequest().getUrl().toString());
+							webRequest.getUrl().toString());
 				}
 			}
 
@@ -332,6 +313,8 @@ public class CookieUtils
 		cookie.setPath(path);
 		cookie.setVersion(settings.getVersion());
 		cookie.setSecure(settings.getSecure());
+		cookie.setMaxAge(settings.getMaxAge());
+		cookie.setHttpOnly(settings.isHttpOnly());
 	}
 
 	/**
@@ -351,7 +334,13 @@ public class CookieUtils
 	 */
 	private WebResponse getWebResponse()
 	{
-		return (WebResponse)RequestCycle.get().getResponse();
+		RequestCycle cycle = RequestCycle.get();
+		Response response = cycle.getResponse();
+		if (!(response instanceof WebResponse))
+		{
+			response = cycle.getOriginalResponse();
+		}
+		return (WebResponse)response;
 	}
 
 	/**

@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.examples.repeater;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * generates random contacts
@@ -70,11 +73,13 @@ public class ContactGenerator
 		contact.setId(generateId());
 		contact.setHomePhone(generatePhoneNumber());
 		contact.setCellPhone(generatePhoneNumber());
+		contact.setBornDate(generateDate());
+		
 		return contact;
 	}
 
 	/**
-	 * generats <code>count</code> number contacts and puts them into <code>collection</code>
+	 * Generates <code>count</code> number contacts and puts them into <code>collection</code>
 	 * collection
 	 * 
 	 * @param collection
@@ -111,5 +116,20 @@ public class ContactGenerator
 		return choices[rint(0, choices.length)];
 	}
 
+	private Date generateDate()
+	{
+	    	GregorianCalendar gc = new GregorianCalendar();
 
+	        int year = rint(1950, 1985);
+
+	        gc.set(Calendar.YEAR, year);
+
+	        int dayOfYear = rint(1, gc.getActualMaximum(Calendar.DAY_OF_YEAR));
+
+	        gc.set(Calendar.DAY_OF_YEAR, dayOfYear);
+	        
+	        return gc.getTime();
+	}
+	
+	
 }

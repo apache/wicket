@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.head;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -55,10 +55,32 @@ public abstract class CssHeaderItem extends HeaderItem
 	 * </pre></code>
 	 */
 	private final String condition;
+
+	private String markupId;
 	
 	protected CssHeaderItem(String condition)
 	{
 		this.condition = condition;
+	}
+
+	/**
+	 * @return an optional markup id for the &lt;link&gt; HTML element that will be rendered
+	 * for this header item
+	 */
+	public String getId()
+	{
+		return markupId;
+	}
+
+	/**
+	 * @param markupId
+	 *          an optional markup id for this header item
+	 * @return {@code this} object, for method chaining
+	 */
+	public CssHeaderItem setId(String markupId)
+	{
+		this.markupId = markupId;
+		return this;
 	}
 
 	/**
@@ -253,7 +275,7 @@ public abstract class CssHeaderItem extends HeaderItem
 		boolean hasCondition = Strings.isEmpty(condition) == false; 
 		if (hasCondition)
 		{
-			if (RequestCycle.get().find(AjaxRequestTarget.class) != null)
+			if (RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent())
 			{
 				// WICKET-4894
 				logger.warn("IE CSS engine doesn't support dynamically injected links in " +
@@ -266,7 +288,7 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		CssUtils.writeLinkUrl(response, url, media);
+		CssUtils.writeLinkUrl(response, url, media, getId());
 
 		if (hasCondition)
 		{

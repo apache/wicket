@@ -104,7 +104,7 @@ public class PageIdPoliticTest extends Assert
 				return new IPageManagerProvider()
 				{
 					@Override
-					public IPageManager get(IPageManagerContext pageManagerContext)
+					public IPageManager apply(IPageManagerContext pageManagerContext)
 					{
 						IPageStore pageStore = new DefaultPageStore(new JavaSerializer(
 							application.getApplicationKey()), dataStore, 4);
@@ -137,7 +137,7 @@ public class PageIdPoliticTest extends Assert
 		{
 			WebComponent component;
 			component = new WebComponent("component");
-			component.add(eventBehavior = new AjaxEventBehavior("onclick")
+			component.add(eventBehavior = new AjaxEventBehavior("click")
 			{
 				/** */
 				private static final long serialVersionUID = 1L;

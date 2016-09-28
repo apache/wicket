@@ -43,7 +43,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  */
 public class CachingResourceStreamLocator implements IResourceStreamLocator
 {
-	private final ConcurrentMap<Key, IResourceStreamReference> cache;
+	private final ConcurrentMap<CacheKey, IResourceStreamReference> cache;
 
 	private final IResourceStreamLocator delegate;
 
@@ -73,7 +73,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	@Override
 	public IResourceStream locate(Class<?> clazz, String path)
 	{
-		Key key = new Key(clazz.getName(), path, null, null, null);
+		CacheKey key = new CacheKey(clazz.getName(), path, null, null, null, null, true);
 		IResourceStreamReference resourceStreamReference = cache.get(key);
 
 		final IResourceStream result;
@@ -91,7 +91,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		return result;
 	}
 
-	private void updateCache(Key key, IResourceStream stream)
+	private void updateCache(CacheKey key, IResourceStream stream)
 	{
 		if (null == stream)
 		{
@@ -113,7 +113,7 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 	public IResourceStream locate(Class<?> scope, String path, String style, String variation,
 		Locale locale, String extension, boolean strict)
 	{
-		Key key = new Key(scope.getName(), path, locale, style, variation);
+		CacheKey key = new CacheKey(scope.getName(), path, extension, locale, style, variation, strict);
 		IResourceStreamReference resourceStreamReference = cache.get(key);
 
 		final IResourceStream result;
@@ -136,5 +136,72 @@ public class CachingResourceStreamLocator implements IResourceStreamLocator
 		String variation, String extension, boolean strict)
 	{
 		return delegate.newResourceNameIterator(path, locale, style, variation, extension, strict);
+	}
+
+	/**
+	 * Clears the resource cache.
+	 * 
+	 * @since 6.16.0
+	 */
+	public void clearCache()
+	{
+		cache.clear();
+	}
+
+	/**
+	 * A specialization of {@link org.apache.wicket.request.resource.ResourceReference.Key} that
+	 * additionally takes the file extension into account
+	 */
+	private static class CacheKey extends Key
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * The file extension
+		 */
+		private final String extension;
+
+		/** Whether the key was looked up using a strict matching search */
+		private final boolean strict;
+
+		private CacheKey(String scope, String name, String extension, Locale locale, String style, String variation, boolean strict)
+		{
+			super(scope, name, locale, style, variation);
+
+			this.extension = extension;
+			this.strict = strict;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = super.hashCode();
+			result = prime * result + ((extension == null) ? 0 : extension.hashCode());
+			result = prime * result + (strict ? 1231 : 1237);
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+				return true;
+			if (!super.equals(obj))
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			CacheKey other = (CacheKey)obj;
+			if (extension == null)
+			{
+				if (other.extension != null)
+					return false;
+			}
+			else if (!extension.equals(other.extension))
+				return false;
+			if (strict != other.strict)
+				return false;
+			return true;
+		}
 	}
 }

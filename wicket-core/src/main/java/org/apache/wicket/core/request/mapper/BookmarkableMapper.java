@@ -19,16 +19,17 @@ package org.apache.wicket.core.request.mapper;
 import java.util.List;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.core.request.handler.PageProvider;
-import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.mapper.ICompoundRequestMapper;
+import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
-import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Decodes and encodes the following URLs:
@@ -51,20 +52,6 @@ import org.apache.wicket.util.lang.Args;
  */
 public class BookmarkableMapper extends AbstractBookmarkableMapper
 {
-	private final IPageParametersEncoder pageParametersEncoder;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param pageParametersEncoder
-	 */
-	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder)
-	{
-		Args.notNull(pageParametersEncoder, "pageParametersEncoder");
-
-		this.pageParametersEncoder = pageParametersEncoder;
-	}
-
 	/**
 	 * Construct.
 	 */
@@ -74,8 +61,15 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	}
 
 	/**
-	 * @see AbstractBookmarkableMapper#buildUrl(AbstractBookmarkableMapper.UrlInfo)
+	 * Construct.
+	 *
+	 * @param pageParametersEncoder
 	 */
+	public BookmarkableMapper(IPageParametersEncoder pageParametersEncoder)
+	{
+		super("notUsed", pageParametersEncoder);
+	}
+
 	@Override
 	protected Url buildUrl(UrlInfo info)
 	{
@@ -89,12 +83,17 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		return encodePageParameters(url, info.getPageParameters(), pageParametersEncoder);
 	}
 
-	/**
-	 * @see AbstractBookmarkableMapper#parseRequest(org.apache.wicket.request.Request)
-	 */
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
+		if (Application.exists())
+		{
+			if (Application.get().getSecuritySettings().getEnforceMounts())
+			{
+				return null;
+			}
+		}
+
 		if (matches(request))
 		{
 			Url url = request.getUrl();
@@ -115,30 +114,15 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 				className = segments.get(1);
 			}
 
+			if (Strings.isEmpty(className))
+			{
+				return null;
+			}
+
 			Class<? extends IRequestablePage> pageClass = getPageClass(className);
 
 			if (pageClass != null && IRequestablePage.class.isAssignableFrom(pageClass))
 			{
-				if (Application.exists())
-				{
-					Application application = Application.get();
-
-					if (application.getSecuritySettings().getEnforceMounts())
-					{
-						// we make an exception if the homepage itself was mounted, see WICKET-1898
-						if (!pageClass.equals(application.getHomePage()))
-						{
-							// WICKET-5094 only enforce mount if page is mounted
-							Url reverseUrl = application.getRootRequestMapper().mapHandler(
-								new RenderPageRequestHandler(new PageProvider(pageClass)));
-							if (!matches(request.cloneWithUrl(reverseUrl)))
-							{
-								return null;
-							}
-						}
-					}
-				}
-
 				// extract the PageParameters from URL if there are any
 				PageParameters pageParameters = extractPageParameters(request, 3,
 					pageParametersEncoder);
@@ -149,18 +133,45 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		return null;
 	}
 
-	/**
-	 * @see AbstractBookmarkableMapper#pageMustHaveBeenCreatedBookmarkable()
-	 */
+	private boolean isPageMounted(Class<? extends IRequestablePage> pageClass, ICompoundRequestMapper compoundMapper)
+	{
+		for (IRequestMapper requestMapper : compoundMapper)
+		{
+			while (requestMapper instanceof IRequestMapperDelegate)
+			{
+				requestMapper = ((IRequestMapperDelegate)requestMapper).getDelegateMapper();
+			}
+
+			if (requestMapper instanceof ICompoundRequestMapper)
+			{
+				if (isPageMounted(pageClass, (ICompoundRequestMapper)requestMapper))
+				{
+					return true;
+				}
+			}
+			else
+			{
+				if (requestMapper instanceof AbstractBookmarkableMapper  && requestMapper != this)
+				{
+					AbstractBookmarkableMapper mapper = (AbstractBookmarkableMapper) requestMapper;
+
+					if (mapper.checkPageClass(pageClass))
+					{
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	@Override
 	protected boolean pageMustHaveBeenCreatedBookmarkable()
 	{
 		return true;
 	}
 
-	/**
-	 * @see AbstractBookmarkableMapper#getCompatibilityScore(org.apache.wicket.request.Request)
-	 */
 	@Override
 	public int getCompatibilityScore(Request request)
 	{
@@ -181,26 +192,66 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 		String bookmarkableIdentifier = getContext().getBookmarkableIdentifier();
 		String pageIdentifier = getContext().getPageIdentifier();
 
-		if (url.getSegments().size() >= 3 && urlStartsWith(url, namespace, bookmarkableIdentifier))
+		List<String> segments = url.getSegments();
+		int segmentsSize = segments.size();
+
+		if (segmentsSize >= 3 && urlStartsWithAndHasPageClass(url, namespace, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 		// baseUrl = 'wicket/bookmarkable/com.example.SomePage[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
-		else if (baseUrl.getSegments().size() == 3 && urlStartsWith(baseUrl, namespace, bookmarkableIdentifier) && url.getSegments().size() >= 2 && urlStartsWith(url, bookmarkableIdentifier))
+		else if (baseUrl.getSegments().size() == 3 && urlStartsWith(baseUrl, namespace, bookmarkableIdentifier)
+				&& segmentsSize >= 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 		// baseUrl = 'bookmarkable/com.example.SomePage', requestUrl = 'bookmarkable/com.example.SomePage'
-		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, bookmarkableIdentifier) && url.getSegments().size() == 2 && urlStartsWith(url, bookmarkableIdentifier))
+		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, bookmarkableIdentifier)
+				&& segmentsSize == 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 		// baseUrl = 'wicket/page[?...]', requestUrl = 'bookmarkable/com.example.SomePage'
-		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, namespace, pageIdentifier) && url.getSegments().size() >= 2 && urlStartsWith(url, bookmarkableIdentifier))
+		else if (baseUrl.getSegments().size() == 2 && urlStartsWith(baseUrl, namespace, pageIdentifier)
+				&& segmentsSize >= 2 && urlStartsWithAndHasPageClass(url, bookmarkableIdentifier))
 		{
 			matches = true;
 		}
 
 		return matches;
+	}
+
+	/**
+	 * Checks whether the url starts with the given segments and additionally
+	 * checks whether the following segment is non-empty
+	 *
+	 * @param url
+	 *          The url to be checked
+	 * @param segments
+	 *          The expected leading segments
+	 * @return {@code true} if the url starts with the given segments and there is non-empty segment after them
+	 */
+	protected boolean urlStartsWithAndHasPageClass(Url url, String... segments)
+	{
+		boolean result = urlStartsWith(url, segments);
+
+		if (result)
+		{
+			List<String> urlSegments = url.getSegments();
+			if (urlSegments.size() == segments.length)
+			{
+				result = false;
+			}
+			else
+			{
+				String pageClassSegment = urlSegments.get(segments.length);
+				if (Strings.isEmpty(pageClassSegment))
+				{
+					result = false;
+				}
+			}
+		}
+
+		return result;
 	}
 }

@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.wicket.request.ILogData;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
@@ -27,6 +23,12 @@ import org.apache.wicket.request.handler.logger.NoLogData;
 import org.apache.wicket.session.ISessionStore;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.string.Strings;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Interface for the request logger and viewer.
@@ -63,6 +65,11 @@ public interface IRequestLogger
 	 * @return The current active requests
 	 */
 	int getCurrentActiveRequestCount();
+
+	/**
+	 * @return The {@link org.apache.wicket.protocol.http.IRequestLogger.RequestData} for the current request.
+	 */
+	RequestData getCurrentRequest();
 
 	/**
 	 * @return The peak active requests
@@ -156,14 +163,14 @@ public interface IRequestLogger
 	/**
 	 * Perform the actual logging
 	 */
-	public void performLogging();
+	void performLogging();
 
 	/**
 	 * This class hold the information one request of a session has.
 	 * 
 	 * @author jcompagner
 	 */
-	public static class SessionData implements IClusterable, Comparable<SessionData>
+	class SessionData implements IClusterable, Comparable<SessionData>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -297,13 +304,14 @@ public interface IRequestLogger
 	 * 
 	 * @author jcompagner
 	 */
-	public static class RequestData implements IClusterable
+	class RequestData implements IClusterable
 	{
 		private static final long serialVersionUID = 1L;
 
 		private long startDate;
 		private long timeTaken;
-		private final List<String> entries = new ArrayList<String>(5);
+		private final List<String> entries = new ArrayList<>(5);
+		private Map<String, Object> userData;
 		private String requestedUrl;
 		private IRequestHandler eventTarget;
 		private IRequestHandler responseTarget;
@@ -483,6 +491,36 @@ public interface IRequestLogger
 		}
 
 		/**
+		 * @param key
+		 * @param value
+		 */
+		public void addUserData(String key, Object value)
+		{
+			getUserData().put(key, value);
+		}
+
+		/**
+		 * @param key
+		 * @return
+		 */
+		public Object getUserData(String key)
+		{
+			return getUserData().get(key);
+		}
+
+		/**
+		 * @return the userData Map
+		 */
+		public Map<String, Object> getUserData()
+		{
+			if (userData == null) {
+				userData = new HashMap<>();
+			}
+
+			return userData;
+		}
+
+		/**
 		 * @return All entries of the objects that are created/updated or removed in this request
 		 */
 		public String getAlteredObjects()
@@ -522,7 +560,7 @@ public interface IRequestLogger
 	 * 
 	 * @author jcompagner
 	 */
-	public interface ISessionLogInfo
+	interface ISessionLogInfo
 	{
 		/**
 		 * If you use the request logger log functionality then this object should have a nice

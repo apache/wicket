@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import org.apache.wicket.IWicketInternalException;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.component.IRequestablePage;
 
@@ -25,7 +26,7 @@ import org.apache.wicket.request.component.IRequestablePage;
  *
  * @author Matej Knopp
  */
-public class StalePageException extends WicketRuntimeException
+public class StalePageException extends WicketRuntimeException implements IWicketInternalException
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,6 +40,7 @@ public class StalePageException extends WicketRuntimeException
 	 */
 	public StalePageException(IRequestablePage page)
 	{
+		super(String.format("A request to page '%s' has been made with stale 'renderCount'. The page will be re-rendered.", page));
 		this.page = page;
 	}
 

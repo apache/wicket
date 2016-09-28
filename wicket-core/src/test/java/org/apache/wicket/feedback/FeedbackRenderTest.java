@@ -17,7 +17,7 @@
 package org.apache.wicket.feedback;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

@@ -16,15 +16,19 @@
  */
 package org.apache.wicket.request.resource;
 
-import org.apache.wicket.WicketTestCase;
+import java.io.IOException;
+import java.util.Locale;
+
 import org.apache.wicket.javascript.IJavaScriptCompressor;
 import org.apache.wicket.markup.html.PackageResourceTest;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
- * 
+ * Tests for JavaScriptPackageResource
  */
 public class JavaScriptPackageResourceTest extends WicketTestCase
 {
@@ -86,6 +90,39 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4762
+	 *
+	 * Asserts that the input stream used to calculate the IResourceVersion is the
+	 * same as the one used for the actual response
+	 */
+	@Test
+	public void cacheableStreamIsCompressed() throws ResourceStreamNotFoundException, IOException
+	{
+		JavaScriptPackageResource resource = new JavaScriptPackageResource(
+				PackageResourceTest.class, "packaged1.txt", null, null, null)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected IJavaScriptCompressor getCompressor()
+			{
+				return new IJavaScriptCompressor()
+				{
+
+					@Override
+					public String compress(String original)
+					{
+						return RESOURCE_COMPRESSED;
+					}
+				};
+			}
+		};
+
+		tester.startResource(resource);
+		assertEquals(RESOURCE_COMPRESSED, tester.getLastResponseAsString());
+	}
+
+	/**
 	 * Tests that a {@link JavaScriptPackageResource} can use the application level
 	 * {@link IJavaScriptCompressor} when there is no custom
 	 */
@@ -108,7 +145,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 	{
 		JavaScriptPackageResource resource = new JavaScriptPackageResource(
 			PackageResourceTest.class, "packaged1.txt", null, null, null);
-
+		tester.getSession().setLocale(Locale.ROOT);
 		tester.getApplication().getResourceSettings().setJavaScriptCompressor(null);
 		tester.startResource(resource);
 		assertEquals("TEST", tester.getLastResponseAsString());

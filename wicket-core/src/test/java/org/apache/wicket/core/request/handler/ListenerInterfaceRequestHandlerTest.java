@@ -21,18 +21,18 @@ import java.text.ParseException;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -42,8 +42,34 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 {
 
 	/**
+	 * WICKET-5466
+	 */
+	@Test
+	public void removedComponent()
+	{
+		// non-existing component on fresh page is ignored
+		PageAndComponentProvider freshPage = new PageAndComponentProvider(DummyPage.class, null,
+			"foo");
+		new ListenerInterfaceRequestHandler(freshPage).respond(tester
+			.getRequestCycle());
+
+		// non-existing component on old page fails
+		PageAndComponentProvider oldPage = new PageAndComponentProvider(new DummyPage(), "foo");
+		try
+		{
+			new ListenerInterfaceRequestHandler(oldPage)
+				.respond(tester.getRequestCycle());
+			fail();
+		}
+		catch (WicketRuntimeException ex)
+		{
+			assertEquals("Component 'foo' has been removed from page.", ex.getMessage());
+		}
+	}
+
+	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4116
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -56,7 +82,7 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 
 		Url urlToAjaxLink = tester.urlFor(page.link);
 		Session session = tester.getSession();
-		session.getPageManager().sessionExpired(session.getId());
+		session.clear();
 
 		// fire a request to the ajax link on the expired page
 		executeAjaxUrlWithLastBaseUrl(urlToAjaxLink);
@@ -120,8 +146,7 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 	public void isPageInstanceCreatedOnClassLinks()
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page.class, "link");
-		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
-			RequestListenerInterface.forName(ILinkListener.class.getSimpleName()));
+		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
 		assertFalse("Handler should not report a page instance is available ",
 			handler.isPageInstanceCreated());
 	}

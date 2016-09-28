@@ -37,6 +37,7 @@ import org.apache.wicket.util.io.IClusterable;
  * @author Jonathan Locke
  * @since 1.2.6
  */
+@SuppressWarnings("serial")
 public abstract class VariableInterpolator implements IClusterable
 {
 	/** The <code>String</code> to interpolate into */

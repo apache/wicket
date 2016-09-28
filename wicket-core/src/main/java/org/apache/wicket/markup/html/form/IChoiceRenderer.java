@@ -16,14 +16,17 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import java.util.List;
+
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Renders one choice. Separates the 'id' values used for internal representation from 'display
  * values' which are the values shown to the user of components that use this renderer.
- * 
+ *
  * @author jcompagner
- * 
+ *
  * @param <T>
  *            The model object type
  */
@@ -31,7 +34,7 @@ public interface IChoiceRenderer<T> extends IClusterable
 {
 	/**
 	 * Get the value for displaying to an end user.
-	 * 
+	 *
 	 * @param object
 	 *            the actual object
 	 * @return the value meant for displaying to an end user
@@ -45,7 +48,7 @@ public interface IChoiceRenderer<T> extends IClusterable
 	 * <p>
 	 * Note that the given index can be {@code -1} if the object in question is not contained in the
 	 * available choices.
-	 * 
+	 *
 	 * @param object
 	 *            The object for which the id should be generated
 	 * @param index
@@ -53,4 +56,18 @@ public interface IChoiceRenderer<T> extends IClusterable
 	 * @return String
 	 */
 	String getIdValue(T object, int index);
+
+	/**
+	 * This method is called to get an object back from its id representation.
+	 *
+	 * The {@code id} may be used to find/load the object in a more efficient way
+	 * than loading all {@code choices} and find the one with the same id in the list
+	 *
+	 * @param id
+	 *          The id representation of the object
+	 * @param choices
+	 *          The list of all rendered choices
+	 * @return A choice from the list that has this {@code id}
+	 */
+	T getObject(String id, IModel<? extends List<? extends T>> choices);
 }

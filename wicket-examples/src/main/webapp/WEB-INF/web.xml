@@ -15,14 +15,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-		 version="2.5">
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1" metadata-complete="false">
 
 	<display-name>Wicket Examples</display-name>
 
-	<!-- only available with servlet spec. 2.4 
+	<!-- only available with servlet spec. 2.4+
 	<locale-encoding-mapping-list>
 		<locale-encoding-mapping>
 			<locale>de</locale>
@@ -45,13 +46,9 @@
 		<param-value>deployment</param-value>
 	</context-param>
 
-	<!--
-	 Parameter used by Spring to locate its context configuration used for creating
-	 a WebApplicationContext.
-	-->
 	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:applicationContext.xml</param-value>
+		<param-name>velocityPropertiesFolder</param-name>
+		<param-value>/META-INF/</param-value>
 	</context-param>
 
 	<filter>
@@ -117,6 +114,15 @@
 	</filter>
 
 	<filter>
+		<filter-name>AjaxHelloBrowserApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.ajaxhellobrowser.HelloBrowserApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
 		<filter-name>StockQuoteApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
@@ -158,6 +164,15 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>org.apache.wicket.examples.images.ImagesApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>VideosApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>org.apache.wicket.examples.media.VideosApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -544,6 +559,13 @@
 	</filter-mapping>
 
 	<filter-mapping>
+		<filter-name>VideosApplication</filter-name>
+		<url-pattern>/videos/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
 		<filter-name>HelloWorldApplication</filter-name>
 		<url-pattern>/helloworld/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
@@ -567,6 +589,13 @@
 	<filter-mapping>
 		<filter-name>HelloBrowserApplication</filter-name>
 		<url-pattern>/hellobrowser/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>AjaxHelloBrowserApplication</filter-name>
+		<url-pattern>/ajaxhellobrowser/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
@@ -756,30 +785,26 @@
 	</filter-mapping>
 
 
-	<!-- CDI EXAMPLE APPLICATION -->
-	<filter>
-		<filter-name>CdiApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>org.apache.wicket.examples.cdi.CdiApplication</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>CdiApplication</filter-name>
-		<url-pattern>/cdi/*</url-pattern>
-	</filter-mapping>
+    <!-- CDI EXAMPLE APPLICATION -->
+    <filter>
+        <filter-name>CdiApplication</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>org.apache.wicket.examples.cdi.CdiApplication</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CdiApplication</filter-name>
+        <url-pattern>/cdi/*</url-pattern>
+    </filter-mapping>
 
-	<listener>
-		<!-- initialize Weld in servlet environment -->
-		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
-	</listener>
-    <resource-env-ref>
-        <description>Object factory for the CDI Bean Manager</description>
-        <resource-env-ref-name>BeanManager</resource-env-ref-name>
-        <resource-env-ref-type>javax.enterprise.inject.spi.BeanManager</resource-env-ref-type>
-    </resource-env-ref>
+    <listener>
+        <!-- initialize Weld in servlet environment -->
+        <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
+    </listener>
     <!-- END CDI EXAMPLE APPLICATION -->
+
 
     <!-- Bean Validation EXAMPLE APPLICATION -->
     <filter>
@@ -794,6 +819,21 @@
         <filter-name>BeanValidation</filter-name>
         <url-pattern>/bean-validation/*</url-pattern>
     </filter-mapping>
+
+	<!--
+	 Parameter used by Spring to locate its context configuration used for creating
+	 a WebApplicationContext.
+	-->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>org.apache.wicket.examples.spring.common.SpringConfig</param-value>
+	</context-param>
+
 
 	<!-- LISTENER -->
 	<listener>
@@ -858,10 +898,14 @@
 			<param-value>org.atmosphere.websocket.protocol.EchoProtocol</param-value>
 		</init-param>
 		<init-param>
-			<param-name>org.atmosphere.cpr.broadcastFilterClasses</param-name>
-			<param-value>org.apache.wicket.atmosphere.TrackMessageSizeFilter</param-value>
+			<param-name>org.atmosphere.cpr.AtmosphereInterceptor</param-name>
+			<param-value>org.atmosphere.client.TrackMessageSizeInterceptor</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<init-param>
+			<param-name>org.atmosphere.client.TrackMessageSizeInterceptor.delimiter</param-name>
+			<param-value><![CDATA[<|msg|>]]></param-value>
+		</init-param>
+ 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -33,7 +34,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * 
  */
 
-public class InlineFrame extends WebMarkupContainer implements ILinkListener
+public class InlineFrame extends WebMarkupContainer implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -122,7 +123,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.INTERFACE, new PageParameters());
+		return urlForListener(new PageParameters());
 	}
 
 	/**
@@ -146,11 +147,17 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		super.onComponentTag(tag);
 	}
 
+	@Override
+	public boolean rendersPage()
+	{
+		return false;
+	}
+	
 	/**
 	 * @see org.apache.wicket.markup.html.link.ILinkListener#onLinkClicked()
 	 */
 	@Override
-	public final void onLinkClicked()
+	public final void onRequest()
 	{
 		setResponsePage(pageProvider.getPageInstance());
 	}
@@ -162,8 +169,8 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		/*
 		 * TODO optimization: the inlineframe component does not always have to be stateless.
 		 * 
-		 * unfortunately due to current implementation always using ipagelink and a ilinklistener
-		 * callback it has to always be stateful because it can be put inside a listview item which
+		 * unfortunately due to current implementation of using a ILinkListener
+		 * callback it has to always be stateful because it can be put inside a ListView item which
 		 * will not be built upon a stateless callback causing a "component at path
 		 * listview:0:iframe not found" error.
 		 * 

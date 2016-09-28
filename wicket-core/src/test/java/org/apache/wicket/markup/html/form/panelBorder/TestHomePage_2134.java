@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.panelBorder;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

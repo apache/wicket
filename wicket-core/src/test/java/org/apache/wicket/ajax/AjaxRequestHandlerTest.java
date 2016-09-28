@@ -25,7 +25,6 @@ import java.util.regex.Pattern;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.MockPageWithLinkAndComponent;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -34,6 +33,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.time.Time;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -66,7 +66,7 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void jeaderContribution2() throws IOException
+	public void headerContribution2() throws IOException
 	{
 		executeHeaderTest(MockComponent2.class);
 	}
@@ -262,6 +262,7 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 	 */
 	private static class Wicket3921 extends WebPage implements IMarkupResourceStreamProvider
 	{
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
@@ -272,6 +273,8 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 
 			add(new AjaxLink<Void>("updatePage")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
@@ -283,6 +286,8 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 
 			add(new AjaxLink<Void>("updateComponent")
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{

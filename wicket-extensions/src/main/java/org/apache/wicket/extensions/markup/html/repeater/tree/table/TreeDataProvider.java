@@ -47,7 +47,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 	 * @param provider
 	 *            the provider to adapt
 	 */
-	public TreeDataProvider(ITreeProvider<T> provider)
+	protected TreeDataProvider(ITreeProvider<T> provider)
 	{
 		this.provider = provider;
 	}
@@ -128,7 +128,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 	}
 
 	/**
-	 * Hook method to decide wether the given node's children should be iterated.
+	 * Hook method to decide whether the given node's children should be iterated.
 	 * 
 	 * @param node
 	 *            node
@@ -157,13 +157,13 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 
 		private Iterator<? extends T> children;
 
-		public Branch(Branch<T> parent, Iterator<? extends T> children)
+		Branch(Branch<T> parent, Iterator<? extends T> children)
 		{
 			this.parent = parent;
 			this.children = children;
 		}
 
-		public NodeModel<T> wrapModel(IModel<T> model)
+		NodeModel<T> wrapModel(IModel<T> model)
 		{
 			boolean[] branches = new boolean[getDepth()];
 
@@ -178,7 +178,7 @@ public abstract class TreeDataProvider<T> implements ITreeDataProvider<T>
 			return new NodeModel<>(model, branches);
 		}
 
-		public int getDepth()
+		int getDepth()
 		{
 			if (parent == null)
 			{

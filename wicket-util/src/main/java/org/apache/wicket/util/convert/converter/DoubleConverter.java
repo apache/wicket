@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.convert.converter;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.IConverter;
@@ -31,6 +32,11 @@ public class DoubleConverter extends AbstractDecimalConverter<Double>
 {
 	private static final long serialVersionUID = 1L;
 
+	// Double.MIN is the smallest nonzero positive number, not the largest
+	// negative number
+	private static final BigDecimal MIN_VALUE = new BigDecimal(-Double.MAX_VALUE);
+	private static final BigDecimal MAX_VALUE = new BigDecimal(Double.MAX_VALUE);
+
 	/**
 	 * The singleton instance for a double converter
 	 */
@@ -42,9 +48,7 @@ public class DoubleConverter extends AbstractDecimalConverter<Double>
 	@Override
 	public Double convertToObject(final String value, final Locale locale)
 	{
-		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
-		// Double.MIN is the smallest nonzero positive number, not the largest
-		// negative number
+		final BigDecimal number = parse(value, MIN_VALUE, MAX_VALUE, locale);
 
 		if (number == null)
 		{

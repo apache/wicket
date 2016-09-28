@@ -115,7 +115,6 @@ public class PagingNavigation extends Loop
 {
 	private static final long serialVersionUID = 1L;
 
-
 	/** The PageableListView this navigation is navigating. */
 	protected IPageable pageable;
 
@@ -238,10 +237,10 @@ public class PagingNavigation extends Loop
 		this.separator = separator;
 	}
 
-
 	@Override
-	protected void onBeforeRender()
+	protected void onConfigure()
 	{
+		super.onConfigure();
 		setDefaultModel(new Model<Integer>(
 			(int)Math.max(Integer.MAX_VALUE, pageable.getPageCount())));
 		// PagingNavigation itself (as well as the PageableListView)
@@ -250,7 +249,6 @@ public class PagingNavigation extends Loop
 		// The index of the first page link depends on the PageableListView's
 		// page currently printed.
 		setStartIndex();
-		super.onBeforeRender();
 	}
 
 	/**
@@ -289,7 +287,7 @@ public class PagingNavigation extends Loop
 		}
 		else
 		{
-			label = String.valueOf(pageIndex + 1);
+			label = String.valueOf(pageIndex + 1).intern();
 		}
 		link.add(new Label("pageNumber", label));
 	}
@@ -424,8 +422,8 @@ public class PagingNavigation extends Loop
 		@Override
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
-			Map<String, String> vars = new MicroMap<String, String>("page",
-				String.valueOf(page + 1));
+			String pageIndex = String.valueOf(page + 1).intern();
+			Map<String, String> vars = new MicroMap<String, String>("page", pageIndex);
 			tag.put("title", PagingNavigation.this.getString(RES, Model.ofMap(vars)));
 		}
 	}

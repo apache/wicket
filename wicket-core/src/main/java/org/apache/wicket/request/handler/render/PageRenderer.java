@@ -23,7 +23,7 @@ import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.settings.IRequestCycleSettings.RenderStrategy;
+import org.apache.wicket.settings.RequestCycleSettings;
 
 /**
  * Delegate responsible for rendering the page. Depending on the implementation (web, test, portlet,
@@ -80,17 +80,20 @@ public abstract class PageRenderer
 
 	protected boolean isOnePassRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.ONE_PASS_RENDER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
+				RequestCycleSettings.RenderStrategy.ONE_PASS_RENDER;
 	}
 
 	protected boolean isRedirectToRender()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
+				RequestCycleSettings.RenderStrategy.REDIRECT_TO_RENDER;
 	}
 
 	protected boolean isRedirectToBuffer()
 	{
-		return Application.get().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER;
+		return Application.get().getRequestCycleSettings().getRenderStrategy() ==
+				RequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER;
 	}
 
 	/**
@@ -115,7 +118,7 @@ public abstract class PageRenderer
 	 * <p>
 	 * By default we will redirect. This is so we do not end up having the browser be on a listener
 	 * URL. A simple scenario is calling {@code setResponsePage(new StatelessPage())} inside form's
-	 * {@code onSubmit()} or link's {@code onClick()} callbacks, or any other listener interface
+	 * {@code onSubmit()} or link's {@code onClick()} callbacks, or any other request listener
 	 * callback. What will happen is that the browser will be on URL like
 	 * {@code ./wicket/page?0-2.IFormSubmitListener-form}, and we will not redirect - leaving the
 	 * browser on such URL. This is a worse alternative then saving one redirect because it may

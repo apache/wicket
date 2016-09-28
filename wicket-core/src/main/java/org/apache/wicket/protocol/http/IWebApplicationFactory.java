@@ -50,6 +50,6 @@ public interface IWebApplicationFactory
 	 * @param filter
 	 *            the wicket filter
 	 */
-	public void destroy(WicketFilter filter);
+	void destroy(WicketFilter filter);
 
 }

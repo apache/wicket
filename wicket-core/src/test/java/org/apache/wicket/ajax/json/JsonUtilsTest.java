@@ -56,5 +56,11 @@ public class JsonUtilsTest extends Assert
 		Object[] arrayValues = {"arrayValue", 3, null, true};
 		map.put("array", arrayValues);
 		assertEquals("[{\"name\":\"array\",\"value\":\"arrayValue\"},{\"name\":\"array\",\"value\":3},{\"name\":\"array\",\"value\":true}]", JsonUtils.asArray(map).toString());
+
+		map.clear();
+		map.put("null", null);
+		assertEquals("[]", JsonUtils.asArray(map).toString());
+		map.put("notNull", "notNull");
+		assertEquals("[{\"name\":\"notNull\",\"value\":\"notNull\"}]", JsonUtils.asArray(map).toString());
 	}
 }

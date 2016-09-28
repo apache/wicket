@@ -1,0 +1,27 @@
+
+
+JMX (Java Management Extensions) is the standard technology adopted in Java for managing and monitoring running applications or Java Virtual Machines. Wicket offers support for JMX through module wicket-jmx. In this paragraph we will see how we can connect to a Wicket application using JMX. In our example we will use JConsole as JMX client. This program is bundled with Java SE since version 5 and we can run it typing jconsole in our OS shell. 
+
+Once JConsole has started it will ask us to establish a new connection to a Java process, choosing between a local process or a remote one. In the following picture we have selected the process corresponding to the local instance of Jetty server we used to run one of our example projects:
+
+!JMX-new-connection.png!
+
+After we have established a JMX connection, JConsole will show us the following set of tabs:
+
+!JMX-console.png!
+
+JMX exposes application-specific informations using special objects called MBeans (Manageable Beans), hence if we want to control our application we must open the corresponding tab. The MBeans containing the application's informations is named @org.apache.wicket.app.<filter/servlet name>@.
+
+In our example we have used wicket.test as filter name for our application:
+
+!JMX-console2.png!
+
+As we can see in the picture above, every MBean exposes a node containing its attributes and another node showing the possible operations that can be performed on the object. In the case of a Wicket application the available operations are clearMarkupCache and clearLocalizerCache:
+
+!JMX-console3.png!
+
+With these two operations we can force Wicket to clear the internal caches used to load components markup and resource bundles. This can be particularly useful if we have our application running in DEPLOYMENT mode and we want to publish minor fixes for markup or bundle files (like spelling or typo corrections) without restarting the entire application. Without cleaning these two caches Wicket would continue to use cached values ignoring any change made to markup or bundle files.
+
+Some of the exposed properties are editable, hence we can tune their values while the application is running. For example if we look at the properties of @ApplicationSettings@ we can set the maximum size allowed for an upload modifying the attribute DefaultMaximumUploadSize:
+
+!JMX-console4.png!

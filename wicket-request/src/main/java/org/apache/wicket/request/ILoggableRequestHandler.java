@@ -32,5 +32,5 @@ public interface ILoggableRequestHandler extends IRequestHandler
 	 * 
 	 * @return The collected log data.
 	 */
-	public ILogData getLogData();
+	ILogData getLogData();
 }

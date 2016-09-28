@@ -28,10 +28,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.settings.ISecuritySettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Reusable user sign in panel with username and password as well as support for persistence of the
@@ -39,11 +35,10 @@ import org.slf4j.LoggerFactory;
  * passing the username and password submitted. The signIn() method should authenticate the user's
  * session.
  * 
- * @see {@link IAuthenticationStrategy}
- * @see {@link ISecuritySettings#getAuthenticationStrategy()}
- * @see {@link DefaultAuthenticationStrategy}
- * @see {@link WebSession#authenticate(String, String)}
- * 
+ * @see IAuthenticationStrategy
+ * @see org.apache.wicket.settings.SecuritySettings#getAuthenticationStrategy()
+ * @see DefaultAuthenticationStrategy
+ *
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
@@ -51,9 +46,6 @@ import org.slf4j.LoggerFactory;
 public class SignInPanel extends Panel
 {
 	private static final long serialVersionUID = 1L;
-
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(SignInPanel.class);
 
 	private static final String SIGN_IN_FORM = "signInForm";
 
@@ -287,18 +279,18 @@ public class SignInPanel extends Panel
 			setModel(new CompoundPropertyModel<>(SignInPanel.this));
 
 			// Attach textfields for username and password
-			add(new TextField<>("username"));
+			add(new TextField<>("username").setRequired(true));
 			add(new PasswordTextField("password"));
 
-			// MarkupContainer row for remember me checkbox
-			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
-			add(rememberMeRow);
+			// container for remember me checkbox
+			WebMarkupContainer rememberMeContainer = new WebMarkupContainer("rememberMeContainer");
+			add(rememberMeContainer);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox("rememberMe"));
+			rememberMeContainer.add(new CheckBox("rememberMe"));
 
 			// Show remember me checkbox?
-			rememberMeRow.setVisible(includeRememberMe);
+			rememberMeContainer.setVisible(includeRememberMe);
 		}
 
 		/**

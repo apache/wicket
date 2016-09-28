@@ -96,10 +96,4 @@ public final class ErrorCodeRequestHandler implements IRequestHandler
 	{
 		return message;
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void detach(final IRequestCycle requestCycle)
-	{
-	}
 }

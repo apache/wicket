@@ -18,12 +18,12 @@ package org.apache.wicket.resource.loader;
 
 import java.util.Map;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IPropertiesFactoryContext;
 import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
 import org.apache.wicket.resource.Properties;
 import org.apache.wicket.resource.PropertiesFactory;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.cycle;
 
+import java.util.Optional;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
@@ -35,7 +37,8 @@ import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
-import org.apache.wicket.request.RequestHandlerStack;
+import org.apache.wicket.request.RequestHandlerExecutor;
+import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
@@ -47,6 +50,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,7 +119,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	/** the time that this request cycle object was created. */
 	private final long startTime;
 
-	private final RequestHandlerStack requestHandlerExecutor;
+	private final RequestHandlerExecutor requestHandlerExecutor;
 
 	private Response activeResponse;
 
@@ -204,82 +208,6 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * Processes the request.
-	 * 
-	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
-	 *         otherwise.
-	 */
-	public boolean processRequest()
-	{
-		try
-		{
-			set(this);
-			listeners.onBeginRequest(this);
-			onBeginRequest();
-			IRequestHandler handler = resolveRequestHandler();
-			if (handler != null)
-			{
-				execute(handler);
-				return true;
-			}
-
-			// Did not find any suitable handler, thus not executing the request
-			log.debug(
-				"No suitable handler found for URL {}, falling back to container to process this request",
-				request.getUrl());
-		}
-		catch (Exception e)
-		{
-			IRequestHandler handler = handleException(e);
-			if (handler != null)
-			{
-				listeners.onExceptionRequestHandlerResolved(this, handler, e);
-				executeExceptionRequestHandler(handler, getExceptionRetryCount());
-				listeners.onRequestHandlerExecuted(this, handler);
-			}
-			else
-			{
-				log.error("Error during request processing. URL=" + request.getUrl(), e);
-			}
-			return true;
-		}
-		finally
-		{
-			set(null);
-		}
-		return false;
-	}
-
-	/**
-	 * Executes a request handler and fires pre/post listener methods
-	 * 
-	 * @param handler
-	 */
-	private void execute(IRequestHandler handler)
-	{
-		Args.notNull(handler, "handler");
-
-		try
-		{
-			listeners.onRequestHandlerResolved(this, handler);
-			requestHandlerExecutor.execute(handler);
-			listeners.onRequestHandlerExecuted(this, handler);
-		}
-		catch (RuntimeException e)
-		{
-			IRequestHandler replacement = requestHandlerExecutor.resolveHandler(e);
-			if (replacement != null)
-			{
-				execute(replacement);
-			}
-			else
-			{
-				throw e;
-			}
-		}
-	}
-
-	/**
 	 * Convenience method that processes the request and detaches the {@link RequestCycle}.
 	 * 
 	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
@@ -299,40 +227,127 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		return result;
 	}
 
+	/**
+	 * Processes the request.
+	 * 
+	 * @return <code>true</code> if the request resolved to a Wicket request, <code>false</code>
+	 *         otherwise.
+	 */
+	public boolean processRequest()
+	{
+		try
+		{
+			set(this);
+			listeners.onBeginRequest(this);
+			onBeginRequest();
+			IRequestHandler handler = resolveRequestHandler();
+			if (handler == null)
+			{
+				// Did not find any suitable handler, thus not executing the request
+				log.debug(
+					"No suitable handler found for URL {}, falling back to container to process this request",
+					request.getUrl());
+			}
+			else
+			{
+				execute(handler);
+				return true;
+			}
+		}
+		catch (Exception exception)
+		{
+			executeExceptionRequestHandler(exception, getExceptionRetryCount());
+			return true;
+		}
+		finally
+		{
+			set(null);
+		}
+
+		return false;
+	}
 
 	/**
+	 * Execute a request handler and notify registered {@link IRequestCycleListener}s.
 	 * 
 	 * @param handler
+	 */
+	private void execute(IRequestHandler handler)
+	{
+		Args.notNull(handler, "handler");
+
+		while (handler != null) {
+			try
+			{
+				listeners.onRequestHandlerResolved(this, handler);
+				IRequestHandler next = requestHandlerExecutor.execute(handler);
+				listeners.onRequestHandlerExecuted(this, handler);
+				
+				handler = next;
+			}
+			catch (RuntimeException e)
+			{
+				ReplaceHandlerException replacer = Exceptions.findCause(e, ReplaceHandlerException.class);
+
+				if (replacer == null)
+				{
+					throw e;
+				}
+
+				if (replacer.getRemoveScheduled())
+				{
+					requestHandlerExecutor.schedule(null);
+				}
+
+				handler = replacer.getReplacementRequestHandler();
+			}
+		}
+	}
+
+	/**
+	 * Execute a requestHandler for the given exception.
+	 * 
+	 * @param exception
 	 * @param retryCount
 	 */
-	private void executeExceptionRequestHandler(final IRequestHandler handler, final int retryCount)
+	private void executeExceptionRequestHandler(Exception exception, int retryCount)
 	{
 		scheduleRequestHandlerAfterCurrent(null);
 
+		IRequestHandler handler = handleException(exception);
+		if (handler == null)
+		{
+			log.error("Error during request processing. URL=" + request.getUrl(), exception);
+			return;
+		}
+
 		try
 		{
-			requestHandlerExecutor.execute(handler);
+			listeners.onExceptionRequestHandlerResolved(this, handler, exception);
+
+			execute(handler);
 		}
 		catch (Exception e)
 		{
 			if (retryCount > 0)
 			{
-				IRequestHandler next = handleException(e);
-				if (next != null)
-				{
-					executeExceptionRequestHandler(next, retryCount - 1);
-					return;
-				}
+				executeExceptionRequestHandler(exception, retryCount - 1);
 			}
-			log.error("Error during processing error message", e);
+			else
+			{
+				log.error("Exception retry count exceeded", e);
+			}
 		}
 	}
 
 	/**
 	 * Return {@link IRequestHandler} for the given exception.
 	 * 
-	 * @param e
+	 * @param e exception to handle
 	 * @return RequestHandler instance
+	 *
+	 * @see IRequestCycleListener#onException(RequestCycle, Exception)
+	 * @see IExceptionMapper#map(Exception)
 	 */
 	protected IRequestHandler handleException(final Exception e)
 	{
@@ -394,9 +409,10 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final <T> void setMetaData(final MetaDataKey<T> key, final T object)
+	public final <T> RequestCycle setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
+		return this;
 	}
 
 	/**
@@ -639,6 +655,10 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		{
 			requestHandlerExecutor.detach();
 		}
+		catch (RuntimeException exception)
+		{
+			handleDetachException(exception);
+		}
 		finally
 		{
 			listeners.onDetach(this);
@@ -652,6 +672,32 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
+	 * Called to handle a {@link java.lang.RuntimeException} that might be 
+	 * thrown during detaching phase. 
+	 * 
+	 * @param exception
+	 */
+	private void handleDetachException(RuntimeException exception) 
+	{
+		boolean isBufferedResponse = true;
+		if (Application.exists())
+		{
+			isBufferedResponse = Application.get().getRequestCycleSettings().getBufferResponse();
+		}
+
+		//if application is using a buffered response strategy,
+		//then we display exception to user.
+		if (isBufferedResponse) 
+		{
+			throw exception;
+		}
+		else 
+		{
+			log.error("Error detaching RequestCycle", exception);
+		}
+	}
+
+	/**
 	 * Convenience method for setting next page to be rendered.
 	 * 
 	 * @param page
@@ -660,38 +706,67 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	{
 		if (page instanceof Page)
 		{
-			((Page)page).setStatelessHint(false);
+			((Page) page).setStatelessHint(false);
 		}
+
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(new PageProvider(page),
 			RenderPageRequestHandler.RedirectPolicy.AUTO_REDIRECT));
 	}
 
-
 	/**
 	 * Convenience method for setting next page to be rendered.
 	 * 
 	 * @param pageClass
+	 *              The class of the page to render
 	 */
 	public void setResponsePage(Class<? extends IRequestablePage> pageClass)
 	{
-		IPageProvider provider = new PageProvider(pageClass, null);
-		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
-			RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT));
+		setResponsePage(pageClass, null, RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT);
 	}
 
+	/**
+	 * Convenience method for setting next page to be rendered.
+	 *
+	 * @param pageClass
+	 *              The class of the page to render
+	 * @param redirectPolicy
+	 *              The policy to use when deciding whether to redirect or not
+	 */
+	public void setResponsePage(Class<? extends IRequestablePage> pageClass, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
+	{
+		setResponsePage(pageClass, null, redirectPolicy);
+	}
 
 	/**
 	 * Convenience method for setting next page to be rendered.
 	 * 
 	 * @param pageClass
+	 *              The class of the page to render
 	 * @param parameters
+	 *              The query parameters for the page to be rendered
 	 */
 	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
 		PageParameters parameters)
 	{
+		setResponsePage(pageClass, parameters, RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT);
+	}
+
+	/**
+	 * Convenience method for setting next page to be rendered.
+	 *
+	 * @param pageClass
+	 *              The class of the page to render
+	 * @param parameters
+	 *              The query parameters for the page to be rendered
+	 * @param redirectPolicy
+	 *              The policy to use when deciding whether to redirect or not
+	 */
+	public void setResponsePage(Class<? extends IRequestablePage> pageClass,
+	                            PageParameters parameters, RenderPageRequestHandler.RedirectPolicy redirectPolicy)
+	{
 		IPageProvider provider = new PageProvider(pageClass, parameters);
 		scheduleRequestHandlerAfterCurrent(new RenderPageRequestHandler(provider,
-			RenderPageRequestHandler.RedirectPolicy.ALWAYS_REDIRECT));
+				redirectPolicy));
 	}
 
 	/**
@@ -765,7 +840,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * @see RequestHandlerStack#getActive()
+	 * @see RequestHandlerExecutor#getActive()
 	 * @return active handler on executor
 	 */
 	public IRequestHandler getActiveRequestHandler()
@@ -774,7 +849,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * @see RequestHandlerStack#next()
+	 * @see RequestHandlerExecutor#next()
 	 * @return the handler scheduled to be executed after current by the executor
 	 */
 	public IRequestHandler getRequestHandlerScheduledAfterCurrent()
@@ -783,7 +858,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	}
 
 	/**
-	 * @see RequestHandlerStack#replaceAll(IRequestHandler)
+	 * @see RequestHandlerExecutor#replaceAll(IRequestHandler)
 	 * @param handler
 	 */
 	public void replaceAllRequestHandlers(final IRequestHandler handler)
@@ -795,35 +870,37 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * Finds a IRequestHandler which is either the currently executing handler or is scheduled to be
 	 * executed.
 	 * 
-	 * @return the found IRequestHandler or {@code null}
+	 * @return the found IRequestHandler or {@link Optional#empty()}
 	 */
-	public <T extends IRequestHandler> T find(final Class<T> type)
+	@SuppressWarnings("unchecked")
+	public <T extends IRequestHandler> Optional<T> find(final Class<T> type)
 	{
 		if (type == null)
 		{
-			return null;
+			return Optional.empty();
 		}
 
 		IRequestHandler result = getActiveRequestHandler();
-
-		if (result == null || type.isAssignableFrom(result.getClass()) == false)
+		if (type.isInstance(result))
 		{
-			result = getRequestHandlerScheduledAfterCurrent();
-			if (result == null || type.isAssignableFrom(result.getClass()) == false)
-			{
-				result = null;
-			}
+			return (Optional<T>)Optional.of(result);
+		}
+		
+		result = getRequestHandlerScheduledAfterCurrent();
+		if (type.isInstance(result))
+		{
+			return (Optional<T>)Optional.of(result);
 		}
 
-		return (T)result;
+		return Optional.empty();
 	}
 
 	/**
-	 * Adapts {@link RequestHandlerStack} to this {@link RequestCycle}
+	 * Adapts {@link RequestHandlerExecutor} to this {@link RequestCycle}
 	 * 
 	 * @author Igor Vaynberg
 	 */
-	private class HandlerExecutor extends RequestHandlerStack
+	private class HandlerExecutor extends RequestHandlerExecutor
 	{
 
 		@Override

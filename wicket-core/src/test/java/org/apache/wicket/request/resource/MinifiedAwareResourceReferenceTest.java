@@ -17,12 +17,15 @@
 package org.apache.wicket.request.resource;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Locale;
 
 /**
  * Testcases for minified aware resources.
@@ -33,6 +36,11 @@ import org.junit.Test;
  */
 public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 {
+	@Before
+	public void before()
+	{
+		tester.getSession().setLocale(Locale.US);
+	}
 
 	private String renderResource(ResourceReference reference)
 	{
@@ -52,9 +60,9 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
 		ResourceReference reference = new JavaScriptResourceReference(
 			MinifiedAwareResourceReferenceTest.class, "b.js");
-		assertEquals("b.min.js", reference.getName());
+		assertEquals("b.js", reference.getName());
 		String fileContent = renderResource(reference);
-		assertEquals("//minified-b", fileContent);
+		assertEquals("// b.min.js", fileContent.trim());
 	}
 
 	/**
@@ -74,7 +82,8 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 		String fileContent = renderResource(reference);
 		assertEquals("//a", fileContent);
 
-		assertEquals(1, locator.minLocated);
+		// this will try 3 lookups for minified resources: en_US.min, en.min and .min 
+		assertEquals(3, locator.minLocated);
 	}
 
 	private class MinCountingResourceStreamLocator extends ResourceStreamLocator

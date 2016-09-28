@@ -21,6 +21,9 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.json.JSONObject;
+import org.apache.wicket.ajax.json.JsonFunction;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.markup.ComponentTag;
@@ -41,7 +44,6 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Modal window component.
@@ -60,21 +62,24 @@ import org.apache.wicket.util.string.Strings;
  * <code>{@link #setPageCreator(ModalWindow.PageCreator)}</code> method.
  * </ul>
  * In case the content is a component, it is not rendered until the window is shown (method
- * <code>{@link #show(org.apache.wicket.ajax.AjaxRequestTarget)})</code>. The window can be made
+ * <code>{@link #show(IPartialPageRequestHandler)})</code>. The window can be made
  * visible from an ajax handler using
- * <code>{@link #show(org.apache.wicket.ajax.AjaxRequestTarget)}</code>.
+ * <code>{@link #show(IPartialPageRequestHandler)}</code>.
  * <p>
  * To close the window there are multiple options. Static method
- * <code>{@link #close(org.apache.wicket.ajax.AjaxRequestTarget)}</code> can be used to close the
+ * <code>{@link #close(IPartialPageRequestHandler)}</code> can be used to close the
  * window from a handler of ajax link inside the window. By default the close button in the upper
  * right corner of the window closes it. This behavior can be altered using
  * <code>{@link #setCloseButtonCallback(ModalWindow.CloseButtonCallback)}</code>. If you want to be
  * notified when the window is closed (either using the close button or calling
- * <code>{@link #close(org.apache.wicket.ajax.AjaxRequestTarget)})</code>, you can use
+ * <code>{@link #close(IPartialPageRequestHandler)})</code>, you can use
  * <code>{@link #setWindowClosedCallback(ModalWindow.WindowClosedCallback)}</code>.
  * <p>
- * Title is specified using {@link #setTitle(String)}. If the content is a page (iframe), the title
- * can remain unset, in that case title from the page inside window will be shown.
+ * Title is specified using {@link #setTitle(String)}. Pass <code>true</code> to
+ * <code>{@link #setEscapeModelStrings(boolean)}</code> to use unencoded markup in the title.
+ * <br>
+ * If the content is a page (iframe), the title can remain unset, in that case title from the page
+ * inside window will be shown.
  * <p>
  * There are several options to specify the visual properties of the window. In all methods where
  * size is expected, width refers to width of entire window (including frame), height refers to the
@@ -168,14 +173,14 @@ public class ModalWindow extends Panel
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface PageCreator extends IClusterable
+	public interface PageCreator extends IClusterable
 	{
 		/**
 		 * Creates a new instance of content page.
 		 * 
 		 * @return new page instance
 		 */
-		public Page createPage();
+		Page createPage();
 	}
 
 	/**
@@ -186,7 +191,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface CloseButtonCallback extends IClusterable
+	public interface CloseButtonCallback extends IClusterable
 	{
 		/**
 		 * Methods invoked after the button has been clicked. The invocation is done using an ajax
@@ -199,7 +204,7 @@ public class ModalWindow extends Panel
 		 * 
 		 * @return True if the window can be closed (will close the window), false otherwise
 		 */
-		public boolean onCloseButtonClicked(AjaxRequestTarget target);
+		boolean onCloseButtonClicked(AjaxRequestTarget target);
 	}
 
 	/**
@@ -209,7 +214,7 @@ public class ModalWindow extends Panel
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static interface WindowClosedCallback extends IClusterable
+	public interface WindowClosedCallback extends IClusterable
 	{
 		/**
 		 * Called after the window has been closed.
@@ -218,7 +223,7 @@ public class ModalWindow extends Panel
 		 *            <code>{@link org.apache.wicket.ajax.AjaxRequestTarget}</code> instance bound
 		 *            with the ajax request.
 		 */
-		public void onClose(AjaxRequestTarget target);
+		void onClose(AjaxRequestTarget target);
 	}
 
 	/**
@@ -262,13 +267,8 @@ public class ModalWindow extends Panel
 
 		// install a default callback that will force
 		// WindowClosedBehavior to be executed
-		setWindowClosedCallback(new WindowClosedCallback()
-		{
-			@Override
-			public void onClose(AjaxRequestTarget target)
-			{
-				// noop
-			}
+		setWindowClosedCallback((WindowClosedCallback) target -> {
+			// noop
 		});
 
 	}
@@ -358,7 +358,7 @@ public class ModalWindow extends Panel
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public void show(final AjaxRequestTarget target)
+	public void show(final IPartialPageRequestHandler target)
 	{
 		if (shown == false)
 		{
@@ -372,12 +372,12 @@ public class ModalWindow extends Panel
 	/**
 	 * Hides the modal window. This can be called from within the modal window, however, the modal
 	 * window must have configured WindowClosedCallback. Otherwise use the
-	 * {@link #close(org.apache.wicket.ajax.AjaxRequestTarget)} method.
+	 * {@link #close(IPartialPageRequestHandler)} method.
 	 * 
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public static final void closeCurrent(final AjaxRequestTarget target)
+	public static void closeCurrent(final IPartialPageRequestHandler target)
 	{
 		target.appendJavaScript(getCloseJavacriptInternal());
 	}
@@ -388,7 +388,7 @@ public class ModalWindow extends Panel
 	 * @param target
 	 *            Request target associated with current ajax request.
 	 */
-	public void close(final AjaxRequestTarget target)
+	public void close(final IPartialPageRequestHandler target)
 	{
 		getContent().setVisible(false);
 		if (isCustomComponent())
@@ -965,12 +965,6 @@ public class ModalWindow extends Panel
 				windowClosedCallback.onClose(target);
 			}
 		}
-
-		@Override
-		public CharSequence getCallbackScript()
-		{
-			return super.getCallbackScript();
-		}
 	}
 
 	/**
@@ -988,19 +982,10 @@ public class ModalWindow extends Panel
 		protected final void respond(final AjaxRequestTarget target)
 		{
 			if ((closeButtonCallback == null) ||
-				(closeButtonCallback.onCloseButtonClicked(target) == true))
+				(closeButtonCallback.onCloseButtonClicked(target)))
 			{
 				close(target);
 			}
-		}
-
-		/**
-		 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#getCallbackScript()
-		 */
-		@Override
-		public final CharSequence getCallbackScript()
-		{
-			return super.getCallbackScript();
 		}
 	}
 
@@ -1015,23 +1000,6 @@ public class ModalWindow extends Panel
 	}
 
 	/**
-	 * Replaces all occurrences of " in string with \".
-	 * 
-	 * @param string
-	 *            String to be escaped.
-	 * 
-	 * @return escaped string
-	 */
-	private String escapeQuotes(String string)
-	{
-		if (string.indexOf('"') != -1)
-		{
-			string = Strings.replaceAll(string, "\"", "\\\"").toString();
-		}
-		return string;
-	}
-
-	/**
 	 * Returns the javascript used to open the window. Subclass
 	 * {@link #postProcessSettings(AppendingStringBuffer)} to modify the JavaScript if needed.
 	 * 
@@ -1041,37 +1009,28 @@ public class ModalWindow extends Panel
 	 */
 	protected final String getWindowOpenJavaScript()
 	{
-		AppendingStringBuffer buffer = new AppendingStringBuffer(500);
+		JSONObject settings = new JSONObject();
 
-		if (isCustomComponent() == true)
-		{
-			buffer.append("var element = document.getElementById(\"");
-			buffer.append(getContentMarkupId());
-			buffer.append("\");\n");
-		}
-
-		buffer.append("var settings = new Object();\n");
-
-		appendAssignment(buffer, "settings.minWidth", getMinimalWidth());
-		appendAssignment(buffer, "settings.minHeight", getMinimalHeight());
-		appendAssignment(buffer, "settings.className", getCssClassName());
-		appendAssignment(buffer, "settings.width", getInitialWidth());
+		settings.put("minWidth", getMinimalWidth());
+		settings.put("minHeight", getMinimalHeight());
+		settings.put("className", getCssClassName());
+		settings.put("width", getInitialWidth());
 
 		if ((isUseInitialHeight() == true) || (isCustomComponent() == false))
 		{
-			appendAssignment(buffer, "settings.height", getInitialHeight());
+			settings.put("height", getInitialHeight());
 		}
 		else
 		{
-			buffer.append("settings.height=null;\n");
+			settings.put("height", (Object)null);
 		}
 
-		appendAssignment(buffer, "settings.resizable", isResizable());
+		settings.put("resizable", isResizable());
 
 		if (isResizable() == false)
 		{
-			appendAssignment(buffer, "settings.widthUnit", getWidthUnit());
-			appendAssignment(buffer, "settings.heightUnit", getHeightUnit());
+			settings.put("widthUnit", getWidthUnit());
+			settings.put("heightUnit", getHeightUnit());
 		}
 
 		if (isCustomComponent() == false)
@@ -1084,6 +1043,7 @@ public class ModalWindow extends Panel
 			CharSequence pageUrl;
 			RequestCycle requestCycle = RequestCycle.get();
 
+			page.getSession().getPageManager().touchPage(page);
 			if (page.isPageStateless())
 			{
 				pageUrl = requestCycle.urlFor(page.getClass(), page.getPageParameters());
@@ -1094,36 +1054,36 @@ public class ModalWindow extends Panel
 				pageUrl = requestCycle.urlFor(handler);
 			}
 
-			appendAssignment(buffer, "settings.src", pageUrl);
+			settings.put("src", pageUrl);
 		}
 		else
 		{
-			buffer.append("settings.element=element;\n");
+			settings.put("element", new JsonFunction("document.getElementById(\"" + getContentMarkupId() + "\")"));
 		}
 
 		if (getCookieName() != null)
 		{
-			appendAssignment(buffer, "settings.cookieId", getCookieName());
+			settings.put("cookieId", getCookieName());
 		}
 
-		Object title = getTitle() != null ? getTitle().getObject() : null;
+		String title = getTitle() != null ? getTitle().getObject() : null;
 		if (title != null)
 		{
-			appendAssignment(buffer, "settings.title", escapeQuotes(title.toString()));
+			settings.put("title", getDefaultModelObjectAsString(title));
 		}
 
 		if (getMaskType() == MaskType.TRANSPARENT)
 		{
-			buffer.append("settings.mask=\"transparent\";\n");
+			settings.put("mask", "transparent");
 		}
 		else if (getMaskType() == MaskType.SEMI_TRANSPARENT)
 		{
-			buffer.append("settings.mask=\"semi-transparent\";\n");
+			settings.put("mask", "semi-transparent");
 		}
 
-		appendAssignment(buffer, "settings.autoSize", autoSize);
+		settings.put("autoSize", autoSize);
 
-		appendAssignment(buffer, "settings.unloadConfirmation", showUnloadConfirmation());
+		settings.put("unloadConfirmation", showUnloadConfirmation());
 
 		// set true if we set a windowclosedcallback
 		boolean haveCloseCallback = false;
@@ -1133,9 +1093,7 @@ public class ModalWindow extends Panel
 		if (windowClosedCallback != null)
 		{
 			WindowClosedBehavior behavior = getBehaviors(WindowClosedBehavior.class).get(0);
-			buffer.append("settings.onClose = function() { ");
-			buffer.append(behavior.getCallbackScript());
-			buffer.append(" };\n");
+			settings.put("onClose", new JsonFunction("function() { " + behavior.getCallbackScript() + " }"));
 
 			haveCloseCallback = true;
 		}
@@ -1145,68 +1103,28 @@ public class ModalWindow extends Panel
 		if ((closeButtonCallback != null) || (haveCloseCallback == false))
 		{
 			CloseButtonBehavior behavior = getBehaviors(CloseButtonBehavior.class).get(0);
-			buffer.append("settings.onCloseButton = function() { ");
-			buffer.append(behavior.getCallbackScript());
-			buffer.append(";return false;};\n");
+			settings.put("onCloseButton", new JsonFunction("function() { " + behavior.getCallbackScript() + "; return false; }"));
 		}
 
-		postProcessSettings(buffer);
-
+		postProcessSettings(settings);
+		
+		AppendingStringBuffer buffer = new AppendingStringBuffer(500);
+		buffer.append("var settings = ");
+		buffer.append(settings.toString());
+		buffer.append(";");
+		
 		buffer.append(getShowJavaScript());
 		return buffer.toString();
-	}
-
-	/**
-	 * 
-	 * @param buffer
-	 * @param key
-	 * @param value
-	 */
-	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
-		final int value)
-	{
-		buffer.append(key).append("=");
-		buffer.append(value);
-		buffer.append(";\n");
-	}
-
-	/**
-	 * 
-	 * @param buffer
-	 * @param key
-	 * @param value
-	 */
-	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
-		final boolean value)
-	{
-		buffer.append(key).append("=");
-		buffer.append(Boolean.toString(value));
-		buffer.append(";\n");
-	}
-
-	/**
-	 * 
-	 * @param buffer
-	 * @param key
-	 * @param value
-	 */
-	private void appendAssignment(final AppendingStringBuffer buffer, final CharSequence key,
-		final CharSequence value)
-	{
-		buffer.append(key).append("=\"");
-		buffer.append(value);
-		buffer.append("\";\n");
 	}
 
 	/**
 	 * Method that allows tweaking the settings
 	 * 
 	 * @param settings
-	 * @return settings javascript
+	 * @return settings json
 	 */
-	protected AppendingStringBuffer postProcessSettings(final AppendingStringBuffer settings)
+	protected void postProcessSettings(JSONObject settings)
 	{
-		return settings;
 	}
 
 	/**

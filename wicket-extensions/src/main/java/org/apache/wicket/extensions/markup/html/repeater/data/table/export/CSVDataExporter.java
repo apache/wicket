@@ -176,7 +176,7 @@ public class CSVDataExporter extends AbstractDataExporter
 	}
 
 	@Override
-	public <T> void exportData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?, ?>> columns, OutputStream outputStream)
+	public <T> void exportData(IDataProvider<T> dataProvider, List<IExportableColumn<T, ?>> columns, OutputStream outputStream)
 		throws IOException
 	{
 		PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, Charset.forName(characterSet)));
@@ -185,7 +185,7 @@ public class CSVDataExporter extends AbstractDataExporter
 			if (isExportHeadersEnabled())
 			{
 				boolean first = true;
-				for (IExportableColumn<T, ?, ?> col : columns)
+				for (IExportableColumn<T, ?> col : columns)
 				{
 					if (first)
 					{
@@ -206,7 +206,7 @@ public class CSVDataExporter extends AbstractDataExporter
 				T row = rowIterator.next();
 
 				boolean first = true;
-				for (IExportableColumn<T, ?, ?> col : columns)
+				for (IExportableColumn<T, ?> col : columns)
 				{
 					if (first)
 					{

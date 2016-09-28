@@ -23,7 +23,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Component representing a single radio choice in a org.apache.wicket.markup.html.form.RadioGroup.
@@ -49,7 +48,7 @@ import org.apache.wicket.util.string.Strings;
  * @param <T>
  *            The model object type
  */
-public class Radio<T> extends LabeledWebMarkupContainer implements IGenericComponent<T>
+public class Radio<T> extends LabeledWebMarkupContainer implements IGenericComponent<T, Radio<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -184,7 +183,7 @@ public class Radio<T> extends LabeledWebMarkupContainer implements IGenericCompo
 		if (group.wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
-			CharSequence url = group.urlFor(IOnChangeListener.INTERFACE, new PageParameters());
+			CharSequence url = group.urlForListener(new PageParameters());
 
 			Form<?> form = group.findParent(Form.class);
 			if (form != null)
@@ -205,19 +204,6 @@ public class Radio<T> extends LabeledWebMarkupContainer implements IGenericCompo
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 
-		// put group id into the class so we can easily identify all radios belonging to the group
-		final String marker = "wicket-" + getGroup().getMarkupId();
-		String clazz = tag.getAttribute("class");
-		if (Strings.isEmpty(clazz))
-		{
-			clazz = marker;
-		}
-		else
-		{
-			clazz = clazz + " " + marker;
-		}
-		tag.put("class", clazz);
-
 	}
 
 	/**
@@ -232,32 +218,6 @@ public class Radio<T> extends LabeledWebMarkupContainer implements IGenericCompo
 	{
 		super.setLabel(labelModel);
 		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final void setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final void setModelObject(T object)
-	{
-		setDefaultModelObject(object);
 	}
 
 	/** {@inheritDoc} */

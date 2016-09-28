@@ -17,7 +17,8 @@
 package org.apache.wicket;
 
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.behavior.IBehaviorListener;
+import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -25,10 +26,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -108,7 +108,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 		}
 	}
 
-	private static class TestCallbackBehavior extends Behavior implements IBehaviorListener
+	private static class TestCallbackBehavior extends Behavior implements IRequestListener
 	{
 		private static final long serialVersionUID = 1L;
 		private boolean requested;
@@ -121,8 +121,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 			super.onComponentTag(component, tag);
 			int index = component.getBehaviorId(this);
 			IRequestHandler handler = new ListenerInterfaceRequestHandler(
-				new PageAndComponentProvider(component.getPage(), component),
-				IBehaviorListener.INTERFACE, index);
+				new PageAndComponentProvider(component.getPage(), component), index);
 			statefullUrl = component.getRequestCycle().mapUrlFor(handler).toString();
 		}
 

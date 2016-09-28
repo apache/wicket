@@ -17,12 +17,17 @@
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.HeaderItem;
-import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.ResourceAggregator;
@@ -79,9 +84,17 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 				return new WrappedHeaderItem((OnDomReadyHeaderItem)item);
 			return item;
 		}
+
+		@Override
+		public List<HeaderItem> getDependencies()
+		{
+			ResourceReference wicketAjaxReference = Application.get().
+					getJavaScriptLibrarySettings().getWicketAjaxReference();
+			return Arrays.<HeaderItem>asList(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+		}
 	}
 
-	private static final ResourceReference AUTOCOMPLETE_JS = new JavaScriptResourceReference(
+	public static final ResourceReference AUTOCOMPLETE_JS = new JavaScriptResourceReference(
 		AutoCompleteBehavior.class, "wicket-autocomplete.js");
 
 	private static final long serialVersionUID = 1L;
@@ -139,8 +152,8 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 			indicatorId = "'" + indicatorId + "'";
 		}
 
-		String initJS = String.format("new Wicket.AutoComplete('%s','%s',%s,%s);", id,
-			getCallbackUrl(), constructSettingsJS(), indicatorId);
+		String initJS = String.format("new Wicket.AutoComplete('%s', %s, %s, %s);", id,
+			renderAjaxAttributes(getComponent(), getAttributes()), constructSettingsJS(), indicatorId);
 
 		final OnDomReadyHeaderItem onDomReady = OnDomReadyHeaderItem.forScript(initJS);
 
@@ -197,5 +210,13 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 		onRequest(val, requestCycle);
 	}
+	
+	@Override
+    protected void updateAjaxAttributes(AjaxRequestAttributes attributes) 
+	{
+        super.updateAjaxAttributes(attributes);
 
+        attributes.setWicketAjaxResponse(false);
+        attributes.setDataType("html");
+    }
 }

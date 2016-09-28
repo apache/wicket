@@ -111,6 +111,12 @@ a:hover {
 	text-decoration: underline;
 }
 
+a[disabled="disabled"], a[disabled="disabled"]:hover{
+	color: inherit;
+	font-weight:normal;	
+	text-decoration: none;
+}
+
 img {
 	border: none;
 }
@@ -497,4 +503,15 @@ table.grid td.filter-td select { width: 100%; font-size: 0.6em; }
 
 tr.section td {
 	padding-top: 0.75em;
+}
+
+/* LIBRARY */
+form dt {
+   float: left;
+   width: 33%;
+   text-align: right;
+}
+form dd {
+   margin-left: 33%;
+   padding-left: 5px;
 }

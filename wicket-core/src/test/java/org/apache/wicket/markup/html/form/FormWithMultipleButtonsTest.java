@@ -18,16 +18,17 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxFallbackButton;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -53,14 +54,14 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 	}
 
 	/**
-	 * @see href https://issues.apache.org/jira/browse/WICKET-1894
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1894">WICKET-1894</a>
 	 */
 	@Test
 	public void ajaxFallbackButtonInvokedFirst()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
-		tester.executeAjaxEvent(testPage.ajaxFallbackButton, "onclick");
+		tester.executeAjaxEvent(testPage.ajaxFallbackButton, "click");
 		assertEquals(0, testPage.submitSequence.indexOf(testPage.ajaxFallbackButton));
 		assertEquals(1, testPage.submitSequence.indexOf(testPage.form));
 	}
@@ -119,13 +120,13 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+				protected void onSubmit(Optional<AjaxRequestTarget> target)
 				{
 					submitSequence.add(this);
 				}
 
 				@Override
-				protected void onError(AjaxRequestTarget target, Form<?> form)
+				protected void onError(AjaxRequestTarget target)
 				{
 				}
 			});

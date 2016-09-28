@@ -131,9 +131,9 @@ public final class Task
 							startOfPeriod.add(frequency).fromNow().sleep();
 						}
 					}
-					catch (Throwable t)
+					catch (Exception x)
 					{
-						log.error("Task '{}' terminated", name, t);
+						log.error("Task '{}' terminated", name, x);
 					}
 					finally
 					{
@@ -224,7 +224,7 @@ public final class Task
 	 * 
 	 * @return the log
 	 */
-	protected Logger getLog()
+	protected synchronized Logger getLog()
 	{
 		if (log == null)
 		{

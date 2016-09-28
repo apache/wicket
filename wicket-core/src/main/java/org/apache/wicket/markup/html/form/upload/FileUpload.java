@@ -24,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.fileupload.FileItem;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
@@ -32,7 +33,6 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.upload.FileItem;
 
 
 /**
@@ -227,9 +227,9 @@ public class FileUpload implements IClusterable
 	 * 
 	 * @param file
 	 *            The file
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void writeTo(final File file) throws IOException
+	public void writeTo(final File file) throws Exception
 	{
 		item.write(file);
 	}
@@ -244,9 +244,9 @@ public class FileUpload implements IClusterable
 	 * @since 1.2
 	 * 
 	 * @return temporary file containing the contents of the uploaded file
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public final File writeToTempFile() throws IOException
+	public final File writeToTempFile() throws Exception
 	{
 		String sessionId = Session.exists() ? Session.get().getId() : "";
 		String tempFileName = sessionId + "_" + RequestCycle.get().getStartTime();

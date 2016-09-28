@@ -53,15 +53,12 @@ public class UnicodeConverter extends WicketExamplePage
 	 * strategy would be to have a model with it's own, translated, string representation of the
 	 * source, which should be updated on every form post (e.g. by overriding {@link Form#onSubmit}
 	 * and in that method explicitly setting the new value). But as you can see, this method is
-	 * slighly easier, and if we wanted to use the translated value in e.g. a database, we could
+	 * slightly easier, and if we wanted to use the translated value in e.g. a database, we could
 	 * just query this model directly or indirectly by calling {@link Component#getDefaultModelObject()} on
 	 * the component that holds it, and we would have a recent value.
 	 */
 	private final class ConverterModel extends Model<String>
 	{
-		/**
-		 * @see org.apache.wicket.model.IModel#getObject()
-		 */
 		@Override
 		public String getObject()
 		{
@@ -77,9 +74,6 @@ public class UnicodeConverter extends WicketExamplePage
 			return result;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-		 */
 		@Override
 		public void setObject(String object)
 		{

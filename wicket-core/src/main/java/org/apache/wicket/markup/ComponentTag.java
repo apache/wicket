@@ -25,11 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.filter.HtmlHandler;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
@@ -49,6 +51,27 @@ import org.slf4j.LoggerFactory;
  */
 public class ComponentTag extends MarkupElement
 {
+	/**
+	 * Factory that creates component during markup root container's initialization. These
+	 * components get queued, which allows other components to be dequeued under these auto
+	 * components.
+	 * 
+	 * @author igor
+	 */
+	public interface IAutoComponentFactory
+	{
+		/**
+		 * Creates a new instance of auto component to be queued
+		 *
+		 * @param container
+		 *                The component that will become a parent of the newly created auto component
+		 * @param tag
+		 *                The markup element for the newly created auto component
+		 */
+		Component newComponent(MarkupContainer container, ComponentTag tag);
+	}
+
+
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(ComponentTag.class);
 
@@ -69,6 +92,9 @@ public class ComponentTag extends MarkupElement
 
 	/** Render the tag as RawMarkup even if no Component can be found */
 	public final static int RENDER_RAW = 0x0020;
+	
+	/** If true, the current tag contains a child or a descendant with the "wicket:id" attribute */
+	public final static int CONTAINS_WICKET_ID = 0x0040;
 
 	/** If close tag, than reference to the corresponding open tag */
 	private ComponentTag openTag;
@@ -97,6 +123,8 @@ public class ComponentTag extends MarkupElement
 
 	/** Filters and Handlers may add their own attributes to the tag */
 	private Map<String, Object> userData;
+
+	private IAutoComponentFactory autoComponentFactory;
 
 	/**
 	 * Automatically create a XmlTag, assign the name and the type, and construct a ComponentTag
@@ -178,10 +206,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final void addBehavior(final Behavior behavior)
 	{
-		if (behavior == null)
-		{
-			throw new IllegalArgumentException("Argument [behavior] cannot be null");
-		}
+		Args.notNull(behavior, "behavior");
 
 		if (behaviors == null)
 		{
@@ -424,17 +449,19 @@ public class ComponentTag extends MarkupElement
 	{
 		dest.id = id;
 		dest.flags = flags;
+		dest.autoComponentFactory = autoComponentFactory;
+
 		if (markupClassRef != null)
 		{
 			dest.setMarkupClass(markupClassRef.get());
 		}
 		if (behaviors != null)
 		{
-			dest.behaviors = new ArrayList<Behavior>(behaviors);
+			dest.behaviors = new ArrayList<>(behaviors);
 		}
 		if (userData != null)
 		{
-			dest.userData = new HashMap<String, Object>(userData);
+			dest.userData = new HashMap<>(userData);
 		}
 	}
 
@@ -803,7 +830,27 @@ public class ComponentTag extends MarkupElement
 	{
 		setFlag(NO_CLOSE_TAG, hasNoCloseTag);
 	}
+	
+	/**
+	 * Sets the flag to indicate if the current tag contains a child 
+	 * or a descendant with the "wicket:id" attribute. 
+	 *
+	 * @param containsWicketId
+	 */
+	public void setContainsWicketId(boolean containsWicketId)
+	{
+		setFlag(CONTAINS_WICKET_ID, containsWicketId);
+	}
 
+	/**
+	 * Says if the current tag contains a child or a descendant with the "wicket:id" attribute.
+	 * @return true if the current tag contains a child or a descendant with the "wicket:id" attribute.
+	 */
+    public boolean containsWicketId()
+    {
+        return getFlag(CONTAINS_WICKET_ID);
+    }
+    
 	/**
 	 * In case of inherited markup, the base and the extended markups are merged and the information
 	 * about the tags origin is lost. In some cases like wicket:head and wicket:link this
@@ -917,7 +964,7 @@ public class ComponentTag extends MarkupElement
 	{
 		if (userData == null)
 		{
-			userData = new HashMap<String, Object>();
+			userData = new HashMap<>();
 		}
 		userData.put(key, value);
 	}
@@ -935,4 +982,16 @@ public class ComponentTag extends MarkupElement
 	public void onBeforeRender(final Component component, final MarkupStream markupStream)
 	{
 	}
+
+	public IAutoComponentFactory getAutoComponentFactory()
+	{
+		return autoComponentFactory;
+	}
+
+	public void setAutoComponentFactory(IAutoComponentFactory autoComponentFactory)
+	{
+		this.autoComponentFactory = autoComponentFactory;
+	}
+
+
 }

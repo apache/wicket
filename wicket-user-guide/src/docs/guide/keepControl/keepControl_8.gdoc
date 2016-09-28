@@ -1,0 +1,39 @@
+When we bind a component to its corresponding tag we can choose to get rid of this outer tag in the final markup. If we call method @setRenderBodyOnly(true)@ on a component Wicket will remove the surrounding tag.
+
+For example given the following markup and code:
+
+*HTML markup:*
+
+{code:html}
+<html>
+<head>
+  <title>Hello world page</title>
+</head>
+<body>
+<div wicket:id="helloWorld">[helloWorld]</div>
+</body>
+</html>
+{code}
+
+*Java code:*
+
+{code}
+Label label = new Label("helloWorld", “Hello World!”);
+label.setRenderBodyOnly(true);
+add(label);
+{code}
+
+the output will be:
+
+{code:html}
+<html>
+<head>
+  <title>Hello world page</title>
+</head>
+<body>
+ Hello World!
+</body>
+</html>
+{code}
+
+As you can see the @<div>@ tag used for component @Label@ is not present in the final markup.

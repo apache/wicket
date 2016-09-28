@@ -91,6 +91,7 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 			{
 				super.updateAjaxAttributes(attributes);
+				attributes.setPreventDefault(true);
 				AjaxPagingNavigationIncrementLink.this.updateAjaxAttributes(attributes);
 			}
 		};

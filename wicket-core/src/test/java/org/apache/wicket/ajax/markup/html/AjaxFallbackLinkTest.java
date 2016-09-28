@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import java.util.Optional;
+
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -46,10 +48,10 @@ public class AjaxFallbackLinkTest extends WicketTestCase
 	{
 		private OnlyAnchorAreaAndLinkPage()
 		{
-			add(new AjaxFallbackLink("l") {
+			add(new AjaxFallbackLink<Void>("l") {
 
 				@Override
-				public void onClick(AjaxRequestTarget target)
+				public void onClick(Optional<AjaxRequestTarget> optional)
 				{
 				}
 			});

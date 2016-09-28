@@ -23,6 +23,9 @@ import java.util.Random;
 
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.image.InlineImage;
+import org.apache.wicket.markup.html.image.Picture;
+import org.apache.wicket.markup.html.image.Source;
 import org.apache.wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResource;
 import org.apache.wicket.markup.html.image.resource.RenderedDynamicImageResource;
@@ -91,9 +94,40 @@ public final class Home extends WicketExamplePage
 		add(new Image("imageModelResourceReference", new Model<>(RESOURCE_REF)));
 
 		// image loaded as resource via model.
-		add(new Image("imageModelResource", new Model<CircleDynamicImageResource>(
-			new CircleDynamicImageResource(100, 100))));
+		add(new Image("imageModelResource", new Model<>(new CircleDynamicImageResource(100, 100))));
 
+		// responsive images (only for img tag)
+		// the first package resource reference is used for the src attribute all following for the
+		// srcset in the order they are given to the constructor
+		Image respImage = new Image("image6", new PackageResourceReference(this.getClass(),
+			"Image2_small.gif"), new PackageResourceReference(this.getClass(), "Image2_small.gif"),
+			new PackageResourceReference(this.getClass(), "Image2_medium.gif"),
+			new PackageResourceReference(this.getClass(), "Image2_large.gif"));
+		// the x values are applied after each given package resource reference in the order they
+		// are applied to the setter in the srcset attribute
+		respImage.setXValues("320w", "2x", "900w");
+		// The sizes are applied comma separated to the sizes attribute
+		respImage.setSizes("(min-width: 50em) 33vw", "(min-width: 28em) 50vw", "100vw");
+		this.add(respImage);
+
+		// responsive images (to demonstrate the same picture is used for sources and img)
+		Picture picture = new Picture("picture");
+		Source large = new Source("sourcelarge", new PackageResourceReference(this.getClass(),
+			"Image2_large.gif"));
+		large.setMedia("(min-width: 650px)");
+		large.setSizes("(min-width: 50em) 33vw");
+		picture.add(large);
+		large.setOutputMarkupId(true);
+		Source medium = new Source("sourcemedium", new PackageResourceReference(this.getClass(),
+			"Image2_medium.gif"));
+		medium.setMedia("(min-width: 465px)");
+		picture.add(medium);
+		Image image3 = new Image("image7", new PackageResourceReference(this.getClass(),
+			"Image2_small.gif"));
+		picture.add(image3);
+		this.add(picture);
+
+		add(new InlineImage("inline", new PackageResourceReference(getClass(),"Image2.gif")));
 	}
 
 	/**

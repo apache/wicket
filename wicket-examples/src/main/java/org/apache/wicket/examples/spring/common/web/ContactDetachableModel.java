@@ -29,7 +29,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
  */
 public abstract class ContactDetachableModel extends LoadableDetachableModel<Contact>
 {
-
 	private long id;
 
 	/**

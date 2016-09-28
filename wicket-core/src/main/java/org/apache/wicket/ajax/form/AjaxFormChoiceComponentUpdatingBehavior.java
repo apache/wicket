@@ -18,17 +18,17 @@ package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.lambda.WicketBiConsumer;
+import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * This is a Ajax Component Update Behavior that is meant for choices/groups that are not one
@@ -37,7 +37,10 @@ import org.apache.wicket.request.resource.ResourceReference;
  * Use the normal {@link AjaxFormComponentUpdatingBehavior} for the normal single component fields
  * 
  * @author jcompagner
- * 
+ * @author svenmeier
+ *
+ * @see org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior#onUpdate(org.apache.wicket.ajax.AjaxRequestTarget)
+ * @see org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior#onError(org.apache.wicket.ajax.AjaxRequestTarget, RuntimeException)
  * @see RadioChoice
  * @see CheckBoxMultipleChoice
  * @see RadioGroup
@@ -46,9 +49,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	AjaxFormComponentUpdatingBehavior
 {
-	private static final ResourceReference CHOICE_JS = new JavaScriptResourceReference(
-		AjaxFormChoiceComponentUpdatingBehavior.class, "AjaxFormChoiceComponentUpdatingBehavior.js");
-
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -60,18 +60,11 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	}
 
 	@Override
-	public void renderHead(Component component, IHeaderResponse response)
-	{
-		super.renderHead(component, response);
-
-		response.render(JavaScriptHeaderItem.forReference(CHOICE_JS));
-	}
-
-	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
 		super.updateAjaxAttributes(attributes);
 
+		attributes.setSerializeRecursively(true);
 		attributes.getAjaxCallListeners().add(new AjaxCallListener()
 		{
 			private static final long serialVersionUID = 1L;
@@ -79,14 +72,9 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 			@Override
 			public CharSequence getPrecondition(Component component)
 			{
-				return String.format("return Wicket.Choice.acceptInput('%s', attrs)",
-					getFormComponent().getInputName());
+				return String.format("return attrs.event.target.name === '%s'", getFormComponent().getInputName());
 			}
 		});
-
-		attributes.getDynamicExtraParameters().add(
-			String.format("return Wicket.Choice.getInputValues('%s', attrs)",
-				getFormComponent().getInputName()));
 	}
 
 	/**
@@ -124,5 +112,58 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 		return (component instanceof RadioChoice) ||
 			(component instanceof CheckBoxMultipleChoice) || (component instanceof RadioGroup) ||
 			(component instanceof CheckGroup);
+	}
+
+	/**
+	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
+	 * 
+	 * @param onUpdateChoice
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
+	 */
+	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice) {
+		Args.notNull(onUpdateChoice, "onUpdateChoice");
+		return new AjaxFormChoiceComponentUpdatingBehavior()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onUpdateChoice.accept(target);
+			}
+		};
+	}
+
+	/**
+	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
+	 * 
+	 * @param onUpdateChoice
+	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @param onError
+	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            {@link RuntimeException}
+	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
+	 */
+	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice,
+	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError) {
+		Args.notNull(onUpdateChoice, "onUpdateChoice");
+		Args.notNull(onError, "onError");
+		return new AjaxFormChoiceComponentUpdatingBehavior()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onUpdateChoice.accept(target);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, RuntimeException e)
+			{
+				onError.accept(target, e);
+			}
+		};
 	}
 }

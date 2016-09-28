@@ -23,7 +23,6 @@ import java.util.Locale;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -262,9 +261,9 @@ public class FormTesterTest extends WicketTestCase
 
 			public TestPage()
 			{
-				Form<Object> form = new Form<Object>("form");
+				Form<Object> form = new Form<>("form");
 				add(form);
-				List<String> choices = Arrays.asList(new String[] { "opt 1", "opt 2" });
+				List<String> choices = Arrays.asList("opt 1", "opt 2");
 				form.add(new DropDownChoice<String>("selector", Model.of(""), choices)
 				{
 					@Override

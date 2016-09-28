@@ -26,16 +26,6 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class HelloWorldApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public HelloWorldApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{

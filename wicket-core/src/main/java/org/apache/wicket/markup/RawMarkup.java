@@ -24,7 +24,7 @@ package org.apache.wicket.markup;
  * @see MarkupElement
  * @author Jonathan Locke
  */
-public final class RawMarkup extends MarkupElement
+public class RawMarkup extends MarkupElement
 {
 	/** The raw markup string * */
 	private final CharSequence string;

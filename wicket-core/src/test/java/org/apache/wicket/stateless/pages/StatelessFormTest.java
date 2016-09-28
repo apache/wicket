@@ -17,10 +17,10 @@
 package org.apache.wicket.stateless.pages;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**

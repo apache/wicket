@@ -25,7 +25,7 @@ public class VariationIterator<T> implements Iterator<T>
 
 	private final Variation<T> variation;
 
-	private int idx = 0;
+	private int idx = -1;
 
 	public VariationIterator(Variation<T> variation) {
 		this(null, variation);
@@ -48,6 +48,32 @@ public class VariationIterator<T> implements Iterator<T>
 	@Override
 	public T next()
 	{
+		if (thisHasNextVariation())
+		{
+			idx++;
+		}
+		else
+		{
+			if (prevHasNextVariation())
+			{
+				idx = 0;
+			}
+			else
+			{
+				throw new NoSuchElementException("no variation left, but next called");
+			}
+		}
+
+		if (idx == 0 && prev != null)
+		{
+			prev.next();
+		}
+
+		return current();
+	}
+
+	public T current()
+	{
 		return variation.values().get(idx);
 	}
 
@@ -64,25 +90,7 @@ public class VariationIterator<T> implements Iterator<T>
 
 	private boolean thisHasNextVariation()
 	{
-		return variation.values().size() > idx + 1;
-	}
-
-	public void nextVariation() {
-		if (thisHasNextVariation())
-		{
-			idx++;
-		} else
-		{
-			if (prevHasNextVariation())
-			{
-				idx=0;
-				prev.nextVariation();
-			}
-			else
-			{
-				throw new NoSuchElementException("no variation left, but next called");
-			}
-		}
+		return idx < variation.values().size() - 1;
 	}
 
 	@Override

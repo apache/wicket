@@ -20,8 +20,6 @@ import java.util.Locale;
 
 /**
  * A helper class to deal with {@link Locale} as string
- * 
- * @author mgrigorov
  */
 public class LocaleHelper
 {
@@ -32,7 +30,7 @@ public class LocaleHelper
 
 	static Locale parseLocale(final String localeAsString, final Locale defaultLocale)
 	{
-		Locale result = null;
+		Locale result;
 
 		final int idxOfUnderbar = localeAsString.indexOf('_');
 		if (idxOfUnderbar > 0)
@@ -46,12 +44,6 @@ public class LocaleHelper
 			String lang = localeAsString;
 
 			result = new Locale(lang);
-		}
-
-
-		if (result == null)
-		{
-			result = defaultLocale;
 		}
 
 		return result;

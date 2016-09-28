@@ -1,0 +1,101 @@
+
+
+Models that implement the interface @org.apache.wicket.model.IChainingModel@ can be used to build a chain of models. These kinds of models are able to recognize whether their model object is itself an implementation of IModel and if so, they will call getObject on the wrapped model and the returned value will be the actual model object. In this way we can combine the action of an arbitrary number of models, making exactly a chain of models. Chaining models allows to combine different data persistence strategies, similarly to what we do with chains of "I/O streams.":http://java.sun.com/developer/technicalArticles/Streams/ProgIOStreams To see model chaining in action we will build a page that implements the List/Detail View pattern, where we have a drop-down list of Person objects and a form to display and edit the data of the current selected Person.
+
+The example page will look like this:
+
+!model-chaining.png!
+
+What we want to do in this example is to chain the model of the DropDownChoice (which contains the selected Person) with the model of the Form. In this way the Form will work with the selected Person as backing object. The DropDownChoice component can be configured to automatically update its model each time we change the selected item on the client side. All we have to do is to override method wantOnSelectionChangedNotifications to make it return true. In practice, when this method returns true, DropDownChoice will submit its value every time JavaScript event onChange occurs, and its model will be consequently updated. To leverage this functionality, DropDownChoice doesn't need to be inside a form.
+
+The following is the resulting markup of the example page:
+
+{code:html}
+...
+<body>
+	List of persons <select wicket:id="persons"></select> <br/>
+	<br/>
+	<form wicket:id="form">		
+		<div style="display: table;">
+			<div style="display: table-row;">
+				<div style="display: table-cell;">Name: </div>
+				<div style="display: table-cell;">
+					<input type="text" wicket:id="name"/> 
+				</div>	
+			</div>
+			<div style="display: table-row;">
+				<div style="display: table-cell;">Surname: </div>
+				<div style="display: table-cell;">
+									<input type="text" wicket:id="surname"/>
+								</div>	
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell;">Address: </div>
+								<div style="display: table-cell;">
+									<input type="text" wicket:id="address"/>
+								</div>	
+							</div>
+							<div style="display: table-row;">
+								<div style="display: table-cell;">Email: </div>
+								<div style="display: table-cell;">
+									<input type="text" wicket:id="email"/>
+								</div>
+							</div>
+						</div>	
+						<input type="submit" value="Save"/>
+					</form>
+				</body>				
+{code}
+
+The initialization code for DropDownChoice is the following:
+
+{code}
+Model<Person> listModel = new Model<Person>();
+ChoiceRenderer<Person> personRender = new ChoiceRenderer<Person>("fullName");
+personsList = new DropDownChoice<Person>("persons", listModel, loadPersons(), personRender){
+		
+		@Override
+		protected boolean wantOnSelectionChangedNotifications() {
+			return true;
+		}
+		
+};
+{code}
+
+As choice render we have used the basic implementation provided with the org.apache.wicket .markup.html.form.ChoiceRenderer class that we have seen in the previous paragraph. loadPersons() is just an utility method which generates a list of Person instances. The model for DropDownChoice is a simple instance of the Model class.
+
+Here is the whole code of the page (except for the loadPersons() method):
+
+{code}
+public class PersonListDetails extends WebPage {
+  private Form form;
+  private DropDownChoice<Person> personsList;
+  
+  public PersonListDetails(){
+    Model<Person> listModel = new Model<Person>();
+    ChoiceRenderer<Person> personRender = new ChoiceRenderer<Person>("fullName");
+    
+    personsList = new DropDownChoice<Person>("persons", listModel, loadPersons(),
+                                                         personRender){
+      @Override
+      protected boolean wantOnSelectionChangedNotifications() {
+        return true;
+      }
+	    };    
+
+	    add(personsList);
+
+	    form = new Form("form", new CompoundPropertyModel<Person>(listModel));    
+	    form.add(new TextField("name"));
+	    form.add(new TextField("surname"));
+	    form.add(new TextField("address"));
+	    form.add(new TextField("email"));
+
+	    add(form);
+	  }
+	       //loadPersons()
+	       //...
+	}
+{code}
+
+The two models work together as a pipeline where the output of method getObject of Model is the model object of CompoundPropertyModel. As we have seen, model chaining allows us to combine the actions of two or more models without creating new custom implementations.

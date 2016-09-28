@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.sort;
 
+import org.apache.wicket.core.util.string.CssUtils;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A component that wraps markup with an OrderByLink. This has the advantage of being able to add
@@ -36,6 +39,16 @@ public class OrderByBorder<S> extends Border
 {
 	private static final long serialVersionUID = 1L;
 
+	public static final String SORT_ASCENDING_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class, "ascending");
+
+	public static final String SORT_DESCENDING_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class, "descending");
+
+	public static final String SORT_NONE_CSS_CLASS_KEY = CssUtils.key(OrderByLink.class, "none");
+
+	private final ISortStateLocator<S> stateLocator;
+
+	private final S property;
+
 	/**
 	 * @param id
 	 *            see
@@ -51,6 +64,9 @@ public class OrderByBorder<S> extends Border
 		final ISortStateLocator<S> stateLocator)
 	{
 		super(id);
+
+		this.stateLocator = stateLocator;
+		this.property = property;
 
 		OrderByLink<S> link = newOrderByLink("orderByLink", property, stateLocator);
 		addToBorder(link);
@@ -89,6 +105,35 @@ public class OrderByBorder<S> extends Border
 	protected void onSortChanged()
 	{
 		// noop
+	}
+
+	@Override
+	public void onComponentTag(final ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		final ISortState<S> sortState = stateLocator.getSortState();
+
+		SortOrder dir = sortState.getPropertySortOrder(property);
+		String cssClass;
+		if (dir == SortOrder.ASCENDING)
+		{
+			cssClass = getString(SORT_ASCENDING_CSS_CLASS_KEY);
+		}
+		else if (dir == SortOrder.DESCENDING)
+		{
+			cssClass = getString(SORT_DESCENDING_CSS_CLASS_KEY);
+		}
+		else
+		{
+			cssClass = getString(SORT_NONE_CSS_CLASS_KEY);
+		}
+
+		if (!Strings.isEmpty(cssClass))
+		{
+			tag.append("class", cssClass, " ");
+		}
+
 	}
 
 }

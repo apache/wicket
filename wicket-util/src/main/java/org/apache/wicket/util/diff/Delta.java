@@ -94,7 +94,7 @@ public abstract class Delta extends ToString
 			DeltaClass[1][0] = DeleteDelta.class;
 			DeltaClass[1][1] = ChangeDelta.class;
 		}
-		catch (Throwable ignored)
+		catch (Exception ignored)
 		{
 		}
 	}
@@ -117,7 +117,7 @@ public abstract class Delta extends ToString
 		{
 			result = (Delta)c.newInstance();
 		}
-		catch (Throwable e)
+		catch (Exception e)
 		{
 			return null;
 		}

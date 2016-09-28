@@ -17,7 +17,7 @@
 package org.apache.wicket.extensions.ajax.markup.html.repeater.data.table;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.IAjaxCallListener;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort.AjaxFallbackOrderByBorder;
 import org.apache.wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -58,9 +58,15 @@ public class AjaxFallbackHeadersToolbar<S> extends HeadersToolbar<S>
 	protected WebMarkupContainer newSortableHeader(final String borderId, final S property,
 		final ISortStateLocator<S> locator)
 	{
-		return new AjaxFallbackOrderByBorder<S>(borderId, property, locator, getAjaxCallListener())
+		return new AjaxFallbackOrderByBorder<S>(borderId, property, locator)
 		{
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
+			{
+				AjaxFallbackHeadersToolbar.this.updateAjaxAttributes(attributes);
+			}
 
 			@Override
 			protected void onAjaxClick(final AjaxRequestTarget target)
@@ -77,13 +83,7 @@ public class AjaxFallbackHeadersToolbar<S> extends HeadersToolbar<S>
 		};
 	}
 
-	/**
-	 * Returns a decorator that will be used to decorate ajax links used in sortable headers
-	 * 
-	 * @return decorator or null for none
-	 */
-	protected IAjaxCallListener getAjaxCallListener()
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
-		return null;
 	}
 }

@@ -19,16 +19,22 @@ package org.apache.wicket.request.cycle;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 
 /**
- * Registers and retrieves first and last IPageRequestHandler in a request cycle.
+ * Registers and retrieves first and last executed {@link IPageRequestHandler} in a request cycle.
  * Can be used to find out what is the requested page and what is the actual response page.
- *
- * <p>To use it an application needs to register it with:
+ * <p>
+ * To use it an application needs to register it with:
  *     <pre><code>
  *          application.getRequestCycleListeners().add(new PageRequestHandlerTracker());
  *     </code></pre>
- * </p>
+ * <p>
+ * The result can then be accessed at the end of each {@link RequestCycle} with:
+ *     <pre><code>
+ *          IPageRequestHandler first = PageRequestHandlerTracker.getFirstHandler(RequestCycle.get());
+ *          IPageRequestHandler last = PageRequestHandlerTracker.getLastHandler(RequestCycle.get());
+ *     </code></pre>
  *
  * @since 1.5.8
  */
@@ -52,20 +58,6 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 		registerLastHandler(cycle,handler);
 	}
 
-	@Override
-	public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
-	{
-		super.onRequestHandlerResolved(cycle, handler);
-		registerLastHandler(cycle,handler);
-	}
-
-	@Override
-	public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler, Exception exception)
-	{
-		super.onExceptionRequestHandlerResolved(cycle, handler, exception);
-		registerLastHandler(cycle,handler);
-	}
-
 	/**
 	 * Registers pagerequesthandler when it's resolved ,keeps up with the most recent handler resolved
 	 *
@@ -76,9 +68,10 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 	 */
 	private void registerLastHandler(RequestCycle cycle, IRequestHandler handler)
 	{
-		if (handler instanceof IPageRequestHandler)
+		final IPageRequestHandler pageRequestHandler = findPageRequestHandler(handler);
+		if (pageRequestHandler != null)
 		{
-			cycle.setMetaData(LAST_HANDLER_KEY, (IPageRequestHandler) handler);
+			cycle.setMetaData(LAST_HANDLER_KEY, pageRequestHandler);
 		}
 	}
 
@@ -92,14 +85,37 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 	 */
 	private void registerFirstHandler(RequestCycle cycle, IRequestHandler handler)
 	{
-		if (handler instanceof IPageRequestHandler && getFirstHandler(cycle) == null)
+		if (getFirstHandler(cycle) == null)
 		{
-			cycle.setMetaData(FIRST_HANDLER_KEY, (IPageRequestHandler)handler);
+			final IPageRequestHandler pageRequestHandler = findPageRequestHandler(handler);
+			if (pageRequestHandler != null)
+			{
+				cycle.setMetaData(FIRST_HANDLER_KEY, pageRequestHandler);
+			}
 		}
 	}
 
+	/**
+	 * Looking for IPageRequestHandler 
+	 * 
+	 * @param handler
+	 * @return IPageRequestHandler if exist otherwise null
+	 */
+	private IPageRequestHandler findPageRequestHandler(IRequestHandler handler)
+	{
+		if (handler instanceof IPageRequestHandler)
+		{
+			return (IPageRequestHandler)handler;
+		}
+	    if (handler instanceof IRequestHandlerDelegate)
+	    {
+	    	return findPageRequestHandler(((IRequestHandlerDelegate)handler).getDelegateHandler());
+	    }
+	    return null;
+	}
+
    /**
-	* retrieves last handler from requestcycle
+	* retrieves last handler from request cycle
 	*
 	* @param cycle
 	* @return last handler

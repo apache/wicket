@@ -19,9 +19,11 @@ package org.apache.wicket.guice;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.apache.wicket.Component;
 
 import com.google.inject.Provider;
-import org.apache.wicket.Component;
 
 /**
  */
@@ -46,7 +48,18 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 	@Inject
 	private Map<String, String> injectedTypeLiteralField;
 
+	@Inject
+	@Named("named1")
+	private String named1;
+
+	@Inject
+	@Named("named2")
+	private String named2;
+
 	private final JavaxInjectTestNoComponent noComponent;
+
+	@Inject
+	private EvilTestService evilTestService;
 
 	/**
 	 * Construct.
@@ -107,6 +120,18 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 		return null;
 	}
 
+	@Override
+	public String getNamed1()
+	{
+		return named1;
+	}
+
+	@Override
+	public String getNamed2()
+	{
+		return named2;
+	}
+
 	/**
 	 * @return injectedTypeLiteralField
 	 */
@@ -130,4 +155,9 @@ public class JavaxInjectTestComponent extends Component implements TestComponent
 		return noComponent.getString();
 	}
 
+	@Override
+	public String getEvilId()
+	{
+		return evilTestService.getId();
+	}
 }

@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.response.filter;
 
-import org.apache.wicket.ajax.XmlAjaxResponse;
+import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 		// <?xml version="1.0" encoding="UTF-8" standalone="yes"?><ajax-response>
 		int min = Math.min(150, responseBuffer.length());
 		String firstNChars = responseBuffer.substring(0, min);
-		return firstNChars.contains(XmlAjaxResponse.START_ROOT_ELEMENT);
+		return firstNChars.contains(XmlPartialPageUpdate.START_ROOT_ELEMENT);
 	}
 
 	/**
@@ -86,6 +87,10 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 	 */
 	public AppendingStringBuffer stripNonValidXMLCharacters(AppendingStringBuffer input)
 	{
+		if (input == null) {
+			return new AppendingStringBuffer();
+		}
+
 		char[] chars = input.getValue();
 		AppendingStringBuffer out = null;
 		boolean isDebugEnabled = LOG.isDebugEnabled();
@@ -108,7 +113,7 @@ public class XmlCleaningResponseFilter implements IResponseFilter
 					if (isDebugEnabled)
 					{
 						LOG.debug("An invalid character '{}' found at position '{}' in '{}'",
-								new Object[] {String.format("0x%X", codePoint), i, new String(chars)});
+								String.format("0x%X", codePoint), i, new String(chars));
 					}
 				}
 				else if (isDebugEnabled)

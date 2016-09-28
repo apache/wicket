@@ -64,7 +64,7 @@ public class MockPageManager implements IPageManager
 	}
 
 	@Override
-	public void sessionExpired(String sessionId)
+	public void clear()
 	{
 		pages.clear();
 	}
@@ -89,6 +89,12 @@ public class MockPageManager implements IPageManager
 		{
 			pages.put(page.getPageId(), page);
 		}
+	}
+
+	@Override
+	public void untouchPage(IManageablePage page)
+	{
+		pages.remove(page.getPageId());
 	}
 
 	/**

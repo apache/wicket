@@ -31,9 +31,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.settings.IApplicationSettings;
 
 
 /**
@@ -67,14 +65,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 		protected IModel<FeedbackMessage> getListItemModel(
 			final IModel<? extends List<FeedbackMessage>> listViewModel, final int index)
 		{
-			return new AbstractReadOnlyModel<FeedbackMessage>()
+			return new IModel<FeedbackMessage>()
 			{
 				private static final long serialVersionUID = 1L;
 
 				/**
 				 * WICKET-4258 Feedback messages might be cleared already.
 				 * 
-				 * @see IApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)
+				 * @see org.apache.wicket.settings.ApplicationSettings#setFeedbackMessageCleanupFilter(org.apache.wicket.feedback.IFeedbackMessageFilter)
 				 */
 				@Override
 				public FeedbackMessage getObject()
@@ -328,7 +326,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected final List<FeedbackMessage> getCurrentMessages()
 	{
-		final List<FeedbackMessage> messages = messageListView.getModelObject();
+		final List<? extends FeedbackMessage> messages = messageListView.getModelObject();
 		return Collections.unmodifiableList(messages);
 	}
 

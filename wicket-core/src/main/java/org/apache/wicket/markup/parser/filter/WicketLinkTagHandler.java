@@ -107,7 +107,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 			tag.enableAutolink(true);
 
 			// Just a dummy name. The ComponentTag will not be forwarded.
-			tag.setId(AUTOLINK_ID);
+			tag.setId(AUTOLINK_ID + getRequestUniqueId());
 			tag.setAutoComponentTag(true);
 			tag.setModified(true);
 			return tag;
@@ -195,7 +195,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 	 * @param ref
 	 * @return true if ref is not null and does not contain namespace
 	 */
-	private final boolean checkRef(String ref)
+	private boolean checkRef(String ref)
 	{
 		return (ref != null) && (!ref.contains(":"));
 	}
@@ -209,7 +209,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 			WicketTag wtag = (WicketTag)tag;
 			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
-				String id = tag.getId() + "-" + container.getPage().getAutoIndex();
+				String id = tag.getId();
 
 				return new TransparentWebMarkupContainer(id);
 			}

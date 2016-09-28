@@ -35,8 +35,7 @@ import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.settings.IDebugSettings;
-import org.apache.wicket.settings.IPageSettings;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.StringValue;
@@ -68,7 +67,7 @@ import org.slf4j.LoggerFactory;
  * with PageParameters will be used.</li>
  * <li><b>Versioning </b>- Pages support the browser's back button when versioning is enabled via
  * {@link #setVersioned(boolean)}. By default all pages are versioned if not configured differently
- * in {@link IPageSettings#setVersionPagesByDefault(boolean)}</li>
+ * in {@link org.apache.wicket.settings.PageSettings#setVersionPagesByDefault(boolean)}</li>
  * </ul>
  * 
  * @see org.apache.wicket.markup.html.WebPage
@@ -82,7 +81,10 @@ import org.slf4j.LoggerFactory;
  * @author Johan Compagner
  * 
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener, IRequestablePage
+public abstract class Page extends MarkupContainer
+	implements
+		IRequestablePage,
+		IQueueRegion
 {
 	/** True if the page hierarchy has been modified in the current request. */
 	private static final int FLAG_IS_DIRTY = FLAG_RESERVED3;
@@ -175,7 +177,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			pageParameters = parameters;
 		}
-		init();
 	}
 
 	/**
@@ -227,9 +228,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		super.detachModels();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#internalPrepareForRender(boolean)
-	 */
 	@Override
 	public void internalPrepareForRender(boolean setRenderingFlag)
 	{
@@ -284,8 +282,21 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			setFlag(FLAG_IS_DIRTY, true);
 			setNextAvailableId();
-			pageManager.touchPage(this);
+
+			if (isInitialization == false)
+			{
+				pageManager.touchPage(this);
+			}
 		}
+	}
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		final IPageManager pageManager = getSession().getPageManager();
+		pageManager.touchPage(this);
 	}
 
 	/**
@@ -320,9 +331,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return autoIndex++;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#getId()
-	 */
 	@Override
 	public final String getId()
 	{
@@ -485,16 +493,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * Redirect to this page.
-	 * 
-	 * @see org.apache.wicket.IRedirectListener#onRedirect()
-	 */
-	@Override
-	public final void onRedirect()
-	{
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * Set the id for this Page. This method is called by PageMap when a Page is added because the
@@ -516,7 +514,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param value
 	 *            whether the page should try to be stateless
 	 */
-	public final void setStatelessHint(boolean value)
+	public final Page setStatelessHint(boolean value)
 	{
 		if (value && !isBookmarkable())
 		{
@@ -525,6 +523,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 					this);
 		}
 		setFlag(FLAG_STATELESS_HINT, value);
+		return this;
 	}
 
 	/**
@@ -563,7 +562,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final IDebugSettings debugSettings = getApplication().getDebugSettings();
+		final DebugSettings debugSettings = getApplication().getDebugSettings();
 		if (debugSettings.getComponentUseCheck())
 		{
 			final List<Component> unrenderedComponents = new ArrayList<Component>();
@@ -697,7 +696,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * Initializes Page by adding it to the Session and initializing it.
 	 */
-	private void init()
+	@Override
+	void init()
 	{
 		if (isBookmarkable() == false)
 		{
@@ -715,9 +715,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		stateless = null;
 	}
 
-	/**
-	 * 
-	 */
 	private void setNextAvailableId()
 	{
 		setNumericId(getSession().nextPageId());
@@ -779,21 +776,14 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
 	@Override
 	protected void onBeforeRender()
 	{
 		// Make sure it is really empty
 		renderedComponents = null;
 
-		// if the page is stateless, reset the flag so that it is tested again
-		if (Boolean.TRUE.equals(stateless))
-		{
-			stateless = null;
-		}
+		// rendering might remove or add stateful components, so clear flag to force reevaluation
+		stateless = null;
 
 		super.onBeforeRender();
 
@@ -806,9 +796,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onAfterRender()
-	 */
 	@Override
 	protected void onAfterRender()
 	{
@@ -849,9 +836,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onDetach()
-	 */
 	@Override
 	protected void onDetach()
 	{
@@ -865,9 +849,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		super.onDetach();
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#onRender()
-	 */
 	@Override
 	protected void onRender()
 	{
@@ -937,9 +918,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		this.stateless = stateless;
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
-	 */
 	@Override
 	public MarkupType getMarkupType()
 	{
@@ -956,12 +934,12 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		setStatelessHint(false);
 
+		// make sure the page will be available on following request
+		getSession().getPageManager().touchPage(this);
+
 		return new PageReference(numericId);
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IManageablePage#getPageId()
-	 */
 	@Override
 	public int getPageId()
 	{
@@ -975,6 +953,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF WICKET API. DO NOT USE!
+	 *
 	 * Sets the flag that determines whether or not this page was created using one of its
 	 * bookmarkable constructors
 	 * 
@@ -996,9 +976,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return getFlag(FLAG_WAS_CREATED_BOOKMARKABLE);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.component.IRequestablePage#renderPage()
-	 */
 	@Override
 	public void renderPage()
 	{
@@ -1008,6 +985,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			++renderCount;
 			render();
+
+			// stateless = null;
 		}
 		finally
 		{
@@ -1025,4 +1004,5 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return renderedComponents != null && renderedComponents.contains(component);
 	}
+
 }

@@ -20,7 +20,7 @@ package org.apache.wicket.model.util;
 import java.io.Serializable;
 
 import org.apache.wicket.model.IDetachable;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.util.lang.Objects;
 
 /**
@@ -32,15 +32,12 @@ import org.apache.wicket.util.lang.Objects;
  * @param <T>
  *            type of model object
  */
-public abstract class GenericBaseModel<T> implements IModel<T>
+public abstract class GenericBaseModel<T> implements IObjectClassAwareModel<T>
 {
 	private static final long serialVersionUID = 1L;
 	/** model object */
 	private T object;
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
@@ -72,9 +69,6 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 	 */
 	protected abstract T createSerializableVersionOf(T object);
 
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
 	public void detach()
 	{
@@ -84,9 +78,13 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 		}
 	}
 
-	/**
-	 * @see Object#toString()
-	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<T> getObjectClass()
+	{
+		return object != null ? (Class<T>) object.getClass() : null;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -96,14 +94,12 @@ public abstract class GenericBaseModel<T> implements IModel<T>
 		return sb.toString();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public int hashCode()
 	{
 		return Objects.hashCode(object);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj)
 	{

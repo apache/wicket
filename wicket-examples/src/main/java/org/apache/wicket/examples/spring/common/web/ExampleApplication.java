@@ -28,7 +28,6 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
  */
 public class ExampleApplication extends WebApplication
 {
-
 	/**
 	 * this field holds a contact dao proxy that is safe to use in wicket components
 	 */
@@ -52,7 +51,7 @@ public class ExampleApplication extends WebApplication
 	}
 
 	@Override
-	public Class getHomePage()
+	public Class<HomePage> getHomePage()
 	{
 		return HomePage.class;
 	}

@@ -1,0 +1,14 @@
+
+
+Always try to pass models on to the parent component. By that, you ensure that at the end of every request the method @IModel.detach()@ gets called. This method is responsible for a data cleanup. Another example: you have implemented your own model which persists the data in the @detach()@ method. So the call of @detach()@ is necessary for that your data gets persisted. You can see an exemplary passing to the super constructor here:
+
+*Listing 11:*
+
+{code}
+public class RegistrationInputPanel extends Panel{
+    public RegistrationInputPanel(String id, IModel<Registration> regModel) {
+        super(id, regModel)
+        // add components
+    }
+}
+{code}

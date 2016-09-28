@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.examples.authentication2;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-
 /**
  * Simple home page which requires authentication
  * 
@@ -27,11 +25,8 @@ public class Home extends AuthenticatedWebPage
 {
 	/**
 	 * Constructor
-	 * 
-	 * @param parameters
-	 *            Page parameters (ignored since this is the home page)
 	 */
-	public Home(final PageParameters parameters)
+	public Home()
 	{
 	}
 }

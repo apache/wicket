@@ -1,0 +1,51 @@
+
+
+WicketStuff provides a module called wicketstuff-javaee-inject that contains component instantiation listener @JavaEEComponentInjector@. If we register this listener in our application we can use standard EJB annotations to inject dependencies into our Wicket components.
+
+To register a component instantiation listener in Wicket we must use @Application@'s method @getComponentInstantiationListeners@ which returns a typed collection of @IComponentInstantiationListeners@. 
+
+The following initialization code is taken from project @EjbInjectionExample@: 
+
+{code}
+public class WicketApplication extends WebApplication
+{    	
+       //Constructor...
+
+	@Override
+	public void init()
+	{
+		super.init();
+		getComponentInstantiationListeners().add(new JavaEEComponentInjector(this));		
+	}	
+}
+{code}
+
+In this example the object that we want to inject is a simple class containing a greeting message:
+
+{code}
+@ManagedBean
+public class EnterpriseMessage {
+	public String message = "Welcome to the EJB world!";
+}
+{code}
+
+Please note that we have used annotation ManagedBean to decorate our object. Now to inject it into the home page we must add a field of type EnterpriseMessage and annotate it with annotation @EJB:
+
+{code}
+public class HomePage extends WebPage {
+	
+	@EJB
+	private EnterpriseMessage enterpriseMessage;
+	//getter and setter for enterpriseMessage...
+	
+	public HomePage(final PageParameters parameters) {
+		super(parameters);
+	
+		add(new Label("message", enterpriseMessage.message));
+	}
+}
+{code}
+
+That is all. We can point the browser to the home page of the project and see the greeting message injected into the page:
+
+!EjbInjectionExample.png!

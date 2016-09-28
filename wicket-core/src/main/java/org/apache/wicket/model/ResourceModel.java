@@ -30,15 +30,13 @@ import org.apache.wicket.Component;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ResourceModel extends AbstractReadOnlyModel<String>
-	implements
-		IComponentAssignedModel<String>
+public class ResourceModel implements IComponentAssignedModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
 	private final String resourceKey;
 
-	private final String defaultValue;
+	private final IModel<String> defaultValue;
 
 	/**
 	 * Constructor
@@ -48,7 +46,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	 */
 	public ResourceModel(String resourceKey)
 	{
-		this(resourceKey, null);
+		this(resourceKey, (IModel<String>)null);
 	}
 
 	/**
@@ -62,13 +60,15 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	 */
 	public ResourceModel(String resourceKey, String defaultValue)
 	{
+		this(resourceKey, Model.of(defaultValue));
+	}
+
+	public ResourceModel(String resourceKey, IModel<String> defaultValue)
+	{
 		this.resourceKey = resourceKey;
 		this.defaultValue = defaultValue;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.AbstractReadOnlyModel#getObject()
-	 */
 	@Override
 	public String getObject()
 	{
@@ -76,21 +76,21 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		return Application.get()
 			.getResourceSettings()
 			.getLocalizer()
-			.getString(resourceKey, null, defaultValue);
+			.getString(resourceKey, null, null, null, null, defaultValue);
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IComponentAssignedModel#wrapOnAssignment(org.apache.wicket.Component)
-	 */
+	@Override
+	public final void setObject(String object)
+	{
+		IComponentAssignedModel.super.setObject(object);
+	}
+
 	@Override
 	public IWrapModel<String> wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper(component);
 	}
 
-	/**
-	 * 
-	 */
 	private class AssignmentWrapper extends LoadableDetachableModel<String>
 		implements
 			IWrapModel<String>
@@ -104,14 +104,11 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		 * 
 		 * @param component
 		 */
-		public AssignmentWrapper(Component component)
+		AssignmentWrapper(Component component)
 		{
 			this.component = component;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
-		 */
 		@Override
 		public IModel<String> getWrappedModel()
 		{
@@ -124,7 +121,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 			return Application.get()
 				.getResourceSettings()
 				.getLocalizer()
-				.getString(resourceKey, component, defaultValue);
+				.getString(resourceKey, component, null, null, null, defaultValue);
 		}
 
 		@Override

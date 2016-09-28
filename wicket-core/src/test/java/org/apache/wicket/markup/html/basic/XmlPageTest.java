@@ -17,11 +17,11 @@
 package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
 import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.XmlFilePropertiesLoader;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

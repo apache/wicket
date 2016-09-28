@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
+import java.util.regex.Pattern;
+
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.time.Time;
@@ -30,11 +32,16 @@ import org.apache.wicket.util.time.Time;
  */
 public class LastModifiedResourceVersion implements IResourceVersion
 {
+	/**
+	 * A valid pattern is a sequence of digits
+	 */
+	private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("[0-9]+");
+
 	@Override
 	public String getVersion(IStaticCacheableResource resource)
 	{
 		// get last modified timestamp of resource
-		IResourceStream stream = resource.getCacheableResourceStream();
+		IResourceStream stream = resource.getResourceStream();
 
 		// if resource stream can not be found do not cache
 		if (stream == null)
@@ -50,6 +57,12 @@ public class LastModifiedResourceVersion implements IResourceVersion
 			return null;
 		}
 		// version string = last modified timestamp converted to milliseconds
-		return String.valueOf(lastModified.getMilliseconds());
+		return String.valueOf(lastModified.getMilliseconds()).intern();
+	}
+
+	@Override
+	public Pattern getVersionPattern()
+	{
+		return TIMESTAMP_PATTERN;
 	}
 }

@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<title>WICKET-5569 Test</title>
+	</head>
+	<body>
+
+		<a wicket:id="link">link</a>
+
+		<!--
+		mc1 is a TransparentWebMarkupContainer. This will contain a component called with id "special",
+		but importantly, this is NOT the "special" that should be added to the ajax response.
+		-->
+		<div wicket:id="mc1">
+			<div wicket:id="special">
+				WRONG_SPECIAL
+			</div>
+		</div>
+
+		<!--
+		A normal WebMarkupContainer so that we remove the chain of component resolvers so as to demonstrate
+		the problem.
+		-->
+		<div wicket:id="mc2">
+
+			<!--
+			A component resolving markup container that resolves from the page.
+			-->
+			<div wicket:id="mc3">
+
+				<!--
+				This is the "special" that the Ajax response must get.
+				-->
+				<div wicket:id="special">
+					CORRECT_SPECIAL
+				</div>
+
+			</div>
+		</div>
+	</body>
+</html>

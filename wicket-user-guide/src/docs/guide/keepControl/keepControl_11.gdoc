@@ -1,0 +1,6 @@
+
+
+In this chapter we have seen the tools provided by Wicket to gain complete control over the generated HTML. However we didn't see yet how we can repeat a portion of HTML with Wicket. With classic server-side technologies like PHP or JSP we use loops (like @while@ or @for@) inside our pages to achieve this result. 
+To perform this task Wicket provides a special-purpose family of components called repeaters and designed to repeat their markup body to display a set of items. 
+
+But to fully understand how these components work, we must first learn more of Wicket's basics. That's why repeaters will be introduced later in [chapter 13|guide:repeaters].

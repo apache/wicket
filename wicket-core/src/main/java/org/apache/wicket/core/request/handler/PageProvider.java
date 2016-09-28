@@ -26,6 +26,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -45,15 +46,17 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
-public class PageProvider implements IPageProvider
+public class PageProvider implements IPageProvider, IClusterable
 {
+	private static final long serialVersionUID = 1L;
+
 	private final Integer renderCount;
 
 	private final Integer pageId;
 
 	private IPageSource pageSource;
 
-	private IRequestablePage pageInstance;
+	private transient IRequestablePage pageInstance;
 	private boolean pageInstanceIsFresh;
 
 	private Class<? extends IRequestablePage> pageClass;

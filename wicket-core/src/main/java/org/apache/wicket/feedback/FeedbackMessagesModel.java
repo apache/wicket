@@ -92,9 +92,6 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 		return sortingComparator;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public final List<FeedbackMessage> getObject()
 	{
@@ -173,19 +170,11 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 		return messages;
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
 	@Override
 	public void setObject(List<FeedbackMessage> object)
 	{
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
 	@Override
 	public void detach()
 	{

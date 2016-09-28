@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 /**
  * 
@@ -35,15 +35,13 @@ public class PageComponentInfoTest extends TestCase
 		assertEquals(pageId, info.getPageInfo().getPageId());
 	}
 
-	private void testPageComponentInfo(PageComponentInfo info, Integer pageId, String listener,
-		String componentPath)
+	private void testPageComponentInfo(PageComponentInfo info, Integer pageId, String componentPath)
 	{
 		assertNotNull(info.getComponentInfo());
 		assertNotNull(info.getPageInfo());
 
 		assertEquals(pageId, info.getPageInfo().getPageId());
 
-		assertEquals(listener, info.getComponentInfo().getListenerInterface());
 		assertEquals(componentPath, info.getComponentInfo().getComponentPath());
 	}
 
@@ -53,9 +51,9 @@ public class PageComponentInfoTest extends TestCase
 	@Test
 	public void test1()
 	{
-		String s = "2-click-foo-bar-baz";
+		String s = "2--foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
-		testPageComponentInfo(info, 2, "click", "foo:bar:baz");
+		testPageComponentInfo(info, 2, "foo:bar:baz");
 		assertEquals(s, info.toString());
 	}
 

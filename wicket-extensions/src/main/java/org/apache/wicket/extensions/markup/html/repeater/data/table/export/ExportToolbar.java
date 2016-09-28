@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
@@ -30,7 +31,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.resource.IResource;
@@ -163,14 +163,14 @@ public class ExportToolbar extends AbstractToolbar
 		WebMarkupContainer td = new WebMarkupContainer("td");
 		add(td);
 
-		td.add(AttributeModifier.replace("colspan", new AbstractReadOnlyModel<String>()
+		td.add(AttributeModifier.replace("colspan", new IModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public String getObject()
 			{
-				return String.valueOf(getTable().getColumns().size());
+				return String.valueOf(getTable().getColumns().size()).intern();
 			}
 		}));
 
@@ -202,7 +202,7 @@ public class ExportToolbar extends AbstractToolbar
 		IResource resource = new ResourceStreamResource()
 		{
 			@Override
-			protected IResourceStream getResourceStream()
+			protected IResourceStream getResourceStream(Attributes attributes)
 			{
 				return new DataExportResourceStreamWriter(dataExporter, getTable());
 			}
@@ -276,6 +276,8 @@ public class ExportToolbar extends AbstractToolbar
 		 *
 		 * @param dataExporter
 		 *      The {@link IDataExporter} to use to export data.
+		 * @param dataTable
+		 *      The {@link DataTable} from which to export.
 		 */
 		public DataExportResourceStreamWriter(IDataExporter dataExporter, DataTable<?, ?> dataTable)
 		{
@@ -332,12 +334,12 @@ public class ExportToolbar extends AbstractToolbar
 			throws IOException
 		{
 			IDataProvider<T> dataProvider = dataTable.getDataProvider();
-			List<IExportableColumn<T, ?, ?>> exportableColumns = new LinkedList<>();
+			List<IExportableColumn<T, ?>> exportableColumns = new LinkedList<>();
 			for (IColumn<T, S> col : dataTable.getColumns())
 			{
 				if (col instanceof IExportableColumn)
 				{
-					exportableColumns.add((IExportableColumn<T, ?, ?>)col);
+					exportableColumns.add((IExportableColumn<T, ?>)col);
 				}
 			}
 			dataExporter.exportData(dataProvider, exportableColumns, outputStream);

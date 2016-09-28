@@ -1,0 +1,35 @@
+/*
+   Dummy stylesheet allowing for some customisation of pdf output without having to copy and modify the other stylesheets.
+*/
+
+ body{
+   font-family:helvetica,arial,sans-serif!important;
+   font-size: 10pt!important;
+ } 
+
+.paragraph{
+   font-family:helvetica,arial,sans-serif!important;	
+}
+
+.code pre {
+    page-break-inside: auto!important;
+}
+
+.bq {
+    page-break-inside: auto!important;
+}
+
+table {
+    page-break-inside: auto!important;
+}
+
+.paragraph{
+ text-indent: 1em!important;
+}
+
+h1{
+  font-size:3em!important;
+  text-align:right;
+  padding-bottom: 30px;	
+}
+

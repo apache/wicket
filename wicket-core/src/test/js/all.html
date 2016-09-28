@@ -5,11 +5,12 @@
 	<title id="titleId">All tests</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="qunit/qunit.css" type="text/css" media="screen" />
-	<script src="../../main/java/org/apache/wicket/resource/jquery/jquery-1.10.2.js"></script>
+	<script src="../../main/java/org/apache/wicket/resource/jquery/jquery-1.12.4.js"></script>
 	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js"></script>
 	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js"></script>
 	<script src="../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js"></script>
 	<script type="text/javascript" src="qunit/qunit.js"></script>
+	<script type="text/javascript" src="qunit/blanket.min.js"></script>
 
 	<!-- the module under test -->
     <script>
@@ -22,18 +23,11 @@
 	<script type="text/javascript" src="form.js"></script>
 	<script type="text/javascript" src="head.js"></script>
 	<script type="text/javascript" src="ajax.js"></script>
+	<script type="text/javascript" src="timer.js"></script>
 </head>
 
 <body>
-	<h1 id="qunit-header">Wicket Ajax tests</h1>
-
-	<h2 id="qunit-banner"></h2>
-
-	<div id="qunit-testrunner-toolbar"></div>
-
-	<h2 id="qunit-userAgent"></h2>
-
-	<ol id="qunit-tests"></ol>
+	<div id="qunit"></div>
 
 	<div id="qunit-fixture">
 
@@ -94,6 +88,7 @@
 			DOM
 		-->
 		<span id="testElement"></span>
+		<div id="testBlockElement"></div>
 
 		<div id="complexElement">
 			<a href="some/url">Link</a>
@@ -116,6 +111,8 @@
 			Form
 		-->
 		<form id="testForm" action="actionUrl">
+
+			<div id="nonHtmlFormElement">
 
 			<input type="text" id="textInputId" name="textInput" value="textValue"/>
 
@@ -154,6 +151,8 @@
 
 			<textarea name="textArea">some text</textarea>
 
+			</div>
+
 		</form>
 
 		<!-- WICKET-4673 Ajax submit of nested form -->
@@ -165,9 +164,17 @@
 			</div>
 		</form>
 
+		<form id="multipartForm">
+			<input type="text" id="multipartFormText"/>
+			<input type="file" id="multipartFormFile"/>
+			<input type="submit" id="multipartFormSubmit">
+		</form>
+
 		<div id="usedAsContextWicket5025"></div>
 
 		<input type="text" id="inputChangeInput">
+
+		<div id="ajaxIndicator"></div>
 	</div>
 </body>
 </html>

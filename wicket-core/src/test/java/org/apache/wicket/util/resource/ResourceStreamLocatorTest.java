@@ -23,13 +23,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Locale;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.resource.ClassPathResourceFinder;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 

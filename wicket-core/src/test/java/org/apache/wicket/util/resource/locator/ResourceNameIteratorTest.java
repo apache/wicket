@@ -21,11 +21,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.core.util.resource.locator.ExtensionResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.LocaleResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.ResourceNameIterator;
 import org.apache.wicket.core.util.resource.locator.StyleAndVariationResourceNameIterator;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 
@@ -151,7 +151,7 @@ public class ResourceNameIteratorTest extends WicketTestCase
 		String path = "patch.extension";
 		String style = null;
 		String var = "var";
-		Locale locale = Locale.getDefault();
+		Locale locale = Locale.CANADA_FRENCH;
 		Iterable<String> extensions = null;
 		boolean strict = false;
 		Iterator<String> iterator = new ResourceNameIterator(path, style, var, locale, extensions, strict);

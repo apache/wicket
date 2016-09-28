@@ -24,7 +24,6 @@ import org.apache.wicket.model.IModel;
  * @see ListView
  * @param <T>
  *            Model object type
- * 
  */
 public class ListItemModel<T> implements IModel<T>
 {
@@ -50,30 +49,15 @@ public class ListItemModel<T> implements IModel<T>
 		this.index = index;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	public T getObject()
 	{
 		return listView.getModelObject().get(index);
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
 	@Override
-	public void setObject(T object)
+	public final void setObject(T object)
 	{
-		listView.getModelObject().set(index, object);
-	}
-
-	/**
-	 * @see org.apache.wicket.model.IDetachable#detach()
-	 */
-	@Override
-	public void detach()
-	{
-		// Do nothing. ListView will detach its own model object.
+		IModel.super.setObject(object);
 	}
 }

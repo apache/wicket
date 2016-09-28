@@ -76,7 +76,6 @@ public class MockFormFileUploadPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	@SuppressWarnings("deprecation")
 	public MockFormFileUploadPage()
 	{
 		this(new PageParameters().set("required", "true"));
@@ -91,7 +90,7 @@ public class MockFormFileUploadPage extends WebPage
 	{
 		domainObject = new MockDomainObjectFileUpload();
 		Form<MockDomainObjectFileUpload> form = new Form<MockDomainObjectFileUpload>("form",
-			new CompoundPropertyModel<MockDomainObjectFileUpload>(domainObject))
+			new CompoundPropertyModel<>(domainObject))
 		{
 			private static final long serialVersionUID = 1L;
 

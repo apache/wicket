@@ -27,7 +27,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  */
 public class LocalizedPage extends WicketExamplePage
 {
-
 	/**
 	 * Construct.
 	 * 

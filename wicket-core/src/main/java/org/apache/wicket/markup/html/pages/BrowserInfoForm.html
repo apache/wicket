@@ -15,39 +15,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
-	<wicket:head>
-		<script type="text/javascript">/*<![CDATA[*/
-		function submitform() {
-			document.postback.navigatorAppName.value = window.navigator.appName;
-			document.postback.navigatorAppVersion.value = window.navigator.appVersion;
-			document.postback.navigatorAppCodeName.value = window.navigator.appCodeName;
-			var cookieEnabled = (window.navigator.cookieEnabled)? true : false;
-			if (typeof window.navigator.cookieEnabled == "undefined" && !cookieEnabled) { 
-				document.cookie = "wickettestcookie";
-				cookieEnabled = (document.cookie.indexOf("wickettestcookie")!=-1)? true : false;
-			}
-			document.postback.navigatorCookieEnabled.value = cookieEnabled;
-			document.postback.navigatorJavaEnabled.value =  window.navigator.javaEnabled();
-			document.postback.navigatorLanguage.value = window.navigator.language ? window.navigator.language : window.navigator.userLanguage;
-			document.postback.navigatorPlatform.value = window.navigator.platform;
-			document.postback.navigatorUserAgent.value = window.navigator.userAgent;
-			if (window.screen) {
-				document.postback.screenWidth.value = window.screen.width;
-				document.postback.screenHeight.value = window.screen.height;
-				document.postback.screenColorDepth.value = window.screen.colorDepth;
-			}
-			document.postback.utcOffset.value = (new Date(new Date().getFullYear(), 0, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
-			document.postback.utcDSTOffset.value = (new Date(new Date().getFullYear(), 6, 1, 0, 0, 0, 0).getTimezoneOffset() / -60);
-			document.postback.browserWidth.value =  window.innerWidth || document.body.offsetWidth;
-			document.postback.browserHeight.value =  window.innerHeight || document.body.offsetHeight;
-			document.postback.hostname.value =  window.location.hostname;
-
-			document.postback.submit();
-		}
-		/*]]>*/</script>
-	</wicket:head>
 	<wicket:panel>
 		<form name="postback" wicket:id="postback" style="position:absolute; left: -10000px;">
 			<input type="text" wicket:id="navigatorAppName" value="test" />

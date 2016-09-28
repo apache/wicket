@@ -17,13 +17,13 @@
 package org.apache.wicket.stateless;
 
 import org.apache.wicket.Page;
-import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -102,5 +102,30 @@ public class StatelessFormTest extends WicketTestCase
 		parameters.add("first", "foo");
 		parameters.add("second", "bar");
 		executeTest(StatelessPageWithForm.class, parameters, "StatelessPageWithForm_expected.html");
+	}
+
+	/**
+	 * Tests that the session remains temporary (i.e. not bound) after submitting
+	 * stateless form
+	 */
+	@Test
+	public void submitStatelessFormDoesntBindSession()
+	{
+		StatelessPageWithForm.FORM_SUBMITTED.set(false);
+		try
+		{
+			tester.startPage(StatelessPageWithForm.class);
+			tester.assertRenderedPage(StatelessPageWithForm.class);
+			FormTester form = tester.newFormTester("form");
+			assertTrue(tester.getSession().isTemporary());
+			form.submit();
+			tester.assertRenderedPage(StatelessPageWithForm.class);
+			assertTrue(StatelessPageWithForm.FORM_SUBMITTED.get());
+			assertTrue(tester.getSession().isTemporary());
+		}
+		finally
+		{
+			StatelessPageWithForm.FORM_SUBMITTED.set(false);
+		}
 	}
 }

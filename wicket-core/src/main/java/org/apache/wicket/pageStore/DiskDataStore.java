@@ -74,7 +74,7 @@ public class DiskDataStore implements IDataStore
 		this.applicationName = applicationName;
 		this.fileStoreFolder = fileStoreFolder;
 		maxSizePerPageSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
-		sessionEntryMap = new ConcurrentHashMap<String, SessionEntry>();
+		sessionEntryMap = new ConcurrentHashMap<>();
 
 		try
 		{
@@ -120,8 +120,11 @@ public class DiskDataStore implements IDataStore
 			pageData = sessionEntry.loadPage(id);
 		}
 
-		log.debug("Returning data{} for page with id '{}' in session with id '{}'", new Object[] {
-				pageData != null ? "" : "(null)", id, sessionId });
+		if (log.isDebugEnabled())
+		{
+			log.debug("Returning data{} for page with id '{}' in session with id '{}'",
+					pageData != null ? "" : "(null)", id, sessionId);
+		}
 		return pageData;
 	}
 
@@ -143,8 +146,10 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, false);
 		if (sessionEntry != null)
 		{
-			log.debug("Removing data for page with id '{}' in session with id '{}'", new Object[] {
-					id, sessionId });
+			if (log.isDebugEnabled())
+			{
+				log.debug("Removing data for page with id '{}' in session with id '{}'", id, sessionId);
+			}
 			sessionEntry.removePage(id);
 		}
 	}
@@ -176,8 +181,10 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, true);
 		if (sessionEntry != null)
 		{
-			log.debug("Storing data for page with id '{}' in session with id '{}'", new Object[] {
-					id, sessionId });
+			if (log.isDebugEnabled())
+			{
+				log.debug("Storing data for page with id '{}' in session with id '{}'", id, sessionId);
+			}
 			sessionEntry.savePage(id, data);
 		}
 	}
@@ -479,12 +486,12 @@ public class DiskDataStore implements IDataStore
 		private void cleanup(final File sessionFolder)
 		{
 			File high = sessionFolder.getParentFile();
-			if (high.list().length == 0)
+			if (high != null && high.list().length == 0)
 			{
 				if (Files.removeFolder(high))
 				{
 					File low = high.getParentFile();
-					if (low.list().length == 0)
+					if (low != null && low.list().length == 0)
 					{
 						Files.removeFolder(low);
 					}
@@ -560,7 +567,12 @@ public class DiskDataStore implements IDataStore
 	 */
 	private String createPathFrom(final String sessionId)
 	{
-		int hash = Math.abs(sessionId.hashCode());
+		int sessionIdHashCode = sessionId.hashCode();
+		if (sessionIdHashCode == Integer.MIN_VALUE) {
+			// Math.abs(MIN_VALUE) == MIN_VALUE, so avoid it
+			sessionIdHashCode += 1;
+		}
+		int hash = Math.abs(sessionIdHashCode);
 		String low = String.valueOf(hash % 9973);
 		String high = String.valueOf((hash / 9973) % 9973);
 		StringBuilder bs = new StringBuilder(sessionId.length() + 10);

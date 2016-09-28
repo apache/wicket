@@ -27,6 +27,10 @@ public interface TestComponentInterface
 
 	String getInjectedOptionalField();
 
+	String getNamed1();
+
+	String getNamed2();
+
 	ITestService getInjectedFieldRed();
 
 	ITestService getInjectedFieldBlue();
@@ -35,4 +39,5 @@ public interface TestComponentInterface
 
 	Map<String, String> getInjectedTypeLiteralField();
 
+	String getEvilId();
 }

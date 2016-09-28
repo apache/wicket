@@ -26,8 +26,6 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,9 +36,6 @@ import org.slf4j.LoggerFactory;
  */
 public class XmlTag
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(XmlTag.class);
-
 	/**
 	 * Enumerated type for different kinds of component tags.
 	 */
@@ -458,7 +453,7 @@ public class XmlTag
 	{
 		if (isMutable)
 		{
-			this.name = name;
+			this.name = name.intern();
 		}
 		else
 		{
@@ -476,7 +471,7 @@ public class XmlTag
 	{
 		if (isMutable)
 		{
-			this.namespace = namespace;
+			this.namespace = namespace != null ? namespace.intern() : null;
 		}
 		else
 		{
@@ -597,7 +592,7 @@ public class XmlTag
 				if ((key != null) &&
 					((attributeToBeIgnored == null) || !key.equalsIgnoreCase(attributeToBeIgnored)))
 				{
-					buffer.append(" ");
+					buffer.append(' ');
 					buffer.append(key);
 					CharSequence value = getAttribute(key);
 
@@ -607,7 +602,7 @@ public class XmlTag
 						buffer.append("=\"");
 						value = Strings.escapeMarkup(value);
 						buffer.append(value);
-						buffer.append("\"");
+						buffer.append('"');
 					}
 				}
 			}

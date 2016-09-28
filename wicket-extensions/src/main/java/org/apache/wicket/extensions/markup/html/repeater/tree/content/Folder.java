@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.tree.content;
 
+import java.util.Optional;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree;
@@ -28,13 +30,12 @@ import org.apache.wicket.model.IModel;
  * 
  * The link is used to expand/collapse the tree depending on the {@link State} of the current node.
  * Nodes without children are not clickable. Subclasses may change this behavior by overriding
- * {@link #isClickable()} and {@link #onClick(AjaxRequestTarget)}.
+ * {@link #isClickable()} and {@link #onClick(Optional<AjaxRequestTarget>)}.
  * 
  * @author svenmeier
  */
 public class Folder<T> extends StyledLinkLabel<T>
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public static final String OTHER_CSS_CLASS_KEY = CssUtils.key(Folder.class, "other");
@@ -71,7 +72,7 @@ public class Folder<T> extends StyledLinkLabel<T>
 	 * Toggle the node's {@link State} on click.
 	 */
 	@Override
-	protected void onClick(AjaxRequestTarget target)
+	protected void onClick(Optional<AjaxRequestTarget> targetOptional)
 	{
 		T t = getModelObject();
 		if (tree.getState(t) == State.EXPANDED)
@@ -155,7 +156,7 @@ public class Folder<T> extends StyledLinkLabel<T>
 	 * 
 	 * @return CSS style class
 	 * 
-	 * @see State#CLOSED
+	 * @see State#COLLAPSED
 	 */
 	protected String getClosedStyleClass()
 	{
@@ -167,7 +168,7 @@ public class Folder<T> extends StyledLinkLabel<T>
 	 * 
 	 * @return CSS style class
 	 * 
-	 * @see State#OPEN
+	 * @see State#EXPANDED
 	 */
 	protected String getOpenStyleClass()
 	{

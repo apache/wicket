@@ -269,18 +269,10 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 */
 	protected T convertChoiceIdToChoice(String id)
 	{
-		final List<? extends T> choices = getChoices();
+		final IModel<? extends List<? extends T>> choices = getChoicesModel();
 		final IChoiceRenderer<? super T> renderer = getChoiceRenderer();
-		for (int index = 0; index < choices.size(); index++)
-		{
-			// Get next choice
-			final T choice = choices.get(index);
-			if (renderer.getIdValue(choice, index).equals(id))
-			{
-				return choice;
-			}
-		}
-		return null;
+		T object = (T) renderer.getObject(id, choices);
+		return object;
 	}
 
 	/**
@@ -396,8 +388,8 @@ public abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * Gets whether the given value represents the current selection.
 	 * 
 	 * 
-	 * aram object The object to check
-	 * 
+	 * @param object
+	 *            The object to check
 	 * @param index
 	 *            The index of the object in the collection
 	 * @param selected
