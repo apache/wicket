@@ -36,7 +36,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
 		<!-- Project Versions -->
-		<jetty.version>7.6.21.v20160908</jetty.version>
+		<jetty.version>7.6.16.v20140903</jetty.version>
 		<jetty9.version>9.0.6.v20130930</jetty9.version>
 		<spring.version>3.0.7.RELEASE</spring.version>
 		<maven.compiler.source>1.6</maven.compiler.source>
