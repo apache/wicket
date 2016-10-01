@@ -66,6 +66,8 @@ You will find the source code here:
 	    |-- wicket-eclipse-settings
 	    |-- wicket-examples
 	    |-- wicket-experimental
+	        |-- wicket-metrics
+	        `-- wicket-atmosphere
 	    |-- wicket-extensions
 	    |-- wicket-guice
 	    |-- wicket-ioc
@@ -76,7 +78,6 @@ You will find the source code here:
 	    |-- wicket-spring
 	    |-- wicket-util
 	    |-- wicket-user-guide
-	    |-- wicket-metrics
 	    `-- wicket-velocity
 	    
 
@@ -120,7 +121,8 @@ Here is a list of projects in this distribution and what they do.
    Most notably the formatting rules;
  - wicket-user-guide: the user guide of wicket
  - wicket-metrics: collects data of a running wicket application
-
+ - wicket-atmosphere: wicket atmosphere support
+ 
 Getting started
 ---------------
 
