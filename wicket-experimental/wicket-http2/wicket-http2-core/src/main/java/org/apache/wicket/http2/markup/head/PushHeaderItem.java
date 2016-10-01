@@ -253,7 +253,7 @@ public class PushHeaderItem extends HeaderItem
 
 				// if the modified since header is before the page modification time or if it can't
 				// be parsed push it.
-				else if (ifModifiedSinceFromRequestTime == null ||
+				if (ifModifiedSinceFromRequestTime == null ||
 					ifModifiedSinceFromRequestTime.before(pageModificationTime))
 				{
 					// Some browsers like IE 9-11 or Chrome 39 that does not send right headers
