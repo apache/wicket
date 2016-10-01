@@ -183,18 +183,21 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	@Override
 	protected void onDetach()
 	{
-		if ((fileUploads != null) && forceCloseStreamsOnDetach())
+		if (fileUploads != null)
 		{
-			for (FileUpload fu : fileUploads)
-			{
-				fu.closeStreams();
-			}
-			fileUploads = null;
+			if (forceCloseStreamsOnDetach()) {
+				for (FileUpload fu : fileUploads)
+				{
+					fu.closeStreams();
+				}
 
-			if (getModel() != null)
-			{
-				getModel().setObject(null);
+				if (getModel() != null)
+				{
+					getModel().setObject(null);
+				}
 			}
+
+			fileUploads = null;
 		}
 		super.onDetach();
 	}
