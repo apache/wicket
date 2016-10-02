@@ -66,8 +66,8 @@ You will find the source code here:
 	    |-- wicket-eclipse-settings
 	    |-- wicket-examples
 	    |-- wicket-experimental
-	        |-- wicket-metrics
-	        `-- wicket-atmosphere
+	    |   |-- wicket-metrics
+	    |   `-- wicket-atmosphere
 	    |-- wicket-extensions
 	    |-- wicket-guice
 	    |-- wicket-ioc
