@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -120,7 +121,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 					String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
 									"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
 									"names so the leading 'on' may break your application."
-							, event, shortName));
+							, event, shortName.toLowerCase(Locale.ENGLISH)));
 		}
 
 	}
