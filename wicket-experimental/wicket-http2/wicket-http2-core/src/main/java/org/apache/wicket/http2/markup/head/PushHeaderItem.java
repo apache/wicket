@@ -266,7 +266,6 @@ public class PushHeaderItem extends HeaderItem
 				// Push the resources if the "if-modified-since" is not available
 				push(request);
 			}
-
 		}
 	}
 
