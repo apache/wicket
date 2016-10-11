@@ -66,10 +66,22 @@ public class PushHeaderItem extends HeaderItem
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The header date format for if-modified-since / last-modified
+	 * The header date formats for if-modified-since / last-modified
 	 */
-	private static final DateTimeFormatter headerDateFormat = DateTimeFormatter
-		.ofPattern("EEE, dd MMM yyyy HH:mm:ss zzz");
+	private static final DateTimeFormatter headerDateFormat_RFC1123 = DateTimeFormatter
+		.ofPattern("EEE, dd MMM yyyy HH:mm:ss zzz")
+		.withLocale(java.util.Locale.ENGLISH)
+		.withZone(ZoneOffset.UTC); // Sun, 06 Nov 1994 08:49:37 GMT ; RFC 822, updated by RFC 1123
+
+	private static final DateTimeFormatter headerDateFormat_RFC1036 = DateTimeFormatter
+		.ofPattern("EEEE, dd-MMM-yy HH:mm:ss zzz")
+		.withLocale(java.util.Locale.ENGLISH)
+		.withZone(ZoneOffset.UTC); // Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obs. by RFC 1036
+
+	private static final DateTimeFormatter headerDateFormat_ASCTIME = DateTimeFormatter
+		.ofPattern("EEE MMM d HH:mm:ss yyyy")
+		.withLocale(java.util.Locale.ENGLISH)
+		.withZone(ZoneOffset.UTC); // Sun Nov 6 08:49:37 1994 ; ANSI C's asctime() format
 
 	/**
 	 * The http2 protocol string
@@ -213,39 +225,72 @@ public class PushHeaderItem extends HeaderItem
 		// Check if the protocol is http/2 or http/2.0 to only push the resources in this case
 		if (isHttp2(request))
 		{
-			try
+
+			Time pageModificationTime = getPageModificationTime();
+			String ifModifiedSinceHeader = pageWebRequest.getHeader("If-Modified-Since");
+
+			// Check if the if-modified-since header is set - if not push all resources
+			if (ifModifiedSinceHeader != null)
 			{
-				Time pageModificationTime = getPageModificationTime();
-				String ifModifiedSinceHeader = pageWebRequest.getHeader("If-Modified-Since");
 
-				// Check if the if-modified-since header is set - if not push all resources
-				if (ifModifiedSinceHeader != null)
+				// Try to parse RFC1123
+				Time ifModifiedSinceFromRequestTime = parseIfModifiedSinceHeader(
+					ifModifiedSinceHeader, headerDateFormat_RFC1123);
+
+				// Try to parse ASCTIME
+				if (ifModifiedSinceFromRequestTime == null)
 				{
-					// Get the time of the if-modified-since header
-					Time ifModifiedSinceFromRequestTime = Time.valueOf(Date.from(LocalDateTime
-						.parse(ifModifiedSinceHeader, headerDateFormat).toInstant(ZoneOffset.UTC)));
-
-					// If the client modification time is before the page modification time -
-					// don't push
-					if (ifModifiedSinceFromRequestTime.before(pageModificationTime))
-					{
-						// Push only if the "if-modified-since" time is before the page modification
-						push(request);
-					}
+					ifModifiedSinceFromRequestTime = parseIfModifiedSinceHeader(
+						ifModifiedSinceHeader, headerDateFormat_ASCTIME);
 				}
-				else
+
+				// Try to parse RFC1036 - because it is obsolete due to RFC 1036 check this last.
+				if (ifModifiedSinceFromRequestTime == null)
 				{
-					// Push the resources if the "if-modified-since" is not available
+					ifModifiedSinceFromRequestTime = parseIfModifiedSinceHeader(
+						ifModifiedSinceHeader, headerDateFormat_RFC1036);
+				}
+
+				// if the modified since header is before the page modification time or if it can't
+				// be parsed push it.
+				if (ifModifiedSinceFromRequestTime == null ||
+					ifModifiedSinceFromRequestTime.before(pageModificationTime))
+				{
+					// Some browsers like IE 9-11 or Chrome 39 that does not send right headers
+					// receive the resource via push all the time
 					push(request);
 				}
 			}
-			catch (DateTimeParseException e)
+			else
 			{
-				// If the "if-modified-since" time can't be parsed - the push handling is going to
-				// be processed
+				// Push the resources if the "if-modified-since" is not available
 				push(request);
 			}
 		}
+	}
+
+	/**
+	 * Parses the given if modified since header with the date time formatter
+	 * 
+	 * @param ifModifiedSinceHeader
+	 *            the if modified since header string
+	 * @param dateTimeFormatter
+	 *            the formatter to parse the header string with
+	 * @return the time or null
+	 */
+	private Time parseIfModifiedSinceHeader(String ifModifiedSinceHeader,
+		DateTimeFormatter dateTimeFormatter)
+	{
+		try
+		{
+			return Time.valueOf(Date.from(LocalDateTime
+				.parse(ifModifiedSinceHeader, dateTimeFormatter).toInstant(ZoneOffset.UTC)));
+		}
+		catch (DateTimeParseException e)
+		{
+			// NOOP
+		}
+		return null;
 	}
 
 	/**

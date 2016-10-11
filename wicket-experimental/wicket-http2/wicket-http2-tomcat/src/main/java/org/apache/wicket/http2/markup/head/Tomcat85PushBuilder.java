@@ -34,7 +34,7 @@ public class Tomcat85PushBuilder implements PushBuilder
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-		org.apache.catalina.connector.Request tomcatRequest = (org.apache.catalina.connector.Request) httpRequest;
+		org.apache.catalina.connector.RequestFacade tomcatRequest = (org.apache.catalina.connector.RequestFacade) httpRequest;
 		org.apache.catalina.servlet4preview.http.PushBuilder pushBuilder = tomcatRequest.getPushBuilder();
 		for (String path : paths)
 		{

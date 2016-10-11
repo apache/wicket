@@ -8,7 +8,7 @@ Current supported servers are:
 
 For the setup you need to follow those steps:
 
-1. Setup your server to use HTTP/2 and follow the instructions provided by the vendor specific documentation
+1. Setup your server to use HTTP/2 and follow the instructions provided by the vendor specific documentation. (Because of HTTP/2 a HTTPS setup is also required)
 
 2. Add the respective dependency for your web server to provide the push functionality.
 {code}
@@ -28,9 +28,9 @@ public class HTTP2Page extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private transient Response webPageResponse;
+	private Response webPageResponse;
 
-	private transient Request webPageRequest;
+	private Request webPageRequest;
 
 	public HTTP2Page()
 	{
@@ -65,4 +65,8 @@ The PushHeaderItem behaves like explained in the following steps:
 * When a browser requests the page a second time and the markup of the page has changed everything is going to be pushed again (200)
 * When a browser requests the page a second time and resource references has been changed but not the page markup, all changed resource references are shipped via separate requests
 
-Note: Chrome does not set cache headers if the https connection is not secure (self signed) / valid - so ensure that a valid https connection is available with your server.
+Note: Chrome does not set cache headers if the https connection is not secure (self signed) / valid - so ensure that a valid https connection is available with your server. "Browser not caching files if HTTPS is used even if it's allowed by webserver via response headers":https://bugs.chromium.org/p/chromium/issues/detail?id=110649
+
+If you want to change the cache behavior to not only look at the markup of the page and based on this proceed the push, override the method *protected Time getPageModificationTime()* of the PushHeaderItem (for more information have a look at the javadoc)
+
+To change the cache headers override the method *protected void applyPageCacheHeader()* of the PushHeaderItem
