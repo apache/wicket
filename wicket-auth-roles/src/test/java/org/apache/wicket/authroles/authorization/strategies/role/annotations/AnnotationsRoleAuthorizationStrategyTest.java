@@ -135,6 +135,22 @@ public class AnnotationsRoleAuthorizationStrategyTest
 	}
 
 	@Test
+	public void allowsInstantiationWithAllRequiredRoles() throws Exception
+	{
+		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
+			roles("role1", "role2"));
+		assertTrue(strategy.isInstantiationAuthorized(TestComponent_Roleset_Instantiate.class));
+	}
+
+	@Test
+	public void deniesInstantiationWithoutAllRequiredRoles() throws Exception
+	{
+		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
+			roles("role2"));
+		assertFalse(strategy.isInstantiationAuthorized(TestComponent_Roleset_Instantiate.class));
+	}
+
+	@Test
 	public void allowsResourceWithRequiredRole() throws Exception
 	{
 		AnnotationsRoleAuthorizationStrategy strategy = new AnnotationsRoleAuthorizationStrategy(
@@ -174,6 +190,20 @@ public class AnnotationsRoleAuthorizationStrategyTest
 		private static final long serialVersionUID = 1L;
 
 		private TestComponent_Instantiate()
+		{
+			super("notUsed");
+		}
+
+	}
+	
+	@AuthorizeInstantiations(ruleset = { @AuthorizeInstantiation({ "role1" }),
+			@AuthorizeInstantiation({ "role2" }) })
+	private static class TestComponent_Roleset_Instantiate extends WebComponent
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		private TestComponent_Roleset_Instantiate()
 		{
 			super("notUsed");
 		}
