@@ -1642,8 +1642,8 @@ public class BaseWicketTester
 	{
 		Component component = assertExists(path);
 
-		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
-			Classes.simpleName(expectedComponentClass),
+		return isTrue("component '" + Classes.name(component.getClass()) + "' is not of type: " +
+			Classes.name(expectedComponentClass),
 			expectedComponentClass.isAssignableFrom(component.getClass()));
 	}
 
