@@ -29,12 +29,18 @@ import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.SimpleWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Web Socket related settings.
@@ -43,9 +49,36 @@ import java.util.concurrent.Callable;
  */
 public class WebSocketSettings
 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(WebSocketSettings.class);
+
 	private static final MetaDataKey<WebSocketSettings> KEY = new MetaDataKey<WebSocketSettings>()
 	{
 	};
+
+	/**
+	 * A flag indicating whether JavaxWebSocketFilter is in use.
+	 * When using JSR356 based implementations the ws:// url should not
+	 * use the WicketFilter's filterPath because JSR356 Upgrade connections
+	 * are never passed to the Servlet Filters.
+	 */
+	private static boolean USING_JAVAX_WEB_SOCKET = false;
+	static
+	{
+		try
+		{
+			Class.forName("org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter");
+			USING_JAVAX_WEB_SOCKET = true;
+			LOG.debug("Using JSR356 Native WebSocket implementation!");
+		} catch (ClassNotFoundException e)
+		{
+			LOG.debug("Using non-JSR356 Native WebSocket implementation!");
+		}
+	}
+
+	private final AtomicReference<CharSequence> filterPrefix = new AtomicReference<>();
+	private final AtomicReference<CharSequence> contextPath = new AtomicReference<>();
+	private final AtomicReference<CharSequence> baseUrl = new AtomicReference<>();
 
 	/**
 	 * Holds this WebSocketSettings in the Application's metadata.
@@ -233,6 +266,48 @@ public class WebSocketSettings
 	public WebRequest newWebSocketRequest(HttpServletRequest request, String filterPath)
 	{
 		return new WebSocketRequest(new ServletRequestCopy(request), filterPath);
+	}
+
+	public void setFilterPrefix(final CharSequence filterPrefix) {
+		this.filterPrefix.set(filterPrefix);
+	}
+
+	public CharSequence getFilterPrefix() {
+		if (filterPrefix.get() == null)
+		{
+			if (USING_JAVAX_WEB_SOCKET)
+			{
+				filterPrefix.compareAndSet(null, "");
+			}
+			else
+			{
+				filterPrefix.compareAndSet(null, RequestCycle.get().getRequest().getFilterPath());
+			}
+		}
+		return filterPrefix.get();
+	}
+
+	public void setContextPath(final CharSequence contextPath) {
+		this.contextPath.set(contextPath);
+	}
+
+	public CharSequence getContextPath() {
+		contextPath.compareAndSet(null, RequestCycle.get().getRequest().getContextPath());
+		return contextPath.get();
+	}
+
+	public void setBaseUrl(final CharSequence baseUrl)
+	{
+		this.baseUrl.set(baseUrl);
+	}
+
+	public CharSequence getBaseUrl() {
+		if (baseUrl.get() == null)
+		{
+			Url _baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
+			baseUrl.compareAndSet(null, Strings.escapeMarkup(_baseUrl.toString()));
+		}
+		return baseUrl.get();
 	}
 
 	/**
