@@ -118,28 +118,45 @@ public class BaseWebSocketBehavior extends Behavior
 			variables.put("pageId", false);
 		}
 
-		Url baseUrl = component.getRequestCycle().getUrlRenderer().getBaseUrl();
-		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
-		variables.put("baseUrl", ajaxBaseUrl);
+		CharSequence baseUrl = getBaseUrl(component);
+		Args.notEmpty(baseUrl, "baseUrl");
+		variables.put("baseUrl", baseUrl);
 
-		String contextPath = component.getRequest().getContextPath();
+		String contextPath = getContextPath(component);
 		variables.put("contextPath", contextPath);
 
 		// preserve the application name for JSR356 based impl
 		variables.put("applicationName", component.getApplication().getName());
 
-		if (USING_JAVAX_WEB_SOCKET)
-		{
-			variables.put("filterPrefix", "");
-		}
-		else
-		{
-			variables.put("filterPrefix", component.getRequest().getFilterPath());
-		}
+		CharSequence filterPrefix = getFilterPrefix(component);
+		variables.put("filterPrefix", filterPrefix);
 
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
 
 		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));
+	}
+
+	protected CharSequence getFilterPrefix(final Component component) {
+		CharSequence filterPrefix;
+		if (USING_JAVAX_WEB_SOCKET)
+		{
+			filterPrefix = "";
+		}
+		else
+		{
+			filterPrefix = component.getRequest().getFilterPath();
+		}
+		return filterPrefix;
+	}
+
+	protected String getContextPath(final Component component) {
+		return component.getRequest().getContextPath();
+	}
+
+	protected CharSequence getBaseUrl(Component component) {
+		Url baseUrl = component.getRequestCycle().getUrlRenderer().getBaseUrl();
+		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
+		return ajaxBaseUrl;
 	}
 
 	@Override
