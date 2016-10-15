@@ -27,7 +27,6 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.util.collections.ClassMetaCache;
@@ -134,7 +133,7 @@ public class HttpsMapper implements IRequestMapperDelegate
 	}
 
 	/**
-	 * Construts a redirect url that should switch the user to the specified {@code scheme}
+	 * Constructs a redirect url that should switch the user to the specified {@code scheme}
 	 * 
 	 * @param handler
 	 *            request handler being accessed
@@ -146,7 +145,7 @@ public class HttpsMapper implements IRequestMapperDelegate
 	 */
 	protected String createRedirectUrl(IRequestHandler handler, Request request, Scheme scheme)
 	{
-		HttpServletRequest req = (HttpServletRequest)((WebRequest)request).getContainerRequest();
+		HttpServletRequest req = (HttpServletRequest)request.getContainerRequest();
 		String url = scheme.urlName() + "://";
 		url += req.getServerName();
 		if (!scheme.usesStandardPort(config))
