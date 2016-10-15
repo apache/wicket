@@ -237,7 +237,7 @@ public class TagUtils
 		Args.notEmpty(id, "id");
 		Args.withinRange(0, fragment.size() - 1, streamOffset, "streamOffset");
 
-		Deque<Boolean> openTagUsability = new LinkedList<Boolean>();
+		Deque<Boolean> openTagUsability = new LinkedList<>();
 		boolean canFind = true;
 
 		MarkupStream stream = new MarkupStream(fragment);
