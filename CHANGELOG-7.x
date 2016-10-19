@@ -2,6 +2,61 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.5.0
+
+** Sub-task
+
+    * [WICKET-6243] - ResourceReferenceAutolink component resolved by AutoLinkResolver ignores session locale changes
+
+** Bug
+
+    * [WICKET-5972] - Datepicker "Close" text overlays 'x' icon.
+    * [WICKET-6136] - AutoCompleteTextField issue in Android 5.1.1
+    * [WICKET-6192] - Remove recreateBookmarkablePagesAfterExpiry check in AbstractBookmarkableMapper#mapHandler
+    * [WICKET-6209] - requesting focus on disabled field fails with error in IE8
+    * [WICKET-6214] - ModalWindow broken on IE
+    * [WICKET-6215] - Test fail when non empty model is set to PasswordTextField
+    * [WICKET-6216] - Problem with queued components and border
+    * [WICKET-6217] - Enclosure broken within Border/Panel
+    * [WICKET-6219] - Fragment fails to report an error in development mode
+    * [WICKET-6221] - WicketTester - missing border path
+    * [WICKET-6222] - renderHead not called with anonymous inner Border class
+    * [WICKET-6225] - Button wrongly sets its model object as 'value' attribute
+    * [WICKET-6227] - CharSequenceResource calculates wrong length when there are unicode symbols
+    * [WICKET-6230] - Infinite redirection when using UrlPathPageParametersEncoder
+    * [WICKET-6231] - wicket:enclosure and getVariation().
+    * [WICKET-6232] - When sending binary data from server to client, wicket-websocket-jquery.js throws error "message.indexOf is not a function"
+    * [WICKET-6235] - TableTree#updateNode() fails if no corresponding node is visible
+    * [WICKET-6236] - Files.remove() causes a 5 seconds delay instead of 500ms as was intended
+    * [WICKET-6237] - PageRequestHandlerTracker doesn't work with IRequestHandlerDelegate
+    * [WICKET-6238] - pub2 Wicket example isn't switching the beer images
+    * [WICKET-6241] - CheckingObjectOutputStream should track the original instance, before writeReplace()
+    * [WICKET-6242] - Weak concurrency management in AuthenticatedWebSession#signedIn
+    * [WICKET-6244] - Palette does not list unselected options
+    * [WICKET-6245] - Open up CsrfPreventionRequestCycleListener for extension
+    * [WICKET-6249] - Invalid state of LoadableDetachableModel with exception during load()
+    * [WICKET-6250] - FileUploadField does not deteach models and fails to null the reference to the transient fileUploads field if forceCloseStreamsOnDetach is false
+    * [WICKET-6254] - Wicket WebSockets problem behind HTTP proxy without servlet context
+
+** Improvement
+
+    * [WICKET-5866] - Reconsider generics of IConverterLocator#getConverter()
+    * [WICKET-6206] - Allow to use custom anticache parameter value for Image component
+    * [WICKET-6210] - FileUpload does not support files of zero size
+    * [WICKET-6211] - PasswordTextField should clear password by default
+    * [WICKET-6226] -  DOCTYPE URL in properties.xml example in wicket documentation won't work.
+    * [WICKET-6229] - Introduce a new setting in ExceptionSettings to control whether to throw exception or log a WARN when requesting for markup id on non-renderable component
+    * [WICKET-6233] - Add component info in the error messages related to WicketTester#assertComponentOnAjaxResponse() 
+    * [WICKET-6234] - Log the decrypted url in CryptoMapper for debugging purposes
+    * [WICKET-6239] - Use Response#addHeader() instead of #setContentLength()
+    * [WICKET-6240] - Hook method to display more information on ExceptionErrorPage
+
+** New Feature
+
+    * [WICKET-5623] - Custom Getters and Setters for PropertyResolver
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.4.0
 
 ** Bug
