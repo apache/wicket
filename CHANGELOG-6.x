@@ -2,6 +2,40 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.25.0
+
+** Sub-task
+
+    * [WICKET-6218] - backport fix for WICKET-6172 to Wicket 6.x
+
+** Bug
+
+    * [WICKET-5972] - Datepicker "Close" text overlays 'x' icon.
+    * [WICKET-6136] - AutoCompleteTextField issue in Android 5.1.1
+    * [WICKET-6209] - requesting focus on disabled field fails with error in IE8
+    * [WICKET-6214] - ModalWindow broken on IE
+    * [WICKET-6219] - Fragment fails to report an error in development mode
+    * [WICKET-6225] - Button wrongly sets its model object as 'value' attribute
+    * [WICKET-6227] - CharSequenceResource calculates wrong length when there are unicode symbols
+    * [WICKET-6230] - Infinite redirection when using UrlPathPageParametersEncoder
+    * [WICKET-6232] - When sending binary data from server to client, wicket-websocket-jquery.js throws error "message.indexOf is not a function"
+    * [WICKET-6235] - TableTree#updateNode() fails if no corresponding node is visible
+    * [WICKET-6236] - Files.remove() causes a 5 seconds delay instead of 500ms as was intended
+    * [WICKET-6237] - PageRequestHandlerTracker doesn't work with IRequestHandlerDelegate
+    * [WICKET-6245] - Open up CsrfPreventionRequestCycleListener for extension
+    * [WICKET-6246] - WebSocket request while Ajax request leads to error regarding HtmlHeaderCotnainer
+
+** Improvement
+
+    * [WICKET-6206] - Allow to use custom anticache parameter value for Image component
+    * [WICKET-6210] - FileUpload does not support files of zero size
+    * [WICKET-6226] -  DOCTYPE URL in properties.xml example in wicket documentation won't work.
+    * [WICKET-6233] - Add component info in the error messages related to WicketTester#assertComponentOnAjaxResponse() 
+    * [WICKET-6234] - Log the decrypted url in CryptoMapper for debugging purposes
+    * [WICKET-6239] - Use Response#addHeader() instead of #setContentLength()
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.24.0
 
 ** Bug
