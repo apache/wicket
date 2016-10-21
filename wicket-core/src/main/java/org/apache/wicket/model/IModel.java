@@ -138,21 +138,21 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a IModel applying the given combining function to the contained object of this and
-	 * the given other model, if they are not null.
+	 * Returns a @IModel@ applying the given combining function to the current model object and 
+	 * to the one from the other model, if they are not null.
 	 *
 	 * @param <R>
 	 *            the resulting type
 	 * @param <U>
 	 *            the other models type
-	 * @param combiner
-	 *            a function combining this and the others object to a result.
 	 * @param other
 	 *            another model to be combined with this one
+	 * @param combiner
+	 *            a function combining this and the others object to a result.
 	 * @return a new IModel
 	 */
-	default <R, U> IModel<R> mapWith(WicketBiFunction<? super T, ? super U, R> combiner,
-		IModel<U> other)
+	default <R, U> IModel<R> combineWith(IModel<U> other,
+		WicketBiFunction<? super T, ? super U, R> combiner)
 	{
 		Args.notNull(combiner, "combiner");
 		Args.notNull(other, "other");
@@ -171,7 +171,7 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a IModel applying the given mapper to the contained object, if it is not NULL.
+	 * Returns a IModel applying the given IModel-bearing mapper to the contained object, if it is not NULL.
 	 *
 	 * @param <R>
 	 *            the new type of the contained object

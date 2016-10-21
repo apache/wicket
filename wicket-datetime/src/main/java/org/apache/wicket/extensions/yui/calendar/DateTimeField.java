@@ -232,18 +232,14 @@ public class DateTimeField extends FormComponentPanel<Date>
 		{
 			private static final long serialVersionUID = 1L;
 
-			@SuppressWarnings("unchecked")
 			@Override
-			public <C> IConverter<C> getConverter(Class<C> type)
+			protected IConverter<?> createConverter(Class<?> type)
 			{
 				if (Integer.class.isAssignableFrom(type))
 				{
-					return (IConverter<C>)MINUTES_CONVERTER;
+					return MINUTES_CONVERTER;
 				}
-				else
-				{
-					return super.getConverter(type);
-				}
+				return null;
 			}
 		};
 		minutesField.add(new RangeValidator<>(0, 59));

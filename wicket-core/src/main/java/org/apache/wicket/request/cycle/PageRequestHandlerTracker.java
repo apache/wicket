@@ -19,6 +19,7 @@ package org.apache.wicket.request.cycle;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.IRequestHandlerDelegate;
 
 /**
  * Registers and retrieves first and last executed {@link IPageRequestHandler} in a request cycle.
@@ -67,9 +68,10 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 	 */
 	private void registerLastHandler(RequestCycle cycle, IRequestHandler handler)
 	{
-		if (handler instanceof IPageRequestHandler)
+		final IPageRequestHandler pageRequestHandler = findPageRequestHandler(handler);
+		if (pageRequestHandler != null)
 		{
-			cycle.setMetaData(LAST_HANDLER_KEY, (IPageRequestHandler) handler);
+			cycle.setMetaData(LAST_HANDLER_KEY, pageRequestHandler);
 		}
 	}
 
@@ -83,14 +85,37 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 	 */
 	private void registerFirstHandler(RequestCycle cycle, IRequestHandler handler)
 	{
-		if (handler instanceof IPageRequestHandler && getFirstHandler(cycle) == null)
+		if (getFirstHandler(cycle) == null)
 		{
-			cycle.setMetaData(FIRST_HANDLER_KEY, (IPageRequestHandler)handler);
+			final IPageRequestHandler pageRequestHandler = findPageRequestHandler(handler);
+			if (pageRequestHandler != null)
+			{
+				cycle.setMetaData(FIRST_HANDLER_KEY, pageRequestHandler);
+			}
 		}
 	}
 
+	/**
+	 * Looking for IPageRequestHandler 
+	 * 
+	 * @param handler
+	 * @return IPageRequestHandler if exist otherwise null
+	 */
+	private IPageRequestHandler findPageRequestHandler(IRequestHandler handler)
+	{
+		if (handler instanceof IPageRequestHandler)
+		{
+			return (IPageRequestHandler)handler;
+		}
+	    if (handler instanceof IRequestHandlerDelegate)
+	    {
+	    	return findPageRequestHandler(((IRequestHandlerDelegate)handler).getDelegateHandler());
+	    }
+	    return null;
+	}
+
    /**
-	* retrieves last handler from requestcycle
+	* retrieves last handler from request cycle
 	*
 	* @param cycle
 	* @return last handler

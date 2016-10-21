@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
@@ -71,6 +69,8 @@ import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -739,10 +739,15 @@ public class Form<T> extends WebMarkupContainer
 	 * 
 	 * @see Form#validate()
 	 */
-	public final void onFormSubmitted(IFormSubmitter submitter)
+	public final void onFormSubmitted(final IFormSubmitter submitter)
 	{
-		markFormsSubmitted();
-
+		final IFormSubmitter actualSubmitter =  submitter != null ? submitter :
+			findActualSubmitter();
+		//find the actual form to process
+		final Form<?> formToProcess = findFormToProcess(actualSubmitter);
+		
+		formToProcess.markFormsSubmitted();
+		
 		if (handleMultiPart())
 		{
 			// Tells FormComponents that a new user input has come
@@ -757,49 +762,19 @@ public class Form<T> extends WebMarkupContainer
 			}
 			else
 			{
-				// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
-				if (submitter == null)
-				{
-					submitter = findSubmittingButton();
-
-					if (submitter instanceof IFormSubmittingComponent)
-					{
-						IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
-						Component component = (Component)submitter;
-
-						if (!component.isVisibleInHierarchy())
-						{
-							throw new WicketRuntimeException("Submit Button " +
-								submittingComponent.getInputName() + " (path=" +
-								component.getPageRelativePath() + ") is not visible");
-						}
-
-						if (!component.isEnabledInHierarchy())
-						{
-							throw new WicketRuntimeException("Submit Button " +
-								submittingComponent.getInputName() + " (path=" +
-								component.getPageRelativePath() + ") is not enabled");
-						}
-					}
-				}
-
 				// When processing was triggered by a Wicket IFormSubmittingComponent and that
 				// component indicates it wants to be called immediately
 				// (without processing), call the IFormSubmittingComponent.onSubmit* methods right
 				// away.
-				if (submitter != null && !submitter.getDefaultFormProcessing())
+				if (actualSubmitter != null && !actualSubmitter.getDefaultFormProcessing())
 				{
-					submitter.onSubmit();
-					submitter.onAfterSubmit();
+					actualSubmitter.onSubmit();
+					actualSubmitter.onAfterSubmit();
 				}
 				else
 				{
-					// the submit request might be for one of the nested forms, so let's
-					// find the right one:
-					final Form<?> formToProcess = findFormToProcess(submitter);
-
 					// process the form for this request
-					formToProcess.process(submitter);
+					formToProcess.process(actualSubmitter);
 				}
 			}
 		}
@@ -807,7 +782,7 @@ public class Form<T> extends WebMarkupContainer
 		// onError
 		else if (hasError())
 		{
-			callOnError(submitter);
+			callOnError(actualSubmitter);
 		}
 
 		// update auto labels if we are inside an ajax request
@@ -821,6 +796,39 @@ public class Form<T> extends WebMarkupContainer
 				}
 			});
 		});
+	}
+	
+	/**
+	 * Find the actual submitter for this form. If such component
+	 * is found but it's not enabled or visible, an exception is thrown.
+	 * 
+	 * @return the actual submitter
+	 */
+	private IFormSubmitter findActualSubmitter() 
+	{
+		IFormSubmitter actualSubmitter = findSubmittingButton();
+
+		if (actualSubmitter instanceof IFormSubmittingComponent)
+		{
+			IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)actualSubmitter;
+			Component component = (Component)actualSubmitter;
+
+			if (!component.isVisibleInHierarchy())
+			{
+				throw new WicketRuntimeException("Submit Button " +
+					submittingComponent.getInputName() + " (path=" +
+					component.getPageRelativePath() + ") is not visible");
+			}
+
+			if (!component.isEnabledInHierarchy())
+			{
+				throw new WicketRuntimeException("Submit Button " +
+					submittingComponent.getInputName() + " (path=" +
+					component.getPageRelativePath() + ") is not enabled");
+			}
+		}
+		
+		return actualSubmitter;
 	}
 
 	/**
@@ -900,7 +908,6 @@ public class Form<T> extends WebMarkupContainer
 	 * 
 	 * @return Whether this form wants to be submitted too if a nested form is submitted.
 	 */
-	// TODO wicket-7 migration guide: changed from public to protected
 	protected boolean wantSubmitOnNestedFormSubmit()
 	{
 		return false;

@@ -93,41 +93,41 @@ public class IModelTest extends Assert
 	}
 
 	@Test
-	public void withMap()
+	public void combineWith()
 	{
 		IModel<String> janeModel = Model.of("Jane");
 		WicketBiFunction<Person, String, String> function =
 				(WicketBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
-		IModel<String> relationShipModel = Model.of(person).mapWith(function, janeModel);
+		IModel<String> relationShipModel = Model.of(person).combineWith(janeModel, function);
 		assertThat(relationShipModel.getObject(), is(equalTo("John is in relationship with Jane")));
 	}
 
 	@Test
-	public void withMapWithNullObject()
+	public void combineWithNullObject()
 	{
 		IModel<String> janeModel = Model.of((String)null);
 		WicketBiFunction<Person, String, String> function =
 				(WicketBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
-		IModel<String> relationShipModel = Model.of(person).mapWith(function, janeModel);
+		IModel<String> relationShipModel = Model.of(person).combineWith(janeModel, function);
 		assertThat(relationShipModel.getObject(), is(nullValue()));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void withMapWithNullModel()
+	public void combineWithNullModel()
 	{
 		IModel<String> janeModel = null;
 		WicketBiFunction<Person, String, String> function =
 				(WicketBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
-		Model.of(person).mapWith(function, janeModel);
+		Model.of(person).combineWith(janeModel, function);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void withMapWithNullCombiner()
+	public void combineWithNullCombiner()
 	{
-		Model.of(person).mapWith(null, Model.of("Jane"));
+		Model.of(person).combineWith(Model.of("Jane"), null);
 	}
 
 	@Test

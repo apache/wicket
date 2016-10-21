@@ -74,6 +74,23 @@ children[0].name ...
 mapField[key].subfield ...
 {code}
 
+h3. LambdaModel
+
+@PropertyModel@ uses textual expressions to resolve object properties. That's nice but it comes with some drawbacks. For example the expression can not be checked at compile time and is not refactory-friendly. To overcome these problems with Wicket 8 a new kind of lambda-based model has been introduced: @org.apache.wicket.model.LambdaModel@. This model uses lambda expressions to get/set model object. Here is the signature of its constructor:
+
+{code}
+public LambdaModel(WicketSupplier<T> getter, WicketConsumer<T> setter)
+{code}
+
+In the following code we use method references to operate on a specific object property:
+
+{code}
+Person person = new Person();
+IModel<String> personNameModel = new LambdaModel<>(person::getName, person::setName);
+{code}
+
+As we have seen for @Model@ also @LambdaModel@ comes with factory method @LambdaModel.of@.
+
 h3. CompoundPropertyModel and model inheritance
 
 Class @org.apache.wicket.model.CompoundPropertyModel@ is a particular kind of model which is usually used in conjunction with another Wicket feature called model inheritance. With this feature, when a component needs to use a model but none has been assigned to it, it will search through the whole container hierarchy for a parent with an inheritable model. Inheritable models are those which implement interface @org.apache.wicket.model.IComponentInheritedModel@ and @CompoundPropertyModel@ is one of them. Once a @CompoundPropertyModel@ has been inherited by a component, it will behave just like a PropertyModel using the id of the component as property expression. As a consequence, to make the most of CompoundPropertyModel we must assign it to one of the containers of a given component, rather than directly to the component itself.

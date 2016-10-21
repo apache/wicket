@@ -143,10 +143,11 @@ advanced:
   title: Wicket advanced topics
   advanced_1: Enriching components with behaviors
   advanced_2: Generating callback URLs with IRequestListener
-  advanced_3: Initializers
-  advanced_4: Using JMX with Wicket
-  advanced_5: Generating HTML markup from code
-  advanced_6: Summary
+  advanced_3: Wicket events infrastructure
+  advanced_4: Initializers
+  advanced_5: Using JMX with Wicket
+  advanced_6: Generating HTML markup from code
+  advanced_7: Summary
 ajax:
   title: Working with AJAX
   ajax_1: How to use AJAX components and behaviors
@@ -176,9 +177,11 @@ security:
   security_1: Authentication
   security_2: Authorizations
   security_3: Using HTTPS protocol
-  security_4: URLs encryption in detail 
+  security_4: URLs encryption in detail
+  security_4_1: CSRF protection
   security_5: Package Resource Guard
-  security_6: Summary
+  security_6: External Security Checks
+  security_7: Summary
 testing:
   title: Test Driven Development with Wicket
   testing_1: Utility class WicketTester
@@ -215,6 +218,10 @@ internals:
   autocomponents: Markup parsing and Autocomponents
 lambdas:
   title: Lambda Expressions
+http2push:
+  title: Wicket HTTP/2 Support (Experimental)
+  http2push_1: Example Usage
+  http2push_2: Create server specific http/2 push support
 monitoring:
   title: Wicket Metrics Monitoring (Experimental)
   monitoring_1: Example setup

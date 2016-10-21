@@ -1,0 +1,3 @@
+With Wicket 8.0.0-M2 the new HTTP/2 push API is supported which uses the PushBuilder.
+
+The advantage of this is that you reduce the latency and thus save a lot of time in waiting for requests.

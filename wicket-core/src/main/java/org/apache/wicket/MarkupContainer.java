@@ -1430,11 +1430,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// Get element as tag
 			final ComponentTag tag = (ComponentTag)element;
 
+			if (tag instanceof WicketTag && ((WicketTag)tag).isFragmentTag()){
+				return false;
+			}
+
 			// Get component id
 			final String id = tag.getId();
 
 			// Get the component for the id from the given container
 			Component component = get(id);
+
 			if (component == null)
 			{
 				component = ComponentResolvers.resolve(this, markupStream, tag, null);
@@ -1638,7 +1643,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	protected final void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		while (markupStream.hasMore())
+		while (markupStream.isCurrentIndexInsideTheStream())
 		{
 			// In case of Page we need to render the whole file. For all other components just what
 			// is in between the open and the close tag.
@@ -2020,8 +2025,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			((IQueueRegion)child).dequeue();			
 		}
 		
-		if (childType == ChildToDequeueType.MARKUP_CONTAINER ||
-			childType == ChildToDequeueType.BORDER)
+		if (childType == ChildToDequeueType.MARKUP_CONTAINER)
 		{
 			// propagate dequeuing to containers
 			MarkupContainer childContainer = (MarkupContainer)child;
@@ -2034,7 +2038,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		if (childType == ChildToDequeueType.NULL || 
 			childType == ChildToDequeueType.QUEUE_REGION)
 		{
-				dequeue.skipToCloseTag();
+			dequeue.skipToCloseTag();
 		}
 
 		// pull the close tag off

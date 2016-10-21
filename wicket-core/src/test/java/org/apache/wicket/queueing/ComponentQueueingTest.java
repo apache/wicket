@@ -648,7 +648,22 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		assertThat(p, hasPath(new Path(a, border, r, s, border.getBodyContainer(), b)));
 	}
+	
+	@Test
+	public void queueBorderBody() throws Exception
+	{
 
+		TestBorder border = new TestBorder("border");
+		border.setBorderMarkup("<wicket:border><wicket:body/></wicket:border>");
+
+		TestPage p = new TestPage();
+		p.setPageMarkup("<div wicket:id=\"border\"><span wicket:id=\"label\"></span></div>");
+		
+		p.add(border);
+		border.queue(new Label("label", "test"));
+		
+		tester.startPage(p);
+	}
 
 	@Test
 	public void border_nested()
@@ -828,6 +843,30 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	    page.queue(container);
 		
+		tester.startPage(page);	
+	}
+	@Test
+	public void queueComponentInsideBorderAndEnclosure()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup(" <div wicket:id=\"panel\"></div>");
+		
+		TestPanel panel = new TestPanel("panel");
+		panel.setPanelMarkup("<wicket:panel>\n"
+			+ "<div wicket:id=\"border\">\n" +
+			"    <div wicket:enclosure=\"child\">\n" +
+			"      <p wicket:id=\"child\">1</p>\n" +			
+			"    </div>\n" +
+			"  </div>\n" +
+			"</wicket:panel>");
+		
+		TestBorder border = new TestBorder("border");
+		border.setBorderMarkup("<wicket:border><wicket:body/></wicket:border>");
+		
+		panel.add(border);
+		page.add(panel);
+		border.add(new Label("child"));
+				
 		tester.startPage(page);	
 	}
 

@@ -400,6 +400,8 @@ public class CryptoMapper implements IRequestMapperDelegate
 			url = decryptRequestListenerParameter(request, encryptedUrl);
 		}
 
+		log.debug("Url '{}' has been decrypted to '{}'", encryptedUrl, url);
+
 		return url;
 	}
 

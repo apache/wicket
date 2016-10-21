@@ -57,3 +57,6 @@ h1, h2, #main a, #main .project strong, .local .local-title .toggle a, #table-of
    #col2 {display:none!important;}
   }
 
+.li-nested-content {
+	margin: .75em 0 .75em 32px
+}

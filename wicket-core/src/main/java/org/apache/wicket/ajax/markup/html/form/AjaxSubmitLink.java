@@ -132,8 +132,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * will be called <em>before</em> the form's onSubmit method.
 	 * 
 	 * @param target the {@link AjaxRequestTarget}
-	 * 
-	 * @param form the {@link Form}
 	 */
 	protected void onSubmit(AjaxRequestTarget target)
 	{
@@ -144,8 +142,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * will be called <em>after</em> the form's onSubmit method.
 	 * 
 	 * @param target the {@link AjaxRequestTarget}
-	 * 
-	 * @param form the {@link Form}
 	 */
 	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
@@ -206,14 +202,13 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * {@link Form#onError()}.
 	 * 
 	 * @param target
-	 * @param form
 	 */
 	protected void onError(AjaxRequestTarget target)
 	{
 	}
 
 	/**
-	 * Use {@link #onSubmit(AjaxRequestTarget, Form)} instead.
+	 * Use {@link #onSubmit(AjaxRequestTarget)} instead.
 	 */
 	@Override
 	public final void onSubmit()
@@ -222,7 +217,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * Use {@link #onAfterSubmit(AjaxRequestTarget, Form)} instead.
+	 * Use {@link #onAfterSubmit(AjaxRequestTarget)} instead.
 	 */
 	@Override
 	public final void onAfterSubmit()

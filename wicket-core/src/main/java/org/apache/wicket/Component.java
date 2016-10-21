@@ -77,11 +77,13 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -725,7 +727,7 @@ public abstract class Component
 	public IMarkupFragment getMarkup()
 	{
 		// Markup already determined or preset?
-		if (markup != null)
+		if (markup != null && markupHasCurrentVariation())
 		{
 			return markup;
 		}
@@ -754,6 +756,18 @@ public abstract class Component
 		// Ask the parent for find the markup for me
 		markup = parent.getMarkup(this);
 		return markup;
+	}
+
+	/**
+	 * Check if the loaded markup has the current 
+	 * variation.
+	 * 
+	 * @return true if the markup has the current variation
+	 */
+	private boolean markupHasCurrentVariation()
+	{
+		return Objects.equal(getVariation(), 
+			markup.getMarkupResourceStream().getVariation());
 	}
 
 	/**
@@ -1358,17 +1372,36 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the converter that should be used by this component.
-	 * 
+	 * Get the converter that should be used by this component, delegates to
+	 * {@link #createConverter(Class)} and then to the application's
+	 * {@link IConverterLocator}.
+	 *
 	 * @param type
 	 *            The type to convert to
-	 * 
+	 *
 	 * @return The converter that should be used by this component
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> type)
-	{
+	public <C> IConverter<C> getConverter(Class<C> type) {
+		IConverter<?> converter = createConverter(type);
+		if (converter != null) {
+			return (IConverter<C>) converter;
+		}
 		return getApplication().getConverterLocator().getConverter(type);
+	}
+
+	/**
+	 * Factory method for converters to be used by this component,
+	 * returns {@code null} by default.
+	 *
+	 * @param type
+	 *            The type to convert to
+	 *
+	 * @return a converter to be used by this component
+	 */
+	protected IConverter<?> createConverter(Class<?> type) {
+		return null;
 	}
 
 	/**
@@ -2530,19 +2563,34 @@ public abstract class Component
 		try
 		{
 			// Render open tag
-			if (getRenderBodyOnly())
+			boolean renderBodyOnly = getRenderBodyOnly();
+			if (renderBodyOnly)
 			{
+				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
+				if (Application.exists())
+				{
+					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+				}
+
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
-					log.warn(String.format(
-						"Markup id set on a component that renders its body only. "
-							+ "Markup id: %s, component id: %s.", getMarkupId(), getId()));
+					String message = String.format("Markup id set on a component that renders its body only. " +
+					                               "Markup id: %s, component id: %s.", getMarkupId(), getId());
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
-					log.warn(String.format(
-						"Placeholder tag set on a component that renders its body only. "
-							+ "Component id: %s.", getId()));
+					String message = String.format("Placeholder tag set on a component that renders its body only. " +
+					                               "Component id: %s.", getId());
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 			}
 			else
@@ -2561,9 +2609,9 @@ public abstract class Component
 				// Render close tag
 				if (openTag.isOpen())
 				{
-					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+					renderClosingComponentTag(markupStream, tag, renderBodyOnly);
 				}
-				else if (getRenderBodyOnly() == false)
+				else if (renderBodyOnly == false)
 				{
 					if (needToRenderTag(openTag))
 					{
@@ -2706,7 +2754,7 @@ public abstract class Component
 					RequestCycle.get().setResponse(oldResponse);
 				}
 				// Then let the component itself to contribute to the header
-				renderHead(this, response);
+				renderHead(response);
 
 				response.markRendered(this);
 			}
@@ -4000,18 +4048,35 @@ public abstract class Component
 			if ((tag instanceof WicketTag) && !tag.isClose() &&
 				!getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER))
 			{
+				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
+				if (Application.exists())
+				{
+					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+				}
+
+				String tagName = tag.getNamespace() + ":" + tag.getName();
+				String componentId = getId();
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
-					log.warn(String.format(
-						"Markup id set on a component that is usually not rendered into markup. "
-							+ "Markup id: %s, component id: %s, component tag: %s.", getMarkupId(),
-						getId(), tag.getName()));
+					String message = String.format("Markup id set on a component that is usually not rendered into markup. " +
+					                               "Markup id: %s, component id: %s, component tag: %s.",
+					                               getMarkupId(), componentId, tagName);
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
-					log.warn(String.format(
-						"Placeholder tag set on a component that is usually not rendered into markup. "
-							+ "Component id: %s, component tag: %s.", getId(), tag.getName()));
+					String message = String.format(
+							"Placeholder tag set on a component that is usually not rendered into markup. " +
+							"Component id: %s, component tag: %s.", componentId, tagName);
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 			}
 
@@ -4444,25 +4509,6 @@ public abstract class Component
 	public boolean canCallListenerInterface()
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
-	}
-
-	/**
-	 * CAUTION: this method is not meant to be overridden like it was in wicket 1.4 when
-	 * implementing {@link IHeaderContributor}. overload
-	 * {@link Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)} instead to
-	 * contribute to the response header.
-	 * 
-	 * @param component
-	 * @param response
-	 */
-	public final void renderHead(Component component, IHeaderResponse response)
-	{
-		if (component != this)
-		{
-			throw new IllegalStateException(
-				"This method is only meant to be invoked on the component where the parameter component==this");
-		}
-		renderHead(response);
 	}
 
 	/**

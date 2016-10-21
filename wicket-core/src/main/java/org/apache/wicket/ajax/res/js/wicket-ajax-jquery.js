@@ -1098,13 +1098,7 @@
 				this._executeHandlers(attrs.sh, attrs, null, null, 'success');
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_SUCCESS, attrs, null, null, 'success');
 
-				// set the focus to the last component
-				if (Wicket.Browser.isIELessThan9()) {
-					// WICKET-5755
-					window.setTimeout("Wicket.Focus.requestFocus();", 0);
-				} else {
-					Wicket.Focus.requestFocus();
-				}
+				Wicket.Focus.requestFocus();
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
 				return FunctionsExecuter.DONE;
@@ -2118,16 +2112,17 @@
 						var css = Wicket.Head.createElement("link");
 
 						// copy supplied attributes only.
-						for (var attrIdx = 0; attrIdx < node.attributes.length; attrIdx++) {
-							var attr = node.attributes[attrIdx];
-							css.setAttribute(attr.name, attr.value)
-						}
+						var attributes = $(node).prop("attributes");
+						var $css = $(css);
+						$.each(attributes, function() {
+							$css.attr(this.name, this.value);
+						});
 
 						// add element to head
 						Wicket.Head.addElement(css);
 
 						// cross browser way to check when the css is loaded
-						// taked from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
+						// taken from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
 						// this makes a second GET request to the css but it gets it either from the cache or
 						// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
 						var img = document.createElement('img');
@@ -2701,30 +2696,33 @@
 
 					if (toFocus) {
 						Wicket.Log.info("Calling focus on " + WF.lastFocusId);
-						try {
-							if (WF.focusSetFromServer) {
-								// WICKET-5858
-								window.setTimeout(function () { toFocus.focus(); }, 0);
-							} else {
-								// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
-								var temp = toFocus.onfocus;
-								toFocus.onfocus = null;
-								
-								// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
-								window.setTimeout(function () {toFocus.focus(); toFocus.onfocus = temp; }, 0);
+
+						var safeFocus = function() {
+							try {
+								toFocus.focus();
+							} catch (ignore) {
+								// WICKET-6209 IE fails if toFocus is disabled
 							}
-						} catch (ignore) {
+						};
+
+						if (WF.focusSetFromServer) {
+							// WICKET-5858
+							window.setTimeout(safeFocus, 0);
+						} else {
+							// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
+							var temp = toFocus.onfocus;
+							toFocus.onfocus = null;
+
+							// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
+							window.setTimeout(function () { safeFocus(); toFocus.onfocus = temp; }, 0);
 						}
-					}
-					else {
+					} else {
 						WF.lastFocusId = "";
 						Wicket.Log.info("Couldn't set focus on element with id '" + WF.lastFocusId + "' because it is not in the page anymore");
 					}
-				}
-				else if (WF.refocusLastFocusedComponentAfterResponse) {
+				} else if (WF.refocusLastFocusedComponentAfterResponse) {
 					Wicket.Log.info("last focus id was not set");
-				}
-				else {
+				} else {
 					Wicket.Log.info("refocus last focused component not needed/allowed");
 				}
 				Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;

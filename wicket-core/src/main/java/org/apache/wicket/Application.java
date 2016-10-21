@@ -51,7 +51,6 @@ import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.markup.parser.filter.WicketLinkTagHandler;
 import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
-import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
@@ -643,7 +642,6 @@ public abstract class Application implements UnboundListener, IEventSink
 		pageSettings.addComponentResolver(new HtmlHeaderResolver());
 		pageSettings.addComponentResolver(new WicketLinkTagHandler());
 		pageSettings.addComponentResolver(new WicketMessageResolver());
-		pageSettings.addComponentResolver(new FragmentResolver());
 		pageSettings.addComponentResolver(new RelativePathPrefixHandler());
 		pageSettings.addComponentResolver(new EnclosureHandler());
 		pageSettings.addComponentResolver(new InlineEnclosureHandler());
@@ -679,7 +677,12 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * @return the exception mapper provider
+	 * Returns a supplier of {@link IExceptionMapper} that will be used to
+	 * handle exceptions which were not handled by any
+	 * {@link IRequestCycleListener#onException(RequestCycle, Exception) request cycle listener}.
+	 *
+	 * @return the exception mapper supplier
+	 * @see IRequestCycleListener#onException(RequestCycle, Exception)
 	 */
 	public Supplier<IExceptionMapper> getExceptionMapperProvider()
 	{

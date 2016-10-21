@@ -13,12 +13,8 @@ Class AuthenticatedWebSession comes with the following set of public methods to 
 * *authenticate(String username, String password)*: this is an abstract method that must be implemented by every subclass of @AuthenticatedWebSession@. It should contain the actual code that checks for user's identity. It returns a boolean value which is true if authentication has succeeded or false otherwise.
 * *signIn(String username, String password)*: this method internally calls authenticate and set the flag signedIn to true if authentication succeeds.
 * *isSignedIn()*:getter method for flag signedIn.
-* *signOut()*: sets the flag signedIn to false.
-* *invalidate()*: calls signOut and invalidates session.
-
-{warning}
-Remember that signOut does not discard any session-relative data. If we want to get rid of these data, we must invoke method invalidate instead of signOut.
-{warning}
+* *invalidate()*: sets the flag signedIn to false and invalidates session.
+* *signOut()*: an alias of *invalidate()*.
 
 Another abstract method we must implement when we use @AuthenticatedWebSession@ is  getRoles which is inherited from parent class @AbstractAuthenticatedWebSession@. This method can be ignored for now as it will be discussed later when we will talk about role-based authorization.
 
@@ -28,9 +24,9 @@ Class AuthenticatedWebApplication provides the following methods to support form
 
 * *getWebSessionClass()*: abstract method that returns the session class to use for this application. The returned class must be a subclass of @AbstractAuthenticatedWebSession@.
 * *getSignInPageClass()*: abstract method that returns the page to use as sign in page when a user must be authenticated.
-* *restartResponseAtSignInPage()*: forces the current response to restart at the sign in page. After we have used this method to redirect a user, we can make her/him return to the original page calling @Componet@'s method @continueToOriginalDestination()@.
+* *restartResponseAtSignInPage()*: forces the current response to restart at the sign in page. After we have used this method to redirect a user, we can make her/him return to the original page calling @Component@'s method @continueToOriginalDestination()@.
 
-The other methods implemented inside @AuthenticatedWebApplication@ will be introduced when we will talk about authorizations.
+The other methods implemented inside @AuthenticatedWebApplication@ will be introduced when we talk about authorization.
 
 h3. A basic example of authentication
 
@@ -52,14 +48,8 @@ public class AuthenticatedPage extends WebPage {
    @Override
    protected void onInitialize() {
       super.onInitialize();
-      add(new Link("goToHomePage") {
+      add(new BookmarkablePageLink("goToHomePage", getApplication().getHomePage()));
 
-         @Override
-         public void onClick() {
-            setResponsePage(getApplication().getHomePage());
-         }
-      });
-      
       add(new Link("logOut") {
 
          @Override
@@ -85,7 +75,7 @@ public class SignInPage extends WebPage {
    protected void onInitialize() {
       super.onInitialize();
       
-      StatelessForm form = new StatelessForm("form"){
+      StatelessForm form = new StatelessForm("form") {
          @Override
          protected void onSubmit() {
             if(Strings.isEmpty(username))
@@ -98,7 +88,7 @@ public class SignInPage extends WebPage {
          }
       };
       
-      form.setDefaultModel(new CompoundPropertyModel(this));
+      form.setModel(new CompoundPropertyModel(this));
       
       form.add(new TextField("username"));
       form.add(new PasswordTextField("password"));
@@ -108,7 +98,7 @@ public class SignInPage extends WebPage {
 }
 {code}
 
-The form is responsible for handling user authentication inside its method onSubmit. The username and password are passed to @AuthenticatedWebSession@'s method @signIn(username, password)@ and if authentication succeeds, the user is redirected to the original page with method @continueToOriginalDestination@.
+The form is responsible for handling user authentication inside its method @onSubmit()@. The username and password are passed to @AuthenticatedWebSession@'s method @signIn(username, password)@ and if authentication succeeds, the user is redirected to the original page with method @continueToOriginalDestination@.
 
 The session class and the application class used in the project are reported here:
 
@@ -118,7 +108,7 @@ The session class and the application class used in the project are reported her
 public class BasicAuthenticationSession extends AuthenticatedWebSession {
 
 	public BasicAuthenticationSession(Request request) {
-		super(request);		
+		super(request);
 	}
 
 	@Override
@@ -129,7 +119,7 @@ public class BasicAuthenticationSession extends AuthenticatedWebSession {
 
 	@Override
 	public Roles getRoles() {
-		return null;
+		return new Roles();
 	}
 }
 {code}
@@ -137,7 +127,7 @@ public class BasicAuthenticationSession extends AuthenticatedWebSession {
 *Application class:*
 
 {code}
-public class WicketApplication extends AuthenticatedWebApplication{    	
+public class WicketApplication extends AuthenticatedWebApplication {
 	@Override
 	public Class<HomePage> getHomePage(){
 		return HomePage.class;
@@ -159,7 +149,7 @@ The authentication logic inside authenticate has been kept quite trivial in orde
 
 h3. Redirecting user to an intermediate page
 
-Method @restartResponseAtSignInPage@ is an example of redirecting user to an intermediate page before allowing him to access to the requested page. This method internally throws exception @org.apache.wicket.RestartResponseAtInterceptPageException@ which saves the URL of the requested page into session metadata and then redirects user to the page passed as constructor parameter (the sign in page).
+Method @restartResponseAtSignInPage@ is an example of redirecting user to an intermediate page before allowing him to access to the requested page. This method internally throws exception @org.apache.wicket.RestartResponseAtInterceptPageException@ which saves the URL and the parameters of the requested page into session metadata and then redirects user to the page passed as constructor parameter (the sign in page).
 
 Component's method @redirectToInterceptPage(Page)@ works in much the same way as @restartResponseAtSignInPage@ but it allows us to specify which page to use as intermediate page:
 

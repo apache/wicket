@@ -78,7 +78,7 @@ public class ExceptionSettings
 	 *
 	 * @author igor
 	 */
-	public static enum AjaxErrorStrategy {
+	public enum AjaxErrorStrategy {
 		/** redirect to error page, just like a normal requset */
 		REDIRECT_TO_ERROR_PAGE,
 		/** invoke client side failure handler */
@@ -90,13 +90,31 @@ public class ExceptionSettings
 	 *
 	 * @author papegaaij
 	 */
-	public static enum ThreadDumpStrategy {
+	public enum ThreadDumpStrategy {
 		/** Do not dump any stacktraces */
 		NO_THREADS,
 		/** Dump the stacktrace of the thread holding the lock */
 		THREAD_HOLDING_LOCK,
 		/** Dump stacktraces of all threads of the application */
 		ALL_THREADS
+	}
+
+	/**
+	 * A strategy defining what to do when a component that will not render its
+	 * markup tag (because of {@link org.apache.wicket.Component#setRenderBodyOnly(boolean) setRenderBodyOnly(true)}
+	 * or used with &lt;wicket:xyz&gt;) is also asked to output a
+	 * markup {@link org.apache.wicket.Component#setOutputMarkupId(boolean) id} or
+	 * {@link org.apache.wicket.Component#setOutputMarkupPlaceholderTag(boolean) placeholder tag}
+	 */
+	public enum NotRenderableErrorStrategy {
+		/**
+		 * Log a message with level {@link org.slf4j.Logger#warn(String) WARNING}
+		 */
+		LOG_WARNING,
+		/**
+		 * Throw a runtime exception
+		 */
+		THROW_EXCEPTION
 	}
 
 	/** Type of handling for unexpected exceptions */
@@ -111,6 +129,8 @@ public class ExceptionSettings
 	 * </p>
 	 */
 	private ThreadDumpStrategy threadDumpStrategy = ThreadDumpStrategy.THREAD_HOLDING_LOCK;
+
+	private NotRenderableErrorStrategy notRenderableErrorStrategy = NotRenderableErrorStrategy.LOG_WARNING;
 
 	/**
 	 * @return Returns the unexpectedExceptionDisplay.
@@ -186,5 +206,13 @@ public class ExceptionSettings
 	public ThreadDumpStrategy getThreadDumpStrategy()
 	{
 		return threadDumpStrategy;
+	}
+
+	public NotRenderableErrorStrategy getNotRenderableErrorStrategy() {
+		return notRenderableErrorStrategy;
+	}
+
+	public void setNotRenderableErrorStrategy(final NotRenderableErrorStrategy notRenderableErrorStrategy) {
+		this.notRenderableErrorStrategy = notRenderableErrorStrategy;
 	}
 }

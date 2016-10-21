@@ -142,6 +142,35 @@ public class PaletteTest extends WicketTestCase
 		tester.assertContains("<option value=\"A\">A</option>");
 	}
 
+	/**
+	 * WICKET-6244
+	 */
+	@Test
+	public void unselectedChoices()
+	{
+		IModel<List<String>> selected = new ListModel<>(new ArrayList<String>());
+
+		IModel<List<String>> all = new ListModel<>(new ArrayList<>(Arrays.asList("A", "AA", "AAA")));
+
+		PaletteTestPage testPage = new PaletteTestPage(selected, all);
+
+		tester.startPage(testPage);
+
+		FormTester formTester = tester.newFormTester(testPage.form.getId());
+		formTester.setValue("palette:recorder", "AAA");
+		formTester.submit();
+
+		Iterator<String> iterator = testPage.palette.getUnselectedChoices();
+		assertEquals(true, iterator.hasNext());
+		assertEquals("A", iterator.next());
+		assertEquals(true, iterator.hasNext());
+		assertEquals("AA", iterator.next());
+		assertEquals(false, iterator.hasNext());
+	}
+
+	/**
+	 * WICKET-5352
+	 */
 	@Test
 	public void required()
 	{
@@ -160,6 +189,9 @@ public class PaletteTest extends WicketTestCase
 		assertTrue(testPage.form.hasError());
 	}
 
+	/**
+	 * WICKET-5352
+	 */
 	@Test
 	public void validationErrorRawInput()
 	{

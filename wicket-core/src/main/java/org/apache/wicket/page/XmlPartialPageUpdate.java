@@ -150,14 +150,15 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	@Override
 	protected void writeHeaderContribution(Response response)
 	{
-		if (headerBuffer.getContents().length() != 0)
+		CharSequence contents = headerBuffer.getContents();
+		if (Strings.isEmpty(contents) == false)
 		{
 			response.write("<header-contribution>");
 
 			// we need to write response as CDATA and parse it on client,
 			// because konqueror crashes when there is a <script> element
 			response.write("<![CDATA[<head xmlns:wicket=\"http://wicket.apache.org\">");
-			response.write(encode(headerBuffer.getContents()));
+			response.write(encode(contents));
 			response.write("</head>]]>");
 			response.write("</header-contribution>");
 		}
