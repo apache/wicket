@@ -89,7 +89,13 @@ Person person = new Person();
 IModel<String> personNameModel = new LambdaModel<>(person::getName, person::setName);
 {code}
 
-As we have seen for @Model@ also @LambdaModel@ comes with factory method @LambdaModel.of@.
+As we have seen for @Model@ also @LambdaModel@ comes with factory method @LambdaModel.of@:
+
+{code}
+Person person = new Person();
+IModel<String> personNameModel = LambdaModel.of(person::getName, person::setName);
+{code}
+
 
 h3. CompoundPropertyModel and model inheritance
 

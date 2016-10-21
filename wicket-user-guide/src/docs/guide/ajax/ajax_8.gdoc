@@ -1,7 +1,48 @@
+Just like we have seen for links, Lambda expressions bring their benefit also to AJAX components and behaviors. Many of them come with a factory method that accepts a lambda expression to use as callback code. Here is an example for the classic and the lambda way of defining an ajax link:
+
+Classic way:
+{code}
+AjaxLink<Void> link = new AjaxLink<Void>("linkId") {
+	@Override
+	public void onClick(AjaxRequestTarget target) {
+		label.modelChanging();
+		label.setDefaultModelObject("test" + (intx++));
+		label.modelChanged();
+		target.add(label);
+	}
+}
+{code}
+
+Using lambdas:
+{code}
+AjaxLink<Void> link = AjaxLink.onClick("linkId", target -> {
+	label.modelChanging();
+	label.setDefaultModelObject("newString");
+	label.modelChanged();
+	target.add(label);
+});
+{code}
+
+Such factory methods can be found also in the utility class @Lambdas@:
+
+{code}
+import static org.apache.wicket.lambda.Lambdas.ajaxLink;
+
+...
+
+AjaxLink<Void> link = ajaxLink("linkId", target -> {
+	label.modelChanging();
+	label.setDefaultModelObject("newString");
+	label.modelChanged();
+	target.add(label);
+});
+{code}
+
+The same can be done for behaviors. For example we can create an @AjaxEventBehavior@ in this way:
+
+{code}
+  Lambdas.onEvent("click", target -> //some lambda stuf)
+{code}
 
 
-AJAX is another example of how Wicket can simplify web technologies providing a good component and object oriented abstraction of them. 
-
-In this chapter we have seen how to take advantage of the AJAX support provided by Wicket to write AJAX-enhanced applications. Most of the chapter has been dedicated to the built-in components and behaviors that let us adopt AJAX without almost any effort. 
-
-In the final part of the chapter we have seen how Wicket physically implements an AJAX call on client side using AJAX request attributes. Then, we have learnt how to use call listeners to execute custom JavaScript during AJAX request lifecycle.
+To find out other useful factory methods, you can check @Lambdas@ JavaDoc.
