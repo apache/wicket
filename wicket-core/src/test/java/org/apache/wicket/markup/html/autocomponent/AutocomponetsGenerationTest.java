@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.autocomponent;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.core.util.string.ComponentRenderer;
 import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -64,5 +65,19 @@ public class AutocomponetsGenerationTest extends WicketTestCase
 		
 		//the number of child components must not have been changed
 		assertEquals(2, border.size());
+	}
+	
+	/*
+	 * Test for https://issues.apache.org/jira/browse/WICKET-6256
+	 */
+	@Test
+	public void autoComponentsIdsGeneration() throws Exception 
+	{
+		Page page = new UniqueIdTest();
+		
+		tester.startPage(page);
+		
+		//render page again. Autocomponents must have the same id
+		tester.startPage(page);		
 	}
 }
