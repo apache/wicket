@@ -17,9 +17,16 @@
 package org.apache.wicket.protocol.http;
 
 import java.nio.charset.Charset;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.WicketTestCase;
+import org.apache.wicket.mock.MockRequestParameters;
+import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -39,6 +46,58 @@ public class WebApplicationTest extends WicketTestCase
 	private static final String MOUNT_PATH_2 = "mount/path/2";
 	private static final String MOUNT_PATH_3 = "mount/path/3";
 	private static final String MOUNT_PATH_4 = "mount/path/4";
+
+	/**
+	 * WICKET-6260
+	 */
+	@Test
+	public void testBodyNotReadBeforeApplicationSetsCharacterEncoding() throws Exception {
+		WebApplication application = tester.getApplication();
+
+		HttpServletRequest request = new MockHttpServletRequest(application, null, null) {
+			@Override
+			public Map<String, String[]> getParameterMap()
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+
+			@Override
+			public String getParameter(String name)
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+
+			@Override
+			public Enumeration<String> getParameterNames()
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+
+			@Override
+			public String[] getParameterValues(String name)
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+
+			@Override
+			public MockRequestParameters getPostParameters()
+			{
+				fail("body should not be read before character encoding is set");
+				return null;
+			}
+		};
+
+		// character encoding not set yet
+		request.setCharacterEncoding(null);
+
+		application.createWebRequest(request , "/");
+
+		assertEquals("UTF-8", request.getCharacterEncoding());
+	}
 
 	/**
 	 * Test basic unmounting from a compound mapper.
