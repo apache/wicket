@@ -25,7 +25,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Generics;
 
 /**
- * A very simple manager for web filter (web filter factories to be exact).
+ * A very simple manager for web filter factories.
  * 
  * @author Juergen Donnerstag
  */
