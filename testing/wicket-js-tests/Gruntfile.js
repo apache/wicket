@@ -114,7 +114,11 @@ module.exports = function(grunt) {
 			 */
 			all: {
 				options: {
-			        urls: ['http://localhost:38888/test/js/all.html']
+			        urls: [
+			        	'http://localhost:38888/test/js/all.html?1.12.4',
+			        	'http://localhost:38888/test/js/all.html?2.2.4',
+			        	'http://localhost:38888/test/js/all.html?3.1.1'
+			        ]
 			    }
 			},
 
@@ -123,14 +127,13 @@ module.exports = function(grunt) {
 			 */
 			amd: {
 				options: {
-					urls: ['http://localhost:38888/test/js/amd.html']
+					urls: [
+						'http://localhost:38888/test/js/amd.html?1.12.4',
+						'http://localhost:38888/test/js/amd.html?2.2.4',
+						'http://localhost:38888/test/js/amd.html?3.1.1'
+					]
 				}
-			},
-
-			/*
-			 * Runs only local tests (w/o ajax ones).
-			 */
-			local: ['../../wicket-core/src/test/js/all.html']
+			}
 		},
 
 		connect: {
