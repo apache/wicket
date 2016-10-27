@@ -30,6 +30,7 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.DisabledAttributeLinkBehavior;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
@@ -167,6 +168,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			super(id, pageClass, parameters);
 			this.anchor = anchor;
 			setAutoEnable(autoEnable);
+			add(new DisabledAttributeLinkBehavior());
 		}
 
 		/**
@@ -200,7 +202,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	/**
 	 * Interface to delegate the actual resolving of auto components to.
 	 */
-	public static interface IAutolinkResolverDelegate
+	public interface IAutolinkResolverDelegate
 	{
 		/**
 		 * Returns a new auto component based on the pathInfo object. The auto component must have
@@ -553,7 +555,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * Resolver that returns the proper attribute value from a component tag reflecting a URL
 	 * reference such as src or href.
 	 */
-	private static interface ITagReferenceResolver
+	private interface ITagReferenceResolver
 	{
 		/**
 		 * Gets the reference attribute value of the tag depending on the type of the tag. For
