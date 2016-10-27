@@ -61,7 +61,7 @@
 		 */
 		updateSelectorState: function(selectorId, findCheckboxes) {
 			var checkboxes = findCheckboxes(),
-				allChecked = true;
+				allChecked = checkboxes.length > 0;
 	
 			for (var i = 0; i < checkboxes.length; i++) {
 				if ((checkboxes[i].disabled === false) && (checkboxes[i].checked === false)) {
