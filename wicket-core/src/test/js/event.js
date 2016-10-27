@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-/*global ok: true, start: true, stop: true, test: true, equal: true, deepEqual: true,
+/*global ok: true, asyncTest: true, start: true, stop: true, test: true, equal: true, deepEqual: true,
  QUnit: true, module: true, expect: true */
 
 jQuery(document).ready(function() {
@@ -87,7 +87,7 @@ jQuery(document).ready(function() {
 
 		var evt = jQuery.Event("keydown", { keyCode: 123 });
 		jQuery(document)
-			.bind('keydown', function(event) {
+			.on('keydown', function(event) {
 				var fixedEvt = Wicket.Event.fix(event);
 				deepEqual(fixedEvt, evt);
 			})
@@ -172,7 +172,7 @@ jQuery(document).ready(function() {
 		$el.remove();
 	});
 	
-	test('add - domready on non-window element', function () {
+	asyncTest('add - domready on non-window element', function () {
 
 		expect(1);
 
@@ -180,6 +180,7 @@ jQuery(document).ready(function() {
 		$el.appendTo(jQuery('#qunit-fixture'));
 
 		var handler = function() {
+			start();
 			ok(true, 'This event must be fired!');
 		};
 
@@ -212,11 +213,12 @@ jQuery(document).ready(function() {
 		$el.remove();
 	});
 
-	test('add - domready on window', function () {
+	asyncTest('add - domready on window', function () {
 
 		expect(1);
 		
 		var handler = function() {
+			start();
 			ok(true, 'This event must be fired!');
 		};
 

@@ -41,7 +41,7 @@
  */
 
 /*global ok: true, start: true, asyncTest: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true */
+ QUnit: true, module: true, expect: true, console: true  */
 
 jQuery(document).ready(function() {
 	"use strict";
@@ -396,7 +396,7 @@ jQuery(document).ready(function() {
 					function(attributes, jqXHR, errorMessage, textStatus) {
 						start();
 						equal(attrs.u, attributes.u);
-						ok(typeof(jqXHR.success) === "function", "jqXHR should be passed");
+						ok(typeof(jqXHR) === "object", "jqXHR should be passed");
 						equal(errorMessage, "Not Found", "Error message should be passed");
 						equal(textStatus, "error", "Text status should be passed");
 					}
@@ -442,7 +442,15 @@ jQuery(document).ready(function() {
 				coh: [
 					function(attributes, jqXHR, textStatus) {
 						start();
-						equal(textStatus, "parsererror", "textStatus");
+						var jQueryVersion = jQuery.fn.jquery;
+						if (
+							(!!window._phantom) &&
+							(jQueryVersion.indexOf("3") === 0 || jQueryVersion.indexOf("2") === 0 )
+						) {
+							equal(textStatus, "success", "textStatus");
+						} else {
+							equal(textStatus, "parsererror", "textStatus");
+						}
 						equal(attributes.u, attrs.u, "url");
 						deepEqual(attributes.e, [ "domready" ], "events");
 						equal(attributes.event, null, "No event for 'domready'");
