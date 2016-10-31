@@ -590,17 +590,17 @@ public abstract class Page extends MarkupContainer
 							// Add to explanatory string to buffer
 							buffer.append(Integer.toString(unrenderedComponents.size()))
 								.append(". ")
-								.append(component)
+								.append(component.toString(true))
 								.append('\n');
 							String metadata = component.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{
-								buffer.append(metadata);
+								buffer.append(metadata).append('\n');
 							}
 							metadata = component.getMetaData(Component.ADDED_AT_KEY);
 							if (metadata != null)
 							{
-								buffer.append(metadata);
+								buffer.append(metadata).append('\n');
 							}
 						}
 						else
@@ -664,7 +664,7 @@ public abstract class Page extends MarkupContainer
 				{
 					// Throw exception
 					throw new WicketRuntimeException(
-						"The component(s) below failed to render. Possible reasons could be that: 1) you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered), 2) if your components were added in a parent container then make sure the markup for the child container includes them in <wicket:extend>.\n\n" +
+						"The component(s) below failed to render. Possible reasons could be that:\n\t1) you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered),\n\t2) if your components were added in a parent container then make sure the markup for the child container includes them in <wicket:extend>.\n\n" +
 							buffer.toString());
 				}
 			}
