@@ -3324,11 +3324,11 @@ public abstract class Component
 				else
 				{
 					buffer.append(", page = ")
-						.append(getPage().getPageClass().getName())
+						.append(Classes.name(getPage().getPageClass()))
 						.append(", path = ")
-						.append(getPath())
-						.append('.')
-						.append(Classes.simpleName(getClass()))
+						.append(getPageRelativePath())
+						.append(", type = ")
+						.append(Classes.name(getClass()))
 						.append(", isVisible = ")
 						.append((determineVisibility()))
 						.append(", isVersioned = ")
