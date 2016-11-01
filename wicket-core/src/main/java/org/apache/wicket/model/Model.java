@@ -69,7 +69,7 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 
 	/**
 	 * Factory method for models that contain lists. This factory method will automatically rebuild
-	 * a nonserializable <code>list</code> into a serializable one.
+	 * a non-serializable <code>list</code> into a serializable one.
 	 * 
 	 * @param <C>
 	 *            model type
@@ -84,7 +84,7 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 
 	/**
 	 * Factory method for models that contain maps. This factory method will automatically rebuild a
-	 * nonserializable <code>map</code> into a serializable one.
+	 * non-serializable <code>map</code> into a serializable one.
 	 * 
 	 * @param <K>
 	 *            key type in map
@@ -101,7 +101,7 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 
 	/**
 	 * Factory method for models that contain sets. This factory method will automatically rebuild a
-	 * nonserializable <code>set</code> into a serializable one.
+	 * non-serializable <code>set</code> into a serializable one.
 	 * 
 	 * @param <C>
 	 *            model type
@@ -116,7 +116,7 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 
 	/**
 	 * Factory method for models that contain collections. This factory method will automatically
-	 * rebuild a nonserializable <code>collection</code> into a serializable {@link ArrayList}.
+	 * rebuild a non-serializable <code>collection</code> into a serializable {@link ArrayList}.
 	 * 
 	 * @param <C>
 	 *            model type

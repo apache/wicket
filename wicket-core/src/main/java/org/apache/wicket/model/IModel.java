@@ -90,7 +90,7 @@ public interface IModel<T> extends IDetachable
 
 	/**
 	 * Returns a IModel checking whether the predicate holds for the contained object, if it is not
-	 * null. If the predicate doesn't evaluate to true, the contained object will be null.
+	 * {@code null}. If the predicate doesn't evaluate to {@code true}, the contained object will be {@code null}.
 	 *
 	 * @param predicate
 	 *            a predicate to be used for testing the contained object
@@ -138,8 +138,8 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a @IModel@ applying the given combining function to the current model object and 
-	 * to the one from the other model, if they are not null.
+	 * Returns a {@link IModel} applying the given combining function to the current model object and
+	 * to the one from the other model, if they are not {@code null}.
 	 *
 	 * @param <R>
 	 *            the resulting type
@@ -171,7 +171,7 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a IModel applying the given IModel-bearing mapper to the contained object, if it is not NULL.
+	 * Returns a IModel applying the given IModel-bearing mapper to the contained object, if it is not {@code null}.
 	 *
 	 * @param <R>
 	 *            the new type of the contained object
@@ -284,14 +284,14 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Supresses generics warning when casting model types.
+	 * Suppresses generics warning when casting model types.
 	 *
 	 * @param <T>
 	 * @param model
 	 * @return cast <code>model</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> IModel<T> of(IModel<?> model)
+	static <T> IModel<T> of(IModel<?> model)
 	{
 		return (IModel<T>)model;
 	}
