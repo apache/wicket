@@ -21,12 +21,12 @@ import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * A component that allows a trigger request to be triggered via html anchor tag
@@ -149,10 +149,11 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	 * @param id
 	 *            the id of the ajax link
 	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxLink}
 	 */
-	public static <T> AjaxLink<T> onClick(String id, WicketConsumer<AjaxRequestTarget> onClick)
+	public static <T> AjaxLink<T> onClick(String id,
+		SerializableConsumer<AjaxRequestTarget> onClick)
 	{
 		Args.notNull(onClick, "onClick");
 
@@ -177,7 +178,8 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	 *            the consumer of the clicked link and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxLink}
 	 */
-	public static <T> AjaxLink<T> onClick(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
+	public static <T> AjaxLink<T> onClick(String id,
+		SerializableBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
 	{
 		Args.notNull(onClick, "onClick");
 

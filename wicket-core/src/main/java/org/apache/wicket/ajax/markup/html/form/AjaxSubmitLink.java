@@ -20,11 +20,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -234,7 +234,8 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 *            the consumer which accepts the link and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSubmitLink}
 	 */
-	public static AjaxSubmitLink onSubmit(String id, WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
+	public static AjaxSubmitLink onSubmit(String id,
+		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -262,8 +263,8 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * @return the {@link AjaxSubmitLink}
 	 */
 	public static AjaxSubmitLink onSubmit(String id,
-	                                            WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit,
-	                                            WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onError)
+		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit,
+		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onError)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");

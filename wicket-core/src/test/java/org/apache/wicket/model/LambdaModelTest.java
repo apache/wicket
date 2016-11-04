@@ -23,9 +23,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
-import org.apache.wicket.lambda.WicketConsumer;
-import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.model.lambda.Person;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 import org.junit.Test;
 
 /**
@@ -85,8 +85,8 @@ public class LambdaModelTest
 	public void equality()
 	{
 		Person person = new Person();
-		final WicketSupplier<String> getName = person::getName;
-		final WicketConsumer<String> setName = person::setName;
+		final SerializableSupplier<String> getName = person::getName;
+		final SerializableConsumer<String> setName = person::setName;
 		IModel<String> personNameModel1 = new LambdaModel<>(getName, setName);
 		IModel<String> personNameModel2 = new LambdaModel<>(getName, setName);
 		assertEquals(personNameModel1, personNameModel2);
@@ -96,8 +96,8 @@ public class LambdaModelTest
 	public void hashcode()
 	{
 		Person person = new Person();
-		final WicketSupplier<String> getName = person::getName;
-		final WicketConsumer<String> setName = person::setName;
+		final SerializableSupplier<String> getName = person::getName;
+		final SerializableConsumer<String> setName = person::setName;
 		IModel<String> personNameModel1 = new LambdaModel<>(getName, setName);
 		IModel<String> personNameModel2 = new LambdaModel<>(getName, setName);
 		assertEquals(personNameModel1.hashCode(), personNameModel2.hashCode());

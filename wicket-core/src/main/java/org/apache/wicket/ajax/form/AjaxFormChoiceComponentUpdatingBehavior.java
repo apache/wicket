@@ -21,14 +21,14 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * This is a Ajax Component Update Behavior that is meant for choices/groups that are not one
@@ -118,10 +118,12 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
 	 * 
 	 * @param onUpdateChoice
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 */
-	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice) {
+	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(
+		SerializableConsumer<AjaxRequestTarget> onUpdateChoice)
+	{
 		Args.notNull(onUpdateChoice, "onUpdateChoice");
 		return new AjaxFormChoiceComponentUpdatingBehavior()
 		{
@@ -139,14 +141,16 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
 	 * 
 	 * @param onUpdateChoice
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and the
 	 *            {@link RuntimeException}
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 */
-	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(WicketConsumer<AjaxRequestTarget> onUpdateChoice,
-	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError) {
+	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(
+		SerializableConsumer<AjaxRequestTarget> onUpdateChoice,
+		SerializableBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	{
 		Args.notNull(onUpdateChoice, "onUpdateChoice");
 		Args.notNull(onError, "onError");
 		return new AjaxFormChoiceComponentUpdatingBehavior()

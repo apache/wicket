@@ -21,12 +21,12 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.IFormSubmitter;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * Ajax event behavior that submits a form via ajax when the event it is attached to, is invoked.
@@ -280,10 +280,11 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @param eventName
 	 *            the event name
 	 * @param onSubmit
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormSubmitBehavior}
 	 */
-	public static AjaxFormSubmitBehavior onSubmit(String eventName, WicketConsumer<AjaxRequestTarget> onSubmit)
+	public static AjaxFormSubmitBehavior onSubmit(String eventName,
+		SerializableConsumer<AjaxRequestTarget> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -305,14 +306,15 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @param eventName
 	 *            the event name
 	 * @param onSubmit
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormSubmitBehavior}
 	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
-	                                              WicketConsumer<AjaxRequestTarget> onSubmit,
-	                                              WicketConsumer<AjaxRequestTarget> onError) {
+		SerializableConsumer<AjaxRequestTarget> onSubmit,
+		SerializableConsumer<AjaxRequestTarget> onError)
+	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");
 

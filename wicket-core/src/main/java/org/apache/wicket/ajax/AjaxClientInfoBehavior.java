@@ -19,7 +19,6 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.pages.BrowserInfoForm;
@@ -29,6 +28,7 @@ import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 /**
  * An behavior that collects the information to populate
@@ -142,11 +142,11 @@ public class AjaxClientInfoBehavior extends AbstractAjaxTimerBehavior
 	 * Creates an {@link AjaxClientInfoBehavior} based on lambda expressions
 	 *
 	 * @param onClientInfo
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
+	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and the
 	 *            {@link WebClientInfo}
 	 * @return the {@link AjaxClientInfoBehavior}
 	 */
-	public static AjaxClientInfoBehavior onClientInfo(WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
+	public static AjaxClientInfoBehavior onClientInfo(SerializableBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
 	{
 		Args.notNull(onClientInfo, "onClientInfo");
 

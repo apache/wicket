@@ -23,11 +23,11 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
-import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.validation.IFormValidator;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -228,10 +228,11 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @param eventName
 	 *            the event name
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
 	 */
-	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName, WicketConsumer<AjaxRequestTarget> onUpdate)
+	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
+		SerializableConsumer<AjaxRequestTarget> onUpdate)
 	{
 		Args.notNull(onUpdate, "onUpdate");
 
@@ -253,15 +254,15 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @param eventName
 	 *            the event name
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link RuntimeException}
+	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and
+	 *            the {@link RuntimeException}
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
 	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
-	                                                         WicketConsumer<AjaxRequestTarget> onUpdate,
-	                                                         WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+		SerializableConsumer<AjaxRequestTarget> onUpdate,
+		SerializableBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
 		Args.notNull(onUpdate, "onUpdate");
 		Args.notNull(onError, "onError");

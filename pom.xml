@@ -441,6 +441,12 @@
 				<type>jar</type>
 			</dependency>
 			<dependency>
+				<groupId>org.danekja</groupId>
+				<artifactId>jdk-serializable-functional</artifactId>
+				<version>1.8.1</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
 				<groupId>org.jboss.seam.conversation</groupId>
 				<artifactId>seam-conversation-spi</artifactId>
 				<version>3.0.0.Final</version>

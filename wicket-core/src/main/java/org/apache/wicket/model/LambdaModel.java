@@ -18,11 +18,11 @@ package org.apache.wicket.model;
 
 import java.util.Objects;
 
-import org.apache.wicket.lambda.WicketBiConsumer;
-import org.apache.wicket.lambda.WicketConsumer;
-import org.apache.wicket.lambda.WicketFunction;
-import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
+import org.danekja.java.util.function.serializable.SerializableFunction;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 /**
  * <code>LambdaModel</code> is a basic implementation of an <code>IModel</code>
@@ -37,8 +37,8 @@ public class LambdaModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final WicketSupplier<T> getter;
-	private final WicketConsumer<T> setter;
+	private final SerializableSupplier<T> getter;
+	private final SerializableConsumer<T> setter;
 
 	/**
 	 * Construct the model, using the given supplier and consumer as
@@ -47,7 +47,7 @@ public class LambdaModel<T> implements IModel<T>
 	 * @param getter Used for the getObject() method.
 	 * @param setter Used for the setObject(T object) method.
 	 */
-	public LambdaModel(WicketSupplier<T> getter, WicketConsumer<T> setter)
+	public LambdaModel(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
 	{
 		this.getter = Args.notNull(getter, "getter");
 		this.setter = Args.notNull(setter, "setter");
@@ -108,7 +108,8 @@ public class LambdaModel<T> implements IModel<T>
 	 *
 	 * @param <T> model object type
 	 */
-	public static <T> IModel<T> of(WicketSupplier<T> getter, WicketConsumer<T> setter) {
+	public static <T> IModel<T> of(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
+	{
 		return new LambdaModel<>(getter, setter);
 	}
 
@@ -128,7 +129,7 @@ public class LambdaModel<T> implements IModel<T>
 	 * 
 	 * @return model
 	 */
-	public static <X, T> IModel<T> of(IModel<X> target, WicketFunction<X, T> getter)
+	public static <X, T> IModel<T> of(IModel<X> target, SerializableFunction<X, T> getter)
 	{
 		Args.notNull(target, "target");
 		Args.notNull(getter, "getter");
@@ -175,7 +176,8 @@ public class LambdaModel<T> implements IModel<T>
 
 	 * @return model
 	 */
-	public static <X, T> IModel<T> of(IModel<X> target, WicketFunction<X, T> getter, WicketBiConsumer<X, T> setter)
+	public static <X, T> IModel<T> of(IModel<X> target, SerializableFunction<X, T> getter,
+		SerializableBiConsumer<X, T> setter)
 	{
 		Args.notNull(target, "target");
 		Args.notNull(getter, "getter");

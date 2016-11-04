@@ -20,9 +20,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-import org.apache.wicket.lambda.WicketBiFunction;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
+import org.danekja.java.util.function.serializable.SerializableBiFunction;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,8 +96,8 @@ public class IModelTest extends Assert
 	public void combineWith()
 	{
 		IModel<String> janeModel = Model.of("Jane");
-		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, other) ->
+		SerializableBiFunction<Person, String, String> function =
+				(SerializableBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = Model.of(person).combineWith(janeModel, function);
 		assertThat(relationShipModel.getObject(), is(equalTo("John is in relationship with Jane")));
@@ -107,8 +107,8 @@ public class IModelTest extends Assert
 	public void combineWithNullObject()
 	{
 		IModel<String> janeModel = Model.of((String)null);
-		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, other) ->
+		SerializableBiFunction<Person, String, String> function =
+				(SerializableBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = Model.of(person).combineWith(janeModel, function);
 		assertThat(relationShipModel.getObject(), is(nullValue()));
@@ -118,8 +118,8 @@ public class IModelTest extends Assert
 	public void combineWithNullModel()
 	{
 		IModel<String> janeModel = null;
-		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, other) ->
+		SerializableBiFunction<Person, String, String> function =
+				(SerializableBiFunction<Person, String, String>) (person1, other) ->
 						person1.getName() + " is in relationship with " + other;
 		Model.of(person).combineWith(janeModel, function);
 	}

@@ -22,12 +22,12 @@ import java.util.Locale;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * An ajax behavior that is attached to a certain client-side (usually javascript) event, such as
@@ -165,10 +165,10 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * @param eventName
 	 *            the event name
 	 * @param onEvent
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxEventBehavior}
 	 */
-	public static AjaxEventBehavior onEvent(String eventName, WicketConsumer<AjaxRequestTarget> onEvent)
+	public static AjaxEventBehavior onEvent(String eventName, SerializableConsumer<AjaxRequestTarget> onEvent)
 	{
 		Args.notNull(onEvent, "onEvent");
 

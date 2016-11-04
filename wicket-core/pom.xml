@@ -55,6 +55,10 @@
 			<artifactId>wicket-util</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.danekja</groupId>
+			<artifactId>jdk-serializable-functional</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-junit</artifactId>
 		</dependency>

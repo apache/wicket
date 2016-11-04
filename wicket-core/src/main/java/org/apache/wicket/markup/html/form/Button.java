@@ -17,12 +17,12 @@
 package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * A form button.
@@ -261,10 +261,10 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 * @param id
 	 *            the id of the button
 	 * @param onSubmit
-	 *            the {@link WicketConsumer} which accepts the {@link Button}
+	 *            the {@code SerializableConsumer} which accepts the {@link Button}
 	 * @return the {@link Button}
 	 */
-	public static Button onSubmit(String id, WicketConsumer<Button> onSubmit)
+	public static Button onSubmit(String id, SerializableConsumer<Button> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -286,14 +286,13 @@ public class Button extends FormComponent<String> implements IFormSubmittingComp
 	 * @param id
 	 *            the id of the button
 	 * @param onSubmit
-	 *            the {@link WicketConsumer} which accepts the {@link Button}
+	 *            the {@code SerializableConsumer} which accepts the {@link Button}
 	 * @param onError
-	 *            the {@link WicketConsumer} which accepts the {@link Button}
+	 *            the {@code SerializableConsumer} which accepts the {@link Button}
 	 * @return the {@link AjaxButton}
 	 */
-	public static Button onSubmit(String id,
-	                                    WicketConsumer<Button> onSubmit,
-	                                    WicketConsumer<Button> onError)
+	public static Button onSubmit(String id, SerializableConsumer<Button> onSubmit,
+		SerializableConsumer<Button> onError)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");
