@@ -83,8 +83,10 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void withoutOriginAllowed()
 	{
+		csrfListener.setNoOriginAction(CsrfAction.ALLOW);
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, null);
 		tester.clickLink("link");
-		assertConflictingOriginsRequestAborted();
+		assertConflictingOriginsRequestAllowed();
 	}
 
 	/** Tests the alternative action of suppressing a request without Origin header */
@@ -92,6 +94,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	public void withoutOriginSuppressed()
 	{
 		csrfListener.setNoOriginAction(CsrfAction.SUPPRESS);
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, null);
 		tester.clickLink("link");
 		tester.assertRenderedPage(FirstPage.class);
 		assertConflictingOriginsRequestSuppressed();
@@ -102,6 +105,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	public void withoutOriginAborted()
 	{
 		csrfListener.setNoOriginAction(CsrfAction.ABORT);
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, null);
 		tester.clickLink("link");
 		assertConflictingOriginsRequestAborted();
 	}
