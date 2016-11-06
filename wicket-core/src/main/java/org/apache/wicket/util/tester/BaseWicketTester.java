@@ -1139,6 +1139,7 @@ public class BaseWicketTester
 			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.setUrl(url);
+		request.addHeader(WebRequest.HEADER_ORIGIN, createOriginHeader());
 		request.addHeader(WebRequest.HEADER_AJAX_BASE_URL, url.toString());
 		request.addHeader(WebRequest.HEADER_AJAX, "true");
 
@@ -1159,6 +1160,16 @@ public class BaseWicketTester
 		}
 
 		processRequest();
+	}
+	
+	/**
+	 * Build value to Origin header based on RequestCycle Url
+	 * 
+	 * @return Origin header
+	 */
+	protected String createOriginHeader(){
+		Url url = RequestCycle.get().getRequest().getUrl();
+		return url.getProtocol() + "://" +url.getHost() + ":" + url.getPort();
 	}
 
 	/**
