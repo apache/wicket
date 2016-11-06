@@ -25,6 +25,7 @@ import org.apache.wicket.WicketTestCase;
 import org.apache.wicket.protocol.http.CsrfPreventionRequestCycleListener.CsrfAction;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.http.WebRequest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +51,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		// Rendering a page is allowed, regardless of Origin (this allows external links into your
 		// website to function)
 
-		tester.addRequestHeader("Origin", "https://google.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "https://google.com/");
 
 		tester.startPage(FirstPage.class);
 		tester.assertRenderedPage(FirstPage.class);
@@ -72,7 +73,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	public void disabledListenerDoesntCheckMismatchedOrigin()
 	{
 		csrfEnabled = false;
-		tester.addRequestHeader("Origin", "http://malicioussite.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://malicioussite.com/");
 		tester.clickLink("link");
 		assertOriginsNotChecked();
 		tester.assertRenderedPage(SecondPage.class);
@@ -114,7 +115,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	public void matchingOriginsAllowed()
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
-		tester.addRequestHeader("Origin", "http://localhost/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost/");
 
 		tester.clickLink("link");
 
@@ -127,7 +128,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	public void conflictingOriginsAllowed()
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 
 		tester.clickLink("link");
 
@@ -139,7 +140,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void conflictingOriginsSuppressed()
 	{
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 		csrfListener.setConflictingOriginAction(CsrfAction.SUPPRESS);
 
 		tester.clickLink("link");
@@ -152,7 +153,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void conflictingOriginsAborted()
 	{
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 
 		tester.clickLink("link");
 
@@ -166,7 +167,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		setErrorCode(401);
 		setErrorMessage("NOT AUTHORIZED");
 
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 		csrfListener.setNoOriginAction(CsrfAction.ABORT);
 
 		tester.clickLink("link");
@@ -180,7 +181,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
 		csrfListener.addAcceptedOrigin("example.com");
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 
 		tester.clickLink("link");
 
@@ -195,7 +196,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		csrfListener.addAcceptedOrigin("example.com");
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
 
-		tester.addRequestHeader("Origin", "http://foo.example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://foo.example.com/");
 
 		tester.clickLink("link");
 
@@ -210,7 +211,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void conflictingOriginPageNotCheckedAllowed()
 	{
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
 
 		// disable the check for this page
@@ -240,7 +241,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		setSuppressHandler(thirdPageRedirect);
 		csrfListener.setConflictingOriginAction(CsrfAction.SUPPRESS);
 
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 
 		tester.clickLink("link");
 
@@ -266,7 +267,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		setAllowHandler(thirdPageRedirect);
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
 
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 
 		tester.clickLink("link");
 
@@ -291,7 +292,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		};
 		setAbortHandler(thirdPageRedirect);
 
-		tester.addRequestHeader("Origin", "http://example.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
 
 		tester.clickLink("link");
@@ -309,7 +310,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void differentPortOriginAborted()
 	{
-		tester.addRequestHeader("Origin", "http://localhost:8080");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost:8080");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
 
 		tester.clickLink("link");
@@ -321,7 +322,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void differentSchemeOriginAborted()
 	{
-		tester.addRequestHeader("Origin", "https://localhost");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "https://localhost");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
 
 		tester.clickLink("link");
@@ -333,7 +334,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	@Test
 	public void longerOriginAllowed()
 	{
-		tester.addRequestHeader("Origin", "http://localhost/supercalifragilisticexpialidocious");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost/supercalifragilisticexpialidocious");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
 
 		tester.clickLink("link");
@@ -349,14 +350,14 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
 
 		// first render a page in the user's session
-		tester.addRequestHeader("Origin", "http://localhost");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost");
 		tester.startPage(ThirdPage.class);
 
 		assertOriginsNotChecked();
 		tester.assertRenderedPage(ThirdPage.class);
 
 		// then click on a link from another external page
-		tester.addRequestHeader("Origin", "http://attacker.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://attacker.com/");
 		tester.clickLink("link", true);
 
 		assertConflictingOriginsRequestAborted();
@@ -369,14 +370,14 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		csrfListener.setConflictingOriginAction(CsrfAction.SUPPRESS);
 
 		// first render a page in the user's session
-		tester.addRequestHeader("Origin", "http://localhost");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost");
 		tester.startPage(ThirdPage.class);
 
 		assertOriginsNotChecked();
 		tester.assertRenderedPage(ThirdPage.class);
 
 		// then click on a link from another external page
-		tester.addRequestHeader("Origin", "http://attacker.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://attacker.com/");
 		tester.clickLink("link", true);
 
 		assertConflictingOriginsRequestSuppressed();
@@ -390,14 +391,14 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		csrfListener.setConflictingOriginAction(CsrfAction.SUPPRESS);
 
 		// first render a page in the user's session
-		tester.addRequestHeader("Origin", "http://localhost");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost");
 		tester.startPage(ThirdPage.class);
 
 		assertOriginsNotChecked();
 		tester.assertRenderedPage(ThirdPage.class);
 
 		// then click on a link from another external page
-		tester.addRequestHeader("Origin", "http://attacker.com/");
+		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://attacker.com/");
 		tester.submitForm("form");
 
 		assertConflictingOriginsRequestSuppressed();

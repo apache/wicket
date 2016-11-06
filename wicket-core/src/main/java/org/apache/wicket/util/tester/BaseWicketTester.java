@@ -117,6 +117,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -1157,8 +1158,9 @@ public class BaseWicketTester
 			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.setUrl(url);
-		request.addHeader("Wicket-Ajax-BaseURL", url.toString());
-		request.addHeader("Wicket-Ajax", "true");
+		request.addHeader(WebRequest.HEADER_ORIGIN, createOriginHeader());
+		request.addHeader(WebRequest.HEADER_AJAX_BASE_URL, url.toString());
+		request.addHeader(WebRequest.HEADER_AJAX, "true");
 
 		if (behavior instanceof AjaxFormSubmitBehavior)
 		{
@@ -1177,6 +1179,16 @@ public class BaseWicketTester
 		}
 
 		processRequest();
+	}
+	
+	/**
+	 * Build value to Origin header based on RequestCycle Url
+	 * 
+	 * @return Origin header
+	 */
+	protected String createOriginHeader(){
+		Url url = RequestCycle.get().getRequest().getUrl();
+		return url.getProtocol() + "://" +url.getHost() + ":" + url.getPort();
 	}
 
 	/**
