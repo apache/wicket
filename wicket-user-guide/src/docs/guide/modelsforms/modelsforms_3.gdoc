@@ -79,7 +79,7 @@ h3. LambdaModel
 @PropertyModel@ uses textual expressions to resolve object properties. That's nice but it comes with some drawbacks. For example the expression can not be checked at compile time and is not refactory-friendly. To overcome these problems with Wicket 8 a new kind of lambda-based model has been introduced: @org.apache.wicket.model.LambdaModel@. This model uses lambda expressions to get/set model object. Here is the signature of its constructor:
 
 {code}
-public LambdaModel(WicketSupplier<T> getter, WicketConsumer<T> setter)
+public LambdaModel(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
 {code}
 
 In the following code we use method references to operate on a specific object property:

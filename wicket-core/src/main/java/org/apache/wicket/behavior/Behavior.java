@@ -292,7 +292,7 @@ public abstract class Behavior
 	}
 
 	/**
-	 * Creates a {@link Behavior} that uses the given {@link WicketFunction function} to do
+	 * Creates a {@link Behavior} that uses the given {@code SerializableFunction function} to do
 	 * something with a component's attribute.
 	 *
 	 * <p>
