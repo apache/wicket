@@ -67,7 +67,6 @@ import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.io.IOUtils;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -265,19 +264,19 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addFile(String fieldName, File file, String contentType)
 	{
-		Args.notNull(file, "file");
+		if (file != null) {
+			if (file.exists() == false)
+			{
+				throw new IllegalArgumentException(
+					"File does not exists. You must provide an existing file: "
+						+ file.getAbsolutePath());
+			}
 
-		if (file.exists() == false)
-		{
-			throw new IllegalArgumentException(
-				"File does not exists. You must provide an existing file: "
-					+ file.getAbsolutePath());
-		}
-
-		if (file.isFile() == false)
-		{
-			throw new IllegalArgumentException(
-				"You can only add a File, which is not a directory. Only files can be uploaded.");
+			if (file.isFile() == false)
+			{
+				throw new IllegalArgumentException(
+					"You can only add a File, which is not a directory. Only files can be uploaded.");
+			}
 		}
 
 		if (uploadedFiles == null)
@@ -1604,7 +1603,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 						out.write("; name=\"".getBytes());
 						out.write(fieldName.getBytes());
 						out.write("\"; filename=\"".getBytes());
-						out.write(uf.getFile().getName().getBytes());
+						if (uf.getFile() != null) {
+							out.write(uf.getFile().getName().getBytes());
+						}
 						out.write("\"".getBytes());
 						out.write(crlf.getBytes());
 						out.write("Content-Type: ".getBytes());
@@ -1612,16 +1613,18 @@ public class MockHttpServletRequest implements HttpServletRequest
 						out.write(crlf.getBytes());
 						out.write(crlf.getBytes());
 
-						// Load the file and put it into the the inputstream
-						FileInputStream fis = new FileInputStream(uf.getFile());
+						if (uf.getFile() != null) {
+							// Load the file and put it into the the inputstream
+							FileInputStream fis = new FileInputStream(uf.getFile());
 
-						try
-						{
-							IOUtils.copy(fis, out);
-						}
-						finally
-						{
-							fis.close();
+							try
+							{
+								IOUtils.copy(fis, out);
+							}
+							finally
+							{
+								fis.close();
+							}
 						}
 						out.write(crlf.getBytes());
 					}
