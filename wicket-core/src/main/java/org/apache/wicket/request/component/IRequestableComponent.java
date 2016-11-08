@@ -17,6 +17,7 @@
 package org.apache.wicket.request.component;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.behavior.InvalidBehaviorIdException;
 import org.apache.wicket.model.IDetachable;
@@ -46,9 +47,11 @@ public interface IRequestableComponent
 	/**
 	 * Returns page this component belongs to.
 	 * 
-	 * @return page instance or <code>null</code>
+	 * @return The page holding this component
+	 * @throws WicketRuntimeException
+	 *             Thrown if component is not yet attached to a Page.
 	 */
-	public IRequestablePage getPage();
+	IRequestablePage getPage() throws WicketRuntimeException;
 
 	/**
 	 * Gets the component at the given path.
