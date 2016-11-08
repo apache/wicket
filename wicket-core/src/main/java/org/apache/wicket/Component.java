@@ -1751,8 +1751,9 @@ public abstract class Component
 	 * Gets the page holding this component.
 	 * 
 	 * @return The page holding this component
-	 * @throws IllegalStateException
+	 * @throws WicketRuntimeException
 	 *             Thrown if component is not yet attached to a Page.
+	 * @see #findPage()
 	 */
 	@Override
 	public final Page getPage()
@@ -3706,9 +3707,9 @@ public abstract class Component
 
 	/**
 	 * If this Component is a Page, returns self. Otherwise, searches for the nearest Page parent in
-	 * the component hierarchy. If no Page parent can be found, null is returned.
+	 * the component hierarchy. If no Page parent can be found, {@code null} is returned.
 	 * 
-	 * @return The Page or null if none can be found
+	 * @return The Page or {@code null} if none can be found
 	 */
 	protected final Page findPage()
 	{
