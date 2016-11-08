@@ -242,19 +242,24 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 				IPageManager pageManager = session.getPageManager();
 				Page page = getPage(pageManager);
 
-				WebSocketRequestHandler requestHandler = webSocketSettings.newWebSocketRequestHandler(page, connection);
-
-				WebSocketPayload payload = createEventPayload(message, requestHandler);
-
-				if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage
-						|| message instanceof AbortedMessage))
+				if (page != null)
 				{
-					requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
-				}
+					WebSocketRequestHandler requestHandler = webSocketSettings.newWebSocketRequestHandler(page, connection);
 
-				IRequestHandler broadcastingHandler = new WebSocketMessageBroadcastHandler(pageId, resourceName, payload);
-				requestMapper.setHandler(broadcastingHandler);
-				requestCycle.processRequestAndDetach();
+					WebSocketPayload payload = createEventPayload(message, requestHandler);
+
+					if (!(message instanceof ConnectedMessage || message instanceof ClosedMessage || message instanceof AbortedMessage)) {
+						requestCycle.scheduleRequestHandlerAfterCurrent(requestHandler);
+					}
+
+					IRequestHandler broadcastingHandler = new WebSocketMessageBroadcastHandler(pageId, resourceName, payload);
+					requestMapper.setHandler(broadcastingHandler);
+					requestCycle.processRequestAndDetach();
+				}
+				else
+				{
+					LOG.debug("Page with id '{}' has been expired. No message will be broadcast!", pageId);
+				}
 			}
 			catch (Exception x)
 			{
