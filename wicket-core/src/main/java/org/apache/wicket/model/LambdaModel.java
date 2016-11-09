@@ -26,10 +26,10 @@ import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 /**
  * <code>LambdaModel</code> is a basic implementation of an <code>IModel</code>
- * that uses a serializable {@link java.util.function.Supplier} to get the object
- * and {@link java.util.function.Consumer} to set it.
+ * that uses a serializable {@link SerializableSupplier} to get the object
+ * and {@link SerializableConsumer} to set it.
  *
- * The detach method defaults does nothing.
+ * The {@link #detach()} method by default does nothing.
  *
  * @param <T> The type of the Model Object
  */
