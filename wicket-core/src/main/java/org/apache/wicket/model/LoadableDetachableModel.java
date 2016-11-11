@@ -200,9 +200,9 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	 *
 	 * @param <T>
 	 * @param getter Used for the getObject() method.
-	 * @return Model
+	 * @return the model
 	 */
-	public static <T> IModel<T> of(SerializableSupplier<T> getter)
+	public static <T> LoadableDetachableModel<T> of(SerializableSupplier<T> getter)
 	{
 		return new LoadableDetachableModel<T>()
 		{
