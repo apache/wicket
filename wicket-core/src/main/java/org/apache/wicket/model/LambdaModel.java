@@ -25,13 +25,14 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 /**
- * <code>LambdaModel</code> is a basic implementation of an <code>IModel</code>
- * that uses a serializable {@link SerializableSupplier} to get the object
- * and {@link SerializableConsumer} to set it.
+ * <code>LambdaModel</code> is a basic implementation of an <code>IModel</code> that uses a
+ * serializable {@link java.util.function.Supplier} to get the object and
+ * {@link java.util.function.Consumer} to set it.
  *
  * The {@link #detach()} method by default does nothing.
  *
- * @param <T> The type of the Model Object
+ * @param <T>
+ *            The type of the Model Object
  */
 public class LambdaModel<T> implements IModel<T>
 {
@@ -41,11 +42,13 @@ public class LambdaModel<T> implements IModel<T>
 	private final SerializableConsumer<T> setter;
 
 	/**
-	 * Construct the model, using the given supplier and consumer as
-	 * implementation for getObject and setObject.
+	 * Construct the model, using the given supplier and consumer as implementation for getObject
+	 * and setObject.
 	 *
-	 * @param getter Used for the getObject() method.
-	 * @param setter Used for the setObject(T object) method.
+	 * @param getter
+	 *            Used for the getObject() method.
+	 * @param setter
+	 *            Used for the setObject(T object) method.
 	 */
 	public LambdaModel(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
 	{
@@ -82,7 +85,7 @@ public class LambdaModel<T> implements IModel<T>
 		{
 			return false;
 		}
-		final LambdaModel<?> other = (LambdaModel<?>) obj;
+		final LambdaModel<?> other = (LambdaModel<?>)obj;
 		if (!Objects.equals(this.getter, other.getter))
 		{
 			return false;
@@ -96,17 +99,21 @@ public class LambdaModel<T> implements IModel<T>
 
 	/**
 	 * Create a {@link LambdaModel}. Usage:
+	 * 
 	 * <pre>
 	 * {@code
 	 * 	LambdaModel.of(person::getName, person::setName)
 	 * }
 	 * </pre>
 	 *
-	 * @param getter used to get value
-	 * @param setter used to set value
+	 * @param getter
+	 *            used to get value
+	 * @param setter
+	 *            used to set value
 	 * @return model
 	 *
-	 * @param <T> model object type
+	 * @param <T>
+	 *            model object type
 	 */
 	public static <T> IModel<T> of(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
 	{
@@ -114,18 +121,48 @@ public class LambdaModel<T> implements IModel<T>
 	}
 
 	/**
+	 * Create a read-only {@link IModel}. Usage:
+	 * 
+	 * <pre>
+	 * {@code
+	 *     LambdaModel.of(person::getName)
+	 * }
+	 * </pre>
+	 * 
+	 * Note that {@link IModel} is a {@code FunctionalInterface} and you can also use a lambda
+	 * directly as a model.
+	 *
+	 * @param getter
+	 *            used to get value
+	 * @return model
+	 *
+	 * @param <T>
+	 *            model object type
+	 */
+	public static <T> IModel<T> of(SerializableSupplier<T> getter)
+	{
+		return getter::get;
+	}
+
+	/**
 	 * Create a {@link LambdaModel} for a given target. Usage:
+	 * 
 	 * <pre>
 	 * {@code
 	 * 	LambdaModel.of(personModel, Person::getName)
 	 * }
 	 * </pre>
+	 * 
 	 * The target model will be detached automatically.
 	 *
-	 * @param target target for getter and setter
-	 * @param getter used to get a value
-	 * @param <X> target model object type
-	 * @param <T> model object type
+	 * @param target
+	 *            target for getter and setter
+	 * @param getter
+	 *            used to get a value
+	 * @param <X>
+	 *            target model object type
+	 * @param <T>
+	 *            model object type
 	 * 
 	 * @return model
 	 */
@@ -134,25 +171,24 @@ public class LambdaModel<T> implements IModel<T>
 		Args.notNull(target, "target");
 		Args.notNull(getter, "getter");
 
-		return new LambdaModel<T>(
-			() ->
+		return new LambdaModel<T>(() -> {
+			X x = target.getObject();
+			if (x == null)
 			{
-				X x = target.getObject();
-				if (x == null) {
-					return null;
-				}
-				return getter.apply(x);
-			},
-
-			(t) ->
-			{
-				throw new UnsupportedOperationException("setObject(Object) not supported");
+				return null;
 			}
-		) {
+			return getter.apply(x);
+		},
+
+			(t) -> {
+				throw new UnsupportedOperationException("setObject(Object) not supported");
+			})
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void detach() {
+			public void detach()
+			{
 				target.detach();
 			}
 		};
@@ -160,20 +196,27 @@ public class LambdaModel<T> implements IModel<T>
 
 	/**
 	 * Create a {@link LambdaModel} for a given target. Usage:
+	 * 
 	 * <pre>
 	 * {@code
 	 * 	LambdaModel.of(personModel, Person::getName, Person::setName)
 	 * }
 	 * </pre>
+	 * 
 	 * The target model will be detached automatically.
 	 *
-	 * @param target target for getter and setter
-	 * @param getter used to get a value
-	 * @param setter used to set a value
+	 * @param target
+	 *            target for getter and setter
+	 * @param getter
+	 *            used to get a value
+	 * @param setter
+	 *            used to set a value
 	 *
-	 * @param <X> target model object type
-	 * @param <T> model object type
-
+	 * @param <X>
+	 *            target model object type
+	 * @param <T>
+	 *            model object type
+	 * 
 	 * @return model
 	 */
 	public static <X, T> IModel<T> of(IModel<X> target, SerializableFunction<X, T> getter,
@@ -183,28 +226,28 @@ public class LambdaModel<T> implements IModel<T>
 		Args.notNull(getter, "getter");
 		Args.notNull(setter, "setter");
 
-		return new LambdaModel<T>(
-			() ->
+		return new LambdaModel<T>(() -> {
+			X x = target.getObject();
+			if (x == null)
 			{
-				X x = target.getObject();
-				if (x == null) {
-					return null;
-				}
-				return getter.apply(x);
-			},
+				return null;
+			}
+			return getter.apply(x);
+		},
 
-			(t) ->
-			{
+			(t) -> {
 				X x = target.getObject();
-				if (x != null) {
+				if (x != null)
+				{
 					setter.accept(x, t);
 				}
-			}
-		) {
+			})
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void detach() {
+			public void detach()
+			{
 				target.detach();
 			}
 		};
