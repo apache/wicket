@@ -38,7 +38,7 @@ public class SqlTimeConverter extends AbstractDateConverter<Time>
 	{
 		if (locale == null)
 		{
-			locale = Locale.getDefault();
+			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
 
 		// return a clone because DateFormat.getDateInstance uses a pool

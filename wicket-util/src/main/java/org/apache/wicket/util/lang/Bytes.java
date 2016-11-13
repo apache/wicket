@@ -361,7 +361,7 @@ public final class Bytes extends LongValue
 	 */
 	public static Bytes valueOf(final String string) throws StringValueConversionException
 	{
-		return valueOf(string, Locale.getDefault());
+		return valueOf(string, Locale.getDefault(Locale.Category.FORMAT));
 	}
 
 	/**
@@ -372,7 +372,7 @@ public final class Bytes extends LongValue
 	@Override
 	public String toString()
 	{
-		return toString(Locale.getDefault());
+		return toString(Locale.getDefault(Locale.Category.FORMAT));
 	}
 
 	/**

@@ -129,7 +129,7 @@ public class DateTextField extends TextField<Date> implements ITextFormatProvide
 			{
 				if (locale == null)
 				{
-					locale = Locale.getDefault();
+					locale = Locale.getDefault(Locale.Category.FORMAT);
 				}
 				return new SimpleDateFormat(DateTextField.this.datePattern, locale);
 			}
