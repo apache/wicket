@@ -77,7 +77,7 @@ public abstract class AbstractDateConverter<D extends Date> extends AbstractConv
 	{
 		if (locale == null)
 		{
-			locale = Locale.getDefault();
+			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
 
 		// return a clone because DateFormat.getDateInstance uses a pool

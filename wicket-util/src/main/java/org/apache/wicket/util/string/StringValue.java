@@ -106,7 +106,7 @@ public class StringValue implements IClusterable
 	 */
 	public static StringValue valueOf(final double value)
 	{
-		return valueOf(value, Locale.getDefault());
+		return valueOf(value, Locale.getDefault(Locale.Category.FORMAT));
 	}
 
 	/**

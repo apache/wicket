@@ -44,7 +44,7 @@ public final class BytesTest extends Assert
 	@Before
 	public void before()
 	{
-		defaultLocale = Locale.getDefault();
+		defaultLocale = Locale.getDefault(Locale.Category.FORMAT);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public final class BytesTest extends Assert
 	@After
 	public void after()
 	{
-		Locale.setDefault(defaultLocale);
+		Locale.setDefault(Locale.Category.FORMAT, defaultLocale);
 	}
 
 	/**

@@ -315,7 +315,7 @@ public class Duration extends AbstractTimeValue
 	 */
 	public static Duration valueOf(final String string) throws StringValueConversionException
 	{
-		return valueOf(string, Locale.getDefault());
+		return valueOf(string, Locale.getDefault(Locale.Category.FORMAT));
 	}
 
 	/**
