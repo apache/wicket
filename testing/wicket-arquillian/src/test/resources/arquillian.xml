@@ -27,9 +27,9 @@
     <container qualifier="wildfly" default="true">
     	<configuration>
     		<property name="jbossHome">target/wildfly-${wildfly.version}</property>
-            <property name="managementPort">48991</property>
+            <property name="managementPort">38991</property>
             <!-- DEBUG MODE MANAGED: -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n -->
-    		<property name="javaVmArguments">-Djboss.socket.binding.port-offset=48993 -Xmx128m -Xrunjdwp:transport=dt_socket,address=48992,server=y,suspend=n
+    		<property name="javaVmArguments">-Djboss.socket.binding.port-offset=38993 -Xmx128m -Xrunjdwp:transport=dt_socket,address=38992,server=y,suspend=n
             </property>
     	</configuration>
     </container>
