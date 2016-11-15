@@ -35,7 +35,7 @@ public abstract class LambdaModel<T> implements IModel<T>
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor hidden, instantation is done using one of the factory methods
+	 * Constructor hidden, instantiation is done using one of the factory methods
 	 */
 	private LambdaModel()
 	{
