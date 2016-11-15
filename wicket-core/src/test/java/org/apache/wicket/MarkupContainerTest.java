@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import org.apache.commons.collections4.map.LinkedMap;
@@ -37,6 +38,8 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -1281,5 +1284,66 @@ public class MarkupContainerTest extends WicketTestCase
 	{
 		for (int i = 0; i < numberOfChildrenToTake; i++)
 			iterator.next();
+	}
+
+	@Test
+	public void stream()
+	{
+		LoginPage loginPage = new LoginPage();
+		Optional<Component> first = loginPage.stream()
+			.filter(c -> c.getId().equals("form"))
+			.findFirst();
+		assertThat(first.isPresent(), is(false));
+
+		loginPage.add(new Form<>("form"));
+		Optional<Component> second = loginPage.stream()
+			.filter(c -> c.getId().equals("form"))
+			.findFirst();
+		assertThat(second.isPresent(), is(true));
+
+		loginPage.add(new WebMarkupContainer("wmc"));
+
+		Optional<Form> form = loginPage.stream()
+			.filter(Form.class::isInstance)
+			.map(Form.class::cast)
+			.findFirst();
+		assertThat(form.isPresent(), is(true));
+
+		Optional<WebMarkupContainer> wmc = loginPage.stream()
+			.filter(WebMarkupContainer.class::isInstance)
+			.map(WebMarkupContainer.class::cast)
+			.findFirst();
+		assertThat(wmc.isPresent(), is(true));
+	}
+
+	@Test
+	public void streamChildren()
+	{
+		LoginPage loginPage = new LoginPage();
+		Optional<Component> first = loginPage.stream()
+			.filter(c -> c.getId().equals("form"))
+			.findFirst();
+		assertThat(first.isPresent(), is(false));
+
+		Form<Object> form = new Form<>("form");
+		loginPage.add(form);
+
+		form.add(new TextField<>("field"));
+
+		assertThat(loginPage.streamChildren()
+			.filter(c -> c.getId().equals("form"))
+			.findFirst()
+			.isPresent(), is(true));
+
+		assertThat(loginPage.streamChildren()
+			.filter(c -> c.getId().equals("field"))
+			.findFirst()
+			.isPresent(), is(true));
+
+		assertThat(loginPage.streamChildren()
+			.filter(TextField.class::isInstance)
+			.filter(c -> c.getId().equals("field"))
+			.findFirst()
+			.isPresent(), is(true));
 	}
 }
