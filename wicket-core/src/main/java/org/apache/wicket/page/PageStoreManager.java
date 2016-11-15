@@ -167,10 +167,14 @@ public class PageStoreManager extends AbstractPageManager
 				sessionCache = new ArrayList<>();
 			}
 
-			for (Object o : afterReadObject)
+			final IPageStore pageStore = getPageStore();
+			if (pageStore != null)
 			{
-				IManageablePage page = getPageStore().convertToPage(o);
-				addPage(page);
+				for (Object o : afterReadObject)
+				{
+					IManageablePage page = pageStore.convertToPage(o);
+					addPage(page);
+				}
 			}
 
 			afterReadObject = null;
@@ -189,10 +193,11 @@ public class PageStoreManager extends AbstractPageManager
 				convertAfterReadObjects();
 			}
 
+			IManageablePage page = null;
 			// try to find page with same id
 			if (sessionCache != null)
 			{
-				IManageablePage page = findPage(id);
+				page = findPage(id);
 				if (page != null)
 				{
 					return page;
@@ -200,7 +205,12 @@ public class PageStoreManager extends AbstractPageManager
 			}
 
 			// not found, ask pagestore for the page
-			return getPageStore().getPage(sessionId, id);
+			final IPageStore pageStore = getPageStore();
+			if (pageStore != null)
+			{
+				page = pageStore.getPage(sessionId, id);
+			}
+			return page;
 		}
 
 		/**

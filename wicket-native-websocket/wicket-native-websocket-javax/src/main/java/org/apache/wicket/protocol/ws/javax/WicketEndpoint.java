@@ -18,12 +18,15 @@ package org.apache.wicket.protocol.ws.javax;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.websocket.CloseReason;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.IApplicationListener;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.lang.Checks;
@@ -43,6 +46,8 @@ public class WicketEndpoint extends Endpoint
 	 */
 	private static final String WICKET_APP_PARAM_NAME = "wicket-app-name";
 
+	private final AtomicBoolean applicationDestroyed = new AtomicBoolean(false);
+
 	private JavaxWebSocketProcessor javaxWebSocketProcessor;
 
 	@Override
@@ -51,6 +56,7 @@ public class WicketEndpoint extends Endpoint
 		String appName = getApplicationName(session);
 
 		WebApplication app = (WebApplication) WebApplication.get(appName);
+		app.getApplicationListeners().add(new ApplicationListener(applicationDestroyed));
 
 		try
 		{
@@ -68,7 +74,10 @@ public class WicketEndpoint extends Endpoint
 	{
 		super.onClose(session, closeReason);
 
-		javaxWebSocketProcessor.onClose(closeReason.getCloseCode().getCode(), closeReason.getReasonPhrase());
+		if (isApplicationAlive())
+		{
+			javaxWebSocketProcessor.onClose(closeReason.getCloseCode().getCode(), closeReason.getReasonPhrase());
+		}
 	}
 
 	@Override
@@ -77,7 +86,14 @@ public class WicketEndpoint extends Endpoint
 		LOG.error("An error occurred in web socket connection with id : " + session.getId(), t);
 		super.onError(session, t);
 
-		javaxWebSocketProcessor.onError(t);
+		if (isApplicationAlive())
+		{
+			javaxWebSocketProcessor.onError(t);
+		}
+	}
+
+	private boolean isApplicationAlive() {
+		return applicationDestroyed.get() == false;
 	}
 
 	private String getApplicationName(Session session)
@@ -113,4 +129,24 @@ public class WicketEndpoint extends Endpoint
 		return appName;
 	}
 
+	private static class ApplicationListener implements IApplicationListener
+	{
+		private final AtomicBoolean applicationDestroyed;
+
+		private ApplicationListener(AtomicBoolean applicationDestroyed)
+		{
+			this.applicationDestroyed = applicationDestroyed;
+		}
+
+		@Override
+		public void onAfterInitialized(Application application)
+		{
+		}
+
+		@Override
+		public void onBeforeDestroyed(Application application)
+		{
+			applicationDestroyed.set(true);
+		}
+	}
 }
