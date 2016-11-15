@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.javax.app;
+package org.apache.wicket.protocol.ws.example;
 
 import org.apache.wicket.markup.html.WebPage;
 
-//@RequireHttps
 public class HomePage extends WebPage
 {
 }

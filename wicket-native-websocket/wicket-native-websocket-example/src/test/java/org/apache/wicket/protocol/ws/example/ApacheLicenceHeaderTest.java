@@ -14,19 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.javax.app;
+package org.apache.wicket.protocol.ws.example;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.ws.api.BaseWebSocketBehavior;
-import org.apache.wicket.protocol.ws.javax.app.charts.ChartWebSocketResource;
-import org.apache.wicket.protocol.ws.javax.app.charts.WebSocketChart;
+import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
 
-public class WebSocketResourceDemoPage extends WebPage
+/**
+ * Test that the license headers are in place in this project. The tests are run from
+ * {@link ApacheLicenseHeaderTestCase}, but you can add project specific tests here if needed.
+ */
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
-	public WebSocketResourceDemoPage()
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenceHeaderTest()
 	{
-		WebSocketChart chartPanel = new WebSocketChart("chartPanel");
-		chartPanel.add(new BaseWebSocketBehavior(ChartWebSocketResource.NAME));
-		add(chartPanel);
+		// addHeaders = true;
 	}
 }

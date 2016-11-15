@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.javax;
+package org.apache.wicket.protocol.ws.example;
 
+import org.apache.wicket.protocol.ws.javax.WicketServerEndpointConfig;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
@@ -25,9 +26,10 @@ import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
-public class Start
+public class StartNativeWebSocketExample
 {
 	public static void main(String[] args) throws Exception
 	{
@@ -44,6 +46,7 @@ public class Start
 		ServerConnector connector = new ServerConnector(server, new HttpConnectionFactory(http_config));
 
 		// Set some timeout options to make debugging easier.
+//        connector.setMaxIdleTime(timeout);
 		connector.setSoLingerTime(-1);
 		connector.setPort(8080);
 		server.addConnector(connector);
@@ -80,15 +83,25 @@ public class Start
 		}
 
 		WebAppContext bb = new WebAppContext();
-
 		bb.setServer(server);
 		bb.setContextPath("/");
-		bb.setWar("src/test/webapp");
+//		bb.setExtraClasspath("target/classes");
+		bb.setWar("src/main/webapp");
+//		bb.getMetaData().addContainerResource(new FileResource(new File("./target/classes").toURI()));
+//		bb.setConfigurations(new Configuration[]{
+//				new WebXmlConfiguration(),
+//				new AnnotationConfiguration()
+//		});
+//		ServletContainerInitializersStarter starter = new ServletContainerInitializersStarter(bb);
+//		starter.doStart();
 
+		ServerContainer serverContainer = WebSocketServerContainerInitializer.configureContext(bb);
+		serverContainer.addEndpoint(new WicketServerEndpointConfig());
+//        WebSocketUpgradeFilter upgradeFilter =
+//                (WebSocketUpgradeFilter) webAppContext.getAttribute(WebSocketUpgradeFilter.class.getName());
+//        upgradeFilter.getFactory().getPolicy().setIdleTimeout(5000);
 
-		WebSocketServerContainerInitializer.configureContext(bb);
-
-		// START JMX SERVER
+			// START JMX SERVER
 		// MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 		// MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
 		// server.getContainer().addEventListener(mBeanContainer);
@@ -97,7 +110,6 @@ public class Start
 		server.setHandler(bb);
 
 		try {
-//			bb.dumpStdErr();
 			System.out.println(">>> STARTING EMBEDDED JETTY SERVER, PRESS ANY KEY TO STOP");
 			server.start();
 			System.in.read();

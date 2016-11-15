@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -20,19 +20,36 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-	<display-name>JSR356 WebSockets</display-name>
+	<display-name>wicket-native-websockets-example</display-name>
+
+    <filter>
+        <filter-name>wrapper</filter-name>
+        <filter-class>org.apache.wicket.protocol.ws.example.WrappingFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>wrapper</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 	<filter>
-		<filter-name>jsr356.websockets</filter-name>
+		<filter-name>wicket.wicket-native-websockets</filter-name>
+		<!--<filter-class>org.apache.wicket.protocol.ws.jetty.Jetty7WebSocketFilter</filter-class>-->
+        <!--<filter-class>org.apache.wicket.protocol.ws.jetty9.Jetty9WebSocketFilter</filter-class>-->
+        <!--<filter-class>org.apache.wicket.protocol.ws.tomcat7.Tomcat7WebSocketFilter</filter-class>-->
         <filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
+        <!--<filter-class>org.wicketstuff.protocol.ws.javax.JavaxWebSocketFilter</filter-class>-->
 		<init-param>
 			<param-name>applicationClassName</param-name>
-			<param-value>org.apache.wicket.protocol.ws.javax.app.JSR356Application</param-value>
+			<param-value>org.apache.wicket.protocol.ws.example.JSR356Application</param-value>
 		</init-param>
 	</filter>
 
 	<filter-mapping>
-		<filter-name>jsr356.websockets</filter-name>
+		<filter-name>wicket.wicket-native-websockets</filter-name>
+		<!--<url-pattern>/ff/*</url-pattern>-->
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+
 </web-app>

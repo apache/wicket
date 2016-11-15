@@ -14,18 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.javax.app.charts;
+package org.apache.wicket.protocol.ws.example.charts;
 
+import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
-import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
+import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 
 /**
  * A helper class that uses the web connection to push data to the
@@ -35,14 +36,16 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
  */
 public class ChartUpdater
 {
-	public static void start(ConnectedMessage message)
+	public static void start(ConnectedMessage message, ScheduledExecutorService scheduledExecutorService)
 	{
 		Record[] data = generateData();
 
 		// create an asynchronous task that will write the data to the client
 		UpdateTask updateTask = new UpdateTask(message.getApplication(), message.getSessionId(), message.getKey(), data);
-		Executors.newScheduledThreadPool(1).schedule(updateTask, 1, TimeUnit.SECONDS);
+        scheduledExecutorService.schedule(updateTask, 1, TimeUnit.SECONDS);
 	}
+
+
 
 	/**
 	 * Generates some random data to send to the client
@@ -119,10 +122,15 @@ public class ChartUpdater
 					// sleep for a while to simulate work
 					TimeUnit.SECONDS.sleep(1);
 				}
-				catch (Exception x)
+				catch (InterruptedException x)
 				{
-					x.printStackTrace();
-					return;
+					Thread.currentThread().interrupt();
+					break;
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					break;
 				}
 			}
 		}

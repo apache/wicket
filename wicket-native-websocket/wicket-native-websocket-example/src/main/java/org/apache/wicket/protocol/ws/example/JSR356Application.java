@@ -14,42 +14,59 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.javax.app;
+package org.apache.wicket.protocol.ws.example;
 
+import org.apache.wicket.protocol.ws.example.charts.ChartWebSocketResource;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
-import org.apache.wicket.protocol.ws.javax.app.charts.ChartWebSocketResource;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Application object for your web application. If you want to run this application without deploying, run the Start class.
- * 
- * @see org.apache.wicket.protocol.ws.javax.Start#main(String[])
+ * Application object for your web application.
+ * If you want to run this application without deploying, run the com.wicketinaction.StartNativeWebSocketExample class.
  */
 public class JSR356Application extends WebApplication
-{    	
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
+{
+    private ScheduledExecutorService scheduledExecutorService;
+
 	@Override
 	public Class<HomePage> getHomePage()
 	{
 		return HomePage.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#init()
-	 */
 	@Override
 	public void init()
 	{
 		super.init();
 
+        scheduledExecutorService = Executors.newScheduledThreadPool(1);
+
+		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig(8080, 8443)));
+
 		mountPage("/behavior", WebSocketBehaviorDemoPage.class);
 		mountPage("/resource", WebSocketResourceDemoPage.class);
 
-		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig()));
-
 		getSharedResources().add(ChartWebSocketResource.NAME, new ChartWebSocketResource());
 	}
+
+    @Override
+    protected void onDestroy() {
+        scheduledExecutorService.shutdownNow();
+
+        super.onDestroy();
+    }
+
+    public ScheduledExecutorService getScheduledExecutorService()
+    {
+        return scheduledExecutorService;
+    }
+
+    public static JSR356Application get()
+    {
+        return (JSR356Application) WebApplication.get();
+    }
 }

@@ -14,30 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.javax.app;
+package org.apache.wicket.protocol.ws.example.charts;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
+import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.wicket.protocol.ws.api.WebSocketResource;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
-import org.apache.wicket.protocol.ws.javax.app.charts.ChartUpdater;
-import org.apache.wicket.protocol.ws.javax.app.charts.WebSocketChart;
+import org.apache.wicket.protocol.ws.example.JSR356Application;
 
-//@RequireHttps
-public class WebSocketBehaviorDemoPage extends WebPage
+/**
+ *
+ */
+public class ChartWebSocketResource extends WebSocketResource
 {
-	public WebSocketBehaviorDemoPage()
-	{
-		WebSocketChart chartPanel = new WebSocketChart("chartPanel");
-		chartPanel.add(new WebSocketBehavior()
-		{
-			@Override
-			protected void onConnect(ConnectedMessage message)
-			{
-				super.onConnect(message);
+	public static final String NAME = ChartWebSocketResource.class.getName();
 
-				ChartUpdater.start(message);
-			}
-		});
-		add(chartPanel);
+	@Override
+	protected void onConnect(ConnectedMessage message)
+	{
+		super.onConnect(message);
+
+		ScheduledExecutorService service = JSR356Application.get().getScheduledExecutorService();
+		ChartUpdater.start(message, service);
 	}
 }

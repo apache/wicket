@@ -14,28 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.javax.app.charts;
+package org.apache.wicket.protocol.ws.example;
 
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.panel.Panel;
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * A panel that initializes a Google Line chart and uses WebSocketBehavior to register an asynchronous
- * task that will push some data through the web socket connection.
+ *
  */
-public class WebSocketChart extends Panel
+public class WrappingFilter implements Filter
 {
-	public WebSocketChart(final String id)
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException
 	{
-		super(id);
 	}
 
 	@Override
-	public void renderHead(IHeaderResponse response)
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
-		super.renderHead(response);
-		response.render(JavaScriptHeaderItem.forReference(new ChartsResourceReference()));
+		request = new HttpServletRequestWrapper((HttpServletRequest) request);
+		chain.doFilter(request, response);
 	}
 
+	@Override
+	public void destroy()
+	{
+	}
 }
