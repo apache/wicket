@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.model;
 
-import java.util.Objects;
-
 import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
@@ -29,95 +27,24 @@ import org.danekja.java.util.function.serializable.SerializableSupplier;
  * serializable {@link java.util.function.Supplier} to get the object and
  * {@link java.util.function.Consumer} to set it.
  *
- * The {@link #detach()} method by default does nothing.
- *
  * @param <T>
  *            The type of the Model Object
  */
-public class LambdaModel<T> implements IModel<T>
+public abstract class LambdaModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
-	private final SerializableSupplier<T> getter;
-	private final SerializableConsumer<T> setter;
-
 	/**
-	 * Construct the model, using the given supplier and consumer as implementation for getObject
-	 * and setObject.
-	 *
-	 * @param getter
-	 *            Used for the getObject() method.
-	 * @param setter
-	 *            Used for the setObject(T object) method.
+	 * Constructor hidden, instantation is done using one of the factory methods
 	 */
-	public LambdaModel(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
+	private LambdaModel()
 	{
-		this.getter = Args.notNull(getter, "getter");
-		this.setter = Args.notNull(setter, "setter");
-	}
-
-	@Override
-	public T getObject()
-	{
-		return getter.get();
 	}
 
 	@Override
 	public void setObject(T t)
 	{
-		setter.accept(t);
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return org.apache.wicket.util.lang.Objects.hashCode(getter, setter);
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj == null)
-		{
-			return false;
-		}
-		if (getClass() != obj.getClass())
-		{
-			return false;
-		}
-		final LambdaModel<?> other = (LambdaModel<?>)obj;
-		if (!Objects.equals(this.getter, other.getter))
-		{
-			return false;
-		}
-		if (!Objects.equals(this.setter, other.setter))
-		{
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Create a {@link LambdaModel}. Usage:
-	 * 
-	 * <pre>
-	 * {@code
-	 * 	LambdaModel.of(person::getName, person::setName)
-	 * }
-	 * </pre>
-	 *
-	 * @param getter
-	 *            used to get value
-	 * @param setter
-	 *            used to set value
-	 * @return model
-	 *
-	 * @param <T>
-	 *            model object type
-	 */
-	public static <T> IModel<T> of(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
-	{
-		return new LambdaModel<>(getter, setter);
+		throw new UnsupportedOperationException("setObject(Object) not supported");
 	}
 
 	/**
@@ -143,6 +70,48 @@ public class LambdaModel<T> implements IModel<T>
 	{
 		return getter::get;
 	}
+
+	/**
+	 * Create a {@link LambdaModel}. Usage:
+	 * 
+	 * <pre>
+	 * {@code
+	 * 	LambdaModel.of(person::getName, person::setName)
+	 * }
+	 * </pre>
+	 *
+	 * @param getter
+	 *            used to get value
+	 * @param setter
+	 *            used to set value
+	 * @return model
+	 *
+	 * @param <T>
+	 *            model object type
+	 */
+	public static <T> IModel<T> of(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
+	{
+		Args.notNull(getter, "getter");
+		Args.notNull(setter, "setter");
+
+		return new LambdaModel<T>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public T getObject()
+			{
+				return getter.get();
+			}
+
+			@Override
+			public void setObject(T t)
+			{
+				setter.accept(t);
+			}
+		};
+	}
+
 
 	/**
 	 * Create a {@link LambdaModel} for a given target. Usage:
@@ -171,20 +140,20 @@ public class LambdaModel<T> implements IModel<T>
 		Args.notNull(target, "target");
 		Args.notNull(getter, "getter");
 
-		return new LambdaModel<T>(() -> {
-			X x = target.getObject();
-			if (x == null)
-			{
-				return null;
-			}
-			return getter.apply(x);
-		},
-
-			(t) -> {
-				throw new UnsupportedOperationException("setObject(Object) not supported");
-			})
+		return new LambdaModel<T>()
 		{
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			public T getObject()
+			{
+				X x = target.getObject();
+				if (x == null)
+				{
+					return null;
+				}
+				return getter.apply(x);
+			}
 
 			@Override
 			public void detach()
@@ -226,24 +195,30 @@ public class LambdaModel<T> implements IModel<T>
 		Args.notNull(getter, "getter");
 		Args.notNull(setter, "setter");
 
-		return new LambdaModel<T>(() -> {
-			X x = target.getObject();
-			if (x == null)
-			{
-				return null;
-			}
-			return getter.apply(x);
-		},
+		return new LambdaModel<T>()
+		{
+			private static final long serialVersionUID = 1L;
 
-			(t) -> {
+			@Override
+			public T getObject()
+			{
+				X x = target.getObject();
+				if (x == null)
+				{
+					return null;
+				}
+				return getter.apply(x);
+			}
+
+			@Override
+			public void setObject(T t)
+			{
 				X x = target.getObject();
 				if (x != null)
 				{
 					setter.accept(x, t);
 				}
-			})
-		{
-			private static final long serialVersionUID = 1L;
+			}
 
 			@Override
 			public void detach()

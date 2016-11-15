@@ -19,13 +19,10 @@ package org.apache.wicket.model;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Person;
-import org.danekja.java.util.function.serializable.SerializableConsumer;
-import org.danekja.java.util.function.serializable.SerializableSupplier;
 import org.junit.Test;
 
 /**
@@ -38,7 +35,7 @@ public class LambdaModelTest
 	public void methodReference()
 	{
 		Person person = new Person();
-		IModel<String> personNameModel = new LambdaModel<>(person::getName, person::setName);
+		IModel<String> personNameModel = LambdaModel.of(person::getName, person::setName);
 		check(personNameModel);
 	}
 
@@ -46,7 +43,7 @@ public class LambdaModelTest
 	public void explicitLambdas()
 	{
 		Person person = new Person();
-		IModel<String> personNameModel = new LambdaModel<>(
+		IModel<String> personNameModel = LambdaModel.of(
 				() -> person.getName(),
 				(name) -> person.setName(name));
 		check(personNameModel);
@@ -81,28 +78,6 @@ public class LambdaModelTest
 		check(personNameModel);
 	}
 
-	@Test
-	public void equality()
-	{
-		Person person = new Person();
-		final SerializableSupplier<String> getName = person::getName;
-		final SerializableConsumer<String> setName = person::setName;
-		IModel<String> personNameModel1 = new LambdaModel<>(getName, setName);
-		IModel<String> personNameModel2 = new LambdaModel<>(getName, setName);
-		assertEquals(personNameModel1, personNameModel2);
-	}
-
-	@Test
-	public void hashcode()
-	{
-		Person person = new Person();
-		final SerializableSupplier<String> getName = person::getName;
-		final SerializableConsumer<String> setName = person::setName;
-		IModel<String> personNameModel1 = new LambdaModel<>(getName, setName);
-		IModel<String> personNameModel2 = new LambdaModel<>(getName, setName);
-		assertEquals(personNameModel1.hashCode(), personNameModel2.hashCode());
-	}
-
 	private void check(IModel<String> personNameModel)
 	{
 		assertThat(personNameModel.getObject(), is(nullValue()));
@@ -120,5 +95,4 @@ public class LambdaModelTest
 		assertThat(clone, is(instanceOf(LambdaModel.class)));
 		assertThat(clone.getObject(), is(personName));
 	}
-
 }
