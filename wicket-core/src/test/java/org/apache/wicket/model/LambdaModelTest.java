@@ -23,7 +23,6 @@ import static org.junit.Assert.assertThat;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Person;
-import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.junit.Test;
 
 /**
@@ -44,9 +43,9 @@ public class LambdaModelTest
 	public void explicitLambdas()
 	{
 		Person person = new Person();
-		IModel<String> personNameModel = LambdaModel.of(
+		IModel<String> personNameModel = LambdaModel.<String>of(
 				() -> person.getName(),
-				(SerializableConsumer<String>) (name) -> person.setName(name));
+				(name) -> person.setName(name));
 		check(personNameModel);
 	}
 
