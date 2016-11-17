@@ -38,7 +38,17 @@ public class TagTesterTest extends Assert
 			"<ajax-response><component id='comp1'><![CDATA[<div class='cls' id='compId'></div>]]></component></ajax-response>";
 
 	// WICKET-5874
-	private static final String NON_CLOSED_INPUT = "<p><input wicket:id=\"wicketId\" type=\"text\"></p>";
+	private static final String NON_CLOSED_INPUT = "<p wicket:id=\"p\"><input wicket:id=\"wicketId\" type=\"text\"></p>";
+
+	/**
+	 * WICKET-6278
+	 */
+	@Test
+	public void tagNoRequiredClose() {
+		TagTester tester = TagTester.createTagByAttribute(NON_CLOSED_INPUT, "wicket:id", "p");
+
+		assertEquals("<input wicket:id=\"wicketId\" type=\"text\">", tester.getValue());
+	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5874
