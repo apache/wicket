@@ -1,0 +1,169 @@
+
+With Wicket as developers we use to define the hierarchy of components in the markup templates:
+
+[source,html]
+----
+<form wicket:id='customer'>
+    <input wicket:id='first' type='text'/>
+    <input wicket:id='last' type='text'/>
+    <div wicket:id="child">
+        <input wicket:id='first' type='text'/>
+        <input wicket:id='last' type='text'/>
+        <input wicket:id='dob' type='date'/>
+    </div>
+</form>
+----
+
+and then we repeat the same hierarchy in Java code:
+
+[source,java]
+----
+Form form=new Form("customer");
+add(form);
+ 
+form.add(new TextField("first"));
+form.add(new TextField("last"));
+ 
+WebMarkupContainer child=new WebMarkupContainer("child");
+form.add(child);
+ 
+child.add(new TextField("first"));
+child.add(new TextField("last"));
+child.add(new TextField("dob"));
+----
+
+The need for the hierarchy in the markup is obvious, it is simply how the markup works. On the Java side of things it may not be immediately apparent. After all, why can we not write the code like this?
+
+[source,java]
+----
+add(new Form("customer"));
+add(new TextField("first"));
+add(new TextField("last"));
+WebMarkupContainer child=new WebMarkupContainer("child");
+add(child);
+add(new TextField("first"));
+add(new TextField("last"));
+add(new TextField("dob"));
+----
+
+There are a couple of reasons:
+
+* Ambiguities that happen with duplicate ids
+* Inheriting state from parent to child
+
+We will examine these below.
+
+=== Markup Id Ambiguities
+
+In the example above we have a form that collects the name of a customer along with the name of their child and the child’s date of birth. We mapped the name of the customer and child to form components with wicket ids _first_ and _last_. If we were to add all the components to the same parent we would get an error because we cannot have two components with the same wicket id under the same parent (two components with id _first_ and two with id _last_). 
+Without hierarchy in Java we would have to make sure that all wicket ids in a markup file are unique, no small feat in a non-trivial page or panel. But, with hierarchy on the Java side we just have to make sure that no parent has two children with the same id, which is trivial.
+
+=== Inheriting State From Parents
+
+Suppose we wanted to hide form fields related to the child in the example above when certain conditions are met. Without hierarchy we would have to modify the _first_, _last_, and _dob_ fields to implement the visibility check. Worse, whenever we would add a new child related field we would have to remember to implement the same check; this is a maintenance headache. With hierarchy this is easy, simply hide the parent container and all children will be hidden as well — the code lives in one place and is automatically inherited by all descendant components. Thus, hierarchy on the Java side allows us to write succinct and maintainable code by making use of the parent-child relationship of components.
+
+=== Pain Points of the Java-Side Hierarchy
+
+While undeniably useful, the Java-side hierarchy can be a pain to maintain. It is very common to get requests to change things because the designer needs to wrap some components in a _div_ with a dynamic style or class attribute. Essentially we want to go from:
+
+[source,html]
+----
+<form wicket:id='customer'>
+    <input wicket:id='first' type='text'/>
+    <input wicket:id='last' type='text'/>
+----
+
+To:
+
+[source,java]
+----
+<form wicket:id='customer'>
+    <div wicket:id='container'>
+        <input wicket:id='first' type='text'/>
+        <input wicket:id='last' type='text'/>
+    </div>
+----
+
+Seems simple enough, but to do so we need to create the new container, find the code that adds all the components that have to be relocated and change it to add to the new container instead. This code:
+
+[source,java]
+----
+Form form=new Form("customer");
+add(form);
+ 
+form.add(new TextField("first"));
+form.add(new TextField("last"));
+----
+
+Will become:
+
+[source,java]
+----
+Form form=new Form("customer");
+add(form);
+ 
+WebMarkupContainer container=new WebMarkupContainer("container");
+form.add(container);
+ 
+container.add(new TextField("first"));
+container.add(new TextField("last"));
+----
+
+Another common change is to tweak the nesting of markup tags. This is something a designer should be able to do on their own if the change is purely visual, but cannot if it means Wicket components will change parents.
+
+In large pages with a lot of components these kinds of simple changes tend to cause a lot of annoyance for the developers.
+
+=== Component Queueing To The Rescue
+
+The idea behind component queueing is simple: instead of adding components to their parents directly, the developer can queue them in any ancestor and have Wicket automatically ‘dequeue’ them to the correct parent using the hierarchy defined in the markup. This will give us the best of both worlds: the developer only has to define the hierarchy once in markup, and have it automatically constructed in Java land.
+
+That means we can go from code like this:
+
+[source,java]
+----
+Form form=new Form("customer");
+add(form);
+ 
+form.add(new TextField("first"));
+form.add(new TextField("last"));
+ 
+WebMarkupContainer child=new WebMarkupContainer("child");
+form.add(child);
+ 
+child.add(new TextField("first"));
+child.add(new TextField("last"));
+child.add(new TextField("dob"));
+----
+
+To code like this:
+
+[source,java]
+----
+queue(new Form("customer"));
+queue(new TextField("first"));
+queue(new TextField("last"));
+ 
+WebMarkupContainer child=new WebMarkupContainer("child");
+queue(child);
+child.queue(new TextField("first"));
+child.queue(new TextField("last"));
+child.queue(new TextField("dob"));
+----
+
+NOTE: Note that we had to queue child’s _first_ and _last_ name fields to the _child_ container in order to disambiguate their wicket ids.
+
+
+The code above does not look shorter or that much different, so where is the advantage?
+
+Suppose our designer wants us to wrap the customer’s first and last name fields with a _div_ that changes its styling based on some condition. We saw how to do that above, we had to create a container and then reparent the two _TextField_ components into it. Using queueing we can skip the second step, all we have to do is add the following line:
+
+[source,java]
+----
+queue(new WebMarkupContainer("container"));
+----
+
+When dequeueing Wicket will automatically reparent the first and last name fields into the container for us.
+
+If the designer later wanted to move the first name field out of the _div_ we just added for them they could do it all by themselves without requiring any changes in the Java code. Wicket would dequeue the first name field into the form and the last name field into the container div.
+
+

@@ -1,0 +1,22 @@
+
+
+
+For end-users a datepicker is one of the most appreciated widget. It allows to simply edit a date value with the help of a user-friendly pop-up calendar. That's why nearly all UI frameworks provide a version of this widget. 
+
+Popular JavaScript libraries like YUI and JQuery come with a ready-to-use datepicker to enrich the user experience of our web applications. Wicket already provides a component which integrates a text field with a calendar widget from YUI library, but there is no built-in component that uses a datepicker based on JQuery library. 
+
+As both JQuery and its child project JQueryUI have gained a huge popularity in the last years, it's quite interesting to see how to integrate them in Wicket building a custom component. In this chapter we will create a custom datepicker based on the corresponding widget from JQueryUI project:
+
+image::../img/datepicker-screenshot.png[]
+
+WARNING: On Internet you can find different libraries that already offer a strong integration between Wicket and JQuery. The goal of this chapter is to see how to integrate Wicket with a JavaScript framework building a simple homemade datepicker which is not intended to provide every feature of the original JavaScript widget.
+
+=== What features we want to implement
+
+Before starting to write code, we must clearly define what features we want to implement for our component. The new component should:
+
+* *Be self-contained*: we must be able to distribute it and use it in other projects without requiring any kind of additional configuration.
+* *Have a customizable date format*: developer must be able to decide the date format used to display date value and to parse user input. 
+* *Be localizable*: the pop-up calendar must be localizable in order to support different languages.
+
+That's what we'd like to have with our custom datepicker. In the rest of the chapter we will see how to implement the features listed above and which resources must be packaged with our component.

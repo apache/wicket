@@ -1,0 +1,6 @@
+
+
+
+The _Request_ and _Response_ classes are located in package _org.apache.wicket.request_ and they provide an abstraction of the concrete request and response used by our web application. 
+
+Both classes are declared as abstract but if our application class inherits from _WebApplication_ it will use their sub classes _ServletWebRequest_ and _ServletWebResponse_, both of them located inside the package _org.apache.wicket.protocol.http.servlet.ServletWebRequest_ and _ServletWebResponse_ wrap respectively a _HttpServletRequest_ and a _HttpServletResponse_ object. If we need to access to these low-level objects we can call _Request_'s method _getContainerRequest()_ and _Response_'s method _getContainerResponse()_.
