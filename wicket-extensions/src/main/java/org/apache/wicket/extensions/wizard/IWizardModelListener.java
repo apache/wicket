@@ -31,15 +31,18 @@ public interface IWizardModelListener extends IClusterable
 	 * @param newStep
 	 *            The new step
 	 */
-	void onActiveStepChanged(IWizardStep newStep);
+	default void onActiveStepChanged(IWizardStep newStep)
+	{}
 
 	/**
 	 * Called when the wizard was cancelled.
 	 */
-	void onCancel();
+	default void onCancel()
+	{}
 
 	/**
-	 * Called when the wizard finished succesfully.
+	 * Called when the wizard finished successfully.
 	 */
-	void onFinish();
+	default void onFinish()
+	{}
 }

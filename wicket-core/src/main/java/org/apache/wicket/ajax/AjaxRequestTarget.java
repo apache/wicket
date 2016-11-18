@@ -47,7 +47,8 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 		 *            javascript
 		 *
 		 */
-		void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target);
+		default void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
+		{}
 
 		/**
 		 * Triggered after ajax request target is done with its response cycle. At this point only
@@ -62,7 +63,8 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 		 * @param response
 		 *            response object that can be used to output javascript
 		 */
-		void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response);
+		default void onAfterRespond(Map<String, Component> map, AjaxRequestTarget.IJavaScriptResponse response)
+		{}
 
 		/**
 		 * Triggered for every Ajax behavior. Can be used to configure common settings.
@@ -73,29 +75,19 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 		 *            The attributes for the Ajax behavior
 		 * @since 7.0.0
 		 */
-		void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes);
+		default void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes)
+		{}
 	}
 
 	/**
 	 * Empty implementation of an {@link IListener} useful as a starting point for your own
 	 * custom listener.
+	 *
+	 * @deprecated This class will be removed in Wicket 9.0.0. Use {@link IListener} instead
 	 */
+	@Deprecated
 	class AbstractListener implements IListener
 	{
-		@Override
-		public void updateAjaxAttributes(AbstractDefaultAjaxBehavior behavior, AjaxRequestAttributes attributes)
-		{
-		}
-
-		@Override
-		public void onBeforeRespond(Map<String, Component> map, AjaxRequestTarget target)
-		{
-		}
-
-		@Override
-		public void onAfterRespond(Map<String, Component> map, IJavaScriptResponse response)
-		{
-		}
 	}
 
 	/**

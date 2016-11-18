@@ -28,7 +28,8 @@ public interface ISessionListener
 	 * 
 	 * @param session
 	 */
-	void onCreated(Session session);
+	default void onCreated(Session session)
+	{}
 
 	/**
 	 * Informs the listener that session with specific id has been unbound.
@@ -36,5 +37,6 @@ public interface ISessionListener
 	 * @param sessionId
 	 *          the id of the unbound session
 	 */
-	void onUnbound(String sessionId);
+	default void onUnbound(String sessionId)
+	{}
 }
