@@ -27,6 +27,7 @@ import org.apache.wicket.request.IRequestHandler;
  * 
  * @author papegaaij
  */
+@FunctionalInterface
 public interface IConversationPropagation
 {
 	/**

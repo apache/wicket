@@ -21,6 +21,7 @@ package org.apache.wicket.event;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
+@FunctionalInterface
 public interface IEventSink
 {
 	/**

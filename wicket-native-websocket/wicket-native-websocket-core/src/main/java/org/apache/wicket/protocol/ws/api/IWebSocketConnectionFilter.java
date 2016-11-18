@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  * @see WebSocketConnectionFilterCollection
  * @author Gergely Nagy
  */
+@FunctionalInterface
 public interface IWebSocketConnectionFilter {
 
     /**

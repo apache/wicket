@@ -30,6 +30,7 @@ import org.apache.wicket.util.io.IClusterable;
  *            type of validatable value
  * @since 1.2.6
  */
+@FunctionalInterface
 public interface IValidator<T> extends IClusterable
 {
 	/**

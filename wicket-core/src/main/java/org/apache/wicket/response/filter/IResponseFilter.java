@@ -30,6 +30,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  * 
  * @see org.apache.wicket.settings.RequestCycleSettings#addResponseFilter(IResponseFilter)
  */
+@FunctionalInterface
 public interface IResponseFilter
 {
 	/**

@@ -23,6 +23,7 @@ import org.apache.wicket.behavior.Behavior;
  * 
  * @author igor
  */
+@FunctionalInterface
 public interface IBehaviorInstantiationListener
 {
 	/**

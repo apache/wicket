@@ -23,6 +23,7 @@ package org.apache.wicket.markup.html.form;
  * 
  * @author Pekka Enberg
  */
+@FunctionalInterface
 public interface IFormVisitorParticipant
 {
 	/**

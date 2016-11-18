@@ -96,6 +96,7 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	 *
 	 * @author ivaynberg
 	 */
+	@FunctionalInterface
 	interface IJavaScriptResponse
 	{
 		/**
@@ -114,6 +115,7 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	 *
 	 * @author Matej Knopp
 	 */
+	@FunctionalInterface
 	interface ITargetRespondListener
 	{
 		/**
