@@ -19,7 +19,7 @@ package org.apache.wicket.extensions.wizard;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
- * Recieves notifications for wizard model state changes.
+ * Receives notifications for wizard model state changes.
  * 
  * @author Eelco Hillenius
  */
