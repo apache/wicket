@@ -29,6 +29,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.value.IValueMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class allows a tag attribute of a component to be modified dynamically with a value obtained
@@ -67,6 +69,8 @@ import org.apache.wicket.util.value.IValueMap;
  */
 public class AttributeModifier extends Behavior implements IClusterable
 {
+	private static final Logger LOG = LoggerFactory.getLogger(AttributeModifier.class);
+
 	/** Marker value to have an attribute without a value added. */
 	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
 
@@ -369,5 +373,34 @@ public class AttributeModifier extends Behavior implements IClusterable
 		Args.notEmpty(attributeName, "attributeName");
 
 		return replace(attributeName, Model.of(VALUELESS_ATTRIBUTE_REMOVE));
+	}
+
+	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException,
+			ClassNotFoundException
+	{
+		s.defaultReadObject();
+
+		try
+		{
+			if (replaceModel instanceof Model)
+			{
+				Model<Serializable> model = (Model<Serializable>) replaceModel;
+
+				final Object replacement = replaceModel.getObject();
+				if (VALUELESS_ATTRIBUTE_ADD.equals(replacement))
+				{
+					model.setObject(VALUELESS_ATTRIBUTE_ADD);
+				}
+				else if (VALUELESS_ATTRIBUTE_REMOVE.equals(replacement))
+				{
+					model.setObject(VALUELESS_ATTRIBUTE_REMOVE);
+				}
+			}
+		}
+		catch (Exception x)
+		{
+			LOG.debug("Cannot reset the value of replaceModel to 'VALUELESS_ATTRIBUTE_ADD/REMOVE': {}",
+					x.getMessage(), x);
+		}
 	}
 }
