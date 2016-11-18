@@ -119,9 +119,6 @@
 							<allow-uri-read>allow-uri-read</allow-uri-read>
 						</attributes>
 						<preserveDirectories>true</preserveDirectories>
-						<requires>
-							<require>asciidoctor-diagram</require>
-						</requires>
 						<sourceDocumentName>single.adoc</sourceDocumentName>
 						<sourceHighlighter>coderay</sourceHighlighter>
 					</configuration>
@@ -216,28 +213,6 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>
-		<profile>
-			<id>dot-1</id>
-			<activation>
-				<file>
-					<exists>/usr/local/bin/dot</exists>
-				</file>
-			</activation>
-			<properties>
-				<dot.location>/usr/local/bin/dot</dot.location>
-			</properties>
-		</profile>
-		<profile>
-			<id>dot-2</id>
-			<activation>
-				<file>
-					<exists>/usr/bin/dot</exists>
-				</file>
-			</activation>
-			<properties>
-				<dot.location>/usr/bin/dot</dot.location>
-			</properties>
 		</profile>
 	</profiles>
 </project>
