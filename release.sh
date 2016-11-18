@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #  Licensed to the Apache Software Foundation (ASF) under one or more
 #  contributor license agreements.  See the NOTICE file distributed with
 #  this work for additional information regarding copyright ownership.
@@ -47,7 +47,7 @@ function getJdkToolchain {
 function generate_promotion_script {
     echo "Generating release promotion script 'promote-$version.sh'"
 read -d '' script <<- EOF
-#!/bin/sh
+#!/bin/bash
 echo "Promoting release $version
 
 Actions about to be performed:
@@ -97,7 +97,7 @@ echo "$script" > promote-$version.sh
 function generate_rollback_script {
 	echo "Generating release rollback script 'revert-$version.sh'"
 read -d '' script <<- EOF
-#!/bin/sh
+#!/bin/bash
 echo -n "Reverting release $version
 
 Actions about to be performed:
