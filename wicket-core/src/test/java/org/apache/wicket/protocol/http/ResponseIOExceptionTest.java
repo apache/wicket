@@ -27,7 +27,7 @@ import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebResponse;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.resource.ResourceStreamResource;
@@ -81,19 +81,19 @@ public class ResponseIOExceptionTest extends Assert
 		TestRequestCycleListener testRequestCycleListener = new TestRequestCycleListener();
 		tester.getApplication().getRequestCycleListeners().add(testRequestCycleListener);
 		tester.startResource(new ResourceStreamResource(new StringResourceStream("asdf")));
-		assertThat(testRequestCycleListener.lastExceptionRquestHandlerResolved,
+		assertThat(testRequestCycleListener.lastExceptionRequestHandlerResolved,
 			instanceOf(EmptyRequestHandler.class));
 	}
 
-	class TestRequestCycleListener extends AbstractRequestCycleListener
+	static class TestRequestCycleListener implements IRequestCycleListener
 	{
-		IRequestHandler lastExceptionRquestHandlerResolved;
+		IRequestHandler lastExceptionRequestHandlerResolved;
 
 		@Override
 		public void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
 			Exception exception)
 		{
-			lastExceptionRquestHandlerResolved = handler;
+			lastExceptionRequestHandlerResolved = handler;
 		}
 
 	}

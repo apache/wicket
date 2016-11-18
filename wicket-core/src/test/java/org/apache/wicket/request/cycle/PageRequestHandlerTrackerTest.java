@@ -52,7 +52,7 @@ public class PageRequestHandlerTrackerTest extends WicketTestCase
 	@Test
 	public void trackPages()
 	{
-		tester.getApplication().getRequestCycleListeners().add(new AbstractRequestCycleListener()
+		tester.getApplication().getRequestCycleListeners().add(new IRequestCycleListener()
 		{
 			@Override
 			public void onDetach(RequestCycle cycle)

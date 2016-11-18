@@ -55,7 +55,7 @@ import org.apache.wicket.util.visit.IVisitor;
  *
  * @author Joonas Hamalainen
  */
-public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
+public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
 {
 	/**
 	 * Construct.

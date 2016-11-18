@@ -69,7 +69,6 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
@@ -1585,7 +1584,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		RequestCycle requestCycle = getRequestCycleProvider().apply(context);
 		requestCycle.getListeners().add(requestCycleListeners);
-		requestCycle.getListeners().add(new AbstractRequestCycleListener()
+		requestCycle.getListeners().add(new IRequestCycleListener()
 		{
 			@Override
 			public void onDetach(final RequestCycle requestCycle)

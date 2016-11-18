@@ -112,9 +112,7 @@ import org.slf4j.LoggerFactory;
  * conflict and the request should be suppressed</li>
  * </ul>
  */
-public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleListener
-	implements
-		IRequestCycleListener
+public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 {
 	private static final Logger log = LoggerFactory
 		.getLogger(CsrfPreventionRequestCycleListener.class);
