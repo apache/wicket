@@ -37,6 +37,8 @@ public interface Executor
 	 *
 	 * @return computed result
 	 * @throws Exception if unable to compute a result
+	 * @deprecated This method is not used by the framework. Will be removed in Wicket 8.0.0
 	 */
+	@Deprecated
 	<T> T call(Callable<T> callable) throws Exception;
 }
