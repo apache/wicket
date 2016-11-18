@@ -31,7 +31,10 @@
 	</description>
 
 	<properties>
+		<asciidoctor.version>1.5.3</asciidoctor.version>
 		<clirr.skip>true</clirr.skip>
+		<!-- because of windows we need this particular version -->
+		<jruby.version>1.7.21</jruby.version>
 	</properties>
 
 	<repositories>
@@ -46,50 +49,6 @@
 			<url>http://repo.grails.org/grails/plugins</url>
 		</repository>
 	</repositories>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.grails</groupId>
-				<artifactId>grails-dependencies</artifactId>
-				<version>${grails.version}</version>
-				<type>pom</type>
-				<exclusions>
-					<exclusion>
-						<groupId>log4j</groupId>
-						<artifactId>log4j</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.grails</groupId>
-						<artifactId>grails-plugin-log4j</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.grails</groupId>
-				<artifactId>grails-docs</artifactId>
-				<version>${grails.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	<dependencies>
-		<dependency>
-			<groupId>org.grails</groupId>
-			<artifactId>grails-dependencies</artifactId>
-			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>org.grails</groupId>
-			<artifactId>grails-docs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
-	</dependencies>
 
 	<build>
 		<plugins>
@@ -120,9 +79,9 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
 					<version>1.4</version>
-                    <inherited>false</inherited>
+					<inherited>false</inherited>
 					<configuration>
-                        <skip>true</skip>
+						<skip>true</skip>
 					</configuration>
 					<dependencies>
 						<dependency>
@@ -147,6 +106,83 @@
 						<!-- Just documentation, no sources -->
 						<skipSource>true</skipSource>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.asciidoctor</groupId>
+					<artifactId>asciidoctor-maven-plugin</artifactId>
+					<version>${asciidoctor.version}</version>
+					<configuration>
+						<backend>html</backend>
+						<doctype>book</doctype>
+						<attributes>
+							<gemPath>${project.build.directory}/gems-provided</gemPath>
+							<allow-uri-read>allow-uri-read</allow-uri-read>
+						</attributes>
+						<preserveDirectories>true</preserveDirectories>
+						<requires>
+							<require>asciidoctor-diagram</require>
+						</requires>
+						<sourceDocumentName>single.adoc</sourceDocumentName>
+						<sourceHighlighter>coderay</sourceHighlighter>
+					</configuration>
+					<executions>
+						<execution>
+							<id>output-html</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>process-asciidoc</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>output-docbook</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>process-asciidoc</goal>
+							</goals>
+							<configuration>
+								<backend>docbook</backend>
+								<doctype>book</doctype>
+							</configuration>
+						</execution>
+						<execution>
+							<id>output-pdf</id>
+							<phase>generate-resources</phase>
+							<goals>
+								<goal>process-asciidoc</goal>
+							</goals>
+							<configuration>
+								<backend>pdf</backend>
+								<attributes>
+									<pagenums />
+									<idprefix />
+									<idseparator>-</idseparator>
+									<toc />
+								</attributes>
+							</configuration>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>org.asciidoctor</groupId>
+							<artifactId>asciidoctorj-pdf</artifactId>
+							<version>1.5.0-alpha.11</version>
+						</dependency>
+						<dependency>
+							<groupId>org.asciidoctor</groupId>
+							<artifactId>asciidoctorj-diagram</artifactId>
+							<version>1.5.0</version>
+						</dependency>
+						<dependency>
+							<groupId>org.asciidoctor</groupId>
+							<artifactId>asciidoctorj</artifactId>
+							<version>1.5.4.1</version>
+						</dependency>
+						<dependency>
+							<groupId>org.jruby</groupId>
+							<artifactId>jruby-complete</artifactId>
+							<version>${jruby.version}</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -175,30 +211,33 @@
 						</configuration>
 					</plugin>
 					<plugin>
-						<groupId>org.grails</groupId>
-						<artifactId>grails-maven-plugin</artifactId>
-						<version>${grails.version}</version>
-						<extensions>true</extensions>
-						<configuration>
-							<grailsVersion>${grails.version}</grailsVersion>
-						</configuration>
-						<executions>
-							<!-- HTML & PDF guide -->
-							<execution>
-								<id>pdf</id>
-								<phase>package</phase>
-								<goals>
-									<goal>exec</goal>
-								</goals>
-								<configuration>
-									<command>doc</command>
-									<args>--pdf</args>
-								</configuration>
-							</execution>
-						</executions>
+						<groupId>org.asciidoctor</groupId>
+						<artifactId>asciidoctor-maven-plugin</artifactId>
 					</plugin>
-                </plugins>
+				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<id>dot-1</id>
+			<activation>
+				<file>
+					<exists>/usr/local/bin/dot</exists>
+				</file>
+			</activation>
+			<properties>
+				<dot.location>/usr/local/bin/dot</dot.location>
+			</properties>
+		</profile>
+		<profile>
+			<id>dot-2</id>
+			<activation>
+				<file>
+					<exists>/usr/bin/dot</exists>
+				</file>
+			</activation>
+			<properties>
+				<dot.location>/usr/bin/dot</dot.location>
+			</properties>
 		</profile>
 	</profiles>
 </project>
