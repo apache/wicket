@@ -2,7 +2,7 @@
 Wicket has been around since 2004 and it has been an Apache project since 2007. During these years it has proved to be a solid and valuable solution for building enterprise web applications.
 
 Wicket core developers have done a wonderful job with this framework and they continue to improve it release after release.
-However Wicket never provided a freely available documentation and even if you can find on Internet many live examples and many technical articles on it (most of them at {externalink:wicket.examples.url}Wicket Examples Site{externalink} and at  http://wicketinaction.com[Wicket in Action] ), the lack of an organized and freely available documentation has always been a sore point for this framework.
+However Wicket never provided a freely available documentation and even if you can find on Internet many live examples and many technical articles on it (most of them at {wicket_examples_url}[Wicket Examples Site] and at http://wicketinaction.com[Wicket in Action]), the lack of an organized and freely available documentation has always been a sore point for this framework.
 
 That's quite an issue because many other popular frameworks (like Spring, Hibernate or Struts) offer a vast and very good documentation which substantially contributed to their success.
 
