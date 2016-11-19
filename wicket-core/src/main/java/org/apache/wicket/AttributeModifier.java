@@ -74,6 +74,32 @@ public class AttributeModifier extends Behavior implements IClusterable
 	/** Marker value to have an attribute without a value removed. */
 	public static final String VALUELESS_ATTRIBUTE_REMOVE = new String("VALUELESS_ATTRIBUTE_REMOVE");
 
+	/**
+	 * A dynamic model that returns the marker value {@link AttributeModifier#VALUELESS_ATTRIBUTE_ADD}
+	 * to prevent making copies of it via (de)serialization
+	 */
+	public static class ValuelessAttributeAddModel extends AbstractReadOnlyModel<Serializable>
+	{
+		@Override
+		public Serializable getObject()
+		{
+			return VALUELESS_ATTRIBUTE_ADD;
+		}
+	}
+
+	/**
+	 * A dynamic model that returns the marker value {@link AttributeModifier#VALUELESS_ATTRIBUTE_REMOVE}
+	 * to prevent making copies of it via (de)serialization
+	 */
+	public static class ValuelessAttributeRemoveModel extends AbstractReadOnlyModel<Serializable>
+	{
+		@Override
+		public Serializable getObject()
+		{
+			return VALUELESS_ATTRIBUTE_REMOVE;
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	/** Attribute specification. */
@@ -119,23 +145,11 @@ public class AttributeModifier extends Behavior implements IClusterable
 		IModel<Serializable> model;
 		if (value == VALUELESS_ATTRIBUTE_ADD)
 		{
-			model = new AbstractReadOnlyModel<Serializable>()
-			{
-				@Override
-				public Serializable getObject() {
-					return VALUELESS_ATTRIBUTE_ADD;
-				}
-			};
+			model = new ValuelessAttributeAddModel();
 		}
 		else if (value == VALUELESS_ATTRIBUTE_REMOVE)
 		{
-			model = new AbstractReadOnlyModel<Serializable>()
-			{
-				@Override
-				public Serializable getObject() {
-					return VALUELESS_ATTRIBUTE_REMOVE;
-				}
-			};
+			model = new ValuelessAttributeRemoveModel();
 		}
 		else
 		{
