@@ -25,20 +25,20 @@ import org.apache.wicket.util.lang.Args;
  */
 public abstract class AbstractClientMessage implements IWebSocketMessage
 {
-	private final Application application;
+	private final String applicationName;
 	private final String sessionId;
 	private final IKey key;
 
 	public AbstractClientMessage(Application application, String sessionId, IKey key)
 	{
-		this.application = Args.notNull(application, "application");
+		this.applicationName = Args.notNull(application, "application").getName();
 		this.sessionId = Args.notNull(sessionId, "sessionId");
 		this.key = Args.notNull(key, "key");
 	}
 
 	public Application getApplication()
 	{
-		return application;
+		return Application.get(applicationName);
 	}
 
 	public String getSessionId()
