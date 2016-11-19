@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
+import org.apache.wicket.util.io.IClusterable;
+
 /**
  * A marker interface for all message types
  *
  * @since 6.0
  */
-public interface IWebSocketMessage
+public interface IWebSocketMessage extends IClusterable
 {
 }
