@@ -16,7 +16,6 @@
  */
 package org.apache.wicket;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
 
@@ -337,11 +336,24 @@ public class AttributeModifierTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6279
 	 */
 	@Test
-	public void deserialize()
+	public void deserializeAdd()
 	{
 		AttributeModifier appender = AttributeModifier.append("class", AttributeModifier.VALUELESS_ATTRIBUTE_ADD);
-		final AttributeModifier copy = WicketObjects.cloneObject(appender);
+		final AttributeModifier copy = (AttributeModifier) WicketObjects.cloneObject(appender);
 		final IModel<?> replaceModel = copy.getReplaceModel();
 		assertThat(replaceModel.getObject().toString(), is(sameInstance(AttributeModifier.VALUELESS_ATTRIBUTE_ADD)));
+	}
+
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6279
+	 */
+	@Test
+	public void deserializeRemove()
+	{
+		AttributeModifier appender = AttributeModifier.append("class", AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE);
+		final AttributeModifier copy = (AttributeModifier) WicketObjects.cloneObject(appender);
+		final IModel<?> replaceModel = copy.getReplaceModel();
+		assertThat(replaceModel.getObject().toString(), is(sameInstance(AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE)));
 	}
 }
