@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.ws.api.message;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
+import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -26,22 +27,22 @@ import org.apache.wicket.util.lang.Args;
  *
  * @since 6.0
  */
-public class ConnectedMessage implements IWebSocketMessage
+public class ConnectedMessage implements IWebSocketMessage, IClusterable
 {
-	private final Application application;
+	private final String applicationName;
 	private final String sessionId;
 	private final IKey key;
 
 	public ConnectedMessage(Application application, String sessionId, IKey key)
 	{
-		this.application = Args.notNull(application, "application");
+		this.applicationName = Args.notNull(application, "application").getName();
 		this.sessionId = Args.notNull(sessionId, "sessionId");
 		this.key = Args.notNull(key, "key");
 	}
 
 	public Application getApplication()
 	{
-		return application;
+		return Application.get(applicationName);
 	}
 
 	public String getSessionId()
