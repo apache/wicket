@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
@@ -41,7 +42,7 @@ public abstract class ClassAttributeModifier extends AttributeAppender
 	}
 
 	@Override
-	protected String newValue(String currentValue, String appendValue)
+	protected Serializable newValue(String currentValue, String appendValue)
 	{
 		String[] classes;
 		if (Strings.isEmpty(currentValue))

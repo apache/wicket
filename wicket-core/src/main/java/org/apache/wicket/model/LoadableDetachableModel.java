@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.model;
 
-import org.apache.wicket.lambda.WicketSupplier;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -200,9 +200,9 @@ public abstract class LoadableDetachableModel<T> implements IModel<T>
 	 *
 	 * @param <T>
 	 * @param getter Used for the getObject() method.
-	 * @return Model
+	 * @return the model
 	 */
-	public static <T> IModel<T> of(WicketSupplier<T> getter)
+	public static <T> LoadableDetachableModel<T> of(SerializableSupplier<T> getter)
 	{
 		return new LoadableDetachableModel<T>()
 		{

@@ -47,6 +47,10 @@ public abstract class WebRequest extends Request
 	public static final String HEADER_AJAX_BASE_URL = "Wicket-Ajax-BaseURL";
 	/** anti-cache query parameter added by Wicket.Ajax.Request at its URL */
 	public static final String PARAM_AJAX_REQUEST_ANTI_CACHE = "_";
+	/** {@code Origin} http header */
+	public static final String HEADER_ORIGIN = "Origin";
+	/** {@code Referer} http header */
+	public static final String HEADER_REFERER = "Referer";
 
 	/**
 	 * @return request cookies

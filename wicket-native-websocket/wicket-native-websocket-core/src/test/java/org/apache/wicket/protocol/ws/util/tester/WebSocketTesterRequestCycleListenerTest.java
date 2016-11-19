@@ -20,7 +20,7 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
@@ -47,7 +47,7 @@ public class WebSocketTesterRequestCycleListenerTest extends Assert
 	public void before()
 	{
 		tester = new WicketTester();
-		tester.getApplication().getRequestCycleListeners().add(new AbstractRequestCycleListener()
+		tester.getApplication().getRequestCycleListeners().add(new IRequestCycleListener()
 		{
 			@Override
 			public void onBeginRequest(RequestCycle cycle)

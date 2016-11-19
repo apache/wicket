@@ -17,10 +17,11 @@
 package org.apache.wicket.model;
 
 
-import org.apache.wicket.lambda.WicketBiFunction;
-import org.apache.wicket.lambda.WicketFunction;
-import org.apache.wicket.lambda.WicketSupplier;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiFunction;
+import org.danekja.java.util.function.serializable.SerializableFunction;
+import org.danekja.java.util.function.serializable.SerializablePredicate;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 /**
  * A IModel wraps the actual model Object used by a Component. IModel implementations are used as a
@@ -90,18 +91,18 @@ public interface IModel<T> extends IDetachable
 
 	/**
 	 * Returns a IModel checking whether the predicate holds for the contained object, if it is not
-	 * null. If the predicate doesn't evaluate to true, the contained object will be null.
+	 * {@code null}. If the predicate doesn't evaluate to {@code true}, the contained object will be {@code null}.
 	 *
 	 * @param predicate
 	 *            a predicate to be used for testing the contained object
 	 * @return a new IModel
 	 */
-	default IModel<T> filter(WicketFunction<? super T, Boolean> predicate)
+	default IModel<T> filter(SerializablePredicate<? super T> predicate)
 	{
 		Args.notNull(predicate, "predicate");
 		return (IModel<T>)() -> {
 			T object = IModel.this.getObject();
-			if (object != null && predicate.apply(object))
+			if (object != null && predicate.test(object))
 			{
 				return object;
 			}
@@ -121,7 +122,7 @@ public interface IModel<T> extends IDetachable
 	 *            a mapper, to be applied to the contained object
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> map(WicketFunction<? super T, R> mapper)
+	default <R> IModel<R> map(SerializableFunction<? super T, R> mapper)
 	{
 		Args.notNull(mapper, "mapper");
 		return (IModel<R>)() -> {
@@ -138,8 +139,8 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a @IModel@ applying the given combining function to the current model object and 
-	 * to the one from the other model, if they are not null.
+	 * Returns a {@link IModel} applying the given combining function to the current model object and
+	 * to the one from the other model, if they are not {@code null}.
 	 *
 	 * @param <R>
 	 *            the resulting type
@@ -152,7 +153,7 @@ public interface IModel<T> extends IDetachable
 	 * @return a new IModel
 	 */
 	default <R, U> IModel<R> combineWith(IModel<U> other,
-		WicketBiFunction<? super T, ? super U, R> combiner)
+		SerializableBiFunction<? super T, ? super U, R> combiner)
 	{
 		Args.notNull(combiner, "combiner");
 		Args.notNull(other, "other");
@@ -171,7 +172,7 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Returns a IModel applying the given IModel-bearing mapper to the contained object, if it is not NULL.
+	 * Returns a IModel applying the given IModel-bearing mapper to the contained object, if it is not {@code null}.
 	 *
 	 * @param <R>
 	 *            the new type of the contained object
@@ -179,11 +180,13 @@ public interface IModel<T> extends IDetachable
 	 *            a mapper, to be applied to the contained object
 	 * @return a new IModel
 	 */
-	default <R> IModel<R> flatMap(WicketFunction<? super T, IModel<R>> mapper)
+	default <R> IModel<R> flatMap(SerializableFunction<? super T, IModel<R>> mapper)
 	{
 		Args.notNull(mapper, "mapper");
 		return new IModel<R>()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public R getObject()
 			{
@@ -267,7 +270,7 @@ public interface IModel<T> extends IDetachable
 	 *            a supplier to be used as a default
 	 * @return a new IModel
 	 */
-	default IModel<T> orElseGet(WicketSupplier<? extends T> other)
+	default IModel<T> orElseGet(SerializableSupplier<? extends T> other)
 	{
 		Args.notNull(other, "other");
 		return (IModel<T>)() -> {
@@ -284,14 +287,14 @@ public interface IModel<T> extends IDetachable
 	}
 
 	/**
-	 * Supresses generics warning when casting model types.
+	 * Suppresses generics warning when casting model types.
 	 *
 	 * @param <T>
 	 * @param model
 	 * @return cast <code>model</code>
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> IModel<T> of(IModel<?> model)
+	static <T> IModel<T> of(IModel<?> model)
 	{
 		return (IModel<T>)model;
 	}

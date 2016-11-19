@@ -21,8 +21,8 @@ import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 /**
  * A variant of the {@link AjaxButton} that displays a busy indicator while the ajax request is in
@@ -96,7 +96,8 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 	}
 
 
-	public static IndicatingAjaxButton onSubmit(String id, WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
+	public static IndicatingAjaxButton onSubmit(String id,
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -111,8 +112,8 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 	}
 
 	public static IndicatingAjaxButton onSubmit(String id,
-	                                            WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
-	                                            WicketBiConsumer<AjaxButton, AjaxRequestTarget> onError)
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onError)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");

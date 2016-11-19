@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.ajax;
 
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * Automatically re-renders the component it is attached to via AJAX at a regular interval.
@@ -71,10 +71,10 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	 * @param interval
 	 *            the interval for the self update
 	 * @param onTimer
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AbstractAjaxTimerBehavior}
 	 */
-	public static AjaxSelfUpdatingTimerBehavior onSelfUpdate(Duration interval, WicketConsumer<AjaxRequestTarget> onTimer)
+	public static AjaxSelfUpdatingTimerBehavior onSelfUpdate(Duration interval, SerializableConsumer<AjaxRequestTarget> onTimer)
 	{
 		Args.notNull(onTimer, "onTimer");
 

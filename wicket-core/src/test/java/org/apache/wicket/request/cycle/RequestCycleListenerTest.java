@@ -306,7 +306,7 @@ public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		this.detaches = 0;
 	}
 
-	private class ErrorCodeListener extends AbstractRequestCycleListener
+	private class ErrorCodeListener implements IRequestCycleListener
 	{
 		private final int code;
 

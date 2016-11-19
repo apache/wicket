@@ -33,7 +33,9 @@ import org.slf4j.LoggerFactory;
  * Base class for request listener interfaces.
  * 
  * @author Jonathan Locke
+ * @deprecated This class is not used by the framework anymore. Will be removed in Wicket 9.0.0
  */
+@Deprecated
 public class RequestListenerInterface
 {
 	/** Map from name to request listener interface */

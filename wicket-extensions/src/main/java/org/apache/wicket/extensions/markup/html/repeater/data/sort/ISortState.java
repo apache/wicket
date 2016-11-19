@@ -36,7 +36,7 @@ public interface ISortState<S> extends IClusterable
 	 * @param order
 	 *            sort order
 	 */
-	public void setPropertySortOrder(S property, SortOrder order);
+	void setPropertySortOrder(S property, SortOrder order);
 
 	/**
 	 * Gets the sort order of a property
@@ -45,6 +45,6 @@ public interface ISortState<S> extends IClusterable
 	 *            sort property to be checked
 	 * @return sort order
 	 */
-	public SortOrder getPropertySortOrder(S property);
+	SortOrder getPropertySortOrder(S property);
 
 }

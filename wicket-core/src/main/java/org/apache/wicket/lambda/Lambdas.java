@@ -35,9 +35,13 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.time.Duration;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
- * Convenience class for easy static importing of lambda factory methods in several components and behaviors.
+ * Convenience class for easy static importing of lambda factory methods in several components and
+ * behaviors.
  */
 public class Lambdas
 {
@@ -47,13 +51,13 @@ public class Lambdas
 	 * @param interval
 	 *            the interval of the timer
 	 * @param onTimer
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AbstractAjaxTimerBehavior}
 	 *
-	 * @see AbstractAjaxTimerBehavior#onTimer(Duration, WicketConsumer)
+	 * @see AbstractAjaxTimerBehavior#onTimer(Duration, SerializableConsumer)
 	 */
 	public static AbstractAjaxTimerBehavior onTimer(Duration interval,
-		WicketConsumer<AjaxRequestTarget> onTimer)
+		SerializableConsumer<AjaxRequestTarget> onTimer)
 	{
 		return AbstractAjaxTimerBehavior.onTimer(interval, onTimer);
 	}
@@ -62,14 +66,14 @@ public class Lambdas
 	 * Creates an {@link AjaxClientInfoBehavior} based on lambda expressions
 	 *
 	 * @param onClientInfo
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link WebClientInfo}
+	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and
+	 *            the {@link WebClientInfo}
 	 * @return the {@link AjaxClientInfoBehavior}
 	 *
-	 * @see AjaxClientInfoBehavior#onClientInfo(WicketBiConsumer)
+	 * @see AjaxClientInfoBehavior#onClientInfo(SerializableBiConsumer)
 	 */
 	public static AjaxClientInfoBehavior onClientInfo(
-		WicketBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
+		SerializableBiConsumer<AjaxRequestTarget, WebClientInfo> onClientInfo)
 	{
 		return AjaxClientInfoBehavior.onClientInfo(onClientInfo);
 	}
@@ -80,13 +84,13 @@ public class Lambdas
 	 * @param eventName
 	 *            the event name
 	 * @param onEvent
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxEventBehavior}
 	 *
 	 * @see AjaxEventBehavior#onEvent(org.apache.wicket.Component, org.apache.wicket.event.IEvent)
 	 */
 	public static AjaxEventBehavior onEvent(String eventName,
-		WicketConsumer<AjaxRequestTarget> onEvent)
+		SerializableConsumer<AjaxRequestTarget> onEvent)
 	{
 		return AjaxEventBehavior.onEvent(eventName, onEvent);
 	}
@@ -97,13 +101,13 @@ public class Lambdas
 	 * @param windowName
 	 *            the window name
 	 * @param onNewWindow
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxNewWindowNotifyingBehavior}
 	 * 
-	 * @see AjaxNewWindowNotifyingBehavior#onNewWindow(String, WicketConsumer)
+	 * @see AjaxNewWindowNotifyingBehavior#onNewWindow(String, SerializableConsumer)
 	 */
 	public static AjaxNewWindowNotifyingBehavior onNewWindow(String windowName,
-		WicketConsumer<AjaxRequestTarget> onNewWindow)
+		SerializableConsumer<AjaxRequestTarget> onNewWindow)
 	{
 		return AjaxNewWindowNotifyingBehavior.onNewWindow(windowName, onNewWindow);
 	}
@@ -114,13 +118,13 @@ public class Lambdas
 	 * @param interval
 	 *            the interval for the self update
 	 * @param onTimer
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSelfUpdatingTimerBehavior}
 	 * 
-	 * @see AjaxSelfUpdatingTimerBehavior#onSelfUpdate(Duration, WicketConsumer)
+	 * @see AjaxSelfUpdatingTimerBehavior#onSelfUpdate(Duration, SerializableConsumer)
 	 */
 	public static AjaxSelfUpdatingTimerBehavior onSelfUpdate(Duration interval,
-		WicketConsumer<AjaxRequestTarget> onTimer)
+		SerializableConsumer<AjaxRequestTarget> onTimer)
 	{
 		return AjaxSelfUpdatingTimerBehavior.onSelfUpdate(interval, onTimer);
 	}
@@ -129,13 +133,13 @@ public class Lambdas
 	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
 	 * 
 	 * @param onUpdateChoice
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 * 
-	 * @see AjaxFormChoiceComponentUpdatingBehavior#onUpdateChoice(WicketConsumer)
+	 * @see AjaxFormChoiceComponentUpdatingBehavior#onUpdateChoice(SerializableConsumer)
 	 */
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(
-		WicketConsumer<AjaxRequestTarget> onUpdateChoice)
+		SerializableConsumer<AjaxRequestTarget> onUpdateChoice)
 	{
 		return AjaxFormChoiceComponentUpdatingBehavior.onUpdateChoice(onUpdateChoice);
 	}
@@ -144,17 +148,18 @@ public class Lambdas
 	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
 	 * 
 	 * @param onUpdateChoice
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link RuntimeException}
+	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and
+	 *            the {@link RuntimeException}
 	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
 	 * 
-	 * @see AjaxFormChoiceComponentUpdatingBehavior#onUpdateChoice(WicketConsumer, WicketBiConsumer)
+	 * @see AjaxFormChoiceComponentUpdatingBehavior#onUpdateChoice(SerializableConsumer,
+	 *      SerializableBiConsumer)
 	 */
 	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(
-		WicketConsumer<AjaxRequestTarget> onUpdateChoice,
-		WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+		SerializableConsumer<AjaxRequestTarget> onUpdateChoice,
+		SerializableBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
 		return AjaxFormChoiceComponentUpdatingBehavior.onUpdateChoice(onUpdateChoice, onError);
 	}
@@ -165,13 +170,13 @@ public class Lambdas
 	 * @param eventName
 	 *            the event name
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
 	 * 
-	 * @see AjaxFormComponentUpdatingBehavior#onUpdate(String, WicketConsumer) 
+	 * @see AjaxFormComponentUpdatingBehavior#onUpdate(String, SerializableConsumer)
 	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
-		WicketConsumer<AjaxRequestTarget> onUpdate)
+		SerializableConsumer<AjaxRequestTarget> onUpdate)
 	{
 		return AjaxFormComponentUpdatingBehavior.onUpdate(eventName, onUpdate);
 	}
@@ -182,17 +187,18 @@ public class Lambdas
 	 * @param eventName
 	 *            the event name
 	 * @param onUpdate
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link RuntimeException}
+	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and
+	 *            the {@link RuntimeException}
 	 * @return the {@link AjaxFormComponentUpdatingBehavior}
 	 * 
-	 * @see AjaxFormComponentUpdatingBehavior#onUpdate(String, WicketConsumer, WicketBiConsumer) 
+	 * @see AjaxFormComponentUpdatingBehavior#onUpdate(String, SerializableConsumer,
+	 *      SerializableBiConsumer)
 	 */
 	public static AjaxFormComponentUpdatingBehavior onUpdate(String eventName,
-		WicketConsumer<AjaxRequestTarget> onUpdate,
-		WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+		SerializableConsumer<AjaxRequestTarget> onUpdate,
+		SerializableBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
 		return AjaxFormComponentUpdatingBehavior.onUpdate(eventName, onUpdate, onError);
 	}
@@ -203,13 +209,13 @@ public class Lambdas
 	 * @param eventName
 	 *            the event name
 	 * @param onSubmit
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormSubmitBehavior}
 	 * 
-	 * @see AjaxFormSubmitBehavior#onSubmit(String, WicketConsumer)
+	 * @see AjaxFormSubmitBehavior#onSubmit(String, SerializableConsumer)
 	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
-		WicketConsumer<AjaxRequestTarget> onSubmit)
+		SerializableConsumer<AjaxRequestTarget> onSubmit)
 	{
 		return AjaxFormSubmitBehavior.onSubmit(eventName, onSubmit);
 	}
@@ -220,15 +226,16 @@ public class Lambdas
 	 * @param eventName
 	 *            the event name
 	 * @param onSubmit
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxFormSubmitBehavior}
 	 * 
-	 * @see AjaxFormSubmitBehavior#onSubmit(String, WicketConsumer, WicketConsumer)
+	 * @see AjaxFormSubmitBehavior#onSubmit(String, SerializableConsumer, SerializableConsumer)
 	 */
 	public static AjaxFormSubmitBehavior onSubmit(String eventName,
-		WicketConsumer<AjaxRequestTarget> onSubmit, WicketConsumer<AjaxRequestTarget> onError)
+		SerializableConsumer<AjaxRequestTarget> onSubmit,
+		SerializableConsumer<AjaxRequestTarget> onError)
 	{
 		return AjaxFormSubmitBehavior.onSubmit(eventName, onSubmit, onError);
 	}
@@ -237,12 +244,12 @@ public class Lambdas
 	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
 	 * 
 	 * @param onChange
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link OnChangeAjaxBehavior}
 	 * 
-	 * @see OnChangeAjaxBehavior#onChange(WicketConsumer)
+	 * @see OnChangeAjaxBehavior#onChange(SerializableConsumer)
 	 */
-	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange)
+	public static OnChangeAjaxBehavior onChange(SerializableConsumer<AjaxRequestTarget> onChange)
 	{
 		return OnChangeAjaxBehavior.onChange(onChange);
 	}
@@ -251,62 +258,63 @@ public class Lambdas
 	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
 	 * 
 	 * @param onChange
-	 *            the {@link WicketConsumer} which accepts the {@link AjaxRequestTarget}
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @param onError
-	 *            the {@link WicketBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link RuntimeException}
+	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and
+	 *            the {@link RuntimeException}
 	 * @return the {@link OnChangeAjaxBehavior}
 	 * 
-	 * @see OnChangeAjaxBehavior#onChange(WicketConsumer, WicketBiConsumer)
+	 * @see OnChangeAjaxBehavior#onChange(SerializableConsumer, SerializableBiConsumer)
 	 */
-	public static OnChangeAjaxBehavior onChange(WicketConsumer<AjaxRequestTarget> onChange,
-		WicketBiConsumer<AjaxRequestTarget, RuntimeException> onError)
+	public static OnChangeAjaxBehavior onChange(SerializableConsumer<AjaxRequestTarget> onChange,
+		SerializableBiConsumer<AjaxRequestTarget, RuntimeException> onError)
 	{
 		return OnChangeAjaxBehavior.onChange(onChange, onError);
 	}
 
 	/**
-	 * Creates a {@link Behavior} that uses the given {@link WicketConsumer consumer}
-	 * to do something with the component's tag.
+	 * Creates a {@link Behavior} that uses the given {@code SerializableConsumer consumer} to do
+	 * something with the component's tag.
 	 *
 	 * <p>
-	 *     Usage:<br/>
-	 *     <code>component.add(onTag(tag -> tag.put(key, value)));</code>
+	 * Usage:<br/>
+	 * <code>component.add(onTag(tag -> tag.put(key, value)));</code>
 	 * </p>
 	 *
 	 * @param onTagConsumer
-	 *              the {@link WicketConsumer} that accepts the {@link ComponentTag}
+	 *            the {@code SerializableConsumer} that accepts the {@link ComponentTag}
 	 * @return The created behavior
 	 * 
-	 * @see Behavior#onTag(WicketConsumer)
+	 * @see Behavior#onTag(SerializableConsumer)
 	 */
-	public static Behavior onTag(WicketConsumer<ComponentTag> onTagConsumer)
+	public static Behavior onTag(SerializableConsumer<ComponentTag> onTagConsumer)
 	{
 		return Behavior.onTag(onTagConsumer);
 	}
 
 	/**
-	 * Creates a {@link Behavior} that uses the given {@link WicketFunction function}
-	 * to do something with a component's attribute.
+	 * Creates a {@link Behavior} that uses the given {@code SerializableFunction function} to do
+	 * something with a component's attribute.
 	 *
 	 * <p>
-	 *     Usage:<br/>
-	 *     <code>component.add(onAttribute("class", value -> condition ? "positive" : "negative"));</code>
+	 * Usage:<br/>
+	 * <code>component.add(onAttribute("class", value -> condition ? "positive" : "negative"));</code>
 	 * </p>
 	 *
 	 * @param attributeName
-	 *              the name of the attribute to manipulate
+	 *            the name of the attribute to manipulate
 	 * @param onAttribute
-	 *              the function that is applied to the attribute value
+	 *            the function that is applied to the attribute value
 	 * @return The created behavior
 	 * 
-	 * @see Behavior#onAttribute(String, WicketFunction)
+	 * @see Behavior#onAttribute(String, SerializableFunction)
 	 */
-	public static Behavior onAttribute(String attributeName, WicketFunction<String, CharSequence> onAttribute)
+	public static Behavior onAttribute(String attributeName,
+		SerializableFunction<String, CharSequence> onAttribute)
 	{
 		return Behavior.onAttribute(attributeName, onAttribute);
 	}
-	
+
 	/**
 	 * Creates an {@link AjaxLink} based on lambda expressions
 	 * 
@@ -316,9 +324,10 @@ public class Lambdas
 	 *            the consumer of the clicked link and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxLink}
 	 * 
-	 * @see AjaxLink#onClick(String, WicketConsumer)
+	 * @see AjaxLink#onClick(String, SerializableConsumer)
 	 */
-	public static <T> AjaxLink<T> ajaxLink(String id, WicketBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
+	public static <T> AjaxLink<T> ajaxLink(String id,
+		SerializableBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
 	{
 		return AjaxLink.onClick(id, onClick);
 	}
@@ -332,10 +341,10 @@ public class Lambdas
 	 *            the consumer of the submitted button and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxButton}
 	 * 
-	 * @see AjaxButton#onSubmit(String, WicketBiConsumer)
+	 * @see AjaxButton#onSubmit(String, SerializableBiConsumer)
 	 */
 	public static AjaxButton ajaxButton(String id,
-		WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
 	{
 		return AjaxButton.onSubmit(id, onSubmit);
 	}
@@ -351,11 +360,11 @@ public class Lambdas
 	 *            the consumer of the button in error and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxButton}
 	 * 
-	 * @see AjaxButton#onSubmit(String, WicketBiConsumer, WicketBiConsumer)
+	 * @see AjaxButton#onSubmit(String, SerializableBiConsumer, SerializableBiConsumer)
 	 */
 	public static AjaxButton ajaxButton(String id,
-		WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
-		WicketBiConsumer<AjaxButton, AjaxRequestTarget> onError)
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onError)
 	{
 		return AjaxButton.onSubmit(id, onSubmit, onError);
 	}
@@ -369,9 +378,10 @@ public class Lambdas
 	 *            the consumer of the updated checkbox and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxCheckBox}
 	 * 
-	 * @see AjaxCheckBox#onUpdate(String, WicketConsumer)
+	 * @see AjaxCheckBox#onUpdate(String, SerializableConsumer)
 	 */
-	public static AjaxCheckBox ajaxCheckBox(String id, WicketBiConsumer<AjaxCheckBox, AjaxRequestTarget> onUpdate)
+	public static AjaxCheckBox ajaxCheckBox(String id,
+		SerializableBiConsumer<AjaxCheckBox, AjaxRequestTarget> onUpdate)
 	{
 		return AjaxCheckBox.onUpdate(id, onUpdate);
 	}
@@ -385,10 +395,10 @@ public class Lambdas
 	 *            the consumer of the submitted button and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSubmitLink}
 	 * 
-	 * @see AjaxSubmitLink#onSubmit(String, WicketBiConsumer)
+	 * @see AjaxSubmitLink#onSubmit(String, SerializableBiConsumer)
 	 */
 	public static AjaxSubmitLink ajaxSubmitLink(String id,
-		WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
+		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
 	{
 		return AjaxSubmitLink.onSubmit(id, onSubmit);
 	}
@@ -404,13 +414,13 @@ public class Lambdas
 	 *            the consumer of the link in error and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxSubmitLink}
 	 * 
-	 * @see AjaxSubmitLink#onSubmit(String, WicketBiConsumer, WicketBiConsumer)
+	 * @see AjaxSubmitLink#onSubmit(String, SerializableBiConsumer, SerializableBiConsumer)
 	 */
 	public static AjaxSubmitLink ajaxSubmitLink(String id,
-		WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit,
-		WicketBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onError)
+		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit,
+		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onError)
 	{
-		return AjaxSubmitLink.onSubmit(id,  onSubmit,  onError);
+		return AjaxSubmitLink.onSubmit(id, onSubmit, onError);
 	}
 
 	/**
@@ -422,9 +432,9 @@ public class Lambdas
 	 *            the consumer of the clicked link
 	 * @return the {@link Link}
 	 * 
-	 * @see Link#onClick(String, WicketConsumer)
+	 * @see Link#onClick(String, SerializableConsumer)
 	 */
-	public static <T> Link<T> link(String id, WicketConsumer<Link<T>> onClick)
+	public static <T> Link<T> link(String id, SerializableConsumer<Link<T>> onClick)
 	{
 		return Link.onClick(id, onClick);
 	}

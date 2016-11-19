@@ -399,6 +399,8 @@ public class TagTester
 	 *            the markup to look for the tag to create the <code>TagTester</code> from the value
 	 *            which the attribute must have
 	 * @return the <code>TagTester</code> which matches the tag by name in the markup
+	 * 
+	 * @deprecated use {@link #createTagByName(String, String)} instead
 	 */
 	@Deprecated
 	public static TagTester createTagByAttribute(String markup, String tagName)

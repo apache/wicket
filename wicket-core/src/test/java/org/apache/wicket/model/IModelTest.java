@@ -18,11 +18,13 @@ package org.apache.wicket.model;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-import org.apache.wicket.lambda.WicketBiFunction;
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
+import org.danekja.java.util.function.serializable.SerializableBiFunction;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,8 +53,7 @@ public class IModelTest extends Assert
 	@Test
 	public void filterMatch()
 	{
-		IModel<Person> johnModel = Model.of(person)
-				.filter((p) -> p.getName().equals(name));
+		IModel<Person> johnModel = Model.of(person).filter((p) -> p.getName().equals(name));
 
 		assertThat(johnModel.getObject(), is(person));
 	}
@@ -60,8 +61,7 @@ public class IModelTest extends Assert
 	@Test
 	public void filterNoMatch()
 	{
-		IModel<Person> johnModel = Model.of(person)
-				.filter((p) -> p.getName().equals("Jane"));
+		IModel<Person> johnModel = Model.of(person).filter((p) -> p.getName().equals("Jane"));
 
 		assertThat(johnModel.getObject(), is(nullValue()));
 	}
@@ -82,7 +82,9 @@ public class IModelTest extends Assert
 	@Test
 	public void map2()
 	{
-		IModel<String> streetModel = Model.of(person).map(Person::getAddress).map(Address::getStreet);
+		IModel<String> streetModel = Model.of(person)
+			.map(Person::getAddress)
+			.map(Address::getStreet);
 		assertThat(streetModel.getObject(), is(equalTo(street)));
 	}
 
@@ -96,9 +98,8 @@ public class IModelTest extends Assert
 	public void combineWith()
 	{
 		IModel<String> janeModel = Model.of("Jane");
-		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, other) ->
-						person1.getName() + " is in relationship with " + other;
+		SerializableBiFunction<Person, String, String> function = (SerializableBiFunction<Person, String, String>)(
+			person1, other) -> person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = Model.of(person).combineWith(janeModel, function);
 		assertThat(relationShipModel.getObject(), is(equalTo("John is in relationship with Jane")));
 	}
@@ -107,9 +108,8 @@ public class IModelTest extends Assert
 	public void combineWithNullObject()
 	{
 		IModel<String> janeModel = Model.of((String)null);
-		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, other) ->
-						person1.getName() + " is in relationship with " + other;
+		SerializableBiFunction<Person, String, String> function = (SerializableBiFunction<Person, String, String>)(
+			person1, other) -> person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = Model.of(person).combineWith(janeModel, function);
 		assertThat(relationShipModel.getObject(), is(nullValue()));
 	}
@@ -118,9 +118,8 @@ public class IModelTest extends Assert
 	public void combineWithNullModel()
 	{
 		IModel<String> janeModel = null;
-		WicketBiFunction<Person, String, String> function =
-				(WicketBiFunction<Person, String, String>) (person1, other) ->
-						person1.getName() + " is in relationship with " + other;
+		SerializableBiFunction<Person, String, String> function = (SerializableBiFunction<Person, String, String>)(
+			person1, other) -> person1.getName() + " is in relationship with " + other;
 		Model.of(person).combineWith(janeModel, function);
 	}
 
@@ -134,12 +133,7 @@ public class IModelTest extends Assert
 	public void flatMap()
 	{
 		IModel<String> heirModel = Model.of(person)
-			.flatMap(john ->
-					LambdaModel.of(
-						() -> john.getName() + " is my parent",
-						john::setName
-					)
-			);
+			.flatMap(john -> LambdaModel.of(() -> john.getName() + " is my parent", john::setName));
 		assertThat(heirModel.getObject(), is(equalTo("John is my parent")));
 
 		String newValue = "Matthias";
@@ -168,7 +162,9 @@ public class IModelTest extends Assert
 	{
 		person.setName(null);
 		String defaultName = "Default name";
-		IModel<String> defaultNameModel = Model.of(person).map(Person::getName).orElseGet(() -> defaultName);
+		IModel<String> defaultNameModel = Model.of(person)
+			.map(Person::getName)
+			.orElseGet(() -> defaultName);
 
 		assertThat(defaultNameModel.getObject(), is(equalTo(defaultName)));
 	}
@@ -177,5 +173,38 @@ public class IModelTest extends Assert
 	public void orElseGetNullOther()
 	{
 		Model.of(person).map(Person::getName).orElseGet(null);
+	}
+
+	@Test
+	public void serializableMethodReference()
+	{
+		Person p = new Person();
+		IModel<String> m = p::getName;
+		assertThat(WicketObjects.cloneObject(m), is(not(nullValue())));
+	}
+
+	static class Account
+	{
+		private Person person = new Person();
+		{
+			person.setName("Some Name");
+		}
+
+		public Person getPerson()
+		{
+			return person;
+		}
+	}
+
+	@Test
+	public void serializableMethodChainReference()
+	{
+		IModel<Account> accountModel = LoadableDetachableModel.of(Account::new);
+		IModel<Person> personModel = accountModel.map(Account::getPerson);
+		IModel<String> nameModel = personModel.map(Person::getName);
+
+		IModel<String> clone = WicketObjects.cloneObject(nameModel);
+		assertThat(clone, is(not(nullValue())));
+		assertThat(clone.getObject(), is("Some Name"));
 	}
 }

@@ -144,6 +144,9 @@
 					<version>${maven.surefire.plugin.version}</version>
 					<configuration>
 						<systemPropertyVariables>
+							<!--<jboss.socket.binding.port-offset>1100</jboss.socket.binding.port-offset>-->
+							<!--<jboss.management.http.port>11090</jboss.management.http.port>-->
+							<jboss.http.port>48181</jboss.http.port>
 							<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 							<jboss.home>${project.build.directory}/wildfly-${wildfly.version}</jboss.home>
 							<module.path>${project.build.directory}/wildfly-${wildfly.version}/modules</module.path>

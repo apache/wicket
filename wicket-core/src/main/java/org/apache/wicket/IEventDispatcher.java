@@ -30,6 +30,7 @@ import org.apache.wicket.event.IEventSink;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
+@FunctionalInterface
 public interface IEventDispatcher
 {
 	/**

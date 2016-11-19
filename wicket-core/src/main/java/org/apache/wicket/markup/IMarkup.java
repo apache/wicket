@@ -26,8 +26,10 @@ package org.apache.wicket.markup;
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
+ * @deprecated This class is not used by the framework anymore. Will be removed in Wicket 9.0.0
  */
-public abstract interface IMarkup
+@Deprecated
+public interface IMarkup
 {
 	/**
 	 * Find the markup element index of the component with 'path'

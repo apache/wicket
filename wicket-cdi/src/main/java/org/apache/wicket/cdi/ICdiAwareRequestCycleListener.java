@@ -27,7 +27,8 @@ public interface ICdiAwareRequestCycleListener extends IRequestCycleListener
 	 * @param cycle
 	 *            request cycle
 	 */
-	void onAfterConversationActivated(RequestCycle cycle);
+	default void onAfterConversationActivated(RequestCycle cycle)
+	{}
 
 	/**
 	 * Called right before the current conversation context is deactivated
@@ -35,5 +36,6 @@ public interface ICdiAwareRequestCycleListener extends IRequestCycleListener
 	 * @param cycle
 	 *            request cycle
 	 */
-	void onBeforeConversationDeactivated(RequestCycle cycle);
+	default void onBeforeConversationDeactivated(RequestCycle cycle)
+	{}
 }

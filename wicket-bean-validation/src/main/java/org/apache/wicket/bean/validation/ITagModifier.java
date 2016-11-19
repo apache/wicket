@@ -15,6 +15,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
  * @author igor
  * 
  */
+@FunctionalInterface
 public interface ITagModifier<T extends Annotation>
 {
 	/**

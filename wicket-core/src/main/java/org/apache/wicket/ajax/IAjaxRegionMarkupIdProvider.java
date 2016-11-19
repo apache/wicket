@@ -91,6 +91,7 @@ import org.apache.wicket.markup.html.form.TextField;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
+@FunctionalInterface
 public interface IAjaxRegionMarkupIdProvider
 {
 	/**

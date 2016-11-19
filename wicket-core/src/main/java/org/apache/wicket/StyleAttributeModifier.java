@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -41,7 +42,7 @@ public abstract class StyleAttributeModifier extends AttributeAppender
 	}
 
 	@Override
-	protected String newValue(String currentValue, String appendValue)
+	protected Serializable newValue(String currentValue, String appendValue)
 	{
 		String[] styles;
 		if (Strings.isEmpty(currentValue))

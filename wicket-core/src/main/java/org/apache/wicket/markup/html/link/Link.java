@@ -21,11 +21,11 @@ import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -428,7 +428,7 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 	 *            the consumer of the clicked link
 	 * @return the {@link Link}
 	 */
-	public static <T> Link<T> onClick(String id, WicketConsumer<Link<T>> onClick)
+	public static <T> Link<T> onClick(String id, SerializableConsumer<Link<T>> onClick)
 	{
 		Args.notNull(onClick, "onClick");
 

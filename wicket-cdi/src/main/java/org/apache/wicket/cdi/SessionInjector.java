@@ -42,10 +42,4 @@ class SessionInjector extends AbstractInjector implements ISessionListener
 	{
 		postConstruct(session);
 	}
-
-	@Override
-	public void onUnbound(String sessionId)
-	{
-	}
-
 }

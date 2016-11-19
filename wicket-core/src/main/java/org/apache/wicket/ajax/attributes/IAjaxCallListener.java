@@ -48,7 +48,10 @@ public interface IAjaxCallListener
 	 *            the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed on initialization of the Ajax call.
 	 */
-	CharSequence getInitHandler(Component component);
+	default CharSequence getInitHandler(Component component)
+	{
+		return null;
+	}
 
 	/**
 	 * The JavaScript that will be executed before the Ajax call, as early as possible. Even before
@@ -62,7 +65,10 @@ public interface IAjaxCallListener
 	 *            the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed before the Ajax call.
 	 */
-	CharSequence getBeforeHandler(Component component);
+	default CharSequence getBeforeHandler(Component component)
+	{
+		return null;
+	}
 
 	/**
 	 * A JavaScript function that is invoked before the request is being executed. If it returns
@@ -77,7 +83,10 @@ public interface IAjaxCallListener
 	 * @return the JavaScript that should be used to decide whether the Ajax call should be made at
 	 *         all.
 	 */
-	CharSequence getPrecondition(Component component);
+	default CharSequence getPrecondition(Component component)
+	{
+		return null;
+	}
 
 	/**
 	 * The JavaScript that will be executed right before the execution of the the Ajax call, only if all
@@ -93,7 +102,10 @@ public interface IAjaxCallListener
 	 *            the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed before the Ajax call.
 	 */
-	CharSequence getBeforeSendHandler(Component component);
+	default CharSequence getBeforeSendHandler(Component component)
+	{
+		return null;
+	}
 
 	/**
 	 * The JavaScript that will be executed after the Ajax call. The script will be executed in a
@@ -111,7 +123,10 @@ public interface IAjaxCallListener
 	 * @return the JavaScript that will be executed after the start of the Ajax call but before its
 	 *         response is returned.
 	 */
-	CharSequence getAfterHandler(Component component);
+	default CharSequence getAfterHandler(Component component)
+	{
+		return null;
+	}
 
 	/**
 	 * The JavaScript that will be executed after successful return of the Ajax call. The script
@@ -127,7 +142,10 @@ public interface IAjaxCallListener
 	 *            the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed after a successful return of the Ajax call.
 	 */
-	CharSequence getSuccessHandler(Component component);
+	default CharSequence getSuccessHandler(Component component)
+	{
+		return null;
+	}
 
 	/**
 	 * The JavaScript that will be executed after unsuccessful return of the Ajax call. The script
@@ -143,7 +161,10 @@ public interface IAjaxCallListener
 	 *            the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed after a unsuccessful return of the Ajax call.
 	 */
-	CharSequence getFailureHandler(Component component);
+	default CharSequence getFailureHandler(Component component)
+	{
+		return null;
+	}
 
 	/**
 	 * The JavaScript that will be executed after both successful and unsuccessful return of the
@@ -159,7 +180,10 @@ public interface IAjaxCallListener
 	 * @return the JavaScript that will be executed after both successful and unsuccessful return of
 	 *         the Ajax call.
 	 */
-	CharSequence getCompleteHandler(Component component);
+	default CharSequence getCompleteHandler(Component component)
+	{
+		return null;
+	}
 
 	/**
 	 * The JavaScript that will be executed after the Ajax call is done, regardless whether it was
@@ -173,5 +197,8 @@ public interface IAjaxCallListener
 	 *            the Component with the Ajax behavior
 	 * @return the JavaScript that will be executed after the Ajax call is done.
 	 */
-	CharSequence getDoneHandler(Component component);
+	default CharSequence getDoneHandler(Component component)
+	{
+		return null;
+	}
 }

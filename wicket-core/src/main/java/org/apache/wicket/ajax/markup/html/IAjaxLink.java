@@ -26,6 +26,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
  * @author Igor Vaynberg (ivaynberg)
  * @author Martijn Dashorst
  */
+@FunctionalInterface
 public interface IAjaxLink
 {
 	/**

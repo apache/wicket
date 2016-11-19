@@ -816,15 +816,17 @@ public class Form<T> extends WebMarkupContainer
 			if (!component.isVisibleInHierarchy())
 			{
 				throw new WicketRuntimeException("Submit Button " +
-					submittingComponent.getInputName() + " (path=" +
-					component.getPageRelativePath() + ") is not visible");
+						submittingComponent.getInputName() + " (" +
+						component.toString(true) +
+						") is not visible");
 			}
 
 			if (!component.isEnabledInHierarchy())
 			{
 				throw new WicketRuntimeException("Submit Button " +
-					submittingComponent.getInputName() + " (path=" +
-					component.getPageRelativePath() + ") is not enabled");
+						submittingComponent.getInputName() + " (" +
+						component.toString(true) +
+						") is not enabled");
 			}
 		}
 		

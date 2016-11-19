@@ -38,7 +38,7 @@ import org.apache.wicket.request.IRequestHandlerDelegate;
  *
  * @since 1.5.8
  */
-public class PageRequestHandlerTracker extends AbstractRequestCycleListener
+public class PageRequestHandlerTracker implements IRequestCycleListener
 {
 	/**
 	 * The key for the first handler
@@ -53,7 +53,6 @@ public class PageRequestHandlerTracker extends AbstractRequestCycleListener
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
 	{
-		super.onRequestHandlerResolved(cycle, handler);
 		registerFirstHandler(cycle,handler);
 		registerLastHandler(cycle,handler);
 	}

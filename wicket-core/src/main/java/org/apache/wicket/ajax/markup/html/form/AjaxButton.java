@@ -20,11 +20,11 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.lambda.WicketBiConsumer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -239,7 +239,8 @@ public abstract class AjaxButton extends Button
 	 *            the consumer which accepts the button and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxButton}
 	 */
-	public static AjaxButton onSubmit(String id, WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
+	public static AjaxButton onSubmit(String id,
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 
@@ -267,8 +268,8 @@ public abstract class AjaxButton extends Button
 	 * @return the {@link AjaxButton}
 	 */
 	public static AjaxButton onSubmit(String id,
-	                                    WicketBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
-	                                    WicketBiConsumer<AjaxButton, AjaxRequestTarget> onError)
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onError)
 	{
 		Args.notNull(onSubmit, "onSubmit");
 		Args.notNull(onError, "onError");

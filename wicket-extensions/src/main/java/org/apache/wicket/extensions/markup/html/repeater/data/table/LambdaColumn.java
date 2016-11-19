@@ -18,15 +18,15 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.export.IExportableColumn;
-import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
- * An implementation of column that adds a label to the cell whose model is determined by
- * the provided {@link WicketFunction} that is evaluated against the current row's model object
+ * An implementation of column that adds a label to the cell whose model is determined by the
+ * provided {@code SerializableFunction} that is evaluated against the current row's model object
  * <p>
  * Example for a table of {@code Contact}s:
  * 
@@ -46,7 +46,7 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 {
 	private static final long serialVersionUID = 1L;
 	
-	private final WicketFunction<T, ?> function;
+	private final SerializableFunction<T, ?> function;
 
 	/**
 	 * Creates a column that is not sortable.
@@ -56,7 +56,8 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 	 * @param function
 	 *            Wicket function to be applied to each row
 	 */
-	public LambdaColumn(final IModel<String> displayModel, final WicketFunction<T, ?> function)
+	public LambdaColumn(final IModel<String> displayModel,
+		final SerializableFunction<T, ?> function)
 	{
 		this(displayModel, null, function);
 	}
@@ -71,7 +72,8 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 	 * @param function
 	 *            Wicket function to be applied to each row
 	 */
-	public LambdaColumn(final IModel<String> displayModel, final S sortProperty, final WicketFunction<T, ?> function)
+	public LambdaColumn(final IModel<String> displayModel, final S sortProperty,
+		final SerializableFunction<T, ?> function)
 	{
 		super(displayModel, sortProperty);
 		
@@ -95,6 +97,8 @@ public class LambdaColumn<T, S> extends AbstractColumn<T, S> implements IExporta
 	{
 		IModel<Object> dataModel = new IModel<Object>()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Object getObject()
 			{

@@ -1,0 +1,10 @@
+
+The wicket-metrics module is available since Wicket 7.3.0 and contains a life measurement implementation to collect data of applications and visualize it.
+
+You can see how many request your application served, how often components are created, initalized, configured or their detach method has been invoked and a lot of other additional information.
+
+The module itself is using  https://dropwizard.github.io/metrics/3.1.0/[Metrics of dropwizard] and  https://eclipse.org/aspectj/[AspectJ] so that if you turn of the measurement it has no longer any effect
+
+to your web application.
+
+Keep in mind that AspectJ is licensed under the Eclipse Public License and you should provide the required license information.

@@ -23,6 +23,7 @@ import org.apache.wicket.util.resource.IResourceStream;
  * 
  * @author jcompagner
  */
+@FunctionalInterface
 public interface IResourceFinder
 {
 	/**

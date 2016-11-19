@@ -17,13 +17,18 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.string.ComponentStrings;
@@ -2155,5 +2160,64 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	protected void addDequeuedComponent(Component component, ComponentTag tag)
 	{
 		add(component);
+	}
+
+	/**
+	 * Returns a sequential {@code Stream} with the direct children of this markup container as its
+	 * source. This stream doesn't traverse the component tree.
+	 *
+	 * @return a sequential {@code Stream} over the direct children of this markup container
+	 * @since 8.0
+	 */
+	public Stream<Component> stream()
+	{
+		return StreamSupport.stream(spliterator(), false);
+	}
+
+	/**
+	 * Returns a sequential {@code Stream} with the all children of this markup container as its
+	 * source. This stream does traverse the component tree.
+	 * 
+	 * @return a sequential {@code Stream} over the all children of this markup container
+	 * @since 8.0
+	 */
+	@SuppressWarnings("unchecked")
+	public Stream<Component> streamChildren()
+	{
+		class ChildrenIterator<C> implements Iterator<C>
+		{
+			private Iterator<C> currentIterator;
+
+			private Deque<Iterator<C>> iteratorStack = new ArrayDeque<>();
+
+			private ChildrenIterator(Iterator<C> iterator)
+			{
+				currentIterator = iterator;
+			}
+
+			@Override
+			public boolean hasNext()
+			{
+				if (!currentIterator.hasNext() && !iteratorStack.isEmpty())
+				{
+					currentIterator = iteratorStack.pop();
+				}
+				return currentIterator.hasNext();
+			}
+
+			@Override
+			public C next()
+			{
+				C child = currentIterator.next();
+				if (child instanceof Iterable)
+				{
+					iteratorStack.push(currentIterator);
+					currentIterator = ((Iterable<C>)child).iterator();
+				}
+				return child;
+			}
+		}
+		return StreamSupport.stream(
+			Spliterators.spliteratorUnknownSize(new ChildrenIterator<>(iterator()), 0), false);
 	}
 }

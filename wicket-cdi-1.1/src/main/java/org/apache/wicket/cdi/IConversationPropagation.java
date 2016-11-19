@@ -27,6 +27,7 @@ import org.apache.wicket.request.IRequestHandler;
  * 
  * @author papegaaij
  */
+@FunctionalInterface
 public interface IConversationPropagation
 {
 	/**
@@ -42,5 +43,5 @@ public interface IConversationPropagation
 	 * @return true if the conversation should be propagated for the given
 	 *         request handler.
 	 */
-	public boolean propagatesVia(IRequestHandler handler, Page page);
+	boolean propagatesVia(IRequestHandler handler, Page page);
 }

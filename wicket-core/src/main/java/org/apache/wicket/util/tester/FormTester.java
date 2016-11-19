@@ -655,7 +655,7 @@ public class FormTester
 	 *            <code>FormComponent</code>. The <code>FormComponent</code> must be of a type
 	 *            <code>FileUploadField</code>.
 	 * @param file
-	 *            the <code>File</code> to upload.
+	 *            the <code>File</code> to upload or {@code null} for an empty input
 	 * @param contentType
 	 *            the content type of the file. Must be a valid mime type.
 	 * @return This

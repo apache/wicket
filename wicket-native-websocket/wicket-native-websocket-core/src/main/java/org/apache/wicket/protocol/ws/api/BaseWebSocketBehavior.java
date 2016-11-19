@@ -97,18 +97,18 @@ public class BaseWebSocketBehavior extends Behavior
 		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(component.getApplication());
 
 		CharSequence baseUrl = getBaseUrl(webSocketSettings);
-		Args.notEmpty(baseUrl, "baseUrl");
+		Args.notNull(baseUrl, "baseUrl");
 		variables.put("baseUrl", baseUrl);
 
 		CharSequence contextPath = getContextPath(webSocketSettings);
-		Args.notEmpty(contextPath, "contextPath");
+		Args.notNull(contextPath, "contextPath");
 		variables.put("contextPath", contextPath);
 
 		// preserve the application name for JSR356 based impl
 		variables.put("applicationName", component.getApplication().getName());
 
 		CharSequence filterPrefix = getFilterPrefix(webSocketSettings);
-		Args.notEmpty(filterPrefix, "filterPrefix");
+		Args.notNull(filterPrefix, "filterPrefix");
 		variables.put("filterPrefix", filterPrefix);
 
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);

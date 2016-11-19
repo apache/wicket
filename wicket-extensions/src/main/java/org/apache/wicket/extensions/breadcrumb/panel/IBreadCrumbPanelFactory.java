@@ -25,6 +25,7 @@ import org.apache.wicket.util.io.IClusterable;
  * for creation. Mainly meant for supporting
  * {@link BreadCrumbPanel#activate(IBreadCrumbPanelFactory)}.
  */
+@FunctionalInterface
 public interface IBreadCrumbPanelFactory extends IClusterable
 {
 	/**

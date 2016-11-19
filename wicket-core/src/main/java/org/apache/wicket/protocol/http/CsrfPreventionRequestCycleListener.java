@@ -33,6 +33,7 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.string.Strings;
@@ -111,9 +112,7 @@ import org.slf4j.LoggerFactory;
  * conflict and the request should be suppressed</li>
  * </ul>
  */
-public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleListener
-	implements
-		IRequestCycleListener
+public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 {
 	private static final Logger log = LoggerFactory
 		.getLogger(CsrfPreventionRequestCycleListener.class);
@@ -383,10 +382,10 @@ public class CsrfPreventionRequestCycleListener extends AbstractRequestCycleList
 	 */
 	protected String getSourceUri(HttpServletRequest containerRequest)
 	{
-		String sourceUri = containerRequest.getHeader("Origin");
+		String sourceUri = containerRequest.getHeader(WebRequest.HEADER_ORIGIN);
 		if (Strings.isEmpty(sourceUri))
 		{
-			sourceUri = containerRequest.getHeader("Referer");
+			sourceUri = containerRequest.getHeader(WebRequest.HEADER_REFERER);
 		}
 		return normalizeUri(sourceUri);
 	}

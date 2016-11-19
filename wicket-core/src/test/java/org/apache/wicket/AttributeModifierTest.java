@@ -16,10 +16,15 @@
  */
 package org.apache.wicket;
 
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
+
 import java.util.Map;
 
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.junit.Assert;
 import org.junit.Test;
@@ -325,5 +330,30 @@ public class AttributeModifierTest extends Assert
 		appender.replaceAttributeValue(null, tag);
 		assertFalse(attributes.isEmpty());
 		assertEquals("VA_REMOVE VA_REMOVE", attributes.get(attrName));
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6279
+	 */
+	@Test
+	public void deserializeAdd()
+	{
+		AttributeModifier appender = AttributeModifier.append("class", AttributeModifier.VALUELESS_ATTRIBUTE_ADD);
+		final AttributeModifier copy = WicketObjects.cloneObject(appender);
+		final IModel<?> replaceModel = copy.getReplaceModel();
+		assertThat(replaceModel.getObject(), is(sameInstance(AttributeModifier.VALUELESS_ATTRIBUTE_ADD)));
+	}
+
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6279
+	 */
+	@Test
+	public void deserializeRemove()
+	{
+		AttributeModifier appender = AttributeModifier.append("class", AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE);
+		final AttributeModifier copy = WicketObjects.cloneObject(appender);
+		final IModel<?> replaceModel = copy.getReplaceModel();
+		assertThat(replaceModel.getObject(), is(sameInstance(AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE)));
 	}
 }

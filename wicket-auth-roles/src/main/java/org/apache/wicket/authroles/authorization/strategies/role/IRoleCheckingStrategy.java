@@ -25,6 +25,7 @@ package org.apache.wicket.authroles.authorization.strategies.role;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
+@FunctionalInterface
 public interface IRoleCheckingStrategy
 {
 	/**

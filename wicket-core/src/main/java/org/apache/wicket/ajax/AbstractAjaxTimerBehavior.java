@@ -19,11 +19,11 @@ package org.apache.wicket.ajax;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * A behavior that generates an AJAX update callback at a regular interval.
@@ -226,7 +226,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 *            the consumer which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AbstractAjaxTimerBehavior}
 	 */
-	public static AbstractAjaxTimerBehavior onTimer(Duration interval, WicketConsumer<AjaxRequestTarget> onTimer)
+	public static AbstractAjaxTimerBehavior onTimer(Duration interval, SerializableConsumer<AjaxRequestTarget> onTimer)
 	{
 		Args.notNull(onTimer, "onTimer");
 

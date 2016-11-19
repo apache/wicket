@@ -378,12 +378,13 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Asserts that a component's markup has loaded with the given style
+	 * Asserts that a component's markup has loaded with the given style.
 	 *
 	 * @param component
 	 *              The component which markup to check
 	 * @param expectedStyle
-	 *              The expected style of the component's markup
+	 *              The expected style of the component's markup.
+	 *              For example: <em>green</em> in <code>MyPanel_green.html</code>
 	 */
 	public void assertMarkupStyle(Component component, String expectedStyle)
 	{

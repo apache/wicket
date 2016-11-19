@@ -21,14 +21,14 @@ import org.apache.wicket.Component;
 import org.apache.wicket.IComponentAwareEventSink;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.lambda.WicketConsumer;
-import org.apache.wicket.lambda.WicketFunction;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
+import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
  * Behaviors are kind of plug-ins for Components. They allow functionality to be added to a
@@ -265,19 +265,19 @@ public abstract class Behavior
 	}
 
 	/**
-	 * Creates a {@link Behavior} that uses the given {@link WicketConsumer consumer}
-	 * to do something with the component's tag.
+	 * Creates a {@link Behavior} that uses the given {@code SerializableConsumer consumer} to do
+	 * something with the component's tag.
 	 *
 	 * <p>
-	 *     Usage:<br/>
-	 *     <code>component.add(onTag(tag -> tag.put(key, value)));</code>
+	 * Usage:<br/>
+	 * <code>component.add(onTag(tag -> tag.put(key, value)));</code>
 	 * </p>
 	 *
 	 * @param onTagConsumer
-	 *              the {@link WicketConsumer} that accepts the {@link ComponentTag}
+	 *            the {@code SerializableConsumer} that accepts the {@link ComponentTag}
 	 * @return The created behavior
 	 */
-	public static Behavior onTag(WicketConsumer<ComponentTag> onTagConsumer)
+	public static Behavior onTag(SerializableConsumer<ComponentTag> onTagConsumer)
 	{
 		Args.notNull(onTagConsumer, "onTagConsumer");
 
@@ -292,29 +292,32 @@ public abstract class Behavior
 	}
 
 	/**
-	 * Creates a {@link Behavior} that uses the given {@link WicketFunction function}
-	 * to do something with a component's attribute.
+	 * Creates a {@link Behavior} that uses the given {@code SerializableFunction function} to do
+	 * something with a component's attribute.
 	 *
 	 * <p>
-	 *     Usage:<br/>
-	 *     <code>component.add(onAttribute("class",
+	 * Usage:<br/>
+	 * <code>component.add(onAttribute("class",
 	 *              currentValue -> condition(currentValue) ? "positive" : "negative"));</code>
 	 * </p>
 	 *
 	 * @param name
-	 *              the name of the attribute to manipulate
+	 *            the name of the attribute to manipulate
 	 * @param onAttribute
-	 *              the {@link WicketFunction} that accepts the old value of the attribute
-	 *              and returns a new value
+	 *            the {@code SerializableFunction} that accepts the old value of the attribute and
+	 *            returns a new value
 	 * @return The created behavior
 	 */
-	public static Behavior onAttribute(String name, WicketFunction<String, CharSequence> onAttribute)
+	public static Behavior onAttribute(String name,
+		SerializableFunction<String, CharSequence> onAttribute)
 	{
 		Args.notEmpty(name, "name");
 		Args.notNull(onAttribute, "onAttribute");
 
 		return new Behavior()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{

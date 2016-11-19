@@ -1,0 +1,17 @@
+
+Wicket's _<wicket:remove>_ tag can be very useful when our web designer needs to show us how a page or a panel should look like. The markup inside this tag will be stripped out in the final page, so it's the ideal place for web designers to put their stub markup:
+
+[source,html]
+----
+<html>
+<head>
+
+</head>
+<body>
+	<wicket:remove>
+	   <!-- Stub markup goes here -->
+	</wicket:remove>
+</body>
+</html>
+----
+

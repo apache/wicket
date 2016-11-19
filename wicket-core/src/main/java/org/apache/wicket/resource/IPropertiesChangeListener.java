@@ -22,7 +22,8 @@ package org.apache.wicket.resource;
  * 
  * @author Juergen Donnerstag
  */
-public abstract interface IPropertiesChangeListener
+@FunctionalInterface
+public interface IPropertiesChangeListener
 {
 	/**
 	 * Fired after a properties file change has been detected

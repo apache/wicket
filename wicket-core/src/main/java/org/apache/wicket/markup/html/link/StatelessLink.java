@@ -17,8 +17,8 @@
 package org.apache.wicket.markup.html.link;
 
 
-import org.apache.wicket.lambda.WicketConsumer;
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * This link is stateless that means that the url to this link could generate a new page before the
@@ -63,10 +63,10 @@ public abstract class StatelessLink<T> extends Link<T>
 	 * @param id
 	 *            the id of the link
 	 * @param onClick
-	 *            the {@link WicketConsumer} which accepts the {@link Void}
+	 *            the {@code SerializableConsumer} which accepts the {@link Void}
 	 * @return the {@link Link}
 	 */
-	public static <T> StatelessLink<T> onClick(String id, WicketConsumer<Link<T>> onClick)
+	public static <T> StatelessLink<T> onClick(String id, SerializableConsumer<Link<T>> onClick)
 	{
 		Args.notNull(onClick, "onClick");
 

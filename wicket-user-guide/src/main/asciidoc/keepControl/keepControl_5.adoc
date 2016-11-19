@@ -1,0 +1,64 @@
+
+Another circumstance in which we may prefer to avoid the creation of custom panels is when we want to conditionally display in a page small fragments of markup. In this case if we decided to use panels, we would end up having a huge number of small panel classes with their related markup file.
+
+To better cope with situations like this, Wicket defines component _Fragment_ in package _org.apache.wicket.markup.html.panel_. Just like its parent component _WebMarkupContainer_, Fragment doesn't have its own markup file but it uses a markup fragment defined in the markup file of its parent container, which can be a page or a panel. The fragment must be delimited with tag _<wicket:fragment>_ and must be identified by a _wicket:id_ attribute. In addition to the component id, _Fragment_'s constructor takes as input also the id of the fragment and a reference to its container.
+
+In the following  example we have defined a fragment in a page and we used it as content area:
+
+*Page markup:*
+
+[source,html]
+----
+<html>
+  ...
+<body>
+...
+	<div wicket:id="contentArea"></div>
+	<wicket:fragment wicket:id="fragmentId">
+	   <!-- Fragment markup goes here -->
+	</wicket:fragment>
+</body>
+</html>
+----
+
+*Java code:*
+
+[source,java]
+----
+Fragment fragment = new  Fragment ("contentArea", "fragmentId", this);
+add(fragment);
+----
+
+Fragments can be very helpful with complex pages or components. For example let's say that we  have a page where users can register to our forum. This page should first display a form where user must insert his/her personal data (name, username, password, email and so on), then, once the user has submitted the form, the page should display a message like “Your registration is complete! Please check your mail to activate your user profile.”. 
+
+Instead of displaying this message with a new component or in a new page, we can define two fragments: one for the initial form and one to display the confirmation message. The second fragment will replace the first one after the form has been submitted:
+
+*Page markup:*
+
+[source,html]
+----
+<html>
+<body>
+	<div wicket:id="contentArea"></div>
+	<wicket:fragment wicket:id="formFrag">
+	   <!-- Form markup goes here -->
+	</wicket:fragment>
+	<wicket:fragment wicket:id="messageFrag">
+	   <!-- Message markup goes here -->
+	</wicket:fragment>
+</body>
+</html>
+----
+
+*Java code:*
+
+[source,java]
+----
+Fragment fragment = new  Fragment ("contentArea", "formFrag", this);
+add(fragment);
+
+//form has been submitted
+Fragment fragment = new  Fragment ("contentArea", "messageFrag", this);
+replace(fragment);
+----
+
