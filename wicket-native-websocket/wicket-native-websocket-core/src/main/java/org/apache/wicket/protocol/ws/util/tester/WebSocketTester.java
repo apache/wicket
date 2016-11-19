@@ -146,7 +146,7 @@ public class WebSocketTester
 	{
 		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(application);
 		WebSocketPushBroadcaster broadcaster = new WebSocketPushBroadcaster(webSocketSettings.getConnectionRegistry());
-		ConnectedMessage wsMessage = new ConnectedMessage(application, sessionId, key);
+		ConnectedMessage wsMessage = new ConnectedMessage(application.getApplicationKey(), sessionId, key);
 		broadcaster.broadcast(wsMessage, message);
 	}
 

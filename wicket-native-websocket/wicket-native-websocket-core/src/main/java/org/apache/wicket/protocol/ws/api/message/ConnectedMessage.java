@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
+
+import java.io.Serializable;
 
 /**
  * A {@link IWebSocketMessage message} when a client creates web socket
@@ -25,11 +26,11 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
  *
  * @since 6.0
  */
-public class ConnectedMessage extends AbstractClientMessage
+public class ConnectedMessage extends AbstractClientMessage implements Serializable
 {
-	public ConnectedMessage(Application application, String sessionId, IKey key)
+	public ConnectedMessage(String applicationKey, String sessionId, IKey key)
 	{
-		super(application, sessionId, key);
+		super(applicationKey, sessionId, key);
 	}
 
 	@Override

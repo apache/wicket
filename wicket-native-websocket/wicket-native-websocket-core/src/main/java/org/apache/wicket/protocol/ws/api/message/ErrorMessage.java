@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
+
+import java.io.Serializable;
 
 /**
  * A {@link IWebSocketMessage message} sent when there is an error while using the
@@ -25,13 +26,13 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
  *
  * @since 7.3.0
  */
-public class ErrorMessage extends AbstractClientMessage
+public class ErrorMessage extends AbstractClientMessage implements Serializable
 {
 	private final Throwable t;
 
-	public ErrorMessage(Application application, String sessionId, IKey key, Throwable t)
+	public ErrorMessage(String applicationKey, String sessionId, IKey key, Throwable t)
 	{
-		super(application, sessionId, key);
+		super(applicationKey, sessionId, key);
 		this.t = t;
 	}
 

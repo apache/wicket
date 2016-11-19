@@ -165,21 +165,21 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			ConnectionRejected connectionRejected = connectionFilter.doFilter(servletRequest);
 			if (connectionRejected != null)
 			{
-				broadcastMessage(new AbortedMessage(getApplication(), getSessionId(), key));
+				broadcastMessage(new AbortedMessage(getApplication().getApplicationKey(), getSessionId(), key));
 				connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
 				connection.close(connectionRejected.getCode(), connectionRejected.getReason());
 				return;
 			}
 		}
 
-		broadcastMessage(new ConnectedMessage(getApplication(), getSessionId(), key));
+		broadcastMessage(new ConnectedMessage(getApplication().getApplicationKey(), getSessionId(), key));
 	}
 
 	@Override
 	public void onClose(int closeCode, String message)
 	{
 		IKey key = getRegistryKey();
-		broadcastMessage(new ClosedMessage(getApplication(), getSessionId(), key));
+		broadcastMessage(new ClosedMessage(getApplication().getApplicationKey(), getSessionId(), key));
 		connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
 	}
 
@@ -187,7 +187,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	public void onError(Throwable t)
 	{
 		IKey key = getRegistryKey();
-		broadcastMessage(new ErrorMessage(getApplication(), getSessionId(), key, t));
+		broadcastMessage(new ErrorMessage(getApplication().getApplicationKey(), getSessionId(), key, t));
 	}
 
 	/**

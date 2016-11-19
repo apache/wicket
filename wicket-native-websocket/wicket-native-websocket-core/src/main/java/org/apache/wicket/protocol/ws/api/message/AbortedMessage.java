@@ -16,19 +16,20 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
+
+import java.io.Serializable;
 
 /**
  * A {@link IWebSocketMessage message} sent when the web socket connection is aborted.
  *
  * @since 7.0.0-M5
  */
-public class AbortedMessage extends AbstractClientMessage
+public class AbortedMessage extends AbstractClientMessage implements Serializable
 {
-	public AbortedMessage(Application application, String sessionId, IKey key)
+	public AbortedMessage(String applicationKey, String sessionId, IKey key)
 	{
-		super(application, sessionId, key);
+		super(applicationKey, sessionId, key);
 	}
 
 	@Override

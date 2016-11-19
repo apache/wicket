@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
+import java.io.ObjectOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.wicket.protocol.ws.api.message.*;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.apache.wicket.util.string.Strings;
@@ -140,6 +143,44 @@ public class WebSocketTesterBehaviorTest extends Assert
 		assertTrue(messageReceived.get());
 		webSocketTester.destroy();
 	}
+
+
+	/**
+	 * Check the supplied object can be serialized.
+	 */
+	private void serializeCheck(Object obj)
+	{
+		try {
+			// if the object cannot be serialized. This will throw up.
+			new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(obj);
+		} catch(Exception checkedExceptionSuck) {
+			// sigh.
+			throw(new RuntimeException("TEST failed to serialize $obj", checkedExceptionSuck));
+		}
+	}
+
+
+
+	@Test
+	public void serverMessagesCanBeSerialized()
+	{
+		// AbstractClientMessage
+	  final AbstractClientMessage[] messages = {
+			new AbortedMessage("appKey", "sessionId", new PageIdKey(42)),
+			new ClosedMessage("appKey", "sessionId", new PageIdKey(42)),
+			new ConnectedMessage("appKey", "sessionId", new PageIdKey(42))
+			//,
+			//new ErrorMessage("appKey", "sessionId", new PageIdKey(42))
+		};
+
+    //Arrays.stream(messages).forEach(m -> serializeCheck(m));
+		for(int brainDeadCouner = 0; brainDeadCouner < messages.length; brainDeadCouner = brainDeadCouner + 1) {
+			Object obj = messages[brainDeadCouner];
+			serializeCheck(obj);
+		}
+
+	}
+
 
 	static class BroadcastMessage implements IWebSocketPushMessage
 	{

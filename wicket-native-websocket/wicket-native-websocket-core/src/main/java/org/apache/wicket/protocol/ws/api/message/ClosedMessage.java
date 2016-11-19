@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
+
+import java.io.Serializable;
 
 /**
  * A {@link IWebSocketMessage message} sent when the web socket connection
@@ -25,11 +26,11 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
  *
  * @since 6.0
  */
-public class ClosedMessage extends AbstractClientMessage
+public class ClosedMessage extends AbstractClientMessage implements Serializable
 {
-	public ClosedMessage(Application application, String sessionId, IKey key)
+	public ClosedMessage(String applicationKey, String sessionId, IKey key)
 	{
-		super(application, sessionId, key);
+		super(applicationKey, sessionId, key);
 	}
 
 	@Override

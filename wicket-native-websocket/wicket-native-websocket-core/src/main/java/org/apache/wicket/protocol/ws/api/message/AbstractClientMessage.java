@@ -20,25 +20,27 @@ import org.apache.wicket.Application;
 import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 
+import java.io.Serializable;
+
 /**
  * A base message for all messages with information about the client
  */
-public abstract class AbstractClientMessage implements IWebSocketMessage
+public abstract class AbstractClientMessage implements IWebSocketMessage, Serializable
 {
-	private final Application application;
+	private final String applicationKey;
 	private final String sessionId;
 	private final IKey key;
 
-	public AbstractClientMessage(Application application, String sessionId, IKey key)
+	public AbstractClientMessage(String applicationKey, String sessionId, IKey key)
 	{
-		this.application = Args.notNull(application, "application");
+		this.applicationKey = Args.notNull(applicationKey, "application");
 		this.sessionId = Args.notNull(sessionId, "sessionId");
 		this.key = Args.notNull(key, "key");
 	}
 
 	public Application getApplication()
 	{
-		return application;
+		return Application.get(applicationKey);
 	}
 
 	public String getSessionId()
