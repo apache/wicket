@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;

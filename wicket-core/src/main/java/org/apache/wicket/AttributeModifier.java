@@ -22,6 +22,7 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IComponentAssignedModel;
 import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
@@ -29,8 +30,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.value.IValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class allows a tag attribute of a component to be modified dynamically with a value obtained
@@ -69,13 +68,11 @@ import org.slf4j.LoggerFactory;
  */
 public class AttributeModifier extends Behavior implements IClusterable
 {
-	private static final Logger LOG = LoggerFactory.getLogger(AttributeModifier.class);
-
 	/** Marker value to have an attribute without a value added. */
-	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
+	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VALUELESS_ATTRIBUTE_ADD");
 
 	/** Marker value to have an attribute without a value removed. */
-	public static final String VALUELESS_ATTRIBUTE_REMOVE = new String("VA_REMOVE");
+	public static final String VALUELESS_ATTRIBUTE_REMOVE = new String("VALUELESS_ATTRIBUTE_REMOVE");
 
 	private static final long serialVersionUID = 1L;
 
@@ -115,7 +112,36 @@ public class AttributeModifier extends Behavior implements IClusterable
 	 */
 	public AttributeModifier(String attribute, Serializable value)
 	{
-		this(attribute, Model.of(value));
+		this(attribute, createModel(value));
+	}
+
+	private static IModel<?> createModel(final Serializable value) {
+		IModel<Serializable> model;
+		if (value == VALUELESS_ATTRIBUTE_ADD)
+		{
+			model = new AbstractReadOnlyModel<Serializable>()
+			{
+				@Override
+				public Serializable getObject() {
+					return VALUELESS_ATTRIBUTE_ADD;
+				}
+			};
+		}
+		else if (value == VALUELESS_ATTRIBUTE_REMOVE)
+		{
+			model = new AbstractReadOnlyModel<Serializable>()
+			{
+				@Override
+				public Serializable getObject() {
+					return VALUELESS_ATTRIBUTE_REMOVE;
+				}
+			};
+		}
+		else
+		{
+			model = Model.of(value);
+		}
+		return model;
 	}
 
 	/**
@@ -176,7 +202,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 			else
 			{
 				final String value = toStringOrNull(attributes.get(attribute));
-				final String newValue = newValue(value, toStringOrNull(replacementValue));
+				final Serializable newValue = newValue(value, toStringOrNull(replacementValue));
 				if (newValue == VALUELESS_ATTRIBUTE_REMOVE)
 				{
 					attributes.remove(attribute);
@@ -189,9 +215,6 @@ public class AttributeModifier extends Behavior implements IClusterable
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -313,7 +336,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 	{
 		Args.notEmpty(attributeName, "attributeName");
 
-		return append(attributeName, Model.of(value));
+		return append(attributeName, createModel(value));
 	}
 
 	/**
@@ -357,7 +380,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 	{
 		Args.notEmpty(attributeName, "attributeName");
 
-		return prepend(attributeName, Model.of(value));
+		return prepend(attributeName, createModel(value));
 	}
 
 	/**
@@ -372,35 +395,6 @@ public class AttributeModifier extends Behavior implements IClusterable
 	{
 		Args.notEmpty(attributeName, "attributeName");
 
-		return replace(attributeName, Model.of(VALUELESS_ATTRIBUTE_REMOVE));
-	}
-
-	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException,
-			ClassNotFoundException
-	{
-		s.defaultReadObject();
-
-		try
-		{
-			if (replaceModel instanceof Model)
-			{
-				Model<Serializable> model = (Model<Serializable>) replaceModel;
-
-				final Object replacement = replaceModel.getObject();
-				if (VALUELESS_ATTRIBUTE_ADD.equals(replacement))
-				{
-					model.setObject(VALUELESS_ATTRIBUTE_ADD);
-				}
-				else if (VALUELESS_ATTRIBUTE_REMOVE.equals(replacement))
-				{
-					model.setObject(VALUELESS_ATTRIBUTE_REMOVE);
-				}
-			}
-		}
-		catch (Exception x)
-		{
-			LOG.debug("Cannot reset the value of replaceModel to 'VALUELESS_ATTRIBUTE_ADD/REMOVE': {}",
-					x.getMessage(), x);
-		}
+		return replace(attributeName, createModel(VALUELESS_ATTRIBUTE_REMOVE));
 	}
 }
