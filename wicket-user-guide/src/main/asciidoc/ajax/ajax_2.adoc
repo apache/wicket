@@ -36,7 +36,7 @@ Base component AjaxEditableLabel exposes the following set of AJAX-aware methods
 * *onError(AjaxRequestTarget target)*: called when the new inserted input has failed validation.
 * *onCancel(AjaxRequestTarget target)*: called when user has exited from editing mode pressing escape key. The default implementation brings back the label to its initial state hiding the editor component.  
 
-Wicket module wicket-examples contains page class _EditableLabelPage.java_ which shows all these three components together. You can see this page in action at {externalink:wicket.examples.url_ajax/editable-label}:
+Wicket module wicket-examples contains page class _EditableLabelPage.java_ which shows all these three components together. You can see this page in action on {wicket_examples_url}/ajax/editable-label[examples site]:
 
 image::../img/edit-label-example-screenshot.png[]
 
@@ -71,7 +71,7 @@ AutoCompleteTextField field = new AutoCompleteTextField<T>("field", model) {
 };
 ----
 
-Wicket module wicket-examples contains page class _AutoCompletePagePage.java_ which shows an example of autocomplete text field. The running example is available at {externalink:wicket.examples.url_ajax/autocomplete} .
+Wicket module wicket-examples contains page class _AutoCompletePagePage.java_ which shows an example of autocomplete text field. The running example is available on {wicket_examples_url}/ajax/autocomplete[examples site] .
 
 === Modal window
 

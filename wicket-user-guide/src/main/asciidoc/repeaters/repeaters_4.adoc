@@ -111,7 +111,7 @@ public HomePage(final PageParameters parameters) {
 
 The data of a single country (ISO code, name, long name, capital and population) are handled with an array of strings. The usage of PagingNavigator is quite straightforward as we need to simply pass the pageable repeater to its constructor. 
 
-To explore the other pageable repeaters shipped with Wicket you can visit the page at {externalink:wicket.examples.url_repeater} where you can find live examples of these components.
+To explore the other pageable repeaters shipped with Wicket you can visit the {wicket_examples_url}/repeater[examples site] where you can find live examples of these components.
 
 NOTE: Wicket provides also component PageableListView which is a sublcass of ListView that implements interface IPageable, hence it can be considered a pageable repeater even if it doesn't use interface IDataProvider as data source.
 

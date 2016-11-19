@@ -80,5 +80,5 @@ public void init()
 === Upload multiple files
 
 If we need to upload multiple files at once and our clients support HTML5, we can still use FileUploadField adding attribute  [multiple] to its tag. If we can not rely on HTML5, we can use the MultiFileUploadField component which allows the user to upload an arbitrary number of files using a JavaScript-based solution.
-An example showing how to use this component can be found in Wicket module wicket-examples in file MultiUploadPage.java. The live example is hosted at {externalink:wicket.examples.url_upload/multi} .
+An example showing how to use this component can be found in Wicket module wicket-examples in file MultiUploadPage.java. The live example is hosted on the {wicket_examples_url}/upload/multi[examples site].
 
