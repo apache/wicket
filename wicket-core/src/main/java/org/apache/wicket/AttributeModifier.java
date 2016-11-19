@@ -29,8 +29,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.value.IValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class allows a tag attribute of a component to be modified dynamically with a value obtained
@@ -69,13 +67,22 @@ import org.slf4j.LoggerFactory;
  */
 public class AttributeModifier extends Behavior implements IClusterable
 {
-	private static final Logger LOG = LoggerFactory.getLogger(AttributeModifier.class);
+	/**
+	 * Special attribute value markers.
+	 */
+	public enum MarkerValue {
+		/** Marker value to have an attribute without a value added. */
+		VALUELESS_ATTRIBUTE_ADD,
+
+		/** Marker value to have an attribute without a value removed. */
+		VALUELESS_ATTRIBUTE_REMOVE
+	}
 
 	/** Marker value to have an attribute without a value added. */
-	public static final String VALUELESS_ATTRIBUTE_ADD = new String("VA_ADD");
+	public static final MarkerValue VALUELESS_ATTRIBUTE_ADD = MarkerValue.VALUELESS_ATTRIBUTE_ADD;
 
 	/** Marker value to have an attribute without a value removed. */
-	public static final String VALUELESS_ATTRIBUTE_REMOVE = new String("VA_REMOVE");
+	public static final MarkerValue VALUELESS_ATTRIBUTE_REMOVE = MarkerValue.VALUELESS_ATTRIBUTE_REMOVE;
 
 	private static final long serialVersionUID = 1L;
 
@@ -176,7 +183,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 			else
 			{
 				final String value = toStringOrNull(attributes.get(attribute));
-				final String newValue = newValue(value, toStringOrNull(replacementValue));
+				final Serializable newValue = newValue(value, toStringOrNull(replacementValue));
 				if (newValue == VALUELESS_ATTRIBUTE_REMOVE)
 				{
 					attributes.remove(attribute);
@@ -189,9 +196,6 @@ public class AttributeModifier extends Behavior implements IClusterable
 		}
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -247,7 +251,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 	 *            The replacement value. This value might be null!
 	 * @return The value that should replace the current attribute value
 	 */
-	protected String newValue(final String currentValue, final String replacementValue)
+	protected Serializable newValue(final String currentValue, final String replacementValue)
 	{
 		return replacementValue;
 	}
@@ -335,7 +339,7 @@ public class AttributeModifier extends Behavior implements IClusterable
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected String newValue(String currentValue, String replacementValue)
+			protected Serializable newValue(String currentValue, String replacementValue)
 			{
 				// swap currentValue and replacementValue in the call to the concatenator
 				return super.newValue(replacementValue, currentValue);
@@ -373,34 +377,5 @@ public class AttributeModifier extends Behavior implements IClusterable
 		Args.notEmpty(attributeName, "attributeName");
 
 		return replace(attributeName, Model.of(VALUELESS_ATTRIBUTE_REMOVE));
-	}
-
-	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException,
-			ClassNotFoundException
-	{
-		s.defaultReadObject();
-
-		try
-		{
-			if (replaceModel instanceof Model)
-			{
-				Model<Serializable> model = (Model<Serializable>) replaceModel;
-
-				final Object replacement = replaceModel.getObject();
-				if (VALUELESS_ATTRIBUTE_ADD.equals(replacement))
-				{
-					model.setObject(VALUELESS_ATTRIBUTE_ADD);
-				}
-				else if (VALUELESS_ATTRIBUTE_REMOVE.equals(replacement))
-				{
-					model.setObject(VALUELESS_ATTRIBUTE_REMOVE);
-				}
-			}
-		}
-		catch (Exception x)
-		{
-			LOG.debug("Cannot reset the value of replaceModel to 'VALUELESS_ATTRIBUTE_ADD/REMOVE': {}",
-					x.getMessage(), x);
-		}
 	}
 }
