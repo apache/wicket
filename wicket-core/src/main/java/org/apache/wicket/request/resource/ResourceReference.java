@@ -259,7 +259,7 @@ public abstract class ResourceReference implements IClusterable
 	}
 
 	/**
-	 * Factory method to build a resorce reference that uses the provided supplier to return
+	 * Factory method to build a resource reference that uses the provided supplier to return
 	 * the resource.
 	 * 
 	 * @param key
@@ -272,12 +272,9 @@ public abstract class ResourceReference implements IClusterable
 	{
 		return new LambdaResourceReference(key, resourceSupplier);
 	}
-	
+
 	public static final class LambdaResourceReference extends ResourceReference
 	{
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1826862147241009289L;
 		
 		final SerializableSupplier<IResource> resourceBuilder;
@@ -285,13 +282,13 @@ public abstract class ResourceReference implements IClusterable
 		public LambdaResourceReference(String name, SerializableSupplier<IResource> resourceBuilder) 
 		{
 			super(name);
-			this.resourceBuilder = resourceBuilder;
+			this.resourceBuilder = Args.notNull(resourceBuilder, "resourceBuilder");
 		}
 
 		public LambdaResourceReference(Key key, SerializableSupplier<IResource> resourceBuilder) 
 		{
 			super(key);
-			this.resourceBuilder = resourceBuilder;
+			this.resourceBuilder = Args.notNull(resourceBuilder, "resourceBuilder");
 		}
 
 		@Override
