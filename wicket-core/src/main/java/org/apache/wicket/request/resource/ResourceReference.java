@@ -27,6 +27,7 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 /**
  * Reference to a resource. Can be used to reference global resources.
@@ -241,7 +242,65 @@ public abstract class ResourceReference implements IClusterable
 	{
 		return new UrlAttributes(getLocale(), getStyle(), getVariation());
 	}
+	
+	/**
+	 * Factory method to build a resource reference that uses the provided supplier to return
+	 * the resource.
+	 * 
+	 * @param name
+	 * 				The name to use with the resource
+	 * @param resourceSupplier
+	 * 				Lambda supplier to build the resource
+	 * @return the new resource reference
+	 */
+	public static final ResourceReference of(String name, SerializableSupplier<IResource> resourceSupplier)
+	{
+		return new LambdaResourceReference(name, resourceSupplier);
+	}
 
+	/**
+	 * Factory method to build a resorce reference that uses the provided supplier to return
+	 * the resource.
+	 * 
+	 * @param key
+	 * 				The {@link Key} to use with the resource
+	 * @param resourceSupplier
+	 * 				Lambda supplier to build the resource
+	 * @return  the new resource reference
+	 */
+	public static final ResourceReference of(Key key, SerializableSupplier<IResource> resourceSupplier)
+	{
+		return new LambdaResourceReference(key, resourceSupplier);
+	}
+	
+	public static final class LambdaResourceReference extends ResourceReference
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1826862147241009289L;
+		
+		final SerializableSupplier<IResource> resourceBuilder;
+
+		public LambdaResourceReference(String name, SerializableSupplier<IResource> resourceBuilder) 
+		{
+			super(name);
+			this.resourceBuilder = resourceBuilder;
+		}
+
+		public LambdaResourceReference(Key key, SerializableSupplier<IResource> resourceBuilder) 
+		{
+			super(key);
+			this.resourceBuilder = resourceBuilder;
+		}
+
+		@Override
+		public IResource getResource() 
+		{
+			return resourceBuilder.get();
+		}
+	}
+	
 	/**
 	 * @see ResourceReference#getUrlAttributes()
 	 * 
