@@ -295,7 +295,7 @@ public class PageParametersTest extends Assert
 	}
 
 	/**
-	 * NamedPairs equality should not depend on the type
+	 * NamedPairs equality should not depend on the order
 	 *
 	 * https://issues.apache.org/jira/browse/WICKET-6283
 	 */
