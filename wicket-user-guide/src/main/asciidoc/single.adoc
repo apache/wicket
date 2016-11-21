@@ -465,29 +465,33 @@ include::resources/resources_10.adoc[leveloffset=+1]
 
 include::resources/resources_11.adoc[leveloffset=+1]
 
-=== Shared resources
+=== Lambda support
 
 include::resources/resources_12.adoc[leveloffset=+1]
 
-=== Customizing resource loading
+=== Shared resources
 
 include::resources/resources_13.adoc[leveloffset=+1]
 
-=== CssHeaderItem and JavaScriptHeaderItem compression
+=== Customizing resource loading
 
 include::resources/resources_14.adoc[leveloffset=+1]
 
-=== NIO resources
+=== CssHeaderItem and JavaScriptHeaderItem compression
 
 include::resources/resources_15.adoc[leveloffset=+1]
 
-=== Resourcen derived through models
+=== NIO resources
 
 include::resources/resources_16.adoc[leveloffset=+1]
 
-=== Summary
+=== Resources derived through models
 
 include::resources/resources_17.adoc[leveloffset=+1]
+
+=== Summary
+
+include::resources/resources_18.adoc[leveloffset=+1]
 
 == An example of integration with JavaScript
 

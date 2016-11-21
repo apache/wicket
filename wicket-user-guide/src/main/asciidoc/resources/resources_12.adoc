@@ -1,33 +1,26 @@
-
-
-
-Resources can be added to a global registry in order to share them at application-level. Shared resources are identified by an application-scoped key and they can be easily retrieved at a later time using reference class _SharedResourceReference_. The global registry can be accessed with _Application_'s method _getSharedResources_. In the following excerpt of code (taken again from project _CustomResourceMounting_) we register an instance of our custom RSS feeds producer as application-shared resource:
+Since interface _IResource_ is marked as functional interface, a custom resource can also be implemented with a simple lambda expression that consumes a _IResource.Attributes_ parameter:
 
 [source,java]
 ----
-  //init application's method
-  @Override
-  public void init(){
-    RSSProducerResource rssResource = new RSSProducerResource();
-    // ...
-    getSharedResources().add("globalRSSProducer", rssResource);    
-  }
+IResource helloWorldRes = (attributes) -> 
+     attributes.getResponse().write("Hello world!");
 ----
 
-Now to use an application-shared resource we can simply retrieve it using class _SharedResourceReference_ and providing the key previously used to register the resource:
+Lambda expressions come in handy also with _ResourceReference_ factory methods _of_ that accept a resource supplier as argument. Let's say we want to mount the resource of the previous example. Using lambdas the code looks like this:
 
 [source,java]
 ----
-add(new ResourceLink("globalRssLink", new SharedResourceReference("globalRSSProducer")));
+@Override
+public void init() {
+  super.init();
+
+  IResource helloWorldRes = (attributes) -> 
+     attributes.getResponse().write("Hello world!");
+     
+  ResourceReference resRef = ResourceReference.of("helloworld", () -> helloWorldRes);        
+
+  mountResource("/helloworld", resRef);
+}
 ----
 
-The URL generated for application shared resources follows the same pattern seen for package resources:
-
-_./wicket/resource/org.apache.wicket.Application/globalRSSProducer_
-
-The last segment of the URL is the key of the resource while the previous segment contains the scope of the resource. For application-scoped resources the scope is always the fully qualified name of class _Application_. This should not be surprising since global resources are visible at application level (i.e. the scope is the application).
-
-NOTE: Package resources are also application-shared resources but they don't need to be explicitly registered.
-
-NOTE: Remember that we can get the URL of a resource reference using method _urlFor(ResourceReference resourceRef, PageParameters params )_ available with both class _RequestCycle_ and class _Component_.
-
+As first argument for factory methods we can specify the name of the resource reference or a key for it (an instance of _ResourceReference.Key_) 

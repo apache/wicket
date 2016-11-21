@@ -1,8 +1,23 @@
 
+Another way to receive external image resources is to use the corresponding component with a model which contains the target URL. 
 
+The ExternalImage and ExternalSource components which are available since Wicket 7.2.0 / Wicket 8.0.0 fulfill that task.
 
-In this chapter we have learnt how to manage resources with the built-in mechanism provided by Wicket. With this mechanism we handle resources from Java code and Wicket will automatically take care of generating a valid URL for them. We have also seen how resources can be bundled as package resources with a component that depends on them to make it self-contained.
+The following example demonstrates the usage of a CompoundPropertyModel with the model object  [ImageSrc] The model object, bound to surrounding component / page, contains an attribute named  [url] which is read by the component:
 
-Then, in the second part of the chapter, we have built a custom resource and we have learnt how to mount it to an arbitrary URL and how to make it globally available as shared resource.
+Java:
+[source,java]
+----
+ImageSrc imageSrc = new ImageSrc();
+imageSrc.setUrl("http://www.google.de/test.jpg");
+setDefaultModel(new CompoundPropertyModel<>(imageSrc));
+add(new ExternalImage("url"));
+----
 
-Finally, in the last part of the paragraph we took a peek at the mechanism provided by the framework to customize the locations where the resource-lookup algorithm searches for resources. 
+HTML:
+[source,java]
+----
+<img wicket:id="url" />
+----
+
+The ExternalImage can also be constructed by passing in a Model (src) and Model of List (srcSet). For ExternalSource only the srcSet is available.

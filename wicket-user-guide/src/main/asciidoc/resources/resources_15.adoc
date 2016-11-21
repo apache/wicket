@@ -1,67 +1,76 @@
 
-The FileSystemResourceRenference comes along with the FileSystemResource, FileSystemResourceStreamReference and the FileSystemResourceStream. Those classes provide a simple way to handle resources with Java's NIO API in Wicket starting from JDK version 7.0. (Available since Wicket 7.2.0 / Wicket 8.0.0)
 
-Example: To include a resource which is zipped into a file and located in a specific folder in the file system you can simply write code like this:
 
-Java:
+Introduced in Wicket 6.20.0 / Wicket 7.0.0 there is a default way to be used in which the output of all CssHeaderItems / JavaScriptHeaderItems is modified before they are cached and delivered to the client. You can add a so called Compressor by receiving the resource settings and invoke 1.setJavaScriptCompressor(...) / 1.setJavaScriptCompressor(...). If you want to add several Compressors use _org.apache.wicket.resource.CompositeCssCompressor_ or _org.apache.wicket.resource.CompositeJavaScriptCompressor_
+
+*Java Code:*
 [source,java]
 ----
-URI uri = URI.create("jar:file:///videosFolder/videos.zip!/folderInZip/Video.mp4");
-Path path = FileSystemResourceReference.getPath(uri);
-FileSystemResourceReference ref = new FileSystemResourceReference("video",path);
-Video video = new Video("video",ref);
-add(vide);
+...
+    public class WicketApplication extends WebApplication
+    {
+        @Override
+        public Class<? extends WebPage> getHomePage()
+        {
+            return HomePage.class;
+        }
+    
+        @Override
+        public void init()
+        {
+            super.init();
+            getResourceSettings().setCssCompressor(new CssUrlReplacer());
+        }
+    }
+...
 ----
 
-HTML:
+In the previous example you see that a _org.apache.wicket.resource.CssUrlReplacer_ is added which does not compress the content, but replaces all urls in CSS files and applies a Wicket representation for them by automatically wrapping them into PackageResourceReferences. Here is an example where you can see what Wicket does with the url representation.
+
+HomePage (in package my/company/):
+*Java Code:*
 [source,java]
 ----
-<video wicket:id="video"/>
+...
+response.render(CssReferenceHeaderItem.forReference(new PackageResourceReference(HomePage.class, "res/css/mycss.css")));
+...
 ----
 
-Using FileSystemResourceReference mounted:
-
-Java:
+mycss.css (in package my/company/res/css/):
+*CSS:*
 [source,java]
 ----
-mountResource("/filecontent/${name}", new FileSystemResourceReference("filesystem")
-{
-	private static final long serialVersionUID = 1L;
-
-	@Override
-	public IResource getResource()
-	{
-		return new FileSystemResource()
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected ResourceResponse newResourceResponse(Attributes attributes)
-			{
-				try
-				{
-					String name = attributes.getParameters().get("name").toString("");
-					URI uri = URI.create(
-						"jar:file:////folder/example.zip!/zipfolder/" + name);
-					return createResourceResponse(
-						FileSystemResourceReference.getPath(uri));
-				}
-				catch (IOException | URISyntaxException e)
-				{
-					throw new WicketRuntimeException("Error while reading the file.", e);
-				}
-			};
-		};
-	}
-});
+...
+body{
+    background-image:url('../images/some.png');
+}
+...
 ----
 
-FileSystemResourceReference.getPath(uri) uses a FileSystemPathService to setup a path the resource reference can work on. 
+some.png (in package my/company/res/images/):
+<blob>
 
-So if you write a custom file system you can easily handle every path by adding a *org.apache.wicket.resource.FileSystemPathService* text file into *META-INF/services* and put in your implementation.
+Output of mycss.css:
+*CSS:*
+[source,java]
+----
+...
+body{
+    background-image:url('../images/some-ver-1425904170000.png');
+}
+...
+----
 
-A reference implementation can be found in the java class org.apache.wicket.resource.FileSystemJarPathService.
+If you add a url which looks like this background-image:url('../images/some.png?embedBase64'); Wicket is going to embed the complete image as base64 string with its corresponding mime type into the css file. It looks like the following code block demonstrates.
 
-Further FileSystemProviders and the corresponding FileSystems can be implemented as described here:
-
-http://docs.oracle.com/javase/7/docs/technotes/guides/io/fsp/filesystemprovider.html[http://docs.oracle.com/javase/7/docs/technotes/guides/io/fsp/filesystemprovider.html]
+Output of mycss.css:
+*CSS:*
+[source,java]
+----
+...
+body{
+    background-image: url(data:image/png;base64,R0lGODlh1wATAX....);
+}
+...
+----
 
