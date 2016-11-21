@@ -295,6 +295,25 @@ public class PageParametersTest extends Assert
 	}
 
 	/**
+	 * NamedPairs equality should not depend on the type
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-6283
+	 */
+	@Test
+	public void equalityOfDiferenteNamedParametersOrder()
+	{
+		PageParameters p1 = new PageParameters()
+				.add("a", "b")
+				.add("c", "d");
+
+		PageParameters p2 = new PageParameters()
+				.add("c", "d")
+				.add("a", "b");
+
+		assertThat(p1, is(equalTo(p2)));
+	}
+
+	/**
 	 * NamedPairs hashCode should not depend on the type
 	 *
 	 * https://issues.apache.org/jira/browse/WICKET-5669
