@@ -123,7 +123,7 @@ public class ConversationPropagator implements IRequestCycleListener
 	}
 
 	@Override
-	public void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
+	public void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
 	{
 		// propagate current non-transient conversation to the newly scheduled
 		// page
