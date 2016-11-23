@@ -70,7 +70,7 @@ public class SqlTimestampConverter extends AbstractDateConverter<Timestamp>
 	{
 		if (locale == null)
 		{
-			locale = Locale.getDefault();
+			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
 
 		// return a clone because DateFormat.getDateInstance uses a pool

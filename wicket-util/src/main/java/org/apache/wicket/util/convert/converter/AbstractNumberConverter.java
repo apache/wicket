@@ -93,7 +93,7 @@ public abstract class AbstractNumberConverter<N extends Number> extends Abstract
 	{
 		if (locale == null)
 		{
-			locale = Locale.getDefault();
+			locale = Locale.getDefault(Locale.Category.FORMAT);
 		}
 
 		if (value == null)

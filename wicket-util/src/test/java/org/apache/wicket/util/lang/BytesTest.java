@@ -32,7 +32,8 @@ public class BytesTest extends Assert
 	/**
 	 * Backup of the default locale.
 	 */
-	private Locale defaultLocale = null;
+	private Locale originalFormatLocale = null;
+	private Locale originalDefaultLocale = null;
 
 	/**
 	 * Save the default locale.
@@ -40,10 +41,13 @@ public class BytesTest extends Assert
 	@Before
 	public void before()
 	{
-		defaultLocale = Locale.getDefault();
+		originalFormatLocale = Locale.getDefault(Locale.Category.FORMAT);
+		originalDefaultLocale = Locale.getDefault();
 
-		// these tests run in US locale.
-		Locale.setDefault(Locale.US);
+		// these tests run in US locale for formatting and German default locale - they should still work with split
+		// locale.
+		Locale.setDefault(Locale.GERMANY);
+		Locale.setDefault(Locale.Category.FORMAT, Locale.US);
 	}
 
 	/**
@@ -52,7 +56,8 @@ public class BytesTest extends Assert
 	@After
 	public void after()
 	{
-		Locale.setDefault(defaultLocale);
+		Locale.setDefault(originalDefaultLocale);
+		Locale.setDefault(Locale.Category.FORMAT, originalFormatLocale);
 	}
 
 	/**
