@@ -251,7 +251,7 @@ tester.executeBehavior(ajaxBehavior));
 
 === Using a custom servlet context
 
-In [paragraph 16.13|guide:resources_13] we have seen how to configure our application to store resource files into a custom folder placed inside webapp root folder (see project _CustomFolder4MarkupExample_). 
+In <<resources_13.adoc,paragraph 16.13>> we have seen how to configure our application to store resource files into a custom folder placed inside webapp root folder (see project _CustomFolder4MarkupExample_). 
 
 In order to write testing code for applications that use this kind of customization, we must tell _WicketTester_ which folder to use as webapp root. This is necessary as under test environment we don't have any web server, hence it's impossible for _WicketTester_ to retrieve this parameter from servlet context.
 
