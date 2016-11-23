@@ -1,0 +1,128 @@
+
+
+
+One of the main goals of Wicket is to use JavaBeans and POJO as data model, overcoming the impedance mismatch between web technologies and OO paradigm. In order to make this task as easy as possible, Wicket offers two special model classes: _org.apache.wicket.model.PropertyModel_ and _org.apache.wicket.model.CompoundPropertyModel_. We will see how to use them in the next two examples, using the following JavaBean as the data object:
+
+[source,java]
+----
+public class Person implements Serializable {	
+	
+	private String name;
+	private String surname;
+	private String address;
+	private String email;
+	private String passportCode;
+	
+	private Person spouse;
+	private List<Person> children;
+       
+	public Person(String name, String surname) {
+		this.name = name;
+		this.surname = surname;
+	}
+
+	public String getFullName(){
+   		return name + " " + surname;
+	} 
+
+	/* 	 
+	 * Getters and setters for private fields
+     */
+}
+----
+
+=== PropertyModel
+
+Let's say we want to display the name field of a Person instance with a label. We could, of course, use the Model class like we did in the previous example, obtaining something like this:
+
+[source,java]
+----
+Person person = new Person();		
+//load person's data...
+		
+Label label = new Label("name", new Model(person.getName()));
+----
+
+However this solution has a huge drawback: the text displayed by the label will be static and if we change the value of the field, the label won't update its content. Instead, to always display the current value of a class field, we should use the _org.apache.wicket.model.PropertyModel_ model class:
+
+[source,java]
+----
+Person person = new Person();		
+//load person's data...
+		
+Label label = new Label("name", new PropertyModel(person, "name"));
+----
+
+PropertyModel has just one constructor with two parameters: the model object (person in our example) and the name of the property we want to read/write ( [name] in our example). This last parameter is called property expression. Internally, methods getObject/setObject use property expression to get/set property's value. To resolve class properties PropertyModel uses class _org.apache.wicket.util.lang.Property_ Resolver which can access any kind of property, private fields included.
+
+Just like the Java language, property expressions support dotted notation to select sub properties. So if we want to display the name of the Person's spouse we can write:
+
+[source,java]
+----
+Label label = new Label("spouseName", new PropertyModel(person, "spouse.name"));
+----
+
+NOTE: PropertyModel is null-safe, which means we don't have to worry if property expression includes a null value in its path. If such a value is encountered, an empty string will be returned.
+
+If property is an array or a List, we can specify an index after its name. For example, to display the name of the first child of a Person we can write the following property expression:
+
+[source,java]
+----
+Label label = new Label("firstChildName", new PropertyModel(person, "children.0.name"));
+----
+
+Indexes and map keys can be also specified using squared brackets: 
+
+[source,java]
+----
+children[0].name ...
+mapField[key].subfield ...
+----
+
+=== CompoundPropertyModel and model inheritance
+
+Class _org.apache.wicket.model.CompoundPropertyModel_ is a particular kind of model which is usually used in conjunction with another Wicket feature called model inheritance. With this feature, when a component needs to use a model but none has been assigned to it, it will search through the whole container hierarchy for a parent with an inheritable model. Inheritable models are those which implement interface _org.apache.wicket.model.IComponentInheritedModel_ and _CompoundPropertyModel_ is one of them. Once a _CompoundPropertyModel_ has been inherited by a component, it will behave just like a PropertyModel using the id of the component as property expression. As a consequence, to make the most of CompoundPropertyModel we must assign it to one of the containers of a given component, rather than directly to the component itself.
+
+For example if we use CompoundPropertyModel with the previous example (display spouse's name), the code would become like this:
+
+[source,java]
+----
+//set CompoundPropertyModel as model for the container of the label
+setDefaultModel(new CompoundPropertyModel(person));
+
+Label label = new Label("spouse.name");	
+
+add(label);
+----
+
+Note that now the id of the label is equal to the property expression previously used with PropertyModel. Now as a further example let's say we want to extend the code above to display all of the main informations of a person (name, surname, address and email). All we have to do is to add one label for every additional information using the relative property expression as component id:
+
+[source,java]
+----
+//Create a person named 'John Smith'
+Person person = new Person("John", "Smith");
+setDefaultModel(new CompoundPropertyModel(person));
+
+add(new Label("name"));
+add(new Label("surname"));
+add(new Label("address"));
+add(new Label("email"));
+add(new Label("spouse.name"));
+----
+
+CompoundPropertyModel can save us a lot of boring coding if we choose the id of components according to properties name. However it's also possible to use this type of model even if the id of a component does not correspond to a valid property expression. The method bind(String property) allows to create a property model from a given CompoundPropertyModel using the provided parameter as property expression. For example if we want to display the spouse's name in a label having  [xyz] as id, we can write the following code:
+
+[source,java]
+----
+//Create a person named 'John Smith'
+Person person = new Person("John", "Smith");
+CompoundPropertyModel compoundModel;
+setDefaultModel(compoundModel = new CompoundPropertyModel(person));
+
+add(new Label("xyz", compoundModel.bind("spouse.name")));
+----
+
+CompoundPropertyModel are particularly useful when used in combination with Wicket forms, as we will see in the next paragraph.
+
+NOTE: Model is referred to as static model because the result of its method getObject is fixed and it is not dynamically evaluated each time the method is called. In contrast, models like PropertyModel and CompoundProperty Model are called dynamic models.
+

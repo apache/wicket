@@ -1,0 +1,32 @@
+
+
+
+Sometimes our custom components may need to use more than a single model to work properly. In such a case we must manually detach the additional models used by our components. In order to do this we can overwrite the Component's onDetach method that is called at the end of the current request. The following is the generic code of a component that uses two models:
+
+[source,java]
+----
+/**
+ * 
+ * fooModel is used as main model while beeModel must be manually detached
+ *
+ */
+public class ComponetTwoModels extends Component{
+
+	private IModel<Bee> beeModel;
+
+	public ComponetTwoModels(String id, IModel<Foo> fooModel, IModel<Bee> beeModel) {
+		super(id, fooModel);
+		this.beeModel = beeModel;
+	}
+
+	@Override
+	public void onDetach() {
+               if(beeModel != null)
+	   beeModel.detach();
+             
+              super.onDetach();
+	}
+}
+----
+
+When we overwrite onDetach we must call the super class implementation of this method, usually as last line in our custom implementation.

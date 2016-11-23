@@ -1,0 +1,175 @@
+
+
+
+The first step in implementing a security policy is assigning a trusted identity to our users, which means that we must authenticate them. Web applications usually adopt a form-based authentication with a login form that asks user for a unique username and the relative password:
+
+image::../img/wikipedia-login-form.png[]
+
+Wicket supports form-based authentication with session class _AuthenticatedWebSession_ and application class _AuthenticatedWebApplication_, both placed inside package _org.apache.wicket.authroles.authentication_.
+
+=== AuthenticatedWebSession
+
+Class AuthenticatedWebSession comes with the following set of public methods to manage user authentication:
+
+* *authenticate(String username, String password)*: this is an abstract method that must be implemented by every subclass of _AuthenticatedWebSession_. It should contain the actual code that checks for user's identity. It returns a boolean value which is true if authentication has succeeded or false otherwise.
+* *signIn(String username, String password)*: this method internally calls authenticate and set the flag signedIn to true if authentication succeeds.
+* *isSignedIn()*:getter method for flag signedIn.
+* *signOut()*: sets the flag signedIn to false.
+* *invalidate()*: calls signOut and invalidates session.
+
+WARNING: Remember that signOut does not discard any session-relative data. If we want to get rid of these data, we must invoke method invalidate instead of signOut.
+
+Another abstract method we must implement when we use _AuthenticatedWebSession_ is  getRoles which is inherited from parent class _AbstractAuthenticatedWebSession_. This method can be ignored for now as it will be discussed later when we will talk about role-based authorization.
+
+=== AuthenticatedWebApplication
+
+Class AuthenticatedWebApplication provides the following methods to support form-based authentication:
+
+* *getWebSessionClass()*: abstract method that returns the session class to use for this application. The returned class must be a subclass of _AbstractAuthenticatedWebSession_.
+* *getSignInPageClass()*: abstract method that returns the page to use as sign in page when a user must be authenticated.
+* *restartResponseAtSignInPage()*: forces the current response to restart at the sign in page. After we have used this method to redirect a user, we can make her/him return to the original page calling _Componet_'s method _continueToOriginalDestination()_.
+
+The other methods implemented inside _AuthenticatedWebApplication_ will be introduced when we will talk about authorizations.
+
+=== A basic example of authentication
+
+Project _BasicAuthenticationExample_ is a basic example of form-based authentication implemented with classes _AuthenticatedWebSession_ and _AuthenticatedWebApplication_.
+
+The homepage of the project contains only a link to page _AuthenticatedPage_ which can be accessed only if user is signed in. The code of _AuthenticatedPage_ is this following:
+
+[source,java]
+----
+public class AuthenticatedPage extends WebPage {
+   @Override
+   protected void onConfigure() {
+      super.onConfigure();
+      AuthenticatedWebApplication app = (AuthenticatedWebApplication)Application.get();
+      //if user is not signed in, redirect him to sign in page
+      if(!AuthenticatedWebSession.get().isSignedIn())
+         app.restartResponseAtSignInPage();
+   }
+   
+   @Override
+   protected void onInitialize() {
+      super.onInitialize();
+      add(new Link("goToHomePage") {
+
+         @Override
+         public void onClick() {
+            setResponsePage(getApplication().getHomePage());
+         }
+      });
+      
+      add(new Link("logOut") {
+
+         @Override
+         public void onClick() {
+            AuthenticatedWebSession.get().invalidate();
+            setResponsePage(getApplication().getHomePage());
+         }
+      });
+   }
+}
+----
+
+Page _AuthenticatedPage_ checks inside onConfigure if user is signed in and if not, it redirects her/him to the sign in page with method _restartResponseAtSignInPage_. The page contains also a link to the homepage and another link that signs out user. 
+
+The sign in page is implemented in class _SignInPage_ and contains the form used to authenticate users:
+
+[source,java]
+----
+public class SignInPage extends WebPage {
+   private String username;
+   private String password;
+   
+   @Override
+   protected void onInitialize() {
+      super.onInitialize();
+      
+      StatelessForm form = new StatelessForm("form"){
+         @Override
+         protected void onSubmit() {
+            if(Strings.isEmpty(username))
+               return;
+            
+            boolean authResult = AuthenticatedWebSession.get().signIn(username, password);
+            //if authentication succeeds redirect user to the requested page
+            if(authResult)
+               continueToOriginalDestination();
+         }
+      };
+      
+      form.setDefaultModel(new CompoundPropertyModel(this));
+      
+      form.add(new TextField("username"));
+      form.add(new PasswordTextField("password"));
+      
+      add(form);
+   }
+}
+----
+
+The form is responsible for handling user authentication inside its method onSubmit. The username and password are passed to _AuthenticatedWebSession_'s method _signIn(username, password)_ and if authentication succeeds, the user is redirected to the original page with method _continueToOriginalDestination_.
+
+The session class and the application class used in the project are reported here:
+
+*Session class:*
+
+[source,java]
+----
+public class BasicAuthenticationSession extends AuthenticatedWebSession {
+
+	public BasicAuthenticationSession(Request request) {
+		super(request);		
+	}
+
+	@Override
+	public boolean authenticate(String username, String password) {
+	      //user is authenticated if both username and password are equal to 'wicketer'
+		return username.equals(password) && username.equals("wicketer");
+	}
+
+	@Override
+	public Roles getRoles() {
+		return null;
+	}
+}
+----
+
+*Application class:*
+
+[source,java]
+----
+public class WicketApplication extends AuthenticatedWebApplication{    	
+	@Override
+	public Class<HomePage> getHomePage(){
+		return HomePage.class;
+	}
+
+	@Override
+	protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass(){
+		return BasicAuthenticationSession.class;
+	}
+
+	@Override
+	protected Class<? extends WebPage> getSignInPageClass() {
+		return SignInPage.class;
+	}
+}
+----
+
+The authentication logic inside authenticate has been kept quite trivial in order to make the code as clean as possible. Please note also that session class must have a constructor that accepts an instance of class _Request_.
+
+=== Redirecting user to an intermediate page
+
+Method _restartResponseAtSignInPage_ is an example of redirecting user to an intermediate page before allowing him to access to the requested page. This method internally throws exception _org.apache.wicket.RestartResponseAtInterceptPageException_ which saves the URL of the requested page into session metadata and then redirects user to the page passed as constructor parameter (the sign in page).
+
+Component's method _redirectToInterceptPage(Page)_ works in much the same way as _restartResponseAtSignInPage_ but it allows us to specify which page to use as intermediate page:
+
+[source,java]
+----
+    redirectToInterceptPage(intermediatePage);
+----
+
+NOTE: Since both _restartResponseAtSignInPage_ and _redirectToInterceptPage_ internally throw an exception, the code placed after them will not be executed.
+

@@ -1,0 +1,20 @@
+
+
+
+HTML provides a multi-line text input control with <textarea> tag. The Wicket counterpart for this kind of control is _org.apache.wicket.markup.html.form.TextArea_ component:
+
+*HTML:*
+
+[source,html]
+----
+<textarea wicket:id="description" rows="5" cols="40"></textarea>
+----
+
+*Java code:*
+
+[source,java]
+----
+form.add(new TextArea("description", Model.of("")));
+----
+
+Component TextArea is used just like any other single-line text field. To specify the size of the text area we can write attributes rows and cols directly in the markup file or we can create new attribute modifiers and add them to our TextArea component.
