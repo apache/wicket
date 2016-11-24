@@ -19,8 +19,8 @@ package org.apache.wicket.atmosphere.config;
 import java.util.List;
 
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.ajax.json.JSONException;
-import org.apache.wicket.ajax.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Contains the parameters passed to the Atmosphere JQuery plugin. See
