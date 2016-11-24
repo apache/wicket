@@ -27,10 +27,7 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
 import org.apache.wicket.ajax.attributes.CallbackParameter;
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
 import org.apache.wicket.ajax.attributes.ThrottlingSettings;
-import org.apache.wicket.ajax.json.JSONArray;
-import org.apache.wicket.ajax.json.JSONException;
-import org.apache.wicket.ajax.json.JSONObject;
-import org.apache.wicket.ajax.json.JsonFunction;
+import org.apache.wicket.ajax.json.JSONFunction;
 import org.apache.wicket.ajax.json.JsonUtils;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -44,6 +41,9 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -320,7 +320,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				{
 					String func = String.format(DYNAMIC_PARAMETER_FUNCTION_TEMPLATE,
 						dynamicExtraParameter);
-					JsonFunction function = new JsonFunction(func);
+					JSONFunction function = new JSONFunction(func);
 					attributesJson.append(AjaxAttributeName.DYNAMIC_PARAMETER_FUNCTION.jsonName(),
 						function);
 				}
@@ -422,15 +422,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		if (Strings.isEmpty(handler) == false)
 		{
-			final JsonFunction function;
-			if (handler instanceof JsonFunction)
+			final JSONFunction function;
+			if (handler instanceof JSONFunction)
 			{
-				function = (JsonFunction)handler;
+				function = (JSONFunction)handler;
 			}
 			else
 			{
 				String func = String.format(functionTemplate, handler);
-				function = new JsonFunction(func);
+				function = new JSONFunction(func);
 			}
 			attributesJson.append(propertyName, function);
 		}
@@ -539,7 +539,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 				{
 					JSONObject object = new JSONObject();
 					object.put("name", curExtraParameter.getAjaxParameterName());
-					object.put("value", new JsonFunction(curExtraParameter.getAjaxParameterCode()));
+					object.put("value", new JSONFunction(curExtraParameter.getAjaxParameterCode()));
 					jsonArray.put(object);
 				}
 				catch (JSONException e)

@@ -21,8 +21,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.json.JSONObject;
-import org.apache.wicket.ajax.json.JsonFunction;
+import org.apache.wicket.ajax.json.JSONFunction;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -44,6 +43,7 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.json.JSONObject;
 
 /**
  * Modal window component.
@@ -1058,7 +1058,7 @@ public class ModalWindow extends Panel
 		}
 		else
 		{
-			settings.put("element", new JsonFunction("document.getElementById(\"" + getContentMarkupId() + "\")"));
+			settings.put("element", new JSONFunction("document.getElementById(\"" + getContentMarkupId() + "\")"));
 		}
 
 		if (getCookieName() != null)
@@ -1093,7 +1093,7 @@ public class ModalWindow extends Panel
 		if (windowClosedCallback != null)
 		{
 			WindowClosedBehavior behavior = getBehaviors(WindowClosedBehavior.class).get(0);
-			settings.put("onClose", new JsonFunction("function() { " + behavior.getCallbackScript() + " }"));
+			settings.put("onClose", new JSONFunction("function() { " + behavior.getCallbackScript() + " }"));
 
 			haveCloseCallback = true;
 		}
@@ -1103,7 +1103,7 @@ public class ModalWindow extends Panel
 		if ((closeButtonCallback != null) || (haveCloseCallback == false))
 		{
 			CloseButtonBehavior behavior = getBehaviors(CloseButtonBehavior.class).get(0);
-			settings.put("onCloseButton", new JsonFunction("function() { " + behavior.getCallbackScript() + "; return false; }"));
+			settings.put("onCloseButton", new JSONFunction("function() { " + behavior.getCallbackScript() + "; return false; }"));
 		}
 
 		postProcessSettings(settings);
