@@ -21,14 +21,18 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxClientInfoBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.RequestCycleSettings;
 
 
@@ -78,11 +82,33 @@ public class AjaxHelloBrowser extends WicketExamplePage
 		clientTime.setOutputMarkupPlaceholderTag(true);
 		clientTime.setVisible(false);
 
-		add(AjaxClientInfoBehavior.onClientInfo((AjaxRequestTarget target, WebClientInfo info) -> {
-			clientInfo.setVisible(true);
-			clientTime.setVisible(true);
-			target.add(clientInfo, clientTime);
-		}));
+		add(new AjaxClientInfoBehavior() {
+
+			@Override
+			public void renderHead(Component component, IHeaderResponse response)
+			{
+				super.renderHead(component, response);
+
+				String script = "Wicket.BrowserInfo.collectExtraInfo = function(info) { info.extendedProperty = 'This property was read extra.'; };";
+
+				response.render(JavaScriptHeaderItem.forScript(script, "extended-client-info"));
+			}
+
+			@Override
+			protected WebClientInfo newWebClientInfo(RequestCycle requestCycle)
+			{
+				return new WebClientInfo(requestCycle, new ExtendedClientProperties());
+			}
+
+			@Override
+			protected void onClientInfo(AjaxRequestTarget target, WebClientInfo webClientInfo)
+			{
+				clientInfo.setVisible(true);
+				clientTime.setVisible(true);
+
+				target.add(clientInfo, clientTime);
+			}
+		});
 
 		add(clientInfo, clientTime);
 	}

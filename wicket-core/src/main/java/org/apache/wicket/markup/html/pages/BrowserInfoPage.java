@@ -22,8 +22,11 @@ import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
  * This page uses a form post right after the page has loaded in the browser, using JavaScript or
@@ -46,7 +49,7 @@ public class BrowserInfoPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private BrowserInfoForm browserInfoForm;
-
+	
 	/**
 	 * Bookmarkable constructor.
 	 */
@@ -70,21 +73,34 @@ public class BrowserInfoPage extends WebPage
 		return false;
 	}
 
+	protected WebClientInfo newWebClientInfo(RequestCycle requestCycle)
+	{
+		return new WebClientInfo(requestCycle);
+	}
+
 	/**
 	 * Adds components.
 	 */
 	private void initComps()
 	{
-		IModel<ClientProperties> properties = new IModel<ClientProperties>()
+		IModel<WebClientInfo> info = new LoadableDetachableModel<WebClientInfo>() {
+			@Override
+			protected WebClientInfo load()
+			{
+				return newWebClientInfo(getRequestCycle());
+			}			
+		};
+
+		IModel<ClientProperties> properties = new LoadableDetachableModel<ClientProperties>()
 		{
 			@Override
-			public ClientProperties getObject()
+			protected ClientProperties load()
 			{
-				return WebSession.get().getClientInfo().getProperties();
+				return info.getObject().getProperties();
 			}
 		};
 
-		add(new ContinueLink("link", properties));
+		add(new ContinueLink("link", info));
 
 		browserInfoForm = new BrowserInfoForm("postback", properties)
 		{
@@ -95,6 +111,8 @@ public class BrowserInfoPage extends WebPage
 			{
 				getModelObject().setJavaScriptEnabled(true);
 
+				WebSession.get().setClientInfo(info.getObject());
+
 				continueToOriginalDestination();
 
 				// switch to home page if no original destination was intercepted
@@ -104,11 +122,16 @@ public class BrowserInfoPage extends WebPage
 		add(browserInfoForm);
 	}
 	
-	private static class ContinueLink extends Link<ClientProperties> {
+	protected ClientProperties newClientInfo()
+	{
+		return WebSession.get().getClientInfo().getProperties();
+	}
 
-		public ContinueLink(String id, IModel<ClientProperties> properties)
+	private static class ContinueLink extends Link<WebClientInfo> {
+
+		public ContinueLink(String id, IModel<WebClientInfo> info)
 		{
-			super(id, properties);
+			super(id, info);
 		}
 
 		@Override
@@ -122,7 +145,9 @@ public class BrowserInfoPage extends WebPage
 		@Override
 		public void onClick()
 		{
-			getModelObject().setJavaScriptEnabled(false);
+			getModelObject().getProperties().setJavaScriptEnabled(false);
+
+			WebSession.get().setClientInfo(getModelObject());
 
 			continueToOriginalDestination();
 
