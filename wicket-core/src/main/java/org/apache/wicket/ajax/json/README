@@ -1,5 +1,5 @@
-All JSON** classes are copied from https://github.com/douglascrockford/JSON-java.
-Last update: May 18 2012
+All JSON** classes are copied from https://github.com/tdunning/open-json.
+Last update: November 25 2016
 
-Json** are our custom.
+Json** are our custom, used in JSONStringer#L261
 JsonFunction is borrowed from https://github.com/ivaynberg/wicket-select2.
