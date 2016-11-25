@@ -907,7 +907,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			// resolving didn't have the desired result or there was no delegate
 			// found; fallback on the default resolving which is a simple
 			// component that leaves the tag unchanged
-			autoComponent = new AutolinkExternalLink(autoId, pathInfo.reference);
+			autoComponent = new WebMarkupContainer(autoId);
 		}
 
 		return autoComponent;
