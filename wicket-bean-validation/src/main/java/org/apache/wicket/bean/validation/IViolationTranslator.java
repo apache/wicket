@@ -10,6 +10,7 @@ import org.apache.wicket.validation.ValidationError;
  * @author igor
  * @see BeanValidationConfiguration#setViolationTranslator(org.apache.wicket.bean.validation.IViolationTranslator)
  */
+@FunctionalInterface
 public interface IViolationTranslator
 {
 	/**

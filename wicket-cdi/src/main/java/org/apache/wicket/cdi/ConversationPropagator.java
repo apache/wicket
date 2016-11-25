@@ -33,7 +33,6 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
@@ -54,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author igor
  */
-public class ConversationPropagator extends AbstractRequestCycleListener
+public class ConversationPropagator implements IRequestCycleListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(ConversationPropagator.class);
 

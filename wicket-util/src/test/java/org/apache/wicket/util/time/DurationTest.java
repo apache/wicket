@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Locale.Category;
 
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.junit.Test;
@@ -72,6 +73,24 @@ public final class DurationTest
 
 		assertEquals(value + " minutes", Duration.seconds(90).toString());
 		assertEquals("12 hours", Duration.days(0.5).toString());
+	}
+
+	@Test
+	public void formatLocale() throws Exception
+	{
+		final Locale oldFormatLocale = Locale.getDefault(Category.FORMAT);
+		final Locale oldDefaultLocale = Locale.getDefault();
+		try
+		{
+			Locale.setDefault(Locale.US);
+			Locale.setDefault(Category.FORMAT, Locale.GERMANY);
+			assertEquals("should take formatting locale into account", "1,5 minutes", Duration.seconds(90)
+					.toString());
+		} finally
+		{
+			Locale.setDefault(oldDefaultLocale);
+			Locale.setDefault(Category.FORMAT, oldFormatLocale);
+		}
 	}
 
 	/** */

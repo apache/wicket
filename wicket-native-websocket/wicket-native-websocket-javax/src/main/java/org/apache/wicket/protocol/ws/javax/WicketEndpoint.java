@@ -139,11 +139,6 @@ public class WicketEndpoint extends Endpoint
 		}
 
 		@Override
-		public void onAfterInitialized(Application application)
-		{
-		}
-
-		@Override
 		public void onBeforeDestroyed(Application application)
 		{
 			applicationDestroyed.set(true);

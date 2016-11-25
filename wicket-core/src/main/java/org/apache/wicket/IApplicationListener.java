@@ -28,12 +28,14 @@ public interface IApplicationListener
 	 * 
 	 * @param application
 	 */
-	void onAfterInitialized(Application application);
+	default void onAfterInitialized(Application application)
+	{}
 
 	/**
 	 * Called before application instance is destroyed
 	 * 
 	 * @param application
 	 */
-	void onBeforeDestroyed(Application application);
+	default void onBeforeDestroyed(Application application)
+	{}
 }

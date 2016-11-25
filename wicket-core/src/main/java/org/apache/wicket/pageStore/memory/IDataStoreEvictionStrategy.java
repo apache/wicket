@@ -21,6 +21,7 @@ package org.apache.wicket.pageStore.memory;
  * An eviction strategy that decides whether the in-memory data structure used as page store should
  * be compacted
  */
+@FunctionalInterface
 public interface IDataStoreEvictionStrategy
 {
 

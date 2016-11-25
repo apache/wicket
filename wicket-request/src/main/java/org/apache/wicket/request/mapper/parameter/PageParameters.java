@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
@@ -466,7 +467,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			if (other.namedParameters != null)
 				return false;
 		}
-		else if (!namedParameters.equals(other.namedParameters))
+		else if (!CollectionUtils.isEqualCollection(namedParameters, other.namedParameters))
 			return false;
 		return true;
 	}

@@ -320,11 +320,5 @@ public class WebSocketSettings
 		{
 			command.run();
 		}
-
-		@Override
-		public <T> T call(Callable<T> callable) throws Exception
-		{
-			return callable.call();
-		}
 	}
 }

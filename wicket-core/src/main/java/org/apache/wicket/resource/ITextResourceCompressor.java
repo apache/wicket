@@ -19,6 +19,7 @@ package org.apache.wicket.resource;
 /**
  * Allow for different implementations of a text compressor
  */
+@FunctionalInterface
 public interface ITextResourceCompressor
 {
 	/**

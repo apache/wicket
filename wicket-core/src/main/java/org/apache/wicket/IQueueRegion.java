@@ -33,13 +33,6 @@ import org.apache.wicket.markup.IMarkupFragment;
  */
 public interface IQueueRegion
 {
-	/** 
-	 * TODO Wicket 8: this interface might be a perfect candidate for Java 8 interface default methods.
-	 * Now methods implementation is in MarkupContainer while it should simply be in those
-	 * classes which implement this interface.
-	 * 
-	 * */
-	
 	/**
 	 * Creates a new {@link DequeueContext} that will be used to dequeue children of this region.
 	 * 

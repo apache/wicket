@@ -1,0 +1,100 @@
+
+With Wicket we can apply markup inheritance using another approach based on the tag _<wicket:child>_. This tag is used inside the parent's markup to define where the children pages/panels can “inject” their custom markup extending the markup inherited from the parent component. 
+An example of a parent page using the tag _<wicket:child>_ is the following:
+
+[source,html]
+----
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+</head>
+<body>
+	This is parent body!
+	<wicket:child/>
+</body>
+</html>
+----
+
+The markup of a child page/panel must be placed inside the tag _<wicket:extend>_. Only the markup inside _<wicket:extend>_ will be included in final markup. Here is an example of child page markup:
+
+[source,java]
+----
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+</head>
+<body>
+    <wicket:extend>
+          This is child body!
+	</wicket:extend>
+</body>
+</html>
+----
+
+Considering the two pages seen above, the final markup generated for child page will be the following:
+
+[source,html]
+----
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+	This is parent body!
+	<wicket:child>
+       <wicket:extend>
+           This is child body!
+	   </wicket:extend>
+    </wicket:child>
+</body>
+</html>
+----
+
+=== Our example revisited
+
+Applying _<wicket:child>_ tag to our layout example, we obtain the following markup for the main template page:
+
+[source,html]
+----
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+</head>
+<body>
+<div id="header" wicket:id="headerPanel">header</div>
+<div id="body">
+	<div id="menu" wicket:id="menuPanel">menu</div>
+	<wicket:child/>
+</div>
+<div id="footer" wicket:id="footerPanel">footer</div>
+</body>
+</html>
+----
+
+We have replaced the _<div>_ tag of the content area with the tag _<wicket:child>_. Going forward with our example we can build a login page creating class _SimpleLoginPage_ which extends the _JugTemplate_ page, but with a related markup file like this:
+
+[source,html]
+----
+<html>
+<head>
+</head>
+<body>
+   <wicket:extend>
+    <div style="margin: auto; width: 40%;">
+       <form  id="loginForm" method="get">
+         <fieldset id="login" class="center">
+            <legend >Login</legend>               
+            <span >Username: </span><input type="text" id="username"/><br/>                                                                  
+            <span >Password: </span><input type="password" id="password" />
+            <p>
+               <input type="submit" name="login" value="login"/>
+            </p>
+         </fieldset>
+      </form>
+    </div>   
+   </wicket:extend>
+</body>
+</html>
+----
+
+As we can see this approach doesn't require to create custom panels to use as content area and it can be useful if we don't have to handle a GUI with a high degree of complexity.

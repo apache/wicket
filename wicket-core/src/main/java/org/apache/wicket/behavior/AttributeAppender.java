@@ -144,14 +144,17 @@ public class AttributeAppender extends AttributeModifier
 	}
 
 	@Override
-	protected String newValue(String currentValue, String appendValue)
+	protected Serializable newValue(String currentValue, String appendValue)
 	{
 		// Short circuit when one of the values is empty: return the other value.
 		if (Strings.isEmpty(currentValue))
+		{
 			return appendValue != null ? appendValue : null;
+		}
 		else if (Strings.isEmpty(appendValue))
-			return currentValue != null ? currentValue : null;
-
+		{
+			return currentValue;
+		}
 		StringBuilder sb = new StringBuilder(currentValue);
 		sb.append((getSeparator() == null ? "" : getSeparator()));
 		sb.append(appendValue);

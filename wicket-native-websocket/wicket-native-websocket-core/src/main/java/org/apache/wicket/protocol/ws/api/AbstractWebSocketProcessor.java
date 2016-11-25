@@ -51,7 +51,7 @@ import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.apache.wicket.protocol.ws.api.registry.ResourceNameKey;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.request.http.WebRequest;
@@ -287,7 +287,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 
 		RequestCycle requestCycle = application.getRequestCycleProvider().apply(context);
 		requestCycle.getListeners().add(application.getRequestCycleListeners());
-		requestCycle.getListeners().add(new AbstractRequestCycleListener()
+		requestCycle.getListeners().add(new IRequestCycleListener()
 		{
 			@Override
 			public void onDetach(final RequestCycle requestCycle)

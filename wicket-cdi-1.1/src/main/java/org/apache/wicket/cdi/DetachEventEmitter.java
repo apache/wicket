@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author igor
  * 
  */
-public class DetachEventEmitter extends AbstractRequestCycleListener
+public class DetachEventEmitter implements IRequestCycleListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(DetachEventEmitter.class);
 

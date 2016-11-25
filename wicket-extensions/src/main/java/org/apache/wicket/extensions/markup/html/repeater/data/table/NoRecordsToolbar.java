@@ -79,13 +79,11 @@ public class NoRecordsToolbar extends AbstractToolbar
 
 	/**
 	 * Only shows this toolbar when there are no rows
-	 * 
-	 * @see org.apache.wicket.Component#isVisible()
 	 */
 	@Override
-	public boolean isVisible()
+	protected void onConfigure()
 	{
-		return getTable().getRowCount() == 0;
+		super.onConfigure();
+		setVisible(getTable().getRowCount() == 0);
 	}
-
 }

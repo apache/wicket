@@ -1,0 +1,33 @@
+
+
+
+Avoid monolithic classes. Often I have seen that developers put the whole stuff into constructors. These classes are getting very unclear and chaotic because you use inline implementations over serveral levels. It is recommended to group logical units and extract methods with a correct business naming. This enhances the clarity and the understandability of the business aspect. When a developer navigates to a component, he is not interested in the technical aspect at first, however he just need the business aspect. To retrieve technical information of a component you can navigate to the method implementation. In case of doubt you should consider to extract seperate components. Smaller components increase the chances of reuse and make testing easier. Listing 17 shows an example of a possible structuring.
+
+*Listing 17:*
+
+[source,java]
+----
+public class BlogEditPage extends WebPage {
+    private IModel<Blog> blogModel;
+
+    public BlogEditPage(IModel<Blog> blogModel) {
+        super(new PageParameters());
+        this.blogModel = blogModel;
+        add(createBlogEditForm());
+    }
+
+    private Form<Blog> createBlogEditForm() {
+        Form<Blog> form = newBlogEditForm();
+        form.add(createHeadlineField());
+        form.add(createContentField());
+        form.add(createTagField());
+        form.add(createViewRightPanel());
+        form.add(createCommentRightPanel());
+        form.setOutputMarkupId(true);
+        return form;
+    }
+
+    // more methods here
+}
+----
+

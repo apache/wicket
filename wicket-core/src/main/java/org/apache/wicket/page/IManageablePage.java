@@ -18,10 +18,7 @@ package org.apache.wicket.page;
 
 import org.apache.wicket.util.io.IClusterable;
 
-// TODO WICKET-NG: this iface used to extend IDetachable, however this causes problems because Page becomes IDetachable and some property models will cause an infinite loop triggering detach on the component again because it is their target object. In the future Component should indeed implement IDetachable, for now copied #detach into this iface directly.
-/**
- * TODO javadoc
- */
+// this iface used to extend IDetachable, however this causes problems because Page becomes IDetachable and some property models will cause an infinite loop triggering detach on the component again because it is their target object. In the future Component should indeed implement IDetachable, for now copied #detach into this iface directly.
 public interface IManageablePage extends IClusterable
 {
 	/**

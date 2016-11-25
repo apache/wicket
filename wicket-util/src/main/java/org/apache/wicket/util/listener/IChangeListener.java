@@ -22,6 +22,7 @@ package org.apache.wicket.util.listener;
  * @author Jonathan Locke
  * @param <T> 
  */
+@FunctionalInterface
 public interface IChangeListener<T>
 {
 	/**

@@ -39,8 +39,9 @@ public interface IBreadCrumbModelListener extends EventListener, IClusterable
 	 * @param breadCrumbParticipant
 	 *            The bread crumb that was activated.
 	 */
-	void breadCrumbActivated(IBreadCrumbParticipant previousParticipant,
-		IBreadCrumbParticipant breadCrumbParticipant);
+	default void breadCrumbActivated(IBreadCrumbParticipant previousParticipant,
+		IBreadCrumbParticipant breadCrumbParticipant)
+	{}
 
 	/**
 	 * Called when a bread crumb was added to the model.
@@ -48,7 +49,8 @@ public interface IBreadCrumbModelListener extends EventListener, IClusterable
 	 * @param breadCrumbParticipant
 	 *            The new bread crumb
 	 */
-	void breadCrumbAdded(IBreadCrumbParticipant breadCrumbParticipant);
+	default void breadCrumbAdded(IBreadCrumbParticipant breadCrumbParticipant)
+	{}
 
 	/**
 	 * Called when a bread crumb was removed from the model.
@@ -56,5 +58,6 @@ public interface IBreadCrumbModelListener extends EventListener, IClusterable
 	 * @param breadCrumbParticipant
 	 *            The bread crumb that was removed
 	 */
-	void breadCrumbRemoved(IBreadCrumbParticipant breadCrumbParticipant);
+	default void breadCrumbRemoved(IBreadCrumbParticipant breadCrumbParticipant)
+	{}
 }

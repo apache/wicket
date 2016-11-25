@@ -19,6 +19,7 @@ package org.apache.wicket;
 /**
  * Generates markup ids for components
  */
+@FunctionalInterface
 public interface IMarkupIdGenerator
 {
 	/**

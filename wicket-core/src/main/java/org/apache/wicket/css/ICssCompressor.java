@@ -23,5 +23,4 @@ import org.apache.wicket.resource.ITextResourceCompressor;
  */
 public interface ICssCompressor extends ITextResourceCompressor
 {
-
 }

@@ -16,9 +16,14 @@
  */
 package org.apache.wicket.cdi;
 
+import javax.enterprise.context.Conversation;
+import javax.inject.Inject;
+
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestConversationalPage;
+import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 /**
@@ -26,6 +31,9 @@ import org.junit.Test;
  */
 public class ConversationPropagatorTest extends WicketCdiTestCase
 {
+	@Inject
+	Conversation conversation;
+
 	@Test
 	public void testAutoConversationNonBookmarkable()
 	{
@@ -89,6 +97,47 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 	}
 
 	@Test
+	public void testPropagationAllHybrid()
+	{
+		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
+		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("segment/${pageType}", TestConversationPage.class));
+
+		tester.startPage(TestConversationPage.class, new PageParameters().add("pageType", "hybrid"));
+
+		int i;
+		for (i = 0; i < 3; i++)
+		{
+			tester.assertCount(i);
+			tester.clickLink("increment");
+		}
+		tester.clickLink("next");
+		for (; i < 6; i++)
+		{
+			tester.assertCount(i);
+			tester.clickLink("increment");
+		}
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6257
+	 */
+	@Test
+	public void testPropagationAllHybridRefresh()
+	{
+		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
+		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("segment/${pageType}", TestConversationPage.class));
+
+		tester.startPage(TestConversationPage.class, new PageParameters().add("pageType", "hybrid"));
+
+		String pageId = tester.getLastRenderedPage().getId();
+		String cid = conversation.getId();
+
+		tester.executeUrl("segment/hybrid?"+pageId+"&cid="+cid);
+
+		assertThat(tester.getLastRenderedPage().getId(), CoreMatchers.is(pageId));
+	}
+
+	@Test
 	public void testPropagationAllBookmarkable()
 	{
 		configure(new CdiConfiguration().setPropagation(ConversationPropagation.ALL));
@@ -149,4 +198,5 @@ public class ConversationPropagatorTest extends WicketCdiTestCase
 			tester.assertCount(1);
 		}
 	}
+
 }

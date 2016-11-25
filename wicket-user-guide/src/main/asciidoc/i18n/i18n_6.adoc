@@ -1,0 +1,5 @@
+
+
+
+Internationalization is a mandatory step if we want to take our applications (and our business!) abroad. Choosing the right strategy to manage our localized resources is fundamental to avoid to make a mess of them. In this chapter we have explored the built-in support for localization provided by Wicket, and we have learnt which solutions it offers to manage resource bundles. In the final part of the chapter we have seen how to localize the options displayed by a component (such as DropDownChoice or RadioChoice) and we also introduced two new models specifically designed to localize our components without introducing in their code any detail about internationalization.
+
