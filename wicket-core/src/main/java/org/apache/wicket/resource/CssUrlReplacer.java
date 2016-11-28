@@ -108,6 +108,11 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 			{
 				processedUrl = imageCandidateUrl.toString();
 			}
+			else if (imageCandidateUrl.isDataUrl())
+			{
+				embedded = true;
+				processedUrl = imageCandidateUrl.toString();
+			}
 			else
 			{
 				// relativize against the url for the containing CSS file
@@ -139,6 +144,8 @@ public class CssUrlReplacer implements IScopeAwareTextResourceProcessor, ICssCom
 				}
 
 			}
+
+			// embedded data urls don't need single quotes, but regular urls do:
 			matcher.appendReplacement(output,
 				embedded ? "url(" + processedUrl + ")" : "url('" + processedUrl + "')");
 		}

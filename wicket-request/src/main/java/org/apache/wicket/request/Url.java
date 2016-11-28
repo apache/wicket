@@ -493,6 +493,17 @@ public class Url implements Serializable
 	}
 
 	/**
+	 * Returns whether the Url is a CSS data uri. Data uris start with '{@literal data:}'.
+	 *
+	 * @return <code>true</code> if Url starts with 'data:', <code>false</code> otherwise.
+	 */
+	public boolean isDataUrl()
+	{
+		return (getProtocol() != null && getProtocol().equals("data")) || (!getSegments().isEmpty() && getSegments()
+				.get(0).startsWith("data"));
+	}
+
+	/**
 	 * Returns whether the Url has a <em>host</em> attribute.
 	 * The scheme is optional because the url may be <code>//host/path</code>.
 	 * The port is also optional because there are defaults for the different protocols.

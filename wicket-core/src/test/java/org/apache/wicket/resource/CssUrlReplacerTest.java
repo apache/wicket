@@ -27,10 +27,7 @@ import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Locale;
 
 public class CssUrlReplacerTest extends WicketTestCase
 {
@@ -60,17 +57,23 @@ public class CssUrlReplacerTest extends WicketTestCase
 			}
 		};
 	}
-
-	@Before
-	public void before()
-	{
-		tester.getSession().setLocale(Locale.ENGLISH);
-	}
-
+	
 	@Test
 	public void doNotProcessFullUrls()
 	{
 		String input = ".class {background-image: url('http://example.com/some.img');}";
+		Class<?> scope = CssUrlReplacerTest.class;
+		String cssRelativePath = "res/css/some.css";
+		CssUrlReplacer replacer = new CssUrlReplacer();
+
+		String processed = replacer.process(input, scope, cssRelativePath);
+		assertThat(processed, is(input));
+	}
+
+	@Test
+	public void doNotProcessDataUrls_WICKET_6290()
+	{
+		String input = ".class {background-image: url(data:image/gif;base64,R0lGODlhEAAQAMQAAORHH);}";
 		Class<?> scope = CssUrlReplacerTest.class;
 		String cssRelativePath = "res/css/some.css";
 		CssUrlReplacer replacer = new CssUrlReplacer();
