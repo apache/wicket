@@ -71,6 +71,18 @@ public class CssUrlReplacerTest extends WicketTestCase
 	}
 
 	@Test
+	public void doNotProcessDataUrls_WICKET_6290()
+	{
+		String input = ".class {background-image: url(data:image/gif;base64,R0lGODlhEAAQAMQAAORHH);}";
+		Class<?> scope = CssUrlReplacerTest.class;
+		String cssRelativePath = "res/css/some.css";
+		CssUrlReplacer replacer = new CssUrlReplacer();
+
+		String processed = replacer.process(input, scope, cssRelativePath);
+		assertThat(processed, is(input));
+	}
+
+	@Test
 	public void doNotProcessContextAbsoluteUrls()
 	{
 		String input = ".class {background-image: url('/some.img');}";
