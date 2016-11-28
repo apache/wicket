@@ -194,7 +194,7 @@ public class ListenerInterfaceRequestHandler
 				? component.canCallListenerInterfaceAfterExpiry()
 				: false;
 
-		if (!canCallListenerInterfaceAfterExpiry && freshPage && (isStateless == false || component == null))
+		if (!canCallListenerInterfaceAfterExpiry && freshPage && (pageComponentProvider.getPageId() != null || component == null))
 		{
 			// A listener interface is invoked on an expired page.
 
