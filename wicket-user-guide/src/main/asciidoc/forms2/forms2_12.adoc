@@ -1,7 +1,8 @@
 
 
 
-Checkboxes work well when we have a small amount of options to display, but they quickly become chaotic as the number of options increases. To overcome this limit we can use the <select> tag switching it to multiple-choice mode with attribute multiple= [multiple] 
+Checkboxes work well when we have a small amount of options to display, but they quickly become chaotic as the number of options increases. To overcome this limit we can use the <select> tag switching it to multiple-choice mode with attribute multiple= [multiple]
+
 image::../img/list-multiple-choices.png[]
 
 Now the user can select multiple options by holding down Ctrl key (or Command key for Mac) and selecting them. 

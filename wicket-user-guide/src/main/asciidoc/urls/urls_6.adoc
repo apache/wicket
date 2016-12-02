@@ -67,7 +67,7 @@ Generated URL:
 
 On the contrary if we manually insert an URL like '<web app path>/pageMount/bar/otherSegm', we can read value 'bar' retrieving the named parameter foo inside our page.
 
-Place holders can be declared as optional using the '1.' character in place of '$':
+Place holders can be declared as optional using the '#' character in place of '$':
 
 [source,java]
 ----

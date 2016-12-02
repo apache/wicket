@@ -5,9 +5,9 @@ Component oriented frameworks differ from classic web frameworks in that they bu
 2. is built before HTML is sent to client
 3. HTML code is generated using this model and not vice versa.
 
-  image::../img/requesthandling-general.png[]
+image::../img/requesthandling-general.png[]
 
-  _General schema of page request handling for a component oriented framework_
+_General schema of page request handling for a component oriented framework_
 
 With this kind of framework our web pages and their HTML components (forms, input controls, links, etc...), are pure class instances.
 Since pages are class instances they live inside the JVM heap and we can handle them as we do with any other Java class.
