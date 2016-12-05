@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
-import org.danekja.java.util.function.serializable.SerializableConsumer;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
@@ -277,7 +277,7 @@ public abstract class Behavior
 	 *            the {@code SerializableConsumer} that accepts the {@link ComponentTag}
 	 * @return The created behavior
 	 */
-	public static Behavior onTag(SerializableConsumer<ComponentTag> onTagConsumer)
+	public static Behavior onTag(SerializableBiConsumer<Component, ComponentTag> onTagConsumer)
 	{
 		Args.notNull(onTagConsumer, "onTagConsumer");
 
@@ -286,7 +286,7 @@ public abstract class Behavior
 			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
-				onTagConsumer.accept(tag);
+				onTagConsumer.accept(component, tag);
 			}
 		};
 	}

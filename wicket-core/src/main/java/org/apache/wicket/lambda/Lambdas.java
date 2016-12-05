@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.lambda;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxClientInfoBehavior;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -285,9 +286,9 @@ public class Lambdas
 	 *            the {@code SerializableConsumer} that accepts the {@link ComponentTag}
 	 * @return The created behavior
 	 * 
-	 * @see Behavior#onTag(SerializableConsumer)
+	 * @see Behavior#onTag(SerializableBiConsumer)
 	 */
-	public static Behavior onTag(SerializableConsumer<ComponentTag> onTagConsumer)
+	public static Behavior onTag(SerializableBiConsumer<Component, ComponentTag> onTagConsumer)
 	{
 		return Behavior.onTag(onTagConsumer);
 	}

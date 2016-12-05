@@ -40,7 +40,7 @@ public class LambdasTest extends WicketTestCase
 		page.add(component);
 		String value = "value";
 		String key = "key";
-		component.add(onTag(tag -> tag.put(key, value)));
+		component.add(onTag((c, tag) -> tag.put(key, value)));
 		component.add(onAttribute("class", oldValue -> "zzz"));
 
 		tester.startPage(page);
