@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
@@ -65,85 +64,7 @@ public class NestedFormsTest extends WicketTestCase
 		assertEquals(0, testPage.submitSequence.indexOf(testPage.innerSubmit));
 		assertEquals(1, testPage.submitSequence.indexOf(testPage.innerForm));
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void subitInnerFormWithAjaxBehavior()
-	{
-		tester.startPage(TestAjaxPage.class);
 
-		FormTester formTester = tester.newFormTester("formA");		
-		formTester.submit("formB:submit");
-		
-		TestAjaxPage testPage = (TestAjaxPage)tester.getLastRenderedPage();
-		
-		assertFalse(testPage.isFormAsubmitted());
-		assertTrue(testPage.isFormBsubmitted());
-	}
-
-	public static class TestAjaxPage extends WebPage implements IMarkupResourceStreamProvider
-	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		private boolean formAsubmitted;
-		private boolean formBsubmitted;
-		
-		public TestAjaxPage() 
-		{
-			final Form<Void> formA = new Form<Void>("formA")
-			{
-				@Override
-				public void onDetach() 
-				{
-					formAsubmitted = isSubmitted();
-					super.onDetach();
-				}
-			};
-			final Form<Void> formB = new Form<Void>("formB")
-			{
-				@Override
-				protected void onDetach() 
-				{
-					formBsubmitted = isSubmitted();
-					super.onDetach();
-				}
-			};
-			
-			formB.add(new AjaxButton("submit") 
-			{
-				private static final long serialVersionUID = 1L;
-			});
-			
-			formA.add(formB);
-			add(formA);
-		}
-		
-		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
-		{
-			return new StringResourceStream(
-				"<head></head>" +
-				"<form wicket:id=\"formA\">\r\n" + 
-				"				Form A\r\n" + 
-				"				<form wicket:id=\"formB\">\r\n" + 
-				"					Form B\r\n" + 
-				"					<button wicket:id=\"submit\">submit</button>\r\n" + 
-				"				</form>\r\n" + 
-				"			</form>");
-		}
-
-		public boolean isFormAsubmitted() {
-			return formAsubmitted;
-		}
-
-		public boolean isFormBsubmitted() {
-			return formBsubmitted;
-		}
-	}
-	
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
