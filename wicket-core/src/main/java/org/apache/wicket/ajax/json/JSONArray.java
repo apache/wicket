@@ -65,7 +65,7 @@ public class JSONArray {
      *                 inconsistent state.
      */
     /* Accept a raw type for API compatibility */
-    public JSONArray(Collection copyFrom) {
+    public JSONArray(Collection<?> copyFrom) {
         this();
         if (copyFrom != null) {
             for (Object aCopyFrom : copyFrom) {
@@ -178,6 +178,20 @@ public class JSONArray {
     }
 
     /**
+     * Appends {@code value} wrapped by {@link JSONArray} to the end of this array.
+     *
+     * @param value any collection.
+     * @return this array.
+     */
+    public JSONArray put(Collection<?> value) {
+        if (value == null) {
+            return put((Object)null);
+        }
+        values.add(new JSONArray(value));
+        return this;
+    }
+
+    /**
      * Appends {@code value} to the end of this array.
      *
      * @param value a {@link JSONObject}, {@link JSONArray}, String, Boolean,
@@ -260,6 +274,23 @@ public class JSONArray {
      */
     public JSONArray put(int index, long value) throws JSONException {
         return put(index, (Long) value);
+    }
+
+    /**
+     * Sets the value at {@code index} to {@code value} wrapped into {@link JSONArray},
+     * null padding this array to the required length if necessary. If a value already
+     * exists at {@code index}, it will be replaced.
+     *
+     * @param index Where to put the value.
+     * @param value The value to set.
+     * @return this array.
+     * @throws JSONException Should never actually happen.
+     */
+    public JSONArray put(int index, Collection<?> value) throws JSONException {
+        if (value == null) {
+            return put(index, (Object)null);
+        }
+        return put(index, new JSONArray(value));
     }
 
     /**
