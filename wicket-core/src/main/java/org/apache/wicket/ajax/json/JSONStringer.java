@@ -258,9 +258,12 @@ public class JSONStringer {
         } else {
             // Hack to make it possible that the value is not surrounded by quotes. (Used for JavaScript function calls)
             // Example: { "name": "testkey", "value": window.myfunction() }
-            if(value.getClass().getSimpleName().indexOf("JsonFunction") != -1){
-                string(value.toString(), false);
-            }else{
+            if (value.getClass().getSimpleName().contains("JsonFunction")) {
+                // note that no escaping of quotes (or anything else) is done in this case.
+                // that is fine because the only way to get to this point is to
+                // explicitly put a special kind of object into the JSON data structure.
+                out.append(value);
+            } else {
                 string(value.toString());
             }
         }
@@ -318,17 +321,11 @@ public class JSONStringer {
     }
 
     private void string(String value) {
-        string(value, true);
-    }
-
-    private void string(String value, boolean surroundingQuotes) {
-        if(surroundingQuotes){
-            out.append("\"");
-        }
-        char previousChar = 0;
+        out.append("\"");
         char currentChar = 0;
+
         for (int i = 0, length = value.length(); i < length; i++) {
-            previousChar = currentChar;
+            char previousChar = currentChar;
             currentChar = value.charAt(i);
 
             /*
@@ -340,12 +337,12 @@ public class JSONStringer {
             switch (currentChar) {
                 case '"':
                 case '\\':
-                    out.append("\\").append(currentChar);
+                    out.append('\\').append(currentChar);
                     break;
 
                 case '/':
-                    // It is not required to escape /, but to place it in script tags "</" has to be escaped
-                    if(previousChar == '<'){
+                    // it makes life easier for HTML embedding of javascript if we escape </ sequences
+                    if (previousChar == '<') {
                         out.append('\\');
                     }
                     out.append(currentChar);
@@ -381,9 +378,7 @@ public class JSONStringer {
             }
 
         }
-        if(surroundingQuotes){
-            out.append("\"");
-        }
+        out.append("\"");
     }
 
     private void newline() {

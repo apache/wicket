@@ -16,6 +16,10 @@
 
 package org.apache.wicket.ajax.json;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -23,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 
 // Note: this class was written without inspecting the non-free org.json sourcecode.
 
@@ -201,6 +206,22 @@ public class JSONObject {
                 nameValuePairs.put(name, value);
             }
         }
+    }
+
+    public JSONObject(Object bean) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+        this(propertiesAsMap(bean));
+    }
+
+    private static Map<String, Object> propertiesAsMap(Object bean)
+            throws IntrospectionException, IllegalAccessException, InvocationTargetException {
+        PropertyDescriptor[] properties = Introspector.getBeanInfo(bean.getClass(), Object.class)
+                .getPropertyDescriptors();
+        Map<String, Object> props = new TreeMap<String, Object>();
+        for (int i = 0; i < properties.length; i++) {
+            PropertyDescriptor propertyDescriptor = properties[i];
+            props.put(propertyDescriptor.getDisplayName(), propertyDescriptor.getReadMethod().invoke(bean));
+        }
+        return props;
     }
 
     /**
@@ -792,7 +813,7 @@ public class JSONObject {
     public JSONArray names() {
         return nameValuePairs.isEmpty()
                 ? null
-                : new JSONArray(new ArrayList<Object>(nameValuePairs.keySet()));
+                : new JSONArray(new ArrayList<String>(nameValuePairs.keySet()));
     }
 
     /**
