@@ -1,5 +1,7 @@
-All JSON** classes are copied from https://github.com/tdunning/open-json.
-Last update: November 25 2016
+Information regarding JSON Implementation:
+* JsonFunction is borrowed from https://github.com/ivaynberg/wicket-select2.
+* All JSON** classes are copied from https://github.com/tdunning/open-json.
+* Json** are our custom classes
+* Methods not supported anymore due to license issues with JSON.org and the switch to open-json throwing a runtime exception.
 
-Json** are our custom, used in JSONStringer#L261
-JsonFunction is borrowed from https://github.com/ivaynberg/wicket-select2.
+Last update: December 07 2016

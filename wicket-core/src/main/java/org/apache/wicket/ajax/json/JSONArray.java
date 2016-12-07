@@ -16,10 +16,14 @@
 
 package org.apache.wicket.ajax.json;
 
+import java.io.Writer;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.wicket.WicketRuntimeException;
 
 // Note: this class was written without inspecting the non-free org.json sourcecode.
 
@@ -755,5 +759,19 @@ public class JSONArray {
     public int hashCode() {
         // diverge from the original, which doesn't implement hashCode
         return values.hashCode();
+    }
+    
+    // Methods removed due to switch to open-json
+
+    public Writer write(Writer writer){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+
+    public JSONArray put(Map map){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+
+    public JSONArray put(int integer, Map map){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 }
