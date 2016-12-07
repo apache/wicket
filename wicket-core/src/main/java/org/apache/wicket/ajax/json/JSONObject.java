@@ -19,15 +19,19 @@ package org.apache.wicket.ajax.json;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+
+import org.apache.wicket.WicketRuntimeException;
 
 // Note: this class was written without inspecting the non-free org.json sourcecode.
 
@@ -965,5 +969,63 @@ public class JSONObject {
         } catch (Exception ignored) {
         }
         return null;
+    }
+    
+    // Methods removed due to switch to open-json
+    
+    public Writer write(Writer writer){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public String valueToString(Object object){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public void testValidity(Object object){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public Object stringToValue(String string){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+
+    public Writer quote(String string, Writer writer){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public JSONObject putOnce(String string, Object object){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public JSONObject put(String string, Map map){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public JSONObject put(String string, Collection collection){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public JSONObject increment(String string){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public String[] getNames(Object object){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public String[] getNames(JSONObject jsonObject){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public String doubleToString(double dou){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public JSONObject(String string, Locale locale){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+
+    public JSONObject(Object object, String[] stringarr){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 }
