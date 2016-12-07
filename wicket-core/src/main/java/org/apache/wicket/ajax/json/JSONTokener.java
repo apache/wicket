@@ -19,7 +19,11 @@ package org.apache.wicket.ajax.json;
 // Note: this class was written without inspecting the non-free org.json sourcecode.
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.util.Collection;
+
+import org.apache.wicket.WicketRuntimeException;
 
 /**
  * Parses a JSON (<a href="http://www.ietf.org/rfc/rfc4627.txt">RFC 4627</a>)
@@ -434,13 +438,13 @@ public class JSONTokener {
                     throw syntaxError("Unterminated array");
                 case ']':
                     if (hasTrailingSeparator) {
-                        result.put(null);
+                        result.put((Collection<?>)null);
                     }
                     return result;
                 case ',':
                 case ';':
                     /* A separator without a value first means "null". */
-                    result.put(null);
+                    result.put((Collection<?>)null);
                     hasTrailingSeparator = true;
                     continue;
                 default:
@@ -602,10 +606,12 @@ public class JSONTokener {
      * input is exhausted.
      *
      * @param thru The string to skip over.
+     * @return boolean 
      */
-    public void skipPast(String thru) {
+    public boolean skipPast(String thru) {
         int thruStart = in.indexOf(thru, pos);
         pos = thruStart == -1 ? in.length() : (thruStart + thru.length());
+        return true;
     }
 
     /**
@@ -654,5 +660,15 @@ public class JSONTokener {
         } else {
             return -1;
         }
+    }
+    
+    // Methods removed due to switch to open-json
+    
+    public boolean end(){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+    
+    public JSONTokener(InputStream inputStream){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 }
