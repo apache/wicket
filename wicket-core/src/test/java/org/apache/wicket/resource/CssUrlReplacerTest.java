@@ -19,6 +19,8 @@ package org.apache.wicket.resource;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
+import java.util.Locale;
+
 import org.apache.wicket.markup.html.image.ImageTest;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -27,6 +29,7 @@ import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Before;
 import org.junit.Test;
 
 public class CssUrlReplacerTest extends WicketTestCase
@@ -58,6 +61,14 @@ public class CssUrlReplacerTest extends WicketTestCase
 		};
 	}
 	
+	@Before
+	public void before()
+	{
+		// if not ENGLISH then the #base64EncodedImage test will pick up a different GIF than the one we're expecting
+		// here.
+		tester.getSession().setLocale(Locale.ENGLISH);
+	}
+
 	@Test
 	public void doNotProcessFullUrls()
 	{
