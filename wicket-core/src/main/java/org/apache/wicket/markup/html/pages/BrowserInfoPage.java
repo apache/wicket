@@ -25,14 +25,12 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
- * <p>
  * This page uses a form post right after the page has loaded in the browser, using JavaScript or
  * alternative means to detect and pass on settings to the embedded form. The form submit method
  * updates this session's {@link org.apache.wicket.core.request.ClientInfo} object and then redirects to
@@ -53,28 +51,24 @@ public class BrowserInfoPage extends WebPage
 	private BrowserInfoForm browserInfoForm;
 
 	/**
-	 * Bookmarkable constructor. This is not for normal framework client use. It will be called
-	 * whenever JavaScript is not supported, and the browser info page's meta refresh fires to this
-	 * page. Prior to this, the other constructor should already have been called.
+	 * This constructor will be called twice, once to display the initial page and additionally when JavaScript
+	 * is not enabled and the meta refresh fires or the user clicks the link instead.
 	 */
 	public BrowserInfoPage()
 	{
 		initComps();
 		RequestCycle requestCycle = getRequestCycle();
 		WebSession session = (WebSession)getSession();
-		WebClientInfo clientInfo = session.getClientInfo();
-		if (clientInfo == null)
-		{
-			clientInfo = new WebClientInfo(requestCycle);
-			getSession().setClientInfo(clientInfo);
-		}
-		else
-		{
-			ClientProperties properties = clientInfo.getProperties();
-			properties.setJavaEnabled(false);
-		}
 
-		continueToOriginalDestination();
+		WebClientInfo clientInfo = session.getClientInfo();
+		if (clientInfo != null)
+		{
+			// clientInfo is already present so continue
+			continueToOriginalDestination();
+			
+			// switch to home page if no original destination was intercepted
+			setResponsePage(getApplication().getHomePage());
+		}
 	}
 
 	@Override
