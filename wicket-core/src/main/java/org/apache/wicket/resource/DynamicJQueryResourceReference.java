@@ -56,6 +56,23 @@ public class DynamicJQueryResourceReference extends JQueryResourceReference
 	{
 	}
 
+	/**
+	 * method returns {@code WebClientInfo} instance from {@code WebSession} if it exists, else
+	 * creates and returns {@code WebClientInfo} instance using the given {@code RequestCycle}.
+	 * 
+	 * @param requestCycle RequestCycle
+	 * 
+	 * @return WebClientInfo
+	 */
+	protected WebClientInfo getClientInfo(RequestCycle requestCycle)
+	{
+		if (Session.exists())
+		{
+			return WebSession.get().getClientInfo();
+		}
+		return new WebClientInfo(requestCycle);
+	}
+
 	@Override
 	public String getName()
 	{
@@ -63,17 +80,9 @@ public class DynamicJQueryResourceReference extends JQueryResourceReference
 		String name = requestCycle.getMetaData(KEY);
 		if (name == null)
 		{
-			WebClientInfo clientInfo;
+			WebClientInfo clientInfo = getClientInfo(requestCycle);
 			name = getVersion2();
-			if (Session.exists())
-			{
-				WebSession session = WebSession.get();
-				clientInfo = session.getClientInfo();
-			}
-			else
-			{
-				clientInfo = new WebClientInfo(requestCycle);
-			}
+
 			ClientProperties clientProperties = clientInfo.getProperties();
 			if (clientProperties.isBrowserInternetExplorer() && clientProperties.getBrowserVersionMajor() < 9)
 			{

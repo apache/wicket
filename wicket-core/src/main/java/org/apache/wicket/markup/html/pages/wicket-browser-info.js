@@ -72,9 +72,15 @@
 			 * @param formMarkupId   The markup id of the special form
 			 * @returns {HTMLFormElement} The special form
 			 */
-			populateFields: function(formMarkupId) {
-				var postbackForm = document.getElementById(formMarkupId);
+			populateFields: function(attrs) {
+				var postbackForm = document.getElementById(attrs.f);
 				var info = Wicket.BrowserInfo.collect();
+				
+				// if 'after collect' (customization) is provided call it and pass collected browser info object
+				if (attrs.ac) {
+					attrs.ac(info);
+				}
+
 				var i;
 				for (i in info) {
 					postbackForm[i].value = info[i];
@@ -88,8 +94,8 @@
 			 *
 			 * @param formMarkupId  The markup id of the special form
 			 */
-			submitForm: function(formMarkupId) {
-				var postbackForm = Wicket.BrowserInfo.populateFields(formMarkupId);
+			submitForm: function(attrs) {
+				var postbackForm = Wicket.BrowserInfo.populateFields(attrs);
 				postbackForm.submit();
 			}
 		};
