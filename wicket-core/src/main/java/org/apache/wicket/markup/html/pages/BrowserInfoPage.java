@@ -20,15 +20,13 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings;
 
 /**
@@ -53,28 +51,11 @@ public class BrowserInfoPage extends WebPage
 	private BrowserInfoForm browserInfoForm;
 
 	/**
-	 * Bookmarkable constructor. This is not for normal framework client use. It will be called
-	 * whenever JavaScript is not supported, and the browser info page's meta refresh fires to this
-	 * page. Prior to this, the other constructor should already have been called.
+	 * Bookmarkable constructor.
 	 */
 	public BrowserInfoPage()
 	{
 		initComps();
-		RequestCycle requestCycle = getRequestCycle();
-		WebSession session = (WebSession)getSession();
-		WebClientInfo clientInfo = session.getClientInfo();
-		if (clientInfo == null)
-		{
-			clientInfo = new WebClientInfo(requestCycle);
-			getSession().setClientInfo(clientInfo);
-		}
-		else
-		{
-			ClientProperties properties = clientInfo.getProperties();
-			properties.setJavaEnabled(false);
-		}
-
-		continueToOriginalDestination();
 	}
 
 	@Override
@@ -97,20 +78,18 @@ public class BrowserInfoPage extends WebPage
 	 */
 	private void initComps()
 	{
-		WebComponent meta = new WebComponent("meta");
-
-		final IModel<String> urlModel = new LoadableDetachableModel<String>()
-		{
-			private static final long serialVersionUID = 1L;
-
+		final IModel<WebClientInfo> info = new LoadableDetachableModel<WebClientInfo>() {
 			@Override
-			protected String load()
+			protected WebClientInfo load()
 			{
-				CharSequence url = urlFor(BrowserInfoPage.class, null);
-				return url.toString();
+				return new WebClientInfo(getRequestCycle());
 			}
 		};
 
+		final ContinueLink link = new ContinueLink("link", info);
+		add(link);
+
+		WebComponent meta = new WebComponent("meta");
 		meta.add(AttributeModifier.replace("content", new AbstractReadOnlyModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
@@ -118,14 +97,11 @@ public class BrowserInfoPage extends WebPage
 			@Override
 			public String getObject()
 			{
-				return "0; url=" + urlModel.getObject();
+				return "0; url=" + link.getURL();
 			}
 
 		}));
 		add(meta);
-		WebMarkupContainer link = new WebMarkupContainer("link");
-		link.add(AttributeModifier.replace("href", urlModel));
-		add(link);
 
 		browserInfoForm = new BrowserInfoForm("postback")
 		{
@@ -138,5 +114,31 @@ public class BrowserInfoPage extends WebPage
 			}
 		};
 		add(browserInfoForm);
+	}
+
+	private static class ContinueLink extends Link<WebClientInfo> {
+
+		public ContinueLink(String id, IModel<WebClientInfo> info)
+		{
+			super(id, info);
+		}
+
+		@Override
+		public CharSequence getURL() {
+			return super.getURL();
+		}
+
+		@Override
+		public void onClick()
+		{
+			getModelObject().getProperties().setJavaEnabled(false);
+
+			WebSession.get().setClientInfo(getModelObject());
+
+			continueToOriginalDestination();
+
+			// switch to home page if no original destination was intercepted
+			setResponsePage(getApplication().getHomePage());
+		}
 	}
 }
