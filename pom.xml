@@ -127,7 +127,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<jacoco.version>0.7.7.201606060606</jacoco.version>
+		<jacoco.version>0.7.8</jacoco.version>
 		<jetty.version>9.3.10.v20160621</jetty.version>
 		<joda-time.version>2.9.4</joda-time.version>
 		<junit.version>4.12</junit.version>
@@ -135,7 +135,7 @@
 		<servlet-api.version>3.1.0</servlet-api.version>
 		<maven.javadoc.version>2.10.4</maven.javadoc.version>
 		<maven.surefire.version>2.19.1</maven.surefire.version>
-		<mockito.version>2.2.13</mockito.version>
+		<mockito.version>2.3.0</mockito.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<hamcrest.version>2.0.0.0</hamcrest.version>
 		<objenesis.version>2.4</objenesis.version>
