@@ -111,6 +111,9 @@ public class BrowserInfoPage extends WebPage
 			protected void afterSubmit()
 			{
 				continueToOriginalDestination();
+
+				// switch to home page if no original destination was intercepted
+				setResponsePage(getApplication().getHomePage());
 			}
 		};
 		add(browserInfoForm);
