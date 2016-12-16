@@ -307,4 +307,28 @@
 			</documentation>
 		</annotation>
 	</element>
+
+	<element name="label">
+		<annotation>
+			<documentation>Wicket will output a FormComponent's label (FormComponent#getLabel()) without
+				requiring a manual extra component such as Label or FormComponentLabel.</documentation>
+		</annotation>
+		<complexType mixed="true">
+			<complexContent>
+				<extension base="wicket:mixedContent">
+					<attribute name="for" use="optional" type="wicket:notEmptyToken">
+						<annotation>
+							<documentation>The wicket:id of FormComponent which label should be used.</documentation>
+						</annotation>
+					</attribute>
+					<attribute name="key" use="optional" type="wicket:notEmptyToken">
+						<annotation>
+							<documentation>The resource id used for lookup. Acts as &lt;wicket:message&gt; </documentation>
+						</annotation>
+					</attribute>
+				</extension>
+			</complexContent>
+		</complexType>
+	</element>
+
 </schema>
