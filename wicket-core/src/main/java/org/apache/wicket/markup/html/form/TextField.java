@@ -107,6 +107,12 @@ public class TextField<T> extends AbstractTextComponent<T>
 
 		tag.put("value", getValue());
 
+		// Auto completion support
+		String autocompleteValue = getAutoCompleteBuilder().toString();
+		if(!autocompleteValue.isEmpty()){
+			tag.put("autocomplete", autocompleteValue);
+		}
+
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
@@ -120,5 +126,13 @@ public class TextField<T> extends AbstractTextComponent<T>
 	protected String[] getInputTypes()
 	{
 		return null;
+	}
+
+	/**
+	 * Gets the value of the autocomplete attribute. The default behavior is that it is turned off
+	 * @return AutoCompleteBuilder the builder to generate the autocomplete attribute information
+	 */
+	protected AutoCompleteBuilder getAutoCompleteBuilder(){
+		return AutoCompleteBuilder.init().empty();
 	}
 }

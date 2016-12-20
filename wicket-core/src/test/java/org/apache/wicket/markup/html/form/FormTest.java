@@ -53,6 +53,39 @@ public class FormTest extends WicketTestCase
 		};
 	}
 
+	/**
+	 * Test auto complete functionality
+	 */
+	@Test
+	public void testAutoComplete(){
+		class TestPage extends WebPage implements IMarkupResourceStreamProvider
+		{
+			boolean shouldFail, submit, error;
+
+			public TestPage()
+			{
+				add(new Form<Void>("form")
+				{
+					@Override
+					protected AutoCompleteBuilder getAutoCompleteBuilder()
+					{
+						return AutoCompleteBuilder.init().forAddressType(AutoCompleteAddressType.BILLING).forField(AutoCompleteFields.GIVEN_NAME);
+					}
+				});
+			}
+
+			@Override
+			public IResourceStream getMarkupResourceStream(final MarkupContainer container,
+				Class<?> containerClass)
+			{
+				return new StringResourceStream("<form wicket:id='form'></form>");
+			}
+		}
+		
+		TestPage testPage = new TestPage();
+		tester.startPage(testPage);
+		assertTrue(tester.getLastResponseAsString().contains("autocomplete=\"billing given-name\""));
+	}
 
 	/**
 	 * @throws Exception
@@ -114,6 +147,12 @@ public class FormTest extends WicketTestCase
 					protected void onError()
 					{
 						error = true;
+					}
+					
+					@Override
+					protected AutoCompleteBuilder getAutoCompleteBuilder()
+					{
+						return AutoCompleteBuilder.init().forAddressType(AutoCompleteAddressType.BILLING).forField(AutoCompleteFields.GIVEN_NAME);
 					}
 				});
 			}
