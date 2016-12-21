@@ -111,7 +111,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 		if (child == null)
 		{
 			//clean any markup previously loaded for children
-			clearChildrenMarkup(parent);
+			cleanChildrenMarkup(parent);
 			
 			return markup;			
 		}
@@ -137,7 +137,7 @@ public abstract class AssociatedMarkupSourcingStrategy extends AbstractMarkupSou
 	 * 
 	 * @param parent
 	 */
-	private void clearChildrenMarkup(MarkupContainer parent) 
+	private void cleanChildrenMarkup(MarkupContainer parent) 
 	{
 		for (Component child : parent) 
 		{
