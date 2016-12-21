@@ -83,7 +83,6 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
@@ -727,7 +726,7 @@ public abstract class Component
 	public IMarkupFragment getMarkup()
 	{
 		// Markup already determined or preset?
-		if (markup != null && markupHasCurrentVariation())
+		if (markup != null)
 		{
 			return markup;
 		}
@@ -756,18 +755,6 @@ public abstract class Component
 		// Ask the parent for find the markup for me
 		markup = parent.getMarkup(this);
 		return markup;
-	}
-
-	/**
-	 * Check if the loaded markup has the current 
-	 * variation.
-	 * 
-	 * @return true if the markup has the current variation
-	 */
-	private boolean markupHasCurrentVariation()
-	{
-		return Objects.equal(getVariation(), 
-			markup.getMarkupResourceStream().getVariation());
 	}
 
 	/**
