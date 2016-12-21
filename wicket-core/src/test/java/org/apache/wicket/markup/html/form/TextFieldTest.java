@@ -36,20 +36,7 @@ import org.junit.Test;
  */
 public class TextFieldTest extends WicketTestCase
 {
-	
-	/**
-	 * Test auto complete feature
-	 */
-	@Test
-	public void testAutoComplete(){
-		TestPage testPage = new TestPage();
-		tester.startPage(testPage);
-		assertTrue(tester.getLastResponseAsString().contains("autocomplete=\"section-blue billing name\""));
-	}
-
-	/** 
-	 * Test that inputs are converted to null 
-	 * */
+	/** */
 	@Test
 	public void emptyInputConvertedToNull()
 	{
@@ -124,13 +111,7 @@ public class TextFieldTest extends WicketTestCase
 		public TestPage()
 		{
 			add(form = new Form<>("form"));
-			form.add(textField = new TextField<String>("text", textModel){
-				@Override
-				protected AutoCompleteBuilder getAutoCompleteBuilder()
-				{
-					return AutoCompleteBuilder.init().withSection("blue").forAddressType(AutoCompleteAddressType.BILLING).forField(AutoCompleteFields.NAME);
-				}
-			});
+			form.add(textField = new TextField<>("text", textModel));
 		}
 
 		@Override

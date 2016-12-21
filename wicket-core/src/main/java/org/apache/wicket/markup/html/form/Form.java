@@ -1352,14 +1352,6 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Gets the value of the autocomplete attribute. The default behavior is that it is turned off
-	 * @return AutoCompleteBuilder the builder to generate the autocomplete attribute information
-	 */
-	protected AutoCompleteBuilder getAutoCompleteBuilder(){
-		return AutoCompleteBuilder.init().empty();
-	}
-
-	/**
 	 * 
 	 * @see org.apache.wicket.Component#getStatelessHint()
 	 */
@@ -1640,12 +1632,6 @@ public class Form<T> extends WebMarkupContainer
 					// form
 					setMultiPart(true);
 				}
-			}
-
-			// Auto completion support
-			String autocompleteValue = getAutoCompleteBuilder().toString();
-			if(!autocompleteValue.isEmpty()){
-				tag.put("autocomplete", autocompleteValue);
 			}
 		}
 		else
