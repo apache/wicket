@@ -2,6 +2,55 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.0.0-M3
+
+** Bug
+
+    * [WICKET-6041] - Nested forms / parent FormComponents do not reflect updated model when nested form submitted
+    * [WICKET-6256] - 8.0.0-M1 <wicket:link> MarkupNotFoundException
+    * [WICKET-6257] - Page instance isn't mapped to an URL just after the 'cid' parameter is add
+    * [WICKET-6262] - IllegalArgumentException: Argument 'filterPrefix' may not be null or empty with WebSocketBehavior
+    * [WICKET-6267] - Native Websocket exception when the page is expired
+    * [WICKET-6270] - No upload is seen as empty upload after WICKET-6210
+    * [WICKET-6277] - Broadcasting ClosedMessage about the JSR 356 WebSocket connection after the container was turned off
+    * [WICKET-6279] - AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE does not work after deserialisation
+    * [WICKET-6283] - Page parameter equality should not depend on named parameters order
+    * [WICKET-6285] - NoRecordsToolbar should override onConfigure rather than isVisible
+    * [WICKET-6289] - Autolinking adds onclick attribute to <img> tags
+    * [WICKET-6290] - CssUrlReplacer doesn't understand data: urls and breaks them
+    * [WICKET-6292] - Button.onSubmit not called for multipart requests
+    * [WICKET-6296] - Not possible to add WebSocketBehavior in ajax request
+    * [WICKET-6298] - Markup not found for Component id =_header_ and WICKET-6231, regression ?
+
+** Improvement
+
+    * [WICKET-5920] - roll a version of ListDataProvider implementing ISortableDetachable model
+    * [WICKET-6056] - Improvements to browser info gathering implementation
+    * [WICKET-6258] - Repeater example page show the back button with the enable link style when disabled
+    * [WICKET-6260] - Revert Ajax detection needed for character encoding to WebRequest.isAjax()
+    * [WICKET-6261] - CheckGroupSelector default selection state incorrect when the list of Checks is empty
+    * [WICKET-6263] - Fix JavaScript tests to pass with jQuery 2.x. and 3.x
+    * [WICKET-6264] - Form: improve error message for disabled/invisible IFormSubmittingComponent
+    * [WICKET-6269] - Use jdk-serializable-functional voor Serializable functional interfaces
+    * [WICKET-6271] - IRequestableComponent getPage() javaDoc and Component implementation mismatch
+    * [WICKET-6274] - Add origin header to ajax requests in BaseWicketTester
+    * [WICKET-6276] - Reduce memory footprint for LambdaModel
+    * [WICKET-6281] - Listener interfaces' methods should use empty default methods for friendlier extension
+    * [WICKET-6282] - Make native web socket message classes serializable
+    * [WICKET-6284] - Introduce lambda-enhanced factory method in ResourceReference 
+    * [WICKET-6293] - Behavior#onTag() should pass the Component as well
+    * [WICKET-6297] - Add wicket:label tag in wicket.xsd
+
+** New Feature
+
+    * [WICKET-6275] - Stream support for MarkupContainer
+
+** Task
+
+    * [WICKET-6287] - Switch from json.org to open-json
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.0.0-M1
 
 ** Bug
@@ -170,5 +219,4 @@ Release Notes - Wicket - Version 8.0.0-M1
     * [WICKET-6095] - Multiline headers in DataTable
 
 =======================================================================
-
 
