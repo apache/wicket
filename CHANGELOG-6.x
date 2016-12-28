@@ -2,6 +2,37 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.26.0
+
+** Sub-task
+
+    * [WICKET-6278] - Backport TagTester fix to 6.x and 7.x
+
+** Bug
+
+    * [WICKET-6250] - FileUploadField does not deteach models and fails to null the reference to the transient fileUploads field if forceCloseStreamsOnDetach is false
+    * [WICKET-6267] - Native Websocket exception when the page is expired
+    * [WICKET-6270] - No upload is seen as empty upload after WICKET-6210
+    * [WICKET-6279] - AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE does not work after deserialisation
+    * [WICKET-6289] - Autolinking adds onclick attribute to <img> tags
+    * [WICKET-6290] - CssUrlReplacer doesn't understand data: urls and breaks them
+    * [WICKET-6295] - Clicking Link in BrowserInfoPage results in infinite request loop
+    * [WICKET-6296] - Not possible to add WebSocketBehavior in ajax request
+
+** Improvement
+
+    * [WICKET-6260] - Revert Ajax detection needed for character encoding to WebRequest.isAjax()
+    * [WICKET-6261] - CheckGroupSelector default selection state incorrect when the list of Checks is empty
+    * [WICKET-6271] - IRequestableComponent getPage() javaDoc and Component implementation mismatch
+    * [WICKET-6274] - Add origin header to ajax requests in BaseWicketTester
+    * [WICKET-6282] - Make native web socket message classes serializable
+
+** Task
+
+    * [WICKET-6287] - Switch from json.org to open-json
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.25.0
 
 ** Sub-task
