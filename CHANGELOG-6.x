@@ -27,10 +27,6 @@ Release Notes - Wicket - Version 6.26.0
     * [WICKET-6274] - Add origin header to ajax requests in BaseWicketTester
     * [WICKET-6282] - Make native web socket message classes serializable
 
-** Task
-
-    * [WICKET-6287] - Switch from json.org to open-json
-
 =======================================================================
 
 Release Notes - Wicket - Version 6.25.0
