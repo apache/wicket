@@ -37,10 +37,6 @@ Release Notes - Wicket - Version 7.6.0
     * [WICKET-6282] - Make native web socket message classes serializable
     * [WICKET-6297] - Add wicket:label tag in wicket.xsd
 
-** Task
-
-    * [WICKET-6287] - Switch from json.org to open-json
-
 =======================================================================
 
 Release Notes - Wicket - Version 7.5.0
