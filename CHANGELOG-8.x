@@ -45,10 +45,6 @@ Release Notes - Wicket - Version 8.0.0-M3
 
     * [WICKET-6275] - Stream support for MarkupContainer
 
-** Task
-
-    * [WICKET-6287] - Switch from json.org to open-json
-
 =======================================================================
 
 Release Notes - Wicket - Version 8.0.0-M2
