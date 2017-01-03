@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<wicket:head>
+    <style>
+    	.download-veil {
+    		position: absolute;
+    		left: 20%;
+    		right: 20%;
+    		color: white;
+    		background-color: darkorange;
+    		font-size: 40px;
+    		text-align: center;
+    	}
+
+    	.download-veil span {
+    		line-height: 128px;
+    	}
+    </style>
+</wicket:head>
+</head>
+<body>
+<wicket:extend>
+
+<p>
+This example demonstrates a <a wicket:id="download">download</a> initiated via Ajax.
+</p>
+
+<p>
+This download <a wicket:id="downloadFailure">fails</a>.
+</p>
+
+<p>
+A resource reference can be <a wicket:id="downloadReference">used too</a>.
+</p>
+
+<div wicket:id="downloading" class="download-veil"><span>Preparing download ...</span></div>
+
+</wicket:extend>
+</body>
+</html>

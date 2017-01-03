@@ -57,7 +57,7 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("todo-list", TodoList.class);
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
-
+		mountPage("download", AjaxDownloadPage.class);
 	}
 
 	/**
