@@ -193,7 +193,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		JSONObject settings = new JSONObject();
 		settings.put("attributes", new JsonFunction(renderAjaxAttributes(getComponent())));
 		settings.put("name", getName());
-		settings.put("url", url);
+		settings.put("downloadUrl", url);
 
 		target.appendJavaScript(String.format("Wicket.AjaxDownload.initiate(%s);", settings));
 
@@ -289,7 +289,12 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	private static Cookie cookie(String name)
 	{
 		Cookie cookie = new Cookie(name, "complete");
+		
+		// has to be on root, otherwise JavaScript will not be able to access the
+		// cookie when it is set from a different path - which is the case when a
+		// ResourceReference is used
 		cookie.setPath("/");
+		
 		return cookie;
 	}
 }

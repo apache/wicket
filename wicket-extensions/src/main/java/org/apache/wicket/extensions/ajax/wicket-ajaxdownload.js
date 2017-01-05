@@ -28,7 +28,7 @@
 	Wicket.AjaxDownload = {
 		initiate : function(settings) {
 			
-			var frame = jQuery("<iframe>").hide().prop("src", settings.url).appendTo("body");
+			var frame = jQuery("<iframe>").hide().prop("src", settings.downloadUrl).appendTo("body");
 			
 			var checkComplete = function() {
 				var result;
