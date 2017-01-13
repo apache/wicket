@@ -133,7 +133,7 @@ _The value of '${label}' is not exactly ${exact} characters long._
 
 ==== CreditCardValidator
 
-Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American Express ["MasterCard] , “Visa” or “Diners Club”). 
+Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American  Express”, “MasterCard” , “Visa” or “Diners Club”). 
 
 *Message:*
 
