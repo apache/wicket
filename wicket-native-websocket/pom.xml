@@ -29,7 +29,6 @@
 	<description>Wicket Native WebSocket provides native integration for WebSocket support with Servlet web containers.</description>
 	<modules>
 		<module>wicket-native-websocket-core</module>
-		<module>wicket-native-websocket-tomcat</module>
 		<module>wicket-native-websocket-javax</module>
 		<module>wicket-native-websocket-example</module>
 	</modules>
