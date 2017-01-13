@@ -9,7 +9,7 @@ Before rendering any component Wicket must retrieve its markup calling method _g
 	Application.get().getMarkupSettings().getMarkupFactory()
 ----
  
-After the markup has been loaded by _MarkupFactory_, it's parsed with class _org.apache.wicket.markup.MarkupParser_. _MarkupFactory_ creates a new _MarkupParser_ with method _newMarkupParser(MarkupResourceStream resource)_. The effective markup parsing is performed with a chain of entities implementing interface _org.apache.wicket.markup.parser.IMarkupFilter_. The default set of _IMarkupFilters_S used by _MarkupParser_ takes care of different tasks such as HTML validation, comments removing, Wicket tags handling, etc... 
+After the markup has been loaded by _MarkupFactory_, it's parsed with class _org.apache.wicket.markup.MarkupParser_. _MarkupFactory_ creates a new _MarkupParser_ with method _newMarkupParser(MarkupResourceStream resource)_. The effective markup parsing is performed with a chain of entities implementing interface _org.apache.wicket.markup.parser.IMarkupFilter_. The default set of _IMarkupFilters_ used by _MarkupParser_ takes care of different tasks such as HTML validation, comments removing, Wicket tags handling, etc... 
 
 To customize the set of _IMarkupFilters_S used in our application we can create a subclass of _MarkupFactory_ overriding method _newMarkupParser(MarkupResourceStream resource)_:
 
