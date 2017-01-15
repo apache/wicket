@@ -212,19 +212,28 @@ public class JSONObject {
         }
     }
 
-    public JSONObject(Object bean) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
-        this(propertiesAsMap(bean));
+    /**
+     * Creates a json object from a bean
+     * @param bean the bean to create the json object from
+     * @throws JSONException If there is an exception while reading the bean
+     */
+    public JSONObject(Object bean) throws JSONException {
+    		this(propertiesAsMap(bean));
     }
 
     private static Map<String, Object> propertiesAsMap(Object bean)
-            throws IntrospectionException, IllegalAccessException, InvocationTargetException {
-        PropertyDescriptor[] properties = Introspector.getBeanInfo(bean.getClass(), Object.class)
-                .getPropertyDescriptors();
-        Map<String, Object> props = new TreeMap<String, Object>();
-        for (int i = 0; i < properties.length; i++) {
-            PropertyDescriptor propertyDescriptor = properties[i];
-            props.put(propertyDescriptor.getDisplayName(), propertyDescriptor.getReadMethod().invoke(bean));
-        }
+            throws JSONException {
+    	Map<String, Object> props = new TreeMap<String, Object>();
+    	try{  
+	        PropertyDescriptor[] properties = Introspector.getBeanInfo(bean.getClass(), Object.class)
+	                .getPropertyDescriptors();
+	        for (int i = 0; i < properties.length; i++) {
+	            PropertyDescriptor propertyDescriptor = properties[i];
+	            props.put(propertyDescriptor.getDisplayName(), propertyDescriptor.getReadMethod().invoke(bean));
+	        }
+    	}catch(IntrospectionException | InvocationTargetException | IllegalAccessException e){
+    		throw new JSONException(e);
+    	}
         return props;
     }
 
