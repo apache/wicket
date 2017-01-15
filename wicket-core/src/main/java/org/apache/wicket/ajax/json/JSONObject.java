@@ -231,8 +231,12 @@ public class JSONObject {
 	            PropertyDescriptor propertyDescriptor = properties[i];
 	            props.put(propertyDescriptor.getDisplayName(), propertyDescriptor.getReadMethod().invoke(bean));
 	        }
-    	}catch(IntrospectionException | InvocationTargetException | IllegalAccessException e){
+    	}catch( IllegalAccessException e){
     		throw new JSONException(e);
+    	}catch(IntrospectionException e){
+    		throw new JSONException(e);
+    	}catch(InvocationTargetException e){
+    		throw new JSONException(e);    		
     	}
         return props;
     }
