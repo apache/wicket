@@ -214,7 +214,7 @@ public class JSONObject {
 
     /**
      * Creates a json object from a bean
-     * @param bean the been to create the json object from
+     * @param bean the bean to create the json object from
      * @throws JSONException If there is an exception while reading the bean
      */
     public JSONObject(Object bean) throws JSONException {
