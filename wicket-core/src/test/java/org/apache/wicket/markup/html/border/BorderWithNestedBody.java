@@ -28,6 +28,12 @@ public class BorderWithNestedBody extends Border
 	{
 		super(id);
 		
+	}
+	
+	@Override
+	protected void onInitialize() 
+	{
+		super.onInitialize();
 		addToBorder(new BorderComponent1("nestedBorder"));
 	}
 
