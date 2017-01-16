@@ -16,25 +16,44 @@
  */
 package org.apache.wicket.markup.html.border;
 
-public class BorderWithNestedBody extends Border
-{
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebPage;
 
+public class BorderWithNestedBodyPage extends WebPage 
+{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3233023845189903488L;
-
-	public BorderWithNestedBody(String id)
-	{
-		super(id);
-		
-	}
+	private static final long serialVersionUID = 8364550846663714451L;
+	
+	//https://issues.apache.org/jira/browse/WICKET-6303
+	private boolean behaviorRendered = false;
 	
 	@Override
 	protected void onInitialize() 
 	{
 		super.onInitialize();
-		addToBorder(new BorderComponent1("nestedBorder"));
+		BorderWithNestedBody border = new BorderWithNestedBody("outerBorder");
+		border.add(new AjaxLink<Void>("ajaxClick") 
+		{
+            @Override
+            protected void onBeforeRender() 
+            {
+            	super.onBeforeRender();
+            	behaviorRendered = true;
+            }
+            
+			@Override
+			public void onClick(AjaxRequestTarget target) 
+			{}
+		});
+		
+		add(border);
 	}
 
+	public boolean isBehaviorRendered() 
+	{
+		return behaviorRendered;
+	}
 }
