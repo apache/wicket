@@ -30,6 +30,5 @@
 	<modules>
 		<module>wicket-native-websocket-core</module>
 		<module>wicket-native-websocket-javax</module>
-		<module>wicket-native-websocket-example</module>
 	</modules>
 </project>

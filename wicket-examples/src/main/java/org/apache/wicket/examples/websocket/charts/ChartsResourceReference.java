@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.example.charts;
+package org.apache.wicket.examples.websocket.charts;
 
 import java.util.ArrayList;
 import java.util.List;

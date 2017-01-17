@@ -14,10 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.example;
+package org.apache.wicket.examples.websocket.charts;
 
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.panel.Panel;
 
-public class HomePage extends WebPage
+/**
+ * A panel that initializes a Google Line chart and uses WebSocketBehavior to register an asynchronous
+ * task that will push some data through the web socket connection.
+ */
+public class WebSocketChart extends Panel
 {
+	public WebSocketChart(final String id)
+	{
+		super(id);
+	}
+
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		super.renderHead(response);
+		response.render(JavaScriptHeaderItem.forReference(new ChartsResourceReference()));
+	}
+
 }

@@ -14,29 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.atmosphere;
+package org.apache.wicket.examples.websocket.charts;
 
-import java.io.Serializable;
+import java.util.concurrent.ScheduledExecutorService;
 
-public class ChatMessage implements Serializable
+import org.apache.wicket.examples.websocket.JSR356Application;
+import org.apache.wicket.protocol.ws.api.WebSocketResource;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+
+/**
+ *
+ */
+public class ChartWebSocketResource extends WebSocketResource
 {
+	public static final String NAME = ChartWebSocketResource.class.getName();
 
-	private String receiver;
-	private String message;
-
-	public ChatMessage(String receiver, String message)
+	@Override
+	protected void onConnect(ConnectedMessage message)
 	{
-		this.receiver = receiver;
-		this.message = message;
-	}
+		super.onConnect(message);
 
-	public String getReceiver()
-	{
-		return receiver;
-	}
-
-	public String getMessage()
-	{
-		return message;
+		ScheduledExecutorService service = JSR356Application.get().getScheduledExecutorService();
+		ChartUpdater.start(message, service);
 	}
 }

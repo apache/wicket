@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.example;
+package org.apache.wicket.examples.websocket;
 
-import org.apache.wicket.protocol.ws.example.charts.ChartWebSocketResource;
+import org.apache.wicket.examples.websocket.charts.ChartWebSocketResource;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;

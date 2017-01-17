@@ -14,21 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.protocol.ws.example;
+package org.apache.wicket.examples.websocket;
 
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.apache.wicket.protocol.ws.example.charts.ChartUpdater;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.examples.websocket.charts.ChartUpdater;
+import org.apache.wicket.examples.websocket.charts.WebSocketChart;
 import org.apache.wicket.protocol.https.RequireHttps;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
-import org.apache.wicket.protocol.ws.example.charts.WebSocketChart;
 
 @RequireHttps
-public class WebSocketBehaviorDemoPage extends WebPage
+public class WebSocketBehaviorDemoPage extends WicketExamplePage
 {
 	public WebSocketBehaviorDemoPage()
 	{

@@ -14,28 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.atmosphere;
+package org.apache.wicket.examples.websocket;
 
-import org.apache.wicket.Session;
-import org.apache.wicket.atmosphere.AtmosphereEvent;
+import org.apache.wicket.examples.WicketExamplePage;
 
-import com.google.common.base.Predicate;
-
-public class ReceiverFilter implements Predicate<AtmosphereEvent>
+public class HomePage extends WicketExamplePage
 {
-	public ReceiverFilter()
-	{
-	}
-
-	@Override
-	public boolean apply(AtmosphereEvent input)
-	{
-		if (input.getPayload() instanceof ChatMessage)
-		{
-			ChatMessage msg = (ChatMessage)input.getPayload();
-			return msg.getReceiver() == null || msg.getReceiver().isEmpty() ||
-				msg.getReceiver().equals(Session.get().getId());
-		}
-		return false;
-	}
 }
