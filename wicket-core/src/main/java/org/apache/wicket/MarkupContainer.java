@@ -2032,19 +2032,19 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		
 		if (childType == ChildToDequeueType.BORDER) 
 		{
-			Border childContainer = (Border)child;
-			// propagate dequeuing to border's body
+            Border childContainer = (Border)child;
+            // propagate dequeuing to border's body
             MarkupContainer body = childContainer.getBodyContainer();
-			
-			dequeueChildrenContainer(dequeue, body);
+
+            dequeueChildrenContainer(dequeue, body);
 		}
 		
 		if (childType == ChildToDequeueType.MARKUP_CONTAINER)
 		{
-			// propagate dequeuing to containers
-			MarkupContainer childContainer = (MarkupContainer)child;
-			
-			dequeueChildrenContainer(dequeue, childContainer);			
+            // propagate dequeuing to containers
+            MarkupContainer childContainer = (MarkupContainer)child;
+
+            dequeueChildrenContainer(dequeue, childContainer);			
 		}
 		
 		if (childType == ChildToDequeueType.NULL || 
@@ -2066,12 +2066,12 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		throw new IllegalStateException(String.format("Could not find the closing tag for '%s'", tag));
 	}
 
-	private void dequeueChildrenContainer(DequeueContext dequeue, MarkupContainer child) 
-	{
-		dequeue.pushContainer(child);
-		child.dequeue(dequeue);
-		dequeue.popContainer();
-	}
+    private void dequeueChildrenContainer(DequeueContext dequeue, MarkupContainer child)
+    {
+        dequeue.pushContainer(child);
+        child.dequeue(dequeue);
+        dequeue.popContainer();
+    }
 
     /** @see IQueueRegion#newDequeueContext() */
 	public DequeueContext newDequeueContext()

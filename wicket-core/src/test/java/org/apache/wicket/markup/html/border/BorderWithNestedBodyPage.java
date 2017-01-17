@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.border;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 
 public class BorderWithNestedBodyPage extends WebPage 
 {
@@ -35,18 +36,19 @@ public class BorderWithNestedBodyPage extends WebPage
 	{
 		super.onInitialize();
 		BorderWithNestedBody border = new BorderWithNestedBody("outerBorder");
-		border.add(new AjaxLink<Void>("ajaxClick") 
-		{
+        border.add(new AjaxLink<Void>("ajaxClick")
+        {
             @Override
-            protected void onBeforeRender() 
+            public void internalRenderHead(HtmlHeaderContainer container)
             {
-            	super.onBeforeRender();
-            	behaviorRendered = true;
+                super.internalRenderHead(container);
+                behaviorRendered = true;
             }
-            
-			@Override
-			public void onClick(AjaxRequestTarget target) 
-			{}
+
+            @Override
+            public void onClick(AjaxRequestTarget target)
+            {
+            }
 		});
 		
 		add(border);
