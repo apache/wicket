@@ -16,14 +16,14 @@ Hope you'll find this guide helpful. Have fun with Wicket!
 
 Editors:
 
-*Andrea Del Bene, adelbene@apache.org*
-*Martin Grigorov*
-*Tobias Soloschenko*
-*Igor Vaynberg*
-*Carsten Hufe*
-*Christian Kroemer*
-*Daniel Bartl*
-*Paul Borș*
+*Andrea Del Bene, adelbene@apache.org* +
+*Martin Grigorov* +
+*Tobias Soloschenko* +
+*Igor Vaynberg* +
+*Carsten Hufe* +
+*Christian Kroemer* +
+*Daniel Bartl* +
+*Paul Borș* +
 *Joachim Rohde*
 
 
