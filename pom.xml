@@ -431,7 +431,7 @@
 			<dependency>
 		    	<groupId>com.tdunning</groupId>
 		    	<artifactId>json</artifactId>
-				<version>1.6</version>
+				<version>1.8</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
