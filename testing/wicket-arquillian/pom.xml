@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -17,14 +17,14 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
 		<version>7.7.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
-	
+
 	<artifactId>wicket-arquillian-testing</artifactId>
 	<packaging>war</packaging>
 
@@ -35,140 +35,56 @@
         WAR version (everything in a single .war file).
     </description>
 
-
 	<properties>
-		<!-- Wildfly dependency versions -->
+		<arquillian.version>1.1.12.Final</arquillian.version>
+		<maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
+		<maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<wildfly.version>8.2.1.Final</wildfly.version>
 		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
-		<version.wildfly_8>8.2.0.Final</version.wildfly_8>
-		
-		<!-- Java EE 6 SPEC JBoss -->
-		<version.jboss.spec.javaee.6.0>3.0.3.Final</version.jboss.spec.javaee.6.0>
-
-		<!-- ShrinkWrap Resolvers Maven -->
-		<version.shrinkwrap.resolvers>2.1.1</version.shrinkwrap.resolvers>
-		
-		<!-- Arquillian -->
-		<version.arquillian_core>1.1.8.Final</version.arquillian_core>
+		<jee.spec.version>1.0.4.Final</jee.spec.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.jboss.arquillian.container</groupId>
-				<artifactId>arquillian-container-test-impl-base</artifactId>
-				<version>${version.arquillian_core}</version>
-				<classifier>tests</classifier>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.arquillian.core</groupId>
-				<artifactId>arquillian-core-impl-base</artifactId>
-				<version>${version.arquillian_core}</version>
-				<classifier>tests</classifier>
-			</dependency>
-            <dependency>
-                <groupId>org.jboss.logging</groupId>
-                <artifactId>jboss-logging</artifactId>
-                <version>3.1.4.GA</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.marshalling</groupId>
-                <artifactId>jboss-marshalling</artifactId>
-                <version>1.4.9.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.marshalling</groupId>
-                <artifactId>jboss-marshalling-river</artifactId>
-                <version>1.4.9.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.remoting</groupId>
-                <artifactId>jboss-remoting</artifactId>
-                <version>4.0.6.Final</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.xnio</groupId>
-                <artifactId>xnio-api</artifactId>
-                <version>3.3.0.Final</version>
-            </dependency>
-             <dependency>
-                 <groupId>org.jboss.xnio</groupId>
-                 <artifactId>xnio-nio</artifactId>
-                 <version>3.3.0.Final</version>
-             </dependency>
-			<dependency>
-				<groupId>org.wildfly</groupId>
-				<artifactId>wildfly-arquillian-container-managed</artifactId>
-				<version>${version.wildfly_8}</version>
-			</dependency>
-			<!-- Arquillian -->
-			<!-- Override dependency resolver with latest version. This must go *BEFORE* 
-				the Arquillian BOM. -->
-			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
-				<version>${version.arquillian_core}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.shrinkwrap.resolver</groupId>
-				<artifactId>shrinkwrap-resolver-bom</artifactId>
-				<version>${version.shrinkwrap.resolvers}</version>
+				<version>${arquillian.version}</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
-			<!-- JBoss distributes a complete set of Java EE 6 APIs including a Bill 
-				of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection) 
-				of artifacts. We use this here so that we always get the correct versions 
-				of artifacts. Here we use the jboss-javaee-6.0-with-tools stack (you can 
-				read this as the JBoss stack of the Java EE 6 APIs, with some extras tools 
-				for your project, such as Arquillian for testing) and the jboss-javaee-6.0-with-hibernate 
-				stack you can read this as the JBoss stack of the Java EE 6 APIs, with extras 
-				from the Hibernate family of projects) -->
-			<dependency>
-				<groupId>org.jboss.spec</groupId>
-				<artifactId>jboss-javaee-6.0</artifactId>
-				<version>${version.jboss.spec.javaee.6.0}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
-	<!-- Dependencies. -->
-
 	<dependencies>
-		<!-- "provided" scope used for API's included in JBoss WildFly. -->
-
-		<!-- Import the CDI API. -->
 		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-7.0</artifactId>
+			<version>${jee.spec.version}</version>
+			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Import the JPA API. -->
 		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<scope>provided</scope>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
-
-		<!-- Import the Common Annotations API (JSR-250). -->
 		<dependency>
-			<groupId>org.jboss.spec.javax.annotation</groupId>
-			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
-			<scope>provided</scope>
+			<groupId>org.wildfly</groupId>
+			<artifactId>wildfly-arquillian-container-embedded</artifactId>
+			<version>${wildfly.version}</version>
 		</dependency>
-
-		<!-- Import the EJB API. -->
 		<dependency>
-			<groupId>org.jboss.spec.javax.ejb</groupId>
-			<artifactId>jboss-ejb-api_3.1_spec</artifactId>
-			<scope>provided</scope>
+			<groupId>org.wildfly</groupId>
+			<artifactId>wildfly-embedded</artifactId>
+			<version>${wildfly.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- Wicket CDI integration. -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -180,196 +96,91 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
-
-		<!-- Servlet -->
-		<dependency>
-			<groupId>org.jboss.spec.javax.servlet</groupId>
-			<artifactId>jboss-servlet-api_3.0_spec</artifactId>
-		</dependency>
-
-		<!-- JUnit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- Arquillian -->
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-container-spi</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-container-test-impl-base</artifactId>
-			<classifier>tests</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.container</groupId>
-			<artifactId>arquillian-container-test-spi</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.core</groupId>
-			<artifactId>arquillian-core-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.core</groupId>
-			<artifactId>arquillian-core-impl-base</artifactId>
-			<classifier>tests</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.core</groupId>
-			<artifactId>arquillian-core-spi</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.junit</groupId>
-			<artifactId>arquillian-junit-container</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.protocol</groupId>
-			<artifactId>arquillian-protocol-servlet</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.test</groupId>
-			<artifactId>arquillian-test-spi</artifactId>
-			<scope>test</scope>
-		</dependency>
 		
-		<!-- Shrinkwrap -->
 		<dependency>
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>
-			<artifactId>shrinkwrap-resolver-depchain</artifactId>
-			<scope>test</scope>
-			<type>pom</type>
+			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
 		</dependency>
-		
-		<!-- Wildfly managed. -->
 		<dependency>
-			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-arquillian-container-managed</artifactId>
-			<scope>test</scope>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-spi</artifactId>
 		</dependency>
+
 	</dependencies>
 
 	<build>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-				<filtering>true</filtering>
-			</testResource>
-		</testResources>
-		<!-- Set the name of the war, used as the context root when the app is deployed. -->
-		<finalName>${project.artifactId}</finalName>
-        <pluginManagement>
-    		<plugins>
-    			<plugin>
-    				<groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-dependency-plugin</artifactId>
-    				<version>2.10</version>
-    				<executions>
-    					<execution>
-    						<id>unpack</id>
-    						<phase>process-test-classes</phase>
-    						<goals>
-    							<goal>unpack</goal>
-    						</goals>
-    						<configuration>
-    							<artifactItems>
-    								<artifactItem>
-    									<groupId>org.wildfly</groupId>
-    									<artifactId>wildfly-dist</artifactId>
-    									<version>${version.wildfly_8}</version>
-    									<type>zip</type>
-    									<overWrite>true</overWrite>
-    									<outputDirectory>${project.build.directory}</outputDirectory>
-    								</artifactItem>
-    							</artifactItems>
-    						</configuration>
-    					</execution>
-    				</executions>
-    			</plugin>
-    			<plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-    				<artifactId>maven-surefire-plugin</artifactId>
-    				<configuration>
-    					<environmentVariables>
-    						<JBOSS_HOME>${project.build.directory}/wildfly-${version.wildfly_8}</JBOSS_HOME>
-    					</environmentVariables>
-    					<systemProperties>
-    						<jboss.version>${version.wildfly_8}</jboss.version>
-    					</systemProperties>
-    				</configuration>
-    			</plugin>
-    			<!-- WildFly plugin to deploy the war -->
-    			<plugin>
-    				<groupId>org.wildfly.plugins</groupId>
-    				<artifactId>wildfly-maven-plugin</artifactId>
-    				<version>${version.wildfly.maven.plugin}</version>
-    				<configuration>
-    					<filename>target/${project.build.finalName}.war</filename>
-    				</configuration>
-    			</plugin>
-    		</plugins>
-        </pluginManagement>
-        <plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>${maven.dependency.plugin.version}</version>
+					<executions>
+						<execution>
+							<id>unpack</id>
+							<phase>process-test-classes</phase>
+							<goals>
+								<goal>unpack</goal>
+							</goals>
+							<configuration>
+								<artifactItems>
+									<artifactItem>
+										<groupId>org.wildfly</groupId>
+										<artifactId>wildfly-dist</artifactId>
+										<version>${wildfly.version}</version>
+										<type>zip</type>
+										<overWrite>false</overWrite>
+										<outputDirectory>${project.build.directory}</outputDirectory>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.surefire.plugin.version}</version>
+					<configuration>
+						<argLine>-Xms128m -Xmx512m -XX:MaxPermSize=128m</argLine>
+						<systemPropertyVariables>
+							<!--<jboss.socket.binding.port-offset>1100</jboss.socket.binding.port-offset>-->
+							<!--<jboss.management.http.port>11090</jboss.management.http.port>-->
+							<jboss.http.port>48182</jboss.http.port>
+							<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+							<jboss.home>${project.build.directory}/wildfly-${wildfly.version}</jboss.home>
+							<module.path>${project.build.directory}/wildfly-${wildfly.version}/modules</module.path>
+						</systemPropertyVariables>
+						<redirectTestOutputToFile>false</redirectTestOutputToFile>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.wildfly.plugins</groupId>
+					<artifactId>wildfly-maven-plugin</artifactId>
+					<version>${version.wildfly.maven.plugin}</version>
+					<configuration>
+						<filename>target/${project.build.finalName}.war</filename>
+					</configuration>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-            </plugin>
+			</plugin>
 			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-            </plugin>
+			</plugin>
 			<plugin>
 				<groupId>org.wildfly.plugins</groupId>
 				<artifactId>wildfly-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+			</plugin>
+		</plugins>
 	</build>
-	<profiles>
-		<profile>
-			<id>release</id>
-			<build>
-				<plugins>
-				    <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-deploy-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-				    <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-				    <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-release-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-				    <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<skip>true</skip>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+
 </project>
 
