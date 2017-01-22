@@ -145,7 +145,7 @@ In some components like in the inline image resource references are going to be 
 
 === Media tags - resource references with content range support
 
-Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support _Range_ HTTP header for the request and _Content-Range_ / _Accept-Range_ HTTP headers for the response, which are used for videos / audio tags. The _Range_ header allows the client to only request a specific byte range of the resource. The server provides the _Content-Range_ and tells the client which bytes are going to be send.
+Since Wicket 7.0.0 the PackageResource and the PackageResourceReference support  [Range] HTTP header for the request and  [Content-Range] /  [Accept-Range] HTTP headers for the response, which are used for videos / audio tags. The  [Range] header allows the client to only request a specific byte range of the resource. The server provides the  [Content-Range] and tells the client which bytes are going to be send.
 
 If you want the resource not to be load into memory apply readBuffered(false) - this way the stream is written directly to the response. (_org.apache.wicket.resource.ITextResourceCompressor_ will not be applied if readBuffered is set to false)
 

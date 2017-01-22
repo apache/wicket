@@ -48,8 +48,9 @@ This method is also responsible for invoking children _onBeforeRender()_ so if w
 
 Please note that in the example above we can trigger the rendering stage pressing F5 key or clicking on link “reload”.
 
-WARNING: If we forget to call superclass version of methods _onInitialize()_ or _onBeforeRender()_, Wicket will throw an _IllegalStateException_ with the following message: +
-`_java.lang.IllegalStateException: org.apache.wicket.Component has not been properly initialized. Something in the hierarchy of <page class name> has not called super.onInitialize()/onBeforeRender() in the override of onInitialize()/ onBeforeRender() method_`
+WARNING: If we forget to call superclass version of methods _onInitialize()_ or _onBeforeRender()_, Wicket will throw an _IllegalStateException_ with the following message:
+
+_java.lang.IllegalStateException: _org.apache.wicket.Component_ has not been properly initialized. Something in the hierarchy of <page class name> has not called super.onInitialize()/onBeforeRender() in the override of onInitialize()/ onBeforeRender() method_
 
 
 === Method onComponentTag

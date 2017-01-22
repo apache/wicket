@@ -70,6 +70,7 @@ public class OrderByBorder<S> extends Border
 
 		OrderByLink<S> link = newOrderByLink("orderByLink", property, stateLocator);
 		addToBorder(link);
+		link.add(getBodyContainer());
 	}
 
 	/**

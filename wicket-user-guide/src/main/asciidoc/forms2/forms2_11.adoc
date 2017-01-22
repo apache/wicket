@@ -147,7 +147,7 @@ form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new Arra
 
 image::../img/grouped-checkbox2.png[]
 
-=== How to implement a "Select all" checkbox
+=== How to implement a  [Select all] checkbox
 
 A nice feature we can offer to users when we have a group of checkboxes is a “special” checkbox which selects/unselects all the other options of the group:
 

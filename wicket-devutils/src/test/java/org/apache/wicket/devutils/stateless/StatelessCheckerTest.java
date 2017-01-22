@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.devutils.stateless;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
@@ -33,7 +30,7 @@ import org.junit.Test;
 public class StatelessCheckerTest extends Assert
 {
 	/**
-	 *
+	 * 
 	 */
 	@StatelessComponent
 	public static class StatelessPage extends DummyHomePage
@@ -42,7 +39,7 @@ public class StatelessCheckerTest extends Assert
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	@StatelessComponent
 	private static class StatelessLabel extends Label
@@ -55,24 +52,7 @@ public class StatelessCheckerTest extends Assert
 		}
 	}
 
-	/**
-	 *
-	 */
-	@StatelessComponent
-	private static class StatefulBehavior extends Behavior
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public boolean getStatelessHint(Component component)
-		{
-			return false;
-		}
-	}
-
-
 	private final StatelessChecker checker = new StatelessChecker();
-	private final StatelessChecker quietlyChecker = new StatelessChecker(true);
 	private WicketTester tester;
 
 	/**
@@ -107,57 +87,6 @@ public class StatelessCheckerTest extends Assert
 			hit = true;
 		}
 		assertTrue("Expected exception", hit);
-	}
-
-	@Test
-	public void testNonBookmarkablePageQuietly()
-	{
-		boolean hit = false;
-		try
-		{
-			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(quietlyChecker);
-			tester.startPage(StatelessPage.class);
-		}
-		catch (IllegalArgumentException ex)
-		{
-			hit = true;
-		}
-		assertFalse("Exceptions should not occur", hit);
-	}
-
-	@Test
-	public void testStatefulBehaviors()
-	{
-		boolean hit = false;
-		try
-		{
-			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-			tester.startComponentInPage(new StatelessLabel("foo").add(new StatefulBehavior()));
-		}
-		catch (WicketRuntimeException ex)
-		{
-			if(ex.getCause() instanceof IllegalStateException) {
-				hit = true;
-			}
-		}
-		assertTrue("Expected exception", hit);
-	}
-	@Test
-	public void testStatefulBehaviorsQuietly()
-	{
-		boolean hit = false;
-		try
-		{
-			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(quietlyChecker);
-			tester.startComponentInPage(new StatelessLabel("foo").add(new StatefulBehavior()));
-		}
-		catch (WicketRuntimeException ex)
-		{
-			if(ex.getCause() instanceof IllegalStateException) {
-				hit = true;
-			}
-		}
-		assertFalse("Exceptions should not occur", hit);
 	}
 
 	@Test

@@ -457,19 +457,8 @@
 	</filter>
 	<!-- couple the session filter to the helloworld servlet -->
 
-    <filter>
-        <filter-name>wicket.wicket-native-websockets</filter-name>
-        <filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
-        <init-param>
-            <param-name>applicationClassName</param-name>
-            <param-value>org.apache.wicket.examples.websocket.JSR356Application</param-value>
-        </init-param>
-    </filter>
 
-    <filter-mapping>
-        <filter-name>wicket.wicket-native-websockets</filter-name>
-        <url-pattern>/websockets/*</url-pattern>
-    </filter-mapping>
+
 
 
 
@@ -875,6 +864,53 @@
 	<servlet-mapping>
 		<servlet-name>ServletTest</servlet-name>
 		<url-pattern>/servlettest/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>AtmosphereApplication</servlet-name>
+		<servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.atmosphere.AtmosphereApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.useWebSocket</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.useNative</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.cpr.sessionSupport</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name>
+			<param-value>30000</param-value>
+		</init-param>
+		<init-param>
+			<param-name>filterMappingUrlPattern</param-name>
+			<param-value>/atmosphere/*</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.websocket.WebSocketProtocol</param-name>
+			<param-value>org.atmosphere.websocket.protocol.EchoProtocol</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.cpr.AtmosphereInterceptor</param-name>
+			<param-value>org.atmosphere.client.TrackMessageSizeInterceptor</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.atmosphere.client.TrackMessageSizeInterceptor.delimiter</param-name>
+			<param-value><![CDATA[<|msg|>]]></param-value>
+		</init-param>
+ 		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AtmosphereApplication</servlet-name>
+		<url-pattern>/atmosphere/*</url-pattern>
 	</servlet-mapping>
 
 	<session-config>

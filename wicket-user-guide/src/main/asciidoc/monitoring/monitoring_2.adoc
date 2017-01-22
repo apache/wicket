@@ -53,7 +53,7 @@ this.
 
 - (6) pip install Django==1.5
 
-- (7) pip install "django-tagging<0.4" 
+- (7) pip install  [django-tagging<0.4] 
 - (8) sudo pip install carbon
 
 - (9) pip install whisper

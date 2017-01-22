@@ -97,7 +97,7 @@ If our IDE is Eclipse the import procedure is a little more complex. Before open
 mvn eclipse:eclipse
 ----
 
-Now to import our project into Eclipse we must create a classpath variable called M2_REPO that must point to your local Maven repository. This can be done selecting “Window/Preferences” and searching for “Classpath Variables”. The folder containing our local Maven repository is usually under our user folder and is called .m2 (for example under Unix system is /home/<myUserName>/.m2/repository):
+  Now to import our project into Eclipse we must create a classpath variable called M2_REPO that must point to your local Maven repository. This can be done selecting “Window/Preferences” and searching for “Classpath Variables”. The folder containing our local Maven repository is usually under our user folder and is called .m2 (for example under Unix system is /home/<myUserName>/.m2/repository):
 
 image::../img/eclipse-classpath-variables.png[]
 

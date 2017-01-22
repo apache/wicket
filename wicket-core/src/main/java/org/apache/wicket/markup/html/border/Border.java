@@ -169,7 +169,18 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		super(id, model);
 
 		body = new BorderBodyContainer(id + "_" + BODY);
-		queueToBorder(body);
+	}
+	
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		
+		//if body has not been assigned yet, we queue it
+		if (body.getParent() == null)
+		{
+			dequeue();
+		}
 	}
 	
 	/**
@@ -308,6 +319,13 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	public Border addToBorder(final Component... children)
 	{
 		super.add(children);
+		
+		//if body has not been assigned yet, we queue it
+		if (body.getParent() == null)
+		{
+			dequeue();
+		}
+		
 		return this;
 	}
 
@@ -316,13 +334,6 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		getBodyContainer().queue(components);
 		return this;
-	}
-	
-	@Override
-	protected void onConfigure() 
-	{
-		super.onConfigure();
-		dequeue();
 	}
 	
 	/**
@@ -658,8 +669,8 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		{
 			//synch the tag id with the one of the body component
 			tag.setId(body.getId());
+			return body;
 		}
-		
 		return super.findComponentToDequeue(tag);
 	}
 

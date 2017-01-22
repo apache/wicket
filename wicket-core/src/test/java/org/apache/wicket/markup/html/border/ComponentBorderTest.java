@@ -130,15 +130,10 @@ public class ComponentBorderTest extends WicketTestCase
 	@Test
 	public void borderWithBodyInsideAnotherBody() throws Exception
 	{
-		BorderWithNestedBodyPage page = tester.startPage(BorderWithNestedBodyPage.class);
-		
-		Border borderTest = (Border) page.get("outerBorder");
+		Border borderTest = tester.startComponentInPage(new BorderWithNestedBody("test"));
 		Border nestedBorder = (Border)borderTest.get("nestedBorder");
 		
 		assertNotNull(borderTest.getBodyContainer().getParent());
 		assertNotNull(nestedBorder.getBodyContainer().getParent());
-		
-		//https://issues.apache.org/jira/browse/WICKET-6303
-		assertTrue(page.isBehaviorRendered());
 	}
 }

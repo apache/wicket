@@ -55,7 +55,7 @@ To display feedback messages we must use component _org.apache.wicket.markup.htm
 </ul>
 ----
 
-CSS classes _feedbackPanel_ and _feedbackPanelERROR_ can be used in order to customize the style of the message list:
+CSS classes  [feedbackPanel] and  [feedbackPanelERROR] can be used in order to customize the style of the message list:
 
 image::../img/feedback-panel-style.png[]
 
@@ -133,7 +133,7 @@ _The value of '${label}' is not exactly ${exact} characters long._
 
 ==== CreditCardValidator
 
-Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American  Express”, “MasterCard” , “Visa” or “Diners Club”). 
+Checks if input is a valid credit card number. This validator supports some of the most popular credit cards (like “American Express ["MasterCard] , “Visa” or “Diners Club”). 
 
 *Message:*
 

@@ -221,7 +221,7 @@ public class SubmitLink extends AbstractSubmitLink
 				{
 					sb.append("var ff=f;");
 				}
-				sb.append("if (typeof ff.onsubmit === 'function') { if (ff.onsubmit()==false) return false; }");
+				sb.append("if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }");
 			}
 			sb.append("f.submit();e.value='';e.name='';return false;");
 			return sb.toString();
