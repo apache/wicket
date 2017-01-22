@@ -9,7 +9,7 @@ Before rendering any component Wicket must retrieve its markup calling method _g
 	Application.get().getMarkupSettings().getMarkupFactory()
 ----
  
-After the markup has been loaded by _MarkupFactory_, it's parsed with class _org.apache.wicket.markup.MarkupParser_. _MarkupFactory_ creates a new _MarkupParser_ with method _newMarkupParser(MarkupResourceStream resource)_. The effective markup parsing is performed with a chain of entities implementing interface _org.apache.wicket.markup.parser.IMarkupFilter_. The default set of _IMarkupFilters_S used by _MarkupParser_ takes care of different tasks such as HTML validation, comments removing, Wicket tags handling, etc... 
+After the markup has been loaded by _MarkupFactory_, it's parsed with class _org.apache.wicket.markup.MarkupParser_. _MarkupFactory_ creates a new _MarkupParser_ with method _newMarkupParser(MarkupResourceStream resource)_. The effective markup parsing is performed with a chain of entities implementing interface _org.apache.wicket.markup.parser.IMarkupFilter_. The default set of _IMarkupFilters_ used by _MarkupParser_ takes care of different tasks such as HTML validation, comments removing, Wicket tags handling, etc... 
 
 To customize the set of _IMarkupFilters_S used in our application we can create a subclass of _MarkupFactory_ overriding method _newMarkupParser(MarkupResourceStream resource)_:
 
@@ -43,7 +43,7 @@ Usually we won't need to change the default configuration of _IMarkupFilters_S, 
 
 === Auto components resolvers
 
-Even if Wicket encourages developers to use just standard HTML in their markup code, in this guide we have seen a number of  [special] tags (those starting with _wicket:_) that help us for specific tasks (e.g. _wicket:enclosure_ tag). Wicket handles most of these tags creating a corresponding special component called _auto_ component. This kind of components are resolved in two steps:
+Even if Wicket encourages developers to use just standard HTML in their markup code, in this guide we have seen a number of "special" tags (those starting with _wicket:_) that help us for specific tasks (e.g. _wicket:enclosure_ tag). Wicket handles most of these tags creating a corresponding special component called _auto_ component. This kind of components are resolved in two steps:
 
 1. first their tag is identified by a _IMarkupFilters_ which also takes care of assigning a unique tag id.
 2. then during rendering phase when an auto-component is found a new component is created for it using one of the registered _org.apache.wicket.markup.resolver.IComponentResolver_:

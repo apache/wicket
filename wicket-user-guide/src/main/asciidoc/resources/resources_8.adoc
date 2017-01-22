@@ -58,7 +58,7 @@ The following code is taken from the Application class of the project:
     }
 ----
 
-As you can see in the code above the  [bucket] that will contain JavaScript tags is called _ .[footer-container] To make a use of it the developer have to add a special component called _HeaderResponseContainer_ in his page:
+As you can see in the code above the _bucket_ that will contain JavaScript tags is called _ .[footer-container] To make a use of it the developer have to add a special component called _HeaderResponseContainer_ in his page:
 
 [source,java]
 ----
