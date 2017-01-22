@@ -79,8 +79,8 @@ To disable measurement:
 WicketMetrics.getSettings().setEnabled(false);
 ----
 
-*IMPORTANT INFORMATION*
-** It is only possible to collect metrics for *one wicket filter per webapp* - don't declare more then one if you want to use wicket-metrics
-** The WicketFilterInitAspect is required so that the application can be resolved - otherwise runtime exceptions will be thrown
-** If you use the SessionCountListener you have to clear the session store if you restart the server - otherwise physically stored session will corrupt the data, because the count is initialized with 0.
-** If you have set wicket-metrics as dependency you can open  [wicket-metrics.template.xml] to get a full template of the  [aop.xml] ** For the weaver options refer to the AspectJ LTW configuration documentation: https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html
+WARNING: *IMPORTANT INFORMATION*
+It is only possible to collect metrics for *one wicket filter per webapp* - don't declare more then one if you want to use wicket-metrics
+The WicketFilterInitAspect is required so that the application can be resolved - otherwise runtime exceptions will be thrown
+If you use the SessionCountListener you have to clear the session store if you restart the server - otherwise physically stored session will corrupt the data, because the count is initialized with 0.
+If you have set wicket-metrics as dependency you can open  [wicket-metrics.template.xml] to get a full template of the  [aop.xml]. For the weaver options refer to the AspectJ LTW configuration documentation: https://eclipse.org/aspectj/doc/next/devguide/ltw-configuration.html

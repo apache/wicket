@@ -55,7 +55,7 @@ To display feedback messages we must use component _org.apache.wicket.markup.htm
 </ul>
 ----
 
-CSS classes  [feedbackPanel] and  [feedbackPanelERROR] can be used in order to customize the style of the message list:
+CSS classes _feedbackPanel_ and _feedbackPanelERROR_ can be used in order to customize the style of the message list:
 
 image::../img/feedback-panel-style.png[]
 
