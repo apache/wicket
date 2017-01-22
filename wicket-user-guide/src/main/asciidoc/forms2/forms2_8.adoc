@@ -1,7 +1,7 @@
 
 
 
-Wicket supports file uploading with the FileUploadField component which must be used with the <input> tag whose type attribute must be set to  [file] In order to send a file on form submission we must enable multipart mode calling MultiPart(true)on our form.
+Wicket supports file uploading with the FileUploadField component which must be used with the <input> tag whose type attribute must be set to "file" In order to send a file on form submission we must enable multipart mode calling MultiPart(true)on our form.
 
 In the next example (project UploadSingleFile) we will see a form which allows users to upload a file into the temporary directory of the server (path /tmp on Unix/Linux systems):
 

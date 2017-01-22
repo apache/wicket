@@ -30,7 +30,7 @@ form.add(new ListMultipleChoice("fruits", new ListModel<String>(new ArrayList<St
 
 image::../img/list-multiple-choices2.png[]
 
-This component must be bound to a <select> tag but the attribute multiple= [multiple] is not required as it will automatically be added by the component. 
+This component must be bound to a <select> tag but the attribute multiple="multiple" is not required as it will automatically be added by the component.
 
 The number of visible rows can be set with the setMaxRows(int maxRows) method.
 
