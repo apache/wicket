@@ -16,4 +16,4 @@ else {
 }
 ----
 
-Instead of constructing _LoginBoxPanel_ conditionally, it is recommended to always add the panel  and control the visibility by overriding _isVisible()_. So the component _LoginBoxPanel_ is responsible for displaying itself. We move the responsibility into the same component which executes the login. Brilliant! Cleanly encapsulated business logic. There is no decision from outside, the component handles all the logic. You can see another example in  [Implement visibilities of components correctly] .
+Instead of constructing _LoginBoxPanel_ conditionally, it is recommended to always add the panel  and control the visibility by overriding _isVisible()_. So the component _LoginBoxPanel_ is responsible for displaying itself. We move the responsibility into the same component which executes the login. Brilliant! Cleanly encapsulated business logic. There is no decision from outside, the component handles all the logic. You can see another example in "Implement visibilities of components correctly" .

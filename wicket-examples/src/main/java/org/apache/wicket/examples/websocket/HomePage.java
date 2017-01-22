@@ -14,27 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.border;
+package org.apache.wicket.examples.websocket;
 
-public class BorderWithNestedBody extends Border
+import org.apache.wicket.examples.WicketExamplePage;
+
+public class HomePage extends WicketExamplePage
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3233023845189903488L;
-
-	public BorderWithNestedBody(String id)
-	{
-		super(id);
-		
-	}
-	
-	@Override
-	protected void onInitialize() 
-	{
-		super.onInitialize();
-		addToBorder(new BorderComponent1("nestedBorder"));
-	}
-
 }

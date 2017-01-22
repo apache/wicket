@@ -26,6 +26,9 @@ import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Stateless checker. Checks if components with {@link StatelessComponent} annotation are really
  * stateless. This is a utility that is intended for use primarily during development. If you add an
@@ -40,6 +43,29 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public class StatelessChecker implements IComponentOnBeforeRenderListener
 {
+	/** Log. */
+	private static final Logger log = LoggerFactory.getLogger(StatelessChecker.class);
+
+	private boolean isQuietly;
+
+	/**
+	 * If it is not Stateless, it defaults to throw an exception.
+	 */
+	public StatelessChecker()
+	{
+		this(false);
+	}
+
+	/**
+	 * If it is not Stateless, control whether throw exception or log output.
+	 * @param isQuietly <code>true</code> log output , <code>false</code> throw an exception.
+	 *
+	 */
+	public StatelessChecker(boolean isQuietly)
+	{
+		this.isQuietly = isQuietly;
+	}
+
 	/**
 	 * Returns <code>true</code> if checker must check given component, <code>false</code>
 	 * otherwise.
@@ -111,7 +137,12 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				{
 				    reason = " Stateful behaviors: " + statefulBehaviors.join();
 				}
-				throw new IllegalStateException(msg + reason);
+				if(!isQuietly) {
+					throw new IllegalStateException(msg + reason);
+				}
+				log.warn(msg + reason);
+				return;
+
 			}
 
 			if (component instanceof MarkupContainer)
@@ -120,7 +151,8 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				final Object o = ((MarkupContainer)component).visitChildren(visitor);
 				if (o != null)
 				{
-					throw new IllegalArgumentException(msg + " Offending component: " + o);
+					writeLogOrThrowIllegalArgumentException(msg + " Offending component: " + o);
+					return;
 				}
 			}
 
@@ -129,14 +161,22 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				final Page p = (Page)component;
 				if (!p.isBookmarkable())
 				{
-					throw new IllegalArgumentException(msg +
-						" Only bookmarkable pages can be stateless");
+					writeLogOrThrowIllegalArgumentException(msg + " Only bookmarkable pages can be stateless");
+					return;
 				}
 				if (!p.isPageStateless())
 				{
-					throw new IllegalArgumentException(msg + " for unknown reason");
+					writeLogOrThrowIllegalArgumentException(msg + " for unknown reason");
+					return;
 				}
 			}
 		}
+	}
+
+	private void writeLogOrThrowIllegalArgumentException(String message) {
+		if(!isQuietly) {
+			throw new IllegalArgumentException(message);
+		}
+		log.warn(message);
 	}
 }

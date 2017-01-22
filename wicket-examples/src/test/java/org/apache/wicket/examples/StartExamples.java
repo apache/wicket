@@ -20,6 +20,7 @@ import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
 
+import org.apache.wicket.protocol.ws.javax.WicketServerEndpointConfig;
 import org.eclipse.jetty.jmx.MBeanContainer;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -30,6 +31,8 @@ import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.websocket.jsr356.server.ServerContainer;
+import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 
 /**
  * Separate startup class for people that want to run the examples directly. Use parameter
@@ -42,7 +45,7 @@ public class StartExamples
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
 		System.setProperty("wicket.configuration", "development");
 
@@ -93,6 +96,9 @@ public class StartExamples
 		bb.setServer(server);
 		bb.setContextPath("/");
 		bb.setWar("src/main/webapp");
+
+		ServerContainer serverContainer = WebSocketServerContainerInitializer.configureContext(bb);
+		serverContainer.addEndpoint(new WicketServerEndpointConfig());
 
 		// uncomment next line if you want to test with JSESSIONID encoded in the urls
 		// ((AbstractSessionManager)

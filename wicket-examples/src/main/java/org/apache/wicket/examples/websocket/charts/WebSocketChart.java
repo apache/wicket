@@ -14,27 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.border;
+package org.apache.wicket.examples.websocket.charts;
 
-public class BorderWithNestedBody extends Border
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.html.panel.Panel;
+
+/**
+ * A panel that initializes a Google Line chart and uses WebSocketBehavior to register an asynchronous
+ * task that will push some data through the web socket connection.
+ */
+public class WebSocketChart extends Panel
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3233023845189903488L;
-
-	public BorderWithNestedBody(String id)
+	public WebSocketChart(final String id)
 	{
 		super(id);
-		
 	}
-	
+
 	@Override
-	protected void onInitialize() 
+	public void renderHead(IHeaderResponse response)
 	{
-		super.onInitialize();
-		addToBorder(new BorderComponent1("nestedBorder"));
+		super.renderHead(response);
+		response.render(JavaScriptHeaderItem.forReference(new ChartsResourceReference()));
 	}
 
 }

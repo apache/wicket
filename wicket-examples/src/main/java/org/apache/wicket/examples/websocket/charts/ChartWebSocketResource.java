@@ -14,27 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.border;
+package org.apache.wicket.examples.websocket.charts;
 
-public class BorderWithNestedBody extends Border
+import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.wicket.examples.websocket.JSR356Application;
+import org.apache.wicket.protocol.ws.api.WebSocketResource;
+import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
+
+/**
+ *
+ */
+public class ChartWebSocketResource extends WebSocketResource
 {
+	public static final String NAME = ChartWebSocketResource.class.getName();
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3233023845189903488L;
-
-	public BorderWithNestedBody(String id)
-	{
-		super(id);
-		
-	}
-	
 	@Override
-	protected void onInitialize() 
+	protected void onConnect(ConnectedMessage message)
 	{
-		super.onInitialize();
-		addToBorder(new BorderComponent1("nestedBorder"));
-	}
+		super.onConnect(message);
 
+		ScheduledExecutorService service = JSR356Application.get().getScheduledExecutorService();
+		ChartUpdater.start(message, service);
+	}
 }

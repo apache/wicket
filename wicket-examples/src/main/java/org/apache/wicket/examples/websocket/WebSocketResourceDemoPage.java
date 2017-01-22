@@ -14,27 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.markup.html.border;
+package org.apache.wicket.examples.websocket;
 
-public class BorderWithNestedBody extends Border
+import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.examples.websocket.charts.ChartWebSocketResource;
+import org.apache.wicket.examples.websocket.charts.WebSocketChart;
+import org.apache.wicket.protocol.https.RequireHttps;
+import org.apache.wicket.protocol.ws.api.BaseWebSocketBehavior;
+
+@RequireHttps
+public class WebSocketResourceDemoPage extends WicketExamplePage
 {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3233023845189903488L;
-
-	public BorderWithNestedBody(String id)
+	public WebSocketResourceDemoPage()
 	{
-		super(id);
-		
+		WebSocketChart chartPanel = new WebSocketChart("chartPanel");
+		chartPanel.add(new BaseWebSocketBehavior(ChartWebSocketResource.NAME));
+		add(chartPanel);
 	}
-	
-	@Override
-	protected void onInitialize() 
-	{
-		super.onInitialize();
-		addToBorder(new BorderComponent1("nestedBorder"));
-	}
-
 }
