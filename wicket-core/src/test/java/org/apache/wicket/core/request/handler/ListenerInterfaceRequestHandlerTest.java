@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import static org.hamcrest.Matchers.is;
+
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -25,9 +27,15 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.core.request.mapper.MountedMapper;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -149,5 +157,52 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
 		assertFalse("Handler should not report a page instance is available ",
 			handler.isPageInstanceCreated());
+	}
+
+	@Test
+	public void skipListenerIfExpiredPage()
+	{
+		tester.getApplication().getRootRequestMapperAsCompound() .add(new MountedMapper("/segment", NotExpiredPage.class));
+		tester.startPage(NotExpiredPage.class);
+		tester.clickLink("statelessLink");
+		NotExpiredPage page = (NotExpiredPage)tester.getLastRenderedPage();
+		assertThat(page.invoked, is(true));
+	}
+
+	public static class NotExpiredPage extends WebPage
+	{
+		public boolean invoked;
+
+		public NotExpiredPage(PageParameters pageParameters)
+		{
+			super(pageParameters);
+			add(new StatelessLink<Object>("statelessLink")
+			{
+				public void onClick()
+				{
+					invoked = true;
+				}
+			});
+			add(new Link<Object>("statefullLink")
+			{
+				public void onClick()
+				{
+				}
+			});
+		}
+
+		@Override
+		public IMarkupFragment getMarkup()
+		{
+			return Markup.of(
+				"<html><body><a wicket:id=\"statelessLink\"></a><a wicket:id=\"statefullLink\"></a></body></html>");
+		}
+
+		@Override
+		protected void onBeforeRender()
+		{
+			get("statefullLink").setVisible(false);
+			super.onBeforeRender();
+		}
 	}
 }

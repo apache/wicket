@@ -167,28 +167,25 @@ public class ListenerInterfaceRequestHandler
 			// initialize the page to be able to check whether it is stateless
 			((Page)page).internalInitialize();
 		}
-		final boolean isStateless = page.isPageStateless();
 
-		RedirectPolicy policy = isStateless
+		RedirectPolicy policy = page.isPageStateless()
 			? RedirectPolicy.NEVER_REDIRECT
 			: RedirectPolicy.AUTO_REDIRECT;
 
-		final boolean canCallListenerInterfaceAfterExpiry = component != null && component.canCallListenerInterfaceAfterExpiry();
+		boolean blockIfExpired = component != null && !component.canCallListenerInterfaceAfterExpiry();
 
-		if (!canCallListenerInterfaceAfterExpiry && freshPage && (isStateless == false || component == null))
+		boolean lateComponent = component == null && freshPage;
+
+		if ((pageComponentProvider.wasExpired() && blockIfExpired) || lateComponent)
 		{
-			// A request listener is invoked on an expired page.
-
-			// If the page is stateful then we cannot assume that the listener is
-			// invoked on its initial state (right after page initialization) and that its
-			// component and/or behavior will be available. That's why the listener
-			// should be ignored and the best we can do is to re-paint the newly constructed
-			// page.
+			// A request listener is invoked on an expired page or the component couldn't be
+			// determined. The best we can do is to re-paint the newly constructed page.
+			// Reference: WICKET-4454, WICKET-6288
 
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug(
-					"An IRequestListener on '{}' is executed on an expired stateful page. "
+					"An IRequestListener was called but its page/component({}) couldn't be resolved. "
 						+ "Scheduling re-create of the page and ignoring the listener interface...",
 					getComponentPath());
 			}
