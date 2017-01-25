@@ -31,10 +31,10 @@ import org.apache.wicket.util.visit.IVisitor;
  * stateless. This is a utility that is intended for use primarily during development. If you add an
  * instance of this class to your application, it will check all components or pages marked with the
  * <tt>StatelessComponent</tt> annotation to make sure that they are stateless as you intended.
- * 
+ *
  * This is useful when trying to maintain stateless pages since it is very easy to inadvertently add
  * a component to a page that internally uses stateful links, etc.
- * 
+ *
  * @author Marat Radchenko
  * @see StatelessComponent
  */
@@ -43,7 +43,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	/**
 	 * Returns <code>true</code> if checker must check given component, <code>false</code>
 	 * otherwise.
-	 * 
+	 *
 	 * @param component
 	 *            component to check.
 	 * @return <code>true</code> if checker must check given component.
@@ -52,6 +52,58 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	{
 		final StatelessComponent ann = component.getClass().getAnnotation(StatelessComponent.class);
 		return (ann != null) && ann.enabled();
+	}
+	/**
+	 * The given component claims to be stateless but isn't.
+	 *
+	 * @param component component failing stateless check
+	 * @param reason explaining reason
+	 */
+	protected void fail(Component component, String reason)
+	{
+		throw new IllegalArgumentException(getMessage(component) + reason);
+	}
+
+	/**
+	 * The given page claims to be stateless but isn't.
+	 *
+	 * @param page page failing stateless check
+	 * @param reason explaining reason
+	 */
+	protected void failPage(Page page, String reason)
+	{
+		fail(page, reason);
+	}
+
+	/**
+	 * The given markupContainer claims to be stateless but isn't.
+	 *
+	 * @param markupContainer MarkupContainer failing stateless check
+	 * @param reason explaining reason
+	 */
+	protected void failMarkupContainer(MarkupContainer markupContainer, String reason)
+	{
+		fail(markupContainer, reason);
+	}
+	/**
+	 * The given component claims to be stateless but isn't, because the holding behaviors are stateful.
+	 *
+	 * @param component component failing stateless check
+	 * @param reason explaining reason
+	 */
+	protected void failBehaviors(Component component, String reason)
+	{
+		throw new IllegalStateException(getMessage(component) + reason);
+	}
+	/**
+	 * return the message from the component
+	 *
+	 * @param component component failing stateless check
+	 * @return message
+	 */
+	private String getMessage(Component component)
+	{
+		return "'" + component + "' claims to be stateless but isn't. ";
 	}
 
 	/**
@@ -91,7 +143,6 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				}
 			};
 
-			final String msg = "'" + component + "' claims to be stateless but isn't.";
 			if (component.isStateless() == false)
 			{
 				StringList statefulBehaviors = new StringList();
@@ -111,16 +162,17 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				{
 				    reason = " Stateful behaviors: " + statefulBehaviors.join();
 				}
-				throw new IllegalStateException(msg + reason);
+				failBehaviors(component, reason);
 			}
 
 			if (component instanceof MarkupContainer)
 			{
+				MarkupContainer container = ((MarkupContainer)component);
 				// Traverse children
-				final Object o = ((MarkupContainer)component).visitChildren(visitor);
+				final Object o = container.visitChildren(visitor);
 				if (o != null)
 				{
-					throw new IllegalArgumentException(msg + " Offending component: " + o);
+					failMarkupContainer(container, " Offending component: " + o);
 				}
 			}
 
@@ -129,12 +181,11 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				final Page p = (Page)component;
 				if (!p.isBookmarkable())
 				{
-					throw new IllegalArgumentException(msg +
-						" Only bookmarkable pages can be stateless");
+					failPage(p, " Only bookmarkable pages can be stateless");
 				}
 				if (!p.isPageStateless())
 				{
-					throw new IllegalArgumentException(msg + " for unknown reason");
+					failPage(p, " for unknown reason");
 				}
 			}
 		}
