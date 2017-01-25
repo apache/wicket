@@ -493,6 +493,15 @@ public abstract class Session implements IClusterable, IEventSink
 			sessionStore.invalidate(RequestCycle.get().getRequest());
 			sessionStore = null;
 			id = null;
+			sessionInvalidated = false;
+			clientInfo = null;
+			dirty = false;
+			metaData = null;
+			feedbackMessages.clear();
+			setStyle(null);
+			pageId.set(0);
+			sequence.set(0);
+			temporarySessionAttributes = null;
 		}
 	}
 
