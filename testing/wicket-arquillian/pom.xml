@@ -37,7 +37,8 @@
 
 	<properties>
 		<!-- port configuration -->
-		<wicket.arquillian.server.port>18787</wicket.arquillian.server.port>
+		<wicket.arquillian.server.port>18788</wicket.arquillian.server.port>
+		<java.debug.wire.protocol.port>48788</java.debug.wire.protocol.port>
 		<wicket.arquillian.management.port>11092</wicket.arquillian.management.port>
 		<!-- end port configuration -->
 
