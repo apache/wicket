@@ -36,6 +36,11 @@
     </description>
 
 	<properties>
+		<!-- port configuration -->
+		<wicket.arquillian.server.port>18787</wicket.arquillian.server.port>
+		<wicket.arquillian.management.port>11092</wicket.arquillian.management.port>
+		<!-- end port configuration -->
+
 		<arquillian.version>1.1.12.Final</arquillian.version>
 		<maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
 		<maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
@@ -109,6 +114,12 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			 <resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -145,9 +156,9 @@
 					<configuration>
 						<argLine>-Xms128m -Xmx512m -XX:MaxPermSize=128m</argLine>
 						<systemPropertyVariables>
-							<!--<jboss.socket.binding.port-offset>1100</jboss.socket.binding.port-offset>-->
-							<!--<jboss.management.http.port>11090</jboss.management.http.port>-->
-							<jboss.http.port>48182</jboss.http.port>
+							<!-- <jboss.socket.binding.port-offset>1100</jboss.socket.binding.port-offset> -->
+							<jboss.management.http.port>${wicket.arquillian.management.port}</jboss.management.http.port>
+							<jboss.http.port>${wicket.arquillian.server.port}</jboss.http.port>
 							<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 							<jboss.home>${project.build.directory}/wildfly-${wildfly.version}</jboss.home>
 							<module.path>${project.build.directory}/wildfly-${wildfly.version}/modules</module.path>
@@ -160,6 +171,7 @@
 					<artifactId>wildfly-maven-plugin</artifactId>
 					<version>${version.wildfly.maven.plugin}</version>
 					<configuration>
+						<port>${wicket.arquillian.management.port}</port>
 						<filename>target/${project.build.finalName}.war</filename>
 					</configuration>
 				</plugin>
