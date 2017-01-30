@@ -16,17 +16,18 @@
  */
 package org.apache.wicket.markup.html.list;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.collections.ReadOnlyIterator;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -651,5 +652,25 @@ public abstract class ListView<T> extends AbstractRepeater
 	public final void setModelObject(List<T> object)
 	{
 		setDefaultModelObject(object);
+	}
+
+	/**
+	 * Returns a new ListVIew
+	 * @param id component id
+	 * @param model model containing a list of items
+	 * @param consumer lambda to use for populating the ListView
+	 * @param <T> type of the items in the model
+	 * @return a new ListView
+	 */
+	public static <T> ListView<T> populateItem(final String id, final IModel<? extends List<T>> model, final SerializableConsumer<ListItem<T>> consumer) {
+		return new ListView<T>(id, model) {
+
+			@Override
+			protected void populateItem(ListItem<T> item) {
+				consumer.accept(item);
+			}
+
+		};
+
 	}
 }
