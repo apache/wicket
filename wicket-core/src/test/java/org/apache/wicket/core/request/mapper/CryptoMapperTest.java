@@ -21,7 +21,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import java.util.function.Supplier;
 
 import org.apache.wicket.MockPage;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -163,7 +163,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	public void homePageForceEncryptionOfRequestListener()
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(tester.getApplication().getHomePage(), "link");
-		IRequestHandler requestHandler = new BookmarkableListenerInterfaceRequestHandler(provider);
+		IRequestHandler requestHandler = new BookmarkableListenerRequestHandler(provider);
 		Url plainUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
 		assertTrue("Plain URL for home page has segments: " + plainUrl.toString(), plainUrl.getSegments().isEmpty());
 		assertNull(mapper.mapRequest(getRequest(plainUrl)));
@@ -265,7 +265,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 	public void bookmarkablePageForceEncryptionOfRequestListener()
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page2.class, "link");
-		IRequestHandler requestHandler = new BookmarkableListenerInterfaceRequestHandler(provider);
+		IRequestHandler requestHandler = new BookmarkableListenerRequestHandler(provider);
 		Url plainUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
 		assertTrue("Plain text request listener URL for bookmarkable page does not start with: "
 			+ PLAIN_BOOKMARKABLE_URL + ": " + plainUrl.toString(),

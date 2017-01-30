@@ -31,7 +31,7 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -3392,7 +3392,7 @@ public abstract class Component
 		if (page.isPageStateless()
 			|| (page.isBookmarkable() && page.wasCreatedBookmarkable()))
 		{
-			return new BookmarkableListenerInterfaceRequestHandler(provider, id);
+			return new BookmarkableListenerRequestHandler(provider, id);
 		}
 		else
 		{

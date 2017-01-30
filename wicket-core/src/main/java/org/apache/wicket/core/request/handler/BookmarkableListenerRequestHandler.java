@@ -29,7 +29,7 @@ import org.apache.wicket.util.lang.Args;
  *
  * @author Matej Knopp
  */
-public class BookmarkableListenerInterfaceRequestHandler
+public class BookmarkableListenerRequestHandler
 	implements
 		IPageRequestHandler,
 		IComponentRequestHandler
@@ -44,7 +44,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	 * @param pageComponentProvider
 	 * @param behaviorIndex
 	 */
-	public BookmarkableListenerInterfaceRequestHandler(
+	public BookmarkableListenerRequestHandler(
 		IPageAndComponentProvider pageComponentProvider,
 		Integer behaviorIndex)
 	{
@@ -59,7 +59,7 @@ public class BookmarkableListenerInterfaceRequestHandler
 	 *
 	 * @param pageComponentProvider
 	 */
-	public BookmarkableListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider)
+	public BookmarkableListenerRequestHandler(PageAndComponentProvider pageComponentProvider)
 	{
 		this(pageComponentProvider, null);
 	}

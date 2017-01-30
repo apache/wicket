@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.IRequestListener;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
@@ -430,10 +430,10 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			}
 
 		}
-		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
+		else if (requestHandler instanceof BookmarkableListenerRequestHandler)
 		{
 			// request listener URL with page class information
-			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
+			BookmarkableListenerRequestHandler handler = (BookmarkableListenerRequestHandler)requestHandler;
 			Class<? extends IRequestablePage> pageClass = handler.getPageClass();
 
 			if (!checkPageClass(pageClass))

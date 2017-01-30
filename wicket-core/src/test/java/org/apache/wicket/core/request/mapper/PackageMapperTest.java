@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import org.apache.wicket.MockPage;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -505,7 +505,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider);
+		IRequestHandler handler = new BookmarkableListenerRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
 
@@ -532,7 +532,7 @@ public class PackageMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider, 4);
+		IRequestHandler handler = new BookmarkableListenerRequestHandler(provider, 4);
 
 		Url url = encoder.mapHandler(handler);
 
