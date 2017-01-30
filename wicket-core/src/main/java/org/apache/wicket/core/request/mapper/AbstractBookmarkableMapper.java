@@ -23,7 +23,7 @@ import org.apache.wicket.IRequestListener;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -304,7 +304,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 		checkExpiration(provider, pageInfo);
 
-		return new ListenerInterfaceRequestHandler(provider, componentInfo.getBehaviorId());
+		return new ListenerRequestHandler(provider, componentInfo.getBehaviorId());
 	}
 
 	private void checkExpiration(PageProvider provider, PageInfo pageInfo)

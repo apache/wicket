@@ -18,7 +18,7 @@ package org.apache.wicket;
 
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPageAndComponentProvider;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.markup.ComponentTag;
@@ -83,7 +83,7 @@ public class BehaviorRequestTest extends WicketTestCase
 		final int index = page.container.getBehaviorId(behaviorUnderTest);
 		final IPageAndComponentProvider provider = new PageAndComponentProvider(page,
 			page.container);
-		final IRequestHandler handler = new ListenerInterfaceRequestHandler(provider, index);
+		final IRequestHandler handler = new ListenerRequestHandler(provider, index);
 
 		return tester.urlFor(handler).toString();
 	}

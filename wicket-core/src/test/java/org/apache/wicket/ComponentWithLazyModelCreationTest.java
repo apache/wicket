@@ -17,7 +17,7 @@
 package org.apache.wicket;
 
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -120,7 +120,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 		{
 			super.onComponentTag(component, tag);
 			int index = component.getBehaviorId(this);
-			IRequestHandler handler = new ListenerInterfaceRequestHandler(
+			IRequestHandler handler = new ListenerRequestHandler(
 				new PageAndComponentProvider(component.getPage(), component), index);
 			statefullUrl = component.getRequestCycle().mapUrlFor(handler).toString();
 		}

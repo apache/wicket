@@ -23,7 +23,7 @@ import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceReque
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -210,9 +210,9 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -230,8 +230,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -253,9 +253,9 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path?param1=value1&15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -298,9 +298,9 @@ public class MountedMapperTest extends AbstractMapperTest
 		context.setNextPageRenderCount(5);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		assertEquals(5, page.getRenderCount());
@@ -329,9 +329,9 @@ public class MountedMapperTest extends AbstractMapperTest
 		Url url = Url.parse("some/mount/path/i1/i2?-1.-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 		IRequestablePage page = h.getPage();
 		checkPage(page, 1);
 
@@ -497,7 +497,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
+		IRequestHandler handler = new ListenerRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
 
@@ -555,7 +555,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider, 4);
+		IRequestHandler handler = new ListenerRequestHandler(provider, 4);
 
 		Url url = encoder.mapHandler(handler);
 

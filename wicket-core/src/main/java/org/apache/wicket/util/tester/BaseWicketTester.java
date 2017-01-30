@@ -62,7 +62,7 @@ import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -1093,7 +1093,7 @@ public class BaseWicketTester
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
+		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
 			component.getPage(), component));
 
 		Url url = urlFor(handler);
@@ -1119,7 +1119,7 @@ public class BaseWicketTester
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
+		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
 			component.getPage(), component));
 
 		processRequest(handler);

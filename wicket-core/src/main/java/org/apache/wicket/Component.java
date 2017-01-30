@@ -32,7 +32,7 @@ import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.string.ComponentStrings;
@@ -3396,7 +3396,7 @@ public abstract class Component
 		}
 		else
 		{
-			return new ListenerInterfaceRequestHandler(provider, id);
+			return new ListenerRequestHandler(provider, id);
 		}
 	}
 

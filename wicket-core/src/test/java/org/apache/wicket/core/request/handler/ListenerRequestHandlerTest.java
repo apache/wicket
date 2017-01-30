@@ -44,9 +44,9 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
- * Tests for {@link ListenerInterfaceRequestHandler}
+ * Tests for {@link ListenerRequestHandler}
  */
-public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
+public class ListenerRequestHandlerTest extends WicketTestCase
 {
 
 	/**
@@ -58,14 +58,14 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 		// non-existing component on fresh page is ignored
 		PageAndComponentProvider freshPage = new PageAndComponentProvider(DummyPage.class, null,
 			"foo");
-		new ListenerInterfaceRequestHandler(freshPage).respond(tester
+		new ListenerRequestHandler(freshPage).respond(tester
 			.getRequestCycle());
 
 		// non-existing component on old page fails
 		PageAndComponentProvider oldPage = new PageAndComponentProvider(new DummyPage(), "foo");
 		try
 		{
-			new ListenerInterfaceRequestHandler(oldPage)
+			new ListenerRequestHandler(oldPage)
 				.respond(tester.getRequestCycle());
 			fail();
 		}
@@ -154,7 +154,7 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 	public void isPageInstanceCreatedOnClassLinks()
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page.class, "link");
-		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
+		ListenerRequestHandler handler = new ListenerRequestHandler(provider);
 		assertFalse("Handler should not report a page instance is available ",
 			handler.isPageInstanceCreated());
 	}

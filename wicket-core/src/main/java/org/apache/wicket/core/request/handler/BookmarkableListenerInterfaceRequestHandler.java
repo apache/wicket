@@ -25,7 +25,7 @@ import org.apache.wicket.util.lang.Args;
 
 /**
  * Request handler for bookmarkable pages with an {@link IRequestListener}. This handler is only used to
- * generate URLs. Rendering is always handled by {@link ListenerInterfaceRequestHandler}.
+ * generate URLs. Rendering is always handled by {@link ListenerRequestHandler}.
  *
  * @author Matej Knopp
  */

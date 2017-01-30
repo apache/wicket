@@ -25,7 +25,7 @@ import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceReque
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -243,9 +243,9 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -263,8 +263,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -286,9 +286,9 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -309,8 +309,8 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		assertEquals(page.getRenderCount(), 5);

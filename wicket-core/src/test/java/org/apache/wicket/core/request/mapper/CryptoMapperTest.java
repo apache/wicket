@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -358,7 +358,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 		final String componentPath = "link";
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page1.class, componentPath);
-		IRequestHandler requestHandler = new ListenerInterfaceRequestHandler(provider);
+		IRequestHandler requestHandler = new ListenerRequestHandler(provider);
 
 		Url plainUrl = mapper.getDelegateMapper().mapHandler(requestHandler);
 		assertTrue(plainUrl.toString().startsWith(MOUNTED_URL));
@@ -391,9 +391,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(requestHandler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler) requestHandler;
+		ListenerRequestHandler handler = (ListenerRequestHandler) requestHandler;
 		assertEquals(componentPath, handler.getComponentPath());
 		assertEquals(Page1.class, handler.getPageClass());
 
@@ -407,9 +407,9 @@ public class CryptoMapperTest extends AbstractMapperTest
 
 		requestHandler = unwrapRequestHandlerDelegate(requestHandler);
 
-		assertThat(requestHandler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(requestHandler, instanceOf(ListenerRequestHandler.class));
 
-		handler = (ListenerInterfaceRequestHandler) requestHandler;
+		handler = (ListenerRequestHandler) requestHandler;
 		assertEquals(componentPath, handler.getComponentPath());
 		assertEquals(Page1.class, handler.getPageClass());
 	}
@@ -603,7 +603,7 @@ public class CryptoMapperTest extends AbstractMapperTest
 		MockPage page = new MockPage();
 		IRequestableComponent c = page.get("foo:bar");
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
+		IRequestHandler handler = new ListenerRequestHandler(provider);
 
 		Url url = mapper.mapHandler(handler);
 		url.addQueryParameter("q", "foo");
