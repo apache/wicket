@@ -68,11 +68,11 @@ public class PageExpirationRecoveryTest extends WicketTestCase
 	}
 
 	@Test
-	public void cannotExecuteListenerInterface()
+	public void cannotExecuteListener()
 	{
 		PageSettings pageSettings = tester.getApplication().getPageSettings();
 		pageSettings.setRecreateBookmarkablePagesAfterExpiry(true); // CAN recreate
-		pageSettings.setCallListenerInterfaceAfterExpiry(false); // CANNOT execute listener interfaces
+		pageSettings.setCallListenerAfterExpiry(false); // CANNOT execute listener interfaces
 
 		ExpirationRecoveryPage page = tester.startPage(ExpirationRecoveryPage.class, parameters);
 		assertEquals(parameters, page.getPageParameters());
@@ -125,10 +125,10 @@ public class PageExpirationRecoveryTest extends WicketTestCase
 	}
 
 	@Test
-	public void canExecuteListenerInterface()
+	public void canExecuteListener()
 	{
 		PageSettings pageSettings = tester.getApplication().getPageSettings();
-		pageSettings.setCallListenerInterfaceAfterExpiry(true);
+		pageSettings.setCallListenerAfterExpiry(true);
 		pageSettings.setRecreateBookmarkablePagesAfterExpiry(true);
 
 		ExpirationRecoveryPage page = tester.startPage(ExpirationRecoveryPage.class, parameters);

@@ -43,7 +43,6 @@ public class ListenerLogData extends PageLogData
 	 * Construct.
 	 *
 	 * @param pageAndComponentProvider
-	 * @param listenerInterface
 	 * @param behaviorIndex
 	 */
 	public ListenerLogData(IPageAndComponentProvider pageAndComponentProvider, Integer behaviorIndex)

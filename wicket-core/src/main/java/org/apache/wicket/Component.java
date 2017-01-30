@@ -2085,7 +2085,7 @@ public abstract class Component
 	 */
 	public final boolean isStateless()
 	{
-		if ((isVisibleInHierarchy() && isEnabledInHierarchy()) == false && canCallListenerInterface() == false)
+		if ((isVisibleInHierarchy() && isEnabledInHierarchy()) == false && canCallListener() == false)
 		{
 			// the component is either invisible or disabled and it can't call listeners
 			// then pretend the component is stateless
@@ -2233,7 +2233,7 @@ public abstract class Component
 		{
 			// only process feedback panel when we are about to be rendered.
 			// setRenderingFlag is false in case prepareForRender is called only to build component
-			// hierarchy (i.e. in BookmarkableListenerInterfaceRequestHandler).
+			// hierarchy (i.e. in BookmarkableListenerRequestHandler).
 			// prepareForRender(true) is always called before the actual rendering is done so
 			// that's where feedback panels gather the messages
 
@@ -4494,7 +4494,7 @@ public abstract class Component
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
-	public boolean canCallListenerInterface()
+	public boolean canCallListener()
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
 	}
@@ -4582,10 +4582,10 @@ public abstract class Component
 	}
 
 	@Override
-	public boolean canCallListenerInterfaceAfterExpiry()
+	public boolean canCallListenerAfterExpiry()
 	{
         	return getApplication().getPageSettings()
-        		.getCallListenerInterfaceAfterExpiry() || isStateless();
+        		.getCallListenerAfterExpiry() || isStateless();
 	}
 	/**
 	 * This method is called whenever a component is re-added to the page's component tree, if it

@@ -47,7 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract encoder for Bookmarkable, Hybrid and BookmarkableListenerInterface URLs.
+ * Abstract encoder for Bookmarkable, Hybrid and BookmarkableListener URLs.
  * 
  * @author Matej Knopp
  */

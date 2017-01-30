@@ -42,7 +42,7 @@ import org.apache.wicket.util.string.Strings;
  *  Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2
  * 
- *  Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
+ *  Page Instance - Bookmarkable Listener (BookmarkableListenerRequestHandler)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click.1-foo-bar-baz (1 is behavior index)
  *  (these will redirect to hybrid if page is not stateless)

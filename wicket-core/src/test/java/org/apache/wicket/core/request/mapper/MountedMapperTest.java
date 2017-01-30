@@ -454,9 +454,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 		page.setRenderCount(4);
 
-		// shouldn't make any difference for
-		// BookmarkableListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for BookmarkableListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");
@@ -472,8 +471,8 @@ public class MountedMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4014
 	 * 
-	 * The difference with testEncode7 is that here ListenerInterfaceRequestHandler is used instead
-	 * of BookmarkableListenerInterfaceRequestHandler
+	 * The difference with testEncode7 is that here ListenerRequestHandler is used instead
+	 * of BookmarkableListenerRequestHandler
 	 */
 	@Test
 	public void encode6_1()
@@ -490,7 +489,7 @@ public class MountedMapperTest extends AbstractMapperTest
 
 		page.setRenderCount(4);
 
-		// shouldn't make any difference for ListenerInterfaceRequestHandler,
+		// shouldn't make any difference for ListenerRequestHandler,
 		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
@@ -517,9 +516,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 		page.setRenderCount(5);
 
-		// shouldn't make any difference for
-		// BookmarkableListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for BookmarkableListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");
@@ -535,8 +533,8 @@ public class MountedMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4014
 	 * 
-	 * The difference with testEncode7 is that here ListenerInterfaceRequestHandler is used instead
-	 * of BookmarkableListenerInterfaceRequestHandler
+	 * The difference with testEncode7 is that here ListenerRequestHandler is used instead
+	 * of BookmarkableListenerRequestHandler
 	 */
 	@Test
 	public void encode7_1()
@@ -548,8 +546,8 @@ public class MountedMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 		page.setRenderCount(5);
 
-		// shouldn't make any difference for ListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for ListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");

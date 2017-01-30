@@ -172,7 +172,7 @@ public class ListenerRequestHandler
 			? RedirectPolicy.NEVER_REDIRECT
 			: RedirectPolicy.AUTO_REDIRECT;
 
-		boolean blockIfExpired = component != null && !component.canCallListenerInterfaceAfterExpiry();
+		boolean blockIfExpired = component != null && !component.canCallListenerAfterExpiry();
 
 		boolean lateComponent = component == null && freshPage;
 
@@ -238,7 +238,7 @@ public class ListenerRequestHandler
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
 
-		if (!component.canCallListenerInterface())
+		if (!component.canCallListener())
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page
@@ -264,7 +264,7 @@ public class ListenerRequestHandler
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
 
-		if (!behavior.canCallListenerInterface(component))
+		if (!behavior.canCallListener(component))
 		{
 			LOG.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
 				component);

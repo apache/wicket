@@ -53,7 +53,7 @@ import org.apache.wicket.util.string.Strings;
  *  IPage Instance - Render Hybrid (RenderPageRequestHandler for mounted pages)
  *  /mount/point?2
  * 
- *  IPage Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler for mounted pages)
+ *  IPage Instance - Bookmarkable Listener (BookmarkableListenerRequestHandler for mounted pages)
  *  /mount/point?2-click-foo-bar-baz
  *  /mount/point?2-5.click.1-foo-bar-baz (1 is behavior index, 5 is render count)
  *  (these will redirect to hybrid if page is not stateless)

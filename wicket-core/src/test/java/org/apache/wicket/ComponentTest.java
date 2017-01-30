@@ -142,7 +142,7 @@ public class ComponentTest extends WicketTestCase
 		// methods no matter whether it is visible or enabled
 		component = new WebComponent("someId") {
 			@Override
-			public boolean canCallListenerInterface()
+			public boolean canCallListener()
 			{
 				return true;
 			}
@@ -180,7 +180,7 @@ public class ComponentTest extends WicketTestCase
 		link = new Link<Void>("someId") {
 
 		    @Override
-		    public boolean canCallListenerInterface() {
+		    public boolean canCallListener() {
 		    	return true;
 		    }
 

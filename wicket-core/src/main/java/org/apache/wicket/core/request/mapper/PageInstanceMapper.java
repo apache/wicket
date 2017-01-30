@@ -36,7 +36,7 @@ import org.apache.wicket.request.mapper.info.PageInfo;
  *  /wicket/page?2
  *
  *
- *  Page Instance - Listener (ListenerInterfaceRequestHandler)
+ *  Page Instance - Listener (ListenerRequestHandler)
  *  /wicket/page?2-click-foo-bar-baz
  *  /wicket/page?2-click.1-foo-bar-baz (1 is behavior index)
  * </pre>

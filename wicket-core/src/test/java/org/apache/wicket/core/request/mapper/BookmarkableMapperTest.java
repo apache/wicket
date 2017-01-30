@@ -599,9 +599,8 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
-		// shouldn't make any difference for
-		// BookmarkableListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for BookmarkableListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");
@@ -627,9 +626,8 @@ public class BookmarkableMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
-		// shouldn't make any difference for
-		// BookmarkableListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for BookmarkableListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");

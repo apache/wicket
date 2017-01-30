@@ -113,5 +113,5 @@ public interface IRequestableComponent
 	 * @return {@code true} if it is save to call an {@link org.apache.wicket.IRequestListener} on this component
 	 *      when the owner page is freshly created after expiration
 	 */
-	boolean canCallListenerInterfaceAfterExpiry();
+	boolean canCallListenerAfterExpiry();
 }

@@ -585,7 +585,7 @@ public class Image extends WebComponent implements IRequestListener
 	}
 
 	@Override
-	public boolean canCallListenerInterface()
+	public boolean canCallListener()
 	{
 		if (isVisibleInHierarchy())
 		{
@@ -596,7 +596,7 @@ public class Image extends WebComponent implements IRequestListener
 		}
 		else
 		{
-			return super.canCallListenerInterface();
+			return super.canCallListener();
 		}
 	}
 
