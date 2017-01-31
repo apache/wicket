@@ -29,8 +29,8 @@
 	<build>
 		<resources>
 			<resource>
-				<filtering>false</filtering>
-				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<directory>${project.basedir}/src/main/resources</directory>
 				<includes>
 					<include>**/*</include>
 				</includes>
@@ -47,6 +47,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-archetype-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<useDefaultDelimiters>false</useDefaultDelimiters>
+					<delimiters>
+						<delimiter>@</delimiter>
+					</delimiters>
+				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
