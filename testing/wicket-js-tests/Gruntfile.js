@@ -77,7 +77,6 @@ module.exports = function(grunt) {
 			extensions: extensionsJs,
 			datetime: datetimeJs,
 			nativeWebSocket: nativeWebSocketJs,
-			atmosphere: atmosphereJs,
 			testsJs: testsJs,
 			gymTestsJs: gymTestsJs,
 			grunt: gruntJs,

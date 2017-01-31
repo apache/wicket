@@ -621,13 +621,9 @@ include::nativewebsockets/nativewebsockets_3.adoc[leveloffset=+1]
 
 include::nativewebsockets/nativewebsockets_4.adoc[leveloffset=+1]
 
-=== Differences with Wicket-Atmosphere module.
-
-include::nativewebsockets/nativewebsockets_5.adoc[leveloffset=+1]
-
 === FAQ
 
-include::nativewebsockets/nativewebsockets_6.adoc[leveloffset=+1]
+include::nativewebsockets/nativewebsockets_5.adoc[leveloffset=+1]
 
 == Security with Wicket
 
