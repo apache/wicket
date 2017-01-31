@@ -379,7 +379,7 @@ public class Lambdas
 	 *            the consumer of the updated checkbox and an {@link AjaxRequestTarget}
 	 * @return the {@link AjaxCheckBox}
 	 * 
-	 * @see AjaxCheckBox#onUpdate(String, SerializableConsumer)
+	 * @see AjaxCheckBox#onUpdate(String, SerializableBiConsumer)
 	 */
 	public static AjaxCheckBox ajaxCheckBox(String id,
 		SerializableBiConsumer<AjaxCheckBox, AjaxRequestTarget> onUpdate)
