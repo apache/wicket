@@ -28,8 +28,8 @@ module.exports = function(grunt) {
 		],
 		extensionsJs = [
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/progressbar.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/wicket-ajaxdownload.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
-			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/tree/res/tree.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js"
