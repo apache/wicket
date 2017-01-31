@@ -691,17 +691,10 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.7</version>
+					<version>3.0.2</version>
 					<configuration>
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
-					<dependencies>
-						<dependency> <!-- remove me when maven-resources-plugin upgrades to plexus-utils:3.0.7 -->
-						  <groupId>org.codehaus.plexus</groupId>
-						  <artifactId>plexus-utils</artifactId>
-						  <version>3.0.22</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 				<plugin>
 					<inherited>true</inherited>
@@ -813,6 +806,7 @@
 							</goals>
 						</execution>
 					</executions>
+					<inherited>true</inherited>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
