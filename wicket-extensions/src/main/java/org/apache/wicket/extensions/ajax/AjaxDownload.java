@@ -40,6 +40,8 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
 import org.apache.wicket.util.lang.Args;
 
+import java.util.Locale;
+
 /**
  * Download resources via Ajax.
  * <p>
@@ -65,6 +67,21 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
 
+	public enum Location {
+		/**
+		 * The resource will be downloaded via a temporary created iframe.
+		 * This is recommended when there are resources in the DOM which will be
+		 * closed automatically on JavaScript <em>unload</em> event, like WebSockets.
+		 */
+		IFrame,
+
+		/**
+		 * The resource will be downloaded by changing the location of the current DOM document.
+		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
+		 */
+		Self
+	}
+
 	/**
 	 * Name of parameter used to transfer the download identifier to the resource.
 	 *
@@ -80,6 +97,8 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	private final ResourceBehavior resourceBehavior;
 
 	private PageParameters resourceParameters;
+
+	private Location location = Location.IFrame;
 
 	/**
 	 * Download of a {@link Resource}.
@@ -194,6 +213,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		settings.put("attributes", new JsonFunction(renderAjaxAttributes(getComponent())));
 		settings.put("name", getName());
 		settings.put("downloadUrl", url);
+		settings.put("method", location.name().toLowerCase(Locale.ENGLISH));
 
 		target.appendJavaScript(String.format("Wicket.AjaxDownload.initiate(%s);", settings));
 
@@ -229,6 +249,15 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		} else if ("failed".equals(result)) {
 			onDownloadFailed(target);
 		}
+	}
+
+	public final Location getLocation() {
+		return location;
+	}
+
+	public AjaxDownload setLocation(final Location location) {
+		this.location = Args.notNull(location, "location");
+		return this;
 	}
 
 	/**

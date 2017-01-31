@@ -27,15 +27,13 @@
 
 	Wicket.AjaxDownload = {
 		initiate : function(settings) {
-			
-			var frame = jQuery("<iframe>").hide().prop("src", settings.downloadUrl).appendTo("body");
-			
-			var checkComplete = function() {
+
+			var checkComplete = function (frame) {
 				var result;
-				
+
 				if (document.cookie.indexOf(settings.name + '=') > -1) {
 					result = "success";
-				} else {
+				} else if (frame) {
 					var html = frame.contents().find('body').html();
 					if (html && html.length) {
 						result = "failed";
@@ -43,17 +41,31 @@
 				}
 
 				if (result) {
-					setTimeout(function() { frame.remove(); }, 0);
-					
+					if (frame) {
+						setTimeout(function () {
+							frame.remove();
+						}, 0);
+					}
+
 					settings.attributes.ep = settings.attributes.ep || {};
-					settings.attributes.ep['result'] = result;
+					settings.attributes.ep.result = result;
 					Wicket.Ajax.ajax(settings.attributes);
 				} else {
-					setTimeout(checkComplete, 100);
+					setTimeout(function() {
+						checkComplete(frame);
+					}, 100);
 				}
-			}; 
-			
-			checkComplete();
+			};
+
+			if (settings.method === 'self') {
+				setTimeout(function() {
+					window.location.href=settings.downloadUrl;
+					checkComplete();
+				}, 100);
+			} else {
+				var frame = jQuery("<iframe>").hide().prop("src", settings.downloadUrl).appendTo("body");
+				checkComplete(frame);
+			}
 		}
 	}; 
 	
