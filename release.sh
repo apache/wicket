@@ -470,6 +470,9 @@ do
     echo >> $NOTICE
 done
 
+echo "Committing changes"
+git commit -am "Changes to notice files"
+
 # clean all projects
 echo "Clean all projects"
 mvn -q clean -Pall
