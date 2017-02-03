@@ -2,6 +2,33 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.0.0-M4
+
+** Bug
+
+    * [WICKET-6165] - Inconsistent behavior of Markupstream.hasMore vs. MarkupStream.next.
+    * [WICKET-6288] - StatelessLink not working
+    * [WICKET-6303] - renderHead method of a Behavior added to a Border body is not called
+    * [WICKET-6306] - Changing model object of Panel added to a Border not allowed
+    * [WICKET-6310] - Once invalidated the Session will be invalidated on every detach
+    * [WICKET-6311] - SignOutPage_ru.html is missing
+    * [WICKET-6314] - 7.6 release references 7.5-SNAPSHOT poms
+
+** Improvement
+
+    * [WICKET-6307] - SubmitLink does not work in Chrome "ff.onsubmit is not a function"
+    * [WICKET-6308] - Add an extra constructor to EmailTextField with a custom validator but without model
+    * [WICKET-6315] - Optimize LinkParser by caching the compiled regex Pattern
+
+** Task
+
+    * [WICKET-6287] - Switch from json.org to open-json
+    * [WICKET-6304] - Remove Tomcat7 support in Native WebSockets
+    * [WICKET-6305] - Remove Atmosphere module
+    * [WICKET-6309] - Move the Native WebSocket demo to wicket-examples module
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.0.0-M3
 
 ** Bug
