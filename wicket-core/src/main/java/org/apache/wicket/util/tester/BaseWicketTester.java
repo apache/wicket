@@ -61,6 +61,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
@@ -1108,8 +1109,21 @@ public class BaseWicketTester
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
-			component.getPage(), component), listener);
+
+		Page page = component.getPage();
+		PageAndComponentProvider pageAndComponentProvider = new PageAndComponentProvider(page,
+			component);
+
+		IRequestHandler handler = null;
+		if (page.isPageStateless() || (page.isBookmarkable() && page.wasCreatedBookmarkable()))
+		{
+			handler = new BookmarkableListenerInterfaceRequestHandler(pageAndComponentProvider,
+				listener);
+		}
+		else
+		{
+			handler = new ListenerInterfaceRequestHandler(pageAndComponentProvider, listener);
+		}
 
 		Url url = urlFor(handler);
 		request.setUrl(url);
