@@ -714,7 +714,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	@Test
 	public void placeholderEncode4()
 	{
-		PageProvider provider = new PageProvider(new MockPage())
+		PageProvider provider = new PageProvider(MockPage.class)
 		{
 			@Override
 			public boolean isNewPageInstance()
