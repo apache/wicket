@@ -160,20 +160,37 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 	}
 
 	@Test
-	public void skipListenerIfExpiredPage()
+	public void executeStatelessLinkInAFreshPage()
 	{
-		tester.getApplication().getRootRequestMapperAsCompound() .add(new MountedMapper("/segment", NotExpiredPage.class));
-		tester.startPage(NotExpiredPage.class);
+		tester.startPage(StatelessPage.class);
+
 		tester.clickLink("statelessLink");
-		NotExpiredPage page = (NotExpiredPage)tester.getLastRenderedPage();
+
+		StatelessPage page = (StatelessPage)tester.getLastRenderedPage();
 		assertThat(page.invoked, is(true));
+		assertThat(page.executedInAnFreshPage, is(true));
 	}
 
-	public static class NotExpiredPage extends WebPage
+	@Test
+	public void executeStatelessLinkInAFreshPageAtASegment()
+	{
+		tester.getApplication().getRootRequestMapperAsCompound() .add(new MountedMapper("/segment", TemporarilyStateful.class));
+		tester.startPage(TemporarilyStateful.class);
+
+		tester.clickLink("statelessLink");
+
+		TemporarilyStateful page = (TemporarilyStateful)tester.getLastRenderedPage();
+		assertThat(page.invoked, is(true));
+		assertThat(page.executedInAnFreshPage, is(true));
+	}
+
+	public static class StatelessPage extends WebPage
 	{
 		public boolean invoked;
+		public boolean executedInAnFreshPage;
+		private boolean initialState = true;
 
-		public NotExpiredPage(PageParameters pageParameters)
+		public StatelessPage(PageParameters pageParameters)
 		{
 			super(pageParameters);
 			add(new StatelessLink<Object>("statelessLink")
@@ -181,12 +198,7 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 				public void onClick()
 				{
 					invoked = true;
-				}
-			});
-			add(new Link<Object>("statefullLink")
-			{
-				public void onClick()
-				{
+					executedInAnFreshPage = initialState;
 				}
 			});
 		}
@@ -195,14 +207,32 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 		public IMarkupFragment getMarkup()
 		{
 			return Markup.of(
-				"<html><body><a wicket:id=\"statelessLink\"></a><a wicket:id=\"statefullLink\"></a></body></html>");
+				"<html><body><a wicket:id=\"statelessLink\"></a></body></html>");
 		}
 
 		@Override
 		protected void onBeforeRender()
 		{
-			get("statefullLink").setVisible(false);
+			initialState = false;
 			super.onBeforeRender();
 		}
 	}
+	public static class TemporarilyStateful extends StatelessPage
+	{
+
+		public TemporarilyStateful(PageParameters pageParameters)
+		{
+			super(pageParameters);
+			setStatelessHint(false);
+		}
+
+
+		@Override
+		protected void onBeforeRender()
+		{
+			setStatelessHint(true);
+			super.onBeforeRender();
+		}
+	}
+
 }
