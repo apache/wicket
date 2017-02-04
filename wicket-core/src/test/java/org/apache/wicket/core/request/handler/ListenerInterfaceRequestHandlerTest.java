@@ -36,18 +36,14 @@ import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.link.ILinkListener;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.StatelessLink;
-import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Tests for {@link ListenerInterfaceRequestHandler}
@@ -64,15 +60,15 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 		// non-existing component on fresh page is ignored
 		PageAndComponentProvider freshPage = new PageAndComponentProvider(DummyPage.class, null,
 				"foo");
-		new ListenerInterfaceRequestHandler(freshPage, IOnChangeListener.INTERFACE).respond(tester
-				.getRequestCycle());
+		new ListenerInterfaceRequestHandler(freshPage, IOnChangeListener.INTERFACE)
+				.respond(tester.getRequestCycle());
 
 		// non-existing component on old page fails
 		PageAndComponentProvider oldPage = new PageAndComponentProvider(new DummyPage(), "foo");
 		try
 		{
-			new ListenerInterfaceRequestHandler(oldPage, IOnChangeListener.INTERFACE).respond(tester
-					.getRequestCycle());
+			new ListenerInterfaceRequestHandler(oldPage, IOnChangeListener.INTERFACE)
+					.respond(tester.getRequestCycle());
 			fail();
 		}
 		catch (WicketRuntimeException ex)
@@ -106,18 +102,19 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 		assertTrue("A new page must be create ", lastRenderedPageId > initialPageId);
 	}
 
-	private void executeAjaxUrlWithLastBaseUrl(Url url) throws IOException,
-		ResourceStreamNotFoundException, ParseException
+	private void executeAjaxUrlWithLastBaseUrl(Url url)
+			throws IOException, ResourceStreamNotFoundException, ParseException
 	{
 		tester.getRequest().setUrl(url);
 		tester.getRequest().addHeader("Wicket-Ajax-BaseURL",
-			tester.getWicketAjaxBaseUrlEncodedInLastResponse());
+				tester.getWicketAjaxBaseUrlEncodedInLastResponse());
 		tester.getRequest().addHeader("Wicket-Ajax", "true");
 		tester.processRequest();
 	}
 
 	/**
-	 * Test page for #recreateThePageWhenListenereInterfaceIsExecutedOnExpiredPage()
+	 * Test page for
+	 * #recreateThePageWhenListenereInterfaceIsExecutedOnExpiredPage()
 	 */
 	public static class AjaxLinkExpirePage extends WebPage implements IMarkupResourceStreamProvider
 	{
@@ -144,11 +141,11 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-			Class<?> containerClass)
+				Class<?> containerClass)
 		{
 
 			return new StringResourceStream(
-				"<html><body><a wicket:id='test'>Link</a></body></html>");
+					"<html><body><a wicket:id='test'>Link</a></body></html>");
 		}
 
 	}
@@ -161,25 +158,44 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page.class, "link");
 		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider,
-			RequestListenerInterface.forName(ILinkListener.class.getSimpleName()));
+				RequestListenerInterface.forName(ILinkListener.class.getSimpleName()));
 		assertFalse("Handler should not report a page instance is available ",
-			handler.isPageInstanceCreated());
+				handler.isPageInstanceCreated());
 	}
 
 	@Test
-	public void skipListenerIfExpiredPage()
+	public void executeStatelessLinkInAFreshPage()
 	{
-		tester.getApplication().getRootRequestMapperAsCompound().add(new MountedMapper("/segment", NotExpiredPage.class));
-		tester.startPage(NotExpiredPage.class);
+		tester.startPage(StatelessPage.class);
+
 		tester.clickLink("statelessLink");
-		NotExpiredPage page = (NotExpiredPage)tester.getLastRenderedPage();
+
+		StatelessPage page = (StatelessPage)tester.getLastRenderedPage();
 		assertThat(page.invoked, is(true));
+		assertThat(page.executedInAnFreshPage, is(true));
 	}
 
-	public static class NotExpiredPage extends WebPage
+	@Test
+	public void executeStatelessLinkInAFreshPageAtASegment()
+	{
+		tester.getApplication().getRootRequestMapperAsCompound()
+				.add(new MountedMapper("/segment", TemporarilyStateful.class));
+		tester.startPage(TemporarilyStateful.class);
+
+		tester.clickLink("statelessLink");
+
+		TemporarilyStateful page = (TemporarilyStateful)tester.getLastRenderedPage();
+		assertThat(page.invoked, is(true));
+		assertThat(page.executedInAnFreshPage, is(true));
+	}
+
+	public static class StatelessPage extends WebPage
 	{
 		public boolean invoked;
-		public NotExpiredPage(PageParameters pageParameters)
+		public boolean executedInAnFreshPage;
+		private boolean initialState = true;
+
+		public StatelessPage(PageParameters pageParameters)
 		{
 			super(pageParameters);
 			add(new StatelessLink<Object>("statelessLink")
@@ -187,24 +203,38 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 				public void onClick()
 				{
 					invoked = true;
-				}
-			});
-			add(new Link<Object>("statefullLink")
-			{
-				public void onClick()
-				{
+					executedInAnFreshPage = initialState;
 				}
 			});
 		}
+
 		@Override
 		public IMarkupFragment getMarkup()
 		{
-			return Markup.of("<html><body><a wicket:id=\"statelessLink\"></a><a wicket:id=\"statefullLink\"></a></body></html>");
+			return Markup.of("<html><body><a wicket:id=\"statelessLink\"></a></body></html>");
 		}
+
 		@Override
 		protected void onBeforeRender()
 		{
-			get("statefullLink").setVisible(false);
+			initialState = false;
+			super.onBeforeRender();
+		}
+	}
+	public static class TemporarilyStateful extends StatelessPage
+	{
+
+		public TemporarilyStateful(PageParameters pageParameters)
+		{
+			super(pageParameters);
+			setStatelessHint(false);
+		}
+
+
+		@Override
+		protected void onBeforeRender()
+		{
+			setStatelessHint(true);
 			super.onBeforeRender();
 		}
 	}
