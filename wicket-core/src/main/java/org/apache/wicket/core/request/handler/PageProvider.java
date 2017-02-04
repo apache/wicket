@@ -20,7 +20,6 @@ import org.apache.wicket.Application;
 import org.apache.wicket.core.request.mapper.IPageSource;
 import org.apache.wicket.core.request.mapper.StalePageException;
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
@@ -56,12 +55,11 @@ public class PageProvider implements IPageProvider, IClusterable
 
 	private IPageSource pageSource;
 
-	private transient IRequestablePage pageInstance;
-	private boolean pageInstanceIsFresh;
-
 	private Class<? extends IRequestablePage> pageClass;
 
 	private PageParameters pageParameters;
+
+	private Provision provision;
 
 	/**
 	 * Creates a new page provider object. Upon calling of {@link #getPageInstance()} this provider
@@ -153,9 +151,19 @@ public class PageProvider implements IPageProvider, IClusterable
 	{
 		Args.notNull(page, "page");
 
-		pageInstance = page;
+		provision = new Provision(page);
 		pageId = page.getPageId();
 		renderCount = page.getRenderCount();
+	}
+
+	private Provision getProvision()
+	{
+		if (provision == null)
+		{
+			provision = new Provision(getPageSource()).resolvePageInstance(pageId, pageClass,
+				pageParameters, renderCount);
+		}
+		return provision;
 	}
 
 	/**
@@ -164,16 +172,11 @@ public class PageProvider implements IPageProvider, IClusterable
 	@Override
 	public IRequestablePage getPageInstance()
 	{
-		if (pageInstance == null)
+		if (!getProvision().didResolvePage() && !getProvision().doesProvideNewPage())
 		{
-			resolvePageInstance(pageId, pageClass, pageParameters, renderCount);
-
-			if (pageInstance == null)
-			{
-				throw new PageExpiredException("Page with id '" + pageId + "' has expired.");
-			}
+			throw new PageExpiredException("Page with id '" + pageId + "' has expired.");
 		}
-		return pageInstance;
+		return getProvision().get();
 	}
 
 	/**
@@ -188,7 +191,7 @@ public class PageProvider implements IPageProvider, IClusterable
 		}
 		else if (isNewPageInstance() == false)
 		{
-			return pageInstance.getPageParameters();
+			return getProvision().get().getPageParameters();
 		}
 		else
 		{
@@ -197,26 +200,24 @@ public class PageProvider implements IPageProvider, IClusterable
 	}
 
 	/**
-	 * The page instance is new only if there is no cached instance or the data stores doesn't have
-	 * a page with that id with the same {@linkplain #pageClass}.
-	 * 
-	 * @see IPageProvider#isNewPageInstance()
+	 * @return don't resolve a page, but can create a new one
 	 */
 	@Override
 	public boolean isNewPageInstance()
 	{
-		boolean isNew = pageInstance == null;
-		if (isNew && pageId != null)
-		{
-			IRequestablePage storedPageInstance = getStoredPage(pageId);
-			if (storedPageInstance != null)
-			{
-				pageInstance = storedPageInstance;
-				isNew = false;
-			}
-		}
+		return !hasPageInstance();
+	}
 
-		return isNew;
+	/**
+	 * @return if provides an identified page
+	 */
+	@Override
+	public final boolean hasPageInstance()
+	{
+		if (pageId != null || provision != null)
+			return getProvision().didResolvePage();
+		else
+			return false;
 	}
 
 	/**
@@ -261,70 +262,6 @@ public class PageProvider implements IPageProvider, IClusterable
 		}
 	}
 
-	private void resolvePageInstance(Integer pageId, Class<? extends IRequestablePage> pageClass,
-		PageParameters pageParameters, Integer renderCount)
-	{
-		IRequestablePage page = null;
-
-		boolean freshCreated = false;
-
-		if (pageId != null)
-		{
-			page = getStoredPage(pageId);
-		}
-
-		if (page == null)
-		{
-			if (pageClass != null)
-			{
-				page = getPageSource().newPageInstance(pageClass, pageParameters);
-				freshCreated = true;
-			}
-		}
-
-		if (page != null && !freshCreated)
-		{
-			if (renderCount != null && page.getRenderCount() != renderCount)
-			{
-				throw new StalePageException(page);
-			}
-		}
-
-		pageInstanceIsFresh = freshCreated;
-		pageInstance = page;
-	}
-
-	/**
-	 * Looks up a page by id from the {@link IPageStore}. <br/>
-	 * If {@linkplain #pageClass} is specified then compares it against the stored instance class
-	 * and returns the found instance only if they match.
-	 * 
-	 * @param pageId
-	 *            the id of the page to look for.
-	 * @return the found page instance by id.
-	 */
-	private IRequestablePage getStoredPage(final int pageId)
-	{
-		IRequestablePage storedPageInstance = getPageSource().getPageInstance(pageId);
-		if (storedPageInstance != null)
-		{
-			if (pageClass == null || pageClass.equals(storedPageInstance.getClass()))
-			{
-				pageInstance = storedPageInstance;
-				pageInstanceIsFresh = false;
-				if (renderCount != null && pageInstance.getRenderCount() != renderCount)
-				{
-					throw new StalePageException(pageInstance);
-				}
-			}
-			else
-			{
-				// the found page class doesn't match the requested one
-				storedPageInstance = null;
-			}
-		}
-		return storedPageInstance;
-	}
 
 	/**
 	 * Detaches the page if it has been loaded (that means either
@@ -334,9 +271,10 @@ public class PageProvider implements IPageProvider, IClusterable
 	@Override
 	public void detach()
 	{
-		if (pageInstance != null)
+		if (provision != null)
 		{
-			pageInstance.detach();
+			provision.detach();
+			provision = null;
 		}
 	}
 
@@ -349,6 +287,11 @@ public class PageProvider implements IPageProvider, IClusterable
 	 */
 	public void setPageSource(IPageSource pageSource)
 	{
+		if (this.provision != null)
+		{
+			throw new IllegalStateException(
+				"A provision was already been done. The provider can be forcefully detached or a new one needs to be used to provide using this page source.");
+		}
 		this.pageSource = pageSource;
 	}
 
@@ -389,48 +332,92 @@ public class PageProvider implements IPageProvider, IClusterable
 	}
 
 	/**
-	 * Checks whether or not the provider has a page instance. This page instance might have been
-	 * passed to this page provider directly or it may have been instantiated or retrieved from the
-	 * page store.
-	 * 
-	 * @return {@code true} iff page instance has been created or retrieved
-	 */
-	@Override
-	public final boolean hasPageInstance()
-	{
-		if (pageInstance == null && pageId != null)
-		{
-			// attempt to load a stored page instance from the page store
-			getStoredPage(pageId);
-		}
-		return pageInstance != null;
-	}
-
-	/**
 	 * Returns whether or not the page instance held by this provider has been instantiated by the
 	 * provider.
 	 * 
-	 * @throws IllegalStateException
-	 *             if this method is called and the provider does not yet have a page instance, ie
-	 *             if {@link #getPageInstance()} has never been called on this provider
 	 * @return {@code true} iff the page instance held by this provider was instantiated by the
 	 *         provider
 	 */
 	@Override
 	public final boolean isPageInstanceFresh()
 	{
-		if (!hasPageInstance())
+		if (this.provision == null)
 		{
 			throw new IllegalStateException("Page instance not yet resolved");
 		}
-		return pageInstanceIsFresh;
+		return getProvision().doesProvideNewPage();
 	}
 
 	@Override
 	public String toString()
 	{
-		return "PageProvider{" + "renderCount=" + renderCount + ", pageId=" + pageId +
-			", pageInstanceIsFresh=" + pageInstanceIsFresh + ", pageClass=" + pageClass +
-			", pageParameters=" + pageParameters + ", pageInstance=" + pageInstance + '}';
+		return "PageProvider{" + "renderCount=" + renderCount + ", pageId=" + pageId
+			+ ", pageClass=" + pageClass + ", pageParameters=" + pageParameters + ", provision="
+			+ provision + '}';
+	}
+
+	private class Provision
+	{
+		private transient IRequestablePage page;
+		private boolean failedToFindStoreddPage;
+		private IPageSource pageSource;
+
+		Provision(IRequestablePage page)
+		{
+			this.page = page;
+		}
+
+		Provision(IPageSource pageSource)
+		{
+			this.pageSource = pageSource;
+		}
+
+		IRequestablePage get()
+		{
+			if (page == null && doesProvideNewPage())
+				page = pageSource.newPageInstance(pageClass, pageParameters);
+			return page;
+		}
+
+		boolean didResolvePage()
+		{
+			return page != null;
+		}
+
+		private boolean doesProvideNewPage()
+		{
+			return failedToFindStoreddPage && pageClass != null;
+		}
+
+		Provision resolvePageInstance(Integer pageId, Class<? extends IRequestablePage> pageClass,
+			PageParameters pageParameters, Integer renderCount)
+		{
+
+			if (pageId != null)
+			{
+				IRequestablePage stored = pageSource.getPageInstance(pageId);
+				if (stored != null && (pageClass == null || pageClass.equals(stored.getClass())))
+				{
+
+					page = stored;
+
+					if (renderCount != null && page.getRenderCount() != renderCount)
+						throw new StalePageException(page);
+				}
+			}
+
+			failedToFindStoreddPage = page == null;
+
+			return this;
+		}
+
+		void detach()
+		{
+			if (page != null)
+			{
+				page.detach();
+			}
+		}
+
 	}
 }
