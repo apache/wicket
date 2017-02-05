@@ -95,23 +95,13 @@ public class ListenerRequestHandler
 	@Override
 	public IRequestablePage getPage()
 	{
-		try
+		IRequestablePage page = pageComponentProvider.getPageInstance();
+		if (page == null && pageComponentProvider.wasExpired())
 		{
-			return pageComponentProvider.getPageInstance();
+			throw new PageExpiredException(
+				"Page with id '" + pageComponentProvider.getPageId() + "' has expired.");
 		}
-		catch (IllegalStateException e)
-		{
-			if (pageComponentProvider.wasExpired())
-			{
-
-				throw new PageExpiredException(
-					"Page with id '" + pageComponentProvider.getPageId() + "' has expired.");
-			}
-			else
-			{
-				throw e;// bubbles up
-			}
-		}
+		return page;
 	}
 
 	@Override
