@@ -188,7 +188,7 @@ public class PageProviderTest extends WicketTestCase
 	{
 		PageProvider provider = new PageProvider(new StatelessPageTest());
 		assertTrue(provider.hasPageInstance());
-		assertFalse(provider.isPageInstanceFresh());
+		assertFalse(provider.doesProvideNewPage());
 	}
 
 	@Test
@@ -198,7 +198,7 @@ public class PageProviderTest extends WicketTestCase
 		assertFalse(provider.hasPageInstance());
 		try
 		{
-			provider.isPageInstanceFresh();
+			provider.doesProvideNewPage();
 			fail("expected illegal state exception");
 		}
 		catch (IllegalStateException e)
@@ -209,7 +209,7 @@ public class PageProviderTest extends WicketTestCase
 		provider.getPageInstance();
 
 		assertTrue(provider.hasPageInstance());
-		assertTrue(provider.isPageInstanceFresh());
+		assertTrue(provider.doesProvideNewPage());
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class PageProviderTest extends WicketTestCase
 
 		PageProvider provider = mapperContext.new TestPageProvider(page.getPageId(), 0);
 		assertTrue(provider.hasPageInstance());
-		assertFalse(provider.isPageInstanceFresh());
+		assertFalse(provider.doesProvideNewPage());
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class PageProviderTest extends WicketTestCase
 		PageProvider provider = new PageProvider(page.getPageId(), MockPageWithLink.class, 0);
 		assertFalse(provider.hasPageInstance());
 		assertEquals(MockPageWithLink.class, provider.getPageInstance().getClass());
-		assertTrue(provider.isPageInstanceFresh());
+		assertTrue(provider.doesProvideNewPage());
 	}
 
 	/** */
