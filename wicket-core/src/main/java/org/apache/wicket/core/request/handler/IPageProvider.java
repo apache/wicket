@@ -43,7 +43,7 @@ public interface IPageProvider
      *          could not have been found and the constructor used did not provide enough information
      *          to create new page instance
 	 */
-	IRequestablePage getPageInstance() throws PageExpiredException;
+	IRequestablePage getPageInstance();
 
 	/**
 	 * Returns {@link PageParameters} of the page.
@@ -53,11 +53,8 @@ public interface IPageProvider
 	PageParameters getPageParameters();
 
 	/**
-	 * Returns whether calling getPageInstance() will result in creating new page instance or
-	 * whether it will be an existing instance (even though it might be pulled from page store).
-	 *
-	 * @return <code>true</code> if calling {@link #getPageInstance()} will create new page
-	 *         instance, <code>false</code> otherwise.
+	 * @return negates {@link PageProvider#hasPageInstance()}
+	 * @deprecated use {@link PageProvider#hasPageInstance()} negation instead
 	 */
 	boolean isNewPageInstance();
 
@@ -95,11 +92,12 @@ public interface IPageProvider
 	void detach();
 
 	/**
-	 * Checks whether or not the provider has a page instance. This page instance might have been
-	 * passed to this page provider directly or it may have been instantiated or retrieved from the
-	 * page store.
-	 *
-	 * @return {@code true} iff page instance has been created or retrieved
+	 * If this provider returns existing page, regardless if it was already created by PageProvider
+	 * itself or is or can be found in the data store. The only guarantee is that by calling
+	 * {@link PageProvider#getPageInstance()} this provider will return an existing instance and no
+	 * page will be created.
+	 * 
+	 * @return if provides an existing page
 	 */
 	boolean hasPageInstance();
 
