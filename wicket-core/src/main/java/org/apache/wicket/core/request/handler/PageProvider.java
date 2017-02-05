@@ -150,7 +150,7 @@ public class PageProvider implements IPageProvider, IClusterable
 	{
 		Args.notNull(page, "page");
 
-		provision = new Provision().resolve(page);
+		provision = new Provision().resolveTo(page);
 		pageId = page.getPageId();
 		renderCount = page.getRenderCount();
 	}
@@ -159,7 +159,7 @@ public class PageProvider implements IPageProvider, IClusterable
 	{
 		if (!provision.wasResolved())
 
-			provision.resolve(pageId, pageClass, pageParameters, renderCount);
+			provision.resolve();
 
 		return provision;
 	}
@@ -353,6 +353,24 @@ public class PageProvider implements IPageProvider, IClusterable
 			+ ", pageClass=" + pageClass + ", pageParameters=" + pageParameters + '}';
 	}
 
+	/**
+	 * A provision is the work necessary to provide a page. It includes to resolve parameters to a
+	 * page, to track the resolution metadata and to keep a reference of the resolved page.
+	 * 
+	 * The logic based on {@link PageProvider}'s parameters:
+	 * 
+	 * - having an stored page id, the stored page is provided
+	 * 
+	 * - having only a page class, a new instance of it is provided
+	 * 
+	 * - having non stored page id plus page class, a new instance of the page class is provided
+	 * 
+	 * - having non stored page id and no page class, no page is provided
+	 * 
+	 * - being a page instance, the instance itself will be the provided page
+	 *
+	 * @author pedro
+	 */
 	private class Provision
 	{
 		transient IRequestablePage page;
@@ -388,7 +406,7 @@ public class PageProvider implements IPageProvider, IClusterable
 			return failedToFindStoredPage;
 		}
 
-		Provision resolve(IRequestablePage page)
+		Provision resolveTo(IRequestablePage page)
 		{
 			this.page = page;
 
@@ -397,8 +415,7 @@ public class PageProvider implements IPageProvider, IClusterable
 			return this;
 		}
 
-		Provision resolve(Integer pageId, Class<? extends IRequestablePage> pageClass,
-			PageParameters pageParameters, Integer renderCount)
+		Provision resolve()
 		{
 
 			if (pageId != null)
