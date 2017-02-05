@@ -113,5 +113,5 @@ public interface IPageProvider
 	 * @return {@code true} iff the page instance held by this provider was instantiated by the
 	 *         provider
 	 */
-	boolean isPageInstanceFresh();
+	boolean doesProvideNewPage();
 }

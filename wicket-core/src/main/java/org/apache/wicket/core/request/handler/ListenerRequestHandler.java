@@ -156,7 +156,7 @@ public class ListenerRequestHandler
 	public void respond(final IRequestCycle requestCycle)
 	{
 		final IRequestablePage page = getPage();
-		final boolean freshPage = pageComponentProvider.isPageInstanceFresh();
+		final boolean freshPage = pageComponentProvider.doesProvideNewPage();
 		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 
 		IRequestableComponent component;

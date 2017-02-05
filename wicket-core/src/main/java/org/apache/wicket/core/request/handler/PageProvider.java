@@ -236,7 +236,7 @@ public class PageProvider implements IPageProvider, IClusterable
 	 *         provider
 	 */
 	@Override
-	public final boolean isPageInstanceFresh()
+	public final boolean doesProvideNewPage()
 	{
 		if (!this.provision.wasResolved())
 		{
