@@ -309,7 +309,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 	private void checkExpiration(PageProvider provider, PageInfo pageInfo)
 	{
-		if (provider.isNewPageInstance() && !getRecreateMountedPagesAfterExpiry())
+		if (provider.wasExpired() && !getRecreateMountedPagesAfterExpiry())
 		{
 			throw new PageExpiredException(String.format("Bookmarkable page with id '%d' has expired.",
 					pageInfo.getPageId()));
