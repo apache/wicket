@@ -170,13 +170,7 @@ public class PageProvider implements IPageProvider, IClusterable
 	@Override
 	public IRequestablePage getPageInstance()
 	{
-		Provision resolvedProvision = getResolvedProvision();
-
-		if (!resolvedProvision.didResolveToPage() && !resolvedProvision.doesProvideNewPage())
-		{
-			throw new IllegalStateException("The configured page provider can't resolve a page.");
-		}
-		return resolvedProvision.getPage();
+		return getResolvedProvision().getPage();
 	}
 
 	/**
