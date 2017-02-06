@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.handler;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -27,12 +29,13 @@ import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.mapper.StalePageException;
+import org.apache.wicket.core.request.mapper.TestMapperContext;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.core.request.mapper.StalePageException;
-import org.apache.wicket.core.request.mapper.TestMapperContext;
+import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -250,6 +253,23 @@ public class PageProviderTest extends WicketTestCase
 		assertFalse(provider.hasPageInstance());
 		assertEquals(MockPageWithLink.class, provider.getPageInstance().getClass());
 		assertTrue(provider.doesProvideNewPage());
+	}
+
+	@Test
+	public void pageProviderIsSerializeble() throws Exception
+	{
+		TestMapperContext mapperContext = new TestMapperContext();
+		Page page = new TestPage();
+		mapperContext.getPageManager().touchPage(page);
+		mapperContext.getPageManager().commitRequest();
+
+		PageProvider pageProvider = new PageProvider(page.getPageId(), page.getRenderCount());
+		JavaSerializer javaSerializer = new JavaSerializer("app");
+		byte[] serialized = javaSerializer.serialize(pageProvider);
+		PageProvider deserialized = (PageProvider)javaSerializer.deserialize(serialized);
+		deserialized.setPageSource(mapperContext);
+
+		assertThat(deserialized.getPageInstance(), is(page));
 	}
 
 	/** */
