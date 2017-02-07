@@ -198,21 +198,13 @@ public class PageProviderTest extends WicketTestCase
 	public void testPageProperties_bookmarkable()
 	{
 		PageProvider provider = new PageProvider(StatelessPageTest.class);
+		assertTrue(provider.doesProvideNewPage());
 		assertFalse(provider.hasPageInstance());
-		try
-		{
-			provider.doesProvideNewPage();
-			fail("expected illegal state exception");
-		}
-		catch (IllegalStateException e)
-		{
-			// expected
-		}
 
 		provider.getPageInstance();
 
-		assertTrue(provider.hasPageInstance());
 		assertTrue(provider.doesProvideNewPage());
+		assertTrue(provider.hasPageInstance());
 	}
 
 	@Test

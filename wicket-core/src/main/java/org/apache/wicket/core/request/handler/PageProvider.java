@@ -219,7 +219,9 @@ public class PageProvider implements IPageProvider, IClusterable
 			return getProvision().didResolveToPage();
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**
@@ -232,10 +234,6 @@ public class PageProvider implements IPageProvider, IClusterable
 	@Override
 	public final boolean doesProvideNewPage()
 	{
-		if (provision == null)
-		{
-			throw new IllegalStateException("Page instance not yet resolved");
-		}
 		return getProvision().doesProvideNewPage();
 	}
 
@@ -382,9 +380,9 @@ public class PageProvider implements IPageProvider, IClusterable
 		IRequestablePage getPage()
 		{
 			if (page == null && doesProvideNewPage())
-
+			{
 				page = getPageSource().newPageInstance(pageClass, pageParameters);
-
+			}
 			return page;
 		}
 
