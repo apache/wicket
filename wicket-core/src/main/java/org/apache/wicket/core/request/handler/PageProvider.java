@@ -232,10 +232,6 @@ public class PageProvider implements IPageProvider, IClusterable
 	@Override
 	public final boolean doesProvideNewPage()
 	{
-		if (provision == null)
-		{
-			throw new IllegalStateException("Page instance not yet resolved");
-		}
 		return getProvision().doesProvideNewPage();
 	}
 
