@@ -308,8 +308,7 @@ public class PageProvider implements IPageProvider, IClusterable
 	{
 		if (provision != null)
 		{
-			throw new IllegalStateException(
-				"A provision was already been done. The provider can be forcefully detached or a new one needs to be used to provide using this page source.");
+			throw new IllegalStateException("A page was already provided.");
 		}
 		this.pageSource = pageSource;
 	}
