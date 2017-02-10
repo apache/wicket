@@ -16,9 +16,6 @@
  */
 package org.apache.wicket.model;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
@@ -45,8 +42,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 	implements
-		IObjectClassAwareModel<T>,
-		IPropertyReflectionAwareModel<T>
+		IObjectClassAwareModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -149,7 +145,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 		{
 			try
 			{
-				return (Class<T>)PropertyResolver.getPropertyClass(expression, target);
+				return (Class<T>)PropertyResolver.getPropertyClass(expression, target, target.getClass());
 			}
 			catch (Exception e)
 			{
@@ -163,7 +159,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 				Class<?> targetClass = ((IObjectClassAwareModel<?>) getTarget()).getObjectClass();
 				if (targetClass != null)
 				{
-					return PropertyResolver.getPropertyClass(expression, targetClass);
+					return PropertyResolver.getPropertyClass(expression, null, targetClass);
 				}
 			}
 			catch (WicketRuntimeException e)
@@ -171,70 +167,6 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 				// it was just a try.
 			}
 
-		}
-		return null;
-	}
-
-	@Override
-	public Field getPropertyField()
-	{
-		String expression = propertyExpression();
-		if (Strings.isEmpty(expression) == false)
-		{
-			Object target = getInnermostModelOrObject();
-			if (target != null)
-			{
-				try
-				{
-					return PropertyResolver.getPropertyField(expression, target);
-				}
-				catch (Exception ignore)
-				{
-					// ignore.
-				}
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public Method getPropertyGetter()
-	{
-		String expression = propertyExpression();
-		if (Strings.isEmpty(expression) == false)
-		{
-			Object target = getInnermostModelOrObject();
-			if (target != null)
-			{
-				try
-				{
-					return PropertyResolver.getPropertyGetter(expression, target);
-				}
-				catch (Exception ignore)
-				{
-				}
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public Method getPropertySetter()
-	{
-		String expression = propertyExpression();
-		if (Strings.isEmpty(expression) == false)
-		{
-			Object target = getInnermostModelOrObject();
-			if (target != null)
-			{
-				try
-				{
-					return PropertyResolver.getPropertySetter(expression, target);
-				}
-				catch (Exception ignore)
-				{
-				}
-			}
 		}
 		return null;
 	}

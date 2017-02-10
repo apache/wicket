@@ -17,7 +17,7 @@
 package org.apache.wicket.util.string.interpolator;
 
 import org.apache.wicket.core.util.string.interpolator.PropertyVariableInterpolator;
-import org.junit.Assert;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -25,7 +25,7 @@ import org.junit.Test;
  * 
  * @author Gerolf Seitz
  */
-public class PropertyVariableInterpolatorTest extends Assert
+public class PropertyVariableInterpolatorTest extends WicketTestCase
 {
 	/**
 	 * 

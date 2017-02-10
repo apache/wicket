@@ -19,7 +19,7 @@ package org.apache.wicket.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -27,7 +27,7 @@ import org.junit.Test;
  * 
  * @author Carl-Eric Menzel
  */
-public class PropertyModelWithListTest extends Assert
+public class PropertyModelWithListTest extends WicketTestCase
 {
 	/** */
 	public static class BeansContainer

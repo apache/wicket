@@ -18,8 +18,7 @@ package org.apache.wicket.model;
 
 import java.io.Serializable;
 
-import junit.framework.TestCase;
-import org.junit.Assert;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
@@ -31,7 +30,7 @@ import org.junit.Test;
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-2937">WICKET-2937</a>
  * @author Pedro Santos
  */
-public class AbstractPropertyModelObjectClassTest extends Assert
+public class AbstractPropertyModelObjectClassTest extends WicketTestCase
 {
 
 	/**

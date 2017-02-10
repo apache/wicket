@@ -21,6 +21,8 @@ import java.lang.ref.WeakReference;
 import org.apache.wicket.Page;
 import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.core.util.lang.IPropertyExpressionResolver;
+import org.apache.wicket.core.util.lang.OGNLPropertyExpressionResolver;
 import org.apache.wicket.feedback.DefaultCleanupFeedbackMessageFilter;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -55,6 +57,8 @@ public class ApplicationSettings
 
 	private IClassResolver classResolver = new DefaultClassResolver();
 
+	private IPropertyExpressionResolver propertyExpressionResolver = new OGNLPropertyExpressionResolver();
+
 	private WeakReference<Class<? extends Page>> internalErrorPage;
 
 	private WeakReference<Class<? extends Page>> pageExpiredErrorPage;
@@ -83,6 +87,11 @@ public class ApplicationSettings
 	public IClassResolver getClassResolver()
 	{
 		return classResolver;
+	}
+
+	public IPropertyExpressionResolver getPropertyExpressionResolver()
+	{
+		return propertyExpressionResolver;
 	}
 
 	/**
@@ -156,6 +165,12 @@ public class ApplicationSettings
 	{
 		classResolver = defaultClassResolver;
 		return this;
+	}
+
+	public void setPropertyExpressionResolver(
+		IPropertyExpressionResolver propertyExpressionResolver)
+	{
+		this.propertyExpressionResolver = propertyExpressionResolver;
 	}
 
 	/**

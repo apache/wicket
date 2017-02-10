@@ -609,7 +609,7 @@ public abstract class Application implements UnboundListener, IEventSink
 
 		// Clear caches of Class keys so the classloader can be garbage
 		// collected (WICKET-625)
-		PropertyResolver.destroy(this);
+//		getApplicationSettings()..destroy(this);
 		MarkupFactory markupFactory = getMarkupSettings().getMarkupFactory();
 
 		if (markupFactory.hasMarkupCache())
