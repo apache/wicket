@@ -21,6 +21,7 @@ import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderRe
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 
 /**
  * An application showing how to return several resources into a single http response.
@@ -38,6 +39,8 @@ public class ResourceDecorationApplication extends WebApplication
 	protected void init()
 	{
 		super.init();
+
+		getResourceSettings().setCachingStrategy(new NoOpResourceCachingStrategy());
 
 		getResourceBundles().addCssBundle(ResourceDecorationApplication.class, "css-bundle.css",
 			new CssResourceReference(HomePage.class, "footer.css"),
