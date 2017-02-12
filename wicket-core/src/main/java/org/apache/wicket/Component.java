@@ -3504,7 +3504,7 @@ public abstract class Component
 	 * 
 	 * Adds state change to page.
 	 */
-	protected final void addStateChange()
+	protected void addStateChange()
 	{
 		checkHierarchyChange(this);
 		final Page page = findPage();
