@@ -138,7 +138,7 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	 * @param object
 	 * @return Model that contains <code>object</code>
 	 */
-	public static <T extends Serializable> Model<T> of(T object)
+	public static <T extends Serializable> IModel<T> of(T object)
 	{
 		return new Model<>(object);
 	}
@@ -150,7 +150,7 @@ public class Model<T extends Serializable> implements IObjectClassAwareModel<T>
 	 * @param <T>
 	 * @return Model that contains <code>object</code>
 	 */
-	public static <T extends Serializable> Model<T> of()
+	public static <T extends Serializable> IModel<T> of()
 	{
 		return new Model<>();
 	}
