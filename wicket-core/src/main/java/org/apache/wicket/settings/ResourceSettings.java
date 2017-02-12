@@ -221,7 +221,8 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		stringResourceLoaders.add(new PackageStringResourceLoader());
 		stringResourceLoaders.add(new ClassStringResourceLoader(application.getClass()));
 		stringResourceLoaders.add(new ValidatorStringResourceLoader());
-		stringResourceLoaders.add(new InitializerStringResourceLoader(application.getInitializers()));
+		stringResourceLoaders
+			.add(new InitializerStringResourceLoader(application.getInitializers()));
 	}
 
 	/**
@@ -285,9 +286,10 @@ public class ResourceSettings implements IPropertiesFactoryContext
 
 	/**
 	 * Gets the resource finders to use when searching for resources. By default, a finder that
-	 * looks in the classpath root is configured. {@link org.apache.wicket.protocol.http.WebApplication} adds the classpath
-	 * directory META-INF/resources. To configure additional search paths or filesystem paths, add
-	 * to this list.
+	 * looks in the classpath root is configured.
+	 * {@link org.apache.wicket.protocol.http.WebApplication} adds the classpath directory
+	 * META-INF/resources. To configure additional search paths or filesystem paths, add to this
+	 * list.
 	 *
 	 * @return Returns the resourceFinders.
 	 */
@@ -378,6 +380,11 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		return stringResourceLoaders;
 	}
 
+	/**
+	 * Gets the exception on missing resource
+	 * 
+	 * @return the exception on messing resource
+	 */
 	public boolean getThrowExceptionOnMissingResource()
 	{
 		return throwExceptionOnMissingResource;
@@ -423,7 +430,8 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @param factory
 	 * @return {@code this} object for chaining
 	 */
-	public ResourceSettings setPropertiesFactory(org.apache.wicket.resource.IPropertiesFactory factory)
+	public ResourceSettings setPropertiesFactory(
+		org.apache.wicket.resource.IPropertiesFactory factory)
 	{
 		propertiesFactory = factory;
 		return this;
@@ -466,12 +474,12 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	}
 
 	/**
-	 * /**
-	 * Sets the resource stream locator for this application
+	 * /** Sets the resource stream locator for this application
 	 *
 	 * Consider wrapping <code>resourceStreamLocator</code> in {@link CachingResourceStreamLocator}.
 	 * This way the locator will not be asked more than once for {@link IResourceStream}s which do
 	 * not exist.
+	 * 
 	 * @param resourceStreamLocator
 	 *            new resource stream locator
 	 *
@@ -488,7 +496,8 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 * @param throwExceptionOnMissingResource
 	 * @return {@code this} object for chaining
 	 */
-	public ResourceSettings setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource)
+	public ResourceSettings setThrowExceptionOnMissingResource(
+		final boolean throwExceptionOnMissingResource)
 	{
 		this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
 		return this;
@@ -499,7 +508,8 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *            Whether to use a default value (if available) when a missing resource is requested
 	 * @return {@code this} object for chaining
 	 */
-	public ResourceSettings setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource)
+	public ResourceSettings setUseDefaultOnMissingResource(
+		final boolean useDefaultOnMissingResource)
 	{
 		this.useDefaultOnMissingResource = useDefaultOnMissingResource;
 		return this;
@@ -558,8 +568,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param compressor
 	 *            The implementation to be used
-	 * @return The old value
-	 * @return {@code this} object for chaining
+	 * @return {@code IJavaScriptCompressor} object for chaining
 	 */
 	public IJavaScriptCompressor setJavaScriptCompressor(IJavaScriptCompressor compressor)
 	{
@@ -588,8 +597,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	 *
 	 * @param compressor
 	 *            The implementation to be used
-	 * @return The old value
-	 * @return {@code this} object for chaining
+	 * @return {@code ICssCompressor} object for chaining
 	 */
 	public ICssCompressor setCssCompressor(ICssCompressor compressor)
 	{
@@ -723,17 +731,19 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	}
 
 	/**
-	 * Sets the comparator used by the {@linkplain org.apache.wicket.markup.head.ResourceAggregator resource aggregator} for
-	 * sorting header items. It should be noted that sorting header items may break resource
-	 * dependencies. This comparator should therefore at least respect dependencies declared by
-	 * resource references. By default, items are sorted using the {@link PriorityFirstComparator}.
+	 * Sets the comparator used by the {@linkplain org.apache.wicket.markup.head.ResourceAggregator
+	 * resource aggregator} for sorting header items. It should be noted that sorting header items
+	 * may break resource dependencies. This comparator should therefore at least respect
+	 * dependencies declared by resource references. By default, items are sorted using the
+	 * {@link PriorityFirstComparator}.
 	 *
 	 * @param headerItemComparator
 	 *            The comparator used to sort header items, when null, header items will not be
 	 *            sorted.
 	 * @return {@code this} object for chaining
 	 */
-	public ResourceSettings setHeaderItemComparator(Comparator<? super RecordedHeaderItem> headerItemComparator)
+	public ResourceSettings setHeaderItemComparator(
+		Comparator<? super RecordedHeaderItem> headerItemComparator)
 	{
 		this.headerItemComparator = headerItemComparator;
 		return this;

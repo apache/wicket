@@ -76,7 +76,7 @@ public class ResourceModel implements IComponentAssignedModel<String>
 		return Application.get()
 			.getResourceSettings()
 			.getLocalizer()
-			.getString(resourceKey, null, null, null, null, defaultValue);
+			.resolveStringWithLocalizationSupport(resourceKey, null, null, null, null, defaultValue);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class ResourceModel implements IComponentAssignedModel<String>
 			return Application.get()
 				.getResourceSettings()
 				.getLocalizer()
-				.getString(resourceKey, component, null, null, null, defaultValue);
+				.resolveStringWithLocalizationSupport(resourceKey, component, null, null, null, defaultValue);
 		}
 
 		@Override
