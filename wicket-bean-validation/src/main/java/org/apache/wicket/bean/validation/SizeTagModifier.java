@@ -20,6 +20,11 @@ public class SizeTagModifier implements ITagModifier<Size>
 		if ("input".equalsIgnoreCase(tag.getName()))
 		{
 			tag.put("maxlength", annotation.max());
+			
+			if (annotation.min() > 0)
+			{
+			    	tag.put("minlength", annotation.min());
+			}
 		}
 	}
 }
