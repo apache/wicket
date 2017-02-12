@@ -37,19 +37,6 @@
 		<jruby.version>1.7.21</jruby.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>grails</id>
-			<name>grails</name>
-			<url>http://repo.grails.org/grails/core</url>
-		</repository>
-		<repository>
-			<id>grails-plugins</id>
-			<name>grails-plugins</name>
-			<url>http://repo.grails.org/grails/plugins</url>
-		</repository>
-	</repositories>
-
 	<build>
 		<plugins>
 			<plugin>
