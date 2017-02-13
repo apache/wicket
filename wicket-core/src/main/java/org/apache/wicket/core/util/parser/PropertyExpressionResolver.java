@@ -2,27 +2,20 @@ package org.apache.wicket.core.util.parser;
 
 import org.apache.wicket.core.util.lang.IPropertyExpressionResolver;
 import org.apache.wicket.core.util.lang.PropertyResolverConverter;
+import org.apache.wicket.core.util.reflection.ObjectWithGetAndSet;
 
 public class PropertyExpressionResolver implements IPropertyExpressionResolver
 {
-
 	@Override
-	public <T> T getValue(String expression, T object)
+	public ObjectWithGetAndSet resolve(String expression, Object object, Class<? extends Object> clz)
 	{
 		return null;
 	}
 
 	@Override
-	public <T> Class<T> getPropertyClass(String expression, Object object, Class<?> targetClass)
+	public void setValue(String expression, Object object, Object value, PropertyResolverConverter prc)
 	{
-		return null;
-	}
 
-	@Override
-	public void setValue(String expression, Object object, Object value,
-		PropertyResolverConverter prc)
-	{
-		
 	}
 
 }

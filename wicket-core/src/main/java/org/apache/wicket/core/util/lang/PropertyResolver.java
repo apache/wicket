@@ -27,15 +27,19 @@ public final class PropertyResolver
 
 	public static <T> T getValue(String expression, T object)
 	{
-		return Application.get().getApplicationSettings().getPropertyExpressionResolver()
-			.getValue(expression, object);
+		if (expression == null || expression.equals("") || object == null)
+		{
+			return object;
+		}
+		IPropertyExpressionResolver propertyExpressionResolver = Application.get().getApplicationSettings().getPropertyExpressionResolver();
+		return (T)propertyExpressionResolver.resolve(expression, object, object.getClass()).getValue();
 	}
 
 	public static <T> Class<T> getPropertyClass(String expression, Object object,
 		Class<?> targetClass)
 	{
-		return Application.get().getApplicationSettings().getPropertyExpressionResolver()
-			.getPropertyClass(expression, object, targetClass);
+		IPropertyExpressionResolver propertyExpressionResolver = Application.get().getApplicationSettings().getPropertyExpressionResolver();
+		return (Class<T>)propertyExpressionResolver.resolve(expression, object, targetClass).getTargetClass();
 	}
 
 	public static void setValue(String expression, Object object, Object value,

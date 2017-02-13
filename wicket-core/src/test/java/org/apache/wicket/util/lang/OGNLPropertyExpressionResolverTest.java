@@ -457,20 +457,20 @@ public class OGNLPropertyExpressionResolverTest extends WicketTestCase
 	{
 		Address address = new Address();
 
-		Class<?> clazz = ognlResolver.getPropertyClass("number", address, address.getClass());
+		Class<?> clazz = ognlResolver.resolve("number", address, address.getClass()).getTargetClass();
 		assertEquals(int.class, clazz);
 
 		Person person = new Person();
 		person.setAddress(new Address());
 
-		clazz = ognlResolver.getPropertyClass("address.number", person, person.getClass());
+		clazz = ognlResolver.resolve("address.number", person, person.getClass()).getTargetClass();
 		assertEquals(int.class, clazz);
 
 		person.setAddressArray(new Address[] { new Address(), new Address() });
-		clazz = ognlResolver.getPropertyClass("addressArray[0]", person, person.getClass());
+		clazz = ognlResolver.resolve("addressArray[0]", person, person.getClass()).getTargetClass();
 		assertEquals(Address.class, clazz);
 
-		clazz = ognlResolver.getPropertyClass("addressArray[0].number", person, person.getClass());
+		clazz = ognlResolver.resolve("addressArray[0].number", person, person.getClass()).getTargetClass();
 		assertEquals(int.class, clazz);
 	}
 
@@ -605,10 +605,10 @@ public class OGNLPropertyExpressionResolverTest extends WicketTestCase
 	{
 		Person person = new Person();
 		assertEquals(String.class,
-			ognlResolver.getPropertyClass("country.name", person, person.getClass()));
+			ognlResolver.resolve("country.name", person, person.getClass()).getTargetClass());
 		try
 		{
-			ognlResolver.getPropertyClass("country.subCountry.name", person, person.getClass());
+			ognlResolver.resolve("country.subCountry.name", person, person.getClass()).getTargetClass();
 			fail("country.subCountry shouldnt be found");
 		}
 		catch (Exception e)
@@ -616,7 +616,7 @@ public class OGNLPropertyExpressionResolverTest extends WicketTestCase
 
 		}
 		person.setCountry(new Country2("test", new Country("test")));
-		ognlResolver.getPropertyClass("country.subCountry.name", person, person.getClass());
+		ognlResolver.resolve("country.subCountry.name", person, person.getClass()).getTargetClass();
 	}
 
 	/**

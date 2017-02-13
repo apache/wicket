@@ -26,8 +26,6 @@ import org.apache.wicket.core.util.reflection.CachingPropertyLocator;
 import org.apache.wicket.core.util.reflection.IGetAndSet;
 import org.apache.wicket.core.util.reflection.ObjectWithGetAndSet;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class parses expressions to lookup or set a value on the object that is given. <br/>
@@ -65,15 +63,11 @@ import org.slf4j.LoggerFactory;
 
 public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolver
 {
-
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
-
 	private final static int RETURN_NULL = 0;
 	private final static int CREATE_NEW_VALUE = 1;
 	private final static int RESOLVE_CLASS = 2;
 
-	private static IPropertyResolver locator = new CachingPropertyLocator( new DefaultPropertyLocator());
+	private IPropertyResolver locator = new CachingPropertyLocator( new DefaultPropertyLocator());
 
 
 	/**
@@ -86,14 +80,9 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 	 *            The object which is evaluated.
 	 * @return The value that is evaluated. Null something in the expression evaluated to null.
 	 */
-	@Override
-	public  Object getValue(final String expression, final Object object)
+	//TODO remove, only being used in tests
+	public Object getValue(final String expression, final Object object)
 	{
-		if (expression == null || expression.equals("") || object == null)
-		{
-			return object;
-		}
-
 		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
 			RETURN_NULL);
 		if (objectWithGetAndSet == null)
@@ -152,27 +141,6 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 	}
 
 	/**
-	 * @param <T>
-	 * @param expression
-	 * @param clz
-	 * @return class of the target Class property expression
-	 * @throws WicketRuntimeException
-	 *             if class cannot be resolved
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> Class<T> getPropertyClass(final String expression, Object object, final Class<?> clz)
-	{
-		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
-			RESOLVE_CLASS, clz);
-		if (objectWithGetAndSet == null)
-		{
-			throw new WicketRuntimeException("No Class returned for expression: " + expression
-				+ " for getting the target class of: " + clz);
-		}
-		return (Class<T>)objectWithGetAndSet.getTargetClass();
-	}
-
 	/**
 	 * @param expression
 	 * @param object
@@ -180,7 +148,7 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 	 * @throws WicketRuntimeException
 	 *             if there is no such field
 	 */
-	public static Field getPropertyField(final String expression, final Object object)
+	public Field getPropertyField(final String expression, final Object object)
 	{
 		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
 			RESOLVE_CLASS);
@@ -199,7 +167,7 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 	 * @throws WicketRuntimeException
 	 *             if there is no getter method
 	 */
-	public static Method getPropertyGetter(final String expression, final Object object)
+	public Method getPropertyGetter(final String expression, final Object object)
 	{
 		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
 			RESOLVE_CLASS);
@@ -218,7 +186,7 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 	 * @throws WicketRuntimeException
 	 *             if there is no setter method
 	 */
-	public static Method getPropertySetter(final String expression, final Object object)
+	public Method getPropertySetter(final String expression, final Object object)
 	{
 		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
 			RESOLVE_CLASS);
@@ -230,6 +198,19 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 		return objectWithGetAndSet.getSetter();
 	}
 
+	@Override
+	public ObjectWithGetAndSet resolve(String expression, Object object, Class<? extends Object> clz)
+	{
+		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
+			RESOLVE_CLASS, clz);
+		if (objectWithGetAndSet == null)
+		{
+			throw new WicketRuntimeException("Null object returned for expression: " + expression
+				+ " for getting the target class of: " + clz);
+		}
+		return objectWithGetAndSet;
+	}
+
 	/**
 	 * Just delegating the call to the original getObjectAndGetSetter passing the object type as
 	 * parameter.
@@ -239,7 +220,7 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 	 * @param tryToCreateNull
 	 * @return {@link ObjectWithGetAndSet}
 	 */
-	private static ObjectWithGetAndSet getObjectWithGetAndSet(final String expression,
+	private ObjectWithGetAndSet getObjectWithGetAndSet(final String expression,
 		final Object object, int tryToCreateNull)
 	{
 		return getObjectWithGetAndSet(expression, object, tryToCreateNull, object.getClass());
@@ -260,7 +241,7 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 	 * @return final getAndSet and the target to apply it on, or {@code null} if expression results
 	 *         in an intermediate null
 	 */
-	private static ObjectWithGetAndSet getObjectWithGetAndSet(final String expression,
+	private ObjectWithGetAndSet getObjectWithGetAndSet(final String expression,
 		final Object object, final int tryToCreateNull, Class<?> clz)
 	{
 		String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[").toString();
@@ -376,7 +357,7 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 		return -1;
 	}
 
-	private static IGetAndSet getGetAndSet(String exp, final Class<?> clz)
+	private IGetAndSet getGetAndSet(String exp, final Class<?> clz)
 	{
 
 		IGetAndSet getAndSet = locator.get(clz, exp);
