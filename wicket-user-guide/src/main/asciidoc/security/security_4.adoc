@@ -17,7 +17,7 @@ The default implementation for this interface is class _org.apache.wicket.util.c
 
 NOTE: For better security it is recommended to install Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html[Policy Files]
 
-By using _CryptoMapper(IRequestMapper wrappedMapper, Application application)_ constructor the mapper will use the configured _org.apache.wicket.util.crypt.ICryptFactory_ from _org.apache.wicket.settings.SecuritySettings1.getCryptFactory()_. To use a stronger cryptography mechanism there are the following options:
+By using _CryptoMapper(IRequestMapper wrappedMapper, Application application)_ constructor the mapper will use the configured _org.apache.wicket.util.crypt.ICryptFactory_ from _org.apache.wicket.settings.SecuritySettings.getCryptFactory()_. To use a stronger cryptography mechanism there are the following options:
 
 * The first option is to use constructor _CryptoMapper(IRequestMapper wrappedMapper, IProvider<ICrypt> cryptProvider)_ and give it an implementation of _org.apache.wicket.util.IProvider_ that returns a custom _org.apache.wicket.util.crypt.ICrypt_. 
 

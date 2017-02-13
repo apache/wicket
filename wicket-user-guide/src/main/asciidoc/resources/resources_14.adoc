@@ -1,7 +1,7 @@
 
 
 
-Introduced in Wicket 6.20.0 / Wicket 7.0.0 there is a default way to be used in which the output of all CssHeaderItems / JavaScriptHeaderItems is modified before they are cached and delivered to the client. You can add a so called Compressor by receiving the resource settings and invoke 1.setJavaScriptCompressor(...) / 1.setJavaScriptCompressor(...). If you want to add several Compressors use _org.apache.wicket.resource.CompositeCssCompressor_ or _org.apache.wicket.resource.CompositeJavaScriptCompressor_
+Introduced in Wicket 6.20.0 / Wicket 7.0.0 there is a default way to be used in which the output of all CssHeaderItems / JavaScriptHeaderItems is modified before they are cached and delivered to the client. You can add a so called Compressor by receiving the resource settings and invoke setJavaScriptCompressor(...) / setJavaScriptCompressor(...). If you want to add several Compressors use _org.apache.wicket.resource.CompositeCssCompressor_ or _org.apache.wicket.resource.CompositeJavaScriptCompressor_
 
 *Java Code:*
 [source,java]
