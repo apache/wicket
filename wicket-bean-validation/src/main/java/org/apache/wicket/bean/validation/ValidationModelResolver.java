@@ -1,8 +1,8 @@
 package org.apache.wicket.bean.validation;
 
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.model.AbstractPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.model.IWrapModel;
 
 /**
@@ -19,7 +19,7 @@ final class ValidationModelResolver
      *
      * @return property-aware model, extracted from supplied component or <code>null</code>
      */
-    public static IPropertyReflectionAwareModel<?> resolvePropertyModelFrom(FormComponent<?> component)
+    public static AbstractPropertyModel<?> resolvePropertyModelFrom(FormComponent<?> component)
     {
         IModel<?> model = component.getModel();
         while (true)
@@ -28,9 +28,9 @@ final class ValidationModelResolver
             {
                 return null;
             }
-            if (model instanceof IPropertyReflectionAwareModel)
+            if (model instanceof AbstractPropertyModel)
             {
-                return (IPropertyReflectionAwareModel<?>) model;
+                return (AbstractPropertyModel<?>) model;
             }
             if (model instanceof IWrapModel<?>)
             {

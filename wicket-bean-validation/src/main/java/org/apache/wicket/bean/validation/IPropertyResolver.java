@@ -1,7 +1,6 @@
 package org.apache.wicket.bean.validation;
 
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.model.IPropertyReflectionAwareModel;
 
 /**
  * Resolves the property to be validated for the given form component. Implementations, incuding the
