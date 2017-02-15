@@ -17,7 +17,7 @@
 package org.apache.wicket.devutils.stateless;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.DummyHomePage;
@@ -33,7 +33,7 @@ import org.junit.Test;
 public class StatelessCheckerTest extends Assert
 {
 	/**
-	 * 
+	 * StatelessPage
 	 */
 	@StatelessComponent
 	public static class StatelessPage extends DummyHomePage
@@ -42,7 +42,7 @@ public class StatelessCheckerTest extends Assert
 	}
 
 	/**
-	 * 
+	 * StatelessLabel
 	 */
 	@StatelessComponent
 	private static class StatelessLabel extends Label
@@ -55,6 +55,27 @@ public class StatelessCheckerTest extends Assert
 		}
 	}
 
+	/**
+	 * StatefulMarkupContainer
+	 */
+	@StatelessComponent
+	private static class StatefulMarkupContainer extends MarkupContainer
+	{
+		private static final long serialVersionUID = 1L;
+
+		public StatefulMarkupContainer(String id) {
+			super(id);
+		}
+		@Override
+		public boolean getStatelessHint()
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * StatefulBehavior
+	 */
 	private static class StatefulBehavior extends Behavior
 	{
 		private static final long serialVersionUID = 1L;
@@ -67,15 +88,12 @@ public class StatelessCheckerTest extends Assert
 	}
 
 	private final StatelessChecker checker = new StatelessChecker();
+
 	private final StatelessChecker checkerQuietly = new StatelessChecker() {
-		protected void fail(Component component, String reason)
+		protected void fail(StatelessCheckFailureException e)
 		{
 			// Do Nothing...
 		}
-		protected void failBehaviors(Component component, String reason) {
-			// Do Nothing...
-		}
-
 	};
 
 	private WicketTester tester;
@@ -101,14 +119,34 @@ public class StatelessCheckerTest extends Assert
 	@Test
 	public void testNonBookmarkablePage()
 	{
-		boolean hit = isHitBookmarkablePage(checker);
+		boolean hit1 = false;
+		try
+		{
+			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
+			tester.startPage(StatelessPage.class);
+		}
+		catch (StatelessCheckFailureException ex)
+		{
+			hit1 = true;
+		}
+		boolean hit = hit1;
 		assertTrue("Expected exception", hit);
 	}
 
 	@Test
 	public void testNonBookmarkablePageQuietly()
 	{
-		boolean hit = isHitBookmarkablePage(checkerQuietly);
+		boolean hit1 = false;
+		try
+		{
+			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checkerQuietly);
+			tester.startPage(StatelessPage.class);
+		}
+		catch (StatelessCheckFailureException ex)
+		{
+			hit1 = true;
+		}
+		boolean hit = hit1;
 		assertFalse("Expected exception", hit);
 	}
 
@@ -132,6 +170,32 @@ public class StatelessCheckerTest extends Assert
 		tester.startComponentInPage(new StatelessLabel("foo"));
 	}
 
+	@Test
+	public void testStatefulMarkupContainer() {
+		boolean hit = isHitMarkupContainer(checker);
+		assertTrue("Expected exception", hit);
+	}
+
+	@Test
+	public void testStatefulMarkupContainerQuietly() {
+		boolean hit = isHitMarkupContainer(checkerQuietly);
+		assertFalse("Expected exception", hit);
+	}
+
+	private boolean isHitMarkupContainer(StatelessChecker checker) {
+		boolean hit = false;
+		try
+		{
+			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
+			tester.startComponentInPage(new StatefulMarkupContainer("foo"));
+		}
+		catch (StatelessCheckFailureException ex)
+		{
+			hit = true;
+		}
+		return hit;
+	}
+
 	private boolean isHitBehaviors(StatelessChecker checker) {
 		boolean hit = false;
 		try
@@ -139,23 +203,7 @@ public class StatelessCheckerTest extends Assert
 			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
 			tester.startComponentInPage(new StatelessLabel("foo").add(new StatefulBehavior()));
 		}
-		catch (WicketRuntimeException ex)
-		{
-			if(ex.getCause() instanceof IllegalStateException) {
-				hit = true;
-			}
-		}
-		return hit;
-	}
-
-	private boolean isHitBookmarkablePage(StatelessChecker checker) {
-		boolean hit = false;
-		try
-		{
-			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-			tester.startPage(StatelessPage.class);
-		}
-		catch (IllegalArgumentException ex)
+		catch (StatelessCheckFailureException ex)
 		{
 			hit = true;
 		}

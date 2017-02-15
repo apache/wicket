@@ -56,54 +56,11 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	/**
 	 * The given component claims to be stateless but isn't.
 	 *
-	 * @param component component failing stateless check
-	 * @param reason explaining reason
+	 * @param e StatelessCheckFailureException
 	 */
-	protected void fail(Component component, String reason)
+	protected void fail(StatelessCheckFailureException e)
 	{
-		throw new IllegalArgumentException(getMessage(component) + reason);
-	}
-
-	/**
-	 * The given page claims to be stateless but isn't.
-	 *
-	 * @param page page failing stateless check
-	 * @param reason explaining reason
-	 */
-	protected void failPage(Page page, String reason)
-	{
-		fail(page, reason);
-	}
-
-	/**
-	 * The given markupContainer claims to be stateless but isn't.
-	 *
-	 * @param markupContainer MarkupContainer failing stateless check
-	 * @param reason explaining reason
-	 */
-	protected void failMarkupContainer(MarkupContainer markupContainer, String reason)
-	{
-		fail(markupContainer, reason);
-	}
-	/**
-	 * The given component claims to be stateless but isn't, because the holding behaviors are stateful.
-	 *
-	 * @param component component failing stateless check
-	 * @param reason explaining reason
-	 */
-	protected void failBehaviors(Component component, String reason)
-	{
-		throw new IllegalStateException(getMessage(component) + reason);
-	}
-	/**
-	 * return the message from the component
-	 *
-	 * @param component component failing stateless check
-	 * @return message
-	 */
-	private String getMessage(Component component)
-	{
-		return "'" + component + "' claims to be stateless but isn't. ";
+		throw e;
 	}
 
 	/**
@@ -162,7 +119,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				{
 				    reason = " Stateful behaviors: " + statefulBehaviors.join();
 				}
-				failBehaviors(component, reason);
+				fail(new StatelessCheckFailureException(component, reason));
 			}
 
 			if (component instanceof MarkupContainer)
@@ -172,7 +129,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				final Object o = container.visitChildren(visitor);
 				if (o != null)
 				{
-					failMarkupContainer(container, " Offending component: " + o);
+					fail(new StatelessCheckFailureException(container, " Offending component: " + o));
 				}
 			}
 
@@ -181,11 +138,11 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				final Page p = (Page)component;
 				if (!p.isBookmarkable())
 				{
-					failPage(p, " Only bookmarkable pages can be stateless");
+					fail(new StatelessCheckFailureException(p, " Only bookmarkable pages can be stateless"));
 				}
 				if (!p.isPageStateless())
 				{
-					failPage(p, " for unknown reason");
+					fail(new StatelessCheckFailureException(p, " for unknown reason"));
 				}
 			}
 		}
