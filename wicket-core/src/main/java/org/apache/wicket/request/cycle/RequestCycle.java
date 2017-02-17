@@ -18,6 +18,11 @@ package org.apache.wicket.request.cycle;
 
 import java.util.Optional;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.AsyncEvent;
+import javax.servlet.AsyncListener;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
@@ -45,6 +50,7 @@ import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -122,6 +128,8 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	private final RequestHandlerExecutor requestHandlerExecutor;
 
 	private Response activeResponse;
+
+	private SuspensionImpl suspension;
 
 	/**
 	 * Construct.
@@ -222,7 +230,9 @@ public class RequestCycle implements IRequestCycle, IEventSink
 		}
 		finally
 		{
-			detach();
+			if (suspension == null) {
+				detach();
+			}
 		}
 		return result;
 	}
@@ -283,7 +293,12 @@ public class RequestCycle implements IRequestCycle, IEventSink
 				IRequestHandler next = requestHandlerExecutor.execute(handler);
 				listeners.onRequestHandlerExecuted(this, handler);
 				
-				handler = next;
+				if (suspension == null) {
+					handler = next;
+				} else {
+					handler = null;
+					suspension.handler = next;
+				}
 			}
 			catch (RuntimeException e)
 			{
@@ -302,6 +317,22 @@ public class RequestCycle implements IRequestCycle, IEventSink
 				handler = replacer.getReplacementRequestHandler();
 			}
 		}
+	}
+
+	/**
+	 * Suspend the request cycle to be resumed on another thread.
+	 * 
+	 * @param timeout {@literal 0} for no timeout
+	 * @return suspension to be resumed
+	 */
+	public Suspension suspend(long timeout) {
+		HttpServletRequest httpServletRequest = (HttpServletRequest)request.getContainerRequest();
+		
+		AsyncContext context = httpServletRequest.startAsync();
+		context.setTimeout(timeout);
+		suspension = new SuspensionImpl(context);
+			
+		return suspension; 
 	}
 
 	/**
@@ -925,4 +956,122 @@ public class RequestCycle implements IRequestCycle, IEventSink
 
 	}
 
+	public interface Suspension {
+		void resume();
+	}
+
+	class SuspensionImpl implements Suspension, AsyncListener {
+
+		AsyncContext asyncContext;
+
+		Application application;
+
+		ClassLoader classLoader;
+
+		IRequestHandler handler;
+
+		SuspensionImpl(AsyncContext asyncContext)
+		{
+			this.asyncContext = asyncContext;
+			this.asyncContext.addListener(this);
+			
+			application = Application.get();
+			classLoader = Thread.currentThread().getContextClassLoader();
+		}
+		
+		/**
+		 * Resume the suspension.
+		 */
+		public synchronized void resume()
+		{
+			if (suspension == null) {
+				throw new WicketRuntimeException("not longer suspended");
+			}
+			suspension = null;
+			
+			final ThreadContext previousThreadContext = ThreadContext.detach();
+			ThreadContext.setApplication(application);
+
+			final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
+			if (previousClassLoader != classLoader)
+			{
+				Thread.currentThread().setContextClassLoader(classLoader);
+			}
+
+			try
+			{
+				set(RequestCycle.this);
+				
+				execute(handler);
+
+				((WebResponse)getResponse()).flush();
+
+				detach();
+			}
+			finally
+			{
+				set(null);
+				
+				ThreadContext.restore(previousThreadContext);
+
+				if (classLoader != previousClassLoader)
+				{
+					Thread.currentThread().setContextClassLoader(previousClassLoader);
+				}
+				
+				asyncContext.complete();
+			}
+		}
+
+		@Override
+		public void onComplete(AsyncEvent event)
+		{
+		}
+
+		@Override
+		public synchronized void onTimeout(AsyncEvent event)
+		{
+			suspension = null;
+			
+			final ThreadContext previousThreadContext = ThreadContext.detach();
+			ThreadContext.setApplication(application);
+
+			final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
+			if (previousClassLoader != classLoader)
+			{
+				Thread.currentThread().setContextClassLoader(classLoader);
+			}
+
+			try
+			{
+				set(RequestCycle.this);
+				
+				detach();
+			}
+			finally
+			{
+				set(null);
+				
+				ThreadContext.restore(previousThreadContext);
+
+				if (classLoader != previousClassLoader)
+				{
+					Thread.currentThread().setContextClassLoader(previousClassLoader);
+				}
+				
+				asyncContext.complete();
+			}
+		}
+
+		@Override
+		public void onError(AsyncEvent event)
+		{
+		}
+
+
+		@Override
+		public void onStartAsync(AsyncEvent event)
+		{
+		}
+	}
 }

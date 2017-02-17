@@ -181,7 +181,7 @@ public class ServletWebRequest extends WebRequest
 		}
 		StringBuilder url = new StringBuilder();
 		uri = Strings.stripJSessionId(uri);
-		String contextPath = httpServletRequest.getContextPath();
+		String contextPath = getContextPath();
 
 		if (LOG.isDebugEnabled())
 		{
