@@ -31,9 +31,9 @@ import org.apache.wicket.WicketRuntimeException;
  */
 public class StatelessCheckFailureException  extends WicketRuntimeException
 {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private Component component;
+	private Component component;
 
 	/**
 	 * Construct.
@@ -41,16 +41,17 @@ public class StatelessCheckFailureException  extends WicketRuntimeException
 	 * @param reason Reason for exception occurrence
 	 */
 	public StatelessCheckFailureException(Component component, String reason)
-    {
-        super("'" + component + "' claims to be stateless but isn't." + reason);
-        this.component = component;
-    }
+	{
+		super("'" + component + "' claims to be stateless but isn't." + reason);
+		this.component = component;
+	}
 
 	/**
 	 * Get check failure component
 	 * @return Failure component
 	 */
-	public Component getComponent() {
+	public Component getComponent()
+	{
 		return component;
 	}
 }
