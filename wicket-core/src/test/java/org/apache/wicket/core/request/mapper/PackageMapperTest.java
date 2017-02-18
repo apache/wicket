@@ -21,11 +21,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import org.apache.wicket.MockPage;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -243,9 +243,9 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -263,8 +263,8 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -286,9 +286,9 @@ public class PackageMapperTest extends AbstractMapperTest
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
@@ -309,8 +309,8 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		assertEquals(page.getRenderCount(), 5);
@@ -497,15 +497,14 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
-		// shouldn't make any difference for
-		// BookmarkableListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for BookmarkableListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider);
+		IRequestHandler handler = new BookmarkableListenerRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
 
@@ -524,15 +523,14 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
-		// shouldn't make any difference for
-		// BookmarkableListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for BookmarkableListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider, 4);
+		IRequestHandler handler = new BookmarkableListenerRequestHandler(provider, 4);
 
 		Url url = encoder.mapHandler(handler);
 

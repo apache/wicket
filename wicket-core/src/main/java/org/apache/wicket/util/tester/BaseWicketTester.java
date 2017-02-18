@@ -60,9 +60,10 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -1093,8 +1094,19 @@ public class BaseWicketTester
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
-			component.getPage(), component));
+		Page page = component.getPage();
+		PageAndComponentProvider pageAndComponentProvider = new PageAndComponentProvider(page,
+			component);
+
+		IRequestHandler handler = null;
+		if (page.isPageStateless() || (page.isBookmarkable() && page.wasCreatedBookmarkable()))
+		{
+			handler = new BookmarkableListenerRequestHandler(pageAndComponentProvider);
+		}
+		else
+		{
+			handler = new ListenerRequestHandler(pageAndComponentProvider);
+		}
 
 		Url url = urlFor(handler);
 		request.setUrl(url);
@@ -1119,7 +1131,7 @@ public class BaseWicketTester
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
+		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
 			component.getPage(), component));
 
 		processRequest(handler);

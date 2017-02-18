@@ -28,7 +28,7 @@ import org.apache.wicket.request.component.IRequestableComponent;
  *
  * @author Emond Papegaaij
  */
-public class ListenerInterfaceLogData extends PageLogData
+public class ListenerLogData extends PageLogData
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,10 +43,9 @@ public class ListenerInterfaceLogData extends PageLogData
 	 * Construct.
 	 *
 	 * @param pageAndComponentProvider
-	 * @param listenerInterface
 	 * @param behaviorIndex
 	 */
-	public ListenerInterfaceLogData(IPageAndComponentProvider pageAndComponentProvider, Integer behaviorIndex)
+	public ListenerLogData(IPageAndComponentProvider pageAndComponentProvider, Integer behaviorIndex)
 	{
 		super(pageAndComponentProvider);
 		componentClass = tryToGetComponentClass(pageAndComponentProvider);

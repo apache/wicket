@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.IRequestListener;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -47,7 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract encoder for Bookmarkable, Hybrid and BookmarkableListenerInterface URLs.
+ * Abstract encoder for Bookmarkable, Hybrid and BookmarkableListener URLs.
  * 
  * @author Matej Knopp
  */
@@ -304,7 +304,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 		checkExpiration(provider, pageInfo);
 
-		return new ListenerInterfaceRequestHandler(provider, componentInfo.getBehaviorId());
+		return new ListenerRequestHandler(provider, componentInfo.getBehaviorId());
 	}
 
 	private void checkExpiration(PageProvider provider, PageInfo pageInfo)
@@ -430,10 +430,10 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			}
 
 		}
-		else if (requestHandler instanceof BookmarkableListenerInterfaceRequestHandler)
+		else if (requestHandler instanceof BookmarkableListenerRequestHandler)
 		{
 			// request listener URL with page class information
-			BookmarkableListenerInterfaceRequestHandler handler = (BookmarkableListenerInterfaceRequestHandler)requestHandler;
+			BookmarkableListenerRequestHandler handler = (BookmarkableListenerRequestHandler)requestHandler;
 			Class<? extends IRequestablePage> pageClass = handler.getPageClass();
 
 			if (!checkPageClass(pageClass))

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.handler;
 
+import static org.hamcrest.Matchers.is;
+
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -25,9 +27,15 @@ import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.core.request.mapper.MountedMapper;
+import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.resource.DummyPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
@@ -36,9 +44,9 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
- * Tests for {@link ListenerInterfaceRequestHandler}
+ * Tests for {@link ListenerRequestHandler}
  */
-public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
+public class ListenerRequestHandlerTest extends WicketTestCase
 {
 
 	/**
@@ -50,14 +58,14 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 		// non-existing component on fresh page is ignored
 		PageAndComponentProvider freshPage = new PageAndComponentProvider(DummyPage.class, null,
 			"foo");
-		new ListenerInterfaceRequestHandler(freshPage).respond(tester
+		new ListenerRequestHandler(freshPage).respond(tester
 			.getRequestCycle());
 
 		// non-existing component on old page fails
 		PageAndComponentProvider oldPage = new PageAndComponentProvider(new DummyPage(), "foo");
 		try
 		{
-			new ListenerInterfaceRequestHandler(oldPage)
+			new ListenerRequestHandler(oldPage)
 				.respond(tester.getRequestCycle());
 			fail();
 		}
@@ -146,8 +154,85 @@ public class ListenerInterfaceRequestHandlerTest extends WicketTestCase
 	public void isPageInstanceCreatedOnClassLinks()
 	{
 		PageAndComponentProvider provider = new PageAndComponentProvider(Page.class, "link");
-		ListenerInterfaceRequestHandler handler = new ListenerInterfaceRequestHandler(provider);
+		ListenerRequestHandler handler = new ListenerRequestHandler(provider);
 		assertFalse("Handler should not report a page instance is available ",
 			handler.isPageInstanceCreated());
 	}
+
+	@Test
+	public void executeStatelessLinkInAFreshPage()
+	{
+		tester.startPage(StatelessPage.class);
+
+		tester.clickLink("statelessLink");
+
+		StatelessPage page = (StatelessPage)tester.getLastRenderedPage();
+		assertThat(page.invoked, is(true));
+		assertThat(page.executedInAnFreshPage, is(true));
+	}
+
+	@Test
+	public void executeStatelessLinkInAFreshPageAtASegment()
+	{
+		tester.getApplication().getRootRequestMapperAsCompound() .add(new MountedMapper("/segment", TemporarilyStateful.class));
+		tester.startPage(TemporarilyStateful.class);
+
+		tester.clickLink("statelessLink");
+
+		TemporarilyStateful page = (TemporarilyStateful)tester.getLastRenderedPage();
+		assertThat(page.invoked, is(true));
+		assertThat(page.executedInAnFreshPage, is(true));
+	}
+
+	public static class StatelessPage extends WebPage
+	{
+		public boolean invoked;
+		public boolean executedInAnFreshPage;
+		private boolean initialState = true;
+
+		public StatelessPage(PageParameters pageParameters)
+		{
+			super(pageParameters);
+			add(new StatelessLink<Object>("statelessLink")
+			{
+				public void onClick()
+				{
+					invoked = true;
+					executedInAnFreshPage = initialState;
+				}
+			});
+		}
+
+		@Override
+		public IMarkupFragment getMarkup()
+		{
+			return Markup.of(
+				"<html><body><a wicket:id=\"statelessLink\"></a></body></html>");
+		}
+
+		@Override
+		protected void onBeforeRender()
+		{
+			initialState = false;
+			super.onBeforeRender();
+		}
+	}
+	public static class TemporarilyStateful extends StatelessPage
+	{
+
+		public TemporarilyStateful(PageParameters pageParameters)
+		{
+			super(pageParameters);
+			setStatelessHint(false);
+		}
+
+
+		@Override
+		protected void onBeforeRender()
+		{
+			setStatelessHint(true);
+			super.onBeforeRender();
+		}
+	}
+
 }

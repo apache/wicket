@@ -220,6 +220,15 @@ public class PageProvider implements IPageProvider, IClusterable
 	}
 
 	/**
+	 * @see org.apache.wicket.core.request.handler.IPageProvider#wasExpired()
+	 */
+	@Override
+	public boolean wasExpired()
+	{
+		return pageId != null && isPageInstanceFresh();
+	}
+
+	/**
 	 * @see IPageProvider#getPageClass()
 	 */
 	@Override

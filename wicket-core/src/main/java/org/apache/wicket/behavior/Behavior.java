@@ -203,19 +203,19 @@ public abstract class Behavior
 
 	/**
 	 * Checks whether or not an {@link IRequestListener} can be invoked on this behavior. For further
-	 * information please read the javadoc on {@link Component#canCallListenerInterface()},
+	 * information please read the javadoc on {@link Component#canCallListener()},
 	 * this method has the same semantics.
 	 * 
-	 * WARNING: Read the javadoc of {@link Component#canCallListenerInterface()} for important
+	 * WARNING: Read the javadoc of {@link Component#canCallListener()} for important
 	 * security-related information.
 	 * 
 	 * @param component
 	 *            component this behavior is attached to
 	 * @return {@literal true} iff the listener method can be invoked
 	 */
-	public boolean canCallListenerInterface(Component component)
+	public boolean canCallListener(Component component)
 	{
-		return isEnabled(component) && component.canCallListenerInterface();
+		return isEnabled(component) && component.canCallListener();
 	}
 
 

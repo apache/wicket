@@ -111,13 +111,10 @@ public class Markup extends AbstractMarkupFragment
 	 */
 	public Markup(final MarkupResourceStream markupResourceStream)
 	{
-		if (markupResourceStream == null)
-		{
-			throw new IllegalArgumentException("Parameter 'markupResourceStream' must not be null");
-		}
+		Args.notNull(markupResourceStream, "markupResourceStream");
 
 		this.markupResourceStream = markupResourceStream;
-		markupElements = new ArrayList<MarkupElement>();
+		markupElements = new ArrayList<>();
 	}
 
 	@Override

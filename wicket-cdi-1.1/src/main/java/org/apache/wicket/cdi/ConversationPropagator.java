@@ -224,9 +224,6 @@ public class ConversationPropagator implements IRequestCycleListener
 			} else if ("org.apache.wicket.protocol.ws.api.WebSocketRequestHandler".equals(handlerClassName)) {
 				// injection is not supported in web sockets communication
 				return false;
-			} else if ("org.apache.wicket.atmosphere.AtmosphereRequestHandler".equals(handlerClassName)) {
-				// injection is not supported in web sockets communication
-				return false;
 			}
 		}
 		return true;

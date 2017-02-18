@@ -22,7 +22,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
-import org.apache.wicket.core.request.handler.logger.ListenerInterfaceLogData;
+import org.apache.wicket.core.request.handler.logger.ListenerLogData;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
@@ -38,20 +38,20 @@ import org.slf4j.LoggerFactory;
  *
  * @author Matej Knopp
  */
-public class ListenerInterfaceRequestHandler
+public class ListenerRequestHandler
 	implements
 		IPageRequestHandler,
 		IComponentRequestHandler,
 		ILoggableRequestHandler
 {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ListenerInterfaceRequestHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ListenerRequestHandler.class);
 
 	private final IPageAndComponentProvider pageComponentProvider;
 
 	private final Integer behaviorId;
 
-	private ListenerInterfaceLogData logData;
+	private ListenerLogData logData;
 
 	/**
 	 * Construct.
@@ -59,7 +59,7 @@ public class ListenerInterfaceRequestHandler
 	 * @param pageComponentProvider
 	 * @param behaviorIndex
 	 */
-	public ListenerInterfaceRequestHandler(IPageAndComponentProvider pageComponentProvider, Integer behaviorIndex)
+	public ListenerRequestHandler(IPageAndComponentProvider pageComponentProvider, Integer behaviorIndex)
 	{
 		Args.notNull(pageComponentProvider, "pageComponentProvider");
 
@@ -72,7 +72,7 @@ public class ListenerInterfaceRequestHandler
 	 *
 	 * @param pageComponentProvider
 	 */
-	public ListenerInterfaceRequestHandler(PageAndComponentProvider pageComponentProvider)
+	public ListenerRequestHandler(PageAndComponentProvider pageComponentProvider)
 	{
 		this(pageComponentProvider, null);
 	}
@@ -120,7 +120,7 @@ public class ListenerInterfaceRequestHandler
 	{
 		if (logData == null)
 		{
-			logData = new ListenerInterfaceLogData(pageComponentProvider, behaviorId);
+			logData = new ListenerLogData(pageComponentProvider, behaviorId);
 		}
 		pageComponentProvider.detach();
 	}
@@ -167,28 +167,25 @@ public class ListenerInterfaceRequestHandler
 			// initialize the page to be able to check whether it is stateless
 			((Page)page).internalInitialize();
 		}
-		final boolean isStateless = page.isPageStateless();
 
-		RedirectPolicy policy = isStateless
+		RedirectPolicy policy = page.isPageStateless()
 			? RedirectPolicy.NEVER_REDIRECT
 			: RedirectPolicy.AUTO_REDIRECT;
 
-		final boolean canCallListenerInterfaceAfterExpiry = component != null && component.canCallListenerInterfaceAfterExpiry();
+		boolean blockIfExpired = component != null && !component.canCallListenerAfterExpiry();
 
-		if (!canCallListenerInterfaceAfterExpiry && freshPage && (isStateless == false || component == null))
+		boolean lateComponent = component == null && freshPage;
+
+		if ((pageComponentProvider.wasExpired() && blockIfExpired) || lateComponent)
 		{
-			// A request listener is invoked on an expired page.
-
-			// If the page is stateful then we cannot assume that the listener is
-			// invoked on its initial state (right after page initialization) and that its
-			// component and/or behavior will be available. That's why the listener
-			// should be ignored and the best we can do is to re-paint the newly constructed
-			// page.
+			// A request listener is invoked on an expired page or the component couldn't be
+			// determined. The best we can do is to re-paint the newly constructed page.
+			// Reference: WICKET-4454, WICKET-6288
 
 			if (LOG.isDebugEnabled())
 			{
 				LOG.debug(
-					"An IRequestListener on '{}' is executed on an expired stateful page. "
+					"An IRequestListener was called but its page/component({}) couldn't be resolved. "
 						+ "Scheduling re-create of the page and ignoring the listener interface...",
 					getComponentPath());
 			}
@@ -241,7 +238,7 @@ public class ListenerInterfaceRequestHandler
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
 
-		if (!component.canCallListenerInterface())
+		if (!component.canCallListener())
 		{
 			// just return so that we have a silent fail and just re-render the
 			// page
@@ -267,7 +264,7 @@ public class ListenerInterfaceRequestHandler
 		// we are in Wicket core land
 		final Component component = (Component)rcomponent;
 
-		if (!behavior.canCallListenerInterface(component))
+		if (!behavior.canCallListener(component))
 		{
 			LOG.warn("behavior not enabled; ignore call. Behavior {} at component {}", behavior,
 				component);
@@ -323,7 +320,7 @@ public class ListenerInterfaceRequestHandler
 	}
 
 	@Override
-	public ListenerInterfaceLogData getLogData()
+	public ListenerLogData getLogData()
 	{
 		return logData;
 	}

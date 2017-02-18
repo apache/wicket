@@ -26,8 +26,9 @@
     
     <container qualifier="wildfly" default="true">
     	<configuration>
+    	 	<property name="managementPort">${wicket.arquillian.management.port}</property>
     		<property name="jbossHome">target/wildfly-${wildfly.version}</property>
-    		<property name="javaVmArguments">-Xrunjdwp:transport=dt_socket,address=48787,server=y,suspend=n</property>
+    		<property name="javaVmArguments">-Xrunjdwp:transport=dt_socket,address=${java.debug.wire.protocol.port},server=y,suspend=n</property>
     	</configuration>
     </container>
 

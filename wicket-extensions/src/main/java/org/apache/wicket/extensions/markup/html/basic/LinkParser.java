@@ -32,7 +32,7 @@ import org.apache.wicket.util.string.Strings;
  */
 public class LinkParser implements ILinkParser
 {
-	private final Map<String, ILinkRenderStrategy> renderStrategies = new HashMap<>();
+	private final Map<Pattern, ILinkRenderStrategy> renderStrategies = new HashMap<>();
 
 	/**
 	 * Adds a render strategy to the parser.
@@ -47,7 +47,8 @@ public class LinkParser implements ILinkParser
 	public ILinkParser addLinkRenderStrategy(final String pattern,
 		final ILinkRenderStrategy renderStrategy)
 	{
-		renderStrategies.put(pattern, renderStrategy);
+		final Pattern compiledPattern = Pattern.compile(pattern, Pattern.DOTALL);
+		renderStrategies.put(compiledPattern, renderStrategy);
 		return this;
 	}
 
@@ -67,12 +68,12 @@ public class LinkParser implements ILinkParser
 		// don't try to parse markup. just plain text. WICKET-4099
 		if (work.indexOf('<') == -1)
 		{
-			for (Map.Entry<String, ILinkRenderStrategy> entry : renderStrategies.entrySet())
+			for (Map.Entry<Pattern, ILinkRenderStrategy> entry : renderStrategies.entrySet())
 			{
-				String pattern = entry.getKey();
+				Pattern pattern = entry.getKey();
 				ILinkRenderStrategy strategy = entry.getValue();
 
-				Matcher matcher = Pattern.compile(pattern, Pattern.DOTALL).matcher(work);
+				Matcher matcher = pattern.matcher(work);
 				StringBuffer buffer = new StringBuffer();
 				while (matcher.find())
 				{

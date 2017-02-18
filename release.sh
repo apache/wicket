@@ -470,11 +470,8 @@ do
     echo >> $NOTICE
 done
 
-echo "Fixing the quickstart to use the correct wicket version"
-sed -e "s/\<wicket\.version\>.*\<\/wicket\.version\>/\<wicket.version\>$version\<\/wicket.version\>/g" -i "" archetypes/quickstart/src/main/resources/archetype-resources/pom.xml
-
 echo "Committing changes"
-git commit -am "Changes to notice files and quickstart archetype"
+git commit -am "Changes to notice files"
 
 # clean all projects
 echo "Clean all projects"

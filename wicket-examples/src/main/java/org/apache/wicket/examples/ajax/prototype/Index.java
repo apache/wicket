@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.ajax.prototype;
 
 import org.apache.wicket.core.request.handler.ComponentRenderingRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -79,8 +79,7 @@ public class Index extends WicketExamplePage
 			@Override
 			protected String getOnClickScript(CharSequence url)
 			{
-				IRequestHandler handler = new ListenerInterfaceRequestHandler(
-					new PageAndComponentProvider(getPage(), this));
+				IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(getPage(), this));
 				Url componentUrl = RequestCycle.get().mapUrlFor(handler);
 				componentUrl.addQueryParameter("anticache", Math.random());
 				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(

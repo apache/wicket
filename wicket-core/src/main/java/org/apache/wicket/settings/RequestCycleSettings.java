@@ -131,7 +131,7 @@ public class RequestCycleSettings
 		 * </p>
 		 * <p>
 		 * Also, even with this strategy set, it is ignored for instances of
-		 * {@link org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler},
+		 * {@link org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler},
 		 * because otherwise they wouldn't be bookmarkable.
 		 * </p>
 		 */

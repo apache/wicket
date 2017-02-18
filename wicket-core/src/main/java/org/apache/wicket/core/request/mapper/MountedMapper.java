@@ -18,7 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.function.Supplier;
 
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -53,7 +53,7 @@ import org.apache.wicket.util.string.Strings;
  *  IPage Instance - Render Hybrid (RenderPageRequestHandler for mounted pages)
  *  /mount/point?2
  * 
- *  IPage Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler for mounted pages)
+ *  IPage Instance - Bookmarkable Listener (BookmarkableListenerRequestHandler for mounted pages)
  *  /mount/point?2-click-foo-bar-baz
  *  /mount/point?2-5.click.1-foo-bar-baz (1 is behavior index, 5 is render count)
  *  (these will redirect to hybrid if page is not stateless)
@@ -158,10 +158,10 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	{
 		Url url = super.mapHandler(requestHandler);
 
-		if (url == null && requestHandler instanceof ListenerInterfaceRequestHandler &&
+		if (url == null && requestHandler instanceof ListenerRequestHandler &&
 			getRecreateMountedPagesAfterExpiry())
 		{
-			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
+			ListenerRequestHandler handler = (ListenerRequestHandler)requestHandler;
 			IRequestablePage page = handler.getPage();
 			if (checkPageInstance(page))
 			{

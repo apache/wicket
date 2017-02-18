@@ -62,6 +62,13 @@ public interface IPageProvider
 	boolean isNewPageInstance();
 
 	/**
+	 * Returns whether the provided page was expired prior to this access.
+	 *
+	 * @return <code>true></code> if the page was created after its original instance expired.
+	 */
+	boolean wasExpired();
+
+	/**
 	 * Returns class of the page.
 	 *
 	 * @return page class

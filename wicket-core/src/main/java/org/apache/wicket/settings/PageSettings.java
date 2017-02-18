@@ -49,7 +49,7 @@ public class PageSettings
 	 * determines whether an {@link IRequestListener} can be executed
 	 * when its owning page is freshly created after expiration
 	 */
-	private boolean callListenerInterfaceAfterExpiry = false;
+	private boolean callListenerAfterExpiry = false;
 
 	/**
 	 * Adds a component resolver to the list.
@@ -133,26 +133,26 @@ public class PageSettings
 	 * @return {@code true} if Wicket should execute an {@link IRequestListener} on a component
 	 *      which owning page is freshly created after expiration of the old one
 	 * @see #getRecreateBookmarkablePagesAfterExpiry()
-	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerInterfaceAfterExpiry()
+	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerAfterExpiry()
 	 */
-	public boolean getCallListenerInterfaceAfterExpiry()
+	public boolean getCallListenerAfterExpiry()
 	{
-		return recreateBookmarkablePagesAfterExpiry && callListenerInterfaceAfterExpiry;
+		return recreateBookmarkablePagesAfterExpiry && callListenerAfterExpiry;
 	}
 
 	/**
 	 * Sets a setting that determines whether Wicket should execute the {@link IRequestListener} on a component
 	 * which owner page is freshly created after expiration of the old one
 	 *
-	 * @param callListenerInterfaceAfterExpiry
-	 *          {@code true} if Wicket should execute the listener interface
+	 * @param callAfterExpiry
+	 *          {@code true} if Wicket should execute the listener
 	 * @see #setRecreateBookmarkablePagesAfterExpiry(boolean)
-	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerInterfaceAfterExpiry()
+	 * @see org.apache.wicket.request.component.IRequestableComponent#canCallListenerAfterExpiry()
 	 * @return {@code this} object for chaining
 	 */
-	public PageSettings setCallListenerInterfaceAfterExpiry(boolean callListenerInterfaceAfterExpiry)
+	public PageSettings setCallListenerAfterExpiry(boolean callAfterExpiry)
 	{
-		this.callListenerInterfaceAfterExpiry = callListenerInterfaceAfterExpiry;
+		this.callListenerAfterExpiry = callAfterExpiry;
 		return this;
 	}
 }
