@@ -42,7 +42,7 @@ public class StatelessCheckFailureException  extends WicketRuntimeException
 	 */
 	public StatelessCheckFailureException(Component component, String reason)
     {
-        super("'" + component + "' claims to be stateless but isn't. ");
+        super("'" + component + "' claims to be stateless but isn't." + reason);
         this.component = component;
     }
 

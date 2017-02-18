@@ -87,14 +87,27 @@ public class StatelessCheckerTest extends Assert
 		}
 	}
 
-	private final StatelessChecker checker = new StatelessChecker();
+	/**
+	 * StatelessCheckerQuietly
+	 */
+	private static class StatelessCheckerQuietly extends StatelessChecker
+	{
+		private StatelessCheckFailureException ex;
 
-	private final StatelessChecker checkerQuietly = new StatelessChecker() {
 		protected void fail(StatelessCheckFailureException e)
 		{
-			// Do Nothing...
+			this.ex = e;
 		}
-	};
+
+		public StatelessCheckFailureException getFailureException()
+		{
+			return ex;
+		}
+	}
+
+	private StatelessChecker checker;
+
+	private StatelessCheckerQuietly checkerQuietly;
 
 	private WicketTester tester;
 
@@ -105,6 +118,8 @@ public class StatelessCheckerTest extends Assert
 	public void setUp()
 	{
 		tester = new WicketTester();
+		checker = new StatelessChecker();
+		checkerQuietly = new StatelessCheckerQuietly();
 	}
 
 	/**
@@ -119,95 +134,100 @@ public class StatelessCheckerTest extends Assert
 	@Test
 	public void testNonBookmarkablePage()
 	{
-		boolean hit1 = false;
 		try
 		{
-			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-			tester.startPage(StatelessPage.class);
+			startNonBookmarkablePage(checker);
+			fail("Expected tester.startPage() to fail with StatelessCheckFailureException");
 		}
 		catch (StatelessCheckFailureException ex)
 		{
-			hit1 = true;
+			assertNonBookmarkablePage(ex);
 		}
-		boolean hit = hit1;
-		assertTrue("Expected exception", hit);
 	}
 
 	@Test
 	public void testNonBookmarkablePageQuietly()
 	{
-		boolean hit1 = false;
-		try
-		{
-			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checkerQuietly);
-			tester.startPage(StatelessPage.class);
-		}
-		catch (StatelessCheckFailureException ex)
-		{
-			hit1 = true;
-		}
-		boolean hit = hit1;
-		assertFalse("Expected exception", hit);
+		startNonBookmarkablePage(checkerQuietly);
+		StatelessCheckFailureException ex = checkerQuietly.getFailureException();
+		assertNonBookmarkablePage(ex);
+	}
+
+	private void startNonBookmarkablePage(StatelessChecker checker)
+	{
+		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
+		tester.startPage(StatelessPage.class);
+	}
+
+	private void assertNonBookmarkablePage(StatelessCheckFailureException ex) {
+		assertEquals("'[Page class = org.apache.wicket.devutils.stateless.StatelessCheckerTest$StatelessPage, id = 0, render count = 1]' claims to be stateless but isn't. Offending component: [TestLink [Component id = testPage]]", ex.getMessage());
+		assertEquals(StatelessPage.class, ex.getComponent().getClass());
 	}
 
 	@Test
 	public void testStatefulBehaviors()
 	{
-		boolean hit = isHitBehaviors(checker);
-		assertTrue("Expected exception", hit);
+		try
+		{
+			startComponentInPage(checker, new StatelessLabel("foo").add(new StatefulBehavior()));
+			fail("Expected tester.startComponentInPage() to fail with StatelessCheckFailureException");
+		}
+		catch (StatelessCheckFailureException ex)
+		{
+			assertStatefulBehaviors(ex);
+		}
 	}
+
 	@Test
 	public void testStatefulBehaviorsQuietly()
 	{
-		boolean hit = isHitBehaviors(checkerQuietly);
-		assertFalse("Expected exception", hit);
+		startComponentInPage(checkerQuietly, new StatelessLabel("foo").add(new StatefulBehavior()));
+		StatelessCheckFailureException ex = checkerQuietly.getFailureException();
+		assertStatefulBehaviors(ex);
+	}
+
+	private void startComponentInPage(StatelessChecker checker, Component foo) {
+		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
+		tester.startComponentInPage(foo);
+	}
+
+	private void assertStatefulBehaviors(StatelessCheckFailureException ex) {
+		assertEquals("'[Component id = foo]' claims to be stateless but isn't. Stateful behaviors: org.apache.wicket.devutils.stateless.StatelessCheckerTest$StatefulBehavior", ex.getMessage());
+		assertEquals(StatelessLabel.class, ex.getComponent().getClass());
 	}
 
 	@Test
 	public void testPositive()
 	{
-		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-		tester.startComponentInPage(new StatelessLabel("foo"));
+		startComponentInPage(checker, new StatelessLabel("foo"));
 	}
 
 	@Test
-	public void testStatefulMarkupContainer() {
-		boolean hit = isHitMarkupContainer(checker);
-		assertTrue("Expected exception", hit);
+	public void testStatefulMarkupContainer()
+	{
+		try
+		{
+			startComponentInPage(checker, new StatefulMarkupContainer("foo"));
+			fail("Expected tester.startComponentInPage() to fail with StatelessCheckFailureException");
+		}
+		catch (StatelessCheckFailureException ex)
+		{
+			assertStatefulMarkupContainer(ex);
+		}
 	}
 
 	@Test
-	public void testStatefulMarkupContainerQuietly() {
-		boolean hit = isHitMarkupContainer(checkerQuietly);
-		assertFalse("Expected exception", hit);
+	public void testStatefulMarkupContainerQuietly()
+	{
+		startComponentInPage(checkerQuietly, new StatefulMarkupContainer("foo"));
+		StatelessCheckFailureException ex = checkerQuietly.getFailureException();
+		assertStatefulMarkupContainer(ex);
+
 	}
 
-	private boolean isHitMarkupContainer(StatelessChecker checker) {
-		boolean hit = false;
-		try
-		{
-			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-			tester.startComponentInPage(new StatefulMarkupContainer("foo"));
-		}
-		catch (StatelessCheckFailureException ex)
-		{
-			hit = true;
-		}
-		return hit;
+	private void assertStatefulMarkupContainer(StatelessCheckFailureException ex)
+	{
+		assertEquals("'[StatefulMarkupContainer [Component id = foo]]' claims to be stateless but isn't. Possible reason: no stateless hint", ex.getMessage());
+		assertEquals(StatefulMarkupContainer.class, ex.getComponent().getClass());
 	}
-
-	private boolean isHitBehaviors(StatelessChecker checker) {
-		boolean hit = false;
-		try
-		{
-			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-			tester.startComponentInPage(new StatelessLabel("foo").add(new StatefulBehavior()));
-		}
-		catch (StatelessCheckFailureException ex)
-		{
-			hit = true;
-		}
-		return hit;
-	}
-
 }
