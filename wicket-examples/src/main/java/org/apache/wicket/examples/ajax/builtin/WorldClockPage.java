@@ -60,8 +60,18 @@ public class WorldClockPage extends BasePage
 		final AbstractAjaxTimerBehavior timer = onTimer(Duration.seconds(1), target -> target.add(la, ny, moscow, prague, london));
 		add(timer);
 
-		add(AjaxLink.onClick("stop", timer::stop));
+		add(new AjaxLink<Void>("stop") {
+			@Override
+			public void onClick(org.apache.wicket.ajax.AjaxRequestTarget target) {
+				timer.stop(target);
+			}
+		});
 
-		add(AjaxLink.onClick("restart", timer::restart));
+		add(new AjaxLink<Void>("restart") {
+			@Override
+			public void onClick(org.apache.wicket.ajax.AjaxRequestTarget target) {
+				timer.restart(target);
+			}
+		});
 	}
 }

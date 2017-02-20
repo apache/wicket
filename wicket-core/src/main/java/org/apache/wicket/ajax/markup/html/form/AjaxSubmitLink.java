@@ -23,8 +23,6 @@ import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AbstractSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.util.lang.Args;
-import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -225,68 +223,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 		logger.warn("unexpected invocation of #onAfterSubmit() on {}", this);
 	}
 
-	/**
-	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
-	 *
-	 * @param id
-	 *            the id of ajax submit link
-	 * @param onSubmit
-	 *            the consumer which accepts the link and an {@link AjaxRequestTarget}
-	 * @return the {@link AjaxSubmitLink}
-	 */
-	public static AjaxSubmitLink onSubmit(String id,
-		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-
-		return new AjaxSubmitLink(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit(AjaxRequestTarget target)
-			{
-				onSubmit.accept(this, target);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxSubmitLink} based on lambda expressions
-	 *
-	 * @param id
-	 *            the id of ajax submit link
-	 * @param onSubmit
-	 *            the consumer of the submitted link and an {@link AjaxRequestTarget}
-	 * @param onError
-	 *            the consumer of the link in error and an {@link AjaxRequestTarget}
-	 * @return the {@link AjaxSubmitLink}
-	 */
-	public static AjaxSubmitLink onSubmit(String id,
-		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onSubmit,
-		SerializableBiConsumer<AjaxSubmitLink, AjaxRequestTarget> onError)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-		Args.notNull(onError, "onError");
-
-		return new AjaxSubmitLink(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit(AjaxRequestTarget target)
-			{
-				onSubmit.accept(this, target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target)
-			{
-				onError.accept(this, target);
-			}
-		};
-	}
-	
 	@Override
 	protected boolean getStatelessHint()
 	{

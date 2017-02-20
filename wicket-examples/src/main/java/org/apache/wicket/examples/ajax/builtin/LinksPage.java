@@ -205,16 +205,24 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(AjaxLink.onClick("set-response-page", (lin, target) -> setResponsePage(LinksPage.class)));
+		add(new AjaxLink<Void>("set-response-page") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				setResponsePage(LinksPage.class);
+			}
+		});
 
-		add(AjaxLink.onClick("exception", (link, target) -> {
-			// Set the proper setting to show the error page
-			// note: will be set until the "failure" link is clicked or the application is
-			// restarted
-			getApplication().getExceptionSettings().setAjaxErrorHandlingStrategy(
-				ExceptionSettings.AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE);
+		add(new AjaxLink<Void>("exception") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				// Set the proper setting to show the error page
+				// note: will be set until the "failure" link is clicked or the application is
+				// restarted
+				getApplication().getExceptionSettings().setAjaxErrorHandlingStrategy(
+					ExceptionSettings.AjaxErrorStrategy.REDIRECT_TO_ERROR_PAGE);
 
-			throw new RuntimeException("test whether the exception handling works");
-		}));
+				throw new RuntimeException("test whether the exception handling works");
+			}
+		});
 	}
 }
