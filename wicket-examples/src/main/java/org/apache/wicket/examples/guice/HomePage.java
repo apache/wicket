@@ -40,7 +40,14 @@ public class HomePage extends WicketExamplePage
 	 */
 	public HomePage()
 	{
-		add(Link.onClick("link", (link) -> labelValue = service.getHelloWorldText()));
+		add(new Link<Void>("link")
+		{
+			@Override
+			public void onClick()
+			{
+				labelValue = service.getHelloWorldText();
+			}
+		});
 		add(new Label("message", () -> labelValue));
 	}
 }

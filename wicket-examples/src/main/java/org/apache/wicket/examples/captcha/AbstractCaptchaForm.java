@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.captcha;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
@@ -83,10 +84,14 @@ public abstract class AbstractCaptchaForm<T> extends GenericPanel<T>
 		captchaImage.setOutputMarkupId(true);
 		form.add(captchaImage);
 
-		AjaxLink<Void> changeCaptchaLink = AjaxLink.onClick("changeLink", target -> {
-			captchaImageResource.invalidate();
-			target.add(captchaImage);
-		});
+		AjaxLink<Void> changeCaptchaLink = new AjaxLink<Void>("changeLink") {
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				captchaImageResource.invalidate();
+				target.add(captchaImage);
+			}
+		};
 		form.add(changeCaptchaLink);
 
 		form.add(new RequiredTextField<String>("text",

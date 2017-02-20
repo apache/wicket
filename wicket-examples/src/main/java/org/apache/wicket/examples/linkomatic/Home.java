@@ -66,17 +66,28 @@ public class Home extends WicketExamplePage
 	public Home()
 	{
 		// Action link counts link clicks
-		final Link<Void> actionLink = Link.onClick("actionLink", (link) -> linkClickCount++);
-		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this,
-			"linkClickCount")));
+		final Link<Void> actionLink = new Link<Void>("actionLink")
+		{
+			public void onClick()
+			{
+				linkClickCount++;
+			}
+		};
+		actionLink
+			.add(new Label("linkClickCount", new PropertyModel<Integer>(this, "linkClickCount")));
 		add(actionLink);
 
 		// Action link counts link clicks on works with onclick handler
-		final Link<Void> actionOnClickLink = Link.onClick("actionOnClickLink", (link) -> onClickLinkClickCount++);
-
+		final Link<Void> actionOnClickLink = new Link<Void>("actionOnClickLink")
+		{
+			public void onClick()
+			{
+				onClickLinkClickCount++;
+			}
+		};
 		add(actionOnClickLink);
-		add(new Label("onClickLinkClickCount", new PropertyModel<Integer>(this,
-			"onClickLinkClickCount")));
+		add(new Label("onClickLinkClickCount",
+			new PropertyModel<Integer>(this, "onClickLinkClickCount")));
 
 		// Link to Page1 is a simple external page link
 		add(new BookmarkablePageLink<>("page1Link", Page1.class));
@@ -84,22 +95,33 @@ public class Home extends WicketExamplePage
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
 		BookmarkablePageLink<Void> page3Link = new BookmarkablePageLink<>("page3Link", Page3.class);
-		page3Link.getPageParameters()
-				.add("bookmarkparameter", "3++2 & 5 � >< space + �");
+		page3Link.getPageParameters().add("bookmarkparameter", "3++2 & 5 � >< space + �");
 		add(page3Link);
 
 		// Link to BookDetails page
-		add(Link.onClick("bookDetailsLink", (link) -> setResponsePage(new BookDetails(new Book("The Hobbit")))));
+		add(new Link<Void>("bookDetailsLink")
+		{
+			public void onClick()
+			{
+				setResponsePage(new BookDetails(new Book("The Hobbit")));
+			}
+		});
 
 		// Delayed link to BookDetails page
-		add(Link.onClick("bookDetailsLink2", (link) -> setResponsePage(new BookDetails(new Book("Inside The Matrix")))));
+		add(new Link<Void>("bookDetailsLink2")
+		{
+			public void onClick()
+			{
+				setResponsePage(new BookDetails(new Book("Inside The Matrix")));
+			}
+		});
 
 		// Image map link example
-		Image imageForMap = new Image("imageForMap", new PackageResourceReference(Home.class,
-			"ImageMap.gif"));
+		Image imageForMap = new Image("imageForMap",
+			new PackageResourceReference(Home.class, "ImageMap.gif"));
 		add(imageForMap);
-		add(new ClientSideImageMap("imageMap", imageForMap).addRectangleArea(
-			new BookmarkablePageLink<Page1>("page1", Page1.class), 0, 0, 100, 100)
+		add(new ClientSideImageMap("imageMap", imageForMap)
+			.addRectangleArea(new BookmarkablePageLink<Page1>("page1", Page1.class), 0, 0, 100, 100)
 			.addCircleArea(new BookmarkablePageLink<Page2>("page2", Page2.class), 160, 50, 35)
 			.addPolygonArea(new BookmarkablePageLink<Page3>("page3", Page3.class), 212, 79, 241, 4,
 				279, 54, 212, 79)
@@ -111,14 +133,15 @@ public class Home extends WicketExamplePage
 		add(new BookmarkablePageLink<>("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// Popup example
-		add(new BookmarkablePageLink<>("popupButtonLink", Popup.class).setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink<>("popupButtonLink", Popup.class)
+			.setPopupSettings(popupSettings));
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
 
 		// And that link as a popup
-		PopupSettings googlePopupSettings = new PopupSettings(PopupSettings.RESIZABLE |
-			PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
+		PopupSettings googlePopupSettings = new PopupSettings(
+			PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
 		add(new ExternalLink("googlePopup", "http://www.google.com",
 			"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
 
@@ -155,17 +178,36 @@ public class Home extends WicketExamplePage
 		add(feedbackPanel);
 		add(new RedirectForm("redirectForm"));
 
-		Link<Void> linkToAnchor = Link.onClick("linkToAnchor", (link) -> {});
+		Link<Void> linkToAnchor = new Link<Void>("linkToAnchor")
+		{
+			@Override
+			public void onClick()
+			{
+			}
+		};
 		add(linkToAnchor);
-		Link<Void> anotherlinkToAnchor = Link.onClick("anotherlinkToAnchor", (link) -> {});
+		Link<Void> anotherlinkToAnchor = new Link<Void>("anotherlinkToAnchor")
+		{
+			@Override
+			public void onClick()
+			{
+			};
+		};
 		add(anotherlinkToAnchor);
 		Component anchorLabel = new Label("anchorLabel",
 			"this label is here to function as an anchor for a link").setOutputMarkupId(true);
 		add(anchorLabel);
 		linkToAnchor.setAnchor(anchorLabel);
 
-		Link<Void> linkWithLabel = Link.onClick("linkWithLabel", (link) -> {});
-		linkWithLabel.setBody(Model.of("A link that provides its body with Link.setBody(someModel)"));
+		Link<Void> linkWithLabel = new Link<Void>("linkWithLabel")
+		{
+			@Override
+			public void onClick()
+			{
+			}
+		};
+		linkWithLabel
+			.setBody(Model.of("A link that provides its body with Link.setBody(someModel)"));
 		add(linkWithLabel);
 	}
 

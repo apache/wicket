@@ -34,10 +34,20 @@ public class AutoConversationPage1 extends CdiExamplePage implements Conversatio
 
 	public AutoConversationPage1()
 	{
-		add(new Label("count", new PropertyModel(this, "counter.count")));
+		add(new Label("count", new PropertyModel<Integer>(this, "counter.count")));
 
-		add(Link.onClick("increment", (link) -> counter.increment()));
+		add(new Link<Void>("increment") {
+			@Override
+			public void onClick()
+			{
+				counter.increment();
+			}
+		});
 
-		add(Link.onClick("next", (link) -> setResponsePage(new AutoConversationPage2())));
+		add(new Link<Void>("next") {
+			public void onClick() {
+				setResponsePage(new AutoConversationPage2());
+			}
+		});
 	}
 }

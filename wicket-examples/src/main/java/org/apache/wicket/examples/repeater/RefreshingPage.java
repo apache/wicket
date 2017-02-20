@@ -80,12 +80,19 @@ public class RefreshingPage extends BasePage
 				item.add(new Label("homephone", contact.getHomePhone()));
 				item.add(new Label("cellphone", contact.getCellPhone()));
 
-				item.add(AttributeModifier.replace("class", () -> (item.getIndex() % 2 == 1) ? "even" : "odd"));
+				item.add(AttributeModifier.replace("class",
+					() -> (item.getIndex() % 2 == 1) ? "even" : "odd"));
 			}
 		};
 
 		add(view);
 
-		add(Link.onClick("refreshLink", (link) -> {}));
+		add(new Link<Void>("refreshLink")
+		{
+			@Override
+			public void onClick()
+			{
+			}
+		});
 	}
 }

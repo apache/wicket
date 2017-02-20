@@ -79,10 +79,12 @@ public class FormInput extends WicketExamplePage
 			add(new LocaleDropDownChoice("localeSelect"));
 
 			// Link to return to default locale
-			add(Link.onClick("defaultLocaleLink", (link) -> {
-				WebRequest request = (WebRequest)getRequest();
-				setLocale(request.getLocale());
-			}));
+			add(new Link<Void>("defaultLocaleLink") {
+				public void onClick() {
+					WebRequest request = (WebRequest)getRequest();
+					setLocale(request.getLocale());
+				}
+			});
 
 			add(new TextField<String>("stringProperty").setRequired(true).setLabel(
 				new Model<>("String")));
@@ -174,10 +176,13 @@ public class FormInput extends WicketExamplePage
 
 			add(new Button("saveButton"));
 
-			add(Button.onSubmit("resetButton", (btn) -> {
-				// just set a new instance of the page
-				setResponsePage(FormInput.class);
-			}).setDefaultFormProcessing(false));
+			add(new Button("resetButton") {
+				@Override
+				public void onSubmit()
+				{
+					setResponsePage(FormInput.class);
+				}
+			}.setDefaultFormProcessing(false));
 		}
 
 		@Override

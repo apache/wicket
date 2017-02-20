@@ -23,8 +23,6 @@ import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.lang.Args;
-import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -230,68 +228,6 @@ public abstract class AjaxButton extends Button
 	{
 	}
 
-	/**
-	 * Creates an {@link AjaxButton} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the ajax button
-	 * @param onSubmit
-	 *            the consumer which accepts the button and an {@link AjaxRequestTarget}
-	 * @return the {@link AjaxButton}
-	 */
-	public static AjaxButton onSubmit(String id,
-		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-
-		return new AjaxButton(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit(AjaxRequestTarget target)
-			{
-				onSubmit.accept(this, target);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxButton} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the ajax button
-	 * @param onSubmit
-	 *            the consumer of the submitted button and an {@link AjaxRequestTarget}
-	 * @param onError
-	 *            the consumer of the button in error and an {@link AjaxRequestTarget}
-	 * @return the {@link AjaxButton}
-	 */
-	public static AjaxButton onSubmit(String id,
-		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
-		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onError)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-		Args.notNull(onError, "onError");
-
-		return new AjaxButton(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onSubmit(AjaxRequestTarget target)
-			{
-				onSubmit.accept(this, target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target)
-			{
-				onError.accept(this, target);
-			}
-		};
-	}
-	
 	@Override
 	protected boolean getStatelessHint()
 	{
