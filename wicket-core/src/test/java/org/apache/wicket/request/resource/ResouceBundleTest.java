@@ -74,6 +74,23 @@ public class ResouceBundleTest extends WicketTestCase
 	}
 
 	/**
+	 * Tests the replacement of provided resources by their bundle with defer option
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void providedResourceWithDefer() throws Exception
+	{
+		tester.getApplication()
+		.getResourceBundles()
+		.addJavaScriptBundle(ResouceBundleTest.class, "ab.js", true,
+			new JavaScriptResourceReference(ResouceBundleTest.class, "a.js"),
+			new JavaScriptResourceReference(ResouceBundleTest.class, "b.js"));
+
+		executeTest(BundlesPage.class, "BundlesPage_result_defer.html");
+	}
+
+	/**
 	 * Tests an external resource bundle
 	 * 
 	 * @throws Exception
