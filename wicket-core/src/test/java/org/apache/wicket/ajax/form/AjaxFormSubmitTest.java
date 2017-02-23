@@ -22,38 +22,86 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
- * Test case for WICKET-1291
- * 
- * @see <a href="https://issues.apache.org/jira/browse/WICKET-1291">WICKET-1291</a>
  * @author marrink
  */
 public class AjaxFormSubmitTest extends WicketTestCase
 {
+	@Test
+	public void submit()
+	{
+		AjaxFormSubmitTestPage page = new AjaxFormSubmitTestPage(true);
+
+		tester.startPage(page);
+		tester.assertRenderedPage(page.getClass());
+		FormTester form = tester.newFormTester("form");
+		form.setValue("txt1", "txt1");
+		form.setValue("txt2", "txt2");
+		// mark the button as the one being pressed. there is a 'p::' infront of name because wicket
+		// escapes "submit" input names as they break browsers
+		tester.getRequest().getPostParameters().setParameterValue("p::submit", "x");
+		tester.submitForm(form.getForm());
+		tester.assertRenderedPage(page.getClass());
+		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM_SUBMIT) > 0);
+		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM_ERROR) > 0);
+		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON_SUBMIT) > 0);
+		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON_ERROR) > 0);
+		assertEquals("txt1", tester.getComponentFromLastRenderedPage("form:txt1")
+			.getDefaultModelObject());
+		assertEquals("txt2", tester.getComponentFromLastRenderedPage("form:txt2")
+			.getDefaultModelObject());
+	}
+
 	/**
 	 * Test ajax form submit without default form processing.
+	 *
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1291">WICKET-1291</a>
 	 */
 	@Test
 	public void submitNoDefProcessing()
 	{
-		Class<? extends Page> pageClass = AjaxFormSubmitTestPage.class;
-		System.out.println("=== " + pageClass.getName() + " ===");
+		AjaxFormSubmitTestPage page = new AjaxFormSubmitTestPage(false);
 
-		tester.startPage(pageClass);
-		tester.assertRenderedPage(pageClass);
+		tester.startPage(page);
+		tester.assertRenderedPage(page.getClass());
 		FormTester form = tester.newFormTester("form");
 		form.setValue("txt1", "txt1");
 		form.setValue("txt2", "txt2");
-		// mark the button as the one being pressed. there is a ':' infront of name because wicket
-		// escapes "submit" input names as they break browsers
-		tester.getRequest().getPostParameters().setParameterValue(":submit", "x");
 		tester.executeAjaxEvent("form:submit", "click");
-		AjaxFormSubmitTestPage page = (AjaxFormSubmitTestPage)tester.getLastRenderedPage();
-		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM) == AjaxFormSubmitTestPage.FORM);
-		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON) == AjaxFormSubmitTestPage.BUTTON);
+		tester.assertRenderedPage(page.getClass());
+		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM_SUBMIT) > 0);
+		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM_ERROR) > 0);
+		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON_SUBMIT) > 0);
+		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON_ERROR) > 0);
 		assertEquals("foo", tester.getComponentFromLastRenderedPage("form:txt1")
 			.getDefaultModelObject());
 		assertEquals("bar", tester.getComponentFromLastRenderedPage("form:txt2")
 			.getDefaultModelObject());
+	}
+
+	/**
+	 * Test ajax fallback with errors.
+	 *
+	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-6324">WICKET-6324</a>
+	 */
+	@Test
+	public void submitFallbackErrors()
+	{
+		AjaxFormSubmitTestPage page = new AjaxFormSubmitTestPage(true);
+
+		tester.startPage(page);
+		tester.assertRenderedPage(page.getClass());
+		FormTester form = tester.newFormTester("form");
+		form.setValue("txt1", "");
+		form.setValue("txt2", "");
+		// mark the button as the one being pressed. there is a 'p::' infront of name because wicket
+		// escapes "submit" input names as they break browsers
+		tester.getRequest().getPostParameters().setParameterValue("p::submit", "x");
+		tester.submitForm(form.getForm());
+		tester.assertRenderedPage(page.getClass());
+		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM_SUBMIT) > 0);
+		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.FORM_ERROR) > 0);
+		assertFalse((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON_SUBMIT) > 0);
+		assertTrue((page.getFormSubmitted() & AjaxFormSubmitTestPage.BUTTON_ERROR) > 0);
 	}
 
 	/**
@@ -65,7 +113,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	@Test
 	public void eventJavaScriptEscaped() throws Exception
 	{
-		tester.startPage(AjaxFormSubmitTestPage.class);
+		tester.startPage(new AjaxFormSubmitTestPage(false));
 		tester.assertResultPage(AjaxFormSubmitTestPage.class,
 			"AjaxFormSubmitTestPage_expected.html");
 	}
