@@ -73,19 +73,19 @@ public abstract class AjaxFallbackButton extends Button
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmit(Optional.ofNullable(target));
+				AjaxFallbackButton.this.onSubmit(Optional.of(target));
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onAfterSubmit(target);
+				AjaxFallbackButton.this.onAfterSubmit(Optional.of(target));
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onError(target);
+				AjaxFallbackButton.this.onError(Optional.of(target));
 			}
 
 			@Override
@@ -119,7 +119,7 @@ public abstract class AjaxFallbackButton extends Button
 	 * @param target
 	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target)
+	protected void onError(Optional<AjaxRequestTarget> target)
 	{
 	}
 
@@ -128,7 +128,7 @@ public abstract class AjaxFallbackButton extends Button
 	{
 		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onError(null);
+			onError(Optional.empty());
 		}
 	}
 
@@ -152,7 +152,7 @@ public abstract class AjaxFallbackButton extends Button
 	{
 		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onAfterSubmit(null);
+			onAfterSubmit(Optional.empty());
 		}
 	}
 
@@ -188,7 +188,7 @@ public abstract class AjaxFallbackButton extends Button
 	 *            ajax target if this linked was invoked using ajax, null otherwise
 	 * @param form
 	 */
-	protected void onAfterSubmit(final AjaxRequestTarget target)
+	protected void onAfterSubmit(final Optional<AjaxRequestTarget> target)
 	{
 	}
 

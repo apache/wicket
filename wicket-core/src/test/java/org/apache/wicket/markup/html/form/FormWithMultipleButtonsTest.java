@@ -124,11 +124,6 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 				{
 					submitSequence.add(this);
 				}
-
-				@Override
-				protected void onError(AjaxRequestTarget target)
-				{
-				}
 			});
 		}
 
