@@ -64,7 +64,7 @@ public class MultiSelectableFolderContent extends Content
 			selected.add(foo);
 		}
 
-		tree.updateNode(foo, targetOptional);
+		targetOptional.ifPresent(target -> tree.updateNode(foo, target));
 	}
 
 	@Override

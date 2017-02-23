@@ -84,7 +84,7 @@ public class EditableFolderContent extends Content
 						/**
 						 * update whole node in case we're located inside TableTree
 						 */
-						tree.updateNode(model.getObject(), Optional.of(target));
+						tree.updateNode(model.getObject(), target);
 					}
 				};
 			}
