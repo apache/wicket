@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.core.util.lang;
+package org.apache.wicket.core.util.parser;
 
 import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
 import static java.lang.String.format;
 
-import org.apache.wicket.core.util.lang.PropertyExpression.BeanProperty;
-import org.apache.wicket.core.util.lang.PropertyExpression.JavaProperty;
+import org.apache.wicket.core.util.parser.PropertyExpression.BeanProperty;
+import org.apache.wicket.core.util.parser.PropertyExpression.JavaProperty;
 
 /**
  * EBNF like description of the property expression syntax <code>

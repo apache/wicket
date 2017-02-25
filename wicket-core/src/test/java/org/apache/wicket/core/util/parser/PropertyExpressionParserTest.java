@@ -1,11 +1,11 @@
-package org.apache.wicket.core.util.lang;
+package org.apache.wicket.core.util.parser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-import org.apache.wicket.core.util.lang.PropertyExpression.BeanProperty;
-import org.apache.wicket.core.util.lang.PropertyExpression.JavaProperty;
+import org.apache.wicket.core.util.parser.PropertyExpression.BeanProperty;
+import org.apache.wicket.core.util.parser.PropertyExpression.JavaProperty;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
