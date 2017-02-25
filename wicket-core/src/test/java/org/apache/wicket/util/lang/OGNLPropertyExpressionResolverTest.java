@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.lang;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -30,8 +32,13 @@ import java.util.Vector;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.core.util.lang.DefaultPropertyLocator;
 import org.apache.wicket.core.util.lang.OGNLPropertyExpressionResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.PropertyResolverConverter;
+import org.apache.wicket.core.util.reflection.AbstractGetAndSet;
+import org.apache.wicket.core.util.reflection.CachingPropertyLocator;
+import org.apache.wicket.core.util.reflection.IGetAndSet;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.AbstractConverter;
@@ -50,7 +57,11 @@ public class OGNLPropertyExpressionResolverTest extends WicketTestCase
 	private static final PropertyResolverConverter CONVERTER = new PropertyResolverConverter(
 		new ConverterLocator(), Locale.US);
 	OGNLPropertyExpressionResolver ognlResolver = new OGNLPropertyExpressionResolver();
+
+	private static final int AN_INTEGER = 10;
 	private Person person;
+	private Map<String, Integer> integerMap = new HashMap<String, Integer>();
+	private WeirdList integerList = new WeirdList();
 
 	/**
 	 * @throws Exception
@@ -839,4 +850,88 @@ public class OGNLPropertyExpressionResolverTest extends WicketTestCase
 //			}
 //		}
 //	}
+
+
+	// EDGE CASES
+	@Test
+	public void shouldAllowEmptySpacesInsideMethodCallBrackets() throws Exception
+	{
+		person.setName("bob");
+		assertThat("bob", is(PropertyResolver.getValue("person.getName( )", this)));
+	}
+
+	@Test
+	public void shouldAllowMapKeysWithSpecialCharactersIncludingOpenSquareBracket() throws Exception
+	{
+		String code = "!@#$%^&*()_+-=[{}|";
+		String expression = "[" + code + "]";
+		PropertyResolver.setValue(expression, integerMap, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue(expression, integerMap), is(AN_INTEGER));
+		assertThat(integerMap.get(code), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldAllowMapKeysWithDot() throws Exception
+	{
+		String code = "code-1.0";
+		String expression = "[" + code + "]";
+		PropertyResolver.setValue(expression, integerMap, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue(expression, integerMap), is(AN_INTEGER));
+		assertThat(integerMap.get(code), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldAllowMapKeysHavingQuotes() throws Exception
+	{
+		String code = "the\"key\"";
+		String expression = "[" + code + "]";
+		PropertyResolver.setValue(expression, integerMap, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue(expression, integerMap), is(AN_INTEGER));
+		assertThat(integerMap.get(code), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldPriorityzeListIndex() throws Exception
+	{
+		integerList.set0(AN_INTEGER);
+		assertThat(PropertyResolver.getValue("integerList.0", this), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldPriorityzeMapKeyInSquareBrakets() throws Exception
+	{
+		PropertyResolver.setValue("[class]", integerMap, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue("[class]", integerMap), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldPriorityzeMapKeyInSquareBraketsAfterAnExpresison() throws Exception
+	{
+		PropertyResolver.setValue("integerMap[class]", this, AN_INTEGER, CONVERTER);
+		assertThat(PropertyResolver.getValue("integerMap[class]", this), is(AN_INTEGER));
+	}
+
+	@Test
+	public void shouldPriorityzeMethodCallWhenEndedByParentises() throws Exception
+	{
+		assertThat(PropertyResolver.getValue("integerMap.getClass()", this), is(HashMap.class));
+	}
+
+
+	static class WeirdList extends ArrayList<Integer>
+	{
+		private static final long serialVersionUID = 1L;
+		private Integer integer;
+
+		public void set0(Integer integer)
+		{
+			this.integer = integer;
+
+		}
+
+		public Integer get0()
+		{
+			return integer;
+		}
+	}
 }
