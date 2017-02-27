@@ -34,7 +34,7 @@ class DispatchedRequestUtils
 	 * @param request
 	 *      the dispatched request
 	 * @param attributeName
-	 *      the name of the requets attribute in which the original request uri is stored
+	 *      the name of the request attribute in which the original request uri is stored
 	 * @param filterPrefix
 	 *      the configured filter prefix for WicketFilter
 	 * @return the uri of the dispatched request without the leading filterPrefix
