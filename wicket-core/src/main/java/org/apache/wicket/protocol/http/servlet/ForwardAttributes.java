@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,18 +24,16 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Represents additional error parameters present in a {@link ServletRequest} when the servlet
- * container is handling an error or a forward to an error page mapped by {@code error-page} element
- * in {@code web.xml}.
+ * Represents additional attributes present in a {@link ServletRequest} when the servlet
+ * container is handling a forward to another path than the initially requested one.
  * 
  * See documentation for the following request attributes for the values stored in this object:
  * <ul>
- * <li>javax.servlet.error.status_code</li>
- * <li>javax.servlet.error.message</li>
- * <li>javax.servlet.error.request_uri</li>
- * <li>javax.servlet.error.servlet_name</li>
- * <li>javax.servlet.error.exception_type</li>
- * <li>javax.servlet.error.exception</li>
+ * <li>{@link javax.servlet.RequestDispatcher#FORWARD_CONTEXT_PATH}</li>
+ * <li>{@link javax.servlet.RequestDispatcher#FORWARD_PATH_INFO}</li>
+ * <li>{@link javax.servlet.RequestDispatcher#FORWARD_QUERY_STRING}</li>
+ * <li>{@link javax.servlet.RequestDispatcher#FORWARD_REQUEST_URI}</li>
+ * <li>{@link javax.servlet.RequestDispatcher#FORWARD_SERVLET_PATH}</li>
  * </ul>
  * 
  */
@@ -52,6 +51,9 @@ public class ForwardAttributes
 	// javax.servlet.forward.query_string
 	private final String queryString;
 
+	// javax.servlet.forward.path_info
+	private final String pathInfo;
+
 	/**
 	 * Constructor.
 	 * 
@@ -59,14 +61,16 @@ public class ForwardAttributes
 	 * @param servletPath
 	 * @param contextPath
 	 * @param queryString
+	 * @param pathInfo
 	 */
 	private ForwardAttributes(String requestUri, String servletPath, String contextPath,
-		String queryString)
+		String queryString, String pathInfo)
 	{
 		this.requestUri = requestUri;
 		this.servletPath = servletPath;
 		this.contextPath = contextPath;
 		this.queryString = queryString;
+		this.pathInfo = pathInfo;
 	}
 
 	/**
@@ -110,6 +114,13 @@ public class ForwardAttributes
 	}
 
 	/**
+	 * @return the path info of the request before the forward dispatch
+	 */
+	public String getPathInfo() {
+		return pathInfo;
+	}
+
+	/**
 	 * Factory for creating instances of this class.
 	 * 
 	 * @param request
@@ -119,15 +130,17 @@ public class ForwardAttributes
 	{
 		Args.notNull(request, "request");
 
-		final String requestUri = DispatchedRequestUtils.getRequestUri(request, "javax.servlet.forward.request_uri", filterPrefix);
-		final String servletPath = (String)request.getAttribute("javax.servlet.forward.servlet_path");
-		final String contextPath = (String)request.getAttribute("javax.servlet.forward.context_path");
-		final String queryString = (String)request.getAttribute("javax.servlet.forward.query_string");
+		final String requestUri = DispatchedRequestUtils.getRequestUri(request, RequestDispatcher.FORWARD_REQUEST_URI, filterPrefix);
+		final String servletPath = (String)request.getAttribute(RequestDispatcher.FORWARD_SERVLET_PATH);
+		final String contextPath = (String)request.getAttribute(RequestDispatcher.FORWARD_CONTEXT_PATH);
+		final String queryString = (String)request.getAttribute(RequestDispatcher.FORWARD_QUERY_STRING);
+		final String pathInfo = (String)request.getAttribute(RequestDispatcher.FORWARD_PATH_INFO);
 
 		if (!Strings.isEmpty(requestUri) || !Strings.isEmpty(servletPath) ||
-			!Strings.isEmpty(contextPath) || !Strings.isEmpty(queryString))
+			!Strings.isEmpty(contextPath) || !Strings.isEmpty(queryString) ||
+			!Strings.isEmpty(pathInfo))
 		{
-			return new ForwardAttributes(requestUri, servletPath, contextPath, queryString);
+			return new ForwardAttributes(requestUri, servletPath, contextPath, queryString, pathInfo);
 		}
 		return null;
 	}
@@ -136,6 +149,7 @@ public class ForwardAttributes
 	public String toString()
 	{
 		return "ForwardAttributes [requestUri=" + requestUri + ", servletPath=" + servletPath +
-			", contextPath=" + contextPath + ", queryString=" + queryString + "]";
+			", contextPath=" + contextPath + ", queryString=" + queryString +
+			   ", pathInfo=" + pathInfo + "]";
 	}
 }
