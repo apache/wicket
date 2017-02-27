@@ -70,7 +70,7 @@ public final class Home extends WicketExamplePage
 		// Need to be set to true to show the type
 		source2.setDisplayType(true);
 		// the default type is the mime type of the image with no codec information
-		source2.setType("video/mp4; codecs='avc1.42E01E, mp4a.40.2'");
+		source2.setType("video/mp4");
 		video2.add(source2);
 
 		add(video2);
