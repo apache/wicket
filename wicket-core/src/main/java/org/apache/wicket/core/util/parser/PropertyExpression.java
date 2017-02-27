@@ -28,6 +28,31 @@ public class PropertyExpression
 	String index;
 	PropertyExpression next;
 
+	public String getPropertyToken()
+	{
+		if (javaProperty != null)
+			return javaProperty.javaIdentifier;
+		else if (beanProperty != null)
+			return beanProperty.propertyName;
+		return null;
+	}
+
+	public boolean canDefaultToIndex()
+	{
+		return (javaProperty != null && (javaProperty.index == null && !javaProperty.hasMethodSign))
+			|| (beanProperty != null && beanProperty.index == null);
+	}
+
+	public String toIndex()
+	{
+		if (index != null)
+			return index;
+		else if (javaProperty != null)
+			return javaProperty.javaIdentifier;
+		else
+			return beanProperty.propertyName;
+	}
+
 	static class BeanProperty
 	{
 		String propertyName;

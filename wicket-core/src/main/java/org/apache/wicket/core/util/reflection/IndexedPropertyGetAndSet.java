@@ -26,7 +26,7 @@ public final class IndexedPropertyGetAndSet extends AbstractGetAndSet
 	private static Method findSetter(final Method getMethod, final Class<?> clz)
 	{
 		String name = getMethod.getName();
-		name = MethodGetAndSet.SET + name.substring(3);
+		name = ReflectionUtility.SET + name.substring(3);
 		try
 		{
 			return clz.getMethod(name, new Class[] { int.class, getMethod.getReturnType() });

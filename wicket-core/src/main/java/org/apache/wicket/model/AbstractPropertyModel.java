@@ -159,7 +159,7 @@ public abstract class AbstractPropertyModel<T> extends ChainingModel<T>
 				Class<?> targetClass = ((IObjectClassAwareModel<?>) getTarget()).getObjectClass();
 				if (targetClass != null)
 				{
-					return PropertyResolver.getPropertyClass(expression, null, targetClass);
+					return (Class<T>)PropertyResolver.getPropertyClass(expression, null, targetClass);
 				}
 			}
 			catch (WicketRuntimeException e)

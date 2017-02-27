@@ -18,13 +18,23 @@ package org.apache.wicket.core.util.lang;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.wicket.Application;
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.core.util.reflection.CachingPropertyLocator;
+import org.apache.wicket.core.util.reflection.AbstractGetAndSet;
+import org.apache.wicket.core.util.reflection.ArrayGetAndSet;
+import org.apache.wicket.core.util.reflection.ArrayLengthGetAndSet;
+import org.apache.wicket.core.util.reflection.FieldGetAndSet;
 import org.apache.wicket.core.util.reflection.IGetAndSet;
+import org.apache.wicket.core.util.reflection.IndexedPropertyGetAndSet;
+import org.apache.wicket.core.util.reflection.ListGetAndSet;
+import org.apache.wicket.core.util.reflection.MapGetAndSet;
+import org.apache.wicket.core.util.reflection.MethodGetAndSet;
 import org.apache.wicket.core.util.reflection.ObjectWithGetAndSet;
+import org.apache.wicket.core.util.reflection.ReflectionUtility;
+import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -63,167 +73,30 @@ import org.apache.wicket.util.string.Strings;
 
 public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolver
 {
-	private final static int RETURN_NULL = 0;
-	private final static int CREATE_NEW_VALUE = 1;
-	private final static int RESOLVE_CLASS = 2;
 
-	private IPropertyResolver locator = new CachingPropertyLocator( new DefaultPropertyLocator());
-
-
-	/**
-	 * Looks up the value from the object with the given expression. If the expression, the object
-	 * itself or one property evaluates to null then a null will be returned.
-	 *
-	 * @param expression
-	 *            The expression string with the property to be lookup.
-	 * @param object
-	 *            The object which is evaluated.
-	 * @return The value that is evaluated. Null something in the expression evaluated to null.
-	 */
-	//TODO remove, only being used in tests
-	public Object getValue(final String expression, final Object object)
+	private IPropertyLocator locator;
+	
+	public OGNLPropertyExpressionResolver()
 	{
-		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
-			RETURN_NULL);
-		if (objectWithGetAndSet == null)
-		{
-			return null;
-		}
-
-		return objectWithGetAndSet.getValue();
+		this(new CachingPropertyLocator(new DefaultPropertyLocator()));
 	}
 
-	/**
-	 * Set the value on the object with the given expression. If the expression can't be evaluated
-	 * then a WicketRuntimeException will be thrown. If a null object is encountered then it will
-	 * try to generate it by calling the default constructor and set it on the object.
-	 *
-	 * The value will be tried to convert to the right type with the given converter.
-	 *
-	 * @param expression
-	 *            The expression string with the property to be set.
-	 * @param object
-	 *            The object which is evaluated to set the value on.
-	 * @param value
-	 *            The value to set.
-	 * @param converter
-	 *            The converter to convert the value if needed to the right type.
-	 * @throws WicketRuntimeException
-	 */
-	@Override
-	public void setValue(final String expression, final Object object, final Object value,
-		final PropertyResolverConverter converter)
+	public OGNLPropertyExpressionResolver(IPropertyLocator locator)
 	{
-		if (Strings.isEmpty(expression))
-		{
-			throw new WicketRuntimeException(
-				"Empty expression setting value: " + value + " on object: " + object);
-		}
-		if (object == null)
-		{
-			throw new WicketRuntimeException(
-				"Attempted to set property value on a null object. Property expression: "
-					+ expression + " Value: " + value);
-		}
-
-		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
-			CREATE_NEW_VALUE);
-		if (objectWithGetAndSet == null)
-		{
-			throw new WicketRuntimeException("Null object returned for expression: " + expression
-				+ " for setting value: " + value + " on: " + object);
-		}
-		objectWithGetAndSet.setValue(value,
-			converter == null
-				? new PropertyResolverConverter(Application.get().getConverterLocator(),
-					Session.get().getLocale())
-				: converter);
-	}
-
-	/**
-	/**
-	 * @param expression
-	 * @param object
-	 * @return Field for the property expression
-	 * @throws WicketRuntimeException
-	 *             if there is no such field
-	 */
-	public Field getPropertyField(final String expression, final Object object)
-	{
-		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
-			RESOLVE_CLASS);
-		if (objectWithGetAndSet == null)
-		{
-			throw new WicketRuntimeException("Null object returned for expression: " + expression
-				+ " for getting the target class of: " + object);
-		}
-		return objectWithGetAndSet.getField();
-	}
-
-	/**
-	 * @param expression
-	 * @param object
-	 * @return Getter method for the property expression
-	 * @throws WicketRuntimeException
-	 *             if there is no getter method
-	 */
-	public Method getPropertyGetter(final String expression, final Object object)
-	{
-		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
-			RESOLVE_CLASS);
-		if (objectWithGetAndSet == null)
-		{
-			throw new WicketRuntimeException("Null object returned for expression: " + expression
-				+ " for getting the target class of: " + object);
-		}
-		return objectWithGetAndSet.getGetter();
-	}
-
-	/**
-	 * @param expression
-	 * @param object
-	 * @return Setter method for the property expression
-	 * @throws WicketRuntimeException
-	 *             if there is no setter method
-	 */
-	public Method getPropertySetter(final String expression, final Object object)
-	{
-		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
-			RESOLVE_CLASS);
-		if (objectWithGetAndSet == null)
-		{
-			throw new WicketRuntimeException("Null object returned for expression: " + expression
-				+ " for getting the target class of: " + object);
-		}
-		return objectWithGetAndSet.getSetter();
+		this.locator = locator;
 	}
 
 	@Override
-	public ObjectWithGetAndSet resolve(String expression, Object object, Class<? extends Object> clz)
+	public ObjectWithGetAndSet resolve(String expression, Object object, Class<? extends Object> clz, int tryToCreateNull)
 	{
 		ObjectWithGetAndSet objectWithGetAndSet = getObjectWithGetAndSet(expression, object,
-			RESOLVE_CLASS, clz);
-		if (objectWithGetAndSet == null)
+			tryToCreateNull, clz);
+		if (objectWithGetAndSet == null && tryToCreateNull != RETURN_NULL)
 		{
 			throw new WicketRuntimeException("Null object returned for expression: " + expression
 				+ " for getting the target class of: " + clz);
 		}
 		return objectWithGetAndSet;
-	}
-
-	/**
-	 * Just delegating the call to the original getObjectAndGetSetter passing the object type as
-	 * parameter.
-	 *
-	 * @param expression
-	 * @param object
-	 * @param tryToCreateNull
-	 * @return {@link ObjectWithGetAndSet}
-	 */
-	private ObjectWithGetAndSet getObjectWithGetAndSet(final String expression,
-		final Object object, int tryToCreateNull)
-	{
-		return getObjectWithGetAndSet(expression, object, tryToCreateNull, object.getClass());
 	}
 
 	/**
@@ -293,7 +166,7 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 			}
 			if (nextValue == null)
 			{
-				if (tryToCreateNull == CREATE_NEW_VALUE)
+				if (tryToCreateNull == IPropertyExpressionResolver.CREATE_NEW_VALUE)
 				{
 					nextValue = getAndSet.newValue(value);
 					if (nextValue == null)
@@ -301,7 +174,7 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 						return null;
 					}
 				}
-				else if (tryToCreateNull == RESOLVE_CLASS)
+				else if (tryToCreateNull == IPropertyExpressionResolver.RESOLVE_CLASS)
 				{
 					clz = getAndSet.getTargetClass();
 				}
@@ -370,5 +243,223 @@ public class OGNLPropertyExpressionResolver implements IPropertyExpressionResolv
 		return getAndSet;
 	}
 
+	/**
+	 * A locator of properties.
+	 * 
+	 * @see https://issues.apache.org/jira/browse/WICKET-5623
+	 */
+	public static interface IPropertyLocator
+	{
+		/**
+		 * Get {@link IGetAndSet} for a property.
+		 * 
+		 * @param clz owning class
+		 * @param exp identifying the property
+		 * @return getAndSet or {@code null} if non located
+		 */
+		IGetAndSet get(Class<?> clz, String exp);
+	}
 
+	/**
+	 * A wrapper for another {@link IPropertyLocator} that caches results of
+	 * {@link #get(Class, String)}.
+	 */
+	public static class CachingPropertyLocator implements IPropertyLocator
+	{
+		private final ConcurrentHashMap<String, IGetAndSet> map = Generics.newConcurrentHashMap(16);
+
+		/**
+		 * Special token to put into the cache representing no located {@link IGetAndSet}.
+		 */
+		private IGetAndSet NONE = new AbstractGetAndSet()
+		{
+
+			@Override
+			public Object getValue(Object object)
+			{
+				return null;
+			}
+
+			@Override
+			public Object newValue(Object object)
+			{
+				return null;
+			}
+
+			@Override
+			public void setValue(Object object, Object value, PropertyResolverConverter converter)
+			{
+			}
+		};
+
+		private IPropertyLocator resolver;
+
+		public CachingPropertyLocator(IPropertyLocator locator)
+		{
+			this.resolver = locator;
+		}
+
+		public IGetAndSet get(Class<?> clz, String exp)
+		{
+			String key = clz.getName() + "#" + exp;
+
+			IGetAndSet located = map.get(key);
+			if (located == null)
+			{
+				located = resolver.get(clz, exp);
+				if (located == null)
+				{
+					located = NONE;
+				}
+				map.put(key, located);
+			}
+
+			if (located == NONE)
+			{
+				located = null;
+			}
+
+			return located;
+		}
+	}
+
+	/**
+	 * Default locator supporting <em>Java Beans</em> properties, maps, lists and method invocations.
+	 */
+	public static class DefaultPropertyLocator implements IPropertyLocator
+	{
+		
+		public IGetAndSet get(Class<?> clz, String exp)
+		{
+			IGetAndSet getAndSet = null;
+
+			Method method = null;
+			Field field;
+			if (exp.startsWith("["))
+			{
+				// if expression begins with [ skip method finding and use it as
+				// a key/index lookup on a map.
+				exp = exp.substring(1, exp.length() - 1);
+			}
+			else if (exp.endsWith("()"))
+			{
+				// if expression ends with (), don't test for setters just skip
+				// directly to method finding.
+				method = ReflectionUtility.findMethod(clz, exp);
+			}
+			else
+			{
+				method = ReflectionUtility.findGetter(clz, exp);
+			}
+			if (method == null)
+			{
+				if (List.class.isAssignableFrom(clz))
+				{
+					try
+					{
+						int index = Integer.parseInt(exp);
+						getAndSet = new ListGetAndSet(index);
+					}
+					catch (NumberFormatException ex)
+					{
+						// can't parse the exp as an index, maybe the exp was a
+						// method.
+						method = ReflectionUtility.findMethod(clz, exp);
+						if (method != null)
+						{
+							getAndSet = new MethodGetAndSet(method,
+								ReflectionUtility.findSetter(method, clz), null);
+						}
+						else
+						{
+							field = ReflectionUtility.findField(clz, exp);
+							if (field != null)
+							{
+								getAndSet = new FieldGetAndSet(field);
+							}
+							else
+							{
+								throw new WicketRuntimeException("The expression '" + exp
+									+ "' is neither an index nor is it a method or field for the list "
+									+ clz);
+							}
+						}
+					}
+				}
+				else if (Map.class.isAssignableFrom(clz))
+				{
+					getAndSet = new MapGetAndSet(exp);
+				}
+				else if (clz.isArray())
+				{
+					try
+					{
+						int index = Integer.parseInt(exp);
+						getAndSet = new ArrayGetAndSet(clz.getComponentType(), index);
+					}
+					catch (NumberFormatException ex)
+					{
+						if (exp.equals("length") || exp.equals("size"))
+						{
+							getAndSet = new ArrayLengthGetAndSet();
+						}
+						else
+						{
+							throw new WicketRuntimeException("Can't parse the expression '" + exp
+								+ "' as an index for an array lookup");
+						}
+					}
+				}
+				else
+				{
+					field = ReflectionUtility.findField(clz, exp);
+					if (field == null)
+					{
+						method = ReflectionUtility.findMethod(clz, exp);
+						if (method == null)
+						{
+							int index = exp.indexOf('.');
+							if (index != -1)
+							{
+								String propertyName = exp.substring(0, index);
+								String propertyIndex = exp.substring(index + 1);
+								try
+								{
+									int parsedIndex = Integer.parseInt(propertyIndex);
+									// if so then it could be a getPropertyIndex(int)
+									// and setPropertyIndex(int, object)
+									String name = Character.toUpperCase(propertyName.charAt(0))
+										+ propertyName.substring(1);
+									method = clz.getMethod(ReflectionUtility.GET + name,
+										new Class[] { int.class });
+									getAndSet = new IndexedPropertyGetAndSet(method, parsedIndex);
+								}
+								catch (Exception e)
+								{
+									throw new WicketRuntimeException("No get method defined for class: "
+										+ clz + " expression: " + propertyName);
+								}
+							}
+						}
+						else
+						{
+							getAndSet = new MethodGetAndSet(method,
+								ReflectionUtility.findSetter(method, clz), null);
+						}
+					}
+					else
+					{
+						getAndSet = new FieldGetAndSet(field);
+					}
+				}
+			}
+			else
+			{
+				field = ReflectionUtility.findField(clz, exp);
+				getAndSet = new MethodGetAndSet(method, ReflectionUtility.findSetter(method, clz), field);
+			}
+
+			return getAndSet;
+		}
+	}
 }

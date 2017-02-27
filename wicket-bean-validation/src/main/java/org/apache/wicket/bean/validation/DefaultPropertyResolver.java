@@ -35,7 +35,7 @@ public class DefaultPropertyResolver implements IPropertyResolver
 		
 		String expression = delegate.getPropertyExpression();
 		IPropertyExpressionResolver propertyExpressionResolver = Application.get().getApplicationSettings().getPropertyExpressionResolver();
-		ObjectWithGetAndSet objectWithGetAndSet = propertyExpressionResolver.resolve(expression, target, target.getClass());
+		ObjectWithGetAndSet objectWithGetAndSet = propertyExpressionResolver.resolve(expression, target, target.getClass(), IPropertyExpressionResolver.RESOLVE_CLASS);
 
 		Method getter = objectWithGetAndSet.getGetter();
 		if (getter != null)

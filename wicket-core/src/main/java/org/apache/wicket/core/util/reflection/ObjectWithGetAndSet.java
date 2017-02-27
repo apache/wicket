@@ -34,11 +34,15 @@ public class ObjectWithGetAndSet
 	}
 
 	/**
+	 * @param createIfNull if the value should be created in case the property is null
 	 * @return The value
 	 */
-	public Object getValue()
+	public Object getValue(boolean createIfNull)
 	{
-		return getAndSet.getValue(value);
+		Object propertyValue = getAndSet.getValue(value);
+		if(propertyValue == null && createIfNull)
+			propertyValue = getAndSet.newValue(value);
+		return propertyValue;
 	}
 
 	/**

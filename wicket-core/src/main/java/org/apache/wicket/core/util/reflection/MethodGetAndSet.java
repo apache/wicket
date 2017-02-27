@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public final class MethodGetAndSet extends AbstractGetAndSet
 {
-	private static final Logger log = LoggerFactory.getLogger(MethodGetAndSet.class);
-	public static final String GET = "get";
-	public static final String IS = "is";
-	public static final String SET = "set";
+	static final Logger log = LoggerFactory.getLogger(MethodGetAndSet.class);
 
 	private final Method getMethod;
 	private final Method setMethod;
@@ -131,52 +128,6 @@ public final class MethodGetAndSet extends AbstractGetAndSet
 				"no set method defined for value: " + value + " on object: " + object
 					+ " while respective getMethod being " + getMethod.getName());
 		}
-	}
-
-	public static Method findSetter(Method getMethod, Class<?> clz)
-	{
-		String name = getMethod.getName();
-		if (name.startsWith(GET))
-		{
-			name = SET + name.substring(3);
-		}
-		else
-		{
-			name = SET + name.substring(2);
-		}
-		try
-		{
-			Method method = clz.getMethod(name, new Class[] { getMethod.getReturnType() });
-			if (method != null)
-			{
-				method.setAccessible(true);
-			}
-			return method;
-		}
-		catch (NoSuchMethodException e)
-		{
-			Method[] methods = clz.getMethods();
-			for (Method method : methods)
-			{
-				if (method.getName().equals(name))
-				{
-					Class<?>[] parameterTypes = method.getParameterTypes();
-					if (parameterTypes.length == 1)
-					{
-						if (parameterTypes[0].isAssignableFrom(getMethod.getReturnType()))
-						{
-							return method;
-						}
-					}
-				}
-			}
-			log.debug("Cannot find setter corresponding to " + getMethod);
-		}
-		catch (Exception e)
-		{
-			log.debug("Cannot find setter corresponding to " + getMethod);
-		}
-		return null;
 	}
 
 	/**
