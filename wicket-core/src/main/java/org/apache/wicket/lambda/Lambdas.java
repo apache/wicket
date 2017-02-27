@@ -39,7 +39,7 @@ import org.danekja.java.util.function.serializable.SerializableFunction;
  * Convenience class for easy static importing of lambda factory methods in several components and
  * behaviors.
  */
-public class Lambdas
+public final class Lambdas
 {
 	/**
 	 * Creates an {@link AbstractAjaxTimerBehavior} based on lambda expressions
@@ -310,4 +310,7 @@ public class Lambdas
 	{
 		return Behavior.onAttribute(attributeName, onAttribute);
 	}
+
+	private Lambdas()
+	{}
 }
