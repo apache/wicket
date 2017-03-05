@@ -502,7 +502,9 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void invalidateNow()
 	{
-		invalidate();
+		if (isSessionInvalidated() == false) {
+			invalidate();
+		}
 		destroy();
 	}
 
