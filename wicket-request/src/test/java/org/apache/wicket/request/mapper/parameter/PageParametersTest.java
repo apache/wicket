@@ -18,6 +18,7 @@ package org.apache.wicket.request.mapper.parameter;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.not;
 
 import java.util.List;
 
@@ -300,7 +301,7 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6283
 	 */
 	@Test
-	public void equalityOfDiferenteNamedParametersOrder()
+	public void equalityOfDifferentNamedParametersOrder()
 	{
 		PageParameters p1 = new PageParameters()
 				.add("a", "b")
@@ -311,6 +312,38 @@ public class PageParametersTest extends Assert
 				.add("a", "b");
 
 		assertThat(p1, is(equalTo(p2)));
+	}
+
+	/**
+	 * namedParameters equality should handle null namedParameters instance.
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-6332
+	 */
+	@Test
+	public void equalityWithEmptyNamedParameters()
+	{
+		PageParameters p1 = new PageParameters()
+				.add("a", "b");
+
+		PageParameters p2 = new PageParameters();
+
+		assertThat(p1, is(not(equalTo(p2))));
+	}
+
+	/**
+	 * indexedParameters equality should handle null namedParameters instance.
+	 *
+	 * https://issues.apache.org/jira/browse/WICKET-6332
+	 */
+	@Test
+	public void equalityWithEmptyIndexedParameters()
+	{
+		PageParameters p1 = new PageParameters()
+				.set(0, "b");
+
+		PageParameters p2 = new PageParameters();
+
+		assertThat(p1, is(not(equalTo(p2))));
 	}
 
 	/**
