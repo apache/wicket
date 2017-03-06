@@ -586,9 +586,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.IBehaviorListener#onRequest()
-	 */
 	@Override
 	public final void onRequest()
 	{
