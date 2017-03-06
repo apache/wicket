@@ -35,7 +35,7 @@ public class SessionSizeModelTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3355">WICKET-3355</a>
 	 */
 	@Test
-	public void testTorelanceOnProblematicSessions()
+	public void testToleranceOnProblematicSessions()
 	{
 		new WicketTester(new MockApplication()
 		{
