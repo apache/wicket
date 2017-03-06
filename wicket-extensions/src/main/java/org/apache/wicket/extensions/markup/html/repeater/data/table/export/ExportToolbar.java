@@ -212,32 +212,44 @@ public class ExportToolbar extends AbstractToolbar
 			.setBody(dataExporter.getDataFormatNameModel());
 	}
 
+	@Override
+	protected void onConfigure()
+	{
+		super.onConfigure();
+
+		calculateVisibility();
+	}
+
 	/**
 	 * This toolbar is only visible if there are rows in the data set and if there are exportable columns in the
 	 * data table and if there are data exporters added to the toolbar.
 	 */
-	@Override
-	public boolean isVisible()
+	protected void calculateVisibility()
 	{
+		final boolean isVisible;
 		if (dataExporters.isEmpty())
 		{
-			return false;
+			isVisible = false;
 		}
-
-		if (getTable().getRowCount() == 0)
+		else if (getTable().getRowCount() == 0)
 		{
-			return false;
+			isVisible = false;
 		}
-
-		for (IColumn<?, ?> col : getTable().getColumns())
+		else
 		{
-			if (col instanceof IExportableColumn)
+			boolean foundExportableColumn = false;
+			for (IColumn<?, ?> col : getTable().getColumns())
 			{
-				return true;
+				if (col instanceof IExportableColumn)
+				{
+					foundExportableColumn = true;
+					break;
+				}
 			}
+			isVisible = foundExportableColumn;
 		}
 
-		return false;
+		setVisible(isVisible);
 	}
 
 	@Override
