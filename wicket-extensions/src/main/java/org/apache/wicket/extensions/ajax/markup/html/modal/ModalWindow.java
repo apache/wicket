@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.modal;
 
+import com.github.openjson.JSONObject;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -43,7 +44,6 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.json.JSONObject;
 
 /**
  * Modal window component.
