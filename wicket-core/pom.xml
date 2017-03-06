@@ -63,8 +63,8 @@
 			<artifactId>mockito-core</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>com.tdunning</groupId>
-		    <artifactId>json</artifactId>
+			<groupId>com.github.openjson</groupId>
+			<artifactId>openjson</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
