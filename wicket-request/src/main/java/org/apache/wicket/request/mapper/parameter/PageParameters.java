@@ -467,6 +467,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			if (other.namedParameters != null)
 				return false;
 		}
+		else if (other.namedParameters == null)
+			return false;
 		else if (!CollectionUtils.isEqualCollection(namedParameters, other.namedParameters))
 			return false;
 		return true;

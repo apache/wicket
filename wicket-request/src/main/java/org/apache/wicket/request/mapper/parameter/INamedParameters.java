@@ -59,7 +59,7 @@ public interface INamedParameters
 	 * @author Matej Knopp
 	 */
 	@SuppressWarnings("serial")
-	public static class NamedPair implements IClusterable
+	class NamedPair implements IClusterable
 	{
 		private final String key;
 		private final String value;
