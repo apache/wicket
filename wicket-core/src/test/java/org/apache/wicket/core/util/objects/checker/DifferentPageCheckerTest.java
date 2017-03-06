@@ -21,7 +21,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.MockPageWithLink;
+import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.form.login.MockHomePage;
@@ -51,8 +51,8 @@ public class DifferentPageCheckerTest extends WicketTestCase
 			}
 		};
 
-		WebComponent component = new ComponentThatKeepsAReferenceToAnotherPage(MockPageWithLink.LINK_ID);
-		MockPageWithLink rootPage = new MockPageWithLink();
+		WebComponent component = new ComponentThatKeepsAReferenceToAnotherPage(MockPageWithOneComponent.COMPONENT_ID);
+		MockPageWithOneComponent rootPage = new MockPageWithOneComponent();
 		rootPage.add(component);
 		byte[] serialized = serializer.serialize(rootPage);
 		assertNull("The produced byte[] must be null if there was an error", serialized);

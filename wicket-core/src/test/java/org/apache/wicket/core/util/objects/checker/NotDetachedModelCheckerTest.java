@@ -24,77 +24,85 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
 import org.apache.wicket.MockPageWithOneComponent;
-import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebComponent;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.mock.MockWebRequest;
-import org.apache.wicket.protocol.http.WebSession;
-import org.apache.wicket.request.Url;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
-public class SessionCheckerTest extends WicketTestCase
+/**
+ * Tests for {@link NotDetachedModelChecker}.
+ * <p>
+ * Tests that the serialization fails when a checking ObjectOutputStream is
+ * used with NotDetachedModelChecker and there is a non-detached LoadableDetachableModel
+ * in the object tree.
+ * </p>
+ */
+public class NotDetachedModelCheckerTest extends WicketTestCase
 {
 	/**
-	 * https://issues.apache.org/jira/browse/WICKET-5634
-	 *
-	 * Tests that the serialization fails when a checking ObjectOutputStream is
-	 * used with SessionChecker and there is a component in the object tree that
-	 * keeps a reference to the Wicket Session.
+	 * https://issues.apache.org/jira/browse/WICKET-4812
+	 * https://issues.apache.org/jira/browse/WICKET-6334
 	 */
 	@Test
-	public void serializingTheSession()
-	{
+	public void whenSerializingPage_thenItsComponentsShouldBeChecked() {
 		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest")
 		{
 			@Override
 			protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 			{
-				IObjectChecker checker = new SessionChecker();
+				IObjectChecker checker = new NotDetachedModelChecker();
 				return new CheckingObjectOutputStream(out, checker);
 			}
 		};
 
 		MockPageWithOneComponent page = new MockPageWithOneComponent();
-		WebMarkupContainer container = new WebMarkupContainer(MockPageWithOneComponent.COMPONENT_ID);
-		page.add(container);
-		// WICKET-6196 force container#children to be an array
-		container.add(new Label("id1"));
-		container.add(new ComponentWithAReferenceToTheSession("id2"));
-		
-		byte[] serialized = serializer.serialize(page);
+		page.add(new ComponentWithAttachedModel(MockPageWithOneComponent.COMPONENT_ID));
+
+		final byte[] serialized = serializer.serialize(page);
 		assertNull("The produced byte[] must be null if there was an error", serialized);
 	}
 
 	/**
+	 * https://issues.apache.org/jira/browse/WICKET-4812
 	 * https://issues.apache.org/jira/browse/WICKET-6334
 	 */
 	@Test
-	public void sessionCheckerShouldNotCheckSerializationOfTheSessionItself() {
+	public void whenSerializingNonPageComponent_thenItsSubComponentsShouldNotBeChecked() {
 		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest")
 		{
 			@Override
 			protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
 			{
-				IObjectChecker checker = new SessionChecker();
+				IObjectChecker checker = new NotDetachedModelChecker();
 				return new CheckingObjectOutputStream(out, checker);
 			}
 		};
-		final Session session = new WebSession(new MockWebRequest(Url.parse("")));
-		final byte[] serialized = serializer.serialize(session);
+
+		final ComponentWithAttachedModel component = new ComponentWithAttachedModel("id");
+
+		final byte[] serialized = serializer.serialize(component);
 		assertThat(serialized, is(notNullValue()));
 	}
 
-	private static class ComponentWithAReferenceToTheSession extends WebComponent
+	private static class ComponentWithAttachedModel extends WebComponent
 	{
-		private final Session member = new WebSession(new MockWebRequest(Url.parse("")));
+		private final IModel<String> member = new LoadableDetachableModel<String>()
+		{
+			@Override
+			protected String load()
+			{
+				return "modelObject";
+			}
+		};
 
-		public ComponentWithAReferenceToTheSession(final String id)
+		public ComponentWithAttachedModel(final String id)
 		{
 			super(id);
+
+			// attach the model object
+			member.getObject();
 		}
 	}
-
 }

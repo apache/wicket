@@ -21,23 +21,20 @@ import static org.hamcrest.Matchers.is;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
 
-import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
-import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.core.util.objects.checker.AbstractObjectChecker;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
-import org.apache.wicket.core.util.objects.checker.IObjectChecker;
+import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.value.ValueMap;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Pedro Santos
  */
-public class SerializableCheckerTest extends Assert
+public class SerializableCheckerTest extends WicketTestCase
 {
 
 	/**
@@ -120,7 +117,33 @@ public class SerializableCheckerTest extends Assert
 		assertTrue(exceptionMessage.contains(NonSerializableType.class.getName()));
 	}
 
-	private static class IdentityTestType implements Serializable
+	private static class ManageablePage implements IManageablePage
+	{
+		@Override
+		public boolean isPageStateless()
+		{
+			return false;
+		}
+
+		@Override
+		public int getPageId()
+		{
+			return 0;
+		}
+
+		@Override
+		public void detach()
+		{
+		}
+
+		@Override
+		public boolean setFreezePageId(boolean freeze)
+		{
+			return false;
+		}
+	}
+
+	private static class IdentityTestType extends ManageablePage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -133,7 +156,7 @@ public class SerializableCheckerTest extends Assert
 		}
 	}
 
-	private static class TestType2 implements Serializable
+	private static class TestType2 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 		ProblematicType problematicType = new ProblematicType();
