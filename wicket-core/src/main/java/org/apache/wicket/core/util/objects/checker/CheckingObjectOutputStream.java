@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Classes;
