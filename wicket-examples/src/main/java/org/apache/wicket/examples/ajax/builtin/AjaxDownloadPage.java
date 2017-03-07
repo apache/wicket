@@ -51,10 +51,12 @@ public class AjaxDownloadPage extends BasePage
 		add(downloadingContainer);
 		
 		initDownload();
-		
+
 		initDownloadFailure();
-		
+
 		initDownloadReference();
+
+		initDownloadInNewWindow();
 	}
 
 	private void initDownload()
@@ -209,7 +211,61 @@ public class AjaxDownloadPage extends BasePage
 			}
 		});
 	}
-	
+
+	private void initDownloadInNewWindow()
+	{
+		IResource resource = new ResourceStreamResource() {
+			protected IResourceStream getResourceStream() {
+				// simulate delay
+				try
+				{
+					TimeUnit.MILLISECONDS.sleep(5000);
+				}
+				catch (InterruptedException e)
+				{
+				}
+
+				return new StringResourceStream("downloaded via ajax in a new browser window");
+			};
+
+		}.setFileName("File-from-IResource.txt").setContentDisposition(ContentDisposition.INLINE).setCacheDuration(Duration.NONE);
+
+		final AjaxDownload download = new AjaxDownload(resource) {
+
+			@Override
+			protected void onBeforeDownload(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(true);
+				target.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadSuccess(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadFailed(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
+		};
+		download.setLocation(AjaxDownload.Location.NewWindow);
+		add(download);
+
+		add(new AjaxLink<Void>("downloadInNewWindow")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				download.initiate(target);
+			}
+		});
+	}
+
 	public static class StaticResource extends ResourceStreamResource {
 
 		StaticResource() {

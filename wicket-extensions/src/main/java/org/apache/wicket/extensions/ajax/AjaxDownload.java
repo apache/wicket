@@ -79,7 +79,13 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		 * The resource will be downloaded by changing the location of the current DOM document.
 		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
 		 */
-		Self
+		Self,
+
+		/**
+		 * The resource will be downloaded in a new browser window by using JavaScript
+		 * <code>window.open()</code> API.
+		 */
+		NewWindow
 	}
 
 	/**

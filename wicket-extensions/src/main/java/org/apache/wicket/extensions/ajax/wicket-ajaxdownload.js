@@ -58,10 +58,13 @@
 			};
 
 			if (settings.method === 'self') {
-				setTimeout(function() {
-					window.location.href=settings.downloadUrl;
+				setTimeout(function () {
+					window.location.href = settings.downloadUrl;
 					checkComplete();
 				}, 100);
+			} else if (settings.method === 'newwindow') {
+				window.open(settings.downloadUrl, 'ajax-download');
+				checkComplete();
 			} else {
 				var frame = jQuery("<iframe>").hide().prop("src", settings.downloadUrl).appendTo("body");
 				checkComplete(frame);
