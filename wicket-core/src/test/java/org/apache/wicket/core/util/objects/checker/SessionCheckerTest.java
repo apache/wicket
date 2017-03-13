@@ -16,14 +16,10 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -57,34 +53,13 @@ public class SessionCheckerTest extends WicketTestCase
 			}
 		};
 
-		MockPageWithOneComponent page = new MockPageWithOneComponent();
-		WebMarkupContainer container = new WebMarkupContainer(MockPageWithOneComponent.COMPONENT_ID);
-		page.add(container);
+		WebMarkupContainer container = new WebMarkupContainer("container");
 		// WICKET-6196 force container#children to be an array
 		container.add(new Label("id1"));
 		container.add(new ComponentWithAReferenceToTheSession("id2"));
 		
-		byte[] serialized = serializer.serialize(page);
+		byte[] serialized = serializer.serialize(container);
 		assertNull("The produced byte[] must be null if there was an error", serialized);
-	}
-
-	/**
-	 * https://issues.apache.org/jira/browse/WICKET-6334
-	 */
-	@Test
-	public void sessionCheckerShouldNotCheckSerializationOfTheSessionItself() {
-		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest")
-		{
-			@Override
-			protected ObjectOutputStream newObjectOutputStream(OutputStream out) throws IOException
-			{
-				IObjectChecker checker = new SessionChecker();
-				return new CheckingObjectOutputStream(out, checker);
-			}
-		};
-		final Session session = new WebSession(new MockWebRequest(Url.parse("")));
-		final byte[] serialized = serializer.serialize(session);
-		assertThat(serialized, is(notNullValue()));
 	}
 
 	private static class ComponentWithAReferenceToTheSession extends WebComponent

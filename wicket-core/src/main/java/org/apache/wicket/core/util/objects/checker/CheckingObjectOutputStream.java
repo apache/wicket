@@ -36,9 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
-import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -350,17 +348,14 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 		nameStack.add(simpleName);
 		traceStack.add(new TraceSlot(obj, fieldDescription));
 
-		if (obj instanceof IManageablePage || (traceStack.size() > 1 && traceStack.get(0).object instanceof IManageablePage))
+		for (IObjectChecker checker : checkers)
 		{
-			for (IObjectChecker checker : checkers)
+			IObjectChecker.Result result = checker.check(obj);
+			if (result.status == IObjectChecker.Result.Status.FAILURE)
 			{
-				IObjectChecker.Result result = checker.check(obj);
-				if (result.status == IObjectChecker.Result.Status.FAILURE)
-				{
-					String prettyPrintMessage = toPrettyPrintedStack(Classes.name(cls));
-					String exceptionMessage = result.reason + '\n' + prettyPrintMessage;
-					throw new ObjectCheckException(exceptionMessage, result.cause);
-				}
+				String prettyPrintMessage = toPrettyPrintedStack(Classes.name(cls));
+				String exceptionMessage = result.reason + '\n' + prettyPrintMessage;
+				throw new ObjectCheckException(exceptionMessage, result.cause);
 			}
 		}
 
