@@ -25,6 +25,7 @@ import java.io.Serializable;
 import org.apache.wicket.core.util.objects.checker.AbstractObjectChecker;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
 import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.value.ValueMap;
@@ -155,7 +156,7 @@ public class SerializableCheckerTest extends WicketTestCase
 		}
 	}
 
-	private static class TestType2 extends ManageablePage
+	private static class TestType2 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 		ProblematicType problematicType = new ProblematicType();
