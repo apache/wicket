@@ -88,6 +88,14 @@ public abstract class AbstractPageManager implements IPageManager
 	}
 
 	@Override
+	public void removePage(final IManageablePage page) {
+		if (page != null)
+		{
+			getRequestAdapter().removePage(page);
+		}
+	}
+
+	@Override
 	public void newSessionCreated()
 	{
 		getRequestAdapter().newSessionCreated();
@@ -96,12 +104,18 @@ public abstract class AbstractPageManager implements IPageManager
 	@Override
 	public void touchPage(IManageablePage page)
 	{
-		getRequestAdapter().touch(page);
+		if (page != null)
+		{
+			getRequestAdapter().touch(page);
+		}
 	}
 
 	@Override
 	public void untouchPage(IManageablePage page)
 	{
-		getRequestAdapter().untouch(page);
+		if (page != null)
+		{
+			getRequestAdapter().untouch(page);
+		}
 	}
 }
