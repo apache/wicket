@@ -30,7 +30,7 @@ import org.apache.wicket.page.IPageManagerContext;
  */
 public class MockPageManager implements IPageManager
 {
-	private final Map<Integer, IManageablePage> pages = new HashMap<Integer, IManageablePage>();
+	private final Map<Integer, IManageablePage> pages = new HashMap<>();
 
 	/**
 	 * Construct.
@@ -55,6 +55,13 @@ public class MockPageManager implements IPageManager
 	public IManageablePage getPage(int id)
 	{
 		return pages.get(id);
+	}
+
+	@Override
+	public void removePage(final IManageablePage page) {
+		if (page != null) {
+			pages.remove(page.getPageId());
+		}
 	}
 
 	@Override
@@ -97,9 +104,6 @@ public class MockPageManager implements IPageManager
 		pages.remove(page.getPageId());
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IPageManager#getContext()
-	 */
 	@Override
 	public IPageManagerContext getContext()
 	{

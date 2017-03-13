@@ -156,6 +156,19 @@ public class PageStoreManager extends AbstractPageManager
 			}
 		}
 
+		private void removePage(IManageablePage page)
+		{
+			if (page != null)
+			{
+				sessionCache.remove(page);
+				final IPageStore pageStore = getPageStore();
+				if (pageStore != null)
+				{
+					pageStore.removePage(sessionId, page.getPageId());
+				}
+			}
+		}
+
 		/**
 		 * If the pages are stored in temporary state (after deserialization) this method convert
 		 * them to list of "real" pages
@@ -369,6 +382,15 @@ public class PageStoreManager extends AbstractPageManager
 			else
 			{
 				return null;
+			}
+		}
+
+		@Override
+		protected void removePage(final IManageablePage page) {
+			final SessionEntry sessionEntry = getSessionEntry(false);
+			if (sessionEntry != null)
+			{
+				sessionEntry.removePage(page);
 			}
 		}
 
