@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.devutils.inspector;
 
-import static org.hamcrest.Matchers.containsString;
-
 import org.apache.wicket.Session;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebSession;
@@ -25,17 +23,13 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * @author Pedro Santos
  */
 public class SessionSizeModelTest extends Assert
 {
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
 
 	/**
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3355">WICKET-3355</a>
@@ -43,11 +37,6 @@ public class SessionSizeModelTest extends Assert
 	@Test
 	public void testToleranceOnProblematicSessions()
 	{
-		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage(containsString("A problem occurred while serializing an object. " +
-				"Please check the earlier logs for more details. Problematic object: " +
-				"org.apache.wicket.devutils.inspector.SessionSizeModelTest$TestSession"));
-
 		new WicketTester(new MockApplication()
 		{
 			@Override
@@ -57,7 +46,7 @@ public class SessionSizeModelTest extends Assert
 			}
 		});
 		SessionSizeModel model = new SessionSizeModel();
-		model.getObject();
+		assertEquals(null, model.getObject());
 	}
 
 	/**
