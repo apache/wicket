@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.devutils.stateless;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
@@ -52,7 +55,29 @@ public class StatelessCheckerTest extends Assert
 		}
 	}
 
+	private static class StatefulBehavior extends Behavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public boolean getStatelessHint(Component component)
+		{
+			return false;
+		}
+	}
+
 	private final StatelessChecker checker = new StatelessChecker();
+	private final StatelessChecker checkerQuietly = new StatelessChecker() {
+		protected void fail(Component component, String reason)
+		{
+			// Do Nothing...
+		}
+		protected void failBehaviors(Component component, String reason) {
+			// Do Nothing...
+		}
+
+	};
+
 	private WicketTester tester;
 
 	/**
@@ -76,6 +101,54 @@ public class StatelessCheckerTest extends Assert
 	@Test
 	public void testNonBookmarkablePage()
 	{
+		boolean hit = isHitBookmarkablePage(checker);
+		assertTrue("Expected exception", hit);
+	}
+
+	@Test
+	public void testNonBookmarkablePageQuietly()
+	{
+		boolean hit = isHitBookmarkablePage(checkerQuietly);
+		assertFalse("Expected exception", hit);
+	}
+
+	@Test
+	public void testStatefulBehaviors()
+	{
+		boolean hit = isHitBehaviors(checker);
+		assertTrue("Expected exception", hit);
+	}
+	@Test
+	public void testStatefulBehaviorsQuietly()
+	{
+		boolean hit = isHitBehaviors(checkerQuietly);
+		assertFalse("Expected exception", hit);
+	}
+
+	@Test
+	public void testPositive()
+	{
+		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
+		tester.startComponentInPage(new StatelessLabel("foo"));
+	}
+
+	private boolean isHitBehaviors(StatelessChecker checker) {
+		boolean hit = false;
+		try
+		{
+			tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
+			tester.startComponentInPage(new StatelessLabel("foo").add(new StatefulBehavior()));
+		}
+		catch (WicketRuntimeException ex)
+		{
+			if(ex.getCause() instanceof IllegalStateException) {
+				hit = true;
+			}
+		}
+		return hit;
+	}
+
+	private boolean isHitBookmarkablePage(StatelessChecker checker) {
 		boolean hit = false;
 		try
 		{
@@ -86,13 +159,7 @@ public class StatelessCheckerTest extends Assert
 		{
 			hit = true;
 		}
-		assertTrue("Expected exception", hit);
+		return hit;
 	}
 
-	@Test
-	public void testPositive()
-	{
-		tester.getApplication().getComponentPostOnBeforeRenderListeners().add(checker);
-		tester.startComponentInPage(new StatelessLabel("foo"));
-	}
 }
