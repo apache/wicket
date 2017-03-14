@@ -588,20 +588,20 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			switch (labelPosition)
 			{
+				case WRAP_BEFORE:
+					buffer.append("</label>");
+					break;
+				case WRAP_AFTER:
+					buffer.append(' ')
+							.append(escaped)
+							.append("</label>");
+					break;
 				case AFTER:
 					buffer.append("<label for=\"")
 							.append(Strings.escapeMarkup(idAttr))
 							.append('"')
 							.append(extraLabelAttributes)
 							.append('>')
-							.append(escaped)
-							.append("</label>");
-					break;
-				case WRAP_BEFORE:
-					buffer.append("</label>");
-					break;
-				case WRAP_AFTER:
-					buffer.append(' ')
 							.append(escaped)
 							.append("</label>");
 					break;
@@ -615,9 +615,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	/**
 	 * You may subclass this method to provide additional attributes to the &lt;label ..&gt; tag.
 	 *
-	 @param index
-	  *            index of the choice
-	  * @param choice
+	 * @param index
+	 *            index of the choice
+	 * @param choice
 	 *            the choice itself
 	 * @return tag attribute name/value pairs.
 	 */
