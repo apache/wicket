@@ -8,6 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,11 @@ import org.slf4j.LoggerFactory;
  * 
  * @author manuelbarzi
  */
-public class AsyncPageStore implements IPageStore
+public class AsynchronousPageStore implements IPageStore
 {
 
 	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(AsyncPageStore.class);
+	private static final Logger log = LoggerFactory.getLogger(AsynchronousPageStore.class);
 
 	/**
 	 * The time to wait when adding an {@link Entry} into the entries. In millis.
@@ -73,7 +74,7 @@ public class AsyncPageStore implements IPageStore
 	 * @param capacity
 	 *            the capacity of the queue that delays the saving
 	 */
-	public AsyncPageStore(final IPageStore pageStore, final int capacity)
+	public AsynchronousPageStore(final IPageStore pageStore, final int capacity)
 	{
 		this.pageStore = pageStore;
 		entries = new LinkedBlockingQueue<Entry>(capacity);
@@ -218,9 +219,7 @@ public class AsyncPageStore implements IPageStore
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#destroy()
 	 */
 	@Override
@@ -242,9 +241,7 @@ public class AsyncPageStore implements IPageStore
 		pageStore.destroy();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#getPage(java.lang.String, int)
 	 */
 	@Override
@@ -266,9 +263,7 @@ public class AsyncPageStore implements IPageStore
 		return page;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#removePage(java.lang.String, int)
 	 */
 	@Override
@@ -288,11 +283,9 @@ public class AsyncPageStore implements IPageStore
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#storePage(java.lang.String,
-	 * org.apache.wicket.page.IManageablePage)
+	 *      org.apache.wicket.page.IManageablePage)
 	 */
 	@Override
 	public void storePage(String sessionId, IManageablePage page)
@@ -325,9 +318,7 @@ public class AsyncPageStore implements IPageStore
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#unbind(java.lang.String)
 	 */
 	@Override
@@ -336,11 +327,9 @@ public class AsyncPageStore implements IPageStore
 		pageStore.unbind(sessionId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#prepareForSerialization(java.lang. String,
-	 * java.io.Serializable)
+	 *      java.io.Serializable)
 	 */
 	@Override
 	public Serializable prepareForSerialization(String sessionId, Serializable page)
@@ -348,9 +337,7 @@ public class AsyncPageStore implements IPageStore
 		return pageStore.prepareForSerialization(sessionId, page);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#restoreAfterSerialization(java.io. Serializable)
 	 */
 	@Override
@@ -359,9 +346,7 @@ public class AsyncPageStore implements IPageStore
 		return pageStore.restoreAfterSerialization(serializable);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.apache.wicket.pageStore.IPageStore#convertToPage(java.lang.Object)
 	 */
 	@Override

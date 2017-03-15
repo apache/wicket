@@ -32,16 +32,16 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Stopwatch;
 
 /**
- * AsyncPageStoreTest
+ * AsynchronousPageStoreTest
  * 
  * @author manuelbarzi
  *
  */
-public class AsyncPageStoreTest
+public class AsynchronousPageStoreTest
 {
 
 	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(AsyncPageStoreTest.class);
+	private static final Logger log = LoggerFactory.getLogger(AsynchronousPageStoreTest.class);
 
 	@SuppressWarnings("serial")
 	private static class DummyPage implements IManageablePage
@@ -135,8 +135,8 @@ public class AsyncPageStoreTest
 	}
 
 	/**
-	 * Store works fully async when number of pages handled never exceeds the async-storage
-	 * capacity.
+	 * Store works fully asynchronous when number of pages handled never exceeds the
+	 * asynchronous-storage capacity.
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -164,8 +164,9 @@ public class AsyncPageStoreTest
 	}
 
 	/**
-	 * Store behaves sync from when number of pages handled exceeds the given async-storage
-	 * capacity. It works async until the number of pages reaches the limit (capacity).
+	 * Store behaves synchronous from when number of pages handled exceeds the given
+	 * asynchronous-storage capacity. It works asynchronous until the number of pages reaches the
+	 * limit (capacity).
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -247,7 +248,7 @@ public class AsyncPageStoreTest
 			}
 		};
 
-		IPageStore asyncPageStore = new AsyncPageStore(pageStore, asyncPageStoreCapacity);
+		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, asyncPageStoreCapacity);
 
 		Stopwatch stopwatch = Stopwatch.createUnstarted();
 
