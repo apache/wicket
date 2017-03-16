@@ -36,10 +36,20 @@ public class ConversationPage1 extends CdiExamplePage
 		// make the conversation long running
 		conversation.begin();
 
-		add(new Label("count", new PropertyModel(this, "counter.count")));
+		add(new Label("count", new PropertyModel<Integer>(this, "counter.count")));
 
-		add(Link.onClick("increment", (link) -> counter.increment()));
+		add(new Link<Void>("increment") {
+			@Override
+			public void onClick()
+			{
+				counter.increment();
+			}
+		});
 
-		add(Link.onClick("next", (link) -> setResponsePage(new ConversationPage2())));
+		add(new Link<Void>("next") {
+			public void onClick() {
+				setResponsePage(new ConversationPage2());
+			}
+		});
 	}
 }

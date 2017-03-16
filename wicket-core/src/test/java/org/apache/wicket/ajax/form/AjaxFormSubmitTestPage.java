@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.form;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Optional;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -36,11 +38,22 @@ public class AjaxFormSubmitTestPage extends WebPage
 	/**
 	 * Indicates form handled submit.
 	 */
-	public static final int FORM = 2;
+	public static final int FORM_SUBMIT = 1;
+
+	/**
+	 * Indicates form handled error.
+	 */
+	public static final int FORM_ERROR = 2;
+
 	/**
 	 * Indicates button handled submit.
 	 */
-	public static final int BUTTON = 4;
+	public static final int BUTTON_SUBMIT = 4;
+	
+	/**
+	 * Indicates button handled error.
+	 */
+	public static final int BUTTON_ERROR = 8;
 
 	private int formSubmitted;
 
@@ -57,7 +70,7 @@ public class AjaxFormSubmitTestPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public AjaxFormSubmitTestPage()
+	public AjaxFormSubmitTestPage(boolean defaultProcessing)
 	{
 		super(new CompoundPropertyModel<ValueMap>(new ValueMap("txt1=foo,txt2=bar")));
 		Form<?> form = new Form<Void>("form")
@@ -67,12 +80,18 @@ public class AjaxFormSubmitTestPage extends WebPage
 			@Override
 			protected void onSubmit()
 			{
-				formSubmitted = formSubmitted | FORM;
+				formSubmitted = formSubmitted | FORM_SUBMIT;
+			}
+			
+			@Override
+			protected void onError()
+			{
+				formSubmitted = formSubmitted | FORM_ERROR;
 			}
 		};
 		add(form);
-		form.add(new TextField<String>("txt1"));
-		form.add(new TextField<String>("txt2"));
+		form.add(new TextField<String>("txt1").setRequired(true));
+		form.add(new TextField<String>("txt2").setRequired(true));
 		form.add(new AjaxFallbackButton("submit", form)
 		{
 			private static final long serialVersionUID = 1L;
@@ -80,15 +99,20 @@ public class AjaxFormSubmitTestPage extends WebPage
 			@Override
 			protected void onSubmit(Optional<AjaxRequestTarget> target)
 			{
-				formSubmitted = formSubmitted | BUTTON;
+				assertEquals(target.isPresent(), getRequestCycle().find(AjaxRequestTarget.class).isPresent());
+				formSubmitted = formSubmitted | BUTTON_SUBMIT;
 			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target)
-			{
+			
+			protected void onError(Optional<AjaxRequestTarget> target) {
+				assertEquals(target.isPresent(), getRequestCycle().find(AjaxRequestTarget.class).isPresent());
+				
+				formSubmitted = formSubmitted | BUTTON_ERROR;
 			}
-
-		}.setDefaultFormProcessing(false));
+			
+			protected void onAfterSubmit(Optional<AjaxRequestTarget> target) {
+				assertEquals(target.isPresent(), getRequestCycle().find(AjaxRequestTarget.class).isPresent());
+			}
+		}.setDefaultFormProcessing(defaultProcessing));
 	}
 
 

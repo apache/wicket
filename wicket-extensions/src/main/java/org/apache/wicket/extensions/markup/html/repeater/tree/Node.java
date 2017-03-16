@@ -72,12 +72,19 @@ public abstract class Node<T> extends Panel
 		super(id, model);
 
 		this.tree = tree;
+	}
+	
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		
 
 		MarkupContainer junction = createJunctionComponent("junction");
 		junction.add(new StyleBehavior());
 		add(junction);
 
-		Component content = createContent(CONTENT_ID, model);
+		Component content = createContent(CONTENT_ID, getModel());
 		if (!content.getId().equals(CONTENT_ID))
 		{
 			throw new IllegalArgumentException(

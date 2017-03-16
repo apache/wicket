@@ -159,18 +159,22 @@ public class AnnotationsPanelsPage extends BasePage
 		outer.setOutputMarkupId(true);
 
 		outer.add(new WebMarkupContainer("test").setOutputMarkupId(true));
-		add(AjaxLink.onClick("link", target -> {
-			showDummy = !showDummy;
-			if (showDummy)
+		add(new AjaxLink<Void>("link")
+		{
+			public void onClick(org.apache.wicket.ajax.AjaxRequestTarget target)
 			{
-				outer.replace(new WebMarkupContainer("test"));
+				showDummy = !showDummy;
+				if (showDummy)
+				{
+					outer.replace(new WebMarkupContainer("test"));
+				}
+				else
+				{
+					outer.replace(new Test("test"));
+				}
+				target.add(outer);
 			}
-			else
-			{
-				outer.replace(new Test("test"));
-			}
-			target.add(outer);
-		}));
+		});
 	}
 
 }

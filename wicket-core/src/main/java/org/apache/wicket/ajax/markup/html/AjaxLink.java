@@ -24,9 +24,6 @@ import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.lang.Args;
-import org.danekja.java.util.function.serializable.SerializableBiConsumer;
-import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * A component that allows a trigger request to be triggered via html anchor tag
@@ -143,57 +140,6 @@ public abstract class AjaxLink<T> extends AbstractLink implements IAjaxLink, IGe
 	@Override
 	public abstract void onClick(final AjaxRequestTarget target);
 
-	/**
-	 * Creates an {@link AjaxLink} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the ajax link
-	 * @param onClick
-	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
-	 * @return the {@link AjaxLink}
-	 */
-	public static <T> AjaxLink<T> onClick(String id,
-		SerializableConsumer<AjaxRequestTarget> onClick)
-	{
-		Args.notNull(onClick, "onClick");
-
-		return new AjaxLink<T>(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				onClick.accept(target);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxLink} based on lambda expressions
-	 * 
-	 * @param id
-	 *            the id of the ajax link
-	 * @param onClick
-	 *            the consumer of the clicked link and an {@link AjaxRequestTarget}
-	 * @return the {@link AjaxLink}
-	 */
-	public static <T> AjaxLink<T> onClick(String id,
-		SerializableBiConsumer<AjaxLink<T>, AjaxRequestTarget> onClick)
-	{
-		Args.notNull(onClick, "onClick");
-
-		return new AjaxLink<T>(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				onClick.accept(this, target);
-			}
-		};
-	}
 	@Override
 	protected boolean getStatelessHint()
 	{

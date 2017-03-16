@@ -171,39 +171,37 @@ public abstract class TableTree<T, S> extends AbstractTree<T>
 	 * For updating of a single branch the whole table is added to the ART.
 	 */
 	@Override
-	public void updateBranch(T node, Optional<? extends IPartialPageRequestHandler> handler)
+	public void updateBranch(T node, IPartialPageRequestHandler target)
 	{
 		// TableTree always outputs markupId
-		handler.ifPresent(target -> target.add(this));
+		target.add(this);
 	}
 
 	/**
 	 * For an update of a node the complete row item is added to the ART.
 	 */
 	@Override
-	public void updateNode(T t, final Optional<? extends IPartialPageRequestHandler> targetOptional)
+	public void updateNode(T t, IPartialPageRequestHandler target)
 	{
-		targetOptional.ifPresent(target -> {
-			final IModel<T> model = getProvider().model(t);
-			table.getBody().visitChildren(Item.class, new IVisitor<Item<T>, Void>()
+		final IModel<T> model = getProvider().model(t);
+		table.getBody().visitChildren(Item.class, new IVisitor<Item<T>, Void>()
+		{
+			@Override
+			public void component(Item<T> item, IVisit<Void> visit)
 			{
-				@Override
-				public void component(Item<T> item, IVisit<Void> visit)
-				{
-					NodeModel<T> nodeModel = (NodeModel<T>)item.getModel();
+				NodeModel<T> nodeModel = (NodeModel<T>)item.getModel();
 
-					if (model.equals(nodeModel.getWrappedModel()))
-					{
-						// row items are configured to output their markupId
-						target.add(item);
-						visit.stop();
-						return;
-					}
-					visit.dontGoDeeper();
+				if (model.equals(nodeModel.getWrappedModel()))
+				{
+					// row items are configured to output their markupId
+					target.add(item);
+					visit.stop();
+					return;
 				}
-			});
-			model.detach();
+				visit.dontGoDeeper();
+			}
 		});
+		model.detach();
 	}
 
 	/**

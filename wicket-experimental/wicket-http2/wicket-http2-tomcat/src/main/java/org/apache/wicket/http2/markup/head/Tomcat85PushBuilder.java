@@ -26,9 +26,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class Tomcat85PushBuilder implements PushBuilder
 {
-	/**
-	 * @see {@link org.apache.wicket.http2.markup.head.PushBuilder}
-	 */
 	@Override
 	public void push(HttpServletRequest httpServletRequest, String... paths)
 	{

@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -190,7 +189,7 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 			{
 				for (T object : nodeUpdates)
 				{
-					tree.updateNode(object, Optional.of(target));
+					tree.updateNode(object, target);
 				}
 			}
 
@@ -198,7 +197,7 @@ public abstract class TreeModelProvider<T> implements ITreeProvider<T>
 			{
 				for (T object : branchUpdates)
 				{
-					tree.updateBranch(object, Optional.of(target));
+					tree.updateBranch(object, target);
 				}
 			}
 		}

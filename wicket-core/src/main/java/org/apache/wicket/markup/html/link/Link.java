@@ -24,8 +24,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.lang.Args;
-import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor (&lt;a href...)
@@ -417,30 +415,5 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener, 
 		{
 			disableLink(tag);
 		}
-	}
-
-	/**
-	 * Creates a {@link Link} based on lambda expressions
-	 *
-	 * @param id
-	 *            the id of the link
-	 * @param onClick
-	 *            the consumer of the clicked link
-	 * @return the {@link Link}
-	 */
-	public static <T> Link<T> onClick(String id, SerializableConsumer<Link<T>> onClick)
-	{
-		Args.notNull(onClick, "onClick");
-
-		return new Link<T>(id)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void onClick()
-			{
-				onClick.accept(this);
-			}
-		};
 	}
 }

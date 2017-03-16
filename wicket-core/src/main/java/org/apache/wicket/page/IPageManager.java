@@ -42,6 +42,15 @@ public interface IPageManager
 	IManageablePage getPage(int id) throws CouldNotLockPageException;
 
 	/**
+	 * Removes a page from the {@link org.apache.wicket.pageStore.IPageStore} and
+	 * {@link org.apache.wicket.pageStore.IDataStore}. Any attempt to access it later
+	 * will lead to {@link org.apache.wicket.protocol.http.PageExpiredException}
+	 *
+	 * @param page The page instance to remove from the stores
+	 */
+	void removePage(IManageablePage page);
+
+	/**
 	 * Marks page as changed.
 	 * <p><strong>Note:</strong>Only stateful pages are stored.</p>
 	 * 

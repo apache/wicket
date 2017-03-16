@@ -33,7 +33,7 @@ public class DefaultMapperContext implements IMapperContext
 	/**
 	 * Constructor.
 	 *
-	 * Uses the threal local Application
+	 * Uses the thread local Application
 	 */
 	public DefaultMapperContext()
 	{

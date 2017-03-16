@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,18 +24,18 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * Represents additional error parameters present in a {@link ServletRequest} when the servlet
+ * Represents additional error attributes present in a {@link ServletRequest} when the servlet
  * container is handling an error or a forward to an error page mapped by {@code error-page} element
  * in {@code web.xml}.
  * 
  * See documentation for the following request attributes for the values stored in this object:
  * <ul>
- * <li>javax.servlet.error.status_code</li>
- * <li>javax.servlet.error.message</li>
- * <li>javax.servlet.error.request_uri</li>
- * <li>javax.servlet.error.servlet_name</li>
- * <li>javax.servlet.error.exception_type</li>
- * <li>javax.servlet.error.exception</li>
+ * <li>{@link RequestDispatcher#ERROR_STATUS_CODE}</li>
+ * <li>{@link RequestDispatcher#ERROR_MESSAGE}</li>
+ * <li>{@link RequestDispatcher#ERROR_REQUEST_URI}</li>
+ * <li>{@link RequestDispatcher#ERROR_SERVLET_NAME}</li>
+ * <li>{@link RequestDispatcher#ERROR_EXCEPTION_TYPE}</li>
+ * <li>{@link RequestDispatcher#ERROR_EXCEPTION}</li>
  * </ul>
  * 
  * @author igor
@@ -144,13 +145,13 @@ public class ErrorAttributes
 	public static ErrorAttributes of(HttpServletRequest request, String filterPrefix)
 	{
 		Args.notNull(request, "request");
-		Integer code = (Integer)request.getAttribute("javax.servlet.error.status_code");
-		String message = (String)request.getAttribute("javax.servlet.error.message");
-		String uri = DispatchedRequestUtils.getRequestUri(request, "javax.servlet.error.request_uri", filterPrefix);
-		String servlet = (String)request.getAttribute("javax.servlet.error.servlet_name");
+		Integer code = (Integer)request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+		String message = (String)request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
+		String uri = DispatchedRequestUtils.getRequestUri(request, RequestDispatcher.ERROR_REQUEST_URI, filterPrefix);
+		String servlet = (String)request.getAttribute(RequestDispatcher.ERROR_SERVLET_NAME);
 		@SuppressWarnings("unchecked")
-		Class<? extends Throwable> type = (Class<? extends Throwable>)request.getAttribute("javax.servlet.error.exception_type");
-		Throwable ex = (Throwable)request.getAttribute("javax.servlet.error.exception");
+		Class<? extends Throwable> type = (Class<? extends Throwable>)request.getAttribute(RequestDispatcher.ERROR_EXCEPTION_TYPE);
+		Throwable ex = (Throwable)request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
 		if (!Strings.isEmpty(uri) || code != null || ex != null)
 		{

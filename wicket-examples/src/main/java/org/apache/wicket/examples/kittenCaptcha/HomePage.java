@@ -45,26 +45,31 @@ public class HomePage extends WicketExamplePage
 		add(captcha = new KittenCaptchaPanel("captcha", new Dimension(400, 200)));
 
 		// In a real application, you'd check the kittens in a form
-		add(AjaxLink.onClick("checkKittens", (target) -> {
-			if (!isSpamBot() && captcha.allKittensSelected())
+		add(new AjaxLink<Void>("checkKittens")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
 			{
-				target.appendJavaScript("alert('you win! happy kittens!');");
-			}
-			else
-			{
-				errors++;
-				if (isSpamBot())
+				if (!isSpamBot() && captcha.allKittensSelected())
 				{
-					target.appendJavaScript("alert('spammer alert');");
+					target.appendJavaScript("alert('you win! happy kittens!');");
 				}
 				else
 				{
-					target.appendJavaScript("alert('please try again');");
+					errors++;
+					if (isSpamBot())
+					{
+						target.appendJavaScript("alert('spammer alert');");
+					}
+					else
+					{
+						target.appendJavaScript("alert('please try again');");
+					}
+					target.add(captcha);
 				}
-				target.add(captcha);
+				captcha.reset();
 			}
-			captcha.reset();
-		}));
+		});
 	}
 
 	/**

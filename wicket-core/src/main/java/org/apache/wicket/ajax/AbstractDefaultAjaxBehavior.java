@@ -18,6 +18,9 @@ package org.apache.wicket.ajax;
 
 import java.util.List;
 
+import com.github.openjson.JSONArray;
+import com.github.openjson.JSONException;
+import com.github.openjson.JSONObject;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -41,9 +44,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -586,9 +586,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.behavior.IBehaviorListener#onRequest()
-	 */
 	@Override
 	public final void onRequest()
 	{

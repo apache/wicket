@@ -96,9 +96,8 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 		});
 		form.add(tree);
 
-		form.add(new DropDownChoice<Content>("content",
-			new PropertyModel<>(this, "content"), initContents(),
-			new ChoiceRenderer<>("class.simpleName"))
+		form.add(new DropDownChoice<Content>("content", new PropertyModel<>(this, "content"),
+			initContents(), new ChoiceRenderer<>("class.simpleName"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -121,11 +120,29 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 			}
 		});
 
-		form.add(Link.onClick("expandAll", (link) -> FooExpansion.get().expandAll()));
+		form.add(new Link<Void>("expandAll")
+		{
+			public void onClick()
+			{
+				FooExpansion.get().expandAll();
+			}
+		});
 
-		form.add(Link.onClick("collapseAll", (link) -> FooExpansion.get().collapseAll()));
+		form.add(new Link<Void>("collapseAll")
+		{
+			public void onClick()
+			{
+				FooExpansion.get().collapseAll();
+			}
+		});
 
-		form.add(Button.onSubmit("submit", (btn) -> {}));
+		form.add(new Button("submit")
+		{
+			@Override
+			public void onSubmit()
+			{
+			}
+		});
 	}
 
 	protected abstract AbstractTree<Foo> createTree(FooProvider provider, IModel<Set<Foo>> state);
