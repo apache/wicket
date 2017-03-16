@@ -103,4 +103,9 @@ public interface IPageStore
 	 * @return page
 	 */
 	IManageablePage convertToPage(Object page);
+	
+	/**
+	 * @return whether the implementation can be wrapped in {@link AsynchronousPageStore}
+	 */
+	boolean canBeAsynchronous();
 }

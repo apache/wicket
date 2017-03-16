@@ -355,4 +355,10 @@ public class AsynchronousPageStore implements IPageStore
 		return pageStore.convertToPage(page);
 	}
 
+	@Override
+	public boolean canBeAsynchronous()
+	{
+		return false;
+	}
+
 }

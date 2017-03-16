@@ -493,6 +493,12 @@ public class AsynchronousPageStoreTest
 		{
 			return null;
 		}
+
+		@Override
+		public boolean canBeAsynchronous()
+		{
+			return true;
+		}
 	}
 
 }
