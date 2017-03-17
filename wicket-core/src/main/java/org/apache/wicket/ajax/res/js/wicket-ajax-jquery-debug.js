@@ -90,8 +90,9 @@
 			msg = msg.replace(/</g, "&lt;");
 			msg = msg.replace(/>/g, "&gt;");
 			msg = msg.replace(/\n/g, "<br/>");
-			msg = msg.replace(/ /g, "&nbsp;");
-			msg = msg.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+			// WICKET-6340 do not use nbsp, it may not be defined in XHTML markup
+			msg = msg.replace(/ /g, "&#160;");
+			msg = msg.replace(/\t/g, "&#160;&#160;&#160;&#160;");
 
 			if (typeof(label) !== "undefined") {
 				msg = "<b>" + label + "</b>" + msg;
