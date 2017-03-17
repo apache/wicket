@@ -68,8 +68,9 @@
 	 * @param iframeName {String} the value of the iframe's name attribute
 	 */
 	createIFrame = function (iframeName) {
+		// WICKET-6340 properly close tag for XHTML markup
 		var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
-			'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;">');
+			'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;"></iframe>');
 		return $iframe[0];
 	};
 
