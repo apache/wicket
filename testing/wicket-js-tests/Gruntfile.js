@@ -113,7 +113,7 @@ module.exports = function(grunt) {
 			        urls: [
 			        	'http://localhost:38887/test/js/all.html?1.12.4',
 			        	'http://localhost:38887/test/js/all.html?2.2.4',
-					'http://localhost:38887/test/js/all.html?3.2.0'
+						'http://localhost:38887/test/js/all.html?3.2.0'
 			        ]
 			    }
 			},

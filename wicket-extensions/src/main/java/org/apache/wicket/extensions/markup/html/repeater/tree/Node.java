@@ -79,7 +79,6 @@ public abstract class Node<T> extends Panel
 	{
 		super.onInitialize();
 
-
 		MarkupContainer junction = createJunctionComponent("junction");
 		junction.add(new StyleBehavior());
 		add(junction);

@@ -110,21 +110,25 @@ public class ResourceBundles
 	public JavaScriptReferenceHeaderItem addJavaScriptBundle(Class<?> scope, String name, boolean defer,
 		JavaScriptResourceReference... references)
 	{
-		List<JavaScriptReferenceHeaderItem> items = new ArrayList<JavaScriptReferenceHeaderItem>();
+		List<JavaScriptReferenceHeaderItem> items = new ArrayList<>();
+
 		for (JavaScriptResourceReference curReference : references)
 		{
 			items.add(JavaScriptHeaderItem.forReference(curReference));
 		}
+
 		ConcatResourceBundleReference<JavaScriptReferenceHeaderItem> bundleReference =
 				newBundleResourceReference(scope, name, items);
+
 		if (Application.exists())
 		{
 			IJavaScriptCompressor javaScriptCompressor = Application.get().getResourceSettings().getJavaScriptCompressor();
 			bundleReference.setCompressor(javaScriptCompressor);
 		}
-		if(defer){
+
+		if (defer) {
 			return addBundle(JavaScriptHeaderItem.forReference(bundleReference, defer));
-		}else{
+		} else{
 			return addBundle(JavaScriptHeaderItem.forReference(bundleReference));
 		}
 	}

@@ -86,7 +86,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	/**
 	 * Overridden to let the node output its markup id.
 	 * 
-	 * @see #updateNode(Object, Optional<IPartialPageRequestHandler>)
+	 * @see #updateNode(T, IPartialPageRequestHandler)
 	 * @see Component#setOutputMarkupId(boolean)
 	 */
 	@Override
@@ -102,7 +102,7 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 	/**
 	 * Overridden to update the corresponding {@link BranchItem} only.
 	 *
-	 * @param node
+	 * @param t
 	 *            node to update
 	 * @param target
 	 *            request target must not be @code null}
@@ -129,7 +129,11 @@ public abstract class NestedTree<T> extends AbstractTree<T>
 
 	/**
 	 * Overridden to update the corresponding {@link Node} only.
+<<<<<<< HEAD
 	 *
+=======
+	 * 
+>>>>>>> master
 	 * @param node
 	 *            node to update
 	 * @param target
