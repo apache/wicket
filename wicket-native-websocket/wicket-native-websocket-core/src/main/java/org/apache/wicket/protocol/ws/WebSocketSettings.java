@@ -305,7 +305,7 @@ public class WebSocketSettings
 		if (baseUrl.get() == null)
 		{
 			Url _baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
-			baseUrl.compareAndSet(null, Strings.escapeMarkup(_baseUrl.toString()));
+			return Strings.escapeMarkup(_baseUrl.toString());
 		}
 		return baseUrl.get();
 	}
