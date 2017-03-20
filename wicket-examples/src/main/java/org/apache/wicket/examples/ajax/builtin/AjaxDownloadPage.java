@@ -252,8 +252,15 @@ public class AjaxDownloadPage extends BasePage
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
 			}
+
+			@Override
+			protected void onDownloadCompleted(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
 		};
-		download.setLocation(AjaxDownload.Location.NewWindow);
+		download.setLocation(AjaxDownload.Location.SameWindow);
 		add(download);
 
 		add(new AjaxLink<Void>("downloadInNewWindow")

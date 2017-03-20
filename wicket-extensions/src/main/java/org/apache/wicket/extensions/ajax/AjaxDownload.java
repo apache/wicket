@@ -72,18 +72,23 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		 * The resource will be downloaded via a temporary created iframe.
 		 * This is recommended when there are resources in the DOM which will be
 		 * closed automatically on JavaScript <em>unload</em> event, like WebSockets.
+		 * Supports both <em>success</em> and <em>failure</em> callbacks!
 		 */
 		IFrame,
 
 		/**
 		 * The resource will be downloaded by changing the location of the current DOM document.
 		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
+		 * Supports only <em>success</em> callback, i.e. it is not possible to detect whether
+		 * the download has finished successfully or not.
 		 */
-		Self,
+		SameWindow,
 
 		/**
 		 * The resource will be downloaded in a new browser window by using JavaScript
 		 * <code>window.open()</code> API.
+		 * Supports only <em>success</em> callback, i.e. it is not possible to detect whether
+		 * the download has finished successfully or not.
 		 */
 		NewWindow
 	}
@@ -230,11 +235,31 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	{
 	}
 
+	/**
+	 * A callback executed when the download of the resource finished successfully.
+	 *
+	 * @param target The Ajax request handler
+	 */
 	protected void onDownloadSuccess(AjaxRequestTarget target)
 	{
 	}
 
+	/**
+	 * A callback executed when the download of the resource failed for some reason,
+	 * e.g. an error at the server side.
+	 *
+	 * @param target The Ajax request handler
+	 */
 	protected void onDownloadFailed(AjaxRequestTarget target)
+	{
+	}
+
+	/**
+	 * A callback executed when the download of the resource finished successfully or with a failure.
+	 *
+	 * @param target The Ajax request handler
+	 */
+	protected void onDownloadCompleted(AjaxRequestTarget target)
 	{
 	}
 
@@ -255,6 +280,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		} else if ("failed".equals(result)) {
 			onDownloadFailed(target);
 		}
+		onDownloadCompleted(target);
 	}
 
 	public final Location getLocation() {
