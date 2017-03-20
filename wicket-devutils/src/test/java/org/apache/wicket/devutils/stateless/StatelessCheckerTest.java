@@ -32,18 +32,12 @@ import org.junit.Test;
  */
 public class StatelessCheckerTest extends Assert
 {
-	/**
-	 * StatelessPage
-	 */
 	@StatelessComponent
 	public static class StatelessPage extends DummyHomePage
 	{
 		private static final long serialVersionUID = 1L;
 	}
 
-	/**
-	 * StatelessLabel
-	 */
 	@StatelessComponent
 	private static class StatelessLabel extends Label
 	{
@@ -55,9 +49,6 @@ public class StatelessCheckerTest extends Assert
 		}
 	}
 
-	/**
-	 * StatefulMarkupContainer
-	 */
 	@StatelessComponent
 	private static class StatefulMarkupContainer extends MarkupContainer
 	{
@@ -66,6 +57,7 @@ public class StatelessCheckerTest extends Assert
 		public StatefulMarkupContainer(String id) {
 			super(id);
 		}
+
 		@Override
 		public boolean getStatelessHint()
 		{
@@ -73,9 +65,6 @@ public class StatelessCheckerTest extends Assert
 		}
 	}
 
-	/**
-	 * StatefulBehavior
-	 */
 	private static class StatefulBehavior extends Behavior
 	{
 		private static final long serialVersionUID = 1L;
@@ -87,9 +76,6 @@ public class StatelessCheckerTest extends Assert
 		}
 	}
 
-	/**
-	 * StatelessCheckerQuietly
-	 */
 	private static class StatelessCheckerQuietly extends StatelessChecker
 	{
 		private StatelessCheckFailureException ex;
@@ -111,9 +97,6 @@ public class StatelessCheckerTest extends Assert
 
 	private WicketTester tester;
 
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Before
 	public void setUp()
 	{
@@ -122,9 +105,6 @@ public class StatelessCheckerTest extends Assert
 		checkerQuietly = new StatelessCheckerQuietly();
 	}
 
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@After
 	public void tearDown()
 	{
