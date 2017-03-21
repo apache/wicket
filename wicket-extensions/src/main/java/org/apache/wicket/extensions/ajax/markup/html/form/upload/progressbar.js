@@ -81,7 +81,7 @@
 
 		_createIFrame : function (iframeName) {
 			var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
-				'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;">');
+				'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;"></iframe>');
 			return $iframe[0];
 		},
 
