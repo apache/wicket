@@ -77,7 +77,7 @@
 					},
 					
 					dismiss: function(result) {
-						if (result == "failed") {
+						if (result === "failed") {
 							wo.close();
 						}
 					}
