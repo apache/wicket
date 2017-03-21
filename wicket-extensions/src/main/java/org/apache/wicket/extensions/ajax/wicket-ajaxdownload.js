@@ -28,35 +28,31 @@
 	Wicket.AjaxDownload = {
 		initiate : function(settings) {
 
-			var notifyServer = function (result) {
+			var notifyServer = function(result) {
                 settings.attributes.ep = settings.attributes.ep || {};
                 settings.attributes.ep.result = result;
                 Wicket.Ajax.ajax(settings.attributes);
             };
 
-			var checkComplete = function (frame) {
+			var checkComplete = function(watcher) {
 				var result;
 
 				if (document.cookie.indexOf(settings.name + '=') > -1) {
 					result = "success";
-				} else if (frame) {
-					var html = frame.contents().find('body').html();
+				} else {
+					var html = watcher.html();
 					if (html && html.length) {
 						result = "failed";
 					}
 				}
 
 				if (result) {
-					if (frame) {
-						setTimeout(function () {
-							frame.remove();
-						}, 0);
-					}
-
+					watcher.dismiss(result);
+					
 					notifyServer(result);
 				} else {
 					setTimeout(function() {
-						checkComplete(frame);
+						checkComplete(watcher);
 					}, 100);
 				}
 			};
@@ -64,16 +60,42 @@
 			if (settings.method === 'samewindow') {
 				setTimeout(function () {
 					window.location.assign(settings.downloadUrl);
-					checkComplete();
+					checkComplete({
+						html: function() {
+							return jQuery();
+						},
+						
+						dismiss: function(result) {
+						}
+					});
 				}, 10);
 			} else if (settings.method === 'newwindow') {
-				var wo = window.open(settings.downloadUrl, 'ajax-download');
-				jQuery(wo).load(function(evt) {
-					notifyServer(undefined);
+				var wo = window.open(settings.downloadUrl);
+				checkComplete({
+					html: function() {
+						return jQuery(wo ? wo.document : undefined).find('body').html();
+					},
+					
+					dismiss: function(result) {
+						if (result == "failed") {
+							wo.close();
+						}
+					}
 				});
 			} else {
 				var frame = jQuery("<iframe></iframe>").hide().prop("src", settings.downloadUrl).appendTo("body");
-				checkComplete(frame);
+				checkComplete({
+					html: function() {
+						return frame.contents().find('body').html();
+					},
+					
+					dismiss: function() {
+						// don't remove iframe immediately
+						setTimeout(function () {
+							frame.remove();
+						}, 0);
+					}
+				});
 			}
 		}
 	}; 

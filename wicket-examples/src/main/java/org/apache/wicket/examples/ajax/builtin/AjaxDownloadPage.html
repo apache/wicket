@@ -23,22 +23,18 @@
 <wicket:extend>
 
 <p>
-This example demonstrates a <a wicket:id="download">download</a> initiated via Ajax.
+	All links below initiate a download of a resource via Ajax (failing every third time): 
 </p>
+
+<ul>
+	<li>via an <a wicket:id="download">iframe</a>.</li>
+	<li>in a <a wicket:id="downloadInNewWindow">new browser window</a>.</li>
+	<li>in the <a wicket:id="downloadInSameWindow">same window</a>.</li>
+</ul>
 
 <p>
-This download <a wicket:id="downloadFailure">fails</a>.
+	Alternatively a <a wicket:id="downloadReference">resource reference</a> can be used too.
 </p>
-
-<p>
-A resource reference can be <a wicket:id="downloadReference">used too</a>.
-</p>
-
-<p>
-    This example demonstrates a <a wicket:id="downloadInNewWindow">download</a>
-    initiated via Ajax and serving the response in a new browser window.
-</p>
-
 
 <div wicket:id="downloading" class="download-veil"><span>Preparing download ...</span></div>
 

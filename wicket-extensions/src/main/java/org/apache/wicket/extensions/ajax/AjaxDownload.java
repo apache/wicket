@@ -16,16 +16,17 @@
  */
 package org.apache.wicket.extensions.ajax;
 
+import java.util.Locale;
+
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IResourceListener;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.json.JSONObject;
-import org.apache.wicket.ajax.json.JsonFunction;
+import org.apache.wicket.ajax.json.JSONFunction;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -34,13 +35,14 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
 import org.apache.wicket.util.lang.Args;
 
-import java.util.Locale;
+import com.github.openjson.JSONObject;
 
 /**
  * Download resources via Ajax.
@@ -69,7 +71,9 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 
 	public enum Location {
 		/**
-		 * The resource will be downloaded via a temporary created iframe.
+		 * The resource will be downloaded via a temporary created iframe, the resource has to be a
+		 * {@link ContentDisposition#ATTACHMENT}.
+		 * <p>
 		 * This is recommended when there are resources in the DOM which will be
 		 * closed automatically on JavaScript <em>unload</em> event, like WebSockets.
 		 * Supports both <em>success</em> and <em>failure</em> callbacks!
@@ -77,18 +81,18 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		IFrame,
 
 		/**
-		 * The resource will be downloaded by changing the location of the current DOM document.
+		 * The resource will be downloaded by changing the location of the current DOM document, the resource has to be a
+		 * {@link ContentDisposition#ATTACHMENT}.
+		 * <p>
 		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
-		 * Supports only <em>success</em> callback, i.e. it is not possible to detect whether
-		 * the download has finished successfully or not.
+		 * Does not support {@link AjaxDownload#onDownloadFailed(AjaxRequestTarget)} callback, i.e. it is not possible to detect
+		 * when the download has failed!
 		 */
 		SameWindow,
 
 		/**
-		 * The resource will be downloaded in a new browser window by using JavaScript
-		 * <code>window.open()</code> API.
-		 * Supports only <em>success</em> callback, i.e. it is not possible to detect whether
-		 * the download has finished successfully or not.
+		 * The resource will be downloaded in a new browser window by using JavaScript <code>window.open()</code> API,
+		 * the resource has to be a {@link ContentDisposition#INLINE}.
 		 */
 		NewWindow
 	}
@@ -221,7 +225,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		}
 
 		JSONObject settings = new JSONObject();
-		settings.put("attributes", new JsonFunction(renderAjaxAttributes(getComponent())));
+		settings.put("attributes", new JSONFunction(renderAjaxAttributes(getComponent())));
 		settings.put("name", getName());
 		settings.put("downloadUrl", url);
 		settings.put("method", location.name().toLowerCase(Locale.ENGLISH));
@@ -304,7 +308,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	/**
 	 * The behavior responding with the actual resource.
 	 */
-	private class ResourceBehavior extends Behavior implements IResourceListener
+	private class ResourceBehavior extends Behavior implements IRequestListener
 	{
 		private final IResource resource;
 
@@ -314,7 +318,13 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		}
 
 		@Override
-		public void onResourceRequested()
+		public boolean rendersPage()
+		{
+			return false;
+		}
+		
+		@Override
+		public void onRequest()
 		{
 			final RequestCycle requestCycle = RequestCycle.get();
 			final Response response = requestCycle.getResponse();
@@ -327,7 +337,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 
 		public CharSequence getUrl()
 		{
-			return getComponent().urlFor(this, IResourceListener.INTERFACE, null);
+			return getComponent().urlForListener(this, null);
 		}
 	}
 

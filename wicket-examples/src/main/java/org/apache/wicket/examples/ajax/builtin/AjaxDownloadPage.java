@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.AjaxDownload;
@@ -28,8 +30,6 @@ import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.time.Duration;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Ajax download.
@@ -52,83 +52,26 @@ public class AjaxDownloadPage extends BasePage
 		
 		initDownload();
 
-		initDownloadFailure();
+		initDownloadInNewWindow();
+
+		initDownloadInSameWindow();
 
 		initDownloadReference();
-
-		initDownloadInNewWindow();
 	}
 
-	private void initDownload()
+	@Override
+	protected void onConfigure()
 	{
-		IResource resource = new ResourceStreamResource() {
-			protected IResourceStream getResourceStream() {
-				// simulate delay
-				try
-				{
-					TimeUnit.MILLISECONDS.sleep(5000);
-				}
-				catch (InterruptedException e)
-				{
-				}
-				
-				return new StringResourceStream("downloaded via ajax");
-			};
-			
-		}.setFileName("File-from-IResource.txt").setContentDisposition(ContentDisposition.ATTACHMENT).setCacheDuration(Duration.NONE);
-		
-		final AjaxDownload download = new AjaxDownload(resource) {
-			
-			@Override
-			protected void onBeforeDownload(AjaxRequestTarget target)
-			{
-				downloadingContainer.setVisible(true);
-				target.add(downloadingContainer);
-			}
+		super.onConfigure();
 
-			@Override
-			protected void onDownloadSuccess(AjaxRequestTarget target)
-			{
-				downloadingContainer.setVisible(false);
-				target.add(downloadingContainer);
-			}
-			
-			@Override
-			protected void onDownloadFailed(AjaxRequestTarget target)
-			{
-				downloadingContainer.setVisible(false);
-				target.add(downloadingContainer);
-			}
-		};
-		add(download);
-		
-		add(new AjaxLink<Void>("download")
-		{
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				download.initiate(target);
-			}
-		});
+		// download cannot continue on page refresh
+		downloadingContainer.setVisible(false);
 	}
 	
-	private void initDownloadFailure()
+	private void initDownload()
 	{
-		IResource resource = new ResourceStreamResource() {
-			protected IResourceStream getResourceStream() {
-				// simulate delay
-				try
-				{
-					TimeUnit.MILLISECONDS.sleep(2000);
-				}
-				catch (InterruptedException e)
-				{
-				}
-				
-				throw new AbortWithHttpErrorCodeException(500);
-			};
-			
-		}.setFileName("file").setContentDisposition(ContentDisposition.ATTACHMENT).setCacheDuration(Duration.NONE);
+		IResource resource = new ExampleResource("downloaded via ajax")
+			.setContentDisposition(ContentDisposition.ATTACHMENT);
 		
 		final AjaxDownload download = new AjaxDownload(resource) {
 			
@@ -157,7 +100,7 @@ public class AjaxDownloadPage extends BasePage
 		};
 		add(download);
 		
-		add(new AjaxLink<Void>("downloadFailure")
+		add(new AjaxLink<Void>("download")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -198,6 +141,8 @@ public class AjaxDownloadPage extends BasePage
 			{
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
+				
+				target.appendJavaScript("alert('Download failed');");
 			}
 		};
 		add(download);
@@ -214,21 +159,8 @@ public class AjaxDownloadPage extends BasePage
 
 	private void initDownloadInNewWindow()
 	{
-		IResource resource = new ResourceStreamResource() {
-			protected IResourceStream getResourceStream() {
-				// simulate delay
-				try
-				{
-					TimeUnit.MILLISECONDS.sleep(5000);
-				}
-				catch (InterruptedException e)
-				{
-				}
-
-				return new StringResourceStream("downloaded via ajax in a new browser window");
-			};
-
-		}.setFileName("File-from-IResource.txt").setContentDisposition(ContentDisposition.INLINE).setCacheDuration(Duration.NONE);
+		IResource resource = new ExampleResource("downloaded via ajax in a new browser window")
+			.setContentDisposition(ContentDisposition.INLINE);
 
 		final AjaxDownload download = new AjaxDownload(resource) {
 
@@ -251,6 +183,58 @@ public class AjaxDownloadPage extends BasePage
 			{
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
+				
+				target.appendJavaScript("alert('Download failed');");
+			}
+
+			@Override
+			protected void onDownloadCompleted(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
+		};
+		download.setLocation(AjaxDownload.Location.NewWindow);
+		add(download);
+
+		add(new AjaxLink<Void>("downloadInNewWindow")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				download.initiate(target);
+			}
+		});
+	}
+
+	private void initDownloadInSameWindow()
+	{
+		IResource resource = new ExampleResource("downloaded via ajax in same browser window")
+			.setContentDisposition(ContentDisposition.ATTACHMENT);
+
+		final AjaxDownload download = new AjaxDownload(resource) {
+
+			@Override
+			protected void onBeforeDownload(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(true);
+				target.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadSuccess(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadFailed(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+				
+				target.appendJavaScript("alert('Download failed');");
 			}
 
 			@Override
@@ -263,7 +247,7 @@ public class AjaxDownloadPage extends BasePage
 		download.setLocation(AjaxDownload.Location.SameWindow);
 		add(download);
 
-		add(new AjaxLink<Void>("downloadInNewWindow")
+		add(new AjaxLink<Void>("downloadInSameWindow")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -290,7 +274,7 @@ public class AjaxDownloadPage extends BasePage
 		}
 		
 		@Override
-		protected IResourceStream getResourceStream()
+		protected IResourceStream getResourceStream(Attributes attributes)
 		{
 			// simulate delay
 			try
@@ -303,5 +287,41 @@ public class AjaxDownloadPage extends BasePage
 			
 			return new StringResourceStream("downloaded via ajax with resource reference");
 		}
+	}
+	
+	private class ExampleResource extends ResourceStreamResource {
+		
+		private String content;
+		
+		private int count = 0;
+
+		public ExampleResource(String content)
+		{
+			this.content = content;
+
+			setFileName("File-from-IResource.txt");
+			setCacheDuration(Duration.NONE);
+		}
+		
+		@Override
+		protected IResourceStream getResourceStream(Attributes attributes) {
+			// simulate delay
+			try
+			{
+				TimeUnit.MILLISECONDS.sleep(3000);
+			}
+			catch (InterruptedException e)
+			{
+			}
+			
+			count++;
+			if (count == 3) {
+				count = 0;
+				throw new AbortWithHttpErrorCodeException(400);
+			}
+
+			return new StringResourceStream(content);
+		};
+
 	}
 }
