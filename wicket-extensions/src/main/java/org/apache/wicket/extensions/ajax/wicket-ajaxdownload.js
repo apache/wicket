@@ -29,10 +29,10 @@
 		initiate : function(settings) {
 
 			var notifyServer = function(result) {
-                settings.attributes.ep = settings.attributes.ep || {};
-                settings.attributes.ep.result = result;
-                Wicket.Ajax.ajax(settings.attributes);
-            };
+				settings.attributes.ep = settings.attributes.ep || {};
+				settings.attributes.ep.result = result;
+				Wicket.Ajax.ajax(settings.attributes);
+			};
 
 			var checkComplete = function(watcher) {
 				var result;
@@ -82,7 +82,7 @@
 						}
 					}
 				});
-			} else {
+			} else if (settings.method == 'iframe') {
 				var frame = jQuery("<iframe></iframe>").hide().prop("src", settings.downloadUrl).appendTo("body");
 				checkComplete({
 					html: function() {
@@ -94,6 +94,45 @@
 						setTimeout(function () {
 							frame.remove();
 						}, 0);
+					}
+				});
+			} else {
+				jQuery.ajax({
+					type: 'get',
+					url: settings.downloadUrl,
+					success: function (response, status, xhr) {
+						var filename = "";
+						var disposition = xhr.getResponseHeader("Content-Disposition");
+						if (disposition && disposition.indexOf("attachment") !== -1) {
+							var matches = /filename[^;=\n]*=(([""]).*?\2|[^;\n]*)/.exec(disposition);
+							if (matches != null && matches[1]) {
+								filename = matches[1].replace(/[""]/g, "");
+							}
+						}
+
+						var type = xhr.getResponseHeader("Content-Type");
+						var blob = new Blob([response], {type: type});
+
+						var blobUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+
+						var anchor = jQuery("<a></a>")
+							.prop("href", blobUrl)
+							.prop("download", filename)
+							.appendTo("body")
+							.hide();
+						
+						anchor[0].click();
+						
+						setTimeout(function () {
+							URL.revokeObjectURL(blobUrl);
+							anchor.remove();
+						}, 100);
+
+						notifyServer("success");
+					},
+
+					error: function (response, status, xhr) {
+						notifyServer("failed");
 					}
 				});
 			}

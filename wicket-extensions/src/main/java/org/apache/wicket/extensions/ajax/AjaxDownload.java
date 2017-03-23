@@ -73,6 +73,13 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 
 	public enum Location {
 		/**
+		 * The resource will be downloaded into a blob.
+		 * <p>
+		 * This is recommended for modern browsers.
+		 */
+		Blob,
+
+		/**
 		 * The resource will be downloaded via a temporary created iframe, the resource has to be a
 		 * {@link ContentDisposition#ATTACHMENT}.
 		 * <p>
@@ -115,7 +122,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 
 	private PageParameters resourceParameters;
 
-	private Location location = Location.IFrame;
+	private Location location = Location.Blob;
 
 	/**
 	 * Download of a {@link Resource}.

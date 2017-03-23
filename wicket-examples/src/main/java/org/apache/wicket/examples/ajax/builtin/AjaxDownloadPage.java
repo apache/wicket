@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.AjaxDownload;
+import org.apache.wicket.extensions.ajax.AjaxDownload.Location;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.resource.ContentDisposition;
@@ -51,6 +52,8 @@ public class AjaxDownloadPage extends BasePage
 		add(downloadingContainer);
 		
 		initDownload();
+		
+		initDownloadInIframe();
 
 		initDownloadInNewWindow();
 
@@ -67,7 +70,7 @@ public class AjaxDownloadPage extends BasePage
 		// download cannot continue on page refresh
 		downloadingContainer.setVisible(false);
 	}
-	
+
 	private void initDownload()
 	{
 		IResource resource = new ExampleResource("downloaded via ajax")
@@ -101,6 +104,49 @@ public class AjaxDownloadPage extends BasePage
 		add(download);
 		
 		add(new AjaxLink<Void>("download")
+		{
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				download.initiate(target);
+			}
+		});
+	}
+
+	private void initDownloadInIframe()
+	{
+		IResource resource = new ExampleResource("downloaded via ajax in iframe")
+			.setContentDisposition(ContentDisposition.ATTACHMENT);
+		
+		final AjaxDownload download = new AjaxDownload(resource) {
+			
+			@Override
+			protected void onBeforeDownload(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(true);
+				target.add(downloadingContainer);
+			}
+
+			@Override
+			protected void onDownloadSuccess(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+			}
+			
+			@Override
+			protected void onDownloadFailed(AjaxRequestTarget target)
+			{
+				downloadingContainer.setVisible(false);
+				target.add(downloadingContainer);
+				
+				target.appendJavaScript("alert('Download failed');");
+			}
+		};
+		download.setLocation(Location.IFrame);
+		add(download);
+		
+		add(new AjaxLink<Void>("downloadIframe")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
