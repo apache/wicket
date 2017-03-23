@@ -64,6 +64,8 @@ import com.github.openjson.JSONObject;
  * </pre>
  * 
  * @author svenmeier
+ * @author Martin Grigorov
+ * @author Maxim Solodovnik
  */
 public class AjaxDownload extends AbstractDefaultAjaxBehavior
 {
@@ -251,6 +253,10 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	/**
 	 * A callback executed when the download of the resource failed for some reason,
 	 * e.g. an error at the server side.
+	 * <p>
+	 * Since the HTTP status code of the download is not available to Wicket, any HTML in the resource response
+	 * will be interpreted as a failure HTTP status message. Thus is it not possible to download HTML resources
+	 * via {@link AjaxDownload}.
 	 *
 	 * @param target The Ajax request handler
 	 */
