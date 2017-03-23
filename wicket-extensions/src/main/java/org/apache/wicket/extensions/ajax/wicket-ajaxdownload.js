@@ -82,7 +82,7 @@
 						}
 					}
 				});
-			} else if (settings.method == 'iframe') {
+			} else if (settings.method === 'iframe') {
 				var frame = jQuery("<iframe></iframe>").hide().prop("src", settings.downloadUrl).appendTo("body");
 				checkComplete({
 					html: function() {
