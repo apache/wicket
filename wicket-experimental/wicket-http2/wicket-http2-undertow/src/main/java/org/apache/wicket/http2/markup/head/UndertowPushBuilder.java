@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Allows to push resources with the Undertow 2+ specific push builder API
@@ -28,9 +30,8 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class UndertowPushBuilder implements PushBuilder
 {
-	/**
-	 * @see {@link org.apache.wicket.http2.markup.head.PushBuilder}
-	 */
+	private static final Logger LOG = LoggerFactory.getLogger(UndertowPushBuilder.class);
+
 	@Override
 	public void push(HttpServletRequest httpServletRequest, String... paths)
 	{
@@ -39,10 +40,18 @@ public class UndertowPushBuilder implements PushBuilder
 		io.undertow.servlet.spec.HttpServletRequestImpl undertowRequest = (io.undertow.servlet.spec.HttpServletRequestImpl) httpRequest;
 		// Added explicit cast here to ensure this is the implementation of undertow
 		io.undertow.servlet.spec.PushBuilderImpl pushBuilder = (io.undertow.servlet.spec.PushBuilderImpl)undertowRequest.getPushBuilder();
-		for (String path : paths)
+		if (pushBuilder != null)
 		{
-			pushBuilder.path(path);
+			for (String path : paths)
+			{
+				pushBuilder.path(path);
+			}
+			pushBuilder.push();
 		}
-		pushBuilder.push();
+		else
+		{
+			LOG.warn("Attempted to use HTTP2 Push but it is not supported for the current request: {}!",
+					httpRequest);
+		}
 	}
 }
