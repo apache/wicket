@@ -20,12 +20,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Allows to push resources with the Tomcat 8.5+ specific push builder API
  */
 public class Tomcat85PushBuilder implements PushBuilder
 {
+	private static final Logger LOG = LoggerFactory.getLogger(Tomcat85PushBuilder.class);
+
 	@Override
 	public void push(HttpServletRequest httpServletRequest, String... paths)
 	{
@@ -33,10 +37,18 @@ public class Tomcat85PushBuilder implements PushBuilder
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
 		org.apache.catalina.connector.RequestFacade tomcatRequest = (org.apache.catalina.connector.RequestFacade) httpRequest;
 		org.apache.catalina.servlet4preview.http.PushBuilder pushBuilder = tomcatRequest.getPushBuilder();
-		for (String path : paths)
+		if (pushBuilder != null)
 		{
-			pushBuilder.path(path);
+			for (String path : paths)
+			{
+				pushBuilder.path(path);
+			}
+			pushBuilder.push();
 		}
-		pushBuilder.push();
+		else
+		{
+			LOG.warn("Attempted to use HTTP2 Push but it is not supported for the current request: {}!",
+						httpRequest);
+		}
 	}
 }

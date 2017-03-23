@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Allows to push resources with the Jetty 9.3+ specific push builder API
@@ -28,16 +30,26 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class Jetty9PushBuilder implements PushBuilder
 {
+	private static final Logger LOG = LoggerFactory.getLogger(Jetty9PushBuilder.class);
+
 	@Override
 	public void push(HttpServletRequest httpServletRequest, String... paths)
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
 		org.eclipse.jetty.server.PushBuilder pushBuilder = org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
-		for (String path : paths)
+		if (pushBuilder != null)
 		{
-			pushBuilder.path(path);
+			for (String path : paths)
+			{
+				pushBuilder.path(path);
+			}
+			pushBuilder.push();
 		}
-		pushBuilder.push();
+		else
+		{
+			LOG.warn("Attempted to use HTTP2 Push but it is not supported for the current request: {}!",
+					httpRequest);
+		}
 	}
 }
