@@ -61,9 +61,6 @@ public abstract class IndicatingAjaxFallbackLink<T> extends AjaxFallbackLink<T>
 		add(indicatorAppender);
 	}
 
-	/**
-	 * @see org.apache.wicket.ajax.IAjaxIndicatorAware#getAjaxIndicatorMarkupId()
-	 */
 	@Override
 	public String getAjaxIndicatorMarkupId()
 	{

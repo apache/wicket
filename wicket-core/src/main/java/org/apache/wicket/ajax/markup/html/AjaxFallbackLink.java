@@ -116,10 +116,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T>
 	{
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.html.link.Link#onClick()
-	 */
 	@Override
 	public final void onClick()
 	{
