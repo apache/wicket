@@ -23,6 +23,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.core.request.handler.logger.ListenerLogData;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
@@ -94,7 +95,13 @@ public class ListenerRequestHandler
 	@Override
 	public IRequestablePage getPage()
 	{
-		return pageComponentProvider.getPageInstance();
+		IRequestablePage page = pageComponentProvider.getPageInstance();
+		if (page == null && pageComponentProvider.wasExpired())
+		{
+			throw new PageExpiredException(
+				"Page with id '" + pageComponentProvider.getPageId() + "' has expired.");
+		}
+		return page;
 	}
 
 	@Override
@@ -139,7 +146,7 @@ public class ListenerRequestHandler
 	public void respond(final IRequestCycle requestCycle)
 	{
 		final IRequestablePage page = getPage();
-		final boolean freshPage = pageComponentProvider.isPageInstanceFresh();
+		final boolean freshPage = pageComponentProvider.doesProvideNewPage();
 		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 
 		IRequestableComponent component;
