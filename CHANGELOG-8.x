@@ -2,6 +2,35 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.0.0-M5
+
+** Bug
+
+    * [WICKET-6317] - AuthenticatedWebSession#signOut() calls twice after session invalidation
+    * [WICKET-6319] - AutoCompleteTextField: popup is hidden when clicking on scrollbar in IE
+    * [WICKET-6329] - org.json migration issue
+    * [WICKET-6337] - Wrong class type in PageAccessSynchronizer
+    * [WICKET-6340] - The Ajax reponse of an AjaxSubmitButton creates invalid XHTML markup for multipart forms
+    * [WICKET-6342] - Wrong baseUrl in BaseWebSocketBehavior
+
+** Improvement
+
+    * [WICKET-6212] - CheckChoice / add a getAdditionalAttributes() also for <label>-tag
+    * [WICKET-6265] - Make it possible to authorize component instantiations both with OR and AND rules
+    * [WICKET-6328] - Add 'pathInfo' to ForwardAttributes
+    * [WICKET-6333] - Use onConfigure() to set the visibility of ExportToolbar instead of overriding isVisible()
+    * [WICKET-6334] - WicketObjects#sizeof() and #cloneObject() should not use IObjectCheckers 
+    * [WICKET-6335] - tree.Node calls virtual methods from constructor
+    * [WICKET-6336] - Add #removePage(IManageablePage) to IPageManager
+    * [WICKET-6343] - Add hook method for exception handling to StatelessChecker
+    * [WICKET-6345] - Check for non-null PushBuilder before trying to use it
+
+** New Feature
+
+    * [WICKET-6286] - Would be good to have AjaxDownload available out of the box 
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.0.0-M4
 
 ** Bug
