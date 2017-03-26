@@ -156,7 +156,7 @@ public class PageStoreManager extends AbstractPageManager
 			}
 		}
 
-		private void removePage(IManageablePage page)
+		private synchronized void removePage(IManageablePage page)
 		{
 			if (page != null)
 			{
