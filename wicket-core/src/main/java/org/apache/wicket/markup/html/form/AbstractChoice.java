@@ -501,4 +501,12 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 			"This class does not support type-conversion because it is performed "
 				+ "exclusively by the IChoiceRenderer assigned to this component");
 	}
+	
+	@Override
+	protected void onDetach()
+	{
+		renderer.detach();
+		
+		super.onDetach();
+	};
 }

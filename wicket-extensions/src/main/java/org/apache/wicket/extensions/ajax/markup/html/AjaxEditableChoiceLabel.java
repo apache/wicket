@@ -324,6 +324,9 @@ public class AjaxEditableChoiceLabel<T> extends AjaxEditableLabel<T>
 		{
 			choices.detach();
 		}
+		
+		renderer.detach();
+		
 		super.onDetach();
 	}
 }

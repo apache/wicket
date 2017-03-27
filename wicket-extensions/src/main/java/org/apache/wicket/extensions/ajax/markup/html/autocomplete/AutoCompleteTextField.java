@@ -307,4 +307,12 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 	{
 		return renderer;
 	}
+	
+	@Override
+	protected void onDetach()
+	{
+		renderer.detach();
+		
+		super.onDetach();
+	}
 }

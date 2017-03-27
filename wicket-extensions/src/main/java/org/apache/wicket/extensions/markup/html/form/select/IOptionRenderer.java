@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.form.select;
 
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.io.IClusterable;
 
 /**
  * @param <T>
@@ -25,7 +25,7 @@ import org.apache.wicket.util.io.IClusterable;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface IOptionRenderer<T> extends IClusterable
+public interface IOptionRenderer<T> extends IDetachable
 {
 	/**
 	 * Get the value for displaying to the user.
@@ -45,4 +45,12 @@ public interface IOptionRenderer<T> extends IClusterable
 	 * @return model that will contain the value object
 	 */
 	IModel<T> getModel(T value);
+
+	/**
+	 * Override when needed.
+	 */
+	@Override
+	default void detach()
+	{
+	}
 }
