@@ -671,6 +671,8 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		// an alternative might be to attach it to one of the subcomponents
 		choicesModel.detach();
 
+		choiceRenderer.detach();
+
 		super.onDetach();
 	}
 

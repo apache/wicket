@@ -185,4 +185,12 @@ public class SelectOptions<T> extends RepeatingView
 			tag.setType(TagType.OPEN);
 		}
 	}
+	
+	@Override
+	protected void onDetach()
+	{
+		renderer.detach();
+		
+		super.onDetach();
+	}
 }
