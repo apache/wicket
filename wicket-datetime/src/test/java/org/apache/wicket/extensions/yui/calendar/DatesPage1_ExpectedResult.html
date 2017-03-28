@@ -105,8 +105,8 @@ Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 </script>
 </head>
 <body>
-<form wicket:id="localeForm" id="localeForm2" method="post" action="./org.apache.wicket.extensions.yui.calendar.DatesPage1?0-1.-localeForm"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="localeForm2_hf_0" id="localeForm2_hf_0" /></div>
-<p><select wicket:id="localeSelect" onchange="document.getElementById(&#039;localeForm2_hf_0&#039;).value=&#039;./org.apache.wicket.extensions.yui.calendar.DatesPage1?0-1.-localeForm-localeSelect&#039;;document.getElementById(&#039;localeForm2&#039;).submit();" name="localeSelect">
+<form wicket:id="localeForm" id="localeForm2" method="post" action="./org.apache.wicket.extensions.yui.calendar.DatesPage1?0-1.-localeForm">
+<p><select wicket:id="localeSelect" onchange="var f = document.getElementById(&#039;localeForm2&#039;); f.action=&#039;./org.apache.wicket.extensions.yui.calendar.DatesPage1?0-1.-localeForm-localeSelect&#039;;f.submit();" name="localeSelect">
 <option value="0">cinese (Cina) (Chinese (China))</option>
 <option value="1">cinese (Cina) (Chinese (China))</option>
 <option value="2">cinese (Cina) (Chinese (China))</option>
@@ -130,7 +130,7 @@ Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 </select> [<a href="./org.apache.wicket.extensions.yui.calendar.DatesPage1?0-1.-localeForm-localeUSLink" wicket:id="localeUSLink">set to english</a>]</p>
 </form>
 <p>
-<form wicket:id="form" id="form3" method="post" action="./org.apache.wicket.extensions.yui.calendar.DatesPage1?0-1.-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form3_hf_0" id="form3_hf_0" /></div><input type="text" wicket:id="dateTextField" value="xx/xx/xx" name="dateTextField" id="dateTextField1"/>
+<form wicket:id="form" id="form3" method="post" action="./org.apache.wicket.extensions.yui.calendar.DatesPage1?0-1.-form"><input type="text" wicket:id="dateTextField" value="xx/xx/xx" name="dateTextField" id="dateTextField1"/>
 <span class="yui-skin-sam">&nbsp;<span style="display:none;position:absolute;z-index: 99999;" id="dateTextField1Dp"></span><img style="cursor: pointer; border: none;" id="dateTextField1Icon" src="../resource/org.apache.wicket.extensions.yui.calendar.DatePicker/icon1.gif" alt="" title=""/></span> <input type="submit" value="submit" /></form>
 </p>
 <p>

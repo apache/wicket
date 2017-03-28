@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -207,34 +208,71 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IRequ
 	@Override
 	public final void onRequest()
 	{
-		convertInput();
-		updateModel();
-		onSelectionChanged(getModelObject());
+		Form<?> form = getForm();
+		if (form == null) {
+			convertInput();
+			updateModel();
+			onSelectionChanged(getModelObject());
+		} else {
+			form.onFormSubmitted(new IFormSubmitter()
+			{
+				@Override
+				public void onSubmit()
+				{
+					convertInput();
+					updateModel();
+					onSelectionChanged(getModelObject());
+				}
+				
+				@Override
+				public void onError()
+				{
+				}
+				
+				@Override
+				public void onAfterSubmit()
+				{
+				}
+				
+				@Override
+				public Form<?> getForm()
+				{
+					return CheckGroup.this.getForm();
+				}
+				
+				@Override
+				public boolean getDefaultFormProcessing()
+				{
+					return false;
+				}
+			});
+		}
 	}
 
 	/**
-	 * Template method that can be overridden by clients that implement IOnChangeListener to be
-	 * notified by onChange events of a select element. This method does nothing by default.
+	 * Template method that can be overridden to be notified by value changes.
+	 * {@link #wantOnSelectionChangedNotifications()} has to be overriden to return {@value true} for
+	 * this method to being called.
 	 * <p>
-	 * Called when a {@link Check} is clicked in a {@link CheckGroup} that wants to be notified of
-	 * this event. This method is to be implemented by clients that want to be notified of selection
-	 * events.
+	 * This method does nothing by default.
 	 * 
 	 * @param newSelection
-	 *            The new selection of the {@link CheckGroup}. NOTE this is the same as you would
+	 *            The newly selected object of the backing model NOTE this is the same as you would
 	 *            get by calling getModelObject() if the new selection were current
-	 * 
-	 * @see #wantOnSelectionChangedNotifications()
 	 */
 	protected void onSelectionChanged(final Collection<T> newSelection)
 	{
 	}
 
 	/**
-	 * This method should be overridden to return true if it is desirable to have
-	 * on-selection-changed notification.
+	 * Whether a request should be generated with each selection change, resulting in the
+	 * model being updated (of just this component) and {@link #onSelectionChanged(Object)}
+	 * being called. This method returns false by default.
+	 * <p>
+	 * Use an {@link AjaxFormChoiceComponentUpdatingBehavior} with <tt>change</tt> event,
+	 * if you want to use Ajax instead.
 	 * 
-	 * @return true if component should receive on-selection-changed notifications, false otherwise
+	 * @return returns {@value false} by default, i.e. selection changes do not result in a request
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{

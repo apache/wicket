@@ -48,13 +48,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
@@ -514,44 +509,19 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * This generates a piece of javascript code that sets the url in the special hidden field and
-	 * submits the form.
+	 * Generate a piece of JavaScript that submits the form to the given URL.
 	 * 
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
 	 * 
 	 * @param url
-	 *            The interface url that has to be stored in the hidden field and submitted
-	 * @return The javascript code that submits the form.
+	 *            The listener url to be submitted to
+	 * @return the javascript code that submits the form.
 	 */
-	public final CharSequence getJsForInterfaceUrl(CharSequence url)
+	public final CharSequence getJsForListenerUrl(CharSequence url)
 	{
-		/*
-		 * since the passed in url is handled when the current url is form's action url and not the
-		 * current request's url we rerender the passed in url to be relative to the form's action
-		 * url
-		 */
-		UrlRenderer renderer = getRequestCycle().getUrlRenderer();
-		Url oldBase = renderer.getBaseUrl();
-		try
-		{
-			Url action = Url.parse(getActionUrl().toString());
-			renderer.setBaseUrl(action);
-			url = renderer.renderUrl(Url.parse(url.toString()));
-		}
-		finally
-		{
-			renderer.setBaseUrl(oldBase);
-		}
-
 		Form<?> root = getRootForm();
-		return new AppendingStringBuffer("document.getElementById('").append(
-			root.getHiddenFieldId())
-			.append("').value='")
-			.append(url)
-			.append("';document.getElementById('")
-			.append(root.getMarkupId())
-			.append("').submit();");
+		return String.format("var f = document.getElementById('%s'); f.action='%s';f.submit();", root.getMarkupId(), url);
 	}
 
 	/**
@@ -748,59 +718,49 @@ public class Form<T> extends WebMarkupContainer
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			String url = getRequest().getRequestParameters()
-				.getParameterValue(getHiddenFieldId())
-				.toString();
-			if (!Strings.isEmpty(url))
+			// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
+			if (submitter == null)
 			{
-				dispatchEvent(getPage(), url);
+				submitter = findSubmittingButton();
+
+				if (submitter instanceof IFormSubmittingComponent)
+				{
+					IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
+					Component component = (Component)submitter;
+
+					if (!component.isVisibleInHierarchy())
+					{
+						throw new WicketRuntimeException("Submit Button " +
+							submittingComponent.getInputName() + " (path=" +
+							component.getPageRelativePath() + ") is not visible");
+					}
+
+					if (!component.isEnabledInHierarchy())
+					{
+						throw new WicketRuntimeException("Submit Button " +
+							submittingComponent.getInputName() + " (path=" +
+							component.getPageRelativePath() + ") is not enabled");
+					}
+				}
+			}
+
+			// When processing was triggered by a Wicket IFormSubmittingComponent and that
+			// component indicates it wants to be called immediately
+			// (without processing), call the IFormSubmittingComponent.onSubmit* methods right
+			// away.
+			if (submitter != null && !submitter.getDefaultFormProcessing())
+			{
+				submitter.onSubmit();
+				submitter.onAfterSubmit();
 			}
 			else
 			{
-				// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
-				if (submitter == null)
-				{
-					submitter = findSubmittingButton();
+				// the submit request might be for one of the nested forms, so let's
+				// find the right one:
+				final Form<?> formToProcess = findFormToProcess(submitter);
 
-					if (submitter instanceof IFormSubmittingComponent)
-					{
-						IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
-						Component component = (Component)submitter;
-
-						if (!component.isVisibleInHierarchy())
-						{
-							throw new WicketRuntimeException("Submit Button " +
-								submittingComponent.getInputName() + " (path=" +
-								component.getPageRelativePath() + ") is not visible");
-						}
-
-						if (!component.isEnabledInHierarchy())
-						{
-							throw new WicketRuntimeException("Submit Button " +
-								submittingComponent.getInputName() + " (path=" +
-								component.getPageRelativePath() + ") is not enabled");
-						}
-					}
-				}
-
-				// When processing was triggered by a Wicket IFormSubmittingComponent and that
-				// component indicates it wants to be called immediately
-				// (without processing), call the IFormSubmittingComponent.onSubmit* methods right
-				// away.
-				if (submitter != null && !submitter.getDefaultFormProcessing())
-				{
-					submitter.onSubmit();
-					submitter.onAfterSubmit();
-				}
-				else
-				{
-					// the submit request might be for one of the nested forms, so let's
-					// find the right one:
-					final Form<?> formToProcess = findFormToProcess(submitter);
-
-					// process the form for this request
-					formToProcess.process(submitter);
-				}
+				// process the form for this request
+				formToProcess.process(submitter);
 			}
 		}
 		// If multi part did fail check if an error is registered and call
@@ -1178,35 +1138,6 @@ public class Form<T> extends WebMarkupContainer
 		});
 
 		return (error != null) && error;
-	}
-
-	/**
-	 * Method for dispatching/calling a interface on a page from the given url. Used by
-	 * {@link Form#onRequest()} for dispatching events
-	 * 
-	 * @param page
-	 *            The page where the event should be called on.
-	 * @param url
-	 *            The url which describes the component path and the interface to be called.
-	 */
-	private void dispatchEvent(final Page page, final String url)
-	{
-		// the current request's url is most likely wicket/page?x-y.IFormSubmitListener-path-to-form
-		// while the passed in url is most likely page?x.y.IOnChangeListener-path-to-component
-		// we transform the passed in url into wicket/page?x-y.IOnChangeListener-path-to-component
-		// so the system mapper can interpret it
-		String urlWoJSessionId = Strings.stripJSessionId(url);
-		Url resolved = new Url(getRequest().getUrl());
-		resolved.resolveRelative(Url.parse(urlWoJSessionId));
-
-		IRequestMapper mapper = getApplication().getRootRequestMapper();
-		Request request = getRequest().cloneWithUrl(resolved);
-		IRequestHandler handler = mapper.mapRequest(request);
-
-		if (handler != null)
-		{
-			getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
-		}
 	}
 
 	/**
@@ -1712,29 +1643,22 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void writeHiddenFields()
 	{
-		// get the hidden field id
-		String nameAndId = getHiddenFieldId();
-
-		AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
-			"<input type=\"hidden\" name=\"")
-			.append(nameAndId)
-			.append("\" id=\"")
-			.append(nameAndId)
-			.append("\" />");
-
 		// if it's a get, did put the parameters in the action attribute,
 		// and have to write the url parameters as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
+			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START);
+
 			String url = getActionUrl().toString();
 			int i = url.indexOf('?');
 			String queryString = (i > -1) ? url.substring(i + 1) : url;
 			String[] params = Strings.split(queryString, '&');
 
 			writeParamsAsHiddenFields(params, buffer);
+			
+			buffer.append("</div>");
+			getResponse().write(buffer);
 		}
-		buffer.append("</div>");
-		getResponse().write(buffer);
 
 		// if a default submitting component was set, handle the rendering of that
 		if (defaultSubmittingComponent instanceof Component)

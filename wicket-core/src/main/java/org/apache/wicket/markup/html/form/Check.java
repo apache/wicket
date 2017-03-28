@@ -203,7 +203,7 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 			Form<?> form = group.findParent(Form.class);
 			if (form != null)
 			{
-				tag.put("onclick", form.getJsForInterfaceUrl(url));
+				tag.put("onclick", form.getJsForListenerUrl(url));
 			}
 			else
 			{
