@@ -97,10 +97,13 @@
 					}
 				});
 			} else {
-				jQuery.ajax({
-					type: 'get',
-					url: settings.downloadUrl,
-					success: function (response, status, xhr) {
+				// jquery does not support binary download
+				var xhr = new XMLHttpRequest();
+
+				xhr.open("GET", settings.downloadUrl);
+				xhr.responseType = "blob";
+				xhr.onload = function() {
+					if (this.status == 200) {
 						var filename = "";
 						var disposition = xhr.getResponseHeader("Content-Disposition");
 						if (disposition && disposition.indexOf("attachment") !== -1) {
@@ -111,7 +114,7 @@
 						}
 
 						var type = xhr.getResponseHeader("Content-Type");
-						var blob = new Blob([response], {type: type});
+						var blob = new Blob([xhr.response], {type: type});
 
 						var blobUrl = (window.URL || window.webkitURL).createObjectURL(blob);
 
@@ -129,12 +132,14 @@
 						}, 100);
 
 						notifyServer("success");
-					},
-
-					error: function (response, status, xhr) {
+					} else {
 						notifyServer("failed");
 					}
-				});
+				};
+				xhr.onerror = function() {
+					notifyServer("failed");
+				};
+				xhr.send();
 			}
 		}
 	}; 
