@@ -14,11 +14,13 @@
 	A CheckBoxGroup and CheckBoxComponnet components let users select multiple values from a group of checkboxes. These components are more flexible then the CheckBoxMultipleChoice component in that individual checkboxes are full components, unlike with CheckBoxMultipleChoice, and thus can be used anywhere in the markup.
 	</p>
 	<p>
+	 <form wicket:id="form">
 		<span wicket:id="group">
 			<table style="border: 2px dotted #fc0; width: 400px; padding: 5px;">
 			 <tr>
 			  <td valign="top">Select persons</td>
 			  <td>
+				  <input type="checkbox" wicket:id="groupselector">check/uncheck all</input><br/>
 				  <table cellspacing="0" cellpadding="2">
 					<tr>
 						<td><b>Select</b></td>
@@ -42,6 +44,7 @@
 			 </tr>
 			</table>
 		</span>
+	 </form>
 	 <span wicket:id="feedback">feedbackmessages will be put here</span>
 	</p>
     <span wicket:id="explainPanel">panel contents come here</span>

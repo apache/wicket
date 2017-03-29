@@ -24,7 +24,6 @@ import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.SelectionChangeBehavior;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -44,9 +43,18 @@ public class CheckGroupPage extends WicketExamplePage
 	public CheckGroupPage()
 	{
 		final CheckGroup<Person> group = new CheckGroup<>("group", new ArrayList<Person>());
-		group.add(new SelectionChangeBehavior());
+		Form<Void> form = new Form<Void>("form")
+		{
+			@Override
+			protected void onSubmit()
+			{
+				info("selected person(s): " + group.getDefaultModelObjectAsString());
+			}
+		};
 
-		add(group);
+		add(form);
+		form.add(group);
+		group.add(new CheckGroupSelector("groupselector"));
 		ListView<Person> persons = new ListView<Person>("persons",
 			ComponentReferenceApplication.getPersons())
 		{
