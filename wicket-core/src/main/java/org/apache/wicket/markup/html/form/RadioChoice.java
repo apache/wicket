@@ -19,12 +19,9 @@ package org.apache.wicket.markup.html.form;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.wicket.IRequestListener;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
@@ -56,18 +53,13 @@ import org.apache.wicket.util.value.IValueMap;
  * 
  * </p>
  * 
- * <p>
- * You can extend this class and override method wantOnSelectionChangedNotifications() to force
- * server roundtrips on each selection change.
- * </p>
- * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
  * 
  * @param <T>
  *            The model object type
  */
-public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IRequestListener
+public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -244,96 +236,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IRe
 		// since this component cannot be attached to input tag the name
 		// variable is illegal
 		tag.remove("name");
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
-	 */
-	@Override
-	public void onRequest()
-	{
-		Form<?> form = getForm();
-		if (form == null) {
-			convertInput();
-			updateModel();
-			onSelectionChanged(getModelObject());
-		} else {
-			form.onFormSubmitted(new IFormSubmitter()
-			{
-				@Override
-				public void onSubmit()
-				{
-					convertInput();
-					updateModel();
-					onSelectionChanged(getModelObject());
-				}
-				
-				@Override
-				public void onError()
-				{
-				}
-				
-				@Override
-				public void onAfterSubmit()
-				{
-				}
-				
-				@Override
-				public Form<?> getForm()
-				{
-					return RadioChoice.this.getForm();
-				}
-				
-				@Override
-				public boolean getDefaultFormProcessing()
-				{
-					return false;
-				}
-			});
-		}
-	}
-
-	/**
-	 * Template method that can be overridden to be notified by value changes.
-	 * {@link #wantOnSelectionChangedNotifications()} has to be overriden to return {@value true} for
-	 * this method to being called.
-	 * <p>
-	 * This method does nothing by default.
-	 * 
-	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is the same as you would
-	 *            get by calling getModelObject() if the new selection were current
-	 */
-	protected void onSelectionChanged(T newSelection)
-	{
-	}
-
-	/**
-	 * Whether a request should be generated with each selection change, resulting in the
-	 * model being updated (of just this component) and {@link #onSelectionChanged(Object)}
-	 * being called. This method returns false by default.
-	 * <p>
-	 * Use an {@link AjaxFormComponentUpdatingBehavior} with <tt>change</tt> event,
-	 * if you want to use Ajax instead.
-	 * 
-	 * @return returns {@value false} by default, i.e. selection changes do not result in a request
-	 */
-	protected boolean wantOnSelectionChangedNotifications()
-	{
-		return false;
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
-	 */
-	@Override
-	protected boolean getStatelessHint()
-	{
-		if (wantOnSelectionChangedNotifications())
-		{
-			return false;
-		}
-		return super.getStatelessHint();
 	}
 
 	/**
@@ -560,32 +462,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IRe
 				.append("\" id=\"")
 				.append(Strings.escapeMarkup(idAttr))
 				.append('"');
-
-			// Should a roundtrip be made (have onSelectionChanged called)
-			// when the option is clicked?
-			if (wantOnSelectionChangedNotifications())
-			{
-				CharSequence url = urlForListener(new PageParameters());
-
-				Form<?> form = findParent(Form.class);
-				if (form != null)
-				{
-					buffer.append(" onclick=\"")
-						.append(form.getJsForListenerUrl(url))
-						.append(";\"");
-				}
-				else
-				{
-					// NOTE: do not encode the url as that would give
-					// invalid JavaScript
-					buffer.append(" onclick=\"window.location.href='")
-						.append(url)
-						.append((url.toString().indexOf('?') > -1 ? '&' : '?') + getInputName())
-						.append('=')
-						.append(Strings.escapeMarkup(id))
-						.append("';\"");
-				}
-			}
 
 			// Allows user to add attributes to the <input..> tag
 			{

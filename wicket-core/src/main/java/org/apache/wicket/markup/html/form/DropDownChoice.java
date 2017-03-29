@@ -18,11 +18,8 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.List;
 
-import org.apache.wicket.IRequestListener;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
 /**
@@ -52,11 +49,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * 
  * </p>
  * 
- * <p>
- * You can can extend this class and override method wantOnSelectionChangedNotifications() to force
- * server roundtrips on each selection change.
- * </p>
- * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner
@@ -64,7 +56,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @param <T>
  *            The model object type
  */
-public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements IRequestListener
+public class DropDownChoice<T> extends AbstractSingleSelectChoice<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -204,53 +196,6 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 
 	/**
-	 * Called when a selection changes.
-	 */
-	@Override
-	public final void onRequest()
-	{
-		Form<?> form = getForm();
-		if (form == null) {
-			convertInput();
-			updateModel();
-			onSelectionChanged(getModelObject());
-		} else {
-			form.getRootForm().onFormSubmitted(new IFormSubmitter()
-			{
-				@Override
-				public void onSubmit()
-				{
-					convertInput();
-					updateModel();
-					onSelectionChanged(getModelObject());
-				}
-				
-				@Override
-				public void onError()
-				{
-				}
-				
-				@Override
-				public void onAfterSubmit()
-				{
-				}
-				
-				@Override
-				public Form<?> getForm()
-				{
-					return DropDownChoice.this.getForm();
-				}
-				
-				@Override
-				public boolean getDefaultFormProcessing()
-				{
-					return false;
-				}
-			});
-		}
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -262,68 +207,6 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	{
 		checkComponentTag(tag, "select");
 
-		// Should a roundtrip be made (have onSelectionChanged called) when the
-		// selection changed?
-		if (wantOnSelectionChangedNotifications())
-		{
-			CharSequence url = urlForListener(new PageParameters());
-
-			Form<?> form = findParent(Form.class);
-			if (form != null)
-			{
-				tag.put("onchange", form.getJsForListenerUrl(url.toString()));
-			}
-			else
-			{
-				tag.put("onchange", "window.location.href='" + url +
-					(url.toString().indexOf('?') > -1 ? "&" : "?") + getInputName() +
-					"=' + this.options[this.selectedIndex].value;");
-			}
-		}
-
 		super.onComponentTag(tag);
-	}
-
-	/**
-	 * Template method that can be overridden to be notified by value changes.
-	 * {@link #wantOnSelectionChangedNotifications()} has to be overriden to return {@value true} for
-	 * this method to being called.
-	 * <p>
-	 * This method does nothing by default.
-	 * 
-	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is the same as you would
-	 *            get by calling getModelObject() if the new selection were current
-	 */
-	protected void onSelectionChanged(final T newSelection)
-	{
-	}
-
-	/**
-	 * Whether a request should be generated with each selection change, resulting in the
-	 * model being updated (of just this component) and {@link #onSelectionChanged(Object)}
-	 * being called. This method returns false by default.
-	 * <p>
-	 * Use an {@link AjaxFormComponentUpdatingBehavior} with <tt>change</tt> event,
-	 * if you want to use Ajax instead.
-	 * 
-	 * @return returns {@value false} by default, i.e. selection changes do not result in a request
-	 */
-	protected boolean wantOnSelectionChangedNotifications()
-	{
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean getStatelessHint()
-	{
-		if (wantOnSelectionChangedNotifications())
-		{
-			return false;
-		}
-		return super.getStatelessHint();
 	}
 }

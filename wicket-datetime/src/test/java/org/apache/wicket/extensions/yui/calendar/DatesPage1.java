@@ -31,6 +31,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.SelectionChangeBehavior;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
@@ -109,29 +110,14 @@ public class DatesPage1 extends WebPage
 			});
 			setChoiceRenderer(new LocaleChoiceRenderer());
 			setDefaultModel(new PropertyModel<>(DatesPage1.this, "selectedLocale"));
+			
+			add(new SelectionChangeBehavior());
 		}
 
 		@Override
 		public String getModelValue()
 		{
 			return super.getModelValue();
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
-		 */
-		@Override
-		public void onSelectionChanged(Locale newSelection)
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
-		 */
-		@Override
-		protected boolean wantOnSelectionChangedNotifications()
-		{
-			return true;
 		}
 	}
 

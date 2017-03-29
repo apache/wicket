@@ -22,7 +22,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * Component representing a single radio choice in a org.apache.wicket.markup.html.form.RadioGroup.
@@ -178,25 +177,6 @@ public class Radio<T> extends LabeledWebMarkupContainer implements IGenericCompo
 		else if (group.getModelComparator().compare(group, getDefaultModelObject()))
 		{
 			tag.put("checked", "checked");
-		}
-
-		if (group.wantOnSelectionChangedNotifications())
-		{
-			// url that points to this components IOnChangeListener method
-			CharSequence url = group.urlForListener(new PageParameters());
-
-			Form<?> form = group.findParent(Form.class);
-			if (form != null)
-			{
-				tag.put("onclick", form.getJsForListenerUrl(url));
-			}
-			else
-			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
-				tag.put("onclick", "window.location.href='" + url +
-					(url.toString().indexOf('?') > -1 ? "&" : "?") + group.getInputName() +
-					"=' + this.value;");
-			}
 		}
 
 		if (!isEnabledInHierarchy())

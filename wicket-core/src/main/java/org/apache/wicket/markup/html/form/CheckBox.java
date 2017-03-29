@@ -18,11 +18,8 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.Locale;
 
-import org.apache.wicket.IRequestListener;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.convert.IConverter;
 
 /**
@@ -42,10 +39,6 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  * </p>
  * <p>
- * You can can extend this class and override method wantOnSelectionChangedNotifications() to force
- * server roundtrips on each selection change.
- * </p>
- * <p>
  * A CheckBox always has a valid therefore values from methods
  * {@link FormComponent#setRequired(boolean)} and {@link FormComponent#isRequired()} are not taken
  * into account.
@@ -53,7 +46,7 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  * @author Jonathan Locke
  */
-public class CheckBox extends FormComponent<Boolean> implements IRequestListener
+public class CheckBox extends FormComponent<Boolean>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -74,96 +67,6 @@ public class CheckBox extends FormComponent<Boolean> implements IRequestListener
 	{
 		super(id, model);
 		setType(Boolean.class);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
-	 */
-	@Override
-	public void onRequest()
-	{
-		Form<?> form = getForm();
-		if (form == null) {
-			convertInput();
-			updateModel();
-			onSelectionChanged(getModelObject());
-		} else {
-			form.onFormSubmitted(new IFormSubmitter()
-			{
-				@Override
-				public void onSubmit()
-				{
-					convertInput();
-					updateModel();
-					onSelectionChanged(getModelObject());
-				}
-				
-				@Override
-				public void onError()
-				{
-				}
-				
-				@Override
-				public void onAfterSubmit()
-				{
-				}
-				
-				@Override
-				public Form<?> getForm()
-				{
-					return CheckBox.this.getForm();
-				}
-				
-				@Override
-				public boolean getDefaultFormProcessing()
-				{
-					return false;
-				}
-			});
-		}
-	}
-
-	/**
-	 * Template method that can be overridden to be notified by value changes.
-	 * {@link #wantOnSelectionChangedNotifications()} has to be overriden to return {@value true} for
-	 * this method to being called.
-	 * <p>
-	 * This method does nothing by default.
-	 * 
-	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is the same as you would
-	 *            get by calling getModelObject() if the new selection were current
-	 */
-	protected void onSelectionChanged(Boolean newSelection)
-	{
-	}
-
-	/**
-	 * Whether a request should be generated with each selection change, resulting in the
-	 * model being updated (of just this component) and {@link #onSelectionChanged(Object)}
-	 * being called. This method returns false by default.
-	 * <p>
-	 * Use an {@link AjaxFormComponentUpdatingBehavior} with <tt>change</tt> event,
-	 * if you want to use Ajax instead.
-	 * 
-	 * @return returns {@value false} by default, i.e. selection changes do not result in a request
-	 */
-	protected boolean wantOnSelectionChangedNotifications()
-	{
-		return false;
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
-	 */
-	@Override
-	protected boolean getStatelessHint()
-	{
-		if (wantOnSelectionChangedNotifications())
-		{
-			return false;
-		}
-		return super.getStatelessHint();
 	}
 
 	/**
@@ -196,28 +99,6 @@ public class CheckBox extends FormComponent<Boolean> implements IRequestListener
 		// remove value attribute, because it overrides the browser's submitted value, eg a [input
 		// type="checkbox" value=""] will always submit as false
 		tag.remove("value");
-
-		// Should a roundtrip be made (have onSelectionChanged called) when the
-		// checkbox is clicked?
-		if (wantOnSelectionChangedNotifications())
-		{
-			CharSequence url = urlForListener(new PageParameters());
-
-			Form<?> form = findParent(Form.class);
-			if (form != null)
-			{
-				tag.put("onclick", form.getJsForListenerUrl(url));
-			}
-			else
-			{
-				// NOTE: do not encode the url as that would give invalid
-				// JavaScript
-				tag.put("onclick", "window.location.href='" + url +
-					(url.toString().indexOf('?') > -1 ? "&" : "?") + getInputName() +
-					"=' + this.checked;");
-			}
-
-		}
 
 		super.onComponentTag(tag);
 	}

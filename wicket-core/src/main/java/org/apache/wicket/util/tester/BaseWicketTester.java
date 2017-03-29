@@ -60,6 +60,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
@@ -121,7 +122,6 @@ import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Args;
@@ -1133,6 +1133,29 @@ public class BaseWicketTester
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
 			component.getPage(), component));
+
+		processRequest(handler);
+	}
+
+	/**
+	 * Simulates invoking an {@link IRequestListener} on a component. As opposed to the
+	 * {@link #executeListener(Component)} method, current request/response objects will be used
+	 * 
+	 * After the listener is invoked the page containing the component will be rendered
+	 * (with an optional redirect - depending on {@link RenderStrategy}).
+	 * 
+	 * @param component
+	 * @param listener
+	 */
+	public void invokeListener(Component component, final Behavior behavior)
+	{
+		Args.notNull(component, "component");
+		Args.notNull(behavior, "behavior");
+
+		// there are two ways to do this. RequestCycle could be forced to call the handler
+		// directly but constructing and parsing the URL increases the chance of triggering bugs
+		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
+			component.getPage(), component), component.getBehaviorId(behavior));
 
 		processRequest(handler);
 	}

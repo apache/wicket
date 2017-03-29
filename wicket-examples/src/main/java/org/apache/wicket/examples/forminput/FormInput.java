@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.SelectionChangeBehavior;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
@@ -248,29 +249,21 @@ public class FormInput extends WicketExamplePage
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
 			setModel(new PropertyModel<>(FormInput.this, "locale"));
-		}
+			
+			add(new SelectionChangeBehavior() {
+				@Override
+				protected void onSelectionChanged()
+				{
+					// note that we don't have to do anything here, as our property
+					// model already calls FormInput.setLocale when the model is
+					// updated
 
-		@Override
-		public void onSelectionChanged(Locale newSelection)
-		{
-			// note that we don't have to do anything here, as our property
-			// model already calls FormInput.setLocale when the model is
-			// updated
-
-			// force re-render by setting the page to render to the bookmarkable
-			// instance, so that the page will be rendered from scratch,
-			// re-evaluating the input patterns etc
-			setResponsePage(FormInput.class);
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
-		 */
-		@Override
-		protected boolean wantOnSelectionChangedNotifications()
-		{
-			// we want round-trips when a the user selects another item
-			return true;
+					// force re-render by setting the page to render to the bookmarkable
+					// instance, so that the page will be rendered from scratch,
+					// re-evaluating the input patterns etc
+					setResponsePage(FormInput.class);
+				}
+			});
 		}
 	}
 

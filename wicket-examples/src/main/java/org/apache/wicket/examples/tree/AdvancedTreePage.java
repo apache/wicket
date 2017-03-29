@@ -43,6 +43,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.SelectionChangeBehavior;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -97,28 +98,10 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 		form.add(tree);
 
 		form.add(new DropDownChoice<Content>("content", new PropertyModel<>(this, "content"),
-			initContents(), new ChoiceRenderer<>("class.simpleName"))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected boolean wantOnSelectionChangedNotifications()
-			{
-				return true;
-			}
-		});
+			initContents(), new ChoiceRenderer<>("class.simpleName")).add(new SelectionChangeBehavior()));
 
 		form.add(new DropDownChoice<Behavior>("theme", new PropertyModel<>(this, "theme"),
-			initThemes(), new ChoiceRenderer<>("class.simpleName"))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected boolean wantOnSelectionChangedNotifications()
-			{
-				return true;
-			}
-		});
+			initThemes(), new ChoiceRenderer<>("class.simpleName")).add(new SelectionChangeBehavior()));
 
 		form.add(new Link<Void>("expandAll")
 		{
