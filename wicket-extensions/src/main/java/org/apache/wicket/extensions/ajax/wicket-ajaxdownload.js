@@ -103,7 +103,7 @@
 				xhr.open("GET", settings.downloadUrl);
 				xhr.responseType = "blob";
 				xhr.onload = function() {
-					if (this.status == 200) {
+					if (this.status === 200) {
 						var filename = "";
 						var disposition = xhr.getResponseHeader("Content-Disposition");
 						if (disposition && disposition.indexOf("attachment") !== -1) {
