@@ -31,8 +31,15 @@
 			<resource>
 				<filtering>true</filtering>
 				<directory>${project.basedir}/src/main/resources</directory>
+				<excludes>
+					<exclude>**/keystore</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>${project.basedir}/src/main/resources</directory>
 				<includes>
-					<include>**/*</include>
+					<include>**/keystore</include>
 				</includes>
 			</resource>
 		</resources>
