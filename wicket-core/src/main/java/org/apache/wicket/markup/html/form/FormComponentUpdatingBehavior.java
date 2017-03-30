@@ -18,21 +18,21 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
-import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A behavior to get change notifications when a choice component changes its selection.
+ * A behavior to get notifications when a {@link FormComponent} changes its value.
  * <p>
- * Contrary to {@link AjaxFormChoiceComponentUpdatingBehavior} all notification are send via
- * standard HTTP requests and the full page is rendered as the response.
+ * Contrary to {@link AjaxFormComponentUpdatingBehavior} all notification are send via
+ * standard HTTP requests and the full page is rendered as a response.
  * 
- * @see SelectionChangeBehavior#onSelectionChanged()
+ * @see FormComponentUpdatingBehavior#onUpdate()
  */
-public class SelectionChangeBehavior extends Behavior implements IRequestListener
+public class FormComponentUpdatingBehavior extends Behavior implements IRequestListener
 {
 
 	private FormComponent<?> formComponent;
@@ -101,7 +101,7 @@ public class SelectionChangeBehavior extends Behavior implements IRequestListene
 	 */
 	private String getJSEvent()
 	{
-		if (formComponent instanceof DropDownChoice)
+		if (formComponent instanceof DropDownChoice || formComponent instanceof AbstractTextComponent)
 		{
 			return "onchange";
 		}
@@ -144,14 +144,14 @@ public class SelectionChangeBehavior extends Behavior implements IRequestListene
 				formComponent.updateModel();
 			}
 
-			onSelectionChanged();
+			onUpdate();
 		}
 		else
 		{
 			formComponent.invalid();
 		}
 		
-		onSelectionChanged();
+		onUpdate();
 	}
 
 	/**
@@ -167,9 +167,9 @@ public class SelectionChangeBehavior extends Behavior implements IRequestListene
 	}
 
 	/**
-	 * Hook method invoked when selection has changed.
+	 * Hook method invoked when the component is updated.
 	 */
-	protected void onSelectionChanged()
+	protected void onUpdate()
 	{
 	}
 

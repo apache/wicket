@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.SelectionChangeBehavior;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.model.Model;
 
 
@@ -62,9 +62,9 @@ public class MockPageWithForm extends WebPage
 		list.add("Select me");
 		MyForm form = new MyForm("form");
 		DropDownChoice<String> dropDown = new DropDownChoice<String>("dropdown", new Model<String>(), list);
-		dropDown.add(new SelectionChangeBehavior() {
+		dropDown.add(new FormComponentUpdatingBehavior() {
 			@Override
-			protected void onSelectionChanged()
+			protected void onUpdate()
 			{
 				selected = true;
 			}

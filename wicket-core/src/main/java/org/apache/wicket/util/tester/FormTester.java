@@ -38,7 +38,7 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.SelectionChangeBehavior;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -506,7 +506,7 @@ public class FormTester
 		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
 
-		List<SelectionChangeBehavior> behaviors = component.getBehaviors(SelectionChangeBehavior.class);
+		List<FormComponentUpdatingBehavior> behaviors = component.getBehaviors(FormComponentUpdatingBehavior.class);
 		if (behaviors.isEmpty() == false) {
 			tester.invokeListener(component, behaviors.get(0));
 		}

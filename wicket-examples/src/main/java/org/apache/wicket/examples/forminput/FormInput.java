@@ -35,7 +35,7 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.SelectionChangeBehavior;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
@@ -250,9 +250,9 @@ public class FormInput extends WicketExamplePage
 			// updating the current locale to property 'locale' of FormInput
 			setModel(new PropertyModel<>(FormInput.this, "locale"));
 			
-			add(new SelectionChangeBehavior() {
+			add(new FormComponentUpdatingBehavior() {
 				@Override
-				protected void onSelectionChanged()
+				protected void onUpdate()
 				{
 					// note that we don't have to do anything here, as our property
 					// model already calls FormInput.setLocale when the model is

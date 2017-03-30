@@ -34,7 +34,7 @@ import org.apache.wicket.extensions.yui.calendar.TimeField;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.SelectionChangeBehavior;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
@@ -102,7 +102,7 @@ public class DatesPage extends WicketExamplePage
 			setChoiceRenderer(new LocaleChoiceRenderer());
 			setDefaultModel(new PropertyModel<>(DatesPage.this, "selectedLocale"));
 			
-			add(new SelectionChangeBehavior());
+			add(new FormComponentUpdatingBehavior());
 		}
 	}
 
