@@ -18,6 +18,7 @@ package org.apache.wicket.markup.html.form;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -44,18 +45,24 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	}
 
 	@Override
-	public final void bind(final Component hostComponent)
+	public final void bind(final Component component)
 	{
-		Args.notNull(hostComponent, "hostComponent");
+		Args.notNull(component, "component");
+
+		if (!(component instanceof FormComponent))
+		{
+			throw new WicketRuntimeException("Behavior " + getClass().getName()
+				+ " can only be added to an instance of a FormComponent");
+		}
 
 		if (formComponent != null)
 		{
 			throw new IllegalStateException("this kind of handler cannot be attached to " +
 				"multiple components; it is already attached to component " + formComponent +
-				", but component " + hostComponent + " wants to be attached too");
+				", but component " + component + " wants to be attached too");
 		}
 
-		this.formComponent = (FormComponent<?>)hostComponent;
+		this.formComponent = (FormComponent<?>)component;
 
 		formComponent.setRenderBodyOnly(false);
 
@@ -63,11 +70,20 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 		onBind();
 	}
 
+	/**
+	 * Called when the component was bound to it's host component. You can get the bound host
+	 * component by calling {@link #getFormComponent()}.
+	 */
 	protected void onBind()
 	{
 	}
 
-	public FormComponent<?> getFormComponent()
+	/**
+	 * Get the hosting component.
+	 * 
+	 * @return hosting component
+	 */
+	public final FormComponent<?> getFormComponent()
 	{
 		return formComponent;
 	}
@@ -101,7 +117,7 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	 */
 	private String getJSEvent()
 	{
-		if (formComponent instanceof DropDownChoice || formComponent instanceof AbstractTextComponent)
+		if (formComponent instanceof DropDownChoice || formComponent instanceof ListMultipleChoice|| formComponent instanceof AbstractTextComponent)
 		{
 			return "onchange";
 		}
@@ -135,23 +151,30 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	 */
 	private void process()
 	{
-		formComponent.validate();
-		if (formComponent.isValid())
+		try
 		{
-			if (getUpdateModel())
+			formComponent.validate();
+			if (formComponent.isValid())
 			{
-				formComponent.valid();
-				formComponent.updateModel();
+				if (getUpdateModel())
+				{
+					formComponent.valid();
+					formComponent.updateModel();
+				}
+	
+				onUpdate();
 			}
-
-			onUpdate();
+			else
+			{
+				formComponent.invalid();
+				
+				onError(null);
+			}
 		}
-		else
+		catch (RuntimeException e)
 		{
-			formComponent.invalid();
+			onError(e);
 		}
-		
-		onUpdate();
 	}
 
 	/**
@@ -173,6 +196,22 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	{
 	}
 
+	/**
+	 * Hook method invoked when updating of the component resulted in an error.
+	 * <p>
+	 * The {@link RuntimeException} will be null if it was just a validation or conversion error of the
+	 * FormComponent.
+	 * 
+	 * @param e optional runtime exception
+	 */
+	protected void onError(RuntimeException e)
+	{
+		if (e != null)
+		{
+			throw e;
+		}
+	}
+	
 	@Override
 	public final void onRequest()
 	{
