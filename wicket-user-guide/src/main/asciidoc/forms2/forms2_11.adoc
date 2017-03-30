@@ -195,5 +195,5 @@ form.add(new RadioChoice("radioGroup", Model.of(""), fruits));
 
 image::../img/grouped-radiobutton.png[]
 
-Just like CheckBoxMultipleChoice, this component provides the setPrefix and setSuffix methods to configure the prefix and suffix for our options and it supports IChoiceRender as well. In addition, RadioChoice provides the wantOnSelectionChangedNotifications() method to notify the web server when the selected option changes (this is the same method seen for DropDownChoice in paragraph 9.4).
+Just like CheckBoxMultipleChoice, this component provides the setPrefix and setSuffix methods to configure the prefix and suffix for our options and it supports IChoiceRender as well.
 
