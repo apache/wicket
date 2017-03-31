@@ -28,8 +28,17 @@ import org.apache.wicket.util.lang.Args;
 /**
  * A behavior to get notifications when a {@link FormComponent} changes its value.
  * <p>
- * Contrary to {@link AjaxFormComponentUpdatingBehavior} all notification are send via
+ * Contrary to {@link AjaxFormComponentUpdatingBehavior} all notification are sent via
  * standard HTTP requests and the full page is rendered as a response.
+ * <p>
+ * Notification is triggered by an event suitable for the host component this
+ * behavior is added to - if needed {@link #getEvent()} can be overridden to change the default
+ * ({@value change} for {@link DropDownChoice}, {@link ListMultipleChoice} and {@link AbstractTextComponent}, 
+ * {@value click} for anything else).
+ * <p>
+ * Note: This behavior has limited support for {@link FormComponent}s outside of a form, i.e. multiple
+ * choice components ({@link ListMultipleChoice} and {@link RadioGroup}) will send their last selected
+ * choice only.
  * 
  * @see FormComponentUpdatingBehavior#onUpdate()
  */
@@ -93,7 +102,7 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 	{
 		CharSequence url = component.urlForListener(this, new PageParameters());
 
-		String event = getJSEvent();
+		String event = getEvent();
 
 		String condition = String.format("if (event.target.name !== '%s') return; ",
 			formComponent.getInputName());
@@ -101,29 +110,31 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 		Form<?> form = component.findParent(Form.class);
 		if (form != null)
 		{
-			tag.put(event, condition + form.getJsForListenerUrl(url.toString()));
+			tag.put("on" + event, condition + form.getJsForListenerUrl(url.toString()));
 		}
 		else
 		{
 			char separator = url.toString().indexOf('?') > -1 ? '&' : '?';
 
-			tag.put(event, condition + String.format("window.location.href='%s%s%s=' + %s;", url,
+			tag.put("on" + event, condition + String.format("window.location.href='%s%s%s=' + %s;", url,
 				separator, formComponent.getInputName(), getJSValue()));
 		}
 	}
 
 	/**
-	 * Which JavaScript event triggers notification. 
+	 * Which JavaScript event triggers notification.
+	 * 
+	 * @return {@value change} or {@value click}, depending on the host component 
 	 */
-	private String getJSEvent()
+	protected String getEvent()
 	{
 		if (formComponent instanceof DropDownChoice || formComponent instanceof ListMultipleChoice|| formComponent instanceof AbstractTextComponent)
 		{
-			return "onchange";
+			return "change";
 		}
 		else
 		{
-			return "onclick";
+			return "click";
 		}
 	}
 
