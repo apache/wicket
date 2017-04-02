@@ -2,6 +2,10 @@ package org.apache.wicket.pageStore;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,6 +25,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.pageStore.DefaultPageStore;
+import org.apache.wicket.pageStore.DiskDataStore;
+import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.util.file.File;
@@ -128,10 +136,78 @@ public class AsynchronousPageStoreTest
 
 		public String toString()
 		{
-			return "DummyPage[pageId = " + pageId + ", writeMillis = " + writeMillis +
-				", readMillis = " + readMillis + ", sessionId = " + sessionId + ", hashCode = " +
-				hashCode() + "]";
+			return "DummyPage[pageId = " + pageId + ", writeMillis = " + writeMillis
+				+ ", readMillis = " + readMillis + ", sessionId = " + sessionId + ", hashCode = "
+				+ hashCode() + "]";
 		}
+	}
+
+	/**
+	 * Store returns the same page instance from queue when there is a close request for it back
+	 * again.
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void storeReturnsSameInstanceOnClosePageRequest() throws InterruptedException
+	{
+
+		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
+		// ISerializer serializer = new DummySerializer();
+
+		IDataStore dataStore = new DiskDataStore("applicationName", new File("./target"),
+			Bytes.bytes(10000l));
+
+		// IPageStore pageStore = new DummyPageStore(new File("target/store"));
+		IPageStore pageStore = spy(new DefaultPageStore(serializer, dataStore, 0));
+
+		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, 100);
+
+		int pageId = 0;
+		String sessionId = "sessionId";
+
+		DummyPage page = new DummyPage(pageId, 1000, 1000, sessionId);
+		asyncPageStore.storePage(sessionId, page);
+
+		Thread.sleep(500);
+
+		asyncPageStore.getPage(sessionId, pageId);
+
+		verify(pageStore, never()).getPage(sessionId, pageId);
+	}
+
+	/**
+	 * Store returns the restored page instance from wrapped store when there is a distant request
+	 * for it back again.
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void storeReturnsRestoredInstanceOnDistantPageRequest() throws InterruptedException
+	{
+
+		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
+		// ISerializer serializer = new DummySerializer();
+
+		IDataStore dataStore = new DiskDataStore("applicationName", new File("./target"),
+			Bytes.bytes(10000l));
+
+		// IPageStore pageStore = new DummyPageStore(new File("target/store"));
+		IPageStore pageStore = spy(new DefaultPageStore(serializer, dataStore, 0));
+
+		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, 100);
+
+		int pageId = 0;
+		String sessionId = "sessionId";
+
+		DummyPage page = new DummyPage(pageId, 1000, 1000, sessionId);
+		asyncPageStore.storePage(sessionId, page);
+
+		Thread.sleep(1500);
+
+		asyncPageStore.getPage(sessionId, pageId);
+
+		verify(pageStore, times(1)).getPage(sessionId, pageId);
 	}
 
 	/**
@@ -164,9 +240,8 @@ public class AsynchronousPageStoreTest
 	}
 
 	/**
-	 * Store behaves synchronous from when number of pages handled exceeds the given
-	 * asynchronous-storage capacity. It works asynchronous until the number of pages reaches the
-	 * limit (capacity).
+	 * Store behaves sync from when number of pages handled exceeds the given asynchronous-storage
+	 * capacity. It works asynchronous until the number of pages reaches the limit (capacity).
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -216,8 +291,9 @@ public class AsynchronousPageStoreTest
 
 		public String toString()
 		{
-			return "Metrics[storedPage = " + storedPage + ", storingMillis = " + storingMillis +
-				", restoredPage = " + restoredPage + ", restoringMillis = " + restoringMillis + "]";
+			return "Metrics[storedPage = " + storedPage + ", storingMillis = " + storingMillis
+				+ ", restoredPage = " + restoredPage + ", restoringMillis = " + restoringMillis
+				+ "]";
 		}
 	}
 
@@ -229,14 +305,15 @@ public class AsynchronousPageStoreTest
 
 		final CountDownLatch lock = new CountDownLatch(pages * sessions);
 
-		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
 		// ISerializer serializer = new DummySerializer();
+		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
+
 		IDataStore dataStore = new DiskDataStore("applicationName", new File("./target"),
 			Bytes.bytes(10000l));
+
+		// IPageStore pageStore = new DummyPageStore(new File("target/store")) {
 		IPageStore pageStore = new DefaultPageStore(serializer, dataStore, 0)
 		{
-			// IPageStore pageStore = new DummyPageStore(new
-			// File("target/store")) {
 
 			@Override
 			public void storePage(String sessionId, IManageablePage page)
@@ -254,23 +331,23 @@ public class AsynchronousPageStoreTest
 
 		for (int pageId = 1; pageId <= pages; pageId++)
 		{
-			for (int sessionId = 1; sessionId <= sessions; sessionId++)
+			for (int i = 1; i <= sessions; i++)
 			{
-				String session = String.valueOf(sessionId);
+				String sessionId = String.valueOf(i);
 				Metrics metrics = new Metrics();
 
 				stopwatch.reset();
 				DummyPage page = new DummyPage(pageId, around(writeMillis), around(readMillis),
-					session);
+					sessionId);
 				stopwatch.start();
-				asyncPageStore.storePage(session, page);
+				asyncPageStore.storePage(sessionId, page);
 				metrics.storedPage = page;
 				metrics.storingMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
 
 				stopwatch.reset();
 				stopwatch.start();
 				metrics.restoredPage = DummyPage.class
-					.cast(asyncPageStore.getPage(session, pageId));
+					.cast(asyncPageStore.getPage(sessionId, pageId));
 				metrics.restoringMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS);
 
 				results.add(metrics);
@@ -497,7 +574,7 @@ public class AsynchronousPageStoreTest
 		@Override
 		public boolean canBeAsynchronous()
 		{
-			return true;
+			return false;
 		}
 	}
 
