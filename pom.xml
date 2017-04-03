@@ -840,6 +840,7 @@
 						</links>
 						<failOnError>false</failOnError>
 						<additionalparam>-Xdoclint:none</additionalparam>
+						<additionalparam>--allow-script-in-comments</additionalparam>
 					</configuration>
 					<executions>
 						<execution>
