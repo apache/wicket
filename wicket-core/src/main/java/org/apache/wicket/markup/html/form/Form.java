@@ -1015,8 +1015,7 @@ public class Form<T> extends WebMarkupContainer
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				Form<?> form = (Form<?>)component;
-				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy() &&
-					form.wantSubmitOnParentFormSubmit())
+				if (form.wantSubmitOnParentFormSubmit() && form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
 					return;
@@ -1158,8 +1157,7 @@ public class Form<T> extends WebMarkupContainer
 			@Override
 			public void component(final Component component, final IVisit<Boolean> visit)
 			{
-				if (component.isVisibleInHierarchy() && component.isEnabledInHierarchy() &&
-					component.hasErrorMessage())
+				if (component.hasErrorMessage() && component.isVisibleInHierarchy() && component.isEnabledInHierarchy())
 				{
 					visit.stop(true);
 				}
