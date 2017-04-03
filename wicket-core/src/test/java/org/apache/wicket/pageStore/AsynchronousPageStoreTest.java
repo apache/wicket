@@ -1,6 +1,7 @@
 package org.apache.wicket.pageStore;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -25,10 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.pageStore.DefaultPageStore;
-import org.apache.wicket.pageStore.DiskDataStore;
-import org.apache.wicket.pageStore.IDataStore;
-import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.util.file.File;
@@ -38,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
+
 
 /**
  * AsynchronousPageStoreTest
@@ -136,9 +134,9 @@ public class AsynchronousPageStoreTest
 
 		public String toString()
 		{
-			return "DummyPage[pageId = " + pageId + ", writeMillis = " + writeMillis
-				+ ", readMillis = " + readMillis + ", sessionId = " + sessionId + ", hashCode = "
-				+ hashCode() + "]";
+			return "DummyPage[pageId = " + pageId + ", writeMillis = " + writeMillis +
+				", readMillis = " + readMillis + ", sessionId = " + sessionId + ", hashCode = " +
+				hashCode() + "]";
 		}
 	}
 
@@ -171,9 +169,11 @@ public class AsynchronousPageStoreTest
 
 		Thread.sleep(500);
 
-		asyncPageStore.getPage(sessionId, pageId);
+		IManageablePage pageBack = asyncPageStore.getPage(sessionId, pageId);
 
 		verify(pageStore, never()).getPage(sessionId, pageId);
+
+		assertEquals(page, pageBack);
 	}
 
 	/**
@@ -205,9 +205,11 @@ public class AsynchronousPageStoreTest
 
 		Thread.sleep(1500);
 
-		asyncPageStore.getPage(sessionId, pageId);
+		IManageablePage pageBack = asyncPageStore.getPage(sessionId, pageId);
 
 		verify(pageStore, times(1)).getPage(sessionId, pageId);
+
+		assertNotEquals(page, pageBack);
 	}
 
 	/**
@@ -291,9 +293,8 @@ public class AsynchronousPageStoreTest
 
 		public String toString()
 		{
-			return "Metrics[storedPage = " + storedPage + ", storingMillis = " + storingMillis
-				+ ", restoredPage = " + restoredPage + ", restoringMillis = " + restoringMillis
-				+ "]";
+			return "Metrics[storedPage = " + storedPage + ", storingMillis = " + storingMillis +
+				", restoredPage = " + restoredPage + ", restoringMillis = " + restoringMillis + "]";
 		}
 	}
 
