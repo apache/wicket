@@ -27,7 +27,6 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.util.lang.Args;
-import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
@@ -133,40 +132,6 @@ public abstract class AjaxFormChoiceComponentUpdatingBehavior extends
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				onUpdateChoice.accept(target);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxFormChoiceComponentUpdatingBehavior} based on lambda expressions
-	 * 
-	 * @param onUpdateChoice
-	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
-	 * @param onError
-	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and the
-	 *            {@link RuntimeException}
-	 * @return the {@link AjaxFormChoiceComponentUpdatingBehavior}
-	 */
-	public static AjaxFormChoiceComponentUpdatingBehavior onUpdateChoice(
-		SerializableConsumer<AjaxRequestTarget> onUpdateChoice,
-		SerializableBiConsumer<AjaxRequestTarget, RuntimeException> onError)
-	{
-		Args.notNull(onUpdateChoice, "onUpdateChoice");
-		Args.notNull(onError, "onError");
-		return new AjaxFormChoiceComponentUpdatingBehavior()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onUpdateChoice.accept(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, RuntimeException e)
-			{
-				onError.accept(target, e);
 			}
 		};
 	}

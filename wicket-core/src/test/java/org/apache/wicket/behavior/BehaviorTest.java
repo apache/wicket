@@ -14,10 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.lambda;
+package org.apache.wicket.behavior;
 
-import static org.apache.wicket.lambda.Lambdas.onTag;
-import static org.apache.wicket.lambda.Lambdas.onAttribute;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
@@ -28,9 +26,9 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
 /**
- * Tests for {@link Lambdas}
+ * Tests for {@link Behavior}
  */
-public class LambdasTest extends WicketTestCase
+public class BehaviorTest extends WicketTestCase
 {
 	@Test
 	public void onTagTest()
@@ -40,8 +38,8 @@ public class LambdasTest extends WicketTestCase
 		page.add(component);
 		String value = "value";
 		String key = "key";
-		component.add(onTag((c, tag) -> tag.put(key, value)));
-		component.add(onAttribute("class", oldValue -> "zzz"));
+		component.add(Behavior.onTag((c, tag) -> tag.put(key, value)));
+		component.add(Behavior.onAttribute("class", oldValue -> "zzz"));
 
 		tester.startPage(page);
 
@@ -58,7 +56,7 @@ public class LambdasTest extends WicketTestCase
 		page.add(component);
 		String value = "value";
 		String key = "key";
-		component.add(onAttribute(key, oldValue -> value));
+		component.add(Behavior.onAttribute(key, oldValue -> value));
 
 		tester.startPage(page);
 

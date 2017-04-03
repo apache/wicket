@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.compref;
 
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.lambda.Lambdas;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
@@ -112,7 +112,7 @@ public class LinkPage extends WicketExamplePage
 			{
 				super(id);
 				count3 = new Count();
-				add(Lambdas.onAttribute("value", oldValue -> "this button is clicked " + count3.getCount() + " times"));
+				add(Behavior.onAttribute("value", oldValue -> "this button is clicked " + count3.getCount() + " times"));
 			}
 
 			@Override

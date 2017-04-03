@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.lang.Args;
-import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
@@ -103,39 +102,4 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 			}
 		};
 	}
-
-	/**
-	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
-	 * 
-	 * @param onChange
-	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
-	 * @param onError
-	 *            the {@code SerializableBiConsumer} which accepts the {@link AjaxRequestTarget} and
-	 *            the {@link RuntimeException}
-	 * @return the {@link OnChangeAjaxBehavior}
-	 */
-	public static OnChangeAjaxBehavior onChange(SerializableConsumer<AjaxRequestTarget> onChange,
-		SerializableBiConsumer<AjaxRequestTarget, RuntimeException> onError)
-	{
-		Args.notNull(onChange, "onChange");
-		Args.notNull(onError, "onError");
-
-		return new OnChangeAjaxBehavior()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onUpdate(AjaxRequestTarget target)
-			{
-				onChange.accept(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, RuntimeException e)
-			{
-				onError.accept(target, e);
-			}
-		};
-	}
-
 }
