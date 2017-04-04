@@ -27,8 +27,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.render.PageRenderer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * {@link IRequestHandler} that renders page instance. Depending on the <code>redirectPolicy</code>
@@ -44,8 +42,6 @@ public class RenderPageRequestHandler
 		IPageClassRequestHandler,
 		ILoggableRequestHandler
 {
-	private static final Logger logger = LoggerFactory.getLogger(RenderPageRequestHandler.class);
-
 	private final IPageProvider pageProvider;
 
 	private final RedirectPolicy redirectPolicy;
@@ -78,6 +74,37 @@ public class RenderPageRequestHandler
 		 * </ul>
 		 */
 		AUTO_REDIRECT
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param pageClass The class of the page to render
+	 */
+	public RenderPageRequestHandler(final Class<? extends IRequestablePage> pageClass)
+	{
+		this(pageClass, null);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param pageClass The class of the page to render
+	 * @param parameters Wrapped query string parameters.
+	 */
+	public RenderPageRequestHandler(final Class<? extends IRequestablePage> pageClass, final PageParameters parameters)
+	{
+		this(new PageProvider(pageClass, parameters));
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param page The page to render
+	 */
+	public RenderPageRequestHandler(final IRequestablePage page)
+	{
+		this(new PageProvider(page));
 	}
 
 	/**
