@@ -506,9 +506,8 @@ public class FormTester
 		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
 
-		List<FormComponentUpdatingBehavior> behaviors = component.getBehaviors(FormComponentUpdatingBehavior.class);
-		if (behaviors.isEmpty() == false) {
-			tester.invokeListener(component, behaviors.get(0));
+		for (FormComponentUpdatingBehavior updater : component.getBehaviors(FormComponentUpdatingBehavior.class)) {
+			tester.invokeListener(component, updater);
 		}
 
 		return this;
