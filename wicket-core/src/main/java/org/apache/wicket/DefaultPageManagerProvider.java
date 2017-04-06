@@ -58,20 +58,23 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 		StoreSettings storeSettings = getStoreSettings();
 
+		IPageStore pageStore;
+
 		if (dataStore.canBeAsynchronous())
 		{
 			int capacity = storeSettings.getAsynchronousQueueCapacity();
 			dataStore = new AsynchronousDataStore(dataStore, capacity);
-		}
 
-		IPageStore pageStore = newPageStore(dataStore);
-		
-		if (pageStore.canBeAsynchronous())
-		{
-			int capacity = storeSettings.getAsynchronousQueueCapacity();
-			pageStore = new AsynchronousPageStore(pageStore, capacity);
+			pageStore = newPageStore(dataStore);
+
+			if (pageStore.canBeAsynchronous())
+			{
+				pageStore = new AsynchronousPageStore(pageStore, capacity);
+			}
 		}
-		
+		else
+			pageStore = newPageStore(dataStore);
+
 		return new PageStoreManager(application.getName(), pageStore, pageManagerContext);
 
 	}
