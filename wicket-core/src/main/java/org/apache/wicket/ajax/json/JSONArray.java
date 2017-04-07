@@ -21,7 +21,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
 
@@ -96,6 +95,7 @@ public class JSONArray {
         if (object instanceof JSONArray) {
             values = ((JSONArray) object).values;
         } else {
+            //noinspection ConstantConditions
             throw JSON.typeMismatch(object, "JSONArray");
         }
     }
@@ -714,9 +714,7 @@ public class JSONArray {
     @Override
     public String toString() {
         try {
-            JSONStringer stringer = new JSONStringer();
-            writeTo(stringer);
-            return stringer.toString();
+            return toString(new JSONStringer());
         } catch (JSONException e) {
             return null;
         }
@@ -737,17 +735,23 @@ public class JSONArray {
      * @throws JSONException Only if there is a coding error.
      */
     public String toString(int indentSpaces) throws JSONException {
-        JSONStringer stringer = new JSONStringer(indentSpaces);
-        writeTo(stringer);
-        return stringer.toString();
+        return toString(new JSONStringer(indentSpaces));
     }
 
-    void writeTo(JSONStringer stringer) throws JSONException {
+    /**
+     * Encodes this array using {@link JSONStringer} provided
+     *
+     * @param stringer - {@link JSONStringer} to be used for serialization
+     * @return The string representation of this.
+     * @throws JSONException On internal errors. Shouldn't happen.
+     */
+    public String toString(JSONStringer stringer) throws JSONException {
         stringer.array();
         for (Object value : values) {
             stringer.value(value);
         }
         stringer.endArray();
+        return stringer.toString();
     }
 
     @Override
@@ -764,14 +768,6 @@ public class JSONArray {
     // Methods removed due to switch to open-json
 
     public Writer write(Writer writer){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-
-    public JSONArray put(Map map){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-
-    public JSONArray put(int integer, Map map){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 }

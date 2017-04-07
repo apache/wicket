@@ -438,13 +438,13 @@ public class JSONTokener {
                     throw syntaxError("Unterminated array");
                 case ']':
                     if (hasTrailingSeparator) {
-                        result.put((Collection<?>)null);
+                        result.put(null);
                     }
                     return result;
                 case ',':
                 case ';':
                     /* A separator without a value first means "null". */
-                    result.put((Collection<?>)null);
+                    result.put(null);
                     hasTrailingSeparator = true;
                     continue;
                 default:
@@ -606,12 +606,10 @@ public class JSONTokener {
      * input is exhausted.
      *
      * @param thru The string to skip over.
-     * @return boolean 
      */
-    public boolean skipPast(String thru) {
+    public void skipPast(String thru) {
         int thruStart = in.indexOf(thru, pos);
         pos = thruStart == -1 ? in.length() : (thruStart + thru.length());
-        return true;
     }
 
     /**

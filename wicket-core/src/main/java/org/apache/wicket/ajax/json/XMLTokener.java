@@ -49,7 +49,7 @@ public class XMLTokener extends JSONTokener
 		throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
 	}
 
-	public boolean skipPast(String to) throws JSONException
+	public void skipPast(String to) throws JSONException
 	{
 		throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
 	}

@@ -19,19 +19,14 @@ package org.apache.wicket.ajax.json;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
-
-import org.apache.wicket.WicketRuntimeException;
 
 // Note: this class was written without inspecting the non-free org.json sourcecode.
 
@@ -116,7 +111,7 @@ public class JSONObject {
         // at least make the broken equals(null) consistent with Objects.hashCode(null).
         @Override
         public int hashCode() {
-            return Objects.hashCode(null);
+            return 0;
         }
 
         @Override
@@ -145,17 +140,19 @@ public class JSONObject {
     /* (accept a raw type for API compatibility) */
     public JSONObject(Map copyFrom) {
         this();
-        Map<?, ?> contentsTyped = (Map<?, ?>) copyFrom;
-        for (Map.Entry<?, ?> entry : contentsTyped.entrySet()) {
+        if (copyFrom != null) {
+            Map<?, ?> contentsTyped = copyFrom;
+            for (Map.Entry<?, ?> entry : contentsTyped.entrySet()) {
             /*
              * Deviate from the original by checking that keys are non-null and
              * of the proper type. (We still defer validating the values).
              */
-            String key = (String) entry.getKey();
-            if (key == null) {
-                throw new NullPointerException("key == null");
+                String key = (String) entry.getKey();
+                if (key == null) {
+                    throw new NullPointerException("key == null");
+                }
+                nameValuePairs.put(key, wrap(entry.getValue()));
             }
-            nameValuePairs.put(key, wrap(entry.getValue()));
         }
     }
 
@@ -218,23 +215,36 @@ public class JSONObject {
      * @throws JSONException If there is an exception while reading the bean
      */
     public JSONObject(Object bean) throws JSONException {
-    		this(propertiesAsMap(bean));
+        this(bean instanceof JSONObject ? ((JSONObject)bean).nameValuePairs : propertiesAsMap(bean));
     }
 
-    private static Map<String, Object> propertiesAsMap(Object bean)
-            throws JSONException {
-    	Map<String, Object> props = new TreeMap<String, Object>();
-    	try{  
-	        PropertyDescriptor[] properties = Introspector.getBeanInfo(bean.getClass(), Object.class)
-	                .getPropertyDescriptors();
-	        for (int i = 0; i < properties.length; i++) {
-	            PropertyDescriptor propertyDescriptor = properties[i];
-	            props.put(propertyDescriptor.getDisplayName(), propertyDescriptor.getReadMethod().invoke(bean));
-	        }
-    	}catch(IntrospectionException | InvocationTargetException | IllegalAccessException e){
-    		throw new JSONException(e);
-    	}
+    private static Map<String, Object> propertiesAsMap(Object bean) throws JSONException {
+        Map<String, Object> props = new TreeMap<String, Object>();
+        try {
+            PropertyDescriptor[] properties = Introspector.getBeanInfo(bean.getClass(), Object.class)
+                    .getPropertyDescriptors();
+            for (PropertyDescriptor prop : properties) {
+                Object v = prop.getReadMethod().invoke(bean);
+                props.put(prop.getDisplayName(), wrap(v));
+            }
+        } catch (IllegalAccessException e) {
+            throw new JSONException(e);
+        } catch (IntrospectionException e) {
+            throw new JSONException(e);
+        } catch (InvocationTargetException e) {
+            throw new JSONException(e);
+        }
         return props;
+    }
+
+    public static String[] getNames(JSONObject x) {
+        Set<String> names = x.keySet();
+        String[] r = new String[names.size()];
+        int i = 0;
+        for (String name : names) {
+            r[i++] = name;
+        }
+        return r;
     }
 
     /**
@@ -313,6 +323,10 @@ public class JSONObject {
      *              Integer, Long, Double, {@link #NULL}, or {@code null}. May not be
      *              {@link Double#isNaN() NaNs} or {@link Double#isInfinite()
      *              infinities}.
+     *              If value is Map or Collection the value is wrapped using
+     *              corresponding JSONObject(map) or JSONArray(collection) object.
+     *              This behavior is considered unsafe and is added for compatibility
+     *              with original 'org.json' package only.
      * @return this object.
      * @throws JSONException if the value is an invalid double (infinite or NaN).
      */
@@ -321,11 +335,16 @@ public class JSONObject {
             nameValuePairs.remove(name);
             return this;
         }
+        Object valueToPut = value;
         if (value instanceof Number) {
             // deviate from the original by checking all Numbers, not just floats & doubles
             JSON.checkDouble(((Number) value).doubleValue());
+        } else if (value instanceof Collection) {
+            valueToPut = new JSONArray((Collection) value);
+        } else if (value instanceof Map) {
+            valueToPut = new JSONObject((Map)value);
         }
-        nameValuePairs.put(checkName(name), value);
+        nameValuePairs.put(checkName(name), valueToPut);
         return this;
     }
 
@@ -836,9 +855,7 @@ public class JSONObject {
     @Override
     public String toString() {
         try {
-            JSONStringer stringer = new JSONStringer();
-            writeTo(stringer);
-            return stringer.toString();
+            return toString(new JSONStringer());
         } catch (JSONException e) {
             return null;
         }
@@ -862,17 +879,23 @@ public class JSONObject {
      * @throws JSONException On internal errors. Shouldn't happen.
      */
     public String toString(int indentSpaces) throws JSONException {
-        JSONStringer stringer = new JSONStringer(indentSpaces);
-        writeTo(stringer);
-        return stringer.toString();
+        return toString(new JSONStringer(indentSpaces));
     }
 
-    void writeTo(JSONStringer stringer) throws JSONException {
+    /**
+     * Encodes this object using {@link JSONStringer} provided
+     *
+     * @param stringer - {@link JSONStringer} to be used for serialization
+     * @return The string representation of this.
+     * @throws JSONException On internal errors. Shouldn't happen.
+     */
+    public String toString(JSONStringer stringer) throws JSONException {
         stringer.object();
         for (Map.Entry<String, Object> entry : nameValuePairs.entrySet()) {
-            stringer.key(entry.getKey()).value(entry.getValue());
+            stringer.entry(entry);
         }
         stringer.endObject();
+        return stringer.toString();
     }
 
     /**
@@ -897,7 +920,7 @@ public class JSONObject {
         }
 
         long longValue = number.longValue();
-        if (doubleValue == (double) longValue) {
+        if (doubleValue == longValue) {
             return Long.toString(longValue);
         }
 
@@ -936,7 +959,8 @@ public class JSONObject {
      * If the object is an array or {@code Collection}, returns an equivalent {@code JSONArray}.
      * If the object is a {@code Map}, returns an equivalent {@code JSONObject}.
      * If the object is a primitive wrapper type or {@code String}, returns the object.
-     * Otherwise if the object is from a {@code java} package, returns the result of {@code toString}.
+     * If the object is from a {@code java} package, returns the result of {@code toString}.
+     * If the object is some other kind of object then it is assumed to be a bean and is converted to a JSONObject.
      * If wrapping fails, returns null.
      *
      * @param o The object to wrap.
@@ -972,69 +996,13 @@ public class JSONObject {
                     o instanceof String) {
                 return o;
             }
-            if (o.getClass().getPackage().getName().startsWith("java.")) {
+            if (o.getClass().getPackage().getName().startsWith("java.") || o instanceof Enum<?>) {
                 return o.toString();
+            } else {
+                return new JSONObject(o);
             }
         } catch (Exception ignored) {
         }
         return null;
-    }
-    
-    // Methods removed due to switch to open-json
-    
-    public Writer write(Writer writer){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public String valueToString(Object object){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public void testValidity(Object object){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public Object stringToValue(String string){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-
-    public Writer quote(String string, Writer writer){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public JSONObject putOnce(String string, Object object){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public JSONObject put(String string, Map map){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public JSONObject put(String string, Collection collection){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public JSONObject increment(String string){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public String[] getNames(Object object){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public String[] getNames(JSONObject jsonObject){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public String doubleToString(double dou){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-    
-    public JSONObject(String string, Locale locale){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
-    }
-
-    public JSONObject(Object object, String[] stringarr){
-    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 }
