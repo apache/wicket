@@ -31,7 +31,6 @@ import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestHandlerDelegate;
-import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -333,7 +332,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 
 	private void checkExpiration(PageProvider provider, PageInfo pageInfo)
 	{
-		if (provider.isNewPageInstance() && !getRecreateMountedPagesAfterExpiry())
+		if (provider.getPageId() != null && provider.isNewPageInstance() && !getRecreateMountedPagesAfterExpiry())
 		{
 			throw new PageExpiredException(String.format("Bookmarkable page with id '%d' has expired.",
 			                                             pageInfo.getPageId()));

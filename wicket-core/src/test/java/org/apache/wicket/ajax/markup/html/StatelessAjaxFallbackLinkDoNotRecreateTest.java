@@ -16,43 +16,35 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.StatelessPage;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.After;
 import org.junit.Test;
 
-import java.util.List;
-
-public class StatelessAjaxFallbackLinkTest extends WicketTestCase
+public class StatelessAjaxFallbackLinkDoNotRecreateTest extends WicketTestCase
 {
 	@After
-	public void teardown()
+	public void after()
 	{
 		// things must stay stateless
 		assertTrue(Session.get().isTemporary());
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6349
+	 */
 	@Test
-	@SuppressWarnings("unchecked")
-	public void testGetStatelessHint()
+	public void statelessPagesAreAlwaysRecreated()
 	{
-		tester.startPage(StatelessPage.class);
+		tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
+		tester.startPage(StatelessAjaxFallbackLinkDoNotRecreatePage.class);
 
-		final StatelessPage page = (StatelessPage)tester.getLastRenderedPage();
-		final AjaxFallbackLink<Void> link = (AjaxFallbackLink<Void>)page.get("more");
+		final Page page = tester.getLastRenderedPage();
+		assertTrue(page.isStateless());
 
-		assertTrue(link.isStateless());
+		tester.clickLink("incrementLink");
 
-		link.onClick();
-
-		final List<? extends Behavior> behaviors = link.getBehaviors();
-		final AjaxEventBehavior behavior = (AjaxEventBehavior)behaviors.get(0);
-
-		behavior.onRequest();
-		
-		assertTrue(link.isStateless());
+		tester.assertRenderedPage(StatelessAjaxFallbackLinkDoNotRecreatePage.class);
 	}
 }
