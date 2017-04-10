@@ -28,6 +28,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // Note: this class was written without inspecting the non-free org.json sourcecode.
 
 /**
@@ -83,7 +86,8 @@ import java.util.TreeMap;
  * prohibit it" for further information.
  */
 public class JSONObject {
-
+	private final static Logger log = LoggerFactory.getLogger(JSONObject.class);
+	
     private static final Double NEGATIVE_ZERO = -0d;
 
     /**
@@ -857,6 +861,7 @@ public class JSONObject {
         try {
             return toString(new JSONStringer());
         } catch (JSONException e) {
+        	log.error("Unexpected exception", e);
             return null;
         }
     }
