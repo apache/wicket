@@ -110,27 +110,4 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 			}
 		};
 	}
-
-	public static IndicatingAjaxButton onSubmit(String id,
-		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit,
-		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onError)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-		Args.notNull(onError, "onError");
-
-		return new IndicatingAjaxButton(id)
-		{
-			@Override
-			public void onSubmit(AjaxRequestTarget target)
-			{
-				onSubmit.accept(this, target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target)
-			{
-				onError.accept(this, target);
-			}
-		};
-	}
 }
