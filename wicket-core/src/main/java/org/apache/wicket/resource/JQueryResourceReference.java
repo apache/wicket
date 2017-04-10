@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.resource;
 
+import static org.apache.wicket.resource.DynamicJQueryResourceReference.VERSION_2;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 
@@ -35,8 +36,11 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 	 * jQuery ver. 1.x - works on modern browsers and IE 6/7/8
 	 */
 	public static final String VERSION_1 = "jquery/jquery-1.12.4.js";
+	public static final String VERSION_3 = "jquery/jquery-3.2.1.js";
 
-	private static final JQueryResourceReference INSTANCE = new JQueryResourceReference();
+	public static final JQueryResourceReference INSTANCE_1 = new JQueryResourceReference();
+	public static final JavaScriptResourceReference INSTANCE_2 = new JavaScriptResourceReference(JQueryResourceReference.class, VERSION_2);
+	public static final JavaScriptResourceReference INSTANCE_3 = new JavaScriptResourceReference(JQueryResourceReference.class, VERSION_3);
 
 	/**
 	 * Normally you should not use this method, but use
@@ -47,7 +51,7 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 	 */
 	public static JQueryResourceReference get()
 	{
-		return INSTANCE;
+		return INSTANCE_1;
 	}
 
 	protected JQueryResourceReference()
