@@ -88,18 +88,15 @@ public class AsynchronousDataStore implements IDataStore
 	public AsynchronousDataStore(final IDataStore dataStore, final int capacity)
 	{
 		this.dataStore = dataStore;
-		entries = new LinkedBlockingQueue<Entry>(capacity);
-		entryMap = new ConcurrentHashMap<String, Entry>();
+		entries = new LinkedBlockingQueue<>(capacity);
+		entryMap = new ConcurrentHashMap<>();
 
 		PageSavingRunnable savingRunnable = new PageSavingRunnable(dataStore, entries, entryMap);
-		pageSavingThread = new Thread(savingRunnable, "Wicket-PageSavingThread");
+		pageSavingThread = new Thread(savingRunnable, "Wicket-AsyncDataStore-PageSavingThread");
 		pageSavingThread.setDaemon(true);
 		pageSavingThread.start();
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IDataStore#destroy()
-	 */
 	@Override
 	public void destroy()
 	{
@@ -130,9 +127,6 @@ public class AsynchronousDataStore implements IDataStore
 		return entryMap.get(getKey(sessionId, id));
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IDataStore#getData(java.lang.String, int)
-	 */
 	@Override
 	public byte[] getData(final String sessionId, final int id)
 	{
@@ -152,18 +146,12 @@ public class AsynchronousDataStore implements IDataStore
 		return data;
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IDataStore#isReplicated()
-	 */
 	@Override
 	public boolean isReplicated()
 	{
 		return dataStore.isReplicated();
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String, int)
-	 */
 	@Override
 	public void removeData(final String sessionId, final int id)
 	{
@@ -180,9 +168,6 @@ public class AsynchronousDataStore implements IDataStore
 		dataStore.removeData(sessionId, id);
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IDataStore#removeData(java.lang.String)
-	 */
 	@Override
 	public void removeData(final String sessionId)
 	{
@@ -362,7 +347,7 @@ public class AsynchronousDataStore implements IDataStore
 	@Override
 	public final boolean canBeAsynchronous()
 	{
-		// should not wrap in abother AsynchronousDataStore
+		// should not wrap in another AsynchronousDataStore
 		return false;
 	}
 }

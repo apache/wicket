@@ -323,7 +323,6 @@ public class PerSessionPageStore extends AbstractCachingPageStore<IManageablePag
 			cache.clear();
 		}
 	}
-	
 
 	@Override
 	public boolean canBeAsynchronous()

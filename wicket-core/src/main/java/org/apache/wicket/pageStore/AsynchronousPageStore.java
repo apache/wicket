@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
@@ -8,7 +24,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +68,7 @@ public class AsynchronousPageStore implements IPageStore
 	/**
 	 * The wrapped {@link IPageStore} that actually stores that pages
 	 */
-	private final IPageStore pageStore;
+	private final IPageStore delegate;
 
 	/**
 	 * The queue where the entries which have to be saved are temporary stored
@@ -69,19 +84,19 @@ public class AsynchronousPageStore implements IPageStore
 	/**
 	 * Construct.
 	 * 
-	 * @param pageStore
+	 * @param delegate
 	 *            the wrapped {@link IPageStore} that actually saved the page
 	 * @param capacity
 	 *            the capacity of the queue that delays the saving
 	 */
-	public AsynchronousPageStore(final IPageStore pageStore, final int capacity)
+	public AsynchronousPageStore(final IPageStore delegate, final int capacity)
 	{
-		this.pageStore = pageStore;
-		entries = new LinkedBlockingQueue<Entry>(capacity);
-		entryMap = new ConcurrentHashMap<String, Entry>();
+		this.delegate = Args.notNull(delegate, "delegate");
+		entries = new LinkedBlockingQueue<>(capacity);
+		entryMap = new ConcurrentHashMap<>();
 
-		PageSavingRunnable savingRunnable = new PageSavingRunnable(pageStore, entries, entryMap);
-		pageSavingThread = new Thread(savingRunnable, "AsyncPageStore-PageSavingThread");
+		PageSavingRunnable savingRunnable = new PageSavingRunnable(delegate, entries, entryMap);
+		pageSavingThread = new Thread(savingRunnable, "Wicket-AsyncPageStore-PageSavingThread");
 		pageSavingThread.setDaemon(true);
 		pageSavingThread.start();
 	}
@@ -139,7 +154,7 @@ public class AsynchronousPageStore implements IPageStore
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + page.getPageId();
-			result = prime * result + ((sessionId == null) ? 0 : sessionId.hashCode());
+			result = prime * result + sessionId.hashCode();
 			return result;
 		}
 
@@ -155,12 +170,7 @@ public class AsynchronousPageStore implements IPageStore
 			Entry other = (Entry)obj;
 			if (page.getPageId() != other.page.getPageId())
 				return false;
-			if (sessionId == null)
-			{
-				if (other.sessionId != null)
-					return false;
-			}
-			else if (!sessionId.equals(other.sessionId))
+			if (!sessionId.equals(other.sessionId))
 				return false;
 			return true;
 		}
@@ -184,12 +194,12 @@ public class AsynchronousPageStore implements IPageStore
 
 		private final ConcurrentMap<String, Entry> entryMap;
 
-		private final IPageStore pageStore;
+		private final IPageStore delegate;
 
-		private PageSavingRunnable(IPageStore pageStore, BlockingQueue<Entry> entries,
-			ConcurrentMap<String, Entry> entryMap)
+		private PageSavingRunnable(IPageStore delegate, BlockingQueue<Entry> entries,
+		                           ConcurrentMap<String, Entry> entryMap)
 		{
-			this.pageStore = pageStore;
+			this.delegate = delegate;
 			this.entries = entries;
 			this.entryMap = entryMap;
 		}
@@ -212,16 +222,13 @@ public class AsynchronousPageStore implements IPageStore
 				if (entry != null)
 				{
 					log.debug("Saving asynchronously: {}...", entry);
-					pageStore.storePage(entry.sessionId, entry.page);
+					delegate.storePage(entry.sessionId, entry.page);
 					entryMap.remove(getKey(entry));
 				}
 			}
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#destroy()
-	 */
 	@Override
 	public void destroy()
 	{
@@ -238,12 +245,9 @@ public class AsynchronousPageStore implements IPageStore
 			}
 		}
 
-		pageStore.destroy();
+		delegate.destroy();
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#getPage(java.lang.String, int)
-	 */
 	@Override
 	public IManageablePage getPage(String sessionId, int pageId)
 	{
@@ -255,7 +259,7 @@ public class AsynchronousPageStore implements IPageStore
 				sessionId, pageId);
 			return entry.page;
 		}
-		IManageablePage page = pageStore.getPage(sessionId, pageId);
+		IManageablePage page = delegate.getPage(sessionId, pageId);
 
 		log.debug("Returning the page of a stored entry with session id '{}' and page id '{}'",
 			sessionId, pageId);
@@ -263,9 +267,6 @@ public class AsynchronousPageStore implements IPageStore
 		return page;
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#removePage(java.lang.String, int)
-	 */
 	@Override
 	public void removePage(String sessionId, int pageId)
 	{
@@ -279,14 +280,9 @@ public class AsynchronousPageStore implements IPageStore
 			}
 		}
 
-		pageStore.removePage(sessionId, pageId);
-
+		delegate.removePage(sessionId, pageId);
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#storePage(java.lang.String,
-	 *      org.apache.wicket.page.IManageablePage)
-	 */
 	@Override
 	public void storePage(String sessionId, IManageablePage page)
 	{
@@ -306,59 +302,45 @@ public class AsynchronousPageStore implements IPageStore
 				log.debug("Storing synchronously page with id '{}' in session '{}'",
 					page.getPageId(), sessionId);
 				entryMap.remove(key);
-				pageStore.storePage(sessionId, page);
+				delegate.storePage(sessionId, page);
 			}
 		}
 		catch (InterruptedException e)
 		{
 			log.error(e.getMessage(), e);
 			entryMap.remove(key);
-			pageStore.storePage(sessionId, page);
+			delegate.storePage(sessionId, page);
 		}
-
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#unbind(java.lang.String)
-	 */
 	@Override
 	public void unbind(String sessionId)
 	{
-		pageStore.unbind(sessionId);
+		delegate.unbind(sessionId);
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#prepareForSerialization(java.lang. String,
-	 *      java.io.Serializable)
-	 */
 	@Override
 	public Serializable prepareForSerialization(String sessionId, Serializable page)
 	{
-		return pageStore.prepareForSerialization(sessionId, page);
+		return delegate.prepareForSerialization(sessionId, page);
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#restoreAfterSerialization(java.io. Serializable)
-	 */
 	@Override
 	public Object restoreAfterSerialization(Serializable serializable)
 	{
-		return pageStore.restoreAfterSerialization(serializable);
+		return delegate.restoreAfterSerialization(serializable);
 	}
 
-	/**
-	 * @see org.apache.wicket.pageStore.IPageStore#convertToPage(java.lang.Object)
-	 */
 	@Override
 	public IManageablePage convertToPage(Object page)
 	{
-		return pageStore.convertToPage(page);
+		return delegate.convertToPage(page);
 	}
 
 	@Override
 	public boolean canBeAsynchronous()
 	{
+		// should not wrap in another AsynchronousPageStore
 		return false;
 	}
-
 }

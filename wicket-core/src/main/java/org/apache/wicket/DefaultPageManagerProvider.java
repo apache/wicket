@@ -73,7 +73,9 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 			}
 		}
 		else
+		{
 			pageStore = newPageStore(dataStore);
+		}
 
 		return new PageStoreManager(application.getName(), pageStore, pageManagerContext);
 
@@ -84,7 +86,6 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		int inmemoryCacheSize = getStoreSettings().getInmemoryCacheSize();
 		ISerializer pageSerializer = application.getFrameworkSettings().getSerializer();
 		return new DefaultPageStore(pageSerializer, dataStore, inmemoryCacheSize);
-//		return new PerSessionPageStore(pageSerializer, dataStore, inmemoryCacheSize);
 	}
 
 	protected IDataStore newDataStore()
