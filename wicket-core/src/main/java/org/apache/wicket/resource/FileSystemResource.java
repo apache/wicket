@@ -76,9 +76,9 @@ public class FileSystemResource extends AbstractResource
 	 * 
 	 * @param path
 	 *            the path to create the resource response with
-	 * @param fileName
-	 *            fileName to set, path.getFileName() will be used in case null passed
-	 * @return the actual resource response x
+	 * @param attributes
+	 *            request attributes
+	 * @return the actual resource response
 	 */
 	protected ResourceResponse createResourceResponse(Attributes attributes, Path path)
 	{
