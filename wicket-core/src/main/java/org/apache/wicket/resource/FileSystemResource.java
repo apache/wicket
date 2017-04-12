@@ -68,7 +68,7 @@ public class FileSystemResource extends AbstractResource
 	@Override
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
-		return createResourceResponse(path, null);
+		return createResourceResponse(attributes, path);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class FileSystemResource extends AbstractResource
 	 *            fileName to set, path.getFileName() will be used in case null passed
 	 * @return the actual resource response x
 	 */
-	protected ResourceResponse createResourceResponse(Path path, String fileName)
+	protected ResourceResponse createResourceResponse(Attributes attributes, Path path)
 	{
 		try
 		{
@@ -95,7 +95,9 @@ public class FileSystemResource extends AbstractResource
 			resourceResponse.setContentType(getMimeType());
 			resourceResponse.setAcceptRange(ContentRangeType.BYTES);
 			resourceResponse.setContentLength(size);
-			resourceResponse.setFileName(fileName == null ? path.getFileName().toString() : fileName);
+			if (path != null && path.getFileName() != null) {
+				resourceResponse.setFileName(path.getFileName().toString());
+			}
 			RequestCycle cycle = RequestCycle.get();
 			Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
 			Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
