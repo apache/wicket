@@ -95,7 +95,7 @@ public class FileSystemResource extends AbstractResource
 			resourceResponse.setContentType(getMimeType());
 			resourceResponse.setAcceptRange(ContentRangeType.BYTES);
 			resourceResponse.setContentLength(size);
-			if (path != null && path.getFileName() != null) {
+			if (path.getFileName() != null) {
 				resourceResponse.setFileName(path.getFileName().toString());
 			}
 			RequestCycle cycle = RequestCycle.get();
