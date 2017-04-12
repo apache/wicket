@@ -49,6 +49,7 @@ public class DynamicJQueryResourceReference extends JQueryResourceReference
 
 	public DynamicJQueryResourceReference()
 	{
+		super(VERSION_2);
 	}
 
 	@Override
