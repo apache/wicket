@@ -73,7 +73,8 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 
 	public enum Location {
 		/**
-		 * The resource will be downloaded into a blob.
+		 * The resource will be downloaded into a blob, the resource has to be a
+		 * {@link ContentDisposition#ATTACHMENT}..
 		 * <p>
 		 * This is recommended for modern browsers.
 		 */
@@ -90,12 +91,12 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		IFrame,
 
 		/**
-		 * The resource will be downloaded by changing the location of the current DOM document, the resource has to be a
-		 * {@link ContentDisposition#ATTACHMENT}.
+		 * The resource will be downloaded by changing the location of the current DOM document,
+		 * the resource has to be a {@link ContentDisposition#ATTACHMENT}.
 		 * <p>
 		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
-		 * Does not support {@link AjaxDownload#onDownloadFailed(AjaxRequestTarget)} callback, i.e. it is not possible to detect
-		 * when the download has failed!
+		 * Does not support {@link AjaxDownload#onDownloadFailed(AjaxRequestTarget)} callback,
+		 * i.e. it is not possible to detect when the download has failed!
 		 */
 		SameWindow,
 
