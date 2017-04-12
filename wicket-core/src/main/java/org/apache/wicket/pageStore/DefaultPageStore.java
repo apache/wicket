@@ -460,4 +460,10 @@ public class DefaultPageStore extends AbstractCachingPageStore<DefaultPageStore.
 			cache.clear();
 		}
 	}
+
+	@Override
+	public boolean canBeAsynchronous()
+	{
+		return true;
+	}
 }
