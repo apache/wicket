@@ -44,7 +44,6 @@
 
 		<arquillian.version>1.1.12.Final</arquillian.version>
 		<maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
-		<maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wildfly.version>8.2.1.Final</wildfly.version>
 		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
@@ -153,7 +152,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${maven.surefire.plugin.version}</version>
+					<version>${maven.surefire.version}</version>
 					<configuration>
 						<systemPropertyVariables>
 							<!-- <jboss.socket.binding.port-offset>1100</jboss.socket.binding.port-offset> -->
