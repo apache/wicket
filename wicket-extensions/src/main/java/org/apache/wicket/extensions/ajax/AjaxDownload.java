@@ -73,8 +73,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 
 	public enum Location {
 		/**
-		 * The resource will be downloaded into a blob, the resource has to be a
-		 * {@link ContentDisposition#ATTACHMENT}..
+		 * The resource will be downloaded into a {@code blob}.
 		 * <p>
 		 * This is recommended for modern browsers.
 		 */
