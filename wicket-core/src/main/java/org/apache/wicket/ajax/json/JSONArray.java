@@ -21,6 +21,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.slf4j.Logger;
@@ -771,6 +772,14 @@ public class JSONArray {
     // Methods removed due to switch to open-json
 
     public Writer write(Writer writer){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+
+    public JSONArray put(Map<?, ?> map){
+    	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
+    }
+
+    public JSONArray put(int integer, Map<?, ?> map){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 }
