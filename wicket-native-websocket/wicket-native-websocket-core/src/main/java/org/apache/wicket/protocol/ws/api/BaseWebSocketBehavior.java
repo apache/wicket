@@ -16,18 +16,26 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.template.PackageTextTemplate;
 
 import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * A behavior that contributes {@link WicketWebSocketJQueryResourceReference}
@@ -81,6 +89,7 @@ public class BaseWebSocketBehavior extends Behavior
 
 		Map<String, Object> variables = Generics.newHashMap();
 
+
 		// set falsy JS values for the non-used parameter
 		if (Strings.isEmpty(resourceName))
 		{
@@ -111,6 +120,9 @@ public class BaseWebSocketBehavior extends Behavior
 		Args.notNull(filterPrefix, "filterPrefix");
 		variables.put("filterPrefix", filterPrefix);
 
+		final CharSequence sessionId = getSessionId(component);
+		variables.put("sessionId", sessionId);
+
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
 
 		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));
@@ -126,6 +138,34 @@ public class BaseWebSocketBehavior extends Behavior
 
 	protected CharSequence getBaseUrl(final WebSocketSettings webSocketSettings) {
 		return webSocketSettings.getBaseUrl();
+	}
+
+	/**
+	 * @param component
+	 *          The component this behavior is bound to
+	 * @return The http session id if it is tracked in the url, otherwise empty string
+	 */
+	protected CharSequence getSessionId(final Component component)
+	{
+		String sessionId = "";
+		final WebApplication application = (WebApplication) component.getApplication();
+		final Set<SessionTrackingMode> effectiveSessionTrackingModes = application.getServletContext().getEffectiveSessionTrackingModes();
+		Object containerRequest = component.getRequest().getContainerRequest();
+		if (effectiveSessionTrackingModes.size() == 1 && SessionTrackingMode.URL.equals(effectiveSessionTrackingModes.iterator().next()))
+		{
+			sessionId = component.getSession().getId();
+		}
+		else if (containerRequest instanceof HttpServletRequest)
+		{
+			CookieUtils cookieUtils = new CookieUtils();
+			final Cookie jsessionid = cookieUtils.getCookie("JSESSIONID");
+			HttpServletRequest httpServletRequest = (HttpServletRequest) containerRequest;
+			if (jsessionid == null || httpServletRequest.isRequestedSessionIdValid() == false)
+			{
+				sessionId = component.getSession().getId();
+			}
+		}
+		return sessionId;
 	}
 
 	@Override

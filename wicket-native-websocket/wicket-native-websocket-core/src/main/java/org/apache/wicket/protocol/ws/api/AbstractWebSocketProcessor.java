@@ -102,9 +102,8 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	public AbstractWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
 	{
 		this.sessionId = request.getSession(true).getId();
-
 		String pageId = request.getParameter("pageId");
-		resourceName = request.getParameter("resourceName");
+		this.resourceName = request.getParameter("resourceName");
 		if (Strings.isEmpty(pageId) && Strings.isEmpty(resourceName))
 		{
 			throw new IllegalArgumentException("The request should have either 'pageId' or 'resourceName' parameter!");
