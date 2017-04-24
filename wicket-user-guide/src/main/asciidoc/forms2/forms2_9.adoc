@@ -54,14 +54,7 @@ public class TemperatureDegreeField extends FormComponentPanel<Double> {
 	protected void onInitialize() {
 		super.onInitialize();	
 		
-		AbstractReadOnlyModel<String> labelModel=new AbstractReadOnlyModel<String>(){
-			@Override
-			public String getObject() {
-				if(getLocale().equals(Locale.US))
-					return "°F";
-				return "°C";
-			}
-		};
+		IModel<String> labelModel = () -> getLocale().equals(Locale.US) ? "°F" : "°C";
 		
 		add(new Label("mesuramentUnit", labelModel));
 		add(userDegree=new TextField<Double>("registeredTemperature", new 
