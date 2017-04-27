@@ -87,12 +87,26 @@
 
 		<!--  JETTY DEPENDENCIES FOR TESTING  -->
 		<dependency>
-			<groupId>org.eclipse.jetty.aggregate</groupId>
-			<artifactId>jetty-all</artifactId>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<scope>test</scope>
 			<version>${jetty9.version}</version>
-			<classifier>uber</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jmx</artifactId>
+			<version>${jetty.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+        <!-- uncomment if WebSocket support is needed
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>javax-websocket-server-impl</artifactId>
+			<version>${jetty.version}</version>
+			<scope>test</scope>
+		</dependency>
+        -->
 	</dependencies>
 	<build>
 		<resources>
@@ -132,7 +146,7 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.6.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>

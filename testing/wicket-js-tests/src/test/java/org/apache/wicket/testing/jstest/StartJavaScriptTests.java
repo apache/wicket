@@ -34,6 +34,9 @@ import org.eclipse.jetty.webapp.WebAppContext;
 /**
  * Separate startup class for people that want to run the examples directly. Use parameter
  * -Dcom.sun.management.jmxremote to startup JMX (and e.g. connect with jconsole).
+ *
+ *
+ * @see <a href="http://localhost:8080/ajax-tests/test/js/all.html?2.2.4">JavaScript tests</a>
  */
 public class StartJavaScriptTests
 {

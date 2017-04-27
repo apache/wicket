@@ -879,7 +879,7 @@
 
 	<session-config>
 		<session-timeout>5</session-timeout>
-        <!--<tracking-mode>URL</tracking-mode>-->
+		<!--<tracking-mode>URL</tracking-mode>-->
 	</session-config>
 
 </web-app>
