@@ -66,6 +66,26 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(p);
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6361
+	 */
+	@Test
+	public void dequeueComponentsOnInitialization()
+	{
+		TestPage p = new TestPage();
+		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
+		MarkupContainer a = new A(), b = new B(), c = new C();
+		
+		//components are queued before their nested container is added to the page.
+		//this caused a "Detach called on component...while it had a non-empty queue" before WICKET-6361 was fixed
+		b.queue(c);
+		a.add(b);
+		
+		p.add(a);
+
+		tester.startPage(p);
+	}
+	
 	/** {@code [a[b,c]] -> [a[b[c]]] } */
 	@Test
 	public void dequeue2()
