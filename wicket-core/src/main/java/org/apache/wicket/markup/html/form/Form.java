@@ -1233,11 +1233,11 @@ public class Form<T> extends WebMarkupContainer
 		buffer.append(HIDDEN_DIV_START);
 
 		// add an empty textfield (otherwise IE doesn't work)
-		buffer.append("<input type=\"text\" autocomplete=\"off\"/>");
+		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
 
 		// add the submitting component
 		final Component submittingComponent = (Component)defaultSubmittingComponent;
-		buffer.append("<input type=\"submit\" name=\"");
+		buffer.append("<input type=\"submit\" tabindex=\"-1\" name=\"");
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
