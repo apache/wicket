@@ -372,13 +372,11 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		private SessionEntry getSessionEntry(boolean create)
 		{
-			String attributeName = getAttributeName();
-			SessionEntry entry = (SessionEntry)getSessionAttribute(attributeName);
+			SessionEntry entry = (SessionEntry)getSessionAttribute(getAttributeName());
 			if (entry == null && create)
 			{
 				bind();
 				entry = new SessionEntry(applicationName, getSessionId());
-				setSessionAttribute(attributeName, entry);
 			}
 			return entry;
 		}
@@ -411,6 +409,7 @@ public class PageStoreManager extends AbstractPageManager
 					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
 					pageStore.storePage(entry.sessionId, page);
 				}
+				setSessionAttribute(getAttributeName(), entry);
 			}
 		}
 	}
