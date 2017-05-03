@@ -73,10 +73,11 @@ Please note that _HeaderResponseContainer_'s needs also a name for the correspon
 <html>
 
 <header>
-//no <script> tag here...
+<!-- no <script> tag here... -->
 </header>
 
 <body>
+<h1 id="click-me">Click me!</h1>
 <!-- here we will have our JavaScript tags -->
 <wicket:container wicket:id="someId"/> 
 </body>
@@ -99,7 +100,7 @@ The code of the home page is the following:
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(getClass(),
                 "javasciptLibrary.js")));
 
-        response.render(OnEventHeaderItem.forScript("'logo'", "click", "alert('Clicked me!')"));
+        response.render(OnEventHeaderItem.forScript("'click-me'", "click", "alert('Clicked me!')"));
     }
 ----
 
