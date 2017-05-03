@@ -167,7 +167,7 @@ public class MarkupFragment extends AbstractMarkupFragment
 	}
 
 	/**
-	 * @return The parent markup. Null if that is a a markup file.
+	 * @return The parent markup. Null if that is a markup file.
 	 */
 	private IMarkupFragment getParentMarkup()
 	{
@@ -194,7 +194,7 @@ public class MarkupFragment extends AbstractMarkupFragment
 		if (markupOnly == false)
 		{
 			buf.append(getRootMarkup().getMarkupResourceStream().toString());
-			buf.append("\n");
+			buf.append('\n');
 		}
 
 		for (int i = 0; i < size(); i++)
@@ -204,12 +204,26 @@ public class MarkupFragment extends AbstractMarkupFragment
 		return buf.toString();
 	}
 
-	/**
-	 * @see java.lang.Iterable#iterator()
-	 */
 	@Override
 	public Iterator<MarkupElement> iterator()
 	{
-		return getRootMarkup().iterator(startIndex, size);
+		return new Iterator<MarkupElement>() {
+			int index = 0;
+
+			@Override
+			public boolean hasNext() {
+				return index < size;
+			}
+
+			@Override
+			public MarkupElement next() {
+				return get(index++);
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException("Cannot remove");
+			}
+		};
 	}
 }
