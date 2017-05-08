@@ -1001,7 +1001,8 @@ public class JSONObject {
                     o instanceof Integer ||
                     o instanceof Long ||
                     o instanceof Short ||
-                    o instanceof String) {
+                    o instanceof String ||
+                    o instanceof JSONString) { // adding JSONString to list for compatibility with org.json
                 return o;
             }
             if (o.getClass().getPackage().getName().startsWith("java.") || o instanceof Enum<?>) {
