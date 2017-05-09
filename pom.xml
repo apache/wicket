@@ -1177,19 +1177,6 @@
 			</build>
 		</profile>
 		<profile>
-			<id>Java 8</id>
-			<activation>
-				<jdk>1.8</jdk>
-			</activation>
-			<properties>
-				<!-- Disable javadoc linter when building with Java 8
-				 http://mail-archives.apache.org/mod_mbox/maven-users/201403.mbox/%3CCANWgJS5xHWiGE+Lecey+mZVbj9Via4JUWsaBeZtQr2aQNebupA@mail.gmail.com%3E
-				 http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
-				 -->
-				<additionalparam>-Xdoclint:none</additionalparam>
-			</properties>
-		</profile>
-		<profile>
 			<id>buildbot</id>
 			<build>
 				<plugins>
