@@ -33,8 +33,8 @@ Depending on the web container that is used the application has to add a depende
 </dependency>
 ----
 
-NOTE: All web containers providing JSR356 implementation are built with Java 7. This is the reason why _wicket-native-websocket-javax_ module is available only with Wicket 7.x+. If your application runs with JRE 7.x then you can
-use _wicket-native-websocket-javax_ together with the latest version of Wicket 6.x. Beware that the API/implementation of _wicket-native-websocket-javax_ may change before Wicket 7.0.0 is released!
+NOTE: All web containers providing JSR356 implementation are built with Java 7. This is the reason why _wicket-native-websocket-javax_ module is available only with Wicket 7.x+. If your application runs with JRE 6.x then you can
+use _wicket-native-websocket-javax_ together with the latest version of Wicket 6.x.
 
 NOTE: The examples above show snippets for Maven's pom.xml but the application can use any other dependency management tool like http://www.gradle.org/[Gradle]
 
@@ -91,12 +91,12 @@ public class MyPage extends WebPage {
 }
 ----
 
-Use _message.getText()_ to read the message sent by the client and use _handler.push(String)_ to push a text message to the connected client. Additionally you can use _handler.add(Component...)_ to add Wicket components for re-render, _handler1.prependJavaScript(CharSequence)_ and _handler1.appendJavaScript(CharSequence)_ as you do with _AjaxRequestTarget_.
+Use _message.getText()_ to read the message sent by the client and use _handler.push(String)_ to push a text message to the connected client. Additionally you can use _handler.add(Component...)_ to add Wicket components for re-render, _handler.prependJavaScript(CharSequence)_ and _handler.appendJavaScript(CharSequence)_ as you do with _AjaxRequestTarget_.
 
 * *WebSocketResource*
 
 Wicket allows one thread at a time to use a page instance to simplify the usage of the pages in multithreaded enviroment. When a WebSocket message is sent to a page Wicket needs to acquire the lock to that page to be able to pass the _IWebSocketMessage_ to the _WebSocketBehavior_. This may be problematic when the application needs to send many messages from the client to the server.
-For this reason Wicket provides _WebSocketResource_ - an IResource implemetation that provides the same APIs as _WebSocketBehavior_. The benefit is that there is no need of synchronization as with the pages and the drawback is that _WebSocketRequesthandler1.add(Component...)_ method cannot be used because there is no access to the components in an _IResource_.
+For this reason Wicket provides _WebSocketResource_ - an IResource implemetation that provides the same APIs as _WebSocketBehavior_. The benefit is that there is no need of synchronization as with the pages and the drawback is that _WebSocketRequesthandler.add(Component...)_ method cannot be used because there is no access to the components in an _IResource_.
 
 To register such WebSocket resource add such line to _YourApplication1.init()_ method:
 [source,java]

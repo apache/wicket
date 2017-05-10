@@ -120,5 +120,5 @@ dynamicLabel.add(new AbstractAjaxTimerBehavior(Duration.seconds(3)) {
 add(dynamicLabel);
 ----
 
-NOTE: As side effect AJAX components and behaviors make their hosting page stateful. As a consequence they are unfit for those pages that must stay stateless. Project WicketStuff provides a module with a stateless version of the most common AJAX components and behaviors. You can find more informations on this module in Appendix B. 
+NOTE: By default AJAX components and behaviors are _stateful_, but as we will see very soon they can be easily turned to statelss if we need to use them in stateless pages.
 

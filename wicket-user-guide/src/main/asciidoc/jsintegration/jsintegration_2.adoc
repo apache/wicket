@@ -1,7 +1,7 @@
 
 
 
-Our new component will extend the a built-in text field _org.apache.wicket.extensions.markup.html.form.DateTextField_ which already uses a java.util.Date as model object and already performs conversion and validation for input values. Since the component must be self-contained, we must ensure that the JavaScript libraries it relies on (JQuery and JQuery UI) will be always available. 
+Our new component will extend the built-in text field _org.apache.wicket.extensions.markup.html.form.DateTextField_ which already uses a java.util.Date as model object and already performs conversion and validation for input values. Since the component must be self-contained, we must ensure that the JavaScript libraries it relies on (JQuery and JQuery UI) will be always available. 
 
 Starting from version 6.0 Wicket has adopted JQuery as backing JavaScript library so we can use the  version bundled with Wicket for our custom datepicker. 
 

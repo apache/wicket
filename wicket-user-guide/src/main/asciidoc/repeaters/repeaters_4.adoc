@@ -22,7 +22,7 @@ Class _org.apache.wicket.markup.repeater.data.DataView_ is the simplest pageable
 ----
 <table>
 	<tr>
-	   <th>Name</th><th>Surename</th><th>Address</th><th>Email</th>
+	   <th>Name</th><th>Surname</th><th>Address</th><th>Email</th>
 	</tr>
 	<tr wicket:id="rows">
 	   <td wicket:id="dataRow"></td>
@@ -45,7 +45,7 @@ DataView<Person> dataView = new DataView<Person>("rows", listDataProvider) {
     RepeatingView repeatingView = new RepeatingView("dataRow");
 
     repeatingView.add(new Label(repeatingView.newChildId(), person.getName()));
-    repeatingView.add(new Label(repeatingView.newChildId(), person.getSurename()));
+    repeatingView.add(new Label(repeatingView.newChildId(), person.getSurname()));
     repeatingView.add(new Label(repeatingView.newChildId(), person.getAddress()));    
     repeatingView.add(new Label(repeatingView.newChildId(), person.getEmail()));
     item.add(repeatingView); 
