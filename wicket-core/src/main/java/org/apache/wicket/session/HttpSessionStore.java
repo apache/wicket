@@ -88,7 +88,7 @@ public class HttpSessionStore implements ISessionStore
 	@Override
 	public final void bind(final Request request, final Session newSession)
 	{
-		if (getAttribute(request, Session.SESSION_ATTRIBUTE_NAME) != newSession)
+		if (getWicketSession(request) != newSession)
 		{
 			// call template method
 			onBind(request, newSession);
@@ -107,7 +107,7 @@ public class HttpSessionStore implements ISessionStore
 					new SessionBindingListener(applicationKey, newSession));
 
 				// register the session object itself
-				setAttribute(request, Session.SESSION_ATTRIBUTE_NAME, newSession);
+				setWicketSession(request, newSession);
 			}
 		}
 	}
@@ -115,14 +115,14 @@ public class HttpSessionStore implements ISessionStore
 	@Override
 	public void flushSession(Request request, Session session)
 	{
-		if (getAttribute(request, Session.SESSION_ATTRIBUTE_NAME) != session)
+		if (getWicketSession(request) != session)
 		{
 			// this session is not yet bound, bind it
 			bind(request, session);
 		}
 		else
 		{
-			setAttribute(request, Session.SESSION_ATTRIBUTE_NAME, session);
+			setWicketSession(request, session);
 		}
 	}
 
@@ -172,9 +172,31 @@ public class HttpSessionStore implements ISessionStore
 		String sessionId = getSessionId(request, false);
 		if (sessionId != null)
 		{
-			return (Session)getAttribute(request, Session.SESSION_ATTRIBUTE_NAME);
+			return getWicketSession(request);
 		}
 		return null;
+	}
+
+	/**
+	 * Reads the Wicket {@link Session} from the {@link HttpSession}'s attribute
+	 *
+	 * @param request The Wicket request
+	 * @return The Wicket Session or {@code null}
+	 */
+	protected Session getWicketSession(final Request request)
+	{
+		return (Session) getAttribute(request, Session.SESSION_ATTRIBUTE_NAME);
+	}
+
+	/**
+	 * Stores the Wicket {@link Session} in an attribute in the {@link HttpSession}
+	 *
+	 * @param request The Wicket request
+	 * @param session The Wicket session
+	 */
+	protected void setWicketSession(final Request request, final Session session)
+	{
+		setAttribute(request, Session.SESSION_ATTRIBUTE_NAME, session);
 	}
 
 	/**
