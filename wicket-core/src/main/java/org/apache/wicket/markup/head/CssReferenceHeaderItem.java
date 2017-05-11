@@ -18,6 +18,7 @@ package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
@@ -128,14 +129,18 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public int hashCode()
 	{
-		return getReference().hashCode();
+		return Objects.hash(super.hashCode(), reference, media, pageParameters);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		if (obj instanceof CssReferenceHeaderItem)
-			return ((CssReferenceHeaderItem)obj).getReference().equals(getReference());
-		return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		CssReferenceHeaderItem that = (CssReferenceHeaderItem) o;
+		return Objects.equals(reference, that.reference) &&
+				Objects.equals(media, that.media) &&
+				Objects.equals(pageParameters, that.pageParameters);
 	}
 }

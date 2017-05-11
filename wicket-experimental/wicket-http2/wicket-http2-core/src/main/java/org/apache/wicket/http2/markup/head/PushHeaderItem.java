@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -413,5 +414,23 @@ public class PushHeaderItem extends HeaderItem
 					request.getClass().getName());
 		}
 		return (HttpServletRequest)assumedHttpServletRequest;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PushHeaderItem that = (PushHeaderItem) o;
+		return Objects.equals(urls, that.urls) &&
+				Objects.equals(pageWebResponse, that.pageWebResponse) &&
+				Objects.equals(pageWebRequest, that.pageWebRequest) &&
+				Objects.equals(page, that.page);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(urls, pageWebResponse, pageWebRequest, page);
 	}
 }

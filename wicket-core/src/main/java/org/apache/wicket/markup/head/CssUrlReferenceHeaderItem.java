@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.UrlUtils;
@@ -90,14 +91,17 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	@Override
 	public int hashCode()
 	{
-		return getUrl().hashCode();
+		return Objects.hash(super.hashCode(), url, media);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		if (obj instanceof CssUrlReferenceHeaderItem)
-			return ((CssUrlReferenceHeaderItem)obj).getUrl().equals(getUrl());
-		return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		CssUrlReferenceHeaderItem that = (CssUrlReferenceHeaderItem) o;
+		return Objects.equals(url, that.url) &&
+				Objects.equals(media, that.media);
 	}
 }
