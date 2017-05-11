@@ -219,10 +219,28 @@ public class MetaDataHeaderItem extends HeaderItem
 
 		return headerItem;
 	}
-	
+
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		return obj instanceof MetaDataHeaderItem && ((MetaDataHeaderItem) obj).generateString().equals(generateString());
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		MetaDataHeaderItem that = (MetaDataHeaderItem) o;
+
+		if (tagAttributes != null ? !tagAttributes.equals(that.tagAttributes) : that.tagAttributes != null)
+			return false;
+		if (tagMinimizedAttributes != null ? !tagMinimizedAttributes.equals(that.tagMinimizedAttributes) : that.tagMinimizedAttributes != null)
+			return false;
+		return tagName != null ? tagName.equals(that.tagName) : that.tagName == null;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = tagAttributes != null ? tagAttributes.hashCode() : 0;
+		result = 31 * result + (tagMinimizedAttributes != null ? tagMinimizedAttributes.hashCode() : 0);
+		result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
+		return result;
 	}
 }

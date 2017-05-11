@@ -125,16 +125,26 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getReference().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		CssReferenceHeaderItem that = (CssReferenceHeaderItem) o;
+
+		if (reference != null ? !reference.equals(that.reference) : that.reference != null) return false;
+		if (media != null ? !media.equals(that.media) : that.media != null) return false;
+		return pageParameters != null ? pageParameters.equals(that.pageParameters) : that.pageParameters == null;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof CssReferenceHeaderItem)
-			return ((CssReferenceHeaderItem)obj).getReference().equals(getReference());
-		return false;
+		int result = super.hashCode();
+		result = 31 * result + (reference != null ? reference.hashCode() : 0);
+		result = 31 * result + (media != null ? media.hashCode() : 0);
+		result = 31 * result + (pageParameters != null ? pageParameters.hashCode() : 0);
+		return result;
 	}
 }

@@ -274,4 +274,21 @@ public abstract class CssHeaderItem extends HeaderItem
 		}
 		response.write("\n");
 	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		CssHeaderItem that = (CssHeaderItem) o;
+
+		return condition != null ? condition.equals(that.condition) : that.condition == null;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return condition != null ? condition.hashCode() : 0;
+	}
 }

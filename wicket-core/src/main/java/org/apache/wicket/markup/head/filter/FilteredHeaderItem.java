@@ -105,19 +105,23 @@ public class FilteredHeaderItem extends HeaderItem implements IHeaderItemWrapper
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getWrapped().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		FilteredHeaderItem that = (FilteredHeaderItem) o;
+
+		if (wrapped != null ? !wrapped.equals(that.wrapped) : that.wrapped != null) return false;
+		return filterName != null ? filterName.equals(that.filterName) : that.filterName == null;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof FilteredHeaderItem)
-		{
-			return ((FilteredHeaderItem)obj).getWrapped().equals(getWrapped());
-		}
-		return false;
+		int result = wrapped != null ? wrapped.hashCode() : 0;
+		result = 31 * result + (filterName != null ? filterName.hashCode() : 0);
+		return result;
 	}
 
 	@Override

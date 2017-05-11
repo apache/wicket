@@ -100,16 +100,24 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getJavaScript().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		JavaScriptContentHeaderItem that = (JavaScriptContentHeaderItem) o;
+
+		if (javaScript != null ? !javaScript.equals(that.javaScript) : that.javaScript != null) return false;
+		return id != null ? id.equals(that.id) : that.id == null;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof JavaScriptContentHeaderItem)
-			return ((JavaScriptContentHeaderItem)obj).getJavaScript().equals(getJavaScript());
-		return false;
+		int result = super.hashCode();
+		result = 31 * result + (javaScript != null ? javaScript.hashCode() : 0);
+		result = 31 * result + (id != null ? id.hashCode() : 0);
+		return result;
 	}
 }

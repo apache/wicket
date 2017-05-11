@@ -359,4 +359,21 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 			response.write("<![endif]-->\n");
 		}
 	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		JavaScriptHeaderItem that = (JavaScriptHeaderItem) o;
+
+		return condition != null ? condition.equals(that.condition) : that.condition == null;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return condition != null ? condition.hashCode() : 0;
+	}
 }

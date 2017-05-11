@@ -33,6 +33,7 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -54,7 +55,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 
 		private WrappedHeaderItem(OnDomReadyHeaderItem onDomReady)
 		{
-			item = onDomReady;
+			item = Args.notNull(onDomReady, "onDomReady");
 		}
 
 		@Override
@@ -89,6 +90,23 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 			ResourceReference wicketAjaxReference = Application.get().
 					getJavaScriptLibrarySettings().getWicketAjaxReference();
 			return Arrays.asList(JavaScriptHeaderItem.forReference(wicketAjaxReference));
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			WrappedHeaderItem that = (WrappedHeaderItem) o;
+
+			return item.equals(that.item);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return item.hashCode();
 		}
 	}
 

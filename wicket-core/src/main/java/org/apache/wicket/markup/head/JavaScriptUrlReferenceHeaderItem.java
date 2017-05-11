@@ -100,16 +100,24 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getUrl().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		JavaScriptUrlReferenceHeaderItem that = (JavaScriptUrlReferenceHeaderItem) o;
+
+		if (url != null ? !url.equals(that.url) : that.url != null) return false;
+		return id != null ? id.equals(that.id) : that.id == null;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof JavaScriptUrlReferenceHeaderItem)
-			return ((JavaScriptUrlReferenceHeaderItem)obj).getUrl().equals(getUrl());
-		return false;
+		int result = super.hashCode();
+		result = 31 * result + (url != null ? url.hashCode() : 0);
+		result = 31 * result + (id != null ? id.hashCode() : 0);
+		return result;
 	}
 }

@@ -153,21 +153,25 @@ public class OnEventHeaderItem extends HeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getTarget().hashCode() ^ getEvent().hashCode() ^ getJavaScript().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		OnEventHeaderItem that = (OnEventHeaderItem) o;
+
+		if (target != null ? !target.equals(that.target) : that.target != null) return false;
+		if (event != null ? !event.equals(that.event) : that.event != null) return false;
+		return javaScript != null ? javaScript.equals(that.javaScript) : that.javaScript == null;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof OnEventHeaderItem)
-		{
-			OnEventHeaderItem other = (OnEventHeaderItem)obj;
-			return other.getTarget().equals(getTarget()) && other.getEvent().equals(getEvent()) &&
-				other.getJavaScript().equals(getJavaScript());
-		}
-		return false;
+		int result = target != null ? target.hashCode() : 0;
+		result = 31 * result + (event != null ? event.hashCode() : 0);
+		result = 31 * result + (javaScript != null ? javaScript.hashCode() : 0);
+		return result;
 	}
 
 	@Override

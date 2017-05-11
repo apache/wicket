@@ -86,4 +86,26 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 		this.charset = charset;
 		return this;
 	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AbstractJavaScriptReferenceHeaderItem that = (AbstractJavaScriptReferenceHeaderItem) o;
+
+		if (async != that.async) return false;
+		if (defer != that.defer) return false;
+		return charset != null ? charset.equals(that.charset) : that.charset == null;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		int result = (async ? 1 : 0);
+		result = 31 * result + (defer ? 1 : 0);
+		result = 31 * result + (charset != null ? charset.hashCode() : 0);
+		return result;
+	}
 }

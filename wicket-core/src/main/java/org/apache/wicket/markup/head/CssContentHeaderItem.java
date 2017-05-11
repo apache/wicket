@@ -99,16 +99,22 @@ public class CssContentHeaderItem extends CssHeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getCss().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		CssContentHeaderItem that = (CssContentHeaderItem) o;
+
+		if (css != null ? !css.equals(that.css) : that.css != null) return false;
+		return id != null ? id.equals(that.id) : that.id == null;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof CssContentHeaderItem)
-			return ((CssContentHeaderItem)obj).getCss().equals(getCss());
-		return false;
+		int result = css != null ? css.hashCode() : 0;
+		result = 31 * result + (id != null ? id.hashCode() : 0);
+		return result;
 	}
 }

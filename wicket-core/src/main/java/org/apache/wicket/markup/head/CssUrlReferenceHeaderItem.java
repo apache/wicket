@@ -88,16 +88,24 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getUrl().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		CssUrlReferenceHeaderItem that = (CssUrlReferenceHeaderItem) o;
+
+		if (url != null ? !url.equals(that.url) : that.url != null) return false;
+		return media != null ? media.equals(that.media) : that.media == null;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof CssUrlReferenceHeaderItem)
-			return ((CssUrlReferenceHeaderItem)obj).getUrl().equals(getUrl());
-		return false;
+		int result = super.hashCode();
+		result = 31 * result + (url != null ? url.hashCode() : 0);
+		result = 31 * result + (media != null ? media.hashCode() : 0);
+		return result;
 	}
 }

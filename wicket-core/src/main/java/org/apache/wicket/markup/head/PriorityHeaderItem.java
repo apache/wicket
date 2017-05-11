@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * {@link HeaderItem} that has priority over other header items. {@code PriorityHeaderItem}s
@@ -40,7 +41,7 @@ public class PriorityHeaderItem extends HeaderItem implements IHeaderItemWrapper
 	 */
 	public PriorityHeaderItem(HeaderItem wrapped)
 	{
-		this.wrapped = wrapped;
+		this.wrapped = Args.notNull(wrapped, "wrapped");
 	}
 
 	/**
@@ -88,19 +89,20 @@ public class PriorityHeaderItem extends HeaderItem implements IHeaderItemWrapper
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getWrapped().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		PriorityHeaderItem that = (PriorityHeaderItem) o;
+
+		return wrapped.equals(that.wrapped);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof PriorityHeaderItem)
-		{
-			return ((PriorityHeaderItem)obj).getWrapped().equals(getWrapped());
-		}
-		return false;
+		return wrapped.hashCode();
 	}
 
 	@Override

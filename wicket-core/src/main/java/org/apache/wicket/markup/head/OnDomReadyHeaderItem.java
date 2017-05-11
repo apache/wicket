@@ -100,17 +100,20 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getJavaScript().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		OnDomReadyHeaderItem that = (OnDomReadyHeaderItem) o;
+
+		return javaScript != null ? javaScript.equals(that.javaScript) : that.javaScript == null;
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof OnDomReadyHeaderItem)
-			return ((OnDomReadyHeaderItem)obj).getJavaScript().equals(getJavaScript());
-		return false;
+		return javaScript != null ? javaScript.hashCode() : 0;
 	}
 
 	@Override
