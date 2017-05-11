@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.head;
 
+import java.util.Objects;
+
 /**
  * A {@link org.apache.wicket.markup.head.HeaderItem} that supports <em>async</em>,
  * <em>defer</em> and <em>charset</em> attributes
@@ -85,5 +87,22 @@ public abstract class AbstractJavaScriptReferenceHeaderItem extends JavaScriptHe
 	{
 		this.charset = charset;
 		return this;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AbstractJavaScriptReferenceHeaderItem that = (AbstractJavaScriptReferenceHeaderItem) o;
+		return async == that.async &&
+				defer == that.defer &&
+				Objects.equals(charset, that.charset);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(async, defer, charset);
 	}
 }

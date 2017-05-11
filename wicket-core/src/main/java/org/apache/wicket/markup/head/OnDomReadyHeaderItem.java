@@ -18,6 +18,7 @@ package org.apache.wicket.markup.head;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.Response;
@@ -103,15 +104,16 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	@Override
 	public int hashCode()
 	{
-		return getJavaScript().hashCode();
+		return Objects.hash(javaScript);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		if (obj instanceof OnDomReadyHeaderItem)
-			return ((OnDomReadyHeaderItem)obj).getJavaScript().equals(getJavaScript());
-		return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		OnDomReadyHeaderItem that = (OnDomReadyHeaderItem) o;
+		return Objects.equals(javaScript, that.javaScript);
 	}
 
 	@Override

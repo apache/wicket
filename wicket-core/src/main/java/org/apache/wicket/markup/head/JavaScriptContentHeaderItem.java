@@ -18,6 +18,7 @@ package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
@@ -91,16 +92,18 @@ public class JavaScriptContentHeaderItem extends JavaScriptHeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getJavaScript().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		JavaScriptContentHeaderItem that = (JavaScriptContentHeaderItem) o;
+		return Objects.equals(javaScript, that.javaScript);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof JavaScriptContentHeaderItem)
-			return ((JavaScriptContentHeaderItem)obj).getJavaScript().equals(getJavaScript());
-		return false;
+		return Objects.hash(super.hashCode(), javaScript);
 	}
 }

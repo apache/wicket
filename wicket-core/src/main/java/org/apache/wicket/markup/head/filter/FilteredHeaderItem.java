@@ -18,6 +18,7 @@ package org.apache.wicket.markup.head.filter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IWrappedHeaderItem;
@@ -109,17 +110,17 @@ public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	@Override
 	public int hashCode()
 	{
-		return getWrapped().hashCode();
+		return Objects.hash(wrapped, filterName);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		if (obj instanceof FilteredHeaderItem)
-		{
-			return ((FilteredHeaderItem)obj).getWrapped().equals(getWrapped());
-		}
-		return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		FilteredHeaderItem that = (FilteredHeaderItem) o;
+		return Objects.equals(wrapped, that.wrapped) &&
+				Objects.equals(filterName, that.filterName);
 	}
 
 	@Override

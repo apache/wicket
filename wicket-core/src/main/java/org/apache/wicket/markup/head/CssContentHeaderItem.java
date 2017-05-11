@@ -18,6 +18,7 @@ package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.core.util.string.CssUtils;
@@ -90,16 +91,17 @@ public class CssContentHeaderItem extends CssHeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getCss().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		CssContentHeaderItem that = (CssContentHeaderItem) o;
+		return Objects.equals(css, that.css);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof CssContentHeaderItem)
-			return ((CssContentHeaderItem)obj).getCss().equals(getCss());
-		return false;
+		return Objects.hash(css);
 	}
 }

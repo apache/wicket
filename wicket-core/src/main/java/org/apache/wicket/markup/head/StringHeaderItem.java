@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head;
 
 import java.util.Collections;
+import java.util.Objects;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.lang.Args;
@@ -80,16 +81,17 @@ public class StringHeaderItem extends HeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getString().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		StringHeaderItem that = (StringHeaderItem) o;
+		return Objects.equals(string, that.string);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof StringHeaderItem)
-			return ((StringHeaderItem)obj).getString().equals(getString());
-		return false;
+		return Objects.hash(string);
 	}
 }
