@@ -11,7 +11,7 @@ Before rendering any component Wicket must retrieve its markup calling method _g
  
 After the markup has been loaded by _MarkupFactory_, it's parsed with class _org.apache.wicket.markup.MarkupParser_. _MarkupFactory_ creates a new _MarkupParser_ with method _newMarkupParser(MarkupResourceStream resource)_. The effective markup parsing is performed with a chain of entities implementing interface _org.apache.wicket.markup.parser.IMarkupFilter_. The default set of _IMarkupFilters_ used by _MarkupParser_ takes care of different tasks such as HTML validation, comments removing, Wicket tags handling, etc... 
 
-To customize the set of _IMarkupFilters_S used in our application we can create a subclass of _MarkupFactory_ overriding method _newMarkupParser(MarkupResourceStream resource)_:
+To customize the set of _IMarkupFiltersS_ used in our application we can create a subclass of _MarkupFactory_ overriding method _newMarkupParser(MarkupResourceStream resource)_:
 
 [source,java]
 ----
@@ -39,7 +39,7 @@ public void init()
 }
 ----
 
-Usually we won't need to change the default configuration of _IMarkupFilters_S, but it's important to be aware of this internal mechanism before we talk about another advanced feature, which is building auto components resolvers.
+Usually we won't need to change the default configuration of _IMarkupFiltersS_, but it's important to be aware of this internal mechanism before we talk about another advanced feature, which is building auto components resolvers.
 
 === Auto components resolvers
 
@@ -68,7 +68,7 @@ public interface IComponentResolver extends IClusterable
 }
 ----
 
-Registered _IComponentResolver_s can be retrieved through Application's settings:
+Registered _IComponentResolverS_ can be retrieved through Application's settings:
 
 [source,java]
 ----

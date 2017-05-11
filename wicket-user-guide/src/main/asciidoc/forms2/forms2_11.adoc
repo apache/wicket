@@ -5,7 +5,7 @@ In this paragraph we will see which components can be used to handle HTML radio 
 
 image::../img/choice-form-screenshot.png[]
 
-A check box can be used as single component to set a boolean property. For this purpose Wicket provides the _org.apache.wicket.markup.html.form.CheckBox_ component which must be attached to <input type= ../>[checkbox] tag. In the next example (project SingleCheckBox) we will consider a form similar to the one used in <<modelsforms.adoc#_component_dropdownchoice,paragraph 11.5>> to edit a Person object, but with an additional checkbox to let the user decide if she wants to subscribe to our mailing list or not. The form uses the following bean as backing object:
+A check box can be used as single component to set a boolean property. For this purpose Wicket provides the _org.apache.wicket.markup.html.form.CheckBox_ component which must be attached to <input type="checkbox"/> tag. In the next example (project SingleCheckBox) we will consider a form similar to the one used in <<modelsforms.adoc#_component_dropdownchoice,paragraph 11.5>> to edit a Person object, but with an additional checkbox to let the user decide if she wants to subscribe to our mailing list or not. The form uses the following bean as backing object:
 
 [source,java]
 ----
@@ -117,7 +117,7 @@ image::../img/grouped-checkbox.png[]
 
 This component can be attached to a <div> tag or to a <span> tag. No specific content is required for this tag as it will be populated with the actual checkboxes. Since this component allows multiple selection, its model object is a list. In the example above we have used model class _org.apache.wicket.model.util.ListModel_ which is specifically designed to wrap a List object.
 
-By default CheckBoxMultipleChoice inserts a <br/> tag as suffix after each option. We can configure both the suffix and the prefix used by the component with the setPrefix and setSuffix methods.
+CheckBoxMultipleChoice can insert a prefix and a suffix before and after each option. To configure them we can use methods _setPrefix_ and _setSuffix_.
 
 When our options are more complex objects than simple strings, we can render them using an IChoiceRender, as we did for DropDownChoice in <<modelsforms.adoc#_component_dropdownchoice,paragraph 11.5>>:
 

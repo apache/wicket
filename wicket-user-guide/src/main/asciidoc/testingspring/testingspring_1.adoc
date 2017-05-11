@@ -47,7 +47,7 @@ The additional configuration part containing listener and context parameter defi
 </beans>
 ----
 
-or use powerful classpath scanning feature of the Spring framework and annotate the MyWebApplication implementation with the appropriate _\_Component_ annotation accordingly while enabling the Spring container to scan the according package(s) of your application for relevant bean definitions:
+or use powerful classpath scanning feature of the Spring framework and annotate the MyWebApplication implementation with the appropriate _Component_ annotation accordingly while enabling the Spring container to scan the according package(s) of your application for relevant bean definitions:
 
 [source,xml]
 ----
@@ -91,4 +91,4 @@ public class MyWebApplication extends WebApplication {
 }
 ----
 
-SpringComponentInjector provided by the Wicket framework enables you to get dependencies from the ApplicationContext directly injected into your Wicket components by simply annotating these with the according _\_SpringBean_ annotation.
+SpringComponentInjector provided by the Wicket framework enables you to get dependencies from the ApplicationContext directly injected into your Wicket components by simply annotating these with the according _SpringBean_ annotation.

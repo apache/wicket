@@ -32,7 +32,7 @@ public class EnterpriseMessage {
 }
 ----
 
-Please note that we have used annotation ManagedBean to decorate our object. Now to inject it into the home page we must add a field of type EnterpriseMessage and annotate it with annotation _EJB:
+Please note that we have used annotation ManagedBean to decorate our object. Now to inject it into the home page we must add a field of type EnterpriseMessage and annotate it with annotation _EJB_:
 
 [source,java]
 ----

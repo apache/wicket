@@ -35,7 +35,7 @@ The content of web.xml declares a servlet filter (class _org.apache.wicket.Proto
 
 Since this is a standard servlet filter we must map it to a specific set of URLs through the _<filter-mapping>_ tag). In the xml above we have mapped every URL to our Wicket filter.
 
-If we are using Servlet 3 or a later version, we can of course use a class in place of web.xml to configure our application. The following example uses annotation _WebFilter.
+If we are using Servlet 3 or a later version, we can of course use a class in place of web.xml to configure our application. The following example uses annotation _WebFilter_.
 
 [source,java]
 ----
