@@ -64,6 +64,7 @@ public class HTTP2Page extends WebPage
 Basically the resource is pushed before the actual response of the component is send to the client (browser) and because of this the client does not need to send an additional request.
 
 The PushHeaderItem behaves like explained in the following steps:
+
 * When a browser requests the page with an initial commit everything is going to be pushed with (200)
 * When a browser requests the page a second time resources are not pushed (304) not modified, because of the actual ResourceReferences headers
 * When a browser requests the page a second time and the markup of the page has changed everything is going to be pushed again (200)

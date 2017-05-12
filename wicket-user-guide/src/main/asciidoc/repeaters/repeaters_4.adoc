@@ -6,10 +6,11 @@ Wicket offers a number of components that should be used when we have to display
 All these components implement interface _org.apache.wicket.markup.html.navigation.paging.IPageable_ and use interface _IDataProvider_ (placed in package _org.apache.wicket.markup.repeater.data_) as data source. This interface is designed to support data paging. We will see an example of data paging later in <<repeaters.adoc#_pageable_repeaters,paragraph 13.4.2>>. 
 
 The methods defined by IDataProvider are the following:
-* iterator(long first, long count): returns an iterator over a subset of the entire dataset. The subset starts from the item at position first and includes all the next count items (i.e. it's the closed interval  <<_first,first+count>>
+
+* *iterator(long first, long count):* returns an iterator over a subset of the entire dataset. The subset starts from the item at position first and includes all the next count items (i.e. it's the closed interval  <<_first,first+count>>
 ).
-* size(): gets the size of the entire dataset. 
-* model(T object): this method is used to wrap an item returned by the iterator with a model. This can be necessary if, for example, we need to wrap items with a detachable model to prevent them from being serialized.
+* *size():* gets the size of the entire dataset. 
+* *model(T object):* this method is used to wrap an item returned by the iterator with a model. This can be necessary if, for example, we need to wrap items with a detachable model to prevent them from being serialized.
 
 Wicket already provides implementations of IDataProvider to work with a List as data source (ListDataProvider) and to support data sorting (SortableDataProvider).
 
