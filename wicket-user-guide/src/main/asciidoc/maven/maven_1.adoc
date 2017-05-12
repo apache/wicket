@@ -15,7 +15,7 @@ As pointed out in the note in <<helloWorld.adoc#_configuration_of_wicket_applica
 
 As we can read Wicket itself discourages us from using DEVELOPMENT mode into production environment. The running mode of our application can be configured in four different ways. The first one is adding a filter parameter inside deployment descriptor web.xml:
 
-[source,html]
+[source,xml]
 ----
 <filter>      
 	<filter-name>wicket.MyApp</filter-name>
@@ -31,7 +31,7 @@ As we can read Wicket itself discourages us from using DEVELOPMENT mode into pro
 </filter>
 ----
 
-The additional parameter is written in bold. The same parameter can be also expressed as context parameter:
+The additional parameter is named _configuration_. The same parameter can be also expressed as context parameter:
 
 [source,html]
 ----
@@ -41,7 +41,7 @@ The additional parameter is written in bold. The same parameter can be also expr
 </context-param>
 ----
 
-The third way to set the running mode is using system property wicket.configuration. This parameter can be specified in the command line that starts up the server:
+The third way to set the running mode is using system property _wicket.configuration_. This parameter can be specified in the command line that starts up the server:
 
 [source,java]
 ----

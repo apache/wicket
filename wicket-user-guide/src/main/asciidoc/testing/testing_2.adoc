@@ -37,8 +37,7 @@ The purpose of a HTML form is to collect user input. _FormTester_ comes with the
 * *setValue(String checkboxId, boolean value)*: sets the value of a given _CheckBox_ component.
 * *setFile(String formComponentId, File file, String contentType)*: sets a _File_ object on a _FileUploadField_ component.
 * *select(String formComponentId, int index)*: selects an option among a list of possible options owned by a component. It supports components that are subclasses of _AbstractChoice_ along with _RadioGroup_ and _CheckGroup_. 
-* *selectMultiple(String formComponentId, int <<_>>
- indexes)*: selects all the options corresponding to the given array of indexes. It can be used with multiple-choice components like _CheckGroup_ or _ListMultipleChoice_.
+* *selectMultiple(String formComponentId, int[] indexes)*: selects all the options corresponding to the given array of indexes. It can be used with multiple-choice components like _CheckGroup_ or _ListMultipleChoice_.
 
 _setValue_ is used inside method _insertUsernamePassword_ to set the username and password fields of the form used in project _StatelessLoginForm_:
 
