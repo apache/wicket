@@ -979,6 +979,8 @@ public class JSONObject {
             }
             if (o.getClass().getPackage().getName().startsWith("java.")) {
                 return o.toString();
+            } else {
+                return new JSONObject(o);
             }
         } catch (Exception ignored) {
         }
