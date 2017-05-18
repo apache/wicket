@@ -2,7 +2,8 @@
 To create a server specific http/2 push support of the Wicket PushBuilder API just follow these steps:
 
 1. Add the following dependency to your projects pom.xml (and of course adjust the version)
-[source,java]
+
+[source,xml]
 ----
 <dependency>
 	<groupId>org.apache.wicket.experimental.wicket8</groupId>
@@ -17,6 +18,7 @@ To create a server specific http/2 push support of the Wicket PushBuilder API ju
 2. Add a single line with the name of the _IInitializer_ class example: _org.apache.wicket.http2.Initializer_ to the created file
 
 3. Implement your own server specific PushBuilder class which implements the interface  _org.apache.wicket.http2.markup.head.PushBuilder_ This is an example how it was done for jetty:
+
 [source,java]
 ----
 public class Jetty9PushBuilder implements PushBuilder
@@ -38,6 +40,7 @@ public class Jetty9PushBuilder implements PushBuilder
 ----
 [arabic, start=5]
 1. Implement the class within the package _org.apache.wicket.http2.Initializer_ and add your own server specific PushBuilder class to the Http2Settings. This is an example how it was done for jetty:
+
 [source,java]
 ----
 public class Initializer implements IInitializer

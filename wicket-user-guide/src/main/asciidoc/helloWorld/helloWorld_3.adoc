@@ -55,8 +55,7 @@ Here is the HTML markup for _HomePage_ (file HomePage.html):
 
 We can see that the _wicket:id_ attribute is set according to the value of the component id. If we run this example we will see the text _Hello WicketWorld!_ Inside a _<div>_ tag.
 
-NOTE: _Label_ replaces the original content of its tag (in our example _ <<_Label's message goes here>>
-_) with the string passed as value (_Hello WicketWorld!_ in our example).
+NOTE: _Label_ replaces the original content of its tag (in our example _[Label's message goes here]_) with the string passed as value (_Hello WicketWorld!_ in our example)
 
 WARNING: If we specify a _wicket:id_ attribute for a tag without adding the corresponding component in our Java code, Wicket will throw a _ComponentNotFound_ Exception.  On the contrary if we add a component in our Java code without specifying a corresponding _wicket:id_ attribute in our markup, Wicket will throw a _WicketRuntimeException_.
 
