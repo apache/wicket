@@ -1672,7 +1672,7 @@ public class BaseWicketTester
 		Component component = getComponentFromLastRenderedPage(path, false);
 		if (component == null)
 		{
-			result = Result.fail("path: '" + path + "' does no exist for page: " +
+			result = Result.fail("path: '" + path + "' does not exist for page: " +
 				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		else
@@ -1698,7 +1698,7 @@ public class BaseWicketTester
 		Component component = getComponentFromLastRenderedPage(path, false);
 		if (component == null)
 		{
-			result = Result.fail("path: '" + path + "' does no exist for page: " +
+			result = Result.fail("path: '" + path + "' does not exist for page: " +
 				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		else
