@@ -3,7 +3,7 @@ This stage is triggered each time a component is rendered by Wicket, typically w
 
 === Method onConfigure
 
-Method _onConfigure()_ has been introduced in order to provide a good point to manage the component states such as its visibility or enabled state. This method is called before the render phase starts. As stated in <<keepControl.adoc#_hiding_or_disabling_a_component,chapter 6.1>>, _isVisible_ and _isEnabled_ are called multiple times when a page or a component is rendered, so it's highly recommended not to directly override these method, but rather to use _onConfigure_ to change component states. On the contrary method _onBeforeRender_ (see the next paragraph) is not indicated for this task because it will not be invoked if component visibility is set to false.
+Method _onConfigure()_ has been introduced in order to provide a good point to manage the component states such as its visibility or enabled state. This method is called before the render phase starts. As stated in <<_hiding_or_disabling_a_component,chapter 6.1>>, _isVisible_ and _isEnabled_ are called multiple times when a page or a component is rendered, so it's highly recommended not to directly override these method, but rather to use _onConfigure_ to change component states. On the contrary method _onBeforeRender_ (see the next paragraph) is not indicated for this task because it will not be invoked if component visibility is set to false.
 
 === Method onBeforeRender
 
@@ -104,7 +104,7 @@ public class HomePage extends WebPage {
 
 Just like we do with _onInitialize_, if we decide to override _onComponentTag_ we must remember to call the same method of the super class because also this class may also customize the tag. Overriding _onComponentTag_ is perfectly fine if we have to customize the tag of a specific component, but if we wanted to reuse the code across different components we should consider to use a behavior in place of this hook method.
 
-We have already seen in <<keepControl.adoc#_modifing_tag_attributes,chapter 6.2>> how to use behavior _AttributeModifier_ to manipulate the tag's attribute. In <<advanced.adoc#_enriching_components_with_behaviors,chapter 19.1>> we will see that base class _Behavior_ offers also a callback method named _onComponentTag(ComponentTag, Component)_ that can be used in place of the hook method _onComponentTag(ComponentTag)_.
+We have already seen in <<_modifing_tag_attributes,chapter 6.2>> how to use behavior _AttributeModifier_ to manipulate the tag's attribute. In <<_enriching_components_with_behaviors,chapter 19.1>> we will see that base class _Behavior_ offers also a callback method named _onComponentTag(ComponentTag, Component)_ that can be used in place of the hook method _onComponentTag(ComponentTag)_.
 
 === Methods onComponentTagBody
 

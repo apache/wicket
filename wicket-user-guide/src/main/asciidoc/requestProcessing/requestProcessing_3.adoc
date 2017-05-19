@@ -5,7 +5,7 @@ Class _org.apache.wicket.request.cycle.RequestCycle_ is the entity in charge of 
 
 Method _createRequestCycle_ is declared as final, so we can't override it to return a custom subclass of _RequestCycle_. Instead, we must build a request cycle provider implementing interface _org.apache.wicket.IRequestCycleProvider_, and then we must tell our application class to use it via the _setRequestCycleProvider_ method.
 
-The current running request cycle can be retrieved at any time by calling its static method _RequestCycle.get()_. Strictly speaking this method returns the request cycle associated with the current (or local) thread, which is the thread that is serving the current request. A similar _get()_ method is also implemented in classes _org.apache.wicket.Application_ (as we have seen in <<helloWorld.adoc#_configuration_of_wicket_applications,paragraph 4.2.2>>) and _org.apache.wicket.Session_ in order to get the application and the session in use by the current thread.
+The current running request cycle can be retrieved at any time by calling its static method _RequestCycle.get()_. Strictly speaking this method returns the request cycle associated with the current (or local) thread, which is the thread that is serving the current request. A similar _get()_ method is also implemented in classes _org.apache.wicket.Application_ (as we have seen in <<_configuration_of_wicket_applications,paragraph 4.2.2>>) and _org.apache.wicket.Session_ in order to get the application and the session in use by the current thread.
 
 NOTE: The implementation of the get method takes advantage of the standard class _java.lang.ThreadLocal_. See its JavaDoc for an introduction to local-thread variables.
 
@@ -45,7 +45,7 @@ The overloaded _urlFor_ method from above also has a corresponding version that 
 
 === Method setResponsePage
 
-The _RequestCycle_ class contains the implementation of the _setResponsePage_ method we use to redirect a user to a specific page (see <<helloWorld.adoc#_wicket_links,paragraph 4.4>>). The namesake method of class _org.apache.wicket.Component_ is just a convenience method that internally invokes the actual implementation on current request cycle:
+The _RequestCycle_ class contains the implementation of the _setResponsePage_ method we use to redirect a user to a specific page (see <<_wicket_links,paragraph 4.4>>). The namesake method of class _org.apache.wicket.Component_ is just a convenience method that internally invokes the actual implementation on current request cycle:
 
 [source,java]
 ----

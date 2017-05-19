@@ -22,7 +22,7 @@ image::../img/page-panel-hierarchy.png[]
 
 _Illustration: Hierarchy of WebPage and Panel classes_
 
-Subclasses of _MarkupContainer_ can contain children components that can be added with method _add(Component...)_ (seen in <<whyLearn.adoc#_benefits_of_component_oriented_frameworks_for_web_development,chapter 3.3>>). _MarkupContainer_ implements a full set of methods to manage children components. The basic operations we can do on them are:
+Subclasses of _MarkupContainer_ can contain children components that can be added with method _add(Component...)_ (seen in <<_benefits_of_component_oriented_frameworks_for_web_development,chapter 3.3>>). _MarkupContainer_ implements a full set of methods to manage children components. The basic operations we can do on them are:
 
 * add one or more children components (with method _add_).
 * remove a specific child component (with method _remove_).

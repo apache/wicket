@@ -1,5 +1,5 @@
 
-In chapter <<urls.adoc#_generating_structured_and_clear_urls,10.6>> we have seen how to encrypt URLs using _CryptoMapper_ request mapper. To encrypt/decrypt page URLs _CryptoMapper_ uses an instance of _org.apache.wicket.util.crypt.ICrypt_ interface:
+In chapter <<_generating_structured_and_clear_urls,10.6>> we have seen how to encrypt URLs using _CryptoMapper_ request mapper. To encrypt/decrypt page URLs _CryptoMapper_ uses an instance of _org.apache.wicket.util.crypt.ICrypt_ interface:
 
 [source,java]
 ----

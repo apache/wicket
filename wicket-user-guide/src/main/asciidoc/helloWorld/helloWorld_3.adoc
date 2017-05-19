@@ -30,7 +30,7 @@ public class HomePage extends WebPage {
 ----
 
 Apart from subclassing _WebPage_, _HomePage_ defines a constructor that adds a _Label_ component to  itself. 
-Method _add(Component component)_ is inherited from ancestor class _org.apache.wicket.MarkupContainer_ and is used to add children components to a web page. We'll see more about _MarkupContainer_ later in <<layout.adoc#_here_comes_the_inheritance,chapter 5.2>>.
+Method _add(Component component)_ is inherited from ancestor class _org.apache.wicket.MarkupContainer_ and is used to add children components to a web page. We'll see more about _MarkupContainer_ later in <<_here_comes_the_inheritance,chapter 5.2>>.
 Class _org.apache.wicket.markup.html.basic.Label_ is the simplest component shipped with Wicket. It just inserts a string (the second argument of its constructor) inside the corresponding HTML tag.
 Just like any other Wicket component, _Label_ needs a textual id (_'helloMessage'_ in our example) to be instantiated. At runtime Wicket will use this value to find the HTML tag we want to bind to the component. This tag must have a special attribute called _wicket:id_ and its value must be identical to the component id (comparison is case-sensitive!).
 
