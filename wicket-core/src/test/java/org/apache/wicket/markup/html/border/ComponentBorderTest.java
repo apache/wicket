@@ -141,4 +141,14 @@ public class ComponentBorderTest extends WicketTestCase
 		//https://issues.apache.org/jira/browse/WICKET-6303
 		assertTrue(page.isBehaviorRendered());
 	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6374
+	 * @throws Exception
+	 */
+	@Test
+    public void borderExtendingMarkup() throws Exception
+    {
+        tester.startComponentInPage(ExtendedBorder.class);
+    }
 }
