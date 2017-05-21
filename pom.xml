@@ -878,8 +878,7 @@
 							<link>http://docs.oracle.com/javase/8/docs/api/</link>
 						</links>
 						<failOnError>false</failOnError>
-						<additionalparam>-Xdoclint:none</additionalparam>
-						<additionalparam>--allow-script-in-comments</additionalparam>
+						<additionalparam>-Xdoclint:none --allow-script-in-comments</additionalparam>
 					</configuration>
 					<executions>
 						<execution>
