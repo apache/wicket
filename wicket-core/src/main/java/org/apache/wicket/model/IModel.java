@@ -18,6 +18,7 @@ package org.apache.wicket.model;
 
 
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableBiFunction;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.danekja.java.util.function.serializable.SerializablePredicate;
@@ -179,6 +180,7 @@ public interface IModel<T> extends IDetachable
 	 * @param mapper
 	 *            a mapper, to be applied to the contained object
 	 * @return a new IModel
+	 * @see LambdaModel#of(IModel, SerializableFunction, SerializableBiConsumer)
 	 */
 	default <R> IModel<R> flatMap(SerializableFunction<? super T, IModel<R>> mapper)
 	{

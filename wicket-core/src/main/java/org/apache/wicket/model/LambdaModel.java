@@ -187,6 +187,7 @@ public abstract class LambdaModel<T> implements IModel<T>
 	 *            model object type
 	 * 
 	 * @return model
+	 * @see IModel#flatMap(SerializableFunction)
 	 */
 	public static <X, R> IModel<R> of(IModel<X> target, SerializableFunction<X, R> getter,
 		SerializableBiConsumer<X, R> setter)
