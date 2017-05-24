@@ -63,10 +63,10 @@ public abstract class LambdaModel<T> implements IModel<T>
 	 *            used to get value
 	 * @return model
 	 *
-	 * @param <T>
+	 * @param <R>
 	 *            model object type
 	 */
-	public static <T> IModel<T> of(SerializableSupplier<T> getter)
+	public static <R> IModel<R> of(SerializableSupplier<R> getter)
 	{
 		return getter::get;
 	}
@@ -86,28 +86,28 @@ public abstract class LambdaModel<T> implements IModel<T>
 	 *            used to set value
 	 * @return model
 	 *
-	 * @param <T>
+	 * @param <R>
 	 *            model object type
 	 */
-	public static <T> IModel<T> of(SerializableSupplier<T> getter, SerializableConsumer<T> setter)
+	public static <R> IModel<R> of(SerializableSupplier<R> getter, SerializableConsumer<R> setter)
 	{
 		Args.notNull(getter, "getter");
 		Args.notNull(setter, "setter");
 
-		return new LambdaModel<T>()
+		return new LambdaModel<R>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public T getObject()
+			public R getObject()
 			{
 				return getter.get();
 			}
 
 			@Override
-			public void setObject(T t)
+			public void setObject(R r)
 			{
-				setter.accept(t);
+				setter.accept(r);
 			}
 		};
 	}
@@ -130,22 +130,22 @@ public abstract class LambdaModel<T> implements IModel<T>
 	 *            used to get a value
 	 * @param <X>
 	 *            target model object type
-	 * @param <T>
+	 * @param <R>
 	 *            model object type
 	 * 
 	 * @return model
 	 */
-	public static <X, T> IModel<T> of(IModel<X> target, SerializableFunction<X, T> getter)
+	public static <X, R> IModel<R> of(IModel<X> target, SerializableFunction<X, R> getter)
 	{
 		Args.notNull(target, "target");
 		Args.notNull(getter, "getter");
 
-		return new LambdaModel<T>()
+		return new LambdaModel<R>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public T getObject()
+			public R getObject()
 			{
 				X x = target.getObject();
 				if (x == null)
@@ -183,24 +183,24 @@ public abstract class LambdaModel<T> implements IModel<T>
 	 *
 	 * @param <X>
 	 *            target model object type
-	 * @param <T>
+	 * @param <R>
 	 *            model object type
 	 * 
 	 * @return model
 	 */
-	public static <X, T> IModel<T> of(IModel<X> target, SerializableFunction<X, T> getter,
-		SerializableBiConsumer<X, T> setter)
+	public static <X, R> IModel<R> of(IModel<X> target, SerializableFunction<X, R> getter,
+		SerializableBiConsumer<X, R> setter)
 	{
 		Args.notNull(target, "target");
 		Args.notNull(getter, "getter");
 		Args.notNull(setter, "setter");
 
-		return new LambdaModel<T>()
+		return new LambdaModel<R>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public T getObject()
+			public R getObject()
 			{
 				X x = target.getObject();
 				if (x == null)
@@ -211,12 +211,12 @@ public abstract class LambdaModel<T> implements IModel<T>
 			}
 
 			@Override
-			public void setObject(T t)
+			public void setObject(R r)
 			{
 				X x = target.getObject();
 				if (x != null)
 				{
-					setter.accept(x, t);
+					setter.accept(x, r);
 				}
 			}
 
