@@ -28,10 +28,10 @@ import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.MarkupStream;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.DisabledAttributeLinkBehavior;
-import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.protocol.http.RequestUtils;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -517,41 +517,6 @@ public final class AutoLinkResolver implements IComponentResolver
 	}
 
 	/**
-	 * Autolink components delegate component resolution to their parent components. Reason:
-	 * autolink tags don't have wicket:id and users wouldn't know where to add the component to.
-	 * 
-	 * @author Juergen Donnerstag
-	 */
-	private final static class AutolinkExternalLink extends ExternalLink
-		implements
-			IComponentResolver
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct
-		 * 
-		 * @param id
-		 * @param href
-		 */
-		public AutolinkExternalLink(final String id, final String href)
-		{
-			super(id, href);
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.resolver.IComponentResolver#resolve(org.apache.wicket.MarkupContainer,
-		 *      org.apache.wicket.markup.MarkupStream, org.apache.wicket.markup.ComponentTag)
-		 */
-		@Override
-		public Component resolve(MarkupContainer container, MarkupStream markupStream,
-			ComponentTag tag)
-		{
-			return getParent().get(tag.getId());
-		}
-	}
-
-	/**
 	 * Resolver that returns the proper attribute value from a component tag reflecting a URL
 	 * reference such as src or href.
 	 */
@@ -903,7 +868,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			// resolving didn't have the desired result or there was no delegate
 			// found; fallback on the default resolving which is a simple
 			// component that leaves the tag unchanged
-			autoComponent = new WebMarkupContainer(componentId);
+			autoComponent = new TransparentWebMarkupContainer(componentId);
 		}
 
 		return autoComponent;
