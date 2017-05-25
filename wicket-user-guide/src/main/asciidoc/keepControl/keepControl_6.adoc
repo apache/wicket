@@ -7,16 +7,16 @@ Considering the markup of a generic panel, we can use _<wicket:head>_ tag in thi
 ----
 <wicket:head>
 	<script type="text/javascript">
-	  	function myPanelFunction(){
-	  	}
-	  </script>
+	   function myPanelFunction(){
+	   }
+	</script>
 	
 	<style>
         .myPanelClass{
 	  	font-weight: bold;
 	  	color: red;
 	  }	 
-       </style>
+    </style>
 </wicket:head>
 <body>
 	<wicket:panel>

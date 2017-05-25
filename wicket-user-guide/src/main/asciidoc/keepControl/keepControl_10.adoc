@@ -11,10 +11,10 @@ Component _org.apache.wicket.markup.html.border.Border_ is a special purpose con
     <wicket:border>
 	 <div>
 	    foo<br />
-    <wicket:body/><br />
-           buz <br />
+            <wicket:body/><br />
+         buz <br />
 
-  </div>
+     </div>
     </wicket:border>
     <!--  everything below </wicket:border> tag will be discarded...-->
 </body>
@@ -71,8 +71,8 @@ Border Markup:
     <wicket:border>
 	 <div>
 	    <div wicket:id="childMarkup"></div>
-    <wicket:body/><br />
-         </div>
+         <wicket:body/><br />
+      </div>
     </wicket:border>
 </body>
 </html>

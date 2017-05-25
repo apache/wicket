@@ -30,47 +30,47 @@ WARNING: The following model is provided for example purposes only and is not in
 ----
 public class JpaLoadableModel<T> extends LoadableDetachableModel<T> {
   
-  private EntityManagerFactory entityManagerFactory;
-  private Class<T> entityClass;
-  private Serializable identifier;
-  private List<Object> constructorParams;
+    private EntityManagerFactory entityManagerFactory;
+    private Class<T> entityClass;
+    private Serializable identifier;
+    private List<Object> constructorParams;
   
-  public JpaLoadableModel(EntityManagerFactory entityManagerFactory, T entity) {
+    public JpaLoadableModel(EntityManagerFactory entityManagerFactory, T entity) {
      
-	super();
+        super();
      
-	PersistenceUnitUtil util = entityManagerFactory.getPersistenceUnitUtil();
+        PersistenceUnitUtil util = entityManagerFactory.getPersistenceUnitUtil();
 	      
-		this.entityManagerFactory = entityManagerFactory;
-	    this.entityClass = (Class<T>) entity.getClass();
-	    this.identifier = (Serializable) util.getIdentifier(entity);
+        this.entityManagerFactory = entityManagerFactory;
+        this.entityClass = (Class<T>) entity.getClass();
+        this.identifier = (Serializable) util.getIdentifier(entity);
 
-	    setObject(entity);
-	}
+        setObject(entity);
+    }
 
-	@Override
-	protected T load() {
-	   T entity = null;
+    @Override
+    protected T load() {
+        T entity = null;
 
-	   if(identifier != null) {  
-	       EntityManager entityManager = entityManagerFactory.createEntityManager();
-	       entity = entityManager.find(entityClass, identifier);
-	     }
-	     return entity;
-	   }
+        if(identifier != null) {  
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            entity = entityManager.find(entityClass, identifier);
+        }
+        return entity;
+    }
 
-	@Override
-	protected void onDetach() {
-	   super.onDetach();
+    @Override
+    protected void onDetach() {
+        super.onDetach();
 
-	     T entity = getObject();
-	     PersistenceUnitUtil persistenceUtil = entityManagerFactory.getPersistenceUnitUtil();
+        T entity = getObject();
+        PersistenceUnitUtil persistenceUtil = entityManagerFactory.getPersistenceUnitUtil();
 
-	     if(entity == null) return;
+        if(entity == null) return;
 
-	     identifier = (Serializable) persistenceUtil.getIdentifier(entity);    
-	  }
-	}
+        identifier = (Serializable) persistenceUtil.getIdentifier(entity);    
+    }
+}
 ----
 
 The constructor of the model takes as input two parameters: an implementation of the JPA interface  javax.persistence.EntityManagerFactory to manage JPA entities and the entity that must be handled by this model. Inside its constructor the model saves the class of the entity and its id (which could be null if the entity has not been persisted yet). These two informations are required to retrieve the entity at a later time and are used by the load method.
