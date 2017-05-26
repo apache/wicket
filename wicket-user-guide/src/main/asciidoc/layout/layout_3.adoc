@@ -19,16 +19,16 @@ we can build a panel called _HeaderPanel_ with a related markup file called Head
 <body>
    <wicket:panel>
       <table width="100%" style="border: 0px none;">
-      <tbody>
-    <tr>
-    <td>
-       <img alt="Jug4Tenda" src="wicketLayout_files/logo_jug4tenda.gif">
-     </td>
-      <td>
-    <h1>Gestione Anagrafica</h1>
-   </td>   
-      </tr>
-      </tbody>
+          <tbody>
+            <tr>
+              <td>
+                <img alt="Jug4Tenda" src="wicketLayout_files/logo_jug4tenda.gif">
+              </td>
+              <td>
+                <h1>Gestione Anagrafica</h1>
+              </td>   
+             </tr>
+          </tbody>
       </table>   
    </wicket:panel>
 </body>
@@ -101,15 +101,15 @@ public class JugTemplate extends WebPage {
 	private Component menuPanel;
 	private Component footerPanel;
  
-              public JugTemplate(){
+    public JugTemplate(){
 		add(headerPanel = new HeaderPanel("headerPanel"));
 		add(menuPanel = new MenuPanel("menuPanel"));
 		add(footerPanel = new FooterPanel("footerPanel"));
 		add(new Label(CONTENT_ID, "Put your content here"));
 	}
               
-             //getters for layout areas
-       //... 
+    //getters for layout areas
+    //... 
 }
 ----
 

@@ -58,7 +58,7 @@ While panels and pages have much in common, there are some notable differences b
 <body>
    <wicket:panel>
       <!-- Your markup goes here -->
-       </wicket:panel>
+   </wicket:panel>
 </body>
 </html>
 ----

@@ -39,8 +39,9 @@ If we are using Servlet 3 or a later version, we can of course use a class in pl
 
 [source,java]
 ----
-@WebFilter(value = "/*", initParams = { @WebInitParam(name = "applicationClassName", value = "com.mycompany.WicketApplication"), 
-				@WebInitParam(name="filterMappingUrlPattern", value="/*") })
+@WebFilter(value = "/*", initParams = { 
+             @WebInitParam(name = "applicationClassName", value = "com.mycompany.WicketApplication"), 
+			@WebInitParam(name="filterMappingUrlPattern", value="/*") })
 public class ProjectFilter extends WicketFilter {
 	
 }
