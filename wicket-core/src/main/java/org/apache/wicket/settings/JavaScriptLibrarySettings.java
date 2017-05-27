@@ -38,7 +38,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class JavaScriptLibrarySettings
 {
-	private ResourceReference jQueryReference = DynamicJQueryResourceReference.get();
+	private ResourceReference jQueryReference = DynamicJQueryResourceReference.getV2();
 
 	private ResourceReference wicketEventReference = WicketEventJQueryResourceReference.get();
 
