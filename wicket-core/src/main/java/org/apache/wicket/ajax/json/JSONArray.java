@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.wicket.WicketRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Note: this class was written without inspecting the non-free org.json sourcecode.
 
@@ -50,7 +52,8 @@ import org.apache.wicket.WicketRuntimeException;
  * prohibit it" for further information.
  */
 public class JSONArray {
-
+	private final static Logger log = LoggerFactory.getLogger(JSONArray.class);
+	
     private final List<Object> values;
 
     /**
@@ -714,11 +717,10 @@ public class JSONArray {
     @Override
     public String toString() {
         try {
-            JSONStringer stringer = new JSONStringer();
-            writeTo(stringer);
-            return stringer.toString();
+            return toString(new JSONStringer());
         } catch (JSONException e) {
-            return null;
+        	log.error("Unexpected exception", e);
+        	return null;
         }
     }
 
@@ -737,17 +739,23 @@ public class JSONArray {
      * @throws JSONException Only if there is a coding error.
      */
     public String toString(int indentSpaces) throws JSONException {
-        JSONStringer stringer = new JSONStringer(indentSpaces);
-        writeTo(stringer);
-        return stringer.toString();
+        return toString(new JSONStringer(indentSpaces));
     }
 
-    void writeTo(JSONStringer stringer) throws JSONException {
+    /**
+     * Encodes this array using {@link JSONStringer} provided
+     *
+     * @param stringer - {@link JSONStringer} to be used for serialization
+     * @return The string representation of this.
+     * @throws JSONException On internal errors. Shouldn't happen.
+     */
+    public String toString(JSONStringer stringer) throws JSONException {
         stringer.array();
         for (Object value : values) {
             stringer.value(value);
         }
         stringer.endArray();
+        return stringer.toString();
     }
 
     @Override
@@ -767,11 +775,11 @@ public class JSONArray {
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 
-    public JSONArray put(Map map){
+    public JSONArray put(Map<?, ?> map){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 
-    public JSONArray put(int integer, Map map){
+    public JSONArray put(int integer, Map<?, ?> map){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 }

@@ -19,6 +19,7 @@ package org.apache.wicket.ajax.json;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 // Note: this class was written without inspecting the non-free org.json sourcecode.
 
@@ -58,12 +59,12 @@ import java.util.List;
  * Item 17, "Design and Document or inheritance or else prohibit it" for further
  * information.
  */
-public class JSONStringer extends JSONWriter{
+public class JSONStringer extends JSONWriter {
 
     /**
      * The output data, containing at most one top-level array or object.
      */
-    final StringBuilder out = new StringBuilder();
+    final protected StringBuilder out = new StringBuilder();
 
     /**
      * Lexical scoping elements within this stringer, necessary to insert the
@@ -237,19 +238,24 @@ public class JSONStringer extends JSONWriter{
         }
 
         if (value instanceof JSONArray) {
-            ((JSONArray) value).writeTo(this);
+            ((JSONArray) value).toString(this);
             return this;
 
         } else if (value instanceof JSONObject) {
-            ((JSONObject) value).writeTo(this);
+            ((JSONObject) value).toString(this);
             return this;
         }
 
         beforeValue();
 
+        if (value instanceof JSONString) {
+          out.append(((JSONString) value).toJSONString());
+          return this;
+        }
+
         if (value == null
-                || value instanceof Boolean
-                || value == JSONObject.NULL) {
+              || value instanceof Boolean
+              || value == JSONObject.NULL) {
             out.append(value);
 
         } else if (value instanceof Number) {
@@ -258,7 +264,7 @@ public class JSONStringer extends JSONWriter{
         } else {
             // Hack to make it possible that the value is not surrounded by quotes. (Used for JavaScript function calls)
             // Example: { "name": "testkey", "value": window.myfunction() }
-            if (value.getClass().getSimpleName().contains("JsonFunction")) {
+            if (value.getClass().getSimpleName().contains("JSONFunction")) {
                 // note that no escaping of quotes (or anything else) is done in this case.
                 // that is fine because the only way to get to this point is to
                 // explicitly put a special kind of object into the JSON data structure.
@@ -317,6 +323,20 @@ public class JSONStringer extends JSONWriter{
         }
         beforeValue();
         out.append(value);
+        return this;
+    }
+
+    /**
+     * Encodes {@code key}/{@code value} pair to this stringer.
+     *
+     * @param entry The entry to encode.
+     * @return this stringer.
+     * @throws JSONException If we have an internal error. Shouldn't happen.
+     */
+    public JSONStringer entry(Map.Entry<String, Object> entry) {
+        if (!JSONObject.NULL.equals(entry.getValue())) {
+            this.key(entry.getKey()).value(entry.getValue());
+        }
         return this;
     }
 
@@ -393,6 +413,18 @@ public class JSONStringer extends JSONWriter{
     }
 
     /**
+     * Creates String representation of the key (property name) to this stringer
+     * Override this method to provide your own representation of the name.
+     *
+     * @param name the name of the forthcoming value.
+     * @return this stringer.
+     */
+    protected JSONStringer createKey(String name) {
+        string(name);
+        return this;
+    }
+
+    /**
      * Encodes the key (property name) to this stringer.
      *
      * @param name the name of the forthcoming value. May not be null.
@@ -404,8 +436,7 @@ public class JSONStringer extends JSONWriter{
             throw new JSONException("Names must be non-null");
         }
         beforeKey();
-        string(name);
-        return this;
+        return createKey(name);
     }
 
     /**

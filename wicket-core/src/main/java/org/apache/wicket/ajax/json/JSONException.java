@@ -41,17 +41,21 @@ package org.apache.wicket.ajax.json;
  *     }
  * }</pre>
  */
-public class JSONException extends RuntimeException {
+public class JSONException extends RuntimeException
+{
 
-    public JSONException(String s) {
-        super(s);
-    }
+	public JSONException(String s)
+	{
+		super(s);
+	}
 
-    public JSONException(Throwable cause) {
-        super(cause);
-    }
+	public JSONException(Throwable cause)
+	{
+		super(cause);
+	}
 
-    public JSONException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public JSONException(String message, Throwable cause)
+	{
+		super(message, cause);
+	}
 }
