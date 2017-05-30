@@ -780,11 +780,10 @@
 					// A file download popup will appear but the page in the browser won't change.
 					this.success(context);
 
-					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
-					    rhttps = /^https:\/\//; // checks whether the string starts with https://
+					var withScheme  = /^[a-z][a-z0-9+.-]*:\/\//;  // checks whether the string starts with a scheme
 
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
-					if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
+					if (redirectUrl.charAt(0) === '/' || withScheme.test(redirectUrl)) {
 						context.isRedirecting = true;
 						Wicket.Ajax.redirect(redirectUrl);
 					}
