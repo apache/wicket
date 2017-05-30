@@ -50,13 +50,21 @@
 				var self = this,
 					url,
 					protocol,
-					WWS = Wicket.WebSocket;
+					WWS = Wicket.WebSocket,
+					port = WWS.port || document.location.port,
+					securePort = WWS.securePort || document.location.port,
+					_port;
 
 				protocol = document.location.protocol
 					.replace('https:', 'wss:')
 					.replace('http:', 'ws:');
 
-				url = protocol + '//' + document.location.host + WWS.contextPath + WWS.filterPrefix + '/wicket/websocket';
+				if ('wss:' === protocol) {
+					_port = securePort ? ":" + securePort : '';
+				} else {
+					_port = port ? ":" + port : '';
+				}
+				url = protocol + '//' + document.location.hostname + _port + WWS.contextPath + WWS.filterPrefix + '/wicket/websocket';
 
 				if (WWS.sessionId !== '') {
 					url += ';jsessionid=' + encodeURIComponent(WWS.sessionId);
