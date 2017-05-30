@@ -10,9 +10,9 @@ Component _org.apache.wicket.markup.html.border.Border_ is a special purpose con
     <!--  everything above <wicket:border> tag will be discarded...-->
     <wicket:border>
 	 <div>
-	    foo<br />
-            <wicket:body/><br />
-         buz <br />
+        foo<br />
+        <wicket:body/><br />
+        buz <br />
 
      </div>
     </wicket:border>
