@@ -100,6 +100,11 @@ public class BaseWebSocketBehavior extends Behavior
 		Args.notNull(baseUrl, "baseUrl");
 		variables.put("baseUrl", baseUrl);
 
+		Integer port = getPort(webSocketSettings);
+		variables.put("port", port);
+		Integer securePort = getSecurePort(webSocketSettings);
+		variables.put("securePort", securePort);
+
 		CharSequence contextPath = getContextPath(webSocketSettings);
 		Args.notNull(contextPath, "contextPath");
 		variables.put("contextPath", contextPath);
@@ -114,6 +119,16 @@ public class BaseWebSocketBehavior extends Behavior
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
 
 		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));
+	}
+
+	protected Integer getPort(WebSocketSettings webSocketSettings)
+	{
+		return webSocketSettings.getPort();
+	}
+
+	protected Integer getSecurePort(WebSocketSettings webSocketSettings)
+	{
+		return webSocketSettings.getSecurePort();
 	}
 
 	protected CharSequence getFilterPrefix(final WebSocketSettings webSocketSettings) {

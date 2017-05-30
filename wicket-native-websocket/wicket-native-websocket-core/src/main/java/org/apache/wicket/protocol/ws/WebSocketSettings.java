@@ -39,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -79,6 +79,8 @@ public class WebSocketSettings
 	private final AtomicReference<CharSequence> filterPrefix = new AtomicReference<>();
 	private final AtomicReference<CharSequence> contextPath = new AtomicReference<>();
 	private final AtomicReference<CharSequence> baseUrl = new AtomicReference<>();
+	private final AtomicInteger port = new AtomicInteger();
+	private final AtomicInteger securePort = new AtomicInteger();
 
 	/**
 	 * Holds this WebSocketSettings in the Application's metadata.
@@ -308,6 +310,44 @@ public class WebSocketSettings
 			return Strings.escapeMarkup(_baseUrl.toString());
 		}
 		return baseUrl.get();
+	}
+
+	/**
+	 * Sets the port that should be used for <code>ws:</code> connections.
+	 * If unset then the current HTTP port will be used.
+	 *
+	 * @param wsPort The custom port for WS connections
+	 */
+	public void setPort(int wsPort)
+	{
+		this.port.set(wsPort);
+	}
+
+	/**
+	 * @return The custom port for WS connections
+	 */
+	public Integer getPort()
+	{
+		return port.get();
+	}
+
+	/**
+	 * Sets the port that should be used for <code>wss:</code> connections.
+	 * If unset then the current HTTPS port will be used.
+	 *
+	 * @param wssPort The custom port for WSS connections
+	 */
+	public void setSecurePort(int wssPort)
+	{
+		this.securePort.set(wssPort);
+	}
+
+	/**
+	 * @return The custom port for WSS connections
+	 */
+	public Integer getSecurePort()
+	{
+		return securePort.get();
 	}
 
 	/**

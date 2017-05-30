@@ -20,6 +20,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.https.HttpsConfig;
 import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.protocol.ws.javax.app.charts.ChartWebSocketResource;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
 
 /**
  * Application object for your web application. If you want to run this application without deploying, run the Start class.
@@ -51,5 +52,14 @@ public class JSR356Application extends WebApplication
 		setRootRequestMapper(new HttpsMapper(getRootRequestMapper(), new HttpsConfig()));
 
 		getSharedResources().add(ChartWebSocketResource.NAME, new ChartWebSocketResource());
+
+		if (System.getenv("OPENSHIFT_APP_NAME") != null)
+		{
+			// OpenShift uses special proxy for WebSocket connections
+			// https://blog.openshift.com/paas-websockets/
+			final WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(this);
+			webSocketSettings.setPort(8000);
+			webSocketSettings.setSecurePort(8443);
+		}
 	}
 }
