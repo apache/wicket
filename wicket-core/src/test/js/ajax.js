@@ -1404,7 +1404,6 @@ jQuery(document).ready(function() {
 					"readyState": 4,
 					getResponseHeader: function (headerName) {
 						if ('Ajax-Location' === headerName) {
-							Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
 							return 'http://a.b.c';
 						}
 						return jqXHR.getResponseHeader(headerName);
@@ -1441,7 +1440,6 @@ jQuery(document).ready(function() {
 					"readyState": 4,
 					getResponseHeader: function (headerName) {
 						if ('Ajax-Location' === headerName) {
-							Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
 							return 'chrome-extensions://a.b.c';
 						}
 						return jqXHR.getResponseHeader(headerName);
@@ -1477,7 +1475,6 @@ jQuery(document).ready(function() {
 					"readyState": 4,
 					getResponseHeader: function (headerName) {
 						if ('Ajax-Location' === headerName) {
-							Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
 							return 'location-without-scheme';
 						}
 						return jqXHR.getResponseHeader(headerName);
