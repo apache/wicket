@@ -181,10 +181,7 @@ public class DiskDataStore implements IDataStore
 		SessionEntry sessionEntry = getSessionEntry(sessionId, true);
 		if (sessionEntry != null)
 		{
-			if (log.isDebugEnabled())
-			{
-				log.debug("Storing data for page with id '{}' in session with id '{}'", id, sessionId);
-			}
+			log.debug("Storing data for page with id '{}' in session with id '{}'", id, sessionId);
 			sessionEntry.savePage(id, data);
 		}
 	}
@@ -262,8 +259,7 @@ public class DiskDataStore implements IDataStore
 				ObjectOutputStream oos = new ObjectOutputStream(stream);
 				try
 				{
-					Map<String, SessionEntry> map = new HashMap<String, SessionEntry>(
-						sessionEntryMap.size());
+					Map<String, SessionEntry> map = new HashMap<>(sessionEntryMap.size());
 					for (Entry<String, SessionEntry> e : sessionEntryMap.entrySet())
 					{
 						if (e.getValue().unbound == false)

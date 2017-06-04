@@ -88,8 +88,8 @@ public class AsynchronousDataStore implements IDataStore
 	public AsynchronousDataStore(final IDataStore dataStore, final int capacity)
 	{
 		this.dataStore = dataStore;
-		entries = new LinkedBlockingQueue<Entry>(capacity);
-		entryMap = new ConcurrentHashMap<String, Entry>();
+		entries = new LinkedBlockingQueue<>(capacity);
+		entryMap = new ConcurrentHashMap<>();
 
 		PageSavingRunnable savingRunnable = new PageSavingRunnable(dataStore, entries, entryMap);
 		pageSavingThread = new Thread(savingRunnable, "Wicket-PageSavingThread");
