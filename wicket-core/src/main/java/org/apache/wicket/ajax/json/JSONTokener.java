@@ -765,11 +765,19 @@ public class JSONTokener
 
 	// Methods removed due to switch to open-json
 
+	/**
+	 * @deprecated since 6.27.0/7.7.0 for legal reasons.
+	 */
+	@Deprecated
 	public boolean end()
 	{
 		throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
 	}
 
+	/**
+	 * @deprecated since 6.27.0/7.7.0 for legal reasons.
+	 */
+	@Deprecated
 	public JSONTokener(InputStream inputStream)
 	{
 		throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);

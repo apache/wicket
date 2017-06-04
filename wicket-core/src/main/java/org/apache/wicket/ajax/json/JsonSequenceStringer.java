@@ -19,6 +19,10 @@ package org.apache.wicket.ajax.json;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.io.StringBufferWriter;
 
+/**
+ * @deprecated since 6.27.0/7.7.0 for legal reasons.
+ */
+@Deprecated
 @SuppressWarnings("javadoc")
 public class JsonSequenceStringer extends JSONWriter
 {
