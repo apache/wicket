@@ -4,7 +4,11 @@ import java.io.Writer;
 
 import org.apache.wicket.WicketRuntimeException;
 
+/**
+ * @deprecated since 6.27.0/7.7.0 for legal reasons. Use {@link JSONStringer} instead.
+ */
 @SuppressWarnings("javadoc")
+@Deprecated
 public class JSONWriter
 {
 

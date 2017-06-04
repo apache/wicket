@@ -770,15 +770,26 @@ public class JSONArray {
     }
     
     // Methods removed due to switch to open-json
-
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public Writer write(Writer writer){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public JSONArray put(Map<?, ?> map){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public JSONArray put(int integer, Map<?, ?> map){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }

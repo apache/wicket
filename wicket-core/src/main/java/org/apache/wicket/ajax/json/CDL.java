@@ -2,7 +2,11 @@ package org.apache.wicket.ajax.json;
 
 import org.apache.wicket.WicketRuntimeException;
 
+/**
+ * @deprecated since 6.27.0/7.7.0 for legal reasons.
+ */
 @SuppressWarnings("javadoc")
+@Deprecated
 public class CDL
 {
 

@@ -1016,55 +1016,106 @@ public class JSONObject {
     }
     
 // Methods removed due to switch to open-json
-    
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public Writer write(Writer writer){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public String valueToString(Object object){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public void testValidity(Object object){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public Object stringToValue(String string){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public Writer quote(String string, Writer writer){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public JSONObject putOnce(String string, Object object){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public JSONObject put(String string, Map map){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public JSONObject put(String string, Collection collection){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public JSONObject increment(String string){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public String[] getNames(Object object){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public String doubleToString(double dou){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
-    
+
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public JSONObject(String string, Locale locale){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
 
+    /**
+     * @deprecated since 6.27.0/7.7.0 for legal reasons.
+     */
+    @Deprecated
     public JSONObject(Object object, String[] stringarr){
     	throw new WicketRuntimeException(JsonConstants.OPEN_JSON_EXCEPTION);
     }
