@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -92,6 +93,16 @@ public class PageStoreManager extends AbstractPageManager
 
 		private transient List<IManageablePage> sessionCache;
 		private transient List<Object> afterReadObject;
+
+		/**
+		 * A flag indicating whether this session entry has been re-set in the Session.
+		 * Web containers intercept {@link javax.servlet.http.HttpSession#setAttribute(String, Object)}
+		 * to detect changes and replicate the session. If the attribute has been already
+		 * bound in the session then it will be first unbound and then re-bound again.
+		 * This flag helps us to detect <em>update</em> operations and skip the default behavior
+		 * of {@link #valueUnbound(HttpSessionBindingEvent)}.
+		 */
+		private final AtomicBoolean updating = new AtomicBoolean(false);
 
 		/**
 		 * Construct.
@@ -311,6 +322,12 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		public void valueUnbound(HttpSessionBindingEvent event)
 		{
+			if (updating.compareAndSet(true, false))
+			{
+				// The entry has been updated. Do not remove the data
+				return;
+			}
+
 			// WICKET-5164 use the original sessionId
 			IPageStore store = getPageStore();
 			// store might be null if destroyed already
@@ -410,6 +427,7 @@ public class PageStoreManager extends AbstractPageManager
 					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
 					pageStore.storePage(entry.sessionId, page);
 				}
+				entry.updating.set(true);
 				setSessionAttribute(getAttributeName(), entry);
 			}
 		}
