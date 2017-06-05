@@ -376,18 +376,20 @@
 			var attrs = {
 				u: callbackUrl,
 				pre: [ function (attributes) {
-					// since attrs.c is not set, we have to check existence by ourself
-					if (!Wicket.$$(elementId)) {
+					var input = Wicket.$(elementId);
+					if (!input) {
+						// WICKET-6366 input might no longer be on page
 						return false;
 					}
 					
 					var activeIsInitial = (document.activeElement === initialElement);
-					var elementVal =  Wicket.$(elementId).value;
-					var hasMinimumLength = elementVal.length >= minInputLength;
+					var hasMinimumLength = input.value.length >= minInputLength;
 					var result = hasMinimumLength && activeIsInitial;
+					
 					if (!result) {
 						hideAutoComplete();
 					}
+					
 					return result;
 				}],
 				ep: {},
@@ -676,7 +678,7 @@
 			}
 
 			if(elementCount>0){
-				if(cfg.preselect === true){
+				if (cfg.preselect === true){
 					var selectedIndex = defaultSelection?defaultSelection:0;
 					for(var ec = 0; ec < elementCount; ec++) {
 						var selectableElement = selectableElements[ec];
@@ -718,8 +720,12 @@
 		function scheduleEmptyCheck() {
 			window.setTimeout(function() {
 				var input=Wicket.$(elementId);
-				if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
-					hideAutoComplete();
+				
+				// WICKET-6366 input might no longer be on page
+				if (input) {
+					if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
+						hideAutoComplete();
+					}
 				}
 			}, 100);
 		}
