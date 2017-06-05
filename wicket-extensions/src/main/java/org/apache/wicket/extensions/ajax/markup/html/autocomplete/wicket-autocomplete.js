@@ -357,9 +357,14 @@
 
 			attrs.pre = attrs.pre || [];
 			attrs.pre.push(function (attributes) {
+				var input = Wicket.$(elementId);
+				if (!input) {
+					// WICKET-6366 input might no longer be on page
+					return false;
+				}
+				
 				var activeIsInitial = (document.activeElement === initialElement);
-				var elementVal = Wicket.$(elementId).value;
-				var hasMinimumLength = elementVal.length >= minInputLength;
+				var hasMinimumLength = input.value.length >= minInputLength;
 			
 				var result = hasMinimumLength && activeIsInitial;
 					
@@ -682,8 +687,12 @@
 		function scheduleEmptyCheck() {
 			window.setTimeout(function() {
 				var input=Wicket.$(elementId);
-				if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
-					hideAutoComplete();
+				
+				// WICKET-6366 input might no longer be on page
+				if (input) {
+					if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
+						hideAutoComplete();
+					}
 				}
 			}, 100);
 		}
