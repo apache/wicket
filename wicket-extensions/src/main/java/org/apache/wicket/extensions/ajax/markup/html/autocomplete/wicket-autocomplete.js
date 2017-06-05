@@ -358,6 +358,12 @@
 			attrs.pre = attrs.pre || [];
 			attrs.pre.push(function (attributes) {
 				var activeIsInitial = (document.activeElement === initialElement);
+
+				// In case component removed before request is about to execute; see WICKET-6366
+				if(!Wicket.$(elementId)) {
+                    return false;
+                }
+
 				var elementVal = Wicket.$(elementId).value;
 				var hasMinimumLength = elementVal.length >= minInputLength;
 			
@@ -682,7 +688,8 @@
 		function scheduleEmptyCheck() {
 			window.setTimeout(function() {
 				var input=Wicket.$(elementId);
-				if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
+                // See WICKET-6366
+				if (!cfg.showListOnEmptyInput && (!input || input.value === null || input.value === "")) {
 					hideAutoComplete();
 				}
 			}, 100);
