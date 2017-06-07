@@ -329,14 +329,8 @@ public class WebPageRenderer extends PageRenderer
 		return (compatibleProtocols(currentUrl.getProtocol(), targetUrl.getProtocol())) &&
 				(neverRedirect(getRedirectPolicy())
 			|| ((isOnePassRender() && notForcedRedirect(getRedirectPolicy())) || (targetUrl
-				.equals(currentUrl) && notNewAndNotStatelessPage(isNewPageInstance(),
-				isPageStateless()))) || (targetUrl.equals(currentUrl) && isRedirectToRender())
+				.equals(currentUrl) && (!isNewPageInstance() && !isPageStateless()))) || (targetUrl.equals(currentUrl) && isRedirectToRender())
 			|| (shouldPreserveClientUrl(cycle) && notForcedRedirect(getRedirectPolicy())));
-	}
-
-	private static boolean notNewAndNotStatelessPage(boolean newPageInstance, boolean pageStateless)
-	{
-		return !newPageInstance && !pageStateless;
 	}
 
 	private static boolean neverRedirect(RedirectPolicy redirectPolicy)
