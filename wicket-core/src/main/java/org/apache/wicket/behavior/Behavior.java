@@ -28,6 +28,7 @@ import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.danekja.java.util.function.serializable.SerializableBiConsumer;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 
 /**
@@ -329,5 +330,33 @@ public abstract class Behavior
 			}
 		};
 	}
+	
+
+	/**
+	 * Creates a {@link Behavior} that uses the given {@code SerializableConsumer consumer} to do
+	 * something with the component during the onConfigure() phase.
+	 *
+	 * <p>
+	 * Usage:<br/>
+	 * <code>component.add(onConfigure(component -> component.setVisible(true)));</code>
+	 * </p>
+	 *
+	 * @param onConfigureConsumer
+	 *            the {@code SerializableConsumer} that accepts the {@link Component}
+	 * @return The created behavior
+	 */
+	public static Behavior onConfigure(SerializableConsumer<Component> onConfigureConsumer)
+	{
+		Args.notNull(onConfigureConsumer, "onConfigureConsumer");
+
+		return new Behavior()
+		{
+			@Override
+			public void onConfigure(Component component)
+			{
+				onConfigureConsumer.accept(component);
+			}
+		};
+	}	
 
 }
