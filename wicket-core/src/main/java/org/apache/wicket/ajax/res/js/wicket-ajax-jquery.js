@@ -2112,9 +2112,9 @@
 						var css = Wicket.Head.createElement("link");
 
 						// copy supplied attributes only.
-						var attributes = $(node).prop("attributes");
-						var $css = $(css);
-						$.each(attributes, function() {
+						var attributes = jQuery(node).prop("attributes");
+						var $css = jQuery(css);
+						jQuery.each(attributes, function() {
 							$css.attr(this.name, this.value);
 						});
 
