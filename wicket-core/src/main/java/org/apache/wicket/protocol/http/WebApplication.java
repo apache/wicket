@@ -16,18 +16,6 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.function.Function;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -80,8 +68,20 @@ import org.apache.wicket.util.lang.PackageName;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.IModificationWatcher;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Locale;
+import java.util.function.Function;
 
 
 /**
@@ -1074,4 +1074,39 @@ public abstract class WebApplication extends Application
 	{
 		return true;
 	}
+
+	/**
+	 * Returns a new web application.
+	 * @param homePageClass Home page class
+	 * @return new web application
+	 */
+	public static WebApplication newWebApp(final Class<? extends Page> homePageClass) {
+		return newWebApp(homePageClass, null);
+	}
+
+	/**
+	 * Returns a new web application.
+	 * @param homePageClass Home page class
+	 * @param initConsumer  Lambda for initializing the web application
+	 * @return new web application
+	 */
+	public static WebApplication newWebApp(final Class<? extends Page> homePageClass, final SerializableConsumer<WebApplication> initConsumer) {
+		return new WebApplication() {
+
+			@Override
+			public Class<? extends Page> getHomePage() {
+				return homePageClass;
+			}
+
+			@Override
+			protected void init() {
+				super.init();
+				if (initConsumer != null) {
+					initConsumer.accept(this);
+				}
+			}
+
+		};
+	}
+
 }
