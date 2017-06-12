@@ -7,7 +7,7 @@ Avoid unwrapping models within the constructor hierarchy, i.e. do not call _IMod
 
 [source,java]
 ----
-new Form("register") {
+new Form<Void>("register") {
     public void onSubmit() {
         // correct, unwrap model in an event call
         Registration reg = registrationModel.getObject()

@@ -8,7 +8,7 @@ That said, you shouldn't be surprised to find an abstract method called _onClick
 ----
 public class HomePage extends WebPage {
 	public HomePage(){
-		add(new Link("id"){
+		add(new Link<Void>("id"){
 			@Override
 			public void onClick() {
 				//link code goes here
@@ -24,7 +24,7 @@ By default after _onClick_ has been executed, Wicket will send back to the curre
 ----
 public class HomePage extends WebPage {
 	public HomePage(){
-		add(new Link("id"){
+		add(new Link<Void>("id"){
 			@Override
 			public void onClick() {			   
                          //we redirect browser to another page.

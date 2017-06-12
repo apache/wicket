@@ -66,7 +66,7 @@ Here is the whole code of the page (except for the loadPersons() method):
 [source,java]
 ----
 public class PersonListDetails extends WebPage {
-  private Form form;
+  private Form<Void> form;
   private DropDownChoice<Person> personsList;
   
   public PersonListDetails(){
@@ -78,7 +78,7 @@ public class PersonListDetails extends WebPage {
 
     add(personsList);
 
-    form = new Form("form", new CompoundPropertyModel<Person>(listModel));    
+    form = new Form<>("form", new CompoundPropertyModel<Person>(listModel));    
     form.add(new TextField("name"));
     form.add(new TextField("surname"));
     form.add(new TextField("address"));
@@ -87,8 +87,8 @@ public class PersonListDetails extends WebPage {
     add(form);
   }
 
-       //loadPersons()
-       //...
+   //loadPersons()
+   //...
 }
 ----
 

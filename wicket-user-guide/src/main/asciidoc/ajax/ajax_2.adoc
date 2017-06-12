@@ -107,7 +107,7 @@ public HomePage(final PageParameters parameters) {
    	modalWindow.setTitle("Modal window");
     	
    	add(modalWindow);
-   	add(new AjaxLink("openWindow") {
+   	add(new AjaxLink<Void>("openWindow") {
 	  @Override
 	  public void onClick(AjaxRequestTarget target) {
 		modalWindow.show(target);				
@@ -341,7 +341,7 @@ label.setVisible(false);
 label.setOutputMarkupPlaceholderTag(true);
 add(label);
 //...
-new AjaxLink("ajaxLink"){
+new AjaxLink<Void>("ajaxLink"){
 	@Override
 	public void onClick(AjaxRequestTarget target) {
 	    //turn label to visible

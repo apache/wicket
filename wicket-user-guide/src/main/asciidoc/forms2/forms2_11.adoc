@@ -69,13 +69,13 @@ The markup and the code for this example are the following:
 [source,java]
 ----
 public HomePage(final PageParameters parameters) {
-    	RegistrationInfo registrtionInfo = new RegistrationInfo();
-    	registrtionInfo.setSubscribeList(true);
+    RegistrationInfo registrtionInfo = new RegistrationInfo();
+    registrtionInfo.setSubscribeList(true);
     	
-    	Form form = new Form("form", 
+    Form<Void> form = new Form<>("form", 
     			new CompoundPropertyModel<RegistrationInfo>(registrtionInfo));		
 		
-    	form.add(new TextField("name"));
+    form.add(new TextField("name"));
 	form.add(new TextField("surname"));
 	form.add(new TextField("address"));
 	form.add(new TextField("email"));

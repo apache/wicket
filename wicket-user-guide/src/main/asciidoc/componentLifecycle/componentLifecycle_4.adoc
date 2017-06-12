@@ -23,7 +23,7 @@ public class HomePage extends WebPage
 		secondLabel = new Label("label", "Second label");
 		
 		add(firstLabel);
-		add(new Link("reload"){
+		add(new Link<Void>("reload"){
 			@Override
 			public void onClick() {
 			}

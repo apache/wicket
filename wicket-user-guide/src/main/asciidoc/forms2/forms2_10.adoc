@@ -47,7 +47,7 @@ public class HomePage extends WebPage {
     private String username;
     
     public HomePage(final PageParameters parameters) {
-       StatelessForm form = new StatelessForm("form"){
+       StatelessForm<Void> form = new StatelessForm<Void>("form"){
          @Override
          protected void onSubmit() {
             //sign in if username and password are “user”

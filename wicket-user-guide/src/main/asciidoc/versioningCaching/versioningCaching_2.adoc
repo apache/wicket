@@ -25,7 +25,7 @@ public class HomePage extends WebPage
 		
 		add(firstLabel);
 		
-		add(new Link("reload"){
+		add(new Link<Void>("reload"){
 			@Override
 			public void onClick() {				
 				if(getPage().contains(firstLabel, true))

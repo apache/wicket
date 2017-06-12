@@ -35,7 +35,7 @@ public class HomePage extends BootstrapBasePage {
         
         fileUploadField = new FileUploadField("fileUploadField");
         
-        Form form = new Form("form"){
+        Form<Void> form = new Form<Void>("form"){
             @Override
             protected void onSubmit() {
               super.onSubmit();

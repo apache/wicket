@@ -101,7 +101,7 @@ List<Locale> locales = Arrays.asList(Locale.ENGLISH, Locale.CHINESE, Locale.GERM
 final DropDownChoice<Locale> changeLocale = 
              new DropDownChoice<Locale>("changeLocale", new Model<Locale>(), locales);
 		
-StatelessForm form = new StatelessForm("form"){
+StatelessForm<Void> form = new StatelessForm<Void>("form"){
 	@Override
 	protected void onSubmit() {
 		Session.get().setLocale(changeLocale.getModelObject());

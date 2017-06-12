@@ -49,7 +49,7 @@ Page code:
 
 [source,java]
 ----
-Form form = new Form("form");
+Form<Void> form = new Form<>("form");
 form.add(new Label("anotherLabel",new ResourceModel("labelValue")));
 add(form);
 ----

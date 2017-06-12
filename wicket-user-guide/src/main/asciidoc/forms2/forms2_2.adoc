@@ -242,7 +242,7 @@ In the example seen in the previous paragraph we have a form which uses success 
 public class HomePage extends WebPage {
 
     public HomePage(final PageParameters parameters) {	
-	Form form = new Form("form"){
+	Form<Void> form = new Form<Void>("form"){
 		@Override
 		protected void onSubmit() {
 			super.onSubmit();

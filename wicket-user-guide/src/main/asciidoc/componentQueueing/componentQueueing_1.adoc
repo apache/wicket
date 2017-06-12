@@ -18,7 +18,7 @@ and then we repeat the same hierarchy in Java code:
 
 [source,java]
 ----
-Form form=new Form("customer");
+Form<Void> form = new Form<>("customer");
 add(form);
  
 form.add(new TextField("first"));
@@ -36,7 +36,7 @@ The need for the hierarchy in the markup is obvious, it is simply how the markup
 
 [source,java]
 ----
-add(new Form("customer"));
+add(new Form<Void>("customer"));
 add(new TextField("first"));
 add(new TextField("last"));
 WebMarkupContainer child=new WebMarkupContainer("child");
@@ -88,7 +88,7 @@ Seems simple enough, but to do so we need to create the new container, find the 
 
 [source,java]
 ----
-Form form=new Form("customer");
+Form<Void> form = new Form<>("customer");
 add(form);
  
 form.add(new TextField("first"));
@@ -99,7 +99,7 @@ Will become:
 
 [source,java]
 ----
-Form form=new Form("customer");
+Form<Void> form = new Form<>("customer");
 add(form);
  
 WebMarkupContainer container=new WebMarkupContainer("container");
@@ -121,7 +121,7 @@ That means we can go from code like this:
 
 [source,java]
 ----
-Form form=new Form("customer");
+Form<Void> form = new Form<>("customer");
 add(form);
  
 form.add(new TextField("first"));

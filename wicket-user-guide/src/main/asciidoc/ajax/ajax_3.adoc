@@ -73,7 +73,7 @@ This behavior allows to send a form via AJAX when the component it is attached t
 
 [source,java]
 ----
-Form form = new Form("form");		
+Form<Void> form = new Form<>("form");		
 Button submitButton = new Button("submitButton");
 //submit form when button is clicked		
 submitButton.add(new AjaxFormSubmitBehavior(form, "click"){});
@@ -91,7 +91,7 @@ The behavior doesn't work with radio buttons and checkboxes. For these kinds of 
 
 [source,java]
 ----
-Form form = new Form("form");		
+Form<Void> form = new Form<>("form");		
 TextField textField = new TextField("textField", Model.of(""));
 //update the model of the text field each time event "change" occurs
 textField.add(new AjaxFormComponentUpdatingBehavior("change"){

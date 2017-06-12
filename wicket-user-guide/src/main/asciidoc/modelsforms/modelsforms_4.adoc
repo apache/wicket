@@ -17,7 +17,7 @@ Java code:
 
 [source,java]
 ----
-Form form = new Form("form"){
+Form<Void> form = new Form<Void>("form"){
     @Override
     protected void onSubmit() {
     	System.out.println("Form submitted.");

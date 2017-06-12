@@ -114,26 +114,26 @@ public class HomePage extends WebPage {
     	TextField regExpPatternTxt;
 	TextField stringToSplitTxt;
 		
-    	Form form = new Form("form"){
-			@Override
-			protected void onSubmit() {
-				super.onSubmit();
-				String messageResult = "Tokens for the given string and pattern:<br/>";
-				String[] tokens = regExpPattern.split(stringToSplit);
-			
-				for (String token : tokens) {
-					messageResult += "- " + token + "<br/>";
-				}				
-				success(messageResult);
+    	Form<Void> form = new Form<Void>("form"){
+		@Override
+		protected void onSubmit() {
+			super.onSubmit();
+			String messageResult = "Tokens for the given string and pattern:<br/>";
+			String[] tokens = regExpPattern.split(stringToSplit);
+		
+			for (String token : tokens) {
+				messageResult += "- " + token + "<br/>";
+			}				
+			success(messageResult);
 		}
 	};
     	
-		form.setDefaultModel(new CompoundPropertyModel(this));
-		form.add(regExpPatternTxt = new TextField("regExpPattern"));
-		form.add(stringToSplitTxt = new TextField("stringToSplit"));
-		add(new FeedbackPanel("feedbackMessage").setEscapeModelStrings(false));
-		
-		add(form);
+	form.setDefaultModel(new CompoundPropertyModel(this));
+	form.add(regExpPatternTxt = new TextField("regExpPattern"));
+	form.add(stringToSplitTxt = new TextField("stringToSplit"));
+	add(new FeedbackPanel("feedbackMessage").setEscapeModelStrings(false));
+	
+	add(form);
     }
 }
 ----
