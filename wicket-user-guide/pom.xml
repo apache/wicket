@@ -104,6 +104,8 @@
 						<attributes>
 							<gemPath>${project.build.directory}/gems-provided</gemPath>
 							<allow-uri-read>allow-uri-read</allow-uri-read>
+							<stylesheet>css/style.css</stylesheet>
+							<linkcss>true</linkcss>
 						</attributes>
 						<preserveDirectories>true</preserveDirectories>
 						<requires>
