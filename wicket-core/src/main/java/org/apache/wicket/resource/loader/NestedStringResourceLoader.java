@@ -16,19 +16,17 @@
  */
 package org.apache.wicket.resource.loader;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.AppendingStringBuffer;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Creates a nested string resource loader which resolves nested keys.<br>
@@ -128,7 +126,7 @@ public class NestedStringResourceLoader implements IStringResourceLoader
 
 		if (value == null)
 		{
-			return handleMissingKey(key, locale, style, component, value);
+			return null;
 		}
 		
 		StringBuffer output = new StringBuffer();
@@ -141,57 +139,13 @@ public class NestedStringResourceLoader implements IStringResourceLoader
 				? loadNestedStringResource(component, nestedKey, locale, style, variation)
 				: loadNestedStringResource(clazz, nestedKey, locale, style, variation);
 
-			replacedPlaceHolder = handleMissingKey(nestedKey, locale, style, component,
-				replacedPlaceHolder);
+			if (replacedPlaceHolder == null)
+			{
+				return null;
+			}
 			matcher.appendReplacement(output, replacedPlaceHolder);
 		}
 		matcher.appendTail(output);
 		return output.toString();
-	}
-
-	/**
-	 * Handles a missing key
-	 * 
-	 * @param nestedKey
-	 *            the key which is going to be handled
-	 * @param locale
-	 *            the actual locale
-	 * @param style
-	 *            the style
-	 * @param component
-	 *            the component
-	 * 
-	 * @param replacedPlaceHolder
-	 * @return the replacedPlaceholder
-	 */
-	private String handleMissingKey(String nestedKey, Locale locale, String style,
-		Component component, String replacedPlaceHolder)
-	{
-		if (replacedPlaceHolder == null)
-		{
-			if (resourceSettings.getThrowExceptionOnMissingResource())
-			{
-				AppendingStringBuffer message = new AppendingStringBuffer(
-					"Unable to find property: '");
-				message.append(nestedKey);
-				message.append('\'');
-
-				if (component != null)
-				{
-					message.append(" for component: ");
-					message.append(component.getPageRelativePath());
-					message.append(" [class=").append(component.getClass().getName()).append(']');
-				}
-				message.append(". Locale: ").append(locale).append(", style: ").append(style);
-
-				throw new MissingResourceException(message.toString(),
-					(component != null ? component.getClass().getName() : ""), nestedKey);
-			}
-			else
-			{
-				replacedPlaceHolder = "[Warning: Property for '" + nestedKey + "' not found]";
-			}
-		}
-		return replacedPlaceHolder;
 	}
 }
