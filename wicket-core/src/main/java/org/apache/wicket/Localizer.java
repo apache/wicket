@@ -232,7 +232,7 @@ public class Localizer
 		String value = getStringIgnoreSettings(key, component, model, locale, style, null);
 
 		// If a property value has been found, or a default value was given,
-		// than replace the placeholder and we are done
+		// then replace the placeholder and we are done
 		if (value != null)
 		{
 			return value;
@@ -416,7 +416,7 @@ public class Localizer
 		}
 
 		// If a property value has been found, or a default value was given,
-		// than replace the placeholder and we are done
+		// then replace the placeholder and we are done
 		if (value != null)
 		{
 			return substitutePropertyExpressions(component, value, model);

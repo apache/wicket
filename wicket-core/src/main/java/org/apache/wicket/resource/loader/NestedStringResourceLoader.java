@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.settings.ResourceSettings;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -50,11 +51,11 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
  */
 public class NestedStringResourceLoader implements IStringResourceLoader
 {
-	private Pattern pattern;
+	private final Pattern pattern;
 
-	private List<IStringResourceLoader> loaders;
+	private final List<IStringResourceLoader> loaders;
 
-	private ResourceSettings resourceSettings;
+	private final ResourceSettings resourceSettings;
 
 	/**
 	 * Creates a nested string resource loader
@@ -68,7 +69,7 @@ public class NestedStringResourceLoader implements IStringResourceLoader
 	public NestedStringResourceLoader(List<IStringResourceLoader> loaders, Pattern pattern)
 	{
 		this.loaders = new ArrayList<>(loaders);
-		this.pattern = pattern;
+		this.pattern = Args.notNull(pattern, "pattern");
 		this.resourceSettings = Application.get().getResourceSettings();
 	}
 
