@@ -260,9 +260,9 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Returns the cleanup feedack message filter. At the end of request all messages are ran
+	 * Returns the cleanup feedback message filter. At the end of request all messages are ran
 	 * through this filter, and the ones accepted are removed. The default implementation accepts
-	 * (and therefore remkoves) all rendered messages.
+	 * (and therefore removes) all rendered messages.
 	 *
 	 * @return feedback message filter
 	 */
