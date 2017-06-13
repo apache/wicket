@@ -38,7 +38,7 @@ enum UserAgent {
 
 	OPERA(Arrays.asList("Opera")),
 
-	CHROME(Arrays.asList("Mozilla,Edge", "Chrome", "AppleWebKit", "Safari")),
+	CHROME("Edge", Arrays.asList("Mozilla", "Chrome", "AppleWebKit", "Safari")),
 
 	SAFARI("Chrome,Edge", Arrays.asList("Mozilla", "AppleWebKit", "Safari")),
 

@@ -94,6 +94,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+			           is(equalTo(false)));
 		}
 	}
 
@@ -131,6 +133,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+			           is(equalTo(false)));
 		}
 	}
 
@@ -168,6 +172,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+			           is(equalTo(false)));
 		}
 	}
 
@@ -205,6 +211,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+			           is(equalTo(false)));
 		}
 	}
 
@@ -236,6 +244,7 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(), is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(), is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(), is(equalTo(false)));
 		}
 	}
 
@@ -262,6 +271,7 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(), is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(), is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(), is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(), is(equalTo(false)));
 		}
 	}
 
@@ -296,6 +306,8 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
 		}
 	}
@@ -334,6 +346,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -364,6 +378,8 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
 		}
 	}
@@ -400,6 +416,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -434,6 +452,8 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
 		}
 	}
@@ -471,6 +491,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -507,6 +529,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -541,6 +565,8 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
 		}
 	}
@@ -577,6 +603,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -612,6 +640,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -644,6 +674,8 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
 		}
 	}
@@ -681,6 +713,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -716,6 +750,8 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
 		}
 	}
@@ -753,6 +789,8 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -789,8 +827,48 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
+
+	/**
+	 * Test Microsoft Edge user-agent strings
+	 */
+	@Test
+	public void edge15()
+	{
+		List<String> userAgents = Arrays.asList(
+				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063");
+
+		for (String userAgent : userAgents)
+		{
+			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
+			           is(equalTo(15)));
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
+			           is(equalTo(15063)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
+			           is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
+			           is(equalTo(false)));
+
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
+			           is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
+			           is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
+			           is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
+			           is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+			           is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+			           is(equalTo(true)));
+		}
+	}
+
 
 	/**
 	 * Test X-Forwarded-For ip address extraction.
