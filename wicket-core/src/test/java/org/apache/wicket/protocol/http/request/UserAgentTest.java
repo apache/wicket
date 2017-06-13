@@ -39,6 +39,11 @@ public class UserAgentTest
 		// check comma separated list of entries - Konqueror,Opera
 		assertFalse(UserAgent.MOZILLA.matches("Something that contains Konqueror"));
 		assertFalse(UserAgent.MOZILLA.matches("Something that contains Opera"));
+
+		// check blacklisted for EDGE
+		assertFalse(UserAgent.EDGE.matches("Something that contains Opera"));
+		assertFalse(UserAgent.EDGE.matches("Something that contains Konqueror"));
+		assertFalse(UserAgent.EDGE.matches("Something that contains Trident"));
 	}
 
 	/**
@@ -58,5 +63,16 @@ public class UserAgentTest
 
 		// full match in detection group 2
 		assertTrue(UserAgent.INTERNET_EXPLORER.matches("Mozilla MSIE Mac_PowerPC"));
+
+		// check Edge
+		final String userAgentEdge
+				= "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063";
+		assertTrue(UserAgent.EDGE.matches(userAgentEdge));
+		assertFalse(UserAgent.FIREFOX.matches(userAgentEdge));
+		assertFalse(UserAgent.INTERNET_EXPLORER.matches(userAgentEdge));
+		assertFalse(UserAgent.SAFARI.matches(userAgentEdge));
+		assertFalse(UserAgent.CHROME.matches(userAgentEdge));
+		assertFalse(UserAgent.OPERA.matches(userAgentEdge));
+		assertFalse(UserAgent.KONQUEROR.matches(userAgentEdge));
 	}
 }
