@@ -16,14 +16,12 @@
  */
 package org.apache.wicket.resource.loader;
 
-import java.util.Locale;
-
 import org.apache.wicket.core.util.resource.locator.IResourceNameIterator;
 import org.apache.wicket.resource.IPropertiesFactory;
 import org.apache.wicket.resource.Properties;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Locale;
 
 
 /**
@@ -44,9 +42,6 @@ import org.slf4j.LoggerFactory;
  */
 public class PackageStringResourceLoader extends ComponentStringResourceLoader
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(PackageStringResourceLoader.class);
-
 	/** The name (without extension) of the properties file */
 	private String filename = "wicket-package";
 
@@ -57,11 +52,6 @@ public class PackageStringResourceLoader extends ComponentStringResourceLoader
 	{
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
 		final String style, final String variation)
