@@ -20,8 +20,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.Localizer;
 import org.apache.wicket.resource.loader.ClassStringResourceLoaderTest.MyValidator;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.apache.wicket.validation.IValidatable;
+import org.apache.wicket.validation.IValidator;
 import org.junit.Test;
 
 /**
@@ -46,4 +49,29 @@ public class NestedStringResourceLoaderTest extends WicketTestCase
 			nestedStringResourceLoader.loadStringResource((Component)null, "nested", null, null, null));
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6393
+	 */
+	@Test
+	public void whenAnyKeyIsMissing_thenUseTheDefaultValue(){
+		List<IStringResourceLoader> loaders = tester.getApplication().getResourceSettings().getStringResourceLoaders();
+		ClassStringResourceLoader classStringResourceLoader = new ClassStringResourceLoader(NestedWithMissingKeyValidator.class);
+		loaders.add(classStringResourceLoader);
+		NestedStringResourceLoader nestedStringResourceLoader = new NestedStringResourceLoader(loaders,Pattern.compile("#\\(([^ ]*?)\\)"));
+		loaders.clear();
+		loaders.add(nestedStringResourceLoader);
+
+		final String defaultValue = "default value";
+		assertEquals(defaultValue, Localizer.get().getString("nested", null, defaultValue));
+	}
+
+	public static class NestedWithMissingKeyValidator implements IValidator<String>
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void validate(IValidatable<String> v)
+		{
+		}
+	}
 }
