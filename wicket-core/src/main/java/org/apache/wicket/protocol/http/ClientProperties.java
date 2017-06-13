@@ -64,6 +64,7 @@ public class ClientProperties implements IClusterable
 	private boolean browserOpera;
 	private boolean browserSafari;
 	private boolean browserChrome;
+	private boolean browserEdge;
 	private int browserVersionMajor = -1;
 	private int browserVersionMinor = -1;
 	private int browserWidth = -1;
@@ -434,6 +435,15 @@ public class ClientProperties implements IClusterable
 	{
 		return browserChrome;
 	}
+	/**
+	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
+	 *
+	 * @return True if a derivative of the Microsoft Edge browser platform.
+	 */
+	public boolean isBrowserEdge()
+	{
+		return browserEdge;
+	}
 
 	/**
 	 * @deprecated use {@link #isNavigatorCookieEnabled()} instead
@@ -560,6 +570,16 @@ public class ClientProperties implements IClusterable
 	public void setBrowserChrome(boolean browserChrome)
 	{
 		this.browserChrome = browserChrome;
+	}
+	/**
+	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
+	 *
+	 * @param browserEdge
+	 *            True if a derivative of the Microsoft Edge browser platform.
+	 */
+	public void setBrowserEdge(boolean browserEdge)
+	{
+		this.browserEdge = browserEdge;
 	}
 
 	/**

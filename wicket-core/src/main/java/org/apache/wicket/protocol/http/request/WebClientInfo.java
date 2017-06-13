@@ -198,12 +198,10 @@ public class WebClientInfo extends ClientInfo
 		setMozillaProperties();
 		setKonquerorProperties();
 		setChromeProperties();
+		setEdgeProperties();
 		setSafariProperties();
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("determined user agent: " + properties);
-		}
+		log.debug("determined user agent: {}", properties);
 	}
 
 	/**
@@ -232,6 +230,21 @@ public class WebClientInfo extends ClientInfo
 			// e.g.: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.24 (KHTML, like Gecko)
 // Chrome/12.0.702.0 Safari/534.24
 			setMajorMinorVersionByPattern("chrome/(\\d+)\\.(\\d+)");
+		}
+	}
+
+	/**
+	 * sets the Edge specific properties
+	 */
+	private void setEdgeProperties()
+	{
+		properties.setBrowserEdge(UserAgent.EDGE.matches(getUserAgent()));
+
+		if (properties.isBrowserEdge())
+		{
+			// e.g.: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+			// Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063
+			setMajorMinorVersionByPattern("edge/(\\d+)\\.(\\d+)");
 		}
 	}
 
