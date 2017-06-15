@@ -170,6 +170,11 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 	
 	/**
+	 * Returns the border body container. 
+	 * 
+	 * NOTE: this component is NOT meant to be directly handled by users, meaning that you 
+	 * can not explicitly add it to an arbitrary container or remove it from its original parent container.
+	 * 
 	 * @return The border body container
 	 */
 	public final BorderBodyContainer getBodyContainer()
