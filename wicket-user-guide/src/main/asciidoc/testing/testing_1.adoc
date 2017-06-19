@@ -120,7 +120,7 @@ If test requires a page we can use _startComponentInPage(Component)_ which autom
 
 === Testing the response
 
-_WicketTester_ allows us to access to the last response generated during testing with method _getLastResponse_. The returned value is an instance of class MockHttpServletResponse that provides helper methods to extract informations from mocked request. 
+_WicketTester_ allows us to access to the last response generated during testing with method _getLastResponse()_. The returned value is an instance of class MockHttpServletResponse that provides helper methods to extract information from mocked request.
 
 In the test case from project _CustomResourceMounting_ we extract the text contained in the last response with method _getDocument_ and we check if it is equal to the RSS feed used for the test: 
 
@@ -143,6 +143,8 @@ public void testMountedResourceResponse() throws IOException, FeedException{test
 ----
 
 To simulate a request to the custom resource we used method _startResource_ which can be used also with resource references.
+
+_getLastResponse()_ should be used to assert the status code, response headers, binary content and anything that is part of the HTTP response.
 
 === Testing URLs
 
