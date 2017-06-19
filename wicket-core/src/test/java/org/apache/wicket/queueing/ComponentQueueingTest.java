@@ -26,6 +26,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -803,6 +804,24 @@ public class ComponentQueueingTest extends WicketTestCase
 				+ "</label>");
 		
 		page.queue(new TextField<>("input", Model.of("test")));
+		
+		tester.startPage(page);	
+	}
+	
+	@Test
+	public void queueInsideTransparentContainer() throws Exception
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup("<div wicket:id='transparentContainer'>"
+			+ "	<div wicket:id='container'>"
+			+ "		<div wicket:id='child'>"
+			+ " 	</div>"
+			+ " </div>"
+			+ "</div>");
+		
+		page.add(new TransparentWebMarkupContainer("transparentContainer"));
+		page.add(new WebMarkupContainer("container"));
+		page.queue(new WebMarkupContainer("child"));
 		
 		tester.startPage(page);	
 	}

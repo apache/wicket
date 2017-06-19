@@ -2090,7 +2090,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			ComponentTag tag = dequeue.takeTag();
 	
 			// see if child is already added to parent
-			Component child = get(tag.getId());
+			Component child = findChildComponent(tag);
 
 			if (child == null)
 			{
@@ -2117,6 +2117,18 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
             }
 		}
 
+	}
+
+	/**
+	 * Search the child component for the given tag.
+	 * 
+	 * @param tag
+	 * 				the component tag 
+	 * @return the child component for the given tag or null if no child can not be found.
+	 */
+	protected Component findChildComponent(ComponentTag tag)
+	{
+		return get(tag.getId());
 	}
 	
 	/**
