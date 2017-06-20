@@ -137,27 +137,18 @@ from, and get started quickly:
  - The Wicket JavaDoc:
     
    the API Docs are available on the main site of the project:
-   http://wicket.apache.org
+   http://wicket.apache.org/learn/#javadoc
     
- - wicket-examples:
+ - Wicket Examples:
 
     shows all components in short usage examples, also available live on:
-    http://www.wicket-library.com/wicket-examples
+    http://examples8x.wicket.apache.org
 
- - wicket-quickstart archetype:
+ - Wicket Quickstart - http://wicket.apache.org/start/quickstart.html:
 
     provides a skeleton project for use in NetBeans, Eclipse, IntelliJ IDEA
-    and other major IDE's, without having to configure anything yourself. You
-    can copy'n'paste the examples from the website into your pages and see
-    them running on your own box.
-
- - AppFuse light - Wicket edition (https://appfuse-light.dev.java.net/)
-
-    AppFuse Light is a can all do it all quickstart setup for almost all
-    possible permutations for building Java web applications and ORM
-    technologies. It features over 60 downloads and combines each available
-    web application framework with Hibernate, iBatis, JDO (JPOX), OJB and
-    Spring JDBC.
+    and other major IDE's, without having to configure anything yourself. Just
+    copy'n'paste the generated command line and Maven will do the job.
 
 Dependencies
 ------------
