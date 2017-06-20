@@ -14,8 +14,8 @@ Contents
 --------
  - License
  - Java/Application server requirements
- - What is in this package
  - Getting started
+ - What is in this package
  - Dependencies
  - Building Wicket from source
  - Migrating from 7.x
@@ -34,6 +34,44 @@ Java/Application server requirements
 
 Wicket requires at least Java 1.8. The application server for running your web
 application should adhere to the servlet specification version 3.1 or newer.
+
+Getting started
+---------------
+
+The Wicket project has several resources and projects where you can learn 
+from, and get started quickly:
+
+ - The Wicket user guide - https://ci.apache.org/projects/wicket/guide/8.x: 
+
+    learn Wicket from scratch reading its userguide which gradually 
+    introduces you to the various features of the framework with 
+    many real-world examples.
+
+ - The Wicket JavaDoc:
+    
+   the API Docs are available on the main site of the project:
+   http://wicket.apache.org
+    
+ - wicket-examples:
+
+    shows all components in short usage examples, also available live on:
+    http://www.wicket-library.com/wicket-examples
+
+ - wicket-quickstart archetype:
+
+    provides a skeleton project for use in NetBeans, Eclipse, IntelliJ IDEA
+    and other major IDE's, without having to configure anything yourself. You
+    can copy'n'paste the examples from the website into your pages and see
+    them running on your own box.
+
+ - AppFuse light - Wicket edition (https://appfuse-light.dev.java.net/)
+
+    AppFuse Light is a can all do it all quickstart setup for almost all
+    possible permutations for building Java web applications and ORM
+    technologies. It features over 60 downloads and combines each available
+    web application framework with Hibernate, iBatis, JDO (JPOX), OJB and
+    Spring JDBC.
+
 
 What is in this package
 -----------------------
@@ -121,34 +159,6 @@ Here is a list of projects in this distribution and what they do.
  - wicket-user-guide: the user guide of wicket
  - wicket-metrics: collects data of a running wicket application
  - wicket-http2: http/2 push support
-
-Getting started
----------------
-
-The Wicket project has several resources and projects where you can learn 
-from, and get started quickly:
-
- - The Wicket user guide - https://wicket.apache.org/learn/#guide: 
-
-    learn Wicket from scratch reading its userguide which gradually 
-    introduces you to the various features of the framework with 
-    many real-world examples.
-
- - The Wicket JavaDoc:
-    
-   the API Docs are available on the main site of the project:
-   http://wicket.apache.org/learn/#javadoc
-    
- - Wicket Examples:
-
-    shows all components in short usage examples, also available live on:
-    http://examples8x.wicket.apache.org
-
- - Wicket Quickstart - http://wicket.apache.org/start/quickstart.html:
-
-    provides a skeleton project for use in NetBeans, Eclipse, IntelliJ IDEA
-    and other major IDE's, without having to configure anything yourself. Just
-    copy'n'paste the generated command line and Maven will do the job.
 
 Dependencies
 ------------
