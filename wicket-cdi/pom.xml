@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-cdi</artifactId>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Wicket CDI Integration</name>
 	<description>
 		Provides integration between Wicket and CDI containers. Enables injection of

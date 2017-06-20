@@ -24,6 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-util</artifactId>
+	<packaging>bundle</packaging>
 	<name>Wicket Util</name>
 	<dependencies>
 		<dependency>

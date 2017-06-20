@@ -26,7 +26,7 @@
     </parent>
 
     <artifactId>wicket-native-websocket-core</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <name>Wicket Native WebSocket Core</name>
     <description>Provides the common code needed for the different integrations with web container's WebSocket implementations</description>
 

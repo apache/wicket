@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-http2-undertow</artifactId>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Wicket Http/2 Undertow 2+</name>
 	<description>
 		Wicket’s implementation to use the PushBuilder API

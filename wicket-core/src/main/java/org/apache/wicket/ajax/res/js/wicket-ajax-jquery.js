@@ -1210,7 +1210,7 @@
 			if (scriptWithIdentifierR.test(text)) {
 				var scripts = [];
 				var scr;
-				while ( (scr = scriptSplitterR.exec(text) ) != null ) {
+				while ( (scr = scriptSplitterR.exec(text) ) !== null ) {
 					scripts.push(scr[0]);
 				}
 
