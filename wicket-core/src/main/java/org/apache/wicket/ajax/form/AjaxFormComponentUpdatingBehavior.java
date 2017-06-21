@@ -195,6 +195,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	/**
 	 * Listener invoked on the ajax request. This listener is invoked after the component's model
 	 * has been updated.
+	 * <p>
+	 * Note: {@link #onError(AjaxRequestTarget, RuntimeException)} is called instead when processing
+	 * of the {@link FormComponent} failed with conversion or validation errors!
 	 * 
 	 * @param target
 	 *            the current request handler

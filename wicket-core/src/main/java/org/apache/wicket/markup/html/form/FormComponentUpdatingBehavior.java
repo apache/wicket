@@ -19,6 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
@@ -202,6 +203,9 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 
 	/**
 	 * Hook method invoked when the component is updated.
+	 * <p>
+	 * Note: {@link #onError(AjaxRequestTarget, RuntimeException)} is called instead when processing
+	 * of the {@link FormComponent} failed with conversion or validation errors!  
 	 */
 	protected void onUpdate()
 	{
