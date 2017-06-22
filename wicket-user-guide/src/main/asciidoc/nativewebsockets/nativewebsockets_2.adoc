@@ -33,8 +33,17 @@ Depending on the web container that is used the application has to add a depende
 </dependency>
 ----
 
-NOTE: All web containers providing JSR356 implementation are built with Java 7. This is the reason why _wicket-native-websocket-javax_ module is available only with Wicket 7.x+. If your application runs with JRE 6.x then you can
-use _wicket-native-websocket-javax_ together with the latest version of Wicket 6.x.
+- for https://projects.spring.io/spring-boot/[Spring Boot] applications also add
+----
+<dependency>
+ <groupId>org.springframework.boot</groupId>
+ <artifactId>spring-boot-starter-websocket</artifactId>
+</dependency>
+----
+
+
+NOTE: All web containers providing JSR356 implementation are built with Java 7. This is the reason why _wicket-native-websocket-javax_ module is available only with Wicket 7.x. If your application runs with JRE 7.x but you are still using Wicket 6.x then you can
+use the https://github.com/wicketstuff/core/tree/wicket-6.x/wicketstuff-native-websocket-javax[WicketStuff] module. Beware that the API/implementation of _wicket-native-websocket-javax_ may change before Wicket 7.0.0 is released!
 
 NOTE: The examples above show snippets for Maven's pom.xml but the application can use any other dependency management tool like http://www.gradle.org/[Gradle]
 
@@ -66,7 +75,34 @@ For JSR356 complaint web containers (at the moment: Tomcat 7.0.47+, Tomcat 8.x a
 <filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
 ----
 
+For https://projects.spring.io/spring-boot/[Spring Boot] application:
+----
+@Bean
+    public FilterRegistrationBean wicketFilter() {
+        final FilterRegistrationBean wicketFilter = new
+FilterRegistrationBean();
+        wicketFilter.setDispatcherTypes(DispatcherType.REQUEST,
+DispatcherType.ERROR, DispatcherType.FORWARD, DispatcherType.ASYNC);
+        wicketFilter.setAsyncSupported(true);
+        wicketFilter.setFilter(new JavaxWebSocketFilter());
+        wicketFilter.addInitParameter(WicketFilter.APP_FACT_PARAM,
+SpringWebApplicationFactory.class.getName());
+        wicketFilter.addInitParameter(WicketFilter.FILTER_MAPPING_PARAM,
+"/*");
+        wicketFilter.addUrlPatterns("/*");
+        return wicketFilter;
+    }
 
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
+    }
+
+    @Bean
+    public WicketServerEndpointConfig wicketServerEndpointConfig() {
+        return new WicketServerEndpointConfig();
+    }
+----
 
 * *WebSocketBehavior*
 
