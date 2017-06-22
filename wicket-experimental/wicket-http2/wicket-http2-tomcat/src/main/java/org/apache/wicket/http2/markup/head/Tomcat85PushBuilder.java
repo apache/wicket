@@ -41,9 +41,8 @@ public class Tomcat85PushBuilder implements PushBuilder
 		{
 			for (String path : paths)
 			{
-				pushBuilder.path(path);
+				pushBuilder.path(path).push();
 			}
-			pushBuilder.push();
 		}
 		else
 		{

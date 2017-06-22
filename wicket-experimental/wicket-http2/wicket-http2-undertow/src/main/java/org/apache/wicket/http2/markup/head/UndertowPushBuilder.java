@@ -44,9 +44,8 @@ public class UndertowPushBuilder implements PushBuilder
 		{
 			for (String path : paths)
 			{
-				pushBuilder.path(path);
+				pushBuilder.path(path).push();
 			}
-			pushBuilder.push();
 		}
 		else
 		{
