@@ -227,6 +227,11 @@ public class JSONObject {
 
     private static Map<String, Object> propertiesAsMap(Object bean) throws JSONException {
         Map<String, Object> props = new TreeMap<String, Object>();
+
+        if (bean instanceof JSONArray) {
+            return props;
+        }
+
         try {
             PropertyDescriptor[] properties = Introspector.getBeanInfo(bean.getClass(), Object.class)
                     .getPropertyDescriptors();
@@ -234,11 +239,7 @@ public class JSONObject {
                 Object v = prop.getReadMethod().invoke(bean);
                 props.put(prop.getDisplayName(), wrap(v));
             }
-        } catch (IllegalAccessException e) {
-            throw new JSONException(e);
-        } catch (IntrospectionException e) {
-            throw new JSONException(e);
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | IntrospectionException | InvocationTargetException e) {
             throw new JSONException(e);
         }
         return props;
