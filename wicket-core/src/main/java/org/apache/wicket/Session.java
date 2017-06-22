@@ -518,7 +518,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	private void destroy()
 	{
-		if (sessionStore != null)
+		if (getSessionStore() != null)
 		{
 			sessionStore.invalidate(RequestCycle.get().getRequest());
 			sessionStore = null;
