@@ -227,6 +227,11 @@ public class JSONObject {
 
     private static Map<String, Object> propertiesAsMap(Object bean) throws JSONException {
         Map<String, Object> props = new TreeMap<String, Object>();
+
+        if (bean instanceof JSONArray) {
+            return props;
+        }
+
         try {
             PropertyDescriptor[] properties = Introspector.getBeanInfo(bean.getClass(), Object.class)
                     .getPropertyDescriptors();
