@@ -1,0 +1,24 @@
+This module comes with class _org.wicketstuff.lambda.components.ComponentFactory_ which exposes a number of factory method to build components using Lambda expressions as event handler. This can be useful to create components with simple behavior. For example:
+
+[source,java]
+----
+//create a standard link component
+add(ComponentFactory.link("id", (link) -> {/*do stuff*/});
+
+//create an AJAX link component
+add(ComponentFactory.ajaxLink("id", (ajaxLink, ajaxTarget) -> {/*do stuff*/});
+----
+
+_AjaxButton_ and _AjaxSubmitLink_ are also supported:
+
+[source,java]
+----
+//create a submit link
+add(ComponentFactory.ajaxSubmitLink("id", (ajaxLink, ajaxTarget) -> {/*do submit stuff*/});
+
+//create a submit link with error handler
+add(ComponentFactory.ajaxSubmitLink("id", (ajaxLink, ajaxTarget) -> {/*do submit stuff*/}, 
+                                   (ajaxLink, ajaxTarget) -> {/*do error stuff*/});
+----
+
+See _ComponentFactory_ JavaDoc for a full list of factory methods.

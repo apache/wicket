@@ -855,6 +855,10 @@ include::wicketstuff/wicketstuff_5.adoc[leveloffset=+1]
 
 include::wicketstuff/wicketstuff_6.adoc[leveloffset=+1]
 
+=== Module wicketstuff-lambda-components
+
+include::wicketstuff/wicketstuff_7.adoc[leveloffset=+1]
+
 [appendix]
 == Lost In Redirection With Apache Wicket
 
