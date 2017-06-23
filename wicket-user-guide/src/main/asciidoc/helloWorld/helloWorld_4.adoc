@@ -61,8 +61,6 @@ public class HomePage extends WebPage {
 }
 ----
 
-The lambda expression is converted into a _org.danekja.java.util.function.serializable.SerializableConsumer_, which is a serializable version of _java.util.function.Consumer<T>_ (we will see later why we need it to be serializable).
-
 Wicket comes with a rich set of link components suited for every need (links to static URL, Ajax-enhanced links, links to a file to download, links to external pages and so on). We will see them in 
 <<_wicket_links_and_url_generation,chapter 10>>.
 

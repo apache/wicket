@@ -9,6 +9,9 @@ add(ComponentFactory.link("id", (link) -> {/*do stuff*/});
 add(ComponentFactory.ajaxLink("id", (ajaxLink, ajaxTarget) -> {/*do stuff*/});
 ----
 
+The factory uses library https://github.com/danekja/jdk-serializable-functional[jdk-serializable-functional] to convert lambda expressions into a serializable version of java.util.function.* interfaces.
+
+
 _AjaxButton_ and _AjaxSubmitLink_ are also supported:
 
 [source,java]

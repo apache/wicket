@@ -16,16 +16,14 @@ In order to comply with the second requirement it could be helpful to check if a
 ----
 @Override
 protected void onInitialize() {
-		super.onInitialize();
-		
-		visitChildren(new IVisitor<Component, Void>() {
-			@Override
-			public void component(Component component, IVisit<Void> arg1) {
-				if(!component.isStateless())
-		  			System.out.println("Component " + component.getId() + " is not stateless");
-			}
-		});
-	}
+	super.onInitialize();
+	
+	visitChildren((component, visit) -> {
+		if(!component.isStateless()) {
+	  	   System.out.println("Component " + component.getId() + " is not stateless");
+		}
+	});
+}
 ----
 
 Alternatively, we could use the _StatelessComponent_ utility annotation along with the _StatelessChecker_ class (they are both in package _org.apache.wicket.devutils.stateless_). _StatelessChecker_ will throw an _IllegalArgumentException_ if a component annotated with _StatelessComponent_ doesn't respect the requirements for being stateless. To use _StatelessComponent_ annotation we must first add the _StatelessChecker_ to our application as a component render listener:
