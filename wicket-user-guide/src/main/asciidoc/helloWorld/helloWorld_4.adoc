@@ -50,20 +50,17 @@ public void onClick() {
 The difference between using the first version of _setResponsePage_ rather than the second one will be illustrated in 
 <<_page_versioning_and_caching,chapter 8>>, when we will introduce the topic of stateful and stateless pages. For now, we can consider them as equivalent. 
 
-Like many other Wicket components, _Link_ is lambda-friendly and comes with a factory method called _onClick_ which leverages lambda expressions to specify handler method:
+Since Wicket 8 is built on Java 8, we can choose to leverage lambda expressions to specify handler method:
 
 [source,java]
 ----
-public class HomePage extends WebPage {
-    public HomePage(){
-        add(Link.onClick("id", () -> setResponsePage(AnotherPage.class));
-    }
-}
+//create a standard link component
+add(ComponentFactory.link("id", (newlink) -> {/*do stuff*/});
 ----
 
-Wicket comes with a rich set of link components suited for every need (links to static URL, Ajax-enhanced links, links to a file to download, links to external pages and so on). We will see them in 
-<<_wicket_links_and_url_generation,chapter 10>>.
+Factory class _ComponentFactory_ is provided by the WicketStuff project. You can find more information on this project, as well as the instructions to use its modules, in Appendix B.
 
-NOTE: We can specify the content of a link (i.e. the text of the picture inside it) with its method _setBody_. This method takes in input a generic Wicket model, which will be the topic of 
-<<_wicket_models_and_forms,chapter 11>>.
+Wicket comes with a rich set of link components suited for every need (links to static URL, Ajax-enhanced links, links to a file to download, links to external pages and so on). We will see them in <<_wicket_links_and_url_generation,chapter 10>>.
+
+NOTE: We can specify the content of a link (i.e. the text inside it) with its method _setBody_. This method takes in input a generic Wicket model, which will be the topic of <<_wicket_models_and_forms,chapter 11>>.
 
