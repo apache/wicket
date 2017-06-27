@@ -573,9 +573,13 @@ include::ajax/ajax_6.adoc[leveloffset=+1]
 
 include::ajax/ajax_7.adoc[leveloffset=+1]
 
-=== Lambda support
+=== Lambda support for components
 
 include::ajax/ajax_8.adoc[leveloffset=+1]
+
+=== Lambda support for behavior
+
+include::ajax/ajax_9.adoc[leveloffset=+1]
 
 === Summary
 
