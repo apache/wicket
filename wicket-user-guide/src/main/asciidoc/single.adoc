@@ -577,13 +577,13 @@ include::ajax/ajax_7.adoc[leveloffset=+1]
 
 include::ajax/ajax_8.adoc[leveloffset=+1]
 
-=== Lambda support for behavior
+=== Lambda support for behaviors
 
 include::ajax/ajax_9.adoc[leveloffset=+1]
 
 === Summary
 
-include::ajax/ajax_9.adoc[leveloffset=+1]
+include::ajax/ajax_10.adoc[leveloffset=+1]
 
 == Integration with enterprise containers
 
