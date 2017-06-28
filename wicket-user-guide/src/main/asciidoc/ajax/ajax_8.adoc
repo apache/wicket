@@ -11,5 +11,5 @@ add(ComponentFactory.ajaxSubmitLink("id", (ajaxLink, ajaxTarget) -> {/*do submit
                                    (ajaxLink, ajaxTarget) -> {/*do error stuff*/});
 ----
 
-For more examples see WicketStuff module <<wicketstuff_7.adoc,wicketstuff-lambda-components>>.
+For more examples see WicketStuff module <<_module_wicketstuff_lambda_components,wicketstuff-lambda-components>>.
 
