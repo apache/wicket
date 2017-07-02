@@ -261,6 +261,22 @@ Have fun!
 	git add release-announce.txt
 }
 
+function generate_announce_md {
+
+echo $'---\nlayout: post\ntitle: Apache Wicket' $version $'released\n---' > wicket-$version-released.md
+sed -e "s/$optionOpenTag/\{\% highlight xml\%\}\n$optionOpenTag/g" release-announce.txt |
+sed -e "s/$optionCloseTag/$optionCloseTag\n\{\% endhighlight\%\}/g" |
+sed -e s/'    \*'/' \*'/g |
+sed -e "s/    CHANGELOG for $version/### This Release\n\n#### CHANGELOG for $version/g" |
+sed -e s/'\*\*'/'#####'/g |
+sed -e "s/    $beginPgp/<div class='highlight'><pre>\n$beginPgp/g" |
+sed -e "s/$endPgp/$endPgp\n<\/pre><\/div>\n/g" |
+sed -e "s/Source: http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version/Source: [$version source download]\(http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\)/g" |
+sed -e "s/Binary: http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\/binaries/Binary: [$version binary download]\(http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\/binaries\)/g" |
+sed -e "s/Upgrading from earlier versions/<!--more-->\n\nUpgrading from earlier versions/g" >> wicket-$version-released.md
+
+}
+
 # the branch on which the code base lives for this version (master is
 # always current development version)
 GIT_BRANCH=wicket-6.x
@@ -329,6 +345,11 @@ major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
 minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
 bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
 version="$major_version.$minor_version.0"
+
+optionOpenTag='<dependency>'
+optionCloseTag='<\/dependency>'
+beginPgp='-----BEGIN PGP SIGNATURE-----'
+endPgp='-----END PGP SIGNATURE-----'
 
 default_version="$version"
 
@@ -550,6 +571,8 @@ popd
 generate_signatures_from_release
 generate_release_vote_email
 generate_announce_email
+generate_announce_md
+
 
 # Done with the tasks, now print out the next things the release manager
 # needs to do
