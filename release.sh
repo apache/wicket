@@ -74,7 +74,7 @@ mvn org.sonatype.plugins:nexus-staging-maven-plugin:1.6.7:rc-release -DstagingRe
 git checkout $GIT_BRANCH
 mvn release:update-versions --batch-mode
 mvn versions:set versions:commit -DnewVersion=$next_version
-git add \` find . ! \( -type d -name "target" -prune \) -name pom.xml \`
+git add --all
 
 echo "
 Check the new versions and commit and push them to origin:
@@ -274,6 +274,8 @@ sed -e "s/$endPgp/$endPgp\n<\/pre><\/div>\n/g" |
 sed -e "s/Source: http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version/Source: [$version source download]\(http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\)/g" |
 sed -e "s/Binary: http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\/binaries/Binary: [$version binary download]\(http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\/binaries\)/g" |
 sed -e "s/Upgrading from earlier versions/<!--more-->\n\nUpgrading from earlier versions/g" >> wicket-$version-released.md
+
+git add wicket-$version-released.md
 
 }
 
