@@ -2,6 +2,37 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.8.0
+
+** Bug
+
+    * [WICKET-4324] - [wicket-ioc] LazyInitProxyFactory CGLIB proxies naming strategy may cause java.lang.IllegalAccessError
+    * [WICKET-6362] - HeaderItems with different PageParameters are treated as identical
+    * [WICKET-6366] - Autocomplete race condition makes page unresponsive
+    * [WICKET-6373] - Edge not recognized in UserAgent
+    * [WICKET-6374] - Exception caused by border extending another border with <wicket:extend>
+    * [WICKET-6376] - Ajax redirects to non http(s)-urls are interpreted as relative
+    * [WICKET-6377] - Autolinking breaks hierarchy for nested elements
+    * [WICKET-6386] - Simplification of the code in WICKET-3347 is not consistent with previous behavior
+    * [WICKET-6387] - ModalWindow PageReference broken
+    * [WICKET-6393] - NestedStringResourceLoader ignores hard-coded default values and throws MissingResourceException
+    * [WICKET-6398] - WICKET-6204 breaks jQuery.noConflict()
+    * [WICKET-6399] - Dequeuing of Border component with nested body fails
+    * [WICKET-6400] - Object with array property fails on NPE when construction JSON object
+
+** Improvement
+
+    * [WICKET-6372] - Consider to switch to a sans-serif typeface in the Wicket guide
+    * [WICKET-6385] - Allow using custom port for web socket connections
+    * [WICKET-6389] - Introduce CsrfPreventionRequestCycleListener that is aware of Web Socket requests
+    * [WICKET-6401] - OSGi-Manifest: wicket-util should decalre its dependency to 'commons-io' and 'commons-fileupload'
+
+** Task
+
+    * [WICKET-6391] - Deprecate the classes and methods which now throw runtime exception after the switch to OpenJson
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.7.0
 
 ** Bug
