@@ -1752,8 +1752,8 @@ public abstract class Component
 		if (page == null)
 		{
 			// Give up with a nice exception
-			throw new WicketRuntimeException("No Page found for component " + this 
-					+ " You probably forgot to add it to its parent component.");
+			throw new WicketRuntimeException("No Page found for component: " + this.toString(true)
+					+ ". You probably forgot to add it to its parent component.");
 		}
 
 		return page;
