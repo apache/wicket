@@ -93,6 +93,7 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(request, segmentsSize,
 					pageParametersEncoder);
+			pageParameters.setLocale(resolveLocale());
 
 			String className = url.getSegments().get(2);
 			StringBuilder name = new StringBuilder(segmentsSize * 2);

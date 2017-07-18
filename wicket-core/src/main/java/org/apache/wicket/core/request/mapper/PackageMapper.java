@@ -118,7 +118,8 @@ public class PackageMapper extends AbstractBookmarkableMapper
 			url.getSegments().add(packageRelativeClassName);
 			encodePageComponentInfo(url, info.getPageComponentInfo());
 
-			PageParameters copy = new PageParameters(info.getPageParameters());
+			PageParameters copy = newPageParameters();
+			copy.mergeWith(info.getPageParameters());
 			if (setPlaceholders(copy, url) == false)
 			{
 				// mandatory parameter is not provided => cannot build Url

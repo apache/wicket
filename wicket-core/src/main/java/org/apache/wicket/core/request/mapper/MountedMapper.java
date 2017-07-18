@@ -148,11 +148,6 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 	}
 
-	protected PageParameters newPageParameters()
-	{
-		return new PageParameters();
-	}
-
 	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
@@ -175,7 +170,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 				PageInfo pageInfo = getPageInfo(handler);
 				ComponentInfo componentInfo = new ComponentInfo(renderCount, componentPath, handler.getBehaviorIndex());
 				PageComponentInfo pageComponentInfo = new PageComponentInfo(pageInfo, componentInfo);
-				PageParameters parameters = new PageParameters(page.getPageParameters());
+				PageParameters parameters = newPageParameters();
+				parameters.mergeWith(page.getPageParameters());
 				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(),
 					parameters.mergeWith(handler.getPageParameters()));
 				url = buildUrl(urlInfo);
@@ -198,7 +194,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 		encodePageComponentInfo(url, info.getPageComponentInfo());
 
-		PageParameters copy = new PageParameters(info.getPageParameters());
+		PageParameters copy = newPageParameters();
+		copy.mergeWith(info.getPageParameters());
 		if (setPlaceholders(copy, url) == false)
 		{
 			// mandatory parameter is not provided => cannot build Url
