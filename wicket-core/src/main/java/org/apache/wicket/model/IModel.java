@@ -276,6 +276,18 @@ public interface IModel<T> extends IDetachable
 	 * Returns a IModel, returning either the contained object or the given default value, depending
 	 * on the {@code null}ness of the contained object.
 	 *
+	 * <p>
+	 * Possible usages:
+	 * <ul>
+	 *     <li>{@code myComponent = new AnyComponent(&quot;someId&quot;, someModel.orElse(defaultValue));}
+	 *      - This way Wicket will make use of the default value if the model object of <em>someModel</em>
+	 *      is {@code null}.
+	 *     </li>
+	 *     <li>in the middle of the application logic: {@code ... = someModel.orElse(default).getModelObject();}</li>
+	 * </ul>
+	 *
+	 * </p>
+	 *
 	 * @param other
 	 *            a default value
 	 * @return a new IModel
