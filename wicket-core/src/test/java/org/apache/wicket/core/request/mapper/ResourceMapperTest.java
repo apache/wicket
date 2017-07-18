@@ -34,8 +34,6 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- */
 public class ResourceMapperTest extends WicketTestCase
 {
 	private static final Charset CHARSET = Charset.forName("UTF-8");

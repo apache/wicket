@@ -123,7 +123,10 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 				// extract the PageParameters from URL if there are any
 				PageParameters pageParameters = extractPageParameters(request, 3,
 					pageParametersEncoder);
-				pageParameters.setLocale(resolveLocale());
+				if (pageParameters != null)
+				{
+					pageParameters.setLocale(resolveLocale());
+				}
 
 				return new UrlInfo(info, pageClass, pageParameters);
 			}

@@ -626,7 +626,10 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		for (int curMatchSize : matchedParameters)
 			total += curMatchSize;
 		PageParameters pageParameters = extractPageParameters(request, total, pageParametersEncoder);
-		pageParameters.setLocale(resolveLocale());
+		if (pageParameters != null)
+		{
+			pageParameters.setLocale(resolveLocale());
+		}
 
 		int skippedParameters = 0;
 		for (int pathSegmentIndex = 0; pathSegmentIndex < pathSegments.size(); pathSegmentIndex++)

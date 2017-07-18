@@ -411,7 +411,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 */
 	public PageParameters mergeWith(final PageParameters other)
 	{
-		if (this != other)
+		if (other != null && this != other)
 		{
 			for (int index = 0; index < other.getIndexedCount(); index++)
 			{
