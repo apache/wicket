@@ -17,6 +17,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -24,6 +26,24 @@ import org.junit.Test;
  */
 public class LocaleAwarePageParametersTest extends WicketTestCase
 {
+	private Locale defaultLocale = null;
+
+	@Before
+	public void before()
+	{
+		defaultLocale = Locale.getDefault(Locale.Category.DISPLAY);
+		Locale.setDefault(Locale.Category.DISPLAY, Locale.ENGLISH);
+	}
+
+	@After
+	public void after()
+	{
+		if (defaultLocale != null)
+		{
+			Locale.setDefault(Locale.Category.DISPLAY, defaultLocale);
+		}
+	}
+
 	@Override
 	protected WebApplication newApplication()
 	{
