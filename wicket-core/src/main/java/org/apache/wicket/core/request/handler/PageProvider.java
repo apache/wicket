@@ -244,10 +244,12 @@ public class PageProvider implements IPageProvider, IClusterable
 		{
 			return pageClass;
 		}
-		else
+		else if (hasPageInstance())
 		{
 			return getPageInstance().getClass();
 		}
+
+		return null;
 	}
 
 	protected IPageSource getPageSource()

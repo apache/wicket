@@ -243,7 +243,7 @@ public class PageProviderTest extends WicketTestCase
 
 		PageProvider provider = new PageProvider(page.getPageId(), MockPageWithLink.class, 0);
 		assertFalse(provider.hasPageInstance());
-		assertEquals(MockPageWithLink.class, provider.getPageInstance().getClass());
+		assertEquals(MockPageWithLink.class, provider.getPageClass());
 		assertTrue(provider.doesProvideNewPage());
 	}
 

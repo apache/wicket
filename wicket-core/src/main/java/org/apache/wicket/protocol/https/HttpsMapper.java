@@ -234,6 +234,11 @@ public class HttpsMapper implements IRequestMapperDelegate
 	 */
 	protected Scheme getDesiredSchemeFor(Class<? extends IRequestablePage> pageClass)
 	{
+		if (pageClass == null)
+		{
+			return Scheme.ANY;
+		}
+
 		Scheme SCHEME = cache.get(pageClass);
 		if (SCHEME == null)
 		{

@@ -2788,7 +2788,7 @@ public class BaseWicketTester
 					if (handler.getPageProvider().hasPageInstance())
 					{
 						Page renderedPage = (Page)handler.getPageProvider().getPageInstance();
-						if (componentInPage != null && lastPage != null
+						if (componentInPage != null && lastPage != null && renderedPage != null
 							&& lastPage.getPageClass() != renderedPage.getPageClass())
 						{
 							// WICKET-3913: reset startComponent if a new page

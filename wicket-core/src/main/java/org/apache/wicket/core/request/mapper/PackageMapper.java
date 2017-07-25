@@ -239,6 +239,10 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	@Override
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
+		if (pageClass == null)
+		{
+			return false;
+		}
 		PackageName pageClassPackageName = PackageName.forClass(pageClass);
 		return packageName.equals(pageClassPackageName);
 	}
