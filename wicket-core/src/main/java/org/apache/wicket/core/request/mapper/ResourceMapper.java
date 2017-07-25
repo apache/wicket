@@ -126,6 +126,10 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 		// now extract the page parameters from the request url
 		PageParameters parameters = extractPageParameters(request, mountSegments.length,
 			parametersEncoder);
+		if (parameters != null)
+		{
+			parameters.setLocale(resolveLocale());
+		}
 
 		// remove caching information from current request
 		removeCachingDecoration(url, parameters);
@@ -146,7 +150,7 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 				// extract the parameter from URL
 				if (parameters == null)
 				{
-					parameters = new PageParameters();
+					parameters = newPageParameters();
 				}
 				parameters.add(placeholder, url.getSegments().get(index), INamedParameters.Type.PATH);
 			}
@@ -174,6 +178,10 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 	{
 		Url originalUrl = new Url(request.getUrl());
 		PageParameters parameters = extractPageParameters(request, mountSegments.length, parametersEncoder);
+		if (parameters != null)
+		{
+			parameters.setLocale(resolveLocale());
+		}
 		removeCachingDecoration(originalUrl, parameters);
 		Request requestWithoutDecoration = request.cloneWithUrl(originalUrl);
 
@@ -214,7 +222,8 @@ public class ResourceMapper extends AbstractBookmarkableMapper
 		}
 
 		// replace placeholder parameters
-		PageParameters parameters = new PageParameters(handler.getPageParameters());
+		PageParameters parameters = newPageParameters();
+		parameters.mergeWith(handler.getPageParameters());
 
 		for (int index = 0; index < mountSegments.length; ++index)
 		{

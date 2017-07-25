@@ -17,6 +17,7 @@
 package org.apache.wicket.request.mapper;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
@@ -251,4 +252,11 @@ public abstract class AbstractMapper implements IRequestMapper
 		return res;
 	}
 
+	/**
+	 * @return the locale to use for parsing any numbers in the request parameters
+	 */
+	protected Locale resolveLocale()
+	{
+		return Locale.getDefault(Locale.Category.DISPLAY);
+	}
 }

@@ -18,8 +18,10 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.wicket.IRequestListener;
+import org.apache.wicket.Session;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -34,6 +36,7 @@ import org.apache.wicket.request.IRequestHandlerDelegate;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.info.ComponentInfo;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
@@ -43,8 +46,6 @@ import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.mapper.parameter.PageParametersEncoder;
 import org.apache.wicket.util.lang.Args;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Abstract encoder for Bookmarkable, Hybrid and BookmarkableListener URLs.
@@ -53,7 +54,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 {
-	private static Logger logger = LoggerFactory.getLogger(AbstractBookmarkableMapper.class);
 
 	/**
 	 * A flag that is used when comparing the mounted paths' segments against
@@ -479,6 +479,45 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		return new PageInfo(pageId);
 	}
 
+	/**
+	 * @return a new instance of {@link PageParameters} that will be passed to the page/resource
+	 */
+	protected PageParameters newPageParameters()
+	{
+		final PageParameters parameters = new PageParameters();
+		parameters.setLocale(resolveLocale());
+		return parameters;
+	}
+
+	/**
+	 * Override {@link #resolveLocale()} to return the result of this method if you want to use
+	 * the user's session or request locale for parsing numbers from the page parameters
+	 *
+	 * @return the Session or Request's locale to use for parsing any numbers in the request parameters
+	 */
+	protected Locale resolveUserLocale()
+	{
+		Locale locale = super.resolveLocale();
+		if (Session.exists())
+		{
+			locale = Session.get().getLocale();
+		}
+		else
+		{
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle != null)
+			{
+				Request request = requestCycle.getRequest();
+				if (request != null)
+				{
+					locale = request.getLocale();
+				}
+			}
+		}
+
+		return locale;
+	}
+
 	protected static class MountPathSegment
 	{
 		private int segmentIndex;
@@ -587,6 +626,10 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 		for (int curMatchSize : matchedParameters)
 			total += curMatchSize;
 		PageParameters pageParameters = extractPageParameters(request, total, pageParametersEncoder);
+		if (pageParameters != null)
+		{
+			pageParameters.setLocale(resolveLocale());
+		}
 
 		int skippedParameters = 0;
 		for (int pathSegmentIndex = 0; pathSegmentIndex < pathSegments.size(); pathSegmentIndex++)
@@ -598,7 +641,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 			{
 				if (pageParameters == null)
 				{
-					pageParameters = new PageParameters();
+					pageParameters = newPageParameters();
 				}
 
 				int curSegmentIndex = matchSegment + curPathSegment.getSegmentIndex();
