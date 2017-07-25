@@ -1738,7 +1738,7 @@ public class BaseWicketTester
 		return isFalse("component '" + path + "' is enabled", component.isEnabledInHierarchy());
 	}
 
-	private Component assertExists(final String path) {
+	protected Component assertExists(final String path) {
 		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
 		{

@@ -32,10 +32,12 @@ import javax.servlet.ServletContext;
 
 import junit.framework.AssertionFailedError;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
@@ -294,6 +296,26 @@ public class WicketTester extends BaseWicketTester
 	public void assertComponent(String path, Class<? extends Component> expectedComponentClass)
 	{
 		assertResult(isComponent(path, expectedComponentClass));
+	}
+
+	/**
+	 * Asserts that the <code>Component</code> a the given path has a behavior
+	 * of the given type.
+	 *
+	 * @param path
+	 *            path to <code>Component</code>
+	 * @param expectedBehaviorClass
+	 *            expected <code>Behavior</code> class
+	 */
+	public void assertBehavior(String path, Class<? extends Behavior> expectedBehaviorClass)
+	{
+		Args.notNull(expectedBehaviorClass, "expectedBehaviorClass");
+
+		Component component = assertExists(path);
+		List<? extends Behavior> behaviors = component.getBehaviors(expectedBehaviorClass);
+		final String message = String.format("Component '%s' has no behaviors of type '%s'",
+				component.getPageRelativePath(), expectedBehaviorClass);
+		assertResult(new Result(CollectionUtils.isEmpty(behaviors), message));
 	}
 
 	/**
