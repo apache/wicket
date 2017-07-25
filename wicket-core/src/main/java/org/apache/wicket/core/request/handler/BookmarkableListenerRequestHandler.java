@@ -72,9 +72,6 @@ public class BookmarkableListenerRequestHandler
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IComponentRequestHandler#getComponent()
-	 */
 	@Override
 	public IRequestableComponent getComponent()
 	{
@@ -87,45 +84,30 @@ public class BookmarkableListenerRequestHandler
 		return pageComponentProvider.getComponentPath();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPage()
-	 */
 	@Override
 	public IRequestablePage getPage()
 	{
 		return pageComponentProvider.getPageInstance();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageClassRequestHandler#getPageClass()
-	 */
 	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageComponentProvider.getPageClass();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageId()
-	 */
 	@Override
 	public Integer getPageId()
 	{
 		return pageComponentProvider.getPageId();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageClassRequestHandler#getPageParameters()
-	 */
 	@Override
 	public PageParameters getPageParameters()
 	{
 		return pageComponentProvider.getPageParameters();
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
-	 */
 	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
@@ -143,9 +125,6 @@ public class BookmarkableListenerRequestHandler
 		return behaviorIndex;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
-	 */
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{

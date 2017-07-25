@@ -164,18 +164,12 @@ public class PageProvider implements IPageProvider, IClusterable
 		return provision;
 	}
 
-	/**
-	 * @see IPageProvider#getPageInstance()
-	 */
 	@Override
 	public IRequestablePage getPageInstance()
 	{
 		return getProvision().getPage();
 	}
 
-	/**
-	 * @see IPageProvider#getPageParameters()
-	 */
 	@Override
 	public PageParameters getPageParameters()
 	{
@@ -237,18 +231,12 @@ public class PageProvider implements IPageProvider, IClusterable
 		return getProvision().doesProvideNewPage();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageProvider#wasExpired()
-	 */
 	@Override
 	public boolean wasExpired()
 	{
 		return pageId != null && getProvision().didFailToFindStoredPage();
 	}
 
-	/**
-	 * @see IPageProvider#getPageClass()
-	 */
 	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
