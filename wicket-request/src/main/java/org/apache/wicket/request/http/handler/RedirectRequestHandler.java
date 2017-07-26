@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A request handler that redirects to the given url.
@@ -64,7 +65,7 @@ public class RedirectRequestHandler implements IRequestHandler
 		{
 			throw new IllegalStateException("Status must be either 301, 302 or 303, but was: " + status);
 		}
-		this.redirectUrl = redirectUrl;
+		this.redirectUrl = Args.notEmpty(redirectUrl, "redirectUrl");
 		this.status = status;
 	}
 
