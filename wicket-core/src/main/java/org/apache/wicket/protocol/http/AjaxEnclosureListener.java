@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.util.visit.IVisit;
@@ -107,8 +108,8 @@ public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
 	 * @param enclosure
 	 * @return true if the given component is the controlling child of the given InlineEnclosure
 	 */
-	private boolean isControllerOfEnclosure(final Component component,
-		final InlineEnclosure enclosure)
+	public static boolean isControllerOfEnclosure(final Component component,
+		final Enclosure enclosure)
 	{
 		return (enclosure.get(enclosure.getChildId()) == component || // #queue()
 				enclosure.getParent().get(enclosure.getChildId()) == component); // #add()

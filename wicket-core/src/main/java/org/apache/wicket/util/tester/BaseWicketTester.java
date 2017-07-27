@@ -82,6 +82,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.SubmitLink;
+import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -96,6 +97,7 @@ import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.protocol.http.AjaxEnclosureListener;
 import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -2321,7 +2323,23 @@ public class BaseWicketTester
 		boolean isComponentInAjaxResponse = ajaxResponse.matches("(?s).*<component id=\"" +
 			markupId + "\"[^>]*?>.*");
 		failMessage = "Component wasn't found in the AJAX response. " + componentInfo;
-		return isTrue(failMessage, isComponentInAjaxResponse);
+		result = isTrue(failMessage, isComponentInAjaxResponse);
+
+		// Check if the component has been included as part of an enclosure render
+		Enclosure enclosure = getLastRenderedPage().visitChildren(Enclosure.class, (Enclosure enc, IVisit<Enclosure> visit) -> {
+			if (AjaxEnclosureListener.isControllerOfEnclosure(component, enc)){
+				visit.stop(enc);
+			}
+		});
+
+		if (enclosure != null){
+			failMessage = "Component's enclosure was not found in the AJAX response. " + enclosure.toString();
+			boolean isEnclosureInAjaxResponse = !isComponentOnAjaxResponse(enclosure).wasFailed();
+			return isTrue(failMessage, isEnclosureInAjaxResponse);
+		} else {
+			return result;
+		}
+
 	}
 
 	/**
