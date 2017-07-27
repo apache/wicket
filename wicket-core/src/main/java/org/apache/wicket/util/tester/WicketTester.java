@@ -647,7 +647,9 @@ public class WicketTester extends BaseWicketTester
 	 *            path to a {@link ListView} <code>Component</code>
 	 * @param expectedList
 	 *            expected <code>List</code> in the model of the given {@link ListView}
+	 * @Deprecated use {@link #assertModelValue(String, Object)} instead
 	 */
+	@Deprecated
 	@Override
 	public void assertListView(String path, List<?> expectedList)
 	{
