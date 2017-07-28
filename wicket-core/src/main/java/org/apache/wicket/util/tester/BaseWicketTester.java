@@ -1843,7 +1843,8 @@ public class BaseWicketTester
 	 *            path to {@link ListView} component
 	 * @param expectedList
 	 *            expected list in the model of {@link ListView}
-	 * @Deprecated use {@link WicketTester#assertModelValue(String, Object)} instead
+	 * @deprecated use {@link WicketTester#assertComponent(String, Class) combined with
+	 *             {@link WicketTester#assertModelValue(String, Object)} instead
 	 */
 	@Deprecated
 	public void assertListView(String path, List<?> expectedList)
