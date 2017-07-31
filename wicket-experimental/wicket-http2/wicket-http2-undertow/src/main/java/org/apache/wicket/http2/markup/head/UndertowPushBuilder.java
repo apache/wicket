@@ -18,6 +18,7 @@ package org.apache.wicket.http2.markup.head;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.http2.markup.head.PushItemHeaderValue.HeaderOperation;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class UndertowPushBuilder implements PushBuilder
 	private static final Logger LOG = LoggerFactory.getLogger(UndertowPushBuilder.class);
 
 	@Override
-	public void push(HttpServletRequest httpServletRequest, String... paths)
+	public void push(HttpServletRequest httpServletRequest, PushItem... pushItems)
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
@@ -42,9 +43,19 @@ public class UndertowPushBuilder implements PushBuilder
 		io.undertow.servlet.spec.PushBuilderImpl pushBuilder = (io.undertow.servlet.spec.PushBuilderImpl)undertowRequest.getPushBuilder();
 		if (pushBuilder != null)
 		{
-			for (String path : paths)
+			for (PushItem pushItem : pushItems)
 			{
-				pushBuilder.path(path).push();
+				pushBuilder.path(pushItem.getUrl());
+				pushItem.getHeaders().entrySet().stream().forEach(pushHeader -> {
+					String key = pushHeader.getKey();
+					PushItemHeaderValue value = pushHeader.getValue();
+					if(value.getOperation() == HeaderOperation.ADD){
+						pushBuilder.addHeader(key, value.getValue());
+					}else{
+						pushBuilder.setHeader(key, value.getValue());
+					}
+				});
+				pushBuilder.push();
 			}
 		}
 		else
