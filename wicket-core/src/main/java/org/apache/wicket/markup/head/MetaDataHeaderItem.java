@@ -38,7 +38,15 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class MetaDataHeaderItem extends HeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * The meta tag name
+	 */
 	public static final String META_TAG = "meta";
+	/**
+	 * the link tag name
+	 */
 	public static final String LINK_TAG = "link";
 
 	private final Map<String, Object> tagAttributes;

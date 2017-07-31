@@ -37,16 +37,17 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class CssHeaderItem extends HeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = LoggerFactory.getLogger(CssHeaderItem.class);
 
 	/**
-	 * The condition to use for Internet Explorer conditional comments. E.g. "IE 7".
-	 * {@code null} or empty string for no condition.
+	 * The condition to use for Internet Explorer conditional comments. E.g. "IE 7". {@code null} or
+	 * empty string for no condition.
 	 *
-	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
-	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
-	 * at the server side:
-	 * <code><pre>
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically with
+	 * JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing at
+	 * the server side: <code><pre>
 	 * public void renderHead(IHeaderResponse response) {
 	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
 	 *   ClientProperties properties = clientInfo.getProperties();
@@ -59,15 +60,15 @@ public abstract class CssHeaderItem extends HeaderItem
 	private final String condition;
 
 	private String markupId;
-	
+
 	protected CssHeaderItem(String condition)
 	{
 		this.condition = condition;
 	}
 
 	/**
-	 * @return an optional markup id for the &lt;link&gt; HTML element that will be rendered
-	 * for this header item
+	 * @return an optional markup id for the &lt;link&gt; HTML element that will be rendered for
+	 *         this header item
 	 */
 	public String getId()
 	{
@@ -76,7 +77,7 @@ public abstract class CssHeaderItem extends HeaderItem
 
 	/**
 	 * @param markupId
-	 *          an optional markup id for this header item
+	 *            an optional markup id for this header item
 	 * @return {@code this} object, for method chaining
 	 */
 	public CssHeaderItem setId(String markupId)
@@ -92,7 +93,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	{
 		return condition;
 	}
-	
+
 	/**
 	 * Creates a {@link CssReferenceHeaderItem} for the given reference.
 	 * 
@@ -139,10 +140,9 @@ public abstract class CssHeaderItem extends HeaderItem
 	/**
 	 * Creates a {@link CssReferenceHeaderItem} for the given reference.
 	 *
-	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
-	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
-	 * at the server side:
-	 * <code><pre>
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically with
+	 * JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing at
+	 * the server side: <code><pre>
 	 * public void renderHead(IHeaderResponse response) {
 	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
 	 *   ClientProperties properties = clientInfo.getProperties();
@@ -169,6 +169,39 @@ public abstract class CssHeaderItem extends HeaderItem
 	}
 
 	/**
+	 * Creates a {@link CssReferenceHeaderItem} for the given reference.
+	 *
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically with
+	 * JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing at
+	 * the server side: <code><pre>
+	 * public void renderHead(IHeaderResponse response) {
+	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+	 *   ClientProperties properties = clientInfo.getProperties();
+	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
+	 *   }
+	 * }
+	 * </pre></code>
+	 *
+	 * @param reference
+	 *            a reference to a CSS resource
+	 * @param pageParameters
+	 *            the parameters for this CSS resource reference
+	 * @param media
+	 *            the media type for this CSS ("print", "screen", etc.)
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * @param rel
+	 *            the rel attribute content
+	 * @return A newly created {@link CssReferenceHeaderItem} for the given reference.
+	 */
+	public static CssReferenceHeaderItem forReference(ResourceReference reference,
+		PageParameters pageParameters, String media, String condition, String rel)
+	{
+		return new CssReferenceHeaderItem(reference, pageParameters, media, condition, rel);
+	}
+
+	/**
 	 * Creates a {@link CssContentHeaderItem} for the given content.
 	 * 
 	 * @param css
@@ -187,10 +220,9 @@ public abstract class CssHeaderItem extends HeaderItem
 	/**
 	 * Creates a {@link CssContentHeaderItem} for the given content.
 	 *
-	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
-	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
-	 * at the server side:
-	 * <code><pre>
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically with
+	 * JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing at
+	 * the server side: <code><pre>
 	 * public void renderHead(IHeaderResponse response) {
 	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
 	 *   ClientProperties properties = clientInfo.getProperties();
@@ -213,7 +245,7 @@ public abstract class CssHeaderItem extends HeaderItem
 	{
 		return new CssContentHeaderItem(css, id, condition);
 	}
-	
+
 	/**
 	 * Creates a {@link CssUrlReferenceHeaderItem} for the given url.
 	 * 
@@ -243,10 +275,9 @@ public abstract class CssHeaderItem extends HeaderItem
 	/**
 	 * Creates a {@link CssUrlReferenceHeaderItem} for the given url.
 	 *
-	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically
-	 * with JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing
-	 * at the server side:
-	 * <code><pre>
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically with
+	 * JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing at
+	 * the server side: <code><pre>
 	 * public void renderHead(IHeaderResponse response) {
 	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
 	 *   ClientProperties properties = clientInfo.getProperties();
@@ -269,19 +300,50 @@ public abstract class CssHeaderItem extends HeaderItem
 		return new CssUrlReferenceHeaderItem(url, media, condition);
 	}
 
+	/**
+	 * Creates a {@link CssUrlReferenceHeaderItem} for the given url.
+	 *
+	 * <strong>Warning</strong>: the conditional comments don't work when injected dynamically with
+	 * JavaScript (i.e. in Ajax response). An alternative solution is to use user agent sniffing at
+	 * the server side: <code><pre>
+	 * public void renderHead(IHeaderResponse response) {
+	 *   WebClientInfo clientInfo = (WebClientInfo) getSession().getClientInfo();
+	 *   ClientProperties properties = clientInfo.getProperties();
+	 *   if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() >= 8) {
+	 *     response.renderCSSReference(new PackageResourceReference(MyPage.class, "my-conditional.css" ));
+	 *   }
+	 * }
+	 * </pre></code>
+	 *
+	 * @param url
+	 *            context-relative url of the CSS resource
+	 * @param media
+	 *            the media type for this CSS ("print", "screen", etc.)
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * @param rel
+	 *            the rel attribute content
+	 * @return A newly created {@link CssUrlReferenceHeaderItem} for the given url.
+	 */
+	public static CssUrlReferenceHeaderItem forUrl(String url, String media, String condition,
+		String rel)
+	{
+		return new CssUrlReferenceHeaderItem(url, media, condition, rel);
+	}
+
 	protected final void internalRenderCSSReference(Response response, String url, String media,
-		String condition)
+		String condition, String rel)
 	{
 		Args.notEmpty(url, "url");
-		
-		boolean hasCondition = Strings.isEmpty(condition) == false; 
+
+		boolean hasCondition = Strings.isEmpty(condition) == false;
 		if (hasCondition)
 		{
 			if (RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent())
 			{
 				// WICKET-4894
 				logger.warn("IE CSS engine doesn't support dynamically injected links in " +
-						"conditional comments. See the javadoc of IHeaderResponse for alternative solution.");
+					"conditional comments. See the javadoc of IHeaderResponse for alternative solution.");
 			}
 
 
@@ -290,7 +352,7 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write("]>");
 		}
 
-		CssUtils.writeLinkUrl(response, url, media, getId());
+		CssUtils.writeLinkUrl(response, url, media, getId(), rel);
 
 		if (hasCondition)
 		{
@@ -302,11 +364,12 @@ public abstract class CssHeaderItem extends HeaderItem
 	@Override
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		CssHeaderItem that = (CssHeaderItem) o;
-		return Objects.equals(condition, that.condition) &&
-				Objects.equals(markupId, that.markupId);
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		CssHeaderItem that = (CssHeaderItem)o;
+		return Objects.equals(condition, that.condition) && Objects.equals(markupId, that.markupId);
 	}
 
 	@Override

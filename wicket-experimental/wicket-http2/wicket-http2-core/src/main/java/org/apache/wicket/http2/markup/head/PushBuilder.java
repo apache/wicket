@@ -28,8 +28,8 @@ public interface PushBuilder
 	 * 
 	 * @param httpServletRequest
 	 *            the http servlet request to get the push builder from
-	 * @param paths
-	 *            the paths of the resources to be pushed
+	 * @param pushItems
+	 *            the pushItems of the resources to be pushed
 	 */
-	void push(HttpServletRequest httpServletRequest, String... paths);
+	void push(HttpServletRequest httpServletRequest, PushItem... pushItems);
 }

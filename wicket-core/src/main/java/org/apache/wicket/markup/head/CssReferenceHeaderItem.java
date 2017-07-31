@@ -36,9 +36,12 @@ import org.apache.wicket.util.string.Strings;
  */
 public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceHeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	private final ResourceReference reference;
 	private final String media;
 	private final PageParameters pageParameters;
+	private final String rel;
 
 	/**
 	 * Creates a new {@code CSSReferenceHeaderItem}.
@@ -59,6 +62,31 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 		this.reference = reference;
 		this.pageParameters = pageParameters;
 		this.media = media;
+		this.rel = null;
+	}
+
+	/**
+	 * Creates a new {@code CSSReferenceHeaderItem}.
+	 * 
+	 * @param reference
+	 *            resource reference pointing to the CSS resource
+	 * @param pageParameters
+	 *            the parameters for this CSS resource reference
+	 * @param media
+	 *            the media type for this CSS ("print", "screen", etc.)
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * @param rel
+	 *            the rel attribute content
+	 */
+	public CssReferenceHeaderItem(ResourceReference reference, PageParameters pageParameters,
+		String media, String condition, String rel)
+	{
+		super(condition);
+		this.reference = reference;
+		this.pageParameters = pageParameters;
+		this.media = media;
+		this.rel = rel;
 	}
 
 	/**
@@ -77,6 +105,14 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	public String getMedia()
 	{
 		return media;
+	}
+
+	/**
+	 * @return the rel attribute content
+	 */
+	public String getRel()
+	{
+		return rel;
 	}
 
 	/**
@@ -104,7 +140,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public void render(Response response)
 	{
-		internalRenderCSSReference(response, getUrl(), media, getCondition());
+		internalRenderCSSReference(response, getUrl(), media, getCondition(), getRel());
 	}
 
 	@Override
@@ -129,18 +165,20 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(super.hashCode(), reference, media, pageParameters);
+		return Objects.hash(super.hashCode(), reference, media, pageParameters, rel);
 	}
 
 	@Override
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		if (!super.equals(o)) return false;
-		CssReferenceHeaderItem that = (CssReferenceHeaderItem) o;
-		return Objects.equals(reference, that.reference) &&
-				Objects.equals(media, that.media) &&
-				Objects.equals(pageParameters, that.pageParameters);
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		if (!super.equals(o))
+			return false;
+		CssReferenceHeaderItem that = (CssReferenceHeaderItem)o;
+		return Objects.equals(reference, that.reference) && Objects.equals(media, that.media) &&
+			Objects.equals(rel, that.rel) && Objects.equals(pageParameters, that.pageParameters);
 	}
 }
