@@ -34,9 +34,9 @@ public class HTTP2Page extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private Response webPageResponse;
+	private transient Response webPageResponse;
 
-	private Request webPageRequest;
+	private transient Request webPageRequest;
 
 	public HTTP2Page()
 	{
