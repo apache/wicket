@@ -52,7 +52,7 @@ public class NoopPushBuilder implements PushBuilder
 	 * </p>
 	 */
 	@Override
-	public void push(HttpServletRequest httpServletRequest, String... paths)
+	public void push(HttpServletRequest httpServletRequest, PushItem... pushItems)
 	{
 		LOG.warn(
 			"This PushBuilder does nothing. Please use one of the other implementations - Jetty9 or Tomcat8.5+");

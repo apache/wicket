@@ -18,6 +18,7 @@ package org.apache.wicket.http2.markup.head;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.http2.markup.head.PushItemHeaderValue.HeaderOperation;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.slf4j.Logger;
@@ -33,16 +34,26 @@ public class Jetty9PushBuilder implements PushBuilder
 	private static final Logger LOG = LoggerFactory.getLogger(Jetty9PushBuilder.class);
 
 	@Override
-	public void push(HttpServletRequest httpServletRequest, String... paths)
+	public void push(HttpServletRequest httpServletRequest, PushItem... pushItems)
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-		org.eclipse.jetty.server.PushBuilder pushBuilder = org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
+		final org.eclipse.jetty.server.PushBuilder pushBuilder = org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
 		if (pushBuilder != null)
 		{
-			for (String path : paths)
+			for (PushItem pushItem : pushItems)
 			{
-				pushBuilder.path(path).push();
+				pushBuilder.path(pushItem.getUrl());
+				pushItem.getHeaders().entrySet().stream().forEach(pushHeader -> {
+					String key = pushHeader.getKey();
+					PushItemHeaderValue value = pushHeader.getValue();
+					if(value.getOperation() == HeaderOperation.ADD){
+						pushBuilder.addHeader(key, value.getValue());
+					}else{
+						pushBuilder.setHeader(key, value.getValue());
+					}
+				});
+				pushBuilder.push();
 			}
 		}
 		else
