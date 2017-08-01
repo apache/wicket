@@ -20,8 +20,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-import org.apache.wicket.request.Response;
 import org.apache.wicket.core.util.string.CssUtils;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -31,6 +31,8 @@ import org.apache.wicket.util.string.Strings;
  */
 public class CssContentHeaderItem extends CssHeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	private final CharSequence css;
 
 	/**
@@ -41,6 +43,8 @@ public class CssContentHeaderItem extends CssHeaderItem
 	 * @param id
 	 *            unique id for the &lt;style&gt; element. This can be <code>null</code>, however in
 	 *            that case the ajax header contribution can't detect duplicate CSS fragments.
+	 * @param condition
+	 *            the condition when the css should be applied
 	 */
 	public CssContentHeaderItem(CharSequence css, String id, String condition)
 	{
@@ -93,9 +97,11 @@ public class CssContentHeaderItem extends CssHeaderItem
 	@Override
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		CssContentHeaderItem that = (CssContentHeaderItem) o;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		CssContentHeaderItem that = (CssContentHeaderItem)o;
 		return Objects.equals(css, that.css);
 	}
 
