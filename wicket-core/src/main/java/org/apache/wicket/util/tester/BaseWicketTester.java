@@ -297,9 +297,9 @@ public class BaseWicketTester
 		}
 
 		servletContext = servletCtx != null ? servletCtx
-				// If it's provided from the container it's not necessary to mock.
-				: !init && application.getServletContext() != null ? application.getServletContext()
-				: new MockServletContext(application, null);
+			// If it's provided from the container it's not necessary to mock.
+			: !init && application.getServletContext() != null ? application.getServletContext()
+			: new MockServletContext(application, null);
 
 		// If using Arquillian and it's configured in a web.xml it'll be provided. If not, mock it.
 		if(application.getWicketFilter() == null)
@@ -342,15 +342,15 @@ public class BaseWicketTester
 
 		// reconfigure application for the test environment
 		application.setPageRendererProvider(new LastPageRecordingPageRendererProvider(
-				application.getPageRendererProvider()));
+			application.getPageRendererProvider()));
 		application.setRequestCycleProvider(new TestRequestCycleProvider(
-				application.getRequestCycleProvider()));
+			application.getRequestCycleProvider()));
 
 		// set a feedback message filter that will not remove any messages
 		originalFeedbackMessageCleanupFilter = application.getApplicationSettings()
-				.getFeedbackMessageCleanupFilter();
+			.getFeedbackMessageCleanupFilter();
 		application.getApplicationSettings().setFeedbackMessageCleanupFilter(
-				IFeedbackMessageFilter.NONE);
+			IFeedbackMessageFilter.NONE);
 		IPageManagerProvider pageManagerProvider = newTestPageManagerProvider();
 		if (pageManagerProvider != null)
 		{
@@ -398,7 +398,7 @@ public class BaseWicketTester
 
 		// assign protocol://host:port to next request unless the last request was ajax
 		final boolean assignBaseLocation = lastRequest != null &&
-				lastRequest.getHeader("Wicket-Ajax") == null;
+			lastRequest.getHeader("Wicket-Ajax") == null;
 
 		// resume request processing with scheme://host:port from last request
 		if (assignBaseLocation)
@@ -462,7 +462,7 @@ public class BaseWicketTester
 
 		ServletWebRequest servletWebRequest = newServletWebRequest();
 		requestCycle = application.createRequestCycle(servletWebRequest,
-				newServletWebResponse(servletWebRequest));
+			newServletWebResponse(servletWebRequest));
 		ThreadContext.setRequestCycle(requestCycle);
 
 		if (session == null)
@@ -647,7 +647,7 @@ public class BaseWicketTester
 	 * @return true, if process was executed successfully
 	 */
 	public boolean processRequest(final MockHttpServletRequest request,
-								  final IRequestHandler forcedRequestHandler)
+		final IRequestHandler forcedRequestHandler)
 	{
 		return processRequest(request, forcedRequestHandler, false);
 	}
@@ -676,7 +676,7 @@ public class BaseWicketTester
 	 * @return true, if process was executed successfully
 	 */
 	protected boolean processRequest(final MockHttpServletRequest forcedRequest,
-									 final IRequestHandler forcedRequestHandler, final boolean redirect)
+		final IRequestHandler forcedRequestHandler, final boolean redirect)
 	{
 		if (forcedRequest != null)
 		{
@@ -731,7 +731,7 @@ public class BaseWicketTester
 				}
 
 				Url newUrl = Url.parse(lastResponse.getRedirectLocation(),
-						Charset.forName(request.getCharacterEncoding()));
+					Charset.forName(request.getCharacterEncoding()));
 
 				if (isExternalRedirect(lastRequest.getUrl(), newUrl))
 				{
@@ -767,7 +767,7 @@ public class BaseWicketTester
 				{
 					// append redirect URL to current URL (what browser would do)
 					Url mergedURL = new Url(lastRequest.getUrl().getSegments(),
-							newUrl.getQueryParameters());
+						newUrl.getQueryParameters());
 					mergedURL.concatSegments(newUrl.getSegments());
 
 					request.setUrl(mergedURL);
@@ -939,7 +939,7 @@ public class BaseWicketTester
 	 * @return the tested resource reference
 	 */
 	public ResourceReference startResourceReference(final ResourceReference reference,
-													final PageParameters pageParameters)
+		final PageParameters pageParameters)
 	{
 		// prepare request
 		request.setURL(request.getContextPath() + request.getServletPath() + "/");
@@ -1001,7 +1001,7 @@ public class BaseWicketTester
 	 * @throws ParseException
 	 */
 	public String getWicketAjaxBaseUrlEncodedInLastResponse() throws IOException,
-			ResourceStreamNotFoundException, ParseException
+		ResourceStreamNotFoundException, ParseException
 	{
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(getLastResponseAsString());
@@ -1009,7 +1009,7 @@ public class BaseWicketTester
 		while ((tag = parser.nextTag()) != null)
 		{
 			if (tag.isOpen() && tag.getName().equals("script") &&
-					"wicket-ajax-base-url".equals(tag.getAttribute("id")))
+				"wicket-ajax-base-url".equals(tag.getAttribute("id")))
 			{
 				parser.next();
 				return parser.getString().toString().split("\\\"")[1];
@@ -1098,7 +1098,7 @@ public class BaseWicketTester
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		Page page = component.getPage();
 		PageAndComponentProvider pageAndComponentProvider = new PageAndComponentProvider(page,
-				component);
+			component);
 
 		IRequestHandler handler = null;
 		if (page.isPageStateless() || (page.isBookmarkable() && page.wasCreatedBookmarkable()))
@@ -1134,7 +1134,7 @@ public class BaseWicketTester
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
-				component.getPage(), component));
+			component.getPage(), component));
 
 		processRequest(handler);
 	}
@@ -1157,7 +1157,7 @@ public class BaseWicketTester
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
 		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
-				component.getPage(), component), component.getBehaviorId(behavior));
+			component.getPage(), component), component.getBehaviorId(behavior));
 
 		processRequest(handler);
 	}
@@ -1173,7 +1173,7 @@ public class BaseWicketTester
 		Args.notNull(behavior, "behavior");
 
 		Url url = Url.parse(behavior.getCallbackUrl().toString(),
-				Charset.forName(request.getCharacterEncoding()));
+			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.setUrl(url);
 		request.addHeader(WebRequest.HEADER_ORIGIN, createOriginHeader());
@@ -1189,7 +1189,7 @@ public class BaseWicketTester
 
 			// mark behavior's component as the form submitter,
 			String name = Form.getRootFormRelativeId(new PropertyModel<Component>(behavior,
-					"component").getObject());
+				"component").getObject());
 			if (!request.getPostParameters().getParameterNames().contains(name))
 			{
 				request.getPostParameters().setParameterValue(name, "marked");
@@ -1218,7 +1218,7 @@ public class BaseWicketTester
 	{
 		AbstractAjaxBehavior behavior = WicketTesterHelper.findAjaxEventBehavior(link, "click");
 		Url url = Url.parse(behavior.getCallbackUrl().toString(),
-				Charset.forName(request.getCharacterEncoding()));
+			Charset.forName(request.getCharacterEncoding()));
 		return transform(url);
 	}
 
@@ -1263,7 +1263,7 @@ public class BaseWicketTester
 	 */
 	@SuppressWarnings("unchecked")
 	public final <C extends Page> C startPage(final Class<C> pageClass,
-											  final PageParameters parameters)
+		final PageParameters parameters)
 	{
 		Args.notNull(pageClass, "pageClass");
 
@@ -1272,7 +1272,7 @@ public class BaseWicketTester
 
 		// prepare the request
 		request.setUrl(application.getRootRequestMapper().mapHandler(
-				new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
+			new BookmarkablePageRequestHandler(new PageProvider(pageClass, parameters))));
 
 		// process the request
 		processRequest();
@@ -1309,7 +1309,7 @@ public class BaseWicketTester
 	public FormTester newFormTester(final String path, final boolean fillBlankString)
 	{
 		return new FormTester(path, (Form<?>)getComponentFromLastRenderedPage(path), this,
-				fillBlankString);
+			fillBlankString);
 	}
 
 	/**
@@ -1355,7 +1355,7 @@ public class BaseWicketTester
 	 * @return The component processed
 	 */
 	public final <C extends Component> C startComponentInPage(final Class<C> componentClass,
-															  final IMarkupFragment pageMarkup)
+		final IMarkupFragment pageMarkup)
 	{
 		Args.notNull(componentClass, "componentClass");
 
@@ -1373,7 +1373,7 @@ public class BaseWicketTester
 		{
 			log.error(e.getMessage(), e);
 			fail(String.format("Cannot instantiate component with type '%s' because of '%s'",
-					componentClass.getName(), e.getMessage()));
+				componentClass.getName(), e.getMessage()));
 		}
 
 		// process the component
@@ -1422,7 +1422,7 @@ public class BaseWicketTester
 	 * @return The component processed
 	 */
 	public final <C extends Component> C startComponentInPage(final C component,
-															  IMarkupFragment pageMarkup)
+		IMarkupFragment pageMarkup)
 	{
 		Args.notNull(component, "component");
 
@@ -1448,11 +1448,11 @@ public class BaseWicketTester
 				// still work. WICKET-3700
 				ContainerInfo containerInfo = new ContainerInfo(page);
 				MarkupResourceStream markupResourceStream = new MarkupResourceStream(
-						new StringResourceStream(markup), containerInfo, page.getClass());
+					new StringResourceStream(markup), containerInfo, page.getClass());
 
 				MarkupParser markupParser = getApplication().getMarkupSettings()
-						.getMarkupFactory()
-						.newMarkupParser(markupResourceStream);
+					.getMarkupFactory()
+					.newMarkupParser(markupResourceStream);
 				pageMarkup = markupParser.parse();
 			}
 			catch (Exception e)
@@ -1505,7 +1505,7 @@ public class BaseWicketTester
 	protected String createPageMarkup(final String componentId)
 	{
 		return "<html><head></head><body><span wicket:id='" + componentId +
-				"'></span></body></html>";
+			"'></span></body></html>";
 	}
 
 	/**
@@ -1582,7 +1582,7 @@ public class BaseWicketTester
 	 * @see org.apache.wicket.MarkupContainer#get(String)
 	 */
 	public Component getComponentFromLastRenderedPage(String path,
-													  final boolean wantVisibleInHierarchy)
+		final boolean wantVisibleInHierarchy)
 	{
 		if (componentInPage != null && componentInPage.isInstantiated)
 		{
@@ -1597,7 +1597,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			fail("path: '" + path + "' does not exist for page: " +
-					Classes.simpleName(getLastRenderedPage().getClass()));
+				Classes.simpleName(getLastRenderedPage().getClass()));
 			return null;
 		}
 
@@ -1656,8 +1656,8 @@ public class BaseWicketTester
 		Component component = assertExists(path);
 
 		return isTrue("component '" + Classes.name(component.getClass()) + "' is not of type: " +
-						Classes.name(expectedComponentClass),
-				expectedComponentClass.isAssignableFrom(component.getClass()));
+			Classes.name(expectedComponentClass),
+			expectedComponentClass.isAssignableFrom(component.getClass()));
 	}
 
 	/**
@@ -1675,12 +1675,12 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			result = Result.fail("path: '" + path + "' does not exist for page: " +
-					Classes.simpleName(getLastRenderedPage().getClass()));
+				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		else
 		{
 			result = isTrue("component '" + path + "' is not visible",
-					component.isVisibleInHierarchy());
+				component.isVisibleInHierarchy());
 		}
 
 		return result;
@@ -1701,12 +1701,12 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			result = Result.fail("path: '" + path + "' does not exist for page: " +
-					Classes.simpleName(getLastRenderedPage().getClass()));
+				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		else
 		{
 			result = isFalse("component '" + path + "' is visible",
-					component.isVisibleInHierarchy());
+				component.isVisibleInHierarchy());
 		}
 
 		return result;
@@ -1745,7 +1745,7 @@ public class BaseWicketTester
 		if (component == null)
 		{
 			fail("path: '" + path + "' does no exist for page: " +
-					Classes.simpleName(getLastRenderedPage().getClass()));
+			     Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		return component;
 	}
@@ -1822,7 +1822,7 @@ public class BaseWicketTester
 	public Result ifContains(String pattern)
 	{
 		return isTrue("pattern '" + pattern + "' not found in:\n" + getLastResponseAsString(),
-				getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
+			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -1835,7 +1835,7 @@ public class BaseWicketTester
 	public Result ifContainsNot(String pattern)
 	{
 		return isFalse("pattern '" + pattern + "' found",
-				getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
+			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
 	}
 
 	/**
@@ -1909,11 +1909,11 @@ public class BaseWicketTester
 			if (isAjax == false)
 			{
 				fail("Link " + path + "is an AjaxLink and will " +
-						"not be invoked when AJAX (javascript) is disabled.");
+					"not be invoked when AJAX (javascript) is disabled.");
 			}
 
 			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
-					linkComponent, "click");
+				linkComponent, "click");
 			for (AjaxEventBehavior behavior : behaviors)
 			{
 				executeBehavior(behavior);
@@ -1927,7 +1927,7 @@ public class BaseWicketTester
 			if (isAjax == false)
 			{
 				fail("Link " + path + " is an AjaxSubmitLink and " +
-						"will not be invoked when AJAX (javascript) is disabled.");
+					"will not be invoked when AJAX (javascript) is disabled.");
 			}
 
 			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
@@ -1936,13 +1936,13 @@ public class BaseWicketTester
 			request.getPostParameters().setParameterValue(pageRelativePath, "x");
 
 			submitAjaxFormSubmitBehavior(link,
-					(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "click"));
+				(AjaxFormSubmitBehavior)WicketTesterHelper.findAjaxEventBehavior(link, "click"));
 		}
 		// if the link is an IAjaxLink, use it (do check if AJAX is expected)
 		else if (isAjax && (linkComponent instanceof IAjaxLink || linkComponent instanceof AjaxFallbackLink))
 		{
 			List<AjaxEventBehavior> behaviors = WicketTesterHelper.findAjaxEventBehaviors(
-					linkComponent, "click");
+				linkComponent, "click");
 			for (AjaxEventBehavior behavior : behaviors)
 			{
 				executeBehavior(behavior);
@@ -1991,18 +1991,18 @@ public class BaseWicketTester
 				try
 				{
 					Method getParametersMethod = BookmarkablePageLink.class.getDeclaredMethod(
-							"getPageParameters", (Class<?>[])null);
+						"getPageParameters", (Class<?>[])null);
 					getParametersMethod.setAccessible(true);
 
 					PageParameters parameters = (PageParameters)getParametersMethod.invoke(
-							bookmarkablePageLink, (Object[])null);
+						bookmarkablePageLink, (Object[])null);
 
 					startPage(bookmarkablePageLink.getPageClass(), parameters);
 				}
 				catch (Exception e)
 				{
 					throw new WicketRuntimeException("Internal error in WicketTester. "
-							+ "Please report this in Wicket's Issue Tracker.", e);
+						+ "Please report this in Wicket's Issue Tracker.", e);
 				}
 			}
 			else if (link instanceof ResourceLink)
@@ -2017,7 +2017,7 @@ public class BaseWicketTester
 				catch (Exception x)
 				{
 					throw new RuntimeException(
-							"An error occurred while clicking on a ResourceLink", x);
+						"An error occurred while clicking on a ResourceLink", x);
 				}
 			}
 			else
@@ -2029,7 +2029,7 @@ public class BaseWicketTester
 		else if (linkComponent instanceof IAjaxLink && isAjax == false)
 		{
 			fail("Link " + path + "is an IAjaxLink and will " +
-					"not be invoked when AJAX (javascript) is disabled.");
+				"not be invoked when AJAX (javascript) is disabled.");
 		}
 		else
 		{
@@ -2062,9 +2062,9 @@ public class BaseWicketTester
 	{
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
 		Url url = Url.parse(
-				form.getRootForm()
-						.urlForListener(new PageParameters())
-						.toString(), Charset.forName(request.getCharacterEncoding()));
+			form.getRootForm()
+				.urlForListener(new PageParameters())
+				.toString(), Charset.forName(request.getCharacterEncoding()));
 
 		// make url absolute
 		transform(url);
@@ -2083,7 +2083,7 @@ public class BaseWicketTester
 	private Url transform(final Url url)
 	{
 		while (url.getSegments().size() > 0 &&
-				(url.getSegments().get(0).equals("..") || url.getSegments().get(0).equals(".")))
+			(url.getSegments().get(0).equals("..") || url.getSegments().get(0).equals(".")))
 		{
 			url.getSegments().remove(0);
 		}
@@ -2110,7 +2110,7 @@ public class BaseWicketTester
 		if (!expectedRenderedPageClass.isAssignableFrom(page.getClass()))
 		{
 			return Result.fail(String.format("classes not the same, expected '%s', current '%s'",
-					expectedRenderedPageClass, page.getClass()));
+				expectedRenderedPageClass, page.getClass()));
 		}
 		return Result.pass();
 	}
@@ -2284,7 +2284,7 @@ public class BaseWicketTester
 		if (!component.isVisible())
 		{
 			failMessage = "A component which is invisible and doesn't render a placeholder tag"
-					+ " will not be rendered at all and thus won't be accessible for subsequent AJAX interaction. " +
+				+ " will not be rendered at all and thus won't be accessible for subsequent AJAX interaction. " +
 					componentInfo;
 			result = isTrue(failMessage, component.getOutputMarkupPlaceholderTag());
 			if (result.wasFailed())
@@ -2301,9 +2301,9 @@ public class BaseWicketTester
 				"You need to execute an AJAX event, using #clickLink() or " +
 				"#executeAjaxEvent(), before using this assertion method";
 		boolean isAjaxResponse = Pattern.compile(
-				"^<\\?xml version=\"1.0\" encoding=\".*?\"\\?><ajax-response>")
-				.matcher(ajaxResponse)
-				.find();
+			"^<\\?xml version=\"1.0\" encoding=\".*?\"\\?><ajax-response>")
+			.matcher(ajaxResponse)
+			.find();
 		result = isTrue(failMessage, isAjaxResponse);
 		if (result.wasFailed())
 		{
@@ -2324,28 +2324,30 @@ public class BaseWicketTester
 
 		// Look for that the component is on the response, using the markup id
 		boolean isComponentInAjaxResponse = ajaxResponse.matches("(?s).*<component id=\"" +
-				markupId + "\"[^>]*?>.*");
+			markupId + "\"[^>]*?>.*");
 		failMessage = "Component wasn't found in the AJAX response. " + componentInfo;
 		result = isTrue(failMessage, isComponentInAjaxResponse);
 
-		if (!result.wasFailed()) {
+		if (result.wasFailed()){
+			// Check if the component has been included as part of an enclosure render
+			Enclosure enclosure = getLastRenderedPage().visitChildren(Enclosure.class, (Enclosure enc, IVisit<Enclosure> visit) -> {
+				if (AjaxEnclosureListener.isControllerOfEnclosure(component, enc)){
+					visit.stop(enc);
+				}
+			});
+
+			if (enclosure != null){
+				failMessage = "Component's enclosure was not found in the AJAX response. " + enclosure;
+				boolean isEnclosureInAjaxResponse = !isComponentOnAjaxResponse(enclosure).wasFailed();
+				return isTrue(failMessage, isEnclosureInAjaxResponse);
+			} else {
+				return result;
+			}
+
+		} else {
 			return result;
 		}
 
-		// Check if the component has been included as part of an enclosure render
-		Enclosure enclosure = getLastRenderedPage().visitChildren(Enclosure.class, (Enclosure enc, IVisit<Enclosure> visit) -> {
-			if (AjaxEnclosureListener.isControllerOfEnclosure(component, enc)){
-				visit.stop(enc);
-			}
-		});
-
-		if (enclosure != null){
-			failMessage = "Component's enclosure was not found in the AJAX response. " + enclosure;
-			boolean isEnclosureInAjaxResponse = !isComponentOnAjaxResponse(enclosure).wasFailed();
-			result = isTrue(failMessage, isEnclosureInAjaxResponse);
-		}
-
-		return result;
 
 	}
 
@@ -2401,7 +2403,7 @@ public class BaseWicketTester
 				if (log.isDebugEnabled())
 				{
 					log.debug("Triggering AjaxSelfUpdatingTimerBehavior: {}",
-							component.getClassRelativePath());
+						component.getClassRelativePath());
 				}
 
 				executeBehavior(timer);
@@ -2452,7 +2454,7 @@ public class BaseWicketTester
 		checkUsability(component, true);
 
 		List<AjaxEventBehavior> ajaxEventBehaviors = WicketTesterHelper.findAjaxEventBehaviors(
-				component, event);
+			component, event);
 		for (AjaxEventBehavior ajaxEventBehavior : ajaxEventBehaviors)
 		{
 			executeBehavior(ajaxEventBehavior);
@@ -2483,7 +2485,7 @@ public class BaseWicketTester
 	public List<TagTester> getTagsByWicketId(String wicketId)
 	{
 		return TagTester.createTagsByAttribute(getLastResponseAsString(), "wicket:id", wicketId,
-				false);
+			false);
 	}
 
 	/**
@@ -2509,7 +2511,7 @@ public class BaseWicketTester
 	 *            The <code>AjaxFormSubmitBehavior</code> with the <code>Form</code> to "submit"
 	 */
 	private void submitAjaxFormSubmitBehavior(final Component component,
-											  AjaxFormSubmitBehavior behavior)
+		AjaxFormSubmitBehavior behavior)
 	{
 		// The form that needs to be "submitted".
 		Form<?> form = behavior.getForm();
@@ -2701,13 +2703,13 @@ public class BaseWicketTester
 		if (component.isVisibleInHierarchy() == false)
 		{
 			res = Result.fail("The component is currently not visible in the hierarchy and thus you can not be used." +
-					" Component: " + component);
+				" Component: " + component);
 		}
 
 		if (component.isEnabledInHierarchy() == false)
 		{
 			res = Result.fail("The component is currently not enabled in the hierarchy and thus you can not be used." +
-					" Component: " + component);
+				" Component: " + component);
 		}
 
 		if (throwException && res.wasFailed())
@@ -2814,7 +2816,7 @@ public class BaseWicketTester
 					{
 						Page renderedPage = (Page)handler.getPageProvider().getPageInstance();
 						if (componentInPage != null && lastPage != null && renderedPage != null
-								&& lastPage.getPageClass() != renderedPage.getPageClass())
+							&& lastPage.getPageClass() != renderedPage.getPageClass())
 						{
 							// WICKET-3913: reset startComponent if a new page
 							// type is rendered
@@ -2967,13 +2969,13 @@ public class BaseWicketTester
 	}
 
 	private static class WicketTesterServletWebResponse extends ServletWebResponse
-			implements
+		implements
 			IMetaDataBufferingWebResponse
 	{
 		private List<Cookie> cookies = new ArrayList<Cookie>();
 
 		private WicketTesterServletWebResponse(ServletWebRequest request,
-											   MockHttpServletResponse response)
+		                                       MockHttpServletResponse response)
 		{
 			super(request, response);
 		}
