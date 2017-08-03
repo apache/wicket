@@ -368,21 +368,21 @@ public class PushHeaderItem extends HeaderItem
 
 				// The context path and the filter have to be applied to the URL, because otherwise
 				// the resource is not pushed correctly
-				StringBuffer partialUrl = new StringBuffer();
+				StringBuilder partialUrl = new StringBuilder();
 				String contextPath = WebApplication.get().getServletContext().getContextPath();
 				partialUrl.append(contextPath);
-				if (!contextPath.equals("/"))
+				if (!"/".equals(contextPath))
 				{
-					partialUrl.append("/");
+					partialUrl.append('/');
 				}
 				String filterPath = WebApplication.get().getWicketFilter().getFilterPath();
-				if (filterPath.equals("/"))
+				if ("/".equals(filterPath))
 				{
 					filterPath = "";
 				}
 				else if (filterPath.endsWith("/"))
 				{
-					filterPath = filterPath.replaceAll(".$", "");
+					filterPath = filterPath.substring(0, filterPath.length() - 1);
 				}
 				partialUrl.append(filterPath);
 				partialUrl.append(url.toString());
