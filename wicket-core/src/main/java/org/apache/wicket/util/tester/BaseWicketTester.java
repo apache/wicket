@@ -2325,26 +2325,24 @@ public class BaseWicketTester
 		failMessage = "Component wasn't found in the AJAX response. " + componentInfo;
 		result = isTrue(failMessage, isComponentInAjaxResponse);
 
-		if (result.wasFailed()){
-			// Check if the component has been included as part of an enclosure render
-			Enclosure enclosure = getLastRenderedPage().visitChildren(Enclosure.class, (Enclosure enc, IVisit<Enclosure> visit) -> {
-				if (AjaxEnclosureListener.isControllerOfEnclosure(component, enc)){
-					visit.stop(enc);
-				}
-			});
-
-			if (enclosure != null){
-				failMessage = "Component's enclosure was not found in the AJAX response. " + enclosure;
-				boolean isEnclosureInAjaxResponse = !isComponentOnAjaxResponse(enclosure).wasFailed();
-				return isTrue(failMessage, isEnclosureInAjaxResponse);
-			} else {
-				return result;
-			}
-
-		} else {
+		if (!result.wasFailed()) {
 			return result;
 		}
 
+		// Check if the component has been included as part of an enclosure render
+		Enclosure enclosure = getLastRenderedPage().visitChildren(Enclosure.class, (Enclosure enc, IVisit<Enclosure> visit) -> {
+			if (AjaxEnclosureListener.isControllerOfEnclosure(component, enc)){
+				visit.stop(enc);
+			}
+		});
+
+		if (enclosure == null) {
+			return result;
+		}
+
+		failMessage = "Component's enclosure was not found in the AJAX response. " + enclosure;
+		boolean isEnclosureInAjaxResponse = !isComponentOnAjaxResponse(enclosure).wasFailed();
+		return isTrue(failMessage, isEnclosureInAjaxResponse);
 
 	}
 
