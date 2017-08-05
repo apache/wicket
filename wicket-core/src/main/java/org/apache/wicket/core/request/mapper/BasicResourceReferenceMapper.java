@@ -204,19 +204,9 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 			segments.add(getClassName(reference.getScope()));
 
 			// setup resource parameters
-			PageParameters parameters = referenceRequestHandler.getPageParameters();
-
-			if (parameters == null)
-			{
-				parameters = new PageParameters();
-			}
-			else
-			{
-				parameters = new PageParameters(parameters);
-
-				// need to remove indexed parameters otherwise the URL won't be able to decode
-				parameters.clearIndexed();
-			}
+			PageParameters parameters = new PageParameters(referenceRequestHandler.getPageParameters());
+			// need to remove indexed parameters otherwise the URL won't be able to decode
+			parameters.clearIndexed();
 
 			ResourceUtil.encodeResourceReferenceAttributes(url, reference);
 
