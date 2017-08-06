@@ -32,17 +32,8 @@
 		<module>wicket-atmosphere</module>
 		<module>wicket-metrics</module>
 	</modules>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>clirr-maven-plugin</artifactId>
-					<configuration>
-						<skip>true</skip>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+
+	<properties>
+		<clirr.skip>true</clirr.skip>
+	</properties>
 </project>
