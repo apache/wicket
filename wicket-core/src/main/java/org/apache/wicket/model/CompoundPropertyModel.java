@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.model;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Component;
 
 /**
@@ -154,5 +156,19 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 	public static <Z> CompoundPropertyModel<Z> of(IModel<Z> model)
 	{
 		return new CompoundPropertyModel<>(model);
+	}
+	
+	/**
+	 * Type-infering factory method
+	 * 
+	 * @param <Z>
+	 *     the type of the model's object
+	 * @param object
+	 *            model object
+	 * @return {@link CompoundPropertyModel} instance
+	 */
+	public static <Z extends Serializable> CompoundPropertyModel<Z> of(Z object)
+	{
+		return new CompoundPropertyModel<>(object);
 	}
 }
