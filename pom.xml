@@ -153,7 +153,7 @@
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
-				<version>22.0</version>
+				<version>23.0</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.el</groupId>
@@ -754,7 +754,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.6.1</version>
+					<version>3.6.2</version>
 					<inherited>true</inherited>
 				</plugin>
 				<plugin>
