@@ -1,7 +1,7 @@
 
 
 
-WicketStuff is an umbrella project that gathers different Wicket-related projects developed and maintained by the community. The project is hosted on GitHub at  https://github.com/wicketstuff/core[https://github.com/wicketstuff/core] . 
+WicketStuff is an umbrella project that gathers different Wicket-related projects developed and maintained by the community. The project is hosted on GitHub at  https://github.com/wicketstuff/core[https://github.com/wicketstuff/core].
 Every module is structured as a parent Maven project containing the actual project that implements the new functionality and an example project that illustrates how to use it in our code. The resulting directory structure of each module is the following:
 
 [source,java]
@@ -12,7 +12,31 @@ Every module is structured as a parent Maven project containing the actual proje
         \---<module name>-examples
 ----
 
-So far we have introduced only modules Kryo Serializer and JavaEE Inject, but WicketStuff comes with many other modules that can be used in our applications. Some of them come in handy to improve the user experience of our pages with complex components or integrating some popular web services (like  http://maps.google.com/[Google Maps] ) and JavaScript libraries (like  http://www.tinymce.com/[TinyMCE] ).
+In order to enjoy extra components, utilities and/or functionality introduced by WicketStuff modules in our Wicket projects, we can import the respective module dependency in our *pom.xml* as shown below:
+
+[source,java]
+----
+<dependency>
+    <groupId>org.wicketstuff</groupId>
+    <artifactId>wicketstuff-<module name></artifactId>
+    <version><wicketstuff version></version>
+</dependency>
+----
+
+where _<wicketstuff version>_ is the version of WicketStuff artifact (e.g. 8.0.0-SNAPSHOT), and _<module name>_ corresponds to the name of WicketStuff module we want to use. As an illustration, to have access to Java 8 lambda style _ComponentFactory_ methods for adding _Links_ or _AjaxButtons_ to our pages, the following dependency declaration will suffice:
+
+[source,java]
+----
+<dependency>
+    <groupId>org.wicketstuff</groupId>
+    <artifactId>wicketstuff-lambda-components</artifactId>
+    <version>8.0.0-SNAPSHOT</version>
+</dependency>
+----
+
+Please refer to <<_module_wicketstuff_lambda_components,Appendix B.7>> for more details about Lambda Components.
+
+So far we have introduced only modules Kryo Serializer and JavaEE Inject, but WicketStuff comes with many other modules that can be used in our applications. Some of them come in handy to improve the user experience of our pages with complex components or integrating some popular web services (like  http://maps.google.com/[Google Maps]) and JavaScript libraries (like  http://www.tinymce.com/[TinyMCE]).
 
 This appendix provides a quick overview of what WicketStuff offers to enhance the usability and the visually-appealing of our pages.
 
