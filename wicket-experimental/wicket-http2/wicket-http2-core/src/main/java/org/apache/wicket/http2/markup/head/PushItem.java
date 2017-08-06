@@ -78,7 +78,7 @@ public class PushItem implements Serializable
 
 	/**
 	 * Creates a push item
-	 * 
+	 *
 	 * @param object
 	 *            the object to extract the push URL information from
 	 * @param pageParameters
@@ -91,7 +91,7 @@ public class PushItem implements Serializable
 
 	/**
 	 * Creates a push item
-	 * 
+	 *
 	 * @param object
 	 *            the object to extract the push URL information from
 	 */
@@ -156,7 +156,7 @@ public class PushItem implements Serializable
 
 	/**
 	 * Gets the URL composed within the push header item
-	 * 
+	 *
 	 * @see {@link org.apache.wicket.http2.markup.head.PushHeaderItem#push(List)}
 	 * @return the URL to be pushed
 	 */
@@ -167,7 +167,7 @@ public class PushItem implements Serializable
 
 	/**
 	 * Sets the URL composed within the push header item
-	 * 
+	 *
 	 * @see {@link org.apache.wicket.http2.markup.head.PushHeaderItem#push(List)}
 	 * @param url
 	 *            the URL used to push the resource
@@ -181,7 +181,7 @@ public class PushItem implements Serializable
 
 	/**
 	 * Gets the headers to be added to the push response
-	 * 
+	 *
 	 * @return the headers to be added to the push response
 	 */
 	public Map<String, PushItemHeaderValue> getHeaders()
@@ -191,7 +191,7 @@ public class PushItem implements Serializable
 
 	/**
 	 * Sets the headers to be added to the push response
-	 * 
+	 *
 	 * @param headers
 	 *            the headers to be added to the push response
 	 * @return the push item

@@ -85,14 +85,36 @@ public final class CssUtils
 	 * Writes a reference to a css file in the response object
 	 *
 	 * @param response
-	 *      the response to write to
+	 *            the response to write to
 	 * @param url
-	 *      the url of the css reference
+	 *            the url of the css reference
 	 * @param media
-	 *      the CSS media
+	 *            the CSS media
+	 * @param markupId
+	 *            the markupId
 	 */
-	public static void writeLinkUrl(final Response response, final CharSequence url, final CharSequence media,
-	                                final String markupId)
+	public static void writeLinkUrl(final Response response, final CharSequence url,
+		final CharSequence media, final String markupId)
+	{
+		CssUtils.writeLinkUrl(response, url, media, markupId, null);
+	}
+
+	/**
+	 * Writes a reference to a css file in the response object
+	 *
+	 * @param response
+	 *            the response to write to
+	 * @param url
+	 *            the url of the css reference
+	 * @param media
+	 *            the CSS media
+	 * @param markupId
+	 *            the markupId
+	 * @param rel
+	 *            the rel attribute
+	 */
+	public static void writeLinkUrl(final Response response, final CharSequence url,
+		final CharSequence media, final String markupId, final String rel)
 	{
 		response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 		response.write(Strings.escapeMarkup(url));
@@ -107,6 +129,12 @@ public final class CssUtils
 		{
 			response.write(" id=\"");
 			response.write(Strings.escapeMarkup(markupId));
+			response.write("\"");
+		}
+		if (Strings.isEmpty(rel) == false)
+		{
+			response.write(" rel=\"");
+			response.write(Strings.escapeMarkup(rel));
 			response.write("\"");
 		}
 		response.write(" />");

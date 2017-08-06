@@ -18,7 +18,7 @@ package org.apache.wicket.http2.markup.head;
 
 /**
  * A push header to be applied when the resource is pushed
- * 
+ *
  * @author Tobias Soloschenko
  *
  */
@@ -26,7 +26,7 @@ public class PushItemHeaderValue
 {
 	/**
 	 * The header operation to be used
-	 * 
+	 *
 	 * @author Tobias Soloschenko
 	 *
 	 */
@@ -59,7 +59,7 @@ public class PushItemHeaderValue
 
 	/**
 	 * The value of the header
-	 * 
+	 *
 	 * @return the value of the header
 	 */
 	public String getValue()
@@ -69,7 +69,7 @@ public class PushItemHeaderValue
 
 	/**
 	 * Sets the value of the header
-	 * 
+	 *
 	 * @param value
 	 *            the value of the header
 	 */
@@ -80,7 +80,7 @@ public class PushItemHeaderValue
 
 	/**
 	 * Gets the header operation
-	 * 
+	 *
 	 * @return the header operation
 	 */
 	public HeaderOperation getOperation()
@@ -90,7 +90,7 @@ public class PushItemHeaderValue
 
 	/**
 	 * Sets the header operation
-	 * 
+	 *
 	 * @param operation
 	 *            the header operation
 	 */

@@ -53,7 +53,7 @@ public class Jetty9PushBuilder implements PushBuilder
 						pushBuilder.setHeader(key, value.getValue());
 					}
 				});
-				pushBuilder.push();	
+				pushBuilder.push();
 			}
 		}
 		else
