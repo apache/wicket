@@ -14,8 +14,7 @@ For those who need further documentation on Wicket, there are  http://wicket.apa
 
 Hope you'll find this guide helpful. Have fun with Wicket!
 
-Editors:
-
+Editors: +
 *Andrea Del Bene, adelbene@apache.org* +
 *Martin Grigorov* +
 *Tobias Soloschenko* +
@@ -27,8 +26,7 @@ Editors:
 *Joachim Rohde*
 
 
-*PS*: this guide is based on Wicket 6. However if you are using an older version you should find this guide useful as well, but it's likely that the code and the snippets won't work with your version.
-
+*PS*: this guide is based on Wicket 8. However if you are using an older version you should find this guide useful as well, but it's likely that the code and the snippets won't work with your version. +
 *PPS*: although I've tried to do my best working on this tutorial, this document is a work in progress and may contain errors and/or omissions. That's why any feedback of any kind is REALLY appreciated!
 
 Project started by 

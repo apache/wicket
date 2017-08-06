@@ -9,7 +9,7 @@ A Wicket application is a standard Java EE web application, hence it is deployed
 
 image::../img/webinf.png[]
 
-_Illustration : The standard directory structure of a Wicket application_
+_Illustration: The standard directory structure of a Wicket application_
 
 The content of web.xml declares a servlet filter (class _org.apache.wicket.Protocol.http.WicketFilter_) which dispatches web requests to our Wicket application:
 
