@@ -8,7 +8,7 @@ By default this HTML file must have the same name of the related page class and 
 
 image::../img/samepackage.png[]
 
-_Illustration :Page class and its related HTML file_
+_Illustration: Page class and its related HTML file_
 
 If you don't like to put class and html side by side (let's say you want all your HTML files in a separated folder) you can use Wicket settings to specify where HTML files can be found. We will cover this topic later in <<resources.adoc#_customizing_resource_loading,chapter 16.14>>.
 

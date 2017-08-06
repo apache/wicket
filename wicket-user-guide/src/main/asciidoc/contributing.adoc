@@ -11,11 +11,11 @@ git clone https://github.com/apache/wicket.git
 
 * Edit the _.adoc_ files in `wicket/wicket-user-guide/src/main/asciidoctor` folder 
 
-* To preview your changes run _mvn clean package -P guide_ in the `wicket/wicket-user-guide` folder (in eclipse use a run configuration)
+* To preview your changes run _mvn clean package -P guide_ in the `wicket/wicket-user-guide` folder (You may use a run configuration in your IDE)
 
-* Navigate to _wicket/wicket-user-guide/target/guide/8.x_ and open one of the following files in a browser / pdf viewer:
-** _guide/single.html_ (single page version)
-** _guide/single.pdf_ (single page pdf version)
+* Navigate to _wicket/wicket-user-guide/target/generated-docs_ and open one of the following files in a browser / pdf viewer:
+** _single.html_ (single page version)
+** _single.pdf_ (single page pdf version)
 
 * Create a ticket in Apache Wicket's https://issues.apache.org/jira/browse/WICKET[JIRA]
 

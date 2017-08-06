@@ -4,7 +4,6 @@ Both frameworks share the same component-based architecture: in AWT we have a _W
 
 image::../img/uml-component.png[]
 
-["plantuml", "uml-component", "svg"]
 ....
 @startuml
 package java.awt {
