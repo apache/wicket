@@ -157,7 +157,7 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 	{
 		return new CompoundPropertyModel<>(model);
 	}
-	
+
 	/**
 	 * Type-infering factory method
 	 * 
