@@ -2,6 +2,49 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.0.0-M7
+
+** Bug
+
+    * [WICKET-4324] - [wicket-ioc] LazyInitProxyFactory CGLIB proxies naming strategy may cause java.lang.IllegalAccessError
+    * [WICKET-6366] - Autocomplete race condition makes page unresponsive
+    * [WICKET-6373] - Edge not recognized in UserAgent
+    * [WICKET-6374] - Exception caused by border extending another border with <wicket:extend>
+    * [WICKET-6376] - Ajax redirects to non http(s)-urls are interpreted as relative
+    * [WICKET-6377] - Autolinking breaks hierarchy for nested elements
+    * [WICKET-6379] - IModel's default models should detach the target model
+    * [WICKET-6386] - Simplification of the code in WICKET-3347 is not consistent with previous behavior
+    * [WICKET-6387] - ModalWindow PageReference broken
+    * [WICKET-6393] - NestedStringResourceLoader ignores hard-coded default values and throws MissingResourceException
+    * [WICKET-6398] - WICKET-6204 breaks jQuery.noConflict()
+    * [WICKET-6399] - Dequeuing of Border component with nested body fails
+    * [WICKET-6400] - Object with array property fails on NPE when construction JSON object
+    * [WICKET-6402] - OSGi-Manifest: wicket does not declare BSN
+    * [WICKET-6406] - Each path has to be pushed directly
+    * [WICKET-6419] -  Localization of PageParameters 
+    * [WICKET-6428] - PageProvider#getPageInstance() may return null
+    * [WICKET-6429] - AbstractRequestLogger should not create new Sessions
+    * [WICKET-6434] - Fixed WicketTester to detect components in enclosure when doing isComponentOnAjaxResponse.
+
+** Improvement
+
+    * [WICKET-6372] - Consider to switch to a sans-serif typeface in the Wicket guide
+    * [WICKET-6385] - Allow using custom port for web socket connections
+    * [WICKET-6388] - MockServletContext should define non-null session tracking modes
+    * [WICKET-6389] - Introduce CsrfPreventionRequestCycleListener that is aware of Web Socket requests
+    * [WICKET-6401] - OSGi-Manifest: wicket-util should decalre its dependency to 'commons-io' and 'commons-fileupload'
+    * [WICKET-6412] - Model#orElse behavior is inconsistent!
+    * [WICKET-6421] - WicketTester should provide assertBehavior method
+    * [WICKET-6433] - Allow to set the rel attribute with CssHeaderItem
+    * [WICKET-6436] - Please add CompoundPropertyModel.of(T object) method
+    * [WICKET-6437] - Libraries should be updated to most recent versions
+
+** Task
+
+    * [WICKET-6390] - Update Tomcat to 8.5.15 to get the latest HTTP2 features and APIs
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.0.0-M6
 
 ** Bug
