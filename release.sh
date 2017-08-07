@@ -612,6 +612,9 @@ Use the release-announce.txt as a starter for the release announcement:
 
     cat release-announce.txt | pbcopy
 
+A Markdown file called wicket-$version-released.md has been also generated.
+You can use it to update the site with the release announcement.
+
 To promote the release after a successful vote, run:
 
     $ ./promote-$version.sh
