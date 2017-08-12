@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-metrics</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.4-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 	<name>Wicket Metrics</name>
 	<description>
