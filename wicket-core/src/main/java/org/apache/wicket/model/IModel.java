@@ -348,6 +348,27 @@ public interface IModel<T> extends IDetachable
 			}
 		};
 	}
+	
+	/**
+	 * Returns a IModel, returning whether the contained object is non-null.
+	 *
+	 * @return a new IModel
+	 */
+	default IModel<Boolean> isPresent() {
+		return new IModel<Boolean>() {
+			@Override
+			public Boolean getObject()
+			{
+				return IModel.this.getObject() != null;
+			}
+
+			@Override
+			public void detach()
+			{
+				IModel.this.detach();
+			}
+		};
+	}
 
 	/**
 	 * Suppresses generics warning when casting model types.

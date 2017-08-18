@@ -176,6 +176,18 @@ public class IModelTest extends Assert
 	}
 
 	@Test
+	public void isPresent()
+	{
+		assertThat(Model.of(person).isPresent().getObject(), is(equalTo(true)));
+	}
+
+	@Test
+	public void isPresentNot()
+	{
+		assertThat(Model.of((Person)null).isPresent().getObject(), is(equalTo(false)));
+	}
+
+	@Test
 	public void serializableMethodReference()
 	{
 		Person p = new Person();
