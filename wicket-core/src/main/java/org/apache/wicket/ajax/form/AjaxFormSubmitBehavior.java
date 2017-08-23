@@ -170,7 +170,17 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected void onEvent(final AjaxRequestTarget target)
 	{
-		getForm().getRootForm().onFormSubmitted(new AjaxFormSubmitBehavior.AjaxFormSubmitter(this, target));
+		AjaxFormSubmitBehavior.AjaxFormSubmitter submitter = new AjaxFormSubmitBehavior.AjaxFormSubmitter(this, target);
+		Form<?> form = getForm();
+		
+		form.getRootForm().onFormSubmitted(submitter);
+		
+		//the target form might have wantSubmitOnParentFormSubmit returning "false"
+		//so it must be explicitly submitted.
+		if (!form.isSubmitted())
+		{
+			form.onFormSubmitted(submitter);
+		}
 	}
 
 	/**
