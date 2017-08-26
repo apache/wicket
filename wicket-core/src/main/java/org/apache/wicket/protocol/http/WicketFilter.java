@@ -710,6 +710,11 @@ public class WicketFilter implements Filter
 		}
 		if (filterPath != null)
 		{
+			if ("/*".equals(filterPath))
+			{
+			filterPath = "";
+			}
+			
 			filterPath = canonicaliseFilterPath(filterPath);
 
 			// We only need to determine it once. It'll not change.
