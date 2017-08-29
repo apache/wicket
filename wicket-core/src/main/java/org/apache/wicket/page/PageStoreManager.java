@@ -307,6 +307,7 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		public void valueBound(HttpSessionBindingEvent event)
 		{
+			updating.set(false);
 		}
 
 		@Override
