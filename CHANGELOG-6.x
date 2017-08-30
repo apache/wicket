@@ -2,6 +2,14 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.27.1
+
+** Bug
+
+    * [WICKET-6457] - PageStore not cleared at session end
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.27.0
 
 ** Bug
