@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -42,12 +43,14 @@ import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.AutoLabelResolver.AutoLabelMarker;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.IObjectClassAwareModel;
 import org.apache.wicket.model.IPropertyReflectionAwareModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
@@ -1575,7 +1578,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	/**
 	 * Update the model of a {@link FormComponent} containing a {@link Collection}.
 	 * 
-	 * If the model object does not yet exists, a new {@link ArrayList} is filled with the converted
+	 * If the model object does not yet exists, a new suitable collection is filled with the converted
 	 * input and used as the new model object. Otherwise the existing collection is modified
 	 * in-place, then {@link Model#setObject(Object)} is called with the same instance: it allows
 	 * the Model to be notified of changes even when {@link Model#getObject()} returns a different
@@ -1599,7 +1602,14 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 		Collection<S> collection = formComponent.getModelObject();
 		if (collection == null)
 		{
-			collection = new ArrayList<>(convertedInput);
+			Class<?> hint = null;
+			if (formComponent.getModel() instanceof IObjectClassAwareModel) {
+				hint = ((IObjectClassAwareModel)formComponent.getModel()).getObjectClass();
+			}
+			if (hint == null) {
+				hint = List.class;
+			}
+			collection = newCollection(hint, convertedInput);
 			formComponent.setModelObject(collection);
 		}
 		else
@@ -1621,7 +1631,7 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 					logger.debug("An error occurred while trying to modify the collection attached to "
 							+ formComponent, unmodifiable);
 				}
-				collection = new ArrayList<>(convertedInput); 
+				collection = newCollection(collection.getClass(), convertedInput);
 			}
 			
 			try
@@ -1643,6 +1653,23 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			}
 			
 			formComponent.modelChanged();
+		}
+	}
+	
+	/**
+	 * Creates a new collection. 
+	 * 
+	 * @param hint type deciding the type of the returned collection
+	 * @param  elements elements for the new collection
+	 * @return collection
+	 * @throws IllegalArgumentException if type is not supported
+	 */
+	private static <S> Collection<S> newCollection(Class<?> hint, Collection<S> elements)
+	{
+		if (Set.class.isAssignableFrom(hint)) {
+			return new HashSet<>(elements);
+		} else {
+			return new ArrayList<>(elements);
 		}
 	}
 }
