@@ -27,9 +27,9 @@ import org.apache.wicket.markup.html.WebPage;
 /**
  * Mock for {@link ChildFirstHeaderRenderStrategyTest#testAjaxAndEnclosures()}
  */
-public class SimplePage3 extends WebPage {
+public class EnclosureAjaxRenderPage extends WebPage {
 
-    public SimplePage3() {
+    public EnclosureAjaxRenderPage() {
 
         this.add(createEnclosureController("enclosed"));
         this.add(createEnclosureController("enclosedInInline"));

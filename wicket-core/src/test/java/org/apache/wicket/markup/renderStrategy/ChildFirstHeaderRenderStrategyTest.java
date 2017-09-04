@@ -19,7 +19,6 @@ package org.apache.wicket.markup.renderStrategy;
 import org.apache.wicket.Page;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,8 +66,8 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	public void testAjaxAndEnclosures() throws Exception
 	{
 
-		tester.startPage(SimplePage3.class);
-		tester.assertRenderedPage(SimplePage3.class);
+		tester.startPage(EnclosureAjaxRenderPage.class);
+		tester.assertRenderedPage(EnclosureAjaxRenderPage.class);
 		tester.clickLink("ajaxLink", true);
 
 		String lastResponse = tester.getLastResponseAsString();
