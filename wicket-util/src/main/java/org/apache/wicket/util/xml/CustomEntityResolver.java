@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.servlet.Filter;
 
+import org.apache.wicket.util.file.WebXmlFile;
 import org.apache.wicket.util.lang.Args;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -138,7 +139,7 @@ public class CustomEntityResolver implements EntityResolver
 	 * <p/>
 	 * manages locating an entity
 	 */
-	public static interface EntityLocator
+	public interface EntityLocator
 	{
 		/**
 		 * @return input source
@@ -168,7 +169,7 @@ public class CustomEntityResolver implements EntityResolver
 		@Override
 		public InputSource locateInputSource()
 		{
-			InputStream stream = Filter.class.getResourceAsStream("resources/" + name);
+			InputStream stream = WebXmlFile.class.getResourceAsStream("dtds/" + name);
 
 			if (stream == null)
 			{
