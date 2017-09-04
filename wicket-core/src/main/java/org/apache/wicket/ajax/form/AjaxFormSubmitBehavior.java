@@ -172,13 +172,6 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		Form<?> form = getForm();
 		
 		form.getRootForm().onFormSubmitted(submitter);
-		
-		//the target form might have wantSubmitOnParentFormSubmit returning "false"
-		//so it must be explicitly submitted.
-		if (!form.isSubmitted())
-		{
-			form.onFormSubmitted(submitter);
-		}
 	}
 
 	/**
