@@ -171,7 +171,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 				}
 
 				Roles acceptedRoles = new Roles(authorizeActionAnnotation.roles());
-				if (!(isEmpty(acceptedRoles) || hasAny(acceptedRoles)))
+				if (!hasAny(acceptedRoles))
 				{
 					return false;
 				}
