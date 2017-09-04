@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.ajax.AjaxDownload;
-import org.apache.wicket.extensions.ajax.AjaxDownload.Location;
+import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
+import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior.Location;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.resource.ContentDisposition;
@@ -76,7 +76,7 @@ public class AjaxDownloadPage extends BasePage
 		IResource resource = new ExampleResource("downloaded via ajax")
 			.setContentDisposition(ContentDisposition.ATTACHMENT);
 		
-		final AjaxDownload download = new AjaxDownload(resource) {
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
 			
 			@Override
 			protected void onBeforeDownload(AjaxRequestTarget target)
@@ -118,7 +118,7 @@ public class AjaxDownloadPage extends BasePage
 		IResource resource = new ExampleResource("downloaded via ajax in iframe")
 			.setContentDisposition(ContentDisposition.ATTACHMENT);
 		
-		final AjaxDownload download = new AjaxDownload(resource) {
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
 			
 			@Override
 			protected void onBeforeDownload(AjaxRequestTarget target)
@@ -166,7 +166,7 @@ public class AjaxDownloadPage extends BasePage
 			}
 		};
 		
-		final AjaxDownload download = new AjaxDownload(reference) {
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(reference) {
 			
 			@Override
 			protected void onBeforeDownload(AjaxRequestTarget target)
@@ -208,7 +208,7 @@ public class AjaxDownloadPage extends BasePage
 		IResource resource = new ExampleResource("downloaded via ajax in a new browser window")
 			.setContentDisposition(ContentDisposition.INLINE);
 
-		final AjaxDownload download = new AjaxDownload(resource) {
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
 
 			@Override
 			protected void onBeforeDownload(AjaxRequestTarget target)
@@ -240,7 +240,7 @@ public class AjaxDownloadPage extends BasePage
 				target.add(downloadingContainer);
 			}
 		};
-		download.setLocation(AjaxDownload.Location.NewWindow);
+		download.setLocation(AjaxDownloadBehavior.Location.NewWindow);
 		add(download);
 
 		add(new AjaxLink<Void>("downloadInNewWindow")
@@ -258,7 +258,7 @@ public class AjaxDownloadPage extends BasePage
 		IResource resource = new ExampleResource("downloaded via ajax in same browser window")
 			.setContentDisposition(ContentDisposition.ATTACHMENT);
 
-		final AjaxDownload download = new AjaxDownload(resource) {
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
 
 			@Override
 			protected void onBeforeDownload(AjaxRequestTarget target)
@@ -290,7 +290,7 @@ public class AjaxDownloadPage extends BasePage
 				target.add(downloadingContainer);
 			}
 		};
-		download.setLocation(AjaxDownload.Location.SameWindow);
+		download.setLocation(AjaxDownloadBehavior.Location.SameWindow);
 		add(download);
 
 		add(new AjaxLink<Void>("downloadInSameWindow")
@@ -314,7 +314,7 @@ public class AjaxDownloadPage extends BasePage
 		@Override
 		public void respond(Attributes attributes)
 		{
-			AjaxDownload.markCompleted(attributes);
+			AjaxDownloadBehavior.markCompleted(attributes);
 			
 			super.respond(attributes);
 		}

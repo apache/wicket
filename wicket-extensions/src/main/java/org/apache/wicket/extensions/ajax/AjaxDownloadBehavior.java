@@ -62,12 +62,16 @@ import com.github.openjson.JSONObject;
  * 	}
  * });
  * </pre>
+ *
+ * <p>To set the name of the downloaded resource make use of
+ * {@link org.apache.wicket.request.resource.ResourceStreamResource#setFileName(String)} or
+ * {@link org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setFileName(String)}</p>
  * 
  * @author svenmeier
  * @author Martin Grigorov
  * @author Maxim Solodovnik
  */
-public class AjaxDownload extends AbstractDefaultAjaxBehavior
+public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
 
@@ -94,7 +98,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		 * the resource has to be a {@link ContentDisposition#ATTACHMENT}.
 		 * <p>
 		 * Note: This will trigger JavaScript <em>unload</em> event on the page!
-		 * Does not support {@link AjaxDownload#onDownloadFailed(AjaxRequestTarget)} callback,
+		 * Does not support {@link AjaxDownloadBehavior#onDownloadFailed(AjaxRequestTarget)} callback,
 		 * i.e. it is not possible to detect when the download has failed!
 		 */
 		SameWindow,
@@ -114,7 +118,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	private static final String RESOURCE_PARAMETER_NAME = "wicket-ajaxdownload";
 
 	private static final ResourceReference JS = new JQueryPluginResourceReference(
-		AjaxDownload.class, "wicket-ajaxdownload.js");
+		AjaxDownloadBehavior.class, "wicket-ajaxdownload.js");
 
 	private final ResourceReference resourceReference;
 
@@ -130,7 +134,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	 * @param resource
 	 *            resource to download
 	 */
-	public AjaxDownload(IResource resource)
+	public AjaxDownloadBehavior(IResource resource)
 	{
 		Args.notNull(resource, "resource");
 		this.resourceBehavior = new ResourceBehavior(resource);
@@ -147,7 +151,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	 * @param reference
 	 *            reference to resource to download
 	 */
-	public AjaxDownload(ResourceReference reference)
+	public AjaxDownloadBehavior(ResourceReference reference)
 	{
 		this(reference, null);
 	}
@@ -164,7 +168,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	 * @param resourceParameters
 	 *            parameters for the resource
 	 */
-	public AjaxDownload(ResourceReference reference, PageParameters resourceParameters)
+	public AjaxDownloadBehavior(ResourceReference reference, PageParameters resourceParameters)
 	{
 		this.resourceBehavior = null;
 
@@ -263,7 +267,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * Since the HTTP status code of the download is not available to Wicket, any HTML in the resource response
 	 * will be interpreted as a failure HTTP status message. Thus is it not possible to download HTML resources
-	 * via {@link AjaxDownload}.
+	 * via {@link AjaxDownloadBehavior}.
 	 *
 	 * @param target The Ajax request handler
 	 */
@@ -304,7 +308,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 		return location;
 	}
 
-	public AjaxDownload setLocation(final Location location) {
+	public AjaxDownloadBehavior setLocation(final Location location) {
 		this.location = Args.notNull(location, "location");
 		return this;
 	}
@@ -358,7 +362,7 @@ public class AjaxDownload extends AbstractDefaultAjaxBehavior
 	 * Mark a resource as complete.
 	 * <p>
 	 * Has to be called from {@link IResource#respond(Attributes)} when downloaded via
-	 * {@link #AjaxDownload(IResource)}.
+	 * {@link #AjaxDownloadBehavior(IResource)}.
 	 * 
 	 * @param attributes
 	 *            resource attributes
