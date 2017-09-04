@@ -718,7 +718,7 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void onFormSubmitted(IFormSubmitter submitter)
 	{
-		markFormsSubmitted();
+		markFormsSubmitted(submitter);
 
 		if (handleMultiPart())
 		{
@@ -984,18 +984,21 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Sets FLAG_SUBMITTED to true on this form and every enabled nested form.
+	 * @param submitter 
 	 */
-	private void markFormsSubmitted()
+	private void markFormsSubmitted(IFormSubmitter submitter)
 	{
 		setFlag(FLAG_SUBMITTED, true);
-
+		Form<?> formToProcess = findFormToProcess(submitter);
+		
 		visitChildren(Form.class, new IVisitor<Component, Void>()
 		{
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				Form<?> form = (Form<?>)component;
-				if (form.wantSubmitOnParentFormSubmit() && form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
+				if ((form.wantSubmitOnParentFormSubmit() || form == formToProcess) 
+					&& form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
 					return;
