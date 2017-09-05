@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.form;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.FormTester;
@@ -53,43 +55,55 @@ public class AjaxFormSubmitBehaviorTest extends WicketTestCase
 		tester.startPage(NestedFormTestPage.class);
 		
 		NestedFormTestPage homePage = (NestedFormTestPage)tester.getLastRenderedPage();
-		assertFalse(homePage.innerFormSubmitted);
+		assertFalse(homePage.innerSubmitted);
 		
 		FormTester formTester = tester.newFormTester("outer:inner");
 		formTester.submit("submit");
 		
-		assertTrue(homePage.innerFormSubmitted);
+		assertTrue(homePage.innerSubmitted);
 	}
 	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6462
+	 * 
+	 * onSubmit must be called once.
+	 */
+	@Test
+	public void formReplacement() 
+	{
+		PanelEdit panelEdit = tester.startComponentInPage(PanelEdit.class);
+		FormTester formTester = tester.newFormTester(panelEdit.getId() + ":form");
+		//AjaxFormSubmitBehavior onSubmit must not be called when form is removed
+		formTester.submit("submit");
+	}
+
 	public static class NestedFormTestPage extends NestedFormPage
 	{
 		
-		public boolean innerFormSubmitted = false;
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -515262294201762225L;
+		
 		
 		public NestedFormTestPage() 
 		{
-			Form<?> outer = new Form("outer");
-			replace(outer);
-			
-			Form<?> inner = new Form("inner")
-			{
+			Form<?> inner = new Form("inner") {
 				@Override
-				protected boolean wantSubmitOnParentFormSubmit() 
-				{
+				protected boolean wantSubmitOnParentFormSubmit() {
 					return false;
 				}
 				
 				@Override
-				protected void onSubmit() 
-				{
+				protected void onSubmit() {
 					super.onSubmit();
-					innerFormSubmitted = true;
+					innerSubmitted = true;
 				}
 			};
 			
-			outer.add(inner);
-			
 			inner.add(new AjaxButton("submit", inner) {});
+			
+			get("outer:inner").replaceWith(inner);
 		}
 	}
 }
