@@ -1,0 +1,47 @@
+<html xmlns:wicket="http://wicket.apache.org">
+
+<wicket:panel>
+
+    <div style="height: auto; width: 600px; text-align: center;margin: 0 auto;border: 1px solid silver;">
+
+        <br>
+        <br>
+        Panel Edit (the submit button is in a form)
+        <br>
+        <br>
+
+        <form wicket:id="form" >
+
+            ....
+            Textfield.....
+            <br>
+            Textfield.....
+            <br>
+            Textfield.....
+            <br>
+            <br>
+            <br>
+
+            When submit is clicked, this panel is remplaced by PanelView
+            <br>
+            (the one we come from)
+            <br>
+            <br>
+            But sumit is called twice.
+            <br>
+            <br>
+
+            <button wicket:id="submit" class="btn btn-primary btn-sm" type="submit">submit</button>
+
+        </form>
+
+        <br>
+        <br>
+        <br>
+        <br>
+
+    </div>
+
+</wicket:panel>
+
+</html>
