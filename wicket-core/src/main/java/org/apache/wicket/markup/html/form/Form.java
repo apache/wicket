@@ -1019,7 +1019,7 @@ public class Form<T> extends WebMarkupContainer
 	private void markFormsSubmitted(IFormSubmitter submitter)
 	{
 		setFlag(FLAG_SUBMITTED, true);
-		Form<?> formToProcess = findFormToProcess(submitter);
+		final Form<?> formToProcess = findFormToProcess(submitter);
 		
 		visitChildren(Form.class, new IVisitor<Component, Void>()
 		{
