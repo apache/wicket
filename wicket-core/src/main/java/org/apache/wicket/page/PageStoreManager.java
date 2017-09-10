@@ -95,14 +95,14 @@ public class PageStoreManager extends AbstractPageManager
 		private transient List<Object> afterReadObject;
 
 		/**
-		 * A flag indicating whether this session entry has been re-set in the Session.
+		 * A flag indicating whether this session entry is being re-set in the Session.
 		 * Web containers intercept {@link javax.servlet.http.HttpSession#setAttribute(String, Object)}
 		 * to detect changes and replicate the session. If the attribute has been already
 		 * bound in the session then it will be first unbound and then re-bound again.
 		 * This flag helps us to detect <em>update</em> operations and skip the default behavior
 		 * of {@link #valueUnbound(HttpSessionBindingEvent)}.
 		 */
-		private final AtomicBoolean updating = new AtomicBoolean(false);
+		private final AtomicBoolean storingTouchedPages = new AtomicBoolean(false);
 
 		/**
 		 * Construct.
@@ -330,15 +330,14 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		public void valueBound(HttpSessionBindingEvent event)
 		{
-			updating.set(false);
 		}
 
 		@Override
 		public void valueUnbound(HttpSessionBindingEvent event)
 		{
-			if (updating.compareAndSet(true, false))
+			if (storingTouchedPages.get())
 			{
-				// The entry has been updated. Do not remove the data
+				// triggered by #storeTouchedPages(), so do not remove the data
 				return;
 			}
 
@@ -450,8 +449,13 @@ public class PageStoreManager extends AbstractPageManager
 					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
 					pageStore.storePage(entry.sessionId, page);
 				}
-				entry.updating.set(true);
-				setSessionAttribute(getAttributeName(), entry);
+				
+				entry.storingTouchedPages.set(true);
+				try {
+					setSessionAttribute(getAttributeName(), entry);
+				} finally {
+					entry.storingTouchedPages.set(false);
+				}
 			}
 		}
 	}
