@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -96,13 +95,18 @@ public class PageStoreManager extends AbstractPageManager
 
 		/**
 		 * A flag indicating whether this session entry is being re-set in the Session.
+		 * <p>
 		 * Web containers intercept {@link javax.servlet.http.HttpSession#setAttribute(String, Object)}
 		 * to detect changes and replicate the session. If the attribute has been already
 		 * bound in the session then it will be first unbound and then re-bound again.
 		 * This flag helps us to detect <em>update</em> operations and skip the default behavior
 		 * of {@link #valueUnbound(HttpSessionBindingEvent)}.
 		 */
-		private final AtomicBoolean storingTouchedPages = new AtomicBoolean(false);
+		private final ThreadLocal<Boolean> storingTouchedPages = new ThreadLocal<Boolean>() {
+			protected Boolean initialValue() {
+				return Boolean.FALSE;
+			};
+		};
 
 		/**
 		 * Construct.
