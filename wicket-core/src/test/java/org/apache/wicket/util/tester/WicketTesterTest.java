@@ -526,11 +526,6 @@ public class WicketTesterTest extends WicketTestCase
 			{
 				value = object;
 			}
-
-			@Override
-			public void detach()
-			{
-			}
 		};
 
 		labelModel.setObject("Label 1");
@@ -1206,13 +1201,13 @@ public class WicketTesterTest extends WicketTestCase
 		MockFormSubmitsPage page = new MockFormSubmitsPage()
 		{
 			@Override
-			protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target)
 			{
 				ajaxSubmitLinkSubmitted.set(true);
 			}
 
 			@Override
-			protected void onAjaxButtonSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onAjaxButtonSubmit(AjaxRequestTarget target)
 			{
 				ajaxButtonSubmitted.set(true);
 			}
@@ -1297,7 +1292,7 @@ public class WicketTesterTest extends WicketTestCase
 		MockPageWithLinkAndLabel page = new MockPageWithLinkAndLabel();
 		final Label label = new Label(MockPageWithLinkAndLabel.LABEL_ID, "Some text");
 		label.setOutputMarkupPlaceholderTag(true);
-		AjaxLink link = new AjaxLink(MockPageWithLinkAndLabel.LINK_ID)
+		AjaxLink link = new AjaxLink<Void>(MockPageWithLinkAndLabel.LINK_ID)
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -1331,5 +1326,17 @@ public class WicketTesterTest extends WicketTestCase
 
 		String secondId = tester.getSession().getId();
 		assertNotEquals(firstId, secondId);
+	}
+
+	@Test
+	public void assertComponentInEnclosureInAjaxResponse()
+	{
+		MockPageWithLabelInEnclosure page = new MockPageWithLabelInEnclosure();
+		AjaxLink<Void> testLink = page.getSelfRefreshingAjaxLink();
+
+		tester.startPage(page);
+		tester.clickLink(testLink);
+		tester.assertComponentOnAjaxResponse(testLink);
+
 	}
 }

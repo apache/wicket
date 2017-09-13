@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.RequestLoggerSettings;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -28,7 +28,7 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 /**
  * Listener that logs request details in the {@link Application#getRequestLogger()} request logger.
  */
-public class RequestLoggerRequestCycleListener extends AbstractRequestCycleListener
+public class RequestLoggerRequestCycleListener implements IRequestCycleListener
 {
 	/**
 	 * Listeners are not thread safe. In order to keep track if a handler was the first in the

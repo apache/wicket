@@ -18,6 +18,7 @@ package org.apache.wicket.feedback;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 
 /**
@@ -40,16 +41,9 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 */
 	public ContainerFeedbackMessageFilter(MarkupContainer container)
 	{
-		if (container == null)
-		{
-			throw new IllegalArgumentException("container must be not null");
-		}
-		this.container = container;
+		this.container = Args.notNull(container, "container");
 	}
 
-	/**
-	 * @see org.apache.wicket.feedback.IFeedbackMessageFilter#accept(org.apache.wicket.feedback.FeedbackMessage)
-	 */
 	@Override
 	public boolean accept(FeedbackMessage message)
 	{

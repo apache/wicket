@@ -27,16 +27,6 @@ import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
  */
 public class AjaxApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public AjaxApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
@@ -67,7 +57,7 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("todo-list", TodoList.class);
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
-
+		mountPage("download", AjaxDownloadPage.class);
 	}
 
 	/**

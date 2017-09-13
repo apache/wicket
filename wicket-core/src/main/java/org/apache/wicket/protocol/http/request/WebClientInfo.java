@@ -52,7 +52,7 @@ public class WebClientInfo extends ClientInfo
 	private final String userAgent;
 
 	/** Client properties object. */
-	private final ClientProperties properties = new ClientProperties();
+	private final ClientProperties properties;
 
 	/**
 	 * Construct.
@@ -62,8 +62,19 @@ public class WebClientInfo extends ClientInfo
 	 */
 	public WebClientInfo(RequestCycle requestCycle)
 	{
+		this(requestCycle, new ClientProperties());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param requestCycle
+	 *            the request cycle
+	 */
+	public WebClientInfo(RequestCycle requestCycle, ClientProperties properties)
+	{
 		this(requestCycle, ((ServletWebRequest)requestCycle.getRequest()).getContainerRequest()
-			.getHeader("User-Agent"));
+			.getHeader("User-Agent"), properties);
 	}
 
 	/**
@@ -76,10 +87,28 @@ public class WebClientInfo extends ClientInfo
 	 */
 	public WebClientInfo(final RequestCycle requestCycle, final String userAgent)
 	{
+		this(requestCycle, userAgent, new ClientProperties());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param requestCycle
+	 *            the request cycle
+	 * @param userAgent
+	 *            The User-Agent string
+	 * @param properties
+	 *			  properties of client            
+	 */
+	public WebClientInfo(final RequestCycle requestCycle, final String userAgent, final ClientProperties properties)
+	{
 		super();
 
 		this.userAgent = userAgent;
+
+		this.properties = properties;
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
+
 		init();
 	}
 
@@ -169,12 +198,10 @@ public class WebClientInfo extends ClientInfo
 		setMozillaProperties();
 		setKonquerorProperties();
 		setChromeProperties();
+		setEdgeProperties();
 		setSafariProperties();
 
-		if (log.isDebugEnabled())
-		{
-			log.debug("determined user agent: " + properties);
-		}
+		log.debug("determined user agent: {}", properties);
 	}
 
 	/**
@@ -207,6 +234,21 @@ public class WebClientInfo extends ClientInfo
 	}
 
 	/**
+	 * sets the Edge specific properties
+	 */
+	private void setEdgeProperties()
+	{
+		properties.setBrowserEdge(UserAgent.EDGE.matches(getUserAgent()));
+
+		if (properties.isBrowserEdge())
+		{
+			// e.g.: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+			// Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063
+			setMajorMinorVersionByPattern("edge/(\\d+)\\.(\\d+)");
+		}
+	}
+
+	/**
 	 * sets the safari specific properties
 	 */
 	private void setSafariProperties()
@@ -219,8 +261,8 @@ public class WebClientInfo extends ClientInfo
 
 			if (userAgent.contains("version/"))
 			{
-				// e.g.: Mozilla/5.0 (Windows; U; Windows NT 6.1; sv-SE) AppleWebKit/533.19.4
-// (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4
+				// e.g.: Mozilla/5.0 (Windows; U; Windows NT 6.1; sv-SE) AppleWebKit/533.19
+				// (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4
 				setMajorMinorVersionByPattern("version/(\\d+)\\.(\\d+)");
 			}
 		}
@@ -239,7 +281,7 @@ public class WebClientInfo extends ClientInfo
 			if (properties.isBrowserMozillaFirefox())
 			{
 				// e.g.: Mozilla/5.0 (X11; U; Linux i686; pl-PL; rv:1.9.0.2) Gecko/20121223
-// Ubuntu/9.25 (jaunty) Firefox/3.8
+				// Ubuntu/9.25 (jaunty) Firefox/3.8
 				setMajorMinorVersionByPattern("firefox/(\\d+)\\.(\\d+)");
 			}
 		}

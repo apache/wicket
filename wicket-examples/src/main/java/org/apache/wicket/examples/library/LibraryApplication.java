@@ -33,34 +33,18 @@ import org.apache.wicket.settings.RequestCycleSettings;
  */
 public final class LibraryApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public LibraryApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(Request, Response)
-	 */
 	@Override
 	public Session newSession(Request request, Response response)
 	{
 		return new LibrarySession(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
@@ -82,11 +66,5 @@ public final class LibraryApplication extends WicketExampleApplication
 			}
 		};
 		getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
-
-		// install crypto mapper to encrypt all application urls
-		// getSecuritySettings().setCryptFactory(new KeyInSessionSunJceCryptFactory());
-		// ThreadsafeCompoundRequestMapper root = new ThreadsafeCompoundRequestMapper();
-		// root.register(new CryptoMapper(getRootRequestMapper(), this));
-		// setRootRequestMapper(root);
 	}
 }

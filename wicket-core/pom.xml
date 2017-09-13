@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-core</artifactId>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Wicket Core</name>
 	<description>
 		Wicket is a Java web application framework that takes simplicity, 
@@ -43,10 +43,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-collections4</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-request</artifactId>
 		</dependency>
@@ -55,12 +51,30 @@
 			<artifactId>wicket-util</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.danekja</groupId>
+			<artifactId>jdk-serializable-functional</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.openjson</groupId>
+			<artifactId>openjson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>

@@ -16,18 +16,19 @@
  */
 package org.apache.wicket.markup.html.autocomponent;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.core.util.string.ComponentRenderer;
 import org.apache.wicket.markup.IMarkupCache;
-import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
-/*
- * Test case for https://issues.apache.org/jira/browse/WICKET-5904
- * and for https://issues.apache.org/jira/browse/WICKET-5908
- */
 public class AutocomponetsGenerationTest extends WicketTestCase
 {
 
+	/*
+	 * Test for https://issues.apache.org/jira/browse/WICKET-5904
+	 * and for https://issues.apache.org/jira/browse/WICKET-5908
+	 */
 	@Test
 	public void autocomponetsNumberDoesntChange()
 	{
@@ -44,5 +45,39 @@ public class AutocomponetsGenerationTest extends WicketTestCase
 		
 		//the number of child components must not have been changed
 		assertEquals(childrenNumber, tester.getLastRenderedPage().size());
+	}
+	
+	/*
+	 * Test for https://issues.apache.org/jira/browse/WICKET-6116
+	 */
+	@Test
+	public void borderResolvesAutocomponents() throws Exception
+	{
+		AutoComponentsBorder border = new AutoComponentsBorder("id");
+		
+		ComponentRenderer.renderComponent(border);
+		
+		//we expect to have a body container and an autocomponent for <img> tag
+		assertEquals(2, border.size());
+		
+		//let's render the same border again
+		ComponentRenderer.renderComponent(border);
+		
+		//the number of child components must not have been changed
+		assertEquals(2, border.size());
+	}
+	
+	/*
+	 * Test for https://issues.apache.org/jira/browse/WICKET-6256
+	 */
+	@Test
+	public void autoComponentsIdsGeneration() throws Exception 
+	{
+		Page page = new UniqueIdTest();
+		
+		tester.startPage(page);
+		
+		//render page again. Autocomponents must have the same id
+		tester.startPage(page);		
 	}
 }

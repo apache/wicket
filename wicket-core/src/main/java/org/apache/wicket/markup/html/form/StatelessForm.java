@@ -82,7 +82,7 @@ public class StatelessForm<T> extends Form<T>
 	@Override
 	protected CharSequence getActionUrl()
 	{
-		return urlFor(IFormSubmitListener.INTERFACE, getPage().getPageParameters());
+		return urlForListener(getPage().getPageParameters());
 	}
 
 	/**
@@ -109,7 +109,6 @@ public class StatelessForm<T> extends Form<T>
 					parameters.remove(formComponent.getInputName());
 				}
 			});
-			parameters.remove(getHiddenFieldId());
 			if (submittingComponent instanceof AbstractSubmitLink)
 			{
 				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;

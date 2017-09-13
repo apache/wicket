@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -61,6 +62,20 @@ public class MarkupVariationTest extends WicketTestCase
 	{
 		return (MarkupContainer) tester.getComponentFromLastRenderedPage("p");
 	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6231
+	 */
+	@Test
+	public void changeVariationBeforeRendering() throws Exception
+	{
+		tester.startPage(new VariationPage());
+		FormTester formTester = tester.newFormTester("p:a_form");
+		
+		formTester.submit();
+		
+		tester.assertContainsNot("One");
+	}
 
 	private static class VariationPage extends WebPage implements IMarkupResourceStreamProvider
 	{
@@ -95,14 +110,22 @@ public class MarkupVariationTest extends WicketTestCase
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
-					variation = "one".equals(variation) ? "two" : "one";
+					changeVariation();
 					target.add(VariationPanel.this);
 				}
 			});
 
 			add(new Label("simpleLabel", "Label"));
 
-			add(new Form<Void>("a_form"));
+			add(new Form<Void>("a_form")
+			{
+				@Override
+				protected void onSubmit()
+				{
+					super.onSubmit();
+					changeVariation();
+				}
+			});
 
 			add(new Label("child", "Inline Enclosure child text"));
 			add(new Label("nestedChild", "Nested Inline Enclosure child text"));
@@ -113,6 +136,11 @@ public class MarkupVariationTest extends WicketTestCase
 		public String getVariation()
 		{
 			return variation;
+		}
+
+		private void changeVariation()
+		{
+			variation = "one".equals(variation) ? "two" : "one";
 		}
 	}
 }

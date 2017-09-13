@@ -20,11 +20,12 @@ import org.apache.wicket.ajax.WicketAjaxDebugJQueryResourceReference;
 import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
 import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.DynamicJQueryResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Interface for settings related to the JavaScript libraries that come with and are used by Wicket.
+ * Class for settings related to the JavaScript libraries that come with and are used by Wicket.
  * <p>
  * With these settings the user application can replace the JavaScript libraries used for Wicket's
  * event and Ajax functionality. By default Wicket uses {@linkplain JQueryResourceReference JQuery}
@@ -37,7 +38,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class JavaScriptLibrarySettings
 {
-	private ResourceReference jQueryReference = JQueryResourceReference.get();
+	private ResourceReference jQueryReference = DynamicJQueryResourceReference.getV2();
 
 	private ResourceReference wicketEventReference = WicketEventJQueryResourceReference.get();
 

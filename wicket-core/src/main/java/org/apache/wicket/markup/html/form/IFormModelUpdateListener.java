@@ -22,6 +22,7 @@ package org.apache.wicket.markup.html.form;
  * 
  * @author ivaynberg
  */
+@FunctionalInterface
 public interface IFormModelUpdateListener
 {
 	/**

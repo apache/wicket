@@ -74,10 +74,9 @@ public class AbstractTextComponentConvertEmptyStringsToNullTest extends WicketTe
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				@SuppressWarnings("unchecked")
-				public <C> IConverter<C> getConverter(Class<C> type)
+				protected IConverter<?> createConverter(Class<?> type)
 				{
-					return (IConverter<C>)new StringArrayConverter();
+					return new StringArrayConverter();
 				}
 			}.setConvertEmptyInputStringToNull(false));
 		}

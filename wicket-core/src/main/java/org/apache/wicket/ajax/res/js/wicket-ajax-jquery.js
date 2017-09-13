@@ -68,8 +68,9 @@
 	 * @param iframeName {String} the value of the iframe's name attribute
 	 */
 	createIFrame = function (iframeName) {
+		// WICKET-6340 properly close tag for XHTML markup
 		var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
-			'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;">');
+			'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;"></iframe>');
 		return $iframe[0];
 	};
 
@@ -779,11 +780,10 @@
 					// A file download popup will appear but the page in the browser won't change.
 					this.success(context);
 
-					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
-					    rhttps = /^https:\/\//; // checks whether the string starts with https://
+					var withScheme  = /^[a-z][a-z0-9+.-]*:\/\//;  // checks whether the string starts with a scheme
 
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
-					if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
+					if (redirectUrl.charAt(0) === '/' || withScheme.test(redirectUrl)) {
 						context.isRedirecting = true;
 						Wicket.Ajax.redirect(redirectUrl);
 					}
@@ -1098,13 +1098,7 @@
 				this._executeHandlers(attrs.sh, attrs, null, null, 'success');
 				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_SUCCESS, attrs, null, null, 'success');
 
-				// set the focus to the last component
-				if (Wicket.Browser.isIELessThan9()) {
-					// WICKET-5755
-					window.setTimeout("Wicket.Focus.requestFocus();", 0);
-				} else {
-					Wicket.Focus.requestFocus();
-				}
+				Wicket.Focus.requestFocus();
 
 				// continue to next step (which should make the processing stop, as success should be the final step)
 				return FunctionsExecuter.DONE;
@@ -1216,7 +1210,7 @@
 			if (scriptWithIdentifierR.test(text)) {
 				var scripts = [];
 				var scr;
-				while ( (scr = scriptSplitterR.exec(text) ) != null ) {
+				while ( (scr = scriptSplitterR.exec(text) ) !== null ) {
 					scripts.push(scr[0]);
 				}
 
@@ -1955,9 +1949,12 @@
 					Wicket.Event.add(attrs.c, evt, function (jqEvent, data) {
 						var call = new Wicket.Ajax.Call();
 						var attributes = jQuery.extend({}, attrs);
-						attributes.event = Wicket.Event.fix(jqEvent);
-						if (data) {
-							attributes.event.extraData = data;
+
+						if (evt !== "domready") {
+							attributes.event = Wicket.Event.fix(jqEvent);
+							if (data) {
+								attributes.event.extraData = data;
+							}
 						}
 
 						call._executeHandlers(attributes.ih, attributes);
@@ -1975,7 +1972,9 @@
 						else {
 							call.ajax(attributes);
 						}
-						Wicket.Ajax._handleEventCancelation(attributes);
+						if (evt !== "domready") {
+							Wicket.Ajax._handleEventCancelation(attributes);
+						}
 					}, null, attrs.sel);
 				});
 			},
@@ -2112,17 +2111,18 @@
 						// create link element
 						var css = Wicket.Head.createElement("link");
 
-						// copy required attributes
-						css.id = node.getAttribute("id");
-						css.rel = node.getAttribute("rel");
-						css.href = node.getAttribute("href");
-						css.type = node.getAttribute("type");
+						// copy supplied attributes only.
+						var attributes = jQuery(node).prop("attributes");
+						var $css = jQuery(css);
+						jQuery.each(attributes, function() {
+							$css.attr(this.name, this.value);
+						});
 
 						// add element to head
 						Wicket.Head.addElement(css);
 
 						// cross browser way to check when the css is loaded
-						// taked from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
+						// taken from http://www.backalleycoder.com/2011/03/20/link-tag-css-stylesheet-load-event/
 						// this makes a second GET request to the css but it gets it either from the cache or
 						// downloads just the first several bytes and realizes that the MIME is wrong and ignores the rest
 						var img = document.createElement('img');
@@ -2696,30 +2696,33 @@
 
 					if (toFocus) {
 						Wicket.Log.info("Calling focus on " + WF.lastFocusId);
-						try {
-							if (WF.focusSetFromServer) {
-								// WICKET-5858
-								window.setTimeout(function () { toFocus.focus(); }, 0);
-							} else {
-								// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
-								var temp = toFocus.onfocus;
-								toFocus.onfocus = null;
-								
-								// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
-								window.setTimeout(function () {toFocus.focus(); toFocus.onfocus = temp; }, 0);
+
+						var safeFocus = function() {
+							try {
+								toFocus.focus();
+							} catch (ignore) {
+								// WICKET-6209 IE fails if toFocus is disabled
 							}
-						} catch (ignore) {
+						};
+
+						if (WF.focusSetFromServer) {
+							// WICKET-5858
+							window.setTimeout(safeFocus, 0);
+						} else {
+							// avoid loops like - onfocus triggering an event the modifies the tag => refocus => the event is triggered again
+							var temp = toFocus.onfocus;
+							toFocus.onfocus = null;
+
+							// IE needs setTimeout (it seems not to call onfocus sync. when focus() is called
+							window.setTimeout(function () { safeFocus(); toFocus.onfocus = temp; }, 0);
 						}
-					}
-					else {
+					} else {
 						WF.lastFocusId = "";
 						Wicket.Log.info("Couldn't set focus on element with id '" + WF.lastFocusId + "' because it is not in the page anymore");
 					}
-				}
-				else if (WF.refocusLastFocusedComponentAfterResponse) {
+				} else if (WF.refocusLastFocusedComponentAfterResponse) {
 					Wicket.Log.info("last focus id was not set");
-				}
-				else {
+				} else {
 					Wicket.Log.info("refocus last focused component not needed/allowed");
 				}
 				Wicket.Focus.refocusLastFocusedComponentAfterResponse = false;

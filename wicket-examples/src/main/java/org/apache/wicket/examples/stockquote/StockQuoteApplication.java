@@ -26,16 +26,6 @@ import org.apache.wicket.examples.WicketExampleApplication;
  */
 public class StockQuoteApplication extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public StockQuoteApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{

@@ -25,6 +25,7 @@ package org.apache.wicket.request;
  * @author Eelco Hillenius
  * @author Matej Knopp
  */
+@FunctionalInterface
 public interface IRequestHandler
 {
 	/**
@@ -42,5 +43,6 @@ public interface IRequestHandler
 	 * @param requestCycle
 	 *            the current request cycle
 	 */
-	void detach(IRequestCycle requestCycle);
+	default void detach(IRequestCycle requestCycle)
+	{}
 }

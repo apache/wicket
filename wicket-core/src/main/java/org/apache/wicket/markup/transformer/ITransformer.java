@@ -25,6 +25,7 @@ import org.apache.wicket.Component;
  * 
  * @author Juergen Donnerstag
  */
+@FunctionalInterface
 public interface ITransformer
 {
 	/**

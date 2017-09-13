@@ -17,12 +17,14 @@
 package org.apache.wicket.request.resource;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.bundles.ConcatBundleResource;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -32,6 +34,12 @@ import org.junit.Test;
  */
 public class ResouceBundleTest extends WicketTestCase
 {
+	@Before
+	public void before()
+	{
+		tester.getSession().setLocale(Locale.ENGLISH);
+	}
+
 	/**
 	 * Tests the concatenation of 2 javascript files
 	 */
@@ -63,6 +71,23 @@ public class ResouceBundleTest extends WicketTestCase
 				new JavaScriptResourceReference(ResouceBundleTest.class, "b.js"));
 
 		executeTest(BundlesPage.class, "BundlesPage_result.html");
+	}
+
+	/**
+	 * Tests the replacement of provided resources by their bundle with defer option
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void providedResourceWithDefer() throws Exception
+	{
+		tester.getApplication()
+		.getResourceBundles()
+		.addJavaScriptBundle(ResouceBundleTest.class, "ab.js", true,
+			new JavaScriptResourceReference(ResouceBundleTest.class, "a.js"),
+			new JavaScriptResourceReference(ResouceBundleTest.class, "b.js"));
+
+		executeTest(BundlesPage.class, "BundlesPage_result_defer.html");
 	}
 
 	/**

@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.apache.wicket.markup.parser.filter.HtmlHandler.requiresCloseTag;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Stack;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.WicketRuntimeException;
@@ -27,7 +31,6 @@ import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
-
 
 /**
  * Tag tester is used to test that a generated markup tag contains the correct attributes, values
@@ -358,6 +361,11 @@ public class TagTester
 	 */
 	public String getValue()
 	{
+		if (openTag == closeTag)
+		{
+			return null;
+		}
+
 		int openPos = openTag.getPos() + openTag.getLength();
 		int closePos = closeTag.getPos();
 
@@ -369,85 +377,35 @@ public class TagTester
 	 * that it will return the first tag which matches the criteria.
 	 *
 	 * @param markup
-	 *            the markup to look for the tag to create the <code>TagTester</code> from
-	 *            the value which the attribute must have
+	 *            the markup to look for the tag to create the <code>TagTester</code> from the value
+	 *            which the attribute must have
 	 * @return the <code>TagTester</code> which matches the tag by name in the markup
 	 */
+	public static TagTester createTagByName(String markup, String tagName)
+	{
+		List<TagTester> tester = createTags(markup, xmlTag -> xmlTag.getName().equalsIgnoreCase(tagName), true);
+		if ((tester == null) || (tester.size() == 0))
+		{
+			return null;
+		}
+		return tester.get(0);
+	}
+
+	/**
+	 * Static factory method for creating a <code>TagTester</code> based on a tag name. Please note
+	 * that it will return the first tag which matches the criteria.
+	 *
+	 * @param markup
+	 *            the markup to look for the tag to create the <code>TagTester</code> from the value
+	 *            which the attribute must have
+	 * @return the <code>TagTester</code> which matches the tag by name in the markup
+	 * 
+	 * @deprecated use {@link #createTagByName(String, String)} instead
+	 */
+	@Deprecated
 	public static TagTester createTagByAttribute(String markup, String tagName)
 	{
-		TagTester tester = null;
-
-		if (Strings.isEmpty(markup) == false && Strings.isEmpty(tagName) == false)
-		{
-			try
-			{
-				// remove the CDATA and
-				// the id attribute of the component because it is often the same as the element's id
-				markup = AJAX_COMPONENT_CDATA_OPEN.matcher(markup).replaceAll("<component>");
-				markup = AJAX_COMPONENT_CDATA_CLOSE.matcher(markup).replaceAll("</component>");
-
-				XmlPullParser parser = new XmlPullParser();
-				parser.parse(markup);
-
-				XmlTag elm;
-				XmlTag openTag = null;
-				XmlTag closeTag = null;
-				int level = 0;
-				while ((elm = parser.nextTag()) != null && closeTag == null)
-				{
-					XmlTag xmlTag = elm;
-
-					String xmlTagName = xmlTag.getName();
-					if (openTag == null && xmlTagName.equalsIgnoreCase(tagName))
-					{
-						if (xmlTag.isOpen())
-						{
-							openTag = xmlTag;
-						}
-						else if (xmlTag.isOpenClose())
-						{
-							openTag = xmlTag;
-							closeTag = xmlTag;
-						}
-					}
-					else if (openTag != null)
-					{
-						String openTagName = openTag.getName();
-						if (xmlTag.isOpen() && xmlTagName.equals(openTagName))
-						{
-							level++;
-						}
-
-						if (xmlTag.isClose())
-						{
-							if (xmlTagName.equals(openTagName))
-							{
-								if (level == 0)
-								{
-									closeTag = xmlTag;
-									closeTag.setOpenTag(openTag);
-								}
-								else
-								{
-									level--;
-								}
-							}
-						}
-					}
-				}
-
-				if (openTag != null && closeTag != null)
-				{
-					tester = new TagTester(parser, openTag, closeTag);
-				}
-			}
-			catch (Exception e)
-			{
-				throw new WicketRuntimeException(e);
-			}
-		}
-
-		return tester;
+		return createTagByName(markup, tagName);
 	}
 
 	/**
@@ -466,110 +424,6 @@ public class TagTester
 	 *         value on the given attribute
 	 */
 	public static TagTester createTagByAttribute(String markup, String attribute, String value)
-	{
-		TagTester tester = null;
-
-		if (Strings.isEmpty(markup) == false && Strings.isEmpty(attribute) == false &&
-			Strings.isEmpty(value) == false)
-		{
-			try
-			{
-				// remove the CDATA and
-				// the id attribute of the component because it is often the same as the element's id
-				markup = AJAX_COMPONENT_CDATA_OPEN.matcher(markup).replaceAll("<component>");
-				markup = AJAX_COMPONENT_CDATA_CLOSE.matcher(markup).replaceAll("</component>");
-
-				XmlPullParser parser = new XmlPullParser();
-				parser.parse(markup);
-
-				XmlTag elm;
-				XmlTag openTag = null;
-				XmlTag closeTag = null;
-				int level = 0;
-				while ((elm = parser.nextTag()) != null && closeTag == null)
-				{
-					XmlTag xmlTag = elm;
-
-					if (openTag == null)
-					{
-						IValueMap attributeMap = xmlTag.getAttributes();
-
-						for (Map.Entry<String, Object> entry : attributeMap.entrySet())
-						{
-							String attr = entry.getKey();
-							if (attr.equals(attribute) && value.equals(entry.getValue()))
-							{
-								if (xmlTag.isOpen())
-								{
-									openTag = xmlTag;
-								}
-								else if (xmlTag.isOpenClose())
-								{
-									openTag = xmlTag;
-									closeTag = xmlTag;
-								}
-							}
-						}
-					}
-					else
-					{
-						if (xmlTag.isOpen() && xmlTag.getName().equals(openTag.getName()))
-						{
-							level++;
-						}
-
-						if (xmlTag.isClose())
-						{
-							if (xmlTag.getName().equals(openTag.getName()))
-							{
-								if (level == 0)
-								{
-									closeTag = xmlTag;
-									closeTag.setOpenTag(openTag);
-								}
-								else
-								{
-									level--;
-								}
-							}
-						}
-					}
-				}
-
-				if (openTag != null && closeTag != null)
-				{
-					tester = new TagTester(parser, openTag, closeTag);
-				}
-				else if (openTag != null)
-				{
-					tester = new TagTester(parser, openTag, openTag);
-				}
-			}
-			catch (Exception e)
-			{
-				throw new WicketRuntimeException(e);
-			}
-		}
-
-		return tester;
-	}
-
-	/**
-	 * Static factory method for creating a <code>TagTester</code> based on a tag found by an
-	 * attribute with a specific value. Please note that it will return the first tag which matches
-	 * the criteria. It's therefore good for attributes such as "id" or "wicket:id", but only if
-	 * "wicket:id" is unique in the specified markup.
-	 * 
-	 * @param markup
-	 *            the markup to look for the tag to create the <code>TagTester</code> from
-	 * @param attribute
-	 *            the attribute which should be on the tag in the markup
-	 * @param value
-	 *            the value which the attribute must have
-	 * @return the <code>TagTester</code> which matches the tag in the markup, that has the given
-	 *         value on the given attribute
-	 */
-	public static TagTester createTagsByAttribute(String markup, String attribute, String value)
 	{
 		List<TagTester> tester = createTagsByAttribute(markup, attribute, value, true);
 		if ((tester == null) || (tester.size() == 0))
@@ -591,18 +445,69 @@ public class TagTester
 	 *            the attribute which should be on the tag in the markup
 	 * @param value
 	 *            the value which the attribute must have
+	 * @return the <code>TagTester</code> which matches the tag in the markup, that has the given
+	 *         value on the given attribute
+	 */
+	@Deprecated
+	public static TagTester createTagsByAttribute(String markup, String attribute, String value)
+	{
+		return createTagByAttribute(markup, attribute, value);
+	}
+
+	/**
+	 * find the correct openTag to the given closeTag and remove all unclosed openTags between both
+	 * in given array {@code stack}
+	 * 
+	 * @param closeTag
+	 *            tag to search for corresponding openTag
+	 * @param stack
+	 *            array of unclosed openTags
+	 * @return corresponding openTag or {@code null}
+	 */
+	private static XmlTag findOpenTag(XmlTag closeTag, Stack<XmlTag> stack)
+	{
+		while (stack.size() > 0)
+		{
+			XmlTag popped = stack.pop();
+			if (popped.getName().equals(closeTag.getName()))
+			{
+				return popped;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Static factory method for creating a <code>TagTester</code> based on a tag found by an
+	 * attribute with a specific value. Please note that it will return the first tag which matches
+	 * the criteria. It's therefore good for attributes suck as "id" or "wicket:id", but only if
+	 * "wicket:id" is unique in the specified markup.
+	 * 
+	 * @param markup
+	 *            the markup to look for the tag to create the <code>TagTester</code> from
+	 * @param attribute
+	 *            the attribute which should be on the tag in the markup
+	 * @param value
+	 *            the value which the attribute must have
 	 * @param stopAfterFirst
 	 *            if true search will stop after the first match
 	 * @return the <code>TagTester</code> which matches the tag in the markup, that has the given
 	 *         value on the given attribute
 	 */
-	public static List<TagTester> createTagsByAttribute(String markup, String attribute,
-		String value, boolean stopAfterFirst)
+	public static List<TagTester> createTagsByAttribute(String markup, String attribute, String value, boolean stopAfterFirst)
+	{
+		if (Strings.isEmpty(attribute) || Strings.isEmpty(value)) {
+			return Collections.emptyList();
+		}
+		
+		return createTags(markup, xmlTag -> value.equals(xmlTag.getAttributes().get(attribute)), stopAfterFirst);
+	}
+	
+	public static List<TagTester> createTags(String markup, Function<XmlTag, Boolean> accept, boolean stopAfterFirst)
 	{
 		List<TagTester> testers = new ArrayList<>();
 
-		if ((Strings.isEmpty(markup) == false) && (Strings.isEmpty(attribute) == false) &&
-			(Strings.isEmpty(value) == false))
+		if ((Strings.isEmpty(markup) == false))
 		{
 			try
 			{
@@ -614,57 +519,68 @@ public class TagTester
 				XmlPullParser parser = new XmlPullParser();
 				parser.parse(markup);
 
-				XmlTag elm = null;
 				XmlTag openTag = null;
 				XmlTag closeTag = null;
-				int level = 0;
-				while ((elm = parser.nextTag()) != null)
+
+				// temporary Tag-Hierarchy after openTag
+				Stack<XmlTag> stack = new Stack<>();
+
+				while (true)
 				{
-					XmlTag xmlTag = elm;
+					XmlTag xmlTag = parser.nextTag();
+					if (xmlTag == null)
+					{
+						break;
+					}
+					
 					if (openTag == null)
 					{
-						IValueMap attributeMap = xmlTag.getAttributes();
-						for (Map.Entry<String, Object> entry : attributeMap.entrySet())
+						if (accept.apply(xmlTag))
 						{
-							if (entry.getKey().equals(attribute) && value.equals(entry.getValue()))
+							if (xmlTag.isOpen())
 							{
-								if (xmlTag.isOpen())
-								{
-									openTag = xmlTag;
-								}
-								else if (xmlTag.isOpenClose())
-								{
-									openTag = xmlTag;
-									closeTag = xmlTag;
-								}
+								openTag = xmlTag;
+							}
+							else if (xmlTag.isOpenClose())
+							{
+								openTag = xmlTag;
+								closeTag = xmlTag;
 							}
 						}
 					}
 					else
 					{
-						if (xmlTag.isOpen() && xmlTag.getName().equals(openTag.getName()))
+						if (xmlTag.isOpen() && !xmlTag.isOpenClose())
 						{
-							level++;
+							stack.push(xmlTag);
 						}
-
 						if (xmlTag.isClose())
 						{
-							if (xmlTag.getName().equals(openTag.getName()))
+							XmlTag foundTag = findOpenTag(xmlTag, stack);
+							if (foundTag == null)
 							{
-								if (level == 0)
+								if (xmlTag.getName().equals(openTag.getName()))
 								{
 									closeTag = xmlTag;
 									closeTag.setOpenTag(openTag);
 								}
+								else if (requiresCloseTag(openTag.getName()) == false)
+								{
+									// no closeTag for current openTag (allowed)
+									closeTag = openTag;
+								}
 								else
 								{
-									level--;
+									// no closeTag for current openTag (invalid structure)
+									// thus reset state
+									openTag = null;
+									closeTag = null;
 								}
 							}
 						}
 					}
 
-					if ((openTag != null) && (closeTag != null) && (level == 0))
+					if ((openTag != null) && (closeTag != null))
 					{
 						TagTester tester = new TagTester(parser, openTag, closeTag);
 						testers.add(tester);
@@ -680,7 +596,6 @@ public class TagTester
 			}
 			catch (Exception e)
 			{
-				// NOTE: IllegalStateException(Throwable) only exists since Java 1.5
 				throw new WicketRuntimeException(e);
 			}
 		}

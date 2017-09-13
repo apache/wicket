@@ -16,11 +16,6 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.behavior.IBehaviorListener;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
-import org.apache.wicket.markup.html.form.IOnChangeListener;
-import org.apache.wicket.markup.html.link.ILinkListener;
-
 /**
  * Initializer for components in wicket core library.
  * 
@@ -34,14 +29,6 @@ public class Initializer implements IInitializer
 	@Override
 	public void init(Application application)
 	{
-		// Register listener interfaces explicitly (even though they implicitly
-		// register when loaded) because deserialization of an object that
-		// implements an interface does not load the interfaces it implements!
-		IBehaviorListener.INTERFACE.register();
-		IFormSubmitListener.INTERFACE.register();
-		ILinkListener.INTERFACE.register();
-		IOnChangeListener.INTERFACE.register();
-		IResourceListener.INTERFACE.register();
 	}
 
 	/**

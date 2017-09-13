@@ -93,7 +93,6 @@ public class SecuredRemoteAddressRequestWrapperFactory extends AbstractRequestWr
 
 	private final static String SECURED_REMOTE_ADDRESSES_PARAMETER = "securedRemoteAddresses";
 
-	/** */
 	public static class Config
 	{
 		/** @see #setSecuredRemoteAdresses(String) */
@@ -147,9 +146,6 @@ public class SecuredRemoteAddressRequestWrapperFactory extends AbstractRequestWr
 		this.config = config;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public HttpServletRequest getWrapper(final HttpServletRequest request)
 	{
@@ -159,15 +155,12 @@ public class SecuredRemoteAddressRequestWrapperFactory extends AbstractRequestWr
 		{
 			log.debug("Incoming request uri=" + request.getRequestURI() + " with originalSecure='" +
 				request.isSecure() + "', remoteAddr='" + request.getRemoteAddr() +
-				"' will be seen with newSecure='" + request.isSecure() + "'");
+				"' will be seen with newSecure='" + xRequest.isSecure() + "'");
 		}
 
 		return xRequest;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean needsWrapper(final HttpServletRequest request)
 	{

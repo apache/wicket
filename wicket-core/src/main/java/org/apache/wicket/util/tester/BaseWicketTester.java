@@ -40,8 +40,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
-import junit.framework.AssertionFailedError;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -50,7 +48,6 @@ import org.apache.wicket.IRequestCycleProvider;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.Session;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
@@ -63,9 +60,11 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.IAjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -82,12 +81,11 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.form.SubmitLink;
+import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.list.ListView;
@@ -99,6 +97,7 @@ import org.apache.wicket.mock.MockRequestParameters;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.protocol.http.AjaxEnclosureListener;
 import org.apache.wicket.protocol.http.IMetaDataBufferingWebResponse;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -125,7 +124,6 @@ import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.session.ISessionStore.UnboundListener;
 import org.apache.wicket.settings.ApplicationSettings;
 import org.apache.wicket.settings.RequestCycleSettings.RenderStrategy;
 import org.apache.wicket.util.lang.Args;
@@ -140,18 +138,20 @@ import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import junit.framework.AssertionFailedError;
+
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
  * container. See javadoc of <code>WicketTester</code> for example usage. This class can be used as
  * is, but JUnit users should use derived class <code>WicketTester</code>.
- * 
+ *
  * @see WicketTester
- * 
+ *
  * @author Ingram Chen
  * @author Juergen Donnerstag
  * @author Frank Bille
  * @author Igor Vaynberg
- * 
+ *
  * @since 1.2.6
  */
 @SuppressWarnings("serial")
@@ -211,7 +211,7 @@ public class BaseWicketTester
 
 	/**
 	 * Creates <code>WicketTester</code> and automatically creates a <code>WebApplication</code>.
-	 * 
+	 *
 	 * @param <C>
 	 * @param homePage
 	 *            a home page <code>Class</code>
@@ -230,7 +230,7 @@ public class BaseWicketTester
 
 	/**
 	 * Creates a <code>WicketTester</code>.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 */
@@ -241,7 +241,7 @@ public class BaseWicketTester
 
 	/**
 	 * Creates a <code>WicketTester</code>.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * @param servletContextBasePath
@@ -255,7 +255,7 @@ public class BaseWicketTester
 
 	/**
 	 * Creates a <code>WicketTester</code>.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * @param servletCtx
@@ -265,10 +265,10 @@ public class BaseWicketTester
 	{
 		this(application, servletCtx, true);
 	}
-	
+
 	/**
 	 * Creates a <code>WicketTester</code>.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * @param init
@@ -278,10 +278,10 @@ public class BaseWicketTester
 	{
 		this(application, null, init);
 	}
-	
+
 	/**
 	 * Creates a <code>WicketTester</code>.
-	 * 
+	 *
 	 * @param application
 	 *            a <code>WicketTester</code> <code>WebApplication</code> object
 	 * @param servletCtx
@@ -297,10 +297,10 @@ public class BaseWicketTester
 		}
 
 		servletContext = servletCtx != null ? servletCtx
-			// If it's provided from the container it's not necessary to mock. 
+			// If it's provided from the container it's not necessary to mock.
 			: !init && application.getServletContext() != null ? application.getServletContext()
 			: new MockServletContext(application, null);
-		
+
 		// If using Arquillian and it's configured in a web.xml it'll be provided. If not, mock it.
 		if(application.getWicketFilter() == null)
 		{
@@ -322,19 +322,15 @@ public class BaseWicketTester
 
 		this.application = application;
 
-		// If it's provided from the container it's not necessary to set again.
-		if (init)
-		{
-			// FIXME some tests are leaking applications by not calling destroy on them or overriding
-			// teardown() without calling super, for now we work around by making each name unique
-			application.setName("WicketTesterApplication-" + UUID.randomUUID());
-		}
-
 		ThreadContext.setApplication(application);
 
-		// If it's provided from the container it's not necessary to set again and init.
 		if (init)
 		{
+			if (application.getName() == null)
+			{
+				application.setName("WicketTesterApplication-" + UUID.randomUUID());
+			}
+
 			application.setServletContext(servletContext);
 			// initialize the application
 			application.initApplication();
@@ -362,14 +358,7 @@ public class BaseWicketTester
 		}
 
 		// create a new session when the old one is invalidated
-		application.getSessionStore().registerUnboundListener(new UnboundListener()
-		{
-			@Override
-			public void sessionUnbound(String sessionId)
-			{
-				newSession();
-			}
-		});
+		application.getSessionStore().registerUnboundListener(sessionId -> newSession());
 
 		// prepare session
 		setupNextRequestCycle();
@@ -377,7 +366,7 @@ public class BaseWicketTester
 
 	/**
 	 * By default Modification Watcher is disabled by default for the tests.
-	 * 
+	 *
 	 * @return the duration between two checks for changes in the resources
 	 */
 	protected Duration getResourcePollFrequency()
@@ -386,7 +375,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @return page manager provider
 	 */
 	protected IPageManagerProvider newTestPageManagerProvider()
@@ -402,9 +391,6 @@ public class BaseWicketTester
 		return lastRenderedPage;
 	}
 
-	/**
-	 *
-	 */
 	private void setupNextRequestCycle()
 	{
 		request = new MockHttpServletRequest(application, httpSession, servletContext, servletRequestLocale());
@@ -491,7 +477,7 @@ public class BaseWicketTester
 
 	/**
 	 * Cleans up feedback messages. This usually happens on detach, but is disabled in unit testing
-	 * so feedback mesasges can be examined.
+	 * so feedback messages can be examined.
 	 */
 	public void cleanupFeedbackMessages()
 	{
@@ -508,7 +494,7 @@ public class BaseWicketTester
 
 	/**
 	 * Cleans up feedback messages given the specified filter.
-	 * 
+	 *
 	 * @param filter
 	 *            filter used to cleanup messages, accepted messages will be removed
 	 */
@@ -536,8 +522,6 @@ public class BaseWicketTester
 	 */
 	private ServletWebRequest newServletWebRequest()
 	{
-
-
 		return (ServletWebRequest)application.newWebRequest(request, request.getFilterPrefix());
 	}
 
@@ -587,7 +571,7 @@ public class BaseWicketTester
 
 	/**
 	 * Returns {@link HttpSession} for this environment
-	 * 
+	 *
 	 * @return session
 	 */
 	public MockHttpSession getHttpSession()
@@ -597,7 +581,7 @@ public class BaseWicketTester
 
 	/**
 	 * Returns the {@link Application} for this environment.
-	 * 
+	 *
 	 * @return application
 	 */
 	public WebApplication getApplication()
@@ -607,7 +591,7 @@ public class BaseWicketTester
 
 	/**
 	 * Returns the {@link ServletContext} for this environment
-	 * 
+	 *
 	 * @return servlet context
 	 */
 	public ServletContext getServletContext()
@@ -621,8 +605,15 @@ public class BaseWicketTester
 	 */
 	public void destroy()
 	{
-		application.internalDestroy();
-		ThreadContext.detach();
+		try
+		{
+			ThreadContext.setApplication(application);
+			application.internalDestroy();
+		}
+		finally
+		{
+			ThreadContext.detach();
+		}
 	}
 
 	/**
@@ -635,7 +626,7 @@ public class BaseWicketTester
 
 	/**
 	 * Processes the request in mocked Wicket environment.
-	 * 
+	 *
 	 * @param request
 	 *            request to process
 	 * @return true, if process was executed successfully
@@ -647,7 +638,7 @@ public class BaseWicketTester
 
 	/**
 	 * Processes the request in mocked Wicket environment.
-	 * 
+	 *
 	 * @param request
 	 *            request to process
 	 * @param forcedRequestHandler
@@ -676,7 +667,7 @@ public class BaseWicketTester
 	 * <p>
 	 * You may subclass processRequest it, to monitor or change any pre-configured value. Request
 	 * headers can be configured more easily by calling {@link #addRequestHeader(String, String)}.
-	 * 
+	 *
 	 * @param forcedRequest
 	 *            Can be null.
 	 * @param forcedRequestHandler
@@ -732,7 +723,7 @@ public class BaseWicketTester
 
 		try
 		{
-			if (followRedirects && lastResponse.isRedirect())
+			if (isFollowRedirects() && lastResponse.isRedirect())
 			{
 				if (redirectCount++ >= 100)
 				{
@@ -799,7 +790,7 @@ public class BaseWicketTester
 	 * Determine whether a given response contains a redirect leading to an external site (which
 	 * cannot be replicated in WicketTester). This is done by comparing the previous request's
 	 * hostname with the hostname given in the redirect.
-	 * 
+	 *
 	 * @param requestUrl
 	 *            request...
 	 * @param newUrl
@@ -839,7 +830,7 @@ public class BaseWicketTester
 	 * Deletion (not replace) of pre-configured header value can be achieved by subclassing
 	 * {@link #processRequest(MockHttpServletRequest, IRequestHandler, boolean)} and modifying the
 	 * request header directly.
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 */
@@ -855,9 +846,6 @@ public class BaseWicketTester
 		preHeader.put(key, value);
 	}
 
-	/**
-	 *
-	 */
 	private void recordRequestResponse()
 	{
 		lastRequest = request;
@@ -871,10 +859,10 @@ public class BaseWicketTester
 	 * Renders the page specified by given {@link IPageProvider}. After render the page instance can
 	 * be retrieved using {@link #getLastRenderedPage()} and the rendered document will be available
 	 * in {@link #getLastResponse()}.
-	 * 
+	 *
 	 * Depending on {@link RenderStrategy} invoking this method can mean that a redirect will happen
 	 * before the actual render.
-	 * 
+	 *
 	 * @param pageProvider
 	 * @return last rendered page
 	 */
@@ -896,9 +884,9 @@ public class BaseWicketTester
 
 	/**
 	 * Renders the page.
-	 * 
+	 *
 	 * @see #startPage(IPageProvider)
-	 * 
+	 *
 	 * @param page
 	 * @return Page
 	 */
@@ -910,7 +898,7 @@ public class BaseWicketTester
 
 	/**
 	 * Simulates a request to a mounted {@link IResource}
-	 * 
+	 *
 	 * @param resource
 	 *            the resource to test
 	 * @return the used {@link ResourceReference} for the simulation
@@ -931,7 +919,7 @@ public class BaseWicketTester
 
 	/**
 	 * Simulates a request to a mounted {@link ResourceReference}
-	 * 
+	 *
 	 * @param reference
 	 *            the resource reference to test
 	 * @return the tested resource reference
@@ -943,7 +931,7 @@ public class BaseWicketTester
 
 	/**
 	 * Simulates a request to a mounted {@link ResourceReference}
-	 * 
+	 *
 	 * @param reference
 	 *            the resource reference to test
 	 * @param pageParameters
@@ -979,7 +967,7 @@ public class BaseWicketTester
 	 * markup gets removed. If you need the whole returned markup in this case use
 	 * {@link #getLastResponse()}{@link MockHttpServletResponse#getDocument() .getDocument()}
 	 * </p>
-	 * 
+	 *
 	 * @return last response as String.
 	 */
 	public String getLastResponseAsString()
@@ -1006,7 +994,7 @@ public class BaseWicketTester
 	/**
 	 * This method tries to parse the last response to return the encoded base URL and will throw an
 	 * exception if there none was encoded.
-	 * 
+	 *
 	 * @return Wicket-Ajax-BaseURL set on last response by {@link AbstractDefaultAjaxBehavior}
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
@@ -1050,7 +1038,7 @@ public class BaseWicketTester
 
 	/**
 	 * Sets whether responses with redirects will be followed automatically.
-	 * 
+	 *
 	 * @param followRedirects
 	 */
 	public void setFollowRedirects(boolean followRedirects)
@@ -1071,7 +1059,7 @@ public class BaseWicketTester
 	 * Encodes the {@link IRequestHandler} to {@link Url}. It should be safe to call this method
 	 * outside request thread as log as no registered {@link IRequestMapper} requires a
 	 * {@link RequestCycle}.
-	 * 
+	 *
 	 * @param handler
 	 * @return {@link Url} for handler.
 	 */
@@ -1089,28 +1077,38 @@ public class BaseWicketTester
 	{
 		Args.notNull(link, "link");
 
-		Url url = Url.parse(link.urlFor(ILinkListener.INTERFACE, new PageParameters()).toString());
+		Url url = Url.parse(link.urlForListener(new PageParameters()).toString());
 		return transform(url).toString();
 	}
 
 	/**
-	 * Simulates processing URL that invokes specified {@link RequestListenerInterface} on
-	 * component.
-	 * 
-	 * After the listener interface is invoked the page containing the component will be rendered
+	 * Simulates processing URL that invokes an {@link IRequestListener} on	a component.
+	 *
+	 * After the listener is invoked the page containing the component will be rendered
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
-	 * 
+	 *
 	 * @param component
 	 * @param listener
 	 */
-	public void executeListener(final Component component, final RequestListenerInterface listener)
+	public void executeListener(final Component component)
 	{
 		Args.notNull(component, "component");
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
-			component.getPage(), component), listener);
+		Page page = component.getPage();
+		PageAndComponentProvider pageAndComponentProvider = new PageAndComponentProvider(page,
+			component);
+
+		IRequestHandler handler = null;
+		if (page.isPageStateless() || (page.isBookmarkable() && page.wasCreatedBookmarkable()))
+		{
+			handler = new BookmarkableListenerRequestHandler(pageAndComponentProvider);
+		}
+		else
+		{
+			handler = new ListenerRequestHandler(pageAndComponentProvider);
+		}
 
 		Url url = urlFor(handler);
 		request.setUrl(url);
@@ -1120,50 +1118,53 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * Simulates invoking a listener on a component. As opposed to the
+	 * Simulates invoking an {@link IRequestListener} on a component. As opposed to the
 	 * {@link #executeListener(Component)} method, current request/response objects will be used
-	 * 
-	 * After the listener interface is invoked the page containing the component will be rendered
+	 *
+	 * After the listener is invoked the page containing the component will be rendered
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
-	 * 
+	 *
 	 * @param component
 	 * @param listener
 	 */
-	public void invokeListener(final Component component, final RequestListenerInterface listener)
+	public void invokeListener(final Component component)
 	{
 		Args.notNull(component, "component");
 
 		// there are two ways to do this. RequestCycle could be forced to call the handler
 		// directly but constructing and parsing the URL increases the chance of triggering bugs
-		IRequestHandler handler = new ListenerInterfaceRequestHandler(new PageAndComponentProvider(
-			component.getPage(), component), listener);
+		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
+			component.getPage(), component));
 
 		processRequest(handler);
 	}
 
 	/**
-	 * Builds and processes a request suitable for invoking a listener. The <code>Component</code>
-	 * must implement any of the known <code>IListener</code> interfaces.
-	 * 
+	 * Simulates invoking an {@link IRequestListener} on a component. As opposed to the
+	 * {@link #executeListener(Component)} method, current request/response objects will be used
+	 *
+	 * After the listener is invoked the page containing the component will be rendered
+	 * (with an optional redirect - depending on {@link RenderStrategy}).
+	 *
 	 * @param component
-	 *            the listener to invoke
+	 * @param listener
 	 */
-	public void executeListener(final Component component)
+	public void invokeListener(Component component, final Behavior behavior)
 	{
 		Args.notNull(component, "component");
+		Args.notNull(behavior, "behavior");
 
-		for (RequestListenerInterface iface : RequestListenerInterface.getRegisteredInterfaces())
-		{
-			if (iface.getListenerInterfaceClass().isAssignableFrom(component.getClass()))
-			{
-				executeListener(component, iface);
-			}
-		}
+		// there are two ways to do this. RequestCycle could be forced to call the handler
+		// directly but constructing and parsing the URL increases the chance of triggering bugs
+		IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(
+			component.getPage(), component), component.getBehaviorId(behavior));
+
+		processRequest(handler);
 	}
 
 	/**
 	 * Builds and processes a request suitable for executing an <code>AbstractAjaxBehavior</code>.
-	 * 
+	 *
 	 * @param behavior
 	 *            an <code>AbstractAjaxBehavior</code> to execute
 	 */
@@ -1175,6 +1176,7 @@ public class BaseWicketTester
 			Charset.forName(request.getCharacterEncoding()));
 		transform(url);
 		request.setUrl(url);
+		request.addHeader(WebRequest.HEADER_ORIGIN, createOriginHeader());
 		request.addHeader(WebRequest.HEADER_AJAX_BASE_URL, url.toString());
 		request.addHeader(WebRequest.HEADER_AJAX, "true");
 
@@ -1198,7 +1200,17 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 * Build value to Origin header based on RequestCycle Url
+	 *
+	 * @return Origin header
+	 */
+	protected String createOriginHeader(){
+		Url url = RequestCycle.get().getRequest().getUrl();
+		return url.getProtocol() + "://" +url.getHost() + ":" + url.getPort();
+	}
+
+	/**
+	 *
 	 * @param link
 	 * @return Url
 	 */
@@ -1211,7 +1223,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param url
 	 */
 	public void executeAjaxUrl(final Url url)
@@ -1228,7 +1240,7 @@ public class BaseWicketTester
 
 	/**
 	 * Renders a <code>Page</code> from its default constructor.
-	 * 
+	 *
 	 * @param <C>
 	 * @param pageClass
 	 *            a test <code>Page</code> class with default constructor
@@ -1241,7 +1253,7 @@ public class BaseWicketTester
 
 	/**
 	 * Renders a <code>Page</code> from its default constructor.
-	 * 
+	 *
 	 * @param <C>
 	 * @param pageClass
 	 *            a test <code>Page</code> class with default constructor
@@ -1272,7 +1284,7 @@ public class BaseWicketTester
 	/**
 	 * Creates a {@link FormTester} for the <code>Form</code> at a given path, and fills all child
 	 * {@link org.apache.wicket.markup.html.form.FormComponent}s with blank <code>String</code>s.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>FormComponent</code>
 	 * @return a <code>FormTester</code> instance for testing the <code>Form</code>
@@ -1285,7 +1297,7 @@ public class BaseWicketTester
 
 	/**
 	 * Creates a {@link FormTester} for the <code>Form</code> at a given path.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>FormComponent</code>
 	 * @param fillBlankString
@@ -1309,7 +1321,7 @@ public class BaseWicketTester
 	 * started component has a child a Link component with id "link" then after starting the
 	 * component you can click it with: <code>tester.clickLink("link")</code>
 	 * </p>
-	 * 
+	 *
 	 * @param <C>
 	 *            the type of the component
 	 * @param componentClass
@@ -1332,10 +1344,10 @@ public class BaseWicketTester
 	 * started component has a child a Link component with id "link" then after starting the
 	 * component you can click it with: <code>tester.clickLink("link")</code>
 	 * </p>
-	 * 
+	 *
 	 * @param <C>
 	 *            the type of the component
-	 * 
+	 *
 	 * @param componentClass
 	 *            the class of the component to be tested
 	 * @param pageMarkup
@@ -1377,7 +1389,7 @@ public class BaseWicketTester
 	 * has id <em>compId</em> and a Link child component component with id "link" then after
 	 * starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
 	 * </p>
-	 * 
+	 *
 	 * @param <C>
 	 *            the type of the component
 	 * @param component
@@ -1400,7 +1412,7 @@ public class BaseWicketTester
 	 * has id <em>compId</em> and a Link child component component with id "link" then after
 	 * starting the component you can click it with: <code>tester.clickLink("compId:link")</code>
 	 * </p>
-	 * 
+	 *
 	 * @param <C>
 	 *            the type of the component
 	 * @param component
@@ -1485,7 +1497,7 @@ public class BaseWicketTester
 	/**
 	 * Creates the markup that will be used for the automatically created {@link Page} that will be
 	 * used to test a component with {@link #startComponentInPage(Class, IMarkupFragment)}
-	 * 
+	 *
 	 * @param componentId
 	 *            the id of the component to be tested
 	 * @return the markup for the {@link Page} as {@link String}. Cannot be {@code null}.
@@ -1499,7 +1511,7 @@ public class BaseWicketTester
 	/**
 	 * Creates a {@link Page} to test a component with
 	 * {@link #startComponentInPage(Component, IMarkupFragment)}
-	 * 
+	 *
 	 * @return a {@link Page} which will contain the component under test as a single child
 	 */
 	protected Page createPage()
@@ -1561,11 +1573,11 @@ public class BaseWicketTester
 	/**
 	 * Gets the component with the given path from last rendered page. This method fails in case the
 	 * component couldn't be found.
-	 * 
+	 *
 	 * @param path
 	 *            Path to component
 	 * @param wantVisibleInHierarchy
-	 *            if true component needs to be VisibleInHierarchy else null is returned
+	 *            if true component needs to be visible in hierarchy else {@code null} is returned
 	 * @return The component at the path
 	 * @see org.apache.wicket.MarkupContainer#get(String)
 	 */
@@ -1602,7 +1614,7 @@ public class BaseWicketTester
 	 * Gets the component with the given path from last rendered page. This method fails in case the
 	 * component couldn't be found, and it will return null if the component was found, but is not
 	 * visible.
-	 * 
+	 *
 	 * @param path
 	 *            Path to component
 	 * @return The component at the path
@@ -1615,7 +1627,7 @@ public class BaseWicketTester
 
 	/**
 	 * assert the text of <code>Label</code> component.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>Label</code> component
 	 * @param expectedLabelText
@@ -1630,9 +1642,9 @@ public class BaseWicketTester
 
 	/**
 	 * assert component class
-	 * 
+	 *
 	 * @param <C>
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @param expectedComponentClass
@@ -1643,14 +1655,14 @@ public class BaseWicketTester
 	{
 		Component component = assertExists(path);
 
-		return isTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:" +
-			Classes.simpleName(expectedComponentClass),
+		return isTrue("component '" + Classes.name(component.getClass()) + "' is not of type: " +
+			Classes.name(expectedComponentClass),
 			expectedComponentClass.isAssignableFrom(component.getClass()));
 	}
 
 	/**
 	 * assert component visible.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @return a <code>Result</code>
@@ -1662,7 +1674,7 @@ public class BaseWicketTester
 		Component component = getComponentFromLastRenderedPage(path, false);
 		if (component == null)
 		{
-			result = Result.fail("path: '" + path + "' does no exist for page: " +
+			result = Result.fail("path: '" + path + "' does not exist for page: " +
 				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		else
@@ -1676,7 +1688,7 @@ public class BaseWicketTester
 
 	/**
 	 * assert component invisible.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @return a <code>Result</code>
@@ -1688,7 +1700,7 @@ public class BaseWicketTester
 		Component component = getComponentFromLastRenderedPage(path, false);
 		if (component == null)
 		{
-			result = Result.fail("path: '" + path + "' does no exist for page: " +
+			result = Result.fail("path: '" + path + "' does not exist for page: " +
 				Classes.simpleName(getLastRenderedPage().getClass()));
 		}
 		else
@@ -1702,7 +1714,7 @@ public class BaseWicketTester
 
 	/**
 	 * assert component enabled.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @return a <code>Result</code>
@@ -1716,7 +1728,7 @@ public class BaseWicketTester
 
 	/**
 	 * assert component disabled.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @return a <code>Result</code>
@@ -1728,7 +1740,7 @@ public class BaseWicketTester
 		return isFalse("component '" + path + "' is enabled", component.isEnabledInHierarchy());
 	}
 
-	private Component assertExists(final String path) {
+	protected Component assertExists(final String path) {
 		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
 		{
@@ -1750,7 +1762,7 @@ public class BaseWicketTester
 
 	/**
 	 * assert component required.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 * @return a <code>Result</code>
@@ -1764,7 +1776,7 @@ public class BaseWicketTester
 
 	/**
 	 * assert component required.
-	 * 
+	 *
 	 * @param component
 	 *            a form component
 	 * @return a <code>Result</code>
@@ -1802,7 +1814,7 @@ public class BaseWicketTester
 
 	/**
 	 * assert the content of last rendered page contains(matches) regex pattern.
-	 * 
+	 *
 	 * @param pattern
 	 *            reqex pattern to match
 	 * @return a <code>Result</code>
@@ -1815,7 +1827,7 @@ public class BaseWicketTester
 
 	/**
 	 * assert the content of last rendered page contains(matches) regex pattern.
-	 * 
+	 *
 	 * @param pattern
 	 *            reqex pattern to match
 	 * @return a <code>Result</code>
@@ -1828,12 +1840,15 @@ public class BaseWicketTester
 
 	/**
 	 * assert the model of {@link ListView} use expectedList
-	 * 
+	 *
 	 * @param path
 	 *            path to {@link ListView} component
 	 * @param expectedList
 	 *            expected list in the model of {@link ListView}
+	 * @deprecated use {@link WicketTester#assertComponent(String, Class) combined with
+	 *             {@link WicketTester#assertModelValue(String, Object)} instead
 	 */
+	@Deprecated
 	public void assertListView(String path, List<?> expectedList)
 	{
 		ListView<?> listView = (ListView<?>)getComponentFromLastRenderedPage(path);
@@ -1844,7 +1859,7 @@ public class BaseWicketTester
 	 * Click the {@link Link} in the last rendered Page.
 	 * <p>
 	 * Simulate that AJAX is enabled.
-	 * 
+	 *
 	 * @see WicketTester#clickLink(String, boolean)
 	 * @param path
 	 *            Click the <code>Link</code> in the last rendered Page.
@@ -1872,7 +1887,7 @@ public class BaseWicketTester
 	 * This method is also able to simulate that AJAX (javascript) is disabled on the client. This
 	 * is done by setting the isAjax parameter to false. If you have an AjaxFallbackLink you can
 	 * then check that it doesn't fail when invoked as a normal link.
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>Link</code> component
 	 * @param isAjax
@@ -2007,14 +2022,14 @@ public class BaseWicketTester
 			}
 			else
 			{
-				executeListener(link, ILinkListener.INTERFACE);
+				executeListener(link);
 			}
 		}
 		// The link requires AJAX
-		else if (linkComponent instanceof IAjaxLink && isAjax == false) 
+		else if (linkComponent instanceof IAjaxLink && isAjax == false)
 		{
 			fail("Link " + path + "is an IAjaxLink and will " +
-				"not be invoked when AJAX (javascript) is disabled.");	
+				"not be invoked when AJAX (javascript) is disabled.");
 		}
 		else
 		{
@@ -2026,7 +2041,7 @@ public class BaseWicketTester
 	 * Submit the given form in the last rendered {@link Page}
 	 * <p>
 	 * <strong>Note</strong>: Form request parameters have to be set explicitly.
-	 * 
+	 *
 	 * @param form
 	 *            path to component
 	 */
@@ -2039,7 +2054,7 @@ public class BaseWicketTester
 	 * Submits the {@link Form} in the last rendered {@link Page}.
 	 * <p>
 	 * <strong>Note</strong>: Form request parameters have to be set explicitely.
-	 * 
+	 *
 	 * @param path
 	 *            path to component
 	 */
@@ -2048,7 +2063,7 @@ public class BaseWicketTester
 		Form<?> form = (Form<?>)getComponentFromLastRenderedPage(path);
 		Url url = Url.parse(
 			form.getRootForm()
-				.urlFor(IFormSubmitListener.INTERFACE, new PageParameters())
+				.urlForListener(new PageParameters())
 				.toString(), Charset.forName(request.getCharacterEncoding()));
 
 		// make url absolute
@@ -2061,7 +2076,7 @@ public class BaseWicketTester
 	/**
 	 * make url suitable for wicket tester use. usually this involves stripping any leading ..
 	 * segments to make the url absolute
-	 * 
+	 *
 	 * @param url
 	 * @return Url
 	 */
@@ -2077,7 +2092,7 @@ public class BaseWicketTester
 
 	/**
 	 * Asserts the last rendered <code>Page</code> class.
-	 * 
+	 *
 	 * @param <C>
 	 * @param expectedRenderedPageClass
 	 *            expected class of last rendered page
@@ -2106,7 +2121,7 @@ public class BaseWicketTester
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
 	 * output file.
 	 * </p>
-	 * 
+	 *
 	 * @param pageClass
 	 *            used to load the <code>File</code> (relative to <code>clazz</code> package)
 	 * @param filename
@@ -2123,7 +2138,7 @@ public class BaseWicketTester
 	/**
 	 * Asserts last rendered <code>Page</code> against an expected HTML document as a
 	 * <code>String</code>.
-	 * 
+	 *
 	 * @param expectedDocument
 	 *            expected output
 	 * @return a <code>Result</code>
@@ -2138,7 +2153,7 @@ public class BaseWicketTester
 
 	/**
 	 * Asserts no error-level feedback messages.
-	 * 
+	 *
 	 * @return a <code>Result</code>
 	 * @see #hasNoFeedbackMessage(int)
 	 */
@@ -2149,7 +2164,7 @@ public class BaseWicketTester
 
 	/**
 	 * Asserts no info-level feedback messages.
-	 * 
+	 *
 	 * @return a <code>Result</code>
 	 * @see #hasNoFeedbackMessage(int)
 	 */
@@ -2227,7 +2242,7 @@ public class BaseWicketTester
 	/**
 	 * Dumps the <code>Component</code> trees to log. Show only the <code>Component</code>s whose
 	 * paths contain the filter <code>String</code>.
-	 * 
+	 *
 	 * @param filter
 	 *            a filter <code>String</code>
 	 */
@@ -2252,7 +2267,7 @@ public class BaseWicketTester
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript. But it shouldn't be needed because you have to trust that the Wicket
 	 * Ajax JavaScript just works.
-	 * 
+	 *
 	 * @param component
 	 *            the <code>Component</code> to test
 	 * @return a <code>Result</code>
@@ -2265,10 +2280,12 @@ public class BaseWicketTester
 		Result result;
 
 		// test that the component renders the placeholder tag if it's not visible
+		String componentInfo = component.toString();
 		if (!component.isVisible())
 		{
 			failMessage = "A component which is invisible and doesn't render a placeholder tag"
-				+ " will not be rendered at all and thus won't be accessible for subsequent AJAX interaction";
+				+ " will not be rendered at all and thus won't be accessible for subsequent AJAX interaction. " +
+					componentInfo;
 			result = isTrue(failMessage, component.getOutputMarkupPlaceholderTag());
 			if (result.wasFailed())
 			{
@@ -2280,8 +2297,9 @@ public class BaseWicketTester
 		String ajaxResponse = getLastResponseAsString();
 
 		// Test that the previous response was actually a AJAX response
-		failMessage = "The Previous response was not an AJAX response. "
-			+ "You need to execute an AJAX event, using clickLink, before using this assert";
+		failMessage = "The previous response was not an AJAX response. "+
+				"You need to execute an AJAX event, using #clickLink() or " +
+				"#executeAjaxEvent(), before using this assertion method";
 		boolean isAjaxResponse = Pattern.compile(
 			"^<\\?xml version=\"1.0\" encoding=\".*?\"\\?><ajax-response>")
 			.matcher(ajaxResponse)
@@ -2295,8 +2313,9 @@ public class BaseWicketTester
 		// See if the component has a markup id
 		String markupId = component.getMarkupId();
 
-		failMessage = "The component doesn't have a markup id, "
-			+ "which means that it can't have been added to the AJAX response";
+		failMessage = "The component doesn't have a markup id, " +
+				"which means that it can't have been added to the AJAX response. " +
+				componentInfo;
 		result = isTrue(failMessage, !Strings.isEmpty(markupId));
 		if (result.wasFailed())
 		{
@@ -2306,15 +2325,35 @@ public class BaseWicketTester
 		// Look for that the component is on the response, using the markup id
 		boolean isComponentInAjaxResponse = ajaxResponse.matches("(?s).*<component id=\"" +
 			markupId + "\"[^>]*?>.*");
-		failMessage = "Component wasn't found in the AJAX response";
-		return isTrue(failMessage, isComponentInAjaxResponse);
+		failMessage = "Component wasn't found in the AJAX response. " + componentInfo;
+		result = isTrue(failMessage, isComponentInAjaxResponse);
+
+		if (!result.wasFailed()) {
+			return result;
+		}
+
+		// Check if the component has been included as part of an enclosure render
+		Enclosure enclosure = getLastRenderedPage().visitChildren(Enclosure.class, (Enclosure enc, IVisit<Enclosure> visit) -> {
+			if (AjaxEnclosureListener.isControllerOfEnclosure(component, enc)){
+				visit.stop(enc);
+			}
+		});
+
+		if (enclosure == null) {
+			return result;
+		}
+
+		failMessage = "Component's enclosure was not found in the AJAX response. " + enclosure;
+		boolean isEnclosureInAjaxResponse = !isComponentOnAjaxResponse(enclosure).wasFailed();
+		return isTrue(failMessage, isEnclosureInAjaxResponse);
+
 	}
 
 	/**
 	 * Simulates the firing of an Ajax event.
-	 * 
+	 *
 	 * @see #executeAjaxEvent(Component, String)
-	 * 
+	 *
 	 * @since 1.2.3
 	 * @param componentPath
 	 *            the <code>Component</code> path
@@ -2330,7 +2369,7 @@ public class BaseWicketTester
 
 	/**
 	 * Simulates the firing of all ajax timer behaviors on the page
-	 * 
+	 *
 	 * @param page
 	 *            the page which timers will be executed
 	 */
@@ -2373,7 +2412,7 @@ public class BaseWicketTester
 	/**
 	 * Simulates the firing of an Ajax event. You add an Ajax event to a <code>Component</code> by
 	 * using:
-	 * 
+	 *
 	 * <pre>
 	 *     ...
 	 *     component.add(new AjaxEventBehavior(&quot;ondblclick&quot;) {
@@ -2381,23 +2420,23 @@ public class BaseWicketTester
 	 *     });
 	 *     ...
 	 * </pre>
-	 * 
+	 *
 	 * You can then test that the code inside <code>onEvent</code> actually does what it's supposed
 	 * to, using the <code>WicketTester</code>:
-	 * 
+	 *
 	 * <pre>
 	 *     ...
 	 *     tester.executeAjaxEvent(component, &quot;ondblclick&quot;);
 	 *     // Test that the code inside onEvent is correct.
 	 *     ...
 	 * </pre>
-	 * 
+	 *
 	 * This also works with <code>AjaxFormSubmitBehavior</code>, where it will "submit" the
 	 * <code>Form</code> before executing the command.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript.
-	 * 
+	 *
 	 * @param component
 	 *            the <code>Component</code> that has the <code>AjaxEventBehavior</code> we want to
 	 *            test. If the <code>Component</code> is <code>null</code>, the test will fail.
@@ -2424,7 +2463,7 @@ public class BaseWicketTester
 	 * Retrieves a <code>TagTester</code> based on a <code>wicket:id</code>. If more
 	 * <code>Component</code>s exist with the same <code>wicket:id</code> in the markup, only the
 	 * first one is returned.
-	 * 
+	 *
 	 * @param wicketId
 	 *            the <code>wicket:id</code> to search for
 	 * @return the <code>TagTester</code> for the tag which has the given <code>wicket:id</code>
@@ -2437,7 +2476,7 @@ public class BaseWicketTester
 	/**
 	 * Modified version of BaseWicketTester#getTagByWicketId(String) that returns all matching tags
 	 * instead of just the first.
-	 * 
+	 *
 	 * @param wicketId
 	 * @return List of Tags
 	 */
@@ -2450,7 +2489,7 @@ public class BaseWicketTester
 	/**
 	 * Retrieves a <code>TagTester</code> based on an DOM id. If more <code>Component</code>s exist
 	 * with the same id in the markup, only the first one is returned.
-	 * 
+	 *
 	 * @param id
 	 *            the DOM id to search for.
 	 * @return the <code>TagTester</code> for the tag which has the given DOM id
@@ -2463,7 +2502,7 @@ public class BaseWicketTester
 	/**
 	 * Helper method for all the places where an Ajax call should submit an associated
 	 * <code>Form</code>.
-	 * 
+	 *
 	 * @param component
 	 *            The component the behavior is attached to
 	 * @param behavior
@@ -2484,7 +2523,7 @@ public class BaseWicketTester
 	/**
 	 * Puts all not already scheduled (e.g. via {@link FormTester#setValue(String, String)}) form
 	 * component values in the post parameters for the next form submit
-	 * 
+	 *
 	 * @param form
 	 *            the {@link Form} which components should be submitted
 	 */
@@ -2513,7 +2552,7 @@ public class BaseWicketTester
 
 	/**
 	 * Retrieves the content type from the response header.
-	 * 
+	 *
 	 * @return the content type from the response header
 	 */
 	public String getContentTypeFromResponseHeader()
@@ -2525,7 +2564,7 @@ public class BaseWicketTester
 
 	/**
 	 * Retrieves the content length from the response header.
-	 * 
+	 *
 	 * @return the content length from the response header
 	 */
 	public int getContentLengthFromResponseHeader()
@@ -2537,7 +2576,7 @@ public class BaseWicketTester
 
 	/**
 	 * Retrieves the last-modified value from the response header.
-	 * 
+	 *
 	 * @return the last-modified value from the response header
 	 */
 	public String getLastModifiedFromResponseHeader()
@@ -2547,7 +2586,7 @@ public class BaseWicketTester
 
 	/**
 	 * Retrieves the content disposition from the response header.
-	 * 
+	 *
 	 * @return the content disposition from the response header
 	 */
 	public String getContentDispositionFromResponseHeader()
@@ -2571,7 +2610,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 * @param condition
 	 * @return fail with message if false
@@ -2586,7 +2625,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 * @param condition
 	 * @return fail with message if true
@@ -2601,7 +2640,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param expected
 	 * @param actual
 	 * @return fail with message if not equal
@@ -2621,7 +2660,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 * @param object
 	 */
@@ -2634,7 +2673,7 @@ public class BaseWicketTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 * @param object
 	 * @return fail with message if not null
@@ -2650,7 +2689,7 @@ public class BaseWicketTester
 
 	/**
 	 * Checks whether a component is visible and/or enabled before usage
-	 * 
+	 *
 	 * @param component
 	 * @param throwException
 	 * @return result
@@ -2737,7 +2776,7 @@ public class BaseWicketTester
 	/**
 	 * Starts a page, a shared resource or a {@link IRequestListener} depending on what the
 	 * {@link IRequestMapper}s resolve for the passed url.
-	 * 
+	 *
 	 * @param _url
 	 *            the url to resolve and execute
 	 */
@@ -2749,35 +2788,32 @@ public class BaseWicketTester
 		processRequest();
 	}
 
-	/**
-	 *
-	 */
 	private class LastPageRecordingPageRendererProvider implements IPageRendererProvider
 	{
 		private final IPageRendererProvider delegate;
 
 		private Page lastPage;
 
-		public LastPageRecordingPageRendererProvider(IPageRendererProvider delegate)
+		private LastPageRecordingPageRendererProvider(IPageRendererProvider delegate)
 		{
 			this.delegate = delegate;
 		}
 
 		@Override
-		public PageRenderer get(final RenderPageRequestHandler handler)
+		public PageRenderer apply(final RenderPageRequestHandler handler)
 		{
 			return new PageRenderer(handler)
 			{
 				@Override
 				public void respond(RequestCycle requestCycle)
 				{
-					delegate.get(handler).respond(requestCycle);
+					delegate.apply(handler).respond(requestCycle);
 
 					// WICKET-5424 record page after wrapped renderer has responded
 					if (handler.getPageProvider().hasPageInstance())
 					{
 						Page renderedPage = (Page)handler.getPageProvider().getPageInstance();
-						if (componentInPage != null && lastPage != null
+						if (componentInPage != null && lastPage != null && renderedPage != null
 							&& lastPage.getPageClass() != renderedPage.getPageClass())
 						{
 							// WICKET-3913: reset startComponent if a new page
@@ -2795,14 +2831,11 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestExceptionMapper implements IExceptionMapper
 	{
 		private final IExceptionMapper delegate;
 
-		public TestExceptionMapper(IExceptionMapper delegate)
+		private TestExceptionMapper(IExceptionMapper delegate)
 		{
 			this.delegate = delegate;
 		}
@@ -2828,36 +2861,30 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestRequestCycleProvider implements IRequestCycleProvider
 	{
 		private final IRequestCycleProvider delegate;
 
-		public TestRequestCycleProvider(IRequestCycleProvider delegate)
+		private TestRequestCycleProvider(IRequestCycleProvider delegate)
 		{
 			this.delegate = delegate;
 		}
 
 		@Override
-		public RequestCycle get(RequestCycleContext context)
+		public RequestCycle apply(RequestCycleContext context)
 		{
 			context.setRequestMapper(new TestRequestMapper(context.getRequestMapper()));
 			forcedHandler = null;
 			context.setExceptionMapper(new TestExceptionMapper(context.getExceptionMapper()));
-			return delegate.get(context);
+			return delegate.apply(context);
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestRequestMapper implements IRequestMapperDelegate
 	{
 		private final IRequestMapper delegate;
 
-		public TestRequestMapper(IRequestMapper delegate)
+		private TestRequestMapper(IRequestMapper delegate)
 		{
 			this.delegate = delegate;
 		}
@@ -2896,30 +2923,20 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
-
-	/**
-	 *
-	 */
 	private static class TestPageManagerProvider implements IPageManagerProvider
 	{
 		@Override
-		public IPageManager get(IPageManagerContext pageManagerContext)
+		public IPageManager apply(IPageManagerContext pageManagerContext)
 		{
 			return new MockPageManager();
 		}
 	}
 
-	/**
-	 *
-	 */
 	private class TestFilterConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<String, String>();
 
-		public TestFilterConfig()
+		private TestFilterConfig()
 		{
 			initParameters.put(WicketFilter.FILTER_MAPPING_PARAM, "/servlet/*");
 		}
@@ -2949,17 +2966,14 @@ public class BaseWicketTester
 		}
 	}
 
-	/**
-	 *
-	 */
 	private static class WicketTesterServletWebResponse extends ServletWebResponse
 		implements
 			IMetaDataBufferingWebResponse
 	{
 		private List<Cookie> cookies = new ArrayList<Cookie>();
 
-		public WicketTesterServletWebResponse(ServletWebRequest request,
-			MockHttpServletResponse response)
+		private WicketTesterServletWebResponse(ServletWebRequest request,
+		                                       MockHttpServletResponse response)
 		{
 			super(request, response);
 		}

@@ -35,5 +35,5 @@ public interface IScopeAwareTextResourceProcessor extends ITextResourceCompresso
 	 *          The name of the package resource
 	 * @return The processed input
 	 */
-	public String process(String input, Class<?> scope, String name);
+	String process(String input, Class<?> scope, String name);
 }

@@ -45,7 +45,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 
 	private static final String LINE_ENDING = System.getProperty("line.separator");
 
-	static interface FileVisitor
+	interface FileVisitor
 	{
 		/**
 		 * @param file
@@ -83,13 +83,13 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 						}
 						else
 						{
-							log.info("File ignored: '{}'", pathname.toString());
+							log.debug("File ignored: '{}'", pathname);
 						}
 					}
 				}
 				else
 				{
-					log.info("File ignored: '{}'", pathname.toString());
+					log.debug("File ignored: '{}'", pathname);
 				}
 			}
 
@@ -146,7 +146,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 
 	private class DirectoryFileFilter implements FileFilter
 	{
-		private final String[] ignoreDirectory = new String[] { ".svn" };
+		private final String[] ignoreDirectory = new String[] { ".git" };
 
 		@Override
 		public boolean accept(final File pathname)
@@ -159,7 +159,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 				relativePathname = Strings.replaceAll(relativePathname,
 					baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
 					.toString();
-				if (relativePathname.equals("target") == false)
+				if ("target".equals(relativePathname) == false)
 				{
 					boolean found = false;
 					for (String ignore : ignoreDirectory)
@@ -307,7 +307,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 				ILicenseHeaderHandler licenseHeaderHandler = entry.getKey();
 				List<File> fileList = entry.getValue();
 
-				failString.append("\n");
+				failString.append('\n');
 				failString.append(licenseHeaderHandler.getClass().getName());
 				failString.append(" failed. The following files(");
 				failString.append(fileList.size());
@@ -329,7 +329,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 						failString.append(licenseType);
 					}
 
-					failString.append(" ").append(filename).append(LINE_ENDING);
+					failString.append(' ').append(filename).append(LINE_ENDING);
 				}
 			}
 

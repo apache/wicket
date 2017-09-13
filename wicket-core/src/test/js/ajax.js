@@ -41,7 +41,7 @@
  */
 
 /*global ok: true, start: true, asyncTest: true, test: true, equal: true, deepEqual: true,
- QUnit: true, module: true, expect: true */
+ QUnit: true, module: true, expect: true, console: true  */
 
 jQuery(document).ready(function() {
 	"use strict";
@@ -396,7 +396,7 @@ jQuery(document).ready(function() {
 					function(attributes, jqXHR, errorMessage, textStatus) {
 						start();
 						equal(attrs.u, attributes.u);
-						ok(typeof(jqXHR.success) === "function", "jqXHR should be passed");
+						ok(typeof(jqXHR) === "object", "jqXHR should be passed");
 						equal(errorMessage, "Not Found", "Error message should be passed");
 						equal(textStatus, "error", "Text status should be passed");
 					}
@@ -435,16 +435,25 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('verify default attributes.', function () {
 
-			expect(25);
+			expect(26);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
 				coh: [
 					function(attributes, jqXHR, textStatus) {
 						start();
-						equal(textStatus, "parsererror", "textStatus");
+						var jQueryVersion = jQuery.fn.jquery;
+						if (
+							(!!window._phantom) &&
+							(jQueryVersion.indexOf("3") === 0 || jQueryVersion.indexOf("2") === 0 )
+						) {
+							equal(textStatus, "success", "textStatus");
+						} else {
+							equal(textStatus, "parsererror", "textStatus");
+						}
 						equal(attributes.u, attrs.u, "url");
 						deepEqual(attributes.e, [ "domready" ], "events");
+						equal(attributes.event, null, "No event for 'domready'");
 						equal(attributes.ch, '0|s', 'channel');
 						equal(attributes.dt, 'xml', 'data type');
 						equal(attributes.wr, true, 'wicket ajax response');
@@ -476,7 +485,7 @@ jQuery(document).ready(function() {
 
 		asyncTest('verify arguments to global listeners. Success scenario.', function () {
 
-			expect(13);
+			expect(14);
 
 			var attrs = {
 				u: 'data/ajax/nonWicketResponse.json',
@@ -496,6 +505,7 @@ jQuery(document).ready(function() {
 					two: '2',
 					three: true
 				};
+				ok(attributes.event instanceof jQuery.Event, "There must be an event for non-'domready' events");
 				deepEqual(data, expected, 'Success: data');
 				equal('success', textStatus, 'Success: textStatus');
 				equal(attrs.u, attributes.u, 'Success: attrs');
@@ -1382,5 +1392,110 @@ jQuery(document).ready(function() {
 			target.off("event1");
 		});
 
+		asyncTest('processAjaxResponse, normal HTTP case.', function () {
+
+			expect(2);
+
+			var originalProcessAjaxResponse = Wicket.Ajax.Call.prototype.processAjaxResponse,
+				originalRedirect = Wicket.Ajax.redirect;
+
+			Wicket.Ajax.Call.prototype.processAjaxResponse = function(data, textStatus, jqXHR, context) {
+				var mockJqXHR = {
+					"readyState": 4,
+					getResponseHeader: function (headerName) {
+						if ('Ajax-Location' === headerName) {
+							return 'http://a.b.c';
+						}
+						return jqXHR.getResponseHeader(headerName);
+					}
+				};
+				originalProcessAjaxResponse.call(Wicket.Ajax.Call.prototype, data, textStatus, mockJqXHR, context);
+			};
+
+			Wicket.Ajax.redirect = function(location) {
+				Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
+				Wicket.Ajax.redirect = originalRedirect;
+				start();
+				equal(location, 'http://a.b.c', 'Custom HTTP address is properly handled');
+			};
+
+
+			var attrs = {
+				u: 'data/ajax/componentId.xml',
+				c: 'componentId'
+			};
+
+			execute(attrs);
+		});
+
+		asyncTest('processAjaxResponse, chrome-extensions case.', function () {
+
+			expect(2);
+
+			var originalProcessAjaxResponse = Wicket.Ajax.Call.prototype.processAjaxResponse,
+				originalRedirect = Wicket.Ajax.redirect;
+
+			Wicket.Ajax.Call.prototype.processAjaxResponse = function(data, textStatus, jqXHR, context) {
+				var mockJqXHR = {
+					"readyState": 4,
+					getResponseHeader: function (headerName) {
+						if ('Ajax-Location' === headerName) {
+							return 'chrome-extensions://a.b.c';
+						}
+						return jqXHR.getResponseHeader(headerName);
+					}
+				};
+				originalProcessAjaxResponse.call(Wicket.Ajax.Call.prototype, data, textStatus, mockJqXHR, context);
+			};
+
+			Wicket.Ajax.redirect = function(location) {
+				Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
+				Wicket.Ajax.redirect = originalRedirect;
+				start();
+				equal(location, 'chrome-extensions://a.b.c', 'Custom chrome-extensions address is properly handled');
+			};
+
+			var attrs = {
+				u: 'data/ajax/componentId.xml',
+				c: 'componentId'
+			};
+
+			execute(attrs);
+		});
+
+		asyncTest('processAjaxResponse, no scheme case.', function () {
+
+			expect(2);
+
+			var originalProcessAjaxResponse = Wicket.Ajax.Call.prototype.processAjaxResponse,
+				originalRedirect = Wicket.Ajax.redirect;
+
+			Wicket.Ajax.Call.prototype.processAjaxResponse = function(data, textStatus, jqXHR, context) {
+				var mockJqXHR = {
+					"readyState": 4,
+					getResponseHeader: function (headerName) {
+						if ('Ajax-Location' === headerName) {
+							return 'location-without-scheme';
+						}
+						return jqXHR.getResponseHeader(headerName);
+					}
+				};
+				originalProcessAjaxResponse.call(Wicket.Ajax.Call.prototype, data, textStatus, mockJqXHR, context);
+			};
+
+			Wicket.Ajax.redirect = function(location) {
+				Wicket.Ajax.Call.prototype.processAjaxResponse = originalProcessAjaxResponse;
+				Wicket.Ajax.redirect = originalRedirect;
+				start();
+				ok(location.indexOf('location-without-scheme') > 0, 'Custom address without scheme is properly handled');
+			};
+
+			var attrs = {
+				u: 'data/ajax/componentId.xml',
+				c: 'componentId'
+			};
+
+			execute(attrs);
+		});
 	}
 });

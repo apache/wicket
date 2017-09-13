@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * A link which can be used exactly like a Button to submit a Form. The onclick of the link will use
@@ -67,7 +69,7 @@ import org.apache.wicket.model.IModel;
  * @author Eelco Hillenius
  * 
  */
-public class SubmitLink extends AbstractSubmitLink
+public class SubmitLink extends AbstractSubmitLink implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -194,37 +196,16 @@ public class SubmitLink extends AbstractSubmitLink
 	 * 
 	 * @return The JavaScript to be executed when the link is clicked.
 	 */
-	protected String getTriggerJavaScript()
+	protected CharSequence getTriggerJavaScript()
 	{
 		if (getForm() != null)
 		{
 			// find the root form - the one we are really going to submit
 			Form<?> root = getForm().getRootForm();
-			StringBuilder sb = new StringBuilder(100);
-			sb.append("var e=document.getElementById('");
-			sb.append(root.getHiddenFieldId());
-			sb.append("'); e.name=\'");
-			sb.append(getInputName());
-			sb.append("'; e.value='x';");
-			sb.append("var f=document.getElementById('");
-			sb.append(root.getMarkupId());
-			sb.append("');");
-			if (shouldInvokeJavaScriptFormOnsubmit())
-			{
-				if (getForm() != root)
-				{
-					sb.append("var ff=document.getElementById('");
-					sb.append(getForm().getMarkupId());
-					sb.append("');");
-				}
-				else
-				{
-					sb.append("var ff=f;");
-				}
-				sb.append("if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }");
-			}
-			sb.append("f.submit();e.value='';e.name='';return false;");
-			return sb.toString();
+
+			CharSequence url = urlForListener(new PageParameters());
+
+			return root.getJsForListenerUrl(url);
 		}
 		else
 		{
@@ -232,6 +213,11 @@ public class SubmitLink extends AbstractSubmitLink
 		}
 	}
 
+	@Override
+	public void onRequest()
+	{
+		getForm().onFormSubmitted(this);
+	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()

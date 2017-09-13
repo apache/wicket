@@ -16,15 +16,16 @@
  */
 package org.apache.wicket;
 
+import java.util.function.Function;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
-import org.apache.wicket.util.IContextProvider;
 
 /**
  * Provides instances of {@link RequestCycle} objects
  * 
  * @author igor.vaynberg
  */
-public interface IRequestCycleProvider extends IContextProvider<RequestCycle, RequestCycleContext>
+public interface IRequestCycleProvider extends Function<RequestCycleContext, RequestCycle>
 {
 }

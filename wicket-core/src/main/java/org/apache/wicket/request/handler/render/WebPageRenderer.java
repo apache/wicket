@@ -268,7 +268,7 @@ public class WebPageRenderer extends PageRenderer
 				// when a normal mounted stateful page is hit at /mount/point
 				// wicket renders the page to buffer and redirects to /mount/point?12
 				// but for stateless page the redirect is not necessary
-				// also for listener interface on stateful page we want to redirect
+				// also for request listeners on stateful page we want to redirect
 				// after the listener is invoked, but on stateless page the user
 				// must ask for redirect explicitly
 				response.writeTo((WebResponse)requestCycle.getResponse());
@@ -329,14 +329,8 @@ public class WebPageRenderer extends PageRenderer
 		return (compatibleProtocols(currentUrl.getProtocol(), targetUrl.getProtocol())) &&
 				(neverRedirect(getRedirectPolicy())
 			|| ((isOnePassRender() && notForcedRedirect(getRedirectPolicy())) || (targetUrl
-				.equals(currentUrl) && notNewAndNotStatelessPage(isNewPageInstance(),
-				isPageStateless()))) || (targetUrl.equals(currentUrl) && isRedirectToRender())
+				.equals(currentUrl) && (!isNewPageInstance() && !isPageStateless()))) || (targetUrl.equals(currentUrl) && isRedirectToRender())
 			|| (shouldPreserveClientUrl(cycle) && notForcedRedirect(getRedirectPolicy())));
-	}
-
-	private static boolean notNewAndNotStatelessPage(boolean newPageInstance, boolean pageStateless)
-	{
-		return !newPageInstance && !pageStateless;
 	}
 
 	private static boolean neverRedirect(RedirectPolicy redirectPolicy)

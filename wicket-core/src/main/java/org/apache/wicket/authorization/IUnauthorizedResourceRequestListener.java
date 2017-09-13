@@ -22,6 +22,7 @@ import org.apache.wicket.request.resource.IResource;
 /**
  * A listener that is notified when a request to some resource is not allowed.
  */
+@FunctionalInterface
 public interface IUnauthorizedResourceRequestListener
 {
 	/**

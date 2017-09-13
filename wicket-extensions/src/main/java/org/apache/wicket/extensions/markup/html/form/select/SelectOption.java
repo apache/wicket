@@ -31,7 +31,7 @@ import org.apache.wicket.model.IModel;
  * 
  * @author Igor Vaynberg
  */
-public class SelectOption<T> extends WebMarkupContainer implements IGenericComponent<T>
+public class SelectOption<T> extends WebMarkupContainer implements IGenericComponent<T, SelectOption<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,34 +57,6 @@ public class SelectOption<T> extends WebMarkupContainer implements IGenericCompo
 	public SelectOption(final String id, final IModel<T> model)
 	{
 		super(id, model);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final SelectOption<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public SelectOption<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
-		return this;
 	}
 
 	/**

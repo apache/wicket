@@ -30,52 +30,23 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class BookmarkablePage extends WebPage
 {
 	/**
-	 * Constructor.
-	 */
-	public BookmarkablePage()
-	{
-		this(null);
-		// note: its here for style actually. When you have both a default
-		// constructor,
-		// and a constructor with a PageParameters argument, the latter is
-		// allways called
-		// with a non-null argument
-	}
-
-	/**
 	 * Construct.
 	 * 
 	 * @param pageParameters
 	 */
 	public BookmarkablePage(PageParameters pageParameters)
 	{
+		super(pageParameters);
 		// get the message from the passed 'message' parameter or fall back to
 		// the default
 		// when no parameters were passed.
 
-		String message;
-		// note: the null check is here as a matter of defensive programming.
-		// Actually, as this
-		// constructor is allways called instead of the default constructor, and
-		// pageParameters
-		// never null, the check is not nescesarry. On the other hand... would
-		// you ever trust
-		// any API enough to just not check it at all?
-		if (pageParameters == null ||
-			pageParameters.get("message").toOptionalString() == null)
-		{
-			message = "This is the default message";
-		}
-		else
-		{
-			message = pageParameters.get("message").toOptionalString();
-		}
-
+		String message = pageParameters.get("message").toString("This is the default message");
 		// Add a label to display the message
 		add(new Label("messageLabel", message));
 
 		// Add a link back. We did not hold any important instance data in
-		// BookMarkabelPageLinkPage,
+		// BookmarkablePageLinkPage,
 		// so navigating to a new instance is just fine
 		add(new BookmarkablePageLink<>("navigateBackLink", BookmarkablePageLinkPage.class));
 	}

@@ -18,8 +18,7 @@ package org.apache.wicket.core.request.mapper;
 
 import java.util.function.Supplier;
 
-import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
@@ -54,7 +53,7 @@ import org.apache.wicket.util.string.Strings;
  *  IPage Instance - Render Hybrid (RenderPageRequestHandler for mounted pages)
  *  /mount/point?2
  * 
- *  IPage Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler for mounted pages)
+ *  IPage Instance - Bookmarkable Listener (BookmarkableListenerRequestHandler for mounted pages)
  *  /mount/point?2-click-foo-bar-baz
  *  /mount/point?2-5.click.1-foo-bar-baz (1 is behavior index, 5 is render count)
  *  (these will redirect to hybrid if page is not stateless)
@@ -149,38 +148,30 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 	}
 
-	protected PageParameters newPageParameters()
-	{
-		return new PageParameters();
-	}
-
 	@Override
 	public Url mapHandler(IRequestHandler requestHandler)
 	{
 		Url url = super.mapHandler(requestHandler);
 
-		if (url == null && requestHandler instanceof ListenerInterfaceRequestHandler &&
+		if (url == null && requestHandler instanceof ListenerRequestHandler &&
 			getRecreateMountedPagesAfterExpiry())
 		{
-			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
+			ListenerRequestHandler handler = (ListenerRequestHandler)requestHandler;
 			IRequestablePage page = handler.getPage();
 			if (checkPageInstance(page))
 			{
-				String componentPath = handler.getComponentPath();
-				RequestListenerInterface listenerInterface = handler.getListenerInterface();
-
 				Integer renderCount = null;
-				if (listenerInterface.isIncludeRenderCount())
+				if (handler.includeRenderCount())
 				{
 					renderCount = page.getRenderCount();
 				}
 
+				String componentPath = handler.getComponentPath();
 				PageInfo pageInfo = getPageInfo(handler);
-				ComponentInfo componentInfo = new ComponentInfo(renderCount,
-					requestListenerInterfaceToString(listenerInterface), componentPath,
-					handler.getBehaviorIndex());
+				ComponentInfo componentInfo = new ComponentInfo(renderCount, componentPath, handler.getBehaviorIndex());
 				PageComponentInfo pageComponentInfo = new PageComponentInfo(pageInfo, componentInfo);
-				PageParameters parameters = new PageParameters(page.getPageParameters());
+				PageParameters parameters = newPageParameters();
+				parameters.mergeWith(page.getPageParameters());
 				UrlInfo urlInfo = new UrlInfo(pageComponentInfo, page.getClass(),
 					parameters.mergeWith(handler.getPageParameters()));
 				url = buildUrl(urlInfo);
@@ -203,7 +194,8 @@ public class MountedMapper extends AbstractBookmarkableMapper
 		}
 		encodePageComponentInfo(url, info.getPageComponentInfo());
 
-		PageParameters copy = new PageParameters(info.getPageParameters());
+		PageParameters copy = newPageParameters();
+		copy.mergeWith(info.getPageParameters());
 		if (setPlaceholders(copy, url) == false)
 		{
 			// mandatory parameter is not provided => cannot build Url

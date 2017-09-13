@@ -27,5 +27,4 @@ package org.apache.wicket.cdi;
  */
 public interface ConversationalComponent
 {
-
 }

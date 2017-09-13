@@ -19,6 +19,10 @@ package org.apache.wicket.ajax.json;
 import java.util.List;
 import java.util.Map;
 
+import com.github.openjson.JSONArray;
+import com.github.openjson.JSONException;
+import com.github.openjson.JSONObject;
+
 /**
  * @since 6.0.0
  */

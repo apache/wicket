@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.WicketRuntimeException;
@@ -38,20 +41,50 @@ import org.junit.Test;
 public class CollectionFormComponentTest extends WicketTestCase
 {
 	@Test
-	public void getSetNullCollection()
+	public void getSetNullList()
 	{
 		final AtomicBoolean setCalled = new AtomicBoolean();
 
 		Object object = new Object()
 		{
-			private Collection<String> internal = null;
+			private List<String> internal = null;
 
-			public Collection<String> getStrings()
+			public List<String> getStrings()
 			{
 				return internal;
 			}
 
-			public void setStrings(Collection<String> strings)
+			public void setStrings(List<String> strings)
+			{
+				this.internal = strings;
+
+				setCalled.set(true);
+			}
+		};
+
+		Choice choice = new Choice(object);
+		choice.setConvertedInput(Arrays.asList("A", "B"));
+		FormComponent.updateCollectionModel(choice);
+
+		assertEquals(true, setCalled.get());
+		assertEquals("[A, B]", choice.getDefaultModelObjectAsString());
+	}
+
+	@Test
+	public void getSetNullSet()
+	{
+		final AtomicBoolean setCalled = new AtomicBoolean();
+
+		Object object = new Object()
+		{
+			private Set<String> internal = null;
+
+			public Set<String> getStrings()
+			{
+				return internal;
+			}
+
+			public void setStrings(Set<String> strings)
 			{
 				this.internal = strings;
 
@@ -139,20 +172,50 @@ public class CollectionFormComponentTest extends WicketTestCase
 	 * WICKET-5518
 	 */
 	@Test
-	public void getSetUnmodifiableCollection()
+	public void getSetUnmodifiableList()
 	{
 		final AtomicBoolean setCalled = new AtomicBoolean();
 
 		Object object = new Object()
 		{
-			private Collection<String> internal = new ArrayList<>();
+			private List<String> internal = new ArrayList<>();
 			
-			public Collection<String> getStrings()
+			public List<String> getStrings()
 			{
-				return Collections.unmodifiableCollection(internal);
+				return Collections.unmodifiableList(internal);
 			}
 
-			public void setStrings(Collection<String> strings)
+			public void setStrings(List<String> strings)
+			{
+				this.internal = strings;
+
+				setCalled.set(true);
+			}
+		};
+
+		Choice choice = new Choice(object);
+		choice.setConvertedInput(Arrays.asList("A", "B"));
+		FormComponent.updateCollectionModel(choice);
+
+		assertEquals(true, setCalled.get());
+		assertEquals("[A, B]", choice.getDefaultModelObjectAsString());
+	}
+
+	@Test
+	public void getSetUnmodifiableSet()
+	{
+		final AtomicBoolean setCalled = new AtomicBoolean();
+
+		Object object = new Object()
+		{
+			private Set<String> internal = new HashSet<>();
+			
+			public Set<String> getStrings()
+			{
+				return Collections.unmodifiableSet(internal);
+			}
+
+			public void setStrings(Set<String> strings)
 			{
 				this.internal = strings;
 

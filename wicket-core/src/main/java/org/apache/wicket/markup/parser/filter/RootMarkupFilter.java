@@ -17,6 +17,8 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.HtmlSpecialTag;
@@ -27,6 +29,7 @@ import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.parser.IMarkupFilter;
 import org.apache.wicket.markup.parser.IXmlPullParser;
 import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 
 /**
@@ -109,6 +112,14 @@ public final class RootMarkupFilter extends AbstractMarkupFilter
 	@Override
 	public final void postProcess(Markup markup)
 	{
+		//once we have done filtering, we reset markup counters for ids 
+		RequestCycle requestCycle = RequestCycle.get();
+		Map<String, AtomicInteger> markupUniqueCounters = requestCycle.getMetaData(REQUEST_COUNTER_KEY);
+		
+		if (markupUniqueCounters != null)
+		{			
+			markupUniqueCounters.clear();
+		}
 	}
 
 	/**

@@ -18,12 +18,16 @@ package org.apache.wicket.markup.renderStrategy;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.application.HeaderContributorListenerCollection;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer.HeaderStreamState;
+import org.apache.wicket.markup.html.internal.InlineEnclosure;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.visit.IVisit;
+import org.apache.wicket.util.visit.IVisitor;
 
 /**
  * An abstract implementation of a header render strategy which is only missing the code to traverse
@@ -116,7 +120,48 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 		final HeaderStreamState headerStreamState, final Component rootComponent)
 	{
 		headerContainer.renderHeaderTagBody(headerStreamState);
+
 		rootComponent.internalRenderHead(headerContainer);
+
+		if (rootComponent instanceof InlineEnclosure) {
+			renderInlineEnclosure(headerContainer, (InlineEnclosure) rootComponent);
+		}
+	}
+
+
+	/**
+	 * Searches for the siblings of the given enclosure for the controller of the given enclosure and
+	 * renders that controller's header contributions.
+	 *
+	 * This is done explicitly because when an enclosed component is added to the {@link AjaxRequestTarget}
+	 * and is consequently replaced for render by the enclosure, the component's header contributions would not make
+	 * it to the response as the enclosure is a sibling of the component in the hierarchy and only children's header contributions
+	 * are added to the response.
+	 *
+	 * Fixes WICKET-6459
+	 *
+	 * @param container the header container to render the header contributions of the enclosure's controller
+	 * @param enclosure the enclosure whose controller's contributions are going to be rendered
+	 */
+	protected void renderInlineEnclosure(HtmlHeaderContainer container, InlineEnclosure enclosure){
+
+		final String childId = enclosure.getChildId();
+
+		// Visit the siblings of the enclosure to attempt and find the controller of the enclosure
+		Component enclosureController = enclosure.getParent().visitChildren(new IVisitor<Component, Component>() {
+			@Override
+			public void component(Component object, IVisit<Component> visit) {
+				if (object.getId().equals(childId)){
+					visit.stop(object);
+				} else {
+					visit.dontGoDeeper();
+				}
+			}
+		});
+
+		if (enclosureController != null){
+			enclosureController.internalRenderHead(container);
+		}
 	}
 
 	/**

@@ -43,11 +43,4 @@ public final class EmptyRequestHandler implements IRequestHandler
 	public void respond(final IRequestCycle requestCycle)
 	{
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void detach(final IRequestCycle requestCycle)
-	{
-	}
-
 }

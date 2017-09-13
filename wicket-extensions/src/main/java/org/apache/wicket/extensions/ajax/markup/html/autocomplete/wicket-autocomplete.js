@@ -89,13 +89,15 @@
 			initialElement = obj;
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
-				var containerId=getMenuId()+"-container";
-				
+				var menuId=getMenuId();
+
 				//workaround for IE. Clicks on scrollbar trigger
 				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
-				if (containerId !== document.activeElement.id) {
+				if (menuId !== document.activeElement.id && (menuId + "-container") !== document.activeElement.id) {
 					window.setTimeout(hideAutoComplete, 500);
-				}				
+				} else {
+					jQuery(this).trigger("focus");
+				}
 			});
 
 			Wicket.Event.add(obj, 'focus', function (jqEvent) {
@@ -355,9 +357,14 @@
 
 			attrs.pre = attrs.pre || [];
 			attrs.pre.push(function (attributes) {
+				var input = Wicket.$(elementId);
+				if (!input) {
+					// WICKET-6366 input might no longer be on page
+					return false;
+				}
+				
 				var activeIsInitial = (document.activeElement === initialElement);
-				var elementVal = Wicket.$(elementId).value;
-				var hasMinimumLength = elementVal.length >= minInputLength;
+				var hasMinimumLength = input.value.length >= minInputLength;
 			
 				var result = hasMinimumLength && activeIsInitial;
 					
@@ -602,6 +609,9 @@
 				elementCount=selectableElements.length;
 
 				var clickFunc = function(event) {
+					// mouseOver might not be called, so select here at least
+					setSelected(getElementIndex(this));
+
 					var value = getSelectedValue();
 					value = handleSelection(value);
 					
@@ -677,8 +687,12 @@
 		function scheduleEmptyCheck() {
 			window.setTimeout(function() {
 				var input=Wicket.$(elementId);
-				if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
-					hideAutoComplete();
+				
+				// WICKET-6366 input might no longer be on page
+				if (input) {
+					if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
+						hideAutoComplete();
+					}
 				}
 			}, 100);
 		}

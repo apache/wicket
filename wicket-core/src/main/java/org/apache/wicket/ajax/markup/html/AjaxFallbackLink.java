@@ -17,6 +17,7 @@
 package org.apache.wicket.ajax.markup.html;
 
 import java.util.Optional;
+import org.apache.wicket.Component;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -99,6 +100,12 @@ public abstract class AjaxFallbackLink<T> extends Link<T>
 				attributes.setPreventDefault(true);
 				AjaxFallbackLink.this.updateAjaxAttributes(attributes);
 			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{				
+				return AjaxFallbackLink.this.getStatelessHint();
+			}
 		};
 	}
 
@@ -109,10 +116,6 @@ public abstract class AjaxFallbackLink<T> extends Link<T>
 	{
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.html.link.Link#onClick()
-	 */
 	@Override
 	public final void onClick()
 	{

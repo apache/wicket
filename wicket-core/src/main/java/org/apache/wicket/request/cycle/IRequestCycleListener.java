@@ -103,21 +103,24 @@ public interface IRequestCycleListener
 	 * 
 	 * @param cycle
 	 */
-	void onBeginRequest(RequestCycle cycle);
+	default void onBeginRequest(RequestCycle cycle)
+	{}
 
 	/**
 	 * Called when the request cycle object has finished its response
 	 * 
 	 * @param cycle
 	 */
-	void onEndRequest(RequestCycle cycle);
+	default void onEndRequest(RequestCycle cycle)
+	{}
 
 	/**
 	 * Called after the request cycle has been detached
 	 * 
 	 * @param cycle
 	 */
-	void onDetach(RequestCycle cycle);
+	default void onDetach(RequestCycle cycle)
+	{}
 
 	/**
 	 * Called when an {@link IRequestHandler} is resolved and will be executed.
@@ -126,7 +129,8 @@ public interface IRequestCycleListener
 	 * 
 	 * @param handler
 	 */
-	void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler);
+	default void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)
+	{}
 
 	/**
 	 * Called when a {@link IRequestHandler} has been scheduled. Can be called multiple times during
@@ -136,7 +140,8 @@ public interface IRequestCycleListener
 	 * @param handler
 	 * @see RequestCycle#scheduleRequestHandlerAfterCurrent(IRequestHandler)
 	 */
-	void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler);
+	default void onRequestHandlerScheduled(RequestCycle cycle, IRequestHandler handler)
+	{}
 
 	/**
 	 * Called when there is an exception in the request cycle that would normally be handled by
@@ -144,17 +149,24 @@ public interface IRequestCycleListener
 	 * 
 	 * Note that in the event of an exception, {@link #onEndRequest(RequestCycle)} will still be called after
 	 * these listeners have {@link #onException(RequestCycle, Exception)} called
-	 * 
-	 * @param cycle
-	 * 
-	 * @return request handler that will be executed or {@code null} if none. If a request handler
-	 *         is returned, it will override any configured exception mapper
-	 * 
+	 * <p>
+	 * <strong>Important</strong>: Custom implementations are recommended to <strong>not</strong> try to
+	 * handle exceptions implementing {@link org.apache.wicket.IWicketInternalException} interface.
+	 * Usually such kind of exceptions should be handled by the framework.
+	 * </p>
+	 *
+	 * @param cycle The current {@link RequestCycle request cycle}
 	 * @param ex
 	 *            the exception that was passed in to
 	 *            {@link RequestCycle#handleException(Exception)}
+	 * @return request handler that will be executed or {@code null} if none. If a request handler
+	 *         is returned, it will override any configured
+	 *         {@link Application#getExceptionMapperProvider() exception mapper}.
 	 */
-	IRequestHandler onException(RequestCycle cycle, Exception ex);
+	default IRequestHandler onException(RequestCycle cycle, Exception ex)
+	{
+		return null;
+	}
 
 	/**
 	 * Called when an {@link IRequestHandler} is resolved for an exception and will be executed.
@@ -163,8 +175,9 @@ public interface IRequestCycleListener
 	 * @param handler
 	 * @param exception
 	 */
-	void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
-		Exception exception);
+	default void onExceptionRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler,
+		Exception exception)
+	{}
 
 	/**
 	 * Called after an {@link IRequestHandler} has been executed. If the execution resulted in an
@@ -173,7 +186,8 @@ public interface IRequestCycleListener
 	 * @param cycle
 	 * @param handler
 	 */
-	void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler);
+	default void onRequestHandlerExecuted(RequestCycle cycle, IRequestHandler handler)
+	{}
 
 	/**
 	 * Called after a Url is generated for a {@link IRequestHandler}. This method can be used to
@@ -183,5 +197,6 @@ public interface IRequestCycleListener
 	 * @param handler
 	 * @param url
 	 */
-	void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url);
+	default void onUrlMapped(RequestCycle cycle, IRequestHandler handler, Url url)
+	{}
 }

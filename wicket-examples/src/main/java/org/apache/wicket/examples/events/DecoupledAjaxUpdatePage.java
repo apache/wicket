@@ -52,24 +52,16 @@ public class DecoupledAjaxUpdatePage extends BasePage
 		add(form);
 
 		// add the textfield that will update the counter value
-		form.add(new TextField<Integer>("counter", new PropertyModel<Integer>(this, "counter"),
+		form.add(new TextField<>("counter", new PropertyModel<>(this, "counter"),
 			Integer.class).setRequired(true));
 
 		// add button that will broadcast counter update event
-		form.add(new AjaxButton("submit")
-		{
-
+		form.add(new AjaxButton("submit") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				send(getPage(), Broadcast.BREADTH, new CounterUpdate(target));
 			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
-			{
-			}
-
 		});
 	}
 
@@ -117,9 +109,6 @@ public class DecoupledAjaxUpdatePage extends BasePage
 			setOutputMarkupId(true);
 		}
 
-		/**
-		 * @see org.apache.wicket.Component#onEvent(org.apache.wicket.event.IEvent)
-		 */
 		@Override
 		public void onEvent(IEvent<?> event)
 		{

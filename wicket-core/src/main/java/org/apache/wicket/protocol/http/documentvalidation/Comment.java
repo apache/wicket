@@ -20,7 +20,9 @@ package org.apache.wicket.protocol.http.documentvalidation;
  * Class representing a comment in an HTML document.
  * 
  * @author Chris Turner
+ * @deprecated Will be removed in Wicket 9.0 together with {@link HtmlDocumentValidator}
  */
+@Deprecated
 public class Comment implements DocumentElement
 {
 	/** The text for this HTML comment */

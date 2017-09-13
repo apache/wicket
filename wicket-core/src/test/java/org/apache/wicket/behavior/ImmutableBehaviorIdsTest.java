@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -69,8 +70,8 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		assertTrue(output.contains("autocomplete=\"off\""));
 		assertTrue(output.contains("class2=\"border\""));
 		assertTrue(output.contains("autocomplete2=\"off\""));
-		assertTrue(output.contains("IBehaviorListener.0"));
-		assertTrue(output.contains("IBehaviorListener.1"));
+		assertTrue(output.contains(".0"));
+		assertTrue(output.contains(".1"));
 		assertEquals(link, page.getContainer().getBehaviorById(0));
 		assertEquals(link2, page.getContainer().getBehaviorById(1));
 
@@ -85,8 +86,8 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		tester.startPage(page);
 		output = tester.getLastResponseAsString();
 //		System.out.println(output);
-		assertTrue(output.contains("IBehaviorListener.0"));
-		assertTrue(output.contains("IBehaviorListener.1"));
+		assertTrue(output.contains(".0"));
+		assertTrue(output.contains(".1"));
 		assertEquals(link, page.getContainer().getBehaviorById(0));
 		assertEquals(link2, page.getContainer().getBehaviorById(1));
 	}
@@ -150,7 +151,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 
 	}
 
-	private static class LinkBehavior extends Behavior implements IBehaviorListener
+	private static class LinkBehavior extends Behavior implements IRequestListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -165,7 +166,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		public void onComponentTag(Component component, ComponentTag tag)
 		{
 			super.onComponentTag(component, tag);
-			tag.put(attr, component.urlFor(this, IBehaviorListener.INTERFACE, new PageParameters()));
+			tag.put(attr, component.urlForListener(this, new PageParameters()));
 		}
 
 		@Override

@@ -24,7 +24,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -52,7 +51,7 @@ import org.apache.wicket.util.string.Strings;
  * @param <T>
  *            The model object type
  */
-public class Check<T> extends LabeledWebMarkupContainer implements IGenericComponent<T>
+public class Check<T> extends LabeledWebMarkupContainer implements IGenericComponent<T, Check<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -195,25 +194,6 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 			tag.put("checked", "checked");
 		}
 
-		if (group.wantOnSelectionChangedNotifications())
-		{
-			// url that points to this components IOnChangeListener method
-			CharSequence url = group.urlFor(IOnChangeListener.INTERFACE, new PageParameters());
-
-			Form<?> form = group.findParent(Form.class);
-			if (form != null)
-			{
-				tag.put("onclick", form.getJsForInterfaceUrl(url));
-			}
-			else
-			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
-				tag.put("onclick", "window.location.href='" + url +
-					(url.toString().indexOf('?') > -1 ? "&" : "?") + group.getInputName() +
-					"=' + this.value;");
-			}
-		}
-
 		if (!isActionAuthorized(ENABLE) || !isEnabledInHierarchy() || !group.isEnabledInHierarchy())
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
@@ -232,34 +212,6 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 	public Check<T> setLabel(IModel<String> labelModel)
 	{
 		super.setLabel(labelModel);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@Override
-	public final Check<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public final T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public final Check<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
 		return this;
 	}
 

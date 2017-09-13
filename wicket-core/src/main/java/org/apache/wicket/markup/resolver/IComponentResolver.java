@@ -47,6 +47,6 @@ public interface IComponentResolver extends IClusterable
 	 *            The current component tag while parsing the markup
 	 * @return component or {@code null} if not found
 	 */
-	public Component resolve(final MarkupContainer container, final MarkupStream markupStream,
+	Component resolve(final MarkupContainer container, final MarkupStream markupStream,
 		final ComponentTag tag);
 }

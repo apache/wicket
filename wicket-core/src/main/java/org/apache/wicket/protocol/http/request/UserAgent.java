@@ -28,9 +28,9 @@ enum UserAgent {
 
 	MOZILLA("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko")),
 
-	FIREFOX("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko", "Firefox")),
+	FIREFOX("Opera,AppleWebKit,Konqueror,Trident,Edge", Arrays.asList("Mozilla", "Gecko", "Firefox")),
 
-	INTERNET_EXPLORER("Opera",
+	INTERNET_EXPLORER("Opera,Edge",
 		Arrays.asList("Mozilla", "MSIE", "Windows"),
 		Arrays.asList("Mozilla", "MSIE", "Trident"),
 		Arrays.asList("Mozilla", "MSIE", "Mac_PowerPC"),
@@ -38,11 +38,13 @@ enum UserAgent {
 
 	OPERA(Arrays.asList("Opera")),
 
-	CHROME(Arrays.asList("Mozilla", "Chrome", "AppleWebKit", "Safari")),
+	CHROME("Edge", Arrays.asList("Mozilla", "Chrome", "AppleWebKit", "Safari")),
 
-	SAFARI("Chrome", Arrays.asList("Mozilla", "AppleWebKit", "Safari")),
+	SAFARI("Chrome,Edge", Arrays.asList("Mozilla", "AppleWebKit", "Safari")),
 
-	KONQUEROR(Arrays.asList("Konqueror"));
+	KONQUEROR(Arrays.asList("Konqueror")),
+
+	EDGE("Opera,Konqueror,Trident", Arrays.asList("Edge", "Mozilla", "Chrome", "Safari"));
 
 	/**
 	 * The values which are not allowed in the user agent.

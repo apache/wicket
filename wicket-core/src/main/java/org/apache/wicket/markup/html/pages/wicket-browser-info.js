@@ -49,7 +49,7 @@
 					cookieEnabled = (document.cookie.indexOf("wickettestcookie") !== -1);
 				}
 				info.navigatorCookieEnabled = cookieEnabled;
-				info.navigatorJavaEnabled =  window.navigator.javaEnabled();
+				info.navigatorJavaEnabled = window.navigator.javaEnabled() || false;
 				info.navigatorLanguage = window.navigator.language ? window.navigator.language : window.navigator.userLanguage;
 				info.navigatorPlatform = window.navigator.platform;
 				info.navigatorUserAgent = window.navigator.userAgent;
@@ -63,6 +63,11 @@
 				info.browserWidth =  window.innerWidth || document.body.offsetWidth;
 				info.browserHeight =  window.innerHeight || document.body.offsetHeight;
 				info.hostname =  window.location.hostname;
+
+				if (Wicket.BrowserInfo.collectExtraInfo) {
+					Wicket.BrowserInfo.collectExtraInfo(info);
+				}
+
 				return info;
 			},
 
@@ -77,7 +82,11 @@
 				var info = Wicket.BrowserInfo.collect();
 				var i;
 				for (i in info) {
-					postbackForm[i].value = info[i];
+					var input = document.createElement('input');
+					input.type = 'text';
+					input.name = i;
+					input.value = info[i];
+					postbackForm.appendChild(input);
 				}
 
 				return postbackForm;

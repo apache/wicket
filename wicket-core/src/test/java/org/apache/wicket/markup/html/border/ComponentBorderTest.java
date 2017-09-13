@@ -126,4 +126,29 @@ public class ComponentBorderTest extends WicketTestCase
 		tester.startPage(BorderWithAutoLabelPage.class);
 		tester.assertRenderedPage(BorderWithAutoLabelPage.class);
 	}
+	
+	@Test
+	public void borderWithBodyInsideAnotherBody() throws Exception
+	{
+		BorderWithNestedBodyPage page = tester.startPage(BorderWithNestedBodyPage.class);
+		
+		Border borderTest = (Border) page.get("outerBorder");
+		Border nestedBorder = (Border)borderTest.get("nestedBorder");
+		
+		assertNotNull(borderTest.getBodyContainer().getParent());
+		assertNotNull(nestedBorder.getBodyContainer().getParent());
+		
+		//https://issues.apache.org/jira/browse/WICKET-6303
+		assertTrue(page.isBehaviorRendered());
+	}
+	
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6374
+	 * @throws Exception
+	 */
+	@Test
+    public void borderExtendingMarkup() throws Exception
+    {
+        tester.startComponentInPage(ExtendedBorder.class);
+    }
 }

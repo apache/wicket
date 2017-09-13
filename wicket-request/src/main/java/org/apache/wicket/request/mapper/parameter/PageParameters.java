@@ -21,9 +21,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
@@ -54,6 +56,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 
 	private List<NamedPair> namedParameters;
 
+	private Locale locale = Locale.getDefault(Locale.Category.DISPLAY);
+
 	/**
 	 * Constructor.
 	 */
@@ -71,15 +75,8 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	{
 		if (copy != null)
 		{
-			if (copy.indexedParameters != null)
-			{
-				indexedParameters = new ArrayList<>(copy.indexedParameters);
-			}
-
-			if (copy.namedParameters != null)
-			{
-				namedParameters = new ArrayList<>(copy.namedParameters);
-			}
+			mergeWith(copy);
+			setLocale(copy.locale);
 		}
 	}
 
@@ -118,7 +115,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			if ((index >= 0) && (index < indexedParameters.size()))
 			{
-				return StringValue.valueOf(indexedParameters.get(index));
+				return StringValue.valueOf(indexedParameters.get(index), locale);
 			}
 		}
 		return StringValue.valueOf((String)null);
@@ -163,7 +160,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			{
 				if (entry.getKey().equals(name))
 				{
-					return StringValue.valueOf(entry.getValue());
+					return StringValue.valueOf(entry.getValue(), locale);
 				}
 			}
 		}
@@ -182,7 +179,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			{
 				if (entry.getKey().equals(name))
 				{
-					result.add(StringValue.valueOf(entry.getValue()));
+					result.add(StringValue.valueOf(entry.getValue(), locale));
 				}
 			}
 			return Collections.unmodifiableList(result);
@@ -400,6 +397,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 		{
 			indexedParameters = other.indexedParameters;
 			namedParameters = other.namedParameters;
+			locale = other.locale;
 		}
 		return this;
 	}
@@ -413,7 +411,7 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	 */
 	public PageParameters mergeWith(final PageParameters other)
 	{
-		if (this != other)
+		if (other != null && this != other)
 		{
 			for (int index = 0; index < other.getIndexedCount(); index++)
 			{
@@ -466,7 +464,9 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 			if (other.namedParameters != null)
 				return false;
 		}
-		else if (!namedParameters.equals(other.namedParameters))
+		else if (other.namedParameters == null)
+			return false;
+		else if (!CollectionUtils.isEqualCollection(namedParameters, other.namedParameters))
 			return false;
 		return true;
 	}
@@ -503,6 +503,12 @@ public class PageParameters implements IClusterable, IIndexedParameters, INamedP
 	public boolean isEmpty()
 	{
 		return (getIndexedCount() == 0) && getNamedKeys().isEmpty();
+	}
+
+	public PageParameters setLocale(Locale locale)
+	{
+		this.locale = locale != null ? locale : Locale.getDefault(Locale.Category.DISPLAY);
+		return this;
 	}
 
 	@Override

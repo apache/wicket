@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -33,7 +34,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * 
  */
 
-public class InlineFrame extends WebMarkupContainer implements ILinkListener
+public class InlineFrame extends WebMarkupContainer implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -122,7 +123,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 */
 	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.INTERFACE, new PageParameters());
+		return urlForListener(new PageParameters());
 	}
 
 	/**
@@ -146,11 +147,14 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 		super.onComponentTag(tag);
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.link.ILinkListener#onLinkClicked()
-	 */
 	@Override
-	public final void onLinkClicked()
+	public boolean rendersPage()
+	{
+		return false;
+	}
+
+	@Override
+	public final void onRequest()
 	{
 		setResponsePage(pageProvider.getPageInstance());
 	}

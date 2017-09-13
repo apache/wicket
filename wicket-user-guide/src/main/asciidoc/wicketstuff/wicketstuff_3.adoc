@@ -1,0 +1,35 @@
+
+
+
+Module wicketstuff-gmap3 integrates  http://maps.google.com[Google Maps] service with Wicket providing component org.wicketstuff.gmap.GMap. If we want to embed Google Maps into one of our pages we just need to add component GMap inside the page. The following snippet is taken from example page SimplePage:
+
+*HTML:*
+
+[source,html]
+----
+...
+<body>
+  <div wicket:id="map">Map</div>
+</body>
+... 
+----
+
+*Java code:*
+
+[source,java]
+----
+public class SimplePage extends WicketExamplePage
+{
+    public SimplePage()
+    {
+        GMap map = new GMap("map");
+        map.setStreetViewControlEnabled(false);
+        map.setScaleControlEnabled(true);
+        map.setScrollWheelZoomEnabled(true);
+        map.setCenter(new GLatLng(52.47649, 13.228573));        
+        add(map);
+    }
+}
+----
+
+The component defines a number of setters to customize its behavior and appearance. More info can be found on wiki page  https://github.com/wicketstuff/core/wiki/Gmap3[https://github.com/wicketstuff/core/wiki/Gmap3] .

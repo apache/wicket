@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.model;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Component;
 
 /**
@@ -72,9 +74,6 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 		return component.getId();
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IComponentInheritedModel#wrapOnInheritance(org.apache.wicket.Component)
-	 */
 	@Override
 	public <C> IWrapModel<C> wrapOnInheritance(Component component)
 	{
@@ -119,33 +118,24 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 		 * @param owner
 		 *            component that this model has been attached to
 		 */
-		public AttachedCompoundPropertyModel(Component owner)
+		AttachedCompoundPropertyModel(Component owner)
 		{
 			super(CompoundPropertyModel.this);
 			this.owner = owner;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.AbstractPropertyModel#propertyExpression()
-		 */
 		@Override
 		protected String propertyExpression()
 		{
 			return CompoundPropertyModel.this.propertyExpression(owner);
 		}
 
-		/**
-		 * @see org.apache.wicket.model.IWrapModel#getWrappedModel()
-		 */
 		@Override
 		public IModel<T> getWrappedModel()
 		{
 			return CompoundPropertyModel.this;
 		}
 
-		/**
-		 * @see org.apache.wicket.model.AbstractPropertyModel#detach()
-		 */
 		@Override
 		public void detach()
 		{
@@ -166,5 +156,19 @@ public class CompoundPropertyModel<T> extends ChainingModel<T> implements ICompo
 	public static <Z> CompoundPropertyModel<Z> of(IModel<Z> model)
 	{
 		return new CompoundPropertyModel<>(model);
+	}
+
+	/**
+	 * Type-infering factory method
+	 * 
+	 * @param <Z>
+	 *     the type of the model's object
+	 * @param object
+	 *            model object
+	 * @return {@link CompoundPropertyModel} instance
+	 */
+	public static <Z extends Serializable> CompoundPropertyModel<Z> of(Z object)
+	{
+		return new CompoundPropertyModel<>(object);
 	}
 }

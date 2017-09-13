@@ -19,6 +19,7 @@ package org.apache.wicket.request.resource;
 /**
  * Used to create a ResourceReference for a given request attributes
  */
+@FunctionalInterface
 public interface IResourceReferenceFactory
 {
 	/**

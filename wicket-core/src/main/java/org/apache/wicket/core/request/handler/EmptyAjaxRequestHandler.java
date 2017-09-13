@@ -73,33 +73,18 @@ public final class EmptyAjaxRequestHandler implements IRequestHandler
 		response.write("\"?><ajax-response></ajax-response>");
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void detach(IRequestCycle requestCycle)
-	{
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
 		return obj instanceof EmptyAjaxRequestHandler;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
 		return HASH;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

@@ -1,0 +1,15 @@
+
+Just like we have seen for regular links, WicketStuff project offers a lambda-based factory class to build Ajax links and Ajax submitting component:
+
+[source,java]
+----
+//create an AJAX link component
+add(ComponentFactory.ajaxLink("id", (ajaxLink, ajaxTarget) -> {/*do stuff*/});
+
+//create a submit link with error handler
+add(ComponentFactory.ajaxSubmitLink("id", (ajaxLink, ajaxTarget) -> {/*do submit stuff*/}, 
+                                   (ajaxLink, ajaxTarget) -> {/*do error stuff*/});
+----
+
+For more examples see WicketStuff module <<_module_wicketstuff_lambda_components,wicketstuff-lambda-components>>.
+

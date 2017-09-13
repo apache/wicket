@@ -22,6 +22,7 @@ package org.apache.wicket.util;
  * @author Igor Vaynberg (ivaynberg)
  * @param <T>
  */
+@FunctionalInterface
 public interface IHierarchical<T>
 {
 	/**

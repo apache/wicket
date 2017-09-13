@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.internal.Enclosure;
 import org.apache.wicket.markup.html.internal.InlineEnclosure;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
 import org.apache.wicket.util.visit.IVisit;
@@ -55,7 +56,7 @@ import org.apache.wicket.util.visit.IVisitor;
  *
  * @author Joonas Hamalainen
  */
-public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
+public class AjaxEnclosureListener implements AjaxRequestTarget.IListener
 {
 	/**
 	 * Construct.
@@ -70,7 +71,7 @@ public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 	@Override
 	public void onBeforeRespond(final Map<String, Component> map, final AjaxRequestTarget target)
 	{
-		final List<String> keysToRemove = new ArrayList<String>();
+		final List<String> keysToRemove = new ArrayList<>();
 
 		target.getPage().visitChildren(InlineEnclosure.class, new IVisitor<InlineEnclosure, Void>()
 		{
@@ -107,8 +108,8 @@ public class AjaxEnclosureListener extends AjaxRequestTarget.AbstractListener
 	 * @param enclosure
 	 * @return true if the given component is the controlling child of the given InlineEnclosure
 	 */
-	private boolean isControllerOfEnclosure(final Component component,
-		final InlineEnclosure enclosure)
+	public static boolean isControllerOfEnclosure(final Component component,
+		final Enclosure enclosure)
 	{
 		return (enclosure.get(enclosure.getChildId()) == component || // #queue()
 				enclosure.getParent().get(enclosure.getChildId()) == component); // #add()

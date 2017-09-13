@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
@@ -110,19 +110,19 @@ public abstract class AjaxButton extends Button
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onSubmit(target, AjaxButton.this.getForm());
+				AjaxButton.this.onSubmit(target);
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onAfterSubmit(target, AjaxButton.this.getForm());
+				AjaxButton.this.onAfterSubmit(target);
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxButton.this.onError(target, AjaxButton.this.getForm());
+				AjaxButton.this.onError(target);
 			}
 
 			@Override
@@ -140,6 +140,12 @@ public abstract class AjaxButton extends Button
 			public boolean getDefaultProcessing()
 			{
 				return AjaxButton.this.getDefaultFormProcessing();
+			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxButton.this.getStatelessHint();
 			}
 		};
 	}
@@ -167,22 +173,10 @@ public abstract class AjaxButton extends Button
 		}
 	}
 
-	@Override
-	protected void onComponentTag(ComponentTag tag)
-	{
-		// WICKET-5594 prevent non-Ajax submit
-		if ("submit".equals(tag.getAttribute("type")))
-		{
-			tag.put("type", "button");
-		}
-
-		super.onComponentTag(tag);
-	}
-
 	/**
 	 * This method is never called.
 	 * 
-	 * @see #onSubmit(AjaxRequestTarget, Form)
+	 * @see #onSubmit(AjaxRequestTarget)
 	 */
 	@Override
 	public final void onSubmit()
@@ -199,7 +193,7 @@ public abstract class AjaxButton extends Button
 	/**
 	 * This method is never called.
 	 * 
-	 * @see #onError(AjaxRequestTarget, Form)
+	 * @see #onError(AjaxRequestTarget)
 	 */
 	@Override
 	public final void onError()
@@ -211,29 +205,32 @@ public abstract class AjaxButton extends Button
 	 * Listener method invoked on form submit with no errors, before {@link Form#onSubmit()}.
 	 * 
 	 * @param target
-	 * @param form
 	 */
-	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onSubmit(AjaxRequestTarget target)
 	{
 	}
 
 	/**
 	 * Listener method invoked on form submit with no errors, after {@link Form#onSubmit()}.
-	 * 
+	 *
 	 * @param target
-	 * @param form
 	 */
-	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
 	}
 
 	/**
 	 * Listener method invoked on form submit with errors
-	 * 
+	 *
 	 * @param target
-	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
+	protected void onError(AjaxRequestTarget target)
 	{
+	}
+
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
 	}
 }

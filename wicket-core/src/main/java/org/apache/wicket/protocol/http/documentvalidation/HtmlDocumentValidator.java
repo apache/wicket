@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.collections.ArrayListStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,10 @@ import org.slf4j.LoggerFactory;
  * closed: p, td, th, li and option.
  * 
  * @author Chris Turner
+ * @deprecated Will be removed in Wicket 9.0. Use {@link org.apache.wicket.util.tester.TagTester} or
+ * {@link org.apache.wicket.util.tester.WicketTestCase#executeTest(Class, PageParameters, String)} instead
  */
+@Deprecated
 public class HtmlDocumentValidator
 {
 	private static final Logger log = LoggerFactory.getLogger(HtmlDocumentValidator.class);

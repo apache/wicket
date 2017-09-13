@@ -49,7 +49,7 @@ public class StringResourceModelTest extends WicketTestCase
 	{
 		page = new TestPage();
 		ws = new WeatherStation();
-		wsModel = new Model<WeatherStation>(ws);
+		wsModel = new Model<>(ws);
 	}
 
 
@@ -190,7 +190,7 @@ public class StringResourceModelTest extends WicketTestCase
 		assertEquals("Let's play in the rain!", model.getString());
 
 		model = new StringResourceModel("with.quote.substitution", page)
-			.setParameters(new Object[] { "rain!" });
+			.setParameters("rain!");
 		assertEquals("Let's play in the rain!", model.getString());
 	}
 
@@ -215,8 +215,6 @@ public class StringResourceModelTest extends WicketTestCase
 			{
 				return new WeatherStation();
 			}
-
-
 		};
 
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);

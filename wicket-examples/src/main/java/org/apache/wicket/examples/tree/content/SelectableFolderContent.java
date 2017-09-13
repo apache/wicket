@@ -20,7 +20,6 @@ import java.util.Optional;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.examples.tree.Foo;
 import org.apache.wicket.extensions.markup.html.repeater.tree.AbstractTree;
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
@@ -71,7 +70,7 @@ public class SelectableFolderContent extends Content
 	{
 		if (selected != null)
 		{
-			tree.updateNode(selected.getObject(), targetOptional);
+			targetOptional.ifPresent(target -> tree.updateNode(selected.getObject(), target));
 
 			selected.detach();
 			selected = null;
@@ -79,7 +78,7 @@ public class SelectableFolderContent extends Content
 
 		selected = provider.model(foo);
 
-		tree.updateNode(foo, targetOptional);
+		targetOptional.ifPresent(target -> tree.updateNode(foo, target));
 	}
 
 	@Override

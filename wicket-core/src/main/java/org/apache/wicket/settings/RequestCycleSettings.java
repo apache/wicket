@@ -25,7 +25,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.time.Duration;
 
 /**
- * Interface for request related settings
+ * Class for request related settings
  * <p>
  * <i>bufferResponse </i> (defaults to true) - True if the application should buffer responses. This
  * does require some additional memory, but helps keep exception displays accurate because the whole
@@ -85,7 +85,7 @@ public class RequestCycleSettings
 	/**
 	 * Enum type for different render strategies
 	 */
-	public static enum RenderStrategy {
+	public enum RenderStrategy {
 		/**
 		 * All logical parts of a request (the action and render part) are handled within the same
 		 * request.
@@ -131,7 +131,7 @@ public class RequestCycleSettings
 		 * </p>
 		 * <p>
 		 * Also, even with this strategy set, it is ignored for instances of
-		 * {@link org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler},
+		 * {@link org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler},
 		 * because otherwise they wouldn't be bookmarkable.
 		 * </p>
 		 */

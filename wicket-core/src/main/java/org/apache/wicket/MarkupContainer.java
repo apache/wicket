@@ -17,13 +17,18 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.wicket.core.util.string.ComponentStrings;
@@ -163,17 +168,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private Object children;
 
-	/**
-	 * @see org.apache.wicket.Component#Component(String)
-	 */
 	public MarkupContainer(final String id)
 	{
 		this(id, null);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#Component(String, IModel)
-	 */
 	public MarkupContainer(final String id, IModel<?> model)
 	{
 		super(id, model);
@@ -857,9 +856,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return this;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#setDefaultModel(org.apache.wicket.model.IModel)
-	 */
 	@Override
 	public MarkupContainer setDefaultModel(final IModel<?> model)
 	{
@@ -902,9 +898,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		return children_size();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -1009,17 +1002,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 		Page page = findPage();
-		
-		// if we have a path to page, dequeue any container children.
-		if (page != null && child instanceof MarkupContainer)
-		{
-		    MarkupContainer childContainer = (MarkupContainer)child;
-		    // if we are already dequeueing there is no need to dequeue again
-		    if (!childContainer.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
-			{				
-				childContainer.dequeue();
-			}
-		}
 
 		if (page != null)
 		{
@@ -1442,11 +1424,16 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			// Get element as tag
 			final ComponentTag tag = (ComponentTag)element;
 
+			if (tag instanceof WicketTag && ((WicketTag)tag).isFragmentTag()){
+				return false;
+			}
+
 			// Get component id
 			final String id = tag.getId();
 
 			// Get the component for the id from the given container
 			Component component = get(id);
+
 			if (component == null)
 			{
 				component = ComponentResolvers.resolve(this, markupStream, tag, null);
@@ -1599,9 +1586,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		renderComponentTagBody(markupStream, openTag);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onRender()
-	 */
 	@Override
 	protected void onRender()
 	{
@@ -1653,7 +1637,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	protected final void renderAll(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		while (markupStream.hasMore())
+		while (markupStream.isCurrentIndexInsideTheStream())
 		{
 			// In case of Page we need to render the whole file. For all other components just what
 			// is in between the open and the close tag.
@@ -1688,9 +1672,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#removeChildren()
-	 */
 	@Override
 	void removeChildren()
 	{
@@ -1713,10 +1694,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#internalMarkRendering(boolean)
-	 */
 	@Override
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
@@ -1752,10 +1729,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRenderChildren()
-	 */
 	@Override
 	void onBeforeRenderChildren()
 	{
@@ -1890,42 +1863,35 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		else
 		{
-			MarkupContainer containerWithQueue = this;
+			MarkupContainer queueRegion = (MarkupContainer)findParent(IQueueRegion.class);
 
-			// check if there are any parent containers that have queued components, up till our
-			// queue region
-			while (containerWithQueue.isQueueEmpty() &&
-				!(containerWithQueue instanceof IQueueRegion))
+			if (queueRegion == null)
 			{
-				containerWithQueue = containerWithQueue.getParent();
-				if (containerWithQueue == null)
-				{
-					// no queued components are available for dequeuing, so we can stop
-					return;
-				}
-			}
-
-			// when there are no components to be dequeued, just stop
-			if (containerWithQueue.isQueueEmpty())
 				return;
-
-			// get the queue region where we are going to dequeue components in
-			MarkupContainer queueRegion = containerWithQueue;
-
-			// the container with queued components could be a queue region, if not, find the region
-			// to dequeue in
-			if (!queueRegion.isQueueRegion())
-			{
-				queueRegion = (MarkupContainer)queueRegion.findParent(IQueueRegion.class);
 			}
-
-			if (queueRegion != null && !queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
+			
+			MarkupContainer anchestor = this;
+			boolean hasQueuedChildren = !isQueueEmpty();
+			
+			while (!hasQueuedChildren && anchestor != queueRegion)
+			{
+				anchestor = anchestor.getParent();
+				hasQueuedChildren = !anchestor.isQueueEmpty();
+			}
+			
+			if (hasQueuedChildren && !queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
 				queueRegion.dequeue();
 			}
 		}
 	}
 
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		dequeue();
+	}
 	/**
 	 * @return {@code true} when one or more components are queued
 	 */
@@ -1997,7 +1963,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			ComponentTag tag = dequeue.takeTag();
 	
 			// see if child is already added to parent
-			Component child = get(tag.getId());
+			Component child = findChildComponent(tag);
 
 			if (child == null)
 			{
@@ -2025,6 +1991,18 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 	}
+
+	/**
+	 * Search the child component for the given tag.
+	 * 
+	 * @param tag
+	 * 				the component tag 
+	 * @return the child component for the given tag or null if no child can not be found.
+	 */
+	protected Component findChildComponent(ComponentTag tag)
+	{
+		return get(tag.getId());
+	}
 	
 	/**
 	 * Propagates dequeuing to child component.
@@ -2038,24 +2016,35 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 */
 	private void dequeueChild(Component child, ComponentTag tag, DequeueContext dequeue)
 	{
-		if (child == null)
+		ChildToDequeueType childType = ChildToDequeueType.fromChild(child);
+		
+		if (childType == ChildToDequeueType.QUEUE_REGION ||
+			childType == ChildToDequeueType.BORDER)
 		{
-			// could not dequeue, or is a dequeue container
-			dequeue.skipToCloseTag();
+			((IQueueRegion)child).dequeue();			
 		}
-		else if (child instanceof IQueueRegion) 
+		
+		if (childType == ChildToDequeueType.BORDER) 
 		{
-			((IQueueRegion)child).dequeue();
-			dequeue.skipToCloseTag();
-		}
-		else if (child instanceof MarkupContainer)
-		{
-			// propagate dequeuing to containers
-			MarkupContainer childContainer = (MarkupContainer)child;
+            Border childContainer = (Border)child;
+            // propagate dequeuing to border's body
+            MarkupContainer body = childContainer.getBodyContainer();
 
-			dequeue.pushContainer(childContainer);
-			childContainer.dequeue(dequeue);
-			dequeue.popContainer();
+            dequeueChildrenContainer(dequeue, body);
+		}
+		
+		if (childType == ChildToDequeueType.MARKUP_CONTAINER)
+		{
+            // propagate dequeuing to containers
+            MarkupContainer childContainer = (MarkupContainer)child;
+
+            dequeueChildrenContainer(dequeue, childContainer);			
+		}
+		
+		if (childType == ChildToDequeueType.NULL || 
+			childType == ChildToDequeueType.QUEUE_REGION)
+		{
+			dequeue.skipToCloseTag();
 		}
 
 		// pull the close tag off
@@ -2070,6 +2059,13 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 		throw new IllegalStateException(String.format("Could not find the closing tag for '%s'", tag));
 	}
+
+    private void dequeueChildrenContainer(DequeueContext dequeue, MarkupContainer child)
+    {
+        dequeue.pushContainer(child);
+        child.dequeue(dequeue);
+        dequeue.popContainer();
+    }
 
     /** @see IQueueRegion#newDequeueContext() */
 	public DequeueContext newDequeueContext()
@@ -2172,5 +2168,64 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	protected void addDequeuedComponent(Component component, ComponentTag tag)
 	{
 		add(component);
+	}
+
+	/**
+	 * Returns a sequential {@code Stream} with the direct children of this markup container as its
+	 * source. This stream doesn't traverse the component tree.
+	 *
+	 * @return a sequential {@code Stream} over the direct children of this markup container
+	 * @since 8.0
+	 */
+	public Stream<Component> stream()
+	{
+		return StreamSupport.stream(spliterator(), false);
+	}
+
+	/**
+	 * Returns a sequential {@code Stream} with the all children of this markup container as its
+	 * source. This stream does traverse the component tree.
+	 * 
+	 * @return a sequential {@code Stream} over the all children of this markup container
+	 * @since 8.0
+	 */
+	@SuppressWarnings("unchecked")
+	public Stream<Component> streamChildren()
+	{
+		class ChildrenIterator<C> implements Iterator<C>
+		{
+			private Iterator<C> currentIterator;
+
+			private Deque<Iterator<C>> iteratorStack = new ArrayDeque<>();
+
+			private ChildrenIterator(Iterator<C> iterator)
+			{
+				currentIterator = iterator;
+			}
+
+			@Override
+			public boolean hasNext()
+			{
+				if (!currentIterator.hasNext() && !iteratorStack.isEmpty())
+				{
+					currentIterator = iteratorStack.pop();
+				}
+				return currentIterator.hasNext();
+			}
+
+			@Override
+			public C next()
+			{
+				C child = currentIterator.next();
+				if (child instanceof Iterable)
+				{
+					iteratorStack.push(currentIterator);
+					currentIterator = ((Iterable<C>)child).iterator();
+				}
+				return child;
+			}
+		}
+		return StreamSupport.stream(
+			Spliterators.spliteratorUnknownSize(new ChildrenIterator<>(iterator()), 0), false);
 	}
 }

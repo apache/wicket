@@ -125,9 +125,8 @@ public class FileUploadErrorTest extends WicketTestCase
 			formTester.submit();
 			fail("Value not succesfully submitted.");
 		}
-		catch (WicketRuntimeException rex)
+		catch (RuntimeException ex)
 		{
-			Throwable ex = rex.getCause().getCause();
 			assertEquals("Special value: " + FileUploadError.THIS_VALUE_SHOULD_THROW_EXCEPTION,
 				ex.getMessage());
 		}

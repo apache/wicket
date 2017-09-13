@@ -100,18 +100,12 @@ public class StaticWizardWithPanels extends Wizard
 		init(model);
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.wizard.Wizard#onCancel()
-	 */
 	@Override
 	public void onCancel()
 	{
 		setResponsePage(Index.class);
 	}
 
-	/**
-	 * @see org.apache.wicket.extensions.wizard.Wizard#onFinish()
-	 */
 	@Override
 	public void onFinish()
 	{

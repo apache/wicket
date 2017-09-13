@@ -29,7 +29,6 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigator;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.IRequestLogger;
@@ -119,14 +118,14 @@ public class LiveSessionsPage extends DevUtilsPage
 			}
 		}));
 
-		IModel<List<SessionData>> sessionModel = new AbstractReadOnlyModel<List<SessionData>>()
+		IModel<List<SessionData>> sessionModel = new IModel<List<SessionData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public List<SessionData> getObject()
 			{
-				return new ArrayList<SessionData>(
+				return new ArrayList<>(
 					Arrays.asList(getRequestLogger().getLiveSessions()));
 			}
 		};

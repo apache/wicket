@@ -38,7 +38,7 @@ public class FormPage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		add(new Form("form")
+		add(new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()

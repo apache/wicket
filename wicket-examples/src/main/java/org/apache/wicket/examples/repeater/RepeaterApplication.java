@@ -30,17 +30,6 @@ public class RepeaterApplication extends WebApplication
 {
 	private final ContactsDatabase contactsDB = new ContactsDatabase(50);
 
-
-	/**
-	 * Constructor.
-	 */
-	public RepeaterApplication()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#init()
-	 */
 	@Override
 	protected void init()
 	{
@@ -59,9 +48,6 @@ public class RepeaterApplication extends WebApplication
 		return contactsDB;
 	}
 
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{

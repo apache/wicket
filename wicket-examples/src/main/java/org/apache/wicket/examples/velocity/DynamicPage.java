@@ -51,7 +51,7 @@ public class DynamicPage extends WicketExamplePage
 		map.put("fields", fields);
 
 		VelocityPanel panel;
-		add(panel = new VelocityPanel("templatePanel", new MapModel<String, List<Field>>(map))
+		add(panel = new VelocityPanel("templatePanel", new MapModel<>(map))
 		{
 			@Override
 			protected IResourceStream getTemplateResource()

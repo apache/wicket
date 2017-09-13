@@ -128,6 +128,8 @@ public abstract class MediaComponent extends WebMarkupContainer
 
 	private Cors crossOrigin;
 
+	private String type;
+
 	private PageParameters pageParameters;
 
 	private final ResourceReference resourceReference;
@@ -336,6 +338,12 @@ public abstract class MediaComponent extends WebMarkupContainer
 		if (cors != null)
 		{
 			tag.put("crossorigin", cors.getRealName());
+		}
+
+		String type = getType();
+		if (type != null)
+		{
+			tag.put("type", type);
 		}
 	}
 
@@ -607,5 +615,66 @@ public abstract class MediaComponent extends WebMarkupContainer
 	public void setCrossOrigin(Cors crossOrigin)
 	{
 		this.crossOrigin = crossOrigin;
+	}
+
+	/**
+	 * Gets the type
+	 *
+	 * @see {@link #setType(String)}
+	 *
+	 * @return the type of this media element
+	 */
+	public String getType()
+	{
+		return type;
+	}
+
+	/**
+	 * Sets the type<br>
+	 * <br>
+	 *
+	 * * The following list shows some examples of how to use the codecs= MIME parameter in the type
+	 * attribute.<br>
+	 * <br>
+	 *
+	 * H.264 Constrained baseline profile video (main and extended video compatible) level 3 and
+	 * Low-Complexity AAC audio in MP4 container<br>
+	 * &lt;source src='video.mp4' <b>type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'</b>&gt;<br>
+	 * H.264 Extended profile video (baseline-compatible) level 3 and Low-Complexity AAC audio in
+	 * MP4 container<br>
+	 * &lt;source src='video.mp4' <b>type='video/mp4; codecs="avc1.58A01E, mp4a.40.2"'</b>&gt;<br>
+	 * H.264 Main profile video level 3 and Low-Complexity AAC audio in MP4 container<br>
+	 * &lt;source src='video.mp4' <b>type='video/mp4; codecs="avc1.4D401E, mp4a.40.2"'</b>&gt;<br>
+	 * H.264 'High' profile video (incompatible with main, baseline, or extended profiles) level 3
+	 * and Low-Complexity AAC audio in MP4 container<br>
+	 * &lt;source src='video.mp4' <b>type='video/mp4; codecs="avc1.64001E, mp4a.40.2"'</b>&gt;<br>
+	 * MPEG-4 Visual Simple Profile Level 0 video and Low-Complexity AAC audio in MP4 container<br>
+	 * &lt;source src='video.mp4' <b>type='video/mp4; codecs="mp4v.20.8, mp4a.40.2"'</b>&gt;<br>
+	 * MPEG-4 Advanced Simple Profile Level 0 video and Low-Complexity AAC audio in MP4 container
+	 * <br>
+	 * &lt;source src='video.mp4' <b>type='video/mp4; codecs="mp4v.20.240, mp4a.40.2"'</b>&gt;<br>
+	 * MPEG-4 Visual Simple Profile Level 0 video and AMR audio in 3GPP container<br>
+	 * &lt;source src='video.3gp' <b>type='video/3gpp; codecs="mp4v.20.8, samr"'</b>&gt;<br>
+	 * Theora video and Vorbis audio in Ogg container<br>
+	 * &lt;source src='video.ogv' <b>type='video/ogg; codecs="theora, vorbis"'</b>&gt;<br>
+	 * Theora video and Speex audio in Ogg container<br>
+	 * &lt;source src='video.ogv' <b>type='video/ogg; codecs="theora, speex"'</b>&gt;<br>
+	 * Vorbis audio alone in Ogg container<br>
+	 * &lt;source src='audio.ogg' <b>type='audio/ogg; codecs=vorbis'</b>&gt;<br>
+	 * Speex audio alone in Ogg container<br>
+	 * &lt;source src='audio.spx' <b>type='audio/ogg; codecs=speex'</b>&gt;<br>
+	 * FLAC audio alone in Ogg container<br>
+	 * &lt;source src='audio.oga' <b>type='audio/ogg; codecs=flac'</b>&gt;<br>
+	 * Dirac video and Vorbis audio in Ogg container<br>
+	 * &lt;source src='video.ogv' <b>type='video/ogg; codecs="dirac, vorbis"'</b>&gt;<br>
+	 * Theora video and Vorbis audio in Matroska container<br>
+	 * &lt;source src='video.mkv' <b>type='video/x-matroska; codecs="theora, vorbis"'</b>&gt;<br>
+	 *
+	 * @param type
+	 *            the type of this media element
+	 */
+	public void setType(String type)
+	{
+		this.type = type;
 	}
 }

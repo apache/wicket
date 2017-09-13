@@ -79,13 +79,12 @@ public abstract class AbstractCaptchaForm<T> extends GenericPanel<T>
 				new ContainerFeedbackMessageFilter(AbstractCaptchaForm.this));
 		form.add(feedback);
 
-		captchaImageResource = createCaptchImageResource();
+		captchaImageResource = createCaptchaImageResource();
 		final Image captchaImage = new Image("image", captchaImageResource);
 		captchaImage.setOutputMarkupId(true);
 		form.add(captchaImage);
 
-		AjaxLink<Void> changeCaptchaLink = new AjaxLink<Void>("changeLink")
-		{
+		AjaxLink<Void> changeCaptchaLink = new AjaxLink<Void>("changeLink") {
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -96,7 +95,7 @@ public abstract class AbstractCaptchaForm<T> extends GenericPanel<T>
 		form.add(changeCaptchaLink);
 
 		form.add(new RequiredTextField<String>("text",
-				new PropertyModel<String>(AbstractCaptchaForm.this, "captchaText"), String.class)
+				new PropertyModel<>(AbstractCaptchaForm.this, "captchaText"), String.class)
 		{
 			@Override
 			protected final void onComponentTag(final ComponentTag tag)
@@ -108,5 +107,5 @@ public abstract class AbstractCaptchaForm<T> extends GenericPanel<T>
 		});
 	}
 
-	protected abstract CaptchaImageResource createCaptchImageResource();
+	protected abstract CaptchaImageResource createCaptchaImageResource();
 }

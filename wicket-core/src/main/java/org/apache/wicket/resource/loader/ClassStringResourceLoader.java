@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 import org.apache.wicket.Component;
-
+import org.apache.wicket.util.lang.Args;
 
 /**
  * This string resource loader attempts to find a single resource bundle that has the same name and
@@ -46,18 +46,10 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 	 */
 	public ClassStringResourceLoader(final Class<?> clazz)
 	{
-		if (clazz == null)
-		{
-			throw new IllegalArgumentException("Parameter 'clazz' must not be null");
-		}
+		Args.notNull(clazz, "clazz");
 		clazzRef = new WeakReference<Class<?>>(clazz);
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public String loadStringResource(final Class<?> clazz, final String key, final Locale locale,
 		final String style, final String variation)
@@ -65,10 +57,6 @@ public class ClassStringResourceLoader extends ComponentStringResourceLoader
 		return super.loadStringResource(clazzRef.get(), key, locale, style, variation);
 	}
 
-	/**
-	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(org.apache.wicket.Component,
-     *      String, java.util.Locale, String, String)
-	 */
 	@Override
 	public String loadStringResource(final Component component, final String key,
 		final Locale locale, final String style, final String variation)

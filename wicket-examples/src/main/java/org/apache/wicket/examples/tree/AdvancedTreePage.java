@@ -43,8 +43,8 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.link.Link;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
@@ -97,36 +97,14 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 		});
 		form.add(tree);
 
-		form.add(new DropDownChoice<Content>("content",
-			new PropertyModel<Content>(this, "content"), initContents(),
-			new ChoiceRenderer<Content>("class.simpleName"))
-		{
-			private static final long serialVersionUID = 1L;
+		form.add(new DropDownChoice<Content>("content", new PropertyModel<>(this, "content"),
+			initContents(), new ChoiceRenderer<>("class.simpleName")).add(new FormComponentUpdatingBehavior()));
 
-			@Override
-			protected boolean wantOnSelectionChangedNotifications()
-			{
-				return true;
-			}
-		});
-
-		form.add(new DropDownChoice<Behavior>("theme", new PropertyModel<Behavior>(this, "theme"),
-			initThemes(), new ChoiceRenderer<Behavior>("class.simpleName"))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected boolean wantOnSelectionChangedNotifications()
-			{
-				return true;
-			}
-		});
+		form.add(new DropDownChoice<Behavior>("theme", new PropertyModel<>(this, "theme"),
+			initThemes(), new ChoiceRenderer<>("class.simpleName")).add(new FormComponentUpdatingBehavior()));
 
 		form.add(new Link<Void>("expandAll")
 		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
 			public void onClick()
 			{
 				FooExpansion.get().expandAll();
@@ -135,9 +113,6 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 
 		form.add(new Link<Void>("collapseAll")
 		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
 			public void onClick()
 			{
 				FooExpansion.get().collapseAll();
@@ -146,8 +121,6 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 
 		form.add(new Button("submit")
 		{
-			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void onSubmit()
 			{
@@ -206,7 +179,7 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 		return content.newContentComponent(id, tree, model);
 	}
 
-	private class FooExpansionModel extends AbstractReadOnlyModel<Set<Foo>>
+	private class FooExpansionModel implements IModel<Set<Foo>>
 	{
 		@Override
 		public Set<Foo> getObject()

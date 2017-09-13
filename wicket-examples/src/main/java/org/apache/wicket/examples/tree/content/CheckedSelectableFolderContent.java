@@ -32,7 +32,6 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class CheckedSelectableFolderContent extends SelectableFolderContent
 {
-
 	private static final long serialVersionUID = 1L;
 
 	public CheckedSelectableFolderContent(ITreeProvider<Foo> provider)

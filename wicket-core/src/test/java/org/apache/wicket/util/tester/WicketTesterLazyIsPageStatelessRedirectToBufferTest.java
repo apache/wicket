@@ -54,7 +54,7 @@ public class WicketTesterLazyIsPageStatelessRedirectToBufferTest extends WicketT
 	 * @throws Exception
 	 */
 	@Test
-	public void statelessListenerInterfaceInvoked() throws Exception
+	public void statelessListenerInvoked() throws Exception
 	{
 	    tester.startPage(StatelessListenerPage.class);
 	    tester.assertRenderedPage(StatelessListenerPage.class);

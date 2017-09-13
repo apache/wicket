@@ -166,21 +166,15 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		super(id, model);
 
 		body = new BorderBodyContainer(id + "_" + BODY);
-	}
-	
-	@Override
-	protected void onInitialize()
-	{
-		super.onInitialize();
-		
-		//if body has not been assigned yet, we queue it
-		if (body.getParent() == null)
-		{
-			dequeue();
-		}
+		queueToBorder(body);
 	}
 	
 	/**
+	 * Returns the border body container. 
+	 * 
+	 * NOTE: this component is NOT meant to be directly handled by users, meaning that you 
+	 * can not explicitly add it to an arbitrary container or remove it from its original parent container.
+	 * 
 	 * @return The border body container
 	 */
 	public final BorderBodyContainer getBodyContainer()
@@ -218,7 +212,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	{
 		for (Component component : children)
 		{
-			if (component == body)
+			if (component == body || component.isAuto())
 			{
 				addToBorder(component);
 			}
@@ -319,6 +313,20 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 		return this;
 	}
 
+	@Override
+	public Border queue(Component... components)
+	{
+		getBodyContainer().queue(components);
+		return this;
+	}
+	
+	@Override
+	protected void onConfigure() 
+	{
+		super.onConfigure();
+		dequeue();
+	}
+	
 	/**
 	 * Queues children components to the Border itself
 	 *
@@ -637,7 +645,7 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	@Override
 	protected DequeueTagAction canDequeueTag(ComponentTag tag)
 	{
-		if ((tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag())
+		if (canDequeueBody(tag))
 		{
 			return DequeueTagAction.DEQUEUE;
 		}
@@ -648,18 +656,27 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	@Override
 	public Component findComponentToDequeue(ComponentTag tag)
 	{
-		if ((tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag())
+		if (canDequeueBody(tag))
 		{
-			return getBodyContainer();
+			//synch the tag id with the one of the body component
+			tag.setId(body.getId());
 		}
+		
 		return super.findComponentToDequeue(tag);
+	}
+
+	private boolean canDequeueBody(ComponentTag tag)
+	{
+		boolean isBodyTag = (tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag();
+		
+		return isBodyTag;
 	}
 
 	@Override
 	protected void addDequeuedComponent(Component component, ComponentTag tag)
 	{
 		// components queued in border get dequeued into the border not into the body container
-		addToBorder(component);
+		super.add(component);
 	}
 	
 	/**

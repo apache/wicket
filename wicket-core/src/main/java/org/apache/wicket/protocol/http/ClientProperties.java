@@ -17,12 +17,14 @@
 package org.apache.wicket.protocol.http;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.TimeZone;
 
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
+import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.io.IClusterable;
@@ -62,6 +64,7 @@ public class ClientProperties implements IClusterable
 	private boolean browserOpera;
 	private boolean browserSafari;
 	private boolean browserChrome;
+	private boolean browserEdge;
 	private int browserVersionMajor = -1;
 	private int browserVersionMinor = -1;
 	private int browserWidth = -1;
@@ -77,15 +80,14 @@ public class ClientProperties implements IClusterable
 	private int screenColorDepth = -1;
 	private int screenHeight = -1;
 	private int screenWidth = -1;
-	/** Cached timezone for repeating calls to {@link #getTimeZone()} */
-	private TimeZone timeZone;
 	private String utcDSTOffset;
-
 	private String utcOffset;
-
 	private String hostname;
 
 	private boolean javaScriptEnabled;
+
+	/** Cached timezone for repeating calls to {@link #getTimeZone()} */
+	private transient TimeZone timeZone;
 
 	/**
 	 * @return The browser height at the time it was measured
@@ -433,6 +435,15 @@ public class ClientProperties implements IClusterable
 	{
 		return browserChrome;
 	}
+	/**
+	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
+	 *
+	 * @return True if a derivative of the Microsoft Edge browser platform.
+	 */
+	public boolean isBrowserEdge()
+	{
+		return browserEdge;
+	}
 
 	/**
 	 * 
@@ -543,6 +554,16 @@ public class ClientProperties implements IClusterable
 	public void setBrowserChrome(boolean browserChrome)
 	{
 		this.browserChrome = browserChrome;
+	}
+	/**
+	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
+	 *
+	 * @param browserEdge
+	 *            True if a derivative of the Microsoft Edge browser platform.
+	 */
+	public void setBrowserEdge(boolean browserEdge)
+	{
+		this.browserEdge = browserEdge;
 	}
 
 	/**
@@ -730,15 +751,19 @@ public class ClientProperties implements IClusterable
 	{
 		StringBuilder b = new StringBuilder();
 
-		Field[] fields = ClientProperties.class.getDeclaredFields();
+		Class<?> clazz = getClass();
+		while (clazz != Object.class) {
+			Field[] fields = clazz.getDeclaredFields();
 
-		for (Field field : fields)
-		{
-			// Ignore these fields
-			if (field.getName().equals("serialVersionUID") == false &&
-				field.getName().startsWith("class$") == false &&
-				field.getName().startsWith("timeZone") == false)
+			for (Field field : fields)
 			{
+				// Ignore these fields
+				if (Modifier.isStatic(field.getModifiers()) ||
+					Modifier.isTransient(field.getModifiers())  ||
+					field.isSynthetic())
+				{
+					continue;
+				}
 
 				field.setAccessible(true);
 
@@ -772,9 +797,35 @@ public class ClientProperties implements IClusterable
 					b.append('\n');
 				}
 			}
-		}
 
+			clazz = clazz.getSuperclass();
+		}
 		return b.toString();
 	}
 
+	/**
+	 * Read parameters.
+	 * 
+	 * @param parameters
+	 *            parameters sent from browser
+	 */
+	public void read(IRequestParameters parameters)
+	{
+		setNavigatorAppCodeName(parameters.getParameterValue("navigatorAppCodeName").toString("N/A"));
+		setNavigatorAppName(parameters.getParameterValue("navigatorAppName").toString("N/A"));
+		setNavigatorAppVersion(parameters.getParameterValue("navigatorAppVersion").toString("N/A"));
+		setNavigatorCookieEnabled(parameters.getParameterValue("navigatorCookieEnabled").toBoolean(false));
+		setNavigatorJavaEnabled(parameters.getParameterValue("navigatorJavaEnabled").toBoolean(false));
+		setNavigatorLanguage(parameters.getParameterValue("navigatorLanguage").toString("N/A"));
+		setNavigatorPlatform(parameters.getParameterValue("navigatorPlatform").toString("N/A"));
+		setNavigatorUserAgent(parameters.getParameterValue("navigatorUserAgent").toString("N/A"));
+		setScreenWidth(parameters.getParameterValue("screenWidth").toInt(-1));
+		setScreenHeight(parameters.getParameterValue("screenHeight").toInt(-1));
+		setScreenColorDepth(parameters.getParameterValue("screenColorDepth").toInt(-1));
+		setUtcOffset(parameters.getParameterValue("utcOffset").toString(null));
+		setUtcDSTOffset(parameters.getParameterValue("utcDSTOffset").toString(null));
+		setBrowserWidth(parameters.getParameterValue("browserWidth").toInt(-1));
+		setBrowserHeight(parameters.getParameterValue("browserHeight").toInt(-1));
+		setHostname(parameters.getParameterValue("hostname").toString("N/A"));
+	}
 }

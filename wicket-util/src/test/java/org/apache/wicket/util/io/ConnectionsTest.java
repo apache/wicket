@@ -23,10 +23,13 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 
 import java.net.URL;
 
+import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.time.Time;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 @SuppressWarnings("javadoc")
+@Category(SlowTests.class)
 public class ConnectionsTest 
 {
 	/**

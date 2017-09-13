@@ -27,7 +27,9 @@ import java.util.Set;
  * Class representing an element in a document.
  * 
  * @author Chris Turner
+ * @deprecated Will be removed in Wicket 9.0 together with {@link HtmlDocumentValidator}
  */
+@Deprecated
 public class Tag implements DocumentElement
 {
 	private final Map<String, String> expectedAttributes = new HashMap<String, String>();

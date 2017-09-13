@@ -52,12 +52,12 @@ public class PageablesPage extends BasePage
 		datacontainer.setOutputMarkupId(true);
 		add(datacontainer);
 
-		PageableListView listview = new PageableListView("rows", Arrays.asList(names), 10)
+		PageableListView<String> listview = new PageableListView<String>("rows", Arrays.asList(names), 10)
 		{
 			@Override
-			protected void populateItem(ListItem item)
+			protected void populateItem(ListItem<String> item)
 			{
-				item.add(new Label("name", item.getDefaultModelObjectAsString()));
+				item.add(new Label("name", item.getModelObject()));
 			}
 		};
 

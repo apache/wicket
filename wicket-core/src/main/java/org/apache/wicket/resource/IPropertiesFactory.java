@@ -49,7 +49,7 @@ public interface IPropertiesFactory
 	/**
 	 * Remove all cached properties.
 	 */
-	abstract void clearCache();
+	void clearCache();
 
 	/**
 	 * Load the properties associated with the path

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.model;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0.0
  */
-public abstract class ChainingModel<T> implements IChainingModel<T>
+public class ChainingModel<T> implements IChainingModel<T>
 {
 	private static final Logger LOG = LoggerFactory.getLogger(ChainingModel.class);
 
@@ -46,6 +48,10 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 					+ "in models directly as it may lead to serialization problems. "
 					+ "If you need to access a property of the session via the model use the "
 					+ "page instance as the model object and 'session.attribute' as the path.");
+		} else if (modelObject instanceof Serializable == false)
+		{
+			LOG.warn("It is not a good idea to reference a non-serializable instance "
+					+ "in models directly as it may lead to serialization problems.");
 		}
 
 		target = modelObject;
@@ -66,9 +72,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#setObject(java.lang.Object)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public void setObject(T object)
@@ -83,9 +86,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IModel#getObject()
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public T getObject()
@@ -97,9 +97,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		return (T)target;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IChainingModel#getChainedModel()
-	 */
 	@Override
 	public IModel<?> getChainedModel()
 	{
@@ -110,9 +107,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.model.IChainingModel#setChainedModel(org.apache.wicket.model.IModel)
-	 */
 	@Override
 	public void setChainedModel(IModel<?> model)
 	{
@@ -137,9 +131,6 @@ public abstract class ChainingModel<T> implements IChainingModel<T>
 		return this;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

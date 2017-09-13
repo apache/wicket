@@ -54,19 +54,22 @@ import org.apache.wicket.resource.JQueryPluginResourceReference;
  * {@link Recorder} by overriding {@link #newRecorderComponent()} and calling
  * {@link #processInput()}:
  * 
- * <pre>
+ * <pre>{@code
  *  Palette palette=new Palette(...) {
  *    protected Recorder newRecorderComponent()
  *    {
  *      Recorder recorder=super.newRecorderComponent();     
- *      recorder.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {
- *        processInput() // let palette process input too
- *        ...
+ *      recorder.add(new AjaxFormComponentUpdatingBehavior("change") {
+ *        protected void onUpdate(AjaxRequestTarget target) {
+ *          processInput(); // let Palette process input too
+ *
+ *          ...
+ *        }
  *      });
  *      return recorder;
  *    }
  *  }
- * </pre>
+ * }</pre>
  * 
  * You can add a {@link DefaultTheme} to style this component in a left to right fashion.
  * 
@@ -667,6 +670,8 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		// to a component
 		// an alternative might be to attach it to one of the subcomponents
 		choicesModel.detach();
+
+		choiceRenderer.detach();
 
 		super.onDetach();
 	}

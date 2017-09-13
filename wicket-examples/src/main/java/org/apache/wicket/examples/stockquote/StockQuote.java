@@ -161,8 +161,7 @@ public class StockQuote
 	 * @throws IOException
 	 * @throws ProtocolException
 	 */
-	private HttpURLConnection setUpHttpConnection(URL url, int length) throws IOException,
-		ProtocolException
+	private HttpURLConnection setUpHttpConnection(URL url, int length) throws IOException
 	{
 		URLConnection connection = url.openConnection();
 		HttpURLConnection httpConn = (HttpURLConnection)connection;
@@ -190,7 +189,7 @@ public class StockQuote
 		InputStreamReader isr = new InputStreamReader(inputStream);
 		BufferedReader in = new BufferedReader(isr);
 
-	 StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		String inputLine;
 		while ((inputLine = in.readLine()) != null)
 		{
@@ -210,7 +209,7 @@ public class StockQuote
 	 */
 	private String createMessage(String symbol)
 	{
-	 StringBuilder message = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		StringBuilder message = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		message.append("<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">");
 		message.append("  <soap:Body>");
 		message.append("    <GetQuote xmlns=\"http://www.webserviceX.NET/\">");

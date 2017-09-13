@@ -8,6 +8,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-bean-validation</artifactId>
+	<packaging>bundle</packaging>
 	<name>Wicket Bean Validation</name>
 
 	<dependencies>

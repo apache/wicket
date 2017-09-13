@@ -18,7 +18,7 @@ package org.apache.wicket.dontstoreunrendered;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 
 /**
  * A base page that provides the markup for PageA, PageB and PageC
@@ -28,7 +28,7 @@ class BasePage extends WebPage {
 
 	public BasePage() {
 
-		add(new Label("className", new AbstractReadOnlyModel<String>() {
+		add(new Label("className", new IModel<String>() {
 
 			@Override
 			public String getObject()

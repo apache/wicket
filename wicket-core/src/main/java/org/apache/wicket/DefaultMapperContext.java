@@ -33,7 +33,7 @@ public class DefaultMapperContext implements IMapperContext
 	/**
 	 * Constructor.
 	 *
-	 * Uses the threal local Application
+	 * Uses the thread local Application
 	 */
 	public DefaultMapperContext()
 	{
@@ -79,18 +79,6 @@ public class DefaultMapperContext implements IMapperContext
 	public ResourceReferenceRegistry getResourceReferenceRegistry()
 	{
 		return application.getResourceReferenceRegistry();
-	}
-
-	@Override
-	public RequestListenerInterface requestListenerInterfaceFromString(final String interfaceName)
-	{
-		return RequestListenerInterface.forName(interfaceName);
-	}
-
-	@Override
-	public String requestListenerInterfaceToString(final RequestListenerInterface listenerInterface)
-	{
-		return listenerInterface.getName();
 	}
 
 	@Override

@@ -633,9 +633,6 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
      */
-	// TODO Wicket 8: consider to deprecate methods {@code join} in Wicket 7 and replace it with standard
-	// Java 8 methods {@code String#join(CharSequence delimiter, CharSequence... elements)}
-	// and {@code String#join(CharSequence delimiter, Iterable<? extends CharSequence> elements)}
 	public static String join(final String separator, final List<String> fragments)
 	{
 		if (fragments == null)
@@ -652,9 +649,6 @@ public final class Strings
 	 * @param fragments
 	 * @return combined fragments
 	 */
-	// TODO Wicket 8: consider to deprecate methods {@code join} in Wicket 7 and replace it with standard
-	// Java 8 methods {@code String#join(CharSequence delimiter, CharSequence... elements)}
-	// and {@code String#join(CharSequence delimiter, Iterable<? extends CharSequence> elements)}
 	public static String join(final String separator, final String... fragments)
 	{
 		if ((fragments == null) || (fragments.length < 1))
@@ -1317,10 +1311,7 @@ public final class Strings
 	 */
 	public static int lengthInBytes(final String string, final Charset charset)
 	{
-		if (string == null)
-		{
-			throw new NullPointerException("Argument `string` cannot be null");
-		}
+		Args.notNull(string, "string");
 		if (charset != null)
 		{
 			try

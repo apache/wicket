@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 
 import javax.servlet.ServletContext;
 
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.markup.ComponentTag;
@@ -79,7 +80,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Eelco Hillenius
  */
-public class Include extends WebComponent
+public class Include extends WebComponent implements IGenericComponent<String, Include>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -129,7 +130,7 @@ public class Include extends WebComponent
 	{
 		// gets the model object: should provide us with either an absolute or a
 		// relative url
-		String url = getDefaultModelObjectAsString();
+		String url = getModelObject();
 
 		if (UrlUtils.isRelative(url))
 		{

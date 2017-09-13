@@ -120,7 +120,7 @@ public class HomePage extends WicketExamplePage
 	{
 		private static final long serialVersionUID = 1L;
 
-		public AjaxProofContainer(String id)
+		private AjaxProofContainer(String id)
 		{
 			super(id);
 			setOutputMarkupId(true);
@@ -129,7 +129,7 @@ public class HomePage extends WicketExamplePage
 		@Override
 		public void renderHead(IHeaderResponse response)
 		{
-			if (getRequestCycle().find(AjaxRequestTarget.class) != null)
+			if (getRequestCycle().find(AjaxRequestTarget.class).isPresent())
 			{
 				response.render(CssHeaderItem.forReference(new PackageResourceReference(
 					HomePage.class, "ajax.css")));

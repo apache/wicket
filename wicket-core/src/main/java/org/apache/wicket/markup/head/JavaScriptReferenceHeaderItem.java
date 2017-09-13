@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -28,6 +29,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.IResourceBundle;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -133,14 +135,17 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 	@Override
 	public int hashCode()
 	{
-		return getReference().hashCode();
+		return java.util.Objects.hash(super.hashCode(), reference, pageParameters);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		if (obj instanceof JavaScriptReferenceHeaderItem)
-			return ((JavaScriptReferenceHeaderItem)obj).getReference().equals(getReference());
-		return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		JavaScriptReferenceHeaderItem that = (JavaScriptReferenceHeaderItem) o;
+		return java.util.Objects.equals(reference, that.reference) &&
+				java.util.Objects.equals(pageParameters, that.pageParameters);
 	}
 }

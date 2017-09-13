@@ -208,7 +208,7 @@ public abstract class WebResponse extends Response
 	/**
 	 * Redirects the response to specified URL. The implementation is responsible for properly
 	 * encoding the URL. Implementations of this method should run passed in {@code url} parameters
-	 * throu the {@link #encodeRedirectURL(CharSequence)} method.
+	 * through the {@link #encodeRedirectURL(CharSequence)} method.
 	 * 
 	 * @param url
 	 */

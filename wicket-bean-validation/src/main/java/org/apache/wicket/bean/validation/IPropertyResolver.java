@@ -14,6 +14,7 @@ import org.apache.wicket.model.IPropertyReflectionAwareModel;
  * @author igor
  * 
  */
+@FunctionalInterface
 public interface IPropertyResolver
 {
 	Property resolveProperty(FormComponent<?> component);

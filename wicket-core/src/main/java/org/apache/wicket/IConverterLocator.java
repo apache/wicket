@@ -31,6 +31,7 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  *         The converter object type
  */
+@FunctionalInterface
 public interface IConverterLocator extends IClusterable
 {
 	/**
@@ -41,5 +42,5 @@ public interface IConverterLocator extends IClusterable
 	 * @param type
 	 * @return The converter for the given type.
 	 */
-	public <C> IConverter<C> getConverter(Class<C> type);
+	<C> IConverter<C> getConverter(Class<C> type);
 }

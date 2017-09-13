@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<wicket:head>
+    <style>
+    	.download-veil {
+    		position: absolute;
+    		left: 20%;
+    		right: 20%;
+    		color: white;
+    		background-color: darkorange;
+    		font-size: 40px;
+    		text-align: center;
+    	}
+
+    	.download-veil span {
+    		line-height: 128px;
+    	}
+    </style>
+</wicket:head>
+</head>
+<body>
+<wicket:extend>
+
+<p>
+	All links below initiate a download of a resource via Ajax (failing every third time): 
+</p>
+
+<ul>
+	<li>for <a wicket:id="download">modern browsers</a>.</li>
+	<li>in an <a wicket:id="downloadIframe">iframe</a>.</li>
+	<li>in a <a wicket:id="downloadInNewWindow">new browser window</a>.</li>
+	<li>in the <a wicket:id="downloadInSameWindow">same window</a>.</li>
+</ul>
+
+<p>
+	Alternatively a <a wicket:id="downloadReference">resource reference</a> can be used too.
+</p>
+
+<div wicket:id="downloading" class="download-veil"><span>Preparing download ...</span></div>
+
+</wicket:extend>
+</body>
+</html>

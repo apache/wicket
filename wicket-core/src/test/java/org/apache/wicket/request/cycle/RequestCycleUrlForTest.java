@@ -20,13 +20,13 @@ import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.request.IExceptionMapper;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.handler.resource.ResourceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -35,11 +35,10 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.response.StringResponse;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 
 /**
  * Tests that RequestCycle#urlFor() does not encode the jsessionid for static resources.
@@ -177,7 +176,7 @@ public class RequestCycleUrlForTest extends Assert
 	 * @param <T>
 	 *     the type of the expected class
 	 */
-	private static class ExactClassMatcher<T> extends BaseMatcher<T>
+	private static class ExactClassMatcher<T> implements ArgumentMatcher<T>
 	{
 		private final Class<T> targetClass;
 
@@ -198,9 +197,9 @@ public class RequestCycleUrlForTest extends Assert
 		}
 
 		@Override
-		public void describeTo(Description desc)
+		public String toString()
 		{
-			desc.appendText("Matches a class or subclass");
+			return "Matches a class or subclass";
 		}
 	}
 }

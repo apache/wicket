@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Assert;
@@ -30,7 +30,7 @@ public class AbstractObjectCheckerTest extends Assert
 	@Test
 	public void doCheckIsNotCalledForExcludedTypes()
 	{
-		List exclusions = Arrays.asList(CharSequence.class);
+		List<Class<?>> exclusions = Collections.singletonList(CharSequence.class);
 
 		IObjectChecker checker = new AbstractObjectChecker(exclusions)
 		{

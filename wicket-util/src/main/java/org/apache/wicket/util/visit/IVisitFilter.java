@@ -42,7 +42,7 @@ public interface IVisitFilter
 	/**
 	 * A visitor filter that allows all objects and their children to be visited
 	 */
-	public static IVisitFilter ANY = new IVisitFilter()
+	IVisitFilter ANY = new IVisitFilter()
 	{
 		/** {@inheritDoc} */
 		@Override

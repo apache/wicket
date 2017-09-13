@@ -28,7 +28,6 @@ import org.apache.wicket.extensions.markup.html.repeater.data.table.IStyledColum
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
@@ -66,7 +65,7 @@ public class FilterToolbar extends AbstractToolbar
 
 		Args.notNull(table, "table");
 		
-		IModel<List<IColumn<T, S>>> model = new AbstractReadOnlyModel<List<IColumn<T,S>>>() {
+		IModel<List<IColumn<T, S>>> model = new IModel<List<IColumn<T,S>>>() {
 			private static final long serialVersionUID = 1L;
 
 			@Override

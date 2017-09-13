@@ -126,6 +126,13 @@ public class WebSocketRequestHandler implements IWebSocketRequestHandler
 						"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
 								component.toString());
 			}
+			else if (component.getPage() != getPage())
+			{
+				throw new IllegalArgumentException(
+						"Cannot update component because its page is not the same as " +
+						"the one this handler has been created for. Component: " +
+								component.toString());
+			}
 			add(component, component.getMarkupId());
 		}
 	}

@@ -1,0 +1,27 @@
+
+You can contribute to this guide by following these steps:
+
+* The guide uses AsciiDoctor to generate the final HTML/PDF so you should consult with its http://asciidoctor.org[syntax]
+
+* Fork Apache Wicket's GIT https://github.com/apache/wicket.git[repository] to your own github account.
+
+* Clone your forked copy of Apache Wicket's repository into your machine
+[source,java]
+----
+git clone https://github.com/<<your github username>>/wicket.git
+----
+
+* Edit the _.adoc_ files in `wicket/wicket-user-guide/src/main/asciidoctor` folder 
+
+* To preview your changes run _mvn clean package -P guide_ in the `wicket/wicket-user-guide` folder (You may use a run configuration in your IDE)
+
+* Navigate to _wicket/wicket-user-guide/target/generated-docs_ and open one of the following files in a browser / pdf viewer:
+** _single.html_ (single page version)
+** _single.pdf_ (single page pdf version)
+
+* Create a ticket in Apache Wicket's https://issues.apache.org/jira/browse/WICKET[JIRA]
+
+* *Commit and push the changes* to your forked Apache Wicket's GIT repository and *create a pull request* on github (Enter the created JIRA ticket id into your pull request's title)
+
+*Thank you!*
+

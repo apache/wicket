@@ -35,6 +35,7 @@ import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.SimpleFormComponentLabel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.Link;
@@ -79,11 +80,8 @@ public class FormInput extends WicketExamplePage
 			add(new LocaleDropDownChoice("localeSelect"));
 
 			// Link to return to default locale
-			add(new Link<Void>("defaultLocaleLink")
-			{
-				@Override
-				public void onClick()
-				{
+			add(new Link<Void>("defaultLocaleLink") {
+				public void onClick() {
 					WebRequest request = (WebRequest)getRequest();
 					setLocale(request.getLocale());
 				}
@@ -148,37 +146,29 @@ public class FormInput extends WicketExamplePage
 			// TextField using a custom converter.
 			add(new TextField<URL>("urlProperty", URL.class)
 			{
-				@SuppressWarnings("unchecked")
 				@Override
-				public <C> IConverter<C> getConverter(final Class<C> type)
+				protected IConverter<?> createConverter(Class<?> type)
 				{
 					if (URL.class.isAssignableFrom(type))
 					{
-						return (IConverter<C>)URLConverter.INSTANCE;
+						return URLConverter.INSTANCE;
 					}
-					else
-					{
-						return super.getConverter(type);
-					}
+					return null;
 				}
 			});
 
 			// TextField using a mask converter
 			add(new TextField<UsPhoneNumber>("phoneNumberUS", UsPhoneNumber.class)
 			{
-
 				@Override
-				public <C> IConverter<C> getConverter(final Class<C> type)
+				protected IConverter<?> createConverter(Class<?> type)
 				{
 					if (UsPhoneNumber.class.isAssignableFrom(type))
 					{
 						// US telephone number mask
 						return new MaskConverter<>("(###) ###-####", UsPhoneNumber.class);
 					}
-					else
-					{
-						return super.getConverter(type);
-					}
+					return null;
 				}
 			});
 
@@ -187,20 +177,15 @@ public class FormInput extends WicketExamplePage
 
 			add(new Button("saveButton"));
 
-			add(new Button("resetButton")
-			{
+			add(new Button("resetButton") {
 				@Override
 				public void onSubmit()
 				{
-					// just set a new instance of the page
 					setResponsePage(FormInput.class);
 				}
 			}.setDefaultFormProcessing(false));
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
 		@Override
 		public void onSubmit()
 		{
@@ -212,7 +197,6 @@ public class FormInput extends WicketExamplePage
 	/** list view to be nested in the form. */
 	private static final class LinesListView extends ListView<String>
 	{
-
 		/**
 		 * Construct.
 		 * 
@@ -229,8 +213,7 @@ public class FormInput extends WicketExamplePage
 		protected void populateItem(ListItem<String> item)
 		{
 			// add a text field that works on each list item model (returns
-			// objects of
-			// type FormInputModel.Line) using property text.
+			// objects of type FormInputModel.Line) using property text.
 			item.add(new TextField<>("lineEdit", new PropertyModel<String>(
 				item.getDefaultModel(), "text")));
 		}
@@ -241,16 +224,6 @@ public class FormInput extends WicketExamplePage
 	 */
 	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale>
 	{
-		/**
-		 * Constructor.
-		 */
-		public LocaleChoiceRenderer()
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
-		 */
 		@Override
 		public Object getDisplayValue(Locale locale)
 		{
@@ -275,33 +248,22 @@ public class FormInput extends WicketExamplePage
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
-			setModel(new PropertyModel<Locale>(FormInput.this, "locale"));
-		}
+			setModel(new PropertyModel<>(FormInput.this, "locale"));
+			
+			add(new FormComponentUpdatingBehavior() {
+				@Override
+				protected void onUpdate()
+				{
+					// note that we don't have to do anything here, as our property
+					// model already calls FormInput.setLocale when the model is
+					// updated
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
-		 */
-		@Override
-		public void onSelectionChanged(Locale newSelection)
-		{
-			// note that we don't have to do anything here, as our property
-			// model allready calls FormInput.setLocale when the model is
-			// updated
-
-			// force re-render by setting the page to render to the bookmarkable
-			// instance, so that the page will be rendered from scratch,
-			// re-evaluating the input patterns etc
-			setResponsePage(FormInput.class);
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
-		 */
-		@Override
-		protected boolean wantOnSelectionChangedNotifications()
-		{
-			// we want roundtrips when a the user selects another item
-			return true;
+					// force re-render by setting the page to render to the bookmarkable
+					// instance, so that the page will be rendered from scratch,
+					// re-evaluating the input patterns etc
+					setResponsePage(FormInput.class);
+				}
+			});
 		}
 	}
 

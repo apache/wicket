@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.cycle;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class RequestCycleListenerDetachOrderTest
 		assertEquals(Event.LISTENER_DETACHED, events.get(1));
 	}
 
-	private class TestListener extends AbstractRequestCycleListener
+	private static class TestListener implements IRequestCycleListener
 	{
 		private final List<Event> events;
 

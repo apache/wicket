@@ -30,7 +30,6 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.AutoLabelTextResolver;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
-import org.apache.wicket.markup.resolver.FragmentResolver;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
@@ -50,14 +49,17 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
+	public static final String CONTAINER_INFO = "containerInfo";
 	/** List of well known wicket tag names */
 	private static final Set<String> WELL_KNOWN_TAG_NAMES = new HashSet<>();
 	/** List of raw wicket tag names */
 	private static final Set<String> RAW_TAG_NAMES = new HashSet<>();
 
 	public static final String CHILD = "child";
-
+	
 	public static final String EXTEND = "extend";
+	public static final String FRAGMENT = "fragment";
+	public static final String MARKUP_CACHE_KEY = "markupCacheKey";
 
 	static {
 		WELL_KNOWN_TAG_NAMES.add(Border.BORDER);
@@ -67,7 +69,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		WELL_KNOWN_TAG_NAMES.add(EnclosureHandler.ENCLOSURE);
 		WELL_KNOWN_TAG_NAMES.add(WicketLinkTagHandler.LINK);
 		WELL_KNOWN_TAG_NAMES.add(WicketRemoveTagHandler.REMOVE);
-		WELL_KNOWN_TAG_NAMES.add(FragmentResolver.FRAGMENT);
+		WELL_KNOWN_TAG_NAMES.add(WicketTagIdentifier.FRAGMENT);
 		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEAD);
 		WELL_KNOWN_TAG_NAMES.add(HtmlHeaderResolver.HEADER_ITEMS);
 		WELL_KNOWN_TAG_NAMES.add(WicketTagIdentifier.CHILD);
@@ -121,8 +123,10 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			{
 				// Make it a Wicket component.
 				tag.setId(namespace + "_" + tag.getName() + getRequestUniqueId());
+				tag.setUserData(CONTAINER_INFO, getMarkupResourceStream().getContainerInfo());
+				tag.setUserData(MARKUP_CACHE_KEY, getMarkupResourceStream().getCacheKey());
 				tag.setModified(true);
-
+				
 				if (isRaw(tag)) 
 				{
 					tag.setFlag(ComponentTag.RENDER_RAW, true);

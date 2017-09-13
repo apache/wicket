@@ -1,8 +1,8 @@
 <html>
-	<head><script type="text/javascript" src="../resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-1.12.1.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
-<script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
+	<head><script type="text/javascript" src="./resource/org.apache.wicket.resource.JQueryResourceReference/jquery/jquery-2.2.4.js"></script>
+<script type="text/javascript" src="./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-event-jquery.js"></script>
+<script type="text/javascript" src="./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
+<script type="text/javascript" src="./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
 <script type="text/javascript" id="wicket-ajax-debug-enable">
 /*<![CDATA[*/
 Wicket.Ajax.DebugWindow.enabled=true;
@@ -10,19 +10,19 @@ Wicket.Ajax.DebugWindow.enabled=true;
 </script>
 <script type="text/javascript" id="wicket-ajax-base-url">
 /*<![CDATA[*/
-Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.form.AjaxFormSubmitTestPage?0";
+Wicket.Ajax.baseUrl="wicket/page?0";
 /*]]>*/
 </script>
 <script type="text/javascript" >
 /*<![CDATA[*/
 Wicket.Event.add(window, "domready", function(event) { 
-Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.form.AjaxFormSubmitTestPage?0-1.IBehaviorListener.0-form-submit","m":"POST","c":"submit2","f":"form1","sc":"p::submit","e":"click","pd":true});;
+Wicket.Ajax.ajax({"u":"./page?0-1.0-form-submit","m":"POST","c":"submit2","f":"form1","sc":"p::submit","e":"click","pd":true});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
 ;});
 /*]]>*/
 </script>
 </head><body>
-		<form wicket:id="form" id="form1" method="post" action="./org.apache.wicket.ajax.form.AjaxFormSubmitTestPage?0-1.IFormSubmitListener-form"><div style="width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden"><input type="hidden" name="form1_hf_0" id="form1_hf_0" /></div>
+		<form wicket:id="form" id="form1" method="post" action="./page?0-1.-form">
 			<input type="text" wicket:id="txt1" value="foo" name="txt1"/>
 			<input type="text" wicket:id="txt2" value="bar" name="txt2"/>
 			<input type="submit" value="Submit" wicket:id="submit" name="p::submit" id="submit2"/>

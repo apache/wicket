@@ -71,12 +71,10 @@ public class FormPage extends BasePage
 					@Override
 					protected IModel<Contact> model(Contact object)
 					{
-						return new CompoundPropertyModel<Contact>(
+						return new CompoundPropertyModel<>(
 							new DetachableContactModel(object));
 					}
-
 				};
-
 			}
 
 			@Override
@@ -125,7 +123,7 @@ public class FormPage extends BasePage
 		public ActionPanel(String id, IModel<Contact> model)
 		{
 			super(id, model);
-			add(new Link("select")
+			add(new Link<Void>("select")
 			{
 				@Override
 				public void onClick()

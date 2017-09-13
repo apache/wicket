@@ -81,9 +81,6 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 		return pageParameters;
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
-	 */
 	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
@@ -91,17 +88,12 @@ public class ResourceReferenceRequestHandler implements IRequestHandler, ILoggab
 			logData = new ResourceReferenceLogData(this);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public ResourceReferenceLogData getLogData()
 	{
 		return logData;
 	}
 
-
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
-	 */
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{

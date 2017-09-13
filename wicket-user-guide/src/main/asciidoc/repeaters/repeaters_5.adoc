@@ -1,0 +1,8 @@
+
+
+
+In this chapter we have explored the built-in set of components called repeaters which are designed to repeat their own markup in output to display a set of items. We have started with component _RepeatingView_ which can be used to repeat a simple markup fragment. 
+
+Then, we have seen components _ListView_ and _RefreshingView_ which should be used when the markup to repeat contains nested components to populate. 
+
+Finally, we have discussed those repeaters that support data paging and that are called pageable repeaters. We ended the chapter looking at an example where a pageable repeater is used with panel PagingNavigator to make its dataset navigable by the user.

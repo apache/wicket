@@ -143,7 +143,7 @@ public class TextTemplateResourceReference extends ResourceReference implements 
 		resource = new ResourceStreamResource(null)
 		{
 			@Override
-			protected IResourceStream getResourceStream()
+			protected IResourceStream getResourceStream(Attributes attributes)
 			{
 				IModel<Map<String, Object>> variables = TextTemplateResourceReference.this.variablesModel;
 				String stringValue = textTemplate.asString(variables.getObject());

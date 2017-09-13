@@ -32,10 +32,6 @@ import org.apache.wicket.protocol.http.servlet.WicketSessionFilter;
  */
 public class HelloWorldServlet extends HttpServlet
 {
-	/**
-	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
-	 */
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,
 			IOException

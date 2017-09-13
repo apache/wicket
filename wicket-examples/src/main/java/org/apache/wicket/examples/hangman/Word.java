@@ -110,9 +110,6 @@ public class Word implements IClusterable
 		return correct;
 	}
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
@@ -134,9 +131,6 @@ public class Word implements IClusterable
 		return true;
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{

@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import java.util.TimeZone;
+import java.time.ZoneId;
 
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.util.time.Duration;
@@ -35,7 +35,7 @@ public class ClockPage extends BasePage
 	public ClockPage()
 	{
 		// add the clock component
-		Clock clock = new Clock("clock", TimeZone.getTimeZone("America/Los_Angeles"));
+		Clock clock = new Clock("clock", ZoneId.of("America/Los_Angeles"));
 		add(clock);
 
 		// add the ajax behavior which will keep updating the component every 5

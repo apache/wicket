@@ -75,9 +75,9 @@ public class TableTreePage extends AdvancedTreePage
 	{
 		List<IColumn<Foo, String>> columns = new ArrayList<>();
 
-		columns.add(new PropertyColumn<Foo, String>(Model.of("ID"), "id"));
+		columns.add(new PropertyColumn<>(Model.of("ID"), "id"));
 
-		columns.add(new TreeColumn<Foo, String>(Model.of("Tree")));
+		columns.add(new TreeColumn<>(Model.of("Tree")));
 
 		columns.add(new AbstractColumn<Foo, String>(Model.of("Depth"))
 		{
@@ -99,8 +99,8 @@ public class TableTreePage extends AdvancedTreePage
 			}
 		});
 
-		columns.add(new PropertyColumn<Foo, String>(Model.of("Bar"), "bar"));
-		columns.add(new PropertyColumn<Foo, String>(Model.of("Baz"), "baz"));
+		columns.add(new PropertyColumn<>(Model.of("Bar"), "bar"));
+		columns.add(new PropertyColumn<>(Model.of("Baz"), "baz"));
 
 		return columns;
 	}

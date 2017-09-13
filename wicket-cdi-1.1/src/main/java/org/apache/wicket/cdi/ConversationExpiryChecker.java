@@ -55,7 +55,7 @@ public class ConversationExpiryChecker implements IComponentOnBeforeRenderListen
 	@Override
 	public void onBeforeRender(Component component)
 	{
-		if (component instanceof Page || RequestCycle.get().find(IPartialPageRequestHandler.class) != null)
+		if (component instanceof Page || RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent())
 		{
 			Page page = component.getPage();
 			String cid = ConversationPropagator.getConversationIdFromPage(page);

@@ -17,6 +17,7 @@
 package org.apache.wicket.util.time;
 
 import java.util.Locale;
+import java.util.Locale.Category;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -314,7 +315,7 @@ public class Duration extends AbstractTimeValue
 	 */
 	public static Duration valueOf(final String string) throws StringValueConversionException
 	{
-		return valueOf(string, Locale.getDefault());
+		return valueOf(string, Locale.getDefault(Locale.Category.FORMAT));
 	}
 
 	/**
@@ -491,7 +492,7 @@ public class Duration extends AbstractTimeValue
 	@Override
 	public String toString()
 	{
-		return toString(Locale.getDefault());
+		return toString(Locale.getDefault(Category.FORMAT));
 	}
 
 	/**

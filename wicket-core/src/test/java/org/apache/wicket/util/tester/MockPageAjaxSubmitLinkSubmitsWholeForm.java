@@ -68,14 +68,14 @@ public class MockPageAjaxSubmitLinkSubmitsWholeForm extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				text = "Hello " + name;
 				target.add(label);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				throw new RuntimeException("Unexpected error occurred.");
 			}
@@ -87,14 +87,14 @@ public class MockPageAjaxSubmitLinkSubmitsWholeForm extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
 				text = "Goodbye " + name;
 				target.add(label);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
+			protected void onError(AjaxRequestTarget target)
 			{
 				throw new RuntimeException("Unexpected error occurred.");
 			}

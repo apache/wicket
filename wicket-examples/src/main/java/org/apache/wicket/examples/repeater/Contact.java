@@ -48,9 +48,6 @@ public class Contact implements IClusterable
 
 	}
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString()
 	{
@@ -58,10 +55,6 @@ public class Contact implements IClusterable
 				" homePhone=" + homePhone + " cellPhone=" + cellPhone + "]";
 	}
 
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{

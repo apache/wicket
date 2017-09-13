@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.protocol.ws.concurrent;
 
-import java.util.concurrent.Callable;
-
 /**
  * An abstraction over all available executor services.
  * The application may use {@link java.util.concurrent.Executor} or
@@ -31,12 +29,4 @@ public interface Executor
 	 * @see     java.lang.Thread#run()
 	 */
 	void run(Runnable command);
-
-	/**
-	 * Computes a result, or throws an exception if unable to do so.
-	 *
-	 * @return computed result
-	 * @throws Exception if unable to compute a result
-	 */
-	<T> T call(Callable<T> callable) throws Exception;
 }

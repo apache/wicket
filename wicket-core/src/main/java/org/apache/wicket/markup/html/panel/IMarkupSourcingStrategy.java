@@ -34,10 +34,10 @@ import org.apache.wicket.markup.resolver.IComponentResolver;
 public interface IMarkupSourcingStrategy
 {
 	/**
-	 * Will be called in addition to {@link Component#renderHead(HtmlHeaderContainer)} and allows
+	 * Will be called in addition to {@link Component#internalRenderHead(HtmlHeaderContainer)} and allows
 	 * the strategy to contribute to the &lt;head&gt; section of the response.
 	 * 
-	 * @see Component#renderHead(HtmlHeaderContainer)
+	 * @see Component#internalRenderHead(HtmlHeaderContainer)
 	 * 
 	 * @param component
 	 *            The component calling the strategy

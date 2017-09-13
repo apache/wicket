@@ -58,19 +58,22 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * {@link DateTextField} by overriding {@link #newDateTextField(String, IModel)} and calling
  * {@link #processInput()}:
  * 
- * <pre>
+ * <pre>{@code
  *  DateTimeField dateTimeField = new DateTimeField(...) {
  *    protected DateTextField newDateTextField(String id, PropertyModel<Date> dateFieldModel)
  *    {
  *      DateTextField dateField = super.newDateTextField(id, dateFieldModel);     
- *      dateField.add(new AjaxFormComponentUpdatingBehavior(&quot;change&quot;) {
- *        processInput() // let DateTimeField process input too
- *        ...
+ *      dateField.add(new AjaxFormComponentUpdatingBehavior("change") {
+ *        protected void onUpdate(AjaxRequestTarget target) {
+ *          processInput(); // let DateTimeField process input too
+ *
+ *          ...
+ *        }
  *      });
  *      return recorder;
  *    }
  *  }
- * </pre>
+ * }</pre>
  * 
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
@@ -220,18 +223,14 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 		{
 			private static final long serialVersionUID = 1L;
 
-			@SuppressWarnings("unchecked")
 			@Override
-			public <C> IConverter<C> getConverter(Class<C> type)
+			protected IConverter<?> createConverter(Class<?> type)
 			{
 				if (Integer.class.isAssignableFrom(type))
 				{
-					return (IConverter<C>)MINUTES_CONVERTER;
+					return MINUTES_CONVERTER;
 				}
-				else
-				{
-					return super.getConverter(type);
-				}
+				return null;
 			}
 		};
 		minutesField.add(new RangeValidator<>(0, 59));

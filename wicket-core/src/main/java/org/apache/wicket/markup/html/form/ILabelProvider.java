@@ -33,5 +33,5 @@ public interface ILabelProvider<T>
 	 * 
 	 * @return labelModel
 	 */
-	public IModel<T> getLabel();
+	IModel<T> getLabel();
 }

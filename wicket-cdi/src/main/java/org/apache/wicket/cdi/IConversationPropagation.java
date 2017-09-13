@@ -37,7 +37,7 @@ public interface IConversationPropagation
 	 *            The current request handler
 	 * @return true if the conversation should be propagated to the given page instance.
 	 */
-	public boolean propagatesViaPage(Page page, IRequestHandler handler);
+	boolean propagatesViaPage(Page page, IRequestHandler handler);
 
 	/**
 	 * Indicates if the conversation should be propagated via url-parameters for the given request
@@ -47,5 +47,5 @@ public interface IConversationPropagation
 	 *            The current request handler
 	 * @return true if the conversation should be propagated for the given request handler.
 	 */
-	public boolean propagatesViaParameters(IRequestHandler handler);
+	boolean propagatesViaParameters(IRequestHandler handler);
 }

@@ -87,18 +87,12 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact, S
 	    return result;
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#size()
-	 */
 	@Override
 	public long size()
 	{
 		return filterContacts(getContactsDB().getIndex(getSort())).size();
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
-	 */
 	@Override
 	public IModel<Contact> model(Contact object)
 	{
@@ -116,6 +110,4 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact, S
 	{
 	    contactFilter  = state;
 	}
-
-	
 }

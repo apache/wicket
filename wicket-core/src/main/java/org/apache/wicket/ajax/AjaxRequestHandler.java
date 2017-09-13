@@ -225,7 +225,14 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			if (component.getOutputMarkupId() == false && !(component instanceof Page))
 			{
 				throw new IllegalArgumentException(
-					"cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+					"Cannot update component that does not have setOutputMarkupId property set to true. Component: " +
+						component.toString());
+			}
+			else if (component.getPage() != getPage())
+			{
+				throw new IllegalArgumentException(
+					"Cannot update component because its page is not the same as " +
+					"the one this handler has been created for. Component: " +
 						component.toString());
 			}
 			add(component, component.getMarkupId());
@@ -430,27 +437,18 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		return Strings.isEmpty(id) ? null : id;
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageClass()
-	 */
 	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return page.getPageClass();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageId()
-	 */
 	@Override
 	public Integer getPageId()
 	{
 		return page.getPageId();
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageRequestHandler#getPageParameters()
-	 */
 	@Override
 	public PageParameters getPageParameters()
 	{
@@ -469,7 +467,6 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 		return page.getRenderCount();
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public PageLogData getLogData()
 	{

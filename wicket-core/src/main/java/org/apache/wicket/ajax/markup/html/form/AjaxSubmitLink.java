@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -82,7 +83,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onError(target, getForm());
+				AjaxSubmitLink.this.onError(target);
 			}
 
 			@Override
@@ -107,13 +108,19 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onSubmit(target, getForm());
+				AjaxSubmitLink.this.onSubmit(target);
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onAfterSubmit(target, getForm());
+				AjaxSubmitLink.this.onAfterSubmit(target);
+			}
+			
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxSubmitLink.this.getStatelessHint();
 			}
 		};
 	}
@@ -121,16 +128,20 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>before</em> the form's onSubmit method.
+	 * 
+	 * @param target the {@link AjaxRequestTarget}
 	 */
-	protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onSubmit(AjaxRequestTarget target)
 	{
 	}
 
 	/**
 	 * Override this method to provide special submit handling in a multi-button form. This method
 	 * will be called <em>after</em> the form's onSubmit method.
+	 * 
+	 * @param target the {@link AjaxRequestTarget}
 	 */
-	protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form)
+	protected void onAfterSubmit(AjaxRequestTarget target)
 	{
 	}
 
@@ -189,14 +200,13 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * {@link Form#onError()}.
 	 * 
 	 * @param target
-	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
+	protected void onError(AjaxRequestTarget target)
 	{
 	}
 
 	/**
-	 * Use {@link #onSubmit(AjaxRequestTarget, Form)} instead.
+	 * Use {@link #onSubmit(AjaxRequestTarget)} instead.
 	 */
 	@Override
 	public final void onSubmit()
@@ -205,11 +215,17 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	}
 
 	/**
-	 * Use {@link #onAfterSubmit(AjaxRequestTarget, Form)} instead.
+	 * Use {@link #onAfterSubmit(AjaxRequestTarget)} instead.
 	 */
 	@Override
 	public final void onAfterSubmit()
 	{
 		logger.warn("unexpected invocation of #onAfterSubmit() on {}", this);
+	}
+
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
 	}
 }

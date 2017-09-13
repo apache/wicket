@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.ajax.builtin.modal;
 
-import org.apache.wicket.Page;
 import org.apache.wicket.PageReference;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -76,24 +75,12 @@ public class ModalContent1Page extends WebPage
 
 		modal.setCssClassName(ModalWindow.CSS_CLASS_GRAY);
 
-		modal.setPageCreator(new ModalWindow.PageCreator()
-		{
-			@Override
-			public Page createPage()
-			{
-				return new ModalContent2Page(modal);
-			}
-		});
+		modal.setPageCreator(() -> new ModalContent2Page(modal));
 
-		modal.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
-		{
-			@Override
-			public boolean onCloseButtonClicked(AjaxRequestTarget target)
-			{
-				target.appendJavaScript("alert('You can\\'t close this modal window using close button."
-					+ " Use the link inside the window instead.');");
-				return false;
-			}
+		modal.setCloseButtonCallback(target -> {
+			target.appendJavaScript("alert('You can\\'t close this modal window using close button."
+				+ " Use the link inside the window instead.');");
+			return false;
 		});
 
 		add(new AjaxLink<Void>("open")

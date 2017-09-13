@@ -19,6 +19,7 @@ package org.apache.wicket.resource;
 /**
  * Allow for different implementations of a text compressor
  */
+@FunctionalInterface
 public interface ITextResourceCompressor
 {
 	/**
@@ -27,5 +28,5 @@ public interface ITextResourceCompressor
 	 * @param original
 	 * @return compressed text resource
 	 */
-	public String compress(String original);
+	String compress(String original);
 }

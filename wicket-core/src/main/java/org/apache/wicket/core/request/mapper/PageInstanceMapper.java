@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import org.apache.wicket.RequestListenerInterface;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -37,7 +36,7 @@ import org.apache.wicket.request.mapper.info.PageInfo;
  *  /wicket/page?2
  *
  *
- *  Page Instance - Listener (ListenerInterfaceRequestHandler)
+ *  Page Instance - Listener (ListenerRequestHandler)
  *  /wicket/page?2-click-foo-bar-baz
  *  /wicket/page?2-click.1-foo-bar-baz (1 is behavior index)
  * </pre>
@@ -86,11 +85,7 @@ public class PageInstanceMapper extends AbstractComponentMapper
 
 					provider.setPageSource(getContext());
 
-					// listener interface
-					RequestListenerInterface listenerInterface = requestListenerInterfaceFromString(componentInfo.getListenerInterface());
-
-					return new ListenerInterfaceRequestHandler(provider, listenerInterface,
-						componentInfo.getBehaviorId());
+					return new ListenerRequestHandler(provider, componentInfo.getBehaviorId());
 				}
 			}
 		}
@@ -112,23 +107,20 @@ public class PageInstanceMapper extends AbstractComponentMapper
 			PageInfo i = new PageInfo(page.getPageId());
 			info = new PageComponentInfo(i, null);
 		}
-		else if (requestHandler instanceof ListenerInterfaceRequestHandler)
+		else if (requestHandler instanceof ListenerRequestHandler)
 		{
-			ListenerInterfaceRequestHandler handler = (ListenerInterfaceRequestHandler)requestHandler;
+			ListenerRequestHandler handler = (ListenerRequestHandler)requestHandler;
 			IRequestablePage page = handler.getPage();
 			String componentPath = handler.getComponentPath();
-			RequestListenerInterface listenerInterface = handler.getListenerInterface();
 
 			Integer renderCount = null;
-			if (listenerInterface.isIncludeRenderCount())
+			if (handler.includeRenderCount())
 			{
 				renderCount = page.getRenderCount();
 			}
 
 			PageInfo pageInfo = new PageInfo(page.getPageId());
-			ComponentInfo componentInfo = new ComponentInfo(renderCount,
-				requestListenerInterfaceToString(listenerInterface), componentPath,
-				handler.getBehaviorIndex());
+			ComponentInfo componentInfo = new ComponentInfo(renderCount, componentPath, handler.getBehaviorIndex());
 			info = new PageComponentInfo(pageInfo, componentInfo);
 		}
 

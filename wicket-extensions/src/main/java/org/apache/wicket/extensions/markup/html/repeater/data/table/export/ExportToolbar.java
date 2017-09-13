@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
@@ -30,7 +31,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.markup.repeater.data.IDataProvider;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.resource.IResource;
@@ -163,7 +163,7 @@ public class ExportToolbar extends AbstractToolbar
 		WebMarkupContainer td = new WebMarkupContainer("td");
 		add(td);
 
-		td.add(AttributeModifier.replace("colspan", new AbstractReadOnlyModel<String>()
+		td.add(AttributeModifier.replace("colspan", new IModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -202,7 +202,7 @@ public class ExportToolbar extends AbstractToolbar
 		IResource resource = new ResourceStreamResource()
 		{
 			@Override
-			protected IResourceStream getResourceStream()
+			protected IResourceStream getResourceStream(Attributes attributes)
 			{
 				return new DataExportResourceStreamWriter(dataExporter, getTable());
 			}
@@ -212,32 +212,44 @@ public class ExportToolbar extends AbstractToolbar
 			.setBody(dataExporter.getDataFormatNameModel());
 	}
 
+	@Override
+	protected void onConfigure()
+	{
+		super.onConfigure();
+
+		calculateVisibility();
+	}
+
 	/**
 	 * This toolbar is only visible if there are rows in the data set and if there are exportable columns in the
 	 * data table and if there are data exporters added to the toolbar.
 	 */
-	@Override
-	public boolean isVisible()
+	protected void calculateVisibility()
 	{
+		final boolean isVisible;
 		if (dataExporters.isEmpty())
 		{
-			return false;
+			isVisible = false;
 		}
-
-		if (getTable().getRowCount() == 0)
+		else if (getTable().getRowCount() == 0)
 		{
-			return false;
+			isVisible = false;
 		}
-
-		for (IColumn<?, ?> col : getTable().getColumns())
+		else
 		{
-			if (col instanceof IExportableColumn)
+			boolean foundExportableColumn = false;
+			for (IColumn<?, ?> col : getTable().getColumns())
 			{
-				return true;
+				if (col instanceof IExportableColumn)
+				{
+					foundExportableColumn = true;
+					break;
+				}
 			}
+			isVisible = foundExportableColumn;
 		}
 
-		return false;
+		setVisible(isVisible);
 	}
 
 	@Override

@@ -29,7 +29,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 /**
@@ -73,7 +73,7 @@ public class HomePage extends WebPage
 
 		final ListView<Object> listView;
 		listViewContainer.add(listView = new ListView<Object>("listView",
-			new AbstractReadOnlyModel<List<Object>>()
+			new IModel<List<Object>>()
 			{
 				@Override
 				public List<Object> getObject()
@@ -98,16 +98,11 @@ public class HomePage extends WebPage
 		form.add(new AjaxFallbackButton("addButton", form)
 		{
 			@Override
-			protected void onSubmit(Optional<AjaxRequestTarget> targetOptional, Form<?> form)
+			protected void onSubmit(Optional<AjaxRequestTarget> targetOptional)
 			{
 				rows++;
 				listView.removeAll();
 				targetOptional.ifPresent(target -> target.add(listViewContainer));
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target, Form<?> form)
-			{
 			}
 		}.setDefaultFormProcessing(false));
 	}

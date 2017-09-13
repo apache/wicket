@@ -29,7 +29,9 @@ import org.slf4j.LoggerFactory;
  * simple HTML of the kind that would generally be utilized during testing.
  * 
  * @author Chris Turner
+ * @deprecated Will be removed in Wicket 9.0 together with {@link HtmlDocumentValidator}
  */
+@Deprecated
 public class HtmlDocumentParser
 {
 	private static final Logger log = LoggerFactory.getLogger(HtmlDocumentParser.class);

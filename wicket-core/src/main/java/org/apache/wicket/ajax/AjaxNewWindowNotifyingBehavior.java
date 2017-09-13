@@ -25,7 +25,10 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.StringValue;
+import org.apache.wicket.util.string.Strings;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * An Ajax behavior that notifies when a new browser window/tab is opened with
@@ -38,6 +41,8 @@ import org.apache.wicket.util.string.StringValue;
  */
 public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * A unique name used for the page window's name
 	 */
@@ -126,4 +131,33 @@ public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjax
 	 */
 	protected abstract void onNewWindow(AjaxRequestTarget target);
 
+	/**
+	 * Creates an {@link AjaxNewWindowNotifyingBehavior} based on lambda expressions
+	 * 
+	 * @param windowName
+	 *            the window name
+	 * @param onNewWindow
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link AjaxNewWindowNotifyingBehavior}
+	 */
+	public static AjaxNewWindowNotifyingBehavior onNewWindow(String windowName, SerializableConsumer<AjaxRequestTarget> onNewWindow)
+	{
+		Args.notNull(onNewWindow, "onNewWindow");
+
+		if (Strings.isEmpty(windowName))
+		{
+			windowName = UUID.randomUUID().toString();
+		}
+
+		return new AjaxNewWindowNotifyingBehavior(windowName)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onNewWindow(AjaxRequestTarget target)
+			{
+				onNewWindow.accept(target);
+			}
+		};
+	}
 }

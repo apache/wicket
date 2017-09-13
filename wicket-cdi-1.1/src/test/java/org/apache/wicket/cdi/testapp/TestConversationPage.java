@@ -73,6 +73,8 @@ public class TestConversationPage extends WebPage
 				String pageType = parameters.get("pageType").toString("nonbookmarkable");
 				if ("bookmarkable".equals(pageType.toLowerCase()))
 					setResponsePage(TestNonConversationalPage.class);
+				else if ("hybrid".equals(pageType.toLowerCase()))
+					setResponsePage(TestConversationPage.this);
 				else
 					setResponsePage(new TestNonConversationalPage());
 			}

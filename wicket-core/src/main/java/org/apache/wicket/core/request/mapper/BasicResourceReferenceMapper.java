@@ -93,6 +93,10 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 			// extract the PageParameters from URL if there are any
 			PageParameters pageParameters = extractPageParameters(request, segmentsSize,
 					pageParametersEncoder);
+			if (pageParameters != null)
+			{
+				pageParameters.setLocale(resolveLocale());
+			}
 
 			String className = url.getSegments().get(2);
 			StringBuilder name = new StringBuilder(segmentsSize * 2);
@@ -200,19 +204,9 @@ public class BasicResourceReferenceMapper extends AbstractResourceReferenceMappe
 			segments.add(getClassName(reference.getScope()));
 
 			// setup resource parameters
-			PageParameters parameters = referenceRequestHandler.getPageParameters();
-
-			if (parameters == null)
-			{
-				parameters = new PageParameters();
-			}
-			else
-			{
-				parameters = new PageParameters(parameters);
-
-				// need to remove indexed parameters otherwise the URL won't be able to decode
-				parameters.clearIndexed();
-			}
+			PageParameters parameters = new PageParameters(referenceRequestHandler.getPageParameters());
+			// need to remove indexed parameters otherwise the URL won't be able to decode
+			parameters.clearIndexed();
 
 			ResourceUtil.encodeResourceReferenceAttributes(url, reference);
 

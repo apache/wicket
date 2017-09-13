@@ -33,35 +33,18 @@ import org.apache.wicket.request.component.IRequestableComponent;
  */
 public final class SignIn2Application extends WicketExampleApplication
 {
-	/**
-	 * Constructor.
-	 */
-	public SignIn2Application()
-	{
-	}
-
-	/**
-	 * @see org.apache.wicket.Application#getHomePage()
-	 */
 	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return Home.class;
 	}
 
-	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
-	 *      Response)
-	 */
 	@Override
 	public Session newSession(Request request, Response response)
 	{
 		return new SignIn2Session(request);
 	}
 
-	/**
-	 * @see org.apache.wicket.examples.WicketExampleApplication#init()
-	 */
 	@Override
 	protected void init()
 	{

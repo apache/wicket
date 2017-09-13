@@ -18,6 +18,7 @@ package org.apache.wicket.markup.head;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.wicket.request.Response;
 
@@ -90,19 +91,18 @@ public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getWrapped().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PriorityHeaderItem that = (PriorityHeaderItem) o;
+		return Objects.equals(wrapped, that.wrapped);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof PriorityHeaderItem)
-		{
-			return ((PriorityHeaderItem)obj).getWrapped().equals(getWrapped());
-		}
-		return false;
+		return Objects.hash(wrapped);
 	}
 
 	@Override

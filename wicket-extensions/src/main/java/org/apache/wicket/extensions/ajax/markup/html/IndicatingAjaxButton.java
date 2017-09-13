@@ -16,10 +16,13 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 
 /**
  * A variant of the {@link AjaxButton} that displays a busy indicator while the ajax request is in
@@ -30,11 +33,8 @@ import org.apache.wicket.model.IModel;
  */
 public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIndicatorAware
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	private final AjaxIndicatorAppender indicatorAppender = new AjaxIndicatorAppender();
 
 	/**
@@ -95,4 +95,19 @@ public abstract class IndicatingAjaxButton extends AjaxButton implements IAjaxIn
 		return indicatorAppender.getMarkupId();
 	}
 
+
+	public static IndicatingAjaxButton onSubmit(String id,
+		SerializableBiConsumer<AjaxButton, AjaxRequestTarget> onSubmit)
+	{
+		Args.notNull(onSubmit, "onSubmit");
+
+		return new IndicatingAjaxButton(id)
+		{
+			@Override
+			public void onSubmit(AjaxRequestTarget target)
+			{
+				onSubmit.accept(this, target);
+			}
+		};
+	}
 }

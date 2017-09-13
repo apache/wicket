@@ -36,7 +36,9 @@ package org.apache.wicket.model;
  * 
  * @see CompoundPropertyModel
  * @see AbstractPropertyModel
+ * @deprecated This class is not used by the framework anymore. Will be removed in Wicket 9.0.0
  */
+@Deprecated
 public interface IChainingModel<T> extends IModel<T>
 {
 	/**
@@ -44,13 +46,13 @@ public interface IChainingModel<T> extends IModel<T>
 	 * 
 	 * @param model
 	 */
-	public void setChainedModel(IModel<?> model);
+	void setChainedModel(IModel<?> model);
 
 	/**
 	 * Returns the chained model if there is a chained model.
 	 * 
 	 * @return The chained model
 	 */
-	public IModel<?> getChainedModel();
+	IModel<?> getChainedModel();
 
 }

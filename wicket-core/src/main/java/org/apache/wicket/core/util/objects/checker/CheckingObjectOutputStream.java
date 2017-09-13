@@ -27,9 +27,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayDeque;
 import java.util.Date;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -345,11 +343,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 
 	private void internalCheck(Object obj)
 	{
-		if (obj == null)
-		{
-			return;
-		}
-
+		final Object original = obj;
 		Class<?> cls = obj.getClass();
 		nameStack.add(simpleName);
 		traceStack.add(new TraceSlot(obj, fieldDescription));
@@ -392,7 +386,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 		}
 		else if (cls.isArray())
 		{
-			checked.put(obj, null);
+			checked.put(original, null);
 			Class<?> ccl = cls.getComponentType();
 			if (!(ccl.isPrimitive()))
 			{
@@ -424,12 +418,13 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 							return;
 						}
 
-						checked.put(streamObj, null);
 						CharSequence arrayPos = new StringBuilder(10).append("[write:").append(count++).append(']');
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
 
 						check(streamObj);
+						
+						checked.put(streamObj, null);
 					}
 				});
 			}
@@ -449,22 +444,15 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 			{
 				try
 				{
-					writeObjectMethod = cls.getDeclaredMethod("writeObject",
-							new Class[] { java.io.ObjectOutputStream.class });
+					writeObjectMethod = cls.getDeclaredMethod("writeObject", java.io.ObjectOutputStream.class);
 				}
-				catch (SecurityException e)
+				catch (SecurityException | NoSuchMethodException e)
 				{
 					// we can't access / set accessible to true
 					writeObjectMethodMissing.add(cls);
 				}
-				catch (NoSuchMethodException e)
-				{
-					// cls doesn't have that method
-					writeObjectMethodMissing.add(cls);
-				}
 			}
 
-			final Object original = obj;
 			if (writeObjectMethod != null)
 			{
 				class InterceptingObjectOutputStream extends ObjectOutputStream
@@ -492,11 +480,11 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 							return null;
 						}
 
-						checked.put(streamObj, null);
 						CharSequence arrayPos = new StringBuilder(10).append("[write:").append(counter).append(']');
 						simpleName = arrayPos;
 						fieldDescription += arrayPos;
 						check(streamObj);
+						checked.put(streamObj, null);
 						return streamObj;
 					}
 				}
@@ -538,7 +526,7 @@ public class CheckingObjectOutputStream extends ObjectOutputStream
 					{
 						throw new RuntimeException(e);
 					}
-					checked.put(obj, null);
+					checked.put(original, null);
 					checkFields(obj, slotDesc);
 				}
 			}

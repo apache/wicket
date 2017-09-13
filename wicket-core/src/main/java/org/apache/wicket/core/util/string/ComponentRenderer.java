@@ -34,7 +34,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A helper class for rendering components and pages
+ * A helper class for rendering components and pages.
+ *
+ * <p><strong>Note</strong>: {@link #renderComponent(Component)} does <strong>not</strong>
+ * support rendering {@link org.apache.wicket.markup.html.panel.Fragment} instances!</p>
  */
 public class ComponentRenderer
 {

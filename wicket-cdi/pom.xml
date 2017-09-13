@@ -24,7 +24,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-cdi</artifactId>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Wicket CDI Integration</name>
 	<description>
 		Provides integration between Wicket and CDI containers. Enables injection of
@@ -61,33 +61,4 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>clirr-maven-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>clirr-check</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-							<configuration>
-								<comparisonVersion>6.1.0</comparisonVersion>
-								<failOnError>true</failOnError>
-								<logResults>true</logResults>
-							</configuration>
-						</execution>
-					</executions>
-					<configuration>
-						<comparisonVersion>6.1.0</comparisonVersion>
-						<failOnError>true</failOnError>
-						<logResults>true</logResults>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
 </project>

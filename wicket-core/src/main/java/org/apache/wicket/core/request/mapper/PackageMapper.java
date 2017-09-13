@@ -55,7 +55,7 @@ import org.apache.wicket.util.string.Strings;
  *  Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
  *  /MyPage?2
  *
- *  Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
+ *  Page Instance - Bookmarkable Listener (BookmarkableListenerRequestHandler)
  *  /MyPage?2-click-foo-bar-baz
  *  /MyPage?2-click.1-foo-bar-baz (1 is behavior index)
  *  (these will redirect to hybrid if page is not stateless)
@@ -118,7 +118,8 @@ public class PackageMapper extends AbstractBookmarkableMapper
 			url.getSegments().add(packageRelativeClassName);
 			encodePageComponentInfo(url, info.getPageComponentInfo());
 
-			PageParameters copy = new PageParameters(info.getPageParameters());
+			PageParameters copy = newPageParameters();
+			copy.mergeWith(info.getPageParameters());
 			if (setPlaceholders(copy, url) == false)
 			{
 				// mandatory parameter is not provided => cannot build Url
@@ -239,6 +240,10 @@ public class PackageMapper extends AbstractBookmarkableMapper
 	@Override
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
+		if (pageClass == null)
+		{
+			return false;
+		}
 		PackageName pageClassPackageName = PackageName.forClass(pageClass);
 		return packageName.equals(pageClassPackageName);
 	}

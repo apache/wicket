@@ -104,12 +104,4 @@ public class ResourceRequestHandler implements IRequestHandler
 			requestCycle.getResponse(), parameters);
 		resource.respond(a);
 	}
-
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
-	 */
-	@Override
-	public void detach(IRequestCycle requestCycle)
-	{
-	}
 }

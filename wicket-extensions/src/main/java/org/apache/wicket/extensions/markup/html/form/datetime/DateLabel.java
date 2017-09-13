@@ -44,7 +44,7 @@ import org.apache.wicket.util.lang.Args;
  * @see java.time.LocalDate
  * @see java.time.format.DateTimeFormatter
  */
-public class DateLabel extends Label implements IGenericComponent<Date>
+public class DateLabel extends Label implements IGenericComponent<Date, DateLabel>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -242,18 +242,13 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 	 * Returns the specialized converter.
 	 */
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> clazz)
+	protected IConverter<?> createConverter(Class<?> type)
 	{
-		if (Date.class.isAssignableFrom(clazz))
+		if (Date.class.isAssignableFrom(type))
 		{
-			@SuppressWarnings("unchecked")
-			IConverter<C> result = (IConverter<C>)converter;
-			return result;
+			return converter;
 		}
-		else
-		{
-			return super.getConverter(clazz);
-		}
+		return null;
 	}
 
 	/**
@@ -291,27 +286,4 @@ public class DateLabel extends Label implements IGenericComponent<Date>
 		}
 		replaceComponentTagBody(markupStream, openTag, s);
 	}
-
-	@Override
-	public IModel<Date> getModel() {
-		return (IModel<Date>) super.getDefaultModel();
-	}
-
-	@Override
-	public DateLabel setModel(IModel<Date> model) {
-		super.setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	public DateLabel setModelObject(Date object) {
-		super.setDefaultModelObject(object);
-		return this;
-	}
-
-	@Override
-	public Date getModelObject() {
-		return (Date) super.getDefaultModelObject();
-	}
-
 }

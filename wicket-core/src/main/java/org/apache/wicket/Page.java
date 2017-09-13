@@ -228,9 +228,6 @@ public abstract class Page extends MarkupContainer
 		super.detachModels();
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#internalPrepareForRender(boolean)
-	 */
 	@Override
 	public void internalPrepareForRender(boolean setRenderingFlag)
 	{
@@ -334,9 +331,6 @@ public abstract class Page extends MarkupContainer
 		return autoIndex++;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#getId()
-	 */
 	@Override
 	public final String getId()
 	{
@@ -590,17 +584,17 @@ public abstract class Page extends MarkupContainer
 							// Add to explanatory string to buffer
 							buffer.append(Integer.toString(unrenderedComponents.size()))
 								.append(". ")
-								.append(component)
+								.append(component.toString(true))
 								.append('\n');
 							String metadata = component.getMetaData(Component.CONSTRUCTED_AT_KEY);
 							if (metadata != null)
 							{
-								buffer.append(metadata);
+								buffer.append(metadata).append('\n');
 							}
 							metadata = component.getMetaData(Component.ADDED_AT_KEY);
 							if (metadata != null)
 							{
-								buffer.append(metadata);
+								buffer.append(metadata).append('\n');
 							}
 						}
 						else
@@ -664,7 +658,7 @@ public abstract class Page extends MarkupContainer
 				{
 					// Throw exception
 					throw new WicketRuntimeException(
-						"The component(s) below failed to render. Possible reasons could be that: 1) you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered), 2) if your components were added in a parent container then make sure the markup for the child container includes them in <wicket:extend>.\n\n" +
+						"The component(s) below failed to render. Possible reasons could be that:\n\t1) you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered),\n\t2) if your components were added in a parent container then make sure the markup for the child container includes them in <wicket:extend>.\n\n" +
 							buffer.toString());
 				}
 			}
@@ -721,9 +715,6 @@ public abstract class Page extends MarkupContainer
 		stateless = null;
 	}
 
-	/**
-	 * 
-	 */
 	private void setNextAvailableId()
 	{
 		setNumericId(getSession().nextPageId());
@@ -785,10 +776,6 @@ public abstract class Page extends MarkupContainer
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.Component#onBeforeRender()
-	 */
 	@Override
 	protected void onBeforeRender()
 	{
@@ -809,9 +796,6 @@ public abstract class Page extends MarkupContainer
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onAfterRender()
-	 */
 	@Override
 	protected void onAfterRender()
 	{
@@ -852,9 +836,6 @@ public abstract class Page extends MarkupContainer
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onDetach()
-	 */
 	@Override
 	protected void onDetach()
 	{
@@ -868,9 +849,6 @@ public abstract class Page extends MarkupContainer
 		super.onDetach();
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#onRender()
-	 */
 	@Override
 	protected void onRender()
 	{
@@ -940,9 +918,6 @@ public abstract class Page extends MarkupContainer
 		this.stateless = stateless;
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
-	 */
 	@Override
 	public MarkupType getMarkupType()
 	{
@@ -965,9 +940,6 @@ public abstract class Page extends MarkupContainer
 		return new PageReference(numericId);
 	}
 
-	/**
-	 * @see org.apache.wicket.page.IManageablePage#getPageId()
-	 */
 	@Override
 	public int getPageId()
 	{
@@ -1004,9 +976,6 @@ public abstract class Page extends MarkupContainer
 		return getFlag(FLAG_WAS_CREATED_BOOKMARKABLE);
 	}
 
-	/**
-	 * @see org.apache.wicket.request.component.IRequestablePage#renderPage()
-	 */
 	@Override
 	public void renderPage()
 	{

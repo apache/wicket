@@ -60,7 +60,6 @@ import org.slf4j.LoggerFactory;
  */
 public class WebPage extends Page
 {
-	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(WebPage.class);
 
 	private static final long serialVersionUID = 1L;
@@ -73,16 +72,11 @@ public class WebPage extends Page
 	 */
 	protected WebPage()
 	{
-		commonInit();
 	}
 
-	/**
-	 * @see Page#Page(IModel)
-	 */
 	protected WebPage(final IModel<?> model)
 	{
 		super(model);
-		commonInit();
 	}
 
 	/**
@@ -103,7 +97,6 @@ public class WebPage extends Page
 	protected WebPage(final PageParameters parameters)
 	{
 		super(parameters);
-		commonInit();
 	}
 
 	/**
@@ -118,14 +111,6 @@ public class WebPage extends Page
 	public MarkupType getMarkupType()
 	{
 		return MarkupType.HTML_MARKUP_TYPE;
-	}
-
-	/**
-	 * Common code executed by constructors.
-	 */
-	private void commonInit()
-	{
-		// so far a noop
 	}
 
 	@Override

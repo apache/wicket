@@ -222,20 +222,16 @@ public class DateTextField extends TextField<LocalDate> implements ITextFormatPr
 
 	/**
 	 * @return The specialized converter.
-	 * @see org.apache.wicket.Component#getConverter(java.lang.Class)
+	 * @see org.apache.wicket.Component#createConverter(java.lang.Class)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> clazz)
+	protected IConverter<?> createConverter(Class<?> clazz)
 	{
 		if (Date.class.isAssignableFrom(clazz))
 		{
-			return (IConverter<C>)converter;
+			return converter;
 		}
-		else
-		{
-			return super.getConverter(clazz);
-		}
+		return null;
 	}
 
 	/**

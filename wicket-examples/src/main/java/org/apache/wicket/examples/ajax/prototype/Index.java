@@ -16,17 +16,16 @@
  */
 package org.apache.wicket.examples.ajax.prototype;
 
+import org.apache.wicket.core.request.handler.ComponentRenderingRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
+import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.core.request.handler.ComponentRenderingRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
 
@@ -80,8 +79,7 @@ public class Index extends WicketExamplePage
 			@Override
 			protected String getOnClickScript(CharSequence url)
 			{
-				IRequestHandler handler = new ListenerInterfaceRequestHandler(
-					new PageAndComponentProvider(getPage(), this), ILinkListener.INTERFACE);
+				IRequestHandler handler = new ListenerRequestHandler(new PageAndComponentProvider(getPage(), this));
 				Url componentUrl = RequestCycle.get().mapUrlFor(handler);
 				componentUrl.addQueryParameter("anticache", Math.random());
 				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(

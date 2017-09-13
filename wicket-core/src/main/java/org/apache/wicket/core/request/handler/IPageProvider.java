@@ -17,6 +17,7 @@
 package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.core.request.mapper.StalePageException;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -38,7 +39,7 @@ public interface IPageProvider
 	 * @throws StalePageException
 	 *             if render count has been specified in constructor and the render count of page
 	 *             does not match the value
-	 * @throws {@link org.apache.wicket.protocol.http.PageExpiredException} if the specified page
+	 * @throws PageExpiredException if the specified page
      *          could not have been found and the constructor used did not provide enough information
      *          to create new page instance
 	 */
@@ -52,13 +53,17 @@ public interface IPageProvider
 	PageParameters getPageParameters();
 
 	/**
-	 * Returns whether calling getPageInstance() will result in creating new page instance or
-	 * whether it will be an existing instance (even though it might be pulled from page store).
-	 *
-	 * @return <code>true</code> if calling {@link #getPageInstance()} will create new page
-	 *         instance, <code>false</code> otherwise.
+	 * @return negates {@link PageProvider#hasPageInstance()}
+	 * @deprecated use {@link PageProvider#hasPageInstance()} negation instead
 	 */
 	boolean isNewPageInstance();
+
+	/**
+	 * Returns whether the provided page was expired prior to this access.
+	 *
+	 * @return <code>true></code> if the page was created after its original instance expired.
+	 */
+	boolean wasExpired();
 
 	/**
 	 * Returns class of the page.
@@ -87,13 +92,14 @@ public interface IPageProvider
 	void detach();
 
 	/**
-	 * Checks whether or not the provider has a page instance. This page instance might have been
-	 * passed to this page provider directly or it may have been instantiated or retrieved from the
-	 * page store.
-	 *
-	 * @return {@code true} iff page instance has been created or retrieved
+	 * If this provider returns existing page, regardless if it was already created by PageProvider
+	 * itself or is or can be found in the data store. The only guarantee is that by calling
+	 * {@link PageProvider#getPageInstance()} this provider will return an existing instance and no
+	 * page will be created.
+	 * 
+	 * @return if provides an existing page
 	 */
-	public boolean hasPageInstance();
+	boolean hasPageInstance();
 
 	/**
 	 * Returns whether or not the page instance held by this provider has been instantiated by the
@@ -105,6 +111,5 @@ public interface IPageProvider
 	 * @return {@code true} iff the page instance held by this provider was instantiated by the
 	 *         provider
 	 */
-	public boolean isPageInstanceFresh();
-
+	boolean doesProvideNewPage();
 }

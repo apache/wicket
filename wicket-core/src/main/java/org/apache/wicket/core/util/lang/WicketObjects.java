@@ -120,15 +120,18 @@ public class WicketObjects
 				return 0;
 			}
 
-			ISerializer serializer;
+			ISerializer serializer = null;
 			if (Application.exists())
 			{
 				serializer = Application.get().getFrameworkSettings().getSerializer();
 			}
-			else
+
+			if (serializer == null || serializer instanceof JavaSerializer)
 			{
+				// WICKET-6334 create a new instance of JavaSerializer that doesn't use custom IObjectCheckers
 				serializer = new JavaSerializer(SerializingObjectSizeOfStrategy.class.getName());
 			}
+
 			byte[] serialized = serializer.serialize(object);
 			int size = -1;
 			if (serialized != null)
@@ -300,16 +303,24 @@ public class WicketObjects
 		}
 		else
 		{
-			ISerializer serializer;
+			ISerializer serializer = null;
 			if (Application.exists())
 			{
 				serializer = Application.get().getFrameworkSettings().getSerializer();
 			}
-			else
+
+			if (serializer == null || serializer instanceof JavaSerializer)
 			{
-				serializer = new JavaSerializer(WicketObjects.class.getName());
+				// WICKET-6334 create a new instance of JavaSerializer that doesn't use custom IObjectCheckers
+				serializer = new JavaSerializer(SerializingObjectSizeOfStrategy.class.getName());
 			}
+
 			byte[] serialized = serializer.serialize(object);
+			if (serialized == null)
+			{
+				throw new IllegalStateException("A problem occurred while serializing an object. " +
+						"Please check the earlier logs for more details. Problematic object: " + object);
+			}
 			Object deserialized = serializer.deserialize(serialized);
 			return (T) deserialized;
 		}

@@ -34,7 +34,7 @@ import org.apache.wicket.request.resource.IResource;
  */
 public interface IAuthorizationStrategy
 {
-	public static class AllowAllAuthorizationStrategy implements IAuthorizationStrategy
+	class AllowAllAuthorizationStrategy implements IAuthorizationStrategy
 	{
 		/**
 		 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
@@ -65,7 +65,7 @@ public interface IAuthorizationStrategy
 	/**
 	 * Implementation of {@link IAuthorizationStrategy} that allows everything.
 	 */
-	public static final IAuthorizationStrategy ALLOW_ALL = new AllowAllAuthorizationStrategy();
+	IAuthorizationStrategy ALLOW_ALL = new AllowAllAuthorizationStrategy();
 
 	/**
 	 * Checks whether an instance of the given component class may be created. If this method

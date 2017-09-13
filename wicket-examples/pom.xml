@@ -44,9 +44,9 @@
     			<version>1.0</version>
     		</dependency>
     		<dependency>
-    			<groupId>com.uwyn</groupId>
+    			<groupId>org.codelibs</groupId>
     			<artifactId>jhighlight</artifactId>
-    			<version>1.0</version>
+    			<version>1.0.3</version>
     			<exclusions>
     				<exclusion>
     					<groupId>javax.servlet</groupId>
@@ -59,27 +59,15 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-util</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-jmx</artifactId>
-			<version>${jetty.version}</version>
-			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty.websocket</groupId>
+			<artifactId>javax-websocket-server-impl</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.el</groupId>
@@ -100,10 +88,6 @@
 		<dependency>
 			<groupId>com.github.cage</groupId>
 			<artifactId>cage</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.uwyn</groupId>
-			<artifactId>jhighlight</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -158,9 +142,13 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-velocity</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-native-websocket-javax</artifactId>
+        </dependency>
 		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket7</groupId>
-			<artifactId>wicket-atmosphere</artifactId>
+			<groupId>org.codelibs</groupId>
+			<artifactId>jhighlight</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>

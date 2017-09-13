@@ -1,0 +1,72 @@
+
+With Wicket 8 _IModel_ has been extended with new methods to fully leverage lambdas. The most interesting thing of the new version of _IModel_ is that it provides a default implementation for all of its methods (included _setObject()_), with the only exception of _getObject()_. 
+In this way _IModel_ is eligible as functional interface and this greatly simplify the creation of custom models. As long as we need to display a static text it doesn't make much sense building a custom model, but if we need to display a dynamic value (like the input provided by a user or a value read from a database), defining a model with a lambda expression comes quite in handy.
+
+Let's say we need a label to display the current time stamp each time a page is rendered. This could be a possible solution:
+
+[source,java]
+----
+add(new Label("timeStamp", () -> java.time.LocalDate.now()));
+----
+
+As mentioned above, method _setObject()_ comes with a default implementation. The code is the following:
+ 
+[source,java]
+----
+default void setObject(final T object)
+{
+  throw new UnsupportedOperationException(
+    "Override this method to support setObject(Object)");
+}
+----
+
+This means that models obtained using _IModel_ as lambda expressions are _read-only_. When we work with forms we need to use a model that support also data storing. In the next paragraph we will see a couple of models shipped with Wicket that allow us to easily use JavaBeans as backing objects.
+
+=== Lambda Goodies
+
+Most of the default methods we find in _IModel_ are meant to leverage Lambda expressions to transform model object. The following is a short reference for such methods:
+
+* *filter(predicate)*: Returns a _IModel_ checking whether the predicate holds for the contained object, if it is not null. If the predicate doesn't evaluate to true, the contained object will be null. Example:
+
+[source,java]
+----
+//the filtered model will have a null model object if person's name 
+//is not "Jane"
+IModel<Person> janeModel = Model.of(person)
+	.filter((p) -> p.getName().equals("Jane"));
+----
+
+* *map(mapperFunction)*: Returns a _IModel_ applying the given mapper to the contained object, if it is not null. Example:
+[source,java]
+----
+//the new read-only model will contain the person's first name
+IModel<String> personNameModel = Model.of(person).map(Person::getName);
+----
+
+* *flatMap(mapperFunction)*: Returns a _IModel_ applying the given _IModel_-bearing mapper to the contained object, if it is not null. Example:
+[source,java]
+----
+//returns a read/write model for person's first name
+//NOTE: LambdaModel will be discussed later.
+IModel<String> personNameModel = Model.of(person).flatMap(targetPerson ->
+LambdaModel.of(
+	() -> targetPerson::getName, targetPerson::setName
+));
+----
+ * *flatMap(otherModel, combiner)*: Returns a _IModel_ applying the given combining function to the current model object and to the one from the other model, if they are not null. Example:
+[source,java]
+----
+IModel<String> hello = Model.of("hello");
+IModel<String> world = Model.of("world");
+IModel<String> combinedModel = hello.combineWith(
+	world, (thisObj, otherObj) -> thisObj + " " + otherObj);
+
+assertEquals("hello world", combinedModel.getObject());
+----
+ * *orElseGet(supplier)*:  Returns a read-only _IModel_ using either the contained object or invoking the given supplier to get a default value. Example:
+[source,java]
+----
+IModel<String> nullObj = new Model();
+assertEquals("hello!", nullObj.orElseGet(() -> "hello!");
+----
+

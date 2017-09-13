@@ -16,48 +16,32 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import java.util.Map;
-
+import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.request.Url;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.ws.WebSocketSettings;
+import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.template.PackageTextTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * A behavior that contributes {@link WicketWebSocketJQueryResourceReference}
  */
 public class BaseWebSocketBehavior extends Behavior
 {
-	private static final Logger LOG = LoggerFactory.getLogger(BaseWebSocketBehavior.class);
-
-	/**
-	 * A flag indicating whether JavaxWebSocketFilter is in use.
-	 * When using JSR356 based implementations the ws:// url should not
-	 * use the WicketFilter's filterPath because JSR356 Upgrade connections
-	 * are never passed to the Servlet Filters.
-	 */
-	private static boolean USING_JAVAX_WEB_SOCKET = false;
-	static
-	{
-		try
-		{
-			Class.forName("org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter");
-			USING_JAVAX_WEB_SOCKET = true;
-			LOG.debug("Using JSR356 Native WebSocket implementation!");
-		} catch (ClassNotFoundException e)
-		{
-			LOG.debug("Using non-JSR356 Native WebSocket implementation!");
-		}
-	}
-
 	private final String resourceName;
 
 	/**
@@ -105,6 +89,7 @@ public class BaseWebSocketBehavior extends Behavior
 
 		Map<String, Object> variables = Generics.newHashMap();
 
+
 		// set falsy JS values for the non-used parameter
 		if (Strings.isEmpty(resourceName))
 		{
@@ -118,28 +103,84 @@ public class BaseWebSocketBehavior extends Behavior
 			variables.put("pageId", false);
 		}
 
-		Url baseUrl = component.getRequestCycle().getUrlRenderer().getBaseUrl();
-		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
-		variables.put("baseUrl", ajaxBaseUrl);
+		WebSocketSettings webSocketSettings = WebSocketSettings.Holder.get(component.getApplication());
 
-		String contextPath = component.getRequest().getContextPath();
+		CharSequence baseUrl = getBaseUrl(webSocketSettings);
+		Args.notNull(baseUrl, "baseUrl");
+		variables.put("baseUrl", baseUrl);
+
+		Integer port = getPort(webSocketSettings);
+		variables.put("port", port);
+		Integer securePort = getSecurePort(webSocketSettings);
+		variables.put("securePort", securePort);
+
+		CharSequence contextPath = getContextPath(webSocketSettings);
+		Args.notNull(contextPath, "contextPath");
 		variables.put("contextPath", contextPath);
 
 		// preserve the application name for JSR356 based impl
 		variables.put("applicationName", component.getApplication().getName());
 
-		if (USING_JAVAX_WEB_SOCKET)
-		{
-			variables.put("filterPrefix", "");
-		}
-		else
-		{
-			variables.put("filterPrefix", component.getRequest().getFilterPath());
-		}
+		CharSequence filterPrefix = getFilterPrefix(webSocketSettings);
+		Args.notNull(filterPrefix, "filterPrefix");
+		variables.put("filterPrefix", filterPrefix);
+
+		final CharSequence sessionId = getSessionId(component);
+		variables.put("sessionId", sessionId);
 
 		String webSocketSetupScript = webSocketSetupTemplate.asString(variables);
 
 		response.render(OnDomReadyHeaderItem.forScript(webSocketSetupScript));
+	}
+
+	protected Integer getPort(WebSocketSettings webSocketSettings)
+	{
+		return webSocketSettings.getPort();
+	}
+
+	protected Integer getSecurePort(WebSocketSettings webSocketSettings)
+	{
+		return webSocketSettings.getSecurePort();
+	}
+
+	protected CharSequence getFilterPrefix(final WebSocketSettings webSocketSettings) {
+		return webSocketSettings.getFilterPrefix();
+	}
+
+	protected CharSequence getContextPath(final WebSocketSettings webSocketSettings) {
+		return webSocketSettings.getContextPath();
+	}
+
+	protected CharSequence getBaseUrl(final WebSocketSettings webSocketSettings) {
+		return webSocketSettings.getBaseUrl();
+	}
+
+	/**
+	 * @param component
+	 *          The component this behavior is bound to
+	 * @return The http session id if it is tracked in the url, otherwise empty string
+	 */
+	protected CharSequence getSessionId(final Component component)
+	{
+		String sessionId = "";
+		final WebApplication application = (WebApplication) component.getApplication();
+		final Set<SessionTrackingMode> effectiveSessionTrackingModes = application.getServletContext().getEffectiveSessionTrackingModes();
+		Object containerRequest = component.getRequest().getContainerRequest();
+		if (effectiveSessionTrackingModes.size() == 1 && SessionTrackingMode.URL.equals(effectiveSessionTrackingModes.iterator().next()))
+		{
+			sessionId = component.getSession().getId();
+		}
+		else if (containerRequest instanceof HttpServletRequest)
+		{
+			CookieUtils cookieUtils = new CookieUtils();
+			final Cookie jsessionid = cookieUtils.getCookie("JSESSIONID");
+			HttpServletRequest httpServletRequest = (HttpServletRequest) containerRequest;
+			if (jsessionid == null || httpServletRequest.isRequestedSessionIdValid() == false)
+			{
+				sessionId = component.getSession().getId();
+			}
+		}
+		return sessionId;
 	}
 
 	@Override

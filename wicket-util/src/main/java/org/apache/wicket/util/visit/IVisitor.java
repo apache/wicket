@@ -24,6 +24,7 @@ package org.apache.wicket.util.visit;
  * @param <R>
  *            type of value the visitor should return as the result of the visit/traversal
  */
+@FunctionalInterface
 public interface IVisitor<T, R>
 {
 	/**
@@ -34,5 +35,5 @@ public interface IVisitor<T, R>
 	 * @param visit
 	 *            Object used to control the visit/traversal
 	 */
-	public void component(T object, IVisit<R> visit);
+	void component(T object, IVisit<R> visit);
 }

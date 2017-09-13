@@ -22,7 +22,10 @@ import org.apache.wicket.request.Url;
 /**
  * Empty implementation of an {@link IRequestCycleListener} useful as a starting point for your own
  * custom listener.
+ *
+ * @deprecated This class will be removed in Wicket 9.0.0. Use {@link IRequestCycleListener} instead.
  */
+@Deprecated
 public abstract class AbstractRequestCycleListener implements IRequestCycleListener
 {
 	@Override

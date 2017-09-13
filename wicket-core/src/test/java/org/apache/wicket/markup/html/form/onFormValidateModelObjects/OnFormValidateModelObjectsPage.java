@@ -28,12 +28,11 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.form.onFormValidateModelObjects.AddressFormPanel.ChildModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
-import org.apache.wicket.markup.html.form.onFormValidateModelObjects.AddressFormPanel.ChildModel;
 
 /**
  * Test page for <a href="https://issues.apache.org/jira/browse/WICKET-4344">WICKET-4344</a>
@@ -86,14 +85,13 @@ public class OnFormValidateModelObjectsPage extends WebPage
 		parentForm.add(new AjaxSubmitLink("parentSubmitBtn", parentForm)
 		{
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> form)
+			protected void onSubmit(AjaxRequestTarget target)
 			{
-				super.onSubmit(target, form);
 				target.add(getThePage().get("validations"));
 			}
 		});
 
-		add(new AjaxLink("resetSubmits")
+		add(new AjaxLink<Void>("resetSubmits")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)

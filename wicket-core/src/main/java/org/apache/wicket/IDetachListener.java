@@ -39,10 +39,12 @@ public interface IDetachListener
 	 * @param component
 	 *            component being detached
 	 */
-	void onDetach(Component component);
+	default void onDetach(Component component)
+	{}
 
 	/**
 	 * Called when the application is being destroyed. Useful for cleaning up listener caches, etc.
 	 */
-	void onDestroyListener();
+	default void onDestroyListener()
+	{}
 }

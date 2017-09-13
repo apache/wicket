@@ -1,0 +1,37 @@
+Ajax behaviors classes come with lambda-based factory methods which make their creation easier and less verbose. For example AjaxEventBehavior can be instantiated like this: 
+
+[source,java]
+----
+  AjaxEventBehavior.onEvent("click", ajaxtarget -> //some lambda stuff)
+----
+
+In the following table are listed these factory methods along with their behavior classes:
+
+.Factory methods
+|===
+|Class Name |Method Name
+
+|AbstractAjaxTimerBehavior
+|onTimer
+
+|AjaxEventBehavior                      
+|onEvent
+
+|AjaxNewWindowNotifyingBehavior         
+|onNewWindow
+
+|AjaxSelfUpdatingTimerBehavior          
+|onSelfUpdate
+
+|AjaxFormChoiceComponentUpdatingBehavior
+|onUpdateChoice
+
+|AjaxFormComponentUpdatingBehavior      
+|onUpdate
+
+|AjaxFormSubmitBehavior                 
+|onSubmit
+
+|OnChangeAjaxBehavior                   
+|onChange
+|===

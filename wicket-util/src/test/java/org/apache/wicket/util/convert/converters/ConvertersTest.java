@@ -87,10 +87,10 @@ public final class ConvertersTest
 	{
 		BooleanConverter converter = new BooleanConverter();
 		assertEquals(Boolean.FALSE, converter.convertToObject("", Locale.US));
-		assertEquals("true", converter.convertToString(Boolean.TRUE, Locale.getDefault()));
-		assertEquals("false", converter.convertToString(Boolean.FALSE, Locale.getDefault()));
-		assertEquals(Boolean.TRUE, converter.convertToObject("true", Locale.getDefault()));
-		assertEquals(Boolean.FALSE, converter.convertToObject("false", Locale.getDefault()));
+		assertEquals("true", converter.convertToString(Boolean.TRUE, Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals("false", converter.convertToString(Boolean.FALSE, Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals(Boolean.TRUE, converter.convertToObject("true", Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals(Boolean.FALSE, converter.convertToObject("false", Locale.getDefault(Locale.Category.FORMAT)));
 	}
 
 	@Test(expected = ConversionException.class)
@@ -99,7 +99,7 @@ public final class ConvertersTest
 		BooleanConverter converter = new BooleanConverter();
 
 		// should throw an exception
-		converter.convertToObject("whatever", Locale.getDefault());
+		converter.convertToObject("whatever", Locale.getDefault(Locale.Category.FORMAT));
 	}
 
 	@Test

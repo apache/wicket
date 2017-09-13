@@ -53,7 +53,7 @@ public class TabbedPanelPage extends WicketExamplePage
 
 		// create a list of ITab objects used to feed the tabbed panel
 		final List<ITab> tabs = new ArrayList<>();
-		tabs.add(new AbstractTab(new Model<String>("first tab"))
+		tabs.add(new AbstractTab(new Model<>("first tab"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -65,7 +65,7 @@ public class TabbedPanelPage extends WicketExamplePage
 
 		});
 
-		tabs.add(new AbstractTab(new Model<String>("second tab"))
+		tabs.add(new AbstractTab(new Model<>("second tab"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -77,7 +77,7 @@ public class TabbedPanelPage extends WicketExamplePage
 
 		});
 
-		tabs.add(new AbstractTab(new Model<String>("third tab"))
+		tabs.add(new AbstractTab(new Model<>("third tab"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -121,18 +121,12 @@ public class TabbedPanelPage extends WicketExamplePage
 			this.clazz = clazz;
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.link.Link#onClick()
-		 */
 		@Override
 		public void onClick()
 		{
 			TabbedPanelPage.this.setDefaultModelObject(clazz);
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.link.Link#isEnabled()
-		 */
 		@Override
 		public boolean isEnabled()
 		{

@@ -15,8 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -37,14 +36,18 @@
     </description>
 
 	<properties>
-		<arquillian.version>1.1.10.Final</arquillian.version>
+		<!-- port configuration -->
+		<wicket.arquillian.server.port>18787</wicket.arquillian.server.port>
+		<java.debug.wire.protocol.port>48787</java.debug.wire.protocol.port>
+		<wicket.arquillian.management.port>11091</wicket.arquillian.management.port>
+		<!-- end port configuration -->
+
+		<arquillian.version>1.1.13.Final</arquillian.version>
 		<maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
-		<maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<slf4j.version>1.7.12</slf4j.version>
 		<wildfly.version>8.2.1.Final</wildfly.version>
 		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
-		<jee.spec.version>1.0.3.Final</jee.spec.version>
+		<jee.spec.version>1.1.0.Final</jee.spec.version>
 	</properties>
 
 	<dependencyManagement>
@@ -111,6 +114,12 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			 <resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -143,9 +152,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>${maven.surefire.plugin.version}</version>
+					<version>${maven.surefire.version}</version>
 					<configuration>
 						<systemPropertyVariables>
+							<!-- <jboss.socket.binding.port-offset>1100</jboss.socket.binding.port-offset> -->
+							<jboss.management.http.port>${wicket.arquillian.management.port}</jboss.management.http.port>
+							<jboss.http.port>${wicket.arquillian.server.port}</jboss.http.port>
 							<java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
 							<jboss.home>${project.build.directory}/wildfly-${wildfly.version}</jboss.home>
 							<module.path>${project.build.directory}/wildfly-${wildfly.version}/modules</module.path>
@@ -158,6 +170,7 @@
 					<artifactId>wildfly-maven-plugin</artifactId>
 					<version>${version.wildfly.maven.plugin}</version>
 					<configuration>
+						<port>${wicket.arquillian.management.port}</port>
 						<filename>target/${project.build.finalName}.war</filename>
 					</configuration>
 				</plugin>

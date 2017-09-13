@@ -17,7 +17,6 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -32,8 +31,8 @@ import org.apache.wicket.authorization.IAuthorizationStrategy;
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.core.util.string.ComponentStrings;
@@ -58,7 +57,6 @@ import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.IHeaderContributor;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.IFormSubmitListener;
 import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.DefaultMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
@@ -79,6 +77,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.settings.DebugSettings;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.IHierarchical;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.io.IClusterable;
@@ -456,7 +455,7 @@ public abstract class Component
 	private transient short requestFlags = 0;
 
 	/** Component id. */
-	private String id;
+	private final String id;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -680,13 +679,15 @@ public abstract class Component
 	 */
 	public Component(final String id, final IModel<?> model)
 	{
-		setId(id);
+		checkId(id);
+		this.id = id;
 
 		init();
 
-		getApplication().getComponentInstantiationListeners().onInstantiation(this);
+		Application application = getApplication();
+		application.getComponentInstantiationListeners().onInstantiation(this);
 
-		final DebugSettings debugSettings = getApplication().getDebugSettings();
+		final DebugSettings debugSettings = application.getDebugSettings();
 		if (debugSettings.isLinePreciseReportingOnNewComponentEnabled() && debugSettings.getComponentUseCheck())
 		{
 			setMetaData(CONSTRUCTED_AT_KEY,
@@ -850,7 +851,7 @@ public abstract class Component
 	 * 
 	 * @return {@code true} if component has been initialized
 	 */
-	final boolean isInitialized()
+	public final boolean isInitialized()
 	{
 		return getFlag(FLAG_INITIALIZED);
 	}
@@ -932,9 +933,6 @@ public abstract class Component
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void internalBeforeRender()
 	{
 		configure();
@@ -944,10 +942,11 @@ public abstract class Component
 		{
 			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
 
-			getApplication().getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
+			Application application = getApplication();
+			application.getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
 
 			onBeforeRender();
-			getApplication().getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
+			application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
 			if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
 			{
@@ -1360,17 +1359,36 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets the converter that should be used by this component.
-	 * 
+	 * Get the converter that should be used by this component, delegates to
+	 * {@link #createConverter(Class)} and then to the application's
+	 * {@link IConverterLocator}.
+	 *
 	 * @param type
 	 *            The type to convert to
-	 * 
+	 *
 	 * @return The converter that should be used by this component
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public <C> IConverter<C> getConverter(Class<C> type)
-	{
+	public <C> IConverter<C> getConverter(Class<C> type) {
+		IConverter<?> converter = createConverter(type);
+		if (converter != null) {
+			return (IConverter<C>) converter;
+		}
 		return getApplication().getConverterLocator().getConverter(type);
+	}
+
+	/**
+	 * Factory method for converters to be used by this component,
+	 * returns {@code null} by default.
+	 *
+	 * @param type
+	 *            The type to convert to
+	 *
+	 * @return a converter to be used by this component
+	 */
+	protected IConverter<?> createConverter(Class<?> type) {
+		return null;
 	}
 
 	/**
@@ -1720,8 +1738,9 @@ public abstract class Component
 	 * Gets the page holding this component.
 	 * 
 	 * @return The page holding this component
-	 * @throws IllegalStateException
+	 * @throws WicketRuntimeException
 	 *             Thrown if component is not yet attached to a Page.
+	 * @see #findPage()
 	 */
 	@Override
 	public final Page getPage()
@@ -1733,7 +1752,8 @@ public abstract class Component
 		if (page == null)
 		{
 			// Give up with a nice exception
-			throw new WicketRuntimeException("No Page found for component " + this);
+			throw new WicketRuntimeException("No Page found for component: " + this.toString(true)
+					+ ". You probably forgot to add it to its parent component.");
 		}
 
 		return page;
@@ -2066,13 +2086,9 @@ public abstract class Component
 	 */
 	public final boolean isStateless()
 	{
-		if (
-		// the component is either invisible or disabled
-		(isVisibleInHierarchy() && isEnabledInHierarchy()) == false &&
-
-		// and it can't call listener interfaces
-			canCallListenerInterface(null) == false)
+		if ((isVisibleInHierarchy() && isEnabledInHierarchy()) == false && canCallListener() == false)
 		{
+			// the component is either invisible or disabled and it can't call listeners
 			// then pretend the component is stateless
 			return true;
 		}
@@ -2218,7 +2234,7 @@ public abstract class Component
 		{
 			// only process feedback panel when we are about to be rendered.
 			// setRenderingFlag is false in case prepareForRender is called only to build component
-			// hierarchy (i.e. in BookmarkableListenerInterfaceRequestHandler).
+			// hierarchy (i.e. in BookmarkableListenerRequestHandler).
 			// prepareForRender(true) is always called before the actual rendering is done so
 			// that's where feedback panels gather the messages
 
@@ -2536,19 +2552,34 @@ public abstract class Component
 		try
 		{
 			// Render open tag
-			if (getRenderBodyOnly())
+			boolean renderBodyOnly = getRenderBodyOnly();
+			if (renderBodyOnly)
 			{
+				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
+				if (Application.exists())
+				{
+					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+				}
+
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
-					log.warn(String.format(
-						"Markup id set on a component that renders its body only. "
-							+ "Markup id: %s, component id: %s.", getMarkupId(), getId()));
+					String message = String.format("Markup id set on a component that renders its body only. " +
+					                               "Markup id: %s, component id: %s.", getMarkupId(), getId());
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
-					log.warn(String.format(
-						"Placeholder tag set on a component that renders its body only. "
-							+ "Component id: %s.", getId()));
+					String message = String.format("Placeholder tag set on a component that renders its body only. " +
+					                               "Component id: %s.", getId());
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 			}
 			else
@@ -2567,9 +2598,9 @@ public abstract class Component
 				// Render close tag
 				if (openTag.isOpen())
 				{
-					renderClosingComponentTag(markupStream, tag, getRenderBodyOnly());
+					renderClosingComponentTag(markupStream, tag, renderBodyOnly);
 				}
-				else if (getRenderBodyOnly() == false)
+				else if (renderBodyOnly == false)
 				{
 					if (needToRenderTag(openTag))
 					{
@@ -2712,7 +2743,7 @@ public abstract class Component
 					RequestCycle.get().setResponse(oldResponse);
 				}
 				// Then let the component itself to contribute to the header
-				renderHead(this, response);
+				renderHead(response);
 
 				response.markRendered(this);
 			}
@@ -3056,6 +3087,8 @@ public abstract class Component
 	 * @param object
 	 *            The object to set
 	 * @return This
+	 * @throws IllegalStateException If the component has neither its own model nor any of its
+	 * parents uses {@link IComponentInheritedModel}
 	 */
 	@SuppressWarnings("unchecked")
 	public final Component setDefaultModelObject(final Object object)
@@ -3066,7 +3099,9 @@ public abstract class Component
 		if (model == null)
 		{
 			throw new IllegalStateException(
-				"Attempt to set model object on null model of component: " + getPageRelativePath());
+				"Attempt to set a model object on a component without a model! " +
+				"Either pass an IModel to the constructor or use #setDefaultModel(new SomeModel(object)). " +
+				"Component: " + getPageRelativePath());
 		}
 
 		// Check authorization
@@ -3278,11 +3313,11 @@ public abstract class Component
 				else
 				{
 					buffer.append(", page = ")
-						.append(getPage().getPageClass().getName())
+						.append(Classes.name(getPage().getPageClass()))
 						.append(", path = ")
-						.append(getPath())
-						.append('.')
-						.append(Classes.simpleName(getClass()))
+						.append(getPageRelativePath())
+						.append(", type = ")
+						.append(Classes.name(getClass()))
 						.append(", isVisible = ")
 						.append((determineVisibility()))
 						.append(", isVersioned = ")
@@ -3330,44 +3365,39 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets a URL for the listener interface on a behavior (e.g. IBehaviorListener on
-	 * AjaxPagingNavigationBehavior).
+	 * Gets a URL for the listener interface on a behavior (e.g. {@link IRequestListener} on
+	 * {@link org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationBehavior}).
 	 * 
 	 * @param behaviour
 	 *            The behavior that the URL should point to
-	 * @param listener
-	 *            The listener interface that the URL should call
 	 * @param parameters
 	 *            The parameters that should be rendered into the urls
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final Behavior behaviour,
-		final RequestListenerInterface listener, final PageParameters parameters)
+	public final CharSequence urlForListener(final Behavior behaviour, final PageParameters parameters)
 	{
 		int id = getBehaviorId(behaviour);
-		IRequestHandler handler = createRequestHandler(listener, parameters, id);
+		IRequestHandler handler = createRequestHandler(parameters, id);
 		return getRequestCycle().urlFor(handler);
 	}
 
 	/**
 	 * Create a suitable request handler depending whether the page is stateless or bookmarkable.
 	 */
-	private IRequestHandler createRequestHandler(RequestListenerInterface listener,
-		PageParameters parameters, Integer id)
+	private IRequestHandler createRequestHandler(PageParameters parameters, Integer id)
 	{
 		Page page = getPage();
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, this, parameters);
 
 		if (page.isPageStateless()
-			|| (getApplication().getPageSettings().getRecreateBookmarkablePagesAfterExpiry()
-				&& page.isBookmarkable() && page.wasCreatedBookmarkable()))
+			|| (page.isBookmarkable() && page.wasCreatedBookmarkable()))
 		{
-			return new BookmarkableListenerInterfaceRequestHandler(provider, listener, id);
+			return new BookmarkableListenerRequestHandler(provider, id);
 		}
 		else
 		{
-			return new ListenerInterfaceRequestHandler(provider, listener, id);
+			return new ListenerRequestHandler(provider, id);
 		}
 	}
 
@@ -3387,20 +3417,17 @@ public abstract class Component
 	}
 
 	/**
-	 * Gets a URL for the listener interface (e.g. ILinkListener).
+	 * Gets a URL for this {@link IRequestListener}.
 	 * 
 	 * @see RequestCycle#urlFor(IRequestHandler)
 	 * 
-	 * @param listener
-	 *            The listener interface that the URL should call
 	 * @param parameters
-	 *            The parameters that should be rendered into the urls
+	 *            The parameters that should be rendered into the URL
 	 * @return The URL
 	 */
-	public final CharSequence urlFor(final RequestListenerInterface listener,
-		final PageParameters parameters)
+	public final CharSequence urlForListener(final PageParameters parameters)
 	{
-		IRequestHandler handler = createRequestHandler(listener, parameters, null);
+		IRequestHandler handler = createRequestHandler(parameters, null);
 		return getRequestCycle().urlFor(handler);
 	}
 
@@ -3668,9 +3695,9 @@ public abstract class Component
 
 	/**
 	 * If this Component is a Page, returns self. Otherwise, searches for the nearest Page parent in
-	 * the component hierarchy. If no Page parent can be found, null is returned.
+	 * the component hierarchy. If no Page parent can be found, {@code null} is returned.
 	 * 
-	 * @return The Page or null if none can be found
+	 * @return The Page or {@code null} if none can be found
 	 */
 	protected final Page findPage()
 	{
@@ -4010,18 +4037,35 @@ public abstract class Component
 			if ((tag instanceof WicketTag) && !tag.isClose() &&
 				!getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER))
 			{
+				ExceptionSettings.NotRenderableErrorStrategy notRenderableErrorStrategy = ExceptionSettings.NotRenderableErrorStrategy.LOG_WARNING;
+				if (Application.exists())
+				{
+					notRenderableErrorStrategy = getApplication().getExceptionSettings().getNotRenderableErrorStrategy();
+				}
+
+				String tagName = tag.getNamespace() + ":" + tag.getName();
+				String componentId = getId();
 				if (getFlag(FLAG_OUTPUT_MARKUP_ID))
 				{
-					log.warn(String.format(
-						"Markup id set on a component that is usually not rendered into markup. "
-							+ "Markup id: %s, component id: %s, component tag: %s.", getMarkupId(),
-						getId(), tag.getName()));
+					String message = String.format("Markup id set on a component that is usually not rendered into markup. " +
+					                               "Markup id: %s, component id: %s, component tag: %s.",
+					                               getMarkupId(), componentId, tagName);
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 				if (getFlag(FLAG_PLACEHOLDER))
 				{
-					log.warn(String.format(
-						"Placeholder tag set on a component that is usually not rendered into markup. "
-							+ "Component id: %s, component tag: %s.", getId(), tag.getName()));
+					String message = String.format(
+							"Placeholder tag set on a component that is usually not rendered into markup. " +
+							"Component id: %s, component tag: %s.", componentId, tagName);
+					if (notRenderableErrorStrategy == ExceptionSettings.NotRenderableErrorStrategy.THROW_EXCEPTION)
+					{
+						throw new IllegalStateException(message);
+					}
+					log.warn(message);
 				}
 			}
 
@@ -4294,7 +4338,7 @@ public abstract class Component
 	 * @param id
 	 *            The non-null id of this component
 	 */
-	final Component setId(final String id)
+	private void checkId(final String id)
 	{
 		if (!(this instanceof Page))
 		{
@@ -4308,9 +4352,6 @@ public abstract class Component
 		{
 			throw new WicketRuntimeException("The component ID must not contain ':' or '~' chars.");
 		}
-
-		this.id = id;
-		return this;
 	}
 
 	/**
@@ -4437,10 +4478,8 @@ public abstract class Component
 	}
 
 	/**
-	 * Checks whether or not a listener method can be invoked on this component. Usually components
-	 * deny these invocations if they are either invisible or disabled in hierarchy. Components can
-	 * examine which listener interface is being invoked by examining the declaring class of the
-	 * passed in {@literal method} parameter.
+	 * Checks whether or not an {@link IRequestListener} can be invoked on this component. Usually components
+	 * deny these invocations if they are either invisible or disabled in hierarchy.
 	 * <p>
 	 * WARNING: be careful when overriding this method because it may open security holes - such as
 	 * allowing a user to click on a link that should be disabled.
@@ -4449,39 +4488,16 @@ public abstract class Component
 	 * Example usecase for overriding: Suppose you are building an component that displays images.
 	 * The component generates a callback to itself using {@link IRequestListener} interface and
 	 * uses this callback to stream image data. If such a component is placed inside a disabled
-	 * webmarkupcontainer we still want to allow the invocation of the request listener callback
+	 * {@code WebMarkupContainer} we still want to allow the invocation of the request listener callback
 	 * method so that image data can be streamed. Such a component would override this method and
-	 * return {@literal true} if the listener method belongs to {@link IRequestListener}.
+	 * return {@literal true}.
 	 * </p>
-	 * 
-	 * @param method
-	 *            listener method about to be invoked on this component. Could be {@code null} - in
-	 *            this case it means <em>any</em> method.
 	 * 
 	 * @return {@literal true} iff the listener method can be invoked on this component
 	 */
-	public boolean canCallListenerInterface(Method method)
+	public boolean canCallListener()
 	{
 		return isEnabledInHierarchy() && isVisibleInHierarchy();
-	}
-
-	/**
-	 * CAUTION: this method is not meant to be overridden like it was in wicket 1.4 when
-	 * implementing {@link IHeaderContributor}. overload
-	 * {@link Component#renderHead(org.apache.wicket.markup.head.IHeaderResponse)} instead to
-	 * contribute to the response header.
-	 * 
-	 * @param component
-	 * @param response
-	 */
-	public final void renderHead(Component component, IHeaderResponse response)
-	{
-		if (component != this)
-		{
-			throw new IllegalStateException(
-				"This method is only meant to be invoked on the component where the parameter component==this");
-		}
-		renderHead(response);
 	}
 
 	/**
@@ -4567,10 +4583,10 @@ public abstract class Component
 	}
 
 	@Override
-	public boolean canCallListenerInterfaceAfterExpiry()
+	public boolean canCallListenerAfterExpiry()
 	{
         	return getApplication().getPageSettings()
-        		.getCallListenerInterfaceAfterExpiry() || isStateless();
+        		.getCallListenerAfterExpiry() || isStateless();
 	}
 	/**
 	 * This method is called whenever a component is re-added to the page's component tree, if it

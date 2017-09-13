@@ -31,7 +31,7 @@ import org.apache.wicket.request.resource.PartWriterCallback;
 /**
  * Used to provide resources based on the on Java NIO FileSystem API.<br>
  * <br>
- * For more information see {@link org.apache.wicket.markup.html.media.FileSystemResourceReference}
+ * For more information see {@link FileSystemResourceReference}
  * 
  * @author Tobias Soloschenko
  *
@@ -59,6 +59,7 @@ public class FileSystemResource extends AbstractResource
 	 */
 	public FileSystemResource()
 	{
+		this(null);
 	}
 
 	/**
@@ -67,8 +68,7 @@ public class FileSystemResource extends AbstractResource
 	@Override
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
-
-		return createResourceResponse(path);
+		return createResourceResponse(attributes, path);
 	}
 
 	/**
@@ -76,9 +76,11 @@ public class FileSystemResource extends AbstractResource
 	 * 
 	 * @param path
 	 *            the path to create the resource response with
-	 * @return the actual resource response x
+	 * @param attributes
+	 *            request attributes
+	 * @return the actual resource response
 	 */
-	protected ResourceResponse createResourceResponse(Path path)
+	protected ResourceResponse createResourceResponse(Attributes attributes, Path path)
 	{
 		try
 		{
@@ -93,6 +95,9 @@ public class FileSystemResource extends AbstractResource
 			resourceResponse.setContentType(getMimeType());
 			resourceResponse.setAcceptRange(ContentRangeType.BYTES);
 			resourceResponse.setContentLength(size);
+			if (path.getFileName() != null) {
+				resourceResponse.setFileName(path.getFileName().toString());
+			}
 			RequestCycle cycle = RequestCycle.get();
 			Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
 			Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
@@ -103,7 +108,7 @@ public class FileSystemResource extends AbstractResource
 		catch (IOException e)
 		{
 			throw new WicketRuntimeException(
-				"An error occured while processing the media resource response", e);
+				"An error occurred while processing the media resource response", e);
 		}
 	}
 
@@ -125,7 +130,7 @@ public class FileSystemResource extends AbstractResource
 	 * 
 	 * @return the mime type to be used for the response
 	 * @throws IOException
-	 *             if the mime type could'nt be resoulved
+	 *             if the mime type couldn't be resolved
 	 */
 	protected String getMimeType() throws IOException
 	{

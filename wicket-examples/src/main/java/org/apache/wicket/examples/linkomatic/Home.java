@@ -37,11 +37,10 @@ import org.apache.wicket.markup.html.link.ResourceLink;
 import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.util.file.Files;
@@ -67,31 +66,28 @@ public class Home extends WicketExamplePage
 	public Home()
 	{
 		// Action link counts link clicks
-		final Link actionLink = new Link("actionLink")
+		final Link<Void> actionLink = new Link<Void>("actionLink")
 		{
-			@Override
 			public void onClick()
 			{
 				linkClickCount++;
 			}
 		};
-		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this,
-			"linkClickCount")));
+		actionLink
+			.add(new Label("linkClickCount", new PropertyModel<Integer>(this, "linkClickCount")));
 		add(actionLink);
 
 		// Action link counts link clicks on works with onclick handler
-		final Link actionOnClickLink = new Link("actionOnClickLink")
+		final Link<Void> actionOnClickLink = new Link<Void>("actionOnClickLink")
 		{
-			@Override
 			public void onClick()
 			{
 				onClickLinkClickCount++;
 			}
 		};
-
 		add(actionOnClickLink);
-		add(new Label("onClickLinkClickCount", new PropertyModel<Integer>(this,
-			"onClickLinkClickCount")));
+		add(new Label("onClickLinkClickCount",
+			new PropertyModel<Integer>(this, "onClickLinkClickCount")));
 
 		// Link to Page1 is a simple external page link
 		add(new BookmarkablePageLink<>("page1Link", Page1.class));
@@ -99,14 +95,12 @@ public class Home extends WicketExamplePage
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
 		BookmarkablePageLink<Void> page3Link = new BookmarkablePageLink<>("page3Link", Page3.class);
-		page3Link.getPageParameters()
-				.add("bookmarkparameter", "3++2 & 5 � >< space + �");
+		page3Link.getPageParameters().add("bookmarkparameter", "3++2 & 5 � >< space + �");
 		add(page3Link);
 
 		// Link to BookDetails page
 		add(new Link<Void>("bookDetailsLink")
 		{
-			@Override
 			public void onClick()
 			{
 				setResponsePage(new BookDetails(new Book("The Hobbit")));
@@ -116,7 +110,6 @@ public class Home extends WicketExamplePage
 		// Delayed link to BookDetails page
 		add(new Link<Void>("bookDetailsLink2")
 		{
-			@Override
 			public void onClick()
 			{
 				setResponsePage(new BookDetails(new Book("Inside The Matrix")));
@@ -124,11 +117,11 @@ public class Home extends WicketExamplePage
 		});
 
 		// Image map link example
-		Image imageForMap = new Image("imageForMap", new PackageResourceReference(Home.class,
-			"ImageMap.gif"));
+		Image imageForMap = new Image("imageForMap",
+			new PackageResourceReference(Home.class, "ImageMap.gif"));
 		add(imageForMap);
-		add(new ClientSideImageMap("imageMap", imageForMap).addRectangleArea(
-			new BookmarkablePageLink<Page1>("page1", Page1.class), 0, 0, 100, 100)
+		add(new ClientSideImageMap("imageMap", imageForMap)
+			.addRectangleArea(new BookmarkablePageLink<Page1>("page1", Page1.class), 0, 0, 100, 100)
 			.addCircleArea(new BookmarkablePageLink<Page2>("page2", Page2.class), 160, 50, 35)
 			.addPolygonArea(new BookmarkablePageLink<Page3>("page3", Page3.class), 212, 79, 241, 4,
 				279, 54, 212, 79)
@@ -140,21 +133,22 @@ public class Home extends WicketExamplePage
 		add(new BookmarkablePageLink<>("popupLink", Popup.class).setPopupSettings(popupSettings));
 
 		// Popup example
-		add(new BookmarkablePageLink<>("popupButtonLink", Popup.class).setPopupSettings(popupSettings));
+		add(new BookmarkablePageLink<>("popupButtonLink", Popup.class)
+			.setPopupSettings(popupSettings));
 
 		// External site link
 		add(new ExternalLink("google", "http://www.google.com", "Click this link to go to Google"));
 
 		// And that link as a popup
-		PopupSettings googlePopupSettings = new PopupSettings(PopupSettings.RESIZABLE |
-			PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
+		PopupSettings googlePopupSettings = new PopupSettings(
+			PopupSettings.RESIZABLE | PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
 		add(new ExternalLink("googlePopup", "http://www.google.com",
 			"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
 
 		// Shared resource link
 		add(new ResourceLink<>("cancelButtonLink", new SharedResourceReference("cancelButton")));
 
-		add(new DownloadLink("downloadLink", new AbstractReadOnlyModel<File>()
+		add(new DownloadLink("downloadLink", new IModel<File>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -184,7 +178,7 @@ public class Home extends WicketExamplePage
 		add(feedbackPanel);
 		add(new RedirectForm("redirectForm"));
 
-		Link linkToAnchor = new Link("linkToAnchor")
+		Link<Void> linkToAnchor = new Link<Void>("linkToAnchor")
 		{
 			@Override
 			public void onClick()
@@ -192,12 +186,12 @@ public class Home extends WicketExamplePage
 			}
 		};
 		add(linkToAnchor);
-		Link anotherlinkToAnchor = new Link("anotherlinkToAnchor")
+		Link<Void> anotherlinkToAnchor = new Link<Void>("anotherlinkToAnchor")
 		{
 			@Override
 			public void onClick()
 			{
-			}
+			};
 		};
 		add(anotherlinkToAnchor);
 		Component anchorLabel = new Label("anchorLabel",
@@ -207,13 +201,13 @@ public class Home extends WicketExamplePage
 
 		Link<Void> linkWithLabel = new Link<Void>("linkWithLabel")
 		{
-
 			@Override
 			public void onClick()
 			{
 			}
 		};
-		linkWithLabel.setBody(Model.of("A link that provides its body with Link.setBody(someModel)"));
+		linkWithLabel
+			.setBody(Model.of("A link that provides its body with Link.setBody(someModel)"));
 		add(linkWithLabel);
 	}
 
@@ -238,9 +232,6 @@ public class Home extends WicketExamplePage
 			add(new TextField<>("redirectUrl"));
 		}
 
-		/**
-		 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-		 */
 		@Override
 		protected void onSubmit()
 		{
@@ -307,9 +298,6 @@ public class Home extends WicketExamplePage
 		this.onClickLinkClickCount = onClickLinkClickCount;
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isVersioned()
-	 */
 	@Override
 	public boolean isVersioned()
 	{

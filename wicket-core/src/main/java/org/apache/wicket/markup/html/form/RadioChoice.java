@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
@@ -54,18 +53,13 @@ import org.apache.wicket.util.value.IValueMap;
  * 
  * </p>
  * 
- * <p>
- * You can extend this class and override method wantOnSelectionChangedNotifications() to force
- * server roundtrips on each selection change.
- * </p>
- * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
  * 
  * @param <T>
  *            The model object type
  */
-public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
+public class RadioChoice<T> extends AbstractSingleSelectChoice<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -242,60 +236,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 		// since this component cannot be attached to input tag the name
 		// variable is illegal
 		tag.remove("name");
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
-	 */
-	@Override
-	public void onSelectionChanged()
-	{
-		convertInput();
-		updateModel();
-		onSelectionChanged(getModelObject());
-	}
-
-	/**
-	 * Template method that can be overridden by clients that implement IOnChangeListener to be
-	 * notified by onChange events of a select element. This method does nothing by default.
-	 * <p>
-	 * Called when a option is selected of a dropdown list that wants to be notified of this event.
-	 * This method is to be implemented by clients that want to be notified of selection events.
-	 * 
-	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is the same as you would
-	 *            get by calling getModelObject() if the new selection were current
-	 * @see #wantOnSelectionChangedNotifications()
-	 */
-	protected void onSelectionChanged(T newSelection)
-	{
-	}
-
-	/**
-	 * Whether this component's onSelectionChanged event handler should called using javascript if
-	 * the selection changes. If true, a roundtrip will be generated with each selection change,
-	 * resulting in the model being updated (of just this component) and onSelectionChanged being
-	 * called. This method returns false by default.
-	 * 
-	 * @return True if this component's onSelectionChanged event handler should called using
-	 *         javascript if the selection changes
-	 */
-	protected boolean wantOnSelectionChangedNotifications()
-	{
-		return false;
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
-	 */
-	@Override
-	protected boolean getStatelessHint()
-	{
-		if (wantOnSelectionChangedNotifications())
-		{
-			return false;
-		}
-		return super.getStatelessHint();
 	}
 
 	/**
@@ -523,32 +463,6 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				.append(Strings.escapeMarkup(idAttr))
 				.append('"');
 
-			// Should a roundtrip be made (have onSelectionChanged called)
-			// when the option is clicked?
-			if (wantOnSelectionChangedNotifications())
-			{
-				CharSequence url = urlFor(IOnChangeListener.INTERFACE, new PageParameters());
-
-				Form<?> form = findParent(Form.class);
-				if (form != null)
-				{
-					buffer.append(" onclick=\"")
-						.append(form.getJsForInterfaceUrl(url))
-						.append(";\"");
-				}
-				else
-				{
-					// NOTE: do not encode the url as that would give
-					// invalid JavaScript
-					buffer.append(" onclick=\"window.location.href='")
-						.append(url)
-						.append((url.toString().indexOf('?') > -1 ? '&' : '?') + getInputName())
-						.append('=')
-						.append(Strings.escapeMarkup(id))
-						.append("';\"");
-				}
-			}
-
 			// Allows user to add attributes to the <input..> tag
 			{
 				IValueMap attrs = getAdditionalAttributes(index, choice);
@@ -583,20 +497,20 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 
 			switch (labelPosition)
 			{
+				case WRAP_BEFORE:
+					buffer.append("</label>");
+					break;
+				case WRAP_AFTER:
+					buffer.append(' ')
+							.append(escaped)
+							.append("</label>");
+					break;
 				case AFTER:
 					buffer.append("<label for=\"")
 							.append(Strings.escapeMarkup(idAttr))
 							.append('"')
 							.append(extraLabelAttributes)
 							.append('>')
-							.append(escaped)
-							.append("</label>");
-					break;
-				case WRAP_BEFORE:
-					buffer.append("</label>");
-					break;
-				case WRAP_AFTER:
-					buffer.append(' ')
 							.append(escaped)
 							.append("</label>");
 					break;
@@ -610,9 +524,9 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	/**
 	 * You may subclass this method to provide additional attributes to the &lt;label ..&gt; tag.
 	 *
-	 @param index
-	  *            index of the choice
-	  * @param choice
+	 * @param index
+	 *            index of the choice
+	 * @param choice
 	 *            the choice itself
 	 * @return tag attribute name/value pairs.
 	 */

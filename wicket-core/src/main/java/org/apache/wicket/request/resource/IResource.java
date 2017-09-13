@@ -28,6 +28,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author Matej Knopp
  */
+@FunctionalInterface
 public interface IResource extends IClusterable
 {
 	/**
@@ -36,7 +37,7 @@ public interface IResource extends IClusterable
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static class Attributes
+	class Attributes
 	{
 		private final Request request;
 		private final Response response;

@@ -20,7 +20,9 @@ package org.apache.wicket.protocol.http.documentvalidation;
  * Class representing text content that can appear within an element.
  * 
  * @author Chris Turner
+ * @deprecated Will be removed in Wicket 9.0 together with {@link HtmlDocumentValidator}
  */
+@Deprecated
 public class TextContent implements DocumentElement
 {
 	private final String value;

@@ -17,20 +17,19 @@
 package org.apache.wicket.core.request.mapper;
 
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.apache.wicket.MockPage;
-import org.apache.wicket.core.request.handler.BookmarkableListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
-import org.apache.wicket.core.request.handler.ListenerInterfaceRequestHandler;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.request.mapper.PackageMapperTest.OuterPage.InnerPage;
-import org.apache.wicket.markup.html.link.ILinkListener;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Url;
@@ -241,17 +240,16 @@ public class PackageMapperTest extends AbstractMapperTest
 	@Test
 	public void decode5()
 	{
-		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-ILinkListener-foo-bar");
+		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 		assertNull(h.getBehaviorIndex());
 	}
@@ -262,16 +260,15 @@ public class PackageMapperTest extends AbstractMapperTest
 	@Test
 	public void decode6()
 	{
-		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 
 		PageParameters p = h.getPageParameters();
@@ -286,17 +283,16 @@ public class PackageMapperTest extends AbstractMapperTest
 	@Test
 	public void decode7()
 	{
-		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-ILinkListener.4-foo-bar");
+		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
 
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		checkPage(page, 15);
 
-		assertEquals(ILinkListener.INTERFACE, h.getListenerInterface());
 		assertEquals("foo:bar", h.getComponent().getPageRelativePath());
 		assertEquals((Object)4, h.getBehaviorIndex());
 	}
@@ -307,14 +303,14 @@ public class PackageMapperTest extends AbstractMapperTest
 	@Test
 	public void decode8()
 	{
-		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-5.-foo-bar&a=b&b=c");
 
 		context.setNextPageRenderCount(5);
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerInterfaceRequestHandler.class));
-		ListenerInterfaceRequestHandler h = (ListenerInterfaceRequestHandler)handler;
+		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
 		assertEquals(page.getRenderCount(), 5);
@@ -326,7 +322,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	@Test(expected = StalePageException.class)
 	public void decode9()
 	{
-		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-5.ILinkListener-foo-bar&a=b&b=c");
+		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-5.-foo-bar&a=b&b=c");
 
 		context.setNextPageRenderCount(6);
 
@@ -501,20 +497,18 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
-		// shouldn't make any difference for
-		// BookmarkableListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for BookmarkableListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE);
+		IRequestHandler handler = new BookmarkableListenerRequestHandler(provider);
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-0.ILinkListener-foo-bar&a=b&b=c", url.toString());
+		assertEquals(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-0.-foo-bar&a=b&b=c", url.toString());
 	}
 
 	/**
@@ -529,20 +523,18 @@ public class PackageMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING);
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
-		// shouldn't make any difference for
-		// BookmarkableListenerInterfaceRequestHandler,
-		// as this explicitely says the url must be bookmarkable
+		// shouldn't make any difference for BookmarkableListenerRequestHandler,
+		// as this explicitly says the url must be bookmarkable
 		page.setCreatedBookmarkable(false);
 
 		IRequestableComponent c = page.get("foo:bar");
 
 		PageAndComponentProvider provider = new PageAndComponentProvider(page, c);
-		IRequestHandler handler = new BookmarkableListenerInterfaceRequestHandler(provider,
-			ILinkListener.INTERFACE, 4);
+		IRequestHandler handler = new BookmarkableListenerRequestHandler(provider, 4);
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-0.ILinkListener.4-foo-bar&a=b&b=c",
+		assertEquals(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-0.4-foo-bar&a=b&b=c",
 			url.toString());
 	}
 

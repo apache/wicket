@@ -63,7 +63,7 @@
 					<plugin>
 						<groupId>com.github.eirslett</groupId>
 						<artifactId>frontend-maven-plugin</artifactId>
-						<version>0.0.28</version>
+						<version>1.4</version>
 						<executions>
 							<execution>
 								<id>install node and npm</id>
@@ -72,8 +72,8 @@
 								</goals>
 								<phase>generate-resources</phase>
 								<configuration>
-									<npmVersion>3.7.1</npmVersion>
-									<nodeVersion>v5.5.0</nodeVersion>
+									<npmVersion>5.0.0</npmVersion>
+									<nodeVersion>v8.0.0</nodeVersion>
 								</configuration>
 							</execution>
 							<execution>
@@ -91,7 +91,7 @@
 									<goal>grunt</goal>
 								</goals>
 								<configuration>
-							        <!-- <arguments>- -verbose</arguments> -->
+							        <!--<arguments> - -verbose </arguments>-->
 							    </configuration>
 							</execution>
 						</executions>
@@ -100,4 +100,24 @@
 			</build>
 		</profile>
 	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jmx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+	</dependencies>
 </project>

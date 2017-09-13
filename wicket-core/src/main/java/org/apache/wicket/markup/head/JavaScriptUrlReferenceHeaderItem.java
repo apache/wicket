@@ -18,6 +18,7 @@ package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.UrlUtils;
@@ -91,16 +92,18 @@ public class JavaScriptUrlReferenceHeaderItem extends AbstractJavaScriptReferenc
 	}
 
 	@Override
-	public int hashCode()
+	public boolean equals(Object o)
 	{
-		return getUrl().hashCode();
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		JavaScriptUrlReferenceHeaderItem that = (JavaScriptUrlReferenceHeaderItem) o;
+		return Objects.equals(url, that.url);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public int hashCode()
 	{
-		if (obj instanceof JavaScriptUrlReferenceHeaderItem)
-			return ((JavaScriptUrlReferenceHeaderItem)obj).getUrl().equals(getUrl());
-		return false;
+		return Objects.hash(super.hashCode(), url);
 	}
 }

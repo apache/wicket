@@ -20,6 +20,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MockPage;
@@ -46,7 +47,7 @@ public class PageAccessSynchronizerTest extends Assert
 
 	/**	 */
 	@Rule
-	public Timeout globalTimeout = new Timeout((int)Duration.seconds(30).getMilliseconds());
+	public Timeout globalTimeout = new Timeout(30, TimeUnit.SECONDS);
 
 	/**
 	 * @throws Exception

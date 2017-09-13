@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.handler.render;
 
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -141,7 +142,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 		assertTrue(responseBuffered.get());
 	}
 
@@ -177,7 +178,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 	}
 
 	/**
@@ -200,7 +201,7 @@ public class WebPageRendererTest extends Assert
 
 		renderer.respond(requestCycle);
 
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 		verify(response, never()).write(any(byte[].class));
 
 	}
@@ -337,7 +338,7 @@ public class WebPageRendererTest extends Assert
         renderer.respond(requestCycle);
 
         verify(response, never()).write(any(byte[].class));
-        verify(response).sendRedirect(anyString());
+        verify(response).sendRedirect(isNull());
     }
 
 	/**
@@ -359,7 +360,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 	}
 
 	/**
@@ -380,7 +381,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 	}
 
 	/**
@@ -404,7 +405,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 	}
 
 	/**
@@ -427,7 +428,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 	}
 
 	/**
@@ -448,7 +449,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 	}
 
 	/**
@@ -558,7 +559,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 		Assert.assertTrue(stored.get());
 	}
 
@@ -593,7 +594,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 		Assert.assertTrue(stored.get());
 	}
 
@@ -983,7 +984,7 @@ public class WebPageRendererTest extends Assert
 		renderer.respond(requestCycle);
 
 		verify(response, never()).write(any(byte[].class));
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 		Assert.assertTrue(stored.get());
 	}
 
@@ -1006,7 +1007,7 @@ public class WebPageRendererTest extends Assert
 
 		renderer.respond(requestCycle);
 
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 		verify(response, never()).write(any(byte[].class));
 
 	}
@@ -1029,7 +1030,7 @@ public class WebPageRendererTest extends Assert
 
 		renderer.respond(requestCycle);
 
-		verify(response).sendRedirect(anyString());
+		verify(response).sendRedirect(isNull());
 		verify(response, never()).write(any(byte[].class));
 
 	}

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -94,6 +95,16 @@ public class PageStoreManager extends AbstractPageManager
 		private transient List<Object> afterReadObject;
 
 		/**
+		 * A flag indicating whether this session entry has been re-set in the Session.
+		 * Web containers intercept {@link javax.servlet.http.HttpSession#setAttribute(String, Object)}
+		 * to detect changes and replicate the session. If the attribute has been already
+		 * bound in the session then it will be first unbound and then re-bound again.
+		 * This flag helps us to detect <em>update</em> operations and skip the default behavior
+		 * of {@link #valueUnbound(HttpSessionBindingEvent)}.
+		 */
+		private final AtomicBoolean updating = new AtomicBoolean(false);
+
+		/**
 		 * Construct.
 		 * 
 		 * @param applicationName
@@ -156,6 +167,19 @@ public class PageStoreManager extends AbstractPageManager
 			}
 		}
 
+		private synchronized void removePage(IManageablePage page)
+		{
+			if (page != null)
+			{
+				sessionCache.remove(page);
+				final IPageStore pageStore = getPageStore();
+				if (pageStore != null)
+				{
+					pageStore.removePage(sessionId, page.getPageId());
+				}
+			}
+		}
+
 		/**
 		 * If the pages are stored in temporary state (after deserialization) this method convert
 		 * them to list of "real" pages
@@ -167,10 +191,14 @@ public class PageStoreManager extends AbstractPageManager
 				sessionCache = new ArrayList<>();
 			}
 
-			for (Object o : afterReadObject)
+			final IPageStore pageStore = getPageStore();
+			if (pageStore != null)
 			{
-				IManageablePage page = getPageStore().convertToPage(o);
-				addPage(page);
+				for (Object o : afterReadObject)
+				{
+					IManageablePage page = pageStore.convertToPage(o);
+					addPage(page);
+				}
 			}
 
 			afterReadObject = null;
@@ -189,10 +217,11 @@ public class PageStoreManager extends AbstractPageManager
 				convertAfterReadObjects();
 			}
 
+			IManageablePage page = null;
 			// try to find page with same id
 			if (sessionCache != null)
 			{
-				IManageablePage page = findPage(id);
+				page = findPage(id);
 				if (page != null)
 				{
 					return page;
@@ -200,7 +229,12 @@ public class PageStoreManager extends AbstractPageManager
 			}
 
 			// not found, ask pagestore for the page
-			return getPageStore().getPage(sessionId, id);
+			final IPageStore pageStore = getPageStore();
+			if (pageStore != null)
+			{
+				page = pageStore.getPage(sessionId, id);
+			}
+			return page;
 		}
 
 		/**
@@ -296,11 +330,18 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		public void valueBound(HttpSessionBindingEvent event)
 		{
+			updating.set(false);
 		}
 
 		@Override
 		public void valueUnbound(HttpSessionBindingEvent event)
 		{
+			if (updating.compareAndSet(true, false))
+			{
+				// The entry has been updated. Do not remove the data
+				return;
+			}
+
 			// WICKET-5164 use the original sessionId
 			IPageStore store = getPageStore();
 			// store might be null if destroyed already
@@ -362,6 +403,15 @@ public class PageStoreManager extends AbstractPageManager
 			}
 		}
 
+		@Override
+		protected void removePage(final IManageablePage page) {
+			final SessionEntry sessionEntry = getSessionEntry(false);
+			if (sessionEntry != null)
+			{
+				sessionEntry.removePage(page);
+			}
+		}
+
 		/**
 		 * 
 		 * @param create
@@ -369,13 +419,11 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		private SessionEntry getSessionEntry(boolean create)
 		{
-			String attributeName = getAttributeName();
-			SessionEntry entry = (SessionEntry)getSessionAttribute(attributeName);
+			SessionEntry entry = (SessionEntry)getSessionAttribute(getAttributeName());
 			if (entry == null && create)
 			{
 				bind();
 				entry = new SessionEntry(applicationName, getSessionId());
-				setSessionAttribute(attributeName, entry);
 			}
 			return entry;
 		}
@@ -402,6 +450,8 @@ public class PageStoreManager extends AbstractPageManager
 					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
 					pageStore.storePage(entry.sessionId, page);
 				}
+				entry.updating.set(true);
+				setSessionAttribute(getAttributeName(), entry);
 			}
 		}
 	}

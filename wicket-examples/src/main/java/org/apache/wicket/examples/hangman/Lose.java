@@ -43,5 +43,4 @@ public class Lose extends HangmanPage
 			}
 		});
 	}
-
 }

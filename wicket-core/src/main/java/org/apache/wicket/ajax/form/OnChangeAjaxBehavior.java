@@ -17,10 +17,13 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
  * A behavior that updates the hosting {@link FormComponent} via Ajax when value of the component is
@@ -49,6 +52,9 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 	 */
 	public static final String EVENT_NAME = "inputchange change";
 
+	/**
+	 * the change event
+	 */
 	public static final String EVENT_CHANGE = "change";
 
 	/**
@@ -72,5 +78,28 @@ public abstract class OnChangeAjaxBehavior extends AjaxFormComponentUpdatingBeha
 		{
 			attributes.setEventNames(EVENT_CHANGE);
 		}
+	}
+
+	/**
+	 * Creates an {@link OnChangeAjaxBehavior} based on lambda expressions
+	 * 
+	 * @param onChange
+	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
+	 * @return the {@link OnChangeAjaxBehavior}
+	 */
+	public static OnChangeAjaxBehavior onChange(SerializableConsumer<AjaxRequestTarget> onChange)
+	{
+		Args.notNull(onChange, "onChange");
+
+		return new OnChangeAjaxBehavior()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target)
+			{
+				onChange.accept(target);
+			}
+		};
 	}
 }

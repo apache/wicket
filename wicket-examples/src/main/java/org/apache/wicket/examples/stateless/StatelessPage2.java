@@ -32,9 +32,6 @@ import org.apache.wicket.validation.validator.RangeValidator;
  */
 public class StatelessPage2 extends WicketExamplePage
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final Integer number = 10;
@@ -52,11 +49,8 @@ public class StatelessPage2 extends WicketExamplePage
 		field.add(new RangeValidator<>(0, 20));
 		field.setRequired(true);
 
-		StatelessForm<?> statelessForm = new StatelessForm("statelessform")
+		StatelessForm<?> statelessForm = new StatelessForm<Void>("statelessform")
 		{
-			/**
-			 * @see org.apache.wicket.markup.html.form.Form#onSubmit()
-			 */
 			@Override
 			protected void onSubmit()
 			{

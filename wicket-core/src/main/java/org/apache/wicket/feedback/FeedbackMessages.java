@@ -55,7 +55,7 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 	 */
 	public FeedbackMessages()
 	{
-		messages = new CopyOnWriteArrayList<FeedbackMessage>();
+		messages = new CopyOnWriteArrayList<>();
 	}
 
 	/**
@@ -189,7 +189,6 @@ public final class FeedbackMessages implements IClusterable, Iterable<FeedbackMe
 		}
 
 		List<FeedbackMessage> toDelete = messages(filter);
-
 
 		for (FeedbackMessage message : toDelete)
 		{

@@ -69,23 +69,23 @@ public abstract class AjaxFallbackButton extends Button
 		add(new AjaxFormSubmitBehavior(form, "click")
 		{
 			private static final long serialVersionUID = 1L;
-
+			
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmit(Optional.ofNullable(target), AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onSubmit(Optional.of(target));
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onAfterSubmit(target, AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onAfterSubmit(Optional.of(target));
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onError(target, AjaxFallbackButton.this.getForm());
+				AjaxFallbackButton.this.onError(Optional.of(target));
 			}
 
 			@Override
@@ -117,49 +117,38 @@ public abstract class AjaxFallbackButton extends Button
 	 * generated via a normal submission, the target argument will be null.
 	 * 
 	 * @param target
-	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target, Form<?> form)
+	protected void onError(Optional<AjaxRequestTarget> target)
 	{
 	}
 
 	@Override
 	public final void onError()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onError(null, getForm());
+			onError(Optional.empty());
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
-	 */
 	@Override
 	public final void onSubmit()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onSubmit(Optional.empty(), getForm());
+			onSubmit(Optional.empty());
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onAfterSubmit()
-	 */
 	@Override
 	public final void onAfterSubmit()
 	{
-		if (getRequestCycle().find(AjaxRequestTarget.class) == null)
+		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onAfterSubmit(null, getForm());
+			onAfterSubmit(Optional.empty());
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.html.form.Button#getForm()
-	 */
 	@Override
 	public Form<?> getForm()
 	{
@@ -173,9 +162,8 @@ public abstract class AjaxFallbackButton extends Button
 	 * 
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
-	 * @param form
 	 */
-	protected void onSubmit(final Optional<AjaxRequestTarget> target, final Form<?> form)
+	protected void onSubmit(final Optional<AjaxRequestTarget> target)
 	{
 	}
 
@@ -186,9 +174,8 @@ public abstract class AjaxFallbackButton extends Button
 	 * 
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
-	 * @param form
 	 */
-	protected void onAfterSubmit(final AjaxRequestTarget target, final Form<?> form)
+	protected void onAfterSubmit(final Optional<AjaxRequestTarget> target)
 	{
 	}
 

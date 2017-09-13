@@ -488,11 +488,20 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	private void destroy()
 	{
-		if (sessionStore != null)
+		if (getSessionStore() != null)
 		{
 			sessionStore.invalidate(RequestCycle.get().getRequest());
 			sessionStore = null;
 			id = null;
+			sessionInvalidated = false;
+			clientInfo = null;
+			dirty = false;
+			metaData = null;
+			feedbackMessages.clear();
+			setStyle(null);
+			pageId.set(0);
+			sequence.set(0);
+			temporarySessionAttributes = null;
 		}
 	}
 
@@ -502,7 +511,9 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void invalidateNow()
 	{
-		invalidate();
+		if (isSessionInvalidated() == false) {
+			invalidate();
+		}
 		destroy();
 	}
 

@@ -19,12 +19,9 @@ package org.apache.wicket.core.request.mapper;
 import java.util.List;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.component.IRequestablePage;
-import org.apache.wicket.request.mapper.ICompoundRequestMapper;
-import org.apache.wicket.request.mapper.IRequestMapperDelegate;
 import org.apache.wicket.request.mapper.info.PageComponentInfo;
 import org.apache.wicket.request.mapper.parameter.IPageParametersEncoder;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -42,7 +39,7 @@ import org.apache.wicket.util.string.Strings;
  *  Page Instance - Render Hybrid (RenderPageRequestHandler for pages that were created using bookmarkable URLs)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2
  * 
- *  Page Instance - Bookmarkable Listener (BookmarkableListenerInterfaceRequestHandler)
+ *  Page Instance - Bookmarkable Listener (BookmarkableListenerRequestHandler)
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click-foo-bar-baz
  *  /wicket/bookmarkable/org.apache.wicket.MyPage?2-click.1-foo-bar-baz (1 is behavior index)
  *  (these will redirect to hybrid if page is not stateless)
@@ -86,6 +83,14 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 	@Override
 	protected UrlInfo parseRequest(Request request)
 	{
+		if (Application.exists())
+		{
+			if (Application.get().getSecuritySettings().getEnforceMounts())
+			{
+				return null;
+			}
+		}
+
 		if (matches(request))
 		{
 			Url url = request.getUrl();
@@ -115,65 +120,18 @@ public class BookmarkableMapper extends AbstractBookmarkableMapper
 
 			if (pageClass != null && IRequestablePage.class.isAssignableFrom(pageClass))
 			{
-				if (Application.exists())
-				{
-					Application application = Application.get();
-
-					if (application.getSecuritySettings().getEnforceMounts())
-					{
-						// we make an exception if the homepage itself was mounted, see WICKET-1898
-						if (!pageClass.equals(application.getHomePage()))
-						{
-							// WICKET-5094 only enforce mount if page is mounted
-							if (isPageMounted(pageClass, application.getRootRequestMapperAsCompound()))
-							{
-								return null;
-							}
-						}
-					}
-				}
-
 				// extract the PageParameters from URL if there are any
 				PageParameters pageParameters = extractPageParameters(request, 3,
 					pageParametersEncoder);
+				if (pageParameters != null)
+				{
+					pageParameters.setLocale(resolveLocale());
+				}
 
 				return new UrlInfo(info, pageClass, pageParameters);
 			}
 		}
 		return null;
-	}
-
-	private boolean isPageMounted(Class<? extends IRequestablePage> pageClass, ICompoundRequestMapper compoundMapper)
-	{
-		for (IRequestMapper requestMapper : compoundMapper)
-		{
-			while (requestMapper instanceof IRequestMapperDelegate)
-			{
-				requestMapper = ((IRequestMapperDelegate)requestMapper).getDelegateMapper();
-			}
-
-			if (requestMapper instanceof ICompoundRequestMapper)
-			{
-				if (isPageMounted(pageClass, (ICompoundRequestMapper)requestMapper))
-				{
-					return true;
-				}
-			}
-			else
-			{
-				if (requestMapper instanceof AbstractBookmarkableMapper  && requestMapper != this)
-				{
-					AbstractBookmarkableMapper mapper = (AbstractBookmarkableMapper) requestMapper;
-
-					if (mapper.checkPageClass(pageClass))
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
 	}
 
 	@Override

@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.link;
 
-
 /**
  * This link is stateless that means that the url to this link could generate a new page before the
  * link onClick is called. Because of this you can't depend on model data in the onClick method.
@@ -42,7 +41,6 @@ public abstract class StatelessLink<T> extends Link<T>
 		super(id);
 	}
 
-
 	@Override
 	protected boolean getStatelessHint()
 	{
@@ -52,6 +50,6 @@ public abstract class StatelessLink<T> extends Link<T>
 	@Override
 	protected CharSequence getURL()
 	{
-		return urlFor(ILinkListener.INTERFACE, getPage().getPageParameters());
+		return urlForListener(getPage().getPageParameters());
 	}
 }

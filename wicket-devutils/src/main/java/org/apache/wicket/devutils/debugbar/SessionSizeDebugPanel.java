@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.devutils.inspector.LiveSessionsPage;
 import org.apache.wicket.devutils.inspector.SessionSizeModel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -76,7 +75,7 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 	@Override
 	protected IModel<String> getDataModel()
 	{
-		return new AbstractReadOnlyModel<String>()
+		return new IModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -95,7 +94,6 @@ public class SessionSizeDebugPanel extends StandardDebugPanel
 			@Override
 			public void detach()
 			{
-				super.detach();
 				size.detach();
 			}
 		};

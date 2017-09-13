@@ -44,7 +44,7 @@ public final class Home extends AuthenticatedWebPage
 	{
 		// Add table of books
 		final PageableListView<Book> listView;
-		add(listView = new PageableListView<Book>("books", new PropertyModel<List<Book>>(this,
+		add(listView = new PageableListView<Book>("books", new PropertyModel<>(this,
 			"books"), 4)
 		{
 			@Override

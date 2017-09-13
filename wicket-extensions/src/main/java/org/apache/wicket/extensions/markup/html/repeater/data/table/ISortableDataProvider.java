@@ -31,6 +31,4 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
  */
 public interface ISortableDataProvider<T, S> extends IDataProvider<T>, ISortStateLocator<S>
 {
-
-
 }

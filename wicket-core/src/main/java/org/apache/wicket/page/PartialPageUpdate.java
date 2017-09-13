@@ -113,6 +113,8 @@ public abstract class PartialPageUpdate
 	protected final ResponseBuffer headerBuffer;
 
 	protected HtmlHeaderContainer header = null;
+	
+	private Component originalHeaderContainer  = null;
 
 	// whether a header contribution is being rendered
 	private boolean headerRendering = false;
@@ -123,7 +125,7 @@ public abstract class PartialPageUpdate
 	 * The page which components are being updated.
 	 */
 	private final Page page;
-
+	
 	/**
 	 * Constructor.
 	 *
@@ -133,7 +135,8 @@ public abstract class PartialPageUpdate
 	public PartialPageUpdate(final Page page)
 	{
 		this.page = page;
-
+		this.originalHeaderContainer = page.get(HtmlHeaderSectionHandler.HEADER_ID);
+		
 		WebResponse response = (WebResponse) page.getResponse();
 		bodyBuffer = new ResponseBuffer(response);
 		headerBuffer = new ResponseBuffer(response);
@@ -172,9 +175,9 @@ public abstract class PartialPageUpdate
 
 			writeFooter(response, encoding);
 		} finally {
-			if (header != null) {
+			if (header != null && originalHeaderContainer!= null) {
 				// restore a normal header
-				page.replace(new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID));
+				page.replace(originalHeaderContainer);
 				header = null;
 			}
 		}

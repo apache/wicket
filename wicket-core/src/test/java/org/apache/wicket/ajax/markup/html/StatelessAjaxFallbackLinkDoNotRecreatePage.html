@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+    <head>
+     <title>Stateless Wicket</title>
+     <link rel="stylesheet" type="text/css" href="style.css"/>
+    </head>
+    <body>
+        <h2>Stateless ajax fallback link</h2>
+        <div>This link uses ajax when it is available, and a regular
+            wicket roundtrip when ajax or javascript are not available and the
+            page should be stateless.</div>
+
+        <b>Counter: </b>
+        <span id="c2" wicket:id="incrementLabel"></span>
+        <a href="#" id="c2-link" wicket:id="incrementLink">increment</a>
+    </body>
+</html>

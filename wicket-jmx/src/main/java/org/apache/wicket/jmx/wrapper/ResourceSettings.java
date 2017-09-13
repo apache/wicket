@@ -120,7 +120,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 			{
 				list.add(loader.toString());
 			}
-			return list.toArray(new String[loaders.size()]);
+			return list.toArray(new String[0]);
 		}
 		return null;
 	}

@@ -54,7 +54,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -75,7 +75,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// which can be found in DropDownChoicePage.properties
 		form.add(new DropDownChoice<>("site", SITES));
 
-		// Allthough the default behavior of displaying the string
+		// Although the default behavior of displaying the string
 		// representations of the choices
 		// by calling toString on the object might be alright in some cases, you
 		// usually want to have
@@ -139,9 +139,6 @@ public class DropDownChoicePage extends WicketExamplePage
 		/** the selected integer. */
 		public Integer integer = INTEGERS.get(0);
 
-		/**
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString()
 		{

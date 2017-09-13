@@ -279,13 +279,13 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	{
 		renderHeaderItems();
 
-		if (RequestCycle.get().find(IPartialPageRequestHandler.class) == null)
+		if (RequestCycle.get().find(IPartialPageRequestHandler.class).isPresent())
 		{
-			renderCombinedEventScripts();
+			renderSeparateEventScripts();
 		}
 		else
 		{
-			renderSeperateEventScripts();
+			renderCombinedEventScripts();
 		}
 		super.close();
 	}
@@ -361,7 +361,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	/**
 	 * Renders the DOM ready and onLoad scripts as separate tags.
 	 */
-	private void renderSeperateEventScripts()
+	private void renderSeparateEventScripts()
 	{
 		for (HeaderItem curItem : domReadyItemsToBeRendered)
 		{

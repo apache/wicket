@@ -23,23 +23,13 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
- * 
- */
 public class RequestEncodingTest extends Assert
 {
-	/** Log. */
-	private static final Logger log = LoggerFactory.getLogger(RequestEncodingTest.class);
 
 	private RedirectApplication application;
 	private WicketTester tester;
 
-	/**
-	 * @see WicketTestCase#commonBefore()
-	 */
 	@Before
 	public void setUp()
 	{
@@ -49,18 +39,12 @@ public class RequestEncodingTest extends Assert
 		tester.assertRenderedPage(RedirectHomePage.class);
 	}
 
-	/**
-	 * 
-	 */
 	@After
 	public void tearDown()
 	{
 		tester.destroy();
 	}
 
-	/**
-	 * 
-	 */
 	@Test
 	public void defaultTest()
 	{
@@ -81,10 +65,6 @@ public class RequestEncodingTest extends Assert
 		assertTrue(document.contains("umlaut-\u00E4-\u00F6-\u00FC"));
 	}
 
-
-	/**
-	 * 
-	 */
 	@Test
 	public void umlautsInRequestUri()
 	{

@@ -23,6 +23,7 @@ import org.apache.wicket.Component;
  * 
  * @author Jonathan Locke
  */
+@FunctionalInterface
 public interface IUnauthorizedComponentInstantiationListener
 {
 	/**

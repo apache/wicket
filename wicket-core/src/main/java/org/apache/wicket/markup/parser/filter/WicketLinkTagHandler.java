@@ -127,7 +127,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 					{
 						if (autolinkStatus == null)
 						{
-							autolinkStatus = new ArrayListStack<Boolean>();
+							autolinkStatus = new ArrayListStack<>();
 						}
 
 						// remember the current setting to be reset after the

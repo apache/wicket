@@ -16,13 +16,12 @@
  */
 package org.apache.wicket.resource.loader;
 
-import java.util.List;
-import java.util.Locale;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.IInitializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.wicket.util.lang.Args;
+
+import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -41,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class InitializerStringResourceLoader extends ComponentStringResourceLoader
 {
-	private List<IInitializer> initializers;
+	private final List<IInitializer> initializers;
 
 	/**
 	 * Create and initialize the resource loader.
@@ -51,14 +50,9 @@ public class InitializerStringResourceLoader extends ComponentStringResourceLoad
 	 */
 	public InitializerStringResourceLoader(List<IInitializer> initializers)
 	{
-		this.initializers = initializers;
+		this.initializers = Args.notNull(initializers, "initializers");
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
 		final String style, final String variation)
@@ -78,10 +72,6 @@ public class InitializerStringResourceLoader extends ComponentStringResourceLoad
 		return null;
 	}
 
-	/**
-	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(org.apache.wicket.Component,
-	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public String loadStringResource(final Component component, final String key,
 		final Locale locale, final String style, final String variation)

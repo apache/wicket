@@ -35,10 +35,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
-import org.apache.wicket.markup.html.form.IOnChangeListener;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -506,29 +506,8 @@ public class FormTester
 		ChoiceSelector choiceSelector = choiceSelectorFactory.create(component);
 		choiceSelector.doSelect(index);
 
-		try
-		{
-			Method wantOnSelectionChangedNotificationsMethod = component.getClass()
-				.getDeclaredMethod("wantOnSelectionChangedNotifications");
-
-			try
-			{
-				wantOnSelectionChangedNotificationsMethod.setAccessible(true);
-				boolean wantOnSelectionChangedNotifications = (Boolean)wantOnSelectionChangedNotificationsMethod.invoke(component);
-				if (wantOnSelectionChangedNotifications)
-				{
-					tester.invokeListener(component, IOnChangeListener.INTERFACE);
-				}
-			}
-			catch (final Exception x)
-			{
-				throw new RuntimeException(x);
-			}
-
-		}
-		catch (final NoSuchMethodException ignored)
-		{
-			// this form component has no auto page reload mechanism
+		for (FormComponentUpdatingBehavior updater : component.getBehaviors(FormComponentUpdatingBehavior.class)) {
+			tester.invokeListener(component, updater);
 		}
 
 		return this;
@@ -656,7 +635,7 @@ public class FormTester
 	 *            <code>FormComponent</code>. The <code>FormComponent</code> must be of a type
 	 *            <code>FileUploadField</code>.
 	 * @param file
-	 *            the <code>File</code> to upload.
+	 *            the <code>File</code> to upload or {@code null} for an empty input
 	 * @param contentType
 	 *            the content type of the file. Must be a valid mime type.
 	 * @return This

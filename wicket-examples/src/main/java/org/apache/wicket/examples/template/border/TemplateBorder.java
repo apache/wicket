@@ -42,11 +42,8 @@ public class TemplateBorder extends Border
 	{
 		super(id);
 		addToBorder(currentBanner = new Banner1("ad"));
-		addToBorder(new Link("changeAdLink")
+		addToBorder(new Link<Void>("changeAdLink")
 		{
-			/**
-			 * @see org.apache.wicket.markup.html.link.Link#onClick()
-			 */
 			@Override
 			public void onClick()
 			{

@@ -1,0 +1,64 @@
+
+To create a server specific http/2 push support of the Wicket PushBuilder API just follow these steps:
+
+1. Add the following dependency to your projects pom.xml (and of course adjust the version)
+
+[source,xml]
+----
+<dependency>
+	<groupId>org.apache.wicket.experimental.wicket8</groupId>
+	<artifactId>wicket-http2-core</artifactId>
+	<version>0.X-SNAPSHOT</version>
+</dependency>
+----
+
+[arabic, start=2]
+1. Add a text file called _org.apache.wicket.IInitializer_ into the folder src/main/resources/META-INF/services/
+
+2. Add a single line with the name of the _IInitializer_ class example: _org.apache.wicket.http2.Initializer_ to the created file
+
+3. Implement your own server specific PushBuilder class which implements the interface  _org.apache.wicket.http2.markup.head.PushBuilder_ This is an example how it was done for jetty:
+
+[source,java]
+----
+public class Jetty9PushBuilder implements PushBuilder
+{
+	@Override
+	public void push(HttpServletRequest httpServletRequest, String... paths)
+	{
+		Request request = RequestCycle.get().getRequest();
+		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
+		org.eclipse.jetty.server.PushBuilder pushBuilder =
+		      org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
+		for (String path : paths)
+		{
+			pushBuilder.path(path);
+		}
+		pushBuilder.push();
+	}
+}
+----
+[arabic, start=5]
+1. Implement the class within the package _org.apache.wicket.http2.Initializer_ and add your own server specific PushBuilder class to the Http2Settings. This is an example how it was done for jetty:
+
+[source,java]
+----
+public class Initializer implements IInitializer
+{
+	/**
+	 * Initializes the push builder API of Jetty 9.3+
+	 */
+	@Override
+	public void init(Application application)
+	{
+		Http2Settings http2Settings = Http2Settings.Holder.get(application);
+		http2Settings.setPushBuilder(new Jetty9PushBuilder());
+	}
+
+	@Override
+	public void destroy(Application application)
+	{
+		// NOOP
+	}
+}
+----

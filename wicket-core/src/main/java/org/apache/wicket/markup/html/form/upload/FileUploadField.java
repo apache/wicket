@@ -27,6 +27,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.IMultipartWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;. When a FileInput
@@ -111,10 +112,8 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 			{
 				for (FileItem item : fileItems)
 				{
-					// Only update the model when there is a file (larger than zero
-					// bytes)
-					if (item != null && item.getSize() > 0)
-					{
+					// WICKET-6270 detect empty field by missing file name
+					if (Strings.isEmpty(item.getName()) == false) {
 						fileUploads.add(new FileUpload(item));
 					}
 				}
@@ -188,18 +187,21 @@ public class FileUploadField extends FormComponent<List<FileUpload>>
 	@Override
 	protected void onDetach()
 	{
-		if ((fileUploads != null) && forceCloseStreamsOnDetach())
+		if (fileUploads != null)
 		{
-			for (FileUpload fu : fileUploads)
-			{
-				fu.closeStreams();
-			}
-			fileUploads = null;
+			if (forceCloseStreamsOnDetach()) {
+				for (FileUpload fu : fileUploads)
+				{
+					fu.closeStreams();
+				}
 
-			if (getModel() != null)
-			{
-				getModel().setObject(null);
+				if (getModel() != null)
+				{
+					getModel().setObject(null);
+				}
 			}
+
+			fileUploads = null;
 		}
 		super.onDetach();
 	}

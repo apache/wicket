@@ -48,11 +48,9 @@ public class SetModel<T> extends GenericBaseModel<Set<T>>
 		setObject(set);
 	}
 
-
-	/** {@inheritDoc} */
 	@Override
 	protected Set<T> createSerializableVersionOf(Set<T> object)
 	{
-		return new HashSet<T>(object);
+		return new HashSet<>(object);
 	}
 }

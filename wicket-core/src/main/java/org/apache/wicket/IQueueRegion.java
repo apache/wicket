@@ -33,13 +33,6 @@ import org.apache.wicket.markup.IMarkupFragment;
  */
 public interface IQueueRegion
 {
-	/** 
-	 * TODO Wicket 8: this interface might be a perfect candidate for Java 8 interface default methods.
-	 * Now methods implementation is in MarkupContainer while it should simply be in those
-	 * classes which implement this interface.
-	 * 
-	 * */
-	
 	/**
 	 * Creates a new {@link DequeueContext} that will be used to dequeue children of this region.
 	 * 
@@ -48,7 +41,7 @@ public interface IQueueRegion
 	 * standard way (such as repeaters and borders) may choose to override this method to implement
 	 * custom behavior for the dequeueing process.
 	 */
-	public DequeueContext newDequeueContext();
+	DequeueContext newDequeueContext();
 
 	/**
 	 * Starts component dequeueing on this {@link IQueueRegion}. This is the entry point into the
@@ -56,7 +49,7 @@ public interface IQueueRegion
 	 * {@link org.apache.wicket.MarkupContainer#dequeue(DequeueContext)} method which performs the
 	 * actual dequeueing. The context's markup is retrieved using the {@link MarkupContainer#getAssociatedMarkup()}.
 	 */
-	public void dequeue();
+	void dequeue();
 	
 	/**
 	 * Returns the markup to use for queuing. Normally, this is the markup of the component 
@@ -64,5 +57,5 @@ public interface IQueueRegion
 	 * 
 	 * @return the markup to use for queuing
 	 */
-	public IMarkupFragment getRegionMarkup();
+	IMarkupFragment getRegionMarkup();
 }

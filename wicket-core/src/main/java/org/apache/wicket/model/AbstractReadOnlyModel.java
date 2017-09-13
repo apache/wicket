@@ -25,16 +25,13 @@ package org.apache.wicket.model;
  * 
  * @param <T>
  *            The model object
+ * @deprecated Use an anonymous instance of {@link IModel} instead. Since Wicket 8.0 {@link IModel}
+ * doesn't require providing implementation of {@link IModel#setObject(Object)} method.
  */
+@Deprecated
 public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @see IModel#getObject()
-	 */
-	@Override
-	public abstract T getObject();
 
 	/**
 	 * This default implementation of setObject unconditionally throws an
@@ -52,22 +49,11 @@ public abstract class AbstractReadOnlyModel<T> implements IModel<T>
 			" does not support setObject(Object)");
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder("Model:classname=[");
 		sb.append(getClass().getName()).append("]");
 		return sb.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void detach()
-	{
 	}
 }

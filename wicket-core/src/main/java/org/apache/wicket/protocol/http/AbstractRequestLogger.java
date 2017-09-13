@@ -134,8 +134,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	@Override
 	public SessionData[] getLiveSessions()
 	{
-		final SessionData[] sessions = liveSessions.values().toArray(
-			new SessionData[liveSessions.values().size()]);
+		final SessionData[] sessions = liveSessions.values().toArray(new SessionData[0]);
 		Arrays.sort(sessions);
 		return sessions;
 	}
@@ -219,8 +218,8 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			{
 				requestdata.setActiveRequest(activeRequests.decrementAndGet());
 			}
-			Session session = Session.get();
-			String sessionId = session.getId();
+			Session session = Session.exists() ? Session.get() : null;
+			String sessionId = session != null ? session.getId() : "N/A";
 			requestdata.setSessionId(sessionId);
 
 			Object sessionInfo = getSessionInfo(session);
@@ -232,7 +231,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			{
 				try
 				{
-					sizeInBytes = session.getSizeInBytes();
+					sizeInBytes = session != null ? session.getSizeInBytes() : -1;
 				}
 				catch (Exception e)
 				{

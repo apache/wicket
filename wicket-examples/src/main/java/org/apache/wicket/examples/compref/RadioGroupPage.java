@@ -24,6 +24,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
@@ -42,7 +43,7 @@ public class RadioGroupPage extends WicketExamplePage
 	{
 
 		final RadioGroup<Person> group = new RadioGroup<>("group", new Model<Person>());
-		Form<?> form = new Form("form")
+		Form<Void> form = new Form<Void>("form")
 		{
 			@Override
 			protected void onSubmit()
@@ -57,15 +58,13 @@ public class RadioGroupPage extends WicketExamplePage
 		ListView<Person> persons = new ListView<Person>("persons",
 			ComponentReferenceApplication.getPersons())
 		{
-
 			@Override
 			protected void populateItem(ListItem<Person> item)
 			{
-				item.add(new Radio<>("radio", item.getModel()));
-				item.add(new Label("name",
-					new PropertyModel<>(item.getDefaultModel(), "name")));
-				item.add(new Label("lastName", new PropertyModel<String>(item.getDefaultModel(),
-					"lastName")));
+				IModel<Person> personModel = item.getModel();
+				item.add(new Radio<>("radio", personModel));
+				item.add(new Label("name", new PropertyModel<>(personModel, "name")));
+				item.add(new Label("lastName", new PropertyModel<String>(personModel, "lastName")));
 			}
 
 		};

@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import org.apache.wicket.RequestListenerInterface;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
@@ -51,22 +50,6 @@ public interface IMapperContext extends IPageSource
 	 * @return {@link ResourceReferenceRegistry}
 	 */
 	ResourceReferenceRegistry getResourceReferenceRegistry();
-
-	/**
-	 * Returns the listener interface name as string.
-	 *
-	 * @param listenerInterface
-	 * @return listener interface name as string
-	 */
-	String requestListenerInterfaceToString(RequestListenerInterface listenerInterface);
-
-	/**
-	 * Returns listener interface for the name
-	 *
-	 * @param interfaceName
-	 * @return listener interface
-	 */
-	RequestListenerInterface requestListenerInterfaceFromString(String interfaceName);
 
 	/**
 	 * Returns the home page class.

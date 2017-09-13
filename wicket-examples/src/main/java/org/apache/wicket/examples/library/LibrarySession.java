@@ -104,19 +104,13 @@ public final class LibrarySession extends AuthenticatedWebSession
 		this.user = user;
 	}
 
-	/**
-	 * @see AuthenticatedWebSession#signOut()
-	 */
 	@Override
-	public void signOut()
+	public void invalidate()
 	{
-		super.signOut();
+		super.invalidate();
 		user = null;
 	}
 
-	/**
-	 * @see AuthenticatedWebSession#getRoles()
-	 */
 	@Override
 	public Roles getRoles()
 	{

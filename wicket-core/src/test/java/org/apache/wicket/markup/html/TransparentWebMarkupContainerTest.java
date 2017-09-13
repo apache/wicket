@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.hamcrest.Matchers.containsString;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.MarkupContainer;
@@ -27,10 +29,12 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.TagTester;
@@ -113,7 +117,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				return new IPageManagerProvider()
 				{
 					@Override
-					public IPageManager get(IPageManagerContext context)
+					public IPageManager apply(IPageManagerContext context)
 					{
 						return new MockPageManager()
 						{
@@ -262,7 +266,17 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		assertEquals(TestEmbeddedTransparentMarkupContainer.LABEL_MARKUP,
 			label.getMarkup().toString(true));
 	}
-	
+
+    /**
+     * https://issues.apache.org/jira/browse/WICKET-6219
+     */
+    @Test
+    public void shouldAllowAFragmentIdConflictingToASibilingTagWicketId() throws Exception
+    {
+            tester.startPage(SubPageWithAFragment.class);
+            assertThat(tester.getLastResponseAsString(), containsString("content"));
+    }
+
 	/** */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
@@ -420,6 +434,56 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				"		</div>" + //
 				"	</div>" + //
 				"</body></html>");
+		}
+	}
+	public static class PageWithAChildInsideATransparentContainer extends WebPage
+			implements
+				IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		public PageWithAChildInsideATransparentContainer(PageParameters parameters)
+		{
+			super(parameters);
+			add(new TransparentWebMarkupContainer("wrapper"));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+		{
+			return new StringResourceStream("" + //
+					"<html><body>" + //
+					" <div wicket:id=\"wrapper\">" + //
+					"	<wicket:child/>" + //
+					" </div>" + //
+					"</body></html>");
+		}
+	}
+	public static class SubPageWithAFragment extends PageWithAChildInsideATransparentContainer
+	{
+		private static final long serialVersionUID = 1L;
+
+		public SubPageWithAFragment(PageParameters parameters)
+		{
+			super(parameters);
+			Fragment fragment = new Fragment("header", "header", this);
+			add(fragment);
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<?> containerClass)
+		{
+			if (PageWithAChildInsideATransparentContainer.class.equals(containerClass))
+				return super.getMarkupResourceStream(container, containerClass);
+			return new StringResourceStream("" + //
+					"<html><body>" + //
+					"<wicket:extend>" + //
+					"	<div wicket:id=\"header\"></div>" + //
+					"	<wicket:fragment wicket:id=\"header\">content</wicket:fragment>" + //
+					"</wicket:extend>" + //
+					"</body></html>");
 		}
 	}
 }

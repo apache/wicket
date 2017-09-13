@@ -23,6 +23,7 @@ import org.apache.wicket.extensions.wizard.Wizard;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.util.lang.Args;
 
 
 /**
@@ -42,10 +43,7 @@ public class WizardPage extends WicketExamplePage
 	 */
 	public <C extends Wizard> WizardPage(Class<C> wizardClass)
 	{
-		if (wizardClass == null)
-		{
-			throw new IllegalArgumentException("argument wizardClass must be not null");
-		}
+		Args.notNull(wizardClass, "wizardClass");
 		try
 		{
 			Constructor<? extends Wizard> ctor = wizardClass.getConstructor(String.class);

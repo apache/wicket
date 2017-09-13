@@ -22,6 +22,7 @@ package org.apache.wicket.extensions.markup.html.basic;
  * 
  * @author Gerolf Seitz
  */
+@FunctionalInterface
 public interface ILinkParser
 {
 	/**

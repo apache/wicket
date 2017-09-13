@@ -47,10 +47,8 @@ public class HomePage extends WicketExamplePage
 		// In a real application, you'd check the kittens in a form
 		add(new AjaxLink<Void>("checkKittens")
 		{
-			private static final long serialVersionUID = 642245961797905032L;
-
 			@Override
-			public void onClick(final AjaxRequestTarget target)
+			public void onClick(AjaxRequestTarget target)
 			{
 				if (!isSpamBot() && captcha.allKittensSelected())
 				{
@@ -75,8 +73,7 @@ public class HomePage extends WicketExamplePage
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return {@code true} is there are at least 3 errors
 	 */
 	boolean isSpamBot()
 	{

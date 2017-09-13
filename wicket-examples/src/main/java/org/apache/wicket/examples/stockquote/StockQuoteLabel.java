@@ -69,9 +69,6 @@ public class StockQuoteLabel extends WebComponent
 		super(id, model);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{

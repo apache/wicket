@@ -16,17 +16,16 @@
  */
 package org.apache.wicket.request.resource;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Locale;
 
 /**
  * Testcases for minified aware resources.
@@ -37,6 +36,11 @@ import org.junit.Test;
  */
 public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 {
+	@Before
+	public void before()
+	{
+		tester.getSession().setLocale(Locale.US);
+	}
 
 	private String renderResource(ResourceReference reference)
 	{

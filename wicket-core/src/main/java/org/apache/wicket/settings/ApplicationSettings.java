@@ -23,11 +23,12 @@ import org.apache.wicket.application.DefaultClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.feedback.DefaultCleanupFeedbackMessageFilter;
 import org.apache.wicket.feedback.IFeedbackMessageFilter;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * * Settings interface for application settings.
+ * * Settings class for application settings.
  * <p>
  * <i>internalErrorPage </i>- You can override this with your own page class to display internal
  * errors in a different way.
@@ -172,18 +173,25 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Sets internal error page class. The class must be bookmarkable and must extend Page.
+	 * Sets internal error page class. The class must be bookmarkable and must extend {@link Page}.
+	 *
+	 * <p>Consider using custom
+	 * {@link org.apache.wicket.request.cycle.IRequestCycleListener#onException(RequestCycle, Exception) request
+	 * cycle listener} if you need to pass some extra information to the error page. By using
+	 * {@link org.apache.wicket.request.cycle.IRequestCycleListener} the application has more flexibility in
+	 * the instantiation of the error page.</p>
 	 *
 	 * @param internalErrorPage
 	 *            The internalErrorPage to set.
 	 * @return {@code this} object for chaining
+	 * @see org.apache.wicket.request.cycle.IRequestCycleListener#onException(RequestCycle, Exception)
 	 */
 	public ApplicationSettings setInternalErrorPage(final Class<? extends Page> internalErrorPage)
 	{
 		Args.notNull(internalErrorPage, "internalErrorPage");
 		checkPageClass(internalErrorPage);
 
-		this.internalErrorPage = new WeakReference<Class<? extends Page>>(internalErrorPage);
+		this.internalErrorPage = new WeakReference<>(internalErrorPage);
 		return this;
 	}
 
@@ -196,13 +204,10 @@ public class ApplicationSettings
 	 */
 	public ApplicationSettings setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage)
 	{
-		if (pageExpiredErrorPage == null)
-		{
-			throw new IllegalArgumentException("Argument pageExpiredErrorPage may not be null");
-		}
+		Args.notNull(pageExpiredErrorPage, "pageExpiredErrorPage");
 		checkPageClass(pageExpiredErrorPage);
 
-		this.pageExpiredErrorPage = new WeakReference<Class<? extends Page>>(pageExpiredErrorPage);
+		this.pageExpiredErrorPage = new WeakReference<>(pageExpiredErrorPage);
 		return this;
 	}
 
@@ -255,9 +260,9 @@ public class ApplicationSettings
 	}
 
 	/**
-	 * Returns the cleanup feedack message filter. At the end of request all messages are ran
+	 * Returns the cleanup feedback message filter. At the end of request all messages are ran
 	 * through this filter, and the ones accepted are removed. The default implementation accepts
-	 * (and therefore remkoves) all rendered messages.
+	 * (and therefore removes) all rendered messages.
 	 *
 	 * @return feedback message filter
 	 */

@@ -41,17 +41,11 @@ class CdiShutdownCleaner implements IApplicationListener
 	}
 
 	@Override
-	public void onAfterInitialized(Application application)
-	{
-		// noop
-	}
-
-	@Override
 	public void onBeforeDestroyed(Application application)
 	{
 		if (preDestroyApplication)
 		{
-			NonContextual.of(application.getClass(), beanManager).preDestroy(application);
+			NonContextual.of(application, beanManager).preDestroy(application);
 		}
 		NonContextual.undeploy(beanManager);
 	}

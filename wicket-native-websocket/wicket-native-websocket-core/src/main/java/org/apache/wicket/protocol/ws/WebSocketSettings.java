@@ -29,12 +29,18 @@ import org.apache.wicket.protocol.ws.api.WebSocketResponse;
 import org.apache.wicket.protocol.ws.api.registry.IWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.api.registry.SimpleWebSocketConnectionRegistry;
 import org.apache.wicket.protocol.ws.concurrent.Executor;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.string.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Web Socket related settings.
@@ -43,9 +49,38 @@ import java.util.concurrent.Callable;
  */
 public class WebSocketSettings
 {
+
+	private static final Logger LOG = LoggerFactory.getLogger(WebSocketSettings.class);
+
 	private static final MetaDataKey<WebSocketSettings> KEY = new MetaDataKey<WebSocketSettings>()
 	{
 	};
+
+	/**
+	 * A flag indicating whether JavaxWebSocketFilter is in use.
+	 * When using JSR356 based implementations the ws:// url should not
+	 * use the WicketFilter's filterPath because JSR356 Upgrade connections
+	 * are never passed to the Servlet Filters.
+	 */
+	private static boolean USING_JAVAX_WEB_SOCKET = false;
+	static
+	{
+		try
+		{
+			Class.forName("org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter");
+			USING_JAVAX_WEB_SOCKET = true;
+			LOG.debug("Using JSR356 Native WebSocket implementation!");
+		} catch (ClassNotFoundException e)
+		{
+			LOG.debug("Using non-JSR356 Native WebSocket implementation!");
+		}
+	}
+
+	private final AtomicReference<CharSequence> filterPrefix = new AtomicReference<>();
+	private final AtomicReference<CharSequence> contextPath = new AtomicReference<>();
+	private final AtomicReference<CharSequence> baseUrl = new AtomicReference<>();
+	private final AtomicInteger port = new AtomicInteger();
+	private final AtomicInteger securePort = new AtomicInteger();
 
 	/**
 	 * Holds this WebSocketSettings in the Application's metadata.
@@ -235,6 +270,86 @@ public class WebSocketSettings
 		return new WebSocketRequest(new ServletRequestCopy(request), filterPath);
 	}
 
+	public void setFilterPrefix(final CharSequence filterPrefix) {
+		this.filterPrefix.set(filterPrefix);
+	}
+
+	public CharSequence getFilterPrefix() {
+		if (filterPrefix.get() == null)
+		{
+			if (USING_JAVAX_WEB_SOCKET)
+			{
+				filterPrefix.compareAndSet(null, "");
+			}
+			else
+			{
+				filterPrefix.compareAndSet(null, RequestCycle.get().getRequest().getFilterPath());
+			}
+		}
+		return filterPrefix.get();
+	}
+
+	public void setContextPath(final CharSequence contextPath) {
+		this.contextPath.set(contextPath);
+	}
+
+	public CharSequence getContextPath() {
+		contextPath.compareAndSet(null, RequestCycle.get().getRequest().getContextPath());
+		return contextPath.get();
+	}
+
+	public void setBaseUrl(final CharSequence baseUrl)
+	{
+		this.baseUrl.set(baseUrl);
+	}
+
+	public CharSequence getBaseUrl() {
+		if (baseUrl.get() == null)
+		{
+			Url _baseUrl = RequestCycle.get().getUrlRenderer().getBaseUrl();
+			return Strings.escapeMarkup(_baseUrl.toString());
+		}
+		return baseUrl.get();
+	}
+
+	/**
+	 * Sets the port that should be used for <code>ws:</code> connections.
+	 * If unset then the current HTTP port will be used.
+	 *
+	 * @param wsPort The custom port for WS connections
+	 */
+	public void setPort(int wsPort)
+	{
+		this.port.set(wsPort);
+	}
+
+	/**
+	 * @return The custom port for WS connections
+	 */
+	public Integer getPort()
+	{
+		return port.get();
+	}
+
+	/**
+	 * Sets the port that should be used for <code>wss:</code> connections.
+	 * If unset then the current HTTPS port will be used.
+	 *
+	 * @param wssPort The custom port for WSS connections
+	 */
+	public void setSecurePort(int wssPort)
+	{
+		this.securePort.set(wssPort);
+	}
+
+	/**
+	 * @return The custom port for WSS connections
+	 */
+	public Integer getSecurePort()
+	{
+		return securePort.get();
+	}
+
 	/**
 	 * Simple executor that runs the tasks in the caller thread.
 	 */
@@ -244,12 +359,6 @@ public class WebSocketSettings
 		public void run(Runnable command)
 		{
 			command.run();
-		}
-
-		@Override
-		public <T> T call(Callable<T> callable) throws Exception
-		{
-			return callable.call();
 		}
 	}
 }

@@ -26,6 +26,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -66,6 +67,26 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(p);
 	}
 
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6361
+	 */
+	@Test
+	public void dequeueComponentsOnInitialization()
+	{
+		TestPage p = new TestPage();
+		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
+		MarkupContainer a = new A(), b = new B(), c = new C();
+		
+		//components are queued before their nested container is added to the page.
+		//this caused a "Detach called on component...while it had a non-empty queue" before WICKET-6361 was fixed
+		b.queue(c);
+		a.add(b);
+		
+		p.add(a);
+
+		tester.startPage(p);
+	}
+	
 	/** {@code [a[b,c]] -> [a[b[c]]] } */
 	@Test
 	public void dequeue2()
@@ -572,14 +593,14 @@ public class ComponentQueueingTest extends WicketTestCase
 		// A is visible, enclosure renders
 
 		assertEquals(
-				"<div wicket:enclosure=\"a\" id=\"wicket__InlineEnclosure_01\"><div wicket:id=\"a\"></div><div wicket:id=\"b\"></div></div>",
+				"<div wicket:enclosure=\"a\" id=\"wicket__InlineEnclosure_20793898271\"><div wicket:id=\"a\"></div><div wicket:id=\"b\"></div></div>",
 				tester.getLastResponseAsString());
 
 		// A is not visible, inline enclosure render only itself (the placeholder tag)
 
 		a.setVisible(false);
 		tester.startPage(p);
-		assertEquals("<div id=\"wicket__InlineEnclosure_01\" style=\"display:none\"></div>", tester.getLastResponseAsString());
+		assertEquals("<div id=\"wicket__InlineEnclosure_20793898271\" style=\"display:none\"></div>", tester.getLastResponseAsString());
 	}
 	
 	/**
@@ -648,7 +669,22 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		assertThat(p, hasPath(new Path(a, border, r, s, border.getBodyContainer(), b)));
 	}
+	
+	@Test
+	public void queueBorderBody() throws Exception
+	{
 
+		TestBorder border = new TestBorder("border");
+		border.setBorderMarkup("<wicket:border><wicket:body/></wicket:border>");
+
+		TestPage p = new TestPage();
+		p.setPageMarkup("<div wicket:id=\"border\"><span wicket:id=\"label\"></span></div>");
+		
+		p.add(border);
+		border.queue(new Label("label", "test"));
+		
+		tester.startPage(p);
+	}
 
 	@Test
 	public void border_nested()
@@ -771,6 +807,24 @@ public class ComponentQueueingTest extends WicketTestCase
 		
 		tester.startPage(page);	
 	}
+	
+	@Test
+	public void queueInsideTransparentContainer() throws Exception
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup("<div wicket:id='transparentContainer'>"
+			+ "	<div wicket:id='container'>"
+			+ "		<div wicket:id='child'>"
+			+ " 	</div>"
+			+ " </div>"
+			+ "</div>");
+		
+		page.add(new TransparentWebMarkupContainer("transparentContainer"));
+		page.add(new WebMarkupContainer("container"));
+		page.queue(new WebMarkupContainer("child"));
+		
+		tester.startPage(page);	
+	}
 
 	@Test
 	public void queueNestedEnclosure()
@@ -828,6 +882,30 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	    page.queue(container);
 		
+		tester.startPage(page);	
+	}
+	@Test
+	public void queueComponentInsideBorderAndEnclosure()
+	{
+		TestPage page = new TestPage();
+		page.setPageMarkup(" <div wicket:id=\"panel\"></div>");
+		
+		TestPanel panel = new TestPanel("panel");
+		panel.setPanelMarkup("<wicket:panel>\n"
+			+ "<div wicket:id=\"border\">\n" +
+			"    <div wicket:enclosure=\"child\">\n" +
+			"      <p wicket:id=\"child\">1</p>\n" +			
+			"    </div>\n" +
+			"  </div>\n" +
+			"</wicket:panel>");
+		
+		TestBorder border = new TestBorder("border");
+		border.setBorderMarkup("<wicket:border><wicket:body/></wicket:border>");
+		
+		panel.add(border);
+		page.add(panel);
+		border.add(new Label("child"));
+				
 		tester.startPage(page);	
 	}
 

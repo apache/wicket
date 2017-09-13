@@ -41,9 +41,6 @@ public class XmlPage extends WebPage
 		add(new PersonsListView("persons", ComponentReferenceApplication.getPersons()));
 	}
 
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getMarkupType()
-	 */
 	@Override
 	public MarkupType getMarkupType()
 	{

@@ -43,27 +43,18 @@ public abstract class AbstractTab implements ITab
 		this.title = title;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public IModel<String> getTitle()
 	{
 		return title;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean isVisible()
 	{
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public abstract WebMarkupContainer getPanel(final String panelId);
 }

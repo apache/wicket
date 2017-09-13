@@ -33,7 +33,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.IResourceListener;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
@@ -43,7 +42,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -153,17 +152,14 @@ public class KittenCaptchaPanel extends Panel
 		setOutputMarkupId(true);
 
 		// Show how many animals have been selected
-		animalSelectionLabel = new Label("animalSelectionLabel",
-			new AbstractReadOnlyModel<String>()
+		animalSelectionLabel = new Label("animalSelectionLabel", new IModel<String>()
+		{
+			@Override
+			public String getObject()
 			{
-				private static final long serialVersionUID = 6792322972316712326L;
-
-				@Override
-				public String getObject()
-				{
-					return imageResource.selectString();
-				}
-			});
+				return imageResource.selectString();
+			}
+		});
 		animalSelectionLabel.setOutputMarkupId(true);
 		add(animalSelectionLabel);
 
@@ -216,8 +212,7 @@ public class KittenCaptchaPanel extends Panel
 					javascript.append("Wicket.$('")
 						.append(image.getMarkupId())
 						.append("').src = '");
-					CharSequence url = image.urlFor(IResourceListener.INTERFACE,
-						new PageParameters());
+					CharSequence url = image.urlForListener(new PageParameters());
 					javascript.append(url);
 					javascript.append(url.toString().indexOf('?') > -1 ? "&amp;" : "?")
 						.append("rand=")

@@ -75,7 +75,7 @@ import org.apache.wicket.validation.IValidator;
  * @param <T>
  */
 // TODO wonder if it makes sense to refactor this into a formcomponentpanel
-public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T>
+public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T, AjaxEditableLabel<T>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -102,12 +102,7 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T>
 		{
 			super.renderHead(component, response);
 
-			IPartialPageRequestHandler target = getRequestCycle().find(IPartialPageRequestHandler.class);
-			if (target != null)
-			{
-				CharSequence callbackScript = getCallbackScript(component);
-				target.appendJavaScript(callbackScript);
-			}
+			getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> target.appendJavaScript(getCallbackScript(component)));
 		}
 
 		@Override
@@ -261,34 +256,6 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T>
 		super.setDefaultModel(model);
 		getLabel().setDefaultModel(model);
 		getEditor().setDefaultModel(model);
-		return this;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public IModel<T> getModel()
-	{
-		return (IModel<T>)getDefaultModel();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public T getModelObject()
-	{
-		return (T)getDefaultModelObject();
-	}
-
-	@Override
-	public AjaxEditableLabel<T> setModel(IModel<T> model)
-	{
-		setDefaultModel(model);
-		return this;
-	}
-
-	@Override
-	public AjaxEditableLabel<T> setModelObject(T object)
-	{
-		setDefaultModelObject(object);
 		return this;
 	}
 
@@ -599,7 +566,6 @@ public class AjaxEditableLabel<T> extends Panel implements IGenericComponent<T>
 		public void detach()
 		{
 			getParentModel().detach();
-
 		}
 
 		@Override

@@ -15,14 +15,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-      version="3.0">
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1" metadata-complete="false">
 
 	<display-name>Wicket Examples</display-name>
 
-	<!-- only available with servlet spec. 2.4 
+	<!-- only available with servlet spec. 2.4+
 	<locale-encoding-mapping-list>
 		<locale-encoding-mapping>
 			<locale>de</locale>
@@ -456,8 +457,19 @@
 	</filter>
 	<!-- couple the session filter to the helloworld servlet -->
 
+    <filter>
+        <filter-name>wicket.wicket-native-websockets</filter-name>
+        <filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>org.apache.wicket.examples.websocket.JSR356Application</param-value>
+        </init-param>
+    </filter>
 
-
+    <filter-mapping>
+        <filter-name>wicket.wicket-native-websockets</filter-name>
+        <url-pattern>/websockets/*</url-pattern>
+    </filter-mapping>
 
 
 
@@ -784,25 +796,26 @@
 	</filter-mapping>
 
 
-	<!-- CDI EXAMPLE APPLICATION -->
-	<filter>
-		<filter-name>CdiApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>org.apache.wicket.examples.cdi.CdiApplication</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>CdiApplication</filter-name>
-		<url-pattern>/cdi/*</url-pattern>
-	</filter-mapping>
+    <!-- CDI EXAMPLE APPLICATION -->
+    <filter>
+        <filter-name>CdiApplication</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+        <init-param>
+            <param-name>applicationClassName</param-name>
+            <param-value>org.apache.wicket.examples.cdi.CdiApplication</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CdiApplication</filter-name>
+        <url-pattern>/cdi/*</url-pattern>
+    </filter-mapping>
 
-	<listener>
-		<!-- initialize Weld in servlet environment -->
-		<listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
-	</listener>
+    <listener>
+        <!-- initialize Weld in servlet environment -->
+        <listener-class>org.jboss.weld.environment.servlet.Listener</listener-class>
+    </listener>
     <!-- END CDI EXAMPLE APPLICATION -->
+
 
     <!-- Bean Validation EXAMPLE APPLICATION -->
     <filter>
@@ -864,55 +877,9 @@
 		<url-pattern>/servlettest/*</url-pattern>
 	</servlet-mapping>
 
-	<servlet>
-		<servlet-name>AtmosphereApplication</servlet-name>
-		<servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
-		<init-param>
-			<param-name>applicationClassName</param-name>
-			<param-value>org.apache.wicket.examples.atmosphere.AtmosphereApplication</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.atmosphere.useWebSocket</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.atmosphere.useNative</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.atmosphere.cpr.sessionSupport</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name>
-			<param-value>30000</param-value>
-		</init-param>
-		<init-param>
-			<param-name>filterMappingUrlPattern</param-name>
-			<param-value>/atmosphere/*</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.atmosphere.websocket.WebSocketProtocol</param-name>
-			<param-value>org.atmosphere.websocket.protocol.EchoProtocol</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.atmosphere.cpr.AtmosphereInterceptor</param-name>
-			<param-value>org.atmosphere.client.TrackMessageSizeInterceptor</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.atmosphere.client.TrackMessageSizeInterceptor.delimiter</param-name>
-			<param-value><![CDATA[<|msg|>]]></param-value>
-		</init-param>
- 		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>AtmosphereApplication</servlet-name>
-		<url-pattern>/atmosphere/*</url-pattern>
-	</servlet-mapping>
-
 	<session-config>
 		<session-timeout>5</session-timeout>
+		<!--<tracking-mode>URL</tracking-mode>-->
 	</session-config>
 
 </web-app>

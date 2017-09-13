@@ -32,10 +32,12 @@ import javax.servlet.ServletContext;
 
 import junit.framework.AssertionFailedError;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.IFeedback;
@@ -297,6 +299,26 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
+	 * Asserts that the <code>Component</code> a the given path has a behavior
+	 * of the given type.
+	 *
+	 * @param path
+	 *            path to <code>Component</code>
+	 * @param expectedBehaviorClass
+	 *            expected <code>Behavior</code> class
+	 */
+	public void assertBehavior(String path, Class<? extends Behavior> expectedBehaviorClass)
+	{
+		Args.notNull(expectedBehaviorClass, "expectedBehaviorClass");
+
+		Component component = assertExists(path);
+		List<? extends Behavior> behaviors = component.getBehaviors(expectedBehaviorClass);
+		final String message = String.format("Component '%s' has no behaviors of type '%s'",
+				component.getPageRelativePath(), expectedBehaviorClass);
+		assertResult(new Result(CollectionUtils.isEmpty(behaviors), message));
+	}
+
+	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
 	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually tests that a
 	 * <code>Component</code> is on the Ajax response sent back to the client.
@@ -328,14 +350,15 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertComponentOnAjaxResponse(String componentPath)
 	{
-		assertComponentOnAjaxResponse(getComponentFromLastRenderedPage(componentPath, false));
+		Component component = getComponentFromLastRenderedPage(componentPath, false);
+		assertComponentOnAjaxResponse(component);
 	}
 
 	/**
 	 * Asserts the content of last rendered page contains (matches) a given regex pattern.
 	 * 
 	 * @param pattern
-	 *            a reqex pattern to match
+	 *            a regex pattern to match
 	 */
 	public void assertContains(String pattern)
 	{
@@ -377,12 +400,13 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Asserts that a component's markup has loaded with the given style
+	 * Asserts that a component's markup has loaded with the given style.
 	 *
 	 * @param component
 	 *              The component which markup to check
 	 * @param expectedStyle
-	 *              The expected style of the component's markup
+	 *              The expected style of the component's markup.
+	 *              For example: <em>green</em> in <code>MyPanel_green.html</code>
 	 */
 	public void assertMarkupStyle(Component component, String expectedStyle)
 	{
@@ -623,7 +647,10 @@ public class WicketTester extends BaseWicketTester
 	 *            path to a {@link ListView} <code>Component</code>
 	 * @param expectedList
 	 *            expected <code>List</code> in the model of the given {@link ListView}
+	 * @Deprecated use {@link #assertComponent(String, Class) combined with
+	 *             {@link #assertModelValue(String, Object)} instead
 	 */
+	@Deprecated
 	@Override
 	public void assertListView(String path, List<?> expectedList)
 	{

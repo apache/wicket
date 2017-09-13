@@ -29,7 +29,6 @@ import org.apache.wicket.model.IModel;
  */
 public class CheckedFolderContent extends Content
 {
-
 	private static final long serialVersionUID = 1L;
 
 	private ProviderSubset<Foo> checked;
@@ -86,11 +85,6 @@ public class CheckedFolderContent extends Content
 					public void setObject(Boolean object)
 					{
 						check(model.getObject(), object);
-					}
-
-					@Override
-					public void detach()
-					{
 					}
 				};
 			}
