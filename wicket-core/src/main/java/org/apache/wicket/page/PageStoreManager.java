@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -40,7 +39,7 @@ public class PageStoreManager extends AbstractPageManager
 	 * A cache that holds all registered page managers. <br/>
 	 * applicationName -> page manager
 	 */
-	private static final ConcurrentMap<String, PageStoreManager> managers = new ConcurrentHashMap<String, PageStoreManager>();
+	private static final ConcurrentMap<String, PageStoreManager> MANAGERS = new ConcurrentHashMap<String, PageStoreManager>();
 
 	private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
 
@@ -63,12 +62,12 @@ public class PageStoreManager extends AbstractPageManager
 		this.applicationName = applicationName;
 		this.pageStore = pageStore;
 
-		if (managers.containsKey(applicationName))
+		if (MANAGERS.containsKey(applicationName))
 		{
-			throw new IllegalStateException("Manager for application with key '" + applicationName +
-				"' already exists.");
+			throw new IllegalStateException(
+				"Manager for application with key '" + applicationName + "' already exists.");
 		}
-		managers.put(applicationName, this);
+		MANAGERS.put(applicationName, this);
 	}
 
 	/**
@@ -95,14 +94,23 @@ public class PageStoreManager extends AbstractPageManager
 		private transient List<Object> afterReadObject;
 
 		/**
-		 * A flag indicating whether this session entry has been re-set in the Session.
-		 * Web containers intercept {@link javax.servlet.http.HttpSession#setAttribute(String, Object)}
-		 * to detect changes and replicate the session. If the attribute has been already
-		 * bound in the session then it will be first unbound and then re-bound again.
-		 * This flag helps us to detect <em>update</em> operations and skip the default behavior
-		 * of {@link #valueUnbound(HttpSessionBindingEvent)}.
+		 * A flag indicating whether this session entry is being re-set in the Session.
+		 * <p>
+		 * Web containers intercept
+		 * {@link javax.servlet.http.HttpSession#setAttribute(String, Object)} to detect changes and
+		 * replicate the session. If the attribute has been already bound in the session then
+		 * {@link #valueUnbound(HttpSessionBindingEvent)} might get called - this flag
+		 * helps us to ignore the invocation in that case.
+		 * 
+		 * @see #valueUnbound(HttpSessionBindingEvent)
 		 */
-		private final AtomicBoolean updating = new AtomicBoolean(false);
+		private transient ThreadLocal<Boolean> storingTouchedPages = new ThreadLocal<Boolean>()
+		{
+			protected Boolean initialValue()
+			{
+				return Boolean.FALSE;
+			};
+		};
 
 		/**
 		 * Construct.
@@ -122,7 +130,7 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		private IPageStore getPageStore()
 		{
-			PageStoreManager manager = managers.get(applicationName);
+			PageStoreManager manager = MANAGERS.get(applicationName);
 
 			if (manager == null)
 			{
@@ -178,10 +186,14 @@ public class PageStoreManager extends AbstractPageManager
 				sessionCache = new ArrayList<IManageablePage>();
 			}
 
-			for (Object o : afterReadObject)
+			final IPageStore pageStore = getPageStore();
+			if (pageStore != null)
 			{
-				IManageablePage page = getPageStore().convertToPage(o);
-				addPage(page);
+				for (Object o : afterReadObject)
+				{
+					IManageablePage page = pageStore.convertToPage(o);
+					addPage(page);
+				}
 			}
 
 			afterReadObject = null;
@@ -200,10 +212,11 @@ public class PageStoreManager extends AbstractPageManager
 				convertAfterReadObjects();
 			}
 
+			IManageablePage page = null;
 			// try to find page with same id
 			if (sessionCache != null)
 			{
-				IManageablePage page = findPage(id);
+				page = findPage(id);
 				if (page != null)
 				{
 					return page;
@@ -211,7 +224,12 @@ public class PageStoreManager extends AbstractPageManager
 			}
 
 			// not found, ask pagestore for the page
-			return getPageStore().getPage(sessionId, id);
+			final IPageStore pageStore = getPageStore();
+			if (pageStore != null)
+			{
+				page = pageStore.getPage(sessionId, id);
+			}
+			return page;
 		}
 
 		/**
@@ -277,10 +295,18 @@ public class PageStoreManager extends AbstractPageManager
 		 * @throws ClassNotFoundException
 		 */
 		@SuppressWarnings("unchecked")
-		private void readObject(final ObjectInputStream s) throws IOException,
-			ClassNotFoundException
+		private void readObject(final ObjectInputStream s)
+			throws IOException, ClassNotFoundException
 		{
 			s.defaultReadObject();
+
+			storingTouchedPages = new ThreadLocal<Boolean>()
+			{
+				protected Boolean initialValue()
+				{
+					return Boolean.FALSE;
+				};
+			};
 
 			afterReadObject = new ArrayList<Object>();
 
@@ -307,15 +333,14 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		public void valueBound(HttpSessionBindingEvent event)
 		{
-			updating.set(false);
 		}
 
 		@Override
 		public void valueUnbound(HttpSessionBindingEvent event)
 		{
-			if (updating.compareAndSet(true, false))
+			if (storingTouchedPages.get())
 			{
-				// The entry has been updated. Do not remove the data
+				// triggered by #storeTouchedPages(), so do not remove the data
 				return;
 			}
 
@@ -358,9 +383,6 @@ public class PageStoreManager extends AbstractPageManager
 			super(context);
 		}
 
-		/**
-		 * @see org.apache.wicket.page.RequestAdapter#getPage(int)
-		 */
 		@Override
 		protected IManageablePage getPage(int id)
 		{
@@ -424,11 +446,20 @@ public class PageStoreManager extends AbstractPageManager
 				entry.setSessionCache(touchedPages);
 				for (IManageablePage page : touchedPages)
 				{
-					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
+					// WICKET-5103 use the same sessionId as used in
+					// SessionEntry#getPage()
 					pageStore.storePage(entry.sessionId, page);
 				}
-				entry.updating.set(true);
-				setSessionAttribute(getAttributeName(), entry);
+
+				entry.storingTouchedPages.set(true);
+				try
+				{
+					setSessionAttribute(getAttributeName(), entry);
+				}
+				finally
+				{
+					entry.storingTouchedPages.set(false);
+				}
 			}
 		}
 	}
@@ -472,7 +503,7 @@ public class PageStoreManager extends AbstractPageManager
 	@Override
 	public void destroy()
 	{
-		managers.remove(applicationName);
+		MANAGERS.remove(applicationName);
 		pageStore.destroy();
 	}
 }
