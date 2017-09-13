@@ -64,8 +64,8 @@ public class PageStoreManager extends AbstractPageManager
 
 		if (MANAGERS.containsKey(applicationName))
 		{
-			throw new IllegalStateException("Manager for application with key '" + applicationName
-				+ "' already exists.");
+			throw new IllegalStateException(
+				"Manager for application with key '" + applicationName + "' already exists.");
 		}
 		MANAGERS.put(applicationName, this);
 	}
@@ -96,14 +96,18 @@ public class PageStoreManager extends AbstractPageManager
 		/**
 		 * A flag indicating whether this session entry is being re-set in the Session.
 		 * <p>
-		 * Web containers intercept {@link javax.servlet.http.HttpSession#setAttribute(String, Object)}
-		 * to detect changes and replicate the session. If the attribute has been already
-		 * bound in the session then it will be first unbound and then re-bound again.
-		 * This flag helps us to detect <em>update</em> operations and skip the default behavior
-		 * of {@link #valueUnbound(HttpSessionBindingEvent)}.
+		 * Web containers intercept
+		 * {@link javax.servlet.http.HttpSession#setAttribute(String, Object)} to detect changes and
+		 * replicate the session. If the attribute has been already bound in the session then
+		 * {@link #valueUnbound(HttpSessionBindingEvent)} might get called - this flag
+		 * helps us to ignore the invocation in that case.
+		 * 
+		 * @see #valueUnbound(HttpSessionBindingEvent)
 		 */
-		private final ThreadLocal<Boolean> storingTouchedPages = new ThreadLocal<Boolean>() {
-			protected Boolean initialValue() {
+		private final ThreadLocal<Boolean> storingTouchedPages = new ThreadLocal<Boolean>()
+		{
+			protected Boolean initialValue()
+			{
 				return Boolean.FALSE;
 			};
 		};
@@ -304,8 +308,8 @@ public class PageStoreManager extends AbstractPageManager
 		 * @throws ClassNotFoundException
 		 */
 		@SuppressWarnings("unchecked")
-		private void readObject(final ObjectInputStream s) throws IOException,
-			ClassNotFoundException
+		private void readObject(final ObjectInputStream s)
+			throws IOException, ClassNotFoundException
 		{
 			s.defaultReadObject();
 
@@ -313,7 +317,8 @@ public class PageStoreManager extends AbstractPageManager
 
 			List<Serializable> l = (List<Serializable>)s.readObject();
 
-			// convert to temporary state after deserialization (will need to be processed
+			// convert to temporary state after deserialization (will need to be
+			// processed
 			// by convertAfterReadObject before the pages can be accessed)
 			IPageStore pageStore = getPageStore();
 			for (Serializable ser : l)
@@ -407,7 +412,8 @@ public class PageStoreManager extends AbstractPageManager
 		}
 
 		@Override
-		protected void removePage(final IManageablePage page) {
+		protected void removePage(final IManageablePage page)
+		{
 			final SessionEntry sessionEntry = getSessionEntry(false);
 			if (sessionEntry != null)
 			{
@@ -450,14 +456,18 @@ public class PageStoreManager extends AbstractPageManager
 				entry.setSessionCache(touchedPages);
 				for (IManageablePage page : touchedPages)
 				{
-					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
+					// WICKET-5103 use the same sessionId as used in
+					// SessionEntry#getPage()
 					pageStore.storePage(entry.sessionId, page);
 				}
-				
+
 				entry.storingTouchedPages.set(true);
-				try {
+				try
+				{
 					setSessionAttribute(getAttributeName(), entry);
-				} finally {
+				}
+				finally
+				{
 					entry.storingTouchedPages.set(false);
 				}
 			}
