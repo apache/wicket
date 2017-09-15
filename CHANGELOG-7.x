@@ -2,6 +2,24 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.9.0
+
+** Bug
+
+    * [WICKET-6429] - AbstractRequestLogger should not create new Sessions
+    * [WICKET-6455] - AjaxFormSubmitBehavior doesn't submit inner forms
+    * [WICKET-6457] - PageStore not cleared at session end
+    * [WICKET-6459] - Ajax re-renders of enclosures do not render their children's header contributions
+    * [WICKET-6462] - When an Ajax Button is submitted, AjaxFormSubmitBehavior # onSubmit is called twice
+    * [WICKET-6465] - PageStore not cleared at session end
+
+** Improvement
+
+    * [WICKET-6454] - WicketApplication behind a proxy with restrictive internet access can not initialized
+    * [WICKET-6463] - Please add additional constructor to Roles
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.8.0
 
 ** Bug
