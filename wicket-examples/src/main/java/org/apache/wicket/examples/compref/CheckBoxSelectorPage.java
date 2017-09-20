@@ -58,32 +58,10 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 		checkgroup.add(new Check<>("check3", Model.of(3)));
 		checkgroup.add(new Check<>("check4", Model.of(4)));
 		// one selector inside the checkgroup...
-		checkgroup.add(new CheckGroupSelector("groupSelector")
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected boolean wantAutomaticUpdate()
-			{
-				return true; // override again to enable auto update. in
-								// CheckGroupSelector it is disabled for
-								// backwards compatibility.
-			}
-		});
+		checkgroup.add(new CheckGroupSelector("groupSelector"));
 
 		// ...and one selector outside the checkgroup
-		form.add(new CheckGroupSelector("groupSelectorOutside", checkgroup)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected boolean wantAutomaticUpdate()
-			{
-				return true; // override again to enable auto update. in
-								// CheckGroupSelector it is disabled for
-								// backwards compatibility.
-			}
-		});
+		form.add(new CheckGroupSelector("groupSelectorOutside", checkgroup));
 		final CheckBoxMultipleChoice<Integer> choice = new CheckBoxMultipleChoice<>(
 			"choice", Model.ofList(new ArrayList<>()), Arrays.asList(1, 2, 3, 4));
 		form.add(choice);
