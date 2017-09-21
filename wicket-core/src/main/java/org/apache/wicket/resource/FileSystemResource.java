@@ -102,7 +102,7 @@ public class FileSystemResource extends AbstractResource
 			Long startbyte = cycle.getMetaData(CONTENT_RANGE_STARTBYTE);
 			Long endbyte = cycle.getMetaData(CONTENT_RANGE_ENDBYTE);
 			resourceResponse.setWriteCallback(
-				new PartWriterCallback(getInputStream(), size, startbyte, endbyte));
+				new PartWriterCallback(getInputStream(), size, startbyte, endbyte).setClose(true));
 			return resourceResponse;
 		}
 		catch (IOException e)
