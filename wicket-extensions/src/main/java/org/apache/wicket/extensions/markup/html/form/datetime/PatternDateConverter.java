@@ -90,7 +90,7 @@ public class PatternDateConverter extends DateConverter
 	 * @return formatter The formatter for the current conversion
 	 */
 	@Override
-	protected DateTimeFormatter getFormat(Locale locale)
+	public DateTimeFormatter getFormat(Locale locale)
 	{
 		return DateTimeFormatter.ofPattern(datePattern).withLocale(locale);
 	}

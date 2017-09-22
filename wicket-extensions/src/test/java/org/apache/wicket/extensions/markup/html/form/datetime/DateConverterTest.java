@@ -14,13 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.datetime;
+package org.apache.wicket.extensions.markup.html.form.datetime;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
+import org.apache.wicket.extensions.markup.html.form.datetime.PatternDateConverter;
+import org.apache.wicket.extensions.markup.html.form.datetime.StyleDateConverter;
+import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.CalendarConverter;
-import org.joda.time.format.DateTimeFormatter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -52,8 +59,9 @@ public class DateConverterTest
 
 		Calendar now = Calendar.getInstance();
 
-		String actual = styleDateConverter.convertToString(now.getTime(), locale);
-		String expected = patternDateConverter.convertToString(now.getTime(), locale);
+		ZonedDateTime zNow = ZonedDateTime.ofInstant(now.toInstant(), ZoneId.systemDefault());
+		String actual = styleDateConverter.convertToString(zNow, locale);
+		String expected = patternDateConverter.convertToString(zNow, locale);
 
 		Assert.assertEquals(expected, actual);
 	}
@@ -70,11 +78,26 @@ public class DateConverterTest
 		input.clear();
 		input.set(2011, Calendar.MAY, 7);
 
-		StyleDateConverter styleDateConverter = new StyleDateConverter("F-", false);
+		final StyleDateConverter styleDateConverter = new StyleDateConverter("F-", false);
 
-		CalendarConverter calendarConverter = new CalendarConverter(styleDateConverter);
+		CalendarConverter calendarConverter = new CalendarConverter(new IConverter<Date>()
+		{
+			private static final long serialVersionUID = 1L;
 
-		String expected = styleDateConverter.convertToString(input.getTime(), locale);
+			@Override
+			public Date convertToObject(String value, Locale locale) throws ConversionException {
+				ZonedDateTime zd = styleDateConverter.convertToObject(value, locale);
+				return zd == null ? null : Date.from(zd.toInstant());
+			}
+
+			@Override
+			public String convertToString(Date value, Locale locale) {
+				return styleDateConverter.convertToString(ZonedDateTime.ofInstant(value.toInstant(), ZoneId.systemDefault()), locale);
+			}
+			
+		});
+
+		String expected = styleDateConverter.convertToString(ZonedDateTime.ofInstant(input.toInstant(), ZoneId.systemDefault()), locale);
 		String actual = calendarConverter.convertToString(input, locale);
 
 		Assert.assertEquals(expected, actual);

@@ -30,8 +30,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import javafx.scene.control.DatePicker;
-
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.core.request.ClientInfo;
@@ -41,14 +39,13 @@ import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.IntegerConverter;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
- * Works on a {@link java.util.Date} object. Displays a date field and a {@link DatePicker}, a field
+ * Works on a {@link java.time.ZonedDateTime} object. Displays a date field and a DatePicker, a field
  * for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours field
  * depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the visibility
  * of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
@@ -116,6 +113,8 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 	private static final String AM_OR_PM = "amOrPm";
 
 	private static final IConverter<Integer> MINUTES_CONVERTER = new IntegerConverter() {
+		private static final long serialVersionUID = 1L;
+
 		protected NumberFormat newNumberFormat(Locale locale) {
 			return new DecimalFormat("00");
 		}
@@ -513,6 +512,8 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 
 	protected class DateModel implements IModel<LocalDate>
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public LocalDate getObject()
 		{
@@ -535,6 +536,8 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 
 	protected class HoursModel implements IModel<Integer>
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public Integer getObject()
 		{
@@ -555,6 +558,8 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 
 	protected class MinutesModel implements IModel<Integer>
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public Integer getObject()
 		{
@@ -575,6 +580,8 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 
 	protected class AmPmModel implements IModel<AM_PM>
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public AM_PM getObject()
 		{

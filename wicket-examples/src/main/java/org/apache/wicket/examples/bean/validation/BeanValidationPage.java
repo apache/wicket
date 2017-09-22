@@ -17,8 +17,8 @@
 package org.apache.wicket.examples.bean.validation;
 
 import org.apache.wicket.bean.validation.PropertyValidator;
+import org.apache.wicket.extensions.markup.html.form.datetime.DateTextField;
 import org.apache.wicket.extensions.markup.html.form.datetime.StyleDateConverter;
-import org.apache.wicket.datetime.markup.html.form.DateTextField;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -29,7 +29,7 @@ import org.apache.wicket.model.PropertyModel;
 
 public class BeanValidationPage extends WicketExamplePage
 {
-
+	private static final long serialVersionUID = 1L;
 	Person person = new Person();
 
 	public BeanValidationPage()
@@ -37,6 +37,8 @@ public class BeanValidationPage extends WicketExamplePage
 		add(new FeedbackPanel("feedbackErrors", new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR)));
 
 		Form<?> form = new Form<Void>("form") {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onSubmit()
 			{

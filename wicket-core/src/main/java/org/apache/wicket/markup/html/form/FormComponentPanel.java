@@ -40,8 +40,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * <p>
  * Here is a simple example of a panel with two components that multiplies and sets that as the
  * master model object. Note that for this simple example, setting the model value wouldn't make
- * sense, as the lhs and rhs cannot be known. For more complete examples of using this class, see
- * the wicket-datetime project.
+ * sense, as the lhs and rhs cannot be known.
  * </p>
  * 
  * <pre>

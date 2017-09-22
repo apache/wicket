@@ -21,7 +21,7 @@ import java.time.ZonedDateTime;
 import org.apache.wicket.model.IModel;
 
 /**
- * Works on a {@link java.util.Date} object. Displays a {@link DateTextField} and a
+ * Works on a {@link java.time.ZonedDateTime} object. Displays a {@link DateTextField} and a
  * {@link DatePicker calendar popup}.<br/>
  * <p>
  * Note: {@link DateField} must <strong>not</strong> be associated with an

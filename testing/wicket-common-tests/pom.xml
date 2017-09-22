@@ -59,11 +59,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-datetime</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-devutils</artifactId>
 			<scope>test</scope>
 		</dependency>

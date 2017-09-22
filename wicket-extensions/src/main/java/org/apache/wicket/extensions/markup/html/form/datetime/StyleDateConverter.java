@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import java.time.chrono.Chronology;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -114,10 +113,11 @@ public class StyleDateConverter extends DateConverter
 	 * @return formatter The formatter for the current conversion
 	 */
 	@Override
-	protected DateTimeFormatter getFormat(Locale locale)
+	public DateTimeFormatter getFormat(Locale locale)
 	{
-		return DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle)
-			.withLocale(locale);
+		return (timeStyle == null 
+				? DateTimeFormatter.ofLocalizedDateTime(dateStyle) 
+				: DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle)).withLocale(locale);
 	}
 
 	public static FormatStyle parseFormatStyle(char style)

@@ -28,7 +28,7 @@ import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * A TextField that is mapped to a <code>java.util.Date</code> object and that uses Joda time to
+ * A TextField that is mapped to a <code>java.time.LocalDate</code> object and that uses java.time time to
  * parse and format values.
  * <p>
  * You should use on of the factory methods to construct the kind you want or use the public

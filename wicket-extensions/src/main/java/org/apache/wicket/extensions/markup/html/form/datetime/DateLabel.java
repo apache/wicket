@@ -44,7 +44,7 @@ import org.apache.wicket.util.lang.Args;
  * @see java.time.LocalDate
  * @see java.time.format.DateTimeFormatter
  */
-public class DateLabel extends Label implements IGenericComponent<Date, DateLabel>
+public class DateLabel extends Label implements IGenericComponent<LocalDate, DateLabel>
 {
 	private static final long serialVersionUID = 1L;
 

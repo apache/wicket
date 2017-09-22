@@ -29,12 +29,12 @@
 	<description>Date/Time components and utilities for Wicket</description>
 	<dependencies>
 		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
+			<artifactId>wicket-extensions</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

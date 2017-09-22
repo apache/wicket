@@ -89,7 +89,6 @@
 		<module>wicket</module>
 		<module>wicket-core</module>
 		<module>wicket-util</module>
-		<module>wicket-datetime</module>
 		<module>wicket-request</module>
 		<module>wicket-devutils</module>
 		<module>wicket-extensions</module>
@@ -127,7 +126,6 @@
 		<cglib.version>3.2.5</cglib.version>
 		<jacoco.version>0.7.9</jacoco.version>
 		<jetty.version>9.4.6.v20170531</jetty.version>
-		<joda-time.version>2.9.9</joda-time.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>4.3.10.RELEASE</spring.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
@@ -246,11 +244,6 @@
 				<groupId>javax.inject</groupId>
 				<artifactId>javax.inject</artifactId>
 				<version>1</version>
-			</dependency>
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>${joda-time.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>

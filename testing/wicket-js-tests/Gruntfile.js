@@ -34,9 +34,6 @@ module.exports = function(grunt) {
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js"
 		],
-		datetimeJs = [
-			"../../wicket-datetime/src/main/java/org/apache/wicket/extensions/yui/calendar/wicket-date.js"
-		],
 		nativeWebSocketJs = [
 			"../../wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
 		],
@@ -75,7 +72,6 @@ module.exports = function(grunt) {
 		jshint: {
 			core: coreJs,
 			extensions: extensionsJs,
-			datetime: datetimeJs,
 			nativeWebSocket: nativeWebSocketJs,
 			testsJs: testsJs,
 			gymTestsJs: gymTestsJs,
