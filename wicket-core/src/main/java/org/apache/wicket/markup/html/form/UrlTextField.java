@@ -40,7 +40,7 @@ public class UrlTextField extends TextField<String>
 	 */
 	public UrlTextField(String id, final String url)
 	{
-		this(id, new Model<String>(url));
+		this(id, Model.of(url));
 	}
 
 	/**

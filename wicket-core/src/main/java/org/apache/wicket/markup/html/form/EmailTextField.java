@@ -46,7 +46,7 @@ public class EmailTextField extends TextField<String>
 	 */
 	public EmailTextField(String id, final String emailAddress)
 	{
-		this(id, new Model<String>(emailAddress));
+		this(id, Model.of(emailAddress));
 	}
 
 	/**
@@ -64,13 +64,30 @@ public class EmailTextField extends TextField<String>
 
 	/**
 	 * Construct.
-	 * 
+	 *
+	 * <p>Use this constructor when the model will be provided by a parent component.</p>
+	 *
 	 * @param id
 	 *            see Component
 	 */
 	public EmailTextField(String id)
 	{
 		this(id, null, EmailAddressValidator.getInstance());
+	}
+
+	/**
+	 * Construct.
+	 *
+	 * <p>Use this constructor when the model will be provided by a parent component.</p>
+	 *
+	 * @param id
+	 *            the component id
+	 * @param emailValidator
+	 *            the validator that will check the correctness of the input value
+	 */
+	public EmailTextField(String id, IValidator<String> emailValidator)
+	{
+		this(id, null, emailValidator);
 	}
 
 	/**
