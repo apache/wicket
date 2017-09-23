@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -115,13 +117,52 @@ public class StyleDateConverter extends DateConverter
 	@Override
 	public DateTimeFormatter getFormat(Locale locale)
 	{
-		return (timeStyle == null 
-				? DateTimeFormatter.ofLocalizedDateTime(dateStyle) 
-				: DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle)).withLocale(locale);
+		DateTimeFormatter df = null;
+		if (dateStyle == null && timeStyle == null) {
+			return df;
+		}
+		if (timeStyle == null)
+		{
+			df = DateTimeFormatter.ofLocalizedDate(dateStyle);
+		}
+		else if (dateStyle == null)
+		{
+			df = DateTimeFormatter.ofLocalizedTime(timeStyle);
+		}
+		else
+		{
+			df = DateTimeFormatter.ofLocalizedDateTime(dateStyle, timeStyle);
+		}
+		return df.withLocale(locale);
 	}
 
 	public static FormatStyle parseFormatStyle(char style)
 	{
 		return DateTextField.parseFormatStyle(style);
+	}
+
+	@Override
+	protected ZonedDateTime convertToObject(String value, DateTimeFormatter format, Locale locale) {
+		if (format == null) {
+			return null;
+		}
+		try
+		{
+			if (timeStyle == null)
+			{
+				LocalDate d = LocalDate.parse(value, format);
+				return ZonedDateTime.of(d.atStartOfDay(), getTimeZone());
+			}
+			else if (dateStyle == null)
+			{
+				// not sure how we can get ZonedDateTime from time
+				return null;
+			}
+			return super.convertToObject(value, format, locale);
+		}
+		catch (RuntimeException e)
+		{
+			throw newConversionException(e, locale);
+		}
 	}
 }

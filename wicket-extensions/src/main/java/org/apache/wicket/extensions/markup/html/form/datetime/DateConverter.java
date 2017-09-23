@@ -65,6 +65,18 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 		this.applyTimeZoneDifference = applyTimeZoneDifference;
 	}
 
+	protected ZonedDateTime convertToObject(String value, DateTimeFormatter format, Locale locale) {
+		try
+		{
+			// parse date retaining the time of the submission
+			return ZonedDateTime.parse(value, format);
+		}
+		catch (RuntimeException e)
+		{
+			throw newConversionException(e, locale);
+		}
+	}
+
 	@Override
 	public ZonedDateTime convertToObject(String value, Locale locale)
 	{
@@ -79,20 +91,11 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 		if (applyTimeZoneDifference)
 		{
 			ZoneId zoneId = getClientTimeZone();
-			ZonedDateTime dateTime;
 
 			// set time zone for client
 			format = format.withZone(getTimeZone());
 
-			try
-			{
-				// parse date retaining the time of the submission
-				dateTime = ZonedDateTime.parse(value, format);
-			}
-			catch (RuntimeException e)
-			{
-				throw newConversionException(e, locale);
-			}
+			ZonedDateTime dateTime = convertToObject(value, format, locale);
 			// apply the server time zone to the parsed value
 			if (zoneId != null)
 			{
@@ -103,15 +106,7 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 		}
 		else
 		{
-			try
-			{
-				ZonedDateTime dateTime = ZonedDateTime.parse(value);
-				return dateTime;
-			}
-			catch (RuntimeException e)
-			{
-				throw newConversionException(e, locale);
-			}
+			return convertToObject(value, format, locale);
 		}
 	}
 
@@ -124,7 +119,7 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 	 *            - {@link Locale} used to set 'format' variable with localized pattern
 	 * @return {@link ConversionException}
 	 */
-	private ConversionException newConversionException(RuntimeException cause, Locale locale)
+	ConversionException newConversionException(RuntimeException cause, Locale locale)
 	{
 		return new ConversionException(cause)
 				.setVariable("format", getDatePattern(locale));
