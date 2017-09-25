@@ -608,42 +608,52 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 	protected PageParameters extractPageParameters(Request request, Url url)
 	{
 		int[] matchedParameters = getMatchedSegmentSizes(url);
+		
 		int total = 0;
 		for (int curMatchSize : matchedParameters)
+		{
 			total += curMatchSize;
+		}
 		PageParameters pageParameters = extractPageParameters(request, total, pageParametersEncoder);
 
-		int skippedParameters = 0;
+		int segmentIndex = 0;
 		for (int pathSegmentIndex = 0; pathSegmentIndex < pathSegments.size(); pathSegmentIndex++)
 		{
-			MountPathSegment curPathSegment = pathSegments.get(pathSegmentIndex);
-			int matchSize = matchedParameters[pathSegmentIndex] - curPathSegment.getFixedPartSize();
-			int optionalParameterMatch = matchSize - curPathSegment.getMinParameters();
-			for (int matchSegment = 0; matchSegment < matchSize; matchSegment++)
+			MountPathSegment pathSegment = pathSegments.get(pathSegmentIndex);
+			
+			int totalAdded = 0;
+			int requiredAdded = 0;
+			for (int segmentParameterIndex = 0; segmentParameterIndex < pathSegment.getMaxParameters() && totalAdded < matchedParameters[pathSegmentIndex]; segmentParameterIndex++)
 			{
 				if (pageParameters == null)
 				{
 					pageParameters = new PageParameters();
 				}
 
-				int curSegmentIndex = matchSegment + curPathSegment.getSegmentIndex();
-				String curSegment = mountSegments[curSegmentIndex];
+				String curSegment = mountSegments[pathSegment.getSegmentIndex() + segmentParameterIndex];
+
 				String placeholder = getPlaceholder(curSegment);
 				String optionalPlaceholder = getOptionalPlaceholder(curSegment);
 				// extract the parameter from URL
 				if (placeholder != null)
 				{
 					pageParameters.add(placeholder,
-							url.getSegments().get(curSegmentIndex - skippedParameters), INamedParameters.Type.PATH);
+							url.getSegments().get(segmentIndex), INamedParameters.Type.PATH);
+					segmentIndex++;
+					totalAdded++;
+					requiredAdded++;
 				}
-				else if (optionalPlaceholder != null && optionalParameterMatch > 0)
+				else if (optionalPlaceholder != null &&
+					matchedParameters[pathSegmentIndex] - segmentParameterIndex > pathSegment.getMinParameters() + pathSegment.getFixedPartSize() - requiredAdded)
 				{
 					pageParameters.add(optionalPlaceholder,
-							url.getSegments().get(curSegmentIndex - skippedParameters), INamedParameters.Type.PATH);
-					optionalParameterMatch--;
+							url.getSegments().get(segmentIndex), INamedParameters.Type.PATH);
+					segmentIndex++;
+					totalAdded++;
 				}
 			}
-			skippedParameters += curPathSegment.getMaxParameters() - matchSize;
+
+			segmentIndex += pathSegment.getFixedPartSize();
 		}
 		return pageParameters;
 	}
