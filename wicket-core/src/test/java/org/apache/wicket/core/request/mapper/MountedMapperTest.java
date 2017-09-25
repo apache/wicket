@@ -739,7 +739,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
-		assertTrue(page.getPageParameters().getNamedKeys().size() == 3);
+		assertEquals(3, page.getPageParameters().getNamedKeys().size());
 		assertEquals("p1", page.getPageParameters().get("param1").toString());
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
 		assertEquals("p3", page.getPageParameters().get("param3").toString());
@@ -811,7 +811,7 @@ public class MountedMapperTest extends AbstractMapperTest
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(1, page.getPageParameters().getIndexedCount());
-		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
+		assertEquals(2, page.getPageParameters().getNamedKeys().size());
 		assertFalse("param1 should not be set",
 			page.getPageParameters().getNamedKeys().contains("param1"));
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
@@ -859,7 +859,54 @@ public class MountedMapperTest extends AbstractMapperTest
 		assertEquals("some/path/p2/p3/i1/i2?a=b&b=c", url.toString());
 	}
 
-	/* WICKET-5056 * */
+	/**
+	 * WICKET-6461
+	 */
+	@Test
+	public void optionalPlaceholdersBeforeRequiredPlaceholder() throws Exception
+	{
+		final MountedMapper mapper = new MountedMapper("/params/#{optional1}/#{optional2}/${required}", MockPage.class) {
+			@Override
+			protected IMapperContext getContext()
+			{
+				return context;
+			}
+
+			@Override
+			boolean getRecreateMountedPagesAfterExpiry()
+			{
+				return true;
+			}
+		};
+		
+		IRequestHandler handler = mapper.mapRequest(getRequest(Url.parse("params/required")));
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
+		PageParameters p = page.getPageParameters();
+		assertEquals(1, p.getNamedKeys().size());
+		assertEquals("required", p.get("required").toString());
+		
+		handler = mapper.mapRequest(getRequest(Url.parse("params/optional1/required")));
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		page = ((RenderPageRequestHandler)handler).getPage();
+		p = page.getPageParameters();
+		assertEquals(2, p.getNamedKeys().size());
+		assertEquals("required", p.get("required").toString());
+		assertEquals("optional1", p.get("optional1").toString());
+		
+		handler = mapper.mapRequest(getRequest(Url.parse("params/optional1/optional2/required")));
+		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		page = ((RenderPageRequestHandler)handler).getPage();
+		p = page.getPageParameters();
+		assertEquals(3, p.getNamedKeys().size());
+		assertEquals("required", p.get("required").toString());
+		assertEquals("optional1", p.get("optional1").toString());
+		assertEquals("optional2", p.get("optional2").toString());
+	}
+
+	/**
+	 * WICKET-5056
+	 */
 	@Test
 	public void optionalParameterGetsLowerScore_ThanExactOne() throws Exception
 	{
