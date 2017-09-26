@@ -17,7 +17,9 @@
 -->
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
   <span style="white-space: nowrap;">
-    <input type="text" wicket:id="date" size="12" />
-    <span wicket:id="time" />
+    <input type="number" wicket:id="hours" size="2" maxlength="2" />
+    <span wicket:id="hoursSeparator">&#160;:</span>
+    <input type="number" wicket:id="minutes" size="2" maxlength="2" />
+    <select wicket:id="amOrPmChoice"></select>
   </span>
 </wicket:panel>

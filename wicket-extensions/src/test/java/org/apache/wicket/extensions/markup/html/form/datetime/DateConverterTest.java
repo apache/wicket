@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.wicket.extensions.markup.html.form.datetime.PatternDateConverter;
+import org.apache.wicket.extensions.markup.html.form.datetime.PatternZonedDateTimeConverter;
 import org.apache.wicket.extensions.markup.html.form.datetime.StyleZonedDateTimeConverter;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
@@ -51,7 +51,7 @@ public class DateConverterTest
 
 		Assert.assertEquals(locale, styleFormatter.getLocale());
 
-		PatternDateConverter patternDateConverter = new PatternDateConverter(
+		PatternZonedDateTimeConverter patternDateConverter = new PatternZonedDateTimeConverter(
 			styleDateConverter.getPattern(locale), false);
 		DateTimeFormatter patternFormatter = patternDateConverter.getFormat(locale);
 

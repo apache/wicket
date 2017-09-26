@@ -30,6 +30,7 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class ModalContent1Page extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
@@ -40,6 +41,8 @@ public class ModalContent1Page extends WebPage
 	{
 		add(new AjaxLink<Void>("closeOK")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -51,6 +54,8 @@ public class ModalContent1Page extends WebPage
 
 		add(new AjaxLink<Void>("closeCancel")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -85,6 +90,8 @@ public class ModalContent1Page extends WebPage
 
 		add(new AjaxLink<Void>("open")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{

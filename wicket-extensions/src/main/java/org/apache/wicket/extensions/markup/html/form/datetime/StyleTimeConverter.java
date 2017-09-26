@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -32,26 +32,26 @@ import java.util.Locale;
  * </p>
  * 
  * @see org.apache.wicket.extensions.markup.html.form.DateTextField
- * @see java.time.LocalDate
+ * @see java.time.LocalTime
  * @see DateTimeFormatter
  * 
  * @author eelcohillenius
  */
-public class StyleDateConverter extends LocalDateConverter
+public class StyleTimeConverter extends LocalTimeConverter
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Date style to use. See {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}.
 	 */
-	private final FormatStyle dateStyle;
+	private final FormatStyle timeStyle;
 
 	/**
 	 * Construct. The dateStyle 'S-' (which is the same as {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}) will
 	 * be used for constructing the date format for the current locale.
 	 * 
 	 */
-	public StyleDateConverter()
+	public StyleTimeConverter()
 	{
 		this(FormatStyle.SHORT);
 	}
@@ -60,31 +60,31 @@ public class StyleDateConverter extends LocalDateConverter
 	 * Construct. The provided pattern will be used as the base format (but they will be localized
 	 * for the current locale) and if null, {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)} will be used.
 	 * 
-	 * @param dateStyle
+	 * @param timeStyle
 	 *            Date style to use. See {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}.
 	 * @throws IllegalArgumentException
 	 *             in case dateStyle is null
 	 */
-	public StyleDateConverter(FormatStyle dateStyle)
+	public StyleTimeConverter(FormatStyle timeStyle)
 	{
 		super();
-		this.dateStyle = dateStyle;
+		this.timeStyle = timeStyle;
 	}
 
-	public StyleDateConverter(String dateStyle)
+	public StyleTimeConverter(String timeStyle)
 	{
-		this(parseFormatStyle(dateStyle.charAt(0)));
+		this(parseFormatStyle(timeStyle.charAt(0)));
 	}
 
 	/**
-	 * Gets the optional date pattern.
+	 * Gets the optional time pattern.
 	 * 
-	 * @return datePattern
+	 * @return timePattern
 	 */
 	@Override
 	public final String getPattern(Locale locale)
 	{
-		return DateTimeFormatterBuilder.getLocalizedDateTimePattern(dateStyle, null, IsoChronology.INSTANCE, locale);
+		return DateTimeFormatterBuilder.getLocalizedDateTimePattern(null, timeStyle, IsoChronology.INSTANCE, locale);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class StyleDateConverter extends LocalDateConverter
 	@Override
 	public DateTimeFormatter getFormat(Locale locale)
 	{
-		return dateStyle == null ? null : DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(locale);
+		return timeStyle == null ? null : DateTimeFormatter.ofLocalizedDate(timeStyle).withLocale(locale);
 	}
 
 	public static FormatStyle parseFormatStyle(char style)
@@ -102,13 +102,13 @@ public class StyleDateConverter extends LocalDateConverter
 	}
 
 	@Override
-	public LocalDate convertToObject(String value, DateTimeFormatter format, Locale locale) {
+	public LocalTime convertToObject(String value, DateTimeFormatter format, Locale locale) {
 		if (format == null) {
 			return null;
 		}
 		try
 		{
-			return LocalDate.parse(value, format);
+			return LocalTime.parse(value, format);
 		}
 		catch (RuntimeException e)
 		{

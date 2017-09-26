@@ -64,7 +64,7 @@ public class DateLabel extends Label implements IGenericComponent<LocalDate, Dat
 	 */
 	public static DateLabel forDatePattern(String id, IModel<LocalDate> model, String datePattern)
 	{
-		return new DateLabel(id, model, new PatternDateConverter(datePattern, true));
+		return new DateLabel(id, model, new PatternZonedDateTimeConverter(datePattern, true));
 	}
 
 	/**

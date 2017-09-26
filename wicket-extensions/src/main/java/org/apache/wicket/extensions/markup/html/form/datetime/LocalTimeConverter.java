@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -34,15 +34,15 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author eelcohillenius
  */
-public abstract class LocalDateConverter implements IDateConverter<LocalDate>
+public abstract class LocalTimeConverter implements IDateConverter<LocalTime>
 {
 	private static final long serialVersionUID = 1L;
 
-	public LocalDate convertToObject(String value, DateTimeFormatter format, Locale locale) {
+	public LocalTime convertToObject(String value, DateTimeFormatter format, Locale locale) {
 		try
 		{
 			// parse date retaining the time of the submission
-			return LocalDate.parse(value, format);
+			return LocalTime.parse(value, format);
 		}
 		catch (RuntimeException e)
 		{
@@ -51,7 +51,7 @@ public abstract class LocalDateConverter implements IDateConverter<LocalDate>
 	}
 
 	@Override
-	public LocalDate convertToObject(String value, Locale locale)
+	public LocalTime convertToObject(String value, Locale locale)
 	{
 		if (Strings.isEmpty(value))
 		{
@@ -80,10 +80,10 @@ public abstract class LocalDateConverter implements IDateConverter<LocalDate>
 	}
 
 	@Override
-	public String convertToString(LocalDate dateTime, Locale locale)
+	public String convertToString(LocalTime time, Locale locale)
 	{
 		DateTimeFormatter format = getFormat(locale);
-		return format.format(dateTime);
+		return format.format(time);
 	}
 
 	/**

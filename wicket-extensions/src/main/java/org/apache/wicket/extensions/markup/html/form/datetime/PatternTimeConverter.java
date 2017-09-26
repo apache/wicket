@@ -35,32 +35,32 @@ import org.apache.wicket.util.lang.Args;
  * @see SimpleDateFormat
  * @see StyleDateConverter
  * @see org.apache.wicket.extensions.markup.html.form.DateTextField
- * @see java.time.LocalDate
+ * @see java.time.LocalTime
  * @see DateTimeFormatter
  * 
  * @author eelcohillenius
  */
-public class PatternDateConverter extends LocalDateConverter
+public class PatternTimeConverter extends LocalTimeConverter
 {
 
 	private static final long serialVersionUID = 1L;
 
 	/** pattern to use. */
-	private final String datePattern;
+	private final String timePattern;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param datePattern
+	 * @param timePattern
 	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
 	 *            patterns.
 	 * @throws IllegalArgumentException
 	 *             in case the date pattern is null
 	 */
-	public PatternDateConverter(String datePattern)
+	public PatternTimeConverter(String timePattern)
 	{
 		super();
-		this.datePattern = Args.notNull(datePattern, "datePattern");
+		this.timePattern = Args.notNull(timePattern, "timePattern");
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class PatternDateConverter extends LocalDateConverter
 	@Override
 	public final String getPattern(Locale locale)
 	{
-		return datePattern;
+		return timePattern;
 	}
 
 	/**
@@ -80,6 +80,6 @@ public class PatternDateConverter extends LocalDateConverter
 	@Override
 	public DateTimeFormatter getFormat(Locale locale)
 	{
-		return DateTimeFormatter.ofPattern(datePattern).withLocale(locale);
+		return DateTimeFormatter.ofPattern(timePattern).withLocale(locale);
 	}
 }

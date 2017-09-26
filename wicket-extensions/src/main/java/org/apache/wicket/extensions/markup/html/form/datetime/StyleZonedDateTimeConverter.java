@@ -25,7 +25,7 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 
 /**
- * Date converter that uses Joda Time and can be configured to take the time zone difference between
+ * Date converter that uses javax.time and can be configured to take the time zone difference between
  * clients and server into account, and that is configured for a certain date style. The pattern
  * will always be locale specific.
  * <p>

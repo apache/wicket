@@ -51,7 +51,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Creates a new DateTextField defaulting to using a short date pattern
+	 * Creates a new DateField defaulting to using a short date pattern
 	 * 
 	 * @param id
 	 *            The id of the text field
@@ -60,22 +60,22 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	 * @param datePattern
 	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
 	 *            patterns.
-	 * @return DateTextField
+	 * @return DateField
 	 */
 	public static DateField forDatePattern(String id, IModel<LocalDate> model, String datePattern)
 	{
-		return new DateField(id, model, new PatternDateConverter(datePattern, true));
+		return new DateField(id, model, new PatternDateConverter(datePattern));
 	}
 
 	/**
-	 * Creates a new DateTextField defaulting to using a short date pattern
+	 * Creates a new DateField defaulting to using a short date pattern
 	 * 
 	 * @param id
 	 *            The id of the text field
 	 * @param datePattern
 	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
 	 *            patterns.
-	 * @return DateTextField
+	 * @return DateField
 	 */
 	public static DateField forDatePattern(String id, String datePattern)
 	{
@@ -83,7 +83,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	}
 
 	/**
-	 * Creates a new DateTextField using the provided date style.
+	 * Creates a new DateField using the provided date style.
 	 * 
 	 * @param id
 	 *            The id of the text field
@@ -94,16 +94,15 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
 	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
 	 *            character '-'. See {@link org.joda.time.DateTimeFormat#forStyle(String)}.
-	 * @return DateTextField
+	 * @return DateField
 	 */
 	public static DateField forDateStyle(String id, IModel<LocalDate> model, String dateStyle)
 	{
-		FormatStyle dateFormatStyle = parseFormatStyle(dateStyle.charAt(0));
-		return new DateField(id, model, new StyleZonedDateTimeConverter(dateStyle, null, false));
+		return new DateField(id, model, new StyleDateConverter(dateStyle));
 	}
 
 	/**
-	 * Creates a new DateTextField using the provided date style.
+	 * Creates a new DateField using the provided date style.
 	 * 
 	 * @param id
 	 *            The id of the text field
@@ -112,7 +111,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
 	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
 	 *            character '-'. See {@link org.joda.time.DateTimeFormat#forStyle(String)}.
-	 * @return DateTextField
+	 * @return DateField
 	 */
 	public static DateField forDateStyle(String id, String dateStyle)
 	{
@@ -120,11 +119,11 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	}
 
 	/**
-	 * Creates a new DateTextField defaulting to using a short date pattern
+	 * Creates a new DateField defaulting to using a short date pattern
 	 * 
 	 * @param id
 	 *            The id of the text field
-	 * @return DateTextField
+	 * @return DateField
 	 */
 	public static DateField forShortStyle(String id)
 	{
@@ -132,27 +131,27 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	}
 
 	/**
-	 * Creates a new DateTextField defaulting to using a short date pattern
+	 * Creates a new DateField defaulting to using a short date pattern
 	 * 
 	 * @param id
 	 *            The id of the text field
 	 * @param model
 	 *            The model
-	 * @return DateTextField
+	 * @return DateField
 	 */
 	public static DateField forShortStyle(String id, IModel<LocalDate> model)
 	{
-		return new DateField(id, model, new StyleZonedDateTimeConverter(false));
+		return new DateField(id, model, new StyleDateConverter());
 	}
 
 	/**
-	 * Creates a new DateTextField using the provided converter.
+	 * Creates a new DateField using the provided converter.
 	 * 
 	 * @param id
 	 *            The id of the text field
 	 * @param converter
 	 *            the date converter
-	 * @return DateTextField
+	 * @return DateField
 	 */
 	public static DateField withConverter(String id, IDateConverter<LocalDate> converter)
 	{
@@ -160,7 +159,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	}
 
 	/**
-	 * Creates a new DateTextField using the provided converter.
+	 * Creates a new DateField using the provided converter.
 	 * 
 	 * @param id
 	 *            The id of the text field
@@ -168,7 +167,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	 *            The model
 	 * @param converter
 	 *            the date converter
-	 * @return DateTextField
+	 * @return DateField
 	 */
 	public static DateField withConverter(String id, IModel<LocalDate> model, IDateConverter<LocalDate> converter)
 	{

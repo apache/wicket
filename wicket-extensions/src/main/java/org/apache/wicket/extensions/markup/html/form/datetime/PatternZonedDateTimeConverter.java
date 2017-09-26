@@ -33,14 +33,15 @@ import org.apache.wicket.util.lang.Args;
  * </p>
  * 
  * @see SimpleDateFormat
- * @see StyleDateConverter
+ * @see StyleZonedDateTimeConverter
  * @see org.apache.wicket.extensions.markup.html.form.DateTextField
- * @see java.time.LocalDate
+ * @see java.time.ZonedDateTime
  * @see DateTimeFormatter
+ * @see java.time.ZoneId
  * 
  * @author eelcohillenius
  */
-public class PatternDateConverter extends LocalDateConverter
+public class PatternZonedDateTimeConverter extends ZonedDateTimeConverter
 {
 
 	private static final long serialVersionUID = 1L;
@@ -50,16 +51,27 @@ public class PatternDateConverter extends LocalDateConverter
 
 	/**
 	 * Construct.
+	 * </p>
+	 * When applyTimeZoneDifference is true, the current time is applied on the parsed date, and the
+	 * date will be corrected for the time zone difference between the server and the client. For
+	 * instance, if I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9
+	 * hours ahead. So, if I'm inputting say 12/24 at a couple of hours before midnight, at the
+	 * server it is already 12/25. If this boolean is true, it will be transformed to 12/25, while
+	 * the client sees 12/24.
+	 * </p>
 	 * 
 	 * @param datePattern
 	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
 	 *            patterns.
+	 * @param applyTimeZoneDifference
+	 *            whether to apply the difference in time zones between client and server
 	 * @throws IllegalArgumentException
 	 *             in case the date pattern is null
 	 */
-	public PatternDateConverter(String datePattern)
+	public PatternZonedDateTimeConverter(String datePattern, boolean applyTimeZoneDifference)
 	{
-		super();
+
+		super(applyTimeZoneDifference);
 		this.datePattern = Args.notNull(datePattern, "datePattern");
 	}
 
