@@ -39,7 +39,7 @@ import java.util.Locale;
  * 
  * @author eelcohillenius
  */
-public class StyleDateConverter extends LocalDateConverter
+public class StyleZonedDateTimeConverter extends ZonedDateTimeConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -48,14 +48,24 @@ public class StyleDateConverter extends LocalDateConverter
 	 */
 	private final FormatStyle dateStyle;
 
+	private final FormatStyle timeStyle;
+
 	/**
 	 * Construct. The dateStyle 'S-' (which is the same as {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}) will
-	 * be used for constructing the date format for the current locale.
+	 * be used for constructing the date format for the current locale. </p> When
+	 * applyTimeZoneDifference is true, the current time is applied on the parsed date, and the date
+	 * will be corrected for the time zone difference between the server and the client. For
+	 * instance, if I'm in Seattle and the server I'm working on is in Amsterdam, the server is 9
+	 * hours ahead. So, if I'm inputting say 12/24 at a couple of hours before midnight, at the
+	 * server it is already 12/25. If this boolean is true, it will be transformed to 12/25, while
+	 * the client sees 12/24. </p>
 	 * 
+	 * @param applyTimeZoneDifference
+	 *            whether to apply the difference in time zones between client and server
 	 */
-	public StyleDateConverter()
+	public StyleZonedDateTimeConverter(boolean applyTimeZoneDifference)
 	{
-		this(FormatStyle.SHORT);
+		this(FormatStyle.SHORT, null, applyTimeZoneDifference);
 	}
 
 	/**
@@ -77,14 +87,14 @@ public class StyleDateConverter extends LocalDateConverter
 	 * @throws IllegalArgumentException
 	 *             in case dateStyle is null
 	 */
-	public StyleDateConverter(FormatStyle dateStyle, FormatStyle timeStyle, boolean applyTimeZoneDifference)
+	public StyleZonedDateTimeConverter(FormatStyle dateStyle, FormatStyle timeStyle, boolean applyTimeZoneDifference)
 	{
 		super(applyTimeZoneDifference);
 		this.dateStyle = dateStyle;
 		this.timeStyle = timeStyle;
 	}
 
-	public StyleDateConverter(String dateTimeStyle, boolean applyTimeZoneDifference)
+	public StyleZonedDateTimeConverter(String dateTimeStyle, boolean applyTimeZoneDifference)
 	{
 		this(parseFormatStyle(dateTimeStyle.charAt(0)), parseFormatStyle(dateTimeStyle.charAt(1)), applyTimeZoneDifference);
 	}

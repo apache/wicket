@@ -33,7 +33,7 @@ import org.apache.wicket.util.lang.Args;
  * </p>
  * 
  * @see SimpleDateFormat
- * @see StyleDateConverter
+ * @see StyleZonedDateTimeConverter
  * @see org.apache.wicket.extensions.markup.html.form.DateTextField
  * @see java.time.ZonedDateTime
  * @see DateTimeFormatter
@@ -41,7 +41,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @author eelcohillenius
  */
-public class PatternDateConverter extends DateConverter
+public class PatternDateConverter extends ZonedDateTimeConverter
 {
 
 	private static final long serialVersionUID = 1L;
@@ -81,7 +81,7 @@ public class PatternDateConverter extends DateConverter
 	 * @return datePattern
 	 */
 	@Override
-	public final String getDatePattern(Locale locale)
+	public final String getPattern(Locale locale)
 	{
 		return datePattern;
 	}

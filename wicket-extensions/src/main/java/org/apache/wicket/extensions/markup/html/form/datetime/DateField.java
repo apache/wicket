@@ -16,65 +16,238 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import java.time.ZonedDateTime;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.FormatStyle;
 
+import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.IConverter;
+import org.apache.wicket.util.lang.Args;
 
 /**
- * Works on a {@link java.time.ZonedDateTime} object. Displays a {@link DateTextField} and a
- * {@link DatePicker calendar popup}.<br/>
+ * A TextField that is mapped to a <code>java.time.LocalDate</code> object and that uses java.time time to
+ * parse and format values.
  * <p>
- * Note: {@link DateField} must <strong>not</strong> be associated with an
- * <code>&lt;input&gt;</code> tag, as opposed to {@link DateTextField}! The corresponding tag is
- * typically either a <code>&lt;div&gt;</code> or a <code>&lt;span&gt;</code> tag.
- * </p>
- * 
- * Example:
- * <p>
- * <u>Java:</u>
- * 
- * <pre>
- * DateField dateField = new DateField(&quot;birthday&quot;);
- * </pre>
- * 
+ * You should use on of the factory methods to construct the kind you want or use the public
+ * constructor and pass in the converter to use.
  * </p>
  * <p>
- * <u>Markup:</u>
- * 
- * <pre>
- * &lt;div wicket:id=&quot;birthday&quot;&gt;&lt;/div&gt;
- * </pre>
- * 
+ * This component tries to apply the time zone difference between the client and server. See the
+ * {@link ZonedDateTimeConverter#getApplyTimeZoneDifference() date converter} of this package for more
+ * information on that.
  * </p>
+ * 
+ * @see StyleZonedDateTimeConverter
+ * @see java.time.ZonedDateTime
+ * @see java.time.format.DateTimeFormatter
+ * @see java.time.ZoneId
  * 
  * @author eelcohillenius
  */
-public class DateField extends DateTimeField
+public class DateField extends TextField<LocalDate> implements ITextFormatProvider
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
+	 * Creates a new DateTextField defaulting to using a short date pattern
 	 * 
 	 * @param id
+	 *            The id of the text field
+	 * @param model
+	 *            The model
+	 * @param datePattern
+	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
+	 *            patterns.
+	 * @return DateTextField
 	 */
-	public DateField(String id)
+	public static DateField forDatePattern(String id, IModel<LocalDate> model, String datePattern)
 	{
-		this(id, null);
+		return new DateField(id, model, new PatternDateConverter(datePattern, true));
 	}
 
 	/**
-	 * Construct.
+	 * Creates a new DateTextField defaulting to using a short date pattern
 	 * 
 	 * @param id
-	 * @param model
+	 *            The id of the text field
+	 * @param datePattern
+	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
+	 *            patterns.
+	 * @return DateTextField
 	 */
-	public DateField(String id, IModel<ZonedDateTime> model)
+	public static DateField forDatePattern(String id, String datePattern)
 	{
-		super(id, model);
+		return forDatePattern(id, null, datePattern);
+	}
 
-		get(HOURS).setVisibilityAllowed(false);
-		get(MINUTES).setVisibilityAllowed(false);
-		get(AM_OR_PM_CHOICE).setVisibilityAllowed(false);
+	/**
+	 * Creates a new DateTextField using the provided date style.
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @param model
+	 *            The model
+	 * @param dateStyle
+	 *            Date style to use. The first character is the date style, and the second character
+	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
+	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
+	 *            character '-'. See {@link org.joda.time.DateTimeFormat#forStyle(String)}.
+	 * @return DateTextField
+	 */
+	public static DateField forDateStyle(String id, IModel<LocalDate> model, String dateStyle)
+	{
+		FormatStyle dateFormatStyle = parseFormatStyle(dateStyle.charAt(0));
+		return new DateField(id, model, new StyleZonedDateTimeConverter(dateStyle, null, false));
+	}
+
+	/**
+	 * Creates a new DateTextField using the provided date style.
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @param dateStyle
+	 *            Date style to use. The first character is the date style, and the second character
+	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
+	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
+	 *            character '-'. See {@link org.joda.time.DateTimeFormat#forStyle(String)}.
+	 * @return DateTextField
+	 */
+	public static DateField forDateStyle(String id, String dateStyle)
+	{
+		return forDateStyle(id, null, dateStyle);
+	}
+
+	/**
+	 * Creates a new DateTextField defaulting to using a short date pattern
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @return DateTextField
+	 */
+	public static DateField forShortStyle(String id)
+	{
+		return forShortStyle(id, null);
+	}
+
+	/**
+	 * Creates a new DateTextField defaulting to using a short date pattern
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @param model
+	 *            The model
+	 * @return DateTextField
+	 */
+	public static DateField forShortStyle(String id, IModel<LocalDate> model)
+	{
+		return new DateField(id, model, new StyleZonedDateTimeConverter(false));
+	}
+
+	/**
+	 * Creates a new DateTextField using the provided converter.
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @param converter
+	 *            the date converter
+	 * @return DateTextField
+	 */
+	public static DateField withConverter(String id, IDateConverter<LocalDate> converter)
+	{
+		return withConverter(id, null, converter);
+	}
+
+	/**
+	 * Creates a new DateTextField using the provided converter.
+	 * 
+	 * @param id
+	 *            The id of the text field
+	 * @param model
+	 *            The model
+	 * @param converter
+	 *            the date converter
+	 * @return DateTextField
+	 */
+	public static DateField withConverter(String id, IModel<LocalDate> model, IDateConverter<LocalDate> converter)
+	{
+		return new DateField(id, model, converter);
+	}
+
+	/**
+	 * The converter for the TextField
+	 */
+	private final IDateConverter<LocalDate> converter;
+
+	/**
+	 * Construct with a converter.
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            The model
+	 * @param converter
+	 *            The converter to use
+	 */
+	public DateField(String id, IModel<LocalDate> model, IDateConverter<LocalDate> converter)
+	{
+		super(id, model, LocalDate.class);
+
+		Args.notNull(converter, "converter");
+		this.converter = converter;
+	}
+
+	/**
+	 * Construct with a converter, and a null model.
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param converter
+	 *            The converter to use
+	 */
+	public DateField(String id, IDateConverter<LocalDate> converter)
+	{
+		this(id, null, converter);
+	}
+
+	/**
+	 * @return The specialized converter.
+	 * @see org.apache.wicket.Component#createConverter(java.lang.Class)
+	 */
+	@Override
+	protected IConverter<?> createConverter(Class<?> clazz)
+	{
+		if (LocalDate.class.isAssignableFrom(clazz))
+		{
+			return converter;
+		}
+		return null;
+	}
+
+	/**
+	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider#getTextFormat()
+	 */
+	@Override
+	public final String getTextFormat()
+	{
+		return converter.getPattern(getLocale());
+	}
+
+	public static FormatStyle parseFormatStyle(char style)
+	{
+		switch (style)
+		{
+			case 'S':
+				return FormatStyle.SHORT;
+			case 'M':
+				return FormatStyle.MEDIUM;
+			case 'L':
+				return FormatStyle.LONG;
+			case 'F':
+				return FormatStyle.FULL;
+			default:
+				return null;
+		}
 	}
 }

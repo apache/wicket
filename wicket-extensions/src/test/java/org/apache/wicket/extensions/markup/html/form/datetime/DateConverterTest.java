@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.wicket.extensions.markup.html.form.datetime.PatternDateConverter;
-import org.apache.wicket.extensions.markup.html.form.datetime.StyleDateConverter;
+import org.apache.wicket.extensions.markup.html.form.datetime.StyleZonedDateTimeConverter;
 import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.CalendarConverter;
@@ -32,7 +32,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests for {@link DateConverter} and subclasses.
+ * Tests for {@link ZonedDateTimeConverter} and subclasses.
  * 
  * @author akiraly
  */
@@ -46,13 +46,13 @@ public class DateConverterTest
 	{
 		Locale locale = Locale.GERMAN;
 
-		StyleDateConverter styleDateConverter = new StyleDateConverter("F-", false);
+		StyleZonedDateTimeConverter styleDateConverter = new StyleZonedDateTimeConverter("F-", false);
 		DateTimeFormatter styleFormatter = styleDateConverter.getFormat(locale);
 
 		Assert.assertEquals(locale, styleFormatter.getLocale());
 
 		PatternDateConverter patternDateConverter = new PatternDateConverter(
-			styleDateConverter.getDatePattern(locale), false);
+			styleDateConverter.getPattern(locale), false);
 		DateTimeFormatter patternFormatter = patternDateConverter.getFormat(locale);
 
 		Assert.assertEquals(locale, patternFormatter.getLocale());
@@ -78,7 +78,7 @@ public class DateConverterTest
 		input.clear();
 		input.set(2011, Calendar.MAY, 7);
 
-		final StyleDateConverter styleDateConverter = new StyleDateConverter("F-", false);
+		final StyleZonedDateTimeConverter styleDateConverter = new StyleZonedDateTimeConverter("F-", false);
 
 		CalendarConverter calendarConverter = new CalendarConverter(new IConverter<Date>()
 		{

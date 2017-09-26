@@ -52,7 +52,7 @@ import org.apache.wicket.validation.validator.RangeValidator;
  * <p>
  * <strong>Ajaxifying the DateTimeField</strong>: If you want to update a DateTimeField with an
  * {@link AjaxFormComponentUpdatingBehavior}, you have to attach it to the contained
- * {@link DateTextField} by overriding {@link #newDateTextField(String, IModel)} and calling
+ * {@link DateField} by overriding {@link #newDateTextField(String, IModel)} and calling
  * {@link #processInput()}:
  * 
  * <pre>{@code
@@ -126,7 +126,7 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 
 	// The date TextField and it's associated model object
 	// Note that any time information in date will be ignored
-	private DateTextField dateField;
+	private DateField dateField;
 	private ZonedDateTime dateTime = ZonedDateTime.now();
 
 	// The TextField for "hours" and it's associated model object
@@ -241,7 +241,7 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 	 * 
 	 * @return The date TextField
 	 */
-	protected final DateTextField getDateTextField()
+	protected final DateField getDateTextField()
 	{
 		return dateField;
 	}
@@ -379,17 +379,17 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 	}
 
 	/**
-	 * create a new {@link DateTextField} instance to be added to this panel.
+	 * create a new {@link DateField} instance to be added to this panel.
 	 * 
 	 * @param id
 	 *            the component id
 	 * @param dateFieldModel
-	 *            model that should be used by the {@link DateTextField}
+	 *            model that should be used by the {@link DateField}
 	 * @return a new date text field instance
 	 */
-	protected DateTextField newDateTextField(String id, IModel<LocalDate> dateFieldModel)
+	protected DateField newDateTextField(String id, IModel<LocalDate> dateFieldModel)
 	{
-		return DateTextField.forShortStyle(id, dateFieldModel, false);
+		return DateField.forShortStyle(id, dateFieldModel);
 	}
 
 	/**

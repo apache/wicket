@@ -26,7 +26,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -40,7 +39,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author eelcohillenius
  */
-public abstract class DateConverter implements IConverter<ZonedDateTime>
+public abstract class ZonedDateTimeConverter implements IDateConverter<ZonedDateTime>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,7 +49,7 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 	private final boolean applyTimeZoneDifference;
 
 	/**
-	 * Construct. </p> When applyTimeZoneDifference is true, the current time is applied on the
+	 * Construct. <p> When applyTimeZoneDifference is true, the current time is applied on the
 	 * parsed date, and the date will be corrected for the time zone difference between the server
 	 * and the client. For instance, if I'm in Seattle and the server I'm working on is in
 	 * Amsterdam, the server is 9 hours ahead. So, if I'm inputting say 12/24 at a couple of hours
@@ -60,12 +59,13 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 	 * @param applyTimeZoneDifference
 	 *            whether to apply the difference in time zones between client and server
 	 */
-	public DateConverter(boolean applyTimeZoneDifference)
+	public ZonedDateTimeConverter(boolean applyTimeZoneDifference)
 	{
 		this.applyTimeZoneDifference = applyTimeZoneDifference;
 	}
 
-	protected ZonedDateTime convertToObject(String value, DateTimeFormatter format, Locale locale) {
+	@Override
+	public ZonedDateTime convertToObject(String value, DateTimeFormatter format, Locale locale) {
 		try
 		{
 			// parse date retaining the time of the submission
@@ -122,7 +122,7 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 	ConversionException newConversionException(RuntimeException cause, Locale locale)
 	{
 		return new ConversionException(cause)
-				.setVariable("format", getDatePattern(locale));
+				.setVariable("format", getPattern(locale));
 	}
 
 	@Override
@@ -164,7 +164,8 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 	 *            The locale used to convert the value
 	 * @return Gets the pattern that is used for printing and parsing
 	 */
-	public abstract String getDatePattern(Locale locale);
+	@Override
+	public abstract String getPattern(Locale locale);
 
 	/**
 	 * Gets the client's time zone.
@@ -188,7 +189,8 @@ public abstract class DateConverter implements IConverter<ZonedDateTime>
 	 * 
 	 * @return formatter The formatter for the current conversion
 	 */
-	protected abstract DateTimeFormatter getFormat(Locale locale);
+	@Override
+	public abstract DateTimeFormatter getFormat(Locale locale);
 
 	/**
 	 * Gets the server time zone. Override this method if you want to fix to a certain time zone,
