@@ -2,6 +2,19 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.28.0
+
+** Bug
+
+    * [WICKET-6457] - PageStore not cleared at session end
+    * [WICKET-6465] - PageStore not cleared at session end
+
+** Improvement
+
+    * [WICKET-6308] - Add an extra constructor to EmailTextField with a custom validator but without model
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.27.1
 
 ** Bug
