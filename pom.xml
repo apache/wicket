@@ -96,6 +96,7 @@
 						<inherited>true</inherited>
 						<configuration>
 							<aggregate>true</aggregate>
+							<additionalparam>--allow-script-in-comments</additionalparam>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -152,6 +153,7 @@
 						<inherited>true</inherited>
 						<configuration>
 							<skip>true</skip>
+							<additionalparam>--allow-script-in-comments</additionalparam>
 						</configuration>
 					</plugin>
 				</plugins>
