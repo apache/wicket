@@ -18,6 +18,7 @@ package org.apache.wicket.http2.markup.head;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.catalina.core.ApplicationPushBuilder;
 import org.apache.wicket.http2.markup.head.PushItemHeaderValue.HeaderOperation;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -37,7 +38,7 @@ public class Tomcat85PushBuilder implements PushBuilder
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
 		org.apache.catalina.connector.RequestFacade tomcatRequest = (org.apache.catalina.connector.RequestFacade) httpRequest;
-		org.apache.catalina.servlet4preview.http.PushBuilder pushBuilder = tomcatRequest.newPushBuilder();
+		ApplicationPushBuilder pushBuilder = (ApplicationPushBuilder) tomcatRequest.newPushBuilder();
 		if (pushBuilder != null)
 		{
 			for (PushItem pushItem : pushItems)
