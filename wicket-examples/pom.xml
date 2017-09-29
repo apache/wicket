@@ -30,6 +30,10 @@
 		Examples displaying a component reference and several components in
 		action.
 	</description>
+
+    <properties>
+        <docker-maven-plugin.version>1.0.0</docker-maven-plugin.version>
+    </properties>
     
 	<dependencyManagement>
     	<dependencies>
@@ -284,4 +288,44 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>docker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>${docker-maven-plugin.version}</version>
+						<configuration>
+							<imageName>apache-docker-wicket-docker.bintray.io/wicket-examples:LATEST-7</imageName>
+							<baseImage>tomcat:8.5-jre8-alpine</baseImage>
+							<resources>
+								<resource>
+									<targetPath>/usr/local/tomcat/webapps</targetPath>
+									<directory>${project.build.directory}</directory>
+									<include>wicket-examples.war</include>
+								</resource>
+							</resources>
+							<forceTags>true</forceTags>
+							<imageTags>
+								<imageTag>LATEST-7</imageTag>
+							</imageTags>
+						</configuration>
+						<executions>
+							<execution>
+								<id>build</id>
+								<goals>
+									<goal>build</goal>
+								</goals>
+								<phase>install</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>
