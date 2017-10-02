@@ -17,19 +17,24 @@
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.util.Locale;
+import java.util.TimeZone;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.protocol.http.request.WebClientInfo;
 
 /**
- * Works on a {@link java.time.LocalDateTimeTime} object. Displays a date field and a DatePicker, a field
+ * Works on a {@link java.time.ZonedDateTimeTime} object. Displays a date field and a DatePicker, a field
  * for hours and a field for minutes, and an AM/PM field. The format (12h/24h) of the hours field
- * depends on the time format of this {@link DateTimeField}'s {@link Locale}, as does the visibility
- * of the AM/PM field (see {@link DateTimeField#use12HourFormat}).
+ * depends on the time format of this {@link ZonedDateTimeField}'s {@link Locale}, as does the visibility
+ * of the AM/PM field (see {@link ZonedDateTimeField#use12HourFormat}).
  * <p>
  * <strong>Ajaxifying the DateTimeField</strong>: If you want to update a DateTimeField with an
  * {@link AjaxFormComponentUpdatingBehavior}, you have to attach it to the contained
@@ -56,18 +61,18 @@ import org.apache.wicket.model.IModel;
  * @author eelcohillenius
  * @see DateField for a variant with just the date field and date picker
  */
-public class DateTimeField extends AbstractDateTimeField<LocalDateTime>
+public class ZonedDateTimeField extends AbstractDateTimeField<ZonedDateTime>
 {
 	private static final long serialVersionUID = 1L;
 
-	private LocalDateTime dateTime = LocalDateTime.now();
+	private ZonedDateTime dateTime = ZonedDateTime.now();
 
 	/**
 	 * Construct.
 	 * 
 	 * @param id
 	 */
-	public DateTimeField(final String id)
+	public ZonedDateTimeField(final String id)
 	{
 		this(id, null);
 	}
@@ -78,23 +83,49 @@ public class DateTimeField extends AbstractDateTimeField<LocalDateTime>
 	 * @param id
 	 * @param model
 	 */
-	public DateTimeField(final String id, final IModel<LocalDateTime> model)
+	public ZonedDateTimeField(final String id, final IModel<ZonedDateTime> model)
 	{
 		super(id, model);
 
 		// Sets the type that will be used when updating the model for this component.
-		setType(LocalDateTime.class);
+		setType(ZonedDateTime.class);
 	}
 
-	LocalDateTime performConvert(LocalDate date, LocalTime time) {
-		return LocalDateTime.of(date, time);
+	/**
+	 * Gets the client's time zone.
+	 * 
+	 * @return The client's time zone or null
+	 */
+	protected ZoneId getClientTimeZone()
+	{
+		ClientInfo info = Session.get().getClientInfo();
+		if (info instanceof WebClientInfo)
+		{
+			TimeZone timeZone = ((WebClientInfo) info).getProperties().getTimeZone();
+			return timeZone != null ? timeZone.toZoneId() : null;
+		}
+		return null;
+	}
+
+	ZonedDateTime performConvert(LocalDate date, LocalTime time) {
+		return ZonedDateTime.of(date, time, getClientTimeZone());
 	}
 
 	@Override
 	void prepareObject() {
-		if (getModelObject() == null)
+		ZonedDateTime modelObject = getModelObject();
+		if (modelObject == null)
 		{
 			dateTime = null;
+		}
+		else
+		{
+			// convert date to the client's time zone if we have that info
+			ZoneId zone = getClientTimeZone();
+			if (zone != null)
+			{
+				modelObject = modelObject.withZoneSameInstant(zone);
+			}
 		}
 	}
 
