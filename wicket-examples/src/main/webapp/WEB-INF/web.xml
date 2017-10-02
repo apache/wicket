@@ -409,15 +409,6 @@
 		</init-param>
 	</filter>
 
-	<filter>
-		<filter-name>DatesApplication</filter-name>
-		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-		<init-param>
-			<param-name>applicationClassName</param-name>
-			<param-value>org.apache.wicket.examples.dates.DatesApplication</param-value>
-		</init-param>
-	</filter>
-
 	<!-- The WicketSesionFilter can be used to provide thread local access to servlets/ JSPs/ etc -->
 	<filter>
 		<filter-name>WicketSessionFilter</filter-name>
@@ -750,13 +741,6 @@
 	</filter-mapping>	
 
 	<filter-mapping>
-		<filter-name>DatesApplication</filter-name>
-		<url-pattern>/dates/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>INCLUDE</dispatcher>
-	</filter-mapping>
-
-	<filter-mapping>
 		<filter-name>RequestMapperApplication</filter-name>
 		<url-pattern>/mappers/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
@@ -830,6 +814,19 @@
         <filter-name>BeanValidation</filter-name>
         <url-pattern>/bean-validation/*</url-pattern>
     </filter-mapping>
+
+	<filter>
+		<filter-name>DateTimeApplication</filter-name>
+		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+			<param-name>applicationClassName</param-name>
+			<param-value>org.apache.wicket.examples.datetime.DateTimeApplication</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>DateTimeApplication</filter-name>
+		<url-pattern>/datetime/*</url-pattern>
+	</filter-mapping>
 
 	<!--
 	 Parameter used by Spring to locate its context configuration used for creating
