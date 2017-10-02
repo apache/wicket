@@ -32,10 +32,6 @@ import java.util.Locale;
  * </p>
  * 
  * @see org.apache.wicket.extensions.markup.html.form.DateTextField
- * @see java.time.LocalTime
- * @see DateTimeFormatter
- * 
- * @author eelcohillenius
  */
 public class StyleTimeConverter extends LocalTimeConverter
 {

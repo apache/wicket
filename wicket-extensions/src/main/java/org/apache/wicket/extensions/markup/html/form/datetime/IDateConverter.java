@@ -17,13 +17,14 @@
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.IConverter;
 
 
 /**
- * Base class for Joda Time based date converters. It contains the logic to parse and format,
+ * Base class for javax.time based date converters. It contains the logic to parse and format,
  * optionally taking the time zone difference between clients and the server into account.
  * <p>
  * Converters of this class are best suited for per-component use.
@@ -31,7 +32,7 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  * @author eelcohillenius
  */
-public interface IDateConverter<T> extends IConverter<T>
+public interface IDateConverter<T extends Temporal> extends IConverter<T>
 {
 
 	T convertToObject(String value, DateTimeFormatter format, Locale locale);

@@ -256,11 +256,6 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 			dateTime = dateTime.with(ChronoField.MONTH_OF_YEAR, date.getMonthValue());
 			dateTime = dateTime.with(ChronoField.DAY_OF_YEAR, date.getDayOfMonth());
 		}
-
-		@Override
-		public void detach()
-		{
-		}
 	}
 
 	protected class TimeModel implements IModel<LocalTime>
@@ -278,11 +273,6 @@ public class DateTimeField extends FormComponentPanel<ZonedDateTime>
 		{
 			dateTime = dateTime.with(ChronoField.HOUR_OF_DAY, time.getHour());
 			dateTime = dateTime.with(ChronoField.MINUTE_OF_HOUR, time.getMinute());
-		}
-
-		@Override
-		public void detach()
-		{
 		}
 	}
 }

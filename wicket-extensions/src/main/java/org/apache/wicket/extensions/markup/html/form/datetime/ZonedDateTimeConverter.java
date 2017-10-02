@@ -31,7 +31,7 @@ import org.apache.wicket.util.string.Strings;
 
 
 /**
- * Base class for Joda Time based date converters. It contains the logic to parse and format,
+ * Base class for javax.time based date converters. It contains the logic to parse and format,
  * optionally taking the time zone difference between clients and the server into account.
  * <p>
  * Converters of this class are best suited for per-component use.
