@@ -38,12 +38,12 @@ public class StyleTimeConverter extends LocalTimeConverter
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Date style to use. See {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}.
+	 * Date style to use. See {@link DateTimeFormatter#ofLocalizedTime(FormatStyle)}.
 	 */
 	private final FormatStyle timeStyle;
 
 	/**
-	 * Construct. The dateStyle 'S-' (which is the same as {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}) will
+	 * Construct. The dateStyle 'S-' (which is the same as {@link DateTimeFormatter#ofLocalizedTime(FormatStyle)}) will
 	 * be used for constructing the date format for the current locale.
 	 * 
 	 */
@@ -54,10 +54,10 @@ public class StyleTimeConverter extends LocalTimeConverter
 
 	/**
 	 * Construct. The provided pattern will be used as the base format (but they will be localized
-	 * for the current locale) and if null, {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)} will be used.
+	 * for the current locale) and if null, {@link DateTimeFormatter#ofLocalizedTime(FormatStyle)} will be used.
 	 * 
 	 * @param timeStyle
-	 *            Date style to use. See {@link DateTimeFormatter#ofLocalizedDate(FormatStyle)}.
+	 *            Date style to use. See {@link DateTimeFormatter#ofLocalizedTime(FormatStyle)}.
 	 * @throws IllegalArgumentException
 	 *             in case dateStyle is null
 	 */
@@ -89,12 +89,12 @@ public class StyleTimeConverter extends LocalTimeConverter
 	@Override
 	public DateTimeFormatter getFormat(Locale locale)
 	{
-		return timeStyle == null ? null : DateTimeFormatter.ofLocalizedDate(timeStyle).withLocale(locale);
+		return timeStyle == null ? null : DateTimeFormatter.ofLocalizedTime(timeStyle).withLocale(locale);
 	}
 
 	public static FormatStyle parseFormatStyle(char style)
 	{
-		return DateField.parseFormatStyle(style);
+		return TimeField.parseFormatStyle(style);
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -289,9 +290,19 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	 * @return a new text field instance
 	 */
 	protected TextField<Integer> newHoursTextField(final String id, IModel<Integer> model, Class<Integer> type) {
-		TextField<Integer> hoursTextField = new TextField<>(id, model, type);
-		hoursTextField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator
-			.range(1, 12));
+		TextField<Integer> hoursTextField = new TextField<Integer>(id, model, type)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected String[] getInputTypes()
+			{
+				return new String[] {"number"};
+			}
+		};
+		hoursTextField.add(AttributeModifier.append("min", getMaximumHours() == 24 ? 0 : 1));
+		hoursTextField.add(AttributeModifier.append("max", getMaximumHours() == 24 ? 23 : 12));
+		hoursTextField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator.range(1, 12));
 		hoursTextField.setLabel(new Model<>(HOURS));
 		return hoursTextField;
 	}
@@ -323,7 +334,15 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 				}
 				return null;
 			}
+
+			@Override
+			protected String[] getInputTypes()
+			{
+				return new String[] {"number"};
+			}
 		};
+		minutesField.add(AttributeModifier.append("min", 0));
+		minutesField.add(AttributeModifier.append("max", 59));
 		minutesField.add(new RangeValidator<>(0, 59));
 		minutesField.setLabel(new Model<>(MINUTES));
 		return minutesField;
@@ -340,20 +359,24 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	@Override
 	public void convertInput()
 	{
-		Integer hoursInput = hoursField.getConvertedInput();
-		Integer minutesInput = minutesField.getConvertedInput();
+		Integer hours = hoursField.getConvertedInput();
+		Integer minutes = minutesField.getConvertedInput();
 		AM_PM amOrPmInput = amOrPmChoice.getConvertedInput();
 
-		// Use the input to create a date object with proper timezone
-		LocalTime localTime = LocalTime.of(hoursInput, minutesInput);
-
-		// Adjust for halfday if needed
-		if (use12HourFormat())
+		LocalTime localTime = null;
+		if (hours != null && minutes != null)
 		{
-			int halfday = (amOrPmInput == AM_PM.PM ? 1 : 0);
-			localTime = localTime.with(ChronoField.AMPM_OF_DAY, halfday);
+			// Use the input to create a LocalTime object
+			localTime = LocalTime.of(hours, minutes);
+
+			// Adjust for halfday if needed
+			if (use12HourFormat())
+			{
+				int halfday = (amOrPmInput == AM_PM.PM ? 1 : 0);
+				localTime = localTime.with(ChronoField.AMPM_OF_DAY, halfday);
+			}
 		}
-		super.convertInput();
+		setConvertedInput(localTime);
 	}
 
 	@Override
@@ -400,7 +423,6 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 		return use12HourFormat ? 12 : 24;
 	}
 
-
 	protected class HoursModel implements IModel<Integer>
 	{
 		private static final long serialVersionUID = 1L;
@@ -408,18 +430,18 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 		@Override
 		public Integer getObject()
 		{
-			return time.getHour();
+			LocalTime t = TimeField.this.getModelObject();
+			if (t == null)
+			{
+				return null;
+			}
+			return getMaximumHours() == 24 ? t.getHour() : t.get(ChronoField.CLOCK_HOUR_OF_AMPM);
 		}
 
 		@Override
 		public void setObject(Integer hour)
 		{
-			time = time.with(ChronoField.HOUR_OF_DAY, hour);
-		}
-
-		@Override
-		public void detach()
-		{
+			time = time.with(getMaximumHours() == 24 ? ChronoField.HOUR_OF_DAY : ChronoField.CLOCK_HOUR_OF_AMPM, hour);
 		}
 	}
 
@@ -430,18 +452,14 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 		@Override
 		public Integer getObject()
 		{
-			return time.getMinute();
+			LocalTime t = TimeField.this.getModelObject();
+			return t == null ? null : t.getMinute();
 		}
 
 		@Override
 		public void setObject(Integer minute)
 		{
 			time = time.with(ChronoField.MINUTE_OF_HOUR, minute);
-		}
-
-		@Override
-		public void detach()
-		{
 		}
 	}
 
@@ -452,7 +470,8 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 		@Override
 		public AM_PM getObject()
 		{
-			int i = time.get(ChronoField.AMPM_OF_DAY);
+			LocalTime t = TimeField.this.getModelObject();
+			int i = t == null ? 0 : t.get(ChronoField.AMPM_OF_DAY);
 			return i == 0 ? AM_PM.AM : AM_PM.PM;
 		}
 
@@ -461,11 +480,6 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 		{
 			int i = AM_PM.AM == amPm ? 0 : 1;
 			time = time.with(ChronoField.AMPM_OF_DAY, i);
-		}
-
-		@Override
-		public void detach()
-		{
 		}
 	}
 
@@ -490,5 +504,17 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	public final String getTextFormat()
 	{
 		return converter.getPattern(getLocale());
+	}
+
+	public static FormatStyle parseFormatStyle(char style)
+	{
+		switch (style)
+		{
+			case 'M':
+				return FormatStyle.MEDIUM;
+			case 'S':
+			default:
+				return FormatStyle.SHORT;
+		}
 	}
 }

@@ -9,18 +9,26 @@
 	<body>
 		<span wicket:id="mainNavigation" />
 
-		<!-- h3>Demo of Wicket's default: <em>org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource</em> </h3>
-		<wicket:container wicket:id="wicket"></wicket:container>
+		<h3>Demo for short style time</h3>
+		<span wicket:id="time1"></span><br/>
 
 		<hr/>
 
-		<h3>Demo using <a href="https://github.com/axet/kaptcha">Kaptcha</a> library</h3>
-		<wicket:container wicket:id="kaptcha"></wicket:container>
+		<h3>Demo for Full style time</h3>
+		<span wicket:id="time2"></span><br/>
 
 		<hr/>
 
-		<h3>Demo using <a href="https://github.com/akiraly/cage">Cage</a> library</h3>
-		<wicket:container wicket:id="cage"></wicket:container-->
+		<h3>Demo for Short style time with 24-hours</h3>
+		<span wicket:id="time3"></span><br/>
 
+		<hr/>
+
+		<form wicket:id="form">
+			<h3>Demo for default Local Date Time in Form</h3>
+			<span wicket:id="datetime1"></span><br/>
+			<input wicket:id="submit" type="submit" value="Submit"/>
+			<div wicket:id="feedback"></div>
+		</form>
 	</body>
 </html>
