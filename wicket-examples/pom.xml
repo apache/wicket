@@ -271,7 +271,6 @@
 		</pluginManagement>
 	</build>
 
-
 	<profiles>
 		<profile>
 			<id>docker</id>
@@ -282,7 +281,7 @@
 						<artifactId>docker-maven-plugin</artifactId>
 						<version>${docker-maven-plugin.version}</version>
 						<configuration>
-							<imageName>apache-docker-wicket-docker.bintray.io/wicket-examples:${project.version}</imageName>
+							<imageName>apache-docker-wicket-docker.bintray.io/wicket-examples:LATEST-8</imageName>
 							<baseImage>tomcat:8.5-jre8-alpine</baseImage>
 							<resources>
 								<resource>
@@ -293,13 +292,8 @@
 							</resources>
 							<forceTags>true</forceTags>
 							<imageTags>
-								<imageTag>${project.version}</imageTag>
-								<imageTag>latest</imageTag>
+								<imageTag>LATEST-8</imageTag>
 							</imageTags>
-							<exposes>
-								<!-- for debugging the application inside Tomcat -->
-								<expose>45555</expose>
-							</exposes>
 						</configuration>
 						<executions>
 							<execution>
