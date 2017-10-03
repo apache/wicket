@@ -51,7 +51,10 @@ public class WebSocketTester
 		Args.notNull(page, "page");
 
 		WebApplication webApplication = wicketTester.getApplication();
-		webApplication.getWicketFilter().setFilterPath("");
+		if (webApplication.getWicketFilter().getFilterPath() == null)
+		{
+			webApplication.getWicketFilter().setFilterPath("");
+		}
 
 		socketProcessor = new TestWebSocketProcessor(wicketTester, page)
 		{
@@ -85,7 +88,10 @@ public class WebSocketTester
 		Args.notNull(resourceName, "resourceName");
 
 		WebApplication webApplication = wicketTester.getApplication();
-		webApplication.getWicketFilter().setFilterPath("");
+		if (webApplication.getWicketFilter().getFilterPath() == null)
+		{
+			webApplication.getWicketFilter().setFilterPath("");
+		}
 
 		socketProcessor = new TestWebSocketProcessor(wicketTester, resourceName)
 		{
