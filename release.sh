@@ -249,7 +249,7 @@ If you upgrade from $major_version.y.z this release is a drop in replacement. If
 you come from a version prior to $major_version.0.0, please read our Wicket $major_version
 migration guide found at
 
- * http://s.apache.org/wicket${major_version}migrate
+ * http://s.apache.org/wicket${major_version}migration
 
 Have fun!
 
