@@ -153,7 +153,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	 *            the date converter
 	 * @return DateField
 	 */
-	public static DateField withConverter(String id, IDateConverter<LocalDate> converter)
+	public static DateField withConverter(String id, LocalDateConverter converter)
 	{
 		return withConverter(id, null, converter);
 	}
@@ -169,7 +169,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	 *            the date converter
 	 * @return DateField
 	 */
-	public static DateField withConverter(String id, IModel<LocalDate> model, IDateConverter<LocalDate> converter)
+	public static DateField withConverter(String id, IModel<LocalDate> model, LocalDateConverter converter)
 	{
 		return new DateField(id, model, converter);
 	}
@@ -177,7 +177,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	/**
 	 * The converter for the TextField
 	 */
-	private final IDateConverter<LocalDate> converter;
+	private final LocalDateConverter converter;
 
 	/**
 	 * Construct with a converter.
@@ -189,7 +189,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	 * @param converter
 	 *            The converter to use
 	 */
-	public DateField(String id, IModel<LocalDate> model, IDateConverter<LocalDate> converter)
+	public DateField(String id, IModel<LocalDate> model, LocalDateConverter converter)
 	{
 		super(id, model, LocalDate.class);
 
@@ -205,7 +205,7 @@ public class DateField extends TextField<LocalDate> implements ITextFormatProvid
 	 * @param converter
 	 *            The converter to use
 	 */
-	public DateField(String id, IDateConverter<LocalDate> converter)
+	public DateField(String id, LocalDateConverter converter)
 	{
 		this(id, null, converter);
 	}

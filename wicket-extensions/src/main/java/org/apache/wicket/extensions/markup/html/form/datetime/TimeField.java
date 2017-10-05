@@ -201,7 +201,7 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	 *            the date converter
 	 * @return TimeField
 	 */
-	public static TimeField withConverter(String id, IDateConverter<LocalTime> converter)
+	public static TimeField withConverter(String id, LocalTimeConverter converter)
 	{
 		return withConverter(id, null, converter);
 	}
@@ -217,7 +217,7 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	 *            the date converter
 	 * @return TimeField
 	 */
-	public static TimeField withConverter(String id, IModel<LocalTime> model, IDateConverter<LocalTime> converter)
+	public static TimeField withConverter(String id, IModel<LocalTime> model, LocalTimeConverter converter)
 	{
 		return new TimeField(id, model, converter);
 	}
@@ -225,7 +225,7 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	/**
 	 * The converter for the TextField
 	 */
-	private final IDateConverter<LocalTime> converter;
+	private final LocalTimeConverter converter;
 
 	/**
 	 * Construct.
@@ -233,7 +233,7 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	 * @param id
 	 *      the component id
 	 */
-	public TimeField(String id, IDateConverter<LocalTime> converter)
+	public TimeField(String id, LocalTimeConverter converter)
 	{
 		this(id, null, converter);
 	}
@@ -246,7 +246,7 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	 * @param model
 	 *      the component's model
 	 */
-	public TimeField(String id, IModel<LocalTime> model, IDateConverter<LocalTime> converter)
+	public TimeField(String id, IModel<LocalTime> model, LocalTimeConverter converter)
 	{
 		super(id, model);
 

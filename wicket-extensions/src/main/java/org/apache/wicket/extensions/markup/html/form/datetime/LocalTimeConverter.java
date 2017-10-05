@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -34,7 +35,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author eelcohillenius
  */
-public abstract class LocalTimeConverter implements IDateConverter<LocalTime>
+public abstract class LocalTimeConverter implements IConverter<LocalTime>
 {
 	private static final long serialVersionUID = 1L;
 

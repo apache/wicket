@@ -26,6 +26,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.util.convert.ConversionException;
+import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
 
@@ -39,7 +40,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author eelcohillenius
  */
-public abstract class ZonedDateTimeConverter implements IDateConverter<ZonedDateTime>
+public abstract class ZonedDateTimeConverter implements IConverter<ZonedDateTime>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +65,6 @@ public abstract class ZonedDateTimeConverter implements IDateConverter<ZonedDate
 		this.applyTimeZoneDifference = applyTimeZoneDifference;
 	}
 
-	@Override
 	public ZonedDateTime convertToObject(String value, DateTimeFormatter format, Locale locale) {
 		try
 		{
@@ -164,7 +164,6 @@ public abstract class ZonedDateTimeConverter implements IDateConverter<ZonedDate
 	 *            The locale used to convert the value
 	 * @return Gets the pattern that is used for printing and parsing
 	 */
-	@Override
 	public abstract String getPattern(Locale locale);
 
 	/**
@@ -189,7 +188,6 @@ public abstract class ZonedDateTimeConverter implements IDateConverter<ZonedDate
 	 * 
 	 * @return formatter The formatter for the current conversion
 	 */
-	@Override
 	public abstract DateTimeFormatter getFormat(Locale locale);
 
 	/**
