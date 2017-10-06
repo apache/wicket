@@ -90,17 +90,9 @@ public class DateTimeField extends AbstractDateTimeField<LocalDateTime>
 		return LocalDateTime.of(date, time);
 	}
 
-	@Override
-	void prepareObject() {
-		if (getModelObject() == null)
-		{
-			dateTime = null;
-		}
-	}
-
 	LocalDate getLocalDate()
 	{
-		return dateTime.toLocalDate();
+		return getModelObject() == null ? null : dateTime.toLocalDate();
 	}
 
 	void setLocalDate(LocalDate date)
@@ -112,7 +104,7 @@ public class DateTimeField extends AbstractDateTimeField<LocalDateTime>
 
 	LocalTime getLocalTime()
 	{
-		return dateTime.toLocalTime();
+		return getModelObject() == null ? null : dateTime.toLocalTime();
 	}
 
 	void setLocalTime(LocalTime time)

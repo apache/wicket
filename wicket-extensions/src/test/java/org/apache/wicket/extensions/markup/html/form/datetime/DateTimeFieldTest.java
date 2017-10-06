@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.markup.html.form.datetime;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Locale;
 
@@ -102,6 +103,69 @@ public class DateTimeFieldTest extends WicketTestCase {
 		LocalDate d = page.field.getModelObject();
 		assertNotNull(d);
 		assertEquals(date, d);
+	}
+
+	@Test
+	public void dateTimeNullTest() {
+		TestDateTimePage page = new TestDateTimePage(null);
+		tester.startPage(page);
+		FormTester formTester = tester.newFormTester("form", false);
+		formTester.submit();
+		assertNull(page.field.getModelObject());
+	}
+
+	@Test
+	public void dateTimeNullTest1() {
+		LocalDate date = LocalDate.of(2017, 02, 13);
+		TestDateTimePage page = new TestDateTimePage(null);
+		tester.startPage(page);
+		FormTester formTester = tester.newFormTester("form", false);
+		formTester.setValue("field:date", new StyleDateConverter("F").convertToString(date, Locale.forLanguageTag("en-US")));
+		formTester.submit();
+		assertNull(page.field.getModelObject());
+	}
+
+	@Test
+	public void dateTimeNullTest2() {
+		TestDateTimePage page = new TestDateTimePage(null);
+		tester.startPage(page);
+		FormTester formTester = tester.newFormTester("form", false);
+		formTester.setValue("field:time:hours", "6");
+		formTester.setValue("field:time:minutes", "15");
+		formTester.select("field:time:amOrPmChoice", 0);
+		formTester.submit();
+		assertNull(page.field.getModelObject());
+	}
+
+	@Test
+	public void dateTimeNotNullTest() {
+		LocalDate date = LocalDate.of(2017, 02, 13);
+		TestDateTimePage page = new TestDateTimePage(null);
+		tester.startPage(page);
+		FormTester formTester = tester.newFormTester("form", false);
+		formTester.setValue("field:date", new StyleDateConverter("S").convertToString(date, Locale.forLanguageTag("en-US")));
+		formTester.setValue("field:time:hours", "6");
+		formTester.setValue("field:time:minutes", "15");
+		formTester.select("field:time:amOrPmChoice", 0);
+		formTester.submit();
+		assertNotNull(page.field.getModelObject());
+		assertEquals(LocalDateTime.of(date, LocalTime.of(6,  15)), page.field.getModelObject());
+	}
+
+	public static class TestDateTimePage extends TestPage<LocalDateTime>
+	{
+		private static final long serialVersionUID = 1L;
+
+		TestDateTimePage(LocalDateTime val)
+		{
+			super(val);
+		}
+
+		@Override
+		FormComponent<LocalDateTime> newComponent()
+		{
+			return new DateTimeField("field", model);
+		}
 	}
 
 	public static class TestDatePage extends TestPage<LocalDate>
