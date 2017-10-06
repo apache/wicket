@@ -114,11 +114,7 @@ public class ZonedDateTimeField extends AbstractDateTimeField<ZonedDateTime>
 	@Override
 	void prepareObject() {
 		ZonedDateTime modelObject = getModelObject();
-		if (modelObject == null)
-		{
-			dateTime = null;
-		}
-		else
+		if (modelObject != null)
 		{
 			// convert date to the client's time zone if we have that info
 			ZoneId zone = getClientTimeZone();
@@ -131,7 +127,7 @@ public class ZonedDateTimeField extends AbstractDateTimeField<ZonedDateTime>
 
 	LocalDate getLocalDate()
 	{
-		return dateTime.toLocalDate();
+		return getModelObject() == null ? null : dateTime.toLocalDate();
 	}
 
 	void setLocalDate(LocalDate date)
@@ -143,7 +139,7 @@ public class ZonedDateTimeField extends AbstractDateTimeField<ZonedDateTime>
 
 	LocalTime getLocalTime()
 	{
-		return dateTime.toLocalTime();
+		return getModelObject() == null ? null : dateTime.toLocalTime();
 	}
 
 	void setLocalTime(LocalTime time)

@@ -137,18 +137,18 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 		try
 		{
 			// Get the converted input values
-			LocalDate localDate = dateField.getConvertedInput();
+			LocalDate date = dateField.getConvertedInput();
+			LocalTime time = timeField.getConvertedInput();
 
-			if (localDate == null)
+			if (date == null || time == null)
 			{
-				return;
+				setConvertedInput(null);
 			}
-
-			// Use the input to create a date object with proper timezone
-			LocalTime localTime = timeField.getConvertedInput();
-
-			// The date will be in the server's timezone
-			setConvertedInput(performConvert(localDate, localTime));
+			else
+			{
+				// Use the input to create proper date-time
+				setConvertedInput(performConvert(date, time));
+			}
 		}
 		catch (RuntimeException e)
 		{
@@ -159,7 +159,9 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 
 	abstract T performConvert(LocalDate date, LocalTime time);
 
-	abstract void prepareObject();
+	void prepareObject() {
+		// no-op by default
+	}
 
 	/**
 	 * create a new {@link DateField} instance to be added to this panel.
