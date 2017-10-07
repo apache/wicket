@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.is;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
+import org.apache.wicket.util.convert.ConversionException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,5 +43,15 @@ public class LocalDateTimeConverterTest extends Assert
 		LocalDateTimeConverter converter = new LocalDateTimeConverter();
 		LocalDateTime date = converter.convertToObject("Jul 11, 2016 1:02:03 AM", Locale.ENGLISH);
 		assertThat(date, is(equalTo(LocalDateTime.of(2016, 7, 11, 1, 2, 3))));
+	}
+	
+	@Test
+	public void convertFails() {
+		LocalDateTimeConverter converter = new LocalDateTimeConverter();
+
+		try {
+			converter.convertToObject("aaa", Locale.ENGLISH);
+		} catch (ConversionException expected) {
+		}
 	}
 }

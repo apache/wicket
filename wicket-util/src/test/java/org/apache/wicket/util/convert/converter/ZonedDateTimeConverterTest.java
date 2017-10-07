@@ -19,7 +19,8 @@ package org.apache.wicket.util.convert.converter;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.ConversionException;
@@ -27,27 +28,30 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests for {@link LocalDateConverter}
+ * Tests for {@link ZonedDateTimeConverter}
  */
-public class LocalDateConverterTest extends Assert
+public class ZonedDateTimeConverterTest extends Assert
 {
+	private ZoneId zone = ZoneId.systemDefault();
+
 	@Test
 	public void convertToString() {
-		LocalDateConverter converter = new LocalDateConverter();
-		String date = converter.convertToString(LocalDate.of(2016, 7, 11), Locale.ENGLISH);
-		assertThat(date, is(equalTo("7/11/16")));
+		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
+		String date = converter.convertToString(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone), Locale.ENGLISH);
+		assertThat(date, is(equalTo("Jul 11, 2016 1:02:03 AM")));
 	}
 
 	@Test
 	public void convertToObject() {
-		LocalDateConverter converter = new LocalDateConverter();
-		LocalDate date = converter.convertToObject("7/11/16", Locale.ENGLISH);
-		assertThat(date, is(equalTo(LocalDate.of(2016, 7, 11))));
+		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
+		ZoneId zone = ZoneId.systemDefault();
+		ZonedDateTime date = converter.convertToObject("Jul 11, 2016 1:02:03 AM", Locale.ENGLISH);
+		assertThat(date, is(equalTo(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone))));
 	}
 	
 	@Test
 	public void convertFails() {
-		LocalDateConverter converter = new LocalDateConverter();
+		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
 
 		try {
 			converter.convertToObject("aaa", Locale.ENGLISH);
