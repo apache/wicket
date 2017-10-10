@@ -19,137 +19,123 @@ package org.apache.wicket.ajax;
 import java.util.UUID;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**
- * An Ajax behavior that notifies when a new browser window/tab is opened with
- * url to a page instance which is already opened in another window/tab in the same user session.
- *
- * Note: this behavior may be assigned only to an instance of a WebPage class.
+ * An Ajax behavior that notifies when a new browser window/tab is opened with url to a page
+ * instance which is already opened in another window/tab in the same user session.
  *
  * @since 6.0
  * @see #onNewWindow(AjaxRequestTarget)
  */
-public abstract class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
+public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * A unique name used for the page window's name
-	 */
-	private final String windowName;
-
-	/**
-	 * The name of the HTTP request parameter that brings the current page window's name.
+	 * The name of the HTTP request parameter that transports the current page window's name.
 	 */
 	private static final String PARAM_WINDOW_NAME = "windowName";
 
 	/**
-	 * A flag whether this behavior has been rendered at least once.
+	 * The name of the window the page is bound to.
 	 */
-	private boolean hasBeenRendered;
+	private String boundName;
 
 	/**
-	 * Constructor.
+	 * Overridden to add the current window name to the request.
 	 */
-	public AjaxNewWindowNotifyingBehavior()
-	{
-		this(UUID.randomUUID().toString());
-	}
-
-	/**
-	 * Constructor.
-	 *
-	 * @param windowName
-	 *      the custom name to use for the page's window
-	 */
-	public AjaxNewWindowNotifyingBehavior(final String windowName)
-	{
-		this.windowName = windowName;
-	}
-
-	@Override
-	protected final void onBind()
-	{
-		super.onBind();
-
-		Component component = getComponent();
-		if (component instanceof WebPage == false)
-		{
-			throw new WicketRuntimeException(AjaxNewWindowNotifyingBehavior.class.getName() + " can be assigned only to WebPage instances.");
-		}
-	}
-
 	@Override
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
 		super.updateAjaxAttributes(attributes);
-		
-		String uuidParam = "return {'"+ PARAM_WINDOW_NAME +"': window.name}";
-		attributes.getDynamicExtraParameters().add(uuidParam);
+
+		String parameter = "return {'" + PARAM_WINDOW_NAME + "': window.name}";
+		attributes.getDynamicExtraParameters().add(parameter);
 	}
 
+	/**
+	 * Overridden to initiate a request once the page was rendered.
+	 */
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 		super.renderHead(component, response);
 
-		if (hasBeenRendered == false)
-		{
-			hasBeenRendered = true;
-			response.render(OnDomReadyHeaderItem.forScript(String.format("window.name='%s'", windowName)));
-		}
-		response.render(OnLoadHeaderItem.forScript("setTimeout(function() {" + getCallbackScript().toString() + "}, 30);"));
+		response.render(OnLoadHeaderItem
+			.forScript("setTimeout(function() {" + getCallbackScript().toString() + "}, 30);"));
 	}
 
 	@Override
 	protected void respond(AjaxRequestTarget target)
 	{
-		StringValue uuidParam = getComponent().getRequest().getRequestParameters().getParameterValue(PARAM_WINDOW_NAME);
+		String windowName = getComponent().getRequest().getRequestParameters()
+			.getParameterValue(PARAM_WINDOW_NAME).toString();
 
-		if (windowName.equals(uuidParam.toString()) == false)
+		if (boundName == null)
+		{
+			// not bound to any window yet
+
+			if (Strings.isEmpty(windowName))
+			{
+				// create new name
+				windowName = newWindowName();
+				target.appendJavaScript(String.format("window.name = '%s';", windowName));
+			}
+
+			// now bound to window
+			boundName = windowName;
+		}
+		else if (boundName.equals(windowName) == false)
 		{
 			onNewWindow(target);
 		}
 	}
 
 	/**
-	 * A callback method when a new window/tab is opened for a page instance
-	 * which is already opened in another window/tab.
+	 * Create a name for a nameless window, default uses a random {@link UUID}.
+	 * 
+	 * @return window name
+	 */
+	protected String newWindowName()
+	{
+		return UUID.randomUUID().toString();
+	}
+
+	/**
+	 * A callback method when a new window/tab is opened for a page instance which is already opened
+	 * in another window/tab.
+	 * <p>
+	 * Default implementation redirects to a new page instance with identical page parameters.
 	 *
 	 * @param target
-	 *      the current ajax request handler
+	 *            the current request handler
 	 */
-	protected abstract void onNewWindow(AjaxRequestTarget target);
+	protected void onNewWindow(AjaxRequestTarget target)
+	{
+		Page page = getComponent().getPage();
+
+		getComponent().setResponsePage(page.getClass(), page.getPageParameters());
+	}
 
 	/**
 	 * Creates an {@link AjaxNewWindowNotifyingBehavior} based on lambda expressions
 	 * 
-	 * @param windowName
-	 *            the window name
 	 * @param onNewWindow
 	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
 	 * @return the {@link AjaxNewWindowNotifyingBehavior}
 	 */
-	public static AjaxNewWindowNotifyingBehavior onNewWindow(String windowName, SerializableConsumer<AjaxRequestTarget> onNewWindow)
+	public static AjaxNewWindowNotifyingBehavior onNewWindow(SerializableConsumer<AjaxRequestTarget> onNewWindow)
 	{
 		Args.notNull(onNewWindow, "onNewWindow");
 
-		if (Strings.isEmpty(windowName))
-		{
-			windowName = UUID.randomUUID().toString();
-		}
-
-		return new AjaxNewWindowNotifyingBehavior(windowName)
+		return new AjaxNewWindowNotifyingBehavior()
 		{
 			private static final long serialVersionUID = 1L;
 
