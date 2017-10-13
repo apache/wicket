@@ -26,8 +26,16 @@ import org.apache.wicket.examples.WicketExampleApplication;
 public class DateTimeApplication extends WicketExampleApplication
 {
 	@Override
+	protected void init()
+	{
+		super.init();
+		
+		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+	}
+
+	@Override
 	public Class< ? extends Page> getHomePage()
 	{
 		return DateTimePage.class;
-	}
+	}	
 }

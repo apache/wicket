@@ -9,26 +9,51 @@
 	<body>
 		<span wicket:id="mainNavigation" />
 
-		<h3>Demo for short style time</h3>
-		<span wicket:id="time1"></span><br/>
-
-		<hr/>
-
-		<h3>Demo for Full style time</h3>
-		<span wicket:id="time2"></span><br/>
-
-		<hr/>
-
-		<h3>Demo for Short style time with 24-hours</h3>
-		<span wicket:id="time3"></span><br/>
-
-		<hr/>
-
 		<form wicket:id="form">
-			<h3>Demo for default Local Date Time in Form</h3>
-			<span wicket:id="datetime1"></span><br/>
-			<input wicket:id="submit" type="submit" value="Submit"/>
+		 	 <div>
+		 	 	<wicket:message key="locale"></wicket:message>
+				<select wicket:id="localeSelect"></select>
+				<a href="#" wicket:id="defaultLocaleLink">[<wicket:message key="default" />]</a>
+     		</div>
+		
+			<hr/>
+		
+			<h3>TimeField 12-hours</h3>
+			<span wicket:id="time1"></span><br/>
+	
+			<hr/>
+	
+			<h3>TimeField 24-hours</h3>
+			<span wicket:id="time2"></span><br/>
+	
+			<hr/>
+
+			<h3>LocalDateTimeField (default time 00:00)</h3>
+			<span wicket:id="datetime0"></span><br/>
+
+			<hr/>
+
+	 	 	<wicket:message key="clientZone"></wicket:message>
+			<select wicket:id="zoneSelect"></select>
+			<br/>
+			
+			<h3>LocalDateTimeField with a ZonedDateTime (<span wicket:id="datetime1-label" />) adjusted to client's time zone</h3>
+			<span wicket:id="datetime1"></span>
+			<br/>
+
+			<h3>LocalDateTimeTextField with a ZonedDateTime (<span wicket:id="datetime2-label" />) adjusted to client's time zone</h3>
+			<input wicket:id="datetime2" type="text" />
+			<br/>
+			
+			<h3>ZonedDateTimeField</h3>
+			<span wicket:id="datetime3"></span>
+			<br/>
+			
+			<hr/>
+
 			<div wicket:id="feedback"></div>
+			
+			<input wicket:id="submit" type="submit" value="Submit"/>
 		</form>
 	</body>
 </html>

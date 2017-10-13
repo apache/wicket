@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.examples.ajax.builtin.modal;
 
-import org.apache.wicket.extensions.markup.html.form.datetime.DateTimeField;
+import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTimeField;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -32,6 +32,6 @@ public class ModalPanel1 extends Panel
 	public ModalPanel1(String id)
 	{
 		super(id);
-		add(new DateTimeField("dateTimeField"));
+		add(new LocalDateTimeField("dateTimeField"));
 	}
 }

@@ -16,12 +16,14 @@
  */
 package org.apache.wicket.examples.bean.validation;
 
+import java.time.format.FormatStyle;
+
 import org.apache.wicket.bean.validation.PropertyValidator;
-import org.apache.wicket.extensions.markup.html.form.datetime.DateField;
-import org.apache.wicket.extensions.markup.html.form.datetime.StyleDateConverter;
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTextField;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -52,8 +54,9 @@ public class BeanValidationPage extends WicketExamplePage
 		form.add(new TextField<>("name", new PropertyModel<String>(this, "person.name")).add(new PropertyValidator<>()));
 		form.add(new TextField<>("phone", new PropertyModel<String>(this, "person.phone")).add(new PropertyValidator<>()));
 		form.add(new TextField<>("email", new PropertyModel<String>(this, "person.email")).add(new PropertyValidator<>()));
-		form.add(new DateField("birthdate", new PropertyModel<>(this, "person.birthdate"),
-			new StyleDateConverter("S-")).add(new PropertyValidator<>()));
+		LocalDateTextField dateField = new LocalDateTextField("birthdate", new PropertyModel<>(this, "person.birthdate"), FormatStyle.SHORT);
+		form.add(dateField.add(new PropertyValidator<>()));
+		form.add(new Label("pattern", new PropertyModel<>(dateField, "textFormat")));
 		form.add(new TextField<>("password", new PropertyModel<String>(this, "person.password")).add(new PropertyValidator<>()));
 		
 		add(new FeedbackPanel("feedbackSuccess", new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO)));

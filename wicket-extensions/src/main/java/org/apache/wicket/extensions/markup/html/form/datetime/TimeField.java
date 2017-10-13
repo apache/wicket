@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.markup.html.form.datetime;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatterBuilder;
@@ -27,63 +26,49 @@ import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
+import org.apache.wicket.core.util.string.CssUtils;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.FormComponentPanel;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.IntegerConverter;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.validation.validator.RangeValidator;
 
 /**
- * Works on a {@link java.util.Date} object. Displays a field for hours and a field for minutes, and
- * an AM/PM field. The format (12h/24h) of the hours field depends on the time format of this
+ * Works on a {@link LocalTime} object. Displays a field for hours and a field for minutes, and an
+ * AM/PM field. The format (12h/24h) of the hours field depends on the time format of this
  * {@link TimeField}'s {@link Locale}, as does the visibility of the AM/PM field (see
  * {@link TimeField#use12HourFormat}).
  * 
  * @author eelcohillenius
- * @see TimeField for a variant with just the date field and date picker
  */
-public class TimeField extends FormComponentPanel<LocalTime> implements ITextFormatProvider
+public class TimeField extends FormComponentPanel<LocalTime>
 {
 	private static final long serialVersionUID = 1L;
+
+	public static final String HOURS_CSS_CLASS_KEY = CssUtils.key(TimeField.class, "hours");
+
+	public static final String MINUTES_CSS_CLASS_KEY = CssUtils.key(TimeField.class, "minutes");
 
 	/**
 	 * Enumerated type for different ways of handling the render part of requests.
 	 */
-	public enum AM_PM {
-		/** */
-		AM("AM"),
-
-		/** */
-		PM("PM");
-
-		private  final String value;
-
-		AM_PM(final String name)
-		{
-			value = name;
-		}
-
-		@Override
-		public String toString()
-		{
-			return value;
-		}
+	public enum AM_PM
+	{
+		AM, PM;
 	}
-	protected static final String HOURS = "hours";
-	protected static final String MINUTES = "minutes";
-	protected static final String AM_OR_PM_CHOICE = "amOrPmChoice";
 
-	private static final IConverter<Integer> MINUTES_CONVERTER = new IntegerConverter() {
+	private static final IConverter<Integer> MINUTES_CONVERTER = new IntegerConverter()
+	{
 		private static final long serialVersionUID = 1L;
 
-		protected NumberFormat newNumberFormat(Locale locale) {
+		protected NumberFormat newNumberFormat(Locale locale)
+		{
 			return new DecimalFormat("00");
 		}
 	};
@@ -96,184 +81,67 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 
 	// The dropdown list for AM/PM and it's associated model object
 	private DropDownChoice<AM_PM> amOrPmChoice;
-	private LocalTime time = LocalTime.now();
-
-	/**
-	 * Creates a new TimeField defaulting to using a short date pattern
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param model
-	 *            The model
-	 * @param timePattern
-	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
-	 *            patterns.
-	 * @return TimeField
-	 */
-	public static TimeField forTimePattern(String id, IModel<LocalTime> model, String timePattern)
-	{
-		return new TimeField(id, model, new PatternTimeConverter(timePattern));
-	}
-
-	/**
-	 * Creates a new TimeField defaulting to using a short date pattern
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param timePattern
-	 *            The pattern to use. Must be not null. See {@link SimpleDateFormat} for available
-	 *            patterns.
-	 * @return TimeField
-	 */
-	public static TimeField forTimePattern(String id, String timePattern)
-	{
-		return forTimePattern(id, null, timePattern);
-	}
-
-	/**
-	 * Creates a new TimeField using the provided date style.
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param model
-	 *            The model
-	 * @param timeStyle
-	 *            Date style to use. The first character is the date style, and the second character
-	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
-	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
-	 *            character '-'. See {@link org.joda.time.DateTimeFormat#forStyle(String)}.
-	 * @return TimeField
-	 */
-	public static TimeField forTimeStyle(String id, IModel<LocalTime> model, String timeStyle)
-	{
-		return new TimeField(id, model, new StyleTimeConverter(timeStyle));
-	}
-
-	/**
-	 * Creates a new TimeField using the provided date style.
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param timeStyle
-	 *            Date style to use. The first character is the date style, and the second character
-	 *            is the time style. Specify a character of 'S' for short style, 'M' for medium, 'L'
-	 *            for long, and 'F' for full. A date or time may be ommitted by specifying a style
-	 *            character '-'. See {@link org.joda.time.DateTimeFormat#forStyle(String)}.
-	 * @return TimeField
-	 */
-	public static TimeField forTimeStyle(String id, String timeStyle)
-	{
-		return forTimeStyle(id, null, timeStyle);
-	}
-
-	/**
-	 * Creates a new TimeField defaulting to using a short date pattern
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @return TimeField
-	 */
-	public static TimeField forShortStyle(String id)
-	{
-		return forShortStyle(id, null);
-	}
-
-	/**
-	 * Creates a new TimeField defaulting to using a short date pattern
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param model
-	 *            The model
-	 * @return TimeField
-	 */
-	public static TimeField forShortStyle(String id, IModel<LocalTime> model)
-	{
-		return new TimeField(id, model, new StyleTimeConverter());
-	}
-
-	/**
-	 * Creates a new TimeField using the provided converter.
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param converter
-	 *            the date converter
-	 * @return TimeField
-	 */
-	public static TimeField withConverter(String id, LocalTimeConverter converter)
-	{
-		return withConverter(id, null, converter);
-	}
-
-	/**
-	 * Creates a new TimeField using the provided converter.
-	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param model
-	 *            The model
-	 * @param converter
-	 *            the date converter
-	 * @return TimeField
-	 */
-	public static TimeField withConverter(String id, IModel<LocalTime> model, LocalTimeConverter converter)
-	{
-		return new TimeField(id, model, converter);
-	}
-
-	/**
-	 * The converter for the TextField
-	 */
-	private final LocalTimeConverter converter;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param id
-	 *      the component id
+	 *            the component id
 	 */
-	public TimeField(String id, LocalTimeConverter converter)
+	public TimeField(String id)
 	{
-		this(id, null, converter);
+		this(id, null);
 	}
 
 	/**
 	 * Construct.
 	 * 
 	 * @param id
-	 *      the component id
+	 *            the component id
 	 * @param model
-	 *      the component's model
+	 *            the component's model
 	 */
-	public TimeField(String id, IModel<LocalTime> model, LocalTimeConverter converter)
+	public TimeField(String id, IModel<LocalTime> model)
 	{
 		super(id, model);
-
-		Args.notNull(converter, "converter");
-		this.converter = converter;
 
 		// Sets the type that will be used when updating the model for this component.
 		setType(LocalTime.class);
 
-
-		// Create and add the "hours" TextField
-		add(hoursField = newHoursTextField(HOURS, new HoursModel(), Integer.class));
-
-		// Create and add the "minutes" TextField
-		add(minutesField = newMinutesTextField(MINUTES, new MinutesModel(), Integer.class));
-
-		// Create and add the "AM/PM" Listbox
-		add(amOrPmChoice = new DropDownChoice<>(AM_OR_PM_CHOICE, new AmPmModel(), Arrays.asList(AM_PM.values())));
-
-		add(new WebMarkupContainer("hoursSeparator")
+		add(new Label("hoursSeparator", new ResourceModel("TimeField.hoursSeparator"))
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public boolean isVisible()
+			protected void onConfigure()
 			{
-				return minutesField.determineVisibility();
+				super.onConfigure();
+
+				minutesField.configure();
+
+				setVisible(minutesField.isVisible());
+			}
+		});
+	}
+
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+
+		// Create and add the "hours" TextField
+		add(hoursField = newHoursTextField("hours", new HoursModel(), Integer.class));
+
+		// Create and add the "minutes" TextField
+		add(minutesField = newMinutesTextField("minutes", new MinutesModel(), Integer.class));
+
+		// Create and add the "AM/PM" choice
+		add(amOrPmChoice = new DropDownChoice<AM_PM>("amOrPmChoice", new AmPmModel(),
+			Arrays.asList(AM_PM.values())) {
+			@Override
+			protected boolean localizeDisplayValues()
+			{
+				return true;
 			}
 		});
 	}
@@ -289,7 +157,9 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 	 *            the type of the text field
 	 * @return a new text field instance
 	 */
-	protected TextField<Integer> newHoursTextField(final String id, IModel<Integer> model, Class<Integer> type) {
+	protected TextField<Integer> newHoursTextField(final String id, IModel<Integer> model,
+		Class<Integer> type)
+	{
 		TextField<Integer> hoursTextField = new TextField<Integer>(id, model, type)
 		{
 			private static final long serialVersionUID = 1L;
@@ -297,13 +167,22 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 			@Override
 			protected String[] getInputTypes()
 			{
-				return new String[] {"number"};
+				return new String[] { "number" };
+			}
+
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+
+				tag.append("class", getString(HOURS_CSS_CLASS_KEY), " ");
+
+				tag.put("min", use12HourFormat() ? 1 : 0);
+				tag.put("max", use12HourFormat() ? 12 : 23);
 			}
 		};
-		hoursTextField.add(AttributeModifier.append("min", getMaximumHours() == 24 ? 0 : 1));
-		hoursTextField.add(AttributeModifier.append("max", getMaximumHours() == 24 ? 23 : 12));
-		hoursTextField.add(getMaximumHours() == 24 ? RangeValidator.range(0, 23) : RangeValidator.range(1, 12));
-		hoursTextField.setLabel(new Model<>(HOURS));
+		hoursTextField
+			.add(use12HourFormat() ? RangeValidator.range(1, 12) : RangeValidator.range(0, 23));
 		return hoursTextField;
 	}
 
@@ -338,13 +217,21 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 			@Override
 			protected String[] getInputTypes()
 			{
-				return new String[] {"number"};
+				return new String[] { "number" };
+			}
+
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				super.onComponentTag(tag);
+
+				tag.append("class", getString(MINUTES_CSS_CLASS_KEY), " ");
+
+				tag.put("min", 0);
+				tag.put("max", 59);
 			}
 		};
-		minutesField.add(AttributeModifier.append("min", 0));
-		minutesField.add(AttributeModifier.append("max", 59));
 		minutesField.add(new RangeValidator<>(0, 59));
-		minutesField.setLabel(new Model<>(MINUTES));
 		return minutesField;
 	}
 
@@ -363,8 +250,12 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 		Integer minutes = minutesField.getConvertedInput();
 		AM_PM amOrPmInput = amOrPmChoice.getConvertedInput();
 
-		LocalTime localTime = null;
-		if (hours != null && minutes != null)
+		LocalTime localTime;
+		if (hours == null && minutes == null)
+		{
+			localTime = null;
+		}
+		else if (hours != null && minutes != null)
 		{
 			// Use the input to create a LocalTime object
 			localTime = LocalTime.of(hours, minutes);
@@ -376,51 +267,39 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 				localTime = localTime.with(ChronoField.AMPM_OF_DAY, halfday);
 			}
 		}
+		else
+		{
+			error(newValidationError(new ConversionException("Cannot parse time").setTargetType(getType())));
+			return;
+		}
+
 		setConvertedInput(localTime);
 	}
 
 	@Override
-	protected void onBeforeRender() {
+	protected void onConfigure()
+	{
+		super.onConfigure();
+
 		hoursField.setRequired(isRequired());
 		minutesField.setRequired(isRequired());
 
-		boolean use12HourFormat = use12HourFormat();
-		amOrPmChoice.setVisible(use12HourFormat);
-		super.onBeforeRender();
+		amOrPmChoice.setVisible(use12HourFormat());
 	}
 
 	/**
 	 * Checks whether the current {@link Locale} uses the 12h or 24h time format. This method can be
 	 * overridden to e.g. always use 24h format.
 	 * 
-	 * @return true, if the current {@link Locale} uses the 12h format.<br/>
-	 *         false, otherwise
+	 * @return {@value true}, if the current {@link Locale} uses the 12h format.<br/>
+	 *         {@value false}, otherwise
 	 */
 	protected boolean use12HourFormat()
 	{
-		String pattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(null, FormatStyle.SHORT, IsoChronology.INSTANCE, getLocale());
-		return pattern.indexOf('a') != -1 || pattern.indexOf('h') != -1 || pattern.indexOf('K') != -1;
-	}
-
-	/**
-	 * @return either 12 or 24, depending on the hour format of the current {@link Locale}
-	 */
-	private int getMaximumHours()
-	{
-		return getMaximumHours(use12HourFormat());
-	}
-
-	/**
-	 * Convenience method (mainly for optimization purposes), in case {@link #use12HourFormat()} has
-	 * already been stored in a local variable and thus doesn't need to be computed again.
-	 * 
-	 * @param use12HourFormat
-	 *            the hour format to use
-	 * @return either 12 or 24, depending on the parameter <code>use12HourFormat</code>
-	 */
-	private int getMaximumHours(boolean use12HourFormat)
-	{
-		return use12HourFormat ? 12 : 24;
+		String pattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(null,
+			FormatStyle.SHORT, IsoChronology.INSTANCE, getLocale());
+		return pattern.indexOf('a') != -1 || pattern.indexOf('h') != -1
+			|| pattern.indexOf('K') != -1;
 	}
 
 	protected class HoursModel implements IModel<Integer>
@@ -435,13 +314,13 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 			{
 				return null;
 			}
-			return getMaximumHours() == 24 ? t.getHour() : t.get(ChronoField.CLOCK_HOUR_OF_AMPM);
+			return use12HourFormat() ? t.get(ChronoField.CLOCK_HOUR_OF_AMPM) : t.getHour();
 		}
 
 		@Override
 		public void setObject(Integer hour)
 		{
-			time = time.with(getMaximumHours() == 24 ? ChronoField.HOUR_OF_DAY : ChronoField.CLOCK_HOUR_OF_AMPM, hour);
+			// ignored
 		}
 	}
 
@@ -459,7 +338,7 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 		@Override
 		public void setObject(Integer minute)
 		{
-			time = time.with(ChronoField.MINUTE_OF_HOUR, minute);
+			// ignored
 		}
 	}
 
@@ -478,43 +357,7 @@ public class TimeField extends FormComponentPanel<LocalTime> implements ITextFor
 		@Override
 		public void setObject(AM_PM amPm)
 		{
-			int i = AM_PM.AM == amPm ? 0 : 1;
-			time = time.with(ChronoField.AMPM_OF_DAY, i);
-		}
-	}
-
-	/**
-	 * @return The specialized converter.
-	 * @see org.apache.wicket.Component#createConverter(java.lang.Class)
-	 */
-	@Override
-	protected IConverter<?> createConverter(Class<?> clazz)
-	{
-		if (LocalTime.class.isAssignableFrom(clazz))
-		{
-			return converter;
-		}
-		return null;
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider#getTextFormat()
-	 */
-	@Override
-	public final String getTextFormat()
-	{
-		return converter.getPattern(getLocale());
-	}
-
-	public static FormatStyle parseFormatStyle(char style)
-	{
-		switch (style)
-		{
-			case 'M':
-				return FormatStyle.MEDIUM;
-			case 'S':
-			default:
-				return FormatStyle.SHORT;
+			// ignored
 		}
 	}
 }
