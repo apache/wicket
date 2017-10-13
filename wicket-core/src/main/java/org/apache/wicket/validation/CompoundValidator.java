@@ -21,7 +21,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -82,5 +86,125 @@ public class CompoundValidator<T> extends Behavior implements IValidator<T>
 	public final List<IValidator<T>> getValidators()
 	{
 		return Collections.unmodifiableList(validators);
+	}
+
+	@Override
+	public void beforeRender(Component component)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).beforeRender(component);
+			}
+		}
+	}
+
+	@Override
+	public void afterRender(Component component)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).afterRender(component);
+			}
+		}
+	}
+
+	@Override
+	public void bind(Component component)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).bind(component);
+			}
+		}
+	}
+
+	@Override
+	public void unbind(Component component)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).unbind(component);
+			}
+		}
+	}
+	
+	@Override
+	public void detach(Component component)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).detach(component);
+			}
+		}
+	}
+
+	@Override
+	public void onException(Component component, RuntimeException exception)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).onException(component, exception);
+			}
+		}
+	}
+
+	public boolean getStatelessHint(Component component)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior && ((Behavior)validator).getStatelessHint(component) == false) {
+				return false;
+			}
+		}
+		return super.getStatelessHint(component);
+	}
+
+	@Override
+	public void onComponentTag(Component component, ComponentTag tag)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).onComponentTag(component, tag);
+			}
+		}
+	}
+
+	@Override
+	public void renderHead(Component component, IHeaderResponse response)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).renderHead(component, response);
+			}
+		}
+	}
+
+	@Override
+	public void onConfigure(Component component)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).onConfigure(component);
+			}
+		}
+	}
+
+	@Override
+	public void onEvent(Component component, IEvent<?> event)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).onEvent(component, event);
+			}
+		}
+	}
+
+	@Override
+	public void onRemove(Component component)
+	{
+		for (IValidator<T> validator : validators) {
+			if (validator instanceof Behavior) {
+				((Behavior)validator).onRemove(component);
+			}
+		}
 	}
 }
