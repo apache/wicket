@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.convert.converter;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -29,7 +28,7 @@ public class ZonedDateTimeConverter extends AbstractJavaTimeConverter<ZonedDateT
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.FULL);
 
 	@Override
 	protected Class<ZonedDateTime> getTargetType()
@@ -45,6 +44,6 @@ public class ZonedDateTimeConverter extends AbstractJavaTimeConverter<ZonedDateT
 
 	@Override
 	protected DateTimeFormatter getDateTimeFormatter() {
-		return DATE_TIME_FORMATTER.withZone(ZoneId.systemDefault());
+		return DATE_TIME_FORMATTER;
 	}
 }

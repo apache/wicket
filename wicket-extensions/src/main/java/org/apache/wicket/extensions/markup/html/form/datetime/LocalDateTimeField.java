@@ -17,19 +17,18 @@
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 import org.apache.wicket.model.IModel;
 
 /**
- * Works on a {@link java.time.ZonedDateTimeTime} object. See {@link AbstractDateTimeField} for
+ * Works on a {@link java.time.LocalDateTime} object. See {@link AbstractDateTimeField} for
  * further details.
- * 
+ *  
  * @author eelcohillenius
  */
-public class ZonedDateTimeField extends AbstractDateTimeField<ZonedDateTime>
+public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,7 +37,7 @@ public class ZonedDateTimeField extends AbstractDateTimeField<ZonedDateTime>
 	 * 
 	 * @param id
 	 */
-	public ZonedDateTimeField(final String id)
+	public LocalDateTimeField(final String id)
 	{
 		this(id, null);
 	}
@@ -49,31 +48,26 @@ public class ZonedDateTimeField extends AbstractDateTimeField<ZonedDateTime>
 	 * @param id
 	 * @param model
 	 */
-	public ZonedDateTimeField(final String id, final IModel<ZonedDateTime> model)
+	public LocalDateTimeField(final String id, final IModel<LocalDateTime> model)
 	{
 		super(id, model);
 
 		// Sets the type that will be used when updating the model for this component.
-		setType(ZonedDateTime.class);
-	}
-
-	/**
-	 * Creates a zoned date time in the systems default zone.
-	 * 
-	 * @see ZoneId#systemDefault()
-	 */
-	protected ZonedDateTime createTemporal(LocalDate date, LocalTime time) {
-		return ZonedDateTime.of(date, time, ZoneId.systemDefault());
+		setType(LocalDateTime.class);
 	}
 
 	@Override
-	protected LocalDate getLocalDate(ZonedDateTime temporal)
+	protected LocalDateTime createTemporal(LocalDate date, LocalTime time) {
+		return LocalDateTime.of(date, time);
+	}
+
+	@Override
+	protected LocalDate getLocalDate(LocalDateTime temporal)
 	{
 		return temporal.toLocalDate();
 	}
 
-	@Override
-	protected LocalTime getLocalTime(ZonedDateTime temporal)
+	protected LocalTime getLocalTime(LocalDateTime temporal)
 	{
 		return temporal.toLocalTime();
 	}

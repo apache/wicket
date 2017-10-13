@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.FormatStyle;
 import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
@@ -29,6 +30,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.util.convert.converter.LocalDateConverter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
@@ -98,7 +100,7 @@ public class DateTimeFieldTest extends WicketTestCase {
 		TestDatePage page = new TestDatePage(null);
 		tester.startPage(page);
 		FormTester formTester = tester.newFormTester("form", false);
-		formTester.setValue("field", new StyleDateConverter("F").convertToString(date, Locale.forLanguageTag("en-US")));
+		formTester.setValue("field", new LocalDateConverter().convertToString(date, Locale.forLanguageTag("en-US")));
 		formTester.submit();
 		LocalDate d = page.field.getModelObject();
 		assertNotNull(d);
@@ -120,7 +122,7 @@ public class DateTimeFieldTest extends WicketTestCase {
 		TestDateTimePage page = new TestDateTimePage(null);
 		tester.startPage(page);
 		FormTester formTester = tester.newFormTester("form", false);
-		formTester.setValue("field:date", new StyleDateConverter("F").convertToString(date, Locale.forLanguageTag("en-US")));
+		formTester.setValue("field:date", new LocalDateConverter().convertToString(date, Locale.forLanguageTag("en-US")));
 		formTester.submit();
 		assertNull(page.field.getModelObject());
 	}
@@ -143,7 +145,7 @@ public class DateTimeFieldTest extends WicketTestCase {
 		TestDateTimePage page = new TestDateTimePage(null);
 		tester.startPage(page);
 		FormTester formTester = tester.newFormTester("form", false);
-		formTester.setValue("field:date", new StyleDateConverter("S").convertToString(date, Locale.forLanguageTag("en-US")));
+		formTester.setValue("field:date", new LocalDateConverter().convertToString(date, Locale.forLanguageTag("en-US")));
 		formTester.setValue("field:time:hours", "6");
 		formTester.setValue("field:time:minutes", "15");
 		formTester.select("field:time:amOrPmChoice", 0);
@@ -164,7 +166,7 @@ public class DateTimeFieldTest extends WicketTestCase {
 		@Override
 		FormComponent<LocalDateTime> newComponent()
 		{
-			return new DateTimeField("field", model);
+			return new LocalDateTimeField("field", model);
 		}
 	}
 
@@ -181,7 +183,7 @@ public class DateTimeFieldTest extends WicketTestCase {
 		@Override
 		FormComponent<LocalDate> newComponent()
 		{
-			return DateField.forDateStyle("field", model, "F");
+			return new LocalDateTextField("field", model, FormatStyle.SHORT);
 		}
 	}
 
@@ -197,7 +199,7 @@ public class DateTimeFieldTest extends WicketTestCase {
 		@Override
 		FormComponent<LocalTime> newComponent()
 		{
-			return TimeField.forTimeStyle("field", model, "F");
+			return new TimeField("field", model);
 		}
 	}
 

@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ import org.apache.wicket.util.convert.converter.ShortConverter;
 import org.apache.wicket.util.convert.converter.SqlDateConverter;
 import org.apache.wicket.util.convert.converter.SqlTimeConverter;
 import org.apache.wicket.util.convert.converter.SqlTimestampConverter;
+import org.apache.wicket.util.convert.converter.ZonedDateTimeConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
 
@@ -184,6 +186,7 @@ public class ConverterLocator implements IConverterLocator
 		set(LocalDate.class, new LocalDateConverter());
 		set(LocalDateTime.class, new LocalDateTimeConverter());
 		set(LocalTime.class, new LocalTimeConverter());
+		set(ZonedDateTime.class, new ZonedDateTimeConverter());
 	}
 
 	/**
