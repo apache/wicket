@@ -32,6 +32,7 @@ import org.apache.wicket.util.IProvider;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.reference.ClassReference;
 import org.apache.wicket.util.string.Strings;
+import java.util.Objects;
 
 /**
  * Encoder for mounted URL. The mount path can contain parameter placeholders, i.e.
@@ -260,7 +261,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	@Override
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
-		return pageClass.equals(this.getPageClass());
+		return Objects.equals(pageClass, this.getPageClass());
 	}
 
 	private Class<? extends IRequestablePage> getPageClass()
