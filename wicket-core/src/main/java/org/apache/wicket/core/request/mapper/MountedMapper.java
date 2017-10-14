@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
@@ -253,7 +254,7 @@ public class MountedMapper extends AbstractBookmarkableMapper
 	@Override
 	protected boolean checkPageClass(Class<? extends IRequestablePage> pageClass)
 	{
-		return pageClass.equals(this.getPageClass());
+		return Objects.equals(pageClass, this.getPageClass());
 	}
 
 	private Class<? extends IRequestablePage> getPageClass()
