@@ -61,7 +61,8 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 		super(id, model, LocalTime.class);
 
 		this.converter = new TextFormatConverter() {
-			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public DateTimeFormatter getDateTimeFormatter(Locale locale)
 			{
@@ -104,7 +105,8 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 		super(id, model, LocalTime.class);
 
 		this.converter = new TextFormatConverter() {
-			
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public DateTimeFormatter getDateTimeFormatter(Locale locale)
 			{
@@ -157,7 +159,8 @@ public class LocalTimeTextField extends TextField<LocalTime> implements ITextFor
 	}
 
 	private abstract class TextFormatConverter extends LocalTimeConverter {
-		
+		private static final long serialVersionUID = 1L;
+
 		public abstract String getTextFormat(Locale locale);
 	}
 }

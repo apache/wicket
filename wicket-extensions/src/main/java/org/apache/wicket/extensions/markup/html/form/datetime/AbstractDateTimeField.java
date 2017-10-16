@@ -207,6 +207,8 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 	protected LocalDateTextField newDateField(String id, IModel<LocalDate> dateFieldModel)
 	{
 		return new LocalDateTextField(id, dateFieldModel, FormatStyle.SHORT) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
@@ -229,6 +231,8 @@ abstract class AbstractDateTimeField<T extends Temporal> extends FormComponentPa
 	protected TimeField newTimeField(String id, IModel<LocalTime> timeFieldModel)
 	{
 		return new TimeField(id, timeFieldModel) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{

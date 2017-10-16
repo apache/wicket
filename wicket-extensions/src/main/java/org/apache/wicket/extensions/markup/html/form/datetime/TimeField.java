@@ -138,6 +138,8 @@ public class TimeField extends FormComponentPanel<LocalTime>
 		// Create and add the "AM/PM" choice
 		add(amOrPmChoice = new DropDownChoice<AM_PM>("amOrPmChoice", new AmPmModel(),
 			Arrays.asList(AM_PM.values())) {
+				private static final long serialVersionUID = 1L;
+
 			@Override
 			protected boolean localizeDisplayValues()
 			{
