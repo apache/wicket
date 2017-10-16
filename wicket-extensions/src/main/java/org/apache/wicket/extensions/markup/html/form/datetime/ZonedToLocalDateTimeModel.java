@@ -36,6 +36,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class ZonedToLocalDateTimeModel implements IModel<LocalDateTime>
 {
+	private static final long serialVersionUID = 1L;
 	private IModel<ZonedDateTime> model;
 
 	/**

@@ -37,5 +37,5 @@ public class DateTimeApplication extends WicketExampleApplication
 	public Class< ? extends Page> getHomePage()
 	{
 		return DateTimePage.class;
-	}	
+	}
 }

@@ -95,6 +95,8 @@ public class DateTimePage extends WicketExamplePage
 		// Link to return to default locale
 		form.add(new Link<Void>("defaultLocaleLink")
 		{
+			private static final long serialVersionUID = 1L;
+
 			public void onClick()
 			{
 				WebRequest request = (WebRequest)getRequest();
@@ -127,6 +129,8 @@ public class DateTimePage extends WicketExamplePage
 		final LocalDateTimeField datetimeField0 = new LocalDateTimeField("datetime0",
 			new PropertyModel<>(this, "dateTime0"))
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected LocalTime getDefaultTime()
 			{
@@ -139,6 +143,8 @@ public class DateTimePage extends WicketExamplePage
 		final LocalDateTimeField datetimeField1 = new LocalDateTimeField("datetime1",
 			new ZonedToLocalDateTimeModel(zonedDateTime1)
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected ZoneId getClientTimeZone()
 				{
@@ -158,6 +164,8 @@ public class DateTimePage extends WicketExamplePage
 		LocalDateTimeTextField datetime2 = new LocalDateTimeTextField("datetime2",
 			new ZonedToLocalDateTimeModel(zonedDateTime2)
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected ZoneId getClientTimeZone()
 				{
@@ -197,6 +205,8 @@ public class DateTimePage extends WicketExamplePage
 	 */
 	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale>
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public Object getDisplayValue(Locale locale)
 		{
@@ -209,6 +219,8 @@ public class DateTimePage extends WicketExamplePage
 	 */
 	private final class LocaleDropDownChoice extends DropDownChoice<Locale>
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 * 
@@ -223,6 +235,8 @@ public class DateTimePage extends WicketExamplePage
 
 			add(new FormComponentUpdatingBehavior()
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected void onUpdate()
 				{
@@ -234,11 +248,14 @@ public class DateTimePage extends WicketExamplePage
 
 	private class ZoneDropDownChoice extends DropDownChoice<ZoneId>
 	{
+		private static final long serialVersionUID = 1L;
 
 		public ZoneDropDownChoice(String id)
 		{
 			super(id, new IModel<List<ZoneId>>()
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public List<ZoneId> getObject()
 				{
@@ -251,6 +268,8 @@ public class DateTimePage extends WicketExamplePage
 
 			setChoiceRenderer(new IChoiceRenderer<ZoneId>()
 			{
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public Object getDisplayValue(ZoneId object)
 				{
@@ -276,6 +295,8 @@ public class DateTimePage extends WicketExamplePage
 
 			add(new FormComponentUpdatingBehavior()
 			{
+				private static final long serialVersionUID = 1L;
+
 				protected void onUpdate()
 				{
 					// clear raw input of all inputs so that values are reformatted
