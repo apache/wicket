@@ -16,35 +16,27 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.convert.converter.LocalDateConverter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
- * Test for {@link LocalDateTimeField}.
+ * Test for {@link TimeField}.
  */
-public class DateTimeFieldTest extends WicketTestCase
+public class TimeFieldTest extends WicketTestCase
 {
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
 
 	@Test
-	public void dateTimeNull()
+	public void timeNull()
 	{
 		TestPage page = new TestPage(null);
 		tester.startPage(page);
@@ -55,68 +47,53 @@ public class DateTimeFieldTest extends WicketTestCase
 	}
 
 	@Test
-	public void timeEmpty()
+	public void timeEmptyHours()
 	{
-		LocalDate date = LocalDate.of(2017, 02, 13);
 		TestPage page = new TestPage(null);
 		tester.startPage(page);
 		FormTester formTester = tester.newFormTester("form", false);
-		formTester.setValue("field:date",
-			new LocalDateConverter().convertToString(date, Locale.forLanguageTag("en-US")));
+		formTester.setValue("field:minutes", "8");
 		formTester.submit();
-		tester.assertNoErrorMessage();
-		assertEquals(LocalDateTime.of(date, LocalTime.of(12, 0)), page.field.getModelObject());
+		tester.assertErrorMessages("The value of 'field' is not a valid LocalTime.");
 	}
 
 	@Test
-	public void dateEmpty()
+	public void timeEmptyMinutes()
 	{
 		TestPage page = new TestPage(null);
 		tester.startPage(page);
 		FormTester formTester = tester.newFormTester("form", false);
-		formTester.setValue("field:time:hours", "6");
-		formTester.setValue("field:time:minutes", "15");
-		formTester.select("field:time:amOrPmChoice", 0);
+		formTester.setValue("field:hours", "8");
 		formTester.submit();
-		tester.assertErrorMessages("The value of 'field' is not a valid LocalDateTime.");
+		tester.assertErrorMessages("The value of 'field' is not a valid LocalTime.");
 	}
 
 	@Test
-	public void dateTimeNotEmpty()
+	public void timeNotNull()
 	{
-		LocalDate date = LocalDate.of(2017, 02, 13);
-		TestPage page = new TestPage(null);
+		TestPage page = new TestPage(LocalTime.of(6, 15));
 		tester.startPage(page);
 		FormTester formTester = tester.newFormTester("form", false);
-		formTester.setValue("field:date",
-			new LocalDateConverter().convertToString(date, Locale.forLanguageTag("en-US")));
-		formTester.setValue("field:time:hours", "6");
-		formTester.setValue("field:time:minutes", "15");
-		formTester.select("field:time:amOrPmChoice", 0);
+		formTester.setValue("field:hours", "8");
 		formTester.submit();
-		tester.assertNoErrorMessage();
-		assertEquals(LocalDateTime.of(date, LocalTime.of(6, 15)), page.field.getModelObject());
+		LocalTime t = page.field.getModelObject();
+		assertNotNull(t);
+		assertEquals(8, t.getHour());
+		assertEquals(15, t.getMinute());
 	}
 
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
 
-		public LocalDateTimeField field;
+		public TimeField field;
 
-		TestPage(LocalDateTime val)
+		TestPage(LocalTime val)
 		{
 			Form<Void> form = new Form<>("form");
 			add(form);
 
-			form.add(field = new LocalDateTimeField("field", Model.of(val))
-			{
-				@Override
-				protected LocalTime getDefaultTime()
-				{
-					return LocalTime.NOON;
-				}
-			});
+			form.add(field = new TimeField("field", Model.of(val)));
 		}
 
 		@Override
