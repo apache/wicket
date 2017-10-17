@@ -233,6 +233,10 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 		Form<?> form = formComponent.findParent(Form.class);
 		if (form == null)
 		{
+			// let form component change its input, so it is available
+			// in case of any errors
+			formComponent.inputChanged();
+
 			process();
 		}
 		else
@@ -264,6 +268,7 @@ public class FormComponentUpdatingBehavior extends Behavior implements IRequestL
 				@Override
 				public boolean getDefaultFormProcessing()
 				{
+					// do not process the whole form
 					return false;
 				}
 			});
