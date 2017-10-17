@@ -10,7 +10,6 @@
     <webPath>/wicket</webPath>
     <webClassPathEntries>
         <webClassPathEntry>/wicket-auth-roles/target/classes</webClassPathEntry>
-        <webClassPathEntry>/wicket-datetime/target/classes</webClassPathEntry>
         <webClassPathEntry>/wicket-examples/target/classes</webClassPathEntry>
         <webClassPathEntry>/wicket-extensions/target/classes</webClassPathEntry>
         <webClassPathEntry>/wicket-guice/target/classes</webClassPathEntry>
@@ -28,7 +27,6 @@
         <webClassPathEntry>M2_REPO/commons-logging/commons-logging/1.1/commons-logging-1.1.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/easymock/easymock/1.2_Java1.3/easymock-1.2_Java1.3.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/javax/portlet/portlet-api/1.0/portlet-api-1.0.jar</webClassPathEntry>
-        <webClassPathEntry>M2_REPO/joda-time/joda-time/1.4/joda-time-1.4.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar</webClassPathEntry>
         <webClassPathEntry>M2_REPO/logkit/logkit/1.0.1/logkit-1.0.1.jar</webClassPathEntry>

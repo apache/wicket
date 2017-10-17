@@ -157,10 +157,6 @@ the src/ folder.
 	As the following projects all depend on wicket, they inherit these
     dependencies.
 
- - wicket-datetime:
-
- 	Joda-Time 2.4 (http://joda-time.sourceforge.net/)
-
  - wicket-velocity:
 
     Apache Velocity 1.7 (http://velocity.apache.org/) and it's dependencies

@@ -14,36 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.ajax.builtin.modal;
+package org.apache.wicket.util.convert.converter;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.markup.html.WebPage;
-
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
 
 /**
- * @author Matej Knopp
- * 
+ * Converts to {@link java.time.ZonedDateTime}.
  */
-public class ModalContent2Page extends WebPage
+public class ZonedDateTimeConverter extends AbstractJavaTimeConverter<ZonedDateTime>
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @param window
-	 */
-	public ModalContent2Page(final ModalWindow window)
-	{
-		add(new AjaxLink<Void>("close")
-		{
-			private static final long serialVersionUID = 1L;
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.FULL);
 
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				window.close(target);
-			}
-		});
+	@Override
+	protected Class<ZonedDateTime> getTargetType()
+	{
+		return ZonedDateTime.class;
+	}
+
+	@Override
+	protected ZonedDateTime createTemporal(TemporalAccessor temporalAccessor)
+	{
+		return ZonedDateTime.from(temporalAccessor);
+	}
+
+	@Override
+	protected DateTimeFormatter getDateTimeFormatter() {
+		return DATE_TIME_FORMATTER;
 	}
 }

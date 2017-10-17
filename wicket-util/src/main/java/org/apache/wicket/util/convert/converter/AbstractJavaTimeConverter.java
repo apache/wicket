@@ -17,6 +17,7 @@
 package org.apache.wicket.util.convert.converter;
 
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
@@ -50,7 +51,14 @@ public abstract class AbstractJavaTimeConverter<T extends Temporal> extends Abst
 		}
 
 		DateTimeFormatter dateTimeFormatter = getDateTimeFormatter(locale);
-		TemporalAccessor temporalAccessor = dateTimeFormatter.parse(value);
+		
+		TemporalAccessor temporalAccessor;
+		try {
+			temporalAccessor = dateTimeFormatter.parse(value);
+		} catch (DateTimeParseException ex) {
+			throw newConversionException("Cannot parse '" + value, value, locale);
+		}
+		
 		return createTemporal(temporalAccessor);
 	}
 

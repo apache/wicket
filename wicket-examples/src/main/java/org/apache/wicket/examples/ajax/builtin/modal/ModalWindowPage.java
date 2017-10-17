@@ -29,6 +29,8 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class ModalWindowPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
+
 	public ModalWindowPage()
 	{
 		final Label result;
@@ -53,6 +55,8 @@ public class ModalWindowPage extends BasePage
 
 		add(new AjaxLink<Void>("showModal1")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -80,6 +84,8 @@ public class ModalWindowPage extends BasePage
 
 		add(new AjaxLink<Void>("showModal2")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{

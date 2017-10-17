@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
+	<head>
+		<title>Wicket Examples - DateTime</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		<span wicket:id="mainNavigation" />
+
+		<form wicket:id="form">
+		 	 <div>
+		 	 	<wicket:message key="locale"></wicket:message>
+				<select wicket:id="localeSelect"></select>
+				<a href="#" wicket:id="defaultLocaleLink">[<wicket:message key="default" />]</a>
+     		</div>
+		
+			<hr/>
+		
+			<h3>TimeField 12-hours</h3>
+			<span wicket:id="time1"></span><br/>
+	
+			<hr/>
+	
+			<h3>TimeField 24-hours</h3>
+			<span wicket:id="time2"></span><br/>
+	
+			<hr/>
+
+			<h3>LocalDateTimeField (default time 00:00)</h3>
+			<span wicket:id="datetime0"></span><br/>
+
+			<hr/>
+
+	 	 	<wicket:message key="clientZone"></wicket:message>
+			<select wicket:id="zoneSelect"></select>
+			<br/>
+			
+			<h3>LocalDateTimeField with a ZonedDateTime (<span wicket:id="datetime1-label" />) adjusted to client's time zone</h3>
+			<span wicket:id="datetime1"></span>
+			<br/>
+
+			<h3>LocalDateTimeTextField with a ZonedDateTime (<span wicket:id="datetime2-label" />) adjusted to client's time zone</h3>
+			<input wicket:id="datetime2" type="text" />
+			<br/>
+			
+			<h3>ZonedDateTimeField</h3>
+			<span wicket:id="datetime3"></span>
+			<br/>
+			
+			<hr/>
+
+			<div wicket:id="feedback"></div>
+			
+			<input wicket:id="submit" type="submit" value="Submit"/>
+		</form>
+	</body>
+</html>

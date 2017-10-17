@@ -14,36 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.examples.ajax.builtin.modal;
+package org.apache.wicket.examples.datetime;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
-import org.apache.wicket.markup.html.WebPage;
-
+import org.apache.wicket.Page;
+import org.apache.wicket.examples.WicketExampleApplication;
 
 /**
- * @author Matej Knopp
+ * Application class for the DateTime example.
  * 
  */
-public class ModalContent2Page extends WebPage
+public class DateTimeApplication extends WicketExampleApplication
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @param window
-	 */
-	public ModalContent2Page(final ModalWindow window)
+	@Override
+	protected void init()
 	{
-		add(new AjaxLink<Void>("close")
-		{
-			private static final long serialVersionUID = 1L;
+		super.init();
+		
+		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+	}
 
-			@Override
-			public void onClick(AjaxRequestTarget target)
-			{
-				window.close(target);
-			}
-		});
+	@Override
+	public Class< ? extends Page> getHomePage()
+	{
+		return DateTimePage.class;
 	}
 }
