@@ -171,8 +171,9 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		Url baseUrl = request.getClientUrl();
 		String namespace = getContext().getNamespace();
 		String pageIdentifier = getContext().getPageIdentifier();
+		List<String> segments = url.getSegments();
 		
-		if (hasSegmentsAfterPageIdentifier(url, pageIdentifier))
+		if (isNotPageInstanceUrl(segments, pageIdentifier))
 		{
 			return false;
 		}
@@ -193,11 +194,17 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		return matches;
 	}
 
-	private boolean hasSegmentsAfterPageIdentifier(Url url, String pageIdentifier) 
-	{
-		List<String> segments = url.getSegments();
+
+	private boolean isNotPageInstanceUrl(List<String> segments, String pageIdentifier) 
+	{		
+		if (segments.size() > 2 ) 
+		{
+			return true;
+		} 
+		
 		int pageIdIndex = segments.indexOf(pageIdentifier);
 		
+		//check if we have segments after pageIdentifier
 		return pageIdIndex < 0 || segments.size() - 1 > pageIdIndex;
 	}
 }
