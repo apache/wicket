@@ -24,7 +24,6 @@ import java.util.TimeZone;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.util.lang.Args;
@@ -107,13 +106,5 @@ public class ZonedToLocalDateTimeModel implements IModel<LocalDateTime>
 		{
 			model.setObject(dateTime.atZone(getClientTimeZone()).withZoneSameInstant(getTargetTimeZone()));
 		}
-	}
-
-	/**
-	 * Convenience factory for a date time.
-	 */
-	public static IModel<LocalDateTime> of(ZonedDateTime dateTime)
-	{
-		return new ZonedToLocalDateTimeModel(new Model<ZonedDateTime>(dateTime));
 	}
 }
