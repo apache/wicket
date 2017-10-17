@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import java.util.List;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -170,7 +171,12 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		Url baseUrl = request.getClientUrl();
 		String namespace = getContext().getNamespace();
 		String pageIdentifier = getContext().getPageIdentifier();
-
+		
+		if (hasSegmentsAfterPageIdentifier(url, pageIdentifier))
+		{
+			return false;
+		}
+		
 		if (urlStartsWith(url, namespace, pageIdentifier))
 		{
 			matches = true;
@@ -185,5 +191,13 @@ public class PageInstanceMapper extends AbstractComponentMapper
 		}
 
 		return matches;
+	}
+
+	private boolean hasSegmentsAfterPageIdentifier(Url url, String pageIdentifier) 
+	{
+		List<String> segments = url.getSegments();
+		int pageIdIndex = segments.indexOf(pageIdentifier);
+		
+		return pageIdIndex < 0 || segments.size() - 1 > pageIdIndex;
 	}
 }

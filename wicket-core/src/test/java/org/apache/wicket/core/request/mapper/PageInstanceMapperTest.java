@@ -20,7 +20,6 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 
 import java.nio.charset.Charset;
 import java.util.Locale;
-
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.IPageRequestHandler;
@@ -72,13 +71,25 @@ public class PageInstanceMapperTest extends AbstractMapperTest
 	@Test
 	public void decode2()
 	{
-		Url url = Url.parse("wicket/page/ingore/me?4&a=3&b=3");
+		Url url = Url.parse("wicket/page?4&a=3&b=3");
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
 
 		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
 		checkPage(h.getPage(), 4);
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void ignoreIfPageIdentifierHasSegmentsAfterIt()
+	{
+		Url url = Url.parse("wicket/page/ingore/me?4&a=3&b=3");
+		
+		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+		assertNull(handler);
 	}
 
 	/**
