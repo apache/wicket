@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
@@ -49,6 +50,16 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	private String boundName;
 
 	/**
+	 * Returns the window's name.
+	 * 
+	 * @return name of {@value null} if not yet bound to a window
+	 */
+	public String getWindowName()
+	{
+		return boundName;
+	}
+	
+	/**
 	 * Overridden to add the current window name to the request.
 	 */
 	@Override
@@ -58,6 +69,19 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 
 		String parameter = "return {'" + PARAM_WINDOW_NAME + "': window.name}";
 		attributes.getDynamicExtraParameters().add(parameter);
+
+		if (boundName != null)
+		{
+			// already bound, send request only when changed
+			attributes.getAjaxCallListeners().add(new AjaxCallListener()
+			{
+				@Override
+				public CharSequence getPrecondition(Component component)
+				{
+					return String.format("return (window.name !== '%s');", boundName);
+				}
+			});
+		}
 	}
 
 	/**
@@ -75,8 +99,7 @@ public class AjaxNewWindowNotifyingBehavior extends AbstractDefaultAjaxBehavior
 	@Override
 	protected void respond(AjaxRequestTarget target)
 	{
-		String windowName = getComponent().getRequest().getRequestParameters()
-			.getParameterValue(PARAM_WINDOW_NAME).toString();
+		String windowName = getComponent().getRequest().getRequestParameters().getParameterValue(PARAM_WINDOW_NAME).toString();
 
 		if (boundName == null)
 		{
