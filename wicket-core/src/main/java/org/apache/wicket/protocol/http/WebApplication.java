@@ -328,6 +328,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Mounts a page class to the given path.
 	 * 
+	 * <p>
+	 * NOTE: mount path must not start with reserved URL segments! See {@link IMapperContext} to know
+	 * which segments are reserved for internal use.
+	 * </p>
 	 * @param <T>
 	 *            type of page
 	 * 
@@ -345,7 +349,11 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Mounts a shared resource to the given path.
-	 * 
+	 *
+	 * <p>
+	 * NOTE: mount path must not start with reserved URL segments! See {@link IMapperContext} to know
+	 * which segments are reserved for internal use.
+	 * </p> 
 	 * @param path
 	 *            the path to mount the resource reference on
 	 * @param reference
@@ -364,7 +372,11 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Mounts mounts all bookmarkable pages in a the pageClass's package to the given path.
-	 * 
+	 *
+	 * <p>
+	 * NOTE: mount path must not start with reserved URL segments! See {@link IMapperContext} to know
+	 * which segments are reserved for internal use.
+	 * </p> 
 	 * @param <P>
 	 *            type of page
 	 * 
