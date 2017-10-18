@@ -20,7 +20,9 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 
 /**
- * Utility interface for providing and creating new page instances.
+ * Utility interface for providing and creating new page instances. This interface is used also to 
+ * define which segments are reserved for internal use (see methods {@link #getNamespace()}, {@link #getPageIdentifier()},
+ * {@link #getBookmarkableIdentifier()} and {@link #getResourceIdentifier()}).
  *
  * @author Matej Knopp
  */

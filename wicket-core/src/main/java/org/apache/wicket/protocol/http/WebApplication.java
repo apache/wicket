@@ -22,12 +22,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.function.Function;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.RuntimeConfigurationType;
@@ -36,6 +34,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxRequestTargetListenerCollection;
+import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.core.request.mapper.PackageMapper;
 import org.apache.wicket.core.request.mapper.ResourceMapper;
@@ -323,6 +322,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Mounts a page class to the given path.
 	 * 
+	 * <p>
+	 * NOTE: mount path must not start with reserved URL segments! See {@link IMapperContext} to know
+	 * which segments are reserved for internal use.
+	 * </p>
 	 * @param <T>
 	 *            type of page
 	 * 
@@ -341,6 +344,10 @@ public abstract class WebApplication extends Application
 	/**
 	 * Mounts a shared resource to the given path.
 	 * 
+	 * <p>
+	 * NOTE: mount path must not start with reserved URL segments! See {@link IMapperContext} to know
+	 * which segments are reserved for internal use.
+	 * </p>
 	 * @param path
 	 *            the path to mount the resource reference on
 	 * @param reference
@@ -359,7 +366,11 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * Mounts mounts all bookmarkable pages in a the pageClass's package to the given path.
-	 * 
+	 *
+	 * <p>
+	 * NOTE: mount path must not start with reserved URL segments! See {@link IMapperContext} to know
+	 * which segments are reserved for internal use.
+	 * </p>
 	 * @param <P>
 	 *            type of page
 	 * 
