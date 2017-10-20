@@ -20,6 +20,7 @@ import org.apache.wicket.Application;
 import org.apache.wicket.core.request.mapper.IPageSource;
 import org.apache.wicket.core.request.mapper.StalePageException;
 import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.component.IRequestablePage;
@@ -165,13 +166,20 @@ public class PageProvider implements IPageProvider, IClusterable
 	}
 
 	@Override
-	public IRequestablePage getPageInstance()
+	public IRequestablePage getPageInstance() throws PageExpiredException
 	{
-		return getProvision().getPage();
+		IRequestablePage page = getProvision().getPage();
+		
+		if (page == null && wasExpired()) 
+		{
+			throw new PageExpiredException("Page with id '" + pageId + "' has expired.");
+		}
+		
+		return page;
 	}
 
 	@Override
-	public PageParameters getPageParameters()
+	public PageParameters getPageParameters() throws PageExpiredException
 	{
 		if (pageParameters != null)
 		{
@@ -238,18 +246,16 @@ public class PageProvider implements IPageProvider, IClusterable
 	}
 
 	@Override
-	public Class<? extends IRequestablePage> getPageClass()
+	public Class<? extends IRequestablePage> getPageClass() throws PageExpiredException
 	{
 		if (pageClass != null)
 		{
 			return pageClass;
 		}
-		else if (hasPageInstance())
+		else
 		{
 			return getPageInstance().getClass();
 		}
-
-		return null;
 	}
 
 	protected IPageSource getPageSource()

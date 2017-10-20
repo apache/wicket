@@ -23,7 +23,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler.RedirectPolicy;
 import org.apache.wicket.core.request.handler.logger.ListenerLogData;
-import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.ILoggableRequestHandler;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.component.IRequestableComponent;
@@ -95,13 +94,7 @@ public class ListenerRequestHandler
 	@Override
 	public IRequestablePage getPage()
 	{
-		IRequestablePage page = pageComponentProvider.getPageInstance();
-		if (page == null && pageComponentProvider.wasExpired())
-		{
-			throw new PageExpiredException(
-				"Page with id '" + pageComponentProvider.getPageId() + "' has expired.");
-		}
-		return page;
+		return pageComponentProvider.getPageInstance();		
 	}
 
 	@Override
