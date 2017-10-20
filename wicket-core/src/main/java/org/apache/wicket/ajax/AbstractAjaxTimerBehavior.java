@@ -112,6 +112,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
+		Component component = getComponent();
+		
 		if (shouldTrigger())
 		{
 			onTimer(target);
@@ -124,7 +126,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 			}
 		}
 
-		clearTimeout(target.getHeaderResponse());
+		clearTimeout(component, target.getHeaderResponse());
 	}
 
 	/**
@@ -181,9 +183,9 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		headerResponse.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 	}
 
-	private void clearTimeout(IHeaderResponse headerResponse)
+	private void clearTimeout(Component component, IHeaderResponse headerResponse)
 	{
-		headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + getComponent().getMarkupId() + "');"));
+		headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + component.getMarkupId() + "');"));
 	}
 
 	/**
@@ -200,7 +202,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 			if (target != null)
 			{
-				clearTimeout(target.getHeaderResponse());
+				clearTimeout(getComponent(), target.getHeaderResponse());
 			}
 		}
 	}
@@ -208,13 +210,15 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	public void onRemove(Component component)
 	{
-		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(component, target.getHeaderResponse()));
 	}
 
 	@Override
 	protected void onUnbind()
 	{
-		getComponent().getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
+		Component component = getComponent();
+		
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(component, target.getHeaderResponse()));
 	}
 
 	/**

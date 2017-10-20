@@ -19,9 +19,9 @@ package org.apache.wicket.extensions.ajax.markup.html;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
@@ -35,7 +35,6 @@ import org.slf4j.LoggerFactory;
  */
 public class AjaxLazyLoadPanelTester
 {
-
 	private static final Logger logger = LoggerFactory.getLogger(AjaxLazyLoadPanelTester.class);
 
 	/**
@@ -59,12 +58,13 @@ public class AjaxLazyLoadPanelTester
 			{
 				// get the AbstractAjaxBehaviour which is responsible for
 				// getting the contents of the lazy panel
-				List<AbstractAjaxBehavior> behaviors = component.getBehaviors(AbstractAjaxBehavior.class);
+				List<AbstractAjaxTimerBehavior> behaviors = component.getPage()
+					.getBehaviors(AbstractAjaxTimerBehavior.class);
 				if (behaviors.size() == 0)
 				{
 					logger.warn("AjaxLazyLoadPanel child found, but no attached AbstractAjaxBehaviors found. A curious situation...");
 				}
-				for (Behavior b : behaviors)
+				for (AbstractAjaxTimerBehavior b : behaviors)
 				{
 					if (!(b instanceof AjaxSelfUpdatingTimerBehavior))
 					{
@@ -78,6 +78,4 @@ public class AjaxLazyLoadPanelTester
 			}
 		});
 	}
-
-
 }
