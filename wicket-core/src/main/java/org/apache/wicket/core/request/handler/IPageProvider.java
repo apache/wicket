@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.core.request.handler;
 
-import org.apache.wicket.core.request.mapper.StalePageException;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -36,21 +35,21 @@ public interface IPageProvider
 	 * Returns page instance specified by the constructor.
 	 *
 	 * @return page instance
-	 * @throws StalePageException
-	 *             if render count has been specified in constructor and the render count of page
-	 *             does not match the value
 	 * @throws PageExpiredException if the specified page
      *          could not have been found and the constructor used did not provide enough information
      *          to create new page instance
 	 */
-	IRequestablePage getPageInstance();
+	IRequestablePage getPageInstance()  throws PageExpiredException;
 
 	/**
 	 * Returns {@link PageParameters} of the page.
 	 *
 	 * @return page parameters
+	 * @throws PageExpiredException if the specified page
+     *          could not have been found and the constructor used did not provide enough information
+     *          to create new page instance
 	 */
-	PageParameters getPageParameters();
+	PageParameters getPageParameters()  throws PageExpiredException;
 
 	/**
 	 * @return negates {@link PageProvider#hasPageInstance()}
@@ -67,10 +66,12 @@ public interface IPageProvider
 
 	/**
 	 * Returns class of the page.
-	 *
+	 * @throws PageExpiredException if the specified page
+     *          could not have been found and the constructor used did not provide enough information
+     *          to create new page instance
 	 * @return page class
 	 */
-	Class<? extends IRequestablePage> getPageClass();
+	Class<? extends IRequestablePage> getPageClass() throws PageExpiredException;
 
 	/**
 	 * Returns the page id.
