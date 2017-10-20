@@ -112,6 +112,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
+		// onTimer might remove this behavior, so keep the component
+		// so the timeout can be cleared later on
 		Component component = getComponent();
 		
 		if (shouldTrigger())

@@ -136,25 +136,26 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	{
 	}
 
+	/**
+	 * Installs a page-global timer if not already present.
+	 */
 	@Override
 	protected void onInitialize()
 	{
 		super.onInitialize();
 
-		AjaxRequestTarget target = getRequestCycle().find(AjaxRequestTarget.class).orElse(null);
-		
-		AjaxLazyLoadTimer timer;
 		// when the timer is not yet installed add it
 		List<AjaxLazyLoadTimer> behaviors = getPage().getBehaviors(AjaxLazyLoadTimer.class);
 		if (behaviors.isEmpty()) {
-			timer = new AjaxLazyLoadTimer();
+			AjaxLazyLoadTimer timer = new AjaxLazyLoadTimer();
 			getPage().add(timer);
-			if (target != null) {
+			
+			getRequestCycle().find(AjaxRequestTarget.class).ifPresent(target -> {
 				// the timer will not be rendered, so stop it first
 				// and restart it immediately on the Ajax request
 				timer.stop(null);
 				timer.restart(target);
-			}
+			});
 		}
 	}
 	
