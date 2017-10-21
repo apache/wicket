@@ -77,11 +77,16 @@ public class ListenerRequestHandler
 		this(pageComponentProvider, null);
 	}
 
-	public boolean includeRenderCount() {
-		if (behaviorId == null) {
+	public boolean includeRenderCount()
+	{
+		if (behaviorId == null)
+		{
 			return ((IRequestListener)getComponent()).rendersPage();
-		} else {
-			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).rendersPage();
+		}
+		else
+		{
+			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex()))
+				.rendersPage();
 		}
 	}
 	
