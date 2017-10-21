@@ -2,6 +2,36 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.0.0-M8
+
+** Bug
+
+    * [WICKET-6455] - AjaxFormSubmitBehavior doesn't submit inner forms
+    * [WICKET-6457] - PageStore not cleared at session end
+    * [WICKET-6459] - Ajax re-renders of enclosures do not render their children's header contributions
+    * [WICKET-6461] - Default constructor is incorrectly called if optional param is not provided in parameter placeholder URL with additional required parameter
+    * [WICKET-6462] - When an Ajax Button is submitted, AjaxFormSubmitBehavior # onSubmit is called twice
+    * [WICKET-6465] - PageStore not cleared at session end
+    * [WICKET-6471] - FileSystemResource file descriptor leak
+    * [WICKET-6476] - It is impossible to use multiple WebSocketTester with the same WebApplication
+    * [WICKET-6479] - AjaxNewWindowNotifyingBehavior erroneously reports new window
+    * [WICKET-6481] - NullPointerException in MountedMapper
+    * [WICKET-6485] - IllegalArgumentException: Argument 'pageClass' may not be null
+
+** Improvement
+
+    * [WICKET-6396] - Model should provide other Optional's methods
+    * [WICKET-6451] - Components with collection models do not support unmodifiable or empty sets
+    * [WICKET-6460] - Rename AjaxDownload to AjaxDownloadBehavior
+    * [WICKET-6463] - Please add additional constructor to Roles
+    * [WICKET-6482] - CompoundValidator should implement all Behavior methods
+
+** Task
+
+    * [WICKET-6105] - Decommission wicket-datetime
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.0.0-M7
 
 ** Bug
