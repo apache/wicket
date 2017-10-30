@@ -17,13 +17,13 @@
 package org.apache.wicket.examples.homepage;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * @author mocleiri
  */
-public class HomePage extends WebPage
+public class HomePage extends WicketExamplePage
 {
 
 	private static final long serialVersionUID = 1L;

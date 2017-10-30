@@ -1,77 +1,58 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" xmlns:wicket="http://wicket.apache.org">
-<head>
-	<title>Wicket Examples</title>
-	<link href="main_style.css" rel="stylesheet" type="text/css" />
-	<!--[if lte IE 6]>
-		<link href="ie.css" rel="stylesheet" type="text/css" />
-	<![endif]-->
+<wicket:extend>
+	<div id="header"><div class="version"> Wicket Version: <span wicket:id="version"/></div></div>			
+	<h1>&#160;&#160;&#160;&#160;Menu</h1>
+	<table>
+       <tbody>
+       <tr><td align="right"><a href="helloworld">helloworld</a></td><td> - As simple as it gets.</td></tr>
+	<tr><td align="right"><a href="echo">echo</a></td><td> - Trivial input form.</td></tr>
+       <tr><td align="right"><a href="forminput">forminput</a></td><td> - Basic form processing.</td></tr>
+	<tr><td align="right"><a href="compref">compref</a></td><td> - Component Reference.</td></tr>
 	
-</head>
-
-<body>
-<div id="container">
-	<div id="content">
-		<div id="header"><div class="version"> Wicket Version: <span wicket:id="version"/></div></div>			
-		<h1>&#160;&#160;&#160;&#160;Menu</h1>
-		<table>
-        <tbody>
-        <tr><td align="right"><a href="helloworld">helloworld</a></td><td> - As simple as it gets.</td></tr>
-		<tr><td align="right"><a href="echo">echo</a></td><td> - Trivial input form.</td></tr>
-        <tr><td align="right"><a href="forminput">forminput</a></td><td> - Basic form processing.</td></tr>
-		<tr><td align="right"><a href="compref">compref</a></td><td> - Component Reference.</td></tr>
-		
-        <tr class="section"><td align="right"><a href="images">images</a></td><td> - Various kinds of images.</td></tr>
-        <tr><td align="right"><a href="linkomatic">linkomatic</a></td><td> - Different kinds of links.</td></tr>
-        <tr><td align="right"><a href="navomatic">navomatic</a></td><td> - Page navigation.</td></tr>
-        <tr><td align="right"><a href="pub">pub</a></td><td> - Localization.</td></tr>
-        <tr><td align="right"><a href="pub2">pub2</a></td><td> - Alternative localization.</td></tr>
-		<tr><td align="right"><a href="unicodeconverter">unicode converter</a></td><td> - Converts input using some model magic.</td></tr>
-        <tr><td align="right"><a href="niceurl">niceurl</a></td><td> - Demonstrates the use of "nice" URLs.</td></tr>
-		<tr><td align="right"><a href="ajax">ajax</a></td><td> - Examples using wicket's built-in AJAX.</td></tr>
-        <tr><td align="right"><a href="repeater">repeaters</a></td><td> - DataView, DataTable, GridView component examples.</td></tr>
-        <tr><td align="right"><a href="tree">tree</a></td><td> - Trees.</td></tr>
-        <tr><td align="right"><a href="authentication1">authentication-1</a></td><td> - A very simple authentication example.</td></tr>
-        <tr><td align="right"><a href="authentication2">authentication-2</a></td><td> - A little bit more advanced authentication example (using cookies).</td></tr>
-		<tr><td align="right"><a href="authentication3">authentication-3</a></td><td> - Demonstrates authentication for pages.</td></tr>
-		<tr><td align="right"><a href="authorization">authorization</a></td><td> - Demonstrates authorization for pages and components.</td></tr>
-        <tr><td align="right"><a href="upload/single">upload</a></td><td> - Single file upload.</td></tr>
-        <tr><td align="right"><a href="upload/multi">upload</a></td><td> - Multiple file upload.</td></tr>
-        <tr><td align="right"><a href="template">template</a></td><td> - Templating example.</td></tr>
-        <tr><td align="right"><a href="mailtemplate">mail template</a></td><td> - Generate mail templates out of Page, Panel or TextTemplate.</td></tr>
-		<tr><td align="right"><a href="stateless">stateless</a></td><td> - Demonstrates stateless pages/sessions.</td></tr>
-        <tr><td align="right"><a href="hellobrowser">Browser Info</a></td><td> - Extracts client info by redirecting to a temporary page.</td></tr>
-        <tr><td align="right"><a href="ajaxhellobrowser">Ajax Browser Info</a></td><td> - Extracts client info by using Ajax.</td></tr>
-        <tr><td align="right"><a href="frames">frames</a></td><td> - Example demonstrating HTML frames.</td></tr>
-        <tr><td align="right"><a href="prototype">ajax with prototype</a></td><td> - AJAX example using prototype.js.</td></tr>
-        <tr><td align="right"><a href="wizard">abacadabra</a></td><td> - Demonstrates the wizard component.</td></tr>
-        <tr><td align="right"><a href="customresourceloading">custom template loading</a></td><td> - Demonstrates custom template loading.</td></tr>
-        <tr><td align="right"><a href="breadcrumb">breadcrumb</a></td><td> - Don't get lost, use bread-crumbs.</td></tr>
-		<tr><td align="right"><a href="captcha">captcha</a></td><td> - Image-based "captcha" to distinguish humans from spammers.</td></tr>
-        <tr><td align="right"><a href="kitten-captcha">kitten-captcha</a></td><td> - Another approach to captchas</td></tr>
-		<tr><td align="right"><a href="datetime">dates and times</a></td><td> - Date components example.</td></tr>
-		
-        <tr class="section"><td align="right"><a href="stock">stockquote</a></td><td> - Stock quote example.</td></tr>
-        <tr><td align="right"><a href="guestbook">guestbook</a></td><td> - A blog-like multi-user guestbook.</td></tr>
-        <tr><td align="right"><a href="hangman">hangman</a></td><td> - The game of hangman.</td></tr>
-		<tr><td align="right"><a href="library">library</a></td><td> - A simple application.</td></tr>
-        
-		<tr class="section"><td align="right"><a href="spring">spring</a></td><td> - Demonstrates integration options with the Spring framework.</td></tr>
-		<tr><td align="right"><a href="guice">guice</a></td><td> - Integration with the Google Guice IoC container.</td></tr>
-		<tr><td align="right"><a href="velocity">velocity</a></td><td> - Shows a Velocity panel in action.</td></tr>
-		<tr><td align="right"><a href="mappers">Wicket 1.5 Request Mappers</a></td><td> - Shows custom request mappers.</td></tr>
-		<tr><td align="right"><a href="events">Wicket 1.5 Events</a></td><td> - Shows inter-component events</td></tr>
-		<tr><td align="right"><a href="resourceaggregation">Resource decoration</a></td><td> - Shows aggregation of css and js resources</td></tr>
-		<tr><td align="right"><a href="cdi">CDI</a></td><td> - Context Dependency and Injection integration</td></tr>
-		<tr><td align="right"><a href="bean-validation">Bean Validation</a></td><td> - Bean Validation integration (JSR 303)</td></tr>
-        <tr><td align="right"><a href="videos">HTML5 Media Tags</a></td><td> - Integration for HTML5 Media Tags</td></tr>
-        <tr><td align="right"><a href="websockets">Web Sockets</a></td><td> - Integration for JSR356 Web Sockets</td></tr>
-    	</tbody>
-		</table>
-	</div>
-	<div id="clearer"/>
-</div>
-</body>
-
-</html>
+       <tr class="section"><td align="right"><a href="images">images</a></td><td> - Various kinds of images.</td></tr>
+       <tr><td align="right"><a href="linkomatic">linkomatic</a></td><td> - Different kinds of links.</td></tr>
+       <tr><td align="right"><a href="navomatic">navomatic</a></td><td> - Page navigation.</td></tr>
+       <tr><td align="right"><a href="pub">pub</a></td><td> - Localization.</td></tr>
+       <tr><td align="right"><a href="pub2">pub2</a></td><td> - Alternative localization.</td></tr>
+	<tr><td align="right"><a href="unicodeconverter">unicode converter</a></td><td> - Converts input using some model magic.</td></tr>
+       <tr><td align="right"><a href="niceurl">niceurl</a></td><td> - Demonstrates the use of "nice" URLs.</td></tr>
+	<tr><td align="right"><a href="ajax">ajax</a></td><td> - Examples using wicket's built-in AJAX.</td></tr>
+       <tr><td align="right"><a href="repeater">repeaters</a></td><td> - DataView, DataTable, GridView component examples.</td></tr>
+       <tr><td align="right"><a href="tree">tree</a></td><td> - Trees.</td></tr>
+       <tr><td align="right"><a href="authentication1">authentication-1</a></td><td> - A very simple authentication example.</td></tr>
+       <tr><td align="right"><a href="authentication2">authentication-2</a></td><td> - A little bit more advanced authentication example (using cookies).</td></tr>
+	<tr><td align="right"><a href="authentication3">authentication-3</a></td><td> - Demonstrates authentication for pages.</td></tr>
+	<tr><td align="right"><a href="authorization">authorization</a></td><td> - Demonstrates authorization for pages and components.</td></tr>
+       <tr><td align="right"><a href="upload/single">upload</a></td><td> - Single file upload.</td></tr>
+       <tr><td align="right"><a href="upload/multi">upload</a></td><td> - Multiple file upload.</td></tr>
+       <tr><td align="right"><a href="template">template</a></td><td> - Templating example.</td></tr>
+       <tr><td align="right"><a href="mailtemplate">mail template</a></td><td> - Generate mail templates out of Page, Panel or TextTemplate.</td></tr>
+	<tr><td align="right"><a href="stateless">stateless</a></td><td> - Demonstrates stateless pages/sessions.</td></tr>
+       <tr><td align="right"><a href="hellobrowser">Browser Info</a></td><td> - Extracts client info by redirecting to a temporary page.</td></tr>
+       <tr><td align="right"><a href="ajaxhellobrowser">Ajax Browser Info</a></td><td> - Extracts client info by using Ajax.</td></tr>
+       <tr><td align="right"><a href="frames">frames</a></td><td> - Example demonstrating HTML frames.</td></tr>
+       <tr><td align="right"><a href="prototype">ajax with prototype</a></td><td> - AJAX example using prototype.js.</td></tr>
+       <tr><td align="right"><a href="wizard">abacadabra</a></td><td> - Demonstrates the wizard component.</td></tr>
+       <tr><td align="right"><a href="customresourceloading">custom template loading</a></td><td> - Demonstrates custom template loading.</td></tr>
+       <tr><td align="right"><a href="breadcrumb">breadcrumb</a></td><td> - Don't get lost, use bread-crumbs.</td></tr>
+	<tr><td align="right"><a href="captcha">captcha</a></td><td> - Image-based "captcha" to distinguish humans from spammers.</td></tr>
+       <tr><td align="right"><a href="kitten-captcha">kitten-captcha</a></td><td> - Another approach to captchas</td></tr>
+	<tr><td align="right"><a href="datetime">dates and times</a></td><td> - Date components example.</td></tr>
+	
+       <tr class="section"><td align="right"><a href="stock">stockquote</a></td><td> - Stock quote example.</td></tr>
+       <tr><td align="right"><a href="guestbook">guestbook</a></td><td> - A blog-like multi-user guestbook.</td></tr>
+       <tr><td align="right"><a href="hangman">hangman</a></td><td> - The game of hangman.</td></tr>
+	<tr><td align="right"><a href="library">library</a></td><td> - A simple application.</td></tr>
+       
+	<tr class="section"><td align="right"><a href="spring">spring</a></td><td> - Demonstrates integration options with the Spring framework.</td></tr>
+	<tr><td align="right"><a href="guice">guice</a></td><td> - Integration with the Google Guice IoC container.</td></tr>
+	<tr><td align="right"><a href="velocity">velocity</a></td><td> - Shows a Velocity panel in action.</td></tr>
+	<tr><td align="right"><a href="mappers">Wicket 1.5 Request Mappers</a></td><td> - Shows custom request mappers.</td></tr>
+	<tr><td align="right"><a href="events">Wicket 1.5 Events</a></td><td> - Shows inter-component events</td></tr>
+	<tr><td align="right"><a href="resourceaggregation">Resource decoration</a></td><td> - Shows aggregation of css and js resources</td></tr>
+	<tr><td align="right"><a href="cdi">CDI</a></td><td> - Context Dependency and Injection integration</td></tr>
+	<tr><td align="right"><a href="bean-validation">Bean Validation</a></td><td> - Bean Validation integration (JSR 303)</td></tr>
+       <tr><td align="right"><a href="videos">HTML5 Media Tags</a></td><td> - Integration for HTML5 Media Tags</td></tr>
+       <tr><td align="right"><a href="websockets">Web Sockets</a></td><td> - Integration for JSR356 Web Sockets</td></tr>
+   	</tbody>
+	</table>
+</wicket:extend>	
