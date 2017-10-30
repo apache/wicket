@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
 
 	<h1>wicket.markup.html.link.Link</h1>
 	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
@@ -36,5 +36,6 @@
 	<input type="button" wicket:id="link3" value="this button is clicked n times" />
 	</p>
     <span wicket:id="explainPanel">panel contents come here</span>
+</wicket:extend>
 </body>
 </html>

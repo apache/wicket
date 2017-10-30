@@ -22,7 +22,7 @@
 	</head>
 
 	<body>
-		<span wicket:id="mainNavigation"/>
+		<wicket:extend>
 	    <a href="index.html">[go back]</a><br/>
 	    <wicket:child/>
 	    
@@ -47,6 +47,7 @@
 	    
 	    <p><wicket:link><a href="print/sheet1/a4">A mounted resource that prints sheets in different formats</a></wicket:link></p>
 	    
-	</body>
+	</wicket:extend>
+</body>
 
 </html>

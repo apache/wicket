@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
 	<p>Counting link using Ajax: <a href="#" wicket:id="link">Click me!</a></p>
 
 	<!-- the wicket component is enclosed in a span tag with a separate markup ID attribute -->
@@ -13,5 +13,6 @@
 	<!-- updater only replaces the contents of the tags, not the tags itself. -->
 
 	<p>Link was clicked <span id="counter"><span wicket:id="counter">-100</span></span> times.</p>
+</wicket:extend>
 </body>
 </html>

@@ -4,7 +4,7 @@
 	<link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-  <span wicket:id="mainNavigation"/>
+  <wicket:extend>
 
   <form wicket:id = "commentForm" id = "commentForm">
     Add your comment here:
@@ -28,5 +28,6 @@
 	    More comment text here.
     </p>
   </wicket:remove>
+</wicket:extend>
 </body>
 </html>

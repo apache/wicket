@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
 
 	<h1>wicket.markup.html.link.BookmarkablePageLink</h1>
 	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
@@ -24,5 +24,6 @@
 	<a wicket:id="pageLinkWithArgs">go to our bookmarkable page passing a message argument</a>
 	</p>
     <span wicket:id="explainPanel">panel contents come here</span>
+</wicket:extend>
 </body>
 </html>

@@ -22,13 +22,14 @@
 	</head>
 
 	<body>
-		<span wicket:id="mainNavigation"/>
+		<wicket:extend>
 	    <a href="Index.html" wicket:id="back">[go back]</a><p/>
 	    <wicket:child/>
 	    
 	    <p>
 	    	<span wicket:id="localizedLabel">[I am a localized depending on the URL's first segment]</span>
 	    </p>	 
-	</body>
+	</wicket:extend>
+</body>
 
 </html>

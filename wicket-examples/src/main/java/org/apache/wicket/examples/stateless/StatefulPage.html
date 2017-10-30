@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
-		<span wicket:id="mainNavigation"/>
+		<wicket:extend>
 		<span wicket:id="message" id="message">Message goes here</span>
 		<br />
 		<a wicket:id="indexLink" href="#">go to index</a>
@@ -33,5 +33,6 @@
 			<p>
 			<span wicket:id="feedback" />
 		</p>
-	</body>
+	</wicket:extend>
+</body>
 </html>

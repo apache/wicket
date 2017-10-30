@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     <p>
 	    This page was loaded by a component specific override. You can use that - with care - if you have
 	    to implement custom loading strategies that are very local to the component. For instance, a custom
@@ -20,5 +20,6 @@
 	    cache key. This functionality can be used to e.g. when you want to load templates from a database,
 	    and you know that the actual templates can be different from request to request.
     </p>
+</wicket:extend>
 </body>
 </html>
