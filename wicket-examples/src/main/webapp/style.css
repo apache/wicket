@@ -1,6 +1,6 @@
 @import url(../fonts/source-code-pro/stylesheet.css);
 @import url(../fonts/source-sans-pro/stylesheet.css);
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
   padding: 0;
   border: 0;
@@ -836,7 +836,6 @@ code, pre, code > span, pre > span {
 
 a {
   border-color: #FF9925;
-  border-style: none none dotted none;
   border-width: 0 0 1px 0;
   cursor: pointer;
   font-weight: 400;
@@ -1001,3 +1000,63 @@ th {
       font-weight: 400;
       text-decoration: none;
       text-transform: uppercase; }
+      
+/* OLD STYLE SECTION */
+
+.mark {
+    background-color: yellow;
+    margin: 5px;    
+}
+
+ul.feedbackPanel li.feedbackPanelERROR {
+    color: red;
+    list-style: circle;
+    font-weight: bold;
+}
+
+ul.feedbackPanel li.feedbackPanelINFO {
+    color: green;
+    list-style: circle;
+    font-weight: bold;
+}
+.nospam {
+    display : none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a[disabled="disabled"], a[disabled="disabled"]:hover{
+    color: inherit;
+    font-weight:normal; 
+    text-decoration: none;
+}
+
+
+
+table.dataview {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #0079d6;
+    font-size: 1em;
+    font-family: arial;
+    }
+    
+table.dataview caption { text-align: left; }
+table.dataview tr { padding-top: 2px; padding-bottom: 2px; }
+table.dataview tr.even { background-color: #ffebcd; }
+table.dataview tr.odd { background-color: #fff; }
+table.dataview tr td { padding-left: 8px; padding-right: 30px; }
+table.dataview tr th { color: black; padding-top: 3px; padding-bottom: 3px; padding-left: 8px; padding-right: 30px; background-color: #c1e4ff; border-bottom: 1px solid #0079d6; border-top: 1px solid #0079d6; text-align: left; white-space: nowrap; vertical-align: middle;}
+
+table.dataview tr th { background-position: right; background-repeat:no-repeat; }
+table.dataview tr th.wicket_orderDown {
+    background-color: #87cbff; background-image: url(images/arrow_down.png); }
+table.dataview tr th.wicket_orderUp {
+    background-color: #87cbff; background-image: url(images/arrow_up.png); }
+table.dataview tr th.wicket_orderNone {
+    background-image: url(images/arrow_off.png);
+}
+table.dataview tr th a { font-weight: normal; }
+table.dataview #message { padding-left: 3px; }
+table.dataview caption { padding-bottom: 2px; }

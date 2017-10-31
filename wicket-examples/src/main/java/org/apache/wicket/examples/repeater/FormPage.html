@@ -5,24 +5,26 @@ RefreshingView in a form, with a <tt>remove</tt> link along with each item.
 <br/><br/>
 
 <form wicket:id="form">
-<table cellspacing="0" class="dataview">
-	<tr>
-		<th>Actions</th>
-		<th>ID</th>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th>Home Phone</th>
-		<th>Cell Phone</th>
-	</tr>
-	<tr wicket:id="simple">
-		<td><span wicket:id="actions">[actions]</span></td>
-		<td><input type="text" wicket:id="id">[contactid]</input> </td>
-		<td><input type="text" wicket:id="firstName">[firstname]</input></td>
-		<td><input type="text" wicket:id="lastName">[lastname]</input></td>
-		<td><input type="text" wicket:id="homePhone">[homephone]</input></td>
-		<td><input type="text" wicket:id="cellPhone">[cellphone]</input></td>
-	</tr>
-</table>
+<div style="overflow-x:auto;">
+	<table cellspacing="0" class="dataview">
+		<tr>
+			<th>Actions</th>
+			<th>ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Home Phone</th>
+			<th>Cell Phone</th>
+		</tr>
+		<tr wicket:id="simple">
+			<td><span wicket:id="actions">[actions]</span></td>
+			<td><input type="text" wicket:id="id">[contactid]</input> </td>
+			<td><input type="text" wicket:id="firstName">[firstname]</input></td>
+			<td><input type="text" wicket:id="lastName">[lastname]</input></td>
+			<td><input type="text" wicket:id="homePhone">[homephone]</input></td>
+			<td><input type="text" wicket:id="cellPhone">[cellphone]</input></td>
+		</tr>
+	</table>
+</div>
 </form>
 
 </wicket:extend>

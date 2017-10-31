@@ -4,16 +4,17 @@
     <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <div wicket:id = "mainNavigation"></div>
-    <div wicket:id = "navomaticBorder">
-		<div style = "width:250px">
-		<div style="text-align: center;"><h3>Page 1</h3></div>
-		Welcome to Navomatic.  The navigation links on the left 
-		will allow you to navigate between three pages.  Notice that the current page 
-		(Page1) is displayed in the "Navigation Links" area as italicized text, 
-		while the other pages are displayed as clickable links.  Go ahead 
-		and click the "Page2" link now.
-		</div>
-    </div>
+    <wicket:extend>
+	    <div wicket:id = "navomaticBorder">
+			<div style = "width:250px">
+			<div style="text-align: center;"><h3>Page 1</h3></div>
+			Welcome to Navomatic.  The navigation links on the left 
+			will allow you to navigate between three pages.  Notice that the current page 
+			(Page1) is displayed in the "Navigation Links" area as italicized text, 
+			while the other pages are displayed as clickable links.  Go ahead 
+			and click the "Page2" link now.
+			</div>
+	    </div>
+    </wicket:extend>
 </body>
 </html>

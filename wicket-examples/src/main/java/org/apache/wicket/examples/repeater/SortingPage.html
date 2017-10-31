@@ -5,23 +5,24 @@ This example demonstrates how easy it is to implement sorting. Simply implement 
 
 
 <span wicket:id="navigator">[dataview navigator]</span>
-<table cellspacing="0" class="dataview">
-	<tr>
-		<th>Actions</th>
-		<th>ID</th>
-		<th wicket:id="orderByFirstName">First Name</th>
-		<th wicket:id="orderByLastName">Last Name</th>
-		<th>Home Phone</th>
-		<th>Cell Phone</th>
-	</tr>
-	<tr wicket:id="sorting">
-		<td><span wicket:id="actions">[actions]</span></td>
-		<td><span wicket:id="contactid">[contactid]</span> </td>
-		<td><span wicket:id="firstname">[firstname]</span></td>
-		<td><span wicket:id="lastname">[lastname]</span></td>
-		<td><span wicket:id="homephone">[homephone]</span></td>
-		<td><span wicket:id="cellphone">[cellphone]</span></td>
-	</tr>
-</table>
-
+<div style="overflow-x:auto;">
+	<table cellspacing="0" class="dataview">
+		<tr>
+			<th>Actions</th>
+			<th>ID</th>
+			<th wicket:id="orderByFirstName">First Name</th>
+			<th wicket:id="orderByLastName">Last Name</th>
+			<th>Home Phone</th>
+			<th>Cell Phone</th>
+		</tr>
+		<tr wicket:id="sorting">
+			<td><span wicket:id="actions">[actions]</span></td>
+			<td><span wicket:id="contactid">[contactid]</span> </td>
+			<td><span wicket:id="firstname">[firstname]</span></td>
+			<td><span wicket:id="lastname">[lastname]</span></td>
+			<td><span wicket:id="homephone">[homephone]</span></td>
+			<td><span wicket:id="cellphone">[cellphone]</span></td>
+		</tr>
+	</table>
+</div>
 </wicket:extend>

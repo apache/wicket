@@ -5,23 +5,25 @@ You simply add your items to the repeating view and its body
 markup will be used to render each one in the order added.
 <br/><br/>
 
-<table cellspacing="0" class="dataview">
-	<tr>
-		<th>Actions</th>
-		<th>ID</th>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th>Home Phone</th>
-		<th>Cell Phone</th>
-	</tr>
-	<tr wicket:id="repeating">
-		<td><span wicket:id="actions">[actions]</span></td>
-		<td><span wicket:id="contactid">[contactid]</span> </td>
-		<td><span wicket:id="firstname">[firstname]</span></td>
-		<td><span wicket:id="lastname">[lastname]</span></td>
-		<td><span wicket:id="homephone">[homephone]</span></td>
-		<td><span wicket:id="cellphone">[cellphone]</span></td>
-	</tr>
-</table>
+<div style="overflow-x:auto;">
+	<table cellspacing="0" class="dataview">
+		<tr>
+			<th>Actions</th>
+			<th>ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Home Phone</th>
+			<th>Cell Phone</th>
+		</tr>
+		<tr wicket:id="repeating">
+			<td><span wicket:id="actions">[actions]</span></td>
+			<td><span wicket:id="contactid">[contactid]</span> </td>
+			<td><span wicket:id="firstname">[firstname]</span></td>
+			<td><span wicket:id="lastname">[lastname]</span></td>
+			<td><span wicket:id="homephone">[homephone]</span></td>
+			<td><span wicket:id="cellphone">[cellphone]</span></td>
+		</tr>
+	</table>
+</div>	
 
 </wicket:extend>
