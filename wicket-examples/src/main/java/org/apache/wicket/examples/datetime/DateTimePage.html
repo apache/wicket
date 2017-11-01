@@ -7,7 +7,7 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
-		<span wicket:id="mainNavigation" />
+		<wicket:extend>
 
 		<form wicket:id="form">
 		 	 <div>
@@ -55,5 +55,6 @@
 			
 			<input wicket:id="submit" type="submit" value="Submit"/>
 		</form>
-	</body>
+	</wicket:extend>
+</body>
 </html>

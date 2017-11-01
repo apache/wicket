@@ -52,6 +52,8 @@ public class HomePage extends WicketExamplePage
 				return version;
 			}
 		}));
+		
+		get("sources").setVisible(false);
 	}
 
 }

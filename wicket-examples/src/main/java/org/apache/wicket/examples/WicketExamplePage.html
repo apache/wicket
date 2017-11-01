@@ -14,37 +14,11 @@
 	rel="stylesheet" />
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-<link rel="stylesheet" type="text/css"
-	href="//cdn.jsdelivr.net/jquery.slick/1.5.5/slick.css" />
-<link rel="stylesheet" type="text/css"
-	href="//cdn.jsdelivr.net/jquery.slick/1.5.5/slick-theme.css" />
-
-<script type="text/javascript"
-	src="//cdn.jsdelivr.net/jquery.slick/1.5.5/slick.min.js"></script>
-
 </head>
 
 <body>
 	<div class="header default">
 		<div class="l-container">
-			<nav class="mainmenu">
-				<ul>
-					<!-- /start/quickstart.html || /learn/ -->
-					<li class=""><a href="/start/quickstart.html">Quick Start</a></li>
-					<!-- /start/download.html || /learn/ -->
-					<li class=""><a href="/start/download.html">Download</a></li>
-					<!-- /learn || /learn/ -->
-					<li class=""><a href="/learn">Documentation</a></li>
-					<!-- /help || /learn/ -->
-					<li class=""><a href="/help">Support</a></li>
-					<!-- /contribute || /learn/ -->
-					<li class=""><a href="/contribute">Contribute</a></li>
-					<!-- /community || /learn/ -->
-					<li class=""><a href="/community">Community</a></li>
-					<!-- /apache || /learn/ -->
-					<li class=""><a href="/apache">Apache</a></li>
-				</ul>
-			</nav>
 			<div class="logo">
 				<a href="/"><img src="/img/logo-apachewicket-white.svg"
 					alt="Apache Wicket"></a>
@@ -53,6 +27,11 @@
 	</div>
 	<main>
 		<div class="l-container">
+			<div class="text-right">
+             <a wicket:id="sources" class="button">
+                Source code
+             </a>
+            </div>
 			<div id="content">
 			  <wicket:child/>
 			</div>
