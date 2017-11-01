@@ -27,23 +27,20 @@
     </div>
     <main>
         <div class="l-container">
-            <div id="content">
-              <p>
-                This page was loaded by a component specific override. You can use that - with care - if you have
-                to implement custom loading strategies that are very local to the component. For instance, a custom
-                component that loads it's template from a database and for which you don't want the application
-                to have to know about it's differing loading resource.
-              </p>
-              <p>
-                This example loads the custom template just once, though it may reload when resource polling is
-                turned on and the template changes. If you want a load the template every time a page (or panel)
-                is requested, you can additionally let your container implement IMarkupCacheKeyProvider, and then
-                return null in the implementation of getCacheKey; Wicket will not cache templates without a
-                cache key. This functionality can be used to e.g. when you want to load templates from a database,
-                and you know that the actual templates can be different from request to request.
-              </p>
-            </div>
-        </div>
+          <p>
+            This page was loaded by a component specific override. You can use that - with care - if you have
+            to implement custom loading strategies that are very local to the component. For instance, a custom
+            component that loads it's template from a database and for which you don't want the application
+            to have to know about it's differing loading resource.
+          </p>
+          <p>
+            This example loads the custom template just once, though it may reload when resource polling is
+            turned on and the template changes. If you want a load the template every time a page (or panel)
+            is requested, you can additionally let your container implement IMarkupCacheKeyProvider, and then
+            return null in the implementation of getCacheKey; Wicket will not cache templates without a
+            cache key. This functionality can be used to e.g. when you want to load templates from a database,
+            and you know that the actual templates can be different from request to request.
+          </p>
     </main>
 </body>
 </html>
