@@ -16,9 +16,8 @@
  */
 package org.apache.wicket.examples.homepage;
 
-import org.apache.wicket.Application;
 import org.apache.wicket.examples.WicketExamplePage;
-import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * @author mocleiri
@@ -34,26 +33,17 @@ public class HomePage extends WicketExamplePage
 	public HomePage()
 	{
 		super();
-
-		add(new Label("version", () -> {
-			/*
-			 * Read the specification version from the wicket-core MANIFEST.MF file.
-			 */
-			Package p = Application.class.getPackage();
-
-			String version = p.getSpecificationVersion();
-
-			if (version == null || version.length() == 0)
-			{
-				return "Missing Version";
-			}
-			else
-			{
-				return version;
-			}
-		}));
-		
-		get("sources").setVisible(false);
 	}
-
+	
+	@Override
+	protected Panel buildHeader(String id) 
+	{
+		return new HomePageHeader(id);
+	}
+	
+	@Override
+	protected boolean showSourceButton() 
+	{
+		return false;
+	}
 }
