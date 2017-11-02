@@ -18,6 +18,7 @@ package org.apache.wicket.examples;
 
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
@@ -44,6 +45,7 @@ public final class WicketExampleHeader extends Panel
 		setRenderBodyOnly(true);
 		
 		add(new Image("exampleheaderimage", new PackageResourceReference(
-			WicketExamplePage.class, "logo-apachewicket-examples-white.svg")));		
+			WicketExamplePage.class, "logo-apachewicket-examples-white.svg")));
+		add(new DebugBar("debug"));
 	}
 }
