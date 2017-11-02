@@ -53,40 +53,50 @@ Function initCalendar is a simple utility function that sets the initialization 
 
 === Initialization code
 
-The initialization code for our component is contained inside its method onInitialize and is the following:
+The component is based on _LocalDateTextField_ which supports pattern-based conversion for dates. The initialization code is the following:
 
 [source,java]
 ----
-@Override
-protected void onInitialize() {
-	super.onInitialize();
-	setOutputMarkupId(true);
+public class JQueryDateField extends LocalDateTextField {
 
-	datePattern =  new ResourceModel("jqueryDateField.shortDatePattern", "mm/dd/yy")
-                                          .getObject();		
-	countryIsoCode = new ResourceModel("jqueryDateField.countryIsoCode", "en-GB")                                                             
-                                          .getObject();
-
-	PackageResourceReference resourceReference = 
-                            new PackageResourceReference(getClass(), "calendar.jpg");
-		
-	urlForIcon = urlFor(resourceReference, new PageParameters());
-	dateConverter = new PatternDateConverter(datePattern, false);	
-}	
-	
-@Override
-public <Date> IConverter<Date> getConverter(Class<Date> type) {
-	return (IConverter<Date>) dateConverter;
-}
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5088998263851588184L;
+    private final String datePattern;
+    private final String countryIsoCode;
+    private CharSequence urlForIcon;
+    private static final PackageResourceReference JQDatePickerRef = 
+                           new PackageResourceReference(JQueryDateField.class, "JQDatePicker.js");
+    
+    public JQueryDateField(String id, IModel<LocalDate> dateModel, 
+            String datePattern, String countryIsoCode){
+        super(id, dateModel, datePattern);
+        this.datePattern = datePattern;
+        this.countryIsoCode = countryIsoCode;
+    }
+    
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        
+        setOutputMarkupId(true);
+        
+        PackageResourceReference resourceReference = new PackageResourceReference(getClass(), "calendar.jpg");
+        
+        urlForIcon = urlFor(resourceReference, new PageParameters());
+        
+        add(AttributeModifier.replace("size", "12"));
+    }
+...    
 ----
 
-The first thing to do inside onInitialize is to ensure that our component will have a markup id for its related text field. This is done invoking setOutputMarkupId(true). 
+The first thing we do inside onInitialize is to ensure that our component will have a markup id for its related text field. This is done invoking setOutputMarkupId(true). 
 
-Next, JQueryDateField tries to retrieve the date format and the ISO language code that must be used as initialization parameters. This is done using class _ResourceModel_ which searches for a given resource in the available bundles. If no value is found for date format or for ISO language code, default values will be used ('mm/dd/yy' and 'en-GB'). 
+Next, to generate the relative URL for the calendar icon we load its file as package resource reference and then we use _Component_'s method urlFor to get the URL value (we have seen this method in <<requestProcessing.adoc#_the_director_of_request_processing_requestcycle,paragraph 9.3.2>>).
 
-To generate the relative URL for calendar icon, we load it as package resource reference and then we use _Component_'s method urlFor to get the URL value (we have seen this method in <<requestProcessing.adoc#_the_director_of_request_processing_requestcycle,paragraph 9.3.2>>).
+NOTE: as you might have noted in the constructor we need to pass the ISO language code along with the date pattern. The ISO code will be used to generate the JavaScript for the calendar. 
 
-The last configuration instruction executed inside onInitialize is the instantiation of the custom converter used by our component. This converter is an instance of the built-in class _org.apache.wicket.datetime.PatternDateConvert_ and must use the previously retrieved date format to perform conversion operations. Now to tell our component to use this converter we must return it overriding _FormComponent_'s method _getConverter_. 
 
 === Header contributor code
 
