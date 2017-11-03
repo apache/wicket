@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.examples;
 
+import org.apache.wicket.examples.resources.ResourcesLocator;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * Navigation panel for the examples project.
@@ -40,5 +43,7 @@ public final class WicketExampleHeader extends Panel
 		super(id);
 
 		setRenderBodyOnly(true);
+		
+		add(new Image("exampleheaderimage", new PackageResourceReference(ResourcesLocator.class, "logo-apachewicket-examples-white.svg")));
 	}
 }

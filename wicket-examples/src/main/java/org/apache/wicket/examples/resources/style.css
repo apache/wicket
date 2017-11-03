@@ -1,4 +1,4 @@
-@import url(../fonts/source-code-pro/stylesheet.css);
+@import url(./fonts/source-code-pro/stylesheet.css);
 @import url(../fonts/source-sans-pro/stylesheet.css);
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
@@ -667,9 +667,8 @@ button.button--alert {
     width: 240px; }
 
 .jumbotron.header {
-  /*        background: radial-gradient(ellipse closest-side, rgba(0,0,0,0), rgba(0,0,0,0.6)), url('../img/background-1.jpg');*/
   background-color: #111;
-  background-image: url("../img/background-2.jpg");
+  background-image: url("background-2.jpg");
   background-repeat: no-repeat;
   background-position: center 25%;
   background-size: cover;
@@ -852,7 +851,7 @@ h1 a, h2 a, h3 a {
   border: none; }
 
 div.header {
-  background-image: url("../img/background-2.jpg");
+  background-image: url("background-2.jpg");
   background-repeat: no-repeat;
   background-position: center 25%;
   background-size: cover;
@@ -958,7 +957,7 @@ th {
 
 .wicket7.header {
   background-color: #FF9925;
-  background-image: url(/img/wicket-7-bg.jpg);
+  background-image: url('wicket-7-bg.jpg');
   margin-bottom: 0;
   text-align: center; }
   .wicket7.header a {
@@ -1056,11 +1055,11 @@ table.dataview tr th { color: black; padding-top: 3px; padding-bottom: 3px; padd
 
 table.dataview tr th { background-position: right; background-repeat:no-repeat; }
 table.dataview tr th.wicket_orderDown {
-    background-color: #87cbff; background-image: url(images/arrow_down.png); }
+    background-color: #87cbff; background-image: url('arrow_down.png'); }
 table.dataview tr th.wicket_orderUp {
-    background-color: #87cbff; background-image: url(images/arrow_up.png); }
+    background-color: #87cbff; background-image: url('arrow_up.png'); }
 table.dataview tr th.wicket_orderNone {
-    background-image: url(images/arrow_off.png);
+    background-image: url('arrow_off.png');
 }
 table.dataview tr th a { font-weight: normal; }
 table.dataview #message { padding-left: 3px; }
@@ -1071,7 +1070,7 @@ table.dataview caption { padding-bottom: 2px; }
 div.tabpanel div.tab-row{
   float:left;
   width:100%;
-  background:#DAE0D2 url("tabs/bg.gif") repeat-x bottom;
+  background:#DAE0D2 url('bg.gif') repeat-x bottom;
   line-height:normal;
   }
 
