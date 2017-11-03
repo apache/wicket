@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.examples;
 
+import org.apache.wicket.examples.resources.ResourcesLocator;
 import org.apache.wicket.examples.source.SourcesPage;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
@@ -24,6 +27,7 @@ import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -97,5 +101,11 @@ public class WicketExamplePage extends WebPage
 	 */
 	protected void explain()
 	{
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		response.render(CssHeaderItem.forReference(new CssResourceReference(ResourcesLocator.class,"style.css"),"screen"));
 	}
 }
