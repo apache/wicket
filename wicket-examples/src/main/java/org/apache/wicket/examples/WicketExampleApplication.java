@@ -17,6 +17,7 @@
 package org.apache.wicket.examples;
 
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.resource.CssUrlReplacer;
 import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.util.crypt.ClassCryptFactory;
 import org.apache.wicket.util.crypt.NoCrypt;
@@ -54,5 +55,7 @@ public abstract class WicketExampleApplication extends WebApplication
 			new ClassCryptFactory(NoCrypt.class, SecuritySettings.DEFAULT_ENCRYPTION_KEY));
 
 		getDebugSettings().setDevelopmentUtilitiesEnabled(true);
+		
+		getResourceSettings().setCssCompressor(new CssUrlReplacer());
 	}
 }
