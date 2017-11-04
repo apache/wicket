@@ -21,14 +21,12 @@ import org.apache.wicket.examples.source.SourcesPage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.PopupSettings;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * Base class for all example pages.
@@ -56,9 +54,6 @@ public class WicketExamplePage extends WebPage
 	{
 		super(pageParameters);
 
-		final String packageName = getClass().getPackage().getName();
-		add(new Label("mainNavigation", Strings.afterLast(packageName, '.')));
-		
 		BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>("sources",
 			SourcesPage.class, SourcesPage.generatePageParameters(this));
 		add(link);

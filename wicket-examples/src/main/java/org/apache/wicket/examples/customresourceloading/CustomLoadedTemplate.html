@@ -16,16 +16,15 @@
 </head>
 
 <body>
-    <div class="header default">
-        <div class="l-container">
-            <div class="logo">
-                <a href="/"><img src="/img/logo-apachewicket-white.svg"
-                    alt="Apache Wicket"></a>
-            </div>
-        </div>
+    <div wicket:id="pageHeader">
     </div>
     <main>
         <div class="l-container">
+            <div class="text-right">
+             <a wicket:id="sources" class="button">
+                Source code
+             </a>
+            </div>
           <p>
             This page was loaded by a component specific override. You can use that - with care - if you have
             to implement custom loading strategies that are very local to the component. For instance, a custom
@@ -40,6 +39,7 @@
             cache key. This functionality can be used to e.g. when you want to load templates from a database,
             and you know that the actual templates can be different from request to request.
           </p>
+        </div> 
     </main>
 </body>
 </html>
