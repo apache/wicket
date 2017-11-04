@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples;
 
-import org.apache.wicket.examples.resources.ResourcesLocator;
 import org.apache.wicket.examples.source.SourcesPage;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -101,6 +100,6 @@ public class WicketExamplePage extends WebPage
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		response.render(CssHeaderItem.forReference(new CssResourceReference(ResourcesLocator.class,"style.css"),"screen"));
+		response.render(CssHeaderItem.forReference(new CssResourceReference(WicketExamplePage.class, "style.css"),"screen"));
 	}
 }

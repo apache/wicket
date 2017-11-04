@@ -1,7 +1,7 @@
 package org.apache.wicket.examples.homepage;
 
 import org.apache.wicket.Application;
-import org.apache.wicket.examples.resources.ResourcesLocator;
+import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -38,7 +38,7 @@ public class HomePageHeader extends Panel {
 		ExternalLink externalLink = new ExternalLink("headerhomelink",
 			Model.of(WebApplication.get().getServletContext().getContextPath()));
 		
-		externalLink.add(new Image("headerimage", new PackageResourceReference(ResourcesLocator.class, "logo-apachewicket-examples-white.svg")));
+		externalLink.add(new Image("headerimage", new PackageResourceReference(WicketExamplePage.class, "logo-apachewicket-examples-white.svg")));
 		
 		add(externalLink);
 	}
