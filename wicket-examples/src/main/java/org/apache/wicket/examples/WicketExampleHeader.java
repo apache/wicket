@@ -18,7 +18,10 @@ package org.apache.wicket.examples;
 
 import org.apache.wicket.examples.resources.ResourcesLocator;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
@@ -44,6 +47,12 @@ public final class WicketExampleHeader extends Panel
 
 		setRenderBodyOnly(true);
 		
-		add(new Image("exampleheaderimage", new PackageResourceReference(ResourcesLocator.class, "logo-apachewicket-examples-white.svg")));
+		ExternalLink externalLink = new ExternalLink("exampleheaderhomelink",
+			Model.of(WebApplication.get().getServletContext().getContextPath()));
+		
+		externalLink.add(new Image("exampleheaderimage", new PackageResourceReference(
+			ResourcesLocator.class, "logo-apachewicket-examples-white.svg")));
+		
+		add(externalLink);
 	}
 }
