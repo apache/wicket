@@ -4,7 +4,10 @@ import org.apache.wicket.Application;
 import org.apache.wicket.examples.resources.ResourcesLocator;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.image.Image;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class HomePageHeader extends Panel {
@@ -31,6 +34,12 @@ public class HomePageHeader extends Panel {
 				return version;
 			}
 		}));
-		add(new Image("headerimage", new PackageResourceReference(ResourcesLocator.class, "logo-apachewicket-examples-white.svg")));
+		
+		ExternalLink externalLink = new ExternalLink("headerhomelink",
+			Model.of(WebApplication.get().getServletContext().getContextPath()));
+		
+		externalLink.add(new Image("headerimage", new PackageResourceReference(ResourcesLocator.class, "logo-apachewicket-examples-white.svg")));
+		
+		add(externalLink);
 	}
 }
