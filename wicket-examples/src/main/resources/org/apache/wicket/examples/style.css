@@ -277,8 +277,8 @@ button.button--alert {
   -moz-osx-font-smoothing: grayscale;
   font-weight: bold;
   line-height: 1.5em;
-  margin: 0 0 0.25rem 0;
-  padding: 0.5rem 0.75rem;
+  margin: 0;
+  padding: 0.2rem 0.75rem;
   text-decoration: none;
   vertical-align: bottom; }
   .button:focus,
