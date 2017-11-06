@@ -3,8 +3,8 @@
         <title>Resource Aggregation Example Application</title>
     </wicket:head>
     <body>
-    	<div wicket:id="mainNavigation"></div>
-    
+    <wicket:extend>   
+        <br/> 
     	<div id="bodyContent" class="bodyContent">
 	    	<h1 class="header">Resource Aggregation Example Application</h1>
 	    	<p style="font-size: 1.5em">If the background is light grey, then app.css was loaded.</p>
@@ -22,6 +22,6 @@
 	    </div>
     
     	<wicket:container wicket:id="footerJS"></wicket:container>
-    
+    </wicket:extend>
     </body>
 </html>
