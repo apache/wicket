@@ -108,29 +108,32 @@
 						var disposition = xhr.getResponseHeader("Content-Disposition");
 						if (disposition) {
 							var matches = /filename[^;=\n]*=(([""]).*?\2|[^;\n]*)/.exec(disposition);
-							if (matches != null && matches[1]) {
+							if (matches !== null && matches[1]) {
 								filename = matches[1].replace(/[""]/g, "");
 							}
 						}
 
-						var type = xhr.getResponseHeader("Content-Type");
-						var blob = new Blob([xhr.response], {type: type});
+						if (typeof window.navigator.msSaveOrOpenBlob !== 'undefined') {
+							window.navigator.msSaveOrOpenBlob(xhr.response, filename);
+						} else {
+							var type = xhr.getResponseHeader("Content-Type");
+							var blob = new Blob([xhr.response], {type: type});
 
-						var blobUrl = (window.URL || window.webkitURL).createObjectURL(blob);
+							var blobUrl = (window.URL || window.webkitURL).createObjectURL(blob);
 
-						var anchor = jQuery("<a></a>")
-							.prop("href", blobUrl)
-							.prop("download", filename)
-							.appendTo("body")
-							.hide();
-						
-						anchor[0].click();
-						
-						setTimeout(function () {
-							URL.revokeObjectURL(blobUrl);
-							anchor.remove();
-						}, 100);
+							var anchor = jQuery("<a></a>")
+								.prop("href", blobUrl)
+								.prop("download", filename)
+								.appendTo("body")
+								.hide();
 
+							anchor[0].click();
+
+							setTimeout(function () {
+								URL.revokeObjectURL(blobUrl);
+								anchor.remove();
+							}, 100);
+						}
 						notifyServer("success");
 					} else {
 						notifyServer("failed");
@@ -143,5 +146,4 @@
 			}
 		}
 	}; 
-	
 })();
