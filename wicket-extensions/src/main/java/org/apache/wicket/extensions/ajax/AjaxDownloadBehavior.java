@@ -48,11 +48,11 @@ import com.github.openjson.JSONObject;
  * Download resources via Ajax.
  * <p>
  * Usage:
- *
+ * 
  * <pre>
  * final AjaxDownload download = new AjaxDownload(resource);
  * add(download);
- *
+ * 
  * add(new AjaxButton("download")
  * {
  * 	&#64;Override
@@ -66,7 +66,7 @@ import com.github.openjson.JSONObject;
  * <p>To set the name of the downloaded resource make use of
  * {@link org.apache.wicket.request.resource.ResourceStreamResource#setFileName(String)} or
  * {@link org.apache.wicket.request.resource.AbstractResource.ResourceResponse#setFileName(String)}</p>
- *
+ * 
  * @author svenmeier
  * @author Martin Grigorov
  * @author Maxim Solodovnik
@@ -130,7 +130,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 
 	/**
 	 * Download of a {@link Resource}.
-	 *
+	 * 
 	 * @param resource
 	 *            resource to download
 	 */
@@ -147,7 +147,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * The {@link IResource} returned by {@link ResourceReference#getResource()} must call
 	 * {@link #markCompleted(Attributes)} when responding, otherwise the callback
 	 * {@link #onDownloadSuccess(AjaxRequestTarget)} will not work.
-	 *
+	 * 
 	 * @param reference
 	 *            reference to resource to download
 	 */
@@ -162,7 +162,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * The {@link IResource} returned by {@link ResourceReference#getResource()} must call
 	 * {@link #markCompleted(Attributes)} when responding, otherwise the callback
 	 * {@link #onDownloadSuccess(AjaxRequestTarget)} will not work.
-	 *
+	 * 
 	 * @param reference
 	 *            reference to resource to download
 	 * @param resourceParameters
@@ -200,7 +200,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 
 	/**
 	 * Call this method to initiate the download.
-	 *
+	 * 
 	 * @param target
 	 *            the initiating Ajax target
 	 */
@@ -230,11 +230,11 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 			parameters.set(RESOURCE_PARAMETER_NAME, getName());
 
 			url = getComponent().getRequestCycle()
-				.urlFor(new ResourceReferenceRequestHandler(resourceReference, addAntiCache(parameters)));
+				.urlFor(new ResourceReferenceRequestHandler(resourceReference, parameters));
 		}
 		else
 		{
-			url = resourceBehavior.getUrl(addAntiCache(null));
+			url = resourceBehavior.getUrl();
 		}
 
 		JSONObject settings = new JSONObject();
@@ -323,30 +323,10 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	}
 
 	/**
-	 * Controls if anti cache parameter should be added to the URL or not
-	 *
-	 * @return {@code true} to add the anti cache request parameter, {@code false} - otherwise
-	 */
-	protected boolean shouldAddAntiCacheParameter() {
-		return true;
-	}
-
-	private PageParameters addAntiCache(PageParameters params) {
-		if (shouldAddAntiCacheParameter()) {
-			if (params == null) {
-				params = new PageParameters();
-			}
-			params.add("antiCache", String.valueOf(System.currentTimeMillis()));
-		}
-		return params;
-	}
-
-	/**
 	 * The behavior responding with the actual resource.
 	 */
 	private class ResourceBehavior extends Behavior implements IRequestListener
 	{
-		private static final long serialVersionUID = 1L;
 		private final IResource resource;
 
 		private ResourceBehavior(IResource resource)
@@ -359,7 +339,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		{
 			return false;
 		}
-
+		
 		@Override
 		public void onRequest()
 		{
@@ -372,9 +352,9 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 			resource.respond(a);
 		}
 
-		public CharSequence getUrl(PageParameters params)
+		public CharSequence getUrl()
 		{
-			return getComponent().urlForListener(this, params);
+			return getComponent().urlForListener(this, null);
 		}
 	}
 
@@ -383,7 +363,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	 * <p>
 	 * Has to be called from {@link IResource#respond(Attributes)} when downloaded via
 	 * {@link #AjaxDownloadBehavior(IResource)}.
-	 *
+	 * 
 	 * @param attributes
 	 *            resource attributes
 	 */
@@ -397,12 +377,12 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	private static Cookie cookie(String name)
 	{
 		Cookie cookie = new Cookie(name, "complete");
-
+		
 		// has to be on root, otherwise JavaScript will not be able to access the
 		// cookie when it is set from a different path - which is the case when a
 		// ResourceReference is used
 		cookie.setPath("/");
-
+		
 		return cookie;
 	}
 }
