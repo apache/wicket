@@ -634,6 +634,14 @@
 					<exclude>**/package.html</exclude>
 				</excludes>
 			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>${project.build.directory}/generated-res</directory>
+				<excludes>
+					<exclude>**/*min.min.js</exclude>
+					<exclude>**/*min.min.css</exclude>
+				</excludes>
+			</resource>
 		</resources>
 		<testResources>
 			<testResource>
@@ -708,6 +716,7 @@
 						<statistics>true</statistics>
 						<jswarn>false</jswarn>
 						<suffix>.min</suffix>
+						<outputDirectory>${project.build.directory}/generated-res</outputDirectory>
 					</configuration>
 					<executions>
 						<execution>

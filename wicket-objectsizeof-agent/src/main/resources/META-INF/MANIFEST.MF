@@ -1,4 +1,3 @@
-Manifest-Version: 1.0
 Premain-Class: org.apache.wicket.util.instrument.ObjectSizeOfAgent
 Agent-Class: org.apache.wicket.util.instrument.ObjectSizeOfAgent
 
