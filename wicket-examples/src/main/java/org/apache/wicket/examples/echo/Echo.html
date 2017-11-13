@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - echo</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
 
 	<form wicket:id="form">
 		<input type="text" wicket:id="msgInput" value="" size="50" />
@@ -13,5 +12,6 @@
 	</form>
     <span wicket:id="msg" id="msg">Message goes here</span>
 
+</wicket:extend>
 </body>
 </html>

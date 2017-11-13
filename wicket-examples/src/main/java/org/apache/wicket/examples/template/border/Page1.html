@@ -2,13 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title wicket:id="title">title comes here</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
     <link rel="stylesheet" type="text/css" href="template/style.css"/>
 </head>
 <body>
 
-	<span wicket:id="mainNavigation"/>
-
+	<wicket:extend>
+    <h2 wicket:id="title"></h2>
 	<span wicket:id="border">
 
 Lorem ipsum dolor sit amet, consectetuer
@@ -33,5 +32,6 @@ elit. Maecenas lacinia aliquet augue.
 	
 	</span><!-- end of border -->
 
+</wicket:extend>
 </body>
 </html>

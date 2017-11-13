@@ -1,7 +1,6 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
 <title>Wicket Examples - Bean Validation</title>
-<link rel="stylesheet" type="text/css" href="style.css" />
 <style>
 	.note { font-size:.8em; }
 	.required {font-weight: bold;}
@@ -10,8 +9,7 @@
 </style>
 </head>
 <body>
-	<span wicket:id="mainNavigation"></span>
-
+    <wicket:extend>
 	<div wicket:id="feedbackErrors"></div>
 
 	<form wicket:id="form" novalidate="novalidate">
@@ -53,5 +51,6 @@
 		</table>
 	</form>
 	<div wicket:id="feedbackSuccess"></div>
+</wicket:extend>
 </body>
 </html>

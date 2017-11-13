@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - hellobrowser</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
 
 	<p>
 	    Hi there. We have been snooping around your browser, even doing a sneaky
@@ -18,5 +17,6 @@
 		<span wicket:id="clienttime">client time info here</span>
 	</p>
 
+</wicket:extend>
 </body>
 </html>

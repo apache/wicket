@@ -1,12 +1,12 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - hangman</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     <p>Bad luck. You failed to guess that the word was <b><span wicket:id="currentWord">summer</span></b>.</p>
     <p>Better luck next time!</p>
     <p><a wicket:id="playAgain">Play again</a>.</p>
+</wicket:extend>
 </body>
 </html>

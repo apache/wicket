@@ -1,10 +1,9 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - pub</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"></span>
+<wicket:extend>
     <span wicket:id="salutation">Salutation</span>
     <p>
 	    <wicket:message key="salespitch">
@@ -26,5 +25,6 @@
         <a href="#" wicket:id="goKorean">[go Korean]</a>&#160;
         <a href="#" wicket:id="goHungarian">[go Hungarian]</a>
     </p>
+</wicket:extend>
 </body>
 </html>

@@ -1,10 +1,9 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - hangman</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     <p>This software plays a game of hangman. 
     <br />
     A word is chosen at random and displayed as a series of blanks. 
@@ -12,5 +11,6 @@
     You then have 5 opportunities to pick letters from the list of available letters.
     </p>
     <p><a wicket:id="start" id="start" href="#">Start Hangman</a></p>
+</wicket:extend>
 </body>
 </html>

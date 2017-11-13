@@ -2,11 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - stockquote</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 	<!-- component for the examples application -->
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     
     <!-- first example -->
     <p>
@@ -26,5 +25,6 @@
     		Stock quote of <span wicket:id="symbol">symbol</span> is <span wicket:id="quote">quote</span>.
     	</p>
     </p>
+</wicket:extend>
 </body>
 </html>

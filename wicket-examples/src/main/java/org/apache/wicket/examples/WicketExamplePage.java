@@ -16,10 +16,16 @@
  */
 package org.apache.wicket.examples;
 
+import org.apache.wicket.examples.source.SourcesPage;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.PopupSettings;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.request.resource.CssResourceReference;
 
 /**
  * Base class for all example pages.
@@ -47,9 +53,30 @@ public class WicketExamplePage extends WebPage
 	{
 		super(pageParameters);
 
-		final String packageName = getClass().getPackage().getName();
-		add(new WicketExampleHeader("mainNavigation", Strings.afterLast(packageName, '.'), this));
+		BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>("sources",
+			SourcesPage.class, SourcesPage.generatePageParameters(this));
+		add(link);
+		
+		link.setVisible(showSourceButton());
+		
+		PopupSettings settings = new PopupSettings("sources", PopupSettings.RESIZABLE);
+		settings.setWidth(800);
+		settings.setHeight(600);
+		link.setPopupSettings(settings);
+		
+		add(buildHeader("pageHeader"));
+		
 		explain();
+	}
+
+	protected boolean showSourceButton() 
+	{
+		return true;
+	}
+
+	protected Panel buildHeader(String id) 
+	{
+		return new WicketExampleHeader(id);
 	}
 
 
@@ -68,5 +95,11 @@ public class WicketExamplePage extends WebPage
 	 */
 	protected void explain()
 	{
+	}
+	
+	@Override
+	public void renderHead(IHeaderResponse response)
+	{
+		response.render(CssHeaderItem.forReference(new CssResourceReference(WicketExamplePage.class, "style.css"),"screen"));
 	}
 }

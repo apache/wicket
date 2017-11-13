@@ -208,6 +208,9 @@
 					<include>**/*.xml</include>
 					<include>**/*.properties</include>
 					<include>**/*.mp4</include>
+					<include>**/*.svg</include>
+					<include>**/*.woff</include>
+					<include>**/*.ttf</include>
 				</includes>
 			</resource>
 			<resource>
@@ -226,6 +229,9 @@
 					<include>**/*.vm</include>
 					<include>**/*.tmpl</include>
 					<include>**/*.mp4</include>
+					<include>**/*.svg</include>
+					<include>**/*.woff</include>
+					<include>**/*.ttf</include>
 				</includes>
 			</resource>
 		</resources>

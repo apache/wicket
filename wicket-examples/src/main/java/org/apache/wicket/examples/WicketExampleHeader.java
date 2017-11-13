@@ -16,13 +16,10 @@
  */
 package org.apache.wicket.examples;
 
-import org.apache.wicket.devutils.debugbar.DebugBar;
-import org.apache.wicket.examples.source.SourcesPage;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.PopupSettings;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.devutils.debugbar.DebugBar;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * Navigation panel for the examples project.
@@ -41,19 +38,14 @@ public final class WicketExampleHeader extends Panel
 	 * @param page
 	 *            The example page
 	 */
-	public WicketExampleHeader(String id, String exampleTitle, WebPage page)
+	public WicketExampleHeader(String id)
 	{
 		super(id);
 
+		setRenderBodyOnly(true);
+		
+		add(new Image("exampleheaderimage", new PackageResourceReference(
+			WicketExamplePage.class, "logo-apachewicket-examples-white.svg")));
 		add(new DebugBar("debug"));
-		add(new Label("exampleTitle", exampleTitle));
-		BookmarkablePageLink<Void> link = new BookmarkablePageLink<Void>("sources",
-			SourcesPage.class, SourcesPage.generatePageParameters(page));
-		add(link);
-
-		PopupSettings settings = new PopupSettings("sources", PopupSettings.RESIZABLE);
-		settings.setWidth(800);
-		settings.setHeight(600);
-		link.setPopupSettings(settings);
 	}
 }

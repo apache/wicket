@@ -3,10 +3,9 @@
 <head>
     <title>Wicket Examples - pub</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"></span>
+<wicket:extend>
     <span wicket:id = "salutation">Salutation</span>  
     <p>
     您的最佳选择
@@ -24,5 +23,6 @@
         <a href="#" wicket:id="goKorean">[go Korean]</a>&#160;
         <a href="#" wicket:id="goHungarian">[go Hungarian]</a>
     </p>    
+</wicket:extend>
 </body>
 </html>

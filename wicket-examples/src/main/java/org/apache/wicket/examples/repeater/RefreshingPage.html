@@ -2,25 +2,26 @@
 This page demonstrates a simple RefreshingView. Notice that when you click refresh or make a selection the id of item object changes because it is regenerated unlike items in the OrderedRepeatingView.
 <br/><br/>
 <a href="#" wicket:id="refreshLink">refresh</a><br/><br/>
-<table cellspacing="0" class="dataview">
-	<tr>
-		<th>Item Id</th>
-		<th>Actions</th>
-		<th>ID</th>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th>Home Phone</th>
-		<th>Cell Phone</th>
-	</tr>
-	<tr wicket:id="view">
-		<td><span wicket:id="itemid">[item id]</span></td>
-		<td><span wicket:id="actions">[actions]</span></td>
-		<td><span wicket:id="contactid">[contactid]</span> </td>
-		<td><span wicket:id="firstname">[firstname]</span></td>
-		<td><span wicket:id="lastname">[lastname]</span></td>
-		<td><span wicket:id="homephone">[homephone]</span></td>
-		<td><span wicket:id="cellphone">[cellphone]</span></td>
-	</tr>
-</table>
-
+<div style="overflow-x:auto;">
+	<table cellspacing="0" class="dataview">
+		<tr>
+			<th>Item Id</th>
+			<th>Actions</th>
+			<th>ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Home Phone</th>
+			<th>Cell Phone</th>
+		</tr>
+		<tr wicket:id="view">
+			<td><span wicket:id="itemid">[item id]</span></td>
+			<td><span wicket:id="actions">[actions]</span></td>
+			<td><span wicket:id="contactid">[contactid]</span> </td>
+			<td><span wicket:id="firstname">[firstname]</span></td>
+			<td><span wicket:id="lastname">[lastname]</span></td>
+			<td><span wicket:id="homephone">[homephone]</span></td>
+			<td><span wicket:id="cellphone">[cellphone]</span></td>
+		</tr>
+	</table>
+</div>
 </wicket:extend>

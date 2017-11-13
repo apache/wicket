@@ -4,10 +4,9 @@
 	xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 	<head>
 		<title>Wicket Examples - DateTime</title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
-		<span wicket:id="mainNavigation" />
+		<wicket:extend>
 
 		<form wicket:id="form">
 		 	 <div>
@@ -55,5 +54,6 @@
 			
 			<input wicket:id="submit" type="submit" value="Submit"/>
 		</form>
-	</body>
+	</wicket:extend>
+</body>
 </html>

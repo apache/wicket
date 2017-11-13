@@ -2,14 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - template</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
-    <span wicket:id="mainNavigation" />
+    <wicket:extend>
 
 	<h1>Template example</h1>
 
-	<p style="border: 2px dotted #fc0; width: 500px; padding: 5px;">
+	<p style="border: 2px dotted #fc0; padding: 5px;">
 	This example shows two different ways of building your page up from shared parts.
 	The first example uses what we commonly call 'markup inheritence',
 	and the second example shows how to achieve roughly the same
@@ -30,5 +29,6 @@
 		</wicket:link>
 	</p>
 
+</wicket:extend>
 </body>
 </html>

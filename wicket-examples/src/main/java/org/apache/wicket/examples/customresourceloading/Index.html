@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - custom resource loading</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     <ul>
     <wicket:link>
     	<li>
@@ -21,5 +20,6 @@
 	    	<a href="#" wicket:id="customLoadingPageLink">Go to a page that which template is loaded by itself.</a>
 		</li>
     </ul>
+</wicket:extend>
 </body>
 </html>
