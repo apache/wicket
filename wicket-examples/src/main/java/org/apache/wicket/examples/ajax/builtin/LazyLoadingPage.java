@@ -114,7 +114,7 @@ public class LazyLoadingPage extends BasePage
 				}
 
 				@Override
-				public Label createContentComponent(String id)
+				public Label getLazyLoadComponent(String id)
 				{
 					return new Label(id, "Lazy Loaded after " + seconds + " seconds");
 				}
@@ -135,7 +135,7 @@ public class LazyLoadingPage extends BasePage
 				private int seconds = r.nextInt(5);
 
 				@Override
-				public Label createContentComponent(String markupId)
+				public Label getLazyLoadComponent(String markupId)
 				{
 					try
 					{

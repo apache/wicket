@@ -23,6 +23,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -39,7 +41,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * then replace the panel when it is ready.
  * <p>
  * This panel will wait with adding the content until {@link #isContentReady()} returns
- * {@code true}. It will poll using an AJAX timer behavior that is installed on the page. When the
+ * {@code true}. It will poll using an {@link AbstractAjaxTimerBehavior} that is installed on the page. When the
  * component is replaced, the timer stops. When you have multiple {@code AjaxLazyLoadPanel}s on the
  * same page, only one timer is used and all panels piggyback on this single timer.
  * <p> 
@@ -56,6 +58,12 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * The component id which will be used to load the lazily loaded component.
 	 */
 	private static final String CONTENT_ID = "content";
+	
+	/**
+	 * @deprecated will be removed in Wicket 9
+	 */
+	@Deprecated
+	public static final String LAZY_LOAD_COMPONENT_ID = CONTENT_ID;
 
 	private boolean loaded;
 
@@ -96,13 +104,30 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	}
 
 	/**
+	 * @deprecated this method is not called, and will be removed in Wicket 9
+	 */
+	protected final void updateAjaxAttributes(AjaxRequestAttributes attributes)
+	{
+	}
+
+	/**
+	 * @deprecated this method is not called, and will be removed in Wicket 9
+	 */
+	@Deprecated
+	protected final void handleCallbackScript(final IHeaderResponse response,
+		final CharSequence callbackScript, final Component component)
+	{
+		
+	}
+
+	/**
 	 * Create a loading component shown instead of the actual content until it is {@link #isContentReady()}.
 	 * 
 	 * @param markupId
 	 *            The components markupid.
 	 * @return The component to show while the real content isn't ready yet
 	 */
-	protected Component createLoadingComponent(final String markupId)
+	protected Component getLoadingComponent(final String markupId)
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(
 			AbstractDefaultAjaxBehavior.INDICATOR);
@@ -120,19 +145,27 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 *            The components markupid.
 	 * @return the content to show after {@link #isContentReady()}
 	 */
-	protected abstract T createContentComponent(String markupId);
+	protected abstract T getLazyLoadComponent(String markupId);
+
+	/**
+	 * @deprecated override {@link #onContentLoaded(Component, Optional)} instead - will be removed in Wicket 9
+	 */
+	@Deprecated
+	protected final void onComponentLoaded(Component component, AjaxRequestTarget target)
+	{
+	}
 
 	/**
 	 * Called after the loading component was replaced with the lazy loaded content.
 	 * <p>
 	 * This default implementation does nothing.
 	 *
-	 * @param component
+	 * @param content
 	 *            The lazy loaded content
 	 * @param target
 	 *            optional Ajax request handler
 	 */
-	protected void onContentLoaded(T component, Optional<AjaxRequestTarget> target)
+	protected void onContentLoaded(T content, Optional<AjaxRequestTarget> target)
 	{
 	}
 
@@ -144,10 +177,19 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	{
 		super.onInitialize();
 
+		initTimer();
+	}
+
+	/**
+	 * Initialize a timer - default implementation installs an {@link AbstractAjaxTimerBehavior} on the page,
+	 * if it is not already present.
+	 */
+	protected void initTimer()
+	{
 		// when the timer is not yet installed add it
 		List<AjaxLazyLoadTimer> behaviors = getPage().getBehaviors(AjaxLazyLoadTimer.class);
 		if (behaviors.isEmpty()) {
-			AjaxLazyLoadTimer timer = new AjaxLazyLoadTimer();
+			AbstractAjaxTimerBehavior timer = new AjaxLazyLoadTimer();
 			getPage().add(timer);
 			
 			getRequestCycle().find(AjaxRequestTarget.class).ifPresent(target -> {
@@ -158,14 +200,14 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 			});
 		}
 	}
-	
+
 	@Override
 	protected void onConfigure()
 	{
 		super.onConfigure();
 
 		if (get(CONTENT_ID) == null) {
-			add(createLoadingComponent(CONTENT_ID));
+			add(getLoadingComponent(CONTENT_ID));
 		} else {
 			isLoaded();
 		}
@@ -177,13 +219,23 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * Since all LazyLoadingPanels on a page share the same Ajax timer, its update interval
 	 * is derived from the minimum of all panel's update intervals.
 	 * 
-	 * @return update interval
+	 * @return update interval, must not be {@value null}
 	 */
 	protected Duration getUpdateInterval() {
 		return Duration.seconds(1);
 	}
 
-	private boolean isLoaded() {
+	/**
+	 * Check whether the content is loaded.
+	 * <p>
+	 * If not loaded already and the content is ready, replaces the lazy loading component with 
+	 * the lazily loaded content. 
+	 * 
+	 * @return {@code true} if content is loaded
+	 * 
+	 * @see #isContentReady()
+	 */
+	protected final boolean isLoaded() {
 		if (loaded == false)
 		{
 			if (isContentReady())
@@ -191,9 +243,9 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 				loaded = true;
 
 				// create the lazy load component
-				T content = createContentComponent(CONTENT_ID);
+				T content = getLazyLoadComponent(CONTENT_ID);
 
-				// replace the spinner with the new component
+				// replace the loading component with the new component
 				AjaxLazyLoadPanel.this.replace(content);
 
 				Optional<AjaxRequestTarget> target = getRequestCycle().find(AjaxRequestTarget.class);
@@ -216,7 +268,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * 
 	 * @see AjaxLazyLoadPanel#isLoaded()
 	 */
-	private static class AjaxLazyLoadTimer extends AbstractAjaxTimerBehavior
+	static class AjaxLazyLoadTimer extends AbstractAjaxTimerBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -228,6 +280,11 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 		@Override
 		protected void onTimer(AjaxRequestTarget target)
 		{
+			load(target);
+		}
+
+		public void load(AjaxRequestTarget target)
+		{
 			setUpdateInterval(Duration.MAXIMUM);
 			
 			getComponent().getPage().visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel<?>, Void>()
@@ -236,7 +293,12 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 				public void component(AjaxLazyLoadPanel<?> panel, IVisit<Void> visit)
 				{
 					if (panel.isLoaded() == false) {
-						setUpdateInterval(Duration.min(getUpdateInterval(), panel.getUpdateInterval()));
+						Duration updateInterval = panel.getUpdateInterval();
+						if (getUpdateInterval() == null) {
+							throw new IllegalArgumentException("update interval must not ben null");
+						}
+						
+						setUpdateInterval(Duration.min(getUpdateInterval(), updateInterval));
 					}						
 				}
 			});
