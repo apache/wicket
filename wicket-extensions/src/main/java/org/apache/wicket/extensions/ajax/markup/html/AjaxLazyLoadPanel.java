@@ -127,7 +127,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 *            The components markupid.
 	 * @return The component to show while the real content isn't ready yet
 	 */
-	protected Component getLoadingComponent(final String markupId)
+	public Component getLoadingComponent(final String markupId)
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(
 			AbstractDefaultAjaxBehavior.INDICATOR);
@@ -145,7 +145,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 *            The components markupid.
 	 * @return the content to show after {@link #isContentReady()}
 	 */
-	protected abstract T getLazyLoadComponent(String markupId);
+	public abstract T getLazyLoadComponent(String markupId);
 
 	/**
 	 * @deprecated override {@link #onContentLoaded(Component, Optional)} instead - will be removed in Wicket 9

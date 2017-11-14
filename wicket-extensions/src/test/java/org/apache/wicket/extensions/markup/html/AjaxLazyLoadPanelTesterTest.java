@@ -43,7 +43,7 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Component getLazyLoadComponent(String markupId)
+			public Component getLazyLoadComponent(final String markupId)
 			{
 				return new Label(markupId, "lazy panel test").setRenderBodyOnly(true);
 			}
