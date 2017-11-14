@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.examples;
 
+import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
@@ -33,8 +33,6 @@ public final class WicketExampleHeader extends Panel
 	 * 
 	 * @param id
 	 *            id of the component
-	 * @param exampleTitle
-	 *            title of the example
 	 * @param page
 	 *            The example page
 	 */

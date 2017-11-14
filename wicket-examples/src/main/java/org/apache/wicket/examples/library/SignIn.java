@@ -44,6 +44,7 @@ public final class SignIn extends WicketExamplePage
 	 */
 	public SignIn(final PageParameters parameters)
 	{
+		super(parameters);
 		add(new SignInPanel("signInPanel", false));
 	}
 }
