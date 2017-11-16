@@ -284,6 +284,9 @@
 	<profiles>
 		<profile>
 			<id>docker</id>
+			<properties>
+				<pushImage/>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
