@@ -5,8 +5,8 @@ The Apache Software Foundation
 :sectlinks:
 
 //custom variables used inside the guide
-:wicket_examples_url: http://examples7x.wicket.apache.org
-:wicket_tutorial_examples_url: http://examples-wickettutorial.rhcloud.com/
+:wicket_examples_url: http://examples7x.wicket.apache.org/wicket-examples
+:wicket_tutorial_examples_url: https://wicket-guide.herokuapp.com/
 
 :sectnums:
 
