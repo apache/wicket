@@ -7,7 +7,7 @@ The Apache Software Foundation
 :sectnums:
 
 //custom variables used inside the guide
-:wicket_examples_url: http://examples8x.wicket.apache.org
+:wicket_examples_url: http://examples8x.wicket.apache.org/wicket-examples
 :wicket_tutorial_examples_url: https://wicket-guide.herokuapp.com/
 
 == Introduction
