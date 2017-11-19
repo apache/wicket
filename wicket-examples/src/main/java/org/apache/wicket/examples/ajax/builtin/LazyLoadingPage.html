@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
 
+<p>
 This example demonstrates the AjaxLazyLoadPanel
 It will lazy load a panel after the page is first fully rendered.
 So panels that can take a while too create can be lazy created
 by an ajax call after the page is rendered.
-  
-<br/><br/>
+</p>
 
-<div wicket:id="lazy"></div>
+<div wicket:id="nonblocking">
+	<h2>Non-blocking lazy panels</h2>
+
+	<p><a href="#" wicket:id="start">Start non-blocking panels</a> (<a href="#" wicket:id="startAjax">via Ajax</a>)</p>
+
+	<div wicket:id="repeater"></div>
+</div>
+
+<div wicket:id="blocking">
+	<h2>Blocking lazy panels</h2>
+	
+	<p><a href="#" wicket:id="start">Start blocking panels</a> (<a href="#" wicket:id="startAjax">via Ajax</a>)</p>
+
+	<div wicket:id="repeater"></div>
+</div>
+
 </wicket:extend>

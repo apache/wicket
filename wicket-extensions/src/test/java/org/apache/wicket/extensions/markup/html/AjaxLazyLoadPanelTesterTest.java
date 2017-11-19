@@ -38,7 +38,7 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 	@Test
 	public void test()
 	{
-		AjaxLazyLoadPanel panel = new AjaxLazyLoadPanel("panel")
+		AjaxLazyLoadPanel<Component> panel = new AjaxLazyLoadPanel<Component>("panel")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class AjaxLazyLoadPanelTesterTest extends WicketTestCase
 		tester.assertLabel(
 			"panel:content",
 			"<img alt=\"Loading...\" src=\"./resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/indicator.gif\"/>");
-		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester, panel.getParent());
+		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester);
 		tester.debugComponentTrees();
 		tester.assertLabel("panel:content", "lazy panel test");
 		String doc = tester.getLastResponseAsString();
