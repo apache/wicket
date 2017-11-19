@@ -1,6 +1,7 @@
 package org.apache.wicket.bean.validation;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import javax.validation.Validator;
 
@@ -35,6 +36,11 @@ public interface BeanValidationContext extends IPropertyResolver
 	 * @return the violation translator
 	 */
 	IViolationTranslator getViolationTranslator();
+
+	/**
+	 * @return the annotation types for not-null constraints
+	 */
+	List<Class<? extends Annotation>> getNotNullAnnotations();
 
 	@Override
 	Property resolveProperty(FormComponent<?> component);

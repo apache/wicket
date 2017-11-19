@@ -1,15 +1,10 @@
 package org.apache.wicket.bean.validation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 
@@ -184,22 +179,25 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		}
 	}
 
-	private List<NotNull> findNotNullConstraints()
+	private Map<Annotation, ConstraintDescriptor<?>> findNotNullConstraints(
+		List<Class<? extends Annotation>> notNullAnnotationTypes)
 	{
 		BeanValidationContext config = BeanValidationConfiguration.get();
 		Validator validator = config.getValidator();
 		Property property = getProperty();
 
-		List<NotNull> constraints = new ArrayList<NotNull>();
+		Map<Annotation, ConstraintDescriptor<?>> constraints = new HashMap<>();
 
 		Iterator<ConstraintDescriptor<?>> it = new ConstraintIterator(validator, property);
 
 		while (it.hasNext())
 		{
 			ConstraintDescriptor<?> desc = it.next();
-			if (desc.getAnnotation().annotationType().equals(NotNull.class))
+			Annotation annotation = desc.getAnnotation();
+			Class<? extends Annotation> annotationType = annotation.annotationType();
+			if (notNullAnnotationTypes.contains(annotationType))
 			{
-				constraints.add((NotNull)desc.getAnnotation());
+				constraints.put(annotation, desc);
 			}
 		}
 
@@ -208,24 +206,28 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 
 	boolean isRequired()
 	{
-		List<NotNull> constraints = findNotNullConstraints();
+		BeanValidationContext config = BeanValidationConfiguration.get();
+		List<Class<? extends Annotation>> notNullAnnotations = config.getNotNullAnnotations();
+		Map<Annotation, ConstraintDescriptor<?>> constraints = findNotNullConstraints(
+			notNullAnnotations);
 
 		if (constraints.isEmpty())
 		{
 			return false;
 		}
 
-		HashSet<Class<?>> validatorGroups = new HashSet<Class<?>>();
+		Set<Class<?>> validatorGroups = new HashSet<>();
 		validatorGroups.addAll(Arrays.asList(getGroups()));
 
-		for (NotNull constraint : constraints)
+		for (Map.Entry<Annotation, ConstraintDescriptor<?>> entry : constraints.entrySet())
 		{
-			if (canApplyToDefaultGroup(constraint) && validatorGroups.isEmpty())
+			ConstraintDescriptor<?> constraintDescriptor = entry.getValue();
+			if (canApplyToDefaultGroup(constraintDescriptor) && validatorGroups.isEmpty())
 			{
 				return true;
 			}
 
-			for (Class<?> constraintGroup : constraint.groups())
+			for (Class<?> constraintGroup : constraintDescriptor.getGroups())
 			{
 				if (validatorGroups.contains(constraintGroup))
 				{
@@ -237,9 +239,9 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		return false;
 	}
 
-	private boolean canApplyToDefaultGroup(NotNull constraint)
+	private boolean canApplyToDefaultGroup(ConstraintDescriptor<?> constraint)
 	{
-		List<Class<?>> groups = Arrays.asList(constraint.groups());
+		Set<Class<?>> groups = constraint.getGroups();
 		//the constraint can be applied to default group either if its group array is empty
 		//or if it contains javax.validation.groups.Default
 		return groups.size() == 0 || groups.contains(Default.class);

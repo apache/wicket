@@ -8,6 +8,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
 import javax.validation.Validator;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.wicket.Application;
@@ -33,17 +36,22 @@ public class BeanValidationConfiguration implements BeanValidationContext
 
 	private List<IPropertyResolver> propertyResolvers = new CopyOnWriteArrayList<>();
 
+	private List<Class<? extends Annotation>> notNullAnnotations = new CopyOnWriteArrayList<>();
+
 	private Map<Class<?>, ITagModifier<? extends Annotation>> tagModifiers = new ConcurrentHashMap<>();
 
 	public BeanValidationConfiguration()
 	{
 		add(new DefaultPropertyResolver());
+		addNotNullAnnotation(NotNull.class);
+		addNotNullAnnotation(NotEmpty.class);
+		addNotNullAnnotation(NotBlank.class);
 		register(Size.class, new SizeTagModifier());
 	}
 
 	/**
 	 * Registeres a tag modifier for a specific constraint annotation
-	 * 
+	 *
 	 * @param annotationType
 	 *            constraint annotation such as {@link Size}
 	 * @param modifier
@@ -73,7 +81,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	/**
 	 * Adds a property resolver to the configuration. Property resolvers registered last are the
 	 * first to be allowed to resolve the property.
-	 * 
+	 *
 	 * @param resolver
 	 * @return {@code this}
 	 */
@@ -99,7 +107,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 
 	/**
 	 * Sets the provider used to retrieve {@link Validator} instances
-	 * 
+	 *
 	 * @param validatorProvider
 	 */
 	public void setValidatorProvider(Supplier<Validator> validatorProvider)
@@ -111,7 +119,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 
 	/**
 	 * Binds this configuration to the application instance
-	 * 
+	 *
 	 * @param application
 	 */
 	public void configure(Application application)
@@ -140,10 +148,25 @@ public class BeanValidationConfiguration implements BeanValidationContext
 		this.violationTranslator = violationTranslator;
 	}
 
+	@Override
+	public List<Class<? extends Annotation>> getNotNullAnnotations()
+	{
+		return notNullAnnotations;
+	}
+
+	public BeanValidationConfiguration addNotNullAnnotation(
+		Class<? extends Annotation> notNullAnnotation)
+	{
+		Args.notNull(notNullAnnotation, "notNullAnnotation");
+
+		this.notNullAnnotations.add(notNullAnnotation);
+		return this;
+	}
+
 	/**
 	 * Retrieves the validation context (read only version of the configuration). This is how
 	 * components retrieve the configuration.
-	 * 
+	 *
 	 * @return validation context
 	 */
 	public static BeanValidationContext get()
