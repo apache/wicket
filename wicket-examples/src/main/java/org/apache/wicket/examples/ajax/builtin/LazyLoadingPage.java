@@ -16,38 +16,98 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import java.util.Random;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.panel.EmptyPanel;
+import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.util.time.Duration;
 
-/**
- * @author jcompagner
- */
+@SuppressWarnings({ "javadoc", "serial" })
 public class LazyLoadingPage extends BasePage
 {
-	/**
-	 * Construct.
-	 */
+	private Random r = new Random();
+
 	public LazyLoadingPage()
 	{
-		add(new AjaxLazyLoadPanel("lazy")
+		add(new Link<Void>("startNonblocking")
 		{
-
 			@Override
-			public Component getLazyLoadComponent(String id)
+			public void onClick()
 			{
-				// sleep for 5 seconds to show the behavior
-				try
-				{
-					Thread.sleep(5000);
-				}
-				catch (InterruptedException e)
-				{
-					throw new RuntimeException(e);
-				}
-				return new Label(id, "Lazy Loaded after 5 seconds");
+				addNonBlockingPanels();
 			}
-
 		});
+		add(new Link<Void>("startBlocking")
+		{
+			@Override
+			public void onClick()
+			{
+				addBlockingPanels();
+			}
+		});
+
+		add(new EmptyPanel("lazy"));
+		add(new EmptyPanel("lazy2"));
+	}
+
+	private void addNonBlockingPanels()
+	{
+		RepeatingView rv;
+		addOrReplace(rv = new RepeatingView("lazy"));
+
+		for (int i = 0; i < 10; i++)
+			rv.add(new AjaxLazyLoadPanel(rv.newChildId())
+			{
+				private static final long serialVersionUID = 1L;
+
+				private long startTime = System.currentTimeMillis();
+
+				private int seconds = r.nextInt(10);
+
+				@Override
+				protected boolean isReadyForReplacement()
+				{
+					return Duration.milliseconds(System.currentTimeMillis() - startTime)
+						.seconds() > seconds;
+				}
+
+				@Override
+				public Component getLazyLoadComponent(String id)
+				{
+					return new Label(id, "Lazy Loaded after " + seconds + " seconds");
+				}
+			});
+	}
+
+	private void addBlockingPanels()
+	{
+		RepeatingView rv;
+		addOrReplace(rv = new RepeatingView("lazy2"));
+
+		for (int i = 0; i < 5; i++)
+			rv.add(new AjaxLazyLoadPanel(rv.newChildId())
+			{
+				private static final long serialVersionUID = 1L;
+
+				private int seconds = r.nextInt(5);
+
+				@Override
+				public Component getLazyLoadComponent(String markupId)
+				{
+					try
+					{
+						Thread.sleep(seconds * 1000);
+					}
+					catch (InterruptedException e)
+					{
+					}
+					return new Label(markupId,
+						"Lazy loaded after blocking the Wicket thread for " + seconds + " seconds");
+				}
+			});
 	}
 }
