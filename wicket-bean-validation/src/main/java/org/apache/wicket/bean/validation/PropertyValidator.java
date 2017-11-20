@@ -179,14 +179,14 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		}
 	}
 
-	private Map<Annotation, ConstraintDescriptor<?>> findNotNullConstraints(
+	private List<ConstraintDescriptor<?>> findNotNullConstraints(
 		List<Class<? extends Annotation>> notNullAnnotationTypes)
 	{
 		BeanValidationContext config = BeanValidationConfiguration.get();
 		Validator validator = config.getValidator();
 		Property property = getProperty();
 
-		Map<Annotation, ConstraintDescriptor<?>> constraints = new HashMap<>();
+		List<ConstraintDescriptor<?>> constraints = new ArrayList<>();
 
 		Iterator<ConstraintDescriptor<?>> it = new ConstraintIterator(validator, property);
 
@@ -197,7 +197,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 			Class<? extends Annotation> annotationType = annotation.annotationType();
 			if (notNullAnnotationTypes.contains(annotationType))
 			{
-				constraints.put(annotation, desc);
+				constraints.add(desc);
 			}
 		}
 
@@ -208,8 +208,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 	{
 		BeanValidationContext config = BeanValidationConfiguration.get();
 		List<Class<? extends Annotation>> notNullAnnotations = config.getNotNullAnnotations();
-		Map<Annotation, ConstraintDescriptor<?>> constraints = findNotNullConstraints(
-			notNullAnnotations);
+		List<ConstraintDescriptor<?>> constraints = findNotNullConstraints(notNullAnnotations);
 
 		if (constraints.isEmpty())
 		{
@@ -219,15 +218,14 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 		Set<Class<?>> validatorGroups = new HashSet<>();
 		validatorGroups.addAll(Arrays.asList(getGroups()));
 
-		for (Map.Entry<Annotation, ConstraintDescriptor<?>> entry : constraints.entrySet())
+		for (ConstraintDescriptor<?> constraint : constraints)
 		{
-			ConstraintDescriptor<?> constraintDescriptor = entry.getValue();
-			if (canApplyToDefaultGroup(constraintDescriptor) && validatorGroups.isEmpty())
+			if (canApplyToDefaultGroup(constraint) && validatorGroups.isEmpty())
 			{
 				return true;
 			}
 
-			for (Class<?> constraintGroup : constraintDescriptor.getGroups())
+			for (Class<?> constraintGroup : constraint.getGroups())
 			{
 				if (validatorGroups.contains(constraintGroup))
 				{
