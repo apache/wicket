@@ -31,9 +31,9 @@
 		action.
 	</description>
 
-    <properties>
-        <docker-maven-plugin.version>1.0.0</docker-maven-plugin.version>
-    </properties>
+	<properties>
+		<dockerfile-maven-plugin.version>1.3.6</dockerfile-maven-plugin.version>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -226,26 +226,33 @@
 	<profiles>
 		<profile>
 			<id>docker</id>
+			<properties>
+				<warName>ROOT</warName>
+			</properties>
 			<build>
+				<finalName>${warName}</finalName>
 				<plugins>
 					<plugin>
-						<groupId>com.spotify</groupId>
-						<artifactId>docker-maven-plugin</artifactId>
-						<version>${docker-maven-plugin.version}</version>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
 						<configuration>
-							<imageName>apache-docker-wicket-docker.bintray.io/wicket-examples:LATEST-6</imageName>
-							<baseImage>tomcat:8.5-jre8-alpine</baseImage>
-							<resources>
-								<resource>
-									<targetPath>/usr/local/tomcat/webapps</targetPath>
-									<directory>${project.build.directory}</directory>
-									<include>wicket-examples.war</include>
-								</resource>
-							</resources>
-							<forceTags>true</forceTags>
-							<imageTags>
-								<imageTag>LATEST-6</imageTag>
-							</imageTags>
+							<warName>${warName}</warName>
+							<!--  include the manifest entries so that we can emit the version of the examples. -->
+							<archive>
+								<manifest>
+									<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+									<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+								</manifest>
+							</archive>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>dockerfile-maven-plugin</artifactId>
+						<version>${dockerfile-maven-plugin.version}</version>
+						<configuration>
+							<repository>apache-docker-wicket-docker.bintray.io/wicket-examples</repository>
+							<tag>LATEST-6</tag>
 						</configuration>
 						<executions>
 							<execution>
