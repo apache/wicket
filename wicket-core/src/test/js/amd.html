@@ -9,7 +9,6 @@
         var require = {
             paths: {
                 'jquery': '../../main/java/org/apache/wicket/resource/jquery/jquery-'+location.search.substring(1), // no .js extension
-                'wicket-event': '../../main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery',
                 'Wicket': '../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery',
                 'WicketDebugWindow': '../../main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug',
                 "qunit": "qunit/qunit"
@@ -19,7 +18,7 @@
                     deps: ['jquery']
                 },
                 'Wicket': {
-                    deps: ['wicket-event'],
+                    deps: ['wicket-ajax'],
                     exports: 'Wicket'
                 },
                 'WicketDebugWindow': {

@@ -31,21 +31,23 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for event triggered scripts.
- * 
+ *
  * @author papegaaij
  */
 public class OnEventHeaderItem extends HeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Creates a {@link OnEventHeaderItem} for the given parameters.
-	 * 
+	 *
 	 * @param target
 	 *            The target of the event handler, for example 'window' or 'document'.
 	 * @param event
 	 *            The event itself, for example 'click'.
 	 * @param javaScript
 	 *            The script to execute on the event.
-	 * 
+	 *
 	 * @return A newly created {@link OnEventHeaderItem}.
 	 */
 	public static OnEventHeaderItem forScript(String target, String event, CharSequence javaScript)
@@ -72,7 +74,7 @@ public class OnEventHeaderItem extends HeaderItem
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param target
 	 * @param event
 	 * @param javaScript
@@ -180,9 +182,9 @@ public class OnEventHeaderItem extends HeaderItem
 	public List<HeaderItem> getDependencies()
 	{
 		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
-		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
+		ResourceReference wicketAjaxReference = ajaxSettings.getWicketAjaxReference();
 		List<HeaderItem> dependencies = super.getDependencies();
-		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		return dependencies;
 	}
 }

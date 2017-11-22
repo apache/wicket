@@ -21,26 +21,28 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for scripts that need to be executed directly after the DOM has been built,
  * but before external resources, such as images, are loaded.
- * 
+ *
  * @author papegaaij
  */
 public class OnDomReadyHeaderItem extends HeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Creates a {@link OnDomReadyHeaderItem} for the script.
-	 * 
+	 *
 	 * @param javaScript
 	 *            The script to execute on the DOM ready event.
-	 * 
+	 *
 	 * @return A newly created {@link OnDomReadyHeaderItem}.
 	 */
 	public static OnDomReadyHeaderItem forScript(CharSequence javaScript)
@@ -62,7 +64,7 @@ public class OnDomReadyHeaderItem extends HeaderItem
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param javaScript
 	 */
 	public OnDomReadyHeaderItem(CharSequence javaScript)
@@ -120,9 +122,9 @@ public class OnDomReadyHeaderItem extends HeaderItem
 	public List<HeaderItem> getDependencies()
 	{
 		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
-		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
+		ResourceReference wicketAjaxReference = ajaxSettings.getWicketAjaxReference();
 		List<HeaderItem> dependencies = super.getDependencies();
-		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		return dependencies;
 	}
 }

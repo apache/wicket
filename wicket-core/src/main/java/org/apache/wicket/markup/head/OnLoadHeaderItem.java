@@ -29,17 +29,19 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for scripts that need to be executed after the entire page is loaded.
- * 
+ *
  * @author papegaaij
  */
 public class OnLoadHeaderItem extends HeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Creates a {@link OnLoadHeaderItem} for the script.
-	 * 
+	 *
 	 * @param javaScript
 	 *            The script to execute on the load event.
-	 * 
+	 *
 	 * @return A newly created {@link OnLoadHeaderItem}.
 	 */
 	public static OnLoadHeaderItem forScript(CharSequence javaScript)
@@ -61,7 +63,7 @@ public class OnLoadHeaderItem extends HeaderItem
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param javaScript
 	 */
 	public OnLoadHeaderItem(CharSequence javaScript)
@@ -120,9 +122,9 @@ public class OnLoadHeaderItem extends HeaderItem
 	public List<HeaderItem> getDependencies()
 	{
 		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
-		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
+		ResourceReference wicketAjaxReference = ajaxSettings.getWicketAjaxReference();
 		List<HeaderItem> dependencies = super.getDependencies();
-		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		return dependencies;
 	}
 }
