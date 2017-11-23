@@ -293,25 +293,6 @@
 				<finalName>${warName}</finalName>
 				<plugins>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>buildnumber-maven-plugin</artifactId>
-						<version>1.4</version>
-						<configuration>
-							<format>{0,date,yyyyMMddHHmmss}</format>
-							<items>
-								<item>timestamp</item>
-							</items>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>validate</phase>
-								<goals>
-									<goal>create</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
 						<configuration>
@@ -330,8 +311,8 @@
 						<artifactId>dockerfile-maven-plugin</artifactId>
 						<version>${dockerfile-maven-plugin.version}</version>
 						<configuration>
-							<repository>apache-docker-wicket-docker.bintray.io/wicket-examples-8</repository>
-							<tag>${buildNumber}</tag>
+							<repository>apache-docker-wicket-docker.bintray.io/wicket-examples</repository>
+							<tag>LATEST-8</tag>
 						</configuration>
 						<executions>
 							<execution>
