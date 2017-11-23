@@ -8,9 +8,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
 import javax.validation.Validator;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.apache.wicket.Application;
@@ -36,16 +33,11 @@ public class BeanValidationConfiguration implements BeanValidationContext
 
 	private List<IPropertyResolver> propertyResolvers = new CopyOnWriteArrayList<>();
 
-	private List<Class<? extends Annotation>> notNullAnnotations = new CopyOnWriteArrayList<>();
-
 	private Map<Class<?>, ITagModifier<? extends Annotation>> tagModifiers = new ConcurrentHashMap<>();
 
 	public BeanValidationConfiguration()
 	{
 		add(new DefaultPropertyResolver());
-		addNotNullAnnotation(NotNull.class);
-		addNotNullAnnotation(NotEmpty.class);
-		addNotNullAnnotation(NotBlank.class);
 		register(Size.class, new SizeTagModifier());
 	}
 
@@ -146,21 +138,6 @@ public class BeanValidationConfiguration implements BeanValidationContext
 		Args.notNull(violationTranslator, "violationTranslator");
 
 		this.violationTranslator = violationTranslator;
-	}
-
-	@Override
-	public List<Class<? extends Annotation>> getNotNullAnnotations()
-	{
-		return notNullAnnotations;
-	}
-
-	public BeanValidationConfiguration addNotNullAnnotation(
-		Class<? extends Annotation> notNullAnnotation)
-	{
-		Args.notNull(notNullAnnotation, "notNullAnnotation");
-
-		this.notNullAnnotations.add(notNullAnnotation);
-		return this;
 	}
 
 	/**

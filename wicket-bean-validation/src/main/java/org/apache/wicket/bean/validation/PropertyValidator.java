@@ -5,6 +5,9 @@ import java.util.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 
@@ -53,6 +56,8 @@ import org.apache.wicket.validation.IValidator;
 public class PropertyValidator<T> extends Behavior implements IValidator<T>
 {
 	private static final Class<?>[] EMPTY = new Class<?>[0];
+	private static final List<Class<? extends Annotation>> NOT_NULL_ANNOTATIONS =
+			Arrays.asList(NotNull.class, NotBlank.class, NotEmpty.class);
 
 	private FormComponent<T> component;
 
@@ -206,9 +211,7 @@ public class PropertyValidator<T> extends Behavior implements IValidator<T>
 
 	boolean isRequired()
 	{
-		BeanValidationContext config = BeanValidationConfiguration.get();
-		List<Class<? extends Annotation>> notNullAnnotations = config.getNotNullAnnotations();
-		List<ConstraintDescriptor<?>> constraints = findNotNullConstraints(notNullAnnotations);
+		List<ConstraintDescriptor<?>> constraints = findNotNullConstraints(NOT_NULL_ANNOTATIONS);
 
 		if (constraints.isEmpty())
 		{

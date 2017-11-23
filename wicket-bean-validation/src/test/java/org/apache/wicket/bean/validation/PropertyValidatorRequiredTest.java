@@ -3,15 +3,9 @@ package org.apache.wicket.bean.validation;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -84,22 +78,6 @@ public class PropertyValidatorRequiredTest
 		assertTrue(page.input22.isRequired());
 		assertTrue(page.input23.isRequired());
 
-		// CustomNotNull
-		assertFalse(page.input24.isRequired());
-
-	}
-
-	@Test
-	public void testCustomNotNullAnnotations()
-	{
-		final BeanValidationConfiguration validationContext = (BeanValidationConfiguration)BeanValidationConfiguration
-			.get();
-		validationContext.addNotNullAnnotation(CustomNotNull.class);
-
-		TestPage page = scope.getTester().startPage(TestPage.class);
-
-		// CustomNotNull
-		assertTrue(page.input24.isRequired());
 	}
 
 	/**
@@ -128,26 +106,13 @@ public class PropertyValidatorRequiredTest
 		}
 	}
 
-	@Target({ ElementType.FIELD })
-	@Retention(RetentionPolicy.RUNTIME)
-	@Constraint(validatedBy = { })
-	public @interface CustomNotNull {
-
-		String message() default "{org.apache.wicket.bean.validation.CustomNotNull.message}";
-
-		Class<?>[] groups() default { };
-
-		Class<? extends Payload>[] payload() default { };
-
-	}
-
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 
 		private TestBean bean = new TestBean();
 		private FormComponent<String> input1, input2, input3, input4, input5, input6, input7,
 			input8, input9, input10, input11, input12, input13, input14, input15, input16, input17,
-			input18, input19, input20, input21, input22, input23, input24;
+			input18, input19, input20, input21, input22, input23;
 
 		public TestPage()
 		{
@@ -202,24 +167,19 @@ public class PropertyValidatorRequiredTest
 			input20 = new TextField<String>("input20", new PropertyModel<String>(this,
 				"bean.propertyOneTwo")).add(new PropertyValidator<String>(GroupThree.class));
 
-			input21 = new TextField<String>("input21",
-				new PropertyModel<String>(this, "bean.subBeanList[0].property"))
-					.add(new PropertyValidator<>());
+			input21 = new TextField<String>("input21", new PropertyModel<String>(this,
+				"bean.subBeanList[0].property")).add(new PropertyValidator<>());
 
 			input22 = new TextField<String>("input22",
-				new PropertyModel<String>(this, "bean.propertyNotEmpty"))
+					new PropertyModel<String>(this, "bean.propertyNotEmpty"))
 					.add(new PropertyValidator<>());
 			input23 = new TextField<String>("input23",
-				new PropertyModel<String>(this, "bean.propertyNotBlank"))
-					.add(new PropertyValidator<>());
-
-			input24 = new TextField<String>("input24",
-				new PropertyModel<String>(this, "bean.propertyCustomNotNull"))
+					new PropertyModel<String>(this, "bean.propertyNotBlank"))
 					.add(new PropertyValidator<>());
 
 			form.add(input1, input2, input3, input4, input5, input6, input7, input8, input9,
 				input10, input11, input12, input13, input14, input15, input16, input17, input18,
-				input19, input20, input21, input22, input23, input24);
+				input19, input20, input21, input22, input23);
 
 		}
 
@@ -228,7 +188,7 @@ public class PropertyValidatorRequiredTest
 			Class<?> containerClass)
 		{
 			return new StringResourceStream(
-				"<form wicket:id='form'><input wicket:id='input1'/><input wicket:id='input2'/><input wicket:id='input3'/><input wicket:id='input4'/><input wicket:id='input5'/><input wicket:id='input6'/><input wicket:id='input7'/><input wicket:id='input8'/><input wicket:id='input9'/><input wicket:id='input10'/><input wicket:id='input11'/><input wicket:id='input12'/><input wicket:id='input13'/><input wicket:id='input14'/><input wicket:id='input15'/><input wicket:id='input16'/><input wicket:id='input17'/><input wicket:id='input18'/><input wicket:id='input19'/><input wicket:id='input20'/><input wicket:id='input21'/><input wicket:id='input22'/><input wicket:id='input23'/><input wicket:id='input24'/></form>");
+				"<form wicket:id='form'><input wicket:id='input1'/><input wicket:id='input2'/><input wicket:id='input3'/><input wicket:id='input4'/><input wicket:id='input5'/><input wicket:id='input6'/><input wicket:id='input7'/><input wicket:id='input8'/><input wicket:id='input9'/><input wicket:id='input10'/><input wicket:id='input11'/><input wicket:id='input12'/><input wicket:id='input13'/><input wicket:id='input14'/><input wicket:id='input15'/><input wicket:id='input16'/><input wicket:id='input17'/><input wicket:id='input18'/><input wicket:id='input19'/><input wicket:id='input20'/><input wicket:id='input21'/><input wicket:id='input22'/><input wicket:id='input23'/></form>");
 		}
 
 	}
@@ -273,9 +233,6 @@ public class PropertyValidatorRequiredTest
 
 		@NotBlank
 		String propertyNotBlank;
-
-		@CustomNotNull
-		String propertyCustomNotNull;
 
 	}
 
