@@ -206,16 +206,6 @@ public class WicketTesterHelper
 		String[] eventNames = Strings.split(event, ' ');
 		for (String eventName : eventNames)
 		{
-			if (eventName.startsWith("on"))
-			{
-				String shortName = event.substring(2);
-				throw new IllegalArgumentException(
-						String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
-										"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
-										"names so the leading 'on' may break your application."
-								, event, shortName));
-			}
-
 			for (Behavior behavior : component.getBehaviors())
 			{
 				if (behavior instanceof AjaxEventBehavior)
