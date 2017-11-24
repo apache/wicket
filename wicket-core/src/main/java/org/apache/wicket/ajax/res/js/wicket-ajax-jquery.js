@@ -28,7 +28,11 @@
 
 	'use strict';
 
-	if (typeof(Wicket) === 'object' && typeof(Wicket.Head) === 'object') {
+	if (typeof(Wicket) === 'undefined') {
+		window.Wicket = {};
+	}
+
+	if (typeof(Wicket.Head) === 'object') {
 		return;
 	}
 
