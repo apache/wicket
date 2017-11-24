@@ -1,4 +1,4 @@
-FROM tomcat:8.5-jre8-alpine
+FROM tomcat:8.5-jre8
 MAINTAINER Apache Wicket Team <dev@wicket.apache.org>
 
 RUN rm -rf /usr/local/tomcat/webapps/*
