@@ -43,7 +43,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 
 	/**
 	 * Registeres a tag modifier for a specific constraint annotation
-	 * 
+	 *
 	 * @param annotationType
 	 *            constraint annotation such as {@link Size}
 	 * @param modifier
@@ -73,7 +73,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	/**
 	 * Adds a property resolver to the configuration. Property resolvers registered last are the
 	 * first to be allowed to resolve the property.
-	 * 
+	 *
 	 * @param resolver
 	 * @return {@code this}
 	 */
@@ -99,7 +99,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 
 	/**
 	 * Sets the provider used to retrieve {@link Validator} instances
-	 * 
+	 *
 	 * @param validatorProvider
 	 */
 	public void setValidatorProvider(Supplier<Validator> validatorProvider)
@@ -111,7 +111,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 
 	/**
 	 * Binds this configuration to the application instance
-	 * 
+	 *
 	 * @param application
 	 */
 	public void configure(Application application)
@@ -143,7 +143,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	/**
 	 * Retrieves the validation context (read only version of the configuration). This is how
 	 * components retrieve the configuration.
-	 * 
+	 *
 	 * @return validation context
 	 */
 	public static BeanValidationContext get()
