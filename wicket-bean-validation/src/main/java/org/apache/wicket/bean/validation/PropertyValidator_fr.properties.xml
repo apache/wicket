@@ -29,10 +29,10 @@
 	<entry key="javax.validation.constraints.Min.message">Le champ '${label}' doit être supérieur ou égal à ${value}</entry>
 	<entry key="javax.validation.constraints.Negative.message">Le champ '${label}' doit être négatif,</entry>
 	<entry key="javax.validation.constraints.NegativeOrZero.message">Le champ '${label}' doit être négatif, ou zéro</entry>
-    <entry key="javax.validation.constraints.NotBlank.message">Le champ '${label}' ne peut pas être vide</entry>
-    <entry key="javax.validation.constraints.NotEmpty.message">Le champ '${label}' ne peut pas être vide</entry>
-    <entry key="javax.validation.constraints.NotNull.message">Le champ '${label}' ne doit pas être null</entry>
-    <entry key="javax.validation.constraints.Null.message">Le champ '${label}' doit être null</entry>
+	<entry key="javax.validation.constraints.NotBlank.message">Le champ '${label}' ne peut pas être vide</entry>
+	<entry key="javax.validation.constraints.NotEmpty.message">Le champ '${label}' ne peut pas être vide</entry>
+	<entry key="javax.validation.constraints.NotNull.message">Le champ '${label}' ne doit pas être null</entry>
+	<entry key="javax.validation.constraints.Null.message">Le champ '${label}' doit être null</entry>
 	<entry key="javax.validation.constraints.Past.message">Le champ '${label}' doit être dans le passé</entry>
 	<entry key="javax.validation.constraints.PastOrPresent.message">Le champ '${label}' doit être dans le passé ou le présent</entry>
 	<entry key="javax.validation.constraints.Positive.message">Le champ '${label}' doit être positif</entry>
@@ -46,8 +46,8 @@
 	<entry key="org.hibernate.validator.constraints.Length.message">La longueur du champ '${label}' doit être entre ${min} et ${max}</entry>
 	<entry key="org.hibernate.validator.constraints.NotBlank.message">Le champ '${label}' ne peut pas être vide</entry>
 	<entry key="org.hibernate.validator.constraints.NotEmpty.message">Le champ '${label}' ne peut pas être vide</entry>
-	<entry key="org.hibernate.validator.constraints.SafeHtml.message">Le champ '${label}' pourrait contenir du contenu HTML dangereux</entry>
 	<entry key="org.hibernate.validator.constraints.Range.message">Le champ '${label}' doit être entre ${min} et ${max}</entry>
+	<entry key="org.hibernate.validator.constraints.SafeHtml.message">Le champ '${label}' pourrait contenir du contenu HTML dangereux</entry>
 	<entry key="org.hibernate.validator.constraints.ScriptAssert.message">Le script "${script}" du champ '${label}' n'a pas retourné true</entry>
 <entry key="org.hibernate.validator.constraints.URL.message">Le champ '${label}' n'est pas une URL</entry>
 
