@@ -41,7 +41,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param application
 	 *          The application instance
 	 */
@@ -57,7 +57,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 		StoreSettings storeSettings = getStoreSettings();
 
-		if (dataStore.canBeAsynchronous())
+		if (dataStore.canBeAsynchronous() && storeSettings.isAsynchronous())
 		{
 			int capacity = storeSettings.getAsynchronousQueueCapacity();
 			dataStore = new AsynchronousDataStore(dataStore, capacity);
