@@ -14,11 +14,8 @@
                 "qunit": "qunit/qunit"
             },
             shim: {
-                'wicket-event': {
-                    deps: ['jquery']
-                },
                 'Wicket': {
-                    deps: ['wicket-ajax'],
+                	deps: ['jquery'],
                     exports: 'Wicket'
                 },
                 'WicketDebugWindow': {
