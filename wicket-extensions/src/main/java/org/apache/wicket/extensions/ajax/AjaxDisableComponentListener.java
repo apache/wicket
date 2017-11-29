@@ -38,22 +38,22 @@ public class AjaxDisableComponentListener extends AjaxCallListener
 	@Override
 	public CharSequence getBeforeHandler(Component component)
 	{
-		return generateHandlerJs(component, true);
+		return generateHandlerJavaScript(component, true);
 	}
 
 	@Override
 	public CharSequence getCompleteHandler(Component component)
 	{
-		return generateHandlerJs(component, false);
+		return generateHandlerJavaScript(component, false);
 	}
 
 	@Override
 	public CharSequence getFailureHandler(Component component)
 	{
-		return generateHandlerJs(component, false);
+		return generateHandlerJavaScript(component, false);
 	}
 
-	protected String generateHandlerJ(Component component, boolean disabled)
+	protected String generateHandlerJavaScript(Component component, boolean disabled)
 	{
 		return String.format(DISABLE_ENABLE_JS, component.getMarkupId(), disabled);
 	}
