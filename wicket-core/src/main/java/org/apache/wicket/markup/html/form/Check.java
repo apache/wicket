@@ -110,10 +110,13 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 
 
 	/**
-	 * Form submission value used for this radio component. This string will appear as the value of
-	 * the <code>value</code> html attribute for the <code>input</code> tag.
+	 * Form submission value used for the Html <code>value</code> attribute of the <code>input</code> tag.
+	 * <p>
+	 * If {@link Check}s are recreated on each render of their {@link CheckGroup}, this method should
+	 * be overridden to return a 'stable' value, otherwise its selection will be lost after a {@link Form}
+	 * was submitted and resulted in {@link Form#hasError()}.
 	 * 
-	 * @return form submission value
+	 * @return input value
 	 */
 	public String getValue()
 	{
