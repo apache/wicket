@@ -23,6 +23,8 @@ import org.apache.wicket.ajax.attributes.AjaxCallListener;
  * An {@link AjaxCallListener} to disable the associated component while the AJAX request is running.
  * Please note that under the hood this class uses DOM attribute 'disabled' to disable a component,
  * hence it can be used only with those HTML components that support this attribute.
+ * If you want to use it with other kinds of components you should override {@link #generateHandlerJavaScript}
+ * to generate the proper enable/disable JavaScript.
  * 
  * @author Andrea Del Bene
  *
@@ -53,6 +55,11 @@ public class AjaxDisableComponentListener extends AjaxCallListener
 		return generateHandlerJavaScript(component, false);
 	}
 
+	/**
+	 * Generate the proper enable/disable JavaScript code for the given component.
+	 * By default component is enabled/disabled using DOM attribute 'disabled'.
+	 * 
+	 */
 	protected String generateHandlerJavaScript(Component component, boolean disabled)
 	{
 		return String.format(DISABLE_ENABLE_JS, component.getMarkupId(), disabled);
