@@ -60,6 +60,10 @@ import org.apache.wicket.model.IModel;
  * normal link behavior, meaning that {@link #onSubmit()} will be called without any other
  * consequences.
  * </p>
+ * <p>
+ * To customize the JavaScript code used to submit the form we must override {@link #getTriggerJavaScript()}. 
+ * This can be helpful to implement additional client side behaviors like disabling the link during form submission.
+ * </p>
  * 
  * @author chris
  * @author jcompagner
