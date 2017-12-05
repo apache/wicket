@@ -26,7 +26,7 @@ This package contains all the classes to make your wicket components and other p
 <p>
 To setup automatic injection of wicket components in your application subclass init() method call:
 <code>
-addComponent.(new SpringComponentInjector(this));
+addComponentInstantiationListener(new SpringComponentInjector(this));
 </code>
 To inject any pojo call <code>InjectorHolder.getInjector().inject(this)</code> in the pojo's constructor.
 </p>

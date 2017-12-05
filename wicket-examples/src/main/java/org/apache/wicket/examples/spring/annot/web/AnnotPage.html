@@ -19,7 +19,7 @@
 This approach allows users to quickly and easily inject any component with bean proxies. Components simply have to annotate any fields they wish injected with @SpringBean annotation.
 Interesting classes:<br/>
 <ul>
-	<li>SpringComponentInjector - an implementation of . that performs the injection</li>
+	<li>SpringComponentInjector - an implementation of IComponentInstantiationListener that performs the injection</li>
 	<li>AnnotPage - contains an annotated field whose value will be initialized with a proxy by the injector</li>
 </ul>
 <table wicket:id="contacts" cellspacing="0" cellpadding="2" class="grid"></table>
