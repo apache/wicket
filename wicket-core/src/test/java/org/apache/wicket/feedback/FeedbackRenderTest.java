@@ -36,7 +36,25 @@ public class FeedbackRenderTest extends WicketTestCase
 
 		tester.startPage(page);
 
-		// non-IFeedback first, then IFeedback from nested to top
-		assertEquals("|id4|id3|id2|id1", page.onBeforeRenderOrder.toString());
+		// non-IFeedback first, then IFeedback top-down
+		assertEquals("|id4|id1|id2|id3", page.onBeforeRenderOrder.toString());
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testAjax() throws Exception
+	{
+		final FeedbacksPage page = new FeedbacksPage();
+
+		tester.startPage(page);
+		
+		page.onBeforeRenderOrder.setLength(0);
+
+		tester.executeAjaxEvent(page.getAjaxLink(), "click");
+		
+		// non-IFeedback first, then IFeedback top-down
+		assertEquals("|id4|id1|id2|id3", page.onBeforeRenderOrder.toString());
 	}
 }
