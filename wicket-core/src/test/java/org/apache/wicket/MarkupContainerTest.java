@@ -1124,14 +1124,8 @@ public class MarkupContainerTest extends WicketTestCase
 		assertThat(iterator1.hasNext(), is(false));
 	}
 
-	/**
-	 * This tests a functional bug in the iterator implementation where you have multiple iterators
-	 * traversing the children, a detach happens and one of the iterators removes a child component
-	 * before the other iterator has a chance to update its internal state to the new world. This is
-	 * a known bug and we expect that this doesn't pose a problem in real world usage.
-	 */
-	@Test(expected = ConcurrentModificationException.class)
-	public void knownBugForDetachWithTwoIteratorsAndRemovals()
+	@Test
+	public void detachWithTwoIteratorsAndRemovals()
 	{
 		int n = NUMBER_OF_CHILDREN_FOR_A_MAP * 2;
 
@@ -1160,21 +1154,11 @@ public class MarkupContainerTest extends WicketTestCase
 		iterator1.next();
 		iterator1.remove();
 
-		// implementation detail that gets in the way of properly solving this exotic use case: at
-		// this moment iterator 2 doesn't know that the modification count was reset before the
-		// iterator 1 removed the component.
 		iterator2.next();
-
-		// code never reaches this point due to the ConcurrentModificationException
 	}
 
-	/**
-	 * This test is the working case for the above scenario where two iterators traverse the
-	 * children, the component gets detached and in this case both iterators have a chance to update
-	 * their internal state to the new world, before they continue to traverse the children.
-	 */
 	@Test
-	public void detachWithTwoIteratorsAndRemovalsWork()
+	public void detachWithTwoIteratorsAndRemovals2()
 	{
 		int n = NUMBER_OF_CHILDREN_FOR_A_MAP * 2;
 
