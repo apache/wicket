@@ -591,7 +591,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			private void refreshInternalIteratorIfNeeded()
 			{
-				if (modCounter != 0 && expectedModCounter >= modCounter)
+				if (expectedModCounter >= modCounter)
 					return;
 
 				if (children == null)
@@ -1935,7 +1935,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	{
 		super.onDetach();
 
-		modCounter = 0;
+		modCounter++;
 		removals_clear();
 
 		if (queue != null && !queue.isEmpty() && hasBeenRendered())
