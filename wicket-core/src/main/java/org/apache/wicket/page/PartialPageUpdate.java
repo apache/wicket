@@ -239,34 +239,30 @@ public abstract class PartialPageUpdate
 	{
 		componentsFrozen = true;
 
-		FeedbackDelay delay = new FeedbackDelay(RequestCycle.get());
+		List<Component> prepared = new ArrayList<>(markupIdToComponent.size());
 		
+		// prepare components
+		FeedbackDelay delay = new FeedbackDelay(RequestCycle.get());
 		try {
-			// prepare components
-			for (Map.Entry<String, Component> stringComponentEntry : markupIdToComponent.entrySet())
+			for (Component component : markupIdToComponent.values())
 			{
-				final Component component = stringComponentEntry.getValue();
-
 				if (!containsAncestorFor(component))
 				{
-					prepareComponent(response, component.getAjaxRegionMarkupId(), component, encoding);
+					prepareComponent(component);
+					prepared.add(component);
 				}
 			}
 
+			// .. now prepare all postponed feedbacks
 			delay.beforeRender();
 		} finally {
 			delay.release();
 		}
 
 		// write components
-		for (Map.Entry<String, Component> stringComponentEntry : markupIdToComponent.entrySet())
+		for (Component component : prepared)
 		{
-			final Component component = stringComponentEntry.getValue();
-
-			if (!containsAncestorFor(component))
-			{
-				writeComponent(response, component.getAjaxRegionMarkupId(), component, encoding);
-			}
+			writeComponent(response, component.getAjaxRegionMarkupId(), component, encoding);
 		}
 
 		if (header != null)
@@ -298,17 +294,10 @@ public abstract class PartialPageUpdate
 	/**
 	 * Prepare a single component
 	 *
-	 * @param response
-	 *      the response to write to
-	 * @param markupId
-	 *      the markup id to use for the component replacement
 	 * @param component
-	 *      the component which markup will be used as replacement
-	 * @param encoding
-	 *      the encoding for the response
+	 *      the component to prepare
 	 */
-
-	protected void prepareComponent(Response response, String markupId, Component component, String encoding)
+	protected void prepareComponent(Component component)
 	{
 		if (component.getRenderBodyOnly() == true)
 		{
@@ -325,8 +314,7 @@ public abstract class PartialPageUpdate
 		{
 			// dont throw an exception but just ignore this component, somehow
 			// it got removed from the page.
-			LOG.warn("Component '{}' with markupid: '{}' not rendered because it was already removed from page",
-					component, markupId);
+			LOG.warn("Component '{}' not rendered because it was already removed from page", component);
 			return;
 		}
 
