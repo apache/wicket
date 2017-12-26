@@ -497,11 +497,6 @@ public abstract class Session implements IClusterable, IEventSink
 			clientInfo = null;
 			dirty = false;
 			metaData = null;
-			feedbackMessages.clear();
-			setStyle(null);
-			pageId.set(0);
-			sequence.set(0);
-			temporarySessionAttributes = null;
 		}
 	}
 
@@ -515,6 +510,11 @@ public abstract class Session implements IClusterable, IEventSink
 			invalidate();
 		}
 		destroy();
+		feedbackMessages.clear();
+		setStyle(null);
+		pageId.set(0);
+		sequence.set(0);
+		temporarySessionAttributes = null;
 	}
 
 	/**
