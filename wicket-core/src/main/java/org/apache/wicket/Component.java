@@ -1648,7 +1648,7 @@ public abstract class Component
 			catch (Exception ex)
 			{
 				// wrap the exception so that it brings info about the component
-				RuntimeException rex = new RuntimeException(
+				WicketRuntimeException rex = new WicketRuntimeException(
 					"An error occurred while getting the model object for Component: " +
 						this.toString(true), ex);
 				throw rex;
