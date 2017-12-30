@@ -20,13 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.PartWriterCallback;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * Used to provide resources based on the on Java NIO FileSystem API.<br>
@@ -40,7 +43,7 @@ public class FileSystemResource extends AbstractResource
 {
 	private static final long serialVersionUID = 1L;
 
-	private Path path;
+	private LoadableDetachableModel<Path> path;
 
 	/**
 	 * Creates a new file system resource based on the given path
@@ -50,7 +53,7 @@ public class FileSystemResource extends AbstractResource
 	 */
 	public FileSystemResource(Path path)
 	{
-		this.path = path;
+		this.path = new PathModel(path);
 	}
 
 	/**
@@ -68,7 +71,23 @@ public class FileSystemResource extends AbstractResource
 	@Override
 	protected ResourceResponse newResourceResponse(Attributes attributes)
 	{
-		return createResourceResponse(attributes, path);
+		return createResourceResponse(attributes, getPath());
+	}
+
+	@Override
+	public void respond(Attributes attributes)
+	{
+		try
+		{
+			super.respond(attributes);
+		}
+		finally
+		{
+			if (path != null)
+			{
+				path.detach();
+			}
+		}
 	}
 
 	/**
@@ -89,7 +108,7 @@ public class FileSystemResource extends AbstractResource
 				throw new WicketRuntimeException(
 					"Please override #newResourceResponse() and provide a path if using a constructor which doesn't take one as argument.");
 			}
-			this.path = path;
+			this.path = new PathModel(path);
 			long size = getSize();
 			ResourceResponse resourceResponse = new ResourceResponse();
 			resourceResponse.setContentType(getMimeType());
@@ -121,7 +140,7 @@ public class FileSystemResource extends AbstractResource
 	 */
 	protected long getSize() throws IOException
 	{
-		return Files.readAttributes(path, BasicFileAttributes.class).size();
+		return Files.readAttributes(getPath(), BasicFileAttributes.class).size();
 	}
 
 	/**
@@ -134,14 +153,15 @@ public class FileSystemResource extends AbstractResource
 	 */
 	protected String getMimeType() throws IOException
 	{
+		final Path _path = getPath();
 		String mimeType = null;
 		if (Application.exists())
 		{
-			mimeType = Application.get().getMimeType(path.getFileName().toString());
+			mimeType = Application.get().getMimeType(_path.getFileName().toString());
 		}
 		if (mimeType == null)
 		{
-			mimeType = Files.probeContentType(path);
+			mimeType = Files.probeContentType(_path);
 		}
 		return mimeType;
 	}
@@ -155,6 +175,29 @@ public class FileSystemResource extends AbstractResource
 	 */
 	protected InputStream getInputStream() throws IOException
 	{
-		return Files.newInputStream(path);
+		return Files.newInputStream(getPath());
+	}
+
+	private Path getPath()
+	{
+		return path.getObject();
+	}
+
+	private static class PathModel extends LoadableDetachableModel<Path>
+	{
+		private final String pathAsString;
+
+		public PathModel(Path path)
+		{
+			super(path);
+			Args.notNull(path, "path");
+			this.pathAsString = path.toString();
+		}
+
+		@Override
+		protected Path load()
+		{
+			return Paths.get(pathAsString);
+		}
 	}
 }
