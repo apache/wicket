@@ -1158,7 +1158,7 @@
 		processEvaluation: function (context, node) {
 
 			// used to match evaluation scripts which manually call FunctionsExecuter's notify() when ready
-			var scriptWithIdentifierR = new RegExp("^\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
+			var scriptWithIdentifierR = new RegExp("\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
 
 			/**
 			 * A regex used to split the text in (priority-)evaluate elements in the Ajax response
