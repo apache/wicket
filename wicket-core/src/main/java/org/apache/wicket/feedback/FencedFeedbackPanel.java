@@ -180,7 +180,7 @@ public class FencedFeedbackPanel extends FeedbackPanel
 				{
 					// this is the catch-all panel
 
-					return new FeedbackCollector(panel.getPage())
+					return new FeedbackCollector(panel.getPage(), true)
 					{
 						@Override
 						protected boolean shouldRecurseInto(Component component)

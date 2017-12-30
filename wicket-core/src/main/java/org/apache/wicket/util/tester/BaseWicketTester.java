@@ -2220,7 +2220,7 @@ public class BaseWicketTester
 	 */
 	public List<FeedbackMessage> getFeedbackMessages(final IFeedbackMessageFilter filter)
 	{
-		return new FeedbackCollector(getLastRenderedPage()).collect(filter);
+		return new FeedbackCollector(getLastRenderedPage(), true).collect(filter);
 	}
 
 	/**
