@@ -23,6 +23,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 
+import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -215,4 +216,34 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 		};
 		Assert.assertEquals("text/plain", fileSystemResourceMime.getMimeType());
 	}
+
+	/**
+	 * Test serialization of {@link FileSystemResource}
+	 */
+	@Test
+	public void testSerialization() throws IOException, URISyntaxException
+	{
+		InputStream inputStream = null;
+		try
+		{
+			URL resource = FileSystemResourceReferenceTest.class.getResource("FileSystemResourceReference.txt");
+			Path path = FileSystemResourceReference.getPath(resource.toURI());
+			final FileSystemResource fileSystemResource = new FileSystemResource(path);
+			final FileSystemResource cloned = WicketObjects.cloneObject(fileSystemResource);
+
+			Assert.assertEquals(cloned.getSize(), 54);
+
+			// Content
+			inputStream = cloned.getInputStream();
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			IOUtils.copy(inputStream, outputStream);
+			Assert.assertEquals("FileSystemResourceReference.zip content in normal file",
+					outputStream.toString());
+		}
+		finally
+		{
+			IOUtils.closeQuietly(inputStream);
+		}
+	}
+
 }
