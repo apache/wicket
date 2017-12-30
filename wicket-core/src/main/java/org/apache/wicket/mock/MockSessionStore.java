@@ -45,9 +45,9 @@ public class MockSessionStore implements ISessionStore
 	}
 
 	private String sessionId;
-	private final Map<String, Serializable> attributes = new HashMap<String, Serializable>();
-	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<UnboundListener>();
-	private final Set<BindListener> bindListeners = new CopyOnWriteArraySet<BindListener>();
+	private final Map<String, Serializable> attributes = new HashMap<>();
+	private final Set<UnboundListener> unboundListeners = new CopyOnWriteArraySet<>();
+	private final Set<BindListener> bindListeners = new CopyOnWriteArraySet<>();
 
 	private Session session;
 
@@ -72,7 +72,7 @@ public class MockSessionStore implements ISessionStore
 	@Override
 	public List<String> getAttributeNames(Request request)
 	{
-		return Collections.unmodifiableList(new ArrayList<String>(attributes.keySet()));
+		return Collections.unmodifiableList(new ArrayList<>(attributes.keySet()));
 	}
 
 	@Override
@@ -96,6 +96,10 @@ public class MockSessionStore implements ISessionStore
 	public void invalidate(Request request)
 	{
 		String sessId = sessionId;
+		if (session != null)
+		{
+			session.onInvalidate();
+		}
 		cleanup();
 		for (UnboundListener l : unboundListeners)
 		{
