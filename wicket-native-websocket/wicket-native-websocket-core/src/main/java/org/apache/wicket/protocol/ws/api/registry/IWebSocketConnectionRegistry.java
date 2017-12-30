@@ -32,7 +32,7 @@ public interface IWebSocketConnectionRegistry
 	 * @param application
 	 *      the web application to look in
 	 * @param sessionId
-	 *      the web socket client session id
+	 *      the http session id
 	 * @param key
 	 *      the web socket client key
 	 * @return the web socket connection used by a client from the specified coordinates
@@ -43,6 +43,7 @@ public interface IWebSocketConnectionRegistry
 	 * @param application
 	 *            the web application to look in
 	 * @param sessionId
+	 *            the http session id
 	 * @return collection of web socket connection used by a client with the given session id
 	 */
 	Collection<IWebSocketConnection> getConnections(Application application, String sessionId);
@@ -61,7 +62,7 @@ public interface IWebSocketConnectionRegistry
 	 * @param application
 	 *      the web application to look in
 	 * @param sessionId
-	 *      the web socket client session id
+	 *      the http session id
 	 * @param key
 	 *      the web socket client key
 	 * @param connection
@@ -75,7 +76,7 @@ public interface IWebSocketConnectionRegistry
 	 * @param application
 	 *      the web application to look in
 	 * @param sessionId
-	 *      the web socket client session id
+	 *      the http session id
 	 * @param key
 	 *      the web socket client key
 	 */
