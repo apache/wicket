@@ -2932,7 +2932,7 @@ public class BaseWicketTester
 		}
 	}
 
-	private class TestFilterConfig implements FilterConfig
+	public class TestFilterConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<String, String>();
 

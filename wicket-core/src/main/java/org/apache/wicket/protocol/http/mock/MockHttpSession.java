@@ -24,6 +24,8 @@ import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.value.ValueMap;
 
 
@@ -186,6 +188,11 @@ public class MockHttpSession implements HttpSession, Serializable
 	@Override
 	public void invalidate()
 	{
+		Session session = (Session) attributes.get("wicket:" + BaseWicketTester.TestFilterConfig.class.getName() + ":session");
+		if (session != null)
+		{
+			session.onInvalidate();
+		}
 		attributes.clear();
 		id = generateSessionId();
 	}
