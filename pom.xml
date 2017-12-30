@@ -729,7 +729,7 @@
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.4.0</version>
 					<extensions>true</extensions>
 					<executions>
 						<execution>
@@ -741,8 +741,10 @@
 							<configuration>
 								<instructions>
 									<Export-Package>*</Export-Package>
-									<Import-Package>org.apache.wicket*</Import-Package>
-									<DynamicImport-Package>*</DynamicImport-Package>
+									<Import-Package>org.apache.wicket*
+										org.junit*;resolution:=optional
+										junit.framework*;resolution:=optional</Import-Package>
+									<DynamicImport-Package>!junit.framework,!org.junit,*</DynamicImport-Package>
 									<_nouses>true</_nouses>
 								</instructions>
 							</configuration>
