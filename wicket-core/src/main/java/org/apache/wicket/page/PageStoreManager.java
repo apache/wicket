@@ -351,7 +351,7 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		public void valueUnbound(HttpSessionBindingEvent event)
 		{
-			if (storingTouchedPages.get())
+			if (storingTouchedPages == null || storingTouchedPages.get())
 			{
 				// triggered by #storeTouchedPages(), so do not remove the data
 				return;
