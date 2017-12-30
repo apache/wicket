@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.api;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
@@ -95,13 +96,19 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 * Constructor.
 	 *
 	 * @param request
-	 *      the http request that was used to create the TomcatWebSocketProcessor
+	 *      the http request that was used to create this {@link IWebSocketProcessor}
 	 * @param application
 	 *      the current Wicket Application
 	 */
 	public AbstractWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
 	{
-		this.sessionId = request.getSession(true).getId();
+		final HttpSession httpSession = request.getSession(true);
+		if (httpSession == null)
+		{
+			throw new IllegalStateException("There is no HTTP Session bound. Without a session Wicket won't be " +
+					"able to find the stored page to update its components");
+		}
+		this.sessionId = httpSession.getId();
 		String pageId = request.getParameter("pageId");
 		this.resourceName = request.getParameter("resourceName");
 		if (Strings.isEmpty(pageId) && Strings.isEmpty(resourceName))
