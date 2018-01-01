@@ -102,7 +102,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	 */
 	public AbstractWebSocketProcessor(final HttpServletRequest request, final WebApplication application)
 	{
-		final HttpSession httpSession = request.getSession(false);
+		final HttpSession httpSession = request.getSession(true);
 		if (httpSession == null)
 		{
 			throw new IllegalStateException("There is no HTTP Session bound. Without a session Wicket won't be " +
