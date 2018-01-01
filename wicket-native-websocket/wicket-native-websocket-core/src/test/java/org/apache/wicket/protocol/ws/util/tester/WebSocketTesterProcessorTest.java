@@ -100,7 +100,6 @@ public class WebSocketTesterProcessorTest extends Assert
 		assertTrue(TestWebSocketResource.ON_ABORT_CALLED.get());
 	}
 
-//	@Ignore
 	@Test
 	public void onConnectMultipleOrigins()
 	{
