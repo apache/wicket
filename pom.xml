@@ -741,10 +741,10 @@
 							<configuration>
 								<instructions>
 									<Export-Package>*</Export-Package>
-									<Import-Package>org.apache.wicket*
-										org.junit*;resolution:=optional
+									<Import-Package>org.apache.wicket*,
+										org.junit*;resolution:=optional,
 										junit.framework*;resolution:=optional</Import-Package>
-									<DynamicImport-Package>!junit.framework,!org.junit,*</DynamicImport-Package>
+									<DynamicImport-Package>*</DynamicImport-Package>
 									<_nouses>true</_nouses>
 								</instructions>
 							</configuration>
