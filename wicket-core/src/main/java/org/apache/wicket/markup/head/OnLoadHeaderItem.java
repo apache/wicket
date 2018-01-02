@@ -86,8 +86,8 @@ public class OnLoadHeaderItem extends HeaderItem
 		CharSequence js = getJavaScript();
 		if (Strings.isEmpty(js) == false)
 		{
-			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
-				"function(event) { " + js + ";});");
+			JavaScriptUtils.writeJavaScript(response,
+				"var f = function() {" + js + ";};\nif ('loaded' === document.readyState) f(); else window.addEventListener('load', f);");
 		}
 	}
 

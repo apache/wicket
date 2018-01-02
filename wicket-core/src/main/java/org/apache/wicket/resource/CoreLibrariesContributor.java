@@ -19,6 +19,7 @@ package org.apache.wicket.resource;
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
@@ -63,8 +64,7 @@ public class CoreLibrariesContributor
 		if (debugSettings.isAjaxDebugModeEnabled())
 		{
 			response.render(JavaScriptHeaderItem.forReference(jsLibrarySettings.getWicketAjaxDebugReference()));
-			response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.DebugWindow.enabled=true;",
-				"wicket-ajax-debug-enable"));
+			response.render(OnLoadHeaderItem.forScript("Wicket.Ajax.DebugWindow.enabled=true;"));
 		}
 		else
 		{

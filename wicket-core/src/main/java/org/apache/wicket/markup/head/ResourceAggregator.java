@@ -223,6 +223,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 
 	private void recordHeaderItem(HeaderItem item, Set<HeaderItem> depsDone)
 	{
+        if (item instanceof AbstractJavaScriptReferenceHeaderItem) {
+            ((AbstractJavaScriptReferenceHeaderItem) item).setDefer(true);
+        }
+
 		renderDependencies(item, depsDone);
 		RecordedHeaderItem recordedItem = itemsToBeRendered.get(item);
 		if (recordedItem == null)
