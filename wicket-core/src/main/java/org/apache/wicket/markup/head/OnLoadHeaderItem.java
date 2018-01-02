@@ -87,7 +87,7 @@ public class OnLoadHeaderItem extends HeaderItem
 		if (Strings.isEmpty(js) == false)
 		{
 			JavaScriptUtils.writeJavaScript(response,
-				"var f = function() {" + js + ";};\nif ('loaded' === document.readyState) f(); else window.addEventListener('load', f);");
+				"var f = function() {" + js + ";};\nif ('complete' === document.readyState) f(); else window.addEventListener('load', f);");
 		}
 	}
 
