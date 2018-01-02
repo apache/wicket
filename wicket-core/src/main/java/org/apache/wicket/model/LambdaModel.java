@@ -156,6 +156,11 @@ public abstract class LambdaModel<T> implements IModel<T>
 			}
 
 			@Override
+			public void setObject(R r) {
+				throw new UnsupportedOperationException("setObject(Object) on " + target + " is not supported");
+			}
+
+			@Override
 			public void detach()
 			{
 				target.detach();
