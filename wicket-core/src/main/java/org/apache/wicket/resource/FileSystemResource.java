@@ -29,7 +29,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.PartWriterCallback;
-import org.apache.wicket.util.lang.Args;
 
 /**
  * Used to provide resources based on the on Java NIO FileSystem API.<br>
@@ -179,19 +178,19 @@ public class FileSystemResource extends AbstractResource
 
 	private static class PathModel extends LoadableDetachableModel<Path>
 	{
+		private static final long serialVersionUID = 1L;
 		private final String pathAsString;
 
 		public PathModel(Path path)
 		{
 			super(path);
-			Args.notNull(path, "path");
-			this.pathAsString = path.toString();
+			this.pathAsString = path == null ? null : path.toString();
 		}
 
 		@Override
 		protected Path load()
 		{
-			return Paths.get(pathAsString);
+			return pathAsString == null ? null : Paths.get(pathAsString);
 		}
 	}
 }
