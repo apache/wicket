@@ -48,7 +48,10 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 
 	private final Component pageResolvingComponent;
 
-	/** Controls whether or not feedback from the {@link Session} will be collected **/
+	/** 
+	 * Controls whether or not feedback from the {@link Session} will be collected.
+	 * By default is true.
+	 */
 	private boolean includeSession = true;
 
 	/**
