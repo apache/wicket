@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.Session;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
 
@@ -46,6 +47,9 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	private Comparator<FeedbackMessage> sortingComparator;
 
 	private final Component pageResolvingComponent;
+
+	/** Controls whether or not feedback from the {@link Session} will be collected **/
+	private boolean includeSession = true;
 
 	/**
 	 * Constructor. Creates a model for all feedback messages on the page.
@@ -126,7 +130,7 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	protected List<FeedbackMessage> collectMessages(Component pageResolvingComponent,
 		IFeedbackMessageFilter filter)
 	{
-		return new FeedbackCollector(pageResolvingComponent.getPage()).collect(filter);
+		return new FeedbackCollector(pageResolvingComponent.getPage(), includeSession).collect(filter);
 	}
 
 	/**
@@ -179,5 +183,20 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 	public void detach()
 	{
 		messages = null;
+	}
+
+	/**
+	 * Controls whether or not feedback from the {@link Session} will be collected.
+	 * 
+	 * See {@link FeedbackCollector#setIncludeSession} and {@link Session#getFeedbackMessages} 
+	 * 
+	 * @param value
+	 * @return 
+	 * @return {@code this} for chaining
+	 */
+	public FeedbackMessagesModel setIncludeSession(boolean includeSession)
+	{
+		this.includeSession = includeSession;
+		return this;
 	}
 }
