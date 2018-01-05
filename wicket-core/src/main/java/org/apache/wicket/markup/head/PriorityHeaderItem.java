@@ -26,16 +26,17 @@ import org.apache.wicket.request.Response;
  * {@link HeaderItem} that has priority over other header items. {@code PriorityHeaderItem}s
  * rendered parent-first at the beginning of the header. Dependencies of a
  * {@code PriorityHeaderItem} also have priority.
- * 
+ *
  * @author papegaaij
  */
 public class PriorityHeaderItem extends HeaderItem implements IWrappedHeaderItem
 {
+	private static final long serialVersionUID = 1L;
 	private HeaderItem wrapped;
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param wrapped
 	 *            the actual {@link HeaderItem} that should have priority
 	 */
