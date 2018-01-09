@@ -44,7 +44,6 @@ import org.apache.wicket.markup.MarkupFactory;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.html.IHeaderContributor;
-import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import org.apache.wicket.markup.parser.filter.EnclosureHandler;
 import org.apache.wicket.markup.parser.filter.InlineEnclosureHandler;
@@ -191,11 +190,6 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	/** session store provider */
 	private Supplier<ISessionStore> sessionStoreProvider;
-
-	/**
-	 * The decorator this application uses to decorate any header responses created by Wicket
-	 */
-	private IHeaderResponseDecorator headerResponseDecorator;
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -1608,42 +1602,18 @@ public abstract class Application implements UnboundListener, IEventSink
 	}
 
 	/**
-	 * Sets an {@link IHeaderResponseDecorator} that you want your application to use to decorate
-	 * header responses.
-	 * 
-	 * @param headerResponseDecorator
-	 *            your custom decorator
-	 */
-	public final Application setHeaderResponseDecorator(
-		final IHeaderResponseDecorator headerResponseDecorator)
-	{
-		this.headerResponseDecorator = headerResponseDecorator;
-		return this;
-	}
-
-	/**
-	 * INTERNAL METHOD - You shouldn't need to call this. This is called every time Wicket creates
-	 * an IHeaderResponse. It gives you the ability to incrementally add features to an
+	 * This is called every time Wicket creates an IHeaderResponse. It gives you the ability to incrementally add features to an
 	 * IHeaderResponse implementation by wrapping it in another implementation.
+	 * <br>
+	 * OVerride this method to decorate an IHeaderResponse in your application.
 	 * 
-	 * To decorate an IHeaderResponse in your application, set the {@link IHeaderResponseDecorator}
-	 * on the application.
-	 * 
-	 * @see IHeaderResponseDecorator
 	 * @param response
 	 *            the response Wicket created
 	 * @return the response Wicket should use in IHeaderContributor traversal
 	 */
-	public final IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
+	public IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
 	{
-		final IHeaderResponse aggregatingResponse = new ResourceAggregator(response);
-
-		if (headerResponseDecorator == null)
-		{
-			return aggregatingResponse;
-		}
-
-		return headerResponseDecorator.decorate(aggregatingResponse);
+		return new ResourceAggregator(response);
 	}
 
 	/**

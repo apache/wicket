@@ -21,7 +21,8 @@ import java.util.Collections;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
-import org.apache.wicket.markup.html.IHeaderResponseDecorator;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -35,19 +36,23 @@ import org.junit.Test;
 public class FilteringHeaderResponseTest extends WicketTestCase
 {
 
-	@Test
-	public void footerDependsOnHeadItem() throws Exception
+	@Override
+	protected WebApplication newApplication()
 	{
-		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
-		{
+		return new MockApplication() {
 			@Override
-			public IHeaderResponse decorate(IHeaderResponse response)
+			public IHeaderResponse decorateHeaderResponse(IHeaderResponse response)
 			{
 				// use this header resource decorator to load all JavaScript resources in the page
 				// footer (after </body>)
-				return new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS");
+				return new JavaScriptFilteredIntoFooterHeaderResponse(super.decorateHeaderResponse(response), "footerJS");
 			}
-		});
+		};
+	}
+	
+	@Test
+	public void footerDependsOnHeadItem() throws Exception
+	{
 		executeTest(FilteredHeaderPage.class, "FilteredHeaderPageExpected.html");
 	}
 

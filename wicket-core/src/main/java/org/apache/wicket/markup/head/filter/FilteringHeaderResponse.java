@@ -263,14 +263,12 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 			}
 		};
 
-		ResourceAggregator resourceAggregator = new ResourceAggregator(headerRenderer);
-
 		for (HeaderItem curItem : resp)
 		{
-			resourceAggregator.render(curItem);
+			headerRenderer.render(curItem);
 		}
 
-		resourceAggregator.close();
+		headerRenderer.close();
 
 		return strResponse.getBuffer();
 	}
