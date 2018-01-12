@@ -14,5 +14,5 @@ public class HomePage extends WebPage {
 
 		// TODO Add your page's components here
 
-    }
+	}
 }
