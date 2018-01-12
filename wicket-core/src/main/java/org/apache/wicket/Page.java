@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.wicket.authorization.UnauthorizedActionException;
 import org.apache.wicket.core.util.lang.WicketObjects;
+import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.MarkupType;
@@ -229,14 +230,15 @@ public abstract class Page extends MarkupContainer
 	}
 
 	@Override
-	public void internalPrepareForRender(boolean setRenderingFlag)
+	protected void onConfigure()
 	{
 		if (!isInitialized())
 		{
 			// initialize the page if not yet initialized
 			internalInitialize();
 		}
-		super.internalPrepareForRender(setRenderingFlag);
+		
+		super.onConfigure();
 	}
 
 	/**
@@ -300,14 +302,14 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * This method is called when a component was rendered standalone. If it is a <code>
+	 * This method is called when a component was rendered as a part. If it is a <code>
 	 * MarkupContainer</code> then the rendering for that container is checked.
 	 * 
 	 * @param component
+	 * 
+	 * @see Component#renderPart()
 	 */
-	public final void endComponentRender(Component component)
+	final void endComponentRender(Component component)
 	{
 		if (component instanceof MarkupContainer)
 		{
@@ -527,14 +529,13 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * This method is called when a component will be rendered standalone.
+	 * This method is called when a component will be rendered as a part.
 	 * 
 	 * @param component
 	 * 
+	 * @see Component#renderPart()
 	 */
-	public final void startComponentRender(Component component)
+	final void startComponentRender(Component component)
 	{
 		renderedComponents = null;
 	}
@@ -984,9 +985,17 @@ public abstract class Page extends MarkupContainer
 		try
 		{
 			++renderCount;
-			render();
 
-			// stateless = null;
+			FeedbackDelay delay = new FeedbackDelay(getRequestCycle());
+			try {
+				beforeRender();
+				
+				delay.beforeRender();
+			} finally {
+				delay.release();
+			}
+
+			render();
 		}
 		finally
 		{
@@ -1004,5 +1013,4 @@ public abstract class Page extends MarkupContainer
 	{
 		return renderedComponents != null && renderedComponents.contains(component);
 	}
-
 }
