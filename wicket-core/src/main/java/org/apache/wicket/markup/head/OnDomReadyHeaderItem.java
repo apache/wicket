@@ -87,7 +87,7 @@ public class OnDomReadyHeaderItem extends HeaderItem
 		if (Strings.isEmpty(js) == false)
 		{
 			JavaScriptUtils.writeJavaScript(response,
-				"var f = function() {" + js + ";};\nif ('loading' !== document.readyState) f(); else document.addEventListener('DOMContentLoaded', f);");
+				"(function() {var f = function() {" + js + ";};\nif ('loading' !== document.readyState) f(); else document.addEventListener('DOMContentLoaded', f);})();");
 		}
 	}
 

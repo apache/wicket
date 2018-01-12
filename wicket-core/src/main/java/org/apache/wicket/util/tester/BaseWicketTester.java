@@ -1008,7 +1008,7 @@ public class BaseWicketTester
 		XmlTag tag;
 		while ((tag = parser.nextTag()) != null)
 		{
-			if (tag.isOpen() && tag.getName().equals("script") &&
+			if (tag.isOpen() && "script".equals(tag.getName()) &&
 				"wicket-ajax-base-url".equals(tag.getAttribute("id")))
 			{
 				parser.next();
@@ -2670,21 +2670,6 @@ public class BaseWicketTester
 		{
 			fail(message);
 		}
-	}
-
-	/**
-	 *
-	 * @param message
-	 * @param object
-	 * @return fail with message if not null
-	 */
-	private Result isNull(String message, Object object)
-	{
-		if (object != null)
-		{
-			return Result.fail(message);
-		}
-		return Result.pass();
 	}
 
 	/**

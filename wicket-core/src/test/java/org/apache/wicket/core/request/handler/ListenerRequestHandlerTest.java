@@ -32,7 +32,6 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -186,6 +185,7 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 
 	public static class StatelessPage extends WebPage
 	{
+		private static final long serialVersionUID = 1L;
 		public boolean invoked;
 		public boolean executedInAnFreshPage;
 		private boolean initialState = true;
@@ -195,6 +195,8 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 			super(pageParameters);
 			add(new StatelessLink<Object>("statelessLink")
 			{
+				private static final long serialVersionUID = 1L;
+
 				public void onClick()
 				{
 					invoked = true;
@@ -219,6 +221,8 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 	}
 	public static class TemporarilyStateful extends StatelessPage
 	{
+		private static final long serialVersionUID = 1L;
+
 
 		public TemporarilyStateful(PageParameters pageParameters)
 		{

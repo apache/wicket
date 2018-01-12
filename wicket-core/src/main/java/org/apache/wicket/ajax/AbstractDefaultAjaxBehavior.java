@@ -107,7 +107,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		RequestCycle requestCycle = component.getRequestCycle();
 		Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
-		response.render(OnLoadHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl + "\";"));
+		response.render(OnLoadHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl + "\";", "wicket-ajax-base-url"));
 
 		renderExtraHeaderContributors(component, response);
 	}
