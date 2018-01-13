@@ -8,32 +8,26 @@
 <link href="../../test2"/>
 <script type="text/javascript" src="../../javascripturlB"></script>
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery-debug.js"></script>
-<script type="text/javascript" id="wicket-ajax-debug-enable">
-/*<![CDATA[*/
-Wicket.Ajax.DebugWindow.enabled=true;
-/*]]>*/
-</script>
-<script type="text/javascript" id="wicket-ajax-base-url">
-/*<![CDATA[*/
-Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.AjaxHeaderContributionPage2?0";
-/*]]>*/
-</script>
 <script type="text/javascript" >
 /*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { 
+(function() {var f = function() {
 domReady();;
 domReadyB();;
 Wicket.Ajax.ajax({"u":"./org.apache.wicket.ajax.AjaxHeaderContributionPage2?0-1.0-link","c":"link1","e":"click","pd":true});;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
-;});
+;};
+if ('loading' !== document.readyState) f(); else document.addEventListener('DOMContentLoaded', f);})();
 /*]]>*/
 </script>
 <script type="text/javascript" >
 /*<![CDATA[*/
-Wicket.Event.add(window, "load", function(event) { 
+(function() {var f = function() {
 onLoad();;
 onLoadB();;
-;});
+Wicket.Ajax.DebugWindow.enabled=true;;
+Wicket.Ajax.baseUrl="wicket/bookmarkable/org.apache.wicket.ajax.AjaxHeaderContributionPage2?0";;
+;};
+if ('complete' === document.readyState) f(); else window.addEventListener('load', f);})();
 /*]]>*/
 </script>
 </head><body>
