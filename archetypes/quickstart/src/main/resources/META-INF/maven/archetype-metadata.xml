@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archetype-descriptor name="quickstart">
-	<requiredProperties>
-		<requiredProperty key="log4j.properties">
-			<defaultValue>log4j2.xml</defaultValue>
-		</requiredProperty>
-	</requiredProperties>
 	<fileSets>
 		<fileSet filtered="true" packaged="true" encoding="UTF-8">
 			<directory>src/main/java</directory>
@@ -28,7 +23,7 @@
 		<fileSet filtered="false" packaged="false" encoding="UTF-8">
 			<directory>src/main/resources</directory>
 			<includes>
-				<include>__log4j.properties__</include>
+				<include>**/*.xml</include>
 			</includes>
 		</fileSet>
 		<fileSet filtered="true" packaged="false" encoding="UTF-8">

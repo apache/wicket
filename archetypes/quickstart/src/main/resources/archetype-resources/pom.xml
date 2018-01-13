@@ -44,7 +44,7 @@
 	<properties>
 		<wicket.version>@project.version@</wicket.version>
 		<jetty9.version>@jetty.version@</jetty9.version>
-		<log4j.version>@log4j.version@</log4j.version>
+		<logback.version>@logback.version@</logback.version>
 		<junit.version>@junit.version@</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -65,16 +65,11 @@
 		</dependency>
 		-->
 
-		<!-- LOGGING DEPENDENCIES - LOG4J -->
+		<!-- LOGGING DEPENDENCIES - LOGBACK -->
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
 		</dependency>
 
 		<!--  JUNIT DEPENDENCY FOR TESTING -->
@@ -103,7 +98,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty.websocket</groupId>
 			<artifactId>javax-websocket-server-impl</artifactId>
-			<version>${jetty.version}</version>
+			<version>${jetty9.version}</version>
 			<scope>test</scope>
 		</dependency>
 		-->
