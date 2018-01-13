@@ -35,7 +35,6 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CircularDependencyException;
 import org.apache.wicket.resource.bundles.ReplacementResourceBundleReference;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * {@code ResourceAggregator} implements resource dependencies, resource bundles and sorting of
@@ -342,15 +341,10 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 
 		combinedScript.setLength(0);
-		String lastId = null;
 		for (OnLoadHeaderItem curItem : loadItemsToBeRendered)
 		{
 			if (markItemRendered(curItem))
 			{
-				if (!Strings.isEmpty(curItem.getId()))
-				{
-					lastId = curItem.getId();
-				}
 				combinedScript.append('\n');
 				combinedScript.append(curItem.getJavaScript());
 				combinedScript.append(';');
@@ -358,7 +352,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 		if (combinedScript.length() > 0)
 		{
-			getRealResponse().render(OnLoadHeaderItem.forScript(combinedScript.append('\n'), lastId));
+			getRealResponse().render(OnLoadHeaderItem.forScript(combinedScript.append('\n')));
 		}
 	}
 

@@ -49,27 +49,7 @@ public class OnLoadHeaderItem extends HeaderItem
 		return new OnLoadHeaderItem(javaScript);
 	}
 
-	/**
-	 * Creates a {@link OnLoadHeaderItem} for the script.
-	 *
-	 * @param javaScript
-	 *            The script to execute on the load event.
-	 * @param id
-	 *            optional id attribute for the script tag
-	 *
-	 * @return A newly created {@link OnLoadHeaderItem}.
-	 */
-	public static OnLoadHeaderItem forScript(CharSequence javaScript, String id)
-	{
-		return new OnLoadHeaderItem(javaScript, id);
-	}
-
 	private final CharSequence javaScript;
-	/**
-	 * An optional markup id to set on the rendered &lt;script&gt; HTML element for
-	 * this header item
-	 */
-	private String markupId;
 
 	/**
 	 * Constructor.
@@ -89,21 +69,7 @@ public class OnLoadHeaderItem extends HeaderItem
 	 */
 	public OnLoadHeaderItem(CharSequence javaScript)
 	{
-		this(javaScript, null);
-	}
-
-	/**
-	 * Construct.
-	 *
-	 * @param javaScript
-	 *            The script to execute on the load event
-	 * @param id
-	 *            optional id attribute for the script tag
-	 */
-	public OnLoadHeaderItem(CharSequence javaScript, String id)
-	{
 		this.javaScript = javaScript;
-		this.markupId = id;
 	}
 
 	/**
@@ -122,14 +88,8 @@ public class OnLoadHeaderItem extends HeaderItem
 		if (Strings.isEmpty(js) == false)
 		{
 			JavaScriptUtils.writeJavaScript(response,
-				"(function() {var f = function() {" + js + ";};\nif ('complete' === document.readyState) f(); else window.addEventListener('load', f);})();",
-				markupId);
+				"(function() {var f = function() {" + js + ";};\nif ('complete' === document.readyState) f(); else window.addEventListener('load', f);})();");
 		}
-	}
-
-	public String getId()
-	{
-		return markupId;
 	}
 
 	@Override
@@ -141,7 +101,7 @@ public class OnLoadHeaderItem extends HeaderItem
 	@Override
 	public String toString()
 	{
-		return String.format("OnLoadHeaderItem('%s'%s)", getJavaScript(), markupId == null ? "" : String.format(", '%s'", markupId));
+		return String.format("OnLoadHeaderItem('%s')", getJavaScript());
 	}
 
 	@Override
