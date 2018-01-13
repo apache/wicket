@@ -8,10 +8,11 @@
 <script type="text/javascript" src="../resource/org.apache.wicket.resource.aggregator.ResourceAggregatorTest2Page/ResourceAggregatorTest2Page.js"></script>
 <script type="text/javascript" >
 /*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { 
+(function() {var f = function() {
 alert('Hello World!');;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
-;});
+;};
+if ('loading' !== document.readyState) f(); else document.addEventListener('DOMContentLoaded', f);})();
 /*]]>*/
 </script>
 </head>

@@ -27,7 +27,6 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.Response;

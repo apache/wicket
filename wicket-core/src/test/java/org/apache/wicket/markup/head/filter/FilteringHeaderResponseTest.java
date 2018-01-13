@@ -63,20 +63,21 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	public void createBucketOnTheFlyForFilteredHeaderItem() throws Exception
 	{
-		FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
-		{
-			@Override
-			protected Response getRealResponse()
+		try (FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
 			{
-				return new StringResponse();
-			}
-		}, "headerBucketName", Collections.EMPTY_LIST);
-
-		String filterName = "filterName";
-		String headerContent = "content";
-		FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
-		headerResponse.render(item);
-		CharSequence realContent = headerResponse.getContent(filterName);
-		assertEquals(headerContent, realContent.toString());
+				@Override
+				protected Response getRealResponse()
+				{
+					return new StringResponse();
+				}
+			}, "headerBucketName", Collections.EMPTY_LIST))
+		{
+			String filterName = "filterName";
+			String headerContent = "content";
+			FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
+			headerResponse.render(item);
+			CharSequence realContent = headerResponse.getContent(filterName);
+			assertEquals(headerContent, realContent.toString());
+		}
 	}
 }
