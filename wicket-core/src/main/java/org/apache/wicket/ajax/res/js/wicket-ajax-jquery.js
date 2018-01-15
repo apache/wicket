@@ -54,7 +54,10 @@
 		isUndef,
 		replaceAll,
 		htmlToDomDocument,
-		nodeListToArray;
+		nodeListToArray,
+		isMultipartAjaxSupported;
+
+	isMultipartAjaxSupported = 'FileReader' in window && 'FormData' in window;
 
 	isUndef = function (target) {
 		return (typeof(target) === 'undefined' || target === null);
@@ -643,7 +646,7 @@
 
 			we.publish(topic.AJAX_CALL_PRECONDITION, attrs);
 
-			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
+			if (attrs.mp && !isMultipartAjaxSupported) { // multipart form. jQuery.ajax() doesn't help here ...
 				var ret = self.submitMultipartForm(context);
 				return ret;
 			}
@@ -666,7 +669,16 @@
 			}
 
 			// convert to URL encoded string
-			data = jQuery.param(data);
+			if (attrs.mp && isMultipartAjaxSupported) {
+				// Convert to FormData
+				data = data.reduce(function (f, v) {
+					f.append(v.name, v.value);
+					return f;
+				}, new FormData());
+			} else {
+				// Convert to URL encoded string
+				data = jQuery.param(data);
+			}
 
 			// execute the request
 			var jqXHR = jQuery.ajax({
@@ -704,6 +716,8 @@
 				async: attrs.async,
 				timeout: attrs.rt,
 				cache: false,
+				contentType: attrs.mp && isMultipartAjaxSupported ? false : undefined,
+				processData: attrs.mp && isMultipartAjaxSupported ? false : undefined,
 				headers: headers,
 				success: function(data, textStatus, jqXHR) {
 					if (attrs.wr) {
@@ -1488,7 +1502,17 @@
 			 */
 			serializeInput: function (input) {
 				var result = [];
-				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) {
+				if (!input || !input.type) {
+					return result;
+				}
+				if (input.type === 'file' && isMultipartAjaxSupported) {
+					if (input.files && input.files.length > 0) {
+						for (var i = 0; i < input.files.length; i++) {
+							var file = input.files[i];
+							result.push({'name': input.name, 'value': file});
+						}
+					}
+				} else if (!(input.type === 'image' || input.type === 'submit')) {
 					var $input = jQuery(input);
 					result = $input.serializeArray();
 				}
