@@ -49,8 +49,7 @@
 		};
 	}
 
-	var createIFrame,
-		getAjaxBaseUrl,
+	var getAjaxBaseUrl,
 		isUndef,
 		replaceAll,
 		htmlToDomDocument,
@@ -63,19 +62,6 @@
 	replaceAll = function (str, from, to) {
 		var regex = new RegExp(from.replace( /\W/g ,'\\$&' ), 'g');
 		return str.replace(regex,to);
-	};
-
-	/**
-	 * Creates an iframe that can be used to load data asynchronously or as a
-	 * target for Ajax form submit.
-	 *
-	 * @param iframeName {String} the value of the iframe's name attribute
-	 */
-	createIFrame = function (iframeName) {
-		// WICKET-6340 properly close tag for XHTML markup
-		var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
-			'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;"></iframe>');
-		return $iframe[0];
 	};
 
 	/**
@@ -553,7 +539,7 @@
 				extraParam = this._asParamArray(extraParam);
 				params = params.concat(extraParam);
 			}
-			return jQuery.param(params);
+			return params;
 		},
 
 		/**
@@ -583,6 +569,8 @@
 					'Wicket-Ajax': 'true',
 					'Wicket-Ajax-BaseURL': getAjaxBaseUrl()
 				},
+				
+				url = attrs.u,
 
 				// the request (extra) parameters
 				data = this._asParamArray(attrs.ep),
@@ -658,6 +646,17 @@
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
+			
+			// collect the dynamic extra parameters
+			if (jQuery.isArray(attrs.dep)) {
+				var dynamicData = this._calculateDynamicParameters(attrs);
+				if (attrs.m.toLowerCase() === 'post') {
+					data = data.concat(dynamicData);
+				} else {
+					var separator = url.indexOf('?') > -1 ? '&' : '?';
+					url = url + separator + jQuery.param(dynamicData);
+				}
+			}
 
 			var wwwFormUrlEncoded = undefined; // default
 			if (attrs.mp) {
@@ -676,29 +675,13 @@
 
 			// execute the request
 			var jqXHR = jQuery.ajax({
-				url: attrs.u,
+				url: url,
 				type: attrs.m,
 				context: self,
 				processData: wwwFormUrlEncoded,
 				contentType: wwwFormUrlEncoded,
 				
 				beforeSend: function (jqXHR, settings) {
-					// collect the dynamic extra parameters
-					if (jQuery.isArray(attrs.dep)) {
-						var queryString,
-							separator;
-
-						queryString = this._calculateDynamicParameters(attrs);
-						if (settings.type.toLowerCase() === 'post') {
-							separator = settings.data.length > 0 ? '&' : '';
-							settings.data = settings.data + separator + queryString;
-							jqXHR.setRequestHeader("Content-Type", settings.contentType);
-						} else {
-							separator = settings.url.indexOf('?') > -1 ? '&' : '?';
-							settings.url = settings.url + separator + queryString;
-						}
-					}
-
 					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
 					we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, jqXHR, settings);
 
