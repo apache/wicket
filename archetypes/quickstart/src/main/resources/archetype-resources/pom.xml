@@ -44,7 +44,7 @@
 	<properties>
 		<wicket.version>@project.version@</wicket.version>
 		<jetty9.version>@jetty.version@</jetty9.version>
-		<logback.version>@logback.version@</logback.version>
+		<slf4j.version>@slf4j.version@</slf4j.version>
 		<junit.version>@junit.version@</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- allowed values: R7, 1.0, 1.5, 2.0 or none -->
@@ -65,11 +65,11 @@
 		</dependency>
 		-->
 
-		<!-- LOGGING DEPENDENCIES - LOGBACK -->
+		<!-- LOGGING DEPENDENCIES - SLF4J-SIMPLE -->
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<!--  JUNIT DEPENDENCY FOR TESTING -->
