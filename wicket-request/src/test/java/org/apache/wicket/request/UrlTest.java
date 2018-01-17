@@ -905,6 +905,24 @@ public class UrlTest
 	}
 
 	@Test
+	public void contextRelativeIsntReadAsContextAbsolute() throws Exception
+	{
+		Url url = Url.parse("/segment");
+		url.setContextRelative(true);
+		assertThat(url.isContextRelative(), is(true));
+		assertThat(url.isContextAbsolute(), is(false));
+	}
+
+	@Test
+	public void contextRelativeIsntReadAsFull() throws Exception
+	{
+		Url url = Url.parse("http://www.example.com/segment");
+		url.setContextRelative(true);
+		assertThat(url.isContextRelative(), is(true));
+		assertThat(url.isFull(), is(false));
+	}
+
+	@Test
 	public void isContextAbsolute()
 	{
 		Url url = Url.parse("");
