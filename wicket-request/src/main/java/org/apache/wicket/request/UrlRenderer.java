@@ -239,10 +239,14 @@ public class UrlRenderer
 			return renderer.renderRelativeUrl(url, getBaseUrl());
 		}
 
-		List<String> baseUrlSegments = getBaseUrl().getSegments();
+		List<String> baseUrlSegments =  new ArrayList<>(getBaseUrl().getSegments());
 		List<String> urlSegments = new ArrayList<>(url.getSegments());
 
-		removeCommonPrefixes(request, baseUrlSegments);
+		if (!getBaseUrl().isContextRelative())
+		{
+			// so we remove any possible filter/context segments
+			removeCommonPrefixes(request, baseUrlSegments);
+		}
 		removeCommonPrefixes(request, urlSegments);
 
 		List<String> newSegments = new ArrayList<>();

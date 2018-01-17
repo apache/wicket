@@ -132,13 +132,13 @@ public class ServletWebRequest extends WebRequest
 	{
 		if (errorAttributes != null && !Strings.isEmpty(errorAttributes.getRequestUri()))
 		{
-			String problematicURI = Url.parse(errorAttributes.getRequestUri(), getCharset())
+			String problematicURI = Url.parse(errorAttributes.getRequestUri(), getCharset(), false)
 				.toString();
 			return getContextRelativeUrl(problematicURI, filterPrefix);
 		}
 		else if (forwardAttributes != null && !Strings.isEmpty(forwardAttributes.getRequestUri()))
 		{
-			String forwardURI = Url.parse(forwardAttributes.getRequestUri(), getCharset())
+			String forwardURI = Url.parse(forwardAttributes.getRequestUri(), getCharset(), false)
 				.toString();
 			return getContextRelativeUrl(forwardURI, filterPrefix);
 		}
@@ -170,6 +170,7 @@ public class ServletWebRequest extends WebRequest
 		url.setPort(httpServletRequest.getServerPort());
 		url.setHost(httpServletRequest.getServerName());
 		url.setProtocol(httpServletRequest.getScheme());
+		url.setContextRelative(true);
 		return url;
 	}
 

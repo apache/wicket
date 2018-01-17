@@ -281,7 +281,9 @@ public class MockWebRequest extends WebRequest
 	@Override
 	public Url getClientUrl()
 	{
-		return new Url(url.getSegments(), Collections.<QueryParameter> emptyList());
+		Url baseUrl = new Url(url.getSegments(), Collections.<QueryParameter> emptyList());
+		baseUrl.setContextRelative(url.isContextRelative());
+		return baseUrl;
 	}
 
 	@Override
