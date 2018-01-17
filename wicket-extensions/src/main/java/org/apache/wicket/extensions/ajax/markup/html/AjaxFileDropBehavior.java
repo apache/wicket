@@ -39,13 +39,14 @@ import org.apache.wicket.util.lang.Bytes;
 
 /**
  * Uploads files from a drop event.
- * 
+ *
+ * @author Andrew Kondratev
  * @author svenmeier
  */
-public class AjaxFileUploadBehavior extends AjaxEventBehavior
+public class AjaxFileDropBehavior extends AjaxEventBehavior
 {
 
-	private static final ResourceReference JS = new PackageResourceReference(AjaxFileUploadBehavior.class, "datatransfer.js");
+	private static final ResourceReference JS = new PackageResourceReference(AjaxFileDropBehavior.class, "datatransfer.js");
 
 	/**
 	 *  Maximum size of all uploaded files in bytes in a request.
@@ -59,7 +60,7 @@ public class AjaxFileUploadBehavior extends AjaxEventBehavior
 
 	private String parameterName = "f";
 	
-	public AjaxFileUploadBehavior()
+	public AjaxFileDropBehavior()
 	{
 		super("drop");
 	}
@@ -127,6 +128,9 @@ public class AjaxFileUploadBehavior extends AjaxEventBehavior
 
 	public Bytes getMaxSize()
 	{
+		if (maxSize == null) {
+			maxSize = getComponent().getApplication().getApplicationSettings().getDefaultMaximumUploadSize();
+		}
 		return maxSize;
 	}
 
