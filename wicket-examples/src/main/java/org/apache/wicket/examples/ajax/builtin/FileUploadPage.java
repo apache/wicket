@@ -21,7 +21,7 @@ import java.util.List;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.extensions.ajax.markup.html.AjaxFileUploadBehavior;
+import org.apache.wicket.extensions.ajax.markup.html.AjaxFileDropBehavior;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -116,7 +116,7 @@ public class FileUploadPage extends BasePage
 		});
 		
 		WebMarkupContainer drop = new WebMarkupContainer("drop");
-		drop.add(new AjaxFileUploadBehavior() {
+		drop.add(new AjaxFileDropBehavior() {
 			protected void onFileUpload(AjaxRequestTarget target, List<FileUpload> files) {
 			    
 				// display uploaded info
