@@ -18,6 +18,7 @@ package org.apache.wicket.examples.ajax.builtin;
 
 import java.util.List;
 
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -133,6 +134,14 @@ public class FileUploadPage extends BasePage
 				}
 				
 				target.add(feedback);
+			}
+			
+			@Override
+			protected void onError(AjaxRequestTarget target, FileUploadException fux)
+			{
+				info(fux.getMessage());
+				
+				target.add(feedback);				
 			}
 		});
 		add(drop);
