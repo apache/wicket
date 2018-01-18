@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.Component;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -46,34 +47,38 @@ import org.apache.wicket.util.lang.Bytes;
 public class AjaxFileDropBehavior extends AjaxEventBehavior
 {
 
-	private static final ResourceReference JS = new PackageResourceReference(AjaxFileDropBehavior.class, "datatransfer.js");
+	private static final ResourceReference JS = new PackageResourceReference(
+		AjaxFileDropBehavior.class, "datatransfer.js");
 
 	/**
-	 *  Maximum size of all uploaded files in bytes in a request.
+	 * Maximum size of all uploaded files in bytes in a request.
 	 */
 	private Bytes maxSize;
 
 	/**
-	 *  Maximum size of file of upload in bytes (if there are more than one) in a request.
+	 * Maximum size of file of upload in bytes (if there are more than one) in a request.
 	 */
 	private Bytes fileMaxSize;
 
 	private String parameterName = "f";
-	
+
 	public AjaxFileDropBehavior()
 	{
 		super("drop");
 	}
-	
+
 	@Override
 	public void renderHead(Component component, IHeaderResponse response)
 	{
 		super.renderHead(component, response);
-		
+
 		response.render(JavaScriptHeaderItem.forReference(JS));
-		
-		// default must be prevented for dragover event, otherwise browser will consume the dataTransfer
-		response.render(OnDomReadyHeaderItem.forScript(String.format("jQuery('#%s').on('dragover', function(e) { e.preventDefault(); });", component.getMarkupId())));
+
+		// default must be prevented for dragover event, otherwise browser will consume the
+		// dataTransfer
+		response.render(OnDomReadyHeaderItem.forScript(
+			String.format("jQuery('#%s').on('dragover', function(e) { e.preventDefault(); });",
+				component.getMarkupId())));
 	}
 
 	@Override
@@ -86,9 +91,10 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 		// default must be prevented, otherwise browser will consume the dataTransfer
 		attributes.setPreventDefault(true);
 
-		attributes.getDynamicExtraParameters().add(
-			String.format("return Wicket.DataTransfer.getFilesAsParamArray(attrs.event.originalEvent, '%s');", parameterName)
-		);
+		attributes.getDynamicExtraParameters()
+			.add(String.format(
+				"return Wicket.DataTransfer.getFilesAsParamArray(attrs.event.originalEvent, '%s');",
+				parameterName));
 	}
 
 	@Override
@@ -97,14 +103,14 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 		try
 		{
 			ServletWebRequest request = (ServletWebRequest)getComponent().getRequest();
-			final MultipartServletWebRequest multipartWebRequest = request.newMultipartWebRequest(
-				getMaxSize(), getComponent().getPage().getId());
+			final MultipartServletWebRequest multipartWebRequest = request
+				.newMultipartWebRequest(getMaxSize(), getComponent().getPage().getId());
 			multipartWebRequest.setFileMaxSize(getFileMaxSize());
 			multipartWebRequest.parseFileParts();
 
 			// TODO: Can't this be detected from header?
 			getComponent().getRequestCycle().setRequest(multipartWebRequest);
-			
+
 			ArrayList<FileUpload> fileUploads = new ArrayList<>();
 
 			// Get the item for the path
@@ -117,23 +123,30 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 					fileUploads.add(new FileUpload(item));
 				}
 			}
-			
+
 			onFileUpload(target, fileUploads);
 		}
 		catch (final FileUploadException fux)
 		{
-			onError(fux);
+			onError(target, fux);
 		}
 	}
 
 	public Bytes getMaxSize()
 	{
-		if (maxSize == null) {
-			maxSize = getComponent().getApplication().getApplicationSettings().getDefaultMaximumUploadSize();
+		if (maxSize == null)
+		{
+			maxSize = getComponent().getApplication().getApplicationSettings()
+				.getDefaultMaximumUploadSize();
 		}
 		return maxSize;
 	}
 
+	/**
+	 * Set the maximum upload size.
+	 * 
+	 * @param maxSize maximum size, must not be null
+	 */
 	public void setMaxSize(Bytes maxSize)
 	{
 		Args.notNull(maxSize, "maxSize");
@@ -145,16 +158,43 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 		return fileMaxSize;
 	}
 
+	/**
+	 * Set an optional maximum size per file.
+	 * 
+	 * @param fileMaxSize maximum size for each uploaded file
+	 */
 	public void setFileMaxSize(Bytes fileMaxSize)
 	{
 		this.fileMaxSize = fileMaxSize;
 	}
-	
+
+	/**
+	 * Hook method called after a file was uploaded.
+	 * <p>
+	 * Note: {@link #onError(AjaxRequestTarget, FileUploadException)} is called instead when
+	 * uploading failed
+	 * 
+	 * @param target
+	 *            the current request handler
+	 * @param files
+	 *            uploaded files
+	 */
 	protected void onFileUpload(AjaxRequestTarget target, List<FileUpload> files)
 	{
 	}
 
-	protected void onError(FileUploadException fux)
+	/**
+	 * Hook method called to handle any error during uploading of the file.
+	 * <p>
+	 * Default implementation re-throws the exception. 
+	 *
+	 * @param target
+	 *            the current request handler
+	 * @param e
+	 *            the error that occurred
+	 */
+	protected void onError(AjaxRequestTarget target, FileUploadException fux)
 	{
+		throw new WicketRuntimeException(fux);
 	}
 }
