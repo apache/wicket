@@ -25,11 +25,12 @@ import org.apache.wicket.Component;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes.Method;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.upload.FileUpload;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
@@ -47,6 +48,8 @@ import org.apache.wicket.util.lang.Bytes;
 public class AjaxFileDropBehavior extends AjaxEventBehavior
 {
 
+	public static final String DRAG_OVER_CLASS_KEY = CssUtils.key(AjaxFileDropBehavior.class, "dragover");
+
 	private static final ResourceReference JS = new PackageResourceReference(
 		AjaxFileDropBehavior.class, "datatransfer.js");
 
@@ -62,9 +65,13 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 
 	private String parameterName = "f";
 
+	/**
+	 * Listen for 'dragover' and 'drop' events and prevent them, only 'drop' will initiate
+	 * an Ajax request.
+	 */
 	public AjaxFileDropBehavior()
 	{
-		super("drop");
+		super("dragenter dragover dragleave drop");
 	}
 
 	@Override
@@ -73,12 +80,6 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 		super.renderHead(component, response);
 
 		response.render(JavaScriptHeaderItem.forReference(JS));
-
-		// default must be prevented for dragover event, otherwise browser will consume the
-		// dataTransfer
-		response.render(OnDomReadyHeaderItem.forScript(
-			String.format("jQuery('#%s').on('dragover', function(e) { e.preventDefault(); });",
-				component.getMarkupId())));
 	}
 
 	@Override
@@ -91,6 +92,16 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 		// default must be prevented, otherwise browser will consume the dataTransfer
 		attributes.setPreventDefault(true);
 
+		attributes.getAjaxCallListeners().add(new AjaxCallListener() {
+			@Override
+			public CharSequence getPrecondition(Component component)
+			{
+				String css = getComponent().getString(DRAG_OVER_CLASS_KEY);
+				
+				return String.format("jQuery('#' + attrs.c).toggleClass('%s', attrs.event.type === 'dragover'); return (attrs.event.type === 'drop');", css);
+			}
+		});
+		
 		attributes.getDynamicExtraParameters()
 			.add(String.format(
 				"return Wicket.DataTransfer.getFilesAsParamArray(attrs.event.originalEvent, '%s');",
