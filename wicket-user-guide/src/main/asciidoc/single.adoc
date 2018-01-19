@@ -153,13 +153,17 @@ include::componentLifecycle/componentLifecycle_3.adoc[leveloffset=+1]
 
 include::componentLifecycle/componentLifecycle_4.adoc[leveloffset=+1]
 
-=== Removing stage
+=== Removed stage
 
 include::componentLifecycle/componentLifecycle_5.adoc[leveloffset=+1]
 
-=== Summary
+=== Detached stage
 
 include::componentLifecycle/componentLifecycle_6.adoc[leveloffset=+1]
+
+=== Summary
+
+include::componentLifecycle/componentLifecycle_7.adoc[leveloffset=+1]
 
 == Page versioning and caching
 

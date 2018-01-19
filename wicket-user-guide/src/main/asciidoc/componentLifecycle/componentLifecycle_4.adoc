@@ -1,15 +1,17 @@
 
-This stage is triggered each time a component is rendered by Wicket, typically when its page is requested or when it is refreshed via AJAX.
+This stage is reached each time a component is rendered, typically when a page is requested or when the component or one of its ancestors is refreshed via AJAX.
 
 === Method onConfigure
 
-Method _onConfigure()_ has been introduced in order to provide a good point to manage the component states such as its visibility or enabled state. This method is called before the render phase starts. As stated in <<_hiding_or_disabling_a_component,chapter 6.1>>, _isVisible_ and _isEnabled_ are called multiple times when a page or a component is rendered, so it's highly recommended not to directly override these method, but rather to use _onConfigure_ to change component states. On the contrary method _onBeforeRender_ (see the next paragraph) is not indicated for this task because it will not be invoked if component visibility is set to false.
+Method _onConfigure()_ has been introduced in order to provide a good point to manage the component states such as its visibility or enabled state. This method is called an all components whose parent is visible.
+
+As stated in <<_hiding_or_disabling_a_component,chapter 6.1>>, _isVisible()_ and _isEnabled()_ are called multiple times when a page or a component is rendered, so it's highly recommended not to directly override these method, but rather to use _onConfigure()_ to change component states. On the contrary method _onBeforeRender_ (see the next paragraph) is not indicated for this task because it will not be invoked if component visibility is set to false.
 
 === Method onBeforeRender
 
-The most important hook method of this stage is probably _onBeforeRender()_. This method is called before a component starts its rendering phase and it is our last chance to change its children hierarchy.
+The most important hook method of this stage is probably _onBeforeRender()_. This method is called on all visible components before any of them are rendered. It is our last chance to change a component's state prior to rendering - no change to a component's state is allowed afterwards.
 
-If we want add/remove children components this is the right place to do it. In the next example (project LifeCycleStages) we will create a page which alternately displays two different labels, swapping between them each time it is rendered:
+If we want to add/remove child components this is the right place to do it. In the next example (project LifeCycleStages) we will create a page which alternately displays two different labels, swapping between them each time it is rendered:
 
 [source,java]
 ----
@@ -51,10 +53,17 @@ Please note that in the example above we can trigger the rendering stage pressin
 WARNING: If we forget to call superclass version of methods _onInitialize()_ or _onBeforeRender()_, Wicket will throw an _IllegalStateException_ with the following message: +
 `_java.lang.IllegalStateException: org.apache.wicket.Component has not been properly initialized. Something in the hierarchy of <page class name> has not called super.onInitialize()/onBeforeRender() in the override of onInitialize()/ onBeforeRender() method_`
 
+=== Method renderHead
+
+This method gives all components the possibility to add items to the page header through its argument of type _org.apache.wicket.markup.head.IHeaderResponse_
+
+=== Method onRender
+
+This method does the actual rendering - you will rarely have to implement it, since most components already contain a specific implementation to produce their markup.
 
 === Method onComponentTag
 
-Method _onComponentTag(ComponentTag)_ is called to process component tag, which can be freely manipulated through its argument of type _org.apache.wicket.markup.ComponentTag_. For example we can add/remove tag attributes with methods _put(String key, String value)_ and _remove(String key)_, or we can even decide to change the tag or rename it with method _setName(String)_ (the following code is taken from project OnComponentTagExample):
+Method _onComponentTag(ComponentTag)_ is called to process a component tag, which can be freely manipulated through its argument of type _org.apache.wicket.markup.ComponentTag_. For example we can add/remove tag attributes with methods _put(String key, String value)_ and _remove(String key)_, or we can even decide to change the tag or rename it with method _setName(String)_ (the following code is taken from project OnComponentTagExample):
 
 *Markup code:*
 
@@ -132,3 +141,7 @@ public class HomePage extends WebPage {
 ----
 
 Note that the original version of _onComponentTagBody_ is invoked only when we want to preserve the standard rendering mechanism for the tag's body (in our example this happens when the component is enabled).
+
+=== Methods onAfterRender
+
+Called on each rendered component immediately after it has been rendered - _onAfterRender()_ will even be called when rendering failed with an exception.
