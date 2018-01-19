@@ -19,6 +19,7 @@ package org.apache.wicket.markup.head.filter;
 import java.util.Collections;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.mock.MockApplication;
@@ -45,7 +46,7 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 			{
 				// use this header resource decorator to load all JavaScript resources in the page
 				// footer (after </body>)
-				return new JavaScriptFilteredIntoFooterHeaderResponse(super.decorateHeaderResponse(response), "footerJS");
+				return new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
 			}
 		};
 	}
