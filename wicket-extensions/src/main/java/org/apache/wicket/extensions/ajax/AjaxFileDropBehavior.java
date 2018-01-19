@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.extensions.ajax.markup.html;
+package org.apache.wicket.extensions.ajax;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class AjaxFileDropBehavior extends AjaxEventBehavior
 	public static final String DRAG_OVER_CLASS_KEY = CssUtils.key(AjaxFileDropBehavior.class, "dragover");
 
 	private static final ResourceReference JS = new PackageResourceReference(
-		AjaxFileDropBehavior.class, "datatransfer.js");
+		AjaxFileDropBehavior.class, "wicket-ajaxupload.js");
 
 	/**
 	 * Maximum size of all uploaded files in bytes in a request.
