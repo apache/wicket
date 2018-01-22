@@ -7,10 +7,11 @@
 <script type="text/javascript" src="../resource/org.apache.wicket.ajax.AbstractDefaultAjaxBehavior/res/js/wicket-ajax-jquery.js"></script>
 <script type="text/javascript" >
 /*<![CDATA[*/
-Wicket.Event.add(window, "domready", function(event) { 
+(function() {var f = function() {
 alert('Hello World!');;
 Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
-;});
+;};
+if ('loading' !== document.readyState) f(); else document.addEventListener('DOMContentLoaded', f);})();
 /*]]>*/
 </script>
 </head>

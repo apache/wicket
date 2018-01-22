@@ -40,7 +40,7 @@ import org.apache.wicket.util.lang.Classes;
  * {@code ResourceAggregator} implements resource dependencies, resource bundles and sorting of
  * resources. During the rendering of components, all {@link HeaderItem}s are
  * {@linkplain RecordedHeaderItem recorded} and processed at the end.
- * 
+ *
  * @author papegaaij
  */
 public class ResourceAggregator extends DecoratingHeaderResponse
@@ -49,7 +49,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 * The location in which a {@link HeaderItem} is added, consisting of the component/behavior
 	 * that added the item, the index in the list for that component/behavior at which the item was
 	 * added and the index in the request.
-	 * 
+	 *
 	 * @author papegaaij
 	 */
 	public static class RecordedHeaderItemLocation
@@ -60,7 +60,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param renderBase
 		 *            The component or behavior that added the item.
 		 * @param indexInRenderBase
@@ -111,7 +111,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 
 	/**
 	 * Contains information about an {@link HeaderItem} that must be rendered.
-	 * 
+	 *
 	 * @author papegaaij
 	 */
 	public static class RecordedHeaderItem
@@ -122,7 +122,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 
 		/**
 		 * Construct.
-		 * 
+		 *
 		 * @param item
 		 */
 		public RecordedHeaderItem(HeaderItem item)
@@ -133,7 +133,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 
 		/**
 		 * Records a location at which the item was added.
-		 * 
+		 *
 		 * @param renderBase
 		 *            The component or behavior that added the item.
 		 * @param indexInRenderBase
@@ -186,7 +186,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param real
 	 */
 	public ResourceAggregator(IHeaderResponse real)
@@ -337,8 +337,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		if (combinedScript.length() > 0)
 		{
 			combinedScript.append("\nWicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);");
-			getRealResponse().render(
-				OnDomReadyHeaderItem.forScript(combinedScript.append('\n').toString()));
+			getRealResponse().render(OnDomReadyHeaderItem.forScript(combinedScript.append('\n')));
 		}
 
 		combinedScript.setLength(0);
@@ -353,8 +352,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 		}
 		if (combinedScript.length() > 0)
 		{
-			getRealResponse().render(
-				OnLoadHeaderItem.forScript(combinedScript.append('\n').toString()));
+			getRealResponse().render(OnLoadHeaderItem.forScript(combinedScript.append('\n')));
 		}
 	}
 
@@ -401,7 +399,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 * Resolves the actual item that needs to be rendered for the given item. This can be a
 	 * {@link NoHeaderItem} when the item was already rendered. It can also be a bundle or the item
 	 * itself, when it is not part of a bundle.
-	 * 
+	 *
 	 * @param item
 	 * @return The item to be rendered
 	 */
@@ -475,7 +473,7 @@ public class ResourceAggregator extends DecoratingHeaderResponse
 	 * @param bundle The bundle that represents the replacement
 	 * @return the bundle with the preserved details
 	 */
-	private HeaderItem preserveJavaScriptDetails(JavaScriptReferenceHeaderItem item, JavaScriptReferenceHeaderItem bundle)
+	private static HeaderItem preserveJavaScriptDetails(JavaScriptReferenceHeaderItem item, JavaScriptReferenceHeaderItem bundle)
 	{
 		HeaderItem resultBundle;
 		ResourceReference bundleReference = bundle.getReference();

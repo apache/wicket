@@ -24,13 +24,17 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.tester.MockAjaxFormPage;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -40,23 +44,14 @@ import org.junit.Test;
 public class DecoratingHeaderResponseTest extends WicketTestCase
 {
 
-	/**
-	 * Basic IHeaderResponseDecorator, just prepending the DECORATED string to resource name.
-	 * 
-	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
-	 * @throws ParseException
-	 */
-	@Test
-	public void decoratedStringPrepend() throws IOException, ResourceStreamNotFoundException,
-		ParseException
+	@Override
+	protected WebApplication newApplication()
 	{
-		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
-		{
+		return new MockApplication() {
 			@Override
-			public IHeaderResponse decorate(IHeaderResponse response)
+			public IHeaderResponse decorateHeaderResponse(IHeaderResponse response)
 			{
-				return new DecoratingHeaderResponse(response)
+				return new ResourceAggregator(new DecoratingHeaderResponse(response)
 				{
 					@Override
 					public void render(HeaderItem item)
@@ -69,9 +64,22 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 						}
 						super.render(item);
 					}
-				};
+				});
 			}
-		});
+		};
+	}
+	
+	/**
+	 * Basic IHeaderResponseDecorator, just prepending the DECORATED string to resource name.
+	 * 
+	 * @throws IOException
+	 * @throws ResourceStreamNotFoundException
+	 * @throws ParseException
+	 */
+	@Test
+	public void decoratedStringPrepend() throws IOException, ResourceStreamNotFoundException,
+		ParseException
+	{
 		tester.startPage(TestPage.class);
 		XmlPullParser parser = new XmlPullParser();
 		parser.parse(tester.getLastResponseAsString());

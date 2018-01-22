@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.FilterConfig;
@@ -159,6 +160,7 @@ public class BaseWicketTester
 {
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(BaseWicketTester.class);
+	private final static Pattern AJAX_BASEURL_PATTERN = Pattern.compile(".*Wicket\\.Ajax\\.baseUrl=\"(.*)\";.*");
 
 	private final ServletContext servletContext;
 	private MockHttpSession httpSession;
@@ -1008,11 +1010,13 @@ public class BaseWicketTester
 		XmlTag tag;
 		while ((tag = parser.nextTag()) != null)
 		{
-			if (tag.isOpen() && tag.getName().equals("script") &&
-				"wicket-ajax-base-url".equals(tag.getAttribute("id")))
+			if (tag.isOpen() && "script".equals(tag.getName()))
 			{
 				parser.next();
-				return parser.getString().toString().split("\\\"")[1];
+				Matcher match = AJAX_BASEURL_PATTERN.matcher(parser.getString());
+				if (match.find()) {
+					return match.group(1);
+				}
 			}
 		}
 
@@ -2670,21 +2674,6 @@ public class BaseWicketTester
 		{
 			fail(message);
 		}
-	}
-
-	/**
-	 *
-	 * @param message
-	 * @param object
-	 * @return fail with message if not null
-	 */
-	private Result isNull(String message, Object object)
-	{
-		if (object != null)
-		{
-			return Result.fail(message);
-		}
-		return Result.pass();
 	}
 
 	/**

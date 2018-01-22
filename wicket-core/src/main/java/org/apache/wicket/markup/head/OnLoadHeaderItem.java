@@ -65,6 +65,7 @@ public class OnLoadHeaderItem extends HeaderItem
 	 * Construct.
 	 *
 	 * @param javaScript
+	 *            The script to execute on the load event
 	 */
 	public OnLoadHeaderItem(CharSequence javaScript)
 	{
@@ -86,8 +87,8 @@ public class OnLoadHeaderItem extends HeaderItem
 		CharSequence js = getJavaScript();
 		if (Strings.isEmpty(js) == false)
 		{
-			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"load\", " +
-				"function(event) { " + js + ";});");
+			JavaScriptUtils.writeJavaScript(response,
+				"(function() {var f = function() {" + js + ";};\nif ('complete' === document.readyState) f(); else window.addEventListener('load', f);})();");
 		}
 	}
 
@@ -100,7 +101,7 @@ public class OnLoadHeaderItem extends HeaderItem
 	@Override
 	public String toString()
 	{
-		return "OnLoadHeaderItem('" + getJavaScript() + "')";
+		return String.format("OnLoadHeaderItem('%s')", getJavaScript());
 	}
 
 	@Override

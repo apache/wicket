@@ -18,9 +18,6 @@ package org.apache.wicket.ajax;
 
 import java.util.List;
 
-import com.github.openjson.JSONArray;
-import com.github.openjson.JSONException;
-import com.github.openjson.JSONObject;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -34,7 +31,7 @@ import org.apache.wicket.ajax.json.JSONFunction;
 import org.apache.wicket.ajax.json.JsonUtils;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.IComponentAwareHeaderContributor;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Url;
@@ -44,6 +41,10 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
+
+import com.github.openjson.JSONArray;
+import com.github.openjson.JSONException;
+import com.github.openjson.JSONObject;
 
 /**
  * The base class for Wicket's default AJAX implementation.
@@ -106,8 +107,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 		RequestCycle requestCycle = component.getRequestCycle();
 		Url baseUrl = requestCycle.getUrlRenderer().getBaseUrl();
 		CharSequence ajaxBaseUrl = Strings.escapeMarkup(baseUrl.toString());
-		response.render(JavaScriptHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl
-			+ "\";", "wicket-ajax-base-url"));
+		response.render(OnLoadHeaderItem.forScript("Wicket.Ajax.baseUrl=\"" + ajaxBaseUrl + "\";"));
 
 		renderExtraHeaderContributors(component, response);
 	}

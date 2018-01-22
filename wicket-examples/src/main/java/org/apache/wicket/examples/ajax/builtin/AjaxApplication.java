@@ -22,6 +22,9 @@ import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.ResourceAggregator;
+import org.apache.wicket.markup.head.filter.JavaScriptDeferHeaderResponse;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 
@@ -75,6 +78,12 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("download", AjaxDownloadPage.class);
 	}
 
+	@Override
+	public IHeaderResponse decorateHeaderResponse(IHeaderResponse response)
+	{
+		return new ResourceAggregator(new JavaScriptDeferHeaderResponse(response));
+	}
+	
 	/**
 	 * @see org.apache.wicket.Application#getHomePage()
 	 */

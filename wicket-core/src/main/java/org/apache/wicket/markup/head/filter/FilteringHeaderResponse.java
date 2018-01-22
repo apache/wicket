@@ -27,7 +27,6 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
 import org.apache.wicket.request.Response;
@@ -263,14 +262,12 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 			}
 		};
 
-		ResourceAggregator resourceAggregator = new ResourceAggregator(headerRenderer);
-
 		for (HeaderItem curItem : resp)
 		{
-			resourceAggregator.render(curItem);
+			headerRenderer.render(curItem);
 		}
 
-		resourceAggregator.close();
+		headerRenderer.close();
 
 		return strResponse.getBuffer();
 	}

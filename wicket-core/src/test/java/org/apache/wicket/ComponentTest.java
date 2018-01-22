@@ -113,6 +113,8 @@ public class ComponentTest extends WicketTestCase
 	{
 		Behavior statefulBehavior = new Behavior()
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean getStatelessHint(Component component)
 			{
@@ -141,6 +143,8 @@ public class ComponentTest extends WicketTestCase
 		// make the component such that it can call listener interface
 		// methods no matter whether it is visible or enabled
 		component = new WebComponent("someId") {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean canCallListener()
 			{
@@ -155,15 +159,17 @@ public class ComponentTest extends WicketTestCase
 		// do the same set of tests on a component that is stateful "by itself"
 		// rather than from a behavior
 		Link<Void> link = new Link<Void>("someId") {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick()
 			{
 			}
 		};
-        
+
 		// Links are stateful by default
 		assertFalse(link.isStateless());
-        
+
 		//make the link invisible
 		link.setVisible(false);
 
@@ -174,19 +180,20 @@ public class ComponentTest extends WicketTestCase
 		// same for disabled link
 		link.setVisible(true).setEnabled(false);
 		assertTrue(link.isStateless());
-        
+
 		// make the link such that it can call listener interface
 		// methods no matter whether it is visible or enabled
 		link = new Link<Void>("someId") {
+			private static final long serialVersionUID = 1L;
 
-		    @Override
-		    public boolean canCallListener() {
-		    	return true;
-		    }
+			@Override
+			public boolean canCallListener() {
+				return true;
+			}
 
-		    @Override
-		    public void onClick() {
-		    }
+			@Override
+			public void onClick() {
+			}
 		};
 
 		link.setVisible(false);
@@ -207,6 +214,8 @@ public class ComponentTest extends WicketTestCase
 
 		WebComponent component = new WebComponent("someId")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onModelChanging()
 			{
@@ -248,6 +257,7 @@ public class ComponentTest extends WicketTestCase
 	 */
 	private static class FlagReserved5Component extends Component
 	{
+		private static final long serialVersionUID = 1L;
 
 		public FlagReserved5Component(final String id) {
 			super(id);

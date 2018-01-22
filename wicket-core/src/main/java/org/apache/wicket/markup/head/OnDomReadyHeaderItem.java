@@ -86,8 +86,8 @@ public class OnDomReadyHeaderItem extends HeaderItem
 		CharSequence js = getJavaScript();
 		if (Strings.isEmpty(js) == false)
 		{
-			JavaScriptUtils.writeJavaScript(response, "Wicket.Event.add(window, \"domready\", " +
-				"function(event) { " + js + ";});");
+			JavaScriptUtils.writeJavaScript(response,
+				"(function() {var f = function() {" + js + ";};\nif ('loading' !== document.readyState) f(); else document.addEventListener('DOMContentLoaded', f);})();");
 		}
 	}
 
