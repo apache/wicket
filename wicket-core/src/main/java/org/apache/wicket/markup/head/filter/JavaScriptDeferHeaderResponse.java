@@ -78,8 +78,7 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 			CharSequence js = getJavaScript();
 			if (Strings.isEmpty(js) == false)
 			{
-				JavaScriptUtils.writeJavaScript(response,
-					"(function(){ var f = function() {" + js + ";};\nif ('loading' !== document.readyState) f(); else document.addEventListener('DOMContentLoaded', f); })();");
+				JavaScriptUtils.writeJavaScript(response, "document.addEventListener('DOMContentLoaded', function() { " + js + "; });");
 			}
 		}
 	}
@@ -103,8 +102,7 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 			CharSequence js = getJavaScript();
 			if (Strings.isEmpty(js) == false)
 			{
-				JavaScriptUtils.writeJavaScript(response,
-					"(function(){ var f = function() {" + js + ";};\nif ('complete' === document.readyState) f(); else window.addEventListener('load', f); })();");
+				JavaScriptUtils.writeJavaScript(response, "window.addEventListener('load', function() { " + js + "; });");
 			}
 		}
 	}	
