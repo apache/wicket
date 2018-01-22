@@ -195,7 +195,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * The decorator this application uses to decorate any header responses created by Wicket
 	 */
-	private IHeaderResponseDecorator headerResponseDecorator;
+	private IHeaderResponseDecorator headerResponseDecorator = (headerresponse) -> {
+		return new ResourceAggregator(headerresponse);
+	};
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -1614,9 +1616,10 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @param headerResponseDecorator
 	 *            your custom decorator
 	 */
-	public final Application setHeaderResponseDecorator(
-		final IHeaderResponseDecorator headerResponseDecorator)
+	public final Application setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
 	{
+		Args.notNull(headerResponseDecorator, "headerResponseDecorator");
+		
 		this.headerResponseDecorator = headerResponseDecorator;
 		return this;
 	}
@@ -1636,14 +1639,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public final IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
 	{
-		final IHeaderResponse aggregatingResponse = new ResourceAggregator(response);
-
-		if (headerResponseDecorator == null)
-		{
-			return aggregatingResponse;
-		}
-
-		return headerResponseDecorator.decorate(aggregatingResponse);
+		return headerResponseDecorator.decorate(response);
 	}
 
 	/**

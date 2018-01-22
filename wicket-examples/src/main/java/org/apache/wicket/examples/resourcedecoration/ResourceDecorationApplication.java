@@ -17,6 +17,7 @@
 package org.apache.wicket.examples.resourcedecoration;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -46,7 +47,7 @@ public class ResourceDecorationApplication extends WebApplication
 		setHeaderResponseDecorator(response -> {
 			// use this header resource decorator to load all JavaScript resources in the page
 			// footer (after </body>)
-			return new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS");
+			return new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
 		});
 	}
 
