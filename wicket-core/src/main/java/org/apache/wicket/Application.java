@@ -41,6 +41,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
 import org.apache.wicket.markup.MarkupFactory;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.html.IHeaderContributor;
@@ -1612,9 +1613,13 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * Sets an {@link IHeaderResponseDecorator} that you want your application to use to decorate
 	 * header responses.
+	 * <p>
+	 * Calling this method replaces the default decorator, which utilizes a {@link ResourceAggregator}:
+	 * The given implementation should make sure, that it too wraps responses in a {@link ResourceAggregator},
+	 * otherwise no dependencies for {@link HeaderItem}s will be resolved.   
 	 * 
 	 * @param headerResponseDecorator
-	 *            your custom decorator
+	 *            your custom decorator, must not be null
 	 */
 	public final Application setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
 	{

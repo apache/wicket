@@ -22,6 +22,7 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.IWrappedHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
@@ -30,6 +31,10 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * A header response that defers all {@link AbstractJavaScriptReferenceHeaderItem}s.
+ * <p>
+ * To prevent any error because of possible dependencies to referenced JavaScript files
+ * *all* {@link JavaScriptHeaderItem}s are replaced with suitable implementations that
+ * delay any execution until {@link AbstractJavaScriptReferenceHeaderItem}s have been loaded.
  * 
  * @author svenmeier
 + */
@@ -49,17 +54,20 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 
 		if (item instanceof AbstractJavaScriptReferenceHeaderItem) {
 			((AbstractJavaScriptReferenceHeaderItem)item).setDefer(true);
+		} else if (item instanceof JavaScriptContentHeaderItem) {
+			item = new NativeOnDomContentLoadedHeaderItem(((JavaScriptContentHeaderItem)item).getJavaScript());
 		} else if (item instanceof OnDomReadyHeaderItem) {
 			item = new NativeOnDomContentLoadedHeaderItem(((OnDomReadyHeaderItem)item).getJavaScript());
 		} else if (item instanceof OnLoadHeaderItem) {
 			item = new NativeOnLoadHeaderItem(((OnLoadHeaderItem)item).getJavaScript());
-		} else if (item instanceof JavaScriptContentHeaderItem) {
-			item = new NativeOnDomContentLoadedHeaderItem(((JavaScriptContentHeaderItem)item).getJavaScript());
 		}
 		
 		super.render(item);
 	}
 
+	/**
+	 * A specialization that uses native "DOMContentLoaded" events without dependency to external JavaScript
+	 */
 	private class NativeOnDomContentLoadedHeaderItem extends OnDomReadyHeaderItem
 	{
 		/**
@@ -83,6 +91,9 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 		}
 	}
 	
+	/**
+	 * A specialization that uses native "load" events without dependency to external JavaScript 
+	 */
 	private class NativeOnLoadHeaderItem extends OnLoadHeaderItem
 	{
 
