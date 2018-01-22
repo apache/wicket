@@ -52,6 +52,10 @@ public class EnclosureTest extends WicketTestCase
 	public void testRenderHomePage() throws Exception
 	{
 		executeTest(EnclosurePage_1.class, "EnclosurePageExpectedResult_1.html");
+		
+		EnclosurePage_1 page = (EnclosurePage_1)tester.getLastRenderedPage();
+		
+		assertEquals(0, page.pendingAfterRenderCount);
 	}
 
 	/**

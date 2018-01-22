@@ -169,7 +169,7 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 				{
 					Page p = (Page)page;
 					p.internalInitialize();
-					p.internalPrepareForRender(false);
+					p.beforeRender();
 					component = page.get(componentPath);
 				}
 			}
