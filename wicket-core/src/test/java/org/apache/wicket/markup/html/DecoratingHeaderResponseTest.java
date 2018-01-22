@@ -24,6 +24,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -56,7 +57,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 			@Override
 			public IHeaderResponse decorate(IHeaderResponse response)
 			{
-				return new DecoratingHeaderResponse(response)
+				return new ResourceAggregator(new DecoratingHeaderResponse(response)
 				{
 					@Override
 					public void render(HeaderItem item)
@@ -69,7 +70,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 						}
 						super.render(item);
 					}
-				};
+				});
 			}
 		});
 		tester.startPage(TestPage.class);
