@@ -49,8 +49,7 @@
 		};
 	}
 
-	var createIFrame,
-		getAjaxBaseUrl,
+	var getAjaxBaseUrl,
 		isUndef,
 		replaceAll,
 		htmlToDomDocument,
@@ -63,19 +62,6 @@
 	replaceAll = function (str, from, to) {
 		var regex = new RegExp(from.replace( /\W/g ,'\\$&' ), 'g');
 		return str.replace(regex,to);
-	};
-
-	/**
-	 * Creates an iframe that can be used to load data asynchronously or as a
-	 * target for Ajax form submit.
-	 *
-	 * @param iframeName {String} the value of the iframe's name attribute
-	 */
-	createIFrame = function (iframeName) {
-		// WICKET-6340 properly close tag for XHTML markup
-		var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
-			'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;"></iframe>');
-		return $iframe[0];
 	};
 
 	/**
@@ -553,7 +539,7 @@
 				extraParam = this._asParamArray(extraParam);
 				params = params.concat(extraParam);
 			}
-			return jQuery.param(params);
+			return params;
 		},
 
 		/**
@@ -583,6 +569,8 @@
 					'Wicket-Ajax': 'true',
 					'Wicket-Ajax-BaseURL': getAjaxBaseUrl()
 				},
+				
+				url = attrs.u,
 
 				// the request (extra) parameters
 				data = this._asParamArray(attrs.ep),
@@ -643,11 +631,6 @@
 
 			we.publish(topic.AJAX_CALL_PRECONDITION, attrs);
 
-			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
-				var ret = self.submitMultipartForm(context);
-				return ret;
-			}
-
 			if (attrs.f) {
 				// serialize the form with id == attrs.f
 				var form = Wicket.$(attrs.f);
@@ -658,39 +641,47 @@
 					var scName = attrs.sc;
 					data = data.concat({name: scName, value: 1});
 				}
-
 			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
+			
+			// collect the dynamic extra parameters
+			if (jQuery.isArray(attrs.dep)) {
+				var dynamicData = this._calculateDynamicParameters(attrs);
+				if (attrs.m.toLowerCase() === 'post') {
+					data = data.concat(dynamicData);
+				} else {
+					var separator = url.indexOf('?') > -1 ? '&' : '?';
+					url = url + separator + jQuery.param(dynamicData);
+				}
+			}
 
-			// convert to URL encoded string
-			data = jQuery.param(data);
+			var wwwFormUrlEncoded = undefined; // default
+			if (attrs.mp) {
+				try {
+					var formData = new FormData();
+					for (var i = 0; i < data.length; i++) {
+						formData.append(data[i].name, data[i].value);
+					}
+					
+					data = formData;
+					wwwFormUrlEncoded = false;
+				} catch (exception) {
+					Wicket.Log.error("Ajax multipat not supported:" + exception);
+				}
+			}
 
 			// execute the request
 			var jqXHR = jQuery.ajax({
-				url: attrs.u,
+				url: url,
 				type: attrs.m,
 				context: self,
+				processData: wwwFormUrlEncoded,
+				contentType: wwwFormUrlEncoded,
+				
 				beforeSend: function (jqXHR, settings) {
-
-					// collect the dynamic extra parameters
-					if (jQuery.isArray(attrs.dep)) {
-						var queryString,
-							separator;
-
-						queryString = this._calculateDynamicParameters(attrs);
-						if (settings.type.toLowerCase() === 'post') {
-							separator = settings.data.length > 0 ? '&' : '';
-							settings.data = settings.data + separator + queryString;
-							jqXHR.setRequestHeader("Content-Type", settings.contentType);
-						} else {
-							separator = settings.url.indexOf('?') > -1 ? '&' : '?';
-							settings.url = settings.url + separator + queryString;
-						}
-					}
-
 					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
 					we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, jqXHR, settings);
 
@@ -829,203 +820,6 @@
 					return this.loadedCallback(data, context);
 				}
 			}
-		},
-
-		/**
-		 * This method serializes a form and sends it as POST body. If the form contains multipart content
-		 * this function will post the form using an iframe instead of the regular ajax call
-		 * and bridge the output - transparently making this work  as if it was an ajax call.
-		 *
-		 * @param {Object} context - the context for the ajax call (request attributes + steps)
-		 */
-		submitMultipartForm: function (context) {
-
-			var attrs = context.attrs;
-
-			var form = Wicket.$(attrs.f);
-			if (!form) {
-				Wicket.Log.error("Wicket.Ajax.Call.submitForm: Trying to submit form with id '" + attrs.f + "' that is not in document.");
-				return;
-			}
-
-			// find root form
-			if (form.tagName.toLowerCase() !== "form") {
-				do {
-					form = form.parentNode;
-				} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
-			}
-
-			if (form.tagName.toLowerCase() !== "form") {
-				Wicket.Log.error("Cannot submit form with id " + attrs.f + " because there is no form element in the hierarchy.");
-				return false;
-			}
-
-			var submittingAttribute = 'data-wicket-submitting';
-
-			if (form.onsubmit && !form.getAttribute(submittingAttribute)) {
-				form.setAttribute(submittingAttribute, submittingAttribute);
-				var retValue = true;
-				try {
-					retValue = form.onsubmit();
-				} finally {
-					form.removeAttribute(submittingAttribute);
-				}
-				if (!retValue) {
-					return;
-				}
-			}
-
-			var originalFormAction = form.action;
-			var originalFormTarget = form.target;
-			var originalFormMethod = form.method;
-			var originalFormEnctype = form.enctype;
-			var originalFormEncoding = form.encoding;
-
-			var iframeName = "wicket-submit-" + ("" + Math.random()).substr(2);
-
-			var iframe = createIFrame(iframeName);
-
-			document.body.appendChild(iframe);
-
-			// reconfigure the form
-			form.target = iframe.name;
-			var separator = (attrs.u.indexOf("?")>-1 ? "&" : "?");
-			form.action = attrs.u + separator + "wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(getAjaxBaseUrl());
-
-			// add the static extra parameters
-			if (attrs.ep) {
-				var extraParametersArray = this._asParamArray(attrs.ep);
-				if (extraParametersArray.length > 0) {
-					var extraParametersQueryString = jQuery.param(extraParametersArray);
-					form.action = form.action + '&' + extraParametersQueryString;
-				}
-			}
-
-			// add the dynamic extra parameters
-			if (jQuery.isArray(attrs.dep)) {
-				var dynamicExtraParameters = this._calculateDynamicParameters(attrs);
-				if (dynamicExtraParameters) {
-					form.action = form.action + '&' + dynamicExtraParameters;
-				}
-			}
-			form.method = 'post';
-			form.enctype = "multipart/form-data";
-			form.encoding = "multipart/form-data";
-
-			// create submitting button element
-			if (attrs.sc) {
-				var $btn = jQuery("<input type='hidden' name='" + attrs.sc + "' id='" + iframe.id + "-btn' value='1'/>");
-				form.appendChild($btn[0]);
-			}
-
-			var we = Wicket.Event;
-			var topic = we.Topic;
-
-			this._executeHandlers(attrs.bsh, attrs, null, null);
-			we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, null, null);
-
-			if (attrs.i) {
-				// show the indicator
-				Wicket.DOM.showIncrementally(attrs.i);
-			}
-
-			//submit the form into the iframe, response will be handled by the onload callback
-			form.submit();
-
-			this._executeHandlers(attrs.ah, attrs);
-			we.publish(topic.AJAX_CALL_AFTER, attrs);
-
-			// a step to execute in both successful and erroneous completion
-			context.endStep = jQuery.proxy(function(notify) {
-				// remove the iframe and button elements
-				setTimeout(function() {
-					jQuery('#'+iframe.id + '-btn').remove();
-					jQuery(iframe).remove();
-				}, 0);
-
-				var attrs = context.attrs;
-				if (attrs.i && context.isRedirecting !== true) {
-					// hide the indicator
-					Wicket.DOM.hideIncrementally(attrs.i);
-				}
-
-				this._executeHandlers(attrs.coh, attrs, null, null);
-				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
-
-				this.done(attrs);
-				return FunctionsExecuter.DONE;
-			}, this);
-
-			// an error handler that is used when the connection to the server fails for any reason
-			if (attrs.rt) {
-				context.errorHandle = setTimeout(jQuery.proxy(function () {
-					this.failure(context, null, "No XML response in the IFrame document", "Failure");
-
-					context.steps.push(context.endStep);
-					var executer = new FunctionsExecuter(context.steps);
-					executer.start();
-				}, this), attrs.rt);
-			} else {
-				Wicket.Log.info("Submitting a multipart form without a timeout. " +
-					"Use AjaxRequestAttributes.setRequestTimeout(duration) if need to handle connection timeouts.");
-			}
-
-			// install handler to deal with the ajax response
-			// ... we add the onload event after form submit because chrome fires it prematurely
-			we.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), context);
-
-
-			// handled, restore state and return true
-			form.action = originalFormAction;
-			form.target = originalFormTarget;
-			form.method = originalFormMethod;
-			form.enctype = originalFormEnctype;
-			form.encoding = originalFormEncoding;
-
-			return true;
-		},
-
-		/**
-		 * Completes the multipart ajax handling started via handleMultipart()
-		 * @param {jQuery.Event} event
-		 */
-		handleMultipartComplete: function (event) {
-
-			var context = event.data,
-				iframe = event.target,
-				envelope;
-
-			if (!isUndef(context.errorHandle)) {
-				clearTimeout(context.errorHandle);
-			}
-
-			// stop the event
-			event.stopPropagation();
-
-			// remove the event
-			jQuery(iframe).off("load.handleMultipartComplete");
-
-			try {
-				envelope = iframe.contentWindow.document;
-			} catch (e) {
-				Wicket.Log.error("Cannot read Ajax response for multipart form submit: " + e);
-			}
-
-			if (isUndef(envelope)) {
-				this.failure(context, null, "No XML response in the IFrame document", "Failure");
-			}
-			else {
-				if (envelope.XMLDocument) {
-					envelope = envelope.XMLDocument;
-				}
-
-				// process the response
-				this.loadedCallback(envelope, context);
-			}
-
-			context.steps.push(context.endStep);
-			var executer = new FunctionsExecuter(context.steps);
-			executer.start();
 		},
 
 		// Processes the response
@@ -1488,9 +1282,16 @@
 			 */
 			serializeInput: function (input) {
 				var result = [];
-				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) {
+				if (input && input.type) {
 					var $input = jQuery(input);
-					result = $input.serializeArray();
+					
+					if (input.type === 'file') {
+						for (var f = 0; f < input.files.length; f++) {
+							result.push({"name" : input.name, "value" : input.files[f]});
+						}
+					} else if (!(input.type === 'image' || input.type === 'submit')) {
+						result = $input.serializeArray();
+					}
 				}
 				return result;
 			},
