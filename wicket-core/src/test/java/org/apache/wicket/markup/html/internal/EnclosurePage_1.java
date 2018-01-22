@@ -29,23 +29,53 @@ import org.apache.wicket.markup.html.basic.Label;
 public class EnclosurePage_1 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+	
+	public int pendingAfterRenderCount = 0; 
 
 	/**
 	 * Construct.
 	 */
 	public EnclosurePage_1()
 	{
-		add(new Label("label1", "Test Label 1"));
-		add(new Label("label2", "Test Label 2"));
-		add(new Label("label3", "Test Label 3").setVisible(false));
-		add(new Label("label4", "Test Label 2"));
-		add(new Label("label5", "Test Label 2"));
-		add(new Label("label6", "Test Label 2"));
-		add(new Label("label7", "Test Label 2"));
+		add(new AfterRenderCountingLabel("label1", "Test Label 1"));
+		add(new AfterRenderCountingLabel("label2", "Test Label 2"));
+		add(new AfterRenderCountingLabel("label3", "Test Label 3").setVisible(false));
+		add(new AfterRenderCountingLabel("label4", "Test Label 2"));
+		add(new AfterRenderCountingLabel("label5", "Test Label 2"));
+		add(new AfterRenderCountingLabel("label6", "Test Label 2"));
+		add(new AfterRenderCountingLabel("label7", "Test Label 2"));
+		
 		WebMarkupContainer container = new WebMarkupContainer("container");
 		add(container);
-		container.add(new Label("label8", "Test Label 2"));
-		add(new Label("label9", "Test Label 2"));
-		add(new Label("label10", "Test Label 3"));
+		
+		container.add(new AfterRenderCountingLabel("label8", "Test Label 2"));
+		
+		add(new AfterRenderCountingLabel("label9", "Test Label 2"));
+		add(new AfterRenderCountingLabel("label10", "Test Label 3"));
+	}
+	
+	class AfterRenderCountingLabel extends Label {
+
+		public AfterRenderCountingLabel(String id, String model)
+		{
+			super(id, model);
+		}
+		
+		@Override
+		protected void onBeforeRender()
+		{
+			super.onBeforeRender();
+			
+			
+			pendingAfterRenderCount++;
+		}
+		
+		@Override
+		protected void onAfterRender()
+		{
+			super.onAfterRender();
+			
+			pendingAfterRenderCount--;
+		}
 	}
 }

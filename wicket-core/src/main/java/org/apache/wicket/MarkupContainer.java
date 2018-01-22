@@ -1694,17 +1694,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
-	@Override
-	void internalMarkRendering(boolean setRenderingFlag)
-	{
-		super.internalMarkRendering(setRenderingFlag);
-
-		for (Component child : this)
-		{
-			child.internalMarkRendering(setRenderingFlag);
-		}
-	}
-
 	/**
 	 * @return a copy of the children array.
 	 */
@@ -1790,17 +1779,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				component.clearVisibleInHierarchyCache();
 			}
 		});
-	}
-
-	@Override
-	protected void onAfterRenderChildren()
-	{
-		for (Component child : this)
-		{
-			// set RENDERING_FLAG to false for auto-component's children (like Enclosure)
-			child.markRendering(false);
-		}
-		super.onAfterRenderChildren();
 	}
 
 	@Override
