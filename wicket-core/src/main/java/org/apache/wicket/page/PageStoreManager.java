@@ -24,10 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-
+import org.apache.wicket.Session;
 import org.apache.wicket.pageStore.IPageStore;
 
 /**
@@ -76,7 +73,7 @@ public class PageStoreManager extends AbstractPageManager
 	 * 
 	 * @author Matej Knopp
 	 */
-	private static class SessionEntry implements Serializable, HttpSessionBindingListener
+	private static class SessionEntry implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -93,24 +90,6 @@ public class PageStoreManager extends AbstractPageManager
 		private transient List<IManageablePage> sessionCache;
 		private transient List<Object> afterReadObject;
 
-		/**
-		 * A flag indicating whether this session entry is being re-set in the Session.
-		 * <p>
-		 * Web containers intercept
-		 * {@link javax.servlet.http.HttpSession#setAttribute(String, Object)} to detect changes and
-		 * replicate the session. If the attribute has been already bound in the session then
-		 * {@link #valueUnbound(HttpSessionBindingEvent)} might get called - this flag
-		 * helps us to ignore the invocation in that case.
-		 * 
-		 * @see #valueUnbound(HttpSessionBindingEvent)
-		 */
-		private transient ThreadLocal<Boolean> storingTouchedPages = new ThreadLocal<Boolean>()
-		{
-			protected Boolean initialValue()
-			{
-				return Boolean.FALSE;
-			};
-		};
 
 		/**
 		 * Construct.
@@ -313,14 +292,6 @@ public class PageStoreManager extends AbstractPageManager
 		{
 			s.defaultReadObject();
 
-			storingTouchedPages = new ThreadLocal<Boolean>()
-			{
-				protected Boolean initialValue()
-				{
-					return Boolean.FALSE;
-				};
-			};
-
 			afterReadObject = new ArrayList<>();
 
 			List<Serializable> l = (List<Serializable>)s.readObject();
@@ -342,30 +313,7 @@ public class PageStoreManager extends AbstractPageManager
 				afterReadObject.add(page);
 			}
 		}
-
-		@Override
-		public void valueBound(HttpSessionBindingEvent event)
-		{
-		}
-
-		@Override
-		public void valueUnbound(HttpSessionBindingEvent event)
-		{
-			if (storingTouchedPages == null || storingTouchedPages.get())
-			{
-				// triggered by #storeTouchedPages(), so do not remove the data
-				return;
-			}
-
-			// WICKET-5164 use the original sessionId
-			IPageStore store = getPageStore();
-			// store might be null if destroyed already
-			if (store != null)
-			{
-				store.unbind(sessionId);
-			}
-		}
-
+		
 		@Override
 		public boolean equals(Object o)
 		{
@@ -468,15 +416,7 @@ public class PageStoreManager extends AbstractPageManager
 					pageStore.storePage(entry.sessionId, page);
 				}
 
-				entry.storingTouchedPages.set(true);
-				try
-				{
-					setSessionAttribute(getAttributeName(), entry);
-				}
-				finally
-				{
-					entry.storingTouchedPages.set(false);
-				}
+				setSessionAttribute(getAttributeName(), entry);
 			}
 		}
 	}
@@ -496,13 +436,7 @@ public class PageStoreManager extends AbstractPageManager
 	@Override
 	public void clear()
 	{
-		RequestAdapter requestAdapter = getRequestAdapter();
-		String sessionEntryAttributeName = getAttributeName();
-		Serializable sessionEntry = requestAdapter.getSessionAttribute(sessionEntryAttributeName);
-		if (sessionEntry instanceof SessionEntry)
-		{
-			((SessionEntry)sessionEntry).valueUnbound(null);
-		}
+		pageStore.unbind(Session.get().getId());
 	}
 
 	@Override
