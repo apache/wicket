@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import org.apache.wicket.Session;
 import org.apache.wicket.pageStore.IPageStore;
 
 /**
@@ -312,18 +313,7 @@ public class PageStoreManager extends AbstractPageManager
 				afterReadObject.add(page);
 			}
 		}
-
-		public void unbindSession()
-		{
-			// WICKET-5164 use the original sessionId
-			IPageStore store = getPageStore();
-			// store might be null if destroyed already
-			if (store != null)
-			{
-				store.unbind(sessionId);
-			}
-		}
-
+		
 		@Override
 		public boolean equals(Object o)
 		{
@@ -446,13 +436,7 @@ public class PageStoreManager extends AbstractPageManager
 	@Override
 	public void clear()
 	{
-		RequestAdapter requestAdapter = getRequestAdapter();
-		String sessionEntryAttributeName = getAttributeName();
-		Serializable sessionEntry = requestAdapter.getSessionAttribute(sessionEntryAttributeName);
-		if (sessionEntry instanceof SessionEntry)
-		{
-			((SessionEntry)sessionEntry).unbindSession();
-		}
+		pageStore.unbind(Session.get().getId());
 	}
 
 	@Override
