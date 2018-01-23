@@ -75,4 +75,22 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 		CharSequence realContent = headerResponse.getContent(filterName);
 		assertEquals(headerContent, realContent.toString());
 	}
+
+	/**
+	 * WICKET-6498 all JavaScript resources have an "defer" attribute, all other JavaScript is
+	 * inside a {@code document.addEventListener('DOMContentLoaded', function() {}; } hook.
+	 */
+	@Test
+	public void deferred() throws Exception
+	{
+		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
+		{
+			@Override
+			public IHeaderResponse decorate(IHeaderResponse response)
+			{
+				return new ResourceAggregator(new JavaScriptDeferHeaderResponse(response));
+			}
+		});
+		executeTest(DeferredPage.class, "DeferredPageExpected.html");
+	}
 }
