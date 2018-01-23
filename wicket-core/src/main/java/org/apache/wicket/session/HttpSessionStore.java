@@ -23,12 +23,10 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.MarkupParser;
@@ -422,6 +420,7 @@ public class HttpSessionStore implements ISessionStore
 			if (wicketSession != null)
 			{
 				wicketSession.onInvalidate();
+				wicketSession.clear();
 			}
 			
 			Application application = Application.get(applicationKey);
