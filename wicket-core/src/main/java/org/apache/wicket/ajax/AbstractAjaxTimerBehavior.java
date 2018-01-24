@@ -88,7 +88,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 		if (isStopped() == false)
 		{
-			addTimeout(response);
+			setTimeout(response);
 		}
 	}
 
@@ -112,23 +112,15 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		// onTimer might remove this behavior, so keep the component
-		// so the timeout can be cleared later on
-		Component component = getComponent();
-		
 		if (shouldTrigger())
 		{
 			onTimer(target);
 
 			if (shouldTrigger())
 			{
-				addTimeout(target.getHeaderResponse());
-
-				return;
+				setTimeout(target.getHeaderResponse());
 			}
 		}
-
-		clearTimeout(component, target.getHeaderResponse());
 	}
 
 	/**
@@ -175,12 +167,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 			if (target != null)
 			{
-				addTimeout(target.getHeaderResponse());
+				setTimeout(target.getHeaderResponse());
 			}
 		}
 	}
 
-	private void addTimeout(IHeaderResponse headerResponse)
+	private void setTimeout(IHeaderResponse headerResponse)
 	{
 		headerResponse.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 	}
