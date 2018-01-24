@@ -44,6 +44,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	private Duration updateInterval;
 
 	private boolean stopped = false;
+	
+	/**
+	 * Id of timer in JavaScript.
+	 */
+	private String timerId;
 
 	/**
 	 * Construct.
@@ -100,9 +105,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
 		CharSequence js = getCallbackScript();
+		
+		Component component = getComponent();
+		// remember id for timer
+		timerId = component.getMarkupId() + "." + component.getBehaviorId(this);
 
 		return String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
-				getComponent().getMarkupId(), js, updateInterval.getMilliseconds());
+			timerId, js, updateInterval.getMilliseconds());
 	}
 
 	/**
@@ -112,6 +121,9 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
+		// timerId is no longer valid after Ajax request
+		timerId = null;
+		
 		if (shouldTrigger())
 		{
 			onTimer(target);
@@ -174,9 +186,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		headerResponse.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
 	}
 
-	private void clearTimeout(Component component, IHeaderResponse headerResponse)
+	private void clearTimeout(IHeaderResponse headerResponse)
 	{
-		headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + component.getMarkupId() + "');"));
+		if (timerId != null) {
+			headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + timerId + "');"));
+						
+			timerId = null; 
+		}
 	}
 
 	/**
@@ -193,7 +209,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 			if (target != null)
 			{
-				clearTimeout(getComponent(), target.getHeaderResponse());
+				clearTimeout(target.getHeaderResponse());
 			}
 		}
 	}
@@ -201,7 +217,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	public void onRemove(Component component)
 	{
-		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(component, target.getHeaderResponse()));
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
 	}
 
 	@Override
@@ -209,7 +225,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		Component component = getComponent();
 		
-		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(component, target.getHeaderResponse()));
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
 	}
 
 	/**
