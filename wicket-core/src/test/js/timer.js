@@ -51,6 +51,8 @@ jQuery(document).ready(function() {
 		Wicket.Timer.clear(timerId);
 		ok(typeof(Wicket.TimerHandles[timerId]) === 'undefined', "There is no handle to the timeout!");
 
-		start();
+		setTimeout(function() {
+			start();			
+		}, 2);
 	});
 });
