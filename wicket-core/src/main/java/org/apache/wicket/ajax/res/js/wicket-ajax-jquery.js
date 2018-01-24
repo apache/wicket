@@ -2541,16 +2541,19 @@
 			/**
 			 * Schedules a timer
 			 * @param {string} timerId - the identifier for the timer
-			 * @param {function|string} js - the JavaScript to execute after the timeout
+			 * @param {function} f - the JavaScript function to execute after the timeout
 			 * @param {number} delay - the timeout
 			 */
-			'set': function(timerId, js, delay) {
+			'set': function(timerId, f, delay) {
 				if (typeof(Wicket.TimerHandles) === 'undefined') {
 					Wicket.TimerHandles = {};
 				}
 
 				Wicket.Timer.clear(timerId);
-				Wicket.TimerHandles[timerId] = setTimeout(js, delay);
+				Wicket.TimerHandles[timerId] = setTimeout(function() {
+					Wicket.Timer.clear(timerId);
+					f();
+				}, delay);
 			},
 
 			/**
