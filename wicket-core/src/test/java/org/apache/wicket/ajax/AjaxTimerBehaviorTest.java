@@ -239,7 +239,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		tester.executeBehavior(timer);
 
-		assertMatches("Wicket.Timer.clear", 1);
+		assertMatches("Wicket.Timer.clear", 0);
 		assertMatches("Wicket.Timer.set", 0);
 	}
 
