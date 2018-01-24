@@ -154,21 +154,18 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	/**
-	 * Re-enables the timer if already stopped
+	 * Restart the timer.
 	 * 
 	 * @param target
 	 *            may be null
 	 */
 	public final void restart(final IPartialPageRequestHandler target)
 	{
-		if (stopped == true)
-		{
-			stopped = false;
+		stopped = false;
 
-			if (target != null)
-			{
-				setTimeout(target.getHeaderResponse());
-			}
+		if (target != null)
+		{
+			setTimeout(target.getHeaderResponse());
 		}
 	}
 
