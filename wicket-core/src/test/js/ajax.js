@@ -31,13 +31,7 @@
 
 		 </Directory>
 
-	... or tweak wicket-examples' StartExamples.java like so:
-
-		bb.setContextPath("/ajax-tests");
-		bb.setWar("../wicket-core/src");
-
-	then run it by opening "http://localhost/ajax-tests/test/js/all.html" in the browser
-
+	Or start StartJavaScriptTests.java in project wicket-js-tests. 
  */
 
 /*global ok: true, start: true, asyncTest: true, test: true, equal: true, deepEqual: true,
