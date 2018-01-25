@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.testing.jstest;
 
+import java.awt.Desktop;
 import java.lang.management.ManagementFactory;
+import java.net.URI;
 
 import javax.management.MBeanServer;
 
@@ -112,12 +114,27 @@ public class StartJavaScriptTests
 		try
 		{
 			server.start();
+			
+			browse();
+			
 			server.join();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			System.exit(100);
+		}
+	}
+
+	private static void browse() 
+	{
+		try
+		{
+			Desktop.getDesktop().browse(new URI("http://localhost:8080/ajax-tests/test/js/all.html?2.2.4"));
+		}
+		catch (Exception e)
+		{
+			System.out.println("can not open browser " + e);
 		}
 	}
 
