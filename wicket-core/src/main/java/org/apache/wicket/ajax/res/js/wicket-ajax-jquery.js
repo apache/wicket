@@ -658,7 +658,7 @@
 				}
 			}
 
-			var wwwFormUrlEncoded = undefined; // default
+			var wwwFormUrlEncoded; // undefined is jQuery's default
 			if (attrs.mp) {
 				try {
 					var formData = new FormData();
