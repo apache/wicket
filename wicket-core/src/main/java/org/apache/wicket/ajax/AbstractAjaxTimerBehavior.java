@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax;
 
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
@@ -44,6 +46,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	private Duration updateInterval;
 
 	private boolean stopped = false;
+	private String timerId = null;
 
 	/**
 	 * Construct.
@@ -93,6 +96,35 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	/**
+	 * Can be overridden to provide different implementation
+	 * 
+	 * @return the unique ID of JS timer
+	 */
+	protected CharSequence createTimerId()
+	{
+		StringBuilder jsId = new StringBuilder(getComponent().getMarkupId());
+		List<AbstractAjaxTimerBehavior> list = getComponent().getBehaviors(AbstractAjaxTimerBehavior.class);
+		if (list.size() != 1)
+		{
+			for (int i = 0; i < list.size(); ++i)
+			{
+				if (list.get(i) == this)
+				{
+					jsId.append('_').append(i);
+				}
+			}
+		}
+		return jsId;
+	}
+
+	private final String getTimerId() {
+		if (timerId == null) {
+			timerId = createTimerId().toString();
+		}
+		return timerId;
+	}
+	
+	/**
 	 * @param updateInterval
 	 *            Duration between AJAX callbacks
 	 * @return JS script
@@ -102,7 +134,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		CharSequence js = getCallbackScript();
 
 		return String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
-				getComponent().getMarkupId(), js, updateInterval.getMilliseconds());
+				getTimerId(), js, updateInterval.getMilliseconds());
 	}
 
 	/**
@@ -187,7 +219,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	private void clearTimeout(Component component, IHeaderResponse headerResponse)
 	{
-		headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + component.getMarkupId() + "');"));
+		headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + getTimerId() + "');"));
 	}
 
 	/**
