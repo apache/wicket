@@ -25,7 +25,6 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 import java.lang.reflect.Field;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -151,6 +150,43 @@ public class MarkupContainerTest extends WicketTestCase
 
 		// rendering flags where properly reset, so second rendering works properly
 		assertEquals(2, page.beforeRenderCalls);
+	}
+
+	@Test
+	public void hierarchyChangeDuringRender()
+	{
+		HierarchyChangePage page = new HierarchyChangePage();
+		try
+		{
+			tester.startPage(page);
+			fail();
+		}
+		catch (WicketRuntimeException expected)
+		{
+			assertEquals(
+				"Cannot modify component hierarchy after render phase has started (page version cant change then anymore)",
+				expected.getMessage());
+		}
+	}
+
+	private static class HierarchyChangePage extends WebPage
+		implements
+			IMarkupResourceStreamProvider
+	{
+
+		@Override
+		protected void onRender()
+		{
+			// change hierarchy during render
+			add(new Label("child"));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body></body></html>");
+		}
 	}
 
 	/**
@@ -1274,28 +1310,23 @@ public class MarkupContainerTest extends WicketTestCase
 	public void stream()
 	{
 		LoginPage loginPage = new LoginPage();
-		Optional<Component> first = loginPage.stream()
-			.filter(c -> c.getId().equals("form"))
+		Optional<Component> first = loginPage.stream().filter(c -> c.getId().equals("form"))
 			.findFirst();
 		assertThat(first.isPresent(), is(false));
 
 		loginPage.add(new Form<>("form"));
-		Optional<Component> second = loginPage.stream()
-			.filter(c -> c.getId().equals("form"))
+		Optional<Component> second = loginPage.stream().filter(c -> c.getId().equals("form"))
 			.findFirst();
 		assertThat(second.isPresent(), is(true));
 
 		loginPage.add(new WebMarkupContainer("wmc"));
 
-		Optional<Form> form = loginPage.stream()
-			.filter(Form.class::isInstance)
-			.map(Form.class::cast)
-			.findFirst();
+		Optional<Form> form = loginPage.stream().filter(Form.class::isInstance)
+			.map(Form.class::cast).findFirst();
 		assertThat(form.isPresent(), is(true));
 
 		Optional<WebMarkupContainer> wmc = loginPage.stream()
-			.filter(WebMarkupContainer.class::isInstance)
-			.map(WebMarkupContainer.class::cast)
+			.filter(WebMarkupContainer.class::isInstance).map(WebMarkupContainer.class::cast)
 			.findFirst();
 		assertThat(wmc.isPresent(), is(true));
 	}
@@ -1304,8 +1335,7 @@ public class MarkupContainerTest extends WicketTestCase
 	public void streamChildren()
 	{
 		LoginPage loginPage = new LoginPage();
-		Optional<Component> first = loginPage.stream()
-			.filter(c -> c.getId().equals("form"))
+		Optional<Component> first = loginPage.stream().filter(c -> c.getId().equals("form"))
 			.findFirst();
 		assertThat(first.isPresent(), is(false));
 
@@ -1314,20 +1344,13 @@ public class MarkupContainerTest extends WicketTestCase
 
 		form.add(new TextField<>("field"));
 
-		assertThat(loginPage.streamChildren()
-			.filter(c -> c.getId().equals("form"))
-			.findFirst()
+		assertThat(loginPage.streamChildren().filter(c -> c.getId().equals("form")).findFirst()
 			.isPresent(), is(true));
 
-		assertThat(loginPage.streamChildren()
-			.filter(c -> c.getId().equals("field"))
-			.findFirst()
+		assertThat(loginPage.streamChildren().filter(c -> c.getId().equals("field")).findFirst()
 			.isPresent(), is(true));
 
-		assertThat(loginPage.streamChildren()
-			.filter(TextField.class::isInstance)
-			.filter(c -> c.getId().equals("field"))
-			.findFirst()
-			.isPresent(), is(true));
+		assertThat(loginPage.streamChildren().filter(TextField.class::isInstance)
+			.filter(c -> c.getId().equals("field")).findFirst().isPresent(), is(true));
 	}
 }

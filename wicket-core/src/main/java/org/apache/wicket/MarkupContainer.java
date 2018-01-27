@@ -1695,6 +1695,21 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	/**
+	 * 
+	 * @see org.apache.wicket.Component#internalMarkRendering(boolean)
+	 */
+	@Override
+	void internalMarkRendering(boolean setRenderingFlag)
+	{
+		super.internalMarkRendering(setRenderingFlag);
+
+		for (Component child : this)
+		{
+			child.internalMarkRendering(setRenderingFlag);
+		}
+	}
+
+	/**
 	 * @return a copy of the children array.
 	 */
 	@SuppressWarnings("unchecked")

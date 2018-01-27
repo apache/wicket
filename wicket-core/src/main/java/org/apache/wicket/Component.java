@@ -2117,6 +2117,23 @@ public abstract class Component
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * Sets the RENDERING flag and removes the PREPARED_FOR_RENDER flag on component and it's
+	 * children.
+	 * 
+	 * @param setRenderingFlag
+	 *            if this is false only the PREPARED_FOR_RENDER flag is removed from component, the
+	 *            RENDERING flag is not set.
+	 * 
+	 * @see #internalPrepareForRender(boolean)
+	 */
+	public final void markRendering(boolean setRenderingFlag)
+	{
+		internalMarkRendering(setRenderingFlag);
+	}
+
+	/**
 	 * Called to indicate that the model content for this component has been changed
 	 */
 	public final void modelChanged()
@@ -2189,6 +2206,8 @@ public abstract class Component
 		Page page = getPage();
 
 		page.startComponentRender(this);
+
+		markRendering(true);
 
 		render();
 		
@@ -3790,6 +3809,7 @@ public abstract class Component
 	 */
 	protected void onBeforeRender()
 	{
+		setRequestFlag(RFLAG_PREPARED_FOR_RENDER, true);
 		onBeforeRenderChildren();
 		setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
 	}
@@ -4129,6 +4149,18 @@ public abstract class Component
 		throw new IllegalArgumentException(
 			exceptionMessage("Component is not a container and so does not contain the path " +
 				path));
+	}
+
+	/**
+	 * @param setRenderingFlag
+	 *            rendering flag
+	 */
+	void internalMarkRendering(boolean setRenderingFlag)
+	{
+		// WICKET-5460 no longer prepared for render
+		setRequestFlag(RFLAG_PREPARED_FOR_RENDER, false);
+
+		setRequestFlag(RFLAG_RENDERING, setRenderingFlag);
 	}
 
 	/**
