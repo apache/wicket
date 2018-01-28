@@ -995,6 +995,8 @@ public abstract class Page extends MarkupContainer
 				delay.release();
 			}
 
+			markRendering(true);
+			
 			render();
 		}
 		finally

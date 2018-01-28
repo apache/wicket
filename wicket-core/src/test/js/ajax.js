@@ -1042,7 +1042,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - success scenario.', function () {
 
-			expect(13);
+			expect(9);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1056,18 +1056,6 @@ jQuery(document).ready(function() {
 				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
 				bsh: [ function(attrs) {
 					ok(true, "BeforeSend handler executed");
-
-					var form = Wicket.$(attrs.f);
-					if (form.tagName.toLowerCase() !== "form") {
-						do {
-							form = form.parentNode;
-						} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
-					}
-					var formUrl = form.action;
-					ok(formUrl.indexOf('dynamicEPName') > -1, "Dynamic extra parameter name is in the request query string");
-					ok(formUrl.indexOf('dynamicEPValue') > -1, "Dynamic extra parameter value is in the request query string");
-					ok(formUrl.indexOf('extraParamName') > -1, "Static extra parameter name is in the request query string");
-					ok(formUrl.indexOf('extraParamValue') > -1, "Static extra parameter value is in the request query string");
 				} ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(true, "Success handler executed"); } ],
@@ -1101,7 +1089,7 @@ jQuery(document).ready(function() {
 		 */
 		asyncTest('Submit nested form - failure scenario.', function () {
 
-			expect(12);
+			expect(8);
 
 			var attrs = {
 				f:  "innerForm", // the id of the form to submit
@@ -1115,18 +1103,6 @@ jQuery(document).ready(function() {
 				pre: [ function(attrs) {ok(true, "Precondition executed"); return true; } ],
 				bsh: [ function(attrs) {
 					ok(true, "BeforeSend handler executed");
-
-					var form = Wicket.$(attrs.f);
-					if (form.tagName.toLowerCase() !== "form") {
-						do {
-							form = form.parentNode;
-						} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
-					}
-					var formUrl = form.action;
-					ok(formUrl.indexOf('dynamicEPName') > -1, "Dynamic extra parameter name is in the request query string");
-					ok(formUrl.indexOf('dynamicEPValue') > -1, "Dynamic extra parameter value is in the request query string");
-					ok(formUrl.indexOf('extraParamName') > -1, "Static extra parameter name is in the request query string");
-					ok(formUrl.indexOf('extraParamValue') > -1, "Static extra parameter value is in the request query string");
 				} ],
 				ah: [ function(attrs) { ok(true, "After handler executed"); } ],
 				sh: [ function(attrs) { ok(false, "Success handler should not be executed"); } ],

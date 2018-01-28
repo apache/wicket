@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+	<wicket:head>
+		<style>
+			.drop-zone {
+				border: 1px dotted #FF9925;
+				width:200px;
+				height:200px;
+			}
+			.drop-zone.drag-over {
+				background: #FF9925;
+				color: #ffffff;
+			}
+		</style>
+	</wicket:head>
+</head>
+<body>
 <wicket:extend xmlns:wicket="http://wicket.apache.org">
 
 Demonstrates Wicket's ability to transparently handle multipart forms via AJAX.<br/><br/>The only difference between this example and other non-AJAX upload examples is the option to trigger the form submit via an AjaxButton, everything else is handled transparently by Wicket.<br/><br/>
@@ -13,4 +30,10 @@ Demonstrates Wicket's ability to transparently handle multipart forms via AJAX.<
 	<input type="submit" value="Regular Submit"/> <input wicket:id="ajaxSubmit" type="button" value="Ajax Submit"/>
 </form>
 
+<div wicket:id="drop" class="drop-zone">
+	Drop file here.
+</div>
+
 </wicket:extend>
+</body>
+</html>
