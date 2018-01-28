@@ -46,10 +46,8 @@ public class AjaxApplication extends WicketExampleApplication
 
 		getDebugSettings().setAjaxDebugModeEnabled(true);
 		
-		setHeaderResponseDecorator(response -> {
-			// use this header resource decorator to defer all JavaScript resources
-			return new ResourceAggregator(new JavaScriptDeferHeaderResponse(response));
-		});
+		// use this header resource decorator to defer all JavaScript resources
+		setHeaderResponseDecorator(response -> new ResourceAggregator(new JavaScriptDeferHeaderResponse(response)));
 
 		getComponentInitializationListeners().add(new IComponentInitializationListener()
 		{
