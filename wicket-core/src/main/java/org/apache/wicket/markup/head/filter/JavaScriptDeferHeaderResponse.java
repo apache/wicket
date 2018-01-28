@@ -70,6 +70,8 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 	 */
 	private class NativeOnDomContentLoadedHeaderItem extends OnDomReadyHeaderItem
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
 		 *
@@ -96,6 +98,7 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 	 */
 	private class NativeOnLoadHeaderItem extends OnLoadHeaderItem
 	{
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
@@ -117,4 +120,4 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 			}
 		}
 	}	
-} 
+}

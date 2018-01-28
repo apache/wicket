@@ -35,6 +35,8 @@ import org.apache.wicket.request.Response;
  */
 public class FilteredHeaderItem extends HeaderItem implements IWrappedHeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	private HeaderItem wrapped;
 
 	private String filterName;

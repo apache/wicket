@@ -59,21 +59,22 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	public void createBucketOnTheFlyForFilteredHeaderItem() throws Exception
 	{
-		FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
+		try (FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
 		{
 			@Override
 			protected Response getRealResponse()
 			{
 				return new StringResponse();
 			}
-		}, "headerBucketName", Collections.EMPTY_LIST);
-
-		String filterName = "filterName";
-		String headerContent = "content";
-		FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
-		headerResponse.render(item);
-		CharSequence realContent = headerResponse.getContent(filterName);
-		assertEquals(headerContent, realContent.toString());
+		}, "headerBucketName", Collections.emptyList()))
+		{
+			String filterName = "filterName";
+			String headerContent = "content";
+			FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
+			headerResponse.render(item);
+			CharSequence realContent = headerResponse.getContent(filterName);
+			assertEquals(headerContent, realContent.toString());
+		}
 	}
 
 	/**
@@ -83,14 +84,7 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	public void deferred() throws Exception
 	{
-		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
-		{
-			@Override
-			public IHeaderResponse decorate(IHeaderResponse response)
-			{
-				return new ResourceAggregator(new JavaScriptDeferHeaderResponse(response));
-			}
-		});
+		tester.getApplication().setHeaderResponseDecorator(response -> new ResourceAggregator(new JavaScriptDeferHeaderResponse(response)));
 		executeTest(DeferredPage.class, "DeferredPageExpected.html");
 	}
 }

@@ -35,6 +35,8 @@ public class DeferredPage extends WebPage
 	public DeferredPage()
 	{
 		add(new AjaxEventBehavior("click") {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
