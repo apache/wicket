@@ -26,6 +26,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.DecoratingHeaderResponse;
+import org.apache.wicket.page.PartialPageUpdate;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
@@ -40,6 +41,11 @@ import org.apache.wicket.util.string.Strings;
 + */
 public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 {
+	/**
+	 * Decorate the given response.
+	 * 
+	 * @param response
+	 */
 	public JavaScriptDeferHeaderResponse(IHeaderResponse response)
 	{
 		super(response);
@@ -66,7 +72,10 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 	}
 
 	/**
-	 * A specialization that uses native "DOMContentLoaded" events without dependency to external JavaScript
+	 * A specialization that uses native "DOMContentLoaded" events without dependency to external JavaScript.
+	 * <p>
+	 * For Ajax requests we utilize the fact, that {@link PartialPageUpdate} renders {@link #getJavaScript()} only,
+	 * executing the JavaScript directly without any event registration.
 	 */
 	private class NativeOnDomContentLoadedHeaderItem extends OnDomReadyHeaderItem
 	{
@@ -82,6 +91,9 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 			super(javaScript);
 		}
 
+		/**
+		 * Overriden to use native {@code addEventListener('DOMContentLoaded')} instead.
+		 */
 		@Override
 		public void render(Response response)
 		{
@@ -95,6 +107,9 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 	
 	/**
 	 * A specialization that uses native "load" events without dependency to external JavaScript 
+	 * <p>
+	 * For Ajax requests we utilize the fact, that {@link PartialPageUpdate} renders {@link #getJavaScript()} only,
+	 * executing the JavaScript directly without any event registration.
 	 */
 	private class NativeOnLoadHeaderItem extends OnLoadHeaderItem
 	{
@@ -110,6 +125,9 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 			super(javaScript);
 		}
 
+		/**
+		 * Overriden to use native {@code addEventListener('load')} instead.
+		 */
 		@Override
 		public void render(Response response)
 		{
