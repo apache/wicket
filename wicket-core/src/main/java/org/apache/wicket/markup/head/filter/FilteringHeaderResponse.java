@@ -233,6 +233,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	 *            the name of the filter to get the bucket for
 	 * @return the content that was accepted by the filter with this name
 	 */
+	@SuppressWarnings("resource")
 	public final CharSequence getContent(String filterName)
 	{
 		if (filterName == null || !responseFilterMap.containsKey(filterName))
@@ -262,6 +263,8 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 			}
 		};
 
+		headerRenderer = decorate(headerRenderer);
+
 		for (HeaderItem curItem : resp)
 		{
 			headerRenderer.render(curItem);
@@ -270,6 +273,18 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 		headerRenderer.close();
 
 		return strResponse.getBuffer();
+	}
+
+	/**
+	 * Decorate the given response used to get contents.
+	 * 
+	 * @param response
+	 *            response to decorate
+	 * @return default implementation just returns the response
+	 */
+	protected IHeaderResponse decorate(IHeaderResponse response)
+	{
+		return response;
 	}
 
 	private void render(HeaderItem item, String filterName)
