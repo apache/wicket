@@ -19,6 +19,7 @@ package org.apache.wicket.markup.head.filter;
 import java.util.Collections;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.head.internal.HeaderResponse;
 import org.apache.wicket.markup.html.IHeaderResponseDecorator;
@@ -45,7 +46,7 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 			{
 				// use this header resource decorator to load all JavaScript resources in the page
 				// footer (after </body>)
-				return new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS");
+				return new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
 			}
 		});
 		executeTest(FilteredHeaderPage.class, "FilteredHeaderPageExpected.html");
@@ -58,20 +59,32 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 	@Test
 	public void createBucketOnTheFlyForFilteredHeaderItem() throws Exception
 	{
-		FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
+		try (FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
 		{
 			@Override
 			protected Response getRealResponse()
 			{
 				return new StringResponse();
 			}
-		}, "headerBucketName", Collections.EMPTY_LIST);
+		}, "headerBucketName", Collections.emptyList()))
+		{
+			String filterName = "filterName";
+			String headerContent = "content";
+			FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
+			headerResponse.render(item);
+			CharSequence realContent = headerResponse.getContent(filterName);
+			assertEquals(headerContent, realContent.toString());
+		}
+	}
 
-		String filterName = "filterName";
-		String headerContent = "content";
-		FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
-		headerResponse.render(item);
-		CharSequence realContent = headerResponse.getContent(filterName);
-		assertEquals(headerContent, realContent.toString());
+	/**
+	 * WICKET-6498 all JavaScript resources have an "defer" attribute, all other JavaScript is
+	 * inside a {@code document.addEventListener('DOMContentLoaded', function() {}; } hook.
+	 */
+	@Test
+	public void deferred() throws Exception
+	{
+		tester.getApplication().setHeaderResponseDecorator(response -> new ResourceAggregator(new JavaScriptDeferHeaderResponse(response)));
+		executeTest(DeferredPage.class, "DeferredPageExpected.html");
 	}
 }
