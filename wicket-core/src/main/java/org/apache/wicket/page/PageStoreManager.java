@@ -43,10 +43,29 @@ public class PageStoreManager extends AbstractPageManager
 
 	private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
 
+	/**
+	 * A flag indicating whether this session entry is being re-set in the Session.
+	 * <p>
+	 * Web containers intercept
+	 * {@link javax.servlet.http.HttpSession#setAttribute(String, Object)} to detect changes and
+	 * replicate the session. If the attribute has been already bound in the session then
+	 * {@link #valueUnbound(HttpSessionBindingEvent)} might get called - this flag
+	 * helps us to ignore the invocation in that case.
+	 * 
+	 * @see #valueUnbound(HttpSessionBindingEvent)
+	 */
+	private static final ThreadLocal<Boolean> STORING_TOUCHED_PAGES = new ThreadLocal<Boolean>()
+	{
+		protected Boolean initialValue()
+		{
+			return Boolean.FALSE;
+		};
+	};
+
 	private final IPageStore pageStore;
-
+	
 	private final String applicationName;
-
+	
 	/**
 	 * Construct.
 	 * 
@@ -93,24 +112,6 @@ public class PageStoreManager extends AbstractPageManager
 		private transient List<IManageablePage> sessionCache;
 		private transient List<Object> afterReadObject;
 
-		/**
-		 * A flag indicating whether this session entry is being re-set in the Session.
-		 * <p>
-		 * Web containers intercept
-		 * {@link javax.servlet.http.HttpSession#setAttribute(String, Object)} to detect changes and
-		 * replicate the session. If the attribute has been already bound in the session then
-		 * {@link #valueUnbound(HttpSessionBindingEvent)} might get called - this flag
-		 * helps us to ignore the invocation in that case.
-		 * 
-		 * @see #valueUnbound(HttpSessionBindingEvent)
-		 */
-		private transient ThreadLocal<Boolean> storingTouchedPages = new ThreadLocal<Boolean>()
-		{
-			protected Boolean initialValue()
-			{
-				return Boolean.FALSE;
-			};
-		};
 
 		/**
 		 * Construct.
@@ -313,14 +314,6 @@ public class PageStoreManager extends AbstractPageManager
 		{
 			s.defaultReadObject();
 
-			storingTouchedPages = new ThreadLocal<Boolean>()
-			{
-				protected Boolean initialValue()
-				{
-					return Boolean.FALSE;
-				};
-			};
-
 			afterReadObject = new ArrayList<>();
 
 			List<Serializable> l = (List<Serializable>)s.readObject();
@@ -351,7 +344,7 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		public void valueUnbound(HttpSessionBindingEvent event)
 		{
-			if (storingTouchedPages == null || storingTouchedPages.get())
+			if (STORING_TOUCHED_PAGES.get())
 			{
 				// triggered by #storeTouchedPages(), so do not remove the data
 				return;
@@ -468,14 +461,14 @@ public class PageStoreManager extends AbstractPageManager
 					pageStore.storePage(entry.sessionId, page);
 				}
 
-				entry.storingTouchedPages.set(true);
+				STORING_TOUCHED_PAGES.set(true);
 				try
 				{
 					setSessionAttribute(getAttributeName(), entry);
 				}
 				finally
 				{
-					entry.storingTouchedPages.set(false);
+					STORING_TOUCHED_PAGES.remove();
 				}
 			}
 		}
