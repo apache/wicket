@@ -528,7 +528,23 @@ public class Form<T> extends WebMarkupContainer
 	public final CharSequence getJsForListenerUrl(CharSequence url)
 	{
 		Form<?> root = getRootForm();
-		return String.format("var f = document.getElementById('%s'); f.action='%s';f.submit();", root.getMarkupId(), url);
+
+		StringBuilder string = new StringBuilder();
+		string.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
+
+		String action = url.toString();
+		if (root.encodeUrlInHiddenFields()) {
+			// parameter must be sent as hidden field, as it would be ignored in the action URL
+			int i = action.indexOf('?');
+			if (i != -1) {
+				string.append(String.format("f.getElementsByTagName('input')[0].name = '%s';", action.substring(i + 1)));
+				action = action.substring(0, i);
+			}
+		}
+
+		string.append(String.format("f.action='%s';", action));
+		string.append("f.submit();");
+		return string;
 	}
 
 	/**
@@ -1264,17 +1280,6 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns the HiddenFieldId which will be used as the name and id property of the hiddenfield
-	 * that is generated for event dispatches.
-	 * 
-	 * @return The name and id of the hidden field.
-	 */
-	public final String getHiddenFieldId()
-	{
-		return getInputNamePrefix() + getMarkupId() + "_hf_0";
-	}
-
-	/**
 	 * Gets the HTTP submit method that will appear in form markup. If no method is specified in the
 	 * template, "post" is the default. Note that the markup-declared HTTP method may not correspond
 	 * to the one actually used to submit the form; in an Ajax submit, for example, JavaScript event
@@ -1618,7 +1623,8 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * 
+	 * Should URL query parameters be encoded in hidden fields. 
+	 *  
 	 * @return true if form's method is 'get'
 	 */
 	protected boolean encodeUrlInHiddenFields()
