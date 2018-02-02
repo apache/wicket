@@ -31,11 +31,17 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * A header response that defers all {@link AbstractJavaScriptReferenceHeaderItem}s.
+ * A header response which defers all {@link AbstractJavaScriptReferenceHeaderItem}s.
  * <p>
  * To prevent any error because of possible dependencies to referenced JavaScript files
  * *all* {@link JavaScriptHeaderItem}s are replaced with suitable implementations that
- * delay any execution until {@link AbstractJavaScriptReferenceHeaderItem}s have been loaded.
+ * delay any execution until all deferred {@link AbstractJavaScriptReferenceHeaderItem}s
+ * have been loaded.
+ * <p>
+ * Note: This solution depends on the execution order of JavaScript in the browser:
+ * The 'DOMContentLoaded' event has to be fired <me>after</em> all deferred JavaScript
+ * resources have been loaded. This doesn't seem to be the case in all browsers, thus
+ * this class should be considered experimental.
  * 
  * @author svenmeier
 + */
@@ -54,7 +60,7 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 	@Override
 	public void render(HeaderItem item)
 	{
-		if (item instanceof IWrappedHeaderItem) {
+		while (item instanceof IWrappedHeaderItem) {
 			item = ((IWrappedHeaderItem)item).getWrapped();
 		}
 
@@ -77,7 +83,7 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 	 * For Ajax requests we utilize the fact, that {@link PartialPageUpdate} renders {@link #getJavaScript()} only,
 	 * thus executing the JavaScript directly without any event registration.
 	 */
-	private class NativeOnDomContentLoadedHeaderItem extends OnDomReadyHeaderItem
+	private static class NativeOnDomContentLoadedHeaderItem extends OnDomReadyHeaderItem
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -111,7 +117,7 @@ public class JavaScriptDeferHeaderResponse extends DecoratingHeaderResponse
 	 * For Ajax requests we utilize the fact, that {@link PartialPageUpdate} renders {@link #getJavaScript()} only,
 	 * thus executing the JavaScript directly without any event registration.
 	 */
-	private class NativeOnLoadHeaderItem extends OnLoadHeaderItem
+	private static class NativeOnLoadHeaderItem extends OnLoadHeaderItem
 	{
 		private static final long serialVersionUID = 1L;
 
