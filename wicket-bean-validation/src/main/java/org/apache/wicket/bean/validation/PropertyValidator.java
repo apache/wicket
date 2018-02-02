@@ -3,6 +3,7 @@ package org.apache.wicket.bean.validation;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -10,8 +11,6 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
@@ -61,8 +60,24 @@ import org.apache.wicket.validation.IValidator;
 public class PropertyValidator<T> extends Behavior implements IValidator<T>
 {
 	private static final Class<?>[] EMPTY = new Class<?>[0];
-	private static final List<Class<? extends Annotation>> NOT_NULL_ANNOTATIONS =
-			Arrays.asList(NotNull.class, NotBlank.class, NotEmpty.class);
+	private static final List<Class<? extends Annotation>> NOT_NULL_ANNOTATIONS;
+	static
+	{
+		List<Class<? extends Annotation>> tmp = new ArrayList<>();
+		tmp.add(NotNull.class);
+		try
+		{
+			tmp.add(Class.forName("javax.validation.constraints.NotBlank")
+				.asSubclass(Annotation.class));
+			tmp.add(Class.forName("javax.validation.constraints.NotEmpty")
+				.asSubclass(Annotation.class));
+		}
+		catch (ClassNotFoundException e)
+		{
+			// ignore exception, we are using bean validation 1.1
+		}
+		NOT_NULL_ANNOTATIONS = Collections.unmodifiableList(tmp);
+	}
 
 	private FormComponent<T> component;
 
