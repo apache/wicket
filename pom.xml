@@ -184,6 +184,28 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>javadoc-1.8+</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<version>${maven.javadoc.version}</version>
+							<configuration>
+								<failOnError>false</failOnError>
+								<additionalparam>-Xdoclint:none</additionalparam>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+
 	</profiles>
 	<url>http://wicket.apache.org/${project.artifactId}</url>
 	<inceptionYear>2006</inceptionYear>
