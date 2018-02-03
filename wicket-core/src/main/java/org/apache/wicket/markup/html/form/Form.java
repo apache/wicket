@@ -685,26 +685,6 @@ public class Form<T> extends WebMarkupContainer
 	@Override
 	public final void onRequest()
 	{
-		// check methods match
-		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
-		{
-			String desiredMethod = getMethod();
-			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
-			if (!actualMethod.equalsIgnoreCase(desiredMethod))
-			{
-				MethodMismatchResponse response = onMethodMismatch();
-				switch (response)
-				{
-					case ABORT :
-						return;
-					case CONTINUE :
-						break;
-					default :
-						throw new IllegalStateException("Invalid " +
-							MethodMismatchResponse.class.getName() + " value: " + response);
-				}
-			}
-		}
 		onFormSubmitted(null);
 	}
 
@@ -734,6 +714,27 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void onFormSubmitted(IFormSubmitter submitter)
 	{
+		// check methods match
+		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
+		{
+			String desiredMethod = getMethod();
+			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
+			if (!actualMethod.equalsIgnoreCase(desiredMethod))
+			{
+				MethodMismatchResponse response = onMethodMismatch();
+				switch (response)
+				{
+					case ABORT :
+						return;
+					case CONTINUE :
+						break;
+					default :
+						throw new IllegalStateException("Invalid " +
+								MethodMismatchResponse.class.getName() + " value: " + response);
+				}
+			}
+		}
+
 		markFormsSubmitted(submitter);
 
 		if (handleMultiPart())
@@ -1343,7 +1344,7 @@ public class Form<T> extends WebMarkupContainer
 						}
 
 					});
-			
+
 			if (Boolean.TRUE.equals(anyEmbeddedMultipart)) {
 				multiPart |= MULTIPART_HINT_YES;
 			} else {
@@ -1623,8 +1624,8 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Should URL query parameters be encoded in hidden fields. 
-	 *  
+	 * Should URL query parameters be encoded in hidden fields.
+	 *
 	 * @return true if form's method is 'get'
 	 */
 	protected boolean encodeUrlInHiddenFields()
@@ -1671,7 +1672,7 @@ public class Form<T> extends WebMarkupContainer
 			String[] params = Strings.split(queryString, '&');
 
 			writeParamsAsHiddenFields(params, buffer);
-			
+
 			buffer.append("</div>");
 			getResponse().write(buffer);
 		}
@@ -1746,7 +1747,7 @@ public class Form<T> extends WebMarkupContainer
 			this.multiPart &= MULTIPART_HARD;
 		}
 	}
-	
+
 	@Override
 	protected void onBeforeRender()
 	{
