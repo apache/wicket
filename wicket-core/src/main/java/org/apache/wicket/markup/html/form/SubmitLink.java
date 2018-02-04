@@ -207,9 +207,18 @@ public class SubmitLink extends AbstractSubmitLink implements IRequestListener
 			// find the root form - the one we are really going to submit
 			Form<?> root = getForm().getRootForm();
 
+			StringBuilder script = new StringBuilder();
+			if (shouldInvokeJavaScriptFormOnsubmit())
+			{
+				script.append(String.format("var ff=document.getElementById('%s');", getForm().getMarkupId()));
+				script.append("if (typeof ff.onsubmit === 'function' && ff.onsubmit() == false) return false;");
+			}
+			
 			CharSequence url = urlForListener(new PageParameters());
-
-			return root.getJsForListenerUrl(url);
+			script.append(root.getJsForListenerUrl(url));
+			script.append("return false;");
+			
+			return script;
 		}
 		else
 		{

@@ -45,6 +45,12 @@ public class SubmitLinkPage extends WicketExamplePage
 		SubmitLink internal = new SubmitLink("internal")
 		{
 			@Override
+			protected boolean shouldInvokeJavaScriptFormOnsubmit()
+			{
+				return false;
+			}
+			
+			@Override
 			public void onSubmit()
 			{
 				info("internal onsubmit");
