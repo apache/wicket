@@ -113,6 +113,12 @@ public abstract class Session implements IClusterable, IEventSink
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(Session.class);
 
+	/** records if session has been invalidated by the current request */
+	private static final MetaDataKey<Boolean> SESSION_INVALIDATED = new MetaDataKey<Boolean>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
@@ -190,9 +196,6 @@ public abstract class Session implements IClusterable, IEventSink
 
 	/** Application level meta data. */
 	private MetaDataEntry<?>[] metaData;
-
-	/** True, if session has been invalidated */
-	private transient volatile boolean sessionInvalidated = false;
 
 	/**
 	 * Temporary instance of the session store. Should be set on each request as it is not supposed
@@ -480,7 +483,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public void invalidate()
 	{
-		sessionInvalidated = true;
+		RequestCycle.get().setMetaData(SESSION_INVALIDATED, true);
 	}
 
 	/**
@@ -493,6 +496,7 @@ public abstract class Session implements IClusterable, IEventSink
 			sessionStore.invalidate(RequestCycle.get().getRequest());
 			sessionStore = null;
 			id = null;
+			RequestCycle.get().setMetaData(SESSION_INVALIDATED, false);
 		}
 	}
 
@@ -533,7 +537,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 */
 	public final boolean isSessionInvalidated()
 	{
-		return sessionInvalidated;
+		return Boolean.TRUE.equals(RequestCycle.get().getMetaData(SESSION_INVALIDATED));
 	}
 
 	/**
@@ -650,7 +654,7 @@ public abstract class Session implements IClusterable, IEventSink
 	{
 		detachFeedback();
 
-		if (sessionInvalidated)
+		if (isSessionInvalidated())
 		{
 			invalidateNow();
 		}
