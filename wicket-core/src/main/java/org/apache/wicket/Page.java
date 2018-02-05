@@ -986,13 +986,11 @@ public abstract class Page extends MarkupContainer
 		{
 			++renderCount;
 
-			FeedbackDelay delay = new FeedbackDelay(getRequestCycle());
-			try {
+			// delay rendering of feedbacks after all other components
+			try (FeedbackDelay delay = new FeedbackDelay(getRequestCycle())) {
 				beforeRender();
 				
 				delay.beforeRender();
-			} finally {
-				delay.release();
 			}
 
 			markRendering(true);

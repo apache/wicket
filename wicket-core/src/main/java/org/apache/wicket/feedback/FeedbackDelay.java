@@ -33,7 +33,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * This gives other {@link Component#beforeRender()} the possibility to report feedbacks,
  * which can then be collected by {@link IFeedback}s afterwards.
  */
-public class FeedbackDelay implements Serializable
+public class FeedbackDelay implements Serializable, AutoCloseable
 {
 	private static final MetaDataKey<FeedbackDelay> KEY = new MetaDataKey<FeedbackDelay>()
 	{
@@ -109,7 +109,13 @@ public class FeedbackDelay implements Serializable
 		}
 	}
 	
-	public void release() {
+	/**
+	 * Close any delays.
+	 * <p>
+	 * This does not call {@link #beforeRender()} on the delayed feedbacks.
+	 */
+	@Override
+	public void close() {
 		if (cycle != null) {
 			cycle.setMetaData(KEY, null);
 			cycle = null;

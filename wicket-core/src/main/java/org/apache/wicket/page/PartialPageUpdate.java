@@ -241,9 +241,8 @@ public abstract class PartialPageUpdate
 
 		List<Component> prepared = new ArrayList<>(markupIdToComponent.size());
 		
-		// prepare components
-		FeedbackDelay delay = new FeedbackDelay(RequestCycle.get());
-		try {
+		// delay preparation of feedbacks after all other components
+		try (FeedbackDelay delay = new FeedbackDelay(RequestCycle.get())) {
 			for (Component component : markupIdToComponent.values())
 			{
 				if (!containsAncestorFor(component))
@@ -255,8 +254,6 @@ public abstract class PartialPageUpdate
 
 			// .. now prepare all postponed feedbacks
 			delay.beforeRender();
-		} finally {
-			delay.release();
 		}
 
 		// write components

@@ -46,7 +46,6 @@ public class StatelessPageWithFeedbackTest extends WicketTestCase
 	 * After submit, both feedbackmessages (from onInitialize and onSubmit) must be visible
 	 */
 	@Test
-	@Ignore("WICKET-6529 is not fixed")
 	public void wicket6529()
 	{
 		tester.startPage(StatelessPageWithFeedback.class);
