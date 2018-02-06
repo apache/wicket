@@ -663,7 +663,7 @@
 				try {
 					var formData = new FormData();
 					for (var i = 0; i < data.length; i++) {
-						formData.append(data[i].name, data[i].value);
+						formData.append(data[i].name, data[i].value || "");
 					}
 					
 					data = formData;

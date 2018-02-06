@@ -1012,7 +1012,6 @@ jQuery(document).ready(function() {
 
 		/**
 		 * Submits a nested multipart form (represented with <div>).
-		 * The submit uses <iframe>.
 		 *
 		 * https://issues.apache.org/jira/browse/WICKET-4673
 		 */
