@@ -2575,7 +2575,7 @@
 				if (WTH) {
 					for (var th in WTH) {
 						if (WTH.hasOwnProperty(th)) {
-							Wicket.Timer.clear(th)
+							Wicket.Timer.clear(th);
 						}
 					}
 				}
