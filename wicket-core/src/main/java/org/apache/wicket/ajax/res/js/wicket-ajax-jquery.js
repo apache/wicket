@@ -2541,26 +2541,43 @@
 			/**
 			 * Schedules a timer
 			 * @param {string} timerId - the identifier for the timer
-			 * @param {function|string} js - the JavaScript to execute after the timeout
+			 * @param {function} f - the JavaScript function to execute after the timeout
 			 * @param {number} delay - the timeout
 			 */
-			'set': function(timerId, js, delay) {
+			'set': function(timerId, f, delay) {
 				if (typeof(Wicket.TimerHandles) === 'undefined') {
 					Wicket.TimerHandles = {};
 				}
 
 				Wicket.Timer.clear(timerId);
-				Wicket.TimerHandles[timerId] = setTimeout(js, delay);
+				Wicket.TimerHandles[timerId] = setTimeout(function() {
+					Wicket.Timer.clear(timerId);
+					f();
+				}, delay);
 			},
 
 			/**
-			 * Un-schedules a timer by its id
+			 * Clears a timer by its id
 			 * @param {string} timerId - the identifier of the timer
 			 */
 			clear: function(timerId) {
 				if (Wicket.TimerHandles && Wicket.TimerHandles[timerId]) {
 					clearTimeout(Wicket.TimerHandles[timerId]);
 					delete Wicket.TimerHandles[timerId];
+				}
+			},
+			
+			/**
+			 * Clear all remaining timers.
+			 */
+			clearAll: function() {
+				var WTH = Wicket.TimerHandles;
+				if (WTH) {
+					for (var th in WTH) {
+						if (WTH.hasOwnProperty(th)) {
+							Wicket.Timer.clear(th)
+						}
+					}
 				}
 			}
 		}
@@ -2936,42 +2953,7 @@
 	 * Clear any scheduled Ajax timers when leaving the current page
 	 */
 	Wicket.Event.add(window, "unload", function() {
-		var WTH = Wicket.TimerHandles;
-		if (WTH) {
-			for (var th in WTH) {
-				if (WTH.hasOwnProperty(th)) {
-					window.clearTimeout(WTH[th]);
-					delete WTH[th];
-				}
-			}
-		}
-	});
-
-	/**
-	 * Remove any scheduled timers on the removed element.
-	 * This wont remove the timer for elements which are children of the removed one.
-	 */
-	Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, element) {
-		var id = element.id;
-		if (Wicket.TimerHandles && Wicket.TimerHandles[id]) {
-			window.clearTimeout(Wicket.TimerHandles[id]);
-			delete Wicket.TimerHandles[id];
-		}
-	});
-
-	/**
-	 * Remove any scheduled timers on elements which are no more in the DOM document.
-	 * This removes the timers for all elements which parents have been removed from the DOM.
-	 */
-	Wicket.Event.subscribe('/dom/node/added', function() {
-		if (Wicket.TimerHandles) {
-			for (var timerHandle in Wicket.TimerHandles) {
-				if (Wicket.$$(timerHandle) === false) {
-					window.clearTimeout(timerHandle);
-					delete Wicket.TimerHandles[timerHandle];
-				}
-			}
-		}
+		Wicket.Timer.clearAll();
 	});
 
 })(jQuery);

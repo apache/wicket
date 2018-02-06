@@ -44,6 +44,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	private Duration updateInterval;
 
 	private boolean stopped = false;
+	
+	/**
+	 * Id of timer in JavaScript.
+	 */
+	private String timerId;
 
 	/**
 	 * Construct.
@@ -88,21 +93,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 		if (isStopped() == false)
 		{
-			addTimeout(response);
+			setTimeout(response);
 		}
-	}
-
-	/**
-	 * @param updateInterval
-	 *            Duration between AJAX callbacks
-	 * @return JS script
-	 */
-	protected final String getJsTimeoutCall(final Duration updateInterval)
-	{
-		CharSequence js = getCallbackScript();
-
-		return String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
-				getComponent().getMarkupId(), js, updateInterval.getMilliseconds());
 	}
 
 	/**
@@ -112,9 +104,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		// onTimer might remove this behavior, so keep the component
-		// so the timeout can be cleared later on
-		Component component = getComponent();
+		// timerId is no longer valid after timer has triggered
+		timerId = null;
 		
 		if (shouldTrigger())
 		{
@@ -122,21 +113,17 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 			if (shouldTrigger())
 			{
-				addTimeout(target.getHeaderResponse());
-
-				return;
+				setTimeout(target.getHeaderResponse());
 			}
 		}
-
-		clearTimeout(component, target.getHeaderResponse());
 	}
 
 	/**
-	 * Decides whether the timer behavior should render its JavaScript to re-trigger
-	 * it after the update interval.
+	 * Decides whether the timer behavior should render its JavaScript to re-trigger it after the
+	 * update interval.
 	 *
-	 * @return {@code true} if the behavior is not stopped, it is enabled and still attached to
-	 *      any component in the page or to the page itself
+	 * @return {@code true} if the behavior is not stopped, it is enabled and still attached to any
+	 *         component in the page or to the page itself
 	 */
 	protected boolean shouldTrigger()
 	{
@@ -162,32 +149,71 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	/**
-	 * Re-enables the timer if already stopped
+	 * Restart the timer.
 	 * 
 	 * @param target
 	 *            may be null
 	 */
 	public final void restart(final IPartialPageRequestHandler target)
 	{
-		if (stopped == true)
-		{
-			stopped = false;
+		stopped = false;
 
-			if (target != null)
-			{
-				addTimeout(target.getHeaderResponse());
-			}
+		if (target != null)
+		{
+			setTimeout(target.getHeaderResponse());
 		}
 	}
 
-	private void addTimeout(IHeaderResponse headerResponse)
+	/**
+	 * Create an identifier for the JavaScript timer.
+	 * <p>
+	 * Note: The identifier must not change as long as this behavior is attached to a component!
+	 * 
+	 * @return creates an id based on {@link Component#getMarkupId()} and
+	 *         {@link Component#getBehaviorById(int)} by default
+	 */
+	protected String getTimerId()
 	{
-		headerResponse.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+		Component component = getComponent();
+
+		return component.getMarkupId() + "." + component.getBehaviorId(this);
 	}
 
-	private void clearTimeout(Component component, IHeaderResponse headerResponse)
+	/**
+	 * Set the timeout on the given {@link IHeaderResponse}. Implementation note:
+	 * <p>
+	 * {@link #respond(AjaxRequestTarget)} might set the timer once and
+	 * {@link #renderHead(Component, IHeaderResponse)} a second time successively, if the attached
+	 * component is re-rendered on the same {@link AjaxRequestTarget}.
+	 * <p>
+	 * But rendering of the component might <em>not</em> actually happen on the same {@link AjaxRequestTarget},
+	 * e.g. when a redirect to a full page-render is scheduled. Thus this method <em>always</em> sets the timeout 
+	 * and in the former case {@link AjaxRequestTarget} will take care of executing one of the
+	 * two {@link OnLoadHeaderItem}s only.
+	 * 
+	 * @param headerResponse
+	 */
+	private void setTimeout(IHeaderResponse headerResponse)
 	{
-		headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + component.getMarkupId() + "');"));
+		CharSequence js = getCallbackScript();
+
+		// remember id to be able to clear it later
+		timerId = getTimerId();
+
+		headerResponse.render(
+			OnLoadHeaderItem.forScript(String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
+				timerId, js, updateInterval.getMilliseconds())));
+	}
+
+	private void clearTimeout(IHeaderResponse headerResponse)
+	{
+		if (timerId != null)
+		{
+			headerResponse
+				.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + timerId + "');"));
+
+			timerId = null;
+		}
 	}
 
 	/**
@@ -204,7 +230,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 			if (target != null)
 			{
-				clearTimeout(getComponent(), target.getHeaderResponse());
+				clearTimeout(target.getHeaderResponse());
 			}
 		}
 	}
@@ -212,7 +238,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	@Override
 	public void onRemove(Component component)
 	{
-		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(component, target.getHeaderResponse()));
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
 	}
 
 	@Override
@@ -220,7 +246,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		Component component = getComponent();
 		
-		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(component, target.getHeaderResponse()));
+		component.getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(target -> clearTimeout(target.getHeaderResponse()));
 	}
 
 	/**
