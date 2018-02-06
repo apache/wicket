@@ -2557,7 +2557,7 @@
 			},
 
 			/**
-			 * Un-schedules a timer by its id
+			 * Clears a timer by its id
 			 * @param {string} timerId - the identifier of the timer
 			 */
 			clear: function(timerId) {
@@ -2567,7 +2567,10 @@
 				}
 			},
 			
-			clearAll: function(timerId) {
+			/**
+			 * Clear all remaining timers.
+			 */
+			clearAll: function() {
 				var WTH = Wicket.TimerHandles;
 				if (WTH) {
 					for (var th in WTH) {

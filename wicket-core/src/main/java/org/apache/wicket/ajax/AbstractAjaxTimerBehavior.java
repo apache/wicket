@@ -98,30 +98,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	/**
-	 * @param updateInterval
-	 *            Duration between AJAX callbacks
-	 * @return JS script
-	 */
-	protected final String getJsTimeoutCall(final Duration updateInterval)
-	{
-		CharSequence js = getCallbackScript();
-		
-		Component component = getComponent();
-		// remember id for timer
-		timerId = component.getMarkupId() + "." + component.getBehaviorId(this);
-
-		return String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
-			timerId, js, updateInterval.getMilliseconds());
-	}
-
-	/**
 	 * 
 	 * @see org.apache.wicket.ajax.AbstractDefaultAjaxBehavior#respond(AjaxRequestTarget)
 	 */
 	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
-		// timerId is no longer valid after Ajax request
+		// timerId is no longer valid after timer has triggered
 		timerId = null;
 		
 		if (shouldTrigger())
@@ -136,11 +119,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	/**
-	 * Decides whether the timer behavior should render its JavaScript to re-trigger
-	 * it after the update interval.
+	 * Decides whether the timer behavior should render its JavaScript to re-trigger it after the
+	 * update interval.
 	 *
-	 * @return {@code true} if the behavior is not stopped, it is enabled and still attached to
-	 *      any component in the page or to the page itself
+	 * @return {@code true} if the behavior is not stopped, it is enabled and still attached to any
+	 *         component in the page or to the page itself
 	 */
 	protected boolean shouldTrigger()
 	{
@@ -181,17 +164,55 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 		}
 	}
 
+	/**
+	 * Create an identifier for the JavaScript timer.
+	 * <p>
+	 * Note: The identifier must not change as long as this behavior is attached to a component!
+	 * 
+	 * @return creates an id based on {@link Component#getMarkupId()} and
+	 *         {@link Component#getBehaviorById(int)} by default
+	 */
+	protected String getTimerId()
+	{
+		Component component = getComponent();
+
+		return component.getMarkupId() + "." + component.getBehaviorId(this);
+	}
+
+	/**
+	 * Set the timeout on the given {@link IHeaderResponse}. Implementation note:
+	 * <p>
+	 * {@link #respond(AjaxRequestTarget)} might set the timer once and
+	 * {@link #renderHead(Component, IHeaderResponse)} a second time successively, if the attached
+	 * component is re-rendered on the same {@link AjaxRequestTarget}.
+	 * <p>
+	 * But rendering of the component might <em>not</em> actually happen on the same {@link AjaxRequestTarget},
+	 * e.g. when a redirect to a full page-render is scheduled. Thus this method <em>always</em> sets the timeout 
+	 * and in the former case {@link AjaxRequestTarget} will take care of executing one of the
+	 * two {@link OnLoadHeaderItem}s only.
+	 * 
+	 * @param headerResponse
+	 */
 	private void setTimeout(IHeaderResponse headerResponse)
 	{
-		headerResponse.render(OnLoadHeaderItem.forScript(getJsTimeoutCall(updateInterval)));
+		CharSequence js = getCallbackScript();
+
+		// remember id to be able to clear it later
+		timerId = getTimerId();
+
+		headerResponse.render(
+			OnLoadHeaderItem.forScript(String.format("Wicket.Timer.set('%s', function(){%s}, %d);",
+				timerId, js, updateInterval.getMilliseconds())));
 	}
 
 	private void clearTimeout(IHeaderResponse headerResponse)
 	{
-		if (timerId != null) {
-			headerResponse.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + timerId + "');"));
-						
-			timerId = null; 
+		if (timerId != null)
+		{
+			headerResponse
+				.render(OnLoadHeaderItem.forScript("Wicket.Timer.clear('" + timerId + "');"));
+
+			timerId = null;
 		}
 	}
 
