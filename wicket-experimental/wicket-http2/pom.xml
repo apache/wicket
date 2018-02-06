@@ -34,6 +34,7 @@
 	<modules>
 		<module>wicket-http2-core</module>
 		<module>wicket-http2-jetty</module>
+		<module>wicket-http2-servlet4</module>
 		<module>wicket-http2-tomcat</module>
 		<module>wicket-http2-undertow</module>
 	</modules>
