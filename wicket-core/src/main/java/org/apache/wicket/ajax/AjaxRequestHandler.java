@@ -233,8 +233,12 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 					"Cannot update component that does not have setOutputMarkupId property set to true. Component: " +
 						component.toString());
 			}
-			Page page = component.findParent(Page.class);
-			if (page != getPage())
+			Page pageOfComponent = component.findParent(Page.class);
+			if (component == getPage() || pageOfComponent == getPage())
+			{
+				add(component, component.getMarkupId());
+			}
+			else
 			{
 				String msg = "Cannot update component because its page is not the same as " +
 					"the one this handler has been created for. Component: " + component.toString();
@@ -249,10 +253,6 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 					// application (which was the behavior in Wicket <= 7.
 					log.error(msg, error);
 				}
-			}
-			else
-			{
-				add(component, component.getMarkupId());
 			}
 		}
 	}
