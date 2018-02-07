@@ -34,28 +34,11 @@ The following code is taken from the Application class of the project:
     @Override
     public void init()
     {
-       setHeaderResponseDecorator(new JavaScriptToBucketResponseDecorator("footer-container"));
+       setHeaderResponseDecorator(response -> {
+            return new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footer-container"));
+       });
     }
 	
-     /**
-     * Decorates an original IHeaderResponse and renders all javascript items
-     * (JavaScriptHeaderItem), to a specific container in the page.
-     */
-    static class JavaScriptToBucketResponseDecorator implements IHeaderResponseDecorator 
-    {
-
-        private String bucketName;
-
-        public JavaScriptToBucketResponseDecorator(String bucketName) {
-            this.bucketName = bucketName;
-        }
-
-        @Override
-        public IHeaderResponse decorate(IHeaderResponse response) {
-            return new JavaScriptFilteredIntoFooterHeaderResponse(response, bucketName);
-        }
-
-    }
 ----
 
 As you can see in the code above the _bucket_ that will contain JavaScript tags is called _footer-container_ To make a use of it the developer have to add a special component called _HeaderResponseContainer_ in his page:
