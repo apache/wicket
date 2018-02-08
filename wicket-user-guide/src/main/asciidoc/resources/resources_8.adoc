@@ -34,11 +34,9 @@ The following code is taken from the Application class of the project:
     @Override
     public void init()
     {
-       setHeaderResponseDecorator(response -> {
-            return new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footer-container"));
-       });
+       setHeaderResponseDecorator(response -> new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footer-container")));
     }
-	
+
 ----
 
 As you can see in the code above the _bucket_ that will contain JavaScript tags is called _footer-container_ To make a use of it the developer have to add a special component called _HeaderResponseContainer_ in his page:
