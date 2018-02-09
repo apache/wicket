@@ -685,26 +685,6 @@ public class Form<T> extends WebMarkupContainer
 	@Override
 	public final void onFormSubmitted()
 	{
-		// check methods match
-		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
-		{
-			String desiredMethod = getMethod();
-			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
-			if (!actualMethod.equalsIgnoreCase(desiredMethod))
-			{
-				MethodMismatchResponse response = onMethodMismatch();
-				switch (response)
-				{
-					case ABORT :
-						return;
-					case CONTINUE :
-						break;
-					default :
-						throw new IllegalStateException("Invalid " +
-							MethodMismatchResponse.class.getName() + " value: " + response);
-				}
-			}
-		}
 		onFormSubmitted(null);
 	}
 
@@ -734,6 +714,27 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void onFormSubmitted(IFormSubmitter submitter)
 	{
+		// check methods match
+		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
+		{
+			String desiredMethod = getMethod();
+			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
+			if (!actualMethod.equalsIgnoreCase(desiredMethod))
+			{
+				MethodMismatchResponse response = onMethodMismatch();
+				switch (response)
+				{
+					case ABORT :
+						return;
+					case CONTINUE :
+						break;
+					default :
+						throw new IllegalStateException("Invalid " +
+								MethodMismatchResponse.class.getName() + " value: " + response);
+				}
+			}
+		}
+
 		markFormsSubmitted(submitter);
 
 		if (handleMultiPart())
@@ -1014,20 +1015,20 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Sets FLAG_SUBMITTED to true on this form and every enabled nested form.
-	 * @param submitter 
+	 * @param submitter
 	 */
 	private void markFormsSubmitted(IFormSubmitter submitter)
 	{
 		setFlag(FLAG_SUBMITTED, true);
 		final Form<?> formToProcess = findFormToProcess(submitter);
-		
+
 		visitChildren(Form.class, new IVisitor<Component, Void>()
 		{
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				Form<?> form = (Form<?>)component;
-				if ((form.wantSubmitOnParentFormSubmit() || form == formToProcess) 
+				if ((form.wantSubmitOnParentFormSubmit() || form == formToProcess)
 					&& form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
