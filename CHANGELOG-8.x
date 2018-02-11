@@ -2,6 +2,53 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.0.0-M9
+
+** Bug
+
+    * [WICKET-6332] - NullPointerException in PageParameters#equals()
+    * [WICKET-6441] - MockHttpSession and MockSessionStore don't call onInvalidate() on invalidate()
+    * [WICKET-6448] - Provide behavior that disables a button after click
+    * [WICKET-6477] - Component.getDefaultModelObject() wraps in RuntimeException instead of WicketRuntimeException
+    * [WICKET-6484] - Wicket.Cookie.set does not set 'secure' flag
+    * [WICKET-6489] - Exception when "identifier|code" javascript is not start on PrependJavaScript
+    * [WICKET-6491] - AjaxDownload is not working in blob mode for Microsoft browsers
+    * [WICKET-6492] - javascript files are not minified in deployment mode and not united
+    * [WICKET-6493] - WebSocket SessionIds are wrong (HttpSession one used instead of Websocket one) + NPE if no HttpSession is found during Handshake Request
+    * [WICKET-6496] - Duplicate definition of interface JSONString
+    * [WICKET-6501] - DefaultPageManagerProvider does not honour StoreSettings.setAsynchronous(false)
+    * [WICKET-6506] - Performance issue when large component isn't visible
+    * [WICKET-6512] - pageId is being reset during Session::replaceSession() call
+    * [WICKET-6513] - NullPointerException at PageStoreManager$SessionEntry after login
+    * [WICKET-6518] - Memory leaks on quickstart restart in tomcat
+    * [WICKET-6522] - ThreadLocal leak in PageStoreManager
+    * [WICKET-6523] - Two AbstractAjaxTimerBehaviors on same component timeId conflict
+    * [WICKET-6524] - Do not require bean validation 2.0.0
+    * [WICKET-6529] - Feedback from onSubmit not rendered on stateless pages
+    * [WICKET-6530] - Race-condition in session invalidation
+
+** New Feature
+
+    * [WICKET-6497] - unify javascript files
+    * [WICKET-6498] - wicket 8 - js to asnyc and or defer
+
+** Improvement
+
+    * [WICKET-6055] - AjaxLazyLoadPanel should provide non-blocking lazy load
+    * [WICKET-6284] - Introduce lambda-enhanced factory method in ResourceReference 
+    * [WICKET-6499] - Support for Bean Validation 2.0
+    * [WICKET-6503] - Ajax refresh and feedback panel
+    * [WICKET-6504] - Use a serializable model for FileSystemResource's path
+    * [WICKET-6509] - Import junit packages as optional
+    * [WICKET-6514] - FeedbackCollector(Component) should not collect session-scoped feedback messages
+    * [WICKET-6517] - use Ajax for multipart instead of iframe
+
+** Task
+
+    * [WICKET-6148] - Remove AjaxEventBehavior#onCheckEvent() before Wicket 8.0.0
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.0.0-M8
 
 ** Bug
