@@ -2,6 +2,33 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.10.0
+
+** Bug
+
+    * [WICKET-6441] - MockHttpSession and MockSessionStore don't call onInvalidate() on invalidate()
+    * [WICKET-6448] - Provide behavior that disables a button after click
+    * [WICKET-6461] - Default constructor is incorrectly called if optional param is not provided in parameter placeholder URL with additional required parameter
+    * [WICKET-6471] - FileSystemResource file descriptor leak
+    * [WICKET-6476] - It is impossible to use multiple WebSocketTester with the same WebApplication
+    * [WICKET-6477] - Component.getDefaultModelObject() wraps in RuntimeException instead of WicketRuntimeException
+    * [WICKET-6481] - NullPointerException in MountedMapper
+    * [WICKET-6484] - Wicket.Cookie.set does not set 'secure' flag
+    * [WICKET-6489] - Exception when "identifier|code" javascript is not start on PrependJavaScript
+    * [WICKET-6493] - WebSocket SessionIds are wrong (HttpSession one used instead of Websocket one) + NPE if no HttpSession is found during Handshake Request
+    * [WICKET-6501] - DefaultPageManagerProvider does not honour StoreSettings.setAsynchronous(false)
+    * [WICKET-6506] - Performance issue when large component isn't visible
+    * [WICKET-6513] - NullPointerException at PageStoreManager$SessionEntry after login
+    * [WICKET-6522] - ThreadLocal leak in PageStoreManager
+    * [WICKET-6530] - Race-condition in session invalidation
+
+** Improvement
+
+    * [WICKET-6482] - CompoundValidator should implement all Behavior methods
+    * [WICKET-6504] - Use a serializable model for FileSystemResource's path
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.9.0
 
 ** Bug
