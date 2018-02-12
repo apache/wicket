@@ -18,9 +18,7 @@ package org.apache.wicket.validation.validator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
-import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidationError;
 import org.apache.wicket.validation.ValidationError;
@@ -188,14 +186,7 @@ public class DateValidator extends RangeValidator<Date>
 			// format variables if format has been specified
 			if (format != null)
 			{
-				WebSession session = WebSession.get();
-
-				Locale locale = session.getLocale();
-				if (locale == null) {
-					locale = Locale.getDefault(Locale.Category.FORMAT);
-				}
-
-				SimpleDateFormat sdf = new SimpleDateFormat(format, locale);
+				SimpleDateFormat sdf = new SimpleDateFormat(format);
 				if (getMinimum() != null)
 				{
 					ve.setVariable("minimum", sdf.format(getMinimum()));
