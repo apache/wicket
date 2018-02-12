@@ -837,7 +837,6 @@
 						<links>
 							<link>http://docs.oracle.com/javase/7/docs/api/</link>
 						</links>
-						<additionalparam>--allow-script-in-comments</additionalparam>
 					</configuration>
 					<executions>
 						<execution>
