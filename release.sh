@@ -530,8 +530,11 @@ git archive --format=tar.gz --prefix=apache-wicket-$version/ -o target/dist/apac
 git archive --format=zip --prefix=apache-wicket-$version/ -o target/dist/apache-wicket-$version.zip $tag
 gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.tar.gz
 gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.zip
-sha256sum target/dist/apache-wicket-$version.tar.gz > target/dist/apache-wicket-$version.tar.gz.sha256
-sha256sum target/dist/apache-wicket-$version.zip > target/dist/apache-wicket-$version.zip.sha256
+
+pushd target/dist
+sha256sum apache-wicket-$version.tar.gz > apache-wicket-$version.tar.gz.sha256
+sha256sum apache-wicket-$version.zip > apache-wicket-$version.zip.sha256
+popd
 
 echo "Create and sign the binaries"
 mkdir target/apache-wicket-$version-bin
@@ -550,8 +553,11 @@ tar cfz dist/binaries/apache-wicket-$version-bin.tar.gz apache-wicket-$version-b
 zip -r dist/binaries/apache-wicket-$version-bin.zip apache-wicket-$version-bin
 gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$version-bin.tar.gz
 gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$version-bin.zip
-sha256sum dist/binaries/apache-wicket-$version-bin.tar.gz > dist/binaries/apache-wicket-$version-bin.tar.gz.sha256
-sha256sum dist/binaries/apache-wicket-$version-bin.zip > dist/binaries/apache-wicket-$version-bin.zip.sha256
+
+pushd dist/binaries
+sha256sum apache-wicket-$version-bin.tar.gz > apache-wicket-$version-bin.tar.gz.sha256
+sha256sum apache-wicket-$version-bin.zip > apache-wicket-$version-bin.zip.sha256
+popd
 popd
 
 echo "Uploading release to dist.apache.org"
