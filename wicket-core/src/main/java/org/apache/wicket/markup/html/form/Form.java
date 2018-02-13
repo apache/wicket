@@ -38,8 +38,6 @@ import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
@@ -146,8 +144,6 @@ public class Form<T> extends WebMarkupContainer
 		IRequestListener,
 		IGenericComponent<T, Form<T>>
 {
-	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
-
 	public static final String ENCTYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 
 	/**
@@ -529,22 +525,26 @@ public class Form<T> extends WebMarkupContainer
 	{
 		Form<?> root = getRootForm();
 
-		StringBuilder string = new StringBuilder();
-		string.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
-
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		
 		String action = url.toString();
 		if (root.encodeUrlInHiddenFields()) {
+			buffer.append(String.format("document.getElementById('%s').innerHTML = '", root.getHiddenFieldsId()));
+			
 			// parameter must be sent as hidden field, as it would be ignored in the action URL
 			int i = action.indexOf('?');
 			if (i != -1) {
-				string.append(String.format("f.getElementsByTagName('input')[0].name = '%s';", action.substring(i + 1)));
+				writeParamsAsHiddenFields(Strings.split(action.substring(i + 1), '&'), buffer);
+				
 				action = action.substring(0, i);
 			}
+			
+			buffer.append("';");
 		}
-
-		string.append(String.format("f.action='%s';", action));
-		string.append("f.submit();");
-		return string;
+		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
+		buffer.append(String.format("f.action='%s';", action));
+		buffer.append("f.submit();");
+		return buffer;
 	}
 
 	/**
@@ -1194,9 +1194,8 @@ public class Form<T> extends WebMarkupContainer
 	{
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
-		// div that is not visible (but not display:none either)
-		buffer.append(HIDDEN_DIV_START);
-
+		getResponse().write("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">");
+		
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
 
@@ -1209,9 +1208,8 @@ public class Form<T> extends WebMarkupContainer
 		buffer.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
-		// close div
-		buffer.append("</div>");
-
+		getResponse().write("</div>");
+		
 		getResponse().write(buffer);
 	}
 
@@ -1278,6 +1276,16 @@ public class Form<T> extends WebMarkupContainer
 		{
 			submittingComponent.onAfterSubmit();
 		}
+	}
+
+	/**
+	 * Returns the id which will be used for the hidden div containing all parameter fields.
+	 * 
+	 * @return the id of the hidden div
+	 */
+	private final String getHiddenFieldsId()
+	{
+		return getInputNamePrefix() + getMarkupId() + "_hf_0";
 	}
 
 	/**
@@ -1655,7 +1663,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Writes the markup for the hidden input field and default button field if applicable to the
+	 * Writes the markup for the hidden input fields and default button field if applicable to the
 	 * current response.
 	 */
 	public final void writeHiddenFields()
@@ -1664,7 +1672,9 @@ public class Form<T> extends WebMarkupContainer
 		// and have to write the url parameters as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
-			AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START);
+			getResponse().write(String.format("<div id=\"%s\" style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">", getHiddenFieldsId()));
+
+			AppendingStringBuffer buffer = new AppendingStringBuffer();				
 
 			String url = getActionUrl().toString();
 			int i = url.indexOf('?');
@@ -1673,8 +1683,9 @@ public class Form<T> extends WebMarkupContainer
 
 			writeParamsAsHiddenFields(params, buffer);
 
-			buffer.append("</div>");
 			getResponse().write(buffer);
+			
+			getResponse().write("</div>");
 		}
 
 		// if a default submitting component was set, handle the rendering of that
@@ -2026,12 +2037,6 @@ public class Form<T> extends WebMarkupContainer
 	public static Form<?> findForm(Component component)
 	{
 		return component.findParent(Form.class);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void renderHead(IHeaderResponse response)
-	{
 	}
 
 	/**

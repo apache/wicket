@@ -55,12 +55,22 @@ public class FormTest extends WicketTestCase
 
 
 	/**
-	 * @throws Exception
+	 * WICKET-6525 / WICKET-6348
 	 */
 	@Test
-	public void formMethodGet() throws Exception
+	public void formMethods() throws Exception
 	{
 		executeTest(FormMethodTestPage.class, "FormMethodTestPage_expected.html");
+		
+		FormMethodTestPage page = (FormMethodTestPage)tester.getLastRenderedPage();
+	
+		// form action contains path and query 
+		assertEquals("var f = document.getElementById('formpost1');f.action='path?param1&param2=val%20ue';f.submit();",
+			page.postForm.getJsForListenerUrl("path?param1&param2=val%20ue").toString());
+		
+		// form action must not contain query (since ignored by browser), put into hidden form parameters instead 
+		assertEquals("document.getElementById('formget2_hf_0').innerHTML = '<input type=\"hidden\" name=\"param1\" value=\"\" /><input type=\"hidden\" name=\"param2\" value=\"val ue\" />';var f = document.getElementById('formget2');f.action='path';f.submit();",
+			page.getForm.getJsForListenerUrl("path?param1&param2=val%20ue").toString());
 	}
 
 	/**
