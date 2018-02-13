@@ -2032,26 +2032,6 @@ public class Form<T> extends WebMarkupContainer
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
-		if (!isRootForm() && isMultiPart())
-		{
-			// register some metadata so we can later properly handle multipart ajax posts for
-			// embedded forms
-			registerJavaScriptNamespaces(response);
-			response.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId() +
-				"\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId() + ".metadata"));
-		}
-	}
-
-	/**
-	 * Produces javascript that registers Wicket.Forms namespaces
-	 * 
-	 * @param response
-	 */
-	protected void registerJavaScriptNamespaces(IHeaderResponse response)
-	{
-		response.render(JavaScriptHeaderItem.forScript(
-			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
-			Form.class.getName()));
 	}
 
 	/**
