@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.extensions.wizard;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.io.IClusterable;
 
 
@@ -73,7 +73,7 @@ public class WizardModel extends AbstractWizardModel
 	private final List<ICondition> conditions = new ArrayList<>();
 
 	/** State history. */
-	private final ArrayListStack<IWizardStep> history = new ArrayListStack<>();
+	private final ArrayDeque<IWizardStep> history = new ArrayDeque<>();
 
 	/** The wizard steps. */
 	private final List<IWizardStep> steps = new ArrayList<>();
