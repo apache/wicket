@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.ArrayDeque;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -30,7 +31,6 @@ import org.apache.wicket.markup.WicketTag;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.parser.AbstractMarkupFilter;
 import org.apache.wicket.markup.resolver.IComponentResolver;
-import org.apache.wicket.util.collections.ArrayListStack;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
@@ -61,7 +61,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 	public static final String AUTOLINK_ID = "_autolink_";
 
 	/** Allow to have link regions within link regions */
-	private ArrayListStack<Boolean> autolinkStatus;
+	private ArrayDeque<Boolean> autolinkStatus;
 
 	/** Current status */
 	private boolean autolinking = true;
@@ -127,7 +127,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter implements ICompo
 					{
 						if (autolinkStatus == null)
 						{
-							autolinkStatus = new ArrayListStack<>();
+							autolinkStatus = new ArrayDeque<>();
 						}
 
 						// remember the current setting to be reset after the

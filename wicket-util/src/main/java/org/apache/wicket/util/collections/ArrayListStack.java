@@ -27,7 +27,9 @@ import java.util.EmptyStackException;
  * 
  * @author Jonathan Locke
  * @param <T>
+ * @deprecated Scheduled to be removed with Wicket 9.x, use {@link java.util.ArrayDeque} instead.
  */
+@Deprecated
 public class ArrayListStack<T> extends ArrayList<T>
 {
 	private static final long serialVersionUID = 1L;
