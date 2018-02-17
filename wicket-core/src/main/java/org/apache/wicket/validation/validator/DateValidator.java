@@ -199,7 +199,9 @@ public class DateValidator extends RangeValidator<Date>
 					{
 						locale = Locale.getDefault(Locale.Category.FORMAT);
 					}
-				} else {
+				}
+				else
+				{
 					locale = Locale.getDefault(Locale.Category.FORMAT);
 				}
 
