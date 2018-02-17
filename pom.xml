@@ -392,31 +392,31 @@
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-metrics</artifactId>
-				<version>0.5-SNAPSHOT</version>
+				<version>0.6-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-core</artifactId>
-				<version>0.4-SNAPSHOT</version>
+				<version>0.5-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-jetty</artifactId>
-				<version>0.4-SNAPSHOT</version>
+				<version>0.5-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-tomcat</artifactId>
-				<version>0.4-SNAPSHOT</version>
+				<version>0.5-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-undertow</artifactId>
-				<version>0.4-SNAPSHOT</version>
+				<version>0.5-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
