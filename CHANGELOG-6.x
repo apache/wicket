@@ -2,6 +2,17 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.29.0
+
+** Bug
+
+    * [WICKET-6484] - Wicket.Cookie.set does not set 'secure' flag
+    * [WICKET-6501] - DefaultPageManagerProvider does not honour StoreSettings.setAsynchronous(false)
+    * [WICKET-6526] - Ajax Buttons do not check for the HTTP method and thus don't respect Form#onMethodMismatch
+    * [WICKET-6530] - Race-condition in session invalidation
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.27.1
 
 ** Bug
