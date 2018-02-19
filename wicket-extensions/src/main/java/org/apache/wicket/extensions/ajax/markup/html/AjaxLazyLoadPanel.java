@@ -173,11 +173,13 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * Installs a page-global timer if not already present.
 	 */
 	@Override
-	protected void onInitialize()
+	protected void onBeforeRender()
 	{
-		super.onInitialize();
+		super.onBeforeRender();
 
-		initTimer();
+		if (isVisibleInHierarchy() && loaded == false) {
+			initTimer();
+		}
 	}
 
 	/**
@@ -193,9 +195,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 			getPage().add(timer);
 			
 			getRequestCycle().find(AjaxRequestTarget.class).ifPresent(target -> {
-				// the timer will not be rendered, so stop it first
-				// and restart it immediately on the Ajax request
-				timer.stop(null);
+				// the timer will not be rendered, so restart it immediately on the Ajax target
 				timer.restart(target);
 			});
 		}
@@ -208,8 +208,6 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 
 		if (get(CONTENT_ID) == null) {
 			add(getLoadingComponent(CONTENT_ID));
-		} else {
-			isLoaded();
 		}
 	}
 
@@ -292,7 +290,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 				@Override
 				public void component(AjaxLazyLoadPanel<?> panel, IVisit<Void> visit)
 				{
-					if (panel.isLoaded() == false) {
+					if (panel.isVisibleInHierarchy() && panel.isLoaded() == false) {
 						Duration updateInterval = panel.getUpdateInterval();
 						if (getUpdateInterval() == null) {
 							throw new IllegalArgumentException("update interval must not ben null");

@@ -61,6 +61,7 @@ public class AjaxLazyLoadPanelTester
 		if (behaviors.size() == 0)
 		{
 			logger.warn("No timer behavior for AjaxLazyLoadPanel found. A curious situation...");
+			return;
 		}
 		else if (behaviors.size() > 1)
 		{
