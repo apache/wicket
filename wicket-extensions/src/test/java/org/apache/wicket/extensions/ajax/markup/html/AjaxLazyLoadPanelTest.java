@@ -35,12 +35,17 @@ public class AjaxLazyLoadPanelTest extends WicketTestCase
 		
 		tester.startPage(page);
 		
-		// render the loading component at least once
+		// loading component rendered at least once, timer set
+		tester.assertContains("LOADING");
 		tester.assertContainsNot("LOADED");
+		tester.assertContains("Wicket.Timer.set\\(");
 
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester);
-		
+
+		// content, no timer needed any more
+		tester.assertContainsNot("LOADING");
 		tester.assertContains("LOADED");
+		tester.assertContainsNot("Wicket.Timer.set\\(");
 	}
 	
 	@Test
@@ -50,17 +55,26 @@ public class AjaxLazyLoadPanelTest extends WicketTestCase
 		page.contentReady = false;
 		
 		tester.startPage(page);
-		
+
+		// no content, timer set
+		tester.assertContains("LOADING");
 		tester.assertContainsNot("LOADED");
+		tester.assertContains("Wicket.Timer.set\\(");
 		
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester);
 
+		// no change, timer re-set
+		tester.assertContainsNot("LOADING");
 		tester.assertContainsNot("LOADED");
+		tester.assertContains("Wicket.Timer.set\\(");
 
 		page.contentReady = true;
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester);
-		
+
+		// content, no timer
+		tester.assertContainsNot("LOADING");
 		tester.assertContains("LOADED");
+		tester.assertContainsNot("Wicket.Timer.set\\(");
 	}
 	
 	@Test
@@ -73,18 +87,21 @@ public class AjaxLazyLoadPanelTest extends WicketTestCase
 		tester.startPage(page);
 		
 		// neither content nor timer since not visible 
+		tester.assertContainsNot("LOADING");
 		tester.assertContainsNot("LOADED");
 		tester.assertContainsNot("Wicket.Timer.set\\(");
 
 		tester.clickLink(page.link);
 		
 		// no content yet, but timer  
+		tester.assertContains("LOADING");
 		tester.assertContainsNot("LOADED");
 		tester.assertContains("Wicket.Timer.set\\(");
 
 		AjaxLazyLoadPanelTester.executeAjaxLazyLoadPanel(tester);
 		
-		// content still, but no timer necessary anymore 
+		// content, but no timer necessary anymore 
+		tester.assertContainsNot("LOADING");
 		tester.assertContains("LOADED");
 		tester.assertContainsNot("Wicket.Timer.set\\(");
 	}

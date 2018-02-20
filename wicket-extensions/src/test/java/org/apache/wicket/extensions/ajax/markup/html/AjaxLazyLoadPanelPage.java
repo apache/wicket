@@ -48,6 +48,12 @@ public class AjaxLazyLoadPanelPage extends WebPage
 			}
 			
 			@Override
+			public Component getLoadingComponent(String id)
+			{
+				return new Label(id, "LOADING");
+			}
+			
+			@Override
 			public Component getLazyLoadComponent(String id)
 			{
 				return new Label(id, "LOADED");

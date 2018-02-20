@@ -123,15 +123,15 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	/**
 	 * Create a loading component shown instead of the actual content until it is {@link #isContentReady()}.
 	 * 
-	 * @param markupId
-	 *            The components markupid.
+	 * @param id
+	 *            The components id
 	 * @return The component to show while the real content isn't ready yet
 	 */
-	public Component getLoadingComponent(final String markupId)
+	public Component getLoadingComponent(final String id)
 	{
 		IRequestHandler handler = new ResourceReferenceRequestHandler(
 			AbstractDefaultAjaxBehavior.INDICATOR);
-		return new Label(markupId,
+		return new Label(id,
 			"<img alt=\"Loading...\" src=\"" + RequestCycle.get().urlFor(handler) + "\"/>")
 				.setEscapeModelStrings(false);
 	}
@@ -177,7 +177,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	{
 		super.onBeforeRender();
 
-		if (isVisibleInHierarchy() && loaded == false) {
+		if (loaded == false) {
 			initTimer();
 		}
 	}
