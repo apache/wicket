@@ -34,6 +34,7 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -149,8 +150,6 @@ public class Form<T> extends WebMarkupContainer
 		IFormSubmitListener,
 		IGenericComponent<T>
 {
-	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
-
 	public static final String ENCTYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 
 	/**
@@ -1237,8 +1236,10 @@ public class Form<T> extends WebMarkupContainer
 	{
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
+		String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
+		
 		// div that is not visible (but not display:none either)
-		buffer.append(HIDDEN_DIV_START);
+		buffer.append(String.format("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", cssClass));
 
 		// add an empty textfield (otherwise IE doesn't work)
 		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
@@ -1718,7 +1719,11 @@ public class Form<T> extends WebMarkupContainer
 		// get the hidden field id
 		String nameAndId = getHiddenFieldId();
 
-		AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
+		String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
+		
+		getResponse().write(String.format("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", cssClass));
+
+		AppendingStringBuffer buffer = new AppendingStringBuffer().append(
 			"<input type=\"hidden\" name=\"")
 			.append(nameAndId)
 			.append("\" id=\"")
