@@ -53,6 +53,14 @@ public class FormTest extends WicketTestCase
 		};
 	}
 
+	/**
+	 * WICKET-6540
+	 */
+	@Test
+	public void defaultButton() throws Exception
+	{
+		executeTest(FormDefaultButtonTestPage.class, "FormDefaultButtonTestPage_expected.html");
+	}
 
 	/**
 	 * WICKET-6525 / WICKET-6348

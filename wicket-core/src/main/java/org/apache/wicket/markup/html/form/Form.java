@@ -1212,7 +1212,9 @@ public class Form<T> extends WebMarkupContainer
 		buffer.append("'); if (b!=null&amp;&amp;b.onclick!=null&amp;&amp;typeof(b.onclick) != 'undefined') {  var r = Wicket.bind(b.onclick, b)(); if (r != false) b.click(); } else { b.click(); };  return false;\" ");
 		buffer.append(" />");
 
-		getResponse().write("</div>");
+		// close div
+		buffer.append("</div>");
+		
 		getResponse().write(buffer);
 	}
 
