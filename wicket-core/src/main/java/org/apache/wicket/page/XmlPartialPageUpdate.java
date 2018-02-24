@@ -24,16 +24,12 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A {@link PartialPageUpdate} that serializes itself to XML.
  */
 public class XmlPartialPageUpdate extends PartialPageUpdate
 {
-	private static final Logger LOG = LoggerFactory.getLogger(XmlPartialPageUpdate.class);
-
 	/**
 	 * The name of the root element in the produced XML document.
 	 */
@@ -63,8 +59,6 @@ public class XmlPartialPageUpdate extends PartialPageUpdate
 	@Override
 	protected void writeComponent(Response response, String markupId, Component component, String encoding)
 	{
-		final Page page = component.findParent(Page.class);
-
 		// substitute our encoding response for the old one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
 		Response oldResponse = RequestCycle.get().setResponse(bodyBuffer);

@@ -239,7 +239,7 @@ public abstract class PartialPageUpdate
 	{
 		componentsFrozen = true;
 
-		List<Component> prepared = new ArrayList<>(markupIdToComponent.size());
+		List<Component> toBeWritten = new ArrayList<>(markupIdToComponent.size());
 		
 		// delay preparation of feedbacks after all other components
 		try (FeedbackDelay delay = new FeedbackDelay(RequestCycle.get())) {
@@ -247,8 +247,9 @@ public abstract class PartialPageUpdate
 			{
 				if (!containsAncestorFor(component))
 				{
-					prepareComponent(component);
-					prepared.add(component);
+					if (prepareComponent(component)) {
+						toBeWritten.add(component);
+					}
 				}
 			}
 
@@ -257,7 +258,7 @@ public abstract class PartialPageUpdate
 		}
 
 		// write components
-		for (Component component : prepared)
+		for (Component component : toBeWritten)
 		{
 			writeComponent(response, component.getAjaxRegionMarkupId(), component, encoding);
 		}
@@ -293,8 +294,9 @@ public abstract class PartialPageUpdate
 	 *
 	 * @param component
 	 *      the component to prepare
+	 * @return wether the component was prepared
 	 */
-	protected void prepareComponent(Component component)
+	protected boolean prepareComponent(Component component)
 	{
 		if (component.getRenderBodyOnly() == true)
 		{
@@ -312,7 +314,7 @@ public abstract class PartialPageUpdate
 			// dont throw an exception but just ignore this component, somehow
 			// it got removed from the page.
 			LOG.warn("Component '{}' not rendered because it was already removed from page", component);
-			return;
+			return false;
 		}
 
 		try
@@ -324,6 +326,8 @@ public abstract class PartialPageUpdate
 			bodyBuffer.reset();
 			throw e;
 		}
+		
+		return true;
 	}
 
 	/**
