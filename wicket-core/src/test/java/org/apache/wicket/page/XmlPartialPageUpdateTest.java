@@ -17,6 +17,7 @@
 package org.apache.wicket.page;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -52,6 +53,7 @@ public class XmlPartialPageUpdateTest extends WicketTestCase
 				"</head>]]></header-contribution></ajax-response>";
 		assertEquals(expected, response.getTextResponse().toString());
 	}
+	
 	/**
 	 * 
 	 * see https://issues.apache.org/jira/browse/WICKET-6162
@@ -74,5 +76,26 @@ public class XmlPartialPageUpdateTest extends WicketTestCase
 		update.writeTo(response, "UTF-8");
 		
 		assertEquals(originalHeader, page.get(HtmlHeaderSectionHandler.HEADER_ID));
+	}
+	
+	/**
+	 * WICKET-6503 removed components are not written, but no exception raised either. 
+	 */
+	@Test
+	public void removedComponentAreNotWritten() throws Exception
+	{
+		PageForPartialUpdate page = new PageForPartialUpdate();
+		
+		tester.startPage(page);
+		
+		XmlPartialPageUpdate update = new XmlPartialPageUpdate(page);		
+		
+		update.add(new Label("notInPage"), "notInPage");
+		
+		MockWebResponse response = new MockWebResponse();
+		
+		update.writeTo(response, "UTF-8");
+		
+		assertFalse("notInPage not written", response.getTextResponse().toString().contains("notInPage"));
 	}
 }
