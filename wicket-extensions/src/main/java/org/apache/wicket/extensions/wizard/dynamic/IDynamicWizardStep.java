@@ -37,7 +37,8 @@ public interface IDynamicWizardStep extends IWizardStep
 	 * Checks if the last button should be enabled.
 	 * 
 	 * @return <tt>true</tt> if the last button should be enabled, <tt>false</tt> otherwise.
-	 * @see IWizardModel#isLastVisible
+	 * 
+	 * @see IWizardModel#isLastAvailable()
 	 */
 	boolean isLastAvailable();
 

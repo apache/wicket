@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.wizard;
 
+import org.apache.wicket.model.ResourceModel;
+
 /**
  * Models a 'last' button in the wizard. When pressed, it calls {@link IWizardStep#applyState()} on
  * the active wizard step, and then moves to the last step in the model with
@@ -37,25 +39,16 @@ public class LastButton extends WizardButton
 	 */
 	public LastButton(final String id, final IWizard wizard)
 	{
-		super(id, wizard, "org.apache.wicket.extensions.wizard.last");
+		super(id, wizard, new ResourceModel("org.apache.wicket.extensions.wizard.last"));
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isEnabled()
-	 */
 	@Override
-	public boolean isEnabled()
+	protected void onConfigure()
 	{
-		return getWizardModel().isLastAvailable() && super.isEnabled();
-	}
+		super.onConfigure();
 
-	/**
-	 * @see org.apache.wicket.Component#isVisible()
-	 */
-	@Override
-	public boolean isVisible()
-	{
-		return getWizardModel().isLastVisible() && super.isVisible();
+		setVisible(getWizardModel().isLastVisible());
+		setEnabled(getWizardModel().isLastAvailable());
 	}
 
 	/**

@@ -83,14 +83,30 @@ public interface IWizardModel extends IClusterable
 	 * Gets whether the cancel button should be displayed.
 	 * 
 	 * @return True if the cancel button should be displayed
+	 * 
+	 * @see #cancel()
 	 */
 	boolean isCancelVisible();
+
+	/**
+	 * Gets whether the last button should be displayed. This method should only return true if the
+	 * {@link #isLastAvailable} will return true at any point. Returning false will prevent the last
+	 * button from appearing on the wizard at all.
+	 * 
+	 * @return True if the last button should be displayed, False otherwise.
+
+	 * @see #isLastAvailable()
+	 * @see #last()
+	 */
+	boolean isLastVisible();
 
 	/**
 	 * Checks if the last button should be enabled.
 	 * 
 	 * @return <tt>true</tt> if the last button should be enabled, <tt>false</tt> otherwise.
-	 * @see #isLastVisible
+	 * 
+	 * @see #isLastVisible()
+	 * @see #last()
 	 */
 	boolean isLastAvailable();
 
@@ -104,18 +120,11 @@ public interface IWizardModel extends IClusterable
 	boolean isLastStep(IWizardStep step);
 
 	/**
-	 * Gets whether the last button should be displayed. This method should only return true if the
-	 * {@link #isLastAvailable} will return true at any point. Returning false will prevent the last
-	 * button from appearing on the wizard at all.
-	 * 
-	 * @return True if the last button should be displayed, False otherwise.
-	 */
-	boolean isLastVisible();
-
-	/**
 	 * Gets whether the next button should be enabled.
 	 * 
 	 * @return True if the next button should be enabled, false otherwise.
+	 * 
+	 * @see #next()
 	 */
 	boolean isNextAvailable();
 
@@ -123,6 +132,8 @@ public interface IWizardModel extends IClusterable
 	 * Gets whether the previous button should be enabled.
 	 * 
 	 * @return True if the previous button should be enabled, false otherwise.
+	 * 
+	 * @see #previous()
 	 */
 	boolean isPreviousAvailable();
 	
@@ -134,6 +145,8 @@ public interface IWizardModel extends IClusterable
 	 * @see #isLastStep(IWizardStep)
 	 * 
 	 * @return True if the finish button should be enabled, false otherwise.
+	 * 
+	 * @see #finish()
 	 */
 	default boolean isFinishAvailable() {
 		return isLastStep(getActiveStep());
@@ -144,6 +157,9 @@ public interface IWizardModel extends IClusterable
 	 * {@link #isLastAvailable} returns <tt>true</tt>. Implementors should notify
 	 * {@link IWizardModelListener listeners} through calling
 	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
+	 * 
+	 * @see #isLastVisible()
+	 * @see #isLastAvailable()
 	 */
 	void last();
 
@@ -152,6 +168,8 @@ public interface IWizardModel extends IClusterable
 	 * {@link #isNextAvailable} returns <tt>true</tt>. Implementors should notify
 	 * {@link IWizardModelListener listeners} through calling
 	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
+	 * 
+	 * @see #isNextAvailable()
 	 */
 	void next();
 
@@ -160,6 +178,8 @@ public interface IWizardModel extends IClusterable
 	 * {@link #isPreviousAvailable} returns <tt>true</tt>. Implementors should notify
 	 * {@link IWizardModelListener listeners} through calling
 	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
+	 * 
+	 * @see #isPreviousAvailable()
 	 */
 	void previous();
 

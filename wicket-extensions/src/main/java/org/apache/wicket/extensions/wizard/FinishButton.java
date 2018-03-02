@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.wizard;
 
+import org.apache.wicket.model.ResourceModel;
+
 /**
  * Models a cancel button in the wizard. When pressed, it calls {@link IWizardStep#applyState()} on
  * the active wizard step, and then {@link Wizard#onFinish()} on the wizard.
@@ -36,16 +38,15 @@ public class FinishButton extends WizardButton
 	 */
 	public FinishButton(final String id, final IWizard wizard)
 	{
-		super(id, wizard, "org.apache.wicket.extensions.wizard.finish");
+		super(id, wizard, new ResourceModel("org.apache.wicket.extensions.wizard.finish"));
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isEnabled()
-	 */
 	@Override
-	public boolean isEnabled()
+	protected void onConfigure()
 	{
-		return getWizardModel().isFinishAvailable() && super.isEnabled();
+		super.onConfigure();
+
+		setEnabled(getWizardModel().isFinishAvailable());
 	}
 
 	/**
