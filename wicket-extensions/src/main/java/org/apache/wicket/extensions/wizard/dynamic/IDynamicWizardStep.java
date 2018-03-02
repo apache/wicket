@@ -69,6 +69,17 @@ public interface IDynamicWizardStep extends IWizardStep
 	boolean isPreviousAvailable();
 
 	/**
+	 * Gets whether the finish button should be enabled.
+	 * 
+	 * @return True if the finish button should be enabled, false otherwise.
+	 * 
+	 * @see IWizardModel#isFinishAvailable()
+	 */
+	default boolean isFinishAvailable() {
+		return isLastStep();
+	}
+
+	/**
 	 * Gets the next wizard step from here. Can only be called when
 	 * {@link DynamicWizardModel#isLastAvailable()} returns true.
 	 * 

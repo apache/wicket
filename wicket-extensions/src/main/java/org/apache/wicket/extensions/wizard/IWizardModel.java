@@ -125,6 +125,19 @@ public interface IWizardModel extends IClusterable
 	 * @return True if the previous button should be enabled, false otherwise.
 	 */
 	boolean isPreviousAvailable();
+	
+	/**
+	 * Gets whether the finish button should be enabled.
+	 * <p>
+	 * By default the finish button is available for the last step only.
+	 * 
+	 * @see #isLastStep(IWizardStep)
+	 * 
+	 * @return True if the finish button should be enabled, false otherwise.
+	 */
+	default boolean isFinishAvailable() {
+		return isLastStep(getActiveStep());
+	}
 
 	/**
 	 * Takes the model to the last step in the wizard. This method must only be called if

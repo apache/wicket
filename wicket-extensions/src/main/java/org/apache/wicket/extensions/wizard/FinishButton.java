@@ -45,9 +45,7 @@ public class FinishButton extends WizardButton
 	@Override
 	public boolean isEnabled()
 	{
-		IWizardStep activeStep = getWizardModel().getActiveStep();
-		return (activeStep != null) && getWizardModel().isLastStep(activeStep) 
-			&& super.isEnabled();
+		return getWizardModel().isFinishAvailable() && super.isEnabled();
 	}
 
 	/**

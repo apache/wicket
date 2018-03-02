@@ -92,9 +92,15 @@ public class WizardModelTest extends WicketTestCase
 
 		assertSame(step1, model.getActiveStep());
 		assertTrue(model.isNextAvailable());
+		assertFalse(model.isLastStep(model.getActiveStep()));
+		assertFalse(model.isFinishAvailable());
+
 		model.next();
 		assertSame(step4, model.getActiveStep());
 		assertFalse(model.isNextAvailable());
+		assertTrue(model.isLastStep(model.getActiveStep()));
+		assertTrue(model.isFinishAvailable());
+
 		try {
 			model.next();
 			fail();
