@@ -20,7 +20,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -255,18 +254,6 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	protected <E> Form<E> newForm(final String id)
 	{
 		return new Form<>(id);
-	}
-
-	@Override
-	protected void onBeforeRender()
-	{
-		super.onBeforeRender();
-		Component buttonBar = form.get(BUTTONS_ID);
-		if (buttonBar instanceof IDefaultButtonProvider)
-		{
-			IFormSubmittingComponent defaultButton = ((IDefaultButtonProvider)buttonBar).getDefaultButton(wizardModel);
-			form.setDefaultButton(defaultButton);
-		}
 	}
 
 	/**

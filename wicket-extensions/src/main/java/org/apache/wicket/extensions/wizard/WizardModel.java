@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.collections.ArrayListStack;
+import org.apache.wicket.util.io.IClusterable;
 
 
 /**
@@ -47,6 +47,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * Interface for conditional displaying of wizard steps.
 	 */
+	@FunctionalInterface
 	public interface ICondition extends IClusterable
 	{
 		/**
@@ -61,21 +62,7 @@ public class WizardModel extends AbstractWizardModel
 	/**
 	 * Condition that always evaluates true.
 	 */
-	public static final ICondition TRUE = new ICondition()
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Always returns true.
-		 * 
-		 * @return True
-		 */
-		@Override
-		public boolean evaluate()
-		{
-			return true;
-		}
-	};
+	public static final ICondition TRUE = (() -> true);
 
 	private static final long serialVersionUID = 1L;
 
@@ -258,9 +245,17 @@ public class WizardModel extends AbstractWizardModel
 	 * @see IWizardModel#stepIterator()
 	 */
 	@Override
-	public final Iterator<IWizardStep> stepIterator()
+	public Iterator<IWizardStep> stepIterator()
 	{
-		return steps.iterator();
+		List<IWizardStep> filtered = new ArrayList<>();
+		
+		for (int s = 0; s < steps.size(); s++) {
+			if (conditions.get(s).evaluate()) {
+				filtered.add(steps.get(s));
+			}
+		}
+		
+		return filtered.iterator();
 	}
 
 	/**

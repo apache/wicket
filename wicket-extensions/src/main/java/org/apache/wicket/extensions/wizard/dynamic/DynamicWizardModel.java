@@ -58,7 +58,7 @@ public class DynamicWizardModel extends AbstractWizardModel
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#getActiveStep()
 	 */
 	@Override
-	public IWizardStep getActiveStep()
+	public IDynamicWizardStep getActiveStep()
 	{
 		return activeStep;
 	}
