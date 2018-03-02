@@ -34,15 +34,6 @@ import org.apache.wicket.extensions.wizard.IWizardStep;
 public interface IDynamicWizardStep extends IWizardStep
 {
 	/**
-	 * Checks if the last button should be enabled.
-	 * 
-	 * @return <tt>true</tt> if the last button should be enabled, <tt>false</tt> otherwise.
-	 * 
-	 * @see IWizardModel#isLastAvailable()
-	 */
-	boolean isLastAvailable();
-
-	/**
 	 * Gets whether this is the last step in the wizard.
 	 * 
 	 * @return True if its the final step in the wizard, false< otherwise.
@@ -50,15 +41,6 @@ public interface IDynamicWizardStep extends IWizardStep
 	 * @see IWizardModel#isLastStep(IWizardStep)
 	 */
 	boolean isLastStep();
-
-	/**
-	 * Gets whether the next button should be enabled.
-	 * 
-	 * @return True if the next button should be enabled, false otherwise.
-	 * 
-	 * @see IWizardModel#isNextAvailable()
-	 */
-	boolean isNextAvailable();
 
 	/**
 	 * Gets whether the previous button should be enabled.
@@ -70,23 +52,22 @@ public interface IDynamicWizardStep extends IWizardStep
 	boolean isPreviousAvailable();
 
 	/**
-	 * Gets whether the finish button should be enabled.
+	 * Gets the previous wizard step from here. Can only be called when
+	 * {@link #isPreviousAvailable()} returns true.
 	 * 
-	 * @return True if the finish button should be enabled, false otherwise.
-	 * 
-	 * @see IWizardModel#isFinishAvailable()
+	 * @return The next wizard step. May not be null unless this is the first step (in which case it
+	 *         should never be called).
 	 */
-	default boolean isFinishAvailable() {
-		return isLastStep();
-	}
+	IDynamicWizardStep previous();
 
 	/**
-	 * Gets the next wizard step from here. Can only be called when
-	 * {@link DynamicWizardModel#isLastAvailable()} returns true.
+	 * Gets whether the next button should be enabled.
 	 * 
-	 * @return The next wizard step. May not be null.
+	 * @return True if the next button should be enabled, false otherwise.
+	 * 
+	 * @see IWizardModel#isNextAvailable()
 	 */
-	IDynamicWizardStep last();
+	boolean isNextAvailable();
 
 	/**
 	 * Gets the next wizard step from here. Can only be called when {@link #isNextAvailable()}
@@ -98,11 +79,30 @@ public interface IDynamicWizardStep extends IWizardStep
 	IDynamicWizardStep next();
 
 	/**
-	 * Gets the previous wizard step from here. Can only be called when
-	 * {@link #isPreviousAvailable()} returns true.
+	 * Checks if the last button should be enabled.
 	 * 
-	 * @return The next wizard step. May not be null unless this is the first step (in which case it
-	 *         should never be called).
+	 * @return <tt>true</tt> if the last button should be enabled, <tt>false</tt> otherwise.
+	 * 
+	 * @see IWizardModel#isLastAvailable()
 	 */
-	IDynamicWizardStep previous();
+	boolean isLastAvailable();
+
+	/**
+	 * Gets the next wizard step from here. Can only be called when
+	 * {@link DynamicWizardModel#isLastAvailable()} returns true.
+	 * 
+	 * @return The next wizard step. May not be null.
+	 */
+	IDynamicWizardStep last();
+
+	/**
+	 * Gets whether the finish button should be enabled.
+	 * 
+	 * @return True if the finish button should be enabled, false otherwise.
+	 * 
+	 * @see IWizardModel#isFinishAvailable()
+	 */
+	default boolean isFinishAvailable() {
+		return isLastStep();
+	}
 }

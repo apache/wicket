@@ -58,19 +58,39 @@ public interface IWizardModel extends IClusterable
 	 *            The wizard model listener to add
 	 */
 	void addListener(IWizardModelListener listener);
-
+	
 	/**
-	 * Cancels further processing. Implementations may clean up and reset the model. Implementations
-	 * should notify the registered {@link IWizardModelListener#onCancel() model listeners}.
+	 * Removes a wizard model listener.
+	 * 
+	 * @param listener
+	 *            The listener to remove
 	 */
-	void cancel();
-
+	void removeListener(IWizardModelListener listener);
+	
 	/**
-	 * Instructs the wizard to finish succesfully. Typically, implementations check whether this
-	 * option is available at all. Implementations may clean up and reset the model. Implementations
-	 * should notify the registered {@link IWizardModelListener#onFinish() model listeners}.
+	 * Resets the model, setting it to the first step. Implementors should notify
+	 * {@link IWizardModelListener listeners} through calling
+	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
 	 */
-	void finish();
+	void reset();
+	
+	/**
+	 * Returns an iterator over all the steps in the model. The iteration order is not guaranteed to
+	 * the be the order of visit. This is an optional operation; dynamic models can just return
+	 * null, and should call init the first time a step is encountered right before rendering it.
+	 * 
+	 * @return an iterator over all the steps of the model or null if the wizard model is not static
+	 */
+	Iterator<IWizardStep> stepIterator();
+	
+	/**
+	 * Gets whether the specified step is the last step in the wizard.
+	 * 
+	 * @param step
+	 *            the step to check
+	 * @return True if its the final step in the wizard, false< otherwise.
+	 */
+	boolean isLastStep(IWizardStep step);
 
 	/**
 	 * Gets the current active step the wizard should display.
@@ -89,12 +109,56 @@ public interface IWizardModel extends IClusterable
 	boolean isCancelVisible();
 
 	/**
+	 * Cancels further processing. Implementations may clean up and reset the model. Implementations
+	 * should notify the registered {@link IWizardModelListener#onCancel() model listeners}.
+	 */
+	void cancel();
+
+	/**
+	 * Gets whether the previous button should be enabled.
+	 * 
+	 * @return True if the previous button should be enabled, false otherwise.
+	 * 
+	 * @see #previous()
+	 */
+	boolean isPreviousAvailable();
+
+	/**
+	 * Takes the model to the previous step.This method must only be called if
+	 * {@link #isPreviousAvailable} returns <tt>true</tt>. Implementors should notify
+	 * {@link IWizardModelListener listeners} through calling
+	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
+	 * 
+	 * @see #isPreviousAvailable()
+	 */
+	void previous();
+
+	/**
+	 * Gets whether the next button should be enabled.
+	 * 
+	 * @return True if the next button should be enabled, false otherwise.
+	 * 
+	 * @see #next()
+	 */
+	boolean isNextAvailable();
+
+	/**
+	 * Increments the model to the next step. This method must only be called if
+	 * {@link #isNextAvailable} returns <tt>true</tt>. Implementors should notify
+	 * {@link IWizardModelListener listeners} through calling
+	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
+	 * 
+	 * @see #isNextAvailable()
+	 */
+	void next();
+
+	/**
 	 * Gets whether the last button should be displayed. This method should only return true if the
 	 * {@link #isLastAvailable} will return true at any point. Returning false will prevent the last
 	 * button from appearing on the wizard at all.
 	 * 
 	 * @return True if the last button should be displayed, False otherwise.
-
+	
 	 * @see #isLastAvailable()
 	 * @see #last()
 	 */
@@ -111,48 +175,6 @@ public interface IWizardModel extends IClusterable
 	boolean isLastAvailable();
 
 	/**
-	 * Gets whether the specified step is the last step in the wizard.
-	 * 
-	 * @param step
-	 *            the step to check
-	 * @return True if its the final step in the wizard, false< otherwise.
-	 */
-	boolean isLastStep(IWizardStep step);
-
-	/**
-	 * Gets whether the next button should be enabled.
-	 * 
-	 * @return True if the next button should be enabled, false otherwise.
-	 * 
-	 * @see #next()
-	 */
-	boolean isNextAvailable();
-
-	/**
-	 * Gets whether the previous button should be enabled.
-	 * 
-	 * @return True if the previous button should be enabled, false otherwise.
-	 * 
-	 * @see #previous()
-	 */
-	boolean isPreviousAvailable();
-	
-	/**
-	 * Gets whether the finish button should be enabled.
-	 * <p>
-	 * By default the finish button is available for the last step only.
-	 * 
-	 * @see #isLastStep(IWizardStep)
-	 * 
-	 * @return True if the finish button should be enabled, false otherwise.
-	 * 
-	 * @see #finish()
-	 */
-	default boolean isFinishAvailable() {
-		return isLastStep(getActiveStep());
-	}
-
-	/**
 	 * Takes the model to the last step in the wizard. This method must only be called if
 	 * {@link #isLastAvailable} returns <tt>true</tt>. Implementors should notify
 	 * {@link IWizardModelListener listeners} through calling
@@ -164,46 +186,23 @@ public interface IWizardModel extends IClusterable
 	void last();
 
 	/**
-	 * Increments the model to the next step. This method must only be called if
-	 * {@link #isNextAvailable} returns <tt>true</tt>. Implementors should notify
-	 * {@link IWizardModelListener listeners} through calling
-	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
+	 * Gets whether the finish button should be enabled.
+	 * <p>
+	 * By default the finish button is available for the last step only.
 	 * 
-	 * @see #isNextAvailable()
+	 * @return True if the finish button should be enabled, false otherwise.
+	 * 
+	 * @see #isLastStep(IWizardStep)
+	 * @see #finish()
 	 */
-	void next();
+	default boolean isFinishAvailable() {
+		return isLastStep(getActiveStep());
+	}
 
 	/**
-	 * Takes the model to the previous step.This method must only be called if
-	 * {@link #isPreviousAvailable} returns <tt>true</tt>. Implementors should notify
-	 * {@link IWizardModelListener listeners} through calling
-	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
-	 * 
-	 * @see #isPreviousAvailable()
+	 * Instructs the wizard to finish succesfully. Typically, implementations check whether this
+	 * option is available at all. Implementations may clean up and reset the model. Implementations
+	 * should notify the registered {@link IWizardModelListener#onFinish() model listeners}.
 	 */
-	void previous();
-
-	/**
-	 * Removes a wizard model listener.
-	 * 
-	 * @param listener
-	 *            The listener to remove
-	 */
-	void removeListener(IWizardModelListener listener);
-
-	/**
-	 * Resets the model, setting it to the first step. Implementors should notify
-	 * {@link IWizardModelListener listeners} through calling
-	 * {@link IWizardModelListener#onActiveStepChanged(IWizardStep)}.
-	 */
-	void reset();
-
-	/**
-	 * Returns an iterator over all the steps in the model. The iteration order is not guaranteed to
-	 * the be the order of visit. This is an optional operation; dynamic models can just return
-	 * null, and should call init the first time a step is encountered right before rendering it.
-	 * 
-	 * @return an iterator over all the steps of the model or null if the wizard model is not static
-	 */
-	Iterator<IWizardStep> stepIterator();
+	void finish();
 }
