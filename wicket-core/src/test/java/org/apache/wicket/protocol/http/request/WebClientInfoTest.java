@@ -645,6 +645,34 @@ public class WebClientInfoTest
 		}
 	}
 
+	@Test
+	public void chromeMobile()
+	{
+		final String userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) CriOS/64.0.3282.112 Mobile/15D100 Safari/604.1";
+
+		WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+
+		assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
+			is(equalTo(64)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
+			is(equalTo(true)));
+
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+			is(equalTo(false)));
+	}
+
 	/**
 	 * Test Konqueror user-agent strings
 	 */
@@ -678,6 +706,35 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
 		}
+	}
+
+	@Test
+	public void ffMobile()
+	{
+		final String userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.5.6 (KHTML, like Gecko) FxiOS/10.6b8836 Mobile/15D100 Safari/604.5.6";
+		WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+
+		assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
+			is(equalTo(10)));
+		assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
+			is(equalTo(6)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
+			is(equalTo(true)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
+			is(equalTo(false)));
+
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+			is(equalTo(false)));
+		assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+			is(equalTo(false)));
 	}
 
 	/**

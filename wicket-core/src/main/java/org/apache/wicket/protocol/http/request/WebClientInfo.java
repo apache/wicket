@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default client info object for web applications.
- * 
+ *
  * @author Eelco Hillenius
  */
 public class WebClientInfo extends ClientInfo
@@ -56,7 +56,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param requestCycle
 	 *            the request cycle
 	 */
@@ -67,7 +67,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param requestCycle
 	 *            the request cycle
 	 */
@@ -79,7 +79,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param requestCycle
 	 *            the request cycle
 	 * @param userAgent
@@ -92,13 +92,13 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param requestCycle
 	 *            the request cycle
 	 * @param userAgent
 	 *            The User-Agent string
 	 * @param properties
-	 *			  properties of client            
+	 *			  properties of client
 	 */
 	public WebClientInfo(final RequestCycle requestCycle, final String userAgent, final ClientProperties properties)
 	{
@@ -114,7 +114,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * Gets the client properties object.
-	 * 
+	 *
 	 * @return the client properties object
 	 */
 	public final ClientProperties getProperties()
@@ -124,7 +124,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * returns the user agent string.
-	 * 
+	 *
 	 * @return the user agent string
 	 */
 	public final String getUserAgent()
@@ -134,7 +134,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * returns the user agent string (lower case).
-	 * 
+	 *
 	 * @return the user agent string
 	 */
 	private String getUserAgentStringLc()
@@ -228,8 +228,12 @@ public class WebClientInfo extends ClientInfo
 		if (properties.isBrowserChrome())
 		{
 			// e.g.: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.24 (KHTML, like Gecko)
-// Chrome/12.0.702.0 Safari/534.24
+			// Chrome/12.0.702.0 Safari/534.24
 			setMajorMinorVersionByPattern("chrome/(\\d+)\\.(\\d+)");
+			if (properties.getBrowserVersionMajor() < 0)
+			{
+				setMajorMinorVersionByPattern("crios/(\\d+)\\.(\\d+)");
+			}
 		}
 	}
 
@@ -276,13 +280,17 @@ public class WebClientInfo extends ClientInfo
 		properties.setBrowserMozillaFirefox(UserAgent.FIREFOX.matches(getUserAgent()));
 		properties.setBrowserMozilla(UserAgent.MOZILLA.matches(getUserAgent()));
 
-		if (properties.isBrowserMozilla())
+		if (properties.isBrowserMozillaFirefox())
 		{
-			if (properties.isBrowserMozillaFirefox())
+			if (properties.isBrowserMozilla())
 			{
 				// e.g.: Mozilla/5.0 (X11; U; Linux i686; pl-PL; rv:1.9.0.2) Gecko/20121223
 				// Ubuntu/9.25 (jaunty) Firefox/3.8
 				setMajorMinorVersionByPattern("firefox/(\\d+)\\.(\\d+)");
+			}
+			else
+			{
+				setMajorMinorVersionByPattern("fxios/(\\d+)\\.(\\d+)");
 			}
 		}
 	}
@@ -339,7 +347,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * extracts the major and minor version out of the userAgentString string.
-	 * 
+	 *
 	 * @param patternString
 	 *            The pattern must contain two matching groups
 	 */
