@@ -420,7 +420,7 @@ public abstract class Component
 
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE = 0x1;
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET = 0x2;
-	private static final short RFLAG_VISIBLE_IN_HIEARARCHY_VALUE = 0x4;
+	private static final short RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED = 0x4;
 	private static final short RFLAG_VISIBLE_IN_HIERARCHY_SET = 0x8;
 	/** onconfigure has been called */
 	private static final short RFLAG_CONFIGURED = 0x10;
@@ -434,7 +434,7 @@ public abstract class Component
 	 */
 	private static final short RFLAG_RENDERING = 0x200;
 	private static final short RFLAG_PREPARED_FOR_RENDER = 0x400;
-	private static final short RFLAG_AFTER_RENDERING = 0x800;
+	private static final short RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED = 0x800;
 	private static final short RFLAG_DETACHING = 0x1000;	
 	/** True when a component is being removed from the hierarchy */
 	private static final short RFLAG_REMOVING_FROM_HIERARCHY = 0x2000;
@@ -805,6 +805,7 @@ public abstract class Component
 	 */
 	protected void onConfigure()
 	{
+		setRequestFlag(RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
@@ -865,31 +866,20 @@ public abstract class Component
 		if (!getFlag(FLAG_INITIALIZED))
 		{
 			setFlag(FLAG_INITIALIZED, true);
+
 			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 			onInitialize();
-			if (!getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(Component.class.getName() +
-					" has not been properly initialized. Something in the hierarchy of " +
-					getClass().getName() +
-					" has not called super.onInitialize() in the override of onInitialize() method");
-			}
-			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
+			verifySuperCall("onInitialize", RFLAG_INITIALIZE_SUPER_CALL_VERIFIED);
 
 			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
 		else if (getFlag(FLAG_REMOVED))
 		{
 			setFlag(FLAG_REMOVED, false);
+			
 			setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, false);
 			onReAdd();
-			if (!getRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(Component.class.getName() +
-						" has not been properly added. Something in the hierarchy of " +
-						getClass().getName() +
-						" has not called super.onReAdd() in the override of onReAdd() method");
-			}
+			verifySuperCall("onReAdd", RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED);
 		}
 	}
 
@@ -902,17 +892,11 @@ public abstract class Component
 		
 		try
 		{
-			setRequestFlag(RFLAG_AFTER_RENDERING, true);
+			setRequestFlag(RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED, false);
 
 			onAfterRender();
 			getApplication().getComponentOnAfterRenderListeners().onAfterRender(this);
-			if (getRequestFlag(RFLAG_AFTER_RENDERING))
-			{
-				throw new IllegalStateException(Component.class.getName() +
-					" has not been properly detached. Something in the hierarchy of " +
-					getClass().getName() +
-					" has not called super.onAfterRender() in the override of onAfterRender() method");
-			}
+			verifySuperCall("onAfterRender", RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED);
 		}
 		finally
 		{
@@ -953,13 +937,7 @@ public abstract class Component
 				onBeforeRender();
 				application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
 
-				if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
-				{
-					throw new IllegalStateException(Component.class.getName() +
-						" has not been properly rendered. Something in the hierarchy of " +
-						getClass().getName() +
-						" has not called super.onBeforeRender() in the override of onBeforeRender() method");
-				}
+				verifySuperCall("onBeforeRender", RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
 			} catch (RuntimeException ex) {
 				setRequestFlag(RFLAG_PREPARED_FOR_RENDER, false);
 				throw ex;
@@ -1001,7 +979,11 @@ public abstract class Component
 		{
 			clearEnabledInHierarchyCache();
 			clearVisibleInHierarchyCache();
+			
+			setRequestFlag(RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED, false);
 			onConfigure();
+			verifySuperCall("onConfigure", RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED);
+			
 			for (Behavior behavior : getBehaviors())
 			{
 				if (isBehaviorAccepted(behavior))
@@ -1019,6 +1001,19 @@ public abstract class Component
 
 			setRequestFlag(RFLAG_CONFIGURED, true);
 		}
+	}
+
+	/**
+	 * Verify super calls of an overridden hook method.
+	 */
+	private final void verifySuperCall(String method, short flag)
+	{
+		if (!getRequestFlag(flag))
+		{
+			throw new IllegalStateException(String.format("%s() in the hierarchy of %s has not called super.%s()", method, getClass().getName(), method));
+		}
+		
+		setRequestFlag(flag, false);
 	}
 
 	/**
@@ -1143,20 +1138,8 @@ public abstract class Component
 		clearEnabledInHierarchyCache();
 		clearVisibleInHierarchyCache();
 
-		boolean beforeRenderSuperCallVerified = getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
-		boolean initializeSuperCallVerified = getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED);
-
-		requestFlags = 0;
-
-		// preserve the super_call_verified flags if they were set. WICKET-5417
-		if (beforeRenderSuperCallVerified)
-		{
-			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
-		}
-		if (initializeSuperCallVerified)
-		{
-			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
-		}
+		// clear request flags but keep super call verifications WICKET-5417
+		requestFlags &= (RFLAG_INITIALIZE_SUPER_CALL_VERIFIED | RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED | RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
 
 		detachFeedback();
 
@@ -3789,7 +3772,7 @@ public abstract class Component
 	 */
 	protected void onAfterRender()
 	{
-		setRequestFlag(RFLAG_AFTER_RENDERING, false);
+		setRequestFlag(RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
