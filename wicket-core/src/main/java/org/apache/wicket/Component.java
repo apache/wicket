@@ -4368,13 +4368,13 @@ public abstract class Component
 	}
 	
 	/**
-	 * Says if the component is rendering or not checking the corresponding flag.
+	 * Says if the component is rendering currently.
 	 * 
 	 * @return true if this component is rendering, false otherwise.
 	 */
 	public final boolean isRendering()
 	{
-		return getRequestFlag(RFLAG_RENDERING);
+		return getRequestFlag(RFLAG_PREPARED_FOR_RENDER) || getRequestFlag(RFLAG_RENDERING);
 	}
 
 	/**
