@@ -18,19 +18,14 @@ package org.apache.wicket.util.string;
 
 import static org.junit.Assert.*;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("javadoc")
 public class StringsTest
 {
-	private static final Logger log = LoggerFactory.getLogger(StringsTest.class);
-
 	@Test
 	public void stripJSessionId()
 	{
@@ -206,11 +201,6 @@ public class StringsTest
 		assertEquals("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
 			Strings.replaceHtmlEscapeNumber(
 				"&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;"));
-	}
-
-	private String convertNonASCIIString(final String str) throws UnsupportedEncodingException
-	{
-		return new String(str.getBytes(), "iso-8859-1");
 	}
 
 	@Test
@@ -446,24 +436,10 @@ public class StringsTest
 		assertEquals("foobarbaz", Strings.join("", fragments));
 	}
 
-	/**
-	 * Converts an array of strings to a String. ["a", "b"] becomes: "[a,b]"
-	 * 
-	 * @param arrayOfStrings
-	 *            the array to convert
-	 * @return the array as a string.
-	 */
-	private String stringValue(final String[] arrayOfStrings)
+	@Test
+	public void testNonchar()
 	{
-		AppendingStringBuffer sb = new AppendingStringBuffer("[");
-		String komma = "";
-		for (String str : arrayOfStrings)
-		{
-			sb.append(komma);
-			sb.append(str);
-			komma = ",";
-		}
-		sb.append("]");
-		return sb.toString();
+		assertEquals("", Strings.escapeMarkup("\ufffe\uffff\uFDDF\uFDE0").toString());
+		assertEquals("", Strings.toEscapedUnicode("\ufffe\uffff\uFDDF\uFDE0"));
 	}
 }
