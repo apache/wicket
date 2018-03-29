@@ -77,6 +77,7 @@ public class EnclosureContainer extends WebMarkupContainer
 	@Override
 	protected void onConfigure()
 	{
+		super.onConfigure();
 		child.configure();
 
 		setVisible(child.determineVisibility());
