@@ -28,7 +28,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @since 6.0
  */
-public class UrlResourceReference extends ResourceReference
+public class UrlResourceReference extends ResourceReference implements IntegrityAttributed
 {
 	/**
 	 * An Url that knows how to render itself, so it doesn't need re-calculating in UrlRenderer. It
@@ -61,6 +61,10 @@ public class UrlResourceReference extends ResourceReference
 	private final Url url;
 
 	private boolean contextRelative = false;
+        
+        private String integrity = null;
+        
+        private CrossOrigin crossOrigin = null;
 
 	/**
 	 * Constructor.
@@ -128,6 +132,24 @@ public class UrlResourceReference extends ResourceReference
 	{
 		return contextRelative;
 	}
+
+        @Override
+        public String getIntegrity() {
+            return integrity;
+        }
+
+        public void setIntegrity(String integrity) {
+            this.integrity = integrity;
+        }
+
+        @Override
+        public CrossOrigin getCrossOrigin() {
+            return crossOrigin;
+        }
+
+        public void setCrossOrigin(CrossOrigin crossOrigin) {
+            this.crossOrigin = crossOrigin;
+        }
 
 	@Override
 	public String toString()

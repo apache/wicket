@@ -23,6 +23,7 @@ import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IntegrityAttributed;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
@@ -167,7 +168,13 @@ public abstract class CssHeaderItem extends HeaderItem
 	public static CssReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String media, String condition)
 	{
-		return new CssReferenceHeaderItem(reference, pageParameters, media, condition);
+                final CssReferenceHeaderItem cssReferenceHeaderItem = new CssReferenceHeaderItem(reference, pageParameters, media, condition);
+                if(reference instanceof IntegrityAttributed) {
+                        IntegrityAttributed integrityAttributed = (IntegrityAttributed) reference;
+                        cssReferenceHeaderItem.setIntegrity(integrityAttributed.getIntegrity());
+                        cssReferenceHeaderItem.setCrossOrigin(integrityAttributed.getCrossOrigin());
+                }
+		return cssReferenceHeaderItem;
 	}
 
 	/**
@@ -200,7 +207,13 @@ public abstract class CssHeaderItem extends HeaderItem
 	public static CssReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String media, String condition, String rel)
 	{
-		return new CssReferenceHeaderItem(reference, pageParameters, media, condition, rel);
+                final CssReferenceHeaderItem cssReferenceHeaderItem = new CssReferenceHeaderItem(reference, pageParameters, media, condition, rel);
+                if(reference instanceof IntegrityAttributed) {
+                        IntegrityAttributed integrityAttributed = (IntegrityAttributed) reference;
+                        cssReferenceHeaderItem.setIntegrity(integrityAttributed.getIntegrity());
+                        cssReferenceHeaderItem.setCrossOrigin(integrityAttributed.getCrossOrigin());
+                }
+		return cssReferenceHeaderItem;
 	}
 
 	/**
@@ -355,9 +368,13 @@ public abstract class CssHeaderItem extends HeaderItem
 			response.write(condition);
 			response.write("]>");
 		}
-
-		CssUtils.writeLinkUrl(response, url, media, getId(), rel);
-
+                if (this instanceof IntegrityAttributed)
+                {
+                        CssUtils.writeLinkUrl(response, url, media, getId(), rel, (IntegrityAttributed) this);
+                } else {
+                        CssUtils.writeLinkUrl(response, url, media, getId(), rel);
+                }
+                
 		if (hasCondition)
 		{
 			response.write("<![endif]-->");

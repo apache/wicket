@@ -17,6 +17,7 @@
 package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.IntegrityAttributed;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.Strings;
 
@@ -116,6 +117,28 @@ public final class CssUtils
 	public static void writeLinkUrl(final Response response, final CharSequence url,
 		final CharSequence media, final String markupId, final String rel)
 	{
+		writeLinkUrl(response, url, media, markupId, rel, null);
+	}
+        
+	/**
+	 * Writes a reference to a css file in the response object
+	 *
+	 * @param response
+	 *            the response to write to
+	 * @param url
+	 *            the url of the css reference
+	 * @param media
+	 *            the CSS media
+	 * @param markupId
+	 *            the markupId
+	 * @param rel
+	 *            the rel attribute
+         * @param integrity
+         *            integrity attributes
+	 */
+	public static void writeLinkUrl(final Response response, final CharSequence url,
+		final CharSequence media, final String markupId, final String rel, final IntegrityAttributed integrity)
+	{
 		response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 		response.write(Strings.escapeMarkup(url));
 		response.write("\"");
@@ -137,6 +160,19 @@ public final class CssUtils
 			response.write(Strings.escapeMarkup(rel));
 			response.write("\"");
 		}
+                if (integrity != null)
+                {
+                    if (!Strings.isEmpty(integrity.getIntegrity()))
+                    {
+                            response.write(" integrity=\"");
+                            response.write(Strings.escapeMarkup(integrity.getIntegrity()));
+                            response.write("\"");
+                    }
+                    if (integrity.getCrossOrigin() != null)
+                    {
+                            response.write(" " + integrity.getCrossOrigin().getAttributeDefinition());
+                    }
+                }
 		response.write(" />");
 	}
 

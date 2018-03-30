@@ -23,6 +23,7 @@ import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.IntegrityAttributed;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
@@ -201,7 +202,13 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer, String charset)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset, null);
+                final JavaScriptReferenceHeaderItem javaScriptReferenceHeaderItem = new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset, null);
+                if(reference instanceof IntegrityAttributed) {
+                        IntegrityAttributed integrityAttributed = (IntegrityAttributed) reference;
+                        javaScriptReferenceHeaderItem.setIntegrity(integrityAttributed.getIntegrity());
+                        javaScriptReferenceHeaderItem.setCrossOrigin(integrityAttributed.getCrossOrigin());
+                }
+		return javaScriptReferenceHeaderItem;
 	}
 
 
@@ -227,7 +234,13 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 	public static JavaScriptReferenceHeaderItem forReference(ResourceReference reference,
 		PageParameters pageParameters, String id, boolean defer, String charset, String condition)
 	{
-		return new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset, condition);
+                final JavaScriptReferenceHeaderItem javaScriptReferenceHeaderItem = new JavaScriptReferenceHeaderItem(reference, pageParameters, id, defer, charset, condition);
+                if(reference instanceof IntegrityAttributed) {
+                        IntegrityAttributed integrityAttributed = (IntegrityAttributed) reference;
+                        javaScriptReferenceHeaderItem.setIntegrity(integrityAttributed.getIntegrity());
+                        javaScriptReferenceHeaderItem.setCrossOrigin(integrityAttributed.getCrossOrigin());
+                }
+		return javaScriptReferenceHeaderItem;
 	}
 
 	/**
@@ -366,7 +379,12 @@ public abstract class JavaScriptHeaderItem extends HeaderItem
 		// the url needs to be escaped when Ajax, because it will break the Ajax Response XML (WICKET-4777)
 		CharSequence escapedUrl = isAjax ? Strings.escapeMarkup(url): url;
 
-		JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset, async);
+		if (this instanceof IntegrityAttributed) {
+                    JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset, async, (IntegrityAttributed) this);
+                }
+                else {
+                    JavaScriptUtils.writeJavaScriptUrl(response, escapedUrl, id, defer, charset, async);
+                }
 
 		if (hasCondition)
 		{

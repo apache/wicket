@@ -25,6 +25,8 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CrossOrigin;
+import org.apache.wicket.request.resource.IntegrityAttributed;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.IResourceBundle;
 import org.apache.wicket.util.string.Strings;
@@ -34,7 +36,7 @@ import org.apache.wicket.util.string.Strings;
  * 
  * @author papegaaij
  */
-public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceHeaderItem
+public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceHeaderItem, IntegrityAttributed
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,6 +44,8 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	private final String media;
 	private final PageParameters pageParameters;
 	private final String rel;
+        private String integrity = null;
+        private CrossOrigin crossOrigin = null;
 
 	/**
 	 * Creates a new {@code CSSReferenceHeaderItem}.
@@ -137,6 +141,24 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 		return super.getProvidedResources();
 	}
 
+        @Override
+        public String getIntegrity() {
+            return integrity;
+        }
+
+        public void setIntegrity(String integrity) {
+            this.integrity = integrity;
+        }
+
+        @Override
+        public CrossOrigin getCrossOrigin() {
+            return crossOrigin;
+        }
+
+        public void setCrossOrigin(CrossOrigin crossOrigin) {
+            this.crossOrigin = crossOrigin;
+        }
+
 	@Override
 	public void render(Response response)
 	{
@@ -165,7 +187,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(super.hashCode(), reference, media, pageParameters, rel);
+		return Objects.hash(super.hashCode(), reference, media, pageParameters, rel, integrity, crossOrigin);
 	}
 
 	@Override
@@ -179,6 +201,7 @@ public class CssReferenceHeaderItem extends CssHeaderItem implements IReferenceH
 			return false;
 		CssReferenceHeaderItem that = (CssReferenceHeaderItem)o;
 		return Objects.equals(reference, that.reference) && Objects.equals(media, that.media) &&
-			Objects.equals(rel, that.rel) && Objects.equals(pageParameters, that.pageParameters);
+			Objects.equals(rel, that.rel) && Objects.equals(pageParameters, that.pageParameters) && 
+                        Objects.equals(integrity, that.integrity) && Objects.equals(crossOrigin, that.crossOrigin);
 	}
 }

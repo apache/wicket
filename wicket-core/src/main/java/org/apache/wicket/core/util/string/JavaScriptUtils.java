@@ -17,6 +17,7 @@
 package org.apache.wicket.core.util.string;
 
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.IntegrityAttributed;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -152,6 +153,30 @@ public class JavaScriptUtils
 	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
 		final String id, boolean defer, String charset, boolean async)
 	{
+                writeJavaScriptUrl(response, url, id, defer, charset, async, null);
+	}
+	/**
+	 * Write a reference to a javascript file to the response object
+	 * 
+	 * @param response
+	 *            The HTTP response
+	 * @param url
+	 *            The javascript file URL
+	 * @param id
+	 *            Unique identifier of element
+	 * @param defer
+	 *            specifies that the execution of a script should be deferred (delayed) until after
+	 *            the page has been loaded.
+	 * @param charset
+	 *            a non null value specifies the charset attribute of the script tag
+	 * @param async
+	 *            specifies that the script can be loaded asynchronously by the browser
+         * @param integrity
+         *            integrity attributes
+	 */
+	public static void writeJavaScriptUrl(final Response response, final CharSequence url,
+		final String id, boolean defer, String charset, boolean async, final IntegrityAttributed integrity)
+	{
 		response.write("<script type=\"text/javascript\" ");
 		if (id != null)
 		{
@@ -171,6 +196,19 @@ public class JavaScriptUtils
 		{
 			response.write("charset=\"" + Strings.escapeMarkup(charset) + "\" ");
 		}
+                if (integrity != null)
+                {
+                    if (!Strings.isEmpty(integrity.getIntegrity()))
+                    {
+                            response.write("integrity=\"");
+                            response.write(Strings.escapeMarkup(integrity.getIntegrity()));
+                            response.write("\" ");
+                    }
+                    if (integrity.getCrossOrigin() != null)
+                    {
+                            response.write(integrity.getCrossOrigin().getAttributeDefinition() + " ");
+                    }
+                }
 		response.write("src=\"");
 		response.write(url);
 		response.write("\"></script>");

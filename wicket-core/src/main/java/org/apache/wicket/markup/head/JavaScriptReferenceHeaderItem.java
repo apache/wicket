@@ -26,6 +26,8 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.CrossOrigin;
+import org.apache.wicket.request.resource.IntegrityAttributed;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.bundles.IResourceBundle;
 import org.apache.wicket.util.lang.Args;
@@ -39,10 +41,12 @@ import org.apache.wicket.util.string.Strings;
  */
 public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHeaderItem
 	implements
-		IReferenceHeaderItem
+		IReferenceHeaderItem, IntegrityAttributed
 {
 	private final ResourceReference reference;
 	private final PageParameters pageParameters;
+        private String integrity = null;
+        private CrossOrigin crossOrigin = null;
 
 	/**
 	 * Creates a new {@code JavaScriptReferenceHeaderItem}.
@@ -132,10 +136,28 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 		return RequestCycle.get().urlFor(handler).toString();
 	}
 
+        @Override
+        public String getIntegrity() {
+            return integrity;
+        }
+
+        public void setIntegrity(String integrity) {
+            this.integrity = integrity;
+        }
+
+        @Override
+        public CrossOrigin getCrossOrigin() {
+            return crossOrigin;
+        }
+
+        public void setCrossOrigin(CrossOrigin crossOrigin) {
+            this.crossOrigin = crossOrigin;
+        }
+
 	@Override
 	public int hashCode()
 	{
-		return java.util.Objects.hash(super.hashCode(), reference, pageParameters);
+		return java.util.Objects.hash(super.hashCode(), reference, pageParameters, integrity, crossOrigin);
 	}
 
 	@Override
@@ -146,6 +168,8 @@ public class JavaScriptReferenceHeaderItem extends AbstractJavaScriptReferenceHe
 		if (!super.equals(o)) return false;
 		JavaScriptReferenceHeaderItem that = (JavaScriptReferenceHeaderItem) o;
 		return java.util.Objects.equals(reference, that.reference) &&
-				java.util.Objects.equals(pageParameters, that.pageParameters);
+				java.util.Objects.equals(pageParameters, that.pageParameters) &&
+				java.util.Objects.equals(integrity, that.integrity) &&
+				java.util.Objects.equals(crossOrigin, that.crossOrigin);
 	}
 }
