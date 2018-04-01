@@ -441,4 +441,11 @@ public class StringsTest
 		// empty separator
 		assertEquals("foobarbaz", Strings.join("", fragments));
 	}
+
+	@Test
+	public void testNonchar()
+	{
+		assertEquals("", Strings.escapeMarkup("\ufffe\uffff\uFDDF\uFDE0").toString());
+		assertEquals("", Strings.toEscapedUnicode("\ufffe\uffff\uFDDF\uFDE0"));
+	}
 }
