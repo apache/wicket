@@ -136,8 +136,8 @@ public class HeaderResponseTest
 	public void conditionalRenderCSSContent()
 	{
 		headerResponse.render(CssHeaderItem.forCSS(".className { font-size: 10px}", "id", "lt IE 8"));
-		String expected = "<!--[if lt IE 8]><style type=\"text/css\" id=\"id\"><!--\n" +
-				".className { font-size: 10px}--></style>\n" +
+		String expected = "<!--[if lt IE 8]><style type=\"text/css\" id=\"id\">\n" +
+				".className { font-size: 10px}</style>\n" +
 				"<![endif]-->\n";
 		String actual = headerResponse.getResponse().toString();
 		Assert.assertEquals(expected, actual);
