@@ -27,11 +27,14 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class CssUtils
 {
+	/** start of CSS inline open tag */
+	public final static String INLINE_OPEN_TAG_START = "<style type=\"text/css\"";
+
 	/** CSS inline open tag */
-	public final static String INLINE_OPEN_TAG = "<style type=\"text/css\"><!--\n";
+	public final static String INLINE_OPEN_TAG = INLINE_OPEN_TAG_START + ">\n";
 
 	/** CSS inline close tag */
-	public final static String INLINE_CLOSE_TAG = "--></style>\n";
+	public final static String INLINE_CLOSE_TAG = "</style>\n";
 
 	/**
 	 * Hidden constructor.
@@ -64,12 +67,12 @@ public final class CssUtils
 	 */
 	public static void writeOpenTag(final Response response, String id)
 	{
-		response.write("<style type=\"text/css\" ");
+		response.write(INLINE_OPEN_TAG_START);
 		if (id != null)
 		{
-			response.write("id=\"" + id + "\"");
+			response.write(" id=\"" + id + "\"");
 		}
-		response.write("><!--\n");
+		response.write(">\n");
 	}
 
 	/**
