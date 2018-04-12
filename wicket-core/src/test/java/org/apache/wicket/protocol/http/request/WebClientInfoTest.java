@@ -17,9 +17,8 @@
 package org.apache.wicket.protocol.http.request;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThan;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -59,7 +57,7 @@ public class WebClientInfoTest
 		servletRequest = mock(HttpServletRequest.class);
 		when(webRequest.getContainerRequest()).thenReturn(servletRequest);
 	}
-
+	
 	/**
 	 * Test IE 6.x user-agent strings
 	 */
@@ -73,15 +71,27 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Windows; U; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)",
 			"Mozilla/5.0 (compatible; MSIE 6.0; Windows NT 5.2; WOW64; .NET CLR 2.0.50727)");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(6)));
+			switch (i)
+			{
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"6.01");
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"6.1");
+					break;
+				default :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"6.0");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -95,7 +105,8 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -115,12 +126,9 @@ public class WebClientInfoTest
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(7)));
+			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "7.0");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -134,7 +142,7 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
 		}
 	}
 
@@ -154,12 +162,9 @@ public class WebClientInfoTest
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(8)));
+			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "8.0");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -173,7 +178,7 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
 		}
 	}
 
@@ -193,12 +198,9 @@ public class WebClientInfoTest
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(9)));
+			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "9.0");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -212,7 +214,7 @@ public class WebClientInfoTest
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
 		}
 	}
 
@@ -234,17 +236,23 @@ public class WebClientInfoTest
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(), is(equalTo(10)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(), is(equalTo(true)));
-
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(), is(equalTo(false)));
+			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "10.0");
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+				is(equalTo(true)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
 		}
 	}
 
@@ -258,20 +266,38 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko",
 			"Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.1) like Gecko");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(), is(equalTo(11)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(), is(greaterThan(-1)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(), is(equalTo(true)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(), is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(), is(equalTo(false)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"11.0");
+					break;
+				case 1 :
+					assertEquals(userAgent, "11.1",
+						webClientInfo.getProperties().getBrowserVersion());
+					break;
+			}
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
+				is(equalTo(true)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
+				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -288,13 +314,9 @@ public class WebClientInfoTest
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(true)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(9)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
-				is(equalTo(64)));
-
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
+				is(equalTo(true)));
+			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "9.64");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
@@ -326,14 +348,40 @@ public class WebClientInfoTest
 			"Mozilla/4.0 (compatible; MSIE 8.0; Linux i686; en) Opera 10.51",
 			"Mozilla/5.0 (Windows NT 5.1; U; zh-cn; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6 Opera 10.70");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
 
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(true)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(10)));
-
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
+				is(equalTo(true)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"10.00");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"10.01");
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"10.10");
+					break;
+				case 3 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"10.5");
+					break;
+				case 4 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"10.51");
+					break;
+				case 5 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"10.70");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
@@ -348,6 +396,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -357,16 +406,15 @@ public class WebClientInfoTest
 	@Test
 	public void opera11()
 	{
-		List<String> userAgents = Arrays.asList("Opera/9.80 (X11; Linux x86_64; U; en) Presto/2.8.131 Version/11.10");
+		List<String> userAgents = Arrays
+			.asList("Opera/9.80 (X11; Linux x86_64; U; en) Presto/2.8.131 Version/11.10");
 
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(), is(equalTo(true)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(11)));
-
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
+				is(equalTo(true)));
+			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "11.10");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
@@ -395,15 +443,27 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Macintosh; U; PPC Mac OS X; fr) AppleWebKit/312.5.2 (KHTML, like Gecko) Safari/312.3.3",
 			"Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/85.8.5 (KHTML, like Gecko) Safari/85.8.1");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(lessThan(3)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"417.9.3");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"312.3.3");
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"85.8.1");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -418,6 +478,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -432,15 +493,27 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_6; en-gb) AppleWebKit/525.18.1 (KHTML, like Gecko) Version/3.1.2 Safari/525.20.1",
 			"Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en-us) AppleWebKit/522.11 (KHTML, like Gecko) Version/3.0.2 Safari/522.12");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(3)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"3.2.1");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"3.1.2");
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"3.0.2");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -455,6 +528,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -470,15 +544,31 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_4_11; nl-nl) AppleWebKit/533.16 (KHTML, like Gecko) Version/4.1 Safari/533.16",
 			"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_4; en-gb) AppleWebKit/528.4+ (KHTML, like Gecko) Version/4.0dp1 Safari/526.11.2");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(4)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"4.0");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"4.0.2");
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"4.1");
+					break;
+				case 3 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"4.0dp1");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -493,6 +583,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -508,15 +599,28 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Windows; U; Windows NT 6.0; nb-NO) AppleWebKit/533.18.1 (KHTML, like Gecko) Version/5.0.2 Safari/533.18.5",
 			"Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_6; de-de) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(5)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"5.0");
+					break;
+				case 1 :
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"5.0.2");
+					break;
+				case 3 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"5.0.4");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -531,6 +635,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -545,15 +650,27 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/525.19 (KHTML, like Gecko) Chrome/0.4.154.31 Safari/525.19",
 			"Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/525.19 (KHTML, like Gecko) Chrome/0.3.154.6 Safari/525.19");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(0)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"0.2.149.27");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"0.4.154.31");
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"0.3.154.6");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -568,6 +685,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -582,15 +700,27 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (X11; U; Linux x86_64; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Ubuntu/10.10 Chromium/8.0.552.237 Chrome/8.0.552.237 Safari/534.10",
 			"Mozilla/5.0 (X11; U; CrOS i686 0.9.128; en-US) AppleWebKit/534.10 (KHTML, like Gecko) Chrome/8.0.552.339 Safari/534.10");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(8)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"8.0.552.224");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"8.0.552.237");
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"8.0.552.339");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -605,6 +735,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -619,15 +750,27 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.24 (KHTML, like Gecko) Ubuntu/10.10 Chromium/12.0.703.0 Chrome/12.0.703.0 Safari/534.24",
 			"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/534.25 (KHTML, like Gecko) Chrome/12.0.706.0 Safari/534.25");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(12)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"12.0.702.0");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"12.0.703.0");
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"12.0.706.0");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -642,6 +785,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -659,10 +803,8 @@ public class WebClientInfoTest
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
@@ -690,19 +832,25 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:2.0b8pre) Gecko/20101213 Firefox/4.0b8pre",
 			"Mozilla/5.0 (Windows; U; Windows NT 6.1; ru; rv:1.9.2.3) Gecko/20100401 Firefox/4.0 (.NET CLR 3.5.30729)");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(4)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
-				is(equalTo(0)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"4.0b8pre");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"4.0");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
 				is(equalTo(true)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
@@ -715,6 +863,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -725,22 +874,37 @@ public class WebClientInfoTest
 	public void firefox38()
 	{
 		List<String> userAgents = Arrays.asList(
-			"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.3) Gecko/20100401 Mozilla/5.0 (X11; U; Linux i686; it-IT; rv:1.9.0.2) Gecko/2008092313 Ubuntu/9.25 (jaunty) Firefox/3.8",
+			"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.3) Gecko/20100401",
+			"Mozilla/5.0 (X11; U; Linux i686; it-IT; rv:1.9.0.2) Gecko/2008092313 Ubuntu/9.25 (jaunty) Firefox/3.8",
 			"Mozilla/5.0 (X11; U; Linux i686; pl-PL; rv:1.9.0.2) Gecko/2008092313 Ubuntu/9.25 (jaunty) Firefox/3.8");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(3)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
-				is(equalTo(8)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
-				is(equalTo(true)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"1.9.2.3");
+					assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
+						is(equalTo(false)));
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"3.8");
+					assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
+						is(equalTo(true)));
+					break;
+				case 2 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"3.8");
+					assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
+						is(equalTo(true)));
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
@@ -753,6 +917,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -766,19 +931,25 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.2.9) Gecko/20100824 Firefox/3.6.9 ( .NET CLR 3.5.30729; .NET CLR 4.0.20506)",
 			"Mozilla/5.0 (X11; U; FreeBSD i386; de-CH; rv:1.9.2.8) Gecko/20100729 Firefox/3.6.8");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(3)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
-				is(equalTo(6)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"3.6.9");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"3.6.8");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
 				is(equalTo(true)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
@@ -791,6 +962,7 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
 		}
 	}
 
@@ -804,19 +976,25 @@ public class WebClientInfoTest
 			"Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.9) Gecko/20071105 Fedora/2.0.0.9-1.fc7 Firefox/2.0.0.9",
 			"Mozilla/5.0 (X11; U; Linux x86_64; en-US; rv:1.8.1.6) Gecko/20061201 Firefox/2.0.0.6 (Ubuntu-feisty)");
 
+		int i = 0;
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-				is(equalTo(2)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
-				is(equalTo(0)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"2.0.0.9");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"2.0.0.6");
+					break;
+			}
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
 				is(equalTo(true)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
 				is(equalTo(true)));
-
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
@@ -829,6 +1007,66 @@ public class WebClientInfoTest
 				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
 				is(equalTo(false)));
+			i++;
+		}
+	}
+	
+	/**
+	 * Test to check for CriOs
+	 */
+	@Test
+	public void detectCriOs() {
+		List<String> userAgents = Arrays.asList(
+			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36",
+			"Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) CriOS/64.0.3282.112 Mobile/15D100 Safari/604.1");
+		
+		int i = 0;
+		for (String userAgent : userAgents)
+		{
+			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
+				is(equalTo(true)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"65.0.3325.162");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"64.0.3282.112");
+					break;
+			}
+			i++;
+		}
+	}
+	/**
+	 * Test to check for FFOs
+	 */
+	@Test
+	public void detectFFOs() {
+		List<String> userAgents = Arrays.asList(
+			"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0",
+			"Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.5.6 (KHTML, like Gecko) FxiOS/10.6b8836 Mobile/15D100 Safari/604.5.6");
+		
+		int i = 0;
+		for (String userAgent : userAgents)
+		{
+			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
+				is(equalTo(true)));
+			switch (i)
+			{
+				case 0 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"59.0");
+					break;
+				case 1 :
+					assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(),
+						"10.6b8836");
+					break;
+			}
+			i++;
 		}
 	}
 
@@ -839,33 +1077,27 @@ public class WebClientInfoTest
 	public void edge15()
 	{
 		List<String> userAgents = Arrays.asList(
-				"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063");
+			"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063");
 
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
-			           is(equalTo(15)));
-			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
-			           is(equalTo(15063)));
+			assertEquals(webClientInfo.getProperties().getBrowserVersion(), "15");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
-			           is(equalTo(false)));
-
+				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserSafari(),
-			           is(equalTo(false)));
+				is(equalTo(false)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
-			           is(equalTo(false)));
-			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(),
-			           is(equalTo(true)));
+				is(equalTo(false)));
+			assertThat(userAgent, webClientInfo.getProperties().isBrowserEdge(), is(equalTo(true)));
 		}
 	}
 
@@ -882,24 +1114,6 @@ public class WebClientInfoTest
 		String actual = clientInfo.getRemoteAddr(requestCycleMock);
 		assertThat(actual, is(equalTo(expected)));
 		Mockito.verifyZeroInteractions(servletRequest);
-	}
-
-	/**
-	 * Test X-Forwarded-For ip address extraction with fallback when no ip is contained.
-	 *
-	 * Note mgrigorov: this test could fail in network setups where unknown addresses, like "blah",
-	 * will resolve to some DNS service saying "'blah' domain is free. Buy it."
-	 */
-	@Test
-	@Ignore
-	public void testExtractFromContainerRequestUnknownXForwardedFor()
-	{
-		String expected = "10.17.37.8";
-		when(servletRequest.getRemoteAddr()).thenReturn(expected);
-		when(webRequest.getHeader("X-Forwarded-For")).thenReturn("unknown");
-		WebClientInfo clientInfo = new WebClientInfo(requestCycleMock, "No user agent");
-		String actual = clientInfo.getRemoteAddr(requestCycleMock);
-		assertThat(actual, is(equalTo(expected)));
 	}
 
 	/**

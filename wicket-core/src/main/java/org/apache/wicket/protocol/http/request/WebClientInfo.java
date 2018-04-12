@@ -18,8 +18,6 @@ package org.apache.wicket.protocol.http.request;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,6 +29,8 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
 
 
 /**
@@ -46,13 +46,19 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * The user agent string from the User-Agent header, app. Theoretically, this might differ from
-	 * {@link org.apache.wicket.protocol.http.ClientProperties#isNavigatorJavaEnabled()} property, which is
-	 * not set until an actual reply from a browser (e.g. using {@link BrowserInfoPage} is set.
+	 * {@link org.apache.wicket.protocol.http.ClientProperties#isNavigatorJavaEnabled()} property,
+	 * which is not set until an actual reply from a browser (e.g. using {@link BrowserInfoPage} is
+	 * set.
 	 */
 	private final String userAgent;
 
 	/** Client properties object. */
 	private final ClientProperties properties;
+
+	private final static UserAgentAnalyzer UAA = UserAgentAnalyzer.newBuilder()
+		.hideMatcherLoadStats()
+		.withCache(25000)
+		.build();
 
 	/**
 	 * Construct.
@@ -70,6 +76,8 @@ public class WebClientInfo extends ClientInfo
 	 * 
 	 * @param requestCycle
 	 *            the request cycle
+	 * @param properties
+	 *            the client properties
 	 */
 	public WebClientInfo(RequestCycle requestCycle, ClientProperties properties)
 	{
@@ -98,17 +106,14 @@ public class WebClientInfo extends ClientInfo
 	 * @param userAgent
 	 *            The User-Agent string
 	 * @param properties
-	 *			  properties of client            
+	 *            properties of client
 	 */
-	public WebClientInfo(final RequestCycle requestCycle, final String userAgent, final ClientProperties properties)
+	public WebClientInfo(final RequestCycle requestCycle, final String userAgent,
+		final ClientProperties properties)
 	{
-		super();
-
 		this.userAgent = userAgent;
-
 		this.properties = properties;
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
-
 		init();
 	}
 
@@ -145,12 +150,12 @@ public class WebClientInfo extends ClientInfo
 	/**
 	 * When using ProxyPass, requestCycle().getHttpServletRequest(). getRemoteAddr() returns the IP
 	 * of the machine forwarding the request. In order to maintain the clients ip address, the
-	 * server places it in the <a
-	 * href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#x-headers">X-Forwarded-For</a>
+	 * server places it in the
+	 * <a href="http://httpd.apache.org/docs/2.2/mod/mod_proxy.html#x-headers">X-Forwarded-For</a>
 	 * Header.
 	 *
-	 * Proxies may also mask the original client IP with tokens like "hidden" or "unknown".
-	 * If so, the last proxy ip address is returned.
+	 * Proxies may also mask the original client IP with tokens like "hidden" or "unknown". If so,
+	 * the last proxy ip address is returned.
 	 *
 	 * @param requestCycle
 	 *            the request cycle
@@ -193,165 +198,117 @@ public class WebClientInfo extends ClientInfo
 	 */
 	private void init()
 	{
-		setInternetExplorerProperties();
-		setOperaProperties();
-		setMozillaProperties();
-		setKonquerorProperties();
-		setChromeProperties();
-		setEdgeProperties();
-		setSafariProperties();
+		nl.basjes.parse.useragent.UserAgent parsedUserAgent = UAA.parse(getUserAgent());
+		setInternetExplorerProperties(parsedUserAgent);
+		setKonquerorProperties(parsedUserAgent);
+		setMozillaProperties(parsedUserAgent);
+		setOperaProperties(parsedUserAgent);
+		setChromeProperties(parsedUserAgent);
+		setEdgeProperties(parsedUserAgent);
+		setSafariProperties(parsedUserAgent);
 
 		log.debug("determined user agent: {}", properties);
 	}
 
 	/**
 	 * sets the konqueror specific properties
+	 * 
+	 * @param parsedUserAgent
 	 */
-	private void setKonquerorProperties()
+	private void setKonquerorProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
 	{
-		properties.setBrowserKonqueror(UserAgent.KONQUEROR.matches(getUserAgent()));
-
-		if (properties.isBrowserKonqueror())
-		{
-			// e.g.: Mozilla/5.0 (compatible; Konqueror/4.2; Linux) KHTML/4.2.96 (like Gecko)
-			setMajorMinorVersionByPattern("konqueror/(\\d+)\\.(\\d+)");
-		}
+		properties.setBrowserKonqueror(
+			UserAgent.KONQUEROR.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
+		setBrowserVersion(parsedUserAgent);
 	}
 
 	/**
 	 * sets the chrome specific properties
+	 * 
+	 * @param parsedUserAgent
 	 */
-	private void setChromeProperties()
+	private void setChromeProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
 	{
-		properties.setBrowserChrome(UserAgent.CHROME.matches(getUserAgent()));
-
-		if (properties.isBrowserChrome())
-		{
-			// e.g.: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.24 (KHTML, like Gecko)
-// Chrome/12.0.702.0 Safari/534.24
-			setMajorMinorVersionByPattern("chrome/(\\d+)\\.(\\d+)");
-		}
+		properties.setBrowserChrome(
+			UserAgent.CHROME.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
+		setBrowserVersion(parsedUserAgent);
 	}
 
 	/**
 	 * sets the Edge specific properties
+	 * 
+	 * @param parsedUserAgent
 	 */
-	private void setEdgeProperties()
+	private void setEdgeProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
 	{
-		properties.setBrowserEdge(UserAgent.EDGE.matches(getUserAgent()));
-
-		if (properties.isBrowserEdge())
-		{
-			// e.g.: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
-			// Chrome/52.0.2743.116 Safari/537.36 Edge/15.15063
-			setMajorMinorVersionByPattern("edge/(\\d+)\\.(\\d+)");
-		}
+		properties.setBrowserEdge(
+			UserAgent.EDGE.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
+		setBrowserVersion(parsedUserAgent);
 	}
 
 	/**
 	 * sets the safari specific properties
+	 * 
+	 * @param parsedUserAgent
 	 */
-	private void setSafariProperties()
+	private void setSafariProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
 	{
-		properties.setBrowserSafari(UserAgent.SAFARI.matches(getUserAgent()));
-
-		if (properties.isBrowserSafari())
-		{
-			String userAgent = getUserAgentStringLc();
-
-			if (userAgent.contains("version/"))
-			{
-				// e.g.: Mozilla/5.0 (Windows; U; Windows NT 6.1; sv-SE) AppleWebKit/533.19
-				// (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4
-				setMajorMinorVersionByPattern("version/(\\d+)\\.(\\d+)");
-			}
-		}
+		properties.setBrowserSafari(
+			UserAgent.SAFARI.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
+		setBrowserVersion(parsedUserAgent);
 	}
 
 	/**
 	 * sets the mozilla/firefox specific properties
+	 * 
+	 * @param parsedUserAgent
 	 */
-	private void setMozillaProperties()
+	private void setMozillaProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
 	{
-		properties.setBrowserMozillaFirefox(UserAgent.FIREFOX.matches(getUserAgent()));
-		properties.setBrowserMozilla(UserAgent.MOZILLA.matches(getUserAgent()));
-
-		if (properties.isBrowserMozilla())
+		boolean isFireFox = UserAgent.FIREFOX.getUaStrings()
+			.contains(parsedUserAgent.getValue("AgentName"));
+		if (isFireFox)
 		{
-			if (properties.isBrowserMozillaFirefox())
-			{
-				// e.g.: Mozilla/5.0 (X11; U; Linux i686; pl-PL; rv:1.9.0.2) Gecko/20121223
-				// Ubuntu/9.25 (jaunty) Firefox/3.8
-				setMajorMinorVersionByPattern("firefox/(\\d+)\\.(\\d+)");
-			}
+			properties.setBrowserMozillaFirefox(true);
+			properties.setBrowserMozilla(true);
 		}
+		else
+		{
+			properties.setBrowserMozilla(
+				UserAgent.MOZILLA.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
+		}
+		setBrowserVersion(parsedUserAgent);
 	}
 
 	/**
 	 * sets the opera specific properties
+	 * 
+	 * @param parsedUserAgent
 	 */
-	private void setOperaProperties()
+	private void setOperaProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
 	{
-		properties.setBrowserOpera(UserAgent.OPERA.matches(getUserAgent()));
-
-		if (properties.isBrowserOpera())
-		{
-			String userAgent = getUserAgentStringLc();
-
-			if (userAgent.startsWith("opera/") && userAgent.contains("version/"))
-			{
-				// e.g.: Opera/9.80 (Windows NT 6.0; U; nl) Presto/2.6.30 Version/10.60
-				setMajorMinorVersionByPattern("version/(\\d+)\\.(\\d+)");
-			}
-			else if (userAgent.startsWith("opera/") && !userAgent.contains("version/"))
-			{
-				// e.g.: Opera/9.80 (Windows NT 6.0; U; nl) Presto/2.6.30
-				setMajorMinorVersionByPattern("opera/(\\d+)\\.(\\d+)");
-			}
-			else
-			{
-				// e.g.: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 6.0; tr) Opera 10.10
-				setMajorMinorVersionByPattern("opera (\\d+)\\.(\\d+)");
-			}
-		}
+		properties.setBrowserOpera(
+			UserAgent.OPERA.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
+		setBrowserVersion(parsedUserAgent);
 	}
 
 	/**
 	 * sets the ie specific properties
-	 */
-	private void setInternetExplorerProperties()
-	{
-		properties.setBrowserInternetExplorer(UserAgent.INTERNET_EXPLORER.matches(getUserAgent()));
-
-		if (properties.isBrowserInternetExplorer())
-		{
-			// modern IE browsers (>=IE11) uses new user agent format
-			if (getUserAgentStringLc().contains("like gecko"))
-			{
-				setMajorMinorVersionByPattern("rv:(\\d+)\\.(\\d+)");
-			}
-			else
-			{
-				setMajorMinorVersionByPattern("msie (\\d+)\\.(\\d+)");
-			}
-		}
-	}
-
-	/**
-	 * extracts the major and minor version out of the userAgentString string.
 	 * 
-	 * @param patternString
-	 *            The pattern must contain two matching groups
+	 * @param parsedUserAgent
 	 */
-	private void setMajorMinorVersionByPattern(String patternString)
+	private void setInternetExplorerProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
 	{
-		String userAgent = getUserAgentStringLc();
-		Matcher matcher = Pattern.compile(patternString).matcher(userAgent);
-
-		if (matcher.find())
-		{
-			properties.setBrowserVersionMajor(Integer.parseInt(matcher.group(1)));
-			properties.setBrowserVersionMinor(Integer.parseInt(matcher.group(2)));
+		properties.setBrowserInternetExplorer(UserAgent.INTERNET_EXPLORER.getUaStrings()
+			.contains(parsedUserAgent.getValue("AgentName")));
+		setBrowserVersion(parsedUserAgent);
+	}
+	
+	private void setBrowserVersion(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
+	{
+		String value = parsedUserAgent.get("AgentVersion").getValue();
+		if(!"Hacker".equals(value)) {
+			properties.setBrowserVersion(value);
 		}
 	}
 }

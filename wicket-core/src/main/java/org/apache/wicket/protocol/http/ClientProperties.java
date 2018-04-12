@@ -65,8 +65,7 @@ public class ClientProperties implements IClusterable
 	private boolean browserSafari;
 	private boolean browserChrome;
 	private boolean browserEdge;
-	private int browserVersionMajor = -1;
-	private int browserVersionMinor = -1;
+	private String browserVersion = "";
 	private int browserWidth = -1;
 	private boolean navigatorCookieEnabled;
 	private boolean navigatorJavaEnabled;
@@ -98,19 +97,11 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * @return The major version number of the browser.
+	 * @return The version number of the browser.
 	 */
-	public int getBrowserVersionMajor()
+	public String getBrowserVersion()
 	{
-		return browserVersionMajor;
-	}
-
-	/**
-	 * @return The minor version number of the browser.
-	 */
-	public int getBrowserVersionMinor()
-	{
-		return browserVersionMinor;
+		return browserVersion;
 	}
 
 	/**
@@ -567,21 +558,12 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * @param browserVersionMajor
-	 *            The major version number of the browser.
+	 * @param browserVersion
+	 *            The version number of the browser.
 	 */
-	public void setBrowserVersionMajor(int browserVersionMajor)
+	public void setBrowserVersion(String browserVersion)
 	{
-		this.browserVersionMajor = browserVersionMajor;
-	}
-
-	/**
-	 * @param browserVersionMinor
-	 *            The minor version number of the browser.
-	 */
-	public void setBrowserVersionMinor(int browserVersionMinor)
-	{
-		this.browserVersionMinor = browserVersionMinor;
+		this.browserVersion = browserVersion;
 	}
 
 	/**
