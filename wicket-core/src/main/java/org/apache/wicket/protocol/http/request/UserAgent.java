@@ -28,7 +28,9 @@ enum UserAgent {
 
 	MOZILLA("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko")),
 
-	FIREFOX("Opera,AppleWebKit,Konqueror,Trident,Edge", Arrays.asList("Mozilla", "Gecko", "Firefox")),
+	FIREFOX("Opera,Konqueror,Trident,Edge",
+		Arrays.asList("Mozilla", "Gecko", "Firefox"),
+		Arrays.asList("Mozilla", "Gecko", "FxiOS")),
 
 	INTERNET_EXPLORER("Opera,Edge",
 		Arrays.asList("Mozilla", "MSIE", "Windows"),
@@ -38,9 +40,11 @@ enum UserAgent {
 
 	OPERA(Arrays.asList("Opera")),
 
-	CHROME("Edge", Arrays.asList("Mozilla", "Chrome", "AppleWebKit", "Safari")),
+	CHROME("Edge",
+		Arrays.asList("Mozilla", "Chrome", "AppleWebKit", "Safari"),
+		Arrays.asList("Mozilla", "CriOS", "AppleWebKit", "Safari")),
 
-	SAFARI("Chrome,Edge", Arrays.asList("Mozilla", "AppleWebKit", "Safari")),
+	SAFARI("Chrome,Edge,FxiOS,CriOS", Arrays.asList("Mozilla", "AppleWebKit", "Safari")),
 
 	KONQUEROR(Arrays.asList("Konqueror")),
 
@@ -58,7 +62,7 @@ enum UserAgent {
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param notAllowed
 	 *            comma separated list with values which are not allowed in the user agent
 	 * @param detectionStrings
@@ -72,7 +76,7 @@ enum UserAgent {
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param detectionStrings
 	 *            list with string which has to be in the user agent string
 	 */

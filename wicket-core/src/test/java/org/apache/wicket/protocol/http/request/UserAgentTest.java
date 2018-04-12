@@ -75,4 +75,18 @@ public class UserAgentTest
 		assertFalse(UserAgent.OPERA.matches(userAgentEdge));
 		assertFalse(UserAgent.KONQUEROR.matches(userAgentEdge));
 	}
+
+	@Test
+	public void detectChrome()
+	{
+		assertTrue(UserAgent.CHROME.matches("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36"));
+		assertTrue(UserAgent.CHROME.matches("Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) CriOS/64.0.3282.112 Mobile/15D100 Safari/604.1"));
+	}
+
+	@Test
+	public void detectFF()
+	{
+		assertTrue(UserAgent.FIREFOX.matches("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0"));
+		assertTrue(UserAgent.FIREFOX.matches("Mozilla/5.0 (iPhone; CPU iPhone OS 11_2_6 like Mac OS X) AppleWebKit/604.5.6 (KHTML, like Gecko) FxiOS/10.6b8836 Mobile/15D100 Safari/604.5.6"));
+	}
 }
