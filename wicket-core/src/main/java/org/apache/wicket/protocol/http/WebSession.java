@@ -89,6 +89,7 @@ public class WebSession extends Session
 
 			if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
 			{
+				clientInfo.initialize();
 				WebPage browserInfoPage = newBrowserInfoPage();
 				throw new RestartResponseAtInterceptPageException(browserInfoPage);
 			}

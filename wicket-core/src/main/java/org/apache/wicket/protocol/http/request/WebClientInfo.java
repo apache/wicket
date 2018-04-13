@@ -21,6 +21,8 @@ import java.net.UnknownHostException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.core.request.ClientInfo;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.ClientProperties;
@@ -55,10 +57,11 @@ public class WebClientInfo extends ClientInfo
 	/** Client properties object. */
 	private final ClientProperties properties;
 
-	private final static UserAgentAnalyzer UAA = UserAgentAnalyzer.newBuilder()
-		.hideMatcherLoadStats()
-		.withCache(25000)
-		.build();
+	/** The key for the file system meta data **/
+	public static final MetaDataKey<UserAgentAnalyzer> UAA_META_DATA_KEY = new MetaDataKey<UserAgentAnalyzer>()
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
 	 * Construct.
@@ -114,7 +117,6 @@ public class WebClientInfo extends ClientInfo
 		this.userAgent = userAgent;
 		this.properties = properties;
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
-		init();
 	}
 
 	/**
@@ -145,6 +147,93 @@ public class WebClientInfo extends ClientInfo
 	private String getUserAgentStringLc()
 	{
 		return (getUserAgent() != null) ? getUserAgent().toLowerCase() : "";
+	}
+
+	/**
+	 * Initializes the {@link WebClientInfo} user agent detection. This can be overridden to choose
+	 * a different detection as YAUAA (https://github.com/nielsbasjes/yauaa) - if you do so, you
+	 * might exclude the maven dependency from your project in favor of a different framework.
+	 */
+	public void initialize()
+	{
+		UserAgentAnalyzer userAgentAnalyzer = Application.get().getMetaData(UAA_META_DATA_KEY);
+		if (userAgentAnalyzer == null)
+		{
+			userAgentAnalyzer = UserAgentAnalyzer.newBuilder()
+				.hideMatcherLoadStats()
+				.withCache(25000)
+				.build();
+			Application.get().setMetaData(UAA_META_DATA_KEY, userAgentAnalyzer);
+		}
+		detectBrowserProperties(userAgentAnalyzer);
+	}
+
+	/**
+	 * Detects browser properties like versions or the type of the browser and applies them to the
+	 * {@link ClientProperties}, override this method if there are errors within the browser /
+	 * version detection due to newer browsers
+	 * 
+	 * @param userAgentAnalyzer
+	 *            the user agent analyzer to detect browsers and versions
+	 */
+	protected void detectBrowserProperties(UserAgentAnalyzer userAgentAnalyzer)
+	{
+
+		nl.basjes.parse.useragent.UserAgent parsedUserAgent = userAgentAnalyzer
+			.parse(getUserAgent());
+		String userAgentName = parsedUserAgent.getValue("AgentName");
+
+		// Konqueror
+		properties.setBrowserKonqueror(UserAgent.KONQUEROR.getUaStrings().contains(userAgentName));
+
+		// Chrome
+		properties.setBrowserChrome(UserAgent.CHROME.getUaStrings().contains(userAgentName));
+
+		// Edge
+		properties.setBrowserEdge(UserAgent.EDGE.getUaStrings().contains(userAgentName));
+
+		// Safari
+		properties.setBrowserSafari(UserAgent.SAFARI.getUaStrings().contains(userAgentName));
+
+		// Opera
+		properties.setBrowserOpera(UserAgent.OPERA.getUaStrings().contains(userAgentName));
+
+		// Internet Explorer
+		properties.setBrowserInternetExplorer(
+			UserAgent.INTERNET_EXPLORER.getUaStrings().contains(userAgentName));
+
+		// FireFox
+		boolean isFireFox = UserAgent.FIREFOX.getUaStrings()
+			.contains(parsedUserAgent.getValue("AgentName"));
+		if (isFireFox)
+		{
+			properties.setBrowserMozillaFirefox(true);
+			properties.setBrowserMozilla(true);
+		}
+		else
+		{
+			properties.setBrowserMozilla(
+				UserAgent.MOZILLA.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
+		}
+
+		// Sets the browser version
+		setBrowserVersion(parsedUserAgent);
+
+		log.debug("determined user agent: {}", properties);
+	}
+
+	/**
+	 * Sets the browser version
+	 * 
+	 * @param parsedUserAgent
+	 */
+	protected void setBrowserVersion(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
+	{
+		String value = parsedUserAgent.get("AgentVersion").getValue();
+		if (!"Hacker".equals(value))
+		{
+			properties.setBrowserVersion(value);
+		}
 	}
 
 	/**
@@ -191,124 +280,5 @@ public class WebClientInfo extends ClientInfo
 			remoteAddr = req.getRemoteAddr();
 		}
 		return remoteAddr;
-	}
-
-	/**
-	 * Initialize the client properties object
-	 */
-	private void init()
-	{
-		nl.basjes.parse.useragent.UserAgent parsedUserAgent = UAA.parse(getUserAgent());
-		setInternetExplorerProperties(parsedUserAgent);
-		setKonquerorProperties(parsedUserAgent);
-		setMozillaProperties(parsedUserAgent);
-		setOperaProperties(parsedUserAgent);
-		setChromeProperties(parsedUserAgent);
-		setEdgeProperties(parsedUserAgent);
-		setSafariProperties(parsedUserAgent);
-
-		log.debug("determined user agent: {}", properties);
-	}
-
-	/**
-	 * sets the konqueror specific properties
-	 * 
-	 * @param parsedUserAgent
-	 */
-	private void setKonquerorProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
-	{
-		properties.setBrowserKonqueror(
-			UserAgent.KONQUEROR.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
-		setBrowserVersion(parsedUserAgent);
-	}
-
-	/**
-	 * sets the chrome specific properties
-	 * 
-	 * @param parsedUserAgent
-	 */
-	private void setChromeProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
-	{
-		properties.setBrowserChrome(
-			UserAgent.CHROME.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
-		setBrowserVersion(parsedUserAgent);
-	}
-
-	/**
-	 * sets the Edge specific properties
-	 * 
-	 * @param parsedUserAgent
-	 */
-	private void setEdgeProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
-	{
-		properties.setBrowserEdge(
-			UserAgent.EDGE.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
-		setBrowserVersion(parsedUserAgent);
-	}
-
-	/**
-	 * sets the safari specific properties
-	 * 
-	 * @param parsedUserAgent
-	 */
-	private void setSafariProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
-	{
-		properties.setBrowserSafari(
-			UserAgent.SAFARI.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
-		setBrowserVersion(parsedUserAgent);
-	}
-
-	/**
-	 * sets the mozilla/firefox specific properties
-	 * 
-	 * @param parsedUserAgent
-	 */
-	private void setMozillaProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
-	{
-		boolean isFireFox = UserAgent.FIREFOX.getUaStrings()
-			.contains(parsedUserAgent.getValue("AgentName"));
-		if (isFireFox)
-		{
-			properties.setBrowserMozillaFirefox(true);
-			properties.setBrowserMozilla(true);
-		}
-		else
-		{
-			properties.setBrowserMozilla(
-				UserAgent.MOZILLA.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
-		}
-		setBrowserVersion(parsedUserAgent);
-	}
-
-	/**
-	 * sets the opera specific properties
-	 * 
-	 * @param parsedUserAgent
-	 */
-	private void setOperaProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
-	{
-		properties.setBrowserOpera(
-			UserAgent.OPERA.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
-		setBrowserVersion(parsedUserAgent);
-	}
-
-	/**
-	 * sets the ie specific properties
-	 * 
-	 * @param parsedUserAgent
-	 */
-	private void setInternetExplorerProperties(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
-	{
-		properties.setBrowserInternetExplorer(UserAgent.INTERNET_EXPLORER.getUaStrings()
-			.contains(parsedUserAgent.getValue("AgentName")));
-		setBrowserVersion(parsedUserAgent);
-	}
-	
-	private void setBrowserVersion(nl.basjes.parse.useragent.UserAgent parsedUserAgent)
-	{
-		String value = parsedUserAgent.get("AgentVersion").getValue();
-		if(!"Hacker".equals(value)) {
-			properties.setBrowserVersion(value);
-		}
 	}
 }

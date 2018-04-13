@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request;
 
+import org.apache.wicket.protocol.http.WebSession;
+import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.util.io.IClusterable;
 
 /**
@@ -28,9 +30,10 @@ public abstract class ClientInfo implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Construct.
+	 * Initializes the {@link ClientInfo} user agent detection. This method is only called from
+	 * {@link WebSession} if
+	 * {@link #org.apache.wicket.settings.RequestCycleSettings.setGatherExtendedBrowserInfo(boolean)}
+	 * of {@link RequestCycleSettings} is set to true
 	 */
-	public ClientInfo()
-	{
-	}
+	public abstract void initialize();
 }
