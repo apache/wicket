@@ -35,5 +35,5 @@ public abstract class ClientInfo implements IClusterable
 	 * {@link #org.apache.wicket.settings.RequestCycleSettings.setGatherExtendedBrowserInfo(boolean)}
 	 * of {@link RequestCycleSettings} is set to true
 	 */
-	public abstract void initialize();
+	public abstract void gatherExtendedInfo();
 }

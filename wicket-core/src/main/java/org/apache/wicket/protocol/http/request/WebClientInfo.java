@@ -154,7 +154,7 @@ public class WebClientInfo extends ClientInfo
 	 * a different detection as YAUAA (https://github.com/nielsbasjes/yauaa) - if you do so, you
 	 * might exclude the maven dependency from your project in favor of a different framework.
 	 */
-	public void initialize()
+	public void gatherExtendedInfo()
 	{
 		UserAgentAnalyzer userAgentAnalyzer = Application.get().getMetaData(UAA_META_DATA_KEY);
 		if (userAgentAnalyzer == null)

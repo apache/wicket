@@ -117,7 +117,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 1 :
@@ -168,7 +168,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "7.0");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(true)));
@@ -204,7 +204,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "8.0");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(true)));
@@ -240,7 +240,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "9.0");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(true)));
@@ -278,7 +278,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "10.0");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserInternetExplorer(),
 				is(equalTo(true)));
@@ -312,7 +312,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -356,7 +356,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(true)));
 			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "9.64");
@@ -394,7 +394,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(true)));
 			switch (i)
@@ -453,7 +453,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
 				is(equalTo(true)));
 			assertEquals(userAgent, webClientInfo.getProperties().getBrowserVersion(), "11.10");
@@ -488,7 +488,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -538,7 +538,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -589,7 +589,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -644,7 +644,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -695,7 +695,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -745,7 +745,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -795,7 +795,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -844,7 +844,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserKonqueror(),
 				is(equalTo(true)));
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserOpera(),
@@ -877,7 +877,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -923,7 +923,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -976,7 +976,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -1021,7 +1021,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			switch (i)
 			{
 				case 0 :
@@ -1065,7 +1065,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserChrome(),
 				is(equalTo(true)));
 			switch (i)
@@ -1094,7 +1094,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozilla(),
 				is(equalTo(true)));
 			switch (i)
@@ -1123,7 +1123,7 @@ public class WebClientInfoTest extends WicketTestCase
 		for (String userAgent : userAgents)
 		{
 			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
-			webClientInfo.initialize();
+			webClientInfo.gatherExtendedInfo();
 			assertEquals(webClientInfo.getProperties().getBrowserVersion(), "15");
 			assertThat(userAgent, webClientInfo.getProperties().isBrowserMozillaFirefox(),
 				is(equalTo(false)));
