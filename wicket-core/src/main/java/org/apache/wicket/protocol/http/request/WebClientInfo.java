@@ -203,8 +203,7 @@ public class WebClientInfo extends ClientInfo
 			UserAgent.INTERNET_EXPLORER.getUaStrings().contains(userAgentName));
 
 		// FireFox
-		boolean isFireFox = UserAgent.FIREFOX.getUaStrings()
-			.contains(parsedUserAgent.getValue("AgentName"));
+		boolean isFireFox = UserAgent.FIREFOX.getUaStrings().contains(userAgentName);
 		if (isFireFox)
 		{
 			properties.setBrowserMozillaFirefox(true);
@@ -212,8 +211,7 @@ public class WebClientInfo extends ClientInfo
 		}
 		else
 		{
-			properties.setBrowserMozilla(
-				UserAgent.MOZILLA.getUaStrings().contains(parsedUserAgent.getValue("AgentName")));
+			properties.setBrowserMozilla(UserAgent.MOZILLA.getUaStrings().contains(userAgentName));
 		}
 
 		// Sets the browser version
