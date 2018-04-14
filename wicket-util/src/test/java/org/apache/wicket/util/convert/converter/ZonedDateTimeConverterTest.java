@@ -32,19 +32,19 @@ import org.junit.Test;
  */
 public class ZonedDateTimeConverterTest extends Assert
 {
-	private ZoneId zone = ZoneId.of("UTC");
+	private ZoneId zone = ZoneId.of("Etc/UCT");
 
 	@Test
 	public void convertToString() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
 		String date = converter.convertToString(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone), Locale.ENGLISH);
-		assertThat(date, is(equalTo("Jul 11, 2016 1:02:03 AM UTC")));
+		assertThat(date, is(equalTo("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time")));
 	}
 
 	@Test
 	public void convertToObject() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
-		ZonedDateTime date = converter.convertToObject("Jul 11, 2016 1:02:03 AM UTC", Locale.ENGLISH);
+		ZonedDateTime date = converter.convertToObject("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time", Locale.ENGLISH);
 		assertThat(date, is(equalTo(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone))));
 	}
 	
