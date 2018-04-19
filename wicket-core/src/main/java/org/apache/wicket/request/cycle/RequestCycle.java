@@ -19,6 +19,7 @@ package org.apache.wicket.request.cycle;
 import java.util.Optional;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.IMetadataContext;
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
@@ -70,7 +71,7 @@ import org.slf4j.LoggerFactory;
  * @author Matej Knopp
  * @author igor.vaynberg
  */
-public class RequestCycle implements IRequestCycle, IEventSink
+public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext<Object, RequestCycle>
 {
 	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
@@ -409,6 +410,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final <T> RequestCycle setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
@@ -426,6 +428,7 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 * @return The metadata or null if no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final <T> T getMetaData(final MetaDataKey<T> key)
 	{
 		return key.get(metaData);
