@@ -138,7 +138,7 @@ import org.slf4j.LoggerFactory;
  * @see org.apache.wicket.protocol.http.WebApplication
  * @author Jonathan Locke
  */
-public abstract class Application implements UnboundListener, IEventSink
+public abstract class Application implements UnboundListener, IEventSink, IMetadataContext<Object, Application>
 {
 	/** Configuration constant for the 2 types */
 	public static final String CONFIGURATION = "configuration";
@@ -405,6 +405,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final synchronized <T> T getMetaData(final MetaDataKey<T> key)
 	{
 		return key.get(metaData);
@@ -518,7 +519,8 @@ public abstract class Application implements UnboundListener, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized <T> Application setMetaData(final MetaDataKey<T> key, final Object object)
+	@Override
+	public synchronized final <T> Application setMetaData(final MetaDataKey<T> key, final T object)
 	{
 		metaData = key.set(metaData, object);
 		return this;

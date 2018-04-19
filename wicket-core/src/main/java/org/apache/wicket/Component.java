@@ -221,7 +221,8 @@ public abstract class Component
 		IHeaderContributor,
 		IHierarchical<Component>,
 		IEventSink,
-		IEventSource
+		IEventSource,
+		IMetadataContext<Serializable, Component>
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
@@ -1503,6 +1504,7 @@ public abstract class Component
 	 * @return The metadata or null of no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final <M extends Serializable> M getMetaData(final MetaDataKey<M> key)
 	{
 		return key.get(getMetaData());
@@ -2855,6 +2857,7 @@ public abstract class Component
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final <M extends Serializable> Component setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		MetaDataEntry<?>[] old = getMetaData();
