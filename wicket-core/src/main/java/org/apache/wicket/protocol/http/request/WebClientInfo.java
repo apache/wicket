@@ -140,16 +140,6 @@ public class WebClientInfo extends ClientInfo
 	}
 
 	/**
-	 * returns the user agent string (lower case).
-	 * 
-	 * @return the user agent string
-	 */
-	private String getUserAgentStringLc()
-	{
-		return (getUserAgent() != null) ? getUserAgent().toLowerCase() : "";
-	}
-
-	/**
 	 * Initializes the {@link WebClientInfo} user agent detection. This can be overridden to choose
 	 * a different detection as YAUAA (https://github.com/nielsbasjes/yauaa) - if you do so, you
 	 * might exclude the maven dependency from your project in favor of a different framework.

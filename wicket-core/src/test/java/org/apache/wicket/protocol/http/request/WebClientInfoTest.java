@@ -26,18 +26,23 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.Application;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
 
 /**
  * Tests the WebClientInfo class
  */
 public class WebClientInfoTest extends WicketTestCase
 {
+	private static ThreadLocal<UserAgentAnalyzer> localAnalyzer = new ThreadLocal<UserAgentAnalyzer>();
 	private RequestCycle requestCycleMock;
 	private ServletWebRequest webRequest;
 	private HttpServletRequest servletRequest;
@@ -55,55 +60,26 @@ public class WebClientInfoTest extends WicketTestCase
 
 		servletRequest = mock(HttpServletRequest.class);
 		when(webRequest.getContainerRequest()).thenReturn(servletRequest);
+
+		if (localAnalyzer.get() == null) {
+			WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, "test");
+			webClientInfo.gatherExtendedInfo();
+			localAnalyzer.set(Application.get().getMetaData(WebClientInfo.UAA_META_DATA_KEY));
+		} else {
+			Application.get().setMetaData(WebClientInfo.UAA_META_DATA_KEY, localAnalyzer.get());
+		}
 	}
-	
-	/**
-	 * Test check check all user agents
-	 */
-	@Test
-	public void testBrowsersAndVersionsOfUserAgents() {
-		// Internet Explorers
-		internetExplorer6();
-		internetExplorer7();
-		internetExplorer8();
-		internetExplorer9();
-		internetExplorer10();
-		internetExplorer11();
-		
-		// Safaris
-		safariLessThan3();
-		safari3();
-		safari4();
-		safari5();
-		
-		// Firefox
-		firefox20();
-		firefox36();
-		firefox38();
-		firefox40();
-		firefoxiOS();
-		
-		// Chrome
-		chrome0();
-		chrome8();
-		chrome12();
-		chromeiOS();
-		
-		// Opera
-		opera10();
-		opera11();
-		opera964();
-		
-		// Konqueror
-		konqueror();
-		
-		// Edge
-		edge15();
+
+	@AfterClass
+	public static void staticAfter()
+	{
+		localAnalyzer.set(null);
 	}
-	
+
 	/**
 	 * Test IE 6.x user-agent strings
 	 */
+	@Test
 	public void internetExplorer6()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -156,6 +132,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test IE 7.x user-agent strings
 	 */
+	@Test
 	public void internetExplorer7()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -192,6 +169,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test IE 8.x user-agent strings
 	 */
+	@Test
 	public void internetExplorer8()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -228,6 +206,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test IE 9.x user-agent strings
 	 */
+	@Test
 	public void internetExplorer9()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -264,6 +243,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test IE 10.x user-agent strings
 	 */
+	@Test
 	public void internetExplorer10()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -302,6 +282,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test IE 11.x user-agent strings
 	 */
+	@Test
 	public void internetExplorer11()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -347,6 +328,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Opera 9.64 user-agent strings
 	 */
+	@Test
 	public void opera964()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -380,6 +362,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Opera 10.x user-agent strings
 	 */
+	@Test
 	public void opera10()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -445,6 +428,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Opera 11.x user-agent strings
 	 */
+	@Test
 	public void opera11()
 	{
 		List<String> userAgents = Arrays
@@ -477,6 +461,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Safari <3 user-agent strings
 	 */
+	@Test
 	public void safariLessThan3()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -527,6 +512,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Safari3 user-agent strings
 	 */
+	@Test
 	public void safari3()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -577,6 +563,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Safari user-agent strings
 	 */
+	@Test
 	public void safari4()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -632,6 +619,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Safari5 user-agent strings
 	 */
+	@Test
 	public void safari5()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -684,6 +672,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Chrome0 user-agent strings
 	 */
+	@Test
 	public void chrome0()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -734,6 +723,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Chrome 8.x user-agent strings
 	 */
+	@Test
 	public void chrome8()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -784,6 +774,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Chrome 12.x user-agent strings
 	 */
+	@Test
 	public void chrome12()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -834,6 +825,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Konqueror user-agent strings
 	 */
+	@Test
 	public void konqueror()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -867,6 +859,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test FF 4.x user-agent strings
 	 */
+	@Test
 	public void firefox40()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -912,6 +905,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test FF3.8 user-agent strings
 	 */
+	@Test
 	public void firefox38()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -966,6 +960,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test FF 3.6 user-agent strings
 	 */
+	@Test
 	public void firefox36()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -1011,6 +1006,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test FF 2.x user-agent strings
 	 */
+	@Test
 	public void firefox20()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -1056,6 +1052,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test to check for CriOs
 	 */
+	@Test
 	public void chromeiOS() {
 		List<String> userAgents = Arrays.asList(
 			"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.162 Safari/537.36",
@@ -1082,9 +1079,11 @@ public class WebClientInfoTest extends WicketTestCase
 			i++;
 		}
 	}
+
 	/**
 	 * Test to check for FFOs
 	 */
+	@Test
 	public void firefoxiOS() {
 		List<String> userAgents = Arrays.asList(
 			"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101 Firefox/59.0",
@@ -1115,6 +1114,7 @@ public class WebClientInfoTest extends WicketTestCase
 	/**
 	 * Test Microsoft Edge user-agent strings
 	 */
+	@Test
 	public void edge15()
 	{
 		List<String> userAgents = Arrays.asList(
@@ -1197,5 +1197,4 @@ public class WebClientInfoTest extends WicketTestCase
 		String actual = clientInfo.getRemoteAddr(requestCycleMock);
 		assertThat(actual, is(equalTo(expected)));
 	}
-
 }
