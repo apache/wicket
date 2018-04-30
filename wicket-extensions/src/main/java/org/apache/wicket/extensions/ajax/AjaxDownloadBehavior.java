@@ -17,10 +17,7 @@
 package org.apache.wicket.extensions.ajax;
 
 import java.util.Locale;
-
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
@@ -129,7 +126,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 	private Location location = Location.Blob;
 
 	/**
-	 * Download of a {@link Resource}.
+	 * Download of a {@link IResource}.
 	 * 
 	 * @param resource
 	 *            resource to download
