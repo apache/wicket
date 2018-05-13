@@ -60,5 +60,22 @@
 			<groupId>org.jglue.cdi-unit</groupId>
 			<artifactId>cdi-unit</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>org.jboss.weld</groupId>
+		    <artifactId>weld-spi</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.jboss.weld</groupId>
+		    <artifactId>weld-core</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.jboss.weld.se</groupId>
+		    <artifactId>weld-se</artifactId>
+		    <scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.weld.module</groupId>
+			<artifactId>weld-web</artifactId>
+		</dependency>
 	</dependencies>
 </project>

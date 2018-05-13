@@ -430,6 +430,28 @@
 				<version>2.4.2.SP1</version>
 			</dependency>
 			<dependency>
+			    <groupId>org.jboss.weld</groupId>
+			    <artifactId>weld-spi</artifactId>
+			    <version>3.0.SP3</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jboss.weld.module</groupId>
+			    <artifactId>weld-web</artifactId>
+			    <version>3.0.4.Final</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>org.jboss.weld</groupId>
+			    <artifactId>weld-core</artifactId>
+			    <version>2.4.7.Final</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jboss.weld.se</groupId>
+			    <artifactId>weld-se</artifactId>
+			    <version>2.4.7.Final</version>
+			    <scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.objenesis</groupId>
 				<artifactId>objenesis</artifactId>
 				<version>${objenesis.version}</version>
@@ -532,7 +554,7 @@
 			<dependency>
 				<groupId>org.jglue.cdi-unit</groupId>
 				<artifactId>cdi-unit</artifactId>
-				<version>2.2.1</version>
+				<version>4.0.2</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -947,6 +969,7 @@
 						<includes>
 							<include>**/*Test.java</include>
 						</includes>
+						<argLine>--add-opens java.base/jdk.internal.loader=ALL-UNNAMED</argLine>
 					</configuration>
 					<dependencies>
 						<dependency>

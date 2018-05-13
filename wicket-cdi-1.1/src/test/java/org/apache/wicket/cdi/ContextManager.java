@@ -26,7 +26,8 @@ import javax.servlet.http.HttpSession;
 import org.jboss.weld.bean.builtin.BeanManagerProxy;
 import org.jboss.weld.servlet.HttpContextLifecycle;
 import org.jboss.weld.servlet.spi.helpers.AcceptingHttpContextActivationFilter;
-import org.jglue.cdiunit.internal.LifecycleAwareRequest;
+import org.jglue.cdiunit.internal.CdiUnitInitialListenerImpl;
+import org.jglue.cdiunit.internal.servlet.LifecycleAwareRequest;
 
 /**
  * @author jsarman
@@ -49,7 +50,7 @@ public class ContextManager
 		try
 		{
 			lifecycle = new HttpContextLifecycle(BeanManagerProxy.unwrap(beanManager),
-					AcceptingHttpContextActivationFilter.INSTANCE, true, true);
+					AcceptingHttpContextActivationFilter.INSTANCE, true, true, false, true);
 		}
 		catch (NoSuchMethodError e)
 		{
@@ -73,7 +74,7 @@ public class ContextManager
 		if (currentRequest != null)
 			return;
 
-		currentRequest = new LifecycleAwareRequest(lifecycle, request, currentSession);
+		currentRequest = new LifecycleAwareRequest(new CdiUnitInitialListenerImpl(), request);
 		lifecycle.requestInitialized(currentRequest, null);
 	}
 

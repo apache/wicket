@@ -1180,7 +1180,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	@Override
 	public HttpSession getSession(boolean b)
 	{
-		HttpSession sess = null;
 		if (session instanceof MockHttpSession)
 		{
 			MockHttpSession mockHttpSession = (MockHttpSession)session;
@@ -1188,13 +1187,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 			{
 				mockHttpSession.setTemporary(false);
 			}
-
-			if (mockHttpSession.isTemporary() == false)
-			{
-				sess = session;
-			}
 		}
-		return sess;
+		return session;
 	}
 
 	/**

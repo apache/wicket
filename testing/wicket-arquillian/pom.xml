@@ -42,7 +42,7 @@
 		<wicket.arquillian.management.port>11091</wicket.arquillian.management.port>
 		<!-- end port configuration -->
 
-		<arquillian.version>1.1.13.Final</arquillian.version>
+		<arquillian.version>1.4.0.Final</arquillian.version>
 		<maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<wildfly.version>8.2.1.Final</wildfly.version>
@@ -84,6 +84,12 @@
 			<groupId>org.wildfly</groupId>
 			<artifactId>wildfly-embedded</artifactId>
 			<version>${wildfly.version}</version>
+			<exclusions>
+            <exclusion>
+                <groupId>sun.jdk</groupId>
+                <artifactId>jconsole</artifactId>
+            </exclusion>
+        </exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
