@@ -15,7 +15,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -45,7 +47,7 @@
 		<arquillian.version>1.4.0.Final</arquillian.version>
 		<maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<wildfly.version>8.2.1.Final</wildfly.version>
+		<wildfly.version>11.0.0.Final</wildfly.version>
 		<version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
 		<jee.spec.version>1.1.0.Final</jee.spec.version>
 	</properties>
@@ -77,20 +79,26 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-arquillian-container-embedded</artifactId>
-			<version>${wildfly.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-embedded</artifactId>
+			<artifactId>wildfly-weld</artifactId>
 			<version>${wildfly.version}</version>
 			<exclusions>
-            <exclusion>
-                <groupId>sun.jdk</groupId>
-                <artifactId>jconsole</artifactId>
-            </exclusion>
-        </exclusions>
+				<exclusion>
+					<groupId>sun.jdk</groupId>
+					<artifactId>jconsole</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.wildfly.arquillian</groupId>
+			<artifactId>wildfly-arquillian-container-embedded</artifactId>
+			<version>2.1.0.Final</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.protocol</groupId>
+			<artifactId>arquillian-protocol-servlet</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
@@ -107,7 +115,7 @@
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-core</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>
 			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
@@ -117,11 +125,12 @@
 			<artifactId>shrinkwrap-resolver-spi</artifactId>
 		</dependency>
 
+
 	</dependencies>
 
 	<build>
 		<resources>
-			 <resource>
+			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
@@ -198,6 +207,18 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<repositories>
+		<repository>
+			<id>Apache Nexus</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
 
