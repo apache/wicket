@@ -1173,22 +1173,28 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/**
 	 * Get the session.
 	 * 
-	 * @param b
+	 * @param createNew
 	 *            Ignored, there is always a session
 	 * @return The session
 	 */
 	@Override
-	public HttpSession getSession(boolean b)
+	public HttpSession getSession(boolean createNew)
 	{
+		HttpSession sess = null;
 		if (session instanceof MockHttpSession)
 		{
 			MockHttpSession mockHttpSession = (MockHttpSession)session;
-			if (b)
+			if (createNew)
 			{
 				mockHttpSession.setTemporary(false);
 			}
+
+			if (mockHttpSession.isTemporary() == false)
+			{
+				sess = session;
+			}
 		}
-		return session;
+		return sess;
 	}
 
 	/**
