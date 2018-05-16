@@ -2,6 +2,31 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.0.0
+
+** Bug
+
+    * [WICKET-6473] - Double slash break 404page
+    * [WICKET-6525] - SubmitLink.onSubmit not invoked when using GET-method
+    * [WICKET-6528] - Component part of Page check in AjaxRequestHandler breaks applications
+    * [WICKET-6533] - Error while parsing xml using AjaxButton
+    * [WICKET-6540] - When form.setDefaultButton(button) is called, the form is not displayed
+    * [WICKET-6542] - Wrong message for IllegalArgumentException in ConverterLocator.java
+    * [WICKET-6543] - onConfigure() Javadoc claims Overrides must call super, but there is no check to enforce it
+    * [WICKET-6545] - Argument 'markup' may not be null.
+    * [WICKET-6546] - CssContentHeaderItem comments CSS code with HTML comments
+
+** Improvement
+
+    * [WICKET-6055] - AjaxLazyLoadPanel should provide non-blocking lazy load
+    * [WICKET-6321] - Support Integrity and Crossorigin attributes for JavaScriptUrlReferenceHeaderItem 
+    * [WICKET-6503] - Ajax refresh and feedback panel
+    * [WICKET-6527] - no possibility to override fixed html appended directly to response by FilterForm
+    * [WICKET-6541] - Allow wizard finish before last step
+    * [WICKET-6548] - CSVDataExporter custom converters and resource strings
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.0.0-M9
 
 ** Bug
