@@ -70,7 +70,6 @@ You will find the source code here:
 	    |-- wicket-cdi
 	    |-- wicket-cdi-1.1
 	    |-- wicket-core
-	    |-- wicket-datetime
 	    |-- wicket-devutils
 	    |-- wicket-eclipse-settings
 	    |-- wicket-examples
@@ -95,8 +94,6 @@ Here is a list of projects in this distribution and what they do.
  - wicket: the core project, includes the framework and basic components;
  - wicket-extensions: contains utilities and more specialized components;
  - wicket-auth-roles: a basic authorization package based on roles;
- - wicket-datetime: contains date/ time specific components such as a date
-   picker;
  - wicket-jmx: registers JMX beans for managing things like your Wicket 
    configuration and markup cache;
  - wicket-objectssizeof-agent: utility for making better estimates of object 

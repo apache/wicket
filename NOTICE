@@ -98,20 +98,6 @@ src/./wicket-core
    [1]: http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/
 
 ---------------------------------------------------------------------------
-src/./wicket-datetime
----------------------------------------------------------------------------
-   Apache Wicket Date Time
-   Copyright 2006-2012 Apache Software Foundation
-
-   This product includes software developed at
-   The Apache Software Foundation (http://www.apache.org/).
-   
-   Contains code of the Yahoo User Interface library (version: 2.8.2r1),
-   released under the BSD License:
-   http://developer.yahoo.net/yui/license.txt
-   Copyright (c) 2010, Yahoo! Inc.
-
----------------------------------------------------------------------------
 src/./wicket-metrics
 ---------------------------------------------------------------------------
 
