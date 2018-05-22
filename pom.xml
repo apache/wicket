@@ -1245,7 +1245,7 @@
 						<configuration>
 							<toolchains>
 								<jdk>
-									<version>1.8</version>
+									<version>${maven.compiler.source}</version>
 									<vendor>oracle</vendor>
 								</jdk>
 							</toolchains>
