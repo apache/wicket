@@ -1,29 +1,7 @@
 
 * *Classpath dependency*
 
-Depending on the web container that is used the application has to add a dependency to either:
-
-- for Jetty 9.0.x
-[source,java]
-----
-<dependency>
-  <groupId>org.apache.wicket</groupId>
-  <artifactId>wicket-native-websocket-jetty9</artifactId>
-  <version>...</version>
-</dependency>
-----
-
-- for Tomcat 7.0.27+ (the old, non-JSR356 implementation)
-[source,java]
-----
-<dependency>
-  <groupId>org.apache.wicket</groupId>
-  <artifactId>wicket-native-websocket-tomcat</artifactId>
-  <version>...</version>
-</dependency>
-----
-
-- for JSR356 complaint implementations (at the moment are supported: Tomcat 8.0+, Tomcat 7.0.47+, Jetty 9.1.0+ and JBoss Wildfly 8.0.0+)
+Add the following dependency to your application to get access to the _wicket-native-websocket_ API on any JSR356 compliant application server (at the moment are supported: Tomcat 8.0+, Tomcat 7.0.47+, Jetty 9.1.0+ and JBoss Wildfly 8.0.0+):
 [source,java]
 ----
 <dependency>
@@ -41,35 +19,12 @@ Depending on the web container that is used the application has to add a depende
 </dependency>
 ----
 
-
-NOTE: All web containers providing JSR356 implementation are built with Java 7. This is the reason why _wicket-native-websocket-javax_ module is available only with Wicket 7.x. If your application runs with JRE 7.x but you are still using Wicket 6.x then you can
-use the https://github.com/wicketstuff/core/tree/wicket-6.x/wicketstuff-native-websocket-javax[WicketStuff] module. Beware that the API/implementation of _wicket-native-websocket-javax_ may change before Wicket 7.0.0 is released!
-
 NOTE: The examples above show snippets for Maven's pom.xml but the application can use any other dependency management tool like http://www.gradle.org/[Gradle]
 
 * *web.xml*
 
-In _WEB-INF/web.xml_ replace the usage of *WicketFilter* with any of the following depending on the web container that is used:
+In _WEB-INF/web.xml_ replace the usage of *WicketFilter* with the following:
 
-For Jetty 9.0.x:
-[source,java]
-----
-<filter-class>org.apache.wicket.protocol.ws.jetty9.Jetty9WebSocketFilter</filter-class>
-----
-
-For Jetty 7.5+ and 8.x:
-[source,java]
-----
-<filter-class>org.apache.wicket.protocol.ws.jetty7.Jetty7WebSocketFilter</filter-class>
-----
-
-For Tomcat 7.0.27+ (old implementation):
-[source,java]
-----
-<filter-class>org.apache.wicket.protocol.ws.tomcat7.Tomcat7WebSocketFilter</filter-class>
-----
-
-For JSR356 complaint web containers (at the moment: Tomcat 7.0.47+, Tomcat 8.x and Jetty 9.1.x):
 [source,java]
 ----
 <filter-class>org.apache.wicket.protocol.ws.javax.JavaxWebSocketFilter</filter-class>
