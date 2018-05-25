@@ -25,6 +25,7 @@ import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.CollectionModel;
+import org.apache.wicket.util.string.Strings;
 
 
 /**
@@ -139,7 +140,9 @@ public class SelectOptions<T> extends RepeatingView
 	 */
 	protected SelectOption<T> newOption(final String text, final IModel<T> model)
 	{
-		return new SimpleSelectOption<>("option", model, text);
+		SimpleSelectOption<T> option = new SimpleSelectOption<>("option", model, text);
+		option.setEscapeModelStrings(this.getEscapeModelStrings());
+		return option;
 	}
 
 	/**
@@ -169,7 +172,12 @@ public class SelectOptions<T> extends RepeatingView
 		@Override
 		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
-			replaceComponentTagBody(markupStream, openTag, text);
+			CharSequence escaped = text;
+			if (getEscapeModelStrings()) {
+				escaped = Strings.escapeMarkup(text);
+			}
+			
+			replaceComponentTagBody(markupStream, openTag, escaped);
 		}
 
 		/**
