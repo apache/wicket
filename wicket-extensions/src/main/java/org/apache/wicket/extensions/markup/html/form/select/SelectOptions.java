@@ -25,7 +25,8 @@ import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.WildcardCollectionModel;
-
+import org.apache.wicket.model.util.CollectionModel;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * Component that makes it easy to produce a list of SelectOption components
@@ -138,7 +139,9 @@ public class SelectOptions<T> extends RepeatingView
 	 */
 	protected SelectOption<T> newOption(final String text, final IModel<? extends T> model)
 	{
-		return new SimpleSelectOption<T>("option", model, text);
+		SimpleSelectOption<T> option = new SimpleSelectOption<T>("option", model, text);
+		option.setEscapeModelStrings(this.getEscapeModelStrings());
+		return option;
 	}
 
 	/**
@@ -168,7 +171,12 @@ public class SelectOptions<T> extends RepeatingView
 		@Override
 		public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 		{
-			replaceComponentTagBody(markupStream, openTag, text);
+			CharSequence escaped = text;
+			if (getEscapeModelStrings()) {
+				escaped = Strings.escapeMarkup(text);
+			}
+			
+			replaceComponentTagBody(markupStream, openTag, escaped);
 		}
 
 		/**

@@ -72,4 +72,20 @@ public class SelectTest extends WicketTestCase
 
 		assertTrue(page.select.isSelected(page.option0));
 	}
+	
+	/**
+	 * WICKET-6553 option text
+	 */
+	@Test
+	public void optionText()
+	{
+
+		SelectTestPage3 page = new SelectTestPage3();
+
+		tester.startPage(page);
+
+		assertTrue(tester.getLastResponseAsString().contains("&lt;1&gt;"));
+		assertTrue(tester.getLastResponseAsString().contains("&lt;2&gt;"));
+		assertTrue(tester.getLastResponseAsString().contains("&lt;3&gt;"));
+	}
 }
