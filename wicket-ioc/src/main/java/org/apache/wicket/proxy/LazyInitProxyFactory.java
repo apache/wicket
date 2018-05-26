@@ -263,10 +263,24 @@ public class LazyInitProxyFactory
 			Class<?> clazz = WicketObjects.resolveClass(type);
 			if (clazz == null)
 			{
-				ClassNotFoundException cause = new ClassNotFoundException(
-					"Could not resolve type [" + type +
-						"] with the currently configured org.apache.wicket.application.IClassResolver");
-				throw new WicketRuntimeException(cause);
+				try
+				{
+					clazz = Class.forName(type, false, Thread.currentThread().getContextClassLoader());
+				}
+				catch (ClassNotFoundException ignored1)
+				{
+					try
+					{
+						clazz = Class.forName(type, false, LazyInitProxyFactory.class.getClassLoader());
+					}
+					catch (ClassNotFoundException ignored2)
+					{
+						ClassNotFoundException cause = new ClassNotFoundException(
+								"Could not resolve type [" + type +
+										"] with the currently configured org.apache.wicket.application.IClassResolver");
+						throw new WicketRuntimeException(cause);
+					}
+				}
 			}
 			return LazyInitProxyFactory.createProxy(clazz, locator);
 		}
