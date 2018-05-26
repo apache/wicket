@@ -125,7 +125,7 @@
 		<!-- Project Versions -->
 		<cglib.version>3.2.6</cglib.version>
 		<jacoco.version>0.7.9</jacoco.version>
-		<jetty.version>9.4.7.v20170914</jetty.version>
+		<jetty.version>9.4.10.v20180503</jetty.version>
 		<joda-time.version>2.9.9</joda-time.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>4.3.10.RELEASE</spring.version>
