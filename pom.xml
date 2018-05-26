@@ -123,7 +123,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<cglib.version>3.2.5</cglib.version>
+		<cglib.version>3.2.6</cglib.version>
 		<jacoco.version>0.7.9</jacoco.version>
 		<jetty.version>9.4.7.v20170914</jetty.version>
 		<joda-time.version>2.9.9</joda-time.version>
@@ -437,7 +437,7 @@
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm-util</artifactId>
-				<version>5.2</version>
+				<version>6.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
