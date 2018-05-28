@@ -267,44 +267,44 @@ jQuery(document).ready(function() {
 		equal(baseUrlText, '/**/Wicket.Ajax.baseUrl=\"clock\";/**/', "Wicket.Ajax.baseUrl must be the third item's content");
 	});
 
-    module('Wicket.Head.Contributor.processContribution');
+	module('Wicket.Head.Contributor.processContribution');
 
-    test('Wicket.Head.Contributor.processContribution - can add meta tags', function() {
-    	var process = function(contribution) {
-            var doc = Wicket.Xml.parse('<header-contribution><![CDATA[<head>' + contribution + '</head>]]></header-contribution>').documentElement,
-                context = {
-                    steps: []
-                };
-                Wicket.Head.Contributor.processContribution(context, doc);
-                return context;
+	test('Wicket.Head.Contributor.processContribution - can add meta tags', function() {
+		var process = function(contribution) {
+			var doc = Wicket.Xml.parse('<header-contribution><![CDATA[<head>' + contribution + '</head>]]></header-contribution>').documentElement,
+				context = {
+					steps: []
+				};
+				Wicket.Head.Contributor.processContribution(context, doc);
+				return context;
 			},
 			metaTags = function(name) {
-    			return jQuery('head meta[name=' + name + ']');
+				return jQuery('head meta[name=' + name + ']');
 			};
 
-        var context1 = process('<meta name="m1" content="c1" />');
-        equal(context1.steps.length, 1, "There must be 1 steps to be executed.");
-        equal(metaTags("m1").length, 0, "There must be no meta tag before the first contribution.");
-        context1.steps[0]();
-        equal(metaTags("m1").length, 1, "There must be one meta tag after the first contribution.");
-        equal(metaTags("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+		var context1 = process('<meta name="m1" content="c1" />');
+		equal(context1.steps.length, 1, "There must be 1 steps to be executed.");
+		equal(metaTags("m1").length, 0, "There must be no meta tag before the first contribution.");
+		context1.steps[0]();
+		equal(metaTags("m1").length, 1, "There must be one meta tag after the first contribution.");
+		equal(metaTags("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
 
-        var context2 = process('<meta name="m1" content="c1_1" />');
-        equal(context2.steps.length, 1, "There must be 1 steps to be executed.");
-        equal(metaTags("m1").length, 1, "There must be one old meta tag before the second contribution.");
-        context2.steps[0]();
-        equal(metaTags("m1").length, 1, "There must be one meta tag after the second contribution.");
-        equal(metaTags("m1").attr("content"), "c1_1", "The meta tag must have the content as requested.");
+		var context2 = process('<meta name="m1" content="c1_1" />');
+		equal(context2.steps.length, 1, "There must be 1 steps to be executed.");
+		equal(metaTags("m1").length, 1, "There must be one old meta tag before the second contribution.");
+		context2.steps[0]();
+		equal(metaTags("m1").length, 1, "There must be one meta tag after the second contribution.");
+		equal(metaTags("m1").attr("content"), "c1_1", "The meta tag must have the content as requested.");
 
-        var context3 = process('<meta name="m2" content="c2" />');
-        equal(context3.steps.length, 1, "There must be 1 steps to be executed.");
-        equal(metaTags("m2").length, 0, "There must be no meta tag before the third contribution.");
-        context3.steps[0]();
-        equal(metaTags("m2").length, 1, "There must be one new meta tag after the third contribution.");
-        equal(metaTags("m2").attr("content"), "c2", "The meta tag must have the content as requested.");
-        equal(metaTags("m1").length, 1, "There must be still the old meta tag after the third contribution.");
-        equal(metaTags("m1").attr("content"), "c1_1", "The meta tag must still have the content as requested.");
-    });
+		var context3 = process('<meta name="m2" content="c2" />');
+		equal(context3.steps.length, 1, "There must be 1 steps to be executed.");
+		equal(metaTags("m2").length, 0, "There must be no meta tag before the third contribution.");
+		context3.steps[0]();
+		equal(metaTags("m2").length, 1, "There must be one new meta tag after the third contribution.");
+		equal(metaTags("m2").attr("content"), "c2", "The meta tag must have the content as requested.");
+		equal(metaTags("m1").length, 1, "There must be still the old meta tag after the third contribution.");
+		equal(metaTags("m1").attr("content"), "c1_1", "The meta tag must still have the content as requested.");
+	});
 
 	/**
 	 * Wicket.Head.Contributor.processXYZ method will be tested in ajax.js

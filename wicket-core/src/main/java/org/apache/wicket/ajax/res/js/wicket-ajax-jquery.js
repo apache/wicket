@@ -1894,8 +1894,8 @@
 							} else if (name === "style") {
 								this.processStyle(context, node);
 							} else if (name === "meta") {
-                            	this.processMeta(context, node);
-                        	}
+								this.processMeta(context, node);
+							}
 						} else if (node.nodeType === 8) { // comment type
 							this.processComment(context, node);
 						}
