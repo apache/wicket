@@ -22,10 +22,8 @@ import java.util.Map;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.settings.DebugSettings;
-import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
@@ -340,34 +338,6 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	}
 
 	/**
-	 * @see org.apache.wicket.Component#onComponentTagBody(org.apache.wicket.markup.MarkupStream,
-	 *      org.apache.wicket.markup.ComponentTag)
-	 */
-	@Override
-	public final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		// Iterate through choices
-		final List<? extends T> choices = getChoices();
-
-		// Buffer to hold generated body
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(70 * (choices.size() + 1));
-
-		// Value of this choice
-		final String selected = getValue();
-
-		// Loop through choices
-		for (int index = 0; index < choices.size(); index++)
-		{
-			// Get next choice
-			final T choice = choices.get(index);
-			appendOptionHtml(buffer, choice, index, selected);
-		}
-
-		// Replace body
-		replaceComponentTagBody(markupStream, openTag, buffer);
-	}
-
-	/**
 	 * Generates and appends html for a single choice into the provided buffer
 	 * 
 	 * @param buffer
@@ -379,163 +349,90 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @param selected
 	 *            The currently selected string value
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void appendOptionHtml(final AppendingStringBuffer buffer, final T choice, int index,
 		final String selected)
 	{
-		Object displayValue = getChoiceRenderer().getDisplayValue(choice);
-		Class<?> objectClass = displayValue == null ? null : displayValue.getClass();
-		// Get label for choice
-		String label = "";
-		if (objectClass != null && objectClass != String.class)
+		// Append option suffix
+		buffer.append(getPrefix(index, choice));
+
+		String id = getChoiceRenderer().getIdValue(choice, index);
+		final String idAttr = getCheckBoxMarkupId(id);
+
+		CharSequence renderValue = renderValue(choice);
+
+		// Allows user to add attributes to the <label..> tag
+		IValueMap labelAttrs = getAdditionalAttributesForLabel(index, choice);
+		StringBuilder extraLabelAttributes = new StringBuilder();
+		if (labelAttrs != null)
 		{
-			@SuppressWarnings("rawtypes")
-			IConverter converter = getConverter(objectClass);
-			label = converter.convertToString(displayValue, getLocale());
+			for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
+			{
+				extraLabelAttributes.append(' ')
+						.append(Strings.escapeMarkup(attr.getKey()))
+						.append("=\"")
+						.append(Strings.escapeMarkup(attr.getValue().toString()))
+						.append('"');
+			}
 		}
-		else if (displayValue != null)
+
+		labelPosition.before(buffer, idAttr, extraLabelAttributes, renderValue);
+
+		// Add checkbox element
+		buffer.append("<input name=\"");
+		buffer.append(getInputName());
+		buffer.append('"');
+		buffer.append(" type=\"checkbox\"");
+		if (isSelected(choice, index, selected))
 		{
-			label = displayValue.toString();
+			buffer.append(" checked=\"checked\"");
 		}
-
-		// If there is a display value for the choice, then we know that the
-		// choice is automatic in some way. If label is /null/ then we know
-		// that the choice is a manually created checkbox tag at some random
-		// location in the page markup!
-		if (label != null)
+		if (isDisabled(choice, index, selected) || !isEnabledInHierarchy())
 		{
-			// Append option suffix
-			buffer.append(getPrefix(index, choice));
+			buffer.append(" disabled=\"disabled\"");
+		}
+		buffer.append(" value=\"");
+		buffer.append(Strings.escapeMarkup(id));
+		buffer.append("\" id=\"");
+		buffer.append(Strings.escapeMarkup(idAttr));
+		buffer.append('"');
 
-			String id = getChoiceRenderer().getIdValue(choice, index);
-			final String idAttr = getCheckBoxMarkupId(id);
-
-			// Add label for checkbox
-			String display = label;
-			if (localizeDisplayValues())
+		// Allows user to add attributes to the <input..> tag
+		{
+			IValueMap attrs = getAdditionalAttributes(index, choice);
+			if (attrs != null)
 			{
-				display = getLocalizer().getString(label, this, label);
-			}
-
-			final CharSequence escaped = (getEscapeModelStrings() ? Strings.escapeMarkup(display)
-					: display);
-
-			// Allows user to add attributes to the <label..> tag
-			IValueMap labelAttrs = getAdditionalAttributesForLabel(index, choice);
-			StringBuilder extraLabelAttributes = new StringBuilder();
-			if (labelAttrs != null)
-			{
-				for (Map.Entry<String, Object> attr : labelAttrs.entrySet())
+				for (Map.Entry<String, Object> attr : attrs.entrySet())
 				{
-					extraLabelAttributes.append(' ')
-							.append(Strings.escapeMarkup(attr.getKey()))
-							.append("=\"")
-							.append(Strings.escapeMarkup(attr.getValue().toString()))
-							.append('"');
-				}
-			}
-
-			switch (labelPosition)
-			{
-				case BEFORE:
-					buffer.append("<label for=\"")
-					.append(Strings.escapeMarkup(idAttr))
-					.append('"')
-					.append(extraLabelAttributes)
-					.append('>')
-					.append(escaped)
-					.append("</label>");
-					break;
-				case WRAP_BEFORE:
-					buffer.append("<label")
-					.append(extraLabelAttributes)
-					.append('>')
-					.append(escaped)
-					.append(' ');
-					break;
-				case WRAP_AFTER:
-					buffer.append("<label")
-					.append(extraLabelAttributes)
-					.append('>');
-					break;
-			}
-
-			// Add checkbox element
-			buffer.append("<input name=\"");
-			buffer.append(getInputName());
-			buffer.append('"');
-			buffer.append(" type=\"checkbox\"");
-			if (isSelected(choice, index, selected))
-			{
-				buffer.append(" checked=\"checked\"");
-			}
-			if (isDisabled(choice, index, selected) || !isEnabledInHierarchy())
-			{
-				buffer.append(" disabled=\"disabled\"");
-			}
-			buffer.append(" value=\"");
-			buffer.append(Strings.escapeMarkup(id));
-			buffer.append("\" id=\"");
-			buffer.append(Strings.escapeMarkup(idAttr));
-			buffer.append('"');
-
-			// Allows user to add attributes to the <input..> tag
-			{
-				IValueMap attrs = getAdditionalAttributes(index, choice);
-				if (attrs != null)
-				{
-					for (Map.Entry<String, Object> attr : attrs.entrySet())
-					{
-						buffer.append(' ')
-							.append(Strings.escapeMarkup(attr.getKey()))
-							.append("=\"")
-							.append(Strings.escapeMarkup(attr.getValue().toString()))
-							.append('"');
-					}
-				}
-			}
-
-			DebugSettings debugSettings = getApplication().getDebugSettings();
-			String componentPathAttributeName = debugSettings.getComponentPathAttributeName();
-			if (Strings.isEmpty(componentPathAttributeName) == false)
-			{
-				CharSequence path = getPageRelativePath();
-				path = Strings.replaceAll(path, "_", "__");
-				path = Strings.replaceAll(path, ":", "_");
-				buffer.append(' ').append(componentPathAttributeName).append("=\"")
-					.append(path)
-					.append("_input_")
-					.append(index)
-					.append('"');
-			}
-
-			buffer.append("/>");
-
-			switch (labelPosition)
-			{
-				case WRAP_BEFORE:
-					buffer.append("</label>");
-					break;
-				case WRAP_AFTER:
 					buffer.append(' ')
-						.append(escaped)
-						.append("</label>");
-					break;
-				case AFTER:
-					buffer.append("<label for=\"")
-						.append(Strings.escapeMarkup(idAttr))
-						.append('"')
-						.append(extraLabelAttributes)
-						.append('>')
-						.append(escaped)
-						.append("</label>");
-					break;
+						.append(Strings.escapeMarkup(attr.getKey()))
+						.append("=\"")
+						.append(Strings.escapeMarkup(attr.getValue().toString()))
+						.append('"');
+				}
 			}
-
-			// Append option suffix
-			buffer.append(getSuffix(index, choice));
 		}
+
+		DebugSettings debugSettings = getApplication().getDebugSettings();
+		String componentPathAttributeName = debugSettings.getComponentPathAttributeName();
+		if (Strings.isEmpty(componentPathAttributeName) == false)
+		{
+			CharSequence path = getPageRelativePath();
+			path = Strings.replaceAll(path, "_", "__");
+			path = Strings.replaceAll(path, ":", "_");
+			buffer.append(' ').append(componentPathAttributeName).append("=\"")
+				.append(path)
+				.append("_input_")
+				.append(index)
+				.append('"');
+		}
+
+		buffer.append("/>");
+
+		labelPosition.after(buffer, idAttr, extraLabelAttributes, renderValue);
+
+		// Append option suffix
+		buffer.append(getSuffix(index, choice));
 	}
 
 	/**

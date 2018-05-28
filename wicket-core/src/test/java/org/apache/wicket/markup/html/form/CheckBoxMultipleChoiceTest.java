@@ -128,7 +128,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		tester.startPage(new TestPage(false, true, false, false));
 		tester.assertContains("<div wicket:id=\"checkWithFixedPrefix\">pre<input name=\"checkWithFixedPrefix\"");
 		tester.assertContains("</label>sufpre<input name=\"checkWithFixedPrefix\"");
-		tester.assertContains("</label>suf</div>");
+		tester.assertContains("</label>suf\n</div>");
 	}
 
 	/** */
@@ -138,7 +138,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		tester.startPage(new TestPage(false, false, true, false));
 		tester.assertContains("<div wicket:id=\"checkWithDynamicPrefix\">pre0a<input name=\"checkWithDynamicPrefix\"");
 		tester.assertContains("</label>suf0apre1b<input name=\"checkWithDynamicPrefix\"");
-		tester.assertContains("</label>suf2c</div>");
+		tester.assertContains("</label>suf2c\n</div>");
 	}
 
 	@Test
@@ -165,7 +165,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		};
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/><label for=\"testid1-testid_0\" class=\"label0\">1</label></span>");
+		tester.assertResultPage("<span wicket:id=\"testid\"><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/><label for=\"testid1-testid_0\" class=\"label0\">1</label>\n</span>");
 	}
 
 	@Test
@@ -186,7 +186,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label for=\"testid1-testid_0\" class=\"label0\">1</label><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/></span>");
+		tester.assertResultPage("<span wicket:id=\"testid\"><label for=\"testid1-testid_0\" class=\"label0\">1</label><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/>\n</span>");
 	}
 
 	@Test
@@ -207,7 +207,7 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label class=\"label0\">1 <input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/></label></span>");
+		tester.assertResultPage("<span wicket:id=\"testid\"><label class=\"label0\">1 <input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/></label>\n</span>");
 	}
 
 	@Test
@@ -228,6 +228,6 @@ public class CheckBoxMultipleChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label class=\"label0\"><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/> 1</label></span>");
+		tester.assertResultPage("<span wicket:id=\"testid\"><label class=\"label0\"><input name=\"testid\" type=\"checkbox\" value=\"0\" id=\"testid1-testid_0\" class=\"input0\"/> 1</label>\n</span>");
 	}
 }
