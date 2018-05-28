@@ -1893,6 +1893,8 @@
 								this.processScript(context, node);
 							} else if (name === "style") {
 								this.processStyle(context, node);
+							} else if (name === "meta") {
+								this.processMeta(context, node);
 							}
 						} else if (node.nodeType === 8) { // comment type
 							this.processComment(context, node);
@@ -2079,6 +2081,26 @@
 							// continue to next step
 							return FunctionsExecuter.DONE;
 						}
+					});
+				},
+
+				processMeta: function (context, node) {
+					context.steps.push(function (notify) {
+						var meta = Wicket.Head.createElement("meta"),
+							$meta = jQuery(meta),
+							attrs = jQuery(node).prop("attributes"),
+							name = node.getAttribute("name");
+
+						if(name) {
+							jQuery('meta[name="' + name + '"]').remove();
+						}
+						jQuery.each(attrs, function() {
+							$meta.attr(this.name, this.value);
+						});
+
+						Wicket.Head.addElement(meta);
+
+						return FunctionsExecuter.DONE;
 					});
 				},
 
