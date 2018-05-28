@@ -29,7 +29,7 @@ public class RadioChoiceTest extends WicketTestCase
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/><label for=\"testid1-0\">1</label></span>");
+		tester.assertResultPage("<span wicket:id=\"testid\"><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/><label for=\"testid1-0\">1</label>\n</span>");
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class RadioChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label for=\"testid1-0\">1</label><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/></span>");
+		tester.assertResultPage("<span wicket:id=\"testid\"><label for=\"testid1-0\">1</label><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/>\n</span>");
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class RadioChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_BEFORE);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label>1 <input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/></label></span>");
+		tester.assertResultPage("<span wicket:id=\"testid\"><label>1 <input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/></label>\n</span>");
 	}
 
 	@Test
@@ -59,6 +59,6 @@ public class RadioChoiceTest extends WicketTestCase
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);
 		tester.startComponentInPage(radioChoice);
 
-		tester.assertResultPage("<span wicket:id=\"testid\"><label><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/> 1</label></span>");
+		tester.assertResultPage("<span wicket:id=\"testid\"><label><input name=\"testid\" type=\"radio\" value=\"0\" id=\"testid1-0\"/> 1</label>\n</span>");
 	}
 }
