@@ -1466,5 +1466,73 @@ jQuery(document).ready(function() {
 
 			execute(attrs);
 		});
+		
+		var metaByName = function(name) {
+			return jQuery('head meta[name=' + name + ']');
+		};
+
+		asyncTest('processMeta() create meta tag', function() {
+
+			expect(3);
+
+			jQuery('meta').remove();
+			equal(metaByName("m1").length, 0, "There must be no meta tag before the contribution.");
+			
+			var attrs = {
+				u: 'data/ajax/metaId.xml',
+				sh: [
+					function() {
+						start();
+						equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
+						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+					}
+				]
+			};
+			execute(attrs);
+		});
+		
+		asyncTest('processMeta() change meta tag', function() {
+
+			expect(3);
+
+			jQuery('meta').remove();
+			jQuery('head').append('<meta name="m1" content="c1_old" />');
+			equal(metaByName("m1").length, 1, "There must be one old meta tag before the contribution.");
+			
+			var attrs = {
+				u: 'data/ajax/metaId.xml',
+				sh: [
+					function() {
+						start();
+						equal(metaByName("m1").length, 1, "There must be one meta tag after the contribution.");
+						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+					}
+				]
+			};
+			execute(attrs);
+		});
+
+		asyncTest('processMeta() add meta tag', function() {
+
+			expect(5);
+
+			jQuery('meta').remove();
+			jQuery('head').append('<meta name="m2" content="c2" />');
+			equal(metaByName("m2").length, 1, "There must be one old meta tag before the contribution.");
+			
+			var attrs = {
+				u: 'data/ajax/metaId.xml',
+				sh: [
+					function() {
+						start();
+						equal(metaByName("m2").length, 1, "There must be one old meta tag after the contribution.");
+						equal(metaByName("m2").attr("content"), "c2", "The old meta tag must still have the old content.");
+						equal(metaByName("m1").length, 1, "There must be one new meta tag after the contribution.");
+						equal(metaByName("m1").attr("content"), "c1", "The meta tag must have the content as requested.");
+					}
+				]
+			};
+			execute(attrs);
+		});
 	}
 });
