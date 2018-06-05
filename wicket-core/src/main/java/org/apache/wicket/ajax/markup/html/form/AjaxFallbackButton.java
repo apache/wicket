@@ -157,11 +157,12 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
-	 * submission, the target argument will be null. This method will be called <em>before</em>
-	 * {@link Form#onSubmit()}.
+	 * submission, the target argument will be {@link Optional#empty()}. This method will be called
+	 * <em>before</em> {@link Form#onSubmit()}.
 	 * 
 	 * @param target
-	 *            ajax target if this linked was invoked using ajax, null otherwise
+	 *            ajax target if this linked was invoked using ajax, {@link Optional#empty()}
+	 *            otherwise
 	 */
 	protected void onSubmit(final Optional<AjaxRequestTarget> target)
 	{
