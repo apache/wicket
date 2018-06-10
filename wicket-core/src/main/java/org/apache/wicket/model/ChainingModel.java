@@ -48,7 +48,7 @@ public class ChainingModel<T> implements IChainingModel<T>
 					+ "in models directly as it may lead to serialization problems. "
 					+ "If you need to access a property of the session via the model use the "
 					+ "page instance as the model object and 'session.attribute' as the path.");
-		} else if (modelObject instanceof Serializable == false)
+		} else if (modelObject != null && (modelObject instanceof Serializable == false))
 		{
 			LOG.warn("It is not a good idea to reference a non-serializable instance "
 					+ "in models directly as it may lead to serialization problems.");
