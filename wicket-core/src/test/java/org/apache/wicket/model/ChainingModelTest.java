@@ -16,10 +16,19 @@
  */
 package org.apache.wicket.model;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.io.StringWriter;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -36,6 +45,11 @@ public class ChainingModelTest
 		assertEquals(Integer.valueOf(1), model.getObject());
 		model.setObject(2);
 		assertEquals(Integer.valueOf(2), model.getObject());
+	}
+	
+	@Test
+	public void testNonSerializable() {
+		new ChainingModel<>(Thread.currentThread());
 	}
 	
 	@Test
