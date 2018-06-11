@@ -50,8 +50,8 @@ public class ChainingModel<T> implements IChainingModel<T>
 					+ "page instance as the model object and 'session.attribute' as the path.");
 		} else if (modelObject != null && (modelObject instanceof Serializable == false))
 		{
-			LOG.warn("It is not a good idea to reference a non-serializable instance "
-					+ "in models directly as it may lead to serialization problems.");
+			LOG.warn("It is not a good idea to reference non-serializable {} "
+					+ "in a model directly as it may lead to serialization problems.", modelObject.getClass());
 		}
 
 		target = modelObject;
