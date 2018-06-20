@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0.0
  */
-public class ChainingModel<T> implements IChainingModel<T>
+public class ChainingModel<T> implements IModel<T>
 {
 	private static final Logger LOG = LoggerFactory.getLogger(ChainingModel.class);
 
@@ -95,22 +95,6 @@ public class ChainingModel<T> implements IChainingModel<T>
 			return ((IModel<T>)target).getObject();
 		}
 		return (T)target;
-	}
-
-	@Override
-	public IModel<?> getChainedModel()
-	{
-		if (target instanceof IModel)
-		{
-			return (IModel<?>)target;
-		}
-		return null;
-	}
-
-	@Override
-	public void setChainedModel(IModel<?> model)
-	{
-		target = model;
 	}
 
 	/**
