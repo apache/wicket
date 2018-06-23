@@ -31,7 +31,9 @@ public class HomePage extends WebPage
 
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unused")
 	private String text1;
+	@SuppressWarnings("unused")
 	private String text2;
 
 	/**

@@ -43,6 +43,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+		    <groupId>nl.basjes.parse.useragent</groupId>
+		    <artifactId>yauaa</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-request</artifactId>
 		</dependency>

@@ -45,8 +45,12 @@ public class DynamicJQueryResourceReference extends JQueryResourceReference
 	 */
 	private static final MetaDataKey<String> KEY = new MetaDataKey<String>()
 	{
+		private static final long serialVersionUID = 1L;
 	};
 
+	/**
+	 * Creates a dynamic jquery resource reference
+	 */
 	public DynamicJQueryResourceReference()
 	{
 		super(VERSION_2);
@@ -71,7 +75,7 @@ public class DynamicJQueryResourceReference extends JQueryResourceReference
 				clientInfo = new WebClientInfo(requestCycle);
 			}
 			ClientProperties clientProperties = clientInfo.getProperties();
-			if (clientProperties.isBrowserInternetExplorer() && clientProperties.getBrowserVersionMajor() < 9)
+			if (clientProperties.isBrowserInternetExplorer() && clientProperties.getBrowserVersion().startsWith("9"))
 			{
 				name = getVersion1();
 			}

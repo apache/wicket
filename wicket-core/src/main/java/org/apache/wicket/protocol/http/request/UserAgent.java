@@ -19,108 +19,46 @@ package org.apache.wicket.protocol.http.request;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.wicket.util.string.Strings;
-
 /**
  * UserAgent
  */
 enum UserAgent {
 
-	MOZILLA("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko")),
+	MOZILLA("Mozilla", "Gecko"),
 
-	FIREFOX("Opera,AppleWebKit,Konqueror,Trident,Edge", Arrays.asList("Mozilla", "Gecko", "Firefox")),
+	FIREFOX("Firefox", "Firefox for iOS"),
 
-	INTERNET_EXPLORER("Opera,Edge",
-		Arrays.asList("Mozilla", "MSIE", "Windows"),
-		Arrays.asList("Mozilla", "MSIE", "Trident"),
-		Arrays.asList("Mozilla", "MSIE", "Mac_PowerPC"),
-		Arrays.asList("Mozilla", "Windows", "Trident", "like Gecko")),
+	INTERNET_EXPLORER("Internet Explorer"),
 
-	OPERA(Arrays.asList("Opera")),
+	OPERA("Opera", "Opera Tablet"),
 
-	CHROME("Edge", Arrays.asList("Mozilla", "Chrome", "AppleWebKit", "Safari")),
+	CHROME("Chrome", "Chromium", "CriOS"),
 
-	SAFARI("Chrome,Edge", Arrays.asList("Mozilla", "AppleWebKit", "Safari")),
+	SAFARI("Safari"),
 
-	KONQUEROR(Arrays.asList("Konqueror")),
+	KONQUEROR("Konqueror"),
 
-	EDGE("Opera,Konqueror,Trident", Arrays.asList("Edge", "Mozilla", "Chrome", "Safari"));
-
-	/**
-	 * The values which are not allowed in the user agent.
-	 */
-	private final String[] notAllowedList;
+	EDGE("Edge");
 
 	/**
 	 * A list with strings which has to be in the user agent string.
 	 */
-	private final List<String>[] detectionStrings;
+	private List<String> uaStrings;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param notAllowed
-	 *            comma separated list with values which are not allowed in the user agent
-	 * @param detectionStrings
-	 *            a list with strings which has to be in the user agent string
+	 * @param uaStrings
+	 *            a list of user agents
 	 */
-	UserAgent(String notAllowed, List<String>... detectionStrings)
+	UserAgent(String... uaStrings)
 	{
-		notAllowedList = Strings.split(notAllowed, ',');
-		this.detectionStrings = detectionStrings;
+		this.uaStrings = Arrays.asList(uaStrings);
 	}
 
-	/**
-	 * Construct.
-	 * 
-	 * @param detectionStrings
-	 *            list with string which has to be in the user agent string
-	 */
-	UserAgent(List<String>... detectionStrings)
+	public List<String> getUaStrings()
 	{
-		this(null, detectionStrings);
+		return uaStrings;
 	}
 
-	/**
-	 * @param userAgent
-	 *            The user agent string
-	 * @return Whether the user agent matches this enum or not
-	 */
-	public boolean matches(String userAgent)
-	{
-		if (userAgent == null)
-		{
-			return false;
-		}
-
-		if (notAllowedList != null)
-		{
-			for (String value : notAllowedList)
-			{
-				if (userAgent.contains(value))
-				{
-					return false;
-				}
-			}
-		}
-
-		for (List<String> detectionGroup : detectionStrings)
-		{
-			boolean groupPassed = true;
-			for (String detectionString : detectionGroup)
-			{
-				if (!userAgent.contains(detectionString))
-				{
-					groupPassed = false;
-					break;
-				}
-			}
-			if (groupPassed)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
 }
