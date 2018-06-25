@@ -16,24 +16,20 @@
  */
 package org.apache.wicket.page;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.concurrent.CountDownLatch;
+
+import org.apache.wicket.mock.MockPageContext;
+import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.pageStore.AsynchronousPageStore;
-import org.apache.wicket.pageStore.DefaultPageStore;
-import org.apache.wicket.pageStore.DiskDataStore;
-import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.pageStore.IPageContext;
 import org.apache.wicket.pageStore.IPageStore;
-import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
-import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
+import org.apache.wicket.pageStore.SerializedPage;
 import org.apache.wicket.util.WicketTestTag;
-import org.apache.wicket.util.file.File;
-import org.apache.wicket.util.lang.Bytes;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.util.reflection.FieldReader;
-import org.mockito.internal.util.reflection.FieldSetter;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-6629
@@ -41,8 +37,9 @@ import org.mockito.internal.util.reflection.FieldSetter;
 @Tag(WicketTestTag.SLOW)
 class AsyncPageStoreManagerTest
 {
-	private static final String APP_NAME = "test_app";
-
+	private CountDownLatch added = new CountDownLatch(1);
+	private CountDownLatch allowAdd = new CountDownLatch(1);
+	
 	/*
 	 * Symptoms:
 	 * 1) Out of memory on DiskDataStore.sessionEntryMap, map contains thousands of
@@ -60,114 +57,61 @@ class AsyncPageStoreManagerTest
 	@Test
 	void invalidateSessionBeforeSave() throws InterruptedException
 	{
-		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
-		IDataStore dataStore = new DiskDataStore("applicationName", new File("target"),
-			Bytes.bytes(10000l));
-		IPageStore pageStore = new DefaultPageStore(serializer, dataStore, 0);
-		IPageStore asyncPageStore = new AsynchronousPageStore(pageStore, 100);
-		IPageManagerContext pageManagerContext = new DummyPageManagerContext();
-		IPageManager newPageManager = new PageStoreManager(APP_NAME, asyncPageStore,
-			pageManagerContext);
+		MockPageStore testStore = new MockPageStore() {
+			
+			@Override
+			public void addPage(IPageContext context, IManageablePage page)
+			{
+				super.addPage(context, page);
 
-		// Commit a page to the pagemanager
-		TestPage toSerializePage = new TestPage(0);
-		newPageManager.touchPage(toSerializePage);
-		newPageManager.commitRequest();
+				added.countDown();
+				
+				try
+				{
+					allowAdd.await();
+				}
+				catch (InterruptedException interrupted)
+				{
+				}
+			}
+		};
+		
+		IPageStore asyncPageStore = new AsynchronousPageStore(testStore, 100);
+		
+		IPageContext contextA = new MockPageContext("A");
 
-		// Allow some time for the PageSavingRunnable to save the page to disk
-		Thread.sleep(1000);
+		// add a page to the session
+		asyncPageStore.addPage(contextA, new SerializedPage(1, new byte[0]));
 
-		// Page should be stored on disk
-		assertNotNull(dataStore.getData("dummy_id", 0));
+		// wait for page being added
+		added.await();
 
-		// "Stop" the PageSavingRunnable, so we can simulate a pending page
-		Thread t = null;
-		try
-		{
-			t = (Thread)new FieldReader(asyncPageStore,
-				AsynchronousPageStore.class.getDeclaredField("pageSavingThread")).read();
-			Runnable r = (Runnable)new FieldReader(t, Thread.class.getDeclaredField("target"))
-				.read();
-			FieldSetter.setField(asyncPageStore,
-				AsynchronousPageStore.class.getDeclaredField("pageSavingThread"), null);
+		assertEquals(1, testStore.getPage(contextA, 1).getPageId());
 
-			// Allow some time for the original PageSavingRunnable to exit
-			Thread.sleep(1000);
+		// add a second page to this session
+		asyncPageStore.addPage(contextA, new SerializedPage(2, new byte[0]));
 
-			t = new Thread(r, "Wicket-AsyncPageStore-PageSavingThread");
-			t.setDaemon(true);
-			FieldSetter.setField(asyncPageStore,
-				AsynchronousPageStore.class.getDeclaredField("pageSavingThread"), t);
-		}
-		catch (NoSuchFieldException | SecurityException e)
-		{
-			throw new RuntimeException(e);
-		}
+		// Session is invalidated
+		asyncPageStore.removeAllPages(contextA);
 
-		// Commit a second page to this session
-		newPageManager.touchPage(new TestPage(1));
-		newPageManager.commitRequest();
+		// indeed empty
+		assertNull(testStore.getPage(contextA, 1));
+		assertNull(testStore.getPage(contextA, 2));
 
-		Thread.sleep(1000);
+		// allow next page add
+		allowAdd.countDown();
+		
+		// wait for page being added
+		added = new CountDownLatch(1);
+		asyncPageStore.addPage(new MockPageContext("B"), new SerializedPage(3, new byte[0]));
+		added.await();
 
-		// PageSavingRunnable is not running so page should not be in the datastore
-		assertNull(dataStore.getData("dummy_id", 1));
-
-		// Session is invalidated and a clear on the PageStoreManager is called
-		newPageManager.clear();
-
-		// Datastore is indeed empty after the clear
-		assertNull(dataStore.getData("dummy_id", 0));
-		assertNull(dataStore.getData("dummy_id", 1));
-
-		// "Restart" the PageSavingRunnable
-		t.start();
-
-		// Allow some time for the PageSavingRunnable to save any pages left in the queue to disk
-		Thread.sleep(1000);
-
-		// Session has been invalidated. The datastore should not contain any pages for this
-		// session, because they will never be cleaned! Not in the DiskDataStore.sessionEntryMap
-		// (OOM) and not on disk (slowly filling disk as this even survives application restarts.
-		assertNull(dataStore.getData("dummy_id", 0));
-		assertNull(dataStore.getData("dummy_id", 1));
+		// Session has been invalidated. The pageStore should not contain any pages for this
+		// session, because they will never be cleaned!
+		assertNull(testStore.getPage(contextA, 1));
+		assertNull(testStore.getPage(contextA, 2));
 		
 		//destroy page manager to clean static variables 
-		newPageManager.destroy();
-	}
-
-	private static class TestPage implements IManageablePage
-	{
-		private static final long serialVersionUID = 1L;
-
-		private final int instanceID;
-
-		private TestPage(int id)
-		{
-			instanceID = id;
-		}
-
-		@Override
-		public boolean isPageStateless()
-		{
-			return false;
-		}
-
-		@Override
-		public int getPageId()
-		{
-			return instanceID;
-		}
-
-		@Override
-		public void detach()
-		{
-		}
-
-		@Override
-		public boolean setFreezePageId(boolean freeze)
-		{
-			return false;
-		}
+		testStore.destroy();
 	}
 }

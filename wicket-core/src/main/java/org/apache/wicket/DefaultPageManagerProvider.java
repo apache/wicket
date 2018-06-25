@@ -19,22 +19,61 @@ package org.apache.wicket;
 import java.io.File;
 
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PageStoreManager;
-import org.apache.wicket.pageStore.AsynchronousDataStore;
+import org.apache.wicket.page.PageManager;
 import org.apache.wicket.pageStore.AsynchronousPageStore;
-import org.apache.wicket.pageStore.DefaultPageStore;
-import org.apache.wicket.pageStore.DiskDataStore;
-import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.pageStore.DiskPageStore;
+import org.apache.wicket.pageStore.FilePageStore;
+import org.apache.wicket.pageStore.GroupingPageStore;
 import org.apache.wicket.pageStore.IPageStore;
+import org.apache.wicket.pageStore.InMemoryPageStore;
+import org.apache.wicket.pageStore.InSessionPageStore;
+import org.apache.wicket.pageStore.NoopPageStore;
+import org.apache.wicket.pageStore.RequestPageStore;
+import org.apache.wicket.pageStore.SerializedPage;
+import org.apache.wicket.pageStore.SerializingPageStore;
 import org.apache.wicket.serialize.ISerializer;
+import org.apache.wicket.settings.FrameworkSettings;
 import org.apache.wicket.settings.StoreSettings;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * {@link IPageManagerProvider} implementation that creates new instance of {@link IPageManager}
- * that persists the pages in {@link DiskDataStore}
+ * A provider of a {@link PageManager} managing @link IManageablePage}s with a default chain of {@link IPageStore}s:
+ * <ol>
+ * <li>{@link RequestPageStore} caching pages until end of the request</li>
+ * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
+ * <li>{@link AsynchronousPageStore} moving storage of pages to an asynchronous worker thread (enabled by default with {@link StoreSettings#isAsynchronous()})</li>
+ * <li>{@link SerializingPageStore} serializing all pages (so they are available for back-button)</li>
+ * <li>{@link DiskPageStore} persisting all pages, configured according to {@link StoreSettings}</li>
+ * </ol>
+ * An alternative chain with all pages held in-memory could be:
+ * <ol>
+ * <li>{@link RequestPageStore} caching pages until end of the request</li>
+ * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
+ * <li>{@link AsynchronousPageStore} moving storage of pages to a worker thread</li>
+ * <li>{@link SerializingPageStore} serializing all pages (so they are available for back-button)</li>
+ * <li>{@link InMemoryPageStore} keeping all pages in memory</li>
+ * </ol>
+ * ... or if all pages should be kept in the session only, without any serialization (no back-button
+ * support though):
+ * <ul>
+ * <li>{@link RequestPageStore} caching pages until end of the request</li>
+ * <li>{@link InSessionPageStore} keeping a limited count of pages in the session, e.g. 10</li>
+ * <li>{@link NoopPageStore} discarding all exceeding pages</li>
+ * </ul>
+ * The chain's initial store should always be a {@link RequestPageStore}, buffering all adding of pages until the end of the request.
+ * Several stores accept {@link SerializedPage} only, these have to be preceded by a {@link SerializingPageStore}.
+ * <p> 
+ * For back-button support <em>at least one</em> store in the chain must create copies of stored
+ * pages (usually through serialization), otherwise any following request will work on an identical
+ * page instance and the previous state of page is no longer accessible.
+ * <p>
+ * Other stores be may inserted ad libitum, e.g.
+ * <ul>
+ * <li>{@link GroupingPageStore} groups pages, e.g. to limit storage size on a per-group basis</li>
+ * <li>{@link FilePageStore} as an alternative to the trusted {@link DiskPageStore}</li>
+ * <li>other implementations from <a href="https://github.com/wicketstuff/core/tree/master/datastores-parent">wicketstuff-datastores</a></li>
+ * </ul>
  */
 public class DefaultPageManagerProvider implements IPageManagerProvider
 {
@@ -44,7 +83,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	 * Constructor.
 	 *
 	 * @param application
-	 *          The application instance
+	 *            The application instance
 	 */
 	public DefaultPageManagerProvider(Application application)
 	{
@@ -52,53 +91,96 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	}
 
 	@Override
-	public IPageManager apply(IPageManagerContext pageManagerContext)
+	public IPageManager get()
 	{
-		IDataStore dataStore = newDataStore();
+		IPageStore store = newPersistentStore();
+		
+		store = newSerializingStore(store);
+		
+		store = newAsynchronousStore(store);
 
-		StoreSettings storeSettings = getStoreSettings();
+		store = newSessionStore(store);
 
-		IPageStore pageStore;
+		store = newRequestStore(store);
 
-		if (dataStore.canBeAsynchronous() && storeSettings.isAsynchronous())
+		return new PageManager(store);
+	}
+
+	/**
+	 * Get the {@link ISerializer} to use for serializing of pages.
+	 * <p>
+	 * By default the serializer of the applications {@link FrameworkSettings}.
+	 * 
+	 * @return how to serialize pages if needed for any {@link IPageStore}
+	 * 
+	 * @see FrameworkSettings#getSerializer()
+	 */
+	protected ISerializer getSerializer()
+	{
+		return application.getFrameworkSettings().getSerializer();
+	}
+
+	/**
+	 * Cache pages in the request until it is finished.
+	 * 
+	 * @see RequestPageStore
+	 */
+	protected IPageStore newRequestStore(IPageStore pageStore)
+	{
+		return new RequestPageStore(pageStore);
+	}
+
+	/**
+	 * Cache last page in the session for fast access.
+	 * 
+	 * @see InSessionPageStore
+	 */
+	protected IPageStore newSessionStore(IPageStore pageStore)
+	{
+		return new InSessionPageStore(pageStore, 1, getSerializer());
+	}
+
+	/**
+	 * Store pages asynchronously into the persistent store, if enabled in {@link StoreSettings#isAsynchronous()}.
+	 * 
+	 * @see AsynchronousPageStore
+	 */
+	protected IPageStore newAsynchronousStore(IPageStore pageStore)
+	{
+		StoreSettings storeSettings = application.getStoreSettings();
+
+		if (storeSettings.isAsynchronous())
 		{
 			int capacity = storeSettings.getAsynchronousQueueCapacity();
-			dataStore = new AsynchronousDataStore(dataStore, capacity);
-
-			pageStore = newPageStore(dataStore);
-
-			if (pageStore.canBeAsynchronous())
-			{
-				pageStore = new AsynchronousPageStore(pageStore, capacity);
-			}
-		}
-		else
-		{
-			pageStore = newPageStore(dataStore);
+			pageStore = new AsynchronousPageStore(pageStore, capacity);
 		}
 
-		return new PageStoreManager(application.getName(), pageStore, pageManagerContext);
-
+		return pageStore;
 	}
 
-	protected IPageStore newPageStore(IDataStore dataStore)
+	/**
+	 * Serialize pages.
+	 * 
+	 * @see SerializingPageStore
+	 */
+	protected IPageStore newSerializingStore(IPageStore pageStore)
 	{
-		int inmemoryCacheSize = getStoreSettings().getInmemoryCacheSize();
-		ISerializer pageSerializer = application.getFrameworkSettings().getSerializer();
-		return new DefaultPageStore(pageSerializer, dataStore, inmemoryCacheSize);
+		return new SerializingPageStore(pageStore, getSerializer());
 	}
 
-	protected IDataStore newDataStore()
+	/**
+	 * Keep persistent copies of all pages on disk.
+	 * 
+	 * @see DiskPageStore
+	 * @see StoreSettings#getMaxSizePerSession()
+	 * @see StoreSettings#getFileStoreFolder()
+	 */
+	protected IPageStore newPersistentStore()
 	{
-		StoreSettings storeSettings = getStoreSettings();
+		StoreSettings storeSettings = application.getStoreSettings();
 		Bytes maxSizePerSession = storeSettings.getMaxSizePerSession();
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 
-		return new DiskDataStore(application.getName(), fileStoreFolder, maxSizePerSession);
-	}
-
-	StoreSettings getStoreSettings()
-	{
-		return application.getStoreSettings();
+		return new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession);
 	}
 }

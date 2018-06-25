@@ -38,7 +38,7 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.pageStore.IPageContext;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
@@ -120,15 +120,15 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 				return new IPageManagerProvider()
 				{
 					@Override
-					public IPageManager apply(IPageManagerContext context)
+					public IPageManager get()
 					{
 						return new MockPageManager()
 						{
 							@Override
-							public void touchPage(IManageablePage page)
+							public void addPage(IManageablePage page)
 							{
 								page = WicketObjects.cloneObject(page);
-								super.touchPage(page);
+								super.addPage(page);
 							}
 						};
 					}

@@ -461,4 +461,18 @@ public class Files
 		logger.error("Failed to create directory: " + folder);
 		return false;
 	}
+
+	/**
+	 * List all files inside the given file.
+	 * 
+	 * @param file directory
+	 * @return files, never {@code null}
+	 */
+	public static File[] list(File file) {
+		File[] files = file.listFiles();
+		if (files == null) {
+			files = new File[0];
+		}
+		return files;
+	}
 }

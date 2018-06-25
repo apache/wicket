@@ -38,6 +38,7 @@ import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedbackContributor;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.session.ISessionStore;
@@ -291,7 +292,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	{
 		if (isTemporary() == false)
 		{
-			getPageManager().clear();
+			getPageManager().removeAllPages();
 		}
 	}
 
@@ -916,8 +917,8 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 */
 	public final IPageManager getPageManager()
 	{
-		IPageManager pageManager = Application.get().internalGetPageManager();
-		return pageAccessSynchronizer.get().adapt(pageManager);
+		IPageManager manager = Application.get().internalGetPageManager();
+		return pageAccessSynchronizer.get().adapt(manager);
 	}
 
 	/** {@inheritDoc} */

@@ -18,33 +18,44 @@ package org.apache.wicket.pageStore;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.apache.wicket.MockPage;
-import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.serialize.java.JavaSerializer;
+import java.io.Serializable;
+import java.util.function.Supplier;
+
+import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.mock.MockPageContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-abstract class AbstractPageStoreTest
+public abstract class AbstractPageStoreTest
 {
-	final String sessionId = "1234567890";
-	final int pageId = 123;
-	private final ISerializer serializer = new JavaSerializer(getClass().getName());
-	private final IDataStore dataStore = new NoopDataStore();
-	private int maxEntries = 1;
-	IPageStore pageStore = null;
+	protected final String sessionId = "1234567890";
+	protected final int pageId = 123;
+	
+	/**
+	 * Maximum entries in store.
+	 */
+	protected int maxEntries = 1;
+	
+	/**
+	 * Data for stored pages.
+	 */
+	protected byte[] pageData = new byte[1];
+	
+	protected IPageStore pageStore = null;
 
 	@BeforeEach
-	void before()
+	public void before()
 	{
-		pageStore = createPageStore(serializer, dataStore, maxEntries);
+		pageStore = createPageStore( maxEntries);
 	}
 
-	abstract IPageStore createPageStore(ISerializer serializer, IDataStore dataStore, int maxEntries);
+	protected abstract IPageStore createPageStore(int maxEntries);
 
 	@AfterEach
-	void after()
+	public void after()
 	{
 		if (pageStore != null)
 		{
@@ -59,9 +70,11 @@ abstract class AbstractPageStoreTest
 	@Test
 	void storePage()
 	{
-		pageStore.storePage(sessionId, new MockPage(pageId));
+		IPageContext context = new MockPageContext(sessionId);
+		
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
-		assertNotNull(pageStore.getPage(sessionId, pageId));
+		assertNotNull(pageStore.getPage(context, pageId));
 	}
 
 	/**
@@ -70,46 +83,122 @@ abstract class AbstractPageStoreTest
 	@Test
 	void storePage2()
 	{
+		pageStore.destroy();
+		
+		IPageContext context = new MockPageContext(sessionId);
 		int maxEntries = 10;
 
-		pageStore = createPageStore(serializer, dataStore, maxEntries);
+		pageStore = createPageStore(maxEntries);
 
-		pageStore.storePage(sessionId, new MockPage(pageId));
-		pageStore.storePage(sessionId, new MockPage(pageId));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
-		assertNotNull(pageStore.getPage(sessionId, pageId));
+		assertNotNull(pageStore.getPage(context, pageId));
 
-		pageStore.removePage(sessionId, pageId);
+		pageStore.removePage(context, new SerializedPage(pageId, pageData));
 
-		assertNull(pageStore.getPage(sessionId, pageId));
+		assertNull(pageStore.getPage(context, pageId));
 	}
 
 	@Test
 	void removePage()
 	{
-		pageStore.storePage(sessionId, new MockPage(pageId));
+		IPageContext context = new MockPageContext(sessionId);
+		
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
-		assertNotNull(pageStore.getPage(sessionId, pageId));
+		assertNotNull(pageStore.getPage(context, pageId));
 
-		pageStore.removePage(sessionId, pageId);
+		pageStore.removePage(context, new SerializedPage(pageId, pageData));
 
-		assertNull(pageStore.getPage(sessionId, pageId));
+		assertNull(pageStore.getPage(context, pageId));
+		
+		int pageId2 = 234;
+		pageStore.removePage(context, new SerializedPage(pageId2, pageData));
+	}
+
+	@Test
+	void removeAllPagesDoesNotBindSession()
+	{
+		IPageContext context = new MockPageContext(sessionId) {
+			@Override
+			public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> value) {
+				if (value.get() != null) {
+					fail();
+				}
+				
+				return null;
+			}
+			
+			@Override
+			public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> value) {
+				if (value.get() != null) {
+					return fail();
+				}
+				
+				return null;
+			}
+		};
+		
+		pageStore.removeAllPages(context);
+	}
+
+	@Test
+	void removePageDoesNotBindSession()
+	{
+		IPageContext context = new MockPageContext(sessionId) {
+			@Override
+			public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> value) {
+				if (value.get() != null) {
+					fail();
+				}
+				
+				return null;
+			}
+			
+			@Override
+			public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> value) {
+				if (value.get() != null) {
+					return fail();
+				}
+				
+				return null;
+			}
+		};
+		
+		pageStore.removePage(context, new SerializedPage(0, pageData));
+	}
+
+	@Test
+	void removeAllPages()
+	{
+		IPageContext context = new MockPageContext(sessionId);
+		
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
+
+		assertNotNull(pageStore.getPage(context, pageId));
+
+		pageStore.removeAllPages(context);
+
+		assertNull(pageStore.getPage(context, pageId));
 	}
 
 	/**
-	 * Verify that at most {@code maxEntries} per session can be put in the cache
+	 * Verify that at most {@code maxEntries} per session can be put in the store
 	 */
 	@Test
 	void maxSizeSameSession()
 	{
-		pageStore.storePage(sessionId, new MockPage(pageId));
+		IPageContext context = new MockPageContext(sessionId);
+		
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
-		assertNotNull(pageStore.getPage(sessionId, pageId));
+		assertNotNull(pageStore.getPage(context, pageId));
 
 		int pageId2 = 234;
-		pageStore.storePage(sessionId, new MockPage(pageId2));
-		assertNull(pageStore.getPage(sessionId, pageId));
-		assertNotNull(pageStore.getPage(sessionId, pageId2));
+		pageStore.addPage(context, new SerializedPage(pageId2, pageData));
+		assertNull(pageStore.getPage(context, pageId));
+		assertNotNull(pageStore.getPage(context, pageId2));
 	}
 
 	/**
@@ -119,15 +208,16 @@ abstract class AbstractPageStoreTest
 	@Test
 	void maxSizeDifferentSessions()
 	{
-		String sessionId2 = "0987654321";
+		IPageContext context = new MockPageContext(sessionId);
+		IPageContext context2 = new MockPageContext("0987654321");
 
-		pageStore.storePage(sessionId, new MockPage(pageId));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
-		assertNotNull(pageStore.getPage(sessionId, pageId));
+		assertNotNull(pageStore.getPage(context, pageId));
 
-		pageStore.storePage(sessionId2, new MockPage(pageId));
+		pageStore.addPage(context2, new SerializedPage(pageId, pageData));
 
-		assertNull(pageStore.getPage(sessionId, pageId));
-		assertNotNull(pageStore.getPage(sessionId2, pageId));
+		assertNotNull(pageStore.getPage(context, pageId));
+		assertNotNull(pageStore.getPage(context2, pageId));
 	}
 }

@@ -37,7 +37,6 @@ public class DevUtilsPage extends WebPage
 	public DevUtilsPage()
 	{
 		super();
-		init();
 	}
 
 	/**
@@ -48,7 +47,6 @@ public class DevUtilsPage extends WebPage
 	public DevUtilsPage(final IModel<?> model)
 	{
 		super(model);
-		init();
 	}
 
 	/**
@@ -59,11 +57,12 @@ public class DevUtilsPage extends WebPage
 	public DevUtilsPage(final PageParameters parameters)
 	{
 		super(parameters);
-		init();
 	}
 
-	private void init()
-	{
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		add(new DebugBar("debug"));
 	}
 
