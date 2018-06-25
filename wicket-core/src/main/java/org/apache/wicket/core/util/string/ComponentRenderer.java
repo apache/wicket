@@ -452,7 +452,7 @@ public class ComponentRenderer
 
 		private RenderPage(Component component)
 		{
-			// do not store the page in IPageStore/IDataStore. WICKET-5422
+			// WICKET-5422 do not store the page in IPageStore 
 			setStatelessHint(true);
 
 			String componentMarkup;

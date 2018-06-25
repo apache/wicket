@@ -37,12 +37,6 @@ public class StoreSettings implements StoreSettingsMBean
 	}
 
 	@Override
-	public int getInmemoryCacheSize()
-	{
-		return application.getStoreSettings().getInmemoryCacheSize();
-	}
-
-	@Override
 	public long getMaxSizePerSession()
 	{
 		return application.getStoreSettings().getMaxSizePerSession().bytes();

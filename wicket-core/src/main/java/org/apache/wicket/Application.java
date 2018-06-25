@@ -55,10 +55,7 @@ import org.apache.wicket.markup.parser.filter.WicketMessageTagHandler;
 import org.apache.wicket.markup.resolver.HtmlHeaderResolver;
 import org.apache.wicket.markup.resolver.WicketContainerResolver;
 import org.apache.wicket.markup.resolver.WicketMessageResolver;
-import org.apache.wicket.page.DefaultPageManagerContext;
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.protocol.http.IRequestLogger;
 import org.apache.wicket.protocol.http.RequestLogger;
@@ -1029,7 +1026,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	/** The Security Settings */
 	private SecuritySettings securitySettings;
 
-	/** The settings for {@link IPageStore}, {@link IDataStore} and {@link IPageManager} */
+	/** The settings for {@link IPageStore} and {@link IPageManager} */
 	private StoreSettings storeSettings;
 
 	/** can the settings object be set/used. */
@@ -1347,19 +1344,17 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 	}
 
 	/**
+	 * Set the provider of an {@link IPageManager}.
 	 * 
 	 * @param provider
+	 * 
+	 * @see DefaultPageManagerProvider
 	 */
 	public final Application setPageManagerProvider(final IPageManagerProvider provider)
 	{
 		pageManagerProvider = provider;
 		return this;
 	}
-
-	/**
-	 * Context for PageManager to interact with rest of Wicket
-	 */
-	private final IPageManagerContext pageManagerContext = new DefaultPageManagerContext();
 
 	/**
 	 * Returns an unsynchronized version of page manager
@@ -1374,20 +1369,11 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 			{
 				if (pageManager == null)
 				{
-					pageManager = pageManagerProvider.apply(getPageManagerContext());
+					pageManager = pageManagerProvider.get();
 				}
 			}
 		}
 		return pageManager;
-	}
-
-	/**
-	 * 
-	 * @return the page manager context
-	 */
-	protected IPageManagerContext getPageManagerContext()
-	{
-		return pageManagerContext;
 	}
 
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1547,7 +1533,7 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 		{
 			session = newSession(requestCycle.getRequest(), requestCycle.getResponse());
 			ThreadContext.setSession(session);
-			internalGetPageManager().newSessionCreated();
+			internalGetPageManager().removeAllPages();
 			sessionListeners.onCreated(session);
 		}
 		else
@@ -1594,10 +1580,15 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 			@Override
 			public void onDetach(final RequestCycle requestCycle)
 			{
+				IPageManager pageManager;
+				
 				if (Session.exists())
 				{
-					Session.get().getPageManager().commitRequest();
+					pageManager = Session.get().getPageManager();
+				} else {
+					pageManager = internalGetPageManager();
 				}
+				pageManager.detach();
 
 				if (Application.exists())
 				{

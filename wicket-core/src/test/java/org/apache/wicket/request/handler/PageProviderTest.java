@@ -65,8 +65,8 @@ class PageProviderTest extends WicketTestCase
 
 		// storing test page
 		TestMapperContext mapperContext = new TestMapperContext();
-		mapperContext.getPageManager().touchPage(testPage);
-		mapperContext.getPageManager().commitRequest();
+		mapperContext.getPageManager().addPage(testPage);
+		mapperContext.getPageManager().detach();
 
 		// by cleaning session cache we make sure of not being testing the same in-memory instance
 		mapperContext.cleanSessionCache();
@@ -80,8 +80,8 @@ class PageProviderTest extends WicketTestCase
 		// changing some sate
 		StatefullMockPage providedPage = (StatefullMockPage)pageProvider.getPageInstance();
 		providedPage.state = newState;
-		mapperContext.getPageManager().touchPage(providedPage);
-		mapperContext.getPageManager().commitRequest();
+		mapperContext.getPageManager().addPage(providedPage);
+		mapperContext.getPageManager().detach();
 
 
 		mapperContext.cleanSessionCache();
@@ -215,8 +215,8 @@ class PageProviderTest extends WicketTestCase
 	{
 		TestMapperContext mapperContext = new TestMapperContext();
 		Page page = new TestPage();
-		mapperContext.getPageManager().touchPage(page);
-		mapperContext.getPageManager().commitRequest();
+		mapperContext.getPageManager().addPage(page);
+		mapperContext.getPageManager().detach();
 
 		// by cleaning session cache we make sure of not being testing the same in-memory instance
 		mapperContext.cleanSessionCache();
@@ -238,8 +238,8 @@ class PageProviderTest extends WicketTestCase
 	{
 		TestMapperContext mapperContext = new TestMapperContext();
 		Page page = new TestPage();
-		mapperContext.getPageManager().touchPage(page);
-		mapperContext.getPageManager().commitRequest();
+		mapperContext.getPageManager().addPage(page);
+		mapperContext.getPageManager().detach();
 
 		// by cleaning session cache we make sure of not being testing the same in-memory instance
 		mapperContext.cleanSessionCache();
@@ -255,8 +255,8 @@ class PageProviderTest extends WicketTestCase
 	{
 		TestMapperContext mapperContext = new TestMapperContext();
 		Page page = new TestPage();
-		mapperContext.getPageManager().touchPage(page);
-		mapperContext.getPageManager().commitRequest();
+		mapperContext.getPageManager().addPage(page);
+		mapperContext.getPageManager().detach();
 
 		PageProvider pageProvider = new PageProvider(page.getPageId(), page.getRenderCount());
 		JavaSerializer javaSerializer = new JavaSerializer("app");

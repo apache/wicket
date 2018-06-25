@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.pageStore.IPageStore;
 
 /**
  * Simple {@link IPageManager} used for testing.
@@ -32,19 +32,12 @@ public class MockPageManager implements IPageManager
 {
 	private final Map<Integer, IManageablePage> pages = new HashMap<>();
 
-	/**
-	 * Construct.
-	 * 
-	 */
-	public MockPageManager()
-	{
-	}
-
 	@Override
-	public void commitRequest()
+	public boolean supportsVersioning()
 	{
+		return false;
 	}
-
+	
 	@Override
 	public void destroy()
 	{
@@ -59,54 +52,29 @@ public class MockPageManager implements IPageManager
 
 	@Override
 	public void removePage(final IManageablePage page) {
-		if (page != null) {
-			pages.remove(page.getPageId());
-		}
-	}
-
-	@Override
-	public void newSessionCreated()
-	{
-		pages.clear();
-	}
-
-	@Override
-	public void clear()
-	{
-		pages.clear();
-	}
-
-	/**
-	 * @param context
-	 */
-	public void setContext(IPageManagerContext context)
-	{
-	}
-
-	@Override
-	public boolean supportsVersioning()
-	{
-		return true;
-	}
-
-	@Override
-	public void touchPage(IManageablePage page)
-	{
-		if (true || page.isPageStateless() == false)
-		{
-			pages.put(page.getPageId(), page);
-		}
-	}
-
-	@Override
-	public void untouchPage(IManageablePage page)
-	{
 		pages.remove(page.getPageId());
 	}
 
 	@Override
-	public IPageManagerContext getContext()
+	public void addPage(IManageablePage page)
 	{
-		return null;
+		pages.put(page.getPageId(), page);
+	}
+
+	@Override
+	public void removeAllPages()
+	{
+		pages.clear();
+	}
+
+	@Override
+	public void detach()
+	{
+	}
+
+	@Override
+	public IPageStore getPageStore()
+	{
+		throw new UnsupportedOperationException();
 	}
 }

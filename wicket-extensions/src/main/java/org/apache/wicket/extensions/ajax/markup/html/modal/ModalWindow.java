@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.modal;
 
-import com.github.openjson.JSONObject;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
@@ -44,6 +43,8 @@ import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.EnumeratedType;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+
+import com.github.openjson.JSONObject;
 
 /**
  * Modal window component.
@@ -1043,7 +1044,7 @@ public class ModalWindow extends Panel
 			CharSequence pageUrl;
 			RequestCycle requestCycle = RequestCycle.get();
 
-			page.getSession().getPageManager().touchPage(page);
+			page.getSession().getPageManager().addPage(page);
 			if (page.isPageStateless())
 			{
 				pageUrl = requestCycle.urlFor(page.getClass(), page.getPageParameters());

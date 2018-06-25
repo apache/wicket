@@ -26,9 +26,8 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * A class for settings related to the the storages where page instances are persisted -
- * {@link org.apache.wicket.pageStore.IPageStore},
- * {@link org.apache.wicket.pageStore.IDataStore} and {@link org.apache.wicket.page.IPageManager}.
+ * A class for settings related to the the storages where page instances are persisted, used by
+ * {@link org.apache.wicket.pageStore.IPageStore} {@link org.apache.wicket.page.IPageManager}.
  * <p>
  * For more information about page storages read <a
  * href="https://cwiki.apache.org/confluence/x/qIaoAQ">Page Storage - Wiki page</a>
@@ -38,19 +37,9 @@ import org.apache.wicket.util.lang.Bytes;
  */
 public class StoreSettings
 {
-	/**
-	 * By default the second level cache is disabled.
-	 *
-	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-5554">WICKET-5554</a>
-	 * @see <a href="https://cwiki.apache.org/confluence/x/qIaoAQ">Wicket Page storages</a>
-	 */
-	private static final int DEFAULT_CACHE_SIZE = 0;
-
 	private static final Bytes DEFAULT_MAX_SIZE_PER_SESSION = Bytes.megabytes(10);
 
 	private static final int DEFAULT_ASYNCHRONOUS_QUEUE_CAPACITY = 100;
-
-	private int inmemoryCacheSize = DEFAULT_CACHE_SIZE;
 
 	private Bytes maxSizePerSession = DEFAULT_MAX_SIZE_PER_SESSION;
 
@@ -58,8 +47,8 @@ public class StoreSettings
 
 	private int asynchronousQueueCapacity = DEFAULT_ASYNCHRONOUS_QUEUE_CAPACITY;
 
-	private boolean isAsynchronous = true;
-
+	private boolean asynchronous = true;
+	
 	/**
 	 * Construct.
 	 * 
@@ -70,32 +59,8 @@ public class StoreSettings
 	}
 
 	/**
-	 * @return the number of page instances which will be stored in the application scoped cache for
-	 *         faster retrieval
-	 */
-	public int getInmemoryCacheSize()
-	{
-		return inmemoryCacheSize;
-	}
-
-	/**
-	 * Sets the maximum number of page instances which will be stored in the application scoped
-	 * second level cache for faster retrieval
-	 *
-	 * @param inmemoryCacheSize
-	 *            the maximum number of page instances which will be held in the application scoped
-	 *            cache
-	 * @return {@code this} object for chaining
-	 */
-	public StoreSettings setInmemoryCacheSize(int inmemoryCacheSize)
-	{
-		this.inmemoryCacheSize = inmemoryCacheSize;
-		return this;
-	}
-
-	/**
 	 * @return maximum page size. After this size is exceeded,
-	 * the {@link org.apache.wicket.pageStore.DiskDataStore} will start saving the
+	 * the {@link org.apache.wicket.pageStore.DiskPageStore} will start saving the
 	 * pages at the beginning of file.
 	 */
 	public Bytes getMaxSizePerSession()
@@ -105,7 +70,7 @@ public class StoreSettings
 
 	/**
 	 * Sets the maximum size of the {@link File} where page instances per session are stored. After
-	 * reaching this size the {@link org.apache.wicket.pageStore.DiskDataStore} will start overriding the
+	 * reaching this size the {@link org.apache.wicket.pageStore.DiskPageStore} will start overriding the
 	 * oldest pages at the beginning of the file.
 	 *
 	 * @param maxSizePerSession
@@ -120,7 +85,7 @@ public class StoreSettings
 	}
 
 	/**
-	 * @return the location of the folder where {@link org.apache.wicket.pageStore.DiskDataStore} will store the files with page
+	 * @return the location of the folder where {@link org.apache.wicket.pageStore.DiskPageStore} will store the files with page
 	 *         instances per session
 	 */
 	public File getFileStoreFolder()
@@ -151,7 +116,7 @@ public class StoreSettings
 	}
 
 	/**
-	 * Sets the folder where {@link org.apache.wicket.pageStore.DiskDataStore} will store the files with page instances per
+	 * Sets the folder where {@link org.apache.wicket.pageStore.DiskPageStore} will store the files with page instances per
 	 * session
 	 *
 	 * @param fileStoreFolder
@@ -166,7 +131,7 @@ public class StoreSettings
 
 	/**
 	 * @return the capacity of the queue used to store the pages which will be stored asynchronously
-	 * @see org.apache.wicket.pageStore.AsynchronousDataStore
+	 * @see org.apache.wicket.pageStore.AsynchronousPageStore
 	 */
 	public int getAsynchronousQueueCapacity()
 	{
@@ -178,7 +143,7 @@ public class StoreSettings
 	 *
 	 * @param queueCapacity
 	 *            the capacity of the queue
-	 * @see org.apache.wicket.pageStore.AsynchronousDataStore
+	 * @see org.apache.wicket.pageStore.AsynchronousPageStore
 	 * @return {@code this} object for chaining
 	 */
 	public StoreSettings setAsynchronousQueueCapacity(int queueCapacity)
@@ -193,9 +158,9 @@ public class StoreSettings
 	}
 
 	/**
-	 * Sets a flag whether to wrap the configured {@link org.apache.wicket.pageStore.IDataStore} with
-	 * {@link org.apache.wicket.pageStore.AsynchronousDataStore}. By doing this the HTTP worker thread will not wait for the
-	 * actual write of the page's bytes into the wrapped {@link org.apache.wicket.pageStore.IDataStore}.
+	 * Sets a flag whether to wrap the configured {@link org.apache.wicket.pageStore.IPageStore} with
+	 * {@link org.apache.wicket.pageStore.AsynchronousPageStore}. By doing this the HTTP worker thread will not wait for the
+	 * actual write of the page's bytes into the wrapped {@link org.apache.wicket.pageStore.IPageStore}.
 	 *
 	 * @param async
 	 *            {@code true} to make it asynchronous, {@code false} - otherwise
@@ -203,15 +168,15 @@ public class StoreSettings
 	 */
 	public StoreSettings setAsynchronous(boolean async)
 	{
-		isAsynchronous = async;
+		asynchronous = async;
 		return this;
 	}
 
 	/**
-	 * @return {@code true} if the storing of page's bytes is asynchronous
+	 * @return {@code true} if the storing of page is asynchronous
 	 */
 	public boolean isAsynchronous()
 	{
-		return isAsynchronous;
+		return asynchronous;
 	}
 }

@@ -16,11 +16,15 @@
  */
 package org.apache.wicket;
 
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
 
-public interface IPageManagerProvider extends Function<IPageManagerContext, IPageManager>
+/**
+ * Provider of an {@link IPageManager}.
+ * 
+ * @author svenmeier
+ */
+public interface IPageManagerProvider extends Supplier<IPageManager>
 {
 }

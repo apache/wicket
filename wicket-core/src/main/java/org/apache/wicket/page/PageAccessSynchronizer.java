@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
@@ -230,13 +231,19 @@ public class PageAccessSynchronizer implements Serializable
 	/**
 	 * Wraps a page manager with this synchronizer
 	 * 
-	 * @param pagemanager
+	 * @param manager
 	 * @return wrapped page manager
 	 */
-	public IPageManager adapt(IPageManager pagemanager)
+	public IPageManager adapt(final IPageManager manager)
 	{
-		return new PageManagerDecorator(pagemanager)
+		return new IPageManager()
 		{
+			@Override
+			public boolean supportsVersioning()
+			{
+				return manager.supportsVersioning();
+			}
+			
 			@Override
 			public IManageablePage getPage(int pageId)
 			{
@@ -244,7 +251,7 @@ public class PageAccessSynchronizer implements Serializable
 				try
 				{
 					lockPage(pageId);
-					page = super.getPage(pageId);
+					page = manager.getPage(pageId);
 				}
 				finally
 				{
@@ -257,13 +264,13 @@ public class PageAccessSynchronizer implements Serializable
 			}
 
 			@Override
-			public void removePage(final IManageablePage page) {
+			public void removePage(IManageablePage page)
+			{
 				if (page != null)
 				{
 					try
 					{
-						super.removePage(page);
-						untouchPage(page);
+						manager.removePage(page);
 					}
 					finally
 					{
@@ -273,23 +280,42 @@ public class PageAccessSynchronizer implements Serializable
 			}
 
 			@Override
-			public void touchPage(IManageablePage page)
+			public void addPage(IManageablePage page)
 			{
 				lockPage(page.getPageId());
-				super.touchPage(page);
+				
+				manager.addPage(page);
 			}
 
 			@Override
-			public void commitRequest()
+			public void removeAllPages()
+			{
+				manager.removeAllPages();
+			}
+			
+			@Override
+			public void detach()
 			{
 				try
 				{
-					super.commitRequest();
+					manager.detach();
 				}
 				finally
 				{
 					unlockAllPages();
 				}
+			}
+			
+			@Override
+			public IPageStore getPageStore()
+			{
+				return manager.getPageStore();
+			}
+			
+			@Override
+			public void destroy()
+			{
+				manager.destroy();
 			}
 		};
 	}

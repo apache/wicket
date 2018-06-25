@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.examples.frames;
 
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.IRequestHandler;
 
 
 /**
@@ -41,7 +41,7 @@ public class BodyFrame extends WebPage
 	{
 		// create a new page instance, passing this 'master page' as an argument
 		LeftFrame leftFrame = new LeftFrame(this);
-		getSession().getPageManager().touchPage(leftFrame);
+		getSession().getPageManager().addPage(leftFrame);
 		// get the url to that page
 		IRequestHandler leftFrameHandler = new RenderPageRequestHandler(new PageProvider(leftFrame));
 		// and create a simple component that modifies it's src attribute to

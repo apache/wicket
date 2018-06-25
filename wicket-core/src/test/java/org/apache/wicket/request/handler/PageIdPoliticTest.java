@@ -29,17 +29,16 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PageStoreManager;
-import org.apache.wicket.pageStore.DefaultPageStore;
-import org.apache.wicket.pageStore.IPageStore;
+import org.apache.wicket.page.PageManager;
+import org.apache.wicket.pageStore.IPageContext;
+import org.apache.wicket.pageStore.InMemoryPageStore;
+import org.apache.wicket.pageStore.RequestPageStore;
 import org.apache.wicket.request.Url;
-import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.apache.wicket.versioning.InMemoryPageStore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,10 +46,10 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Pedro Santos
  */
-class PageIdPoliticTest
+public class PageIdPoliticTest
 {
 	private WicketTester tester;
-	private InMemoryPageStore dataStore;
+	private InMemoryPageStore pageStore;
 	private MockApplication application;
 	private int storeCount;
 
@@ -89,12 +88,12 @@ class PageIdPoliticTest
 	void setUp() throws Exception
 	{
 		application = new MockApplication();
-		dataStore = new InMemoryPageStore()
+		pageStore = new InMemoryPageStore("test", Integer.MAX_VALUE)
 		{
 			@Override
-			public void storeData(String sessionId, int pageId, byte[] pageAsBytes)
+			public void addPage(IPageContext context, IManageablePage page)
 			{
-				super.storeData(sessionId, pageId, pageAsBytes);
+				super.addPage(context, page);
 				storeCount++;
 			}
 		};
@@ -106,12 +105,9 @@ class PageIdPoliticTest
 				return new IPageManagerProvider()
 				{
 					@Override
-					public IPageManager apply(IPageManagerContext pageManagerContext)
+					public IPageManager get()
 					{
-						IPageStore pageStore = new DefaultPageStore(new JavaSerializer(
-							application.getApplicationKey()), dataStore, 4);
-						return new PageStoreManager(application.getName(), pageStore,
-							pageManagerContext);
+						return new PageManager(new RequestPageStore(pageStore));
 					}
 				};
 			}
@@ -135,7 +131,7 @@ class PageIdPoliticTest
 		/**
 		 * Construct.
 		 */
-        public TestPage()
+		public TestPage()
 		{
 			WebComponent component;
 			component = new WebComponent("component");
@@ -157,7 +153,7 @@ class PageIdPoliticTest
 		 * @param encoding
 		 * @return ajaxUrl
 		 */
-		Url getAjaxUrl(String encoding)
+		public Url getAjaxUrl(String encoding)
 		{
 			return Url.parse(eventBehavior.getCallbackUrl().toString(), Charset.forName(encoding));
 		}
