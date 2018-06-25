@@ -35,6 +35,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  *
  * @since 6.9.0
  */
+@Deprecated
 public class DynamicJQueryResourceReference extends JQueryResourceReference
 {
 	private static final long serialVersionUID = 1L;

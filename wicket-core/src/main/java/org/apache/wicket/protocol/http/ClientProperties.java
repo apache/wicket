@@ -100,6 +100,7 @@ public class ClientProperties implements IClusterable
 	/**
 	 * @return The major version number of the browser.
 	 */
+	@Deprecated
 	public int getBrowserVersionMajor()
 	{
 		return browserVersionMajor;
@@ -108,6 +109,7 @@ public class ClientProperties implements IClusterable
 	/**
 	 * @return The minor version number of the browser.
 	 */
+	@Deprecated
 	public int getBrowserVersionMinor()
 	{
 		return browserVersionMinor;
@@ -370,6 +372,7 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @return True if a derivative of the Microsoft Internet Explorer browser platform.
 	 */
+	@Deprecated
 	public boolean isBrowserInternetExplorer()
 	{
 		return browserInternetExplorer;
@@ -380,6 +383,7 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @return True if a derivative of the KDE Konqueror browser platform.
 	 */
+	@Deprecated
 	public boolean isBrowserKonqueror()
 	{
 		return browserKonqueror;
@@ -390,6 +394,7 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @return True if a derivative of the Mozilla 1.0-1.8+ browser platform.
 	 */
+	@Deprecated
 	public boolean isBrowserMozilla()
 	{
 		return browserMozilla;
@@ -401,6 +406,7 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @return True if a derivative of the Mozilla Firefox 1.0+ browser platform.
 	 */
+	@Deprecated
 	public boolean isBrowserMozillaFirefox()
 	{
 		return browserMozillaFirefox;
@@ -411,6 +417,7 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @return True if a derivative of the Opera browser platform.
 	 */
+	@Deprecated
 	public boolean isBrowserOpera()
 	{
 		return browserOpera;
@@ -421,6 +428,7 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @return True if a derivative of the Apple Safari browser platform.
 	 */
+	@Deprecated
 	public boolean isBrowserSafari()
 	{
 		return browserSafari;
@@ -431,6 +439,7 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @return True if a derivative of the Chrome browser platform.
 	 */
+	@Deprecated
 	public boolean isBrowserChrome()
 	{
 		return browserChrome;
@@ -440,6 +449,7 @@ public class ClientProperties implements IClusterable
 	 *
 	 * @return True if a derivative of the Microsoft Edge browser platform.
 	 */
+	@Deprecated
 	public boolean isBrowserEdge()
 	{
 		return browserEdge;
@@ -484,6 +494,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserInternetExplorer
 	 *            True if a derivative of the Microsoft Internet Explorer browser platform.
 	 */
+	@Deprecated
 	public void setBrowserInternetExplorer(boolean browserInternetExplorer)
 	{
 		this.browserInternetExplorer = browserInternetExplorer;
@@ -495,6 +506,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserKonqueror
 	 *            True if a derivative of the KDE Konqueror browser platform.
 	 */
+	@Deprecated
 	public void setBrowserKonqueror(boolean browserKonqueror)
 	{
 		this.browserKonqueror = browserKonqueror;
@@ -506,6 +518,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserMozilla
 	 *            True if a derivative of the Mozilla 1.0-1.8+ browser platform.
 	 */
+	@Deprecated
 	public void setBrowserMozilla(boolean browserMozilla)
 	{
 		this.browserMozilla = browserMozilla;
@@ -518,6 +531,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserMozillaFirefox
 	 *            True if a derivative of the Mozilla Firefox 1.0+ browser platform.
 	 */
+	@Deprecated
 	public void setBrowserMozillaFirefox(boolean browserMozillaFirefox)
 	{
 		this.browserMozillaFirefox = browserMozillaFirefox;
@@ -529,6 +543,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserOpera
 	 *            True if a derivative of the Opera browser platform.
 	 */
+	@Deprecated
 	public void setBrowserOpera(boolean browserOpera)
 	{
 		this.browserOpera = browserOpera;
@@ -540,6 +555,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserSafari
 	 *            True if a derivative of the Apple Safari browser platform.
 	 */
+	@Deprecated
 	public void setBrowserSafari(boolean browserSafari)
 	{
 		this.browserSafari = browserSafari;
@@ -551,6 +567,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserChrome
 	 *            True if a derivative of the Chrome browser platform.
 	 */
+	@Deprecated
 	public void setBrowserChrome(boolean browserChrome)
 	{
 		this.browserChrome = browserChrome;
@@ -561,6 +578,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserEdge
 	 *            True if a derivative of the Microsoft Edge browser platform.
 	 */
+	@Deprecated
 	public void setBrowserEdge(boolean browserEdge)
 	{
 		this.browserEdge = browserEdge;
@@ -570,6 +588,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserVersionMajor
 	 *            The major version number of the browser.
 	 */
+	@Deprecated
 	public void setBrowserVersionMajor(int browserVersionMajor)
 	{
 		this.browserVersionMajor = browserVersionMajor;
@@ -579,6 +598,7 @@ public class ClientProperties implements IClusterable
 	 * @param browserVersionMinor
 	 *            The minor version number of the browser.
 	 */
+	@Deprecated
 	public void setBrowserVersionMinor(int browserVersionMinor)
 	{
 		this.browserVersionMinor = browserVersionMinor;

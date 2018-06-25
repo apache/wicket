@@ -23,7 +23,10 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * UserAgent
+ * 
+ * @deprecated will be remove in Wicket 9 - use {@link https://github.com/nielsbasjes/yauaa} as a possible alternative instead
  */
+@Deprecated
 enum UserAgent {
 
 	MOZILLA("Opera,AppleWebKit,Konqueror,Trident", Arrays.asList("Mozilla", "Gecko")),
