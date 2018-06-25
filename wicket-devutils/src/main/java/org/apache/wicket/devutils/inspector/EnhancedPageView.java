@@ -86,42 +86,13 @@ public final class EnhancedPageView extends GenericPanel<Page>
 	 * 
 	 * @param id
 	 *            See Component
-	 * @param page
+	 * @param model
 	 *            The page to be analyzed
 	 */
-	public EnhancedPageView(String id, Page page)
+	public EnhancedPageView(String id, IModel<Page> model)
 	{
-		this(id, getModelFor(page == null ? null : page.getPageReference()));
-	}
-
-	private static IModel<Page> getModelFor(final PageReference pageRef)
-	{
-		return new LoadableDetachableModel<Page>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected Page load()
-			{
-				if (pageRef == null)
-					return null;
-				Page page = pageRef.getPage();
-				return page;
-			}
-		};
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param id
-	 *            See Component
-	 * @param pageModel
-	 *            The page to be analyzed
-	 */
-	public EnhancedPageView(String id, IModel<Page> pageModel)
-	{
-		super(id, pageModel);
+		super(id, model);
+		
 		expandState = new ExpandState();
 		expandState.expandAll();
 		showStatefulAndParentsOnly = false;

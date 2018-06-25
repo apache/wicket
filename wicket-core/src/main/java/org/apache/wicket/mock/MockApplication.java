@@ -67,7 +67,7 @@ public class MockApplication extends WebApplication
 
 		// set page and session store providers
 		setSessionStoreProvider(MockSessionStore::new);
-		setPageManagerProvider((pageManagerContext) -> new MockPageManager());
+		setPageManagerProvider(() -> new MockPageManager());
 
 		// for test cases we usually want stable resource names
 		getResourceSettings().setCachingStrategy(NoOpResourceCachingStrategy.INSTANCE);

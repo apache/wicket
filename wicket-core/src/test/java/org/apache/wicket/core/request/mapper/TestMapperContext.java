@@ -20,19 +20,20 @@ import org.apache.wicket.MockPage;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.markup.MarkupParser;
-import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PageStoreManager;
-import org.apache.wicket.pageStore.DefaultPageStore;
-import org.apache.wicket.pageStore.IDataStore;
-import org.apache.wicket.pageStore.IPageStore;
-import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
+import org.apache.wicket.mock.MockPageStore;
+import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.page.PageManager;
+import org.apache.wicket.pageStore.DummyPageContext;
+import org.apache.wicket.pageStore.IPageContext;
+import org.apache.wicket.pageStore.InMemoryPageStore;
+import org.apache.wicket.pageStore.RequestPageStore;
+import org.apache.wicket.pageStore.InSessionPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceReference.Key;
 import org.apache.wicket.request.resource.ResourceReferenceRegistry;
 import org.apache.wicket.serialize.java.JavaSerializer;
-import org.apache.wicket.versioning.InMemoryPageStore;
 
 /**
  * Simple {@link IMapperContext} implementation for testing purposes
@@ -43,10 +44,10 @@ public class TestMapperContext implements IMapperContext
 {
 	private static final String APP_NAME = "test_app";
 	private static int count;
-	private IDataStore dataStore;
-	private IPageStore pageStore;
-	private IPageManagerContext pageManagerContext;
-	private PageStoreManager pageManager;
+
+	InSessionPageStore pageStore;
+	DummyPageContext pageContext;
+	IPageManager pageManager;
 	private String appName;
 	private boolean createMockPageIfInstanceNotFound = true;
 
@@ -56,10 +57,18 @@ public class TestMapperContext implements IMapperContext
 	public TestMapperContext()
 	{
 		appName = APP_NAME + count++;
-		dataStore = new InMemoryPageStore();
-		pageStore = new DefaultPageStore(new JavaSerializer(appName), dataStore, 4);
-		pageManagerContext = new DummyPageManagerContext();
-		pageManager = new PageStoreManager(appName, pageStore, pageManagerContext);
+		
+		pageContext = new DummyPageContext();
+		
+		InMemoryPageStore inMemoryPageStore = new InMemoryPageStore(appName, Integer.MAX_VALUE);
+		pageStore = new InSessionPageStore(inMemoryPageStore, 4, new JavaSerializer(appName));
+		pageManager = new PageManager(new RequestPageStore(pageStore)) {
+			@Override
+			protected IPageContext createPageContext()
+			{
+				return pageContext;
+			}
+		};
 	}
 
 	/**
@@ -67,17 +76,17 @@ public class TestMapperContext implements IMapperContext
 	 */
 	public void cleanSessionCache()
 	{
-		getPageManager().getContext().setRequestData(null);
+		pageContext.clearRequest();
 		MockPage other = new MockPage();
 		other.setPageId(Integer.MAX_VALUE);
-		getPageManager().touchPage(other);
-		getPageManager().commitRequest();
+		getPageManager().addPage(other);
+		pageManager.detach();
 	}
 
 	/**
 	 * @return pageManager
 	 */
-	public PageStoreManager getPageManager()
+	public IPageManager getPageManager()
 	{
 		return pageManager;
 	}
@@ -175,7 +184,7 @@ public class TestMapperContext implements IMapperContext
 
 	}
 
-	private int idCounter = 0;
+	int idCounter = 0;
 
 	@Override
 	public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,
@@ -184,7 +193,7 @@ public class TestMapperContext implements IMapperContext
 		try
 		{
 			MockPage page;
-			page = (MockPage)pageClass.getDeclaredConstructor().newInstance();
+			page = (MockPage)pageClass.newInstance();
 			page.setPageId(++idCounter);
 			page.setBookmarkable(true);
 			page.setCreatedBookmarkable(true);

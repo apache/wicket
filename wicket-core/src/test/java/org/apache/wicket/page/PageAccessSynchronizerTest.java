@@ -323,7 +323,7 @@ class PageAccessSynchronizerTest
 
 		int pageId = 1;
 		IManageablePage page = new MockPage(pageId);
-		synchronizedPageManager.touchPage(page);
+		synchronizedPageManager.addPage(page);
 		synchronizedPageManager.getPage(pageId);
 		PageLock pageLock2 = locks.get(Integer.valueOf(pageId));
 		assertNotNull(pageLock2);

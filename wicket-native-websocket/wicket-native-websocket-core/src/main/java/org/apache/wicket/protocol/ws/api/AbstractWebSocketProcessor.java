@@ -300,7 +300,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 			{
 				if (Session.exists())
 				{
-					Session.get().getPageManager().commitRequest();
+					Session.get().getPageManager().detach();
 				}
 			}
 		});

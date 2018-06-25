@@ -21,25 +21,22 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.wicket.versioning.InMemoryPageStore;
+import org.apache.wicket.MockPage;
+import org.apache.wicket.page.IManageablePage;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests for {@link AsynchronousDataStore}
+ * Tests for {@link AsynchronousPageStore}
  */
 public class AsynchronousDataStoreTest
 {
-//	private static final IDataStore WRAPPED_DATA_STORE = new DiskDataStore("asyncDataStoreApp", new StoreSettings(null).getFileStoreFolder(), Bytes.kilobytes(1));
-	private static final IDataStore WRAPPED_DATA_STORE = new InMemoryPageStore();
+	private static final IPageStore WRAPPED_PAGE_STORE = new InMemoryPageStore("test", Integer.MAX_VALUE);
 
 	/** the data store under test */
-	private static final IDataStore DATA_STORE = new AsynchronousDataStore(WRAPPED_DATA_STORE, 100);
-
-	/** the data for each page */
-	private static final byte[] DATA = new byte[] { 1, 2, 3 };
+	private static final IPageStore ASYNC_PAGE_STORE = new AsynchronousPageStore(WRAPPED_PAGE_STORE, 100);
 
 	/** the used jsessionid's */
-	private static final String[] SESSIONS = new String[] { "s1", "s2", "s3" };
+	private static final IPageContext[] CONTEXT = new IPageContext[] { createContext("s1"), createContext("s2"), createContext("s3")};
 
 	/** the ids for the stored/removed pages */
 	private static final int[] PAGE_IDS = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -57,13 +54,13 @@ public class AsynchronousDataStoreTest
 	private static final SecureRandom RND = new SecureRandom();
 
 	/**
-	 * Executes random mutator and accessor operations on {@link AsynchronousDataStore} validating
+	 * Executes random mutator and accessor operations on {@link AsynchronousPageStore} validating
 	 * that the used data structures can be used simultaneously.
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-    void randomOperations() throws Exception
+	void randomOperations() throws Exception
 	{
 		ExecutorService executorService = Executors.newFixedThreadPool(50);
 
@@ -74,7 +71,12 @@ public class AsynchronousDataStoreTest
 		}
 		LATCH.await();
 		executorService.shutdown();
-		DATA_STORE.destroy();
+		ASYNC_PAGE_STORE.destroy();
+	}
+
+	private static IPageContext createContext(String sessionId)
+	{
+		return new DummyPageContext(sessionId);
 	}
 
 	private static abstract class AbstractTask implements Runnable
@@ -94,14 +96,19 @@ public class AsynchronousDataStoreTest
 			}
 		}
 
-		String getSessionId()
+		protected IPageContext getPageContext()
 		{
-			return SESSIONS[RND.nextInt(SESSIONS.length)];
+			return CONTEXT[RND.nextInt(CONTEXT.length)];
 		}
 
-		int getPageId()
+		protected int getPageId()
 		{
 			return PAGE_IDS[RND.nextInt(PAGE_IDS.length)];
+		}
+		
+		protected IManageablePage getPage()
+		{
+			return new MockPage(getPageId());
 		}
 	}
 
@@ -110,7 +117,7 @@ public class AsynchronousDataStoreTest
 		@Override
 		public void r()
 		{
-			DATA_STORE.storeData(getSessionId(), getPageId(), DATA);
+			ASYNC_PAGE_STORE.addPage(getPageContext(), getPage());
 		}
 	}
 
@@ -119,7 +126,7 @@ public class AsynchronousDataStoreTest
 		@Override
 		public void r()
 		{
-			DATA_STORE.getData(getSessionId(), getPageId());
+			ASYNC_PAGE_STORE.getPage(getPageContext(), getPageId());
 		}
 	}
 
@@ -128,7 +135,7 @@ public class AsynchronousDataStoreTest
 		@Override
 		public void r()
 		{
-			DATA_STORE.removeData(getSessionId(), getPageId());
+			ASYNC_PAGE_STORE.removePage(getPageContext(), getPage());
 		}
 	}
 
@@ -137,7 +144,7 @@ public class AsynchronousDataStoreTest
 		@Override
 		public void r()
 		{
-			DATA_STORE.removeData(getSessionId());
+			ASYNC_PAGE_STORE.removeAllPages(getPageContext());
 		}
 	}
 }

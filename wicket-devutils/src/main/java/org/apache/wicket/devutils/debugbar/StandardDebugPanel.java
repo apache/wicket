@@ -50,7 +50,7 @@ public abstract class StandardDebugPanel extends DevUtilsPanel
 	protected void onInitialize()
 	{
 		super.onInitialize();
-		BookmarkablePageLink<Void> link = createLink("link");
+		WebMarkupContainer link = createLink("link");
 		add(link);
 		ResourceReference img = getImageResourceReference();
 		if (img == null)
@@ -64,7 +64,7 @@ public abstract class StandardDebugPanel extends DevUtilsPanel
 		link.add(new Label("data", getDataModel()));
 	}
 
-	protected BookmarkablePageLink<Void> createLink(final String id)
+	protected WebMarkupContainer createLink(final String id)
 	{
 		return new BookmarkablePageLink<>(id, getLinkPageClass(), getLinkPageParameters());
 	}
