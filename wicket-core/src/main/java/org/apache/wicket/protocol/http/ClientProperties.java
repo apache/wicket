@@ -57,16 +57,6 @@ public class ClientProperties implements IClusterable
 	private static final long serialVersionUID = 1L;
 
 	private int browserHeight = -1;
-	private boolean browserInternetExplorer;
-	private boolean browserKonqueror;
-	private boolean browserMozilla;
-	private boolean browserMozillaFirefox;
-	private boolean browserOpera;
-	private boolean browserSafari;
-	private boolean browserChrome;
-	private boolean browserEdge;
-	private int browserVersionMajor = -1;
-	private int browserVersionMinor = -1;
 	private int browserWidth = -1;
 	private boolean navigatorCookieEnabled;
 	private boolean navigatorJavaEnabled;
@@ -95,22 +85,6 @@ public class ClientProperties implements IClusterable
 	public int getBrowserHeight()
 	{
 		return browserHeight;
-	}
-
-	/**
-	 * @return The major version number of the browser.
-	 */
-	public int getBrowserVersionMajor()
-	{
-		return browserVersionMajor;
-	}
-
-	/**
-	 * @return The minor version number of the browser.
-	 */
-	public int getBrowserVersionMinor()
-	{
-		return browserVersionMinor;
 	}
 
 	/**
@@ -365,87 +339,6 @@ public class ClientProperties implements IClusterable
 	}
 
 	/**
-	 * Flag indicating that the browser is a derivative of the Microsoft Internet Explorer browser
-	 * platform.
-	 * 
-	 * @return True if a derivative of the Microsoft Internet Explorer browser platform.
-	 */
-	public boolean isBrowserInternetExplorer()
-	{
-		return browserInternetExplorer;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the KDE Konqueror browser platform.
-	 * 
-	 * @return True if a derivative of the KDE Konqueror browser platform.
-	 */
-	public boolean isBrowserKonqueror()
-	{
-		return browserKonqueror;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 * 
-	 * @return True if a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 */
-	public boolean isBrowserMozilla()
-	{
-		return browserMozilla;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Mozilla Firefox 1.0+ browser
-	 * platform.
-	 * 
-	 * @return True if a derivative of the Mozilla Firefox 1.0+ browser platform.
-	 */
-	public boolean isBrowserMozillaFirefox()
-	{
-		return browserMozillaFirefox;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Opera browser platform.
-	 * 
-	 * @return True if a derivative of the Opera browser platform.
-	 */
-	public boolean isBrowserOpera()
-	{
-		return browserOpera;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Apple Safari browser platform.
-	 * 
-	 * @return True if a derivative of the Apple Safari browser platform.
-	 */
-	public boolean isBrowserSafari()
-	{
-		return browserSafari;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Chrome browser platform.
-	 * 
-	 * @return True if a derivative of the Chrome browser platform.
-	 */
-	public boolean isBrowserChrome()
-	{
-		return browserChrome;
-	}
-	/**
-	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
-	 *
-	 * @return True if a derivative of the Microsoft Edge browser platform.
-	 */
-	public boolean isBrowserEdge()
-	{
-		return browserEdge;
-	}
-
-	/**
 	 * 
 	 * 
 	 * @return The client's navigator.cookieEnabled property.
@@ -475,113 +368,6 @@ public class ClientProperties implements IClusterable
 	public void setBrowserHeight(int browserHeight)
 	{
 		this.browserHeight = browserHeight;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Microsoft Internet Explorer browser
-	 * platform.
-	 * 
-	 * @param browserInternetExplorer
-	 *            True if a derivative of the Microsoft Internet Explorer browser platform.
-	 */
-	public void setBrowserInternetExplorer(boolean browserInternetExplorer)
-	{
-		this.browserInternetExplorer = browserInternetExplorer;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the KDE Konqueror browser platform.
-	 * 
-	 * @param browserKonqueror
-	 *            True if a derivative of the KDE Konqueror browser platform.
-	 */
-	public void setBrowserKonqueror(boolean browserKonqueror)
-	{
-		this.browserKonqueror = browserKonqueror;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 * 
-	 * @param browserMozilla
-	 *            True if a derivative of the Mozilla 1.0-1.8+ browser platform.
-	 */
-	public void setBrowserMozilla(boolean browserMozilla)
-	{
-		this.browserMozilla = browserMozilla;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Mozilla Firefox 1.0+ browser
-	 * platform.
-	 * 
-	 * @param browserMozillaFirefox
-	 *            True if a derivative of the Mozilla Firefox 1.0+ browser platform.
-	 */
-	public void setBrowserMozillaFirefox(boolean browserMozillaFirefox)
-	{
-		this.browserMozillaFirefox = browserMozillaFirefox;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Opera browser platform.
-	 * 
-	 * @param browserOpera
-	 *            True if a derivative of the Opera browser platform.
-	 */
-	public void setBrowserOpera(boolean browserOpera)
-	{
-		this.browserOpera = browserOpera;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Apple Safari browser platform.
-	 * 
-	 * @param browserSafari
-	 *            True if a derivative of the Apple Safari browser platform.
-	 */
-	public void setBrowserSafari(boolean browserSafari)
-	{
-		this.browserSafari = browserSafari;
-	}
-
-	/**
-	 * Flag indicating that the browser is a derivative of the Chrome browser platform.
-	 * 
-	 * @param browserChrome
-	 *            True if a derivative of the Chrome browser platform.
-	 */
-	public void setBrowserChrome(boolean browserChrome)
-	{
-		this.browserChrome = browserChrome;
-	}
-	/**
-	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
-	 *
-	 * @param browserEdge
-	 *            True if a derivative of the Microsoft Edge browser platform.
-	 */
-	public void setBrowserEdge(boolean browserEdge)
-	{
-		this.browserEdge = browserEdge;
-	}
-
-	/**
-	 * @param browserVersionMajor
-	 *            The major version number of the browser.
-	 */
-	public void setBrowserVersionMajor(int browserVersionMajor)
-	{
-		this.browserVersionMajor = browserVersionMajor;
-	}
-
-	/**
-	 * @param browserVersionMinor
-	 *            The minor version number of the browser.
-	 */
-	public void setBrowserVersionMinor(int browserVersionMinor)
-	{
-		this.browserVersionMinor = browserVersionMinor;
 	}
 
 	/**
