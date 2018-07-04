@@ -337,13 +337,7 @@ public class PageStoreManager extends AbstractPageManager
 				return;
 			}
 
-			// WICKET-5164 use the original sessionId
-			IPageStore store = getPageStore();
-			// store might be null if destroyed already
-			if (store != null)
-			{
-				store.unbind(sessionId);
-			}
+			clear();
 		}
 
 		@Override
@@ -351,6 +345,18 @@ public class PageStoreManager extends AbstractPageManager
 		{
 			// see https://issues.apache.org/jira/browse/WICKET-5390
 			return false;
+		}
+
+		public void clear() {
+			sessionCache.clear();
+			
+			// WICKET-5164 use the original sessionId
+			IPageStore store = getPageStore();
+			// store might be null if destroyed already
+			if (store != null)
+			{
+				store.unbind(sessionId);
+			}
 		}
 	}
 
@@ -467,11 +473,13 @@ public class PageStoreManager extends AbstractPageManager
 	public void clear()
 	{
 		RequestAdapter requestAdapter = getRequestAdapter();
+		requestAdapter.clear();
+		
 		String sessionEntryAttributeName = getAttributeName();
 		Serializable sessionEntry = requestAdapter.getSessionAttribute(sessionEntryAttributeName);
 		if (sessionEntry instanceof SessionEntry)
 		{
-			((SessionEntry)sessionEntry).valueUnbound(null);
+			((SessionEntry)sessionEntry).clear();
 		}
 	}
 
