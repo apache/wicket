@@ -203,4 +203,8 @@ public abstract class RequestAdapter
 			}
 		}
 	}
+
+	public void clear() {
+		touchedPages.clear();
+	}
 }
