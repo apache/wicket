@@ -28,6 +28,7 @@ public class SessionLocaleInterpolator implements MessageInterpolator
 		this.delegate = delegate;
 	}
 
+	@Override
 	public String interpolate(final String messageTemplate,
 		final MessageInterpolator.Context context)
 	{
@@ -42,6 +43,7 @@ public class SessionLocaleInterpolator implements MessageInterpolator
 		}
 	}
 
+	@Override
 	public String interpolate(final String message, final MessageInterpolator.Context context,
 		final Locale locale)
 	{

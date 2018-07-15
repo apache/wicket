@@ -295,6 +295,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 			requestCycle.setMetaData(SESSION_DATA, sessionData);
 	}
 
+	@Override
 	public RequestData getCurrentRequest()
 	{
 		RequestCycle requestCycle = RequestCycle.get();

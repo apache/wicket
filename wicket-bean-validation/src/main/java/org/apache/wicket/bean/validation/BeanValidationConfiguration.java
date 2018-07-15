@@ -62,6 +62,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	}
 
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Annotation> ITagModifier<T> getTagModifier(Class<T> annotationType)
 	{

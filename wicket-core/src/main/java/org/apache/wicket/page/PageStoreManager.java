@@ -56,6 +56,7 @@ public class PageStoreManager extends AbstractPageManager
 	 */
 	private static final ThreadLocal<Boolean> STORING_TOUCHED_PAGES = new ThreadLocal<Boolean>()
 	{
+		@Override
 		protected Boolean initialValue()
 		{
 			return Boolean.FALSE;

@@ -240,6 +240,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		return this;
 	}
 
+	@Override
 	public Localizer getLocalizer()
 	{
 		if (localizer == null)
@@ -304,6 +305,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		return resourcePollFrequency;
 	}
 
+	@Override
 	public IResourceStreamLocator getResourceStreamLocator()
 	{
 		if (resourceStreamLocator == null)
@@ -316,6 +318,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 		return resourceStreamLocator;
 	}
 
+	@Override
 	public IModificationWatcher getResourceWatcher(boolean start)
 	{
 		if (resourceWatcher == null && start)

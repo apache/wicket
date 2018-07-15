@@ -416,6 +416,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
@@ -436,6 +437,7 @@ public class Palette<T> extends FormComponentPanel<Collection<T>>
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				super.onComponentTag(tag);
