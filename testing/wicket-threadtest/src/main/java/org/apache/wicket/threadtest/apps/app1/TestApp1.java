@@ -75,10 +75,10 @@ public class TestApp1 extends WebApplication
 		setPageManagerProvider(new DefaultPageManagerProvider(this)
 		{
 			@Override
-			public IPageManager get(IPageManagerContext pageManagerContext)
+			public IPageManager apply(IPageManagerContext pageManagerContext)
 			{
 				IDataStore dataStore = new HttpSessionDataStore(pageManagerContext,
-					new PageNumberEvictionStrategy(100));
+					new PageNumberEvictionStrategy(500));
 				IPageStore pageStore = new DefaultPageStore(
 					new JavaSerializer(getApplicationKey()), dataStore,
 					getStoreSettings().getInmemoryCacheSize());

@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.string.interpolator.VariableInterpolator;
 
 /**
  * TODO javadoc
@@ -52,14 +53,25 @@ public abstract class AbstractGetCommand extends AbstractCommand
 			List<String> urls = getUrls();
 			for (String url : urls)
 			{
-
-				String modUrl = Strings.replaceAll(url, "${iteration}", String.valueOf(i))
-					.toString();
+				final int iteration = i;
+				String modUrl = new VariableInterpolator(url, false) {
+					@Override
+					protected String getValue(String variableName) {
+						return AbstractGetCommand.this.getValue(variableName, iteration);
+					}
+				}.toString();
 				doGet(runner.getClient(), modUrl);
 			}
 		}
 	}
 
+	protected String getValue(String name, int iteration) {
+		if ("iteration".equals(name)) {
+			return String.valueOf(iteration);
+		}
+		return null;
+	}
+	
 	/**
 	 * Execute a GET request using the provided url.
 	 * 
