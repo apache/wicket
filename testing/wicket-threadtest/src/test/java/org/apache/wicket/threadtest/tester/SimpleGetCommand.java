@@ -102,9 +102,7 @@ public class SimpleGetCommand extends AbstractGetCommand
 			{
 				log.error("ERROR! code: " + code);
 				log.error(url);
-// log.error(Streams.readString(method.getResponseBodyAsStream()));
-				// TODO rather than failing, just gather statistics
-				// throw new Exception(new String(method.getResponseBody()));
+				throw new Exception(new String(method.getResponseBody()));
 			}
 			if (getPrintResponse())
 			{
