@@ -21,25 +21,31 @@ import java.util.List;
 
 import org.apache.wicket.threadtest.tester.SimpleGetCommand;
 import org.apache.wicket.threadtest.tester.Tester;
+import org.junit.Test;
 
 /**
  * @author eelcohillenius
  */
-public class App1Test2
+public class App2Test
 {
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception
+
+	@Test
+	public void test1() throws Exception
 	{
 
-		List<String> gets = Arrays.asList("/app1/wicket/bookmarkable/org.apache.wicket.threadtest.apps.app1.Home");
+		List<String> gets = Arrays.asList("/app2/wicket/bookmarkable/org.apache.wicket.threadtest.apps.app2.Home");
 
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 5);
 
 		// getCmd.setPrintResponse(true);
-		Tester tester = new Tester(getCmd, 100, false);
+
+		// AS OF OCTOBER 9 2006, THIS TYPICALLY RESULTS IN A DEADLOCK
+		// FIXED now... keep this test
+		Tester tester = new Tester(getCmd, 50, false);
+
+		// new Tester(.., .., false) would not give a deadlock, as then
+		// all threads point to seperate sessions
+
 		tester.run();
 	}
 }

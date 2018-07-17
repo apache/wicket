@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.threadtest.tester;
 
+import static org.junit.Assert.fail;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -120,6 +122,8 @@ public final class Tester implements CommandRunnerObserver
 
 	private int port = 8090;
 
+	private boolean failed;
+
 	/**
 	 * Construct.
 	 * 
@@ -182,6 +186,8 @@ public final class Tester implements CommandRunnerObserver
 
 	public synchronized void onError(CommandRunner runner, Exception e)
 	{
+		failed = true;
+		
 		activeThreads--;
 		notifyAll();
 	}
@@ -276,6 +282,10 @@ public final class Tester implements CommandRunnerObserver
 			{
 				server.stop();
 			}
+		}
+		
+		if (failed) {
+			fail();
 		}
 	}
 
