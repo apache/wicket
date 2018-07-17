@@ -39,7 +39,7 @@ public class App1Test3
 		gets.add("/app1/wicket/bookmarkable/org.apache.wicket.threadtest.apps.app1.ResourceTestPage");
 		for (int i = 0; i < ResourceTestPage.IMAGES_PER_PAGE; i++)
 		{
-			gets.add("/app1/wicket/page?0-IResourceListener-listView-${iteration}-image");
+			gets.add("/app1/wicket/page?${iteration}--listView-${iteration}-image");
 		}
 
 		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 5);

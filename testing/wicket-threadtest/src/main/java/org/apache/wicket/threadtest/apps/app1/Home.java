@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -318,23 +319,8 @@ public class Home extends WebPage
 		{
 			super(id, LOCALES, new LocaleChoiceRenderer());
 			setDefaultModel(new PropertyModel<Locale>(Home.this, "locale"));
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
-		 */
-		@Override
-		public void onSelectionChanged(Locale newSelection)
-		{
-		}
-
-		/**
-		 * @see org.apache.wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
-		 */
-		@Override
-		protected boolean wantOnSelectionChangedNotifications()
-		{
-			return true;
+			
+			add(new FormComponentUpdatingBehavior());
 		}
 	}
 

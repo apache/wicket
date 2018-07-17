@@ -36,12 +36,21 @@ public class App1Test1
 
 		List<String> gets = Arrays.asList(
 			"/app1/wicket/bookmarkable/org.apache.wicket.threadtest.apps.app1.Home",
-			"/app1/wicket/page?0-${iteration}.ILinkListener-link");
+			"/app1/wicket/page?${id}-1.-link");
 
 		// you can turn this on if you e.g. want to attach to a profiler
 // Thread.sleep(5000);
 
-		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 10);
+		SimpleGetCommand getCmd = new SimpleGetCommand(gets, 10) {
+			@Override
+			protected String getValue(String name, int iteration) {
+				if ("id".equals(name)) {
+					// page id increases by one on each render
+					return "" + (iteration * 2);
+				}
+				return super.getValue(name, iteration);
+			}
+		};
 		// getCmd.setPrintResponse(true);
 		Tester tester = new Tester(getCmd, 100, true);
 		tester.run();
