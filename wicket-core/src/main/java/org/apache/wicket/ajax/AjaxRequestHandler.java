@@ -45,6 +45,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
+import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.AppendingStringBuffer;
@@ -426,8 +427,11 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	public String getLastFocusedElementId()
 	{
 		WebRequest request = (WebRequest)page.getRequest();
+
 		String id = request.getHeader("Wicket-FocusedElementId");
-		return Strings.isEmpty(id) ? null : id;
+		
+		// WICKET-6568 might contain non-ASCII
+		return Strings.isEmpty(id) ? null : UrlDecoder.QUERY_INSTANCE.decode(id, request.getCharset());
 	}
 
 	/**

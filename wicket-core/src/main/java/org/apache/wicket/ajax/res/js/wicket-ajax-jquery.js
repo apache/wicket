@@ -608,7 +608,8 @@
 				topic = we.Topic;
 
 			if (Wicket.Focus.lastFocusId) {
-				headers["Wicket-FocusedElementId"] = Wicket.Focus.lastFocusId;
+				// WICKET-6568 might contain non-ASCII
+				headers["Wicket-FocusedElementId"] = Wicket.Form.encode(Wicket.Focus.lastFocusId);
 			}
 
 			self._executeHandlers(attrs.bh, attrs);
