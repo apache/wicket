@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +31,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DiffUtil;
@@ -178,6 +180,25 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 		// THIS FAILS! even though the same sequence of clicks
 		// done in a browser does not cause the label to change
 		tester.assertLabel("msg", "onBeforeRender called");
+	}
+
+	/**
+	 * WICKET-6568
+	 */
+	@Test
+	public void lastFocusedEncoding()
+	{
+		FocusPage page = new FocusPage();
+		
+		tester.startPage(page);
+
+		// wicket-ajax-jquery encodes non ASCII id
+		String encoded = UrlEncoder.QUERY_INSTANCE.encode("€uro", Charset.forName("UTF-8"));
+		tester.getRequest().setHeader("Wicket-FocusedElementId", encoded);
+		
+		tester.executeAjaxEvent("link", "click");
+
+		assertEquals("€uro", page.lastFocusedElementId);
 	}
 
 	/**
