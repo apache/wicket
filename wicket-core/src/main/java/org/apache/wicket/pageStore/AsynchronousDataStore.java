@@ -208,7 +208,7 @@ public class AsynchronousDataStore implements IDataStore
 
 			if (added == false)
 			{
-				log.debug("Storing synchronously page with id '{}' in session '{}'", id, sessionId);
+				log.debug("Storing synchronously data with id '{}' in session '{}'", id, sessionId);
 				entryMap.remove(key);
 				dataStore.storeData(sessionId, id, data);
 			}
