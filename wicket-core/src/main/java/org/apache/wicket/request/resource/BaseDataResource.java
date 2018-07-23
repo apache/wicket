@@ -24,10 +24,11 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.util.time.Time;
 
 /**
- * An abstract resource that can deliver static data - passed to the constructor,
- * or dynamic - returned by {@link #getData(org.apache.wicket.request.resource.IResource.Attributes)}
+ * An abstract resource that can deliver static data - passed to the constructor, or dynamic -
+ * returned by {@link #getData(org.apache.wicket.request.resource.IResource.Attributes)}
  *
- * @param <T> The type of the data this resource can deliver
+ * @param <T>
+ *            The type of the data this resource can deliver
  */
 public abstract class BaseDataResource<T> extends AbstractResource
 {
@@ -45,8 +46,8 @@ public abstract class BaseDataResource<T> extends AbstractResource
 	private final String filename;
 
 	/**
-	 * Creates a {@link org.apache.wicket.request.resource.BaseDataResource} which will
-	 * provide its data dynamically with
+	 * Creates a {@link org.apache.wicket.request.resource.BaseDataResource} which will provide its
+	 * data dynamically with
 	 * {@link #getData(org.apache.wicket.request.resource.IResource.Attributes)}
 	 *
 	 * @param contentType
@@ -91,9 +92,9 @@ public abstract class BaseDataResource<T> extends AbstractResource
 	 * Post-configures the given response, e.g. set/override response headers.
 	 *
 	 * @param response
-	 *              The response to configure
+	 *            The response to configure
 	 * @param attributes
-	 *              The request attributes (web request, web response, parameters)
+	 *            The request attributes (web request, web response, parameters)
 	 */
 	protected void configureResponse(final ResourceResponse response, final Attributes attributes)
 	{
@@ -105,6 +106,7 @@ public abstract class BaseDataResource<T> extends AbstractResource
 		final ResourceResponse response = new ResourceResponse();
 
 		String contentType = this.contentType;
+		String filename = getFilename();
 
 		if (contentType == null)
 		{
@@ -165,16 +167,17 @@ public abstract class BaseDataResource<T> extends AbstractResource
 
 	/**
 	 * Writes the given data to the response
+	 * 
 	 * @param response
-	 *              The response to write to
+	 *            The response to write to
 	 * @param data
-	 *              The data to write
+	 *            The data to write
 	 */
 	protected abstract void writeData(Response response, T data);
 
 	/**
 	 * @param data
-	 *              The data to be written
+	 *            The data to be written
 	 * @return The length of the data to be written. Used to set "Content-Length" response header
 	 */
 	protected abstract Long getLength(T data);
@@ -190,5 +193,15 @@ public abstract class BaseDataResource<T> extends AbstractResource
 	protected T getData(final Attributes attributes)
 	{
 		return data;
+	}
+
+	/**
+	 * Returns the filename that will be set as the Content-Disposition header.
+	 *
+	 * @return the filename
+	 */
+	protected String getFilename()
+	{
+		return filename;
 	}
 }
