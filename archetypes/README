@@ -38,7 +38,7 @@ e.g.:
 >mvn archetype:create \
   -DarchetypeGroupId=org.apache.wicket\
   -DarchetypeArtifactId=wicket-archetype-quickstart \
-  -DarchetypeVersion=1.3.0-SNAPSHOT \
+  -DarchetypeVersion=9.0.0-SNAPSHOT \
   -DgroupId=com.mycompany \
   -DartifactId=myproject
   

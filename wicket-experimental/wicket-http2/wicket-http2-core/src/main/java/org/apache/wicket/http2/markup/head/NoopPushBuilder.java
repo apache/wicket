@@ -46,12 +46,13 @@ public class NoopPushBuilder implements PushBuilder
 	}
 
 	/**
-	 * Warns the dev to provide a vendor specific push builder API
-	 * 
-	 * @see {@link org.apache.wicket.http2.markup.head.PushBuilder}
+	 * Warns the dev to provide a vendor specific push builder API.
+	 * <p>
+	 * {@inheritDoc}
+	 * </p>
 	 */
 	@Override
-	public void push(HttpServletRequest httpServletRequest, String... paths)
+	public void push(HttpServletRequest httpServletRequest, PushItem... pushItems)
 	{
 		LOG.warn(
 			"This PushBuilder does nothing. Please use one of the other implementations - Jetty9 or Tomcat8.5+");

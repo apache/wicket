@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
-<head>
+<wicket:head>
     <title>Wicket Examples - custom resource loading</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
+</wicket:head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     <p>
 	    This page was loaded from the web context. It was found by the custom resource stream locator,
 	    which is set in the application object of this example.
@@ -15,5 +14,6 @@
 	    taking the path into account. This is not the preferred way of doing thing, but
 	    it is here to show you that you can do your own path interpretation.
 	</p>
+</wicket:extend>
 </body>
 </html>

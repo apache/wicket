@@ -25,6 +25,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
@@ -188,34 +192,58 @@ public class JavaSerializer implements ISerializer
 		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
 			ClassNotFoundException
 		{
-			String className = desc.getName();
-
 			try
 			{
 				return super.resolveClass(desc);
 			}
-			catch (ClassNotFoundException ex1)
+			catch (ClassNotFoundException cnfEx)
 			{
 				// ignore this exception.
-				log.debug("Class not found by the object outputstream itself, trying the IClassResolver");
+				log.debug(
+					"Class not found by the object outputstream itself, trying the IClassResolver");
+
+				Class< ? > candidate = resolveClassInWicket(desc.getName());
+				if (candidate == null)
+				{
+					throw cnfEx;
+				}
+				return candidate;
 			}
+		}
 
-
-			Class<?> candidate = null;
+		/*
+		 * resolves a class by name, first using the default Class.forName, but looking in the
+		 * Wicket ClassResolvers as well.
+		 */
+		private Class<?> resolveClassByName(String className, ClassLoader latestUserDefined)
+			throws ClassNotFoundException
+		{
 			try
 			{
-				// Can the application always be taken??
-				// Should be if serialization happened in thread with application set
-				// (WICKET-2195)
+				return Class.forName(className, false, latestUserDefined);
+			}
+			catch (ClassNotFoundException cnfEx)
+			{
+				Class<?> ret = resolveClassInWicket(className);
+				if (ret == null)
+					throw cnfEx;
+				return ret;
+			}
+		}
+
+		/*
+		 * Resolves a class from Wicket's ClassResolver
+		 */
+		private Class<?> resolveClassInWicket(String className) throws ClassNotFoundException
+		{
+			Class<?> candidate;
+			try
+			{
 				Application application = Application.get();
 				ApplicationSettings applicationSettings = application.getApplicationSettings();
 				IClassResolver classResolver = applicationSettings.getClassResolver();
 
 				candidate = classResolver.resolveClass(className);
-				if (candidate == null)
-				{
-					candidate = super.resolveClass(desc);
-				}
 			}
 			catch (WicketRuntimeException ex)
 			{
@@ -223,10 +251,94 @@ public class JavaSerializer implements ISerializer
 				{
 					throw (ClassNotFoundException)ex.getCause();
 				}
+				else
+				{
+					ClassNotFoundException wrapperCnf = new ClassNotFoundException();
+					wrapperCnf.initCause(ex);
+					throw wrapperCnf;
+				}
 			}
 			return candidate;
 		}
+
+		/*
+		 * This method is an a copy of the super-method, with Class.forName replaced with a call to
+		 * resolveClassByName.
+		 */
+		@Override
+		protected Class<?> resolveProxyClass(String[] interfaces)
+			throws ClassNotFoundException, IOException
+		{
+			try
+			{
+				return super.resolveProxyClass(interfaces);
+			}
+			catch (ClassNotFoundException cnfEx)
+			{
+				// ignore this exception.
+				log.debug(
+					"Proxy Class not found by the object outputstream itself, trying the IClassResolver");
+
+				ClassLoader latestLoader = latestUserDefinedLoader();
+				ClassLoader nonPublicLoader = null;
+				boolean hasNonPublicInterface = false;
+
+				// define proxy in class loader of non-public interface(s), if any
+				Class<?>[] classObjs = new Class<?>[interfaces.length];
+				for (int i = 0; i < interfaces.length; i++)
+				{
+					Class<?> cl = resolveClassByName(interfaces[i], latestLoader);
+					if ((cl.getModifiers() & Modifier.PUBLIC) == 0)
+					{
+						if (hasNonPublicInterface)
+						{
+							if (nonPublicLoader != cl.getClassLoader())
+							{
+								throw new IllegalAccessError(
+									"conflicting non-public interface class loaders");
+							}
+						}
+						else
+						{
+							nonPublicLoader = cl.getClassLoader();
+							hasNonPublicInterface = true;
+						}
+					}
+					classObjs[i] = cl;
+				}
+				try
+				{
+					return Proxy.getProxyClass(
+						hasNonPublicInterface ? nonPublicLoader : latestLoader, classObjs);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new ClassNotFoundException(null, e);
+				}
+			}
+		}
+
+		/*
+		 * Method in the superclass is private, call it via reflection.
+		 */
+		private static ClassLoader latestUserDefinedLoader()
+		{
+			try
+			{
+				Method originalMethod =
+					ObjectInputStream.class.getDeclaredMethod("latestUserDefinedLoader");
+				originalMethod.setAccessible(true);
+				return (ClassLoader) originalMethod.invoke(null);
+			}
+			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException e)
+			{
+				// should not happen
+				throw new WicketRuntimeException(e);
+			}
+		}
 	}
+
 	/**
 	 * Write objects to the wrapped output stream and log a meaningful message for serialization
 	 * problems.

@@ -16,8 +16,6 @@
  */
 package org.apache.wicket.markup.html.border;
 
-import java.util.Objects;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.DequeueContext;
 import org.apache.wicket.DequeueTagAction;
@@ -36,7 +34,6 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.BorderMarkupSourcingStrategy;
 import org.apache.wicket.markup.html.panel.IMarkupSourcingStrategy;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
-import org.apache.wicket.markup.parser.filter.WicketTagIdentifier;
 import org.apache.wicket.markup.resolver.IComponentResolver;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.lang.Args;
@@ -173,6 +170,11 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 	}
 	
 	/**
+	 * Returns the border body container. 
+	 * 
+	 * NOTE: this component is NOT meant to be directly handled by users, meaning that you 
+	 * can not explicitly add it to an arbitrary container or remove it from its original parent container.
+	 * 
 	 * @return The border body container
 	 */
 	public final BorderBodyContainer getBodyContainer()
@@ -665,16 +667,9 @@ public abstract class Border extends WebMarkupContainer implements IComponentRes
 
 	private boolean canDequeueBody(ComponentTag tag)
 	{
-		String tagCacheKey = (String)tag.getUserData(
-			WicketTagIdentifier.MARKUP_CACHE_KEY);
-		String borderCacheKey = getAssociatedMarkup().getMarkupResourceStream().getCacheKey();
-		
 		boolean isBodyTag = (tag instanceof WicketTag) && ((WicketTag)tag).isBodyTag();
 		
-		//the body tag might belong to an outer body component
-		boolean isBorderBodyTag = Objects.equals(tagCacheKey, borderCacheKey);
-		
-		return isBodyTag && isBorderBodyTag;
+		return isBodyTag;
 	}
 
 	@Override

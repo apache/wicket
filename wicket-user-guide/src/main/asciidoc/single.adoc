@@ -8,7 +8,7 @@ The Apache Software Foundation
 
 //custom variables used inside the guide
 :wicket_examples_url: http://examples8x.wicket.apache.org
-:wicket_tutorial_examples_url: http://examples-wickettutorial.rhcloud.com/
+:wicket_tutorial_examples_url: https://wicket-guide.herokuapp.com/
 
 == Introduction
 include::introduction.adoc[]
@@ -153,13 +153,17 @@ include::componentLifecycle/componentLifecycle_3.adoc[leveloffset=+1]
 
 include::componentLifecycle/componentLifecycle_4.adoc[leveloffset=+1]
 
-=== Removing stage
+=== Removed stage
 
 include::componentLifecycle/componentLifecycle_5.adoc[leveloffset=+1]
 
-=== Summary
+=== Detached stage
 
 include::componentLifecycle/componentLifecycle_6.adoc[leveloffset=+1]
+
+=== Summary
+
+include::componentLifecycle/componentLifecycle_7.adoc[leveloffset=+1]
 
 == Page versioning and caching
 
@@ -573,13 +577,17 @@ include::ajax/ajax_6.adoc[leveloffset=+1]
 
 include::ajax/ajax_7.adoc[leveloffset=+1]
 
-=== Lambda support
+=== Lambda support for components
 
 include::ajax/ajax_8.adoc[leveloffset=+1]
 
-=== Summary
+=== Lambda support for behaviors
 
 include::ajax/ajax_9.adoc[leveloffset=+1]
+
+=== Summary
+
+include::ajax/ajax_10.adoc[leveloffset=+1]
 
 == Integration with enterprise containers
 
@@ -621,13 +629,9 @@ include::nativewebsockets/nativewebsockets_3.adoc[leveloffset=+1]
 
 include::nativewebsockets/nativewebsockets_4.adoc[leveloffset=+1]
 
-=== Differences with Wicket-Atmosphere module.
-
-include::nativewebsockets/nativewebsockets_5.adoc[leveloffset=+1]
-
 === FAQ
 
-include::nativewebsockets/nativewebsockets_6.adoc[leveloffset=+1]
+include::nativewebsockets/nativewebsockets_5.adoc[leveloffset=+1]
 
 == Security with Wicket
 
@@ -859,7 +863,7 @@ include::wicketstuff/wicketstuff_5.adoc[leveloffset=+1]
 
 include::wicketstuff/wicketstuff_6.adoc[leveloffset=+1]
 
-=== Module stateless
+=== Module wicketstuff-lambda-components
 
 include::wicketstuff/wicketstuff_7.adoc[leveloffset=+1]
 

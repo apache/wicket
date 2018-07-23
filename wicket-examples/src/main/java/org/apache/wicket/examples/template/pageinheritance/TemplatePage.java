@@ -46,16 +46,21 @@ public abstract class TemplatePage extends WicketExamplePage
 	{
 		add(new Label("title", new PropertyModel<>(this, "pageTitle")));
 		add(currentBanner = new Banner1("ad"));
-		add(Link.onClick("changeAdLink", (link) -> {
-			if (currentBanner.getClass() == Banner1.class)
+		add(new Link<Void>("changeAdLink")
+		{
+			@Override
+			public void onClick()
 			{
-				TemplatePage.this.replace(currentBanner = new Banner2("ad"));
+				if (currentBanner.getClass() == Banner1.class)
+				{
+					TemplatePage.this.replace(currentBanner = new Banner2("ad"));
+				}
+				else
+				{
+					TemplatePage.this.replace(currentBanner = new Banner1("ad"));
+				}
 			}
-			else
-			{
-				TemplatePage.this.replace(currentBanner = new Banner1("ad"));
-			}
-		}));
+		});
 		add(new BookmarkablePageLink<>("page1Link", Page1.class));
 		add(new BookmarkablePageLink<>("page2Link", Page2.class));
 	}

@@ -1,7 +1,7 @@
 
 
 
-Wicket supports file uploading with the FileUploadField component which must be used with the <input> tag whose type attribute must be set to "file" In order to send a file on form submission we must enable multipart mode calling MultiPart(true)on our form.
+Wicket supports file uploading with the FileUploadField component which must be used with the <input> tag whose type attribute must be set to "file" In order to send a file on form submission we must enable multipart mode calling setMultiPart(true) on our form.
 
 In the next example (project UploadSingleFile) we will see a form which allows users to upload a file into the temporary directory of the server (path /tmp on Unix/Linux systems):
 
@@ -28,37 +28,40 @@ In the next example (project UploadSingleFile) we will see a form which allows u
 
 [source,java]
 ----
-public class HomePage extends WebPage {
-	private FileUploadField fileUploadField;
-	
-	public HomePage(final PageParameters parameters) {
-	   	fileUploadField = new FileUploadField("fileUploadField");
-	    
-		Form form = new Form("form"){
-			@Override
-			protected void onSubmit() {
-				super.onSubmit();
-			     
-				FileUpload fileUpload = fileUploadField.getFileUpload();
-			    
-				try {
-					File file = new File(System.getProperty("java.io.tmpdir") + "/" +
-					fileUpload.getClientFileName());
-				    	
-					fileUpload.writeTo(file);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		};	
-	
-		form.setMultiPart(true);
-		//set a limit for uploaded file's size
-		form.setMaxSize(Bytes.kilobytes(100));
-		form.add(fileUploadField);
-		add(new FeedbackPanel("feedbackPanel"));
-		add(form);
-	}
+public class HomePage extends BootstrapBasePage {
+    private FileUploadField fileUploadField;
+
+    public HomePage(final PageParameters parameters) {
+        
+        fileUploadField = new FileUploadField("fileUploadField");
+        
+        Form<Void> form = new Form<Void>("form"){
+            @Override
+            protected void onSubmit() {
+              super.onSubmit();
+                 
+              FileUpload fileUpload = fileUploadField.getFileUpload();
+                
+                try {
+                    File file = new File(System.getProperty("java.io.tmpdir") + "/" +
+                            fileUpload.getClientFileName());
+                    
+                    fileUpload.writeTo(file);
+                    info("Upload completed!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    error("Upload failed!");
+             }
+            }
+        };  
+    
+        form.setMultiPart(true);
+        //set a limit for uploaded file's size
+        form.setMaxSize(Bytes.kilobytes(100));
+        form.add(fileUploadField);
+        add(new FeedbackPanel("feedbackPanel"));
+        add(form);
+    }
 }
 ----
 

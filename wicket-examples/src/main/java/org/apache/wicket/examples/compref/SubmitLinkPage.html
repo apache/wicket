@@ -2,25 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - component reference</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
 
 	<h1>wicket.markup.html.form.SubmitLink</h1>
 	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
 
 	<p>
 	A SubmitLink is a special link that acts like a submit button.
-	It can be inside the form component or inside the form component.
+	It can be inside the form component or outside the form component.
 	</p>
 	<p>
-	 <form wicket:id="form">
+	 <form wicket:id="form" onsubmit="return confirm('Do you really want to submit?');">
 	  <a wicket:id="internal">Internal SubmitLink</a>
 	 </form>
-	  <a wicket:id="external">External SubmitLink</a>
+	  <a wicket:id="external">External SubmitLink with confirmation</a>
 	 <span wicket:id="feedback">feedbackmessages will be put here</span>
 	</p>
     <span wicket:id="explainPanel">panel contents come here</span>
+</wicket:extend>
 </body>
 </html>

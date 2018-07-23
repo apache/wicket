@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-velocity</artifactId>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Wicket Velocity</name>
 	<description>
 		Provides a specialized panel and some related utilities that enables

@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.head;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.UrlUtils;
@@ -30,8 +31,31 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class CssUrlReferenceHeaderItem extends CssHeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	private final String url;
 	private final String media;
+	private final String rel;
+
+	/**
+	 * Creates a new {@code CSSUrlReferenceHeaderItem}.
+	 * 
+	 * @param url
+	 *            context-relative url of the CSS resource
+	 * @param media
+	 *            the media type for this CSS ("print", "screen", etc.)
+	 * @param condition
+	 *            the condition to use for Internet Explorer conditional comments. E.g. "IE 7".
+	 * @param rel
+	 *            the rel attribute content
+	 */
+	public CssUrlReferenceHeaderItem(String url, String media, String condition, String rel)
+	{
+		super(condition);
+		this.url = url;
+		this.media = media;
+		this.rel = rel;
+	}
 
 	/**
 	 * Creates a new {@code CSSUrlReferenceHeaderItem}.
@@ -48,6 +72,7 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 		super(condition);
 		this.url = url;
 		this.media = media;
+		this.rel = null;
 	}
 
 	/**
@@ -66,19 +91,27 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 		return media;
 	}
 
+	/**
+	 * @return the rel attribute content
+	 */
+	public String getRel()
+	{
+		return rel;
+	}
+
 	@Override
 	public void render(Response response)
 	{
 		internalRenderCSSReference(response,
 			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()), getMedia(),
-			getCondition());
+			getCondition(), getRel());
 	}
 
 	@Override
 	public Iterable<?> getRenderTokens()
 	{
-		return Arrays.asList("css-" +
-			UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()) + "-" + media);
+		return Arrays.asList(
+			"css-" + UrlUtils.rewriteToContextRelative(getUrl(), RequestCycle.get()) + "-" + media);
 	}
 
 	@Override
@@ -90,14 +123,20 @@ public class CssUrlReferenceHeaderItem extends CssHeaderItem
 	@Override
 	public int hashCode()
 	{
-		return getUrl().hashCode();
+		return Objects.hash(super.hashCode(), url, media, rel);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		if (obj instanceof CssUrlReferenceHeaderItem)
-			return ((CssUrlReferenceHeaderItem)obj).getUrl().equals(getUrl());
-		return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		if (!super.equals(o))
+			return false;
+		CssUrlReferenceHeaderItem that = (CssUrlReferenceHeaderItem)o;
+		return Objects.equals(url, that.url) && Objects.equals(media, that.media) &&
+			Objects.equals(rel, that.rel);
 	}
 }

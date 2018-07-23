@@ -22,7 +22,9 @@ This table has a toolbar filter. We can specify a valid range for contact's born
 	    	<span style="float: right;">from: <input wicket:id="dateFrom"/></span> <br/>
 	    	<span style="float: right;">to: <input wicket:id="dateTo"/></span>
     	</fieldset>
-    	<table class="dataview" wicket:id="tableWithFilterForm">[table]</table>
+    	<div style="overflow-x:auto;">
+    	   <table class="dataview" wicket:id="tableWithFilterForm">[table]</table>
+    	</div>
     </form>
     
 </wicket:extend>

@@ -42,6 +42,7 @@ import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.proxy.objenesis.ObjenesisProxyFactory;
 import org.apache.wicket.util.io.IClusterable;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A factory class that creates lazy init proxies given a type and a {@link IProxyTargetLocator}
@@ -262,10 +263,24 @@ public class LazyInitProxyFactory
 			Class<?> clazz = WicketObjects.resolveClass(type);
 			if (clazz == null)
 			{
-				ClassNotFoundException cause = new ClassNotFoundException(
-					"Could not resolve type [" + type +
-						"] with the currently configured org.apache.wicket.application.IClassResolver");
-				throw new WicketRuntimeException(cause);
+				try
+				{
+					clazz = Class.forName(type, false, Thread.currentThread().getContextClassLoader());
+				}
+				catch (ClassNotFoundException ignored1)
+				{
+					try
+					{
+						clazz = Class.forName(type, false, LazyInitProxyFactory.class.getClassLoader());
+					}
+					catch (ClassNotFoundException ignored2)
+					{
+						ClassNotFoundException cause = new ClassNotFoundException(
+								"Could not resolve type [" + type +
+										"] with the currently configured org.apache.wicket.application.IClassResolver");
+						throw new WicketRuntimeException(cause);
+					}
+				}
 			}
 			return LazyInitProxyFactory.createProxy(clazz, locator);
 		}
@@ -610,7 +625,11 @@ public class LazyInitProxyFactory
 		public String getClassName(final String prefix, final String source, final Object key,
 				final Predicate names)
 		{
-			return super.getClassName("WICKET_" + prefix, source, key, names);
+			int lastIdxOfDot = prefix.lastIndexOf('.');
+			String packageName = prefix.substring(0, lastIdxOfDot);
+			String className = prefix.substring(lastIdxOfDot + 1);
+			String newPrefix = packageName + ".Wicket_Proxy_" + className;
+			return super.getClassName(newPrefix, source, key, names);
 		}
 	}
 

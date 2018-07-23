@@ -76,7 +76,7 @@ public final class ConvertersTest
 
 		// \u00A0 = nbsp
 		// \u00A4 = currency symbol (unspecified currency)
-		String string = "1\u00A0234,00 \u00A4";
+		String string = "1\u00A0234,00\u00A0\u00A4";
 
 		assertEquals(string, fc.convertToString(Float.valueOf(1234f), Locale.FRENCH));
 		assertEquals(Float.valueOf(1234f), fc.convertToObject(string, Locale.FRENCH));
@@ -377,7 +377,7 @@ public final class ConvertersTest
 		cal.clear();
 		cal.set(2011, Calendar.MAY, 1);
 
-		assertEquals("1-5-11", converter.convertToString(cal, DUTCH_LOCALE));
+		assertEquals("01-05-11", converter.convertToString(cal, DUTCH_LOCALE));
 		assertEquals(cal, converter.convertToObject("1-5-11", DUTCH_LOCALE));
 
 		cal = Calendar.getInstance(Locale.US);

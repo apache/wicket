@@ -73,19 +73,19 @@ public abstract class AjaxFallbackButton extends Button
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onSubmit(Optional.ofNullable(target));
+				AjaxFallbackButton.this.onSubmit(Optional.of(target));
 			}
 
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onAfterSubmit(target);
+				AjaxFallbackButton.this.onAfterSubmit(Optional.of(target));
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxFallbackButton.this.onError(target);
+				AjaxFallbackButton.this.onError(Optional.of(target));
 			}
 
 			@Override
@@ -117,9 +117,8 @@ public abstract class AjaxFallbackButton extends Button
 	 * generated via a normal submission, the target argument will be null.
 	 * 
 	 * @param target
-	 * @param form
 	 */
-	protected void onError(AjaxRequestTarget target)
+	protected void onError(Optional<AjaxRequestTarget> target)
 	{
 	}
 
@@ -128,13 +127,10 @@ public abstract class AjaxFallbackButton extends Button
 	{
 		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onError(null);
+			onError(Optional.empty());
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
-	 */
 	@Override
 	public final void onSubmit()
 	{
@@ -144,22 +140,15 @@ public abstract class AjaxFallbackButton extends Button
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onAfterSubmit()
-	 */
 	@Override
 	public final void onAfterSubmit()
 	{
 		if (getRequestCycle().find(AjaxRequestTarget.class).isPresent() == false)
 		{
-			onAfterSubmit(null);
+			onAfterSubmit(Optional.empty());
 		}
 	}
 
-	/**
-	 * 
-	 * @see org.apache.wicket.markup.html.form.Button#getForm()
-	 */
 	@Override
 	public Form<?> getForm()
 	{
@@ -168,12 +157,12 @@ public abstract class AjaxFallbackButton extends Button
 
 	/**
 	 * Callback for the onClick event. If ajax failed and this event was generated via a normal
-	 * submission, the target argument will be null. This method will be called <em>before</em>
-	 * {@link Form#onSubmit()}.
+	 * submission, the target argument will be {@link Optional#empty()}. This method will be called
+	 * <em>before</em> {@link Form#onSubmit()}.
 	 * 
 	 * @param target
-	 *            ajax target if this linked was invoked using ajax, null otherwise
-	 * @param form
+	 *            ajax target if this linked was invoked using ajax, {@link Optional#empty()}
+	 *            otherwise
 	 */
 	protected void onSubmit(final Optional<AjaxRequestTarget> target)
 	{
@@ -186,9 +175,8 @@ public abstract class AjaxFallbackButton extends Button
 	 * 
 	 * @param target
 	 *            ajax target if this linked was invoked using ajax, null otherwise
-	 * @param form
 	 */
-	protected void onAfterSubmit(final AjaxRequestTarget target)
+	protected void onAfterSubmit(final Optional<AjaxRequestTarget> target)
 	{
 	}
 

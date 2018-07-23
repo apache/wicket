@@ -10,7 +10,6 @@ Wicket generates markup ids using an instance of interface _org.apache.wicket.IM
 public void init()
 {
 	super.init();
-	//wrap disabled links with <b> tag
 	getMarkupSettings().setMarkupIdGenerator(myGenerator);		
 }
 ----

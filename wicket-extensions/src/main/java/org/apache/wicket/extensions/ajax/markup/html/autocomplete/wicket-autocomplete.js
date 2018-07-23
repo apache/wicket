@@ -35,7 +35,7 @@
 		enterHidesWithNoSelection : false
 	};
 
-	Wicket.AutoComplete=function(elementId, ajaxAttributes, cfg, indicatorId){
+	Wicket.AutoComplete=function(ajaxAttributes, cfg){
 		var KEY_TAB=9;
 		var KEY_ENTER=13;
 		var KEY_ESC=27;
@@ -85,15 +85,15 @@
 				choiceDiv.parentNode.parentNode.removeChild(choiceDiv.parentNode);
 			}
 
-			var obj = Wicket.$(elementId);
+			var obj = Wicket.$(ajaxAttributes.c);
 			initialElement = obj;
 
 			Wicket.Event.add(obj, 'blur', function (jqEvent) {
-				var containerId=getMenuId()+"-container";
-				
+				var menuId=getMenuId();
+
 				//workaround for IE. Clicks on scrollbar trigger
 				//'blur' event on input field. (See https://issues.apache.org/jira/browse/WICKET-5882)
-				if (containerId !== document.activeElement.id) {
+				if (menuId !== document.activeElement.id && (menuId + "-container") !== document.activeElement.id) {
 					window.setTimeout(hideAutoComplete, 500);
 				} else {
 					jQuery(this).trigger("focus");
@@ -120,7 +120,7 @@
 							setSelected(selected-1);
 						}
 
-						var searchTerm = Wicket.$(elementId).value;
+						var searchTerm = Wicket.$(ajaxAttributes.c).value;
 						if(selected === -1 && searchTerm) {
 							// select the last element
 							setSelected(elementCount-1);
@@ -292,7 +292,7 @@
 		}
 
 		function getMenuId() {
-			return elementId+"-autocomplete";
+			return ajaxAttributes.c+"-autocomplete";
 		}
 
 		function getAutocompleteMenu() {
@@ -345,7 +345,7 @@
 		}
 
 		function actualUpdateChoices() {
-			prepareAndExecuteAjaxUpdate(doUpdateChoices, Wicket.$(elementId).value);
+			prepareAndExecuteAjaxUpdate(doUpdateChoices, Wicket.$(ajaxAttributes.c).value);
 		}
 		
 		function prepareAndExecuteAjaxUpdate(successHandler, currentInput){
@@ -357,9 +357,14 @@
 
 			attrs.pre = attrs.pre || [];
 			attrs.pre.push(function (attributes) {
+				var input = Wicket.$(ajaxAttributes.c);
+				if (!input) {
+					// WICKET-6366 input might no longer be on page
+					return false;
+				}
+				
 				var activeIsInitial = (document.activeElement === initialElement);
-				var elementVal = Wicket.$(elementId).value;
-				var hasMinimumLength = elementVal.length >= minInputLength;
+				var hasMinimumLength = input.value.length >= minInputLength;
 			
 				var result = hasMinimumLength && activeIsInitial;
 					
@@ -380,17 +385,17 @@
 		}
 
 		function showIndicator() {
-			Wicket.DOM.show(indicatorId);
+			Wicket.DOM.show(ajaxAttributes.i);
 		}
 
 		function hideIndicator() {
-			Wicket.DOM.hide(indicatorId);
+			Wicket.DOM.hide(ajaxAttributes.i);
 		}
 
 		function showAutoComplete() {
-			var input = Wicket.$(elementId);
+			var input = Wicket.$(ajaxAttributes.c);
 			var container = getAutocompleteContainer();
-			var index=getOffsetParentZIndex(elementId);
+			var index=getOffsetParentZIndex(ajaxAttributes.c);
 			container.show();
 			if (!isNaN(Number(index))) {
 				container.style.zIndex=(Number(index)+1);
@@ -444,7 +449,7 @@
 			}
 			
 			if (triggerChangeOnHide) {
-				var input = Wicket.$(elementId);
+				var input = Wicket.$(ajaxAttributes.c);
 				jQuery(input).triggerHandler('change');
 				triggerChangeOnHide = false;
 			}
@@ -582,7 +587,7 @@
 			getAutocompleteMenu().showingAutocomplete = false;
 
 			// check if the input hasn't been cleared in the meanwhile or has been replaced by ajax
-			var input=Wicket.$(elementId);
+			var input=Wicket.$(ajaxAttributes.c);
 			if ((input !== initialElement) || (document.activeElement !== input) || !cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
 				hideAutoComplete();
 				hideIndicator();
@@ -610,7 +615,7 @@
 					var value = getSelectedValue();
 					value = handleSelection(value);
 					
-					var input = Wicket.$(elementId);
+					var input = Wicket.$(ajaxAttributes.c);
 					if (value) {
 						input.value = value;
 						triggerChangeOnHide = true;
@@ -681,9 +686,13 @@
 
 		function scheduleEmptyCheck() {
 			window.setTimeout(function() {
-				var input=Wicket.$(elementId);
-				if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
-					hideAutoComplete();
+				var input=Wicket.$(ajaxAttributes.c);
+				
+				// WICKET-6366 input might no longer be on page
+				if (input) {
+					if (!cfg.showListOnEmptyInput && (input.value === null || input.value === "")) {
+						hideAutoComplete();
+					}
 				}
 			}, 100);
 		}
@@ -773,7 +782,7 @@
 				sizeAffected = true;
 			}
 			if (sizeAffected) {
-				calculateAndSetPopupBounds(Wicket.$(elementId), menu.parentNode);
+				calculateAndSetPopupBounds(Wicket.$(ajaxAttributes.c), menu.parentNode);
 			} // update stuff related to bounds if needed
 		}
 

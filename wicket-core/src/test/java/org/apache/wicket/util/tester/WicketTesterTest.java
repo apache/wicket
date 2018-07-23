@@ -1327,4 +1327,16 @@ public class WicketTesterTest extends WicketTestCase
 		String secondId = tester.getSession().getId();
 		assertNotEquals(firstId, secondId);
 	}
+
+	@Test
+	public void assertComponentInEnclosureInAjaxResponse()
+	{
+		MockPageWithLabelInEnclosure page = new MockPageWithLabelInEnclosure();
+		AjaxLink<Void> testLink = page.getSelfRefreshingAjaxLink();
+
+		tester.startPage(page);
+		tester.clickLink(testLink);
+		tester.assertComponentOnAjaxResponse(testLink);
+
+	}
 }

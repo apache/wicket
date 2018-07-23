@@ -18,10 +18,8 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.Locale;
 
-import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.convert.IConverter;
 
 /**
@@ -41,10 +39,6 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  * </p>
  * <p>
- * You can can extend this class and override method wantOnSelectionChangedNotifications() to force
- * server roundtrips on each selection change.
- * </p>
- * <p>
  * A CheckBox always has a valid therefore values from methods
  * {@link FormComponent#setRequired(boolean)} and {@link FormComponent#isRequired()} are not taken
  * into account.
@@ -52,7 +46,7 @@ import org.apache.wicket.util.convert.IConverter;
  * 
  * @author Jonathan Locke
  */
-public class CheckBox extends FormComponent<Boolean> implements IRequestListener
+public class CheckBox extends FormComponent<Boolean>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -73,60 +67,6 @@ public class CheckBox extends FormComponent<Boolean> implements IRequestListener
 	{
 		super(id, model);
 		setType(Boolean.class);
-	}
-
-	/**
-	 * @see org.apache.wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
-	 */
-	@Override
-	public void onRequest()
-	{
-		convertInput();
-		updateModel();
-		onSelectionChanged(getModelObject());
-	}
-
-	/**
-	 * Template method that can be overridden by clients that implement IOnChangeListener to be
-	 * notified by onChange events of a select element. This method does nothing by default.
-	 * <p>
-	 * Called when a option is selected of a dropdown list that wants to be notified of this event.
-	 * This method is to be implemented by clients that want to be notified of selection events.
-	 * 
-	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is the same as you would
-	 *            get by calling getModelObject() if the new selection were current
-	 * @see #wantOnSelectionChangedNotifications()
-	 */
-	protected void onSelectionChanged(Boolean newSelection)
-	{
-	}
-
-	/**
-	 * Whether this component's onSelectionChanged event handler should called using javascript if
-	 * the selection changes. If true, a roundtrip will be generated with each selection change,
-	 * resulting in the model being updated (of just this component) and onSelectionChanged being
-	 * called. This method returns false by default.
-	 * 
-	 * @return True if this component's onSelectionChanged event handler should called using
-	 *         javascript if the selection changes
-	 */
-	protected boolean wantOnSelectionChangedNotifications()
-	{
-		return false;
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
-	 */
-	@Override
-	protected boolean getStatelessHint()
-	{
-		if (wantOnSelectionChangedNotifications())
-		{
-			return false;
-		}
-		return super.getStatelessHint();
 	}
 
 	/**
@@ -159,28 +99,6 @@ public class CheckBox extends FormComponent<Boolean> implements IRequestListener
 		// remove value attribute, because it overrides the browser's submitted value, eg a [input
 		// type="checkbox" value=""] will always submit as false
 		tag.remove("value");
-
-		// Should a roundtrip be made (have onSelectionChanged called) when the
-		// checkbox is clicked?
-		if (wantOnSelectionChangedNotifications())
-		{
-			CharSequence url = urlForListener(new PageParameters());
-
-			Form<?> form = findParent(Form.class);
-			if (form != null)
-			{
-				tag.put("onclick", form.getJsForInterfaceUrl(url));
-			}
-			else
-			{
-				// NOTE: do not encode the url as that would give invalid
-				// JavaScript
-				tag.put("onclick", "window.location.href='" + url +
-					(url.toString().indexOf('?') > -1 ? "&" : "?") + getInputName() +
-					"=' + this.checked;");
-			}
-
-		}
 
 		super.onComponentTag(tag);
 	}

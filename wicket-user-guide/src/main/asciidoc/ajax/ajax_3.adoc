@@ -73,7 +73,7 @@ This behavior allows to send a form via AJAX when the component it is attached t
 
 [source,java]
 ----
-Form form = new Form("form");		
+Form<Void> form = new Form<>("form");		
 Button submitButton = new Button("submitButton");
 //submit form when button is clicked		
 submitButton.add(new AjaxFormSubmitBehavior(form, "click"){});
@@ -81,7 +81,7 @@ add(form);
 add(submitButton);
 ----
 
-NOTE: _AjaxFormSubmitBehavior_ does not prevent JavaScript default event handling. For _<input type= @[submit] you'll have to call _AjaxRequestAttributes1.setPreventDefault(true)_ to prevent the form from being submitted twice.
+NOTE: _AjaxFormSubmitBehavior_ does not prevent JavaScript default event handling. For _<input type=submit_ you'll have to call _AjaxRequestAttributes.setPreventDefault(true)_ to prevent the form from being submitted twice.
 
 === AjaxFormComponentUpdatingBehavior
 
@@ -91,7 +91,7 @@ The behavior doesn't work with radio buttons and checkboxes. For these kinds of 
 
 [source,java]
 ----
-Form form = new Form("form");		
+Form<Void> form = new Form<>("form");		
 TextField textField = new TextField("textField", Model.of(""));
 //update the model of the text field each time event "change" occurs
 textField.add(new AjaxFormComponentUpdatingBehavior("change"){
@@ -120,5 +120,5 @@ dynamicLabel.add(new AbstractAjaxTimerBehavior(Duration.seconds(3)) {
 add(dynamicLabel);
 ----
 
-NOTE: As side effect AJAX components and behaviors make their hosting page stateful. As a consequence they are unfit for those pages that must stay stateless. Project WicketStuff provides a module with a stateless version of the most common AJAX components and behaviors. You can find more informations on this module in Appendix B. 
+NOTE: By default AJAX components and behaviors are _stateful_, but as we will see very soon they can be easily turned to statelss if we need to use them in stateless pages.
 

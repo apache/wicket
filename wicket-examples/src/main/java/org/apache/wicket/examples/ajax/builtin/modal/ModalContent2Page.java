@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.WebPage;
  */
 public class ModalContent2Page extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @param window

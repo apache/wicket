@@ -51,27 +51,18 @@ public class BookmarkablePageRequestHandler
 		this.pageProvider = pageProvider;
 	}
 
-	/**
-	 * @see IPageClassRequestHandler#getPageClass()
-	 */
 	@Override
 	public Class<? extends IRequestablePage> getPageClass()
 	{
 		return pageProvider.getPageClass();
 	}
 
-	/**
-	 * @see IPageClassRequestHandler#getPageParameters()
-	 */
 	@Override
 	public PageParameters getPageParameters()
 	{
 		return pageProvider.getPageParameters();
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#respond(org.apache.wicket.request.IRequestCycle)
-	 */
 	@Override
 	public void respond(IRequestCycle requestCycle)
 	{
@@ -79,9 +70,6 @@ public class BookmarkablePageRequestHandler
 		// However URL will never be resolved to BookmarkablePageRequestHandler
 	}
 
-	/**
-	 * @see org.apache.wicket.request.IRequestHandler#detach(org.apache.wicket.request.IRequestCycle)
-	 */
 	@Override
 	public void detach(IRequestCycle requestCycle)
 	{
@@ -89,7 +77,6 @@ public class BookmarkablePageRequestHandler
 			logData = new PageLogData(pageProvider);
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public PageLogData getLogData()
 	{

@@ -28,7 +28,11 @@
 
 	'use strict';
 
-	if (typeof(Wicket) === 'object' && typeof(Wicket.Head) === 'object') {
+	if (typeof(Wicket) === 'undefined') {
+		window.Wicket = {};
+	}
+
+	if (typeof(Wicket.Head) === 'object') {
 		return;
 	}
 
@@ -45,8 +49,7 @@
 		};
 	}
 
-	var createIFrame,
-		getAjaxBaseUrl,
+	var getAjaxBaseUrl,
 		isUndef,
 		replaceAll,
 		htmlToDomDocument,
@@ -59,18 +62,6 @@
 	replaceAll = function (str, from, to) {
 		var regex = new RegExp(from.replace( /\W/g ,'\\$&' ), 'g');
 		return str.replace(regex,to);
-	};
-
-	/**
-	 * Creates an iframe that can be used to load data asynchronously or as a
-	 * target for Ajax form submit.
-	 *
-	 * @param iframeName {String} the value of the iframe's name attribute
-	 */
-	createIFrame = function (iframeName) {
-		var $iframe = jQuery('<iframe name="'+iframeName+'" id="'+iframeName+
-			'" src="about:blank" style="position: absolute; top: -9999px; left: -9999px;">');
-		return $iframe[0];
 	};
 
 	/**
@@ -548,7 +539,7 @@
 				extraParam = this._asParamArray(extraParam);
 				params = params.concat(extraParam);
 			}
-			return jQuery.param(params);
+			return params;
 		},
 
 		/**
@@ -578,6 +569,8 @@
 					'Wicket-Ajax': 'true',
 					'Wicket-Ajax-BaseURL': getAjaxBaseUrl()
 				},
+				
+				url = attrs.u,
 
 				// the request (extra) parameters
 				data = this._asParamArray(attrs.ep),
@@ -638,11 +631,6 @@
 
 			we.publish(topic.AJAX_CALL_PRECONDITION, attrs);
 
-			if (attrs.mp) { // multipart form. jQuery.ajax() doesn't help here ...
-				var ret = self.submitMultipartForm(context);
-				return ret;
-			}
-
 			if (attrs.f) {
 				// serialize the form with id == attrs.f
 				var form = Wicket.$(attrs.f);
@@ -653,39 +641,47 @@
 					var scName = attrs.sc;
 					data = data.concat({name: scName, value: 1});
 				}
-
 			} else if (attrs.c && !jQuery.isWindow(attrs.c)) {
 				// serialize just the form component with id == attrs.c
 				var el = Wicket.$(attrs.c);
 				data = data.concat(Wicket.Form.serializeElement(el, attrs.sr));
 			}
+			
+			// collect the dynamic extra parameters
+			if (jQuery.isArray(attrs.dep)) {
+				var dynamicData = this._calculateDynamicParameters(attrs);
+				if (attrs.m.toLowerCase() === 'post') {
+					data = data.concat(dynamicData);
+				} else {
+					var separator = url.indexOf('?') > -1 ? '&' : '?';
+					url = url + separator + jQuery.param(dynamicData);
+				}
+			}
 
-			// convert to URL encoded string
-			data = jQuery.param(data);
+			var wwwFormUrlEncoded; // undefined is jQuery's default
+			if (attrs.mp) {
+				try {
+					var formData = new FormData();
+					for (var i = 0; i < data.length; i++) {
+						formData.append(data[i].name, data[i].value || "");
+					}
+					
+					data = formData;
+					wwwFormUrlEncoded = false;
+				} catch (exception) {
+					Wicket.Log.error("Ajax multipat not supported:" + exception);
+				}
+			}
 
 			// execute the request
 			var jqXHR = jQuery.ajax({
-				url: attrs.u,
+				url: url,
 				type: attrs.m,
 				context: self,
+				processData: wwwFormUrlEncoded,
+				contentType: wwwFormUrlEncoded,
+				
 				beforeSend: function (jqXHR, settings) {
-
-					// collect the dynamic extra parameters
-					if (jQuery.isArray(attrs.dep)) {
-						var queryString,
-							separator;
-
-						queryString = this._calculateDynamicParameters(attrs);
-						if (settings.type.toLowerCase() === 'post') {
-							separator = settings.data.length > 0 ? '&' : '';
-							settings.data = settings.data + separator + queryString;
-							jqXHR.setRequestHeader("Content-Type", settings.contentType);
-						} else {
-							separator = settings.url.indexOf('?') > -1 ? '&' : '?';
-							settings.url = settings.url + separator + queryString;
-						}
-					}
-
 					self._executeHandlers(attrs.bsh, attrs, jqXHR, settings);
 					we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, jqXHR, settings);
 
@@ -779,11 +775,10 @@
 					// A file download popup will appear but the page in the browser won't change.
 					this.success(context);
 
-					var rhttp  = /^http:\/\//,  // checks whether the string starts with http://
-					    rhttps = /^https:\/\//; // checks whether the string starts with https://
+					var withScheme  = /^[a-z][a-z0-9+.-]*:\/\//;  // checks whether the string starts with a scheme
 
 					// support/check for non-relative redirectUrl like as provided and needed in a portlet context
-					if (redirectUrl.charAt(0) === '/' || rhttp.test(redirectUrl) || rhttps.test(redirectUrl)) {
+					if (redirectUrl.charAt(0) === '/' || withScheme.test(redirectUrl)) {
 						context.isRedirecting = true;
 						Wicket.Ajax.redirect(redirectUrl);
 					}
@@ -825,203 +820,6 @@
 					return this.loadedCallback(data, context);
 				}
 			}
-		},
-
-		/**
-		 * This method serializes a form and sends it as POST body. If the form contains multipart content
-		 * this function will post the form using an iframe instead of the regular ajax call
-		 * and bridge the output - transparently making this work  as if it was an ajax call.
-		 *
-		 * @param {Object} context - the context for the ajax call (request attributes + steps)
-		 */
-		submitMultipartForm: function (context) {
-
-			var attrs = context.attrs;
-
-			var form = Wicket.$(attrs.f);
-			if (!form) {
-				Wicket.Log.error("Wicket.Ajax.Call.submitForm: Trying to submit form with id '" + attrs.f + "' that is not in document.");
-				return;
-			}
-
-			// find root form
-			if (form.tagName.toLowerCase() !== "form") {
-				do {
-					form = form.parentNode;
-				} while(form.tagName.toLowerCase() !== "form" && form !== document.body);
-			}
-
-			if (form.tagName.toLowerCase() !== "form") {
-				Wicket.Log.error("Cannot submit form with id " + attrs.f + " because there is no form element in the hierarchy.");
-				return false;
-			}
-
-			var submittingAttribute = 'data-wicket-submitting';
-
-			if (form.onsubmit && !form.getAttribute(submittingAttribute)) {
-				form.setAttribute(submittingAttribute, submittingAttribute);
-				var retValue = true;
-				try {
-					retValue = form.onsubmit();
-				} finally {
-					form.removeAttribute(submittingAttribute);
-				}
-				if (!retValue) {
-					return;
-				}
-			}
-
-			var originalFormAction = form.action;
-			var originalFormTarget = form.target;
-			var originalFormMethod = form.method;
-			var originalFormEnctype = form.enctype;
-			var originalFormEncoding = form.encoding;
-
-			var iframeName = "wicket-submit-" + ("" + Math.random()).substr(2);
-
-			var iframe = createIFrame(iframeName);
-
-			document.body.appendChild(iframe);
-
-			// reconfigure the form
-			form.target = iframe.name;
-			var separator = (attrs.u.indexOf("?")>-1 ? "&" : "?");
-			form.action = attrs.u + separator + "wicket-ajax=true&wicket-ajax-baseurl=" + Wicket.Form.encode(getAjaxBaseUrl());
-
-			// add the static extra parameters
-			if (attrs.ep) {
-				var extraParametersArray = this._asParamArray(attrs.ep);
-				if (extraParametersArray.length > 0) {
-					var extraParametersQueryString = jQuery.param(extraParametersArray);
-					form.action = form.action + '&' + extraParametersQueryString;
-				}
-			}
-
-			// add the dynamic extra parameters
-			if (jQuery.isArray(attrs.dep)) {
-				var dynamicExtraParameters = this._calculateDynamicParameters(attrs);
-				if (dynamicExtraParameters) {
-					form.action = form.action + '&' + dynamicExtraParameters;
-				}
-			}
-			form.method = 'post';
-			form.enctype = "multipart/form-data";
-			form.encoding = "multipart/form-data";
-
-			// create submitting button element
-			if (attrs.sc) {
-				var $btn = jQuery("<input type='hidden' name='" + attrs.sc + "' id='" + iframe.id + "-btn' value='1'/>");
-				form.appendChild($btn[0]);
-			}
-
-			var we = Wicket.Event;
-			var topic = we.Topic;
-
-			this._executeHandlers(attrs.bsh, attrs, null, null);
-			we.publish(topic.AJAX_CALL_BEFORE_SEND, attrs, null, null);
-
-			if (attrs.i) {
-				// show the indicator
-				Wicket.DOM.showIncrementally(attrs.i);
-			}
-
-			//submit the form into the iframe, response will be handled by the onload callback
-			form.submit();
-
-			this._executeHandlers(attrs.ah, attrs);
-			we.publish(topic.AJAX_CALL_AFTER, attrs);
-
-			// a step to execute in both successful and erroneous completion
-			context.endStep = jQuery.proxy(function(notify) {
-				// remove the iframe and button elements
-				setTimeout(function() {
-					jQuery('#'+iframe.id + '-btn').remove();
-					jQuery(iframe).remove();
-				}, 0);
-
-				var attrs = context.attrs;
-				if (attrs.i && context.isRedirecting !== true) {
-					// hide the indicator
-					Wicket.DOM.hideIncrementally(attrs.i);
-				}
-
-				this._executeHandlers(attrs.coh, attrs, null, null);
-				Wicket.Event.publish(Wicket.Event.Topic.AJAX_CALL_COMPLETE, attrs, null, null);
-
-				this.done(attrs);
-				return FunctionsExecuter.DONE;
-			}, this);
-
-			// an error handler that is used when the connection to the server fails for any reason
-			if (attrs.rt) {
-				context.errorHandle = setTimeout(jQuery.proxy(function () {
-					this.failure(context, null, "No XML response in the IFrame document", "Failure");
-
-					context.steps.push(context.endStep);
-					var executer = new FunctionsExecuter(context.steps);
-					executer.start();
-				}, this), attrs.rt);
-			} else {
-				Wicket.Log.info("Submitting a multipart form without a timeout. " +
-					"Use AjaxRequestAttributes.setRequestTimeout(duration) if need to handle connection timeouts.");
-			}
-
-			// install handler to deal with the ajax response
-			// ... we add the onload event after form submit because chrome fires it prematurely
-			we.add(iframe, "load.handleMultipartComplete", jQuery.proxy(this.handleMultipartComplete, this), context);
-
-
-			// handled, restore state and return true
-			form.action = originalFormAction;
-			form.target = originalFormTarget;
-			form.method = originalFormMethod;
-			form.enctype = originalFormEnctype;
-			form.encoding = originalFormEncoding;
-
-			return true;
-		},
-
-		/**
-		 * Completes the multipart ajax handling started via handleMultipart()
-		 * @param {jQuery.Event} event
-		 */
-		handleMultipartComplete: function (event) {
-
-			var context = event.data,
-				iframe = event.target,
-				envelope;
-
-			if (!isUndef(context.errorHandle)) {
-				clearTimeout(context.errorHandle);
-			}
-
-			// stop the event
-			event.stopPropagation();
-
-			// remove the event
-			jQuery(iframe).off("load.handleMultipartComplete");
-
-			try {
-				envelope = iframe.contentWindow.document;
-			} catch (e) {
-				Wicket.Log.error("Cannot read Ajax response for multipart form submit: " + e);
-			}
-
-			if (isUndef(envelope)) {
-				this.failure(context, null, "No XML response in the IFrame document", "Failure");
-			}
-			else {
-				if (envelope.XMLDocument) {
-					envelope = envelope.XMLDocument;
-				}
-
-				// process the response
-				this.loadedCallback(envelope, context);
-			}
-
-			context.steps.push(context.endStep);
-			var executer = new FunctionsExecuter(context.steps);
-			executer.start();
 		},
 
 		// Processes the response
@@ -1158,7 +956,7 @@
 		processEvaluation: function (context, node) {
 
 			// used to match evaluation scripts which manually call FunctionsExecuter's notify() when ready
-			var scriptWithIdentifierR = new RegExp("^\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
+			var scriptWithIdentifierR = new RegExp("\\(function\\(\\)\\{([a-zA-Z_]\\w*)\\|((.|\\n)*)?\\}\\)\\(\\);$");
 
 			/**
 			 * A regex used to split the text in (priority-)evaluate elements in the Ajax response
@@ -1210,7 +1008,7 @@
 			if (scriptWithIdentifierR.test(text)) {
 				var scripts = [];
 				var scr;
-				while ( (scr = scriptSplitterR.exec(text) ) != null ) {
+				while ( (scr = scriptSplitterR.exec(text) ) !== null ) {
 					scripts.push(scr[0]);
 				}
 
@@ -1484,9 +1282,16 @@
 			 */
 			serializeInput: function (input) {
 				var result = [];
-				if (input && input.type && !(input.type === 'image' || input.type === 'submit')) {
+				if (input && input.type) {
 					var $input = jQuery(input);
-					result = $input.serializeArray();
+					
+					if (input.type === 'file') {
+						for (var f = 0; f < input.files.length; f++) {
+							result.push({"name" : input.name, "value" : input.files[f]});
+						}
+					} else if (!(input.type === 'image' || input.type === 'submit')) {
+						result = $input.serializeArray();
+					}
 				}
 				return result;
 			},
@@ -2088,6 +1893,8 @@
 								this.processScript(context, node);
 							} else if (name === "style") {
 								this.processStyle(context, node);
+							} else if (name === "meta") {
+								this.processMeta(context, node);
 							}
 						} else if (node.nodeType === 8) { // comment type
 							this.processComment(context, node);
@@ -2112,9 +1919,9 @@
 						var css = Wicket.Head.createElement("link");
 
 						// copy supplied attributes only.
-						var attributes = $(node).prop("attributes");
-						var $css = $(css);
-						$.each(attributes, function() {
+						var attributes = jQuery(node).prop("attributes");
+						var $css = jQuery(css);
+						jQuery.each(attributes, function() {
 							$css.attr(this.name, this.value);
 						});
 
@@ -2274,6 +2081,26 @@
 							// continue to next step
 							return FunctionsExecuter.DONE;
 						}
+					});
+				},
+
+				processMeta: function (context, node) {
+					context.steps.push(function (notify) {
+						var meta = Wicket.Head.createElement("meta"),
+							$meta = jQuery(meta),
+							attrs = jQuery(node).prop("attributes"),
+							name = node.getAttribute("name");
+
+						if(name) {
+							jQuery('meta[name="' + name + '"]').remove();
+						}
+						jQuery.each(attrs, function() {
+							$meta.attr(this.name, this.value);
+						});
+
+						Wicket.Head.addElement(meta);
+
+						return FunctionsExecuter.DONE;
 					});
 				},
 
@@ -2736,20 +2563,23 @@
 			/**
 			 * Schedules a timer
 			 * @param {string} timerId - the identifier for the timer
-			 * @param {function|string} js - the JavaScript to execute after the timeout
+			 * @param {function} f - the JavaScript function to execute after the timeout
 			 * @param {number} delay - the timeout
 			 */
-			'set': function(timerId, js, delay) {
+			'set': function(timerId, f, delay) {
 				if (typeof(Wicket.TimerHandles) === 'undefined') {
 					Wicket.TimerHandles = {};
 				}
 
 				Wicket.Timer.clear(timerId);
-				Wicket.TimerHandles[timerId] = setTimeout(js, delay);
+				Wicket.TimerHandles[timerId] = setTimeout(function() {
+					Wicket.Timer.clear(timerId);
+					f();
+				}, delay);
 			},
 
 			/**
-			 * Un-schedules a timer by its id
+			 * Clears a timer by its id
 			 * @param {string} timerId - the identifier of the timer
 			 */
 			clear: function(timerId) {
@@ -2757,10 +2587,296 @@
 					clearTimeout(Wicket.TimerHandles[timerId]);
 					delete Wicket.TimerHandles[timerId];
 				}
+			},
+			
+			/**
+			 * Clear all remaining timers.
+			 */
+			clearAll: function() {
+				var WTH = Wicket.TimerHandles;
+				if (WTH) {
+					for (var th in WTH) {
+						if (WTH.hasOwnProperty(th)) {
+							Wicket.Timer.clear(th);
+						}
+					}
+				}
 			}
 		}
 	});
 
+
+	jQuery.extend(true, Wicket, {
+
+		Browser: {
+			_isKHTML: null,
+			isKHTML: function () {
+				var wb = Wicket.Browser;
+				if (wb._isKHTML === null) {
+					wb._isKHTML = (/Konqueror|KHTML/).test(window.navigator.userAgent) && !/Apple/.test(window.navigator.userAgent);
+				}
+				return wb._isKHTML;
+			},
+
+			_isSafari: null,
+			isSafari: function () {
+				var wb = Wicket.Browser;
+				if (wb._isSafari === null) {
+					wb._isSafari = !/Chrome/.test(window.navigator.userAgent) && /KHTML/.test(window.navigator.userAgent) && /Apple/.test(window.navigator.userAgent);
+				}
+				return wb._isSafari;
+			},
+
+			_isChrome: null,
+			isChrome: function () {
+				var wb = Wicket.Browser;
+				if (wb._isChrome === null) {
+					wb._isChrome = (/KHTML/).test(window.navigator.userAgent) && /Apple/.test(window.navigator.userAgent) && /Chrome/.test(window.navigator.userAgent);
+				}
+				return wb._isChrome;
+			},
+
+			_isOpera: null,
+			isOpera: function () {
+				var wb = Wicket.Browser;
+				if (wb._isOpera === null) {
+					wb._isOpera = !Wicket.Browser.isSafari() && typeof(window.opera) !== "undefined";
+				}
+				return wb._isOpera;
+			},
+
+			_isIE: null,
+			isIE: function () {
+				var wb = Wicket.Browser;
+				if (wb._isIE === null) {
+					wb._isIE = !Wicket.Browser.isSafari() && (typeof(document.all) !== "undefined" || window.navigator.userAgent.indexOf("Trident/")>-1) && typeof(window.opera) === "undefined";
+				}
+				return wb._isIE;
+			},
+
+			_isIEQuirks: null,
+			isIEQuirks: function () {
+				var wb = Wicket.Browser;
+				if (wb._isIEQuirks === null) {
+					// is the browser internet explorer in quirks mode (we could use document.compatMode too)
+					wb._isIEQuirks = Wicket.Browser.isIE() && window.document.documentElement.clientHeight === 0;
+				}
+				return wb._isIEQuirks;
+			},
+
+			_isIELessThan9: null,
+			isIELessThan9: function () {
+				var wb = Wicket.Browser;
+				if (wb._isIELessThan9 === null) {
+					var index = window.navigator.userAgent.indexOf("MSIE");
+					var version = parseFloat(window.navigator.userAgent.substring(index + 5));
+					wb._isIELessThan9 = Wicket.Browser.isIE() && version < 9;
+				}
+				return wb._isIELessThan9;
+			},
+
+			_isIELessThan11: null,
+			isIELessThan11: function () {
+				var wb = Wicket.Browser;
+				if (wb._isIELessThan11 === null) {
+					wb._isIELessThan11 = !Wicket.Browser.isSafari() && typeof(document.all) !== "undefined" && typeof(window.opera) === "undefined";
+				}
+				return wb._isIELessThan11;
+			},
+
+			_isIE11: null,
+			isIE11: function () {
+				var wb = Wicket.Browser;
+				if (wb._isIE11 === null) {
+					var userAgent = window.navigator.userAgent;
+					var isTrident = userAgent.indexOf("Trident") > -1;
+					var is11 = userAgent.indexOf("rv:11") > -1;
+					wb._isIE11 = isTrident && is11;
+				}
+				return wb._isIE11;
+			},
+
+			_isGecko: null,
+			isGecko: function () {
+				var wb = Wicket.Browser;
+				if (wb._isGecko === null) {
+					wb._isGecko = (/Gecko/).test(window.navigator.userAgent) && !Wicket.Browser.isSafari();
+				}
+				return wb._isGecko;
+			}
+		},
+
+		/**
+		 * Events related code
+		 * Based on code from Mootools (http://mootools.net)
+		 */
+		Event: {
+			idCounter: 0,
+
+			getId: function (element) {
+				var $el = jQuery(element),
+					id = $el.prop("id");
+
+				if (typeof(id) === "string" && id.length > 0) {
+					return id;
+				} else {
+					id = "wicket-generated-id-" + Wicket.Event.idCounter++;
+					$el.prop("id", id);
+					return id;
+				}
+			},
+
+			keyCode: function (evt) {
+				return Wicket.Event.fix(evt).keyCode;
+			},
+
+			/**
+			 * Prevent event from bubbling up in the element hierarchy.
+			 * @param evt {Event} - the event to stop
+			 * @param immediate {Boolean} - true if the event should not be handled by other listeners registered
+			 *      on the same HTML element. Optional
+			 */
+			stop: function (evt, immediate) {
+				evt = Wicket.Event.fix(evt);
+				if (immediate) {
+					evt.stopImmediatePropagation();
+				} else {
+					evt.stopPropagation();
+				}
+				return evt;
+			},
+
+			/**
+			 * If no event is given as argument (IE), window.event is returned.
+			 */
+			fix: function (evt) {
+				return jQuery.event.fix(evt || window.event);
+			},
+
+			fire: function (element, event) {
+				event = (event === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : event;
+				jQuery(element).trigger(event);
+			},
+
+			/**
+			 * Binds an event listener for an element
+			 *
+			 * Also supports the special 'domready' event on window.
+			 * 'domready' is event fired when the DOM is complete, but
+			 * before loading external resources (images, scripts, ...)
+			 *
+			 * @param element {HTMLElement} The host HTML element
+			 * @param type {String} The type of the DOM event
+			 * @param fn {Function} The event handler to unbind
+			 * @param data {Object} Extra data for the event
+			 * @param selector {String} A selector string to filter the descendants of the selected
+			 *      elements that trigger the event. If the selector is null or omitted,
+			 *      the event is always triggered when it reaches the selected element.
+			 */
+			add: function (element, type, fn, data, selector) {
+				if (type === 'domready') {
+					jQuery(fn);
+				} else if (type === 'load' && element === window) {
+					jQuery(window).on('load', function() {
+						jQuery(fn);
+					});
+				} else {
+					type = (type === 'mousewheel' && Wicket.Browser.isGecko()) ? 'DOMMouseScroll' : type;
+					var el = element;
+					if (typeof(element) === 'string') {
+						el = document.getElementById(element);
+					}
+
+					if (!el && Wicket.Log) {
+						Wicket.Log.error('Cannot bind a listener for event "' + type +
+							'" on element "' + element + '" because the element is not in the DOM');
+					}
+
+					jQuery(el).on(type, selector, data, fn);
+				}
+				return element;
+			},
+
+			/**
+			 * Unbinds an event listener for an element
+			 *
+			 * @param element {HTMLElement} The host HTML element
+			 * @param type {String} The type of the DOM event
+			 * @param fn {Function} The event handler to unbind
+			 */
+			remove: function (element, type, fn) {
+				jQuery(element).off(type, fn);
+			},
+
+			/**
+			* Adds a subscriber for the passed topic.
+			*
+			* @param topic {String} - the channel name for which this subscriber will be notified
+			*        If '*' then it will be notified for all topics
+			* @param subscriber {Function} - the callback to call when an event with this type is published
+			*/
+			subscribe: function (topic, subscriber) {
+				if (topic) {
+					jQuery(document).on(topic, subscriber);
+				}
+			},
+
+			/**
+			 * Un-subscribes a subscriber from a topic.
+			 * @param topic {String} - the topic name. If omitted un-subscribes all
+			 *      subscribers from all topics
+			 * @param subscriber {Function} - the handler to un-subscribe. If omitted then
+			 *      all subscribers are removed from this topic
+			 */
+			unsubscribe: function(topic, subscriber) {
+				if (topic) {
+					if (subscriber) {
+						jQuery(document).off(topic, subscriber);
+					} else {
+						jQuery(document).off(topic);
+					}
+				} else {
+					jQuery(document).off();
+				}
+			},
+
+			/**
+			* Sends a notification to all subscribers for the given topic.
+			* Subscribers for topic '*' receive the actual topic as first parameter,
+			* otherwise the topic is not passed to subscribers which listen for specific
+			* event types.
+			*
+			* @param topic {String} - the channel name for which all subscribers will be notified.
+			*/
+			publish: function (topic) {
+				if (topic) {
+					// cut the topic argument
+					var args = Array.prototype.slice.call(arguments).slice(1);
+
+					jQuery(document).triggerHandler(topic, args);
+					jQuery(document).triggerHandler('*', args);
+				}
+			},
+
+			/**
+			 * The names of the topics on which Wicket notifies
+			 */
+			Topic: {
+				DOM_NODE_REMOVING      : '/dom/node/removing',
+				DOM_NODE_ADDED         : '/dom/node/added',
+				AJAX_CALL_INIT         : '/ajax/call/init',
+				AJAX_CALL_BEFORE       : '/ajax/call/before',
+				AJAX_CALL_PRECONDITION : '/ajax/call/precondition',
+				AJAX_CALL_BEFORE_SEND  : '/ajax/call/beforeSend',
+				AJAX_CALL_SUCCESS      : '/ajax/call/success',
+				AJAX_CALL_COMPLETE     : '/ajax/call/complete',
+				AJAX_CALL_AFTER        : '/ajax/call/after',
+				AJAX_CALL_FAILURE      : '/ajax/call/failure',
+				AJAX_CALL_DONE         : '/ajax/call/done',
+				AJAX_HANDLERS_BOUND    : '/ajax/handlers/bound'
+			}
+		}
+	});
 	/**
 	 * A special event that is used to listen for immediate changes in input fields.
 	 */
@@ -2859,42 +2975,7 @@
 	 * Clear any scheduled Ajax timers when leaving the current page
 	 */
 	Wicket.Event.add(window, "unload", function() {
-		var WTH = Wicket.TimerHandles;
-		if (WTH) {
-			for (var th in WTH) {
-				if (WTH.hasOwnProperty(th)) {
-					window.clearTimeout(WTH[th]);
-					delete WTH[th];
-				}
-			}
-		}
-	});
-
-	/**
-	 * Remove any scheduled timers on the removed element.
-	 * This wont remove the timer for elements which are children of the removed one.
-	 */
-	Wicket.Event.subscribe('/dom/node/removing', function(jqEvent, element) {
-		var id = element.id;
-		if (Wicket.TimerHandles && Wicket.TimerHandles[id]) {
-			window.clearTimeout(Wicket.TimerHandles[id]);
-			delete Wicket.TimerHandles[id];
-		}
-	});
-
-	/**
-	 * Remove any scheduled timers on elements which are no more in the DOM document.
-	 * This removes the timers for all elements which parents have been removed from the DOM.
-	 */
-	Wicket.Event.subscribe('/dom/node/added', function() {
-		if (Wicket.TimerHandles) {
-			for (var timerHandle in Wicket.TimerHandles) {
-				if (Wicket.$$(timerHandle) === false) {
-					window.clearTimeout(timerHandle);
-					delete Wicket.TimerHandles[timerHandle];
-				}
-			}
-		}
+		Wicket.Timer.clearAll();
 	});
 
 })(jQuery);

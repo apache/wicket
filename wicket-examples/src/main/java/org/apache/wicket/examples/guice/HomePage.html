@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - guice</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     <p>
     This page uses <a href="http://code.google.com/p/google-guice/">Google Guice</a>.
     There is a service interface called <code>IMyService</code>, with an implementation POJO called <code>MyService</code>.
@@ -27,5 +26,6 @@
     To configure your application for Guice injection, see the javadoc for <code>GuiceComponentInjector</code>.
     </p>
     
+</wicket:extend>
 </body>
 </html>

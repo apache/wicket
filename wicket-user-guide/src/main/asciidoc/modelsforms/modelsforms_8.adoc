@@ -21,10 +21,10 @@ public class ComponetTwoModels extends Component{
 
 	@Override
 	public void onDetach() {
-               if(beeModel != null)
-	   beeModel.detach();
+        if(beeModel != null)
+           beeModel.detach();
              
-              super.onDetach();
+        super.onDetach();
 	}
 }
 ----

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.json;
 
+import com.github.openjson.JSONString;
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 

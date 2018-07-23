@@ -1,54 +1,15 @@
 
-Just like we have seen for links, Lambda expressions bring their benefit also to AJAX components and behaviors. Many of them come with a factory method that accepts a lambda expression to use as callback code. Here is an example for the classic and the lambda way of defining an ajax link:
-
-Classic way:
-[source,java]
-----
-AjaxLink<Void> link = new AjaxLink<Void>("linkId") {
-	@Override
-	public void onClick(AjaxRequestTarget target) {
-		label.modelChanging();
-		label.setDefaultModelObject("test" + (intx++));
-		label.modelChanged();
-		target.add(label);
-	}
-}
-----
-
-Using lambdas:
-[source,java]
-----
-AjaxLink<Void> link = AjaxLink.onClick("linkId", target -> {
-	label.modelChanging();
-	label.setDefaultModelObject("newString");
-	label.modelChanged();
-	target.add(label);
-});
-----
-
-Such factory methods can be found also in the utility class _Lambdas_:
+Just like we have seen for regular links, WicketStuff project offers a lambda-based factory class to build Ajax links and Ajax submitting component:
 
 [source,java]
 ----
-import static org.apache.wicket.lambda.Lambdas.ajaxLink;
+//create an AJAX link component
+add(ComponentFactory.ajaxLink("id", (ajaxLink, ajaxTarget) -> {/*do stuff*/});
 
-...
-
-AjaxLink<Void> link = ajaxLink("linkId", target -> {
-	label.modelChanging();
-	label.setDefaultModelObject("newString");
-	label.modelChanged();
-	target.add(label);
-});
+//create a submit link with error handler
+add(ComponentFactory.ajaxSubmitLink("id", (ajaxLink, ajaxTarget) -> {/*do submit stuff*/}, 
+                                   (ajaxLink, ajaxTarget) -> {/*do error stuff*/});
 ----
 
-The same can be done for behaviors. For example we can create an _AjaxEventBehavior_ in this way:
-
-[source,java]
-----
-  Lambdas.onEvent("click", target -> //some lambda stuf)
-----
-
-
-To find out other useful factory methods, you can check _Lambdas_ JavaDoc.
+For more examples see WicketStuff module <<_module_wicketstuff_lambda_components,wicketstuff-lambda-components>>.
 

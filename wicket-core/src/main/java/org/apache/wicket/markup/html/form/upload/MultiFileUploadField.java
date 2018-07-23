@@ -290,9 +290,6 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 
 	}
 
-	/**
-	 * @see org.apache.wicket.markup.html.form.FormComponent#convertValue(java.lang.String[])
-	 */
 	@Override
 	protected Collection<FileUpload> convertValue(String[] value) throws ConversionException
 	{
@@ -332,9 +329,6 @@ public class MultiFileUploadField extends FormComponentPanel<Collection<FileUplo
 		FormComponent.updateCollectionModel(this);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#onDetach()
-	 */
 	@Override
 	protected void onDetach()
 	{

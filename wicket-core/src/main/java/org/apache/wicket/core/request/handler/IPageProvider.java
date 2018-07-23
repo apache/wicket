@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.core.request.handler;
 
-import org.apache.wicket.core.request.mapper.StalePageException;
 import org.apache.wicket.protocol.http.PageExpiredException;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -36,28 +35,25 @@ public interface IPageProvider
 	 * Returns page instance specified by the constructor.
 	 *
 	 * @return page instance
-	 * @throws StalePageException
-	 *             if render count has been specified in constructor and the render count of page
-	 *             does not match the value
 	 * @throws PageExpiredException if the specified page
      *          could not have been found and the constructor used did not provide enough information
      *          to create new page instance
 	 */
-	IRequestablePage getPageInstance() throws PageExpiredException;
+	IRequestablePage getPageInstance()  throws PageExpiredException;
 
 	/**
 	 * Returns {@link PageParameters} of the page.
 	 *
 	 * @return page parameters
+	 * @throws PageExpiredException if the specified page
+     *          could not have been found and the constructor used did not provide enough information
+     *          to create new page instance
 	 */
-	PageParameters getPageParameters();
+	PageParameters getPageParameters()  throws PageExpiredException;
 
 	/**
-	 * Returns whether calling getPageInstance() will result in creating new page instance or
-	 * whether it will be an existing instance (even though it might be pulled from page store).
-	 *
-	 * @return <code>true</code> if calling {@link #getPageInstance()} will create new page
-	 *         instance, <code>false</code> otherwise.
+	 * @return negates {@link PageProvider#hasPageInstance()}
+	 * @deprecated use {@link PageProvider#hasPageInstance()} negation instead
 	 */
 	boolean isNewPageInstance();
 
@@ -70,10 +66,12 @@ public interface IPageProvider
 
 	/**
 	 * Returns class of the page.
-	 *
+	 * @throws PageExpiredException if the specified page
+     *          could not have been found and the constructor used did not provide enough information
+     *          to create new page instance
 	 * @return page class
 	 */
-	Class<? extends IRequestablePage> getPageClass();
+	Class<? extends IRequestablePage> getPageClass() throws PageExpiredException;
 
 	/**
 	 * Returns the page id.
@@ -95,11 +93,12 @@ public interface IPageProvider
 	void detach();
 
 	/**
-	 * Checks whether or not the provider has a page instance. This page instance might have been
-	 * passed to this page provider directly or it may have been instantiated or retrieved from the
-	 * page store.
-	 *
-	 * @return {@code true} iff page instance has been created or retrieved
+	 * If this provider returns existing page, regardless if it was already created by PageProvider
+	 * itself or is or can be found in the data store. The only guarantee is that by calling
+	 * {@link PageProvider#getPageInstance()} this provider will return an existing instance and no
+	 * page will be created.
+	 * 
+	 * @return if provides an existing page
 	 */
 	boolean hasPageInstance();
 
@@ -113,5 +112,5 @@ public interface IPageProvider
 	 * @return {@code true} iff the page instance held by this provider was instantiated by the
 	 *         provider
 	 */
-	boolean isPageInstanceFresh();
+	boolean doesProvideNewPage();
 }

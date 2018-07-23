@@ -294,12 +294,9 @@ public final class EnhancedPageView extends GenericPanel<Page>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onAfterSubmit(AjaxRequestTarget target)
+			protected void onAfterSubmit(Optional<AjaxRequestTarget> target)
 			{
-				if (target != null)
-				{
-					target.add(componentTree);
-				}
+				target.ifPresent(t -> t.add(componentTree));
 			}
 		});
 

@@ -48,10 +48,6 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 	{
 	}
 
-	/**
-	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(java.lang.Class,
-	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public String loadStringResource(Class<?> clazz, final String key, final Locale locale,
 		final String style, final String variation)
@@ -67,10 +63,6 @@ public class ValidatorStringResourceLoader extends ComponentStringResourceLoader
 		return super.loadStringResource(clazz, key, locale, style, variation);
 	}
 
-	/**
-	 * @see org.apache.wicket.resource.loader.ComponentStringResourceLoader#loadStringResource(org.apache.wicket.Component,
-	 *      java.lang.String, java.util.Locale, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public String loadStringResource(final Component component, final String key,
 		final Locale locale, final String style, final String variation)

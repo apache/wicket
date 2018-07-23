@@ -1,6 +1,27 @@
+This module comes with class _org.wicketstuff.lambda.components.ComponentFactory_ which exposes a number of factory method to build components using Lambda expressions as event handler. This can be useful to create components with simple behavior. For example:
 
-Wicket makes working with AJAX easy and pleasant with its component-oriented abstraction. However as side effect, AJAX components and behaviors make their hosting page stateful. This can be quite annoying if we are working on a page that must be stateless (for example a login page). 
-In this case an obvious solution would be to roll out our own stateless components/behaviors, but Wicketstuff alredy offers such kind of artifacts with _stateless_ module. Here you can find the stateless version of the basic AJAX componets and behaviors shiped with Wicket, like _StatelessAjaxSubmitLink_, _StatelessAjaxFallbackLink_, _StatelessAjaxEventBehavior_, _StatelessAjaxFormSubmitBehavior_ etc...
-A short introduction to this module can be found on its  https://github.com/wicketstuff/core/tree/master/stateless-parent[home page] .
+[source,java]
+----
+//create a standard link component
+add(ComponentFactory.link("id", (link) -> {/*do stuff*/});
+
+//create an AJAX link component
+add(ComponentFactory.ajaxLink("id", (ajaxLink, ajaxTarget) -> {/*do stuff*/});
+----
+
+The factory uses library https://github.com/danekja/jdk-serializable-functional[jdk-serializable-functional] to convert lambda expressions into a serializable version of java.util.function.* interfaces.
 
 
+_AjaxButton_ and _AjaxSubmitLink_ are also supported:
+
+[source,java]
+----
+//create a submit link
+add(ComponentFactory.ajaxSubmitLink("id", (ajaxLink, ajaxTarget) -> {/*do submit stuff*/});
+
+//create a submit link with error handler
+add(ComponentFactory.ajaxSubmitLink("id", (ajaxLink, ajaxTarget) -> {/*do submit stuff*/}, 
+                                   (ajaxLink, ajaxTarget) -> {/*do error stuff*/});
+----
+
+See _ComponentFactory_ JavaDoc for a full list of factory methods.

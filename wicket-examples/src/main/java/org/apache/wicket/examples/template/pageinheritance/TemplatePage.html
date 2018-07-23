@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
-<head>
-    <title wicket:id="title">title comes here</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+<wicket:head>
     <link rel="stylesheet" type="text/css" href="template/style.css"/>
-</head>
+</wicket:head>
 <body>
-    <span wicket:id="mainNavigation"/>
-
+    <wicket:extend>
+        <h2 wicket:id="title"></h2>
+    
 	<div id="header" class="borderedBlock">
 	 <table width="100%">
 	  <tr>
@@ -41,5 +40,6 @@
 	 footer
 	</div>
 
+</wicket:extend>
 </body>
 </html>

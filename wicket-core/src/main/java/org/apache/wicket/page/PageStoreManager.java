@@ -43,10 +43,29 @@ public class PageStoreManager extends AbstractPageManager
 
 	private static final String ATTRIBUTE_NAME = "wicket:persistentPageManagerData";
 
+	/**
+	 * A flag indicating whether this session entry is being re-set in the Session.
+	 * <p>
+	 * Web containers intercept
+	 * {@link javax.servlet.http.HttpSession#setAttribute(String, Object)} to detect changes and
+	 * replicate the session. If the attribute has been already bound in the session then
+	 * {@link #valueUnbound(HttpSessionBindingEvent)} might get called - this flag
+	 * helps us to ignore the invocation in that case.
+	 * 
+	 * @see #valueUnbound(HttpSessionBindingEvent)
+	 */
+	private static final ThreadLocal<Boolean> STORING_TOUCHED_PAGES = new ThreadLocal<Boolean>()
+	{
+		protected Boolean initialValue()
+		{
+			return Boolean.FALSE;
+		};
+	};
+
 	private final IPageStore pageStore;
-
+	
 	private final String applicationName;
-
+	
 	/**
 	 * Construct.
 	 * 
@@ -64,8 +83,8 @@ public class PageStoreManager extends AbstractPageManager
 
 		if (MANAGERS.containsKey(applicationName))
 		{
-			throw new IllegalStateException("Manager for application with key '" + applicationName
-				+ "' already exists.");
+			throw new IllegalStateException(
+				"Manager for application with key '" + applicationName + "' already exists.");
 		}
 		MANAGERS.put(applicationName, this);
 	}
@@ -92,6 +111,7 @@ public class PageStoreManager extends AbstractPageManager
 
 		private transient List<IManageablePage> sessionCache;
 		private transient List<Object> afterReadObject;
+
 
 		/**
 		 * Construct.
@@ -153,6 +173,19 @@ public class PageStoreManager extends AbstractPageManager
 				}
 
 				sessionCache.add(page);
+			}
+		}
+
+		private synchronized void removePage(IManageablePage page)
+		{
+			if (page != null)
+			{
+				sessionCache.remove(page);
+				final IPageStore pageStore = getPageStore();
+				if (pageStore != null)
+				{
+					pageStore.removePage(sessionId, page.getPageId());
+				}
 			}
 		}
 
@@ -276,8 +309,8 @@ public class PageStoreManager extends AbstractPageManager
 		 * @throws ClassNotFoundException
 		 */
 		@SuppressWarnings("unchecked")
-		private void readObject(final ObjectInputStream s) throws IOException,
-			ClassNotFoundException
+		private void readObject(final ObjectInputStream s)
+			throws IOException, ClassNotFoundException
 		{
 			s.defaultReadObject();
 
@@ -311,6 +344,12 @@ public class PageStoreManager extends AbstractPageManager
 		@Override
 		public void valueUnbound(HttpSessionBindingEvent event)
 		{
+			if (STORING_TOUCHED_PAGES.get())
+			{
+				// triggered by #storeTouchedPages(), so do not remove the data
+				return;
+			}
+
 			// WICKET-5164 use the original sessionId
 			IPageStore store = getPageStore();
 			// store might be null if destroyed already
@@ -372,6 +411,16 @@ public class PageStoreManager extends AbstractPageManager
 			}
 		}
 
+		@Override
+		protected void removePage(final IManageablePage page)
+		{
+			final SessionEntry sessionEntry = getSessionEntry(false);
+			if (sessionEntry != null)
+			{
+				sessionEntry.removePage(page);
+			}
+		}
+
 		/**
 		 * 
 		 * @param create
@@ -379,13 +428,11 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		private SessionEntry getSessionEntry(boolean create)
 		{
-			String attributeName = getAttributeName();
-			SessionEntry entry = (SessionEntry)getSessionAttribute(attributeName);
+			SessionEntry entry = (SessionEntry)getSessionAttribute(getAttributeName());
 			if (entry == null && create)
 			{
 				bind();
 				entry = new SessionEntry(applicationName, getSessionId());
-				setSessionAttribute(attributeName, entry);
 			}
 			return entry;
 		}
@@ -409,8 +456,19 @@ public class PageStoreManager extends AbstractPageManager
 				entry.setSessionCache(touchedPages);
 				for (IManageablePage page : touchedPages)
 				{
-					// WICKET-5103 use the same sessionId as used in SessionEntry#getPage()
+					// WICKET-5103 use the same sessionId as used in
+					// SessionEntry#getPage()
 					pageStore.storePage(entry.sessionId, page);
+				}
+
+				STORING_TOUCHED_PAGES.set(true);
+				try
+				{
+					setSessionAttribute(getAttributeName(), entry);
+				}
+				finally
+				{
+					STORING_TOUCHED_PAGES.remove();
 				}
 			}
 		}

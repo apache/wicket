@@ -109,7 +109,6 @@ public class StatelessForm<T> extends Form<T>
 					parameters.remove(formComponent.getInputName());
 				}
 			});
-			parameters.remove(getHiddenFieldId());
 			if (submittingComponent instanceof AbstractSubmitLink)
 			{
 				AbstractSubmitLink submitLink = (AbstractSubmitLink)submittingComponent;

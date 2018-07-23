@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.IRequestListener;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -48,7 +47,7 @@ import org.apache.wicket.util.visit.IVisitor;
  * @param <T>
  *            The model object type
  */
-public class RadioGroup<T> extends FormComponent<T> implements IRequestListener
+public class RadioGroup<T> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -70,24 +69,6 @@ public class RadioGroup<T> extends FormComponent<T> implements IRequestListener
 	{
 		super(id, model);
 		setRenderBodyOnly(true);
-	}
-
-	protected boolean wantOnSelectionChangedNotifications()
-	{
-		return false;
-	}
-
-	/**
-	 * @see org.apache.wicket.MarkupContainer#getStatelessHint()
-	 */
-	@Override
-	protected boolean getStatelessHint()
-	{
-		if (wantOnSelectionChangedNotifications())
-		{
-			return false;
-		}
-		return super.getStatelessHint();
 	}
 
 	@Override
@@ -162,33 +143,5 @@ public class RadioGroup<T> extends FormComponent<T> implements IRequestListener
 		// No longer applicable, breaks XHTML validation.
 		tag.remove("disabled");
 		tag.remove("name");
-	}
-
-	/**
-	 * Called when a selection changes.
-	 */
-	@Override
-	public final void onRequest()
-	{
-		convertInput();
-		updateModel();
-		onSelectionChanged(getModelObject());
-	}
-
-	/**
-	 * Template method that can be overridden by clients that implement IOnChangeListener to be
-	 * notified by onChange events of a select element. This method does nothing by default.
-	 * <p>
-	 * Called when a option is selected of a dropdown list that wants to be notified of this event.
-	 * This method is to be implemented by clients that want to be notified of selection events.
-	 * 
-	 * @param newSelection
-	 *            The newly selected object of the backing model NOTE this is the same as you would
-	 *            get by calling getModelObject() if the new selection were current
-	 * 
-	 * @see #wantOnSelectionChangedNotifications()
-	 */
-	protected void onSelectionChanged(final T newSelection)
-	{
 	}
 }

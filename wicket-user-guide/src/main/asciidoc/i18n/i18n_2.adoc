@@ -88,17 +88,10 @@ The label displaying the greeting message has a custom read-only model which ret
 
 [source,java]
 ----
-IModel<String> model = new AbstractReadOnlyModel<String>() {
-			@Override
-			public String getObject() {
-				return getString("greetingMessage");
-			}
-};
+IModel<String> model = () -> getString("greetingMessage");
 
 add(new Label("greetingMessage", model));
 ----
-
-Class _org.apache.wicket.model.AbstractReadOnlyModel_ is a convenience class for implementing read-only models. In this project we have implemented a custom read-only model for illustrative purposes only because Wicket already provides built-in models for the same task. We will see them in paragraph <<i18n.adoc#_internationalization_and_models,paragraph 15.5>>.
 
 The rest of the code of the home page builds the stateless form and the drop-down menu used to change the locale.
 
@@ -108,7 +101,7 @@ List<Locale> locales = Arrays.asList(Locale.ENGLISH, Locale.CHINESE, Locale.GERM
 final DropDownChoice<Locale> changeLocale = 
              new DropDownChoice<Locale>("changeLocale", new Model<Locale>(), locales);
 		
-StatelessForm form = new StatelessForm("form"){
+StatelessForm<Void> form = new StatelessForm<Void>("form"){
 	@Override
 	protected void onSubmit() {
 		Session.get().setLocale(changeLocale.getModelObject());

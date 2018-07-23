@@ -58,6 +58,15 @@ public abstract class RequestAdapter
 	protected abstract IManageablePage getPage(int id);
 
 	/**
+	 * Removes a page from the cache and the stores ({@link org.apache.wicket.pageStore.IPageStore} and
+	 * {@link org.apache.wicket.pageStore.IDataStore}). Any attempt to access it later
+	 * will lead to {@link org.apache.wicket.protocol.http.PageExpiredException}
+	 *
+	 * @param page The page instance to remove
+	 */
+	protected abstract void removePage(final IManageablePage page);
+
+	/**
 	 * Store the list of stateful pages.
 	 * 
 	 * @param touchedPages

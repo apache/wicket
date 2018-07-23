@@ -80,7 +80,7 @@ public class JQueryPluginResourceReference extends JavaScriptResourceReference
 		}
 		else
 		{
-			backingLibraryReference = DynamicJQueryResourceReference.get();
+			backingLibraryReference = JQueryResourceReference.INSTANCE_2;
 		}
 		List<HeaderItem> dependencies = super.getDependencies();
 		dependencies.add(JavaScriptHeaderItem.forReference(backingLibraryReference));

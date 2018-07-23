@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -35,7 +36,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.string.Strings;
 
 /**
  * @since 1.2
@@ -92,6 +92,21 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 					getJavaScriptLibrarySettings().getWicketAjaxReference();
 			return Arrays.<HeaderItem>asList(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			WrappedHeaderItem that = (WrappedHeaderItem) o;
+			return Objects.equals(item, that.item);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return Objects.hash(item);
+		}
 	}
 
 	public static final ResourceReference AUTOCOMPLETE_JS = new JavaScriptResourceReference(
@@ -140,20 +155,8 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	private void renderAutocompleteHead(final IHeaderResponse response)
 	{
 		response.render(JavaScriptHeaderItem.forReference(AUTOCOMPLETE_JS));
-		final String id = getComponent().getMarkupId();
 
-		String indicatorId = findIndicatorId();
-		if (Strings.isEmpty(indicatorId))
-		{
-			indicatorId = "null";
-		}
-		else
-		{
-			indicatorId = "'" + indicatorId + "'";
-		}
-
-		String initJS = String.format("new Wicket.AutoComplete('%s', %s, %s, %s);", id,
-			renderAjaxAttributes(getComponent(), getAttributes()), constructSettingsJS(), indicatorId);
+		String initJS = String.format("new Wicket.AutoComplete(%s, %s);", renderAjaxAttributes(getComponent()), constructSettingsJS());
 
 		final OnDomReadyHeaderItem onDomReady = OnDomReadyHeaderItem.forScript(initJS);
 

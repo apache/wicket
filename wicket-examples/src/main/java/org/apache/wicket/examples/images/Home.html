@@ -1,10 +1,9 @@
 <html xmlns:wicket="http://wicket.apache.org">
-<head>
+<wicket:head>
     <title>Wicket Examples - images</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
+</wicket:head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     <img src = "Image1.gif"/>
     <img wicket:id = "image2" src = "Image2.gif"/>
     <img wicket:id = "image3"/>
@@ -24,5 +23,6 @@
 		<img wicket:id="image7"/>
 	</picture>
 	<img wicket:id="inline"/>
+</wicket:extend>
 </body>
 </html>

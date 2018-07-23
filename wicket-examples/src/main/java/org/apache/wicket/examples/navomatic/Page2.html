@@ -1,17 +1,17 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - navomatic</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <div wicket:id = "mainNavigation"></div>
-    <div wicket:id = "navomaticBorder">
-		<div style = "width:250px">
-		<div style="text-align: center;"><h3>Page 2</h3></div>
-		Welcome to Page 2 of Navomatic.  Notice that the Page1 link is now clickable
-		(so that you can return to Page1 if you want to) and the Page2 link is
-		italicized text.  Go ahead and click the Page3 link.
-		</div>
-    </div>
+    <wicket:extend>
+	    <div wicket:id = "navomaticBorder">
+			<div style = "width:250px">
+			<div style="text-align: center;"><h3>Page 2</h3></div>
+			Welcome to Page 2 of Navomatic.  Notice that the Page1 link is now clickable
+			(so that you can return to Page1 if you want to) and the Page2 link is
+			italicized text.  Go ahead and click the Page3 link.
+			</div>
+	    </div>
+    </wicket:extend>
 </body>
 </html>

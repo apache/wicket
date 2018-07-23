@@ -17,6 +17,7 @@
 package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.Page;
+import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -148,16 +149,13 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 		}
 	}
 
-	/**
-	 * @see org.apache.wicket.core.request.handler.IPageAndComponentProvider#getComponent()
-	 */
 	@Override
 	public IRequestableComponent getComponent()
 	{
 		if (component == null)
 		{
 			IRequestablePage page = getPageInstance();
-			component = page.get(componentPath);
+			component = page != null ? page.get(componentPath) : null;
 			if (component == null)
 			{
 
@@ -172,7 +170,14 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 				{
 					Page p = (Page)page;
 					p.internalInitialize();
-					p.internalPrepareForRender(false);
+					
+					// preparation of feedbacks is delayed into the render phase
+					try (FeedbackDelay delay = new FeedbackDelay(p.getRequestCycle())) {
+						p.beforeRender();
+						p.markRendering(false);
+						
+						// note: no invocation of delay.onBeforeRender() 
+					}
 					component = page.get(componentPath);
 				}
 			}

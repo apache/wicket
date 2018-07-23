@@ -56,8 +56,8 @@ public class ListItemModel<T> implements IModel<T>
 	}
 
 	@Override
-	public final void setObject(T object)
+	public void setObject(T object)
 	{
-		IModel.super.setObject(object);
+		listView.getModelObject().set(index, object);
 	}
 }

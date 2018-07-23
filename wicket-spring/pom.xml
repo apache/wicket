@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-spring</artifactId>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Wicket Spring Integration</name>
 	<description>Integration project to use Spring injection in your Wicket applications. See the wicket-spring-examples for integration patterns.</description>
 	<dependencies>

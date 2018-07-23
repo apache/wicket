@@ -5,4 +5,4 @@ Class _Component_ provides two getter methods to determinate if a component is v
 
 Even if nothing prevents us from overriding these two methods to implement a custom logic to determinate the state of a component, we should keep in mind that methods _isVisible_ and _isEnabled_ are called multiple times before a component is fully rendered. Hence, if we place non-trivial code inside these two methods, we can sensibly deteriorate the responsiveness of our pages.
 
-As we will see in the next chapter, class _Component_ provides method _onConfigure_ which is more suited to contain code that contributes to determinate component states because it is called just once during rendering phase.
+As we will see in the next chapter, class _Component_ provides method _onConfigure_ which is more suited to contain code that contributes to determinate component states because it is called just once during rendering phase of a request.

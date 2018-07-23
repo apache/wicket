@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>org.apache.wicket</groupId>
 		<artifactId>wicket-parent</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-core</artifactId>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Wicket Core</name>
 	<description>
 		Wicket is a Java web application framework that takes simplicity, 
@@ -63,8 +63,18 @@
 			<artifactId>mockito-core</artifactId>
 		</dependency>
 		<dependency>
-		    <groupId>com.tdunning</groupId>
-		    <artifactId>json</artifactId>
+			<groupId>com.github.openjson</groupId>
+			<artifactId>openjson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>

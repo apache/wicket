@@ -34,31 +34,12 @@ The following code is taken from the Application class of the project:
     @Override
     public void init()
     {
-       setHeaderResponseDecorator(new JavaScriptToBucketResponseDecorator("footer-container"));
+       setHeaderResponseDecorator(response -> new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footer-container")));
     }
-	
-     /**
-     * Decorates an original IHeaderResponse and renders all javascript items
-     * (JavaScriptHeaderItem), to a specific container in the page.
-     */
-    static class JavaScriptToBucketResponseDecorator implements IHeaderResponseDecorator 
-    {
 
-        private String bucketName;
-
-        public JavaScriptToBucketResponseDecorator(String bucketName) {
-            this.bucketName = bucketName;
-        }
-
-        @Override
-        public IHeaderResponse decorate(IHeaderResponse response) {
-            return new JavaScriptFilteredIntoFooterHeaderResponse(response, bucketName);
-        }
-
-    }
 ----
 
-As you can see in the code above the _bucket_ that will contain JavaScript tags is called _ .[footer-container] To make a use of it the developer have to add a special component called _HeaderResponseContainer_ in his page:
+As you can see in the code above the _bucket_ that will contain JavaScript tags is called _footer-container_ To make a use of it the developer have to add a special component called _HeaderResponseContainer_ in his page:
 
 [source,java]
 ----
@@ -73,10 +54,11 @@ Please note that _HeaderResponseContainer_'s needs also a name for the correspon
 <html>
 
 <header>
-//no <script> tag here...
+<!-- no <script> tag here... -->
 </header>
 
 <body>
+<h1 id="click-me">Click me!</h1>
 <!-- here we will have our JavaScript tags -->
 <wicket:container wicket:id="someId"/> 
 </body>
@@ -99,7 +81,7 @@ The code of the home page is the following:
         response.render(JavaScriptHeaderItem.forReference(new PackageResourceReference(getClass(),
                 "javasciptLibrary.js")));
 
-        response.render(OnEventHeaderItem.forScript("'logo'", "click", "alert('Clicked me!')"));
+        response.render(OnEventHeaderItem.forScript("'click-me'", "click", "alert('Clicked me!')"));
     }
 ----
 

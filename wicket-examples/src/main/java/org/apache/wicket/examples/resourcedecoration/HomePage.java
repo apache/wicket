@@ -93,6 +93,7 @@ public class HomePage extends WicketExamplePage
 	@Override
 	public void renderHead(IHeaderResponse response)
 	{
+		super.renderHead(response);
 		// example of things that may be shared for all your applications across your company,
 
 		// two CSS resources in the same group. header.css is rendered first because has lower

@@ -27,7 +27,7 @@ Link code:
 
 [source,java]
 ----
-add(new Link("pageWithIndexParam") {
+add(new Link<Void>("pageWithIndexParam") {
 
 	@Override
 	public void onClick() {
@@ -95,7 +95,7 @@ Project PageParametersExample comes also with a link to a page with both indexed
 
 [source,java]
 ----
-add(new Link("pageWithNamedIndexParam") {
+add(new Link<Void>("pageWithNamedIndexParam") {
 
 	@Override
  	public void onClick() {

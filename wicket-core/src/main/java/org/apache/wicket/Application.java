@@ -41,6 +41,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.javascript.DefaultJavaScriptCompressor;
 import org.apache.wicket.markup.MarkupFactory;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.html.IHeaderContributor;
@@ -195,7 +196,9 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * The decorator this application uses to decorate any header responses created by Wicket
 	 */
-	private IHeaderResponseDecorator headerResponseDecorator;
+	private IHeaderResponseDecorator headerResponseDecorator = (headerresponse) -> {
+		return new ResourceAggregator(headerresponse);
+	};
 
 	/**
 	 * Checks if the <code>Application</code> threadlocal is set in this thread
@@ -1610,13 +1613,18 @@ public abstract class Application implements UnboundListener, IEventSink
 	/**
 	 * Sets an {@link IHeaderResponseDecorator} that you want your application to use to decorate
 	 * header responses.
+	 * <p>
+	 * Calling this method replaces the default decorator, which utilizes a {@link ResourceAggregator}:
+	 * The given implementation should make sure, that it too wraps responses in a {@link ResourceAggregator},
+	 * otherwise no dependencies for {@link HeaderItem}s will be resolved.   
 	 * 
 	 * @param headerResponseDecorator
-	 *            your custom decorator
+	 *            your custom decorator, must not be null
 	 */
-	public final Application setHeaderResponseDecorator(
-		final IHeaderResponseDecorator headerResponseDecorator)
+	public final Application setHeaderResponseDecorator(final IHeaderResponseDecorator headerResponseDecorator)
 	{
+		Args.notNull(headerResponseDecorator, "headerResponseDecorator");
+		
 		this.headerResponseDecorator = headerResponseDecorator;
 		return this;
 	}
@@ -1636,14 +1644,7 @@ public abstract class Application implements UnboundListener, IEventSink
 	 */
 	public final IHeaderResponse decorateHeaderResponse(final IHeaderResponse response)
 	{
-		final IHeaderResponse aggregatingResponse = new ResourceAggregator(response);
-
-		if (headerResponseDecorator == null)
-		{
-			return aggregatingResponse;
-		}
-
-		return headerResponseDecorator.decorate(aggregatingResponse);
+		return headerResponseDecorator.decorate(response);
 	}
 
 	/**

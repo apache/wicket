@@ -19,6 +19,7 @@ package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 import java.util.Iterator;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -129,4 +130,10 @@ public abstract class AutoCompleteBehavior<T> extends AbstractAutoCompleteBehavi
 	 * @return iterator over all possible choice objects
 	 */
 	protected abstract Iterator<T> getChoices(String input);
+
+	@Override
+	public void detach(Component component)
+	{
+		renderer.detach();
+	}
 }

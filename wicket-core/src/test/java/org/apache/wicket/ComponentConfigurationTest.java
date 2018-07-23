@@ -152,6 +152,8 @@ public class ComponentConfigurationTest extends WicketTestCase
 		@Override
 		protected void onConfigure()
 		{
+			super.onConfigure();
+			
 			requestCount++;
 			totalCount++;
 		}

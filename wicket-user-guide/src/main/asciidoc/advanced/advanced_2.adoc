@@ -53,9 +53,9 @@ public abstract class Link<T> extends AbstractLink implements IRequestListener .
 }
 ----
 
-Callback URLs can be generated with _Component_'s method _urlFor(PageParameters)_ or with method _urlFor (Behavior, RequestListenerInterface, PageParameters)_ if we are using a callback interface with a behavior (see the following example).
+Callback URLs can be generated with _Component_'s method _urlForListener(PageParameters)_ or with method _urlForListener(Behavior, PageParameters)_ if we are using a request listener on a component or behavior respectively (see the following example).
 
-Project _CallbackURLExample_ contains a behavior (class _OnChangeSingleChoiceBehavior_) that implements _org.apache.wicket.IRequestListener_ to update the model of an _AbstractSingleSelectChoice_ component when user changes the selected option (it provides the same functionality of method _wantOnSelectionChangedNotifications_). 
+Project _CallbackURLExample_ contains a behavior (class _OnChangeSingleChoiceBehavior_) that implements _org.apache.wicket.IRequestListener_ to update the model of an _AbstractSingleSelectChoice_ component when user changes the selected option (it provides the same functionality as _FormComponentUpdatingBehavior_). 
 The following is the implementation of _onRequest()_ provided by _OnSelectionChangedNotifications_:
 
 [source,java]

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -29,7 +30,7 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
 
 /**
- * {@link HeaderItem} for meta informations such as &lt;meta&gt; tags or 
+ * {@link HeaderItem} for meta information such as &lt;meta&gt; tags or
  * canonical &lt;link&gt;
  * 
  * @author andrea del bene
@@ -37,7 +38,15 @@ import org.apache.wicket.util.value.ValueMap;
  */
 public class MetaDataHeaderItem extends HeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * The meta tag name
+	 */
 	public static final String META_TAG = "meta";
+	/**
+	 * the link tag name
+	 */
 	public static final String LINK_TAG = "link";
 
 	private final Map<String, Object> tagAttributes;
@@ -219,16 +228,21 @@ public class MetaDataHeaderItem extends HeaderItem
 
 		return headerItem;
 	}
-	
+
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		return obj instanceof MetaDataHeaderItem && ((MetaDataHeaderItem) obj).generateString().equals(generateString());
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MetaDataHeaderItem that = (MetaDataHeaderItem) o;
+		return Objects.equals(tagAttributes, that.tagAttributes) &&
+				Objects.equals(tagMinimizedAttributes, that.tagMinimizedAttributes) &&
+				Objects.equals(tagName, that.tagName);
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return generateString().hashCode();
+		return Objects.hash(tagAttributes, tagMinimizedAttributes, tagName);
 	}
 }

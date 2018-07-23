@@ -58,7 +58,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		final AuthorizeInstantiation classAnnotation = componentClass.getAnnotation(AuthorizeInstantiation.class);
 		if (classAnnotation != null)
 		{
-			authorized = hasAny(new Roles(classAnnotation.value()));
+			authorized = check(classAnnotation);
 		}
 		else
 		{
@@ -69,7 +69,22 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 				final AuthorizeInstantiation packageAnnotation = componentPackage.getAnnotation(AuthorizeInstantiation.class);
 				if (packageAnnotation != null)
 				{
-					authorized = hasAny(new Roles(packageAnnotation.value()));
+					authorized = check(packageAnnotation);
+				}
+			}
+		}
+
+		// Check for multiple instantiations
+		final AuthorizeInstantiations authorizeInstantiationsAnnotation = componentClass
+			.getAnnotation(AuthorizeInstantiations.class);
+		if (authorizeInstantiationsAnnotation != null)
+		{
+			for (final AuthorizeInstantiation authorizeInstantiationAnnotation : authorizeInstantiationsAnnotation
+				.ruleset())
+			{
+				if (!check(authorizeInstantiationAnnotation))
+				{
+					authorized = false;
 				}
 			}
 		}
@@ -77,6 +92,28 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 		return authorized;
 	}
 
+	/**
+	 * Check if annotated instantiation is allowed.
+	 * 
+	 * @param authorizeInstantiationAnnotation
+	 *            The annotations information
+	 * @return False if the instantiation is not authorized
+	 */
+	private <T extends IRequestableComponent> boolean check(
+		final AuthorizeInstantiation authorizeInstantiationAnnotation)
+	{
+		// We are authorized unless we are found not to be
+		boolean authorized = true;
+
+		// Check class annotation first because it is more specific than package annotation
+		if (authorizeInstantiationAnnotation != null)
+		{
+			authorized = hasAny(new Roles(authorizeInstantiationAnnotation.value()));
+		}
+
+		return authorized;
+	}
+	
 	/**
 	 * @see org.apache.wicket.authorization.IAuthorizationStrategy#isActionAuthorized(org.apache.wicket.Component,
 	 *      org.apache.wicket.authorization.Action)
@@ -134,7 +171,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 				}
 
 				Roles acceptedRoles = new Roles(authorizeActionAnnotation.roles());
-				if (!(isEmpty(acceptedRoles) || hasAny(acceptedRoles)))
+				if (!hasAny(acceptedRoles))
 				{
 					return false;
 				}

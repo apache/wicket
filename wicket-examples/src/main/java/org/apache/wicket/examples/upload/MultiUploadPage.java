@@ -106,12 +106,12 @@ public class MultiUploadPage extends WicketExamplePage
 		/**
 		 * Construct.
 		 * 
-		 * @param name
-		 *            Component name
+		 * @param id
+		 *            Component id
 		 */
-		public FileUploadForm(String name)
+		public FileUploadForm(String id)
 		{
-			super(name);
+			super(id);
 
 			// set this form to multipart mode (always needed for uploads!)
 			setMultiPart(true);

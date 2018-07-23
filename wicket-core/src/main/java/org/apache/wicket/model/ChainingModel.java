@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.model;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,7 @@ import org.slf4j.LoggerFactory;
  *
  * @since 6.0.0
  */
-public class ChainingModel<T> implements IChainingModel<T>
+public class ChainingModel<T> implements IModel<T>
 {
 	private static final Logger LOG = LoggerFactory.getLogger(ChainingModel.class);
 
@@ -46,6 +48,10 @@ public class ChainingModel<T> implements IChainingModel<T>
 					+ "in models directly as it may lead to serialization problems. "
 					+ "If you need to access a property of the session via the model use the "
 					+ "page instance as the model object and 'session.attribute' as the path.");
+		} else if (modelObject != null && (modelObject instanceof Serializable == false))
+		{
+			LOG.warn("It is not a good idea to reference non-serializable {} "
+					+ "in a model directly as it may lead to serialization problems.", modelObject.getClass());
 		}
 
 		target = modelObject;
@@ -89,22 +95,6 @@ public class ChainingModel<T> implements IChainingModel<T>
 			return ((IModel<T>)target).getObject();
 		}
 		return (T)target;
-	}
-
-	@Override
-	public IModel<?> getChainedModel()
-	{
-		if (target instanceof IModel)
-		{
-			return (IModel<?>)target;
-		}
-		return null;
-	}
-
-	@Override
-	public void setChainedModel(IModel<?> model)
-	{
-		target = model;
 	}
 
 	/**

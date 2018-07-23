@@ -42,7 +42,7 @@ public class SessionSizeModel implements IModel<Bytes>
 		Bytes result = null;
 		if (Session.exists())
 		{
-			long sizeOfSession = WicketObjects.sizeof(Session.get());
+			long sizeOfSession = Session.get().getSizeInBytes();
 			if (sizeOfSession > -1)
 			{
 				result = Bytes.bytes(sizeOfSession);

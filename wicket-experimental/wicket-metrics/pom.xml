@@ -20,12 +20,12 @@
 	<parent>
 		<groupId>org.apache.wicket.experimental.wicket8</groupId>
 		<artifactId>wicket-experimental</artifactId>
-		<version>8.0.0-SNAPSHOT</version>
+		<version>9.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-metrics</artifactId>
-	<version>0.2-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<version>0.7-SNAPSHOT</version>
+	<packaging>bundle</packaging>
 	<name>Wicket Metrics</name>
 	<description>
 		Wicket’s implementation to show metric information

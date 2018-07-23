@@ -1,14 +1,36 @@
-<wicket:extend xmlns:wicket="http://wicket.apache.org">
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+<wicket:head>
+<style type="text/css">
+table {
+    border-collapse:collapse;
+}
+
+td {
+    padding: 2px;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+</style>
+</wicket:head>
+</head>
+<body>
+<wicket:extend>
 
 This page demonstrates the GridView component
 <br/><br/>
 
 <span wicket:id="navigator">[dataview navigator]</span>
 
-<table cellspacing="0" cellpadding="2" border="1">
-	<tr wicket:id="rows">
-		<td wicket:id="cols"><span wicket:id="firstName">[firstname]</span></td>
-	</tr>
-</table>
-
+<div style="overflow-x:auto;">
+	<table cellspacing="0" cellpadding="2" border="1">
+		<tr wicket:id="rows">
+			<td wicket:id="cols"><span wicket:id="firstName">[firstname]</span></td>
+		</tr>
+	</table>
+</div>
 </wicket:extend>
+</body>
+</html>

@@ -9,8 +9,8 @@ An example of a parent page using the tag _<wicket:child>_ is the following:
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
 </head>
 <body>
-	This is parent body!
-	<wicket:child/>
+    This is parent body!
+    <wicket:child/>
 </body>
 </html>
 ----
@@ -25,8 +25,8 @@ The markup of a child page/panel must be placed inside the tag _<wicket:extend>_
 </head>
 <body>
     <wicket:extend>
-          This is child body!
-	</wicket:extend>
+      This is child body!
+    </wicket:extend>
 </body>
 </html>
 ----
@@ -37,14 +37,14 @@ Considering the two pages seen above, the final markup generated for child page 
 ----
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-	This is parent body!
-	<wicket:child>
-       <wicket:extend>
-           This is child body!
-	   </wicket:extend>
+    This is parent body!
+    <wicket:child>
+      <wicket:extend>
+        This is child body!
+      </wicket:extend>
     </wicket:child>
 </body>
 </html>

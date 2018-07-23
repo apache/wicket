@@ -4,23 +4,22 @@
 	xmlns:wicket="http://wicket.apache.org" xml:lang="en" lang="en">
 	<head>
 		<title>Wicket Examples - Captcha</title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
-		<span wicket:id="mainNavigation" />
+		<wicket:extend>
 
-		<h3>Demo of Wicket's default: <em>org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource</em> </h3>
-		<wicket:container wicket:id="wicket"></wicket:container>
-
-		<hr/>
-
-		<h3>Demo using <a href="https://github.com/axet/kaptcha">Kaptcha</a> library</h3>
-		<wicket:container wicket:id="kaptcha"></wicket:container>
-
-		<hr/>
-
-		<h3>Demo using <a href="https://github.com/akiraly/cage">Cage</a> library</h3>
-		<wicket:container wicket:id="cage"></wicket:container>
-
+			<h3>Demo of Wicket's default: <em>org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource</em> </h3>
+			<wicket:container wicket:id="wicket"></wicket:container>
+	
+			<hr/>
+	
+			<h3>Demo using <a href="https://github.com/axet/kaptcha">Kaptcha</a> library</h3>
+			<wicket:container wicket:id="kaptcha"></wicket:container>
+	
+			<hr/>
+	
+			<h3>Demo using <a href="https://github.com/akiraly/cage">Cage</a> library</h3>
+			<wicket:container wicket:id="cage"></wicket:container>
+        </wicket:extend>
 	</body>
 </html>

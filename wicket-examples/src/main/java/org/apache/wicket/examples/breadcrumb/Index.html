@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - bread crumb</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     
 	<div>
 	  <span wicket:id="breadCrumbBar">bar</span>
@@ -15,5 +14,6 @@
 	  <span wicket:id="panel">bar</span>
 	</div>
 
+</wicket:extend>
 </body>
 </html>

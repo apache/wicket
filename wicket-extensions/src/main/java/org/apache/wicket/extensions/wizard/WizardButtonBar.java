@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.wizard;
 
-import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 
 /**
@@ -31,7 +31,7 @@ import org.apache.wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public class WizardButtonBar extends Panel implements IDefaultButtonProvider
+public class WizardButtonBar extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,83 +64,96 @@ public class WizardButtonBar extends Panel implements IDefaultButtonProvider
 		add(newFinishButton("finish", wizard));
 	}
 
+	@Override
+	protected void onBeforeRender()
+	{
+		super.onBeforeRender();
+
+		WizardButton button = getDefaultButton(wizard.getWizardModel());
+		if (button != null) {
+			Form<?> form = button.getForm();
+			if (form != null) {
+				form.setDefaultButton(button);
+			}
+		}
+	}
+
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IDefaultButtonProvider#getDefaultButton(org.apache.wicket.extensions.wizard.IWizardModel)
 	 */
-	@Override
-	public IFormSubmittingComponent getDefaultButton(final IWizardModel model)
+	public WizardButton getDefaultButton(final IWizardModel model)
 	{
 		if (model.isNextAvailable())
 		{
-			return (IFormSubmittingComponent)get("next");
+			return (WizardButton)get("next");
 		}
 		else if (model.isLastAvailable())
 		{
-			return (IFormSubmittingComponent)get("last");
+			return (WizardButton)get("last");
 		}
 		else if (model.isLastStep(model.getActiveStep()))
 		{
-			return (IFormSubmittingComponent)get("finish");
+			return (WizardButton)get("finish");
 		}
 		return null;
 	}
 	
 	/**
-	 * Creates a new {@link PreviousButton}
+	 * Creates a new button for {@link IWizardModel#previous()}.
 	 * 
-	 * @param id the button's markup-id
+	 * @param id the button's id
 	 * @param wizard the {@link IWizard}
 	 * @return a new {@code PreviousButton}
 	 */
-	protected PreviousButton newPreviousButton(final String id, final IWizard wizard)
+	protected WizardButton newPreviousButton(final String id, final IWizard wizard)
 	{
 		return new PreviousButton(id, wizard);
 	}
 
 	/**
-	 * Creates a new {@link NextButton}
+	 * Creates a new button for {@link IWizardModel#next()}.
 	 * 
-	 * @param id the button's markup-id
+	 * @param id the button's id
 	 * @param wizard the {@link IWizard}
 	 * @return a new {@code NextButton}
 	 */
-	protected NextButton newNextButton(final String id, final IWizard wizard)
+	protected WizardButton newNextButton(final String id, final IWizard wizard)
 	{
 		return new NextButton(id, wizard);
 	}
 
 	/**
-	 * Creates a new {@link LastButton}
+	 * Creates a new button for {@link IWizardModel#last()}.
 	 * 
-	 * @param id the button's markup-id
+	 * @param id the button's id
 	 * @param wizard the {@link IWizard}
 	 * @return a new {@code LastButton}
 	 */
-	protected LastButton newLastButton(final String id, final IWizard wizard)
+	protected WizardButton newLastButton(final String id, final IWizard wizard)
 	{
 		return new LastButton(id, wizard);
 	}
 
 	/**
-	 * Creates a new {@link CancelButton}
+	 * Creates a new button for {@link IWizardModel#cancel()}.
 	 * 
-	 * @param id the button's markup-id
+	 * @param id the button's id
 	 * @param wizard the {@link IWizard}
 	 * @return a new {@code CancelButton}
 	 */
-	protected CancelButton newCancelButton(final String id, final IWizard wizard)
+	protected WizardButton newCancelButton(final String id, final IWizard wizard)
 	{
 		return new CancelButton(id, wizard);
 	}
 
 	/**
-	 * Creates a new {@link FinishButton}
+	 * Creates a new button for {@link IWizardModel#finish()}.
 	 * 
-	 * @param id the button's markup-id
+	 * @param id the button's id
 	 * @param wizard the {@link IWizard}
-	 * @return a new {@code FinishButton}
+	 * @return a new button
 	 */
-	protected FinishButton newFinishButton(final String id, final IWizard wizard)
+	protected WizardButton newFinishButton(final String id, final IWizard wizard)
 	{
 		return new FinishButton(id, wizard);
 	}

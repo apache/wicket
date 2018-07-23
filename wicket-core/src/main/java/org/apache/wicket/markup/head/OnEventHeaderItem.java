@@ -19,6 +19,7 @@ package org.apache.wicket.markup.head;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.string.JavaScriptUtils;
@@ -30,21 +31,23 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * {@link HeaderItem} for event triggered scripts.
- * 
+ *
  * @author papegaaij
  */
 public class OnEventHeaderItem extends HeaderItem
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Creates a {@link OnEventHeaderItem} for the given parameters.
-	 * 
+	 *
 	 * @param target
 	 *            The target of the event handler, for example 'window' or 'document'.
 	 * @param event
 	 *            The event itself, for example 'click'.
 	 * @param javaScript
 	 *            The script to execute on the event.
-	 * 
+	 *
 	 * @return A newly created {@link OnEventHeaderItem}.
 	 */
 	public static OnEventHeaderItem forScript(String target, String event, CharSequence javaScript)
@@ -71,7 +74,7 @@ public class OnEventHeaderItem extends HeaderItem
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param target
 	 * @param event
 	 * @param javaScript
@@ -82,17 +85,7 @@ public class OnEventHeaderItem extends HeaderItem
 
 		Args.notEmpty(event, "event");
 		event = event.toLowerCase(Locale.ENGLISH);
-		if (event.startsWith("on"))
-		{
-			String shortName = event.substring(2);
-			throw new IllegalArgumentException(
-					String.format("Since version 6.0.0 Wicket uses JavaScript event registration so there is no need of the leading " +
-									"'on' in the event name '%s'. Please use just '%s'. Wicket 8.x won't manipulate the provided event " +
-									"names so the leading 'on' may break your application."
-							, event, shortName));
-		}
 		this.event = event;
-
 		this.javaScript = javaScript;
 	}
 
@@ -161,28 +154,27 @@ public class OnEventHeaderItem extends HeaderItem
 	@Override
 	public int hashCode()
 	{
-		return getTarget().hashCode() ^ getEvent().hashCode() ^ getJavaScript().hashCode();
+		return Objects.hash(target, event, javaScript);
 	}
 
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(Object o)
 	{
-		if (obj instanceof OnEventHeaderItem)
-		{
-			OnEventHeaderItem other = (OnEventHeaderItem)obj;
-			return other.getTarget().equals(getTarget()) && other.getEvent().equals(getEvent()) &&
-				other.getJavaScript().equals(getJavaScript());
-		}
-		return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		OnEventHeaderItem that = (OnEventHeaderItem) o;
+		return Objects.equals(target, that.target) &&
+				Objects.equals(event, that.event) &&
+				Objects.equals(javaScript, that.javaScript);
 	}
 
 	@Override
 	public List<HeaderItem> getDependencies()
 	{
 		JavaScriptLibrarySettings ajaxSettings = Application.get().getJavaScriptLibrarySettings();
-		ResourceReference wicketEventReference = ajaxSettings.getWicketEventReference();
+		ResourceReference wicketAjaxReference = ajaxSettings.getWicketAjaxReference();
 		List<HeaderItem> dependencies = super.getDependencies();
-		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		dependencies.add(JavaScriptHeaderItem.forReference(wicketAjaxReference));
 		return dependencies;
 	}
 }

@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.wizard;
 
 import java.util.Iterator;
 
+import org.apache.wicket.extensions.wizard.WizardModel.ICondition;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
 
@@ -46,6 +47,64 @@ public class WizardModelTest extends WicketTestCase
 		{
 			WizardStep step = (WizardStep)iterator.next();
 			assertEquals(model, step.getWizardModel());
+		}
+	}
+	
+	@Test
+	public void testWizard()
+	{
+		WizardModel model = new WizardModel();
+		
+		WizardStep step1 = new WizardStep();
+		model.add(step1);
+		
+		WizardStep step2 = new WizardStep();
+		model.add(step2, () -> false);
+		
+		class ConditionWizadStep extends WizardStep implements ICondition {
+
+			@Override
+			public boolean evaluate()
+			{
+				return false;
+			}
+			
+		};
+		WizardStep step3 = new ConditionWizadStep();
+		model.add(step3);
+		
+		WizardStep step4 = new WizardStep();
+		model.add(step4);
+
+		model.reset();
+		
+		Iterator<IWizardStep> iterator = model.stepIterator();
+		assertTrue(iterator.hasNext());
+		iterator.next();
+		assertTrue(iterator.hasNext());
+		iterator.next();
+		assertFalse(iterator.hasNext());
+		try {
+			iterator.next();
+			fail();
+		} catch (Exception expected) {
+		}
+
+		assertSame(step1, model.getActiveStep());
+		assertTrue(model.isNextAvailable());
+		assertFalse(model.isLastStep(model.getActiveStep()));
+		assertFalse(model.isFinishAvailable());
+
+		model.next();
+		assertSame(step4, model.getActiveStep());
+		assertFalse(model.isNextAvailable());
+		assertTrue(model.isLastStep(model.getActiveStep()));
+		assertTrue(model.isFinishAvailable());
+
+		try {
+			model.next();
+			fail();
+		} catch (Exception expected) {
 		}
 	}
 }

@@ -51,6 +51,11 @@ public class PageManagerDecorator implements IPageManager
 	}
 
 	@Override
+	public void removePage(final IManageablePage page) {
+		delegate.removePage(page);
+	}
+
+	@Override
 	public void touchPage(IManageablePage page)
 	{
 		delegate.touchPage(page);

@@ -18,28 +18,48 @@ package org.apache.wicket.http2.markup.head;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.catalina.core.ApplicationPushBuilder;
+import org.apache.wicket.http2.markup.head.PushItemHeaderValue.HeaderOperation;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Allows to push resources with the Tomcat 8.5+ specific push builder API
  */
 public class Tomcat85PushBuilder implements PushBuilder
 {
-	/**
-	 * @see {@link org.apache.wicket.http2.markup.head.PushBuilder}
-	 */
+	private static final Logger LOG = LoggerFactory.getLogger(Tomcat85PushBuilder.class);
+
 	@Override
-	public void push(HttpServletRequest httpServletRequest, String... paths)
+	public void push(HttpServletRequest httpServletRequest, PushItem... pushItems)
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
 		org.apache.catalina.connector.RequestFacade tomcatRequest = (org.apache.catalina.connector.RequestFacade) httpRequest;
-		org.apache.catalina.servlet4preview.http.PushBuilder pushBuilder = tomcatRequest.getPushBuilder();
-		for (String path : paths)
+		ApplicationPushBuilder pushBuilder = (ApplicationPushBuilder) tomcatRequest.newPushBuilder();
+		if (pushBuilder != null)
 		{
-			pushBuilder.path(path);
+			for (PushItem pushItem : pushItems)
+			{
+				pushBuilder.path(pushItem.getUrl());
+				pushItem.getHeaders().entrySet().stream().forEach(pushHeader -> {
+					String key = pushHeader.getKey();
+					PushItemHeaderValue value = pushHeader.getValue();
+					if(value.getOperation() == HeaderOperation.ADD){
+						pushBuilder.addHeader(key, value.getValue());
+					}else{
+						pushBuilder.setHeader(key, value.getValue());
+					}
+				});
+				pushBuilder.push();
+			}
 		}
-		pushBuilder.push();
+		else
+		{
+			LOG.warn("Attempted to use HTTP2 Push but it is not supported for the current request: {}!",
+						httpRequest);
+		}
 	}
 }

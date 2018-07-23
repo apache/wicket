@@ -18,6 +18,7 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.filter;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -87,10 +88,12 @@ public class FilterForm<T> extends Form<T>
 
 		String id = Strings.escapeMarkup(getFocusTrackerFieldCssId()).toString();
 		String value = getRequest().getPostParameters().getParameterValue(id).toString("");
+		String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
+		
 		getResponse().write(
 			String.format(
-				"<div style='position: absolute; left: -9999px; width: 1px; height: 1px;'><input type='hidden' name='%s' id='%s' value='%s'/><input type='submit'/></div>",
-				id, id, Strings.escapeMarkup(value)));
+				"<div style='position: absolute; left: -9999px; width: 1px; height: 1px;' class='%s'><input type='hidden' name='%s' id='%s' value='%s'/><input type='submit'/></div>",
+				cssClass, id, id, Strings.escapeMarkup(value)));
 	}
 
 	/**

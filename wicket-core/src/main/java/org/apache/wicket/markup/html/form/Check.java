@@ -24,7 +24,6 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.Strings;
 
 
@@ -111,10 +110,13 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 
 
 	/**
-	 * Form submission value used for this radio component. This string will appear as the value of
-	 * the <code>value</code> html attribute for the <code>input</code> tag.
+	 * Form submission value used for the Html <code>value</code> attribute of the <code>input</code> tag.
+	 * <p>
+	 * If {@link Check}s are recreated on each render of their {@link CheckGroup}, this method should
+	 * be overridden to return a 'stable' value, otherwise its selection will be lost after a {@link Form}
+	 * was submitted and resulted in {@link Form#hasError()}.
 	 * 
-	 * @return form submission value
+	 * @return input value
 	 */
 	public String getValue()
 	{
@@ -193,25 +195,6 @@ public class Check<T> extends LabeledWebMarkupContainer implements IGenericCompo
 		else if (collection.contains(getDefaultModelObject()))
 		{
 			tag.put("checked", "checked");
-		}
-
-		if (group.wantOnSelectionChangedNotifications())
-		{
-			// url that points to this components IOnChangeListener method
-			CharSequence url = group.urlForListener(new PageParameters());
-
-			Form<?> form = group.findParent(Form.class);
-			if (form != null)
-			{
-				tag.put("onclick", form.getJsForInterfaceUrl(url));
-			}
-			else
-			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
-				tag.put("onclick", "window.location.href='" + url +
-					(url.toString().indexOf('?') > -1 ? "&" : "?") + group.getInputName() +
-					"=' + this.value;");
-			}
 		}
 
 		if (!isActionAuthorized(ENABLE) || !isEnabledInHierarchy() || !group.isEnabledInHierarchy())

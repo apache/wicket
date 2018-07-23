@@ -31,10 +31,10 @@ import org.apache.wicket.util.visit.IVisitor;
  * stateless. This is a utility that is intended for use primarily during development. If you add an
  * instance of this class to your application, it will check all components or pages marked with the
  * <tt>StatelessComponent</tt> annotation to make sure that they are stateless as you intended.
- * 
+ *
  * This is useful when trying to maintain stateless pages since it is very easy to inadvertently add
  * a component to a page that internally uses stateful links, etc.
- * 
+ *
  * @author Marat Radchenko
  * @see StatelessComponent
  */
@@ -43,7 +43,7 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	/**
 	 * Returns <code>true</code> if checker must check given component, <code>false</code>
 	 * otherwise.
-	 * 
+	 *
 	 * @param component
 	 *            component to check.
 	 * @return <code>true</code> if checker must check given component.
@@ -52,6 +52,15 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 	{
 		final StatelessComponent ann = component.getClass().getAnnotation(StatelessComponent.class);
 		return (ann != null) && ann.enabled();
+	}
+	/**
+	 * The given component claims to be stateless but isn't.
+	 *
+	 * @param e StatelessCheckFailureException
+	 */
+	protected void fail(StatelessCheckFailureException e)
+	{
+		throw e;
 	}
 
 	/**
@@ -91,7 +100,6 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				}
 			};
 
-			final String msg = "'" + component + "' claims to be stateless but isn't.";
 			if (component.isStateless() == false)
 			{
 				StringList statefulBehaviors = new StringList();
@@ -111,16 +119,19 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				{
 				    reason = " Stateful behaviors: " + statefulBehaviors.join();
 				}
-				throw new IllegalStateException(msg + reason);
+				fail(new StatelessCheckFailureException(component, reason));
+				return;
 			}
 
 			if (component instanceof MarkupContainer)
 			{
+				MarkupContainer container = ((MarkupContainer)component);
 				// Traverse children
-				final Object o = ((MarkupContainer)component).visitChildren(visitor);
+				final Object o = container.visitChildren(visitor);
 				if (o != null)
 				{
-					throw new IllegalArgumentException(msg + " Offending component: " + o);
+					fail(new StatelessCheckFailureException(container, " Offending component: " + o));
+					return;
 				}
 			}
 
@@ -129,12 +140,13 @@ public class StatelessChecker implements IComponentOnBeforeRenderListener
 				final Page p = (Page)component;
 				if (!p.isBookmarkable())
 				{
-					throw new IllegalArgumentException(msg +
-						" Only bookmarkable pages can be stateless");
+					fail(new StatelessCheckFailureException(p, " Only bookmarkable pages can be stateless"));
+					return;
 				}
 				if (!p.isPageStateless())
 				{
-					throw new IllegalArgumentException(msg + " for unknown reason");
+					fail(new StatelessCheckFailureException(p, " for unknown reason"));
+					return;
 				}
 			}
 		}

@@ -50,14 +50,14 @@ In the following snippet we have a form with two submit buttons bound to an <inp
 public class HomePage extends WebPage {
 	
 	public HomePage(final PageParameters parameters) {		
-		Form form = new Form("form");
+		Form<Void> form = new Form<>("form");
 	
-	     	form.add(new TextField("username", Model.of("")));
-	    	form.add(new Button("submit1", Model.of("First submitter")));
+	    form.add(new TextField("username", Model.of("")));
+	    form.add(new Button("submit1", Model.of("First submitter")));
 		Button secondSubmitter;
 		form.add(secondSubmitter = new Button("submit2", Model.of("Second submitter")));
 		
-	    	form.setDefaultButton(secondSubmitter);
+	    form.setDefaultButton(secondSubmitter);
 		add(form);
 	}
 }
@@ -110,7 +110,7 @@ A notable difference between this component and Button is that SubmitLink can be
 public class HomePage extends WebPage {
 	
 	public HomePage(final PageParameters parameters) {		
-		Form form = new Form("form");
+		Form<Void> form = new Form<>("form");
 	    
 		form.add(new PasswordTextField("password", Model.of("")));
 		//specify the form to submit

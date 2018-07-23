@@ -120,7 +120,7 @@ public class RegistrationPage extends Page {
         <div wicket:id="registration">
            Display the RegistrationInputPanel
         </div>
-        <input type=&rdquo;submit&rdquo; wicket:id="register" value="Register"/>
+        <input type="submit" wicket:id="register" value="Register"/>
     </form>
 </body>
 </html>

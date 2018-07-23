@@ -20,16 +20,16 @@
 	<head>
 		<meta charset="utf-8" />
         <title>Apache Wicket Native WebSocket demos</title>
-		<link rel="stylesheet" href="style.css" type="text/css" media="screen" title="Stylesheet" />
 	</head>
 	<body>
-		<div wicket:id="mainNavigation"></div>
+		<wicket:extend>
 
-		<wicket:link>
-			<ul>
-				<li><a href="WebSocketBehaviorDemoPage.html">demo with WebSocketBehavior</a></li>
-				<li><a href="WebSocketResourceDemoPage.html">demo with WebSocketResource</a></li>
-			</ul>
-		</wicket:link>
+			<wicket:link>
+				<ul>
+					<li><a href="WebSocketBehaviorDemoPage.html">demo with WebSocketBehavior</a></li>
+					<li><a href="WebSocketResourceDemoPage.html">demo with WebSocketResource</a></li>
+				</ul>
+			</wicket:link>
+		</wicket:extend>
 	</body>
 </html>

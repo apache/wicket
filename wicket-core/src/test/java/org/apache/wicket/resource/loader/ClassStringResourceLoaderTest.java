@@ -41,9 +41,6 @@ public class ClassStringResourceLoaderTest extends WicketTestCase
 			loader.loadStringResource((Component)null, "error", null, null, null));
 	}
 
-	/**
-	 * 
-	 */
 	public static class MyValidator implements IValidator<String>
 	{
 		private static final long serialVersionUID = 1L;

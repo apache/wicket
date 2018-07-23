@@ -17,7 +17,7 @@ Java code:
 
 [source,java]
 ----
-Form form = new Form("form"){
+Form<Void> form = new Form<Void>("form"){
     @Override
     protected void onSubmit() {
     	System.out.println("Form submitted.");
@@ -44,7 +44,7 @@ As first example of interaction between the form and its models, we will build a
 WARNING: The topic of security will be discussed later in chapter 22. The following form is for example purposes only and is not suited for a real application.
 If you need to use a login form you should consider to use component _org.apache.wicket.authroles.authentication.panel.SignInPanel_ shipped with Wicket.
 
-This form needs two text fields, one of which must be a password field. We should also use a label to display the result of login process1. For the sake of simplicity, the login logic is all inside onSubmit and is quite trivial.
+This form needs two text fields, one of which must be a password field. We should also use a label to display the result of login process. For the sake of simplicity, the login logic is all inside onSubmit and is quite trivial.
 
 The following is a possible implementation of our form:
 

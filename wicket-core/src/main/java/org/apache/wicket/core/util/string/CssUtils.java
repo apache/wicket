@@ -27,11 +27,14 @@ import org.apache.wicket.util.string.Strings;
  */
 public final class CssUtils
 {
+	/** start of CSS inline open tag */
+	public final static String INLINE_OPEN_TAG_START = "<style type=\"text/css\"";
+
 	/** CSS inline open tag */
-	public final static String INLINE_OPEN_TAG = "<style type=\"text/css\"><!--\n";
+	public final static String INLINE_OPEN_TAG = INLINE_OPEN_TAG_START + ">\n";
 
 	/** CSS inline close tag */
-	public final static String INLINE_CLOSE_TAG = "--></style>\n";
+	public final static String INLINE_CLOSE_TAG = "</style>\n";
 
 	/**
 	 * Hidden constructor.
@@ -64,12 +67,12 @@ public final class CssUtils
 	 */
 	public static void writeOpenTag(final Response response, String id)
 	{
-		response.write("<style type=\"text/css\" ");
+		response.write(INLINE_OPEN_TAG_START);
 		if (id != null)
 		{
-			response.write("id=\"" + id + "\"");
+			response.write(" id=\"" + id + "\"");
 		}
-		response.write("><!--\n");
+		response.write(">\n");
 	}
 
 	/**
@@ -85,14 +88,36 @@ public final class CssUtils
 	 * Writes a reference to a css file in the response object
 	 *
 	 * @param response
-	 *      the response to write to
+	 *            the response to write to
 	 * @param url
-	 *      the url of the css reference
+	 *            the url of the css reference
 	 * @param media
-	 *      the CSS media
+	 *            the CSS media
+	 * @param markupId
+	 *            the markupId
 	 */
-	public static void writeLinkUrl(final Response response, final CharSequence url, final CharSequence media,
-	                                final String markupId)
+	public static void writeLinkUrl(final Response response, final CharSequence url,
+		final CharSequence media, final String markupId)
+	{
+		CssUtils.writeLinkUrl(response, url, media, markupId, null);
+	}
+
+	/**
+	 * Writes a reference to a css file in the response object
+	 *
+	 * @param response
+	 *            the response to write to
+	 * @param url
+	 *            the url of the css reference
+	 * @param media
+	 *            the CSS media
+	 * @param markupId
+	 *            the markupId
+	 * @param rel
+	 *            the rel attribute
+	 */
+	public static void writeLinkUrl(final Response response, final CharSequence url,
+		final CharSequence media, final String markupId, final String rel)
 	{
 		response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 		response.write(Strings.escapeMarkup(url));
@@ -107,6 +132,12 @@ public final class CssUtils
 		{
 			response.write(" id=\"");
 			response.write(Strings.escapeMarkup(markupId));
+			response.write("\"");
+		}
+		if (Strings.isEmpty(rel) == false)
+		{
+			response.write(" rel=\"");
+			response.write(Strings.escapeMarkup(rel));
 			response.write("\"");
 		}
 		response.write(" />");

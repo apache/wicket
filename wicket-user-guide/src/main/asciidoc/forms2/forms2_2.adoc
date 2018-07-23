@@ -75,7 +75,7 @@ Wicket already provides a number of built-in validators ready to be used. The fo
 
 ==== EmailAddressValidator
 
-Checks if input respects the format local-part\_domain.
+Checks if input respects the format local-part@domain.
 
 *Message:*
 
@@ -91,7 +91,7 @@ _The value of '${label}' is not a valid URL._
 
 ==== DateValidator
 
-Validator class that can be extended or used as a factory class to get date validators to check if a date is bigger than a lower bound (method minimum(Date min)), smaller than a upper bound (method maximum(Date max)) or inside a range (method range(Date min, Date max)).
+Validator class that can be extended or used as a factory class to get date validators to check if a date is greater than a lower bound (method minimum(Date min)), smaller than a upper bound (method maximum(Date max)) or inside a range (method range(Date min, Date max)).
 
 *Messages:*
 
@@ -242,7 +242,7 @@ In the example seen in the previous paragraph we have a form which uses success 
 public class HomePage extends WebPage {
 
     public HomePage(final PageParameters parameters) {	
-	Form form = new Form("form"){
+	Form<Void> form = new Form<Void>("form"){
 		@Override
 		protected void onSubmit() {
 			super.onSubmit();

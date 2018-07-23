@@ -152,10 +152,7 @@ public class InlineFrame extends WebMarkupContainer implements IRequestListener
 	{
 		return false;
 	}
-	
-	/**
-	 * @see org.apache.wicket.markup.html.link.ILinkListener#onLinkClicked()
-	 */
+
 	@Override
 	public final void onRequest()
 	{

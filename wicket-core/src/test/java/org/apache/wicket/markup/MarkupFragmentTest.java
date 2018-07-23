@@ -18,12 +18,22 @@ package org.apache.wicket.markup;
 
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 /**
- * 
+ * Tests for {@link MarkupFragment}
  */
 public class MarkupFragmentTest extends WicketTestCase
 {
+	private static final Logger LOG = LoggerFactory.getLogger(MarkupFragmentTest.class);
+
 	/** */
 	@Test
 	public void iteratorSameAsSizeForMarkup()
@@ -93,5 +103,33 @@ public class MarkupFragmentTest extends WicketTestCase
 		MarkupFragment fragment = new MarkupFragment(markup, 1);
 
 		assertEquals(1, fragment.size());
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6339
+	 */
+	@Test
+	public void iteratorMustBeSameAsGetByIndex() {
+		// test markup
+		Markup markup = Markup.of("<html><body><wicket:panel><wicket:container wicket:id='content'><a wicket:id='link' href='https://www.google.de'>Test</a></wicket:container></wicket:panel></body></html>");
+
+		IMarkupFragment firstLevelFragment = markup.find("content");
+		LOG.debug("First level fragment: '{}' with size '{}'", firstLevelFragment, firstLevelFragment.size());
+
+		// construct a new fragment for the link-Tag as sub-fragment of firstLevelFragment
+		MarkupFragment secondLevelFragment = new MarkupFragment(firstLevelFragment, 1);
+		LOG.debug("Second level fragment: '{}' with size '{}'", secondLevelFragment, secondLevelFragment.size());
+
+		List<MarkupElement> iteratorElements = new ArrayList<>(secondLevelFragment.size());
+		for (MarkupElement markupElement : secondLevelFragment) {
+			iteratorElements.add(markupElement);
+		}
+		List<MarkupElement> getElements = new ArrayList<>(secondLevelFragment.size());
+		for (int i = 0; i < secondLevelFragment.size(); i++) {
+			getElements.add(secondLevelFragment.get(i));
+		}
+
+		// elements from iterator should match the ones from the get(i) method
+		assertThat(getElements, is(equalTo(iteratorElements)));
 	}
 }

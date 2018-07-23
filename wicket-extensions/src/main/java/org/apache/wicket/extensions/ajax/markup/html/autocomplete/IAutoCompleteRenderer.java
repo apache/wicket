@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html.autocomplete;
 
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.util.io.IClusterable;
 
 /**
  * A renderer used to generate html output for the {@link AutoCompleteBehavior}.
@@ -60,7 +60,7 @@ import org.apache.wicket.util.io.IClusterable;
  * @author Janne Hietam&auml;ki (jannehietamaki)
  * 
  */
-public interface IAutoCompleteRenderer<T> extends IClusterable
+public interface IAutoCompleteRenderer<T> extends IDetachable
 {
 	/**
 	 * Render the html fragment for the given completion object. Usually the html is written out by
@@ -94,4 +94,11 @@ public interface IAutoCompleteRenderer<T> extends IClusterable
 	 */
 	void renderFooter(Response response, int count);
 
+	/**
+	 * Override when needed.
+	 */
+	@Override
+	default void detach()
+	{
+	}
 }

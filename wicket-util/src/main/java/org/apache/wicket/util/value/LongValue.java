@@ -218,6 +218,27 @@ public class LongValue implements Comparable<LongValue>, Serializable
 	}
 
 	/**
+	 * Returns the min of the two long values.
+	 * 
+	 * @param <T>
+	 * @param lhs
+	 * @param rhs
+	 * @throws IllegalArgumentException
+	 *             if either argument is {@code null}
+	 * @return min value
+	 */
+	public static <T extends LongValue> T min(final T lhs, final T rhs)
+	{
+		Args.notNull(lhs, "lhs");
+		Args.notNull(rhs, "rhs");
+		if (lhs.compareTo(rhs) < 0)
+		{
+			return lhs;
+		}
+		return rhs;
+	}
+
+	/**
 	 * Returns the max of the two long values.
 	 * 
 	 * @param <T>

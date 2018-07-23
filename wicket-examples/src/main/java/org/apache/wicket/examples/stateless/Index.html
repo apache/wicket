@@ -2,10 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 	<head>
 		<title>Wicket Examples - stateless</title>
-		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<body>
-		<span wicket:id="mainNavigation"/>
+		<wicket:extend>
 		<span wicket:id="message" id="message">Message goes here</span>
 		<br />
 		<a wicket:id="linkToStatelessPage" href="#">go to another default stateless page</a>
@@ -22,5 +21,6 @@
 		<br/>
 		<br/>
 		<a wicket:id="invalidatesession" href="#">Invalidate the session</a>
-	</body>
+	</wicket:extend>
+</body>
 </html>

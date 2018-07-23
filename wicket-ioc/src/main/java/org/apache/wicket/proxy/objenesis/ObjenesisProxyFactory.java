@@ -39,7 +39,6 @@ public class ObjenesisProxyFactory
 		e.setSuperclass(type);
 		e.setCallbackType(handler.getClass());
 		e.setNamingPolicy(namingPolicy);
-		e.setUseCache(false);
 
 		Class<?> proxyClass = e.createClass();
 		Enhancer.registerCallbacks(proxyClass, new Callback[]{handler});

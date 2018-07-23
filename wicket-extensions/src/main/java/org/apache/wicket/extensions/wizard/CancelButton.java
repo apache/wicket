@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.wizard;
 
+import org.apache.wicket.model.ResourceModel;
+
 /**
  * Models a cancel button in the wizard. When pressed, it calls {@link Wizard#onCancel()} which
  * should do the real work.
@@ -36,26 +38,16 @@ public class CancelButton extends WizardButton
 	 */
 	public CancelButton(final String id, final IWizard wizard)
 	{
-		super(id, wizard, "org.apache.wicket.extensions.wizard.cancel");
+		super(id, wizard, new ResourceModel("org.apache.wicket.extensions.wizard.cancel"));
 		setDefaultFormProcessing(false);
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isEnabled()
-	 */
 	@Override
-	public final boolean isEnabled()
+	protected void onConfigure()
 	{
-		return true;
-	}
-
-	/**
-	 * @see org.apache.wicket.Component#isVisible()
-	 */
-	@Override
-	public final boolean isVisible()
-	{
-		return getWizardModel().isCancelVisible() && super.isVisible();
+		super.onConfigure();
+		
+		setVisible(getWizardModel().isCancelVisible());
 	}
 
 	/**

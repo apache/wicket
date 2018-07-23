@@ -1,7 +1,6 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - upload</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 	<style>
 		legend { border: 1px solid #e9601a; background-color: #bbb; color: #fff; padding: 4px;}
 		fieldset { border: 1px solid #e9601a; padding: 10px; margin-top: 10px;}
@@ -12,7 +11,7 @@
 	</style>
 </head>
 <body>
-    <span wicket:id="mainNavigation"/>
+<wicket:extend>
 
 	<p>The multi upload field is based on javascript found <a target="_blank" href="http://the-stickman.com/web-development/javascript/upload-multiple-files-with-a-single-file-element/">here</a>.<br /><br />
 	Wicket can also handle file uploads via AJAX, please see AJAX examples section. AJAX Functionality is not included in this example to keep things simple.</p>
@@ -24,14 +23,14 @@
 	 <fieldset>
 	  <legend>Upload form</legend>
     	<p>
-	    <div wicket:id="fileInput" class="mfuex"/>
+	        <div wicket:id="fileInput" class="mfuex"></div>
 	    </p>
 	    <input type="submit" value="Upload!"/>
 	 </fieldset>
     </form>
 
 	 <div>
-		<span wicket:id="uploadFeedback"/>
+		<span wicket:id="uploadFeedback"></span>
 	 </div>
 
     <div>
@@ -44,8 +43,6 @@
       </table>
     </div>
 
-
-
-
+</wicket:extend>
 </body>
 </html>

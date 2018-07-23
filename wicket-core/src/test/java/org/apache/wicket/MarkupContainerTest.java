@@ -25,7 +25,6 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 import java.lang.reflect.Field;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -151,6 +150,43 @@ public class MarkupContainerTest extends WicketTestCase
 
 		// rendering flags where properly reset, so second rendering works properly
 		assertEquals(2, page.beforeRenderCalls);
+	}
+
+	@Test
+	public void hierarchyChangeDuringRender()
+	{
+		HierarchyChangePage page = new HierarchyChangePage();
+		try
+		{
+			tester.startPage(page);
+			fail();
+		}
+		catch (WicketRuntimeException expected)
+		{
+			assertEquals(
+				"Cannot modify component hierarchy after render phase has started (page version cant change then anymore)",
+				expected.getMessage());
+		}
+	}
+
+	private static class HierarchyChangePage extends WebPage
+		implements
+			IMarkupResourceStreamProvider
+	{
+
+		@Override
+		protected void onRender()
+		{
+			// change hierarchy during render
+			add(new Label("child"));
+		}
+
+		@Override
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
+		{
+			return new StringResourceStream("<html><body></body></html>");
+		}
 	}
 
 	/**
@@ -1124,14 +1160,8 @@ public class MarkupContainerTest extends WicketTestCase
 		assertThat(iterator1.hasNext(), is(false));
 	}
 
-	/**
-	 * This tests a functional bug in the iterator implementation where you have multiple iterators
-	 * traversing the children, a detach happens and one of the iterators removes a child component
-	 * before the other iterator has a chance to update its internal state to the new world. This is
-	 * a known bug and we expect that this doesn't pose a problem in real world usage.
-	 */
-	@Test(expected = ConcurrentModificationException.class)
-	public void knownBugForDetachWithTwoIteratorsAndRemovals()
+	@Test
+	public void detachWithTwoIteratorsAndRemovals()
 	{
 		int n = NUMBER_OF_CHILDREN_FOR_A_MAP * 2;
 
@@ -1160,21 +1190,11 @@ public class MarkupContainerTest extends WicketTestCase
 		iterator1.next();
 		iterator1.remove();
 
-		// implementation detail that gets in the way of properly solving this exotic use case: at
-		// this moment iterator 2 doesn't know that the modification count was reset before the
-		// iterator 1 removed the component.
 		iterator2.next();
-
-		// code never reaches this point due to the ConcurrentModificationException
 	}
 
-	/**
-	 * This test is the working case for the above scenario where two iterators traverse the
-	 * children, the component gets detached and in this case both iterators have a chance to update
-	 * their internal state to the new world, before they continue to traverse the children.
-	 */
 	@Test
-	public void detachWithTwoIteratorsAndRemovalsWork()
+	public void detachWithTwoIteratorsAndRemovals2()
 	{
 		int n = NUMBER_OF_CHILDREN_FOR_A_MAP * 2;
 
@@ -1290,28 +1310,23 @@ public class MarkupContainerTest extends WicketTestCase
 	public void stream()
 	{
 		LoginPage loginPage = new LoginPage();
-		Optional<Component> first = loginPage.stream()
-			.filter(c -> c.getId().equals("form"))
+		Optional<Component> first = loginPage.stream().filter(c -> c.getId().equals("form"))
 			.findFirst();
 		assertThat(first.isPresent(), is(false));
 
 		loginPage.add(new Form<>("form"));
-		Optional<Component> second = loginPage.stream()
-			.filter(c -> c.getId().equals("form"))
+		Optional<Component> second = loginPage.stream().filter(c -> c.getId().equals("form"))
 			.findFirst();
 		assertThat(second.isPresent(), is(true));
 
 		loginPage.add(new WebMarkupContainer("wmc"));
 
-		Optional<Form> form = loginPage.stream()
-			.filter(Form.class::isInstance)
-			.map(Form.class::cast)
-			.findFirst();
+		Optional<Form> form = loginPage.stream().filter(Form.class::isInstance)
+			.map(Form.class::cast).findFirst();
 		assertThat(form.isPresent(), is(true));
 
 		Optional<WebMarkupContainer> wmc = loginPage.stream()
-			.filter(WebMarkupContainer.class::isInstance)
-			.map(WebMarkupContainer.class::cast)
+			.filter(WebMarkupContainer.class::isInstance).map(WebMarkupContainer.class::cast)
 			.findFirst();
 		assertThat(wmc.isPresent(), is(true));
 	}
@@ -1320,8 +1335,7 @@ public class MarkupContainerTest extends WicketTestCase
 	public void streamChildren()
 	{
 		LoginPage loginPage = new LoginPage();
-		Optional<Component> first = loginPage.stream()
-			.filter(c -> c.getId().equals("form"))
+		Optional<Component> first = loginPage.stream().filter(c -> c.getId().equals("form"))
 			.findFirst();
 		assertThat(first.isPresent(), is(false));
 
@@ -1330,20 +1344,13 @@ public class MarkupContainerTest extends WicketTestCase
 
 		form.add(new TextField<>("field"));
 
-		assertThat(loginPage.streamChildren()
-			.filter(c -> c.getId().equals("form"))
-			.findFirst()
+		assertThat(loginPage.streamChildren().filter(c -> c.getId().equals("form")).findFirst()
 			.isPresent(), is(true));
 
-		assertThat(loginPage.streamChildren()
-			.filter(c -> c.getId().equals("field"))
-			.findFirst()
+		assertThat(loginPage.streamChildren().filter(c -> c.getId().equals("field")).findFirst()
 			.isPresent(), is(true));
 
-		assertThat(loginPage.streamChildren()
-			.filter(TextField.class::isInstance)
-			.filter(c -> c.getId().equals("field"))
-			.findFirst()
-			.isPresent(), is(true));
+		assertThat(loginPage.streamChildren().filter(TextField.class::isInstance)
+			.filter(c -> c.getId().equals("field")).findFirst().isPresent(), is(true));
 	}
 }

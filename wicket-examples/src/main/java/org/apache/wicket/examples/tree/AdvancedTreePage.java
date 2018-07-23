@@ -43,6 +43,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
@@ -96,36 +97,35 @@ public abstract class AdvancedTreePage extends AbstractTreePage
 		});
 		form.add(tree);
 
-		form.add(new DropDownChoice<Content>("content",
-			new PropertyModel<>(this, "content"), initContents(),
-			new ChoiceRenderer<>("class.simpleName"))
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected boolean wantOnSelectionChangedNotifications()
-			{
-				return true;
-			}
-		});
+		form.add(new DropDownChoice<Content>("content", new PropertyModel<>(this, "content"),
+			initContents(), new ChoiceRenderer<>("class.simpleName")).add(new FormComponentUpdatingBehavior()));
 
 		form.add(new DropDownChoice<Behavior>("theme", new PropertyModel<>(this, "theme"),
-			initThemes(), new ChoiceRenderer<>("class.simpleName"))
-		{
-			private static final long serialVersionUID = 1L;
+			initThemes(), new ChoiceRenderer<>("class.simpleName")).add(new FormComponentUpdatingBehavior()));
 
-			@Override
-			protected boolean wantOnSelectionChangedNotifications()
+		form.add(new Link<Void>("expandAll")
+		{
+			public void onClick()
 			{
-				return true;
+				FooExpansion.get().expandAll();
 			}
 		});
 
-		form.add(Link.onClick("expandAll", (link) -> FooExpansion.get().expandAll()));
+		form.add(new Link<Void>("collapseAll")
+		{
+			public void onClick()
+			{
+				FooExpansion.get().collapseAll();
+			}
+		});
 
-		form.add(Link.onClick("collapseAll", (link) -> FooExpansion.get().collapseAll()));
-
-		form.add(Button.onSubmit("submit", (btn) -> {}));
+		form.add(new Button("submit")
+		{
+			@Override
+			public void onSubmit()
+			{
+			}
+		});
 	}
 
 	protected abstract AbstractTree<Foo> createTree(FooProvider provider, IModel<Set<Foo>> state);

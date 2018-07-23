@@ -141,7 +141,7 @@ public class DefaultExceptionMapper implements IExceptionMapper
 		}
 		else if (e instanceof ResponseIOException)
 		{
-			logger.error("Connection lost, give up responding.", e);
+			logger.debug("Connection lost, give up responding.", e);
 			return new EmptyRequestHandler();
 		}
 		else if (e instanceof PackageResource.PackageResourceBlockedException && application.usesDeploymentConfig())

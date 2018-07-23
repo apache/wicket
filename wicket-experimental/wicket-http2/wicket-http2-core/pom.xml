@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>org.apache.wicket.experimental.wicket8</groupId>
 		<artifactId>wicket-http2</artifactId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.6-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>wicket-http2-core</artifactId>
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Wicket Http/2 Core</name>
 	<description>
 		Wicket’s implementation to use the PushBuilder API

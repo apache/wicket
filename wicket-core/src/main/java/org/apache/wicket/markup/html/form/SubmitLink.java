@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * A link which can be used exactly like a Button to submit a Form. The onclick of the link will use
@@ -60,6 +62,10 @@ import org.apache.wicket.model.IModel;
  * normal link behavior, meaning that {@link #onSubmit()} will be called without any other
  * consequences.
  * </p>
+ * <p>
+ * To customize the JavaScript code used to submit the form we must override {@link #getTriggerJavaScript()}. 
+ * This can be helpful to implement additional client side behaviors like disabling the link during form submission.
+ * </p>
  * 
  * @author chris
  * @author jcompagner
@@ -67,7 +73,7 @@ import org.apache.wicket.model.IModel;
  * @author Eelco Hillenius
  * 
  */
-public class SubmitLink extends AbstractSubmitLink
+public class SubmitLink extends AbstractSubmitLink implements IRequestListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -194,37 +200,25 @@ public class SubmitLink extends AbstractSubmitLink
 	 * 
 	 * @return The JavaScript to be executed when the link is clicked.
 	 */
-	protected String getTriggerJavaScript()
+	protected CharSequence getTriggerJavaScript()
 	{
 		if (getForm() != null)
 		{
 			// find the root form - the one we are really going to submit
 			Form<?> root = getForm().getRootForm();
-			StringBuilder sb = new StringBuilder(100);
-			sb.append("var e=document.getElementById('");
-			sb.append(root.getHiddenFieldId());
-			sb.append("'); e.name=\'");
-			sb.append(getInputName());
-			sb.append("'; e.value='x';");
-			sb.append("var f=document.getElementById('");
-			sb.append(root.getMarkupId());
-			sb.append("');");
+
+			StringBuilder script = new StringBuilder();
 			if (shouldInvokeJavaScriptFormOnsubmit())
 			{
-				if (getForm() != root)
-				{
-					sb.append("var ff=document.getElementById('");
-					sb.append(getForm().getMarkupId());
-					sb.append("');");
-				}
-				else
-				{
-					sb.append("var ff=f;");
-				}
-				sb.append("if (typeof ff.onsubmit === 'function') { if (ff.onsubmit()==false) return false; }");
+				script.append(String.format("var ff=document.getElementById('%s');", getForm().getMarkupId()));
+				script.append("if (typeof ff.onsubmit === 'function' && ff.onsubmit() == false) return false;");
 			}
-			sb.append("f.submit();e.value='';e.name='';return false;");
-			return sb.toString();
+			
+			CharSequence url = urlForListener(new PageParameters());
+			script.append(root.getJsForListenerUrl(url));
+			script.append("return false;");
+			
+			return script;
 		}
 		else
 		{
@@ -232,6 +226,11 @@ public class SubmitLink extends AbstractSubmitLink
 		}
 	}
 
+	@Override
+	public void onRequest()
+	{
+		getForm().onFormSubmitted(this);
+	}
 
 	/**
 	 * @see org.apache.wicket.markup.html.form.IFormSubmittingComponent#onError()

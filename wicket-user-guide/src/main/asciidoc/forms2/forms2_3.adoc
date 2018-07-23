@@ -25,7 +25,7 @@ Application.get().getConverterLocator().getConverter(Boolean.class);
 
 NOTE: Components which are subclasses of AbstractSingleSelectChoice don't follow the schema illustrated above to convert user input. 
 
-These kinds of components (like DropDownChoice and RadioChoice1) use their choice render and their collection of possible choices to perform input conversion.
+These kinds of components (like DropDownChoice and RadioChoice) use their choice render and their collection of possible choices to perform input conversion.
 
 === Creating custom application-scoped converters
 
@@ -86,7 +86,7 @@ public class RegExpPatternConverter implements IConverter<Pattern> {
 ----
 
 Methods declared by interface IConverter take as input a Locale parameter in order to deal with locale-sensitive data and conversions. We will learn more about locales and internationalization in 
-<<_internationalization_with_wicket,paragraph 15>>.
+<<_internationalization_with_wicket,Chapter 15>>.
 
 Once we have implemented our custom converter, we must override method newConverterLocator() inside our application class and tell it to add our new converter to the default set:
 
@@ -114,26 +114,26 @@ public class HomePage extends WebPage {
     	TextField regExpPatternTxt;
 	TextField stringToSplitTxt;
 		
-    	Form form = new Form("form"){
-			@Override
-			protected void onSubmit() {
-				super.onSubmit();
-				String messageResult = "Tokens for the given string and pattern:<br/>";
-				String[] tokens = regExpPattern.split(stringToSplit);
-			
-				for (String token : tokens) {
-					messageResult += "- " + token + "<br/>";
-				}				
-				success(messageResult);
+    	Form<Void> form = new Form<Void>("form"){
+		@Override
+		protected void onSubmit() {
+			super.onSubmit();
+			String messageResult = "Tokens for the given string and pattern:<br/>";
+			String[] tokens = regExpPattern.split(stringToSplit);
+		
+			for (String token : tokens) {
+				messageResult += "- " + token + "<br/>";
+			}				
+			success(messageResult);
 		}
 	};
     	
-		form.setDefaultModel(new CompoundPropertyModel(this));
-		form.add(regExpPatternTxt = new TextField("regExpPattern"));
-		form.add(stringToSplitTxt = new TextField("stringToSplit"));
-		add(new FeedbackPanel("feedbackMessage").setEscapeModelStrings(false));
-		
-		add(form);
+	form.setDefaultModel(new CompoundPropertyModel(this));
+	form.add(regExpPatternTxt = new TextField("regExpPattern"));
+	form.add(stringToSplitTxt = new TextField("stringToSplit"));
+	add(new FeedbackPanel("feedbackMessage").setEscapeModelStrings(false));
+	
+	add(form);
     }
 }
 ----

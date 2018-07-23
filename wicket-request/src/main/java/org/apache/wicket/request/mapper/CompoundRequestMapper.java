@@ -128,7 +128,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	{
 		List<MapperWithScore> list = new ArrayList<>(mappers.size());
 
-		for (IRequestMapper mapper : mappers)
+		for (IRequestMapper mapper : this)
 		{
 			int score = mapper.getCompatibilityScore(request);
 			list.add(new MapperWithScore(mapper, score));
@@ -205,7 +205,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	@Override
 	public Url mapHandler(final IRequestHandler handler)
 	{
-		for (IRequestMapper mapper : mappers)
+		for (IRequestMapper mapper : this)
 		{
 			Url url = mapper.mapHandler(handler);
 			if (url != null)
@@ -225,7 +225,7 @@ public class CompoundRequestMapper implements ICompoundRequestMapper
 	public int getCompatibilityScore(final Request request)
 	{
 		int score = Integer.MIN_VALUE;
-		for (IRequestMapper mapper : mappers)
+		for (IRequestMapper mapper : this)
 		{
 			score = Math.max(score, mapper.getCompatibilityScore(request));
 		}

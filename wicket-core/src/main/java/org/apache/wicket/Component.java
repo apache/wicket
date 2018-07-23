@@ -17,11 +17,11 @@
 package org.apache.wicket;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.apache.wicket.ajax.IAjaxRegionMarkupIdProvider;
 import org.apache.wicket.application.IComponentInstantiationListener;
@@ -40,6 +40,7 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.event.IEventSource;
+import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedback;
@@ -86,7 +87,6 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitFilter;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visit;
@@ -312,12 +312,6 @@ public abstract class Component
 		}
 	};
 
-	/** an unused flag */
-	private static final int FLAG_UNUSED0 = 0x20000000;
-	private static final int FLAG_UNUSED1 = 0x800000;
-	private static final int FLAG_UNUSED2 = 0x1000000;
-	private static final int FLAG_UNUSED3 = 0x10000000;
-
 	/** True when a component is being auto-added */
 	private static final int FLAG_AUTO = 0x0001;
 
@@ -389,17 +383,6 @@ public abstract class Component
 	 */
 	private static final int FLAG_MODEL_SET = 0x100000;
 
-	/** True when a component is being removed from the hierarchy */
-	protected static final int FLAG_REMOVING_FROM_HIERARCHY = 0x200000;
-
-	/**
-	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
-	 * invoked (right before invoking beforeRender on children)
-	 */
-	protected static final int FLAG_RENDERING = 0x2000000;
-	protected static final int FLAG_PREPARED_FOR_RENDER = 0x4000000;
-	protected static final int FLAG_AFTER_RENDERING = 0x8000000;
-
 	/**
 	 * Flag that restricts visibility of a component when set to true. This is usually used when a
 	 * component wants to restrict visibility of another component. Calling
@@ -408,8 +391,6 @@ public abstract class Component
 	 */
 	private static final int FLAG_VISIBILITY_ALLOWED = 0x40000000;
 
-	private static final int FLAG_DETACHING = 0x80000000;
-	
 	/**
 	 * The name of attribute that will hold markup id
 	 */
@@ -439,7 +420,7 @@ public abstract class Component
 
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_VALUE = 0x1;
 	private static final short RFLAG_ENABLED_IN_HIERARCHY_SET = 0x2;
-	private static final short RFLAG_VISIBLE_IN_HIEARARCHY_VALUE = 0x4;
+	private static final short RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED = 0x4;
 	private static final short RFLAG_VISIBLE_IN_HIERARCHY_SET = 0x8;
 	/** onconfigure has been called */
 	private static final short RFLAG_CONFIGURED = 0x10;
@@ -447,6 +428,16 @@ public abstract class Component
 	private static final short RFLAG_INITIALIZE_SUPER_CALL_VERIFIED = 0x40;
 	protected static final short RFLAG_CONTAINER_DEQUEING = 0x80;
 	private static final short RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED = 0x100;
+	/**
+	 * Flag that makes we are in before-render callback phase Set after component.onBeforeRender is
+	 * invoked (right before invoking beforeRender on children)
+	 */
+	private static final short RFLAG_RENDERING = 0x200;
+	private static final short RFLAG_PREPARED_FOR_RENDER = 0x400;
+	private static final short RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED = 0x800;
+	private static final short RFLAG_DETACHING = 0x1000;	
+	/** True when a component is being removed from the hierarchy */
+	private static final short RFLAG_REMOVING_FROM_HIERARCHY = 0x2000;
 
 	/**
 	 * Flags that only keep their value during the request. Useful for cache markers, etc. At the
@@ -789,7 +780,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Called once per request on components before they are about to be rendered. This method
+	 * Called on all components before any component is rendered. This method
 	 * should be used to configure such things as visibility and enabled flags.
 	 * <p>
 	 * Overrides must call {@code super.onConfigure()}, usually before any other code
@@ -814,6 +805,7 @@ public abstract class Component
 	 */
 	protected void onConfigure()
 	{
+		setRequestFlag(RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
@@ -857,7 +849,7 @@ public abstract class Component
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE PUBLIC API, DO NOT CALL IT
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * Used to call {@link #onInitialize()}
 	 */
@@ -874,146 +866,82 @@ public abstract class Component
 		if (!getFlag(FLAG_INITIALIZED))
 		{
 			setFlag(FLAG_INITIALIZED, true);
+
 			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
 			onInitialize();
-			if (!getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(Component.class.getName() +
-					" has not been properly initialized. Something in the hierarchy of " +
-					getClass().getName() +
-					" has not called super.onInitialize() in the override of onInitialize() method");
-			}
-			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, false);
+			verifySuperCall("onInitialize", RFLAG_INITIALIZE_SUPER_CALL_VERIFIED);
 
 			getApplication().getComponentInitializationListeners().onInitialize(this);
 		}
 		else if (getFlag(FLAG_REMOVED))
 		{
 			setFlag(FLAG_REMOVED, false);
+			
 			setRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED, false);
 			onReAdd();
-			if (!getRequestFlag(RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(Component.class.getName() +
-						" has not been properly added. Something in the hierarchy of " +
-						getClass().getName() +
-						" has not called super.onReAdd() in the override of onReAdd() method");
-			}
+			verifySuperCall("onReAdd", RFLAG_ON_RE_ADD_SUPER_CALL_VERIFIED);
 		}
 	}
 
 	/**
-	 * Called on every component after the page is rendered. It will call onAfterRender for it self
-	 * and its children.
+	 * Called on every component after the page is rendered. Calls hook {@link #onAfterRender()}.
 	 */
-	public final void afterRender()
+	final void afterRender()
 	{
+		setRequestFlag(RFLAG_PREPARED_FOR_RENDER, false);
+		
 		try
 		{
-			setFlag(FLAG_AFTER_RENDERING, true);
-
-			// always detach children because components can be attached
-			// independently of their parents
-			onAfterRenderChildren();
+			setRequestFlag(RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED, false);
 
 			onAfterRender();
 			getApplication().getComponentOnAfterRenderListeners().onAfterRender(this);
-			if (getFlag(FLAG_AFTER_RENDERING))
-			{
-				throw new IllegalStateException(Component.class.getName() +
-					" has not been properly detached. Something in the hierarchy of " +
-					getClass().getName() +
-					" has not called super.onAfterRender() in the override of onAfterRender() method");
-			}
+			verifySuperCall("onAfterRender", RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED);
 		}
 		finally
 		{
 			// this flag must always be set to false.
-			markRendering(false);
-		}
-	}
-
-	private void internalBeforeRender()
-	{
-		configure();
-
-		if ((determineVisibility()) && !getFlag(FLAG_RENDERING) &&
-			!getFlag(FLAG_PREPARED_FOR_RENDER))
-		{
-			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
-
-			Application application = getApplication();
-			application.getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
-
-			onBeforeRender();
-			application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
-
-			if (!getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED))
-			{
-				throw new IllegalStateException(Component.class.getName() +
-					" has not been properly rendered. Something in the hierarchy of " +
-					getClass().getName() +
-					" has not called super.onBeforeRender() in the override of onBeforeRender() method");
-			}
+			setRequestFlag(RFLAG_RENDERING, false);
 		}
 	}
 
 	/**
-	 * We need to postpone calling beforeRender() on components that implement {@link IFeedback}, to
-	 * be sure that all other component's beforeRender() has been already called, so that IFeedbacks
-	 * can collect all feedback messages. This is the key under list of postponed {@link IFeedback}
-	 * is stored to request cycle metadata. The List is then iterated over in
-	 * {@link #prepareForRender()} after calling {@link #beforeRender()}, to initialize postponed
-	 * components.
-	 */
-	private static final MetaDataKey<List<Component>> FEEDBACK_LIST = new MetaDataKey<List<Component>>()
-	{
-		private static final long serialVersionUID = 1L;
-	};
-
-	/**
-	 * Called for every component when the page is getting to be rendered. it will call
-	 * {@link #configure()} and {@link #onBeforeRender()} for this component and all the child
-	 * components
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * 
+	 * Called on all components before any component is rendered. Calls hooks
+	 * {@link #configure()} and (if visible) {@link #onBeforeRender()}
+	 * and delegates to {@link #beforeRender()} of all child components.
 	 */
 	public final void beforeRender()
 	{
 		if (this instanceof IFeedback)
 		{
-			// this component is a feedback. Feedback must be initialized last, so that
-			// they can collect messages from other components
-			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
-			if (feedbacks == null)
-			{
-				feedbacks = new ArrayList<>();
-				getRequestCycle().setMetaData(FEEDBACK_LIST, feedbacks);
-			}
-
-			if (this instanceof MarkupContainer)
-			{
-				((MarkupContainer)this).visitChildren(IFeedback.class,
-					new IVisitor<Component, Void>()
-					{
-						@Override
-						public void component(Component feedback, IVisit<Void> visit)
-						{
-							feedback.beforeRender();
-
-							// don't need to go deeper,
-							// as the feedback will visit its children on its own
-							visit.dontGoDeeper();
-						}
-					});
-			}
-
-			if (!feedbacks.contains(this))
-			{
-				feedbacks.add(this);
+			Optional<FeedbackDelay> delay = FeedbackDelay.get(getRequestCycle());
+			if (delay.isPresent()) {
+				delay.get().postpone((IFeedback)this);
+				return;
 			}
 		}
-		else
+
+		configure();
+
+		if ((determineVisibility()) && !getRequestFlag(RFLAG_RENDERING) &&
+			!getRequestFlag(RFLAG_PREPARED_FOR_RENDER))
 		{
-			internalBeforeRender();
+			try {
+				setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, false);
+
+				Application application = getApplication();
+				application.getComponentPreOnBeforeRenderListeners().onBeforeRender(this);
+
+				onBeforeRender();
+				application.getComponentPostOnBeforeRenderListeners().onBeforeRender(this);
+
+				verifySuperCall("onBeforeRender", RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
+			} catch (RuntimeException ex) {
+				setRequestFlag(RFLAG_PREPARED_FOR_RENDER, false);
+				throw ex;
+			}
 		}
 	}
 
@@ -1051,7 +979,11 @@ public abstract class Component
 		{
 			clearEnabledInHierarchyCache();
 			clearVisibleInHierarchyCache();
+			
+			setRequestFlag(RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED, false);
 			onConfigure();
+			verifySuperCall("onConfigure", RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED);
+			
 			for (Behavior behavior : getBehaviors())
 			{
 				if (isBehaviorAccepted(behavior))
@@ -1072,9 +1004,19 @@ public abstract class Component
 	}
 
 	/**
-	 * 
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
+	 * Verify super calls of an overridden hook method.
+	 */
+	private final void verifySuperCall(String method, short flag)
+	{
+		if (!getRequestFlag(flag))
+		{
+			throw new IllegalStateException(String.format("%s() in the hierarchy of %s has not called super.%s()", method, getClass().getName(), method));
+		}
+		
+		setRequestFlag(flag, false);
+	}
+
+	/**
 	 * Called after the {@link #onConfigure()}, but before {@link #onBeforeRender()}
 	 */
 	void internalOnAfterConfigure()
@@ -1134,10 +1076,10 @@ public abstract class Component
 	 */
 	final void internalOnRemove()
 	{
-		setFlag(FLAG_REMOVING_FROM_HIERARCHY, true);
+		setRequestFlag(RFLAG_REMOVING_FROM_HIERARCHY, true);
 		onRemove();
 		setFlag(FLAG_REMOVED, true);
-		if (getFlag(FLAG_REMOVING_FROM_HIERARCHY))
+		if (getRequestFlag(RFLAG_REMOVING_FROM_HIERARCHY))
 		{
 			throw new IllegalStateException(Component.class.getName() +
 				" has not been properly removed from hierachy. Something in the hierarchy of " +
@@ -1157,9 +1099,9 @@ public abstract class Component
 	{
 		try
 		{
-			setFlag(FLAG_DETACHING, true);
+			setRequestFlag(RFLAG_DETACHING, true);
 			onDetach();
-			if (getFlag(FLAG_DETACHING))
+			if (getRequestFlag(RFLAG_DETACHING))
 			{
 				throw new IllegalStateException(Component.class.getName() +
 						" has not been properly detached. Something in the hierarchy of " +
@@ -1196,20 +1138,8 @@ public abstract class Component
 		clearEnabledInHierarchyCache();
 		clearVisibleInHierarchyCache();
 
-		boolean beforeRenderSuperCallVerified = getRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
-		boolean initializeSuperCallVerified = getRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED);
-
-		requestFlags = 0;
-
-		// preserve the super_call_verified flags if they were set. WICKET-5417
-		if (beforeRenderSuperCallVerified)
-		{
-			setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
-		}
-		if (initializeSuperCallVerified)
-		{
-			setRequestFlag(RFLAG_INITIALIZE_SUPER_CALL_VERIFIED, true);
-		}
+		// clear request flags but keep super call verifications WICKET-5417
+		requestFlags &= (RFLAG_INITIALIZE_SUPER_CALL_VERIFIED | RFLAG_ON_CONFIGURE_SUPER_CALL_VERIFIED | RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED);
 
 		detachFeedback();
 
@@ -1469,7 +1399,7 @@ public abstract class Component
 	}
 
 	/**
-	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * Get a copy of the markup's attributes which are associated with the component.
 	 * <p>
@@ -1646,7 +1576,7 @@ public abstract class Component
 			catch (Exception ex)
 			{
 				// wrap the exception so that it brings info about the component
-				RuntimeException rex = new RuntimeException(
+				WicketRuntimeException rex = new WicketRuntimeException(
 					"An error occurred while getting the model object for Component: " +
 						this.toString(true), ex);
 				throw rex;
@@ -1752,7 +1682,8 @@ public abstract class Component
 		if (page == null)
 		{
 			// Give up with a nice exception
-			throw new WicketRuntimeException("No Page found for component " + this);
+			throw new WicketRuntimeException("No Page found for component: " + this.toString(true)
+					+ ". You probably forgot to add it to its parent component.");
 		}
 
 		return page;
@@ -2214,62 +2145,6 @@ public abstract class Component
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * <p>
-	 * Prepares the component and it's children for rendering. On whole page render this method must
-	 * be called on the page. On AJAX request, this method must be called on the updated component.
-	 * 
-	 * @param setRenderingFlag
-	 *            Whether to set the rendering flag. This must be true if the page is about to be
-	 *            rendered. However, there are usecases to call this method without an immediate
-	 *            render (e.g. on stateless listener request target to build the component
-	 *            hierarchy), in that case setRenderingFlag should be false.
-	 */
-	public void internalPrepareForRender(boolean setRenderingFlag)
-	{
-		beforeRender();
-
-		if (setRenderingFlag)
-		{
-			// only process feedback panel when we are about to be rendered.
-			// setRenderingFlag is false in case prepareForRender is called only to build component
-			// hierarchy (i.e. in BookmarkableListenerRequestHandler).
-			// prepareForRender(true) is always called before the actual rendering is done so
-			// that's where feedback panels gather the messages
-
-			List<Component> feedbacks = getRequestCycle().getMetaData(FEEDBACK_LIST);
-			if (feedbacks != null)
-			{
-				// iterate over a copy because a IFeedback may add more IFeedback children
-// (WICKET-4687)
-				Component[] feedbacksCopy = feedbacks.toArray(new Component[feedbacks.size()]);
-				for (Component feedback : feedbacksCopy)
-				{
-					// render it only if it is still in the page hierarchy (WICKET-4895)
-					if (feedback.findPage() != null)
-					{
-						feedback.internalBeforeRender();
-					}
-				}
-			}
-			getRequestCycle().setMetaData(FEEDBACK_LIST, null);
-		}
-
-		markRendering(setRenderingFlag);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
-	 * Prepares the component and it's children for rendering. On whole page render this method must
-	 * be called on the page. On AJAX request, this method must be called on updated component.
-	 */
-	public final void prepareForRender()
-	{
-		internalPrepareForRender(true);
-	}
-
-	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The current request's url
 	 * is saved for future use by method continueToOriginalDestination(); Only use this method when
 	 * you plan to continue to the current url at some later time; otherwise just use
@@ -2302,24 +2177,44 @@ public abstract class Component
 		parent.remove(this);
 	}
 
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * <p>
+	 * Renders this component as a part of a response - the caller has to
+	 * make sure that this component is prepared for render.
+	 * 
+	 * @see #beforeRender()
+	 */
+	public final void renderPart() {
+		Page page = getPage();
+
+		page.startComponentRender(this);
+
+		markRendering(true);
+
+		render();
+		
+		page.endComponentRender(this);
+	}
 
 	/**
-	 * Render the Component.
+	 * Render this component and all its children. Always calls hook {@link #onAfterRender()}
+	 * regardless of any exception.
 	 */
 	public final void render()
 	{
-		RuntimeException exception = null;
+		if (isAuto())
+		{
+			// auto components are prepared when rendered
+			beforeRender();
+		}
 
+		// Do the render
+		RuntimeException exception = null;
 		try
 		{
-			// Invoke prepareForRender only if this is the root component to be rendered
-			MarkupContainer parent = getParent();
-			if ((parent == null) || (parent.getFlag(FLAG_RENDERING) == false) || isAuto())
-			{
-				internalPrepareForRender(true);
-			}
-
-			// Do the render
+			setRequestFlag(RFLAG_RENDERING, true);
+			
 			internalRender();
 		}
 		catch (final RuntimeException ex)
@@ -2365,9 +2260,6 @@ public abstract class Component
 
 		// MarkupStream is an Iterator for the markup
 		MarkupStream markupStream = new MarkupStream(markup);
-
-		// Flag: we started the render process
-		markRendering(true);
 
 		MarkupElement elem = markup.get(0);
 		if (elem instanceof ComponentTag)
@@ -2512,13 +2404,13 @@ public abstract class Component
 
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * <p>
 	 * Renders the component at the current position in the given markup stream. The method
 	 * onComponentTag() is called to allow the component to mutate the start tag. The method
 	 * onComponentTagBody() is then called to permit the component to render its body.
 	 */
-	public final void internalRenderComponent()
+	protected final void internalRenderComponent()
 	{
 		final IMarkupFragment markup = getMarkup();
 		if (markup == null)
@@ -2697,7 +2589,7 @@ public abstract class Component
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
 	 * 
 	 * Print to the web response what ever the component wants to contribute to the head section.
 	 * Make sure that all attached behaviors are asked as well.
@@ -3644,7 +3536,7 @@ public abstract class Component
 	protected void checkHierarchyChange(final Component component)
 	{
 		// Throw exception if modification is attempted during rendering
-		if (getFlag(FLAG_RENDERING) && !component.isAuto())
+		if (getRequestFlag(RFLAG_RENDERING) && !component.isAuto())
 		{
 			throw new WicketRuntimeException(
 				"Cannot modify component hierarchy after render phase has started (page version cant change then anymore)");
@@ -3875,15 +3767,16 @@ public abstract class Component
 	}
 
 	/**
-	 * Called just after a component is rendered.
+	 * Called immediately after a component and all its children have been rendered,
+	 * regardless of any exception.
 	 */
 	protected void onAfterRender()
 	{
-		setFlag(FLAG_AFTER_RENDERING, false);
+		setRequestFlag(RFLAG_AFTER_RENDER_SUPER_CALL_VERIFIED, true);
 	}
 
 	/**
-	 * Called just before a component is rendered only if the component is visible.
+	 * Called on all visible components before any component is rendered.
 	 * <p>
 	 * <strong>NOTE</strong>: If you override this, you *must* call super.onBeforeRender() within
 	 * your implementation.
@@ -3899,7 +3792,7 @@ public abstract class Component
 	 */
 	protected void onBeforeRender()
 	{
-		setFlag(FLAG_PREPARED_FOR_RENDER, true);
+		setRequestFlag(RFLAG_PREPARED_FOR_RENDER, true);
 		onBeforeRenderChildren();
 		setRequestFlag(RFLAG_BEFORE_RENDER_SUPER_CALL_VERIFIED, true);
 	}
@@ -3957,7 +3850,7 @@ public abstract class Component
 	 */
 	protected void onDetach()
 	{
-		setFlag(FLAG_DETACHING, false);
+		setRequestFlag(RFLAG_DETACHING, false);
 	}
 
 	/**
@@ -3968,7 +3861,7 @@ public abstract class Component
 	 */
 	protected void onRemove()
 	{
-		setFlag(FLAG_REMOVING_FROM_HIERARCHY, false);
+		setRequestFlag(RFLAG_REMOVING_FROM_HIERARCHY, false);
 	}
 
 	/**
@@ -4160,14 +4053,12 @@ public abstract class Component
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 * 
 	 * @param flag
 	 *            The flag to set
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	protected final Component setRequestFlag(final short flag, final boolean set)
+	final Component setRequestFlag(final short flag, final boolean set)
 	{
 		if (set)
 		{
@@ -4250,9 +4141,9 @@ public abstract class Component
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
 		// WICKET-5460 no longer prepared for render
-		setFlag(FLAG_PREPARED_FOR_RENDER, false);
+		setRequestFlag(RFLAG_PREPARED_FOR_RENDER, false);
 
-		setFlag(FLAG_RENDERING, setRenderingFlag);
+		setRequestFlag(RFLAG_RENDERING, setRenderingFlag);
 	}
 
 	/**
@@ -4277,14 +4168,7 @@ public abstract class Component
 	 */
 	boolean isPreparedForRender()
 	{
-		return getFlag(FLAG_PREPARED_FOR_RENDER);
-	}
-
-	/**
-	 * 
-	 */
-	protected void onAfterRenderChildren()
-	{
+		return getRequestFlag(RFLAG_PREPARED_FOR_RENDER);
 	}
 
 	/**
@@ -4467,13 +4351,13 @@ public abstract class Component
 	}
 	
 	/**
-	 * Says if the component is rendering or not checking the corresponding flag.
+	 * Says if the component is rendering currently.
 	 * 
 	 * @return true if this component is rendering, false otherwise.
 	 */
 	public final boolean isRendering()
 	{
-		return getFlag(FLAG_RENDERING);
+		return getRequestFlag(RFLAG_PREPARED_FOR_RENDER) || getRequestFlag(RFLAG_RENDERING);
 	}
 
 	/**

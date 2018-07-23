@@ -18,8 +18,7 @@ The custom _IPageManager_ implementation may or may not use _IPageStore/IDataSto
 
 === IPageStore
 
-_org.apache.wicket.pageStore.IPageStore_'s role is to mediate the storing and loading of pages done by the underlying _IDataStore_. The default implementation _org.apache.wicket.pageStore.DefaultPageStore_ pre-processes the pages before passing them to _IDataStore1.storeData(String, int, byte <<_>>
-)_ and to post-processes them after _IDataStore1.getData(String, int)_. The processing consists of transforming the page instance to _org.apache.wicket.pageStore.DefaultPageStore.SerializedPage_. This is a struct of:
+_org.apache.wicket.pageStore.IPageStore_'s role is to mediate the storing and loading of pages done by the underlying _IDataStore_. The default implementation _org.apache.wicket.pageStore.DefaultPageStore_ pre-processes the pages before passing them to _IDataStore.storeData(String, int, byte)_ and to post-processes them after _IDataStore.getData(String, int)_. The processing consists of transforming the page instance to _org.apache.wicket.pageStore.DefaultPageStore.SerializedPage_. This is a struct of:
 
 [source,java]
 ----
@@ -32,7 +31,7 @@ _org.apache.wicket.pageStore.IPageStore_'s role is to mediate the storing and lo
 
 i.e. this is the serialized page instance (data) plus additional information needed to be able to easily find it later (sessionId, pageId).
 
-When a _SerializedPage_ has to be stored _DefaultPageStore_ stores it in a application scoped cache ({sessionId, pageId} -> SerializedPage) and additionally gives it to the underlying _IDataStore1.storeData(sessionId, pageId, data)_. The application scoped cache is used as second level cache. Getting a page from it is slower than the http session based cache in _PageStoreManager_ because the page has to be deserialized, but is faster than the underlying _IDataStore_ which stores the page bytes in some persistent store.
+When a _SerializedPage_ has to be stored _DefaultPageStore_ stores it in a application scoped cache ({sessionId, pageId} -> SerializedPage) and additionally gives it to the underlying _IDataStore.storeData(sessionId, pageId, data)_. The application scoped cache is used as second level cache. Getting a page from it is slower than the http session based cache in _PageStoreManager_ because the page has to be deserialized, but is faster than the underlying _IDataStore_ which stores the page bytes in some persistent store.
 
 The size of the application scoped cache is configurable via _org.apache.wicket.settings.StoreSettings.setInmemoryCacheSize(int)_.
 
@@ -44,7 +43,7 @@ This folder contains a sub-folder for each active http session. This session fol
 === AsynchronousDataStore
 
 By default Wicket wraps _DiskDataStore_ with _org.apache.wicket.pageStore.AsynchronousDataStore_. The role of _AsynchronousDataStore_ is to detach the http worker thread from waiting for the write of the page bytes to the disk.
-To disable it use: _org.apache.wicket.settings.StoreSettings.setAsynchronous(false)_. AsynchronousDataStore can delay the storage of pages' bytes for at most _org.apache.wicket.settings.StoreSettings.setAsynchronousQueueCapacity(int)_ pages. If this capacity is exceeded then the page's bytes are written synchronously to the backing _IDataStore_.
+To disable it use: _org.apache.wicket.settings.StoreSettings.setAsynchronous(false)_. AsynchronousDataStore can delay the storage of page's bytes for at most _org.apache.wicket.settings.StoreSettings.setAsynchronousQueueCapacity(int)_ pages. If this capacity is exceeded then the page's bytes are written synchronously to the backing _IDataStore_.
 
 === DebugDiskDataStore
 

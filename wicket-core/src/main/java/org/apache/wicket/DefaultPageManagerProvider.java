@@ -22,6 +22,7 @@ import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.page.PageStoreManager;
 import org.apache.wicket.pageStore.AsynchronousDataStore;
+import org.apache.wicket.pageStore.AsynchronousPageStore;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
@@ -41,7 +42,7 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param application
 	 *          The application instance
 	 */
@@ -57,13 +58,25 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 
 		StoreSettings storeSettings = getStoreSettings();
 
-		if (dataStore.canBeAsynchronous())
+		IPageStore pageStore;
+
+		if (dataStore.canBeAsynchronous() && storeSettings.isAsynchronous())
 		{
 			int capacity = storeSettings.getAsynchronousQueueCapacity();
 			dataStore = new AsynchronousDataStore(dataStore, capacity);
+
+			pageStore = newPageStore(dataStore);
+
+			if (pageStore.canBeAsynchronous())
+			{
+				pageStore = new AsynchronousPageStore(pageStore, capacity);
+			}
+		}
+		else
+		{
+			pageStore = newPageStore(dataStore);
 		}
 
-		IPageStore pageStore = newPageStore(dataStore);
 		return new PageStoreManager(application.getName(), pageStore, pageManagerContext);
 
 	}
@@ -73,7 +86,6 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		int inmemoryCacheSize = getStoreSettings().getInmemoryCacheSize();
 		ISerializer pageSerializer = application.getFrameworkSettings().getSerializer();
 		return new DefaultPageStore(pageSerializer, dataStore, inmemoryCacheSize);
-//		return new PerSessionPageStore(pageSerializer, dataStore, inmemoryCacheSize);
 	}
 
 	protected IDataStore newDataStore()

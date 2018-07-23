@@ -18,8 +18,6 @@ package org.apache.wicket.protocol.http.request;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -108,8 +106,6 @@ public class WebClientInfo extends ClientInfo
 
 		this.properties = properties;
 		properties.setRemoteAddress(getRemoteAddr(requestCycle));
-
-		init();
 	}
 
 	/**
@@ -186,159 +182,5 @@ public class WebClientInfo extends ClientInfo
 			remoteAddr = req.getRemoteAddr();
 		}
 		return remoteAddr;
-	}
-
-	/**
-	 * Initialize the client properties object
-	 */
-	private void init()
-	{
-		setInternetExplorerProperties();
-		setOperaProperties();
-		setMozillaProperties();
-		setKonquerorProperties();
-		setChromeProperties();
-		setSafariProperties();
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("determined user agent: " + properties);
-		}
-	}
-
-	/**
-	 * sets the konqueror specific properties
-	 */
-	private void setKonquerorProperties()
-	{
-		properties.setBrowserKonqueror(UserAgent.KONQUEROR.matches(getUserAgent()));
-
-		if (properties.isBrowserKonqueror())
-		{
-			// e.g.: Mozilla/5.0 (compatible; Konqueror/4.2; Linux) KHTML/4.2.96 (like Gecko)
-			setMajorMinorVersionByPattern("konqueror/(\\d+)\\.(\\d+)");
-		}
-	}
-
-	/**
-	 * sets the chrome specific properties
-	 */
-	private void setChromeProperties()
-	{
-		properties.setBrowserChrome(UserAgent.CHROME.matches(getUserAgent()));
-
-		if (properties.isBrowserChrome())
-		{
-			// e.g.: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.24 (KHTML, like Gecko)
-// Chrome/12.0.702.0 Safari/534.24
-			setMajorMinorVersionByPattern("chrome/(\\d+)\\.(\\d+)");
-		}
-	}
-
-	/**
-	 * sets the safari specific properties
-	 */
-	private void setSafariProperties()
-	{
-		properties.setBrowserSafari(UserAgent.SAFARI.matches(getUserAgent()));
-
-		if (properties.isBrowserSafari())
-		{
-			String userAgent = getUserAgentStringLc();
-
-			if (userAgent.contains("version/"))
-			{
-				// e.g.: Mozilla/5.0 (Windows; U; Windows NT 6.1; sv-SE) AppleWebKit/533.19
-				// (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4
-				setMajorMinorVersionByPattern("version/(\\d+)\\.(\\d+)");
-			}
-		}
-	}
-
-	/**
-	 * sets the mozilla/firefox specific properties
-	 */
-	private void setMozillaProperties()
-	{
-		properties.setBrowserMozillaFirefox(UserAgent.FIREFOX.matches(getUserAgent()));
-		properties.setBrowserMozilla(UserAgent.MOZILLA.matches(getUserAgent()));
-
-		if (properties.isBrowserMozilla())
-		{
-			if (properties.isBrowserMozillaFirefox())
-			{
-				// e.g.: Mozilla/5.0 (X11; U; Linux i686; pl-PL; rv:1.9.0.2) Gecko/20121223
-				// Ubuntu/9.25 (jaunty) Firefox/3.8
-				setMajorMinorVersionByPattern("firefox/(\\d+)\\.(\\d+)");
-			}
-		}
-	}
-
-	/**
-	 * sets the opera specific properties
-	 */
-	private void setOperaProperties()
-	{
-		properties.setBrowserOpera(UserAgent.OPERA.matches(getUserAgent()));
-
-		if (properties.isBrowserOpera())
-		{
-			String userAgent = getUserAgentStringLc();
-
-			if (userAgent.startsWith("opera/") && userAgent.contains("version/"))
-			{
-				// e.g.: Opera/9.80 (Windows NT 6.0; U; nl) Presto/2.6.30 Version/10.60
-				setMajorMinorVersionByPattern("version/(\\d+)\\.(\\d+)");
-			}
-			else if (userAgent.startsWith("opera/") && !userAgent.contains("version/"))
-			{
-				// e.g.: Opera/9.80 (Windows NT 6.0; U; nl) Presto/2.6.30
-				setMajorMinorVersionByPattern("opera/(\\d+)\\.(\\d+)");
-			}
-			else
-			{
-				// e.g.: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 6.0; tr) Opera 10.10
-				setMajorMinorVersionByPattern("opera (\\d+)\\.(\\d+)");
-			}
-		}
-	}
-
-	/**
-	 * sets the ie specific properties
-	 */
-	private void setInternetExplorerProperties()
-	{
-		properties.setBrowserInternetExplorer(UserAgent.INTERNET_EXPLORER.matches(getUserAgent()));
-
-		if (properties.isBrowserInternetExplorer())
-		{
-			// modern IE browsers (>=IE11) uses new user agent format
-			if (getUserAgentStringLc().contains("like gecko"))
-			{
-				setMajorMinorVersionByPattern("rv:(\\d+)\\.(\\d+)");
-			}
-			else
-			{
-				setMajorMinorVersionByPattern("msie (\\d+)\\.(\\d+)");
-			}
-		}
-	}
-
-	/**
-	 * extracts the major and minor version out of the userAgentString string.
-	 * 
-	 * @param patternString
-	 *            The pattern must contain two matching groups
-	 */
-	private void setMajorMinorVersionByPattern(String patternString)
-	{
-		String userAgent = getUserAgentStringLc();
-		Matcher matcher = Pattern.compile(patternString).matcher(userAgent);
-
-		if (matcher.find())
-		{
-			properties.setBrowserVersionMajor(Integer.parseInt(matcher.group(1)));
-			properties.setBrowserVersionMinor(Integer.parseInt(matcher.group(2)));
-		}
 	}
 }

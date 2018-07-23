@@ -23,6 +23,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * 
  * @author juergen donnerstag
@@ -48,6 +53,39 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	public void test2() throws Exception
 	{
 		executeCombinedTest(SimplePage2.class, "SimplePage2_ExpectedResult.html");
+	}
+
+	/**
+	 * Tests that when a controller of an enclosure is added to the ajax target, its header
+	 * contributions reach the response
+	 *
+	 * WICKET-6459
+	 *
+	 */
+	@Test
+	public void testAjaxAndEnclosures() throws Exception
+	{
+
+		tester.startPage(EnclosureAjaxRenderPage.class);
+		tester.assertRenderedPage(EnclosureAjaxRenderPage.class);
+		tester.clickLink("ajaxLink", true);
+
+		String lastResponse = tester.getLastResponseAsString();
+
+		String headerContribution = lastResponse.split("<header-contribution")[1].split("</header-contribution")[0];
+
+		Pattern headerStylesheetLinkExtractor = Pattern.compile("<link.*/>");
+		Matcher headerStyleSheetLinkMatcher = headerStylesheetLinkExtractor.matcher(headerContribution);
+
+		List<String> headerStylesheetLinks = new ArrayList<>();
+
+		while (headerStyleSheetLinkMatcher.find()){
+			headerStylesheetLinks.add(headerStyleSheetLinkMatcher.group());
+		}
+
+		assertTrue(headerStylesheetLinks.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"../../enclosedInInline.css\" />"));
+		assertTrue(headerStylesheetLinks.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"../../enclosed.css\" />"));
+
 	}
 
 	/**

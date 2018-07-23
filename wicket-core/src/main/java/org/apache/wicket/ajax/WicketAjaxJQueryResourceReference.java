@@ -23,6 +23,7 @@ import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.resource.JQueryResourceReference;
 
 /**
  * @author hoeve
@@ -49,17 +50,17 @@ public class WicketAjaxJQueryResourceReference extends JavaScriptResourceReferen
 	@Override
 	public List<HeaderItem> getDependencies()
 	{
-		final ResourceReference wicketEventReference;
+		final ResourceReference jqueryReference;
 		if (Application.exists())
 		{
-			wicketEventReference = Application.get().getJavaScriptLibrarySettings().getWicketEventReference();
+			jqueryReference = Application.get().getJavaScriptLibrarySettings().getJQueryReference();
 		}
 		else
 		{
-			wicketEventReference = WicketEventJQueryResourceReference.get();
+			jqueryReference = JQueryResourceReference.getV2();
 		}
 		List<HeaderItem> dependencies = super.getDependencies();
-		dependencies.add(JavaScriptHeaderItem.forReference(wicketEventReference));
+		dependencies.add(JavaScriptHeaderItem.forReference(jqueryReference));
 		return dependencies;
 	}
 }

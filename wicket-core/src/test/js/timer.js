@@ -28,8 +28,8 @@ jQuery(document).ready(function() {
 
 		var timerId = 'timerId',
 			run = function() {
+				ok(typeof(Wicket.TimerHandles[timerId]) === 'undefined', "There is no handle to the timeout!");
 				ok("The timer is ran!");
-				ok(Wicket.TimerHandles[timerId], "There is a handle to the timeout!");
 				start();
 			};
 
@@ -38,21 +38,21 @@ jQuery(document).ready(function() {
 
 	test('clear', function () {
 		stop();
-		expect(3);
+		expect(2);
 
 		var timerId = 'timerId',
 			run = function() {
-				ok("The timer is ran!");
-
-				ok(Wicket.TimerHandles[timerId], "There is a handle to the timeout!");
-
-				Wicket.Timer.clear(timerId);
-
-				ok(typeof(Wicket.TimerHandles[timerId]) === 'undefined', "There is NO handle to the timeout!");
-
-				start();
+				ok(false, "timeout is not called");
 			};
 
 		Wicket.Timer.set('timerId', run, 1);
+		ok(Wicket.TimerHandles[timerId], "There is a handle to the timeout!");
+		
+		Wicket.Timer.clear(timerId);
+		ok(typeof(Wicket.TimerHandles[timerId]) === 'undefined', "There is no handle to the timeout!");
+
+		setTimeout(function() {
+			start();			
+		}, 2);
 	});
 });

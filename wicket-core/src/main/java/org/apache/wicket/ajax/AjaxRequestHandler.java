@@ -51,6 +51,8 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A request target that produces ajax response envelopes used on the client side to update
@@ -81,6 +83,7 @@ import org.apache.wicket.util.visit.IVisitor;
  */
 public class AjaxRequestHandler implements AjaxRequestTarget
 {
+	private static final Logger log = LoggerFactory.getLogger(AjaxRequestHandler.class);
 
 	/**
 	 * Collector of page updates.
@@ -106,7 +109,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 	 * Constructor
 	 * 
 	 * @param page
-	 *      the currently active page
+	 *            the currently active page
 	 */
 	public AjaxRequestHandler(final Page page)
 	{
@@ -140,7 +143,7 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 			 * events will have been fired by now.
 			 * 
 			 * @param response
-			 *      the response to write to
+			 *            the response to write to
 			 */
 			@Override
 			protected void onAfterRespond(final Response response)
@@ -150,7 +153,8 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 				// invoke onafterresponse event on listeners
 				if (listeners != null)
 				{
-					final Map<String, Component> components = Collections.unmodifiableMap(markupIdToComponent);
+					final Map<String, Component> components = Collections
+						.unmodifiableMap(markupIdToComponent);
 
 					// create response that will be used by listeners to append
 					// javascript
@@ -159,7 +163,8 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 						@Override
 						public void addJavaScript(String script)
 						{
-							writeNormalEvaluations(response, Collections.<CharSequence>singleton(script));
+							writeNormalEvaluations(response,
+								Collections.<CharSequence> singleton(script));
 						}
 					};
 
@@ -228,14 +233,27 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 					"Cannot update component that does not have setOutputMarkupId property set to true. Component: " +
 						component.toString());
 			}
-			else if (component.getPage() != getPage())
+			Page pageOfComponent = component.findParent(Page.class);
+			if (component == getPage() || pageOfComponent == getPage())
 			{
-				throw new IllegalArgumentException(
-					"Cannot update component because its page is not the same as " +
-					"the one this handler has been created for. Component: " +
-						component.toString());
+				add(component, component.getMarkupId());
 			}
-			add(component, component.getMarkupId());
+			else
+			{
+				String msg = "Cannot update component because its page is not the same as " +
+					"the one this handler has been created for. Component: " + component.toString();
+				IllegalArgumentException error = new IllegalArgumentException(msg);
+				if (Application.get().usesDevelopmentConfig())
+				{
+					throw error;
+				}
+				else
+				{
+					// log the error to the application log, but don't block the user of the
+					// application (which was the behavior in Wicket <= 7.
+					log.error(msg, error);
+				}
+			}
 		}
 	}
 

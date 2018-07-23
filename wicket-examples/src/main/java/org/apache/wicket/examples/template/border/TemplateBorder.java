@@ -42,16 +42,21 @@ public class TemplateBorder extends Border
 	{
 		super(id);
 		addToBorder(currentBanner = new Banner1("ad"));
-		addToBorder(Link.onClick("changeAdLink", (link) -> {
-			if (currentBanner.getClass() == Banner1.class)
+		addToBorder(new Link<Void>("changeAdLink")
+		{
+			@Override
+			public void onClick()
 			{
-				TemplateBorder.this.replaceInBorder(currentBanner = new Banner2("ad"));
+				if (currentBanner.getClass() == Banner1.class)
+				{
+					TemplateBorder.this.replaceInBorder(currentBanner = new Banner2("ad"));
+				}
+				else
+				{
+					TemplateBorder.this.replaceInBorder(currentBanner = new Banner1("ad"));
+				}
 			}
-			else
-			{
-				TemplateBorder.this.replaceInBorder(currentBanner = new Banner1("ad"));
-			}
-		}));
+		});
 		addToBorder(new BookmarkablePageLink<>("page1Link", Page1.class));
 		addToBorder(new BookmarkablePageLink<>("page2Link", Page2.class));
 	}

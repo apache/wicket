@@ -22,11 +22,11 @@ image::../img/page-panel-hierarchy.png[]
 
 _Illustration: Hierarchy of WebPage and Panel classes_
 
-Subclasses of _MarkupContainer_ can contain children components that can be added with method _add(Component...)_ (seen in <<whyLearn.adoc#_benefits_of_component_oriented_frameworks_for_web_development,chapter 3.3>>). _MarkupContainer_ implements a full set of methods to manage children components. The basic operations we can do on them are:
+Subclasses of _MarkupContainer_ can contain children components that can be added with method _add(Component...)_ (seen in <<_benefits_of_component_oriented_frameworks_for_web_development,chapter 3.3>>). _MarkupContainer_ implements a full set of methods to manage children components. The basic operations we can do on them are:
 
 * add one or more children components (with method _add_).
 * remove a specific child component (with method _remove_).
-* retrieve a specific child component with method _get(String)_. The string parameter is the id of the component or its relative path if the component is nested inside other _MarkupContainer_s. This path is a colon-separated string containing also the ids of the intermediate containers traversed to get to the child component. To illustrate an example of component path, let's consider the code of the following page:
+* retrieve a specific child component with method _get(String)_. The string parameter is the id of the component or its relative path if the component is nested inside other _MarkupContainers_. This path is a colon-separated string containing also the ids of the intermediate containers traversed to get to the child component. To illustrate an example of component path, let's consider the code of the following page:
 
 [source,java]
 ----
@@ -34,7 +34,7 @@ MyPanel myPanel = new MyPanel ("innerContainer");
 add(myPanel);
 ----
 
-Component _MyPanel_ is a custom panel containing only a label having _ [name] as id. Under those conditions we could retrieve this label from the container page using the following path expression:
+Component _MyPanel_ is a custom panel containing only a label having *"name"* as id. Under those conditions we could retrieve this label from the container page using the following path expression:
 
 [source,java]
 ----
@@ -42,7 +42,7 @@ Label name = (Label)get("innerContainer:name");
 ----
 
 * replace a specific child component with a new component having the same id (with method _replace_).
-* iterate thought children components with the iterator returned by method _iterator_ or using visitor pattern1 with methods _visitChildren_.
+* iterate thought children components. This can be done in the old way (pre-Wicket 8) using method _iterator_ or using visitor pattern with method _visitChildren_. Starting from Wicket 8 the same task can be accomplished using the _stream_ object returned by methods _stream_ (which contains only the direct children) and _streamChildren_ (which contains all children).
 
 Both _Panel_ and _WebPage_ have their own associated markup file which is used to render the corresponding component. If such file is not provided, Wicket will apply markup inheritance looking for a markup file through their ancestor classes. When a panel is attached to a container, the content of its markup file is inserted into its related tag.
 
@@ -58,7 +58,7 @@ While panels and pages have much in common, there are some notable differences b
 <body>
    <wicket:panel>
       <!-- Your markup goes here -->
-       </wicket:panel>
+   </wicket:panel>
 </body>
 </html>
 ----

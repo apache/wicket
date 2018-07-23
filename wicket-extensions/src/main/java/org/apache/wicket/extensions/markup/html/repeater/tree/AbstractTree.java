@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.tree;
 
-import java.util.Optional;
 import java.util.Set;
 
 import org.apache.wicket.Component;
@@ -156,7 +155,9 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 		getModelObject().add(t);
 		modelChanged();
 
-		updateBranch(t, getRequestCycle().find(IPartialPageRequestHandler.class));
+		getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(
+			target -> updateBranch(t, target)
+		);
 	}
 
 	/**
@@ -176,7 +177,9 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 		getModelObject().remove(t);
 		modelChanged();
 
-		updateBranch(t, getRequestCycle().find(IPartialPageRequestHandler.class));
+		getRequestCycle().find(IPartialPageRequestHandler.class).ifPresent(
+			target -> updateBranch(t, target)
+		);
 	}
 
 	/**
@@ -248,25 +251,25 @@ public abstract class AbstractTree<T> extends Panel implements IGenericComponent
 
 	/**
 	 * Convenience method to update a single branch on an {@link AjaxRequestTarget}. Does nothing if
-	 * the given node is currently not visible or target is not present.
+	 * the given node is currently not visible.
 	 * 
 	 * @param node
 	 *            node to update
 	 * @param target
-	 *            request target
+	 *            request target must not be @code null}
 	 */
-	public abstract void updateBranch(T node, final Optional<? extends IPartialPageRequestHandler> target);
+	public abstract void updateBranch(T node, IPartialPageRequestHandler target);
 
 	/**
 	 * Convenience method to update a single node on an {@link AjaxRequestTarget}. Does nothing if
-	 * the given node is currently not visible or target is not present.
+	 * the given node is currently not visible.
 	 * 
 	 * @param node
 	 *            node to update
 	 * @param target
-	 *            request target or {@code null}
+	 *            request target must not be @code null}
 	 */
-	public abstract void updateNode(T node, final Optional<? extends IPartialPageRequestHandler> target);
+	public abstract void updateNode(T node, IPartialPageRequestHandler target);
 
 	/**
 	 * The state of a node.

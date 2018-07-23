@@ -74,7 +74,7 @@ mvn org.sonatype.plugins:nexus-staging-maven-plugin:1.6.7:rc-release -DstagingRe
 git checkout $GIT_BRANCH
 mvn release:update-versions --batch-mode
 mvn versions:set versions:commit -DnewVersion=$next_version
-git add \` find . ! \( -type d -name "target" -prune \) -name pom.xml \`
+git add --all
 
 echo "
 Check the new versions and commit and push them to origin:
@@ -261,6 +261,24 @@ Have fun!
 	git add release-announce.txt
 }
 
+function generate_announce_md {
+
+echo $'---\nlayout: post\ntitle: Apache Wicket' $version $'released\n---' > wicket-$version-released.md
+sed -e "s/$optionOpenTag/\{\% highlight xml\%\}\n$optionOpenTag/g" release-announce.txt |
+sed -e "s/$optionCloseTag/$optionCloseTag\n\{\% endhighlight\%\}/g" |
+sed -e s/'    \*'/' \*'/g |
+sed -e "s/    CHANGELOG for $version/### This Release\n\n#### CHANGELOG for $version/g" |
+sed -e s/'\*\*'/'#####'/g |
+sed -e "s/    $beginPgp/<div class='highlight'><pre>\n$beginPgp/g" |
+sed -e "s/$endPgp/$endPgp\n<\/pre><\/div>\n/g" |
+sed -e "s/Source: http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version/Source: [$version source download]\(http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\)/g" |
+sed -e "s/Binary: http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\/binaries/Binary: [$version binary download]\(http:\/\/www.apache.org\/dyn\/closer.cgi\/wicket\/$version\/binaries\)/g" |
+sed -e "s/Upgrading from earlier versions/<!--more-->\n\nUpgrading from earlier versions/g" >> wicket-$version-released.md
+
+git add wicket-$version-released.md
+
+}
+
 # the branch on which the code base lives for this version (master is
 # always current development version)
 GIT_BRANCH=master
@@ -329,6 +347,11 @@ major_version=$(expr $current_version : '\(.*\)\..*\..*\-.*')
 minor_version=$(expr $current_version : '.*\.\(.*\)\..*\-.*')
 bugfix_version=$(expr $current_version : '.*\..*\.\(.*\)-.*')
 version="$major_version.$minor_version.0"
+
+optionOpenTag='<dependency>'
+optionCloseTag='<\/dependency>'
+beginPgp='-----BEGIN PGP SIGNATURE-----'
+endPgp='-----END PGP SIGNATURE-----'
 
 default_version="$version"
 
@@ -470,11 +493,8 @@ do
     echo >> $NOTICE
 done
 
-echo "Fixing the quickstart to use the correct wicket version"
-sed -e "s/\<wicket\.version\>.*\<\/wicket\.version\>/\<wicket.version\>$version\<\/wicket.version\>/g" -i "" archetypes/quickstart/src/main/resources/archetype-resources/pom.xml
-
 echo "Committing changes"
-git commit -am "Changes to notice files and quickstart archetype"
+git commit -am "Changes to notice files"
 
 # clean all projects
 echo "Clean all projects"
@@ -510,10 +530,11 @@ git archive --format=tar.gz --prefix=apache-wicket-$version/ -o target/dist/apac
 git archive --format=zip --prefix=apache-wicket-$version/ -o target/dist/apache-wicket-$version.zip $tag
 gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.tar.gz
 gpg --armor --detach-sign --use-agent --sign target/dist/apache-wicket-$version.zip
-gpg --print-md SHA1 target/dist/apache-wicket-$version.tar.gz > target/dist/apache-wicket-$version.tar.gz.sha
-gpg --print-md MD5  target/dist/apache-wicket-$version.tar.gz > target/dist/apache-wicket-$version.tar.gz.md5
-gpg --print-md SHA1 target/dist/apache-wicket-$version.zip > target/dist/apache-wicket-$version.zip.sha
-gpg --print-md MD5  target/dist/apache-wicket-$version.zip > target/dist/apache-wicket-$version.zip.md5
+
+pushd target/dist
+sha256sum apache-wicket-$version.tar.gz > apache-wicket-$version.tar.gz.sha256
+sha256sum apache-wicket-$version.zip > apache-wicket-$version.zip.sha256
+popd
 
 echo "Create and sign the binaries"
 mkdir target/apache-wicket-$version-bin
@@ -532,10 +553,11 @@ tar cfz dist/binaries/apache-wicket-$version-bin.tar.gz apache-wicket-$version-b
 zip -r dist/binaries/apache-wicket-$version-bin.zip apache-wicket-$version-bin
 gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$version-bin.tar.gz
 gpg --armor --detach-sign --use-agent --sign dist/binaries/apache-wicket-$version-bin.zip
-gpg --print-md SHA1 dist/binaries/apache-wicket-$version-bin.tar.gz > dist/binaries/apache-wicket-$version-bin.tar.gz.sha
-gpg --print-md MD5  dist/binaries/apache-wicket-$version-bin.tar.gz > dist/binaries/apache-wicket-$version-bin.tar.gz.md5
-gpg --print-md SHA1 dist/binaries/apache-wicket-$version-bin.zip > dist/binaries/apache-wicket-$version-bin.zip.sha
-gpg --print-md MD5  dist/binaries/apache-wicket-$version-bin.zip > dist/binaries/apache-wicket-$version-bin.zip.md5
+
+pushd dist/binaries
+sha256sum apache-wicket-$version-bin.tar.gz > apache-wicket-$version-bin.tar.gz.sha256
+sha256sum apache-wicket-$version-bin.zip > apache-wicket-$version-bin.zip.sha256
+popd
 popd
 
 echo "Uploading release to dist.apache.org"
@@ -550,6 +572,8 @@ popd
 generate_signatures_from_release
 generate_release_vote_email
 generate_announce_email
+generate_announce_md
+
 
 # Done with the tasks, now print out the next things the release manager
 # needs to do
@@ -589,6 +613,9 @@ Congratulations on the successful release vote!
 Use the release-announce.txt as a starter for the release announcement:
 
     cat release-announce.txt | pbcopy
+
+A Markdown file called wicket-$version-released.md has been also generated.
+You can use it to update the site with the release announcement.
 
 To promote the release after a successful vote, run:
 

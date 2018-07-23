@@ -3,9 +3,9 @@
   "description": "Apache Wicket JavaScript unit tests",
   "version": "0.2.0",
   "license": "Apache-2.0",
-  "repository" : { 
-    "type" : "git",
-    "url" : "http://git-wip-us.apache.org/repos/asf/wicket.git"
+  "repository": {
+    "type": "git",
+    "url": "http://git-wip-us.apache.org/repos/asf/wicket.git"
   },
   "devDependencies": {
     "grunt": "~1.0.1",

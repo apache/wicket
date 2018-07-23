@@ -1,5 +1,5 @@
 
-To modify tag attributes we can use class _org.apache.wicket.AttributeModifier_. This class extends _org.apache.wicket.behavior.Behavior_ and can be added to any component via the _Component_'s _add_ method. Class _Behavior_ is used to expand component functionalities and it can also modify component markup. We will see this class in detail later in <<advanced.adoc#_enriching_components_with_behaviors,chapter 19.1>>.
+To modify tag attributes in a component's HTML markup we can use class _org.apache.wicket.AttributeModifier_. This class extends _org.apache.wicket.behavior.Behavior_ and can be added to any component via the _Component_'s _add_ method. Class _Behavior_ is used to expand component functionalities and it can also modify component markup. We will see this class in detail later in <<advanced.adoc#_enriching_components_with_behaviors,chapter 19.1>>.
 
 As first example of attribute manipulation let's consider a _Label_ component bound to the following markup:
 
@@ -8,7 +8,7 @@ As first example of attribute manipulation let's consider a _Label_ component bo
 <span wicket:id="simpleLabel"></span>
 ----
 
-Suppose we want to add some style to label content making it red and bolded. We can add to the label an _AttributeModifier_ which creates the tag attribute _style_ with value _ :[color:red;font-weight:bold] 
+Suppose we want to add some style to label content making it red and bolded. We can add to the label an _AttributeModifier_ which creates the tag attribute _style_ with value _color:red;font-weight:bold_:
 [source,java]
 ----
 label.add(new AttributeModifier("style", "color:red;font-weight:bold"));

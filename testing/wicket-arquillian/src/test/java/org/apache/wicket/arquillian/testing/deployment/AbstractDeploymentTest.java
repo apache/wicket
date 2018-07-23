@@ -73,8 +73,7 @@ public abstract class AbstractDeploymentTest {
 		
 		// Create libs from POM.XML.
 		File[] asFile = Maven.configureResolver()
-				// I'm not using internet directly, I have a Nexus Repository that handles the libs for me.
-				.workOffline().withMavenCentralRepo(false)
+				.withMavenCentralRepo(true)
 				// Load everything from pom, that is compile and runtime, as a file and transitivity to don't loose anything and cause exceptions.
 				.loadPomFromFile("./pom.xml").importCompileAndRuntimeDependencies()
 				.resolve().withTransitivity().asFile();

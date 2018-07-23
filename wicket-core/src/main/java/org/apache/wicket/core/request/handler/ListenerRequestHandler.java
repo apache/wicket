@@ -77,11 +77,16 @@ public class ListenerRequestHandler
 		this(pageComponentProvider, null);
 	}
 
-	public boolean includeRenderCount() {
-		if (behaviorId == null) {
+	public boolean includeRenderCount()
+	{
+		if (behaviorId == null)
+		{
 			return ((IRequestListener)getComponent()).rendersPage();
-		} else {
-			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex())).rendersPage();
+		}
+		else
+		{
+			return ((IRequestListener)getComponent().getBehaviorById(getBehaviorIndex()))
+				.rendersPage();
 		}
 	}
 	
@@ -94,7 +99,7 @@ public class ListenerRequestHandler
 	@Override
 	public IRequestablePage getPage()
 	{
-		return pageComponentProvider.getPageInstance();
+		return pageComponentProvider.getPageInstance();		
 	}
 
 	@Override
@@ -139,7 +144,7 @@ public class ListenerRequestHandler
 	public void respond(final IRequestCycle requestCycle)
 	{
 		final IRequestablePage page = getPage();
-		final boolean freshPage = pageComponentProvider.isPageInstanceFresh();
+		final boolean freshPage = pageComponentProvider.doesProvideNewPage();
 		final boolean isAjax = ((WebRequest)requestCycle.getRequest()).isAjax();
 
 		IRequestableComponent component;

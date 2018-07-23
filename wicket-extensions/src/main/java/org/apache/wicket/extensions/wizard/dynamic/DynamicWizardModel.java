@@ -58,7 +58,7 @@ public class DynamicWizardModel extends AbstractWizardModel
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#getActiveStep()
 	 */
 	@Override
-	public IWizardStep getActiveStep()
+	public IDynamicWizardStep getActiveStep()
 	{
 		return activeStep;
 	}
@@ -108,6 +108,12 @@ public class DynamicWizardModel extends AbstractWizardModel
 		return activeStep.isPreviousAvailable();
 	}
 
+	@Override
+	public boolean isFinishAvailable()
+	{
+		return activeStep.isFinishAvailable();
+	}
+	
 	/**
 	 * @see org.apache.wicket.extensions.wizard.IWizardModel#last()
 	 */

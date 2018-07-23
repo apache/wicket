@@ -1667,7 +1667,10 @@
 		set: function(name, value, expiredays) {
 			var exdate = new Date();
 			exdate.setDate(exdate.getDate() + expiredays);
-			document.cookie = name + "=" + window.escape(value) + ((expiredays === null) ? "" : ";expires="+exdate);
+			var secure = /^https/.test(location.protocol) ? ';secure' : '';
+			document.cookie = name + "=" + window.escape(value) +
+				((expiredays === null) ? "" : ";expires="+exdate) +
+				secure;
 		}
 	};
 

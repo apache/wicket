@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?> 
 
 <html xmlns:wicket="http://wicket.apache.org">
-<head>
+<wicket:head>
 	<title>Wicket Examples - encodings</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
+</wicket:head>
 <body>
-  <span wicket:id="mainNavigation"/>
+  <wicket:extend>
   
 	Http Header character set:
 	<script type="text/javascript">
@@ -17,7 +16,8 @@
 	<br/>
 	<span wicket:id="message">Here comes the hello world message ...</span>
 	<p>
-		Test: äöü		
+		Test: Ã¤Ã¶Ã¼		
 	</p>
+</wicket:extend>
 </body>
 </html>

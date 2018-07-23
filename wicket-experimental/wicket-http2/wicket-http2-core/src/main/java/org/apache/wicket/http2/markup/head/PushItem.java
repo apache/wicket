@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.http2.markup.head;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -25,35 +30,74 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * 
  * @author Tobias Soloschenko
  */
-public class PushItem
+public class PushItem implements Serializable
 {
-	private Object object;
+	private static final long serialVersionUID = 1L;
+
+	private Serializable object;
 
 	private PageParameters pageParameters;
+
+	private String url;
+
+	private Map<String, PushItemHeaderValue> headers = new HashMap<>();
 
 	/**
 	 * Creates a push item
 	 * 
 	 * @param object
-	 *            the object
+	 *            the object to extract the push URL information from
 	 * @param pageParameters
 	 *            the page parameters
+	 * @param headers
+	 *            the headers to be applied to the push
 	 */
-	public PushItem(Object object, PageParameters pageParameters)
+	public PushItem(Serializable object, PageParameters pageParameters,
+		Map<String, PushItemHeaderValue> headers)
 	{
 		this.object = object;
 		this.pageParameters = pageParameters;
+		if (headers != null)
+		{
+			this.headers = headers;
+		}
 	}
 
 	/**
 	 * Creates a push item
 	 * 
 	 * @param object
-	 *            the object
+	 *            the object to extract the push URL information from
+	 * @param headers
+	 *            the headers to be applied to the push
 	 */
-	public PushItem(Object object)
+	public PushItem(Serializable object, Map<String, PushItemHeaderValue> headers)
 	{
-		this.object = object;
+		this(object, null, headers);
+	}
+
+	/**
+	 * Creates a push item
+	 *
+	 * @param object
+	 *            the object to extract the push URL information from
+	 * @param pageParameters
+	 *            the page parameters
+	 */
+	public PushItem(Serializable object, PageParameters pageParameters)
+	{
+		this(object, pageParameters, null);
+	}
+
+	/**
+	 * Creates a push item
+	 *
+	 * @param object
+	 *            the object to extract the push URL information from
+	 */
+	public PushItem(Serializable object)
+	{
+		this(object, null, null);
 	}
 
 	/**
@@ -64,9 +108,9 @@ public class PushItem
 	}
 
 	/**
-	 * Gets the object
+	 * Gets the object which contains the push URL information
 	 * 
-	 * @return the object
+	 * @return the object to extract the push URL information from
 	 */
 	public Object getObject()
 	{
@@ -74,13 +118,14 @@ public class PushItem
 	}
 
 	/**
-	 * Sets the object
+	 * Sets the object which contains the push URL information
 	 * 
 	 * @param object
-	 *            the object
+	 *            the object to extract the push URL information from
+	 * @see {@link org.apache.wicket.request.cycle.RequestCycle} (urlFor methods)
 	 * @return the push item
 	 */
-	public PushItem setObject(Object object)
+	public PushItem setObject(Serializable object)
 	{
 		this.object = object;
 		return this;
@@ -106,6 +151,54 @@ public class PushItem
 	public PushItem setPageParameters(PageParameters pageParameters)
 	{
 		this.pageParameters = pageParameters;
+		return this;
+	}
+
+	/**
+	 * Gets the URL composed within the push header item
+	 *
+	 * @see {@link org.apache.wicket.http2.markup.head.PushHeaderItem#push(List)}
+	 * @return the URL to be pushed
+	 */
+	public String getUrl()
+	{
+		return url;
+	}
+
+	/**
+	 * Sets the URL composed within the push header item
+	 *
+	 * @see {@link org.apache.wicket.http2.markup.head.PushHeaderItem#push(List)}
+	 * @param url
+	 *            the URL used to push the resource
+	 * @return the push item
+	 */
+	public PushItem setUrl(String url)
+	{
+		this.url = url;
+		return this;
+	}
+
+	/**
+	 * Gets the headers to be added to the push response
+	 *
+	 * @return the headers to be added to the push response
+	 */
+	public Map<String, PushItemHeaderValue> getHeaders()
+	{
+		return headers;
+	}
+
+	/**
+	 * Sets the headers to be added to the push response
+	 *
+	 * @param headers
+	 *            the headers to be added to the push response
+	 * @return the push item
+	 */
+	public PushItem setHeaders(Map<String, PushItemHeaderValue> headers)
+	{
+		this.headers = headers;
 		return this;
 	}
 }

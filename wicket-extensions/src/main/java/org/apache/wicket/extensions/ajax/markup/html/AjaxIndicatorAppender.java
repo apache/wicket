@@ -26,6 +26,7 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.handler.resource.ResourceReferenceRequestHandler;
+import org.apache.wicket.request.resource.ResourceReference;
 
 /**
  * A behavior that adds a span with wicket's default indicator gif to the end of the component's
@@ -53,11 +54,25 @@ public class AjaxIndicatorAppender extends Behavior
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private final ResourceReference indicator;
+
 	/**
 	 * Construct.
 	 */
 	public AjaxIndicatorAppender()
 	{
+		this(AbstractDefaultAjaxBehavior.INDICATOR);
+	}
+	
+	/**
+	 * Build a new instance specifing a custom busy indicator as {@link ResourceReference}.
+	 * 
+	 * @param indicator
+	 *             The {@link ResourceReference} to use as busy indicator.     
+	 */
+	public AjaxIndicatorAppender(ResourceReference indicator)
+	{
+		this.indicator = indicator;
 	}
 
 	@Override
@@ -97,8 +112,7 @@ public class AjaxIndicatorAppender extends Behavior
 	 */
 	protected CharSequence getIndicatorUrl()
 	{
-		IRequestHandler handler = new ResourceReferenceRequestHandler(
-			AbstractDefaultAjaxBehavior.INDICATOR);
+		IRequestHandler handler = new ResourceReferenceRequestHandler(indicator);
 		return RequestCycle.get().urlFor(handler);
 	}
 

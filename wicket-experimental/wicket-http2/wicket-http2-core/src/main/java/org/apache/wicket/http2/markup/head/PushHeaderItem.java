@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -35,6 +36,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.http2.Http2Settings;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
@@ -96,7 +98,7 @@ public class PushHeaderItem extends HeaderItem
 	/**
 	 * The URLs of resources to be pushed to the client
 	 */
-	private Set<String> urls = new ConcurrentHashSet<String>(new TreeSet<String>());
+	private Set<PushItem> pushItems = new ConcurrentHashSet<PushItem>(new TreeSet<PushItem>());
 	/**
 	 * The web response of the page to apply the caching information to
 	 */
@@ -146,9 +148,9 @@ public class PushHeaderItem extends HeaderItem
 	public Iterable<?> getRenderTokens()
 	{
 		Set<String> tokens = new TreeSet<String>();
-		for (String url : urls)
+		for (PushItem pushItem : pushItems)
 		{
-			tokens.add(url + TOKEN_SUFFIX);
+			tokens.add(pushItem.getUrl() + TOKEN_SUFFIX);
 		}
 		return tokens;
 	}
@@ -304,7 +306,7 @@ public class PushHeaderItem extends HeaderItem
 		// Receives the vendor specific push builder
 		Http2Settings http2Settings = Http2Settings.Holder.get(Application.get());
 		PushBuilder pushBuilder = http2Settings.getPushBuilder();
-		pushBuilder.push(request, urls.toArray(new String[urls.size()]));
+		pushBuilder.push(request, pushItems.toArray(new PushItem[pushItems.size()]));
 	}
 
 	/**
@@ -336,13 +338,17 @@ public class PushHeaderItem extends HeaderItem
 				{
 					url = requestCycle.urlFor((ResourceReference)object, parameters);
 				}
-				else if (object instanceof Class)
+				else if (Page.class.isAssignableFrom(object.getClass()))
 				{
 					url = requestCycle.urlFor((Class<? extends Page>)object, parameters);
 				}
 				else if (object instanceof IRequestHandler)
 				{
 					url = requestCycle.urlFor((IRequestHandler)object);
+				}
+				else if (pushItem.getUrl() != null)
+				{
+					url = pushItem.getUrl();
 				}
 				else
 				{
@@ -360,7 +366,32 @@ public class PushHeaderItem extends HeaderItem
 					url = url.toString().substring(1);
 				}
 
-				urls.add(url.toString());
+				// The context path and the filter have to be applied to the URL, because otherwise
+				// the resource is not pushed correctly
+				StringBuilder partialUrl = new StringBuilder();
+				String contextPath = WebApplication.get().getServletContext().getContextPath();
+				partialUrl.append(contextPath);
+				if (!"/".equals(contextPath))
+				{
+					partialUrl.append('/');
+				}
+				String filterPath = WebApplication.get().getWicketFilter().getFilterPath();
+				if ("/".equals(filterPath))
+				{
+					filterPath = "";
+				}
+				else if (filterPath.endsWith("/"))
+				{
+					filterPath = filterPath.substring(0, filterPath.length() - 1);
+				}
+				partialUrl.append(filterPath);
+				partialUrl.append(url.toString());
+
+				// Set the url the resource is going to be pushed with
+				pushItem.setUrl(partialUrl.toString());
+
+				// Apply the push item to be used during the push process
+				this.pushItems.add(pushItem);
 			}
 		return this;
 	}
@@ -413,5 +444,24 @@ public class PushHeaderItem extends HeaderItem
 					request.getClass().getName());
 		}
 		return (HttpServletRequest)assumedHttpServletRequest;
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		PushHeaderItem that = (PushHeaderItem)o;
+		return Objects.equals(pushItems, that.pushItems) &&
+			Objects.equals(pageWebResponse, that.pageWebResponse) &&
+			Objects.equals(pageWebRequest, that.pageWebRequest) && Objects.equals(page, that.page);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(pushItems, pageWebResponse, pageWebRequest, page);
 	}
 }

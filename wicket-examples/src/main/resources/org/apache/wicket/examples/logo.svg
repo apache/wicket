@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="70"
+   height="70"
+   id="svg2"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="logo-apachewicket-white.svg">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Apache Wicket</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     id="namedview16"
+     showgrid="false"
+     inkscape:zoom="2.3659192"
+     inkscape:cx="222.01753"
+     inkscape:cy="40"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <title
+     id="title4">Apache Wicket</title>
+  <desc
+     id="desc6">Logo for Apache Wicket.</desc>
+  <defs
+     id="defs8" />
+  <g
+     id="g10"
+     transform="translate(-196,2)">
+    <circle
+       cx="231"
+       cy="32"
+       r="32"
+       id="circle12"
+       style="fill:#ff9925" />
+    <path
+       d="m 199,0 m 20,20 0,24 8,0 8,0 8,0 0,-24 -8,16 -4,-8 -4,8 -8,-16 z"
+       style="fill:#ffffff"
+       id="path14"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

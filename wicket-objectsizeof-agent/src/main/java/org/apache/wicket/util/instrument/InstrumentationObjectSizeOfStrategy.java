@@ -40,7 +40,7 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 	 * Records the size of an object and it's dependents as if they were serialized but using the
 	 * instrumentation API to calculate.
 	 */
-	private final class SizeRecodingOuputStream extends ObjectOutputStream
+	private final class SizeRecodingOutputStream extends ObjectOutputStream
 	{
 
 		private long totalSize = 0;
@@ -50,7 +50,7 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 		 * 
 		 * @throws IOException
 		 */
-		public SizeRecodingOuputStream() throws IOException
+		public SizeRecodingOutputStream() throws IOException
 		{
 			super(new OutputStream()
 			{
@@ -119,13 +119,13 @@ public class InstrumentationObjectSizeOfStrategy implements IObjectSizeOfStrateg
 		}
 		try
 		{
-			SizeRecodingOuputStream recorder = new SizeRecodingOuputStream();
+			SizeRecodingOutputStream recorder = new SizeRecodingOutputStream();
 			recorder.writeObject(obj);
 			return recorder.getTotalSize();
 		}
 		catch (IOException e)
 		{
-			LOG.error("Error calculating size of object", e);
+			LOG.error("An error occurred while calculating the size of object: " + obj, e);
 			return -1;
 		}
 

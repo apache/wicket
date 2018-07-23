@@ -1,15 +1,14 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Examples - linkomatic</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 
-    <span wicket:id = "mainNavigation"/>
+    <wicket:extend>
 
     <h2>Title: <span wicket:id = "title">Huckleberry Finn</span></h2>
 
     <p><wicket:link><a href="Home.html">[go back]</a></wicket:link></p>
-
+    </wicket:extend>
 </body>
 </html>

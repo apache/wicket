@@ -72,10 +72,15 @@ public class UploadPage extends WicketExamplePage
 		{
 			final File file = listItem.getModelObject();
 			listItem.add(new Label("file", file.getName()));
-			listItem.add(Link.onClick("delete", (link) -> {
-				Files.remove(file);
-				info("Deleted " + file);
-			}));
+			listItem.add(new Link<Void>("delete")
+			{
+				@Override
+				public void onClick()
+				{
+					Files.remove(file);
+					info("Deleted " + file);
+				}
+			});
 		}
 	}
 

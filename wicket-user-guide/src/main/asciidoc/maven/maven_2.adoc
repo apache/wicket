@@ -77,7 +77,7 @@ If we need to use more Wicket modules or additional libraries, we can add the ap
 
 === Importing a Maven project into our IDE
 
-Maven projects can be easily imported into the most popular Java IDEs. However, the procedure needed to do this differs from IDE to IDE. In this paragraph we can find the instructions to import Maven projects into three of the most popular IDEs among Java developers : NetBeans, JetBrains IDEA and Eclipse.
+Maven projects can be easily imported into the most popular Java IDEs. However, the procedure needed to do this differs from IDE to IDE. In this paragraph we can find the instructions to import Maven projects into three of the most popular IDEs among Java developers: NetBeans, JetBrains IDEA and Eclipse.
 
 *NetBeans*
 Starting from version 6.7, NetBeans includes Maven support, hence we can start it and directly open the folder containing our project:
@@ -90,26 +90,15 @@ Intellj IDEA comes with a Maven importing functionality that can be started unde
 image::../img/intellj-maven-import.png[]
 
 *Eclipse*
-If our IDE is Eclipse the import procedure is a little more complex. Before opening the new project we must generate the Eclipse project artifacts running the following command from project root:
-
-[source,java]
-----
-mvn eclipse:eclipse
-----
-
-Now to import our project into Eclipse we must create a classpath variable called M2_REPO that must point to your local Maven repository. This can be done selecting “Window/Preferences” and searching for “Classpath Variables”. The folder containing our local Maven repository is usually under our user folder and is called .m2 (for example under Unix system is /home/<myUserName>/.m2/repository):
-
-image::../img/eclipse-classpath-variables.png[]
-
-Once we have created the classpath variable we can go to “File/Import.../Existing Project into Workspace”, select the directory of the project and press “Finish”:
+Just like the other IDEs Eclipse supports Maven projects out of the box. Open the “File/Import...” dialog and search for Maven:
 
 image::../img/eclipse-maven-import.png[]
 
-Once the project has been imported into Eclipse, we are free to use our favourite plug-ins to run it or debug it (like for example  [run-jetty-run] http://code.google.com/p/run-jetty-run/ ).  
+then, select the project folder containing the POM file:
 
-NOTE: Please note the option “Copy projects into workspace” in the previous illustration. If we select it, the original project generated with Maven won't be affected by the changes made inside Eclipse because we will work on a copy of it under the current workspace.
+image::../img/eclipse-maven-select.png[]
 
-NOTE: If we modify the pom.xml file (for example adding further dependencies) we must regenerate project's artifacts and refresh the project (F5 key) to reflect changes into Eclipse.
+Once the project has been imported into Eclipse, we are free to use our favourite plug-ins to run it or debug it (like for example https://github.com/xzer/run-jetty-run/[run-jetty-run]).  
 
 === Speeding up development with plugins.
 
@@ -123,6 +112,6 @@ You can  find a nice introduction guide to this plugin at  http://netbeans.org/k
 For JetBrain IDEA we can use WicketForge plugin, hosted at Google Code  http://code.google.com/p/wicketforge/[http://code.google.com/p/wicketforge/] . The plugin is released under ASF 2.0 license.
 
 *Eclipse*
-With Eclipse we can install one of the plugins that supports Wicket. As of the writing of this document, the most popular is probably Qwickie, available in the Eclipse Marketplace and hosted on Google Code at  http://code.google.com/p/qwickie/[http://code.google.com/p/qwickie/] .
+With Eclipse we can install one of the plugins that supports Wicket. As of the writing of this document, the most popular is probably Qwickie, available in the Eclipse Marketplace and hosted on Google Code at https://github.com/count-negative/qwickie/[https://github.com/count-negative/qwickie/].
 QWickie is released under ASF 2.0 license.
 

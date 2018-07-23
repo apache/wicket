@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.extensions.wizard;
 
+import org.apache.wicket.model.ResourceModel;
 
 /**
  * Models a next button in the wizard. When pressed, it calls {@link IWizardStep#applyState()} on
@@ -36,16 +37,15 @@ public class NextButton extends WizardButton
 	 */
 	public NextButton(final String id, final IWizard wizard)
 	{
-		super(id, wizard, "org.apache.wicket.extensions.wizard.next");
+		super(id, wizard, new ResourceModel("org.apache.wicket.extensions.wizard.next"));
 	}
 
-	/**
-	 * @see org.apache.wicket.Component#isEnabled()
-	 */
 	@Override
-	public boolean isEnabled()
+	protected void onConfigure()
 	{
-		return super.isEnabled() && getWizardModel().isNextAvailable();
+		super.onConfigure();
+
+		setEnabled(getWizardModel().isNextAvailable());
 	}
 
 	/**

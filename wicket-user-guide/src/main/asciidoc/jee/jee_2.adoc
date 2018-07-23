@@ -38,7 +38,7 @@ public class EnterpriseMessage {
 }
 ----
 
-In the home page of the project the object is injected using Wicket annotation _SpringBean:
+In the home page of the project the object is injected using Wicket annotation _SpringBean_:
 
 [source,java]
 ----

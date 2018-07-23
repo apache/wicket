@@ -3,7 +3,7 @@
 
 In Wicket the best way to add dynamic functionalities to our application (such as csv export, a pdf generated on the fly, etc...) is implementing a custom resource. In this paragraph as example of custom resource we will build a basic RSS feeds generator which can be used to publish feeds on our site (project CustomResourceMounting). Instead of generating a RSS feed by hand we will use Rome framework and its utility classes. 
 
-As hinted above in <<resources.adoc#_static_vs_dynamic_resources,paragraph 16.1>>, class _AbstractResource_ can be used as base class to implement new resources. This class defines abstract method _newResourceResponse_ which is invoked when the resource is requested. The following is the code of our RSS feeds generator:
+As hinted above in <<_static_vs_dynamic_resources,paragraph 16.1>>, class _AbstractResource_ can be used as base class to implement new resources. This class defines abstract method _newResourceResponse_ which is invoked when the resource is requested. The following is the code of our RSS feeds generator:
 
 [source,java]
 ----

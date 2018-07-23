@@ -50,9 +50,9 @@ public class AuthenticatedPage extends WebPage {
    @Override
    protected void onInitialize() {
       super.onInitialize();
-      add(new BookmarkablePageLink("goToHomePage", getApplication().getHomePage()));
+      add(new BookmarkablePageLink<Void>("goToHomePage", getApplication().getHomePage()));
 
-      add(new Link("logOut") {
+      add(new Link<Void>("logOut") {
 
          @Override
          public void onClick() {
@@ -78,7 +78,7 @@ public class SignInPage extends WebPage {
    protected void onInitialize() {
       super.onInitialize();
       
-      StatelessForm form = new StatelessForm("form") {
+      StatelessForm<Void> form = new StatelessForm<Void>("form") {
          @Override
          protected void onSubmit() {
             if(Strings.isEmpty(username))

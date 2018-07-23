@@ -49,6 +49,7 @@ public class CdiWicketTester extends WicketTester
 	{
 		super(app);
 		NonContextual.of(CdiWicketTester.class).inject(this);
+		getHttpSession().setTemporary(false);
 	}
 
 	/**

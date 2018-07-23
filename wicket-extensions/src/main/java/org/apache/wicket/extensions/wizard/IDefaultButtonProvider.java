@@ -32,6 +32,7 @@ import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
  * 
  * @author eelcohillenius
  */
+@Deprecated
 public interface IDefaultButtonProvider
 {
 	/**

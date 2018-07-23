@@ -1,10 +1,9 @@
 <html xmlns:wicket="http://wicket.apache.org">
-<head>
+<wicket:head>
     <title>Wicket Examples - forminput</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
+</wicket:head>
 <body>
-    <span wicket:id="mainNavigation"/>
+    <wicket:extend>
     <form wicket:id="inputForm" class="inputForm">
  	 <div>
 		<wicket:message key="use.locale">Use locale:</wicket:message>
@@ -82,5 +81,6 @@
 	<div id="feedbackPanel">
 		<span wicket:id="feedback"/>
     </div>
+</wicket:extend>
 </body>
 </html>

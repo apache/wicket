@@ -162,4 +162,12 @@ public class TransparentWebMarkupContainer extends WebMarkupContainer implements
 			}
 		}
 	}
+	
+	@Override
+	protected Component findChildComponent(ComponentTag tag)
+	{
+		Component childComponent = super.findChildComponent(tag);
+		
+		return childComponent != null ? childComponent : resolve(this, null, tag);
+	}
 }

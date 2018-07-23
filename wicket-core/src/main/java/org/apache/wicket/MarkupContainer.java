@@ -589,7 +589,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 
 			private void refreshInternalIteratorIfNeeded()
 			{
-				if (modCounter != 0 && expectedModCounter >= modCounter)
+				if (expectedModCounter >= modCounter)
 					return;
 
 				if (children == null)
@@ -1002,17 +1002,6 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 
 		Page page = findPage();
-		
-		// if we have a path to page, dequeue any container children.
-		if (page != null && child instanceof MarkupContainer)
-		{
-		    MarkupContainer childContainer = (MarkupContainer)child;
-		    // if we are already dequeueing there is no need to dequeue again
-		    if (!childContainer.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
-			{				
-				childContainer.dequeue();
-			}
-		}
 
 		if (page != null)
 		{
@@ -1705,6 +1694,10 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 	}
 
+	/**
+	 * 
+	 * @see org.apache.wicket.Component#internalMarkRendering(boolean)
+	 */
 	@Override
 	void internalMarkRendering(boolean setRenderingFlag)
 	{
@@ -1804,22 +1797,11 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	}
 
 	@Override
-	protected void onAfterRenderChildren()
-	{
-		for (Component child : this)
-		{
-			// set RENDERING_FLAG to false for auto-component's children (like Enclosure)
-			child.markRendering(false);
-		}
-		super.onAfterRenderChildren();
-	}
-
-	@Override
 	protected void onDetach()
 	{
 		super.onDetach();
 
-		modCounter = 0;
+		modCounter++;
 		removals_clear();
 
 		if (queue != null && !queue.isEmpty() && hasBeenRendered())
@@ -1874,42 +1856,35 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 		}
 		else
 		{
-			MarkupContainer containerWithQueue = this;
+			MarkupContainer queueRegion = (MarkupContainer)findParent(IQueueRegion.class);
 
-			// check if there are any parent containers that have queued components, up till our
-			// queue region
-			while (containerWithQueue.isQueueEmpty() &&
-				!(containerWithQueue instanceof IQueueRegion))
+			if (queueRegion == null)
 			{
-				containerWithQueue = containerWithQueue.getParent();
-				if (containerWithQueue == null)
-				{
-					// no queued components are available for dequeuing, so we can stop
-					return;
-				}
-			}
-
-			// when there are no components to be dequeued, just stop
-			if (containerWithQueue.isQueueEmpty())
 				return;
-
-			// get the queue region where we are going to dequeue components in
-			MarkupContainer queueRegion = containerWithQueue;
-
-			// the container with queued components could be a queue region, if not, find the region
-			// to dequeue in
-			if (!queueRegion.isQueueRegion())
-			{
-				queueRegion = (MarkupContainer)queueRegion.findParent(IQueueRegion.class);
 			}
-
-			if (queueRegion != null && !queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
+			
+			MarkupContainer anchestor = this;
+			boolean hasQueuedChildren = !isQueueEmpty();
+			
+			while (!hasQueuedChildren && anchestor != queueRegion)
+			{
+				anchestor = anchestor.getParent();
+				hasQueuedChildren = !anchestor.isQueueEmpty();
+			}
+			
+			if (hasQueuedChildren && !queueRegion.getRequestFlag(RFLAG_CONTAINER_DEQUEING))
 			{
 				queueRegion.dequeue();
 			}
 		}
 	}
 
+	@Override
+	protected void onInitialize()
+	{
+		super.onInitialize();
+		dequeue();
+	}
 	/**
 	 * @return {@code true} when one or more components are queued
 	 */
@@ -1981,7 +1956,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 			ComponentTag tag = dequeue.takeTag();
 	
 			// see if child is already added to parent
-			Component child = get(tag.getId());
+			Component child = findChildComponent(tag);
 
 			if (child == null)
 			{
@@ -2008,6 +1983,18 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
             }
 		}
 
+	}
+
+	/**
+	 * Search the child component for the given tag.
+	 * 
+	 * @param tag
+	 * 				the component tag 
+	 * @return the child component for the given tag or null if no child can not be found.
+	 */
+	protected Component findChildComponent(ComponentTag tag)
+	{
+		return get(tag.getId());
 	}
 	
 	/**

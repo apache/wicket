@@ -73,21 +73,21 @@ public class PropertyValidatorRequiredTest
 		assertTrue(page.input21.isRequired());
 
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5656
-	 * 
+	 *
 	 * Annotation NotNull must be effective even if is not directly applied.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testResolveComposedConstraints() throws Exception
 	{
-		Property property = new Property(DefaultPropertyResolverTest.BeanWithPassword.class, "password");		
+		Property property = new Property(DefaultPropertyResolverTest.BeanWithPassword.class, "password");
 		PropertyValidator<DefaultPropertyResolverTest.BeanWithPassword> propertyValidator = new PropertyValidator<>(property);
-		
-		assertTrue(propertyValidator.isRequired()); 
+
+		assertTrue(propertyValidator.isRequired());
 	}
 
 	public static class TestApplication extends MockApplication
@@ -214,7 +214,6 @@ public class PropertyValidatorRequiredTest
 
 		@NotNull(groups = { GroupOne.class, GroupTwo.class })
 		String propertyOneTwo;
-
 	}
 
 }

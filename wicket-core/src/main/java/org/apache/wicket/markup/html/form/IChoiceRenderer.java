@@ -18,8 +18,8 @@ package org.apache.wicket.markup.html.form;
 
 import java.util.List;
 
+import org.apache.wicket.model.IDetachable;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.util.io.IClusterable;
 
 /**
  * Renders one choice. Separates the 'id' values used for internal representation from 'display
@@ -30,7 +30,7 @@ import org.apache.wicket.util.io.IClusterable;
  * @param <T>
  *            The model object type
  */
-public interface IChoiceRenderer<T> extends IClusterable
+public interface IChoiceRenderer<T> extends IDetachable
 {
 	/**
 	 * Get the value for displaying to an end user.
@@ -70,4 +70,13 @@ public interface IChoiceRenderer<T> extends IClusterable
 	 * @return A choice from the list that has this {@code id}
 	 */
 	T getObject(String id, IModel<? extends List<? extends T>> choices);
+
+	/**
+	 * Override when needed.
+	 */
+	@Override
+	default void detach()
+	{
+	}
+	
 }

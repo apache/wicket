@@ -80,17 +80,6 @@ public interface AjaxRequestTarget extends IPartialPageRequestHandler, ILoggable
 	}
 
 	/**
-	 * Empty implementation of an {@link IListener} useful as a starting point for your own
-	 * custom listener.
-	 *
-	 * @deprecated This class will be removed in Wicket 9.0.0. Use {@link IListener} instead
-	 */
-	@Deprecated
-	class AbstractListener implements IListener
-	{
-	}
-
-	/**
 	 * An ajax javascript response that allows users to add javascript to be executed on the client
 	 * side
 	 *

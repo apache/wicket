@@ -1,0 +1,88 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+@font-face {
+    font-family: 'Source Code Pro';
+    src: url('SourceCodePro-ExtraLight-webfont.eot');
+    src: url('SourceCodePro-ExtraLight-webfont.eot?#iefix') format('embedded-opentype'),
+         url('SourceCodePro-ExtraLight-webfont.woff') format('woff'),
+         url('SourceCodePro-ExtraLight-webfont.ttf') format('truetype'),
+         url('SourceCodePro-ExtraLight-webfont.svg#SourceCodeProExtraLight') format('svg');
+    font-weight: 200;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    src: url('SourceCodePro-Light-webfont.eot');
+    src: url('SourceCodePro-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('SourceCodePro-Light-webfont.woff') format('woff'),
+         url('SourceCodePro-Light-webfont.ttf') format('truetype'),
+         url('SourceCodePro-Light-webfont.svg#SourceCodeProLight') format('svg');
+    font-weight: 300;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    src: url('SourceCodePro-Regular-webfont.eot');
+    src: url('SourceCodePro-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('SourceCodePro-Regular-webfont.woff') format('woff'),
+         url('SourceCodePro-Regular-webfont.ttf') format('truetype'),
+         url('SourceCodePro-Regular-webfont.svg#SourceCodeProRegular') format('svg');
+    font-weight: 400;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    src: url('SourceCodePro-Semibold-webfont.eot');
+    src: url('SourceCodePro-Semibold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('SourceCodePro-Semibold-webfont.woff') format('woff'),
+         url('SourceCodePro-Semibold-webfont.ttf') format('truetype'),
+         url('SourceCodePro-Semibold-webfont.svg#SourceCodeProSemibold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    src: url('SourceCodePro-Bold-webfont.eot');
+    src: url('SourceCodePro-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('SourceCodePro-Bold-webfont.woff') format('woff'),
+         url('SourceCodePro-Bold-webfont.ttf') format('truetype'),
+         url('SourceCodePro-Bold-webfont.svg#SourceCodeProBold') format('svg');
+    font-weight: 700;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'Source Code Pro';
+    src: url('SourceCodePro-Black-webfont.eot');
+    src: url('SourceCodePro-Black-webfont.eot?#iefix') format('embedded-opentype'),
+         url('SourceCodePro-Black-webfont.woff') format('woff'),
+         url('SourceCodePro-Black-webfont.ttf') format('truetype'),
+         url('SourceCodePro-Black-webfont.svg#SourceCodeProBlack') format('svg');
+    font-weight: 900;
+    font-style: normal;
+
+}
+

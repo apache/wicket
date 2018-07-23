@@ -35,11 +35,10 @@ import org.apache.wicket.Page;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.core.util.string.CssUtils;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.validation.FormValidatorAdapter;
@@ -48,13 +47,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.protocol.http.servlet.MultipartServletWebRequest;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.IRequestParameters;
-import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.encoding.UrlDecoder;
 import org.apache.wicket.util.lang.Args;
@@ -151,8 +145,6 @@ public class Form<T> extends WebMarkupContainer
 		IRequestListener,
 		IGenericComponent<T, Form<T>>
 {
-	private static final String HIDDEN_DIV_START = "<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\">";
-
 	public static final String ENCTYPE_MULTIPART_FORM_DATA = "multipart/form-data";
 
 	/**
@@ -514,44 +506,46 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * This generates a piece of javascript code that sets the url in the special hidden field and
-	 * submits the form.
+	 * @deprecated use {@link #getJsForListenerUrl(CharSequence)} instead.
+	 */
+	public final CharSequence getJsForInterfaceUrl(CharSequence url) {
+		return getJsForListenerUrl(url);
+	}
+
+	/**
+	 * Generate a piece of JavaScript that submits the form to the given URL.
 	 * 
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
 	 * 
 	 * @param url
-	 *            The interface url that has to be stored in the hidden field and submitted
-	 * @return The javascript code that submits the form.
+	 *            The listener url to be submitted to
+	 * @return the javascript code that submits the form.
 	 */
-	public final CharSequence getJsForInterfaceUrl(CharSequence url)
+	public final CharSequence getJsForListenerUrl(CharSequence url)
 	{
-		/*
-		 * since the passed in url is handled when the current url is form's action url and not the
-		 * current request's url we rerender the passed in url to be relative to the form's action
-		 * url
-		 */
-		UrlRenderer renderer = getRequestCycle().getUrlRenderer();
-		Url oldBase = renderer.getBaseUrl();
-		try
-		{
-			Url action = Url.parse(getActionUrl().toString());
-			renderer.setBaseUrl(action);
-			url = renderer.renderUrl(Url.parse(url.toString()));
-		}
-		finally
-		{
-			renderer.setBaseUrl(oldBase);
-		}
-
 		Form<?> root = getRootForm();
-		return new AppendingStringBuffer("document.getElementById('").append(
-			root.getHiddenFieldId())
-			.append("').value='")
-			.append(url)
-			.append("';document.getElementById('")
-			.append(root.getMarkupId())
-			.append("').submit();");
+
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		
+		String action = url.toString();
+		if (root.encodeUrlInHiddenFields()) {
+			buffer.append(String.format("document.getElementById('%s').innerHTML = '", root.getHiddenFieldsId()));
+			
+			// parameter must be sent as hidden field, as it would be ignored in the action URL
+			int i = action.indexOf('?');
+			if (i != -1) {
+				writeParamsAsHiddenFields(Strings.split(action.substring(i + 1), '&'), buffer);
+				
+				action = action.substring(0, i);
+			}
+			
+			buffer.append("';");
+		}
+		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
+		buffer.append(String.format("f.action='%s';", action));
+		buffer.append("f.submit();");
+		return buffer;
 	}
 
 	/**
@@ -692,26 +686,6 @@ public class Form<T> extends WebMarkupContainer
 	@Override
 	public final void onRequest()
 	{
-		// check methods match
-		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
-		{
-			String desiredMethod = getMethod();
-			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
-			if (!actualMethod.equalsIgnoreCase(desiredMethod))
-			{
-				MethodMismatchResponse response = onMethodMismatch();
-				switch (response)
-				{
-					case ABORT :
-						return;
-					case CONTINUE :
-						break;
-					default :
-						throw new IllegalStateException("Invalid " +
-							MethodMismatchResponse.class.getName() + " value: " + response);
-				}
-			}
-		}
 		onFormSubmitted(null);
 	}
 
@@ -741,66 +715,77 @@ public class Form<T> extends WebMarkupContainer
 	 */
 	public final void onFormSubmitted(IFormSubmitter submitter)
 	{
-		markFormsSubmitted();
+		// check methods match
+		if (getRequest().getContainerRequest() instanceof HttpServletRequest)
+		{
+			String desiredMethod = getMethod();
+			String actualMethod = ((HttpServletRequest)getRequest().getContainerRequest()).getMethod();
+			if (!actualMethod.equalsIgnoreCase(desiredMethod))
+			{
+				MethodMismatchResponse response = onMethodMismatch();
+				switch (response)
+				{
+					case ABORT :
+						return;
+					case CONTINUE :
+						break;
+					default :
+						throw new IllegalStateException("Invalid " +
+								MethodMismatchResponse.class.getName() + " value: " + response);
+				}
+			}
+		}
+
+		markFormsSubmitted(submitter);
 
 		if (handleMultiPart())
 		{
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			String url = getRequest().getRequestParameters()
-				.getParameterValue(getHiddenFieldId())
-				.toString();
-			if (!Strings.isEmpty(url))
+			// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
+			if (submitter == null)
 			{
-				dispatchEvent(getPage(), url);
+				submitter = findSubmittingButton();
+
+				if (submitter instanceof IFormSubmittingComponent)
+				{
+					IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
+					Component component = (Component)submitter;
+
+					if (!component.isVisibleInHierarchy())
+					{
+						throw new WicketRuntimeException("Submit Button " +
+							submittingComponent.getInputName() + " (path=" +
+							component.getPageRelativePath() + ") is not visible");
+					}
+
+					if (!component.isEnabledInHierarchy())
+					{
+						throw new WicketRuntimeException("Submit Button " +
+							submittingComponent.getInputName() + " (path=" +
+							component.getPageRelativePath() + ") is not enabled");
+					}
+				}
+			}
+
+			// When processing was triggered by a Wicket IFormSubmittingComponent and that
+			// component indicates it wants to be called immediately
+			// (without processing), call the IFormSubmittingComponent.onSubmit* methods right
+			// away.
+			if (submitter != null && !submitter.getDefaultFormProcessing())
+			{
+				submitter.onSubmit();
+				submitter.onAfterSubmit();
 			}
 			else
 			{
-				// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
-				if (submitter == null)
-				{
-					submitter = findSubmittingButton();
+				// the submit request might be for one of the nested forms, so let's
+				// find the right one:
+				final Form<?> formToProcess = findFormToProcess(submitter);
 
-					if (submitter instanceof IFormSubmittingComponent)
-					{
-						IFormSubmittingComponent submittingComponent = (IFormSubmittingComponent)submitter;
-						Component component = (Component)submitter;
-
-						if (!component.isVisibleInHierarchy())
-						{
-							throw new WicketRuntimeException("Submit Button " +
-								submittingComponent.getInputName() + " (path=" +
-								component.getPageRelativePath() + ") is not visible");
-						}
-
-						if (!component.isEnabledInHierarchy())
-						{
-							throw new WicketRuntimeException("Submit Button " +
-								submittingComponent.getInputName() + " (path=" +
-								component.getPageRelativePath() + ") is not enabled");
-						}
-					}
-				}
-
-				// When processing was triggered by a Wicket IFormSubmittingComponent and that
-				// component indicates it wants to be called immediately
-				// (without processing), call the IFormSubmittingComponent.onSubmit* methods right
-				// away.
-				if (submitter != null && !submitter.getDefaultFormProcessing())
-				{
-					submitter.onSubmit();
-					submitter.onAfterSubmit();
-				}
-				else
-				{
-					// the submit request might be for one of the nested forms, so let's
-					// find the right one:
-					final Form<?> formToProcess = findFormToProcess(submitter);
-
-					// process the form for this request
-					formToProcess.process(submitter);
-				}
+				// process the form for this request
+				formToProcess.process(submitter);
 			}
 		}
 		// If multi part did fail check if an error is registered and call
@@ -1017,19 +1002,21 @@ public class Form<T> extends WebMarkupContainer
 
 	/**
 	 * Sets FLAG_SUBMITTED to true on this form and every enabled nested form.
+	 * @param submitter 
 	 */
-	private void markFormsSubmitted()
+	private void markFormsSubmitted(IFormSubmitter submitter)
 	{
 		setFlag(FLAG_SUBMITTED, true);
-
+		Form<?> formToProcess = findFormToProcess(submitter);
+		
 		visitChildren(Form.class, new IVisitor<Component, Void>()
 		{
 			@Override
 			public void component(final Component component, final IVisit<Void> visit)
 			{
 				Form<?> form = (Form<?>)component;
-				if (form.isEnabledInHierarchy() && form.isVisibleInHierarchy() &&
-					form.wantSubmitOnParentFormSubmit())
+				if ((form.wantSubmitOnParentFormSubmit() || form == formToProcess) 
+					&& form.isEnabledInHierarchy() && form.isVisibleInHierarchy())
 				{
 					form.setFlag(FLAG_SUBMITTED, true);
 					return;
@@ -1171,8 +1158,7 @@ public class Form<T> extends WebMarkupContainer
 			@Override
 			public void component(final Component component, final IVisit<Boolean> visit)
 			{
-				if (component.isVisibleInHierarchy() && component.isEnabledInHierarchy() &&
-					component.hasErrorMessage())
+				if (component.hasErrorMessage() && component.isVisibleInHierarchy() && component.isEnabledInHierarchy())
 				{
 					visit.stop(true);
 				}
@@ -1180,35 +1166,6 @@ public class Form<T> extends WebMarkupContainer
 		});
 
 		return (error != null) && error;
-	}
-
-	/**
-	 * Method for dispatching/calling a interface on a page from the given url. Used by
-	 * {@link Form#onRequest()} for dispatching events
-	 * 
-	 * @param page
-	 *            The page where the event should be called on.
-	 * @param url
-	 *            The url which describes the component path and the interface to be called.
-	 */
-	private void dispatchEvent(final Page page, final String url)
-	{
-		// the current request's url is most likely wicket/page?x-y.IFormSubmitListener-path-to-form
-		// while the passed in url is most likely page?x.y.IOnChangeListener-path-to-component
-		// we transform the passed in url into wicket/page?x-y.IOnChangeListener-path-to-component
-		// so the system mapper can interpret it
-		String urlWoJSessionId = Strings.stripJSessionId(url);
-		Url resolved = new Url(getRequest().getUrl());
-		resolved.resolveRelative(Url.parse(urlWoJSessionId));
-
-		IRequestMapper mapper = getApplication().getRootRequestMapper();
-		Request request = getRequest().cloneWithUrl(resolved);
-		IRequestHandler handler = mapper.mapRequest(request);
-
-		if (handler != null)
-		{
-			getRequestCycle().scheduleRequestHandlerAfterCurrent(handler);
-		}
 	}
 
 	/**
@@ -1238,15 +1195,17 @@ public class Form<T> extends WebMarkupContainer
 	{
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 
+		String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
+
 		// div that is not visible (but not display:none either)
-		buffer.append(HIDDEN_DIV_START);
+		buffer.append(String.format("<div style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", cssClass));
 
 		// add an empty textfield (otherwise IE doesn't work)
-		buffer.append("<input type=\"text\" autocomplete=\"off\"/>");
+		buffer.append("<input type=\"text\" tabindex=\"-1\" autocomplete=\"off\"/>");
 
 		// add the submitting component
 		final Component submittingComponent = (Component)defaultSubmittingComponent;
-		buffer.append("<input type=\"submit\" name=\"");
+		buffer.append("<input type=\"submit\" tabindex=\"-1\" name=\"");
 		buffer.append(defaultSubmittingComponent.getInputName());
 		buffer.append("\" onclick=\" var b=document.getElementById('");
 		buffer.append(submittingComponent.getMarkupId());
@@ -1255,7 +1214,7 @@ public class Form<T> extends WebMarkupContainer
 
 		// close div
 		buffer.append("</div>");
-
+		
 		getResponse().write(buffer);
 	}
 
@@ -1325,12 +1284,11 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Returns the HiddenFieldId which will be used as the name and id property of the hiddenfield
-	 * that is generated for event dispatches.
+	 * Returns the id which will be used for the hidden div containing all parameter fields.
 	 * 
-	 * @return The name and id of the hidden field.
+	 * @return the id of the hidden div
 	 */
-	public final String getHiddenFieldId()
+	private final String getHiddenFieldsId()
 	{
 		return getInputNamePrefix() + getMarkupId() + "_hf_0";
 	}
@@ -1399,7 +1357,7 @@ public class Form<T> extends WebMarkupContainer
 						}
 
 					});
-			
+
 			if (Boolean.TRUE.equals(anyEmbeddedMultipart)) {
 				multiPart |= MULTIPART_HINT_YES;
 			} else {
@@ -1679,7 +1637,8 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * 
+	 * Should URL query parameters be encoded in hidden fields.
+	 *
 	 * @return true if form's method is 'get'
 	 */
 	protected boolean encodeUrlInHiddenFields()
@@ -1709,34 +1668,32 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Writes the markup for the hidden input field and default button field if applicable to the
+	 * Writes the markup for the hidden input fields and default button field if applicable to the
 	 * current response.
 	 */
 	public final void writeHiddenFields()
 	{
-		// get the hidden field id
-		String nameAndId = getHiddenFieldId();
-
-		AppendingStringBuffer buffer = new AppendingStringBuffer(HIDDEN_DIV_START).append(
-			"<input type=\"hidden\" name=\"")
-			.append(nameAndId)
-			.append("\" id=\"")
-			.append(nameAndId)
-			.append("\" />");
-
 		// if it's a get, did put the parameters in the action attribute,
 		// and have to write the url parameters as hidden fields
 		if (encodeUrlInHiddenFields())
 		{
+			String cssClass = getString(CssUtils.key(Form.class, "hidden-fields"));
+
+			getResponse().write(String.format("<div id=\"%s\" style=\"width:0px;height:0px;position:absolute;left:-100px;top:-100px;overflow:hidden\" class=\"%s\">", getHiddenFieldsId(), cssClass));
+
+			AppendingStringBuffer buffer = new AppendingStringBuffer();				
+
 			String url = getActionUrl().toString();
 			int i = url.indexOf('?');
 			String queryString = (i > -1) ? url.substring(i + 1) : url;
 			String[] params = Strings.split(queryString, '&');
 
 			writeParamsAsHiddenFields(params, buffer);
+
+			getResponse().write(buffer);
+			
+			getResponse().write("</div>");
 		}
-		buffer.append("</div>");
-		getResponse().write(buffer);
 
 		// if a default submitting component was set, handle the rendering of that
 		if (defaultSubmittingComponent instanceof Component)
@@ -1808,7 +1765,7 @@ public class Form<T> extends WebMarkupContainer
 			this.multiPart &= MULTIPART_HARD;
 		}
 	}
-	
+
 	@Override
 	protected void onBeforeRender()
 	{
@@ -2087,32 +2044,6 @@ public class Form<T> extends WebMarkupContainer
 	public static Form<?> findForm(Component component)
 	{
 		return component.findParent(Form.class);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void renderHead(IHeaderResponse response)
-	{
-		if (!isRootForm() && isMultiPart())
-		{
-			// register some metadata so we can later properly handle multipart ajax posts for
-			// embedded forms
-			registerJavaScriptNamespaces(response);
-			response.render(JavaScriptHeaderItem.forScript("Wicket.Forms[\"" + getMarkupId() +
-				"\"]={multipart:true};", Form.class.getName() + '.' + getMarkupId() + ".metadata"));
-		}
-	}
-
-	/**
-	 * Produces javascript that registers Wicket.Forms namespaces
-	 * 
-	 * @param response
-	 */
-	protected void registerJavaScriptNamespaces(IHeaderResponse response)
-	{
-		response.render(JavaScriptHeaderItem.forScript(
-			"if (typeof(Wicket)=='undefined') { Wicket={}; } if (typeof(Wicket.Forms)=='undefined') { Wicket.Forms={}; }",
-			Form.class.getName()));
 	}
 
 	/**

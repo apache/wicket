@@ -75,7 +75,7 @@ public class ClassCryptFactory implements ICryptFactory
 			log.warn("failed, Wicket will fallback on a dummy implementation");
 			log.warn("\t(" + NoCrypt.class.getName() + ")");
 			log.warn("This is NOT recommended for production systems.");
-			log.warn("Please override method org.apache.wicket.Application.newCrypt()");
+			log.warn("Please override method org.apache.wicket.util.crypt.ICryptFactory.newCrypt()");
 			log.warn("to provide a custom encryption/decryption implementation.");
 			log.warn("The cause of the instantiation failure: ");
 			log.warn("\t" + e.getMessage());

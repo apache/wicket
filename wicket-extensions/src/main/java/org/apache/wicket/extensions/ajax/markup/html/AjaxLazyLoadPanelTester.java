@@ -18,13 +18,10 @@ package org.apache.wicket.extensions.ajax.markup.html;
 
 import java.util.List;
 
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
-import org.apache.wicket.behavior.AbstractAjaxBehavior;
-import org.apache.wicket.behavior.Behavior;
+import org.apache.wicket.Page;
+import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel.AjaxLazyLoadTimer;
 import org.apache.wicket.util.tester.BaseWicketTester;
-import org.apache.wicket.util.visit.IVisit;
-import org.apache.wicket.util.visit.IVisitor;
+import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,49 +32,64 @@ import org.slf4j.LoggerFactory;
  */
 public class AjaxLazyLoadPanelTester
 {
-
 	private static final Logger logger = LoggerFactory.getLogger(AjaxLazyLoadPanelTester.class);
 
 	/**
-	 * Searches the {@link MarkupContainer}, looking for and triggering {@link AjaxLazyLoadPanel}s
-	 * to fetch their contents. Very useful for testing pages / panels that use
-	 * {@link AjaxLazyLoadPanel}s.
+	 * Triggers loading of all {@link AjaxLazyLoadPanel}'s content in the last rendered page.
 	 * 
 	 * @param wt
-	 *            the {@link BaseWicketTester} to execute the behaviour (
-	 *            {@link BaseWicketTester#executeBehavior} ).
-	 * @param container
-	 *            contains the {@link AjaxLazyLoadPanel} to trigger
+	 *            the tester
 	 */
-	public static void executeAjaxLazyLoadPanel(final BaseWicketTester wt,
-		final MarkupContainer container)
+	public static void executeAjaxLazyLoadPanel(final BaseWicketTester wt)
 	{
-		container.visitChildren(AjaxLazyLoadPanel.class, new IVisitor<AjaxLazyLoadPanel, Void>()
-		{
-			@Override
-			public void component(final AjaxLazyLoadPanel component, final IVisit<Void> visit)
-			{
-				// get the AbstractAjaxBehaviour which is responsible for
-				// getting the contents of the lazy panel
-				List<AbstractAjaxBehavior> behaviors = component.getBehaviors(AbstractAjaxBehavior.class);
-				if (behaviors.size() == 0)
-				{
-					logger.warn("AjaxLazyLoadPanel child found, but no attached AbstractAjaxBehaviors found. A curious situation...");
-				}
-				for (Behavior b : behaviors)
-				{
-					if (!(b instanceof AjaxSelfUpdatingTimerBehavior))
-					{
-						// tell wicket tester to execute it :)
-						logger.debug("Triggering lazy panel: " + component.getClassRelativePath());
-						AbstractAjaxBehavior abstractAjaxBehaviour = (AbstractAjaxBehavior)b;
-						wt.executeBehavior(abstractAjaxBehaviour);
-					}
-				}
-				// continue looking for other AjazLazyLoadPanel
-			}
-		});
+		executeAjaxLazyLoadPanel(wt, wt.getLastRenderedPage());
 	}
 
+	/**
+	 * Triggers loading of all {@link AjaxLazyLoadPanel}'s content in a page.
+	 * 
+	 * @param wt
+	 *            the tester
+	 * @param page
+	 *            contains the {@link AjaxLazyLoadPanel}s to trigger
+	 */
+	public static void executeAjaxLazyLoadPanel(final BaseWicketTester wt, final Page page)
+	{
+		// get the AbstractAjaxBehaviour which is responsible for
+		// getting the contents of the lazy panel
+		List<AjaxLazyLoadTimer> behaviors = page.getBehaviors(AjaxLazyLoadTimer.class);
+		if (behaviors.size() == 0)
+		{
+			logger.warn("No timer behavior for AjaxLazyLoadPanel found. A curious situation...");
+			return;
+		}
+		else if (behaviors.size() > 1)
+		{
+			logger.warn(
+				"Multiple timer behavior for AjaxLazyLoadPanel found. A curious situation...");
+		}
 
+		wt.executeBehavior(behaviors.get(0));
+	}
+
+	/**
+	 * Triggers loading of a single {@link AjaxLazyLoadPanel}.
+	 * 
+	 * @param wt
+	 *            the tester
+	 * @param panel
+	 *            the panel
+	 * @return	update duration or {@value null} of already loadedO
+	 */
+	public static Duration loadAjaxLazyLoadPanel(final BaseWicketTester wt, final AjaxLazyLoadPanel<?> panel)
+	{
+		if (panel.isLoaded())
+		{
+			return null;
+		}
+		else
+		{
+			return panel.getUpdateInterval();
+		}
+	}
 }

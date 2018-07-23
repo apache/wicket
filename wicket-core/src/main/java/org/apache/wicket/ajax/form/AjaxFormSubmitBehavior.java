@@ -170,7 +170,10 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected void onEvent(final AjaxRequestTarget target)
 	{
-		getForm().getRootForm().onFormSubmitted(new AjaxFormSubmitBehavior.AjaxFormSubmitter(this, target));
+		AjaxFormSubmitBehavior.AjaxFormSubmitter submitter = new AjaxFormSubmitBehavior.AjaxFormSubmitter(this, target);
+		Form<?> form = getForm();
+		
+		form.getRootForm().onFormSubmitted(submitter);
 	}
 
 	/**
@@ -296,42 +299,6 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				onSubmit.accept(target);
-			}
-		};
-	}
-
-	/**
-	 * Creates an {@link AjaxFormSubmitBehavior} based on lambda expressions
-	 * 
-	 * @param eventName
-	 *            the event name
-	 * @param onSubmit
-	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
-	 * @param onError
-	 *            the {@code SerializableConsumer} which accepts the {@link AjaxRequestTarget}
-	 * @return the {@link AjaxFormSubmitBehavior}
-	 */
-	public static AjaxFormSubmitBehavior onSubmit(String eventName,
-		SerializableConsumer<AjaxRequestTarget> onSubmit,
-		SerializableConsumer<AjaxRequestTarget> onError)
-	{
-		Args.notNull(onSubmit, "onSubmit");
-		Args.notNull(onError, "onError");
-
-		return new AjaxFormSubmitBehavior(eventName)
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onSubmit(AjaxRequestTarget target)
-			{
-				onSubmit.accept(target);
-			}
-
-			@Override
-			protected void onError(AjaxRequestTarget target)
-			{
-				onError.accept(target);
 			}
 		};
 	}

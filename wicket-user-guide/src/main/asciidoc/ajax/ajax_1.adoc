@@ -9,7 +9,7 @@ For example component AjaxLink (in package _org.apache.wicket.ajax.markup.html_)
 
 [source,java]
 ----
-new AjaxLink("ajaxLink"){
+new AjaxLink<Void>("ajaxLink"){
 	@Override
 	public void onClick(AjaxRequestTarget target) {
 	    //some server side code...
@@ -21,7 +21,7 @@ Using AjaxRequestTarget we can specify the content that must be sent back to the
 
 [source,java]
 ----
-new AjaxLink("ajaxLink"){
+new AjaxLink<Void>("ajaxLink"){
 	@Override
 	public void onClick(AjaxRequestTarget target) {
 	    //modify the model of a label and refresh it on browser
@@ -40,7 +40,7 @@ final Label label = new Label("labelComponent", "Initial value.");
 label.setOutputMarkupId(true);
 add(label);
 //...
-new AjaxLink("ajaxLink"){
+new AjaxLink<Void>("ajaxLink"){
 	@Override
 	public void onClick(AjaxRequestTarget target) {
 	    //modify the model of a label and refresh it on client side
@@ -54,7 +54,7 @@ Another common use of AjaxRequestTarget is to prepend or append some JavaScript 
 
 [source,java]
 ----
-new AjaxLink("ajaxLink"){
+new AjaxLink<Void>("ajaxLink"){
 	@Override
 	public void onClick(AjaxRequestTarget target) {
 	    target.appendJavaScript(";alert('Hello!!');");

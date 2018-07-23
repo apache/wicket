@@ -29,6 +29,7 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.border.Border;
+import org.apache.wicket.markup.html.internal.HtmlHeaderContainer;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.IManageablePage;
@@ -37,7 +38,6 @@ import org.apache.wicket.page.IPageManagerContext;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
@@ -242,16 +242,25 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * Headers not rendered for components inside TransparentWebMarkupContainer on ajax update
 	 */
 	@Test
-	public void updateEmbeddedAjaxComponent() throws Exception
+	public void updateAjaxUpdateOfTransparentContainer() throws Exception
 	{
-		tester.startPage(TestEmbeddedAjaxComponet.class);
-		tester.clickLink("ajaxLink", true);
+		TestEmbeddedAjaxComponet page = new TestEmbeddedAjaxComponet();
+		tester.startPage(page);
+		assertEquals(2, page.renderHeadCount);
 		
-		TagTester scriptTag = TagTester.createTagByAttribute(
-			tester.getLastResponseAsString(), "header-contribution");
+		tester.clickLink("container:updateTransparentContainer", true);
+		assertEquals(4, page.renderHeadCount);
+	}
+	
+	@Test
+	public void updateAjaxUpdateOfContainerWithTransparentContainer() throws Exception
+	{
+		TestEmbeddedAjaxComponet page = new TestEmbeddedAjaxComponet();
+		tester.startPage(page);
+		assertEquals(2, page.renderHeadCount);
 		
-		//check if our response contains headers
-		assertNotNull(scriptTag);
+		tester.clickLink("container:updateContainer", true);
+		assertEquals(4, page.renderHeadCount);
 	}
 	
 	@Test
@@ -377,19 +386,51 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	public static class TestEmbeddedAjaxComponet extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
+		
+		public int renderHeadCount = 0;
 
 		/** */
 		public TestEmbeddedAjaxComponet()
 		{
-			final Component container;
-			add(container = new TransparentWebMarkupContainer("container")
-					.setOutputMarkupId(true));
-			add(new AjaxLink<Void>("ajaxLink"){
+			final WebMarkupContainer container = new WebMarkupContainer("container");
+			container.setOutputMarkupId(true);
+			add(container);
+			
+			final Component transparentContainer = new TransparentWebMarkupContainer("transparentContainer").setOutputMarkupId(true);
+			container.add(transparentContainer);
+			
+			container.add(new AjaxLink<Void>("updateContainer"){
 
+				@Override
+				public void internalRenderHead(HtmlHeaderContainer container)
+				{
+					super.internalRenderHead(container);
+
+					renderHeadCount++;
+				}
+				
 				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					target.add(container);
+				}
+				
+			});
+			
+			container.add(new AjaxLink<Void>("updateTransparentContainer"){
+
+				@Override
+				public void internalRenderHead(HtmlHeaderContainer container)
+				{
+					super.internalRenderHead(container);
+
+					renderHeadCount++;
+				}
+				
+				@Override
+				public void onClick(AjaxRequestTarget target)
+				{
+					target.add(transparentContainer);
 				}
 				
 			});
@@ -402,7 +443,10 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 			return new StringResourceStream("" + //
 				"<html><body>" + //
 				"	<div wicket:id=\"container\">" + //
-				"		<a wicket:id=\"ajaxLink\"></a>" + //
+				"		<div wicket:id=\"transparentContainer\">" + //
+				"			<a wicket:id=\"updateContainer\"></a>" + //
+				"			<a wicket:id=\"updateTransparentContainer\"></a>" + //
+				"		</div>" + //
 				"	</div>" + //
 				"</body></html>");
 		}

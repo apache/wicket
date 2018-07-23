@@ -18,7 +18,6 @@ module.exports = function(grunt) {
 
 	var
 		coreJs = [
-			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-event-jquery.js',
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery-debug.js',
 			'../../wicket-core/src/main/java/org/apache/wicket/ajax/res/js/wicket-ajax-jquery.js',
 			"../../wicket-core/src/main/java/org/apache/wicket/markup/html/form/CheckSelector.js",
@@ -28,20 +27,14 @@ module.exports = function(grunt) {
 		],
 		extensionsJs = [
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/form/upload/progressbar.js",
+			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/wicket-ajaxdownload.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/form/palette/palette.js",
-			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/tree/res/tree.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/autocomplete/wicket-autocomplete.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js",
 			"../../wicket-extensions/src/main/java/org/apache/wicket/extensions/markup/html/repeater/data/table/filter/wicket-filterform.js"
 		],
-		datetimeJs = [
-			"../../wicket-datetime/src/main/java/org/apache/wicket/extensions/yui/calendar/wicket-date.js"
-		],
 		nativeWebSocketJs = [
 			"../../wicket-native-websocket/wicket-native-websocket-core/src/main/java/org/apache/wicket/protocol/ws/api/res/js/wicket-websocket-jquery.js"
-		],
-		atmosphereJs = [
-			"../../wicket-experimental/wicket-atmosphere/src/main/java/org/apache/wicket/atmosphere/jquery.wicketatmosphere.js"
 		],
 		testsJs = [
 			"../../wicket-core/src/test/js/ajax.js",
@@ -78,9 +71,7 @@ module.exports = function(grunt) {
 		jshint: {
 			core: coreJs,
 			extensions: extensionsJs,
-			datetime: datetimeJs,
 			nativeWebSocket: nativeWebSocketJs,
-			atmosphere: atmosphereJs,
 			testsJs: testsJs,
 			gymTestsJs: gymTestsJs,
 			grunt: gruntJs,
@@ -117,7 +108,7 @@ module.exports = function(grunt) {
 			        urls: [
 			        	'http://localhost:38887/test/js/all.html?1.12.4',
 			        	'http://localhost:38887/test/js/all.html?2.2.4',
-			        	'http://localhost:38887/test/js/all.html?3.1.1'
+						'http://localhost:38887/test/js/all.html?3.2.1'
 			        ]
 			    }
 			},
@@ -130,7 +121,7 @@ module.exports = function(grunt) {
 					urls: [
 						'http://localhost:38887/test/js/amd.html?1.12.4',
 						'http://localhost:38887/test/js/amd.html?2.2.4',
-						'http://localhost:38887/test/js/amd.html?3.1.1'
+						'http://localhost:38887/test/js/amd.html?3.2.1'
 					]
 				}
 			}

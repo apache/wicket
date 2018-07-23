@@ -28,6 +28,7 @@ import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.IWrappedHeaderItem;
@@ -238,19 +239,34 @@ public abstract class PartialPageUpdate
 	{
 		componentsFrozen = true;
 
-		// process component markup
-		for (Map.Entry<String, Component> stringComponentEntry : markupIdToComponent.entrySet())
-		{
-			final Component component = stringComponentEntry.getValue();
-
-			if (!containsAncestorFor(component))
+		List<Component> toBeWritten = new ArrayList<>(markupIdToComponent.size());
+		
+		// delay preparation of feedbacks after all other components
+		try (FeedbackDelay delay = new FeedbackDelay(RequestCycle.get())) {
+			for (Component component : markupIdToComponent.values())
 			{
-				writeComponent(response, component.getAjaxRegionMarkupId(), component, encoding);
+				if (!containsAncestorFor(component))
+				{
+					if (prepareComponent(component)) {
+						toBeWritten.add(component);
+					}
+				}
 			}
+
+			// .. now prepare all postponed feedbacks
+			delay.beforeRender();
+		}
+
+		// write components
+		for (Component component : toBeWritten)
+		{
+			writeComponent(response, component.getAjaxRegionMarkupId(), component, encoding);
 		}
 
 		if (header != null)
 		{
+			RequestCycle cycle = RequestCycle.get();
+			
 			// some header responses buffer all calls to render*** until close is called.
 			// when they are closed, they do something (i.e. aggregate all JS resource urls to a
 			// single url), and then "flush" (by writing to the real response) before closing.
@@ -258,19 +274,60 @@ public abstract class PartialPageUpdate
 			// tag, which we do here:
 			headerRendering = true;
 			// save old response, set new
-			Response oldResponse = RequestCycle.get().setResponse(headerBuffer);
+			Response oldResponse = cycle.setResponse(headerBuffer);
 			headerBuffer.reset();
 
 			// now, close the response (which may render things)
 			header.getHeaderResponse().close();
 
 			// revert to old response
-			RequestCycle.get().setResponse(oldResponse);
+			cycle.setResponse(oldResponse);
 
 			// write the XML tags and we're done
 			writeHeaderContribution(response);
 			headerRendering = false;
 		}
+	}
+
+	/**
+	 * Prepare a single component
+	 *
+	 * @param component
+	 *      the component to prepare
+	 * @return wether the component was prepared
+	 */
+	protected boolean prepareComponent(Component component)
+	{
+		if (component.getRenderBodyOnly() == true)
+		{
+			throw new IllegalStateException(
+					"A partial update is not possible for a component that has renderBodyOnly enabled. Component: " +
+							component.toString());
+		}
+
+		component.setOutputMarkupId(true);
+
+		// Initialize temporary variables
+		final Page page = component.findParent(Page.class);
+		if (page == null)
+		{
+			// dont throw an exception but just ignore this component, somehow
+			// it got removed from the page.
+			LOG.warn("Component '{}' not rendered because it was already removed from page", component);
+			return false;
+		}
+
+		try
+		{
+			component.beforeRender();
+		}
+		catch (RuntimeException e)
+		{
+			bodyBuffer.reset();
+			throw e;
+		}
+		
+		return true;
 	}
 
 	/**

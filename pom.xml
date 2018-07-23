@@ -17,9 +17,6 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<prerequisites>
-		<maven>3.3.9</maven>
-	</prerequisites>
 	<parent>
 		<groupId>org.apache</groupId>
 		<artifactId>apache</artifactId>
@@ -27,7 +24,7 @@
 	</parent>
 	<groupId>org.apache.wicket</groupId>
 	<artifactId>wicket-parent</artifactId>
-	<version>8.0.0-SNAPSHOT</version>
+	<version>9.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java-based open source component web application framework.</description>
@@ -92,7 +89,6 @@
 		<module>wicket</module>
 		<module>wicket-core</module>
 		<module>wicket-util</module>
-		<module>wicket-datetime</module>
 		<module>wicket-request</module>
 		<module>wicket-devutils</module>
 		<module>wicket-extensions</module>
@@ -123,32 +119,40 @@
 		<maven.compiler.optimize>true</maven.compiler.optimize>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>10</maven.compiler.source>
+		<maven.compiler.target>10</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<jacoco.version>0.7.8</jacoco.version>
-		<jetty.version>9.4.0.v20161208</jetty.version>
-		<joda-time.version>2.9.7</joda-time.version>
+		<cglib.version>3.2.6</cglib.version>
+		<jacoco.version>0.7.9</jacoco.version>
+		<jetty.version>9.4.10.v20180503</jetty.version>
+		<joda-time.version>2.9.9</joda-time.version>
 		<junit.version>4.12</junit.version>
-		<spring.version>4.3.6.RELEASE</spring.version>
+		<spring.version>4.3.10.RELEASE</spring.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
 		<maven.javadoc.version>2.10.4</maven.javadoc.version>
-		<maven.surefire.version>2.19.1</maven.surefire.version>
-		<mockito.version>2.6.9</mockito.version>
-		<slf4j.version>1.7.22</slf4j.version>
+		<maven.surefire.version>2.20</maven.surefire.version>
+		<mockito.version>2.18.3</mockito.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.0.0.0</hamcrest.version>
-		<objenesis.version>2.5.1</objenesis.version>
+		<objenesis.version>2.6</objenesis.version>
 		<aspectj.version>1.8.10</aspectj.version>
-		<metrics.version>3.1.2</metrics.version>
+		<metrics.version>3.2.3</metrics.version>
 	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>com.google.code.findbugs</groupId>
 				<artifactId>jsr305</artifactId>
-				<version>3.0.1</version>
+				<version>3.0.2</version>
 				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>23.0</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.el</groupId>
@@ -181,16 +185,33 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.jetty.aggregate</groupId>
-				<artifactId>jetty-all</artifactId>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-webapp</artifactId>
 				<version>${jetty.version}</version>
 				<scope>test</scope>
-                <classifier>uber</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-server</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty.websocket</groupId>
+				<artifactId>javax-websocket-server-impl</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-jmx</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>cglib</groupId>
 				<artifactId>cglib</artifactId>
-				<version>3.2.4</version>
+				<version>${cglib.version}</version>
 				<exclusions>
 					<!-- excluded due to conflict with asm 5 in wicket-ioc -->
 					<exclusion>
@@ -202,7 +223,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>2.8.6</version>
+				<version>2.9.0</version>
 				<optional>true</optional>
 			</dependency>
 			<dependency>
@@ -213,7 +234,7 @@
 			<dependency>
 				<groupId>commons-fileupload</groupId>
 				<artifactId>commons-fileupload</artifactId>
-				<version>1.3.2</version>
+				<version>1.3.3</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
@@ -224,11 +245,6 @@
 				<groupId>javax.inject</groupId>
 				<artifactId>javax.inject</artifactId>
 				<version>1</version>
-			</dependency>
-			<dependency>
-				<groupId>joda-time</groupId>
-				<artifactId>joda-time</artifactId>
-				<version>${joda-time.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
@@ -242,6 +258,11 @@
 				<version>4.1</version>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.6</version>
+			</dependency>
+			<dependency>
 				<groupId>org.apache.velocity</groupId>
 				<artifactId>velocity</artifactId>
 				<version>1.7</version>
@@ -249,7 +270,7 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<!-- It seems there is a bug in Maven (2.2.1 & 3.0.1) and
 				type 'pom' is not properly inherited. I.e. the
 				dependency management doesn't work -->
@@ -258,162 +279,144 @@
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-auth-roles</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bean-validation</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-cdi-1.1</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-core</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-datetime</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-devutils</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-eclipse-settings</artifactId>
-				<version>3</version>
+				<version>4</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-extensions</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-guice</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-ioc</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-jmx</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-core</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-native-websocket-javax</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket</groupId>
-				<artifactId>wicket-native-websocket-tomcat</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-request</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-util</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-velocity</artifactId>
-				<version>8.0.0-SNAPSHOT</version>
+				<version>9.0.0-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-metrics</artifactId>
-				<version>0.2-SNAPSHOT</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket.experimental.wicket8</groupId>
-				<artifactId>wicket-atmosphere</artifactId>
-				<version>0.25-SNAPSHOT</version>
+				<version>0.7-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-core</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.6-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-jetty</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.6-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-tomcat</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.6-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-undertow</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<version>0.6-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.danekja</groupId>
 				<artifactId>jdk-serializable-functional</artifactId>
-				<version>1.8.2</version>
+				<version>1.8.3</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
-		    	<groupId>com.tdunning</groupId>
-		    	<artifactId>json</artifactId>
-				<version>1.8</version>
+				<groupId>com.github.openjson</groupId>
+				<artifactId>openjson</artifactId>
+				<version>1.0.8</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
@@ -424,7 +427,29 @@
 			<dependency>
 				<groupId>org.jboss.weld.servlet</groupId>
 				<artifactId>weld-servlet</artifactId>
-				<version>2.2.5.Final</version>
+				<version>2.4.2.SP1</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jboss.weld</groupId>
+			    <artifactId>weld-spi</artifactId>
+			    <version>3.0.SP3</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jboss.weld.module</groupId>
+			    <artifactId>weld-web</artifactId>
+			    <version>3.0.4.Final</version>
+			</dependency>
+
+			<dependency>
+			    <groupId>org.jboss.weld</groupId>
+			    <artifactId>weld-core</artifactId>
+			    <version>2.4.7.Final</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jboss.weld.se</groupId>
+			    <artifactId>weld-se</artifactId>
+			    <version>2.4.7.Final</version>
+			    <scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.objenesis</groupId>
@@ -434,7 +459,7 @@
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm-util</artifactId>
-				<version>5.2</version>
+				<version>6.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -517,7 +542,7 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
-				<version>5.3.4.Final</version>
+				<version>5.4.2.Final</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -529,7 +554,7 @@
 			<dependency>
 				<groupId>org.jglue.cdi-unit</groupId>
 				<artifactId>cdi-unit</artifactId>
-				<version>2.2.1</version>
+				<version>4.0.2</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -619,6 +644,14 @@
 					<exclude>**/package.html</exclude>
 				</excludes>
 			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>${project.build.directory}/generated-res</directory>
+				<excludes>
+					<exclude>**/*min.min.js</exclude>
+					<exclude>**/*min.min.css</exclude>
+				</excludes>
+			</resource>
 		</resources>
 		<testResources>
 			<testResource>
@@ -693,6 +726,7 @@
 						<statistics>true</statistics>
 						<jswarn>false</jswarn>
 						<suffix>.min</suffix>
+						<outputDirectory>${project.build.directory}/generated-res</outputDirectory>
 					</configuration>
 					<executions>
 						<execution>
@@ -705,7 +739,8 @@
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.4.0</version>
+					<extensions>true</extensions>
 					<executions>
 						<execution>
 							<id>bundle-manifest</id>
@@ -716,7 +751,9 @@
 							<configuration>
 								<instructions>
 									<Export-Package>*</Export-Package>
-									<Import-Package>org.apache.wicket*</Import-Package>
+									<Import-Package>org.apache.wicket*,
+										org.junit*;resolution:=optional,
+										junit.framework*;resolution:=optional</Import-Package>
 									<DynamicImport-Package>*</DynamicImport-Package>
 									<_nouses>true</_nouses>
 								</instructions>
@@ -727,12 +764,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-archetype-plugin</artifactId>
-					<version>2.4</version>
+					<version>3.0.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.6.0</version>
+					<version>3.7.0</version>
 					<inherited>true</inherited>
 				</plugin>
 				<plugin>
@@ -760,7 +797,7 @@
 				        <dependency>
 				            <groupId>org.apache.wicket</groupId>
 				            <artifactId>wicket-eclipse-settings</artifactId>
-				            <version>3</version>
+				            <version>4</version>
 				        </dependency>
 				    </dependencies>
 				</plugin>
@@ -768,6 +805,21 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-enforcer-plugin</artifactId>
 					<version>1.4.1</version>
+					<executions>
+						<execution>
+							<id>enforce-maven</id>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<configuration>
+								<rules>
+									<requireMavenVersion>
+										<version>3.3.9</version>
+									</requireMavenVersion>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
 					<configuration>
 						<rules>
 							<dependencyConvergence />
@@ -811,9 +863,8 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.6</version>
+					<version>3.0.2</version>
 					<configuration>
-						<useDefaultManifestFile>true</useDefaultManifestFile>
 						<archive>
 							<manifest>
 								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
@@ -843,7 +894,7 @@
 							<link>http://docs.oracle.com/javase/8/docs/api/</link>
 						</links>
 						<failOnError>false</failOnError>
-						<additionalparam>-Xdoclint:none</additionalparam>
+						<additionalparam>-Xdoclint:none --allow-script-in-comments</additionalparam>
 					</configuration>
 					<executions>
 						<execution>
@@ -857,7 +908,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
-					<version>2.5.2</version>
+					<version>2.5.3</version>
 					<inherited>true</inherited>
 					<configuration>
 						<pushChanges>false</pushChanges>
@@ -885,7 +936,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.7</version>
+					<version>3.0.2</version>
 					<configuration>
 						<encoding>${project.build.sourceEncoding}</encoding>
 					</configuration>
@@ -899,7 +950,7 @@
 					<inherited>true</inherited>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.4</version>
+					<version>3.0.1</version>
 					<executions>
 						<execution>
 							<id>attach-sources</id>
@@ -918,6 +969,7 @@
 						<includes>
 							<include>**/*Test.java</include>
 						</includes>
+						<argLine>--add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-modules=ALL-SYSTEM</argLine>
 					</configuration>
 					<dependencies>
 						<dependency>
@@ -955,7 +1007,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-war-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.0</version>
 					<configuration>
 						<warName>${project.artifactId}</warName>
 					</configuration>
@@ -1216,7 +1268,7 @@
 						<configuration>
 							<toolchains>
 								<jdk>
-									<version>1.8</version>
+									<version>${maven.compiler.source}</version>
 									<vendor>oracle</vendor>
 								</jdk>
 							</toolchains>
@@ -1232,7 +1284,7 @@
 				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.8.1</version>
+				<version>2.9</version>
 				<reportSets>
 					<reportSet>
 						<reports>

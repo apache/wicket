@@ -181,7 +181,7 @@ Link code:
 
 [source,java]
 ----
-add(new Link("mountedPage") {
+add(new Link<Void>("mountedPage") {
 
 	@Override
 	public void onClick() {

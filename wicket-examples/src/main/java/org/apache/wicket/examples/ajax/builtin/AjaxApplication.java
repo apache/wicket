@@ -16,9 +16,13 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AjaxNewWindowNotifyingBehavior;
+import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.examples.WicketExampleApplication;
 import org.apache.wicket.examples.ajax.builtin.modal.ModalWindowPage;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.response.filter.AjaxServerAndClientTimeFilter;
 
 
@@ -39,6 +43,17 @@ public class AjaxApplication extends WicketExampleApplication
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 
 		getDebugSettings().setAjaxDebugModeEnabled(true);
+		
+		getComponentInitializationListeners().add(new IComponentInitializationListener()
+		{
+			@Override
+			public void onInitialize(Component component)
+			{
+				if (component instanceof WebPage) {
+					component.add(new AjaxNewWindowNotifyingBehavior());
+				}
+			}
+		});
 
 		mountPage("autocomplete", AutoCompletePage.class);
 		mountPage("choice", ChoicePage.class);
@@ -57,7 +72,7 @@ public class AjaxApplication extends WicketExampleApplication
 		mountPage("todo-list", TodoList.class);
 		mountPage("world-clock", WorldClockPage.class);
 		mountPage("upload", FileUploadPage.class);
-
+		mountPage("download", AjaxDownloadPage.class);
 	}
 
 	/**

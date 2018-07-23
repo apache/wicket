@@ -47,10 +47,17 @@ public class StatefulPage extends WicketExamplePage
 		add(new BookmarkablePageLink<>("indexLink", Index.class));
 
 		// Action link counts link clicks
-		final Link actionLink = Link.onClick("actionLink", (link) -> linkClickCount++);
+		final Link<Void> actionLink = new Link<Void>("actionLink")
+		{
+			@Override
+			public void onClick()
+			{
+				linkClickCount++;
+			}
+		};
 		add(actionLink);
-		actionLink.add(new Label("linkClickCount", new PropertyModel<Integer>(this,
-			"linkClickCount")));
+		actionLink
+			.add(new Label("linkClickCount", new PropertyModel<Integer>(this, "linkClickCount")));
 
 		final TextField<String> field = new TextField<>("textfield", new Model<String>());
 
@@ -59,8 +66,8 @@ public class StatefulPage extends WicketExamplePage
 			@Override
 			protected void onSubmit()
 			{
-				info("Submitted text: " + field.getDefaultModelObject() + ", link click count: " +
-					linkClickCount);
+				info("Submitted text: " + field.getDefaultModelObject() + ", link click count: "
+					+ linkClickCount);
 			}
 		};
 		statelessForm.add(field);

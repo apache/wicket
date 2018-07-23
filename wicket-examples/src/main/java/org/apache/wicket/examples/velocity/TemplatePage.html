@@ -1,11 +1,10 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head>
     <title>Wicket Contrib Examples - Template Page</title>
-	<link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 
- <span wicket:id="mainNavigation"/>
+ <wicket:extend>
 
 <table cellpadding="5px">
  <tr>
@@ -43,5 +42,6 @@
 	<span wicket:id="feedback"/>
  </div>
 
+</wicket:extend>
 </body>
 </html>

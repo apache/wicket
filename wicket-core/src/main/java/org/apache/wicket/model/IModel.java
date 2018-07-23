@@ -18,6 +18,7 @@ package org.apache.wicket.model;
 
 
 import org.apache.wicket.util.lang.Args;
+import org.danekja.java.util.function.serializable.SerializableBiConsumer;
 import org.danekja.java.util.function.serializable.SerializableBiFunction;
 import org.danekja.java.util.function.serializable.SerializableFunction;
 import org.danekja.java.util.function.serializable.SerializablePredicate;
@@ -100,15 +101,26 @@ public interface IModel<T> extends IDetachable
 	default IModel<T> filter(SerializablePredicate<? super T> predicate)
 	{
 		Args.notNull(predicate, "predicate");
-		return (IModel<T>)() -> {
-			T object = IModel.this.getObject();
-			if (object != null && predicate.test(object))
+		return new IModel<T>()
+		{
+			@Override
+			public T getObject()
 			{
-				return object;
+				T object = IModel.this.getObject();
+				if (object != null && predicate.test(object))
+				{
+					return object;
+				}
+				else
+				{
+					return null;
+				}
 			}
-			else
+
+			@Override
+			public void detach()
 			{
-				return null;
+				IModel.this.detach();
 			}
 		};
 	}
@@ -125,15 +137,24 @@ public interface IModel<T> extends IDetachable
 	default <R> IModel<R> map(SerializableFunction<? super T, R> mapper)
 	{
 		Args.notNull(mapper, "mapper");
-		return (IModel<R>)() -> {
-			T object = IModel.this.getObject();
-			if (object == null)
+		return new IModel<R>() {
+			@Override
+			public R getObject()
 			{
-				return null;
+				T object = IModel.this.getObject();
+				if (object == null)
+				{
+					return null;
+				} else
+				{
+					return mapper.apply(object);
+				}
 			}
-			else
+
+			@Override
+			public void detach()
 			{
-				return mapper.apply(object);
+				IModel.this.detach();
 			}
 		};
 	}
@@ -157,16 +178,26 @@ public interface IModel<T> extends IDetachable
 	{
 		Args.notNull(combiner, "combiner");
 		Args.notNull(other, "other");
-		return (IModel<R>)() -> {
-			T t = IModel.this.getObject();
-			U u = other.getObject();
-			if (t != null && u != null)
+		return new IModel<R>() {
+			@Override
+			public R getObject()
 			{
-				return combiner.apply(t, u);
+				T t = IModel.this.getObject();
+				U u = other.getObject();
+				if (t != null && u != null)
+				{
+					return combiner.apply(t, u);
+				} else
+				{
+					return null;
+				}
 			}
-			else
+
+			@Override
+			public void detach()
 			{
-				return null;
+				other.detach();
+				IModel.this.detach();
 			}
 		};
 	}
@@ -179,6 +210,7 @@ public interface IModel<T> extends IDetachable
 	 * @param mapper
 	 *            a mapper, to be applied to the contained object
 	 * @return a new IModel
+	 * @see LambdaModel#of(IModel, SerializableFunction, SerializableBiConsumer)
 	 */
 	default <R> IModel<R> flatMap(SerializableFunction<? super T, IModel<R>> mapper)
 	{
@@ -227,6 +259,7 @@ public interface IModel<T> extends IDetachable
 			public void detach()
 			{
 				T object = IModel.this.getObject();
+				IModel.this.detach();
 				if (object != null)
 				{
 					IModel<R> model = mapper.apply(object);
@@ -243,21 +276,42 @@ public interface IModel<T> extends IDetachable
 	 * Returns a IModel, returning either the contained object or the given default value, depending
 	 * on the {@code null}ness of the contained object.
 	 *
+	 * <p>
+	 * Possible usages:
+	 * <ul>
+	 *     <li>{@code myComponent = new AnyComponent(&quot;someId&quot;, someModel.orElse(defaultValue));}
+	 *      - This way Wicket will make use of the default value if the model object of <em>someModel</em>
+	 *      is {@code null}.
+	 *     </li>
+	 *     <li>in the middle of the application logic: {@code ... = someModel.orElse(default).getModelObject();}</li>
+	 * </ul>
+	 *
+	 * </p>
+	 *
 	 * @param other
 	 *            a default value
 	 * @return a new IModel
 	 */
 	default IModel<T> orElse(T other)
 	{
-		return (IModel<T>)() -> {
-			T object = IModel.this.getObject();
-			if (object == null)
+		return new IModel<T>() {
+			@Override
+			public T getObject()
 			{
-				return other;
+				T object = IModel.this.getObject();
+				if (object == null)
+				{
+					return other;
+				} else
+				{
+					return object;
+				}
 			}
-			else
+
+			@Override
+			public void detach()
 			{
-				return object;
+				IModel.this.detach();
 			}
 		};
 	}
@@ -273,15 +327,45 @@ public interface IModel<T> extends IDetachable
 	default IModel<T> orElseGet(SerializableSupplier<? extends T> other)
 	{
 		Args.notNull(other, "other");
-		return (IModel<T>)() -> {
-			T object = IModel.this.getObject();
-			if (object == null)
+		return new IModel<T>() {
+			@Override
+			public T getObject()
 			{
-				return other.get();
+				T object = IModel.this.getObject();
+				if (object == null)
+				{
+					return other.get();
+				} else
+				{
+					return object;
+				}
 			}
-			else
+
+			@Override
+			public void detach()
 			{
-				return object;
+				IModel.this.detach();
+			}
+		};
+	}
+	
+	/**
+	 * Returns a IModel, returning whether the contained object is non-null.
+	 *
+	 * @return a new IModel
+	 */
+	default IModel<Boolean> isPresent() {
+		return new IModel<Boolean>() {
+			@Override
+			public Boolean getObject()
+			{
+				return IModel.this.getObject() != null;
+			}
+
+			@Override
+			public void detach()
+			{
+				IModel.this.detach();
 			}
 		};
 	}

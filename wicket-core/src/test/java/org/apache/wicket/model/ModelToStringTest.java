@@ -39,20 +39,6 @@ public class ModelToStringTest extends WicketTestCase
 		}
 	}
 
-	/**
-	 * Test stub for testing AbstractReadOnlyModel.toString()
-	 */
-	private static class MyAbstractReadOnlyModel extends AbstractReadOnlyModel<String>
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public String getObject()
-		{
-			return "FOO";
-		}
-	}
-
 	private static final class MyLoadableDetachableModel extends LoadableDetachableModel<String>
 	{
 		private static final long serialVersionUID = 1L;
@@ -62,17 +48,6 @@ public class ModelToStringTest extends WicketTestCase
 		{
 			return "foo";
 		}
-	}
-
-	/**
-	 * Tests AbstractReadOnlyModel.toString().
-	 */
-	@Test
-	public void abstractReadOnlyModel()
-	{
-		MyAbstractReadOnlyModel model = new MyAbstractReadOnlyModel();
-		String expected = "Model:classname=[" + model.getClass().getName() + "]";
-		assertEquals(expected, model.toString());
 	}
 
 	/**

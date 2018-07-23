@@ -1,7 +1,7 @@
 
 
 
-Wicket comes with interface _org.apache.wicket.markup.html.IHeaderContributor_ which allows components and behaviors (which will be introduced later in <<advanced.adoc#_enriching_components_with_behaviors,paragraph 18.1>>) to contribute to the header section of their page. The only method defined in this interface is _renderHead(IHeaderResponse response)_ where _IHeaderResponse_ is an interface which defines method _render(HeaderItem item)_ to write static resources or free-form text into the header section of the page. 
+Wicket comes with interface _org.apache.wicket.markup.html.IHeaderContributor_ which allows components and behaviors (which will be introduced later in <<_enriching_components_with_behaviors,paragraph 18.1>>) to contribute to the header section of their page. The only method defined in this interface is _renderHead(IHeaderResponse response)_ where _IHeaderResponse_ is an interface which defines method _render(HeaderItem item)_ to write static resources or free-form text into the header section of the page. 
 
 Header entries are instances of abstract class _org.apache.wicket.markup.head.HeaderItem_. Wicket provides a set of built-in implementations of this class suited for the most common types of resources. With the exception of _PriorityHeaderItem_, every implementation of _HeaderItem_ is an abstract factory class:
 
