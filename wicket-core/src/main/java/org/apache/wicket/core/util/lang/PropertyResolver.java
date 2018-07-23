@@ -1066,11 +1066,11 @@ public final class PropertyResolver
 						}
 					}
 				}
-				log.debug("Cannot find setter corresponding to " + getMethod);
+				log.debug("Cannot find setter corresponding to " + getMethod, e);
 			}
 			catch (Exception e)
 			{
-				log.debug("Cannot find setter corresponding to " + getMethod);
+				log.debug("Cannot find setter corresponding to " + getMethod, e);
 			}
 			return null;
 		}
