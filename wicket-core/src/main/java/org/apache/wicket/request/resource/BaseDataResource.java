@@ -105,6 +105,7 @@ public abstract class BaseDataResource<T> extends AbstractResource
 		final ResourceResponse response = new ResourceResponse();
 
 		String contentType = this.contentType;
+        String filename = getFilename();
 
 		if (contentType == null)
 		{
@@ -190,5 +191,14 @@ public abstract class BaseDataResource<T> extends AbstractResource
 	protected T getData(final Attributes attributes)
 	{
 		return data;
+	}
+
+	/**
+	 * Returns the filename that will be set as the Content-Disposition header.
+	 *
+	 * @return The filename that will be set as the Content-Disposition header
+	 */
+	protected String getFilename() {
+		return filename;
 	}
 }
