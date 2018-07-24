@@ -98,7 +98,7 @@ public abstract class Injector
 
 		for (final Field field : fields)
 		{
-			if (!field.isAccessible())
+			if (!field.canAccess(object))
 			{
 				field.setAccessible(true);
 			}
