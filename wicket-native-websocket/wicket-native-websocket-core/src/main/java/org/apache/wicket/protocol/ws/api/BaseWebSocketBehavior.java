@@ -173,7 +173,8 @@ public class BaseWebSocketBehavior extends Behavior
 		else if (containerRequest instanceof HttpServletRequest)
 		{
 			CookieUtils cookieUtils = new CookieUtils();
-			final Cookie jsessionid = cookieUtils.getCookie("JSESSIONID");
+			final String jsessionCookieName = application.getServletContext().getSessionCookieConfig().getName();
+			final Cookie jsessionid = cookieUtils.getCookie(jsessionCookieName);
 			HttpServletRequest httpServletRequest = (HttpServletRequest) containerRequest;
 			if (jsessionid == null || httpServletRequest.isRequestedSessionIdValid() == false)
 			{
