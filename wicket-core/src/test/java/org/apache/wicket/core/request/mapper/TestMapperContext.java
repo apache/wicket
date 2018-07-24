@@ -184,7 +184,7 @@ public class TestMapperContext implements IMapperContext
 		try
 		{
 			MockPage page;
-			page = (MockPage)pageClass.newInstance();
+			page = (MockPage)pageClass.getDeclaredConstructor().newInstance();
 			page.setPageId(++idCounter);
 			page.setBookmarkable(true);
 			page.setCreatedBookmarkable(true);

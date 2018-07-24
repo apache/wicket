@@ -710,7 +710,7 @@ public final class PropertyResolver
 			Object value = null;
 			try
 			{
-				value = clzComponentType.newInstance();
+				value = clzComponentType.getDeclaredConstructor().newInstance();
 				Array.set(object, index, value);
 			}
 			catch (Exception e)
@@ -900,7 +900,7 @@ public final class PropertyResolver
 			Object value = null;
 			try
 			{
-				value = clz.newInstance();
+				value = clz.getDeclaredConstructor().newInstance();
 				setMethod.invoke(object, index, value);
 			}
 			catch (Exception e)
@@ -1091,7 +1091,7 @@ public final class PropertyResolver
 			Object value = null;
 			try
 			{
-				value = clz.newInstance();
+				value = clz.getDeclaredConstructor().newInstance();
 				setMethod.invoke(object, value);
 			}
 			catch (Exception e)
@@ -1184,7 +1184,7 @@ public final class PropertyResolver
 			Object value = null;
 			try
 			{
-				value = clz.newInstance();
+				value = clz.getDeclaredConstructor().newInstance();
 				field.set(object, value);
 			}
 			catch (Exception e)

@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
@@ -578,9 +579,9 @@ public class MockServletContext implements ServletContext
 	{
 		try
 		{
-			return addServlet(servletName, servletClass.newInstance());
+			return addServlet(servletName, servletClass.getDeclaredConstructor().newInstance());
 		}
-		catch (InstantiationException | IllegalAccessException e)
+		catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
 		{
 			throw new WicketRuntimeException(e);
 		}
@@ -591,9 +592,9 @@ public class MockServletContext implements ServletContext
 	{
 		try
 		{
-			return clazz.newInstance();
+			return clazz.getDeclaredConstructor().newInstance();
 		}
-		catch (InstantiationException | IllegalAccessException e)
+		catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
 		{
 			throw new WicketRuntimeException(e);
 		}

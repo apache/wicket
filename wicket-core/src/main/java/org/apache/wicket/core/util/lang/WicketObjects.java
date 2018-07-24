@@ -341,7 +341,7 @@ public class WicketObjects
 			try
 			{
 				Class<?> c = WicketObjects.resolveClass(className);
-				return (T) c.newInstance();
+				return (T) c.getDeclaredConstructor().newInstance();
 			}
 			catch (Exception e)
 			{

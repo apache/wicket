@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -318,26 +319,15 @@ public class WicketFilter implements Filter
 					Thread.currentThread().getContextClassLoader());
 
 				// Instantiate the factory
-				return (IWebApplicationFactory)factoryClass.newInstance();
+				return (IWebApplicationFactory)factoryClass.getDeclaredConstructor().newInstance();
 			}
 			catch (ClassCastException e)
 			{
 				throw new WicketRuntimeException("Application factory class " +
 					appFactoryClassName + " must implement IWebApplicationFactory");
 			}
-			catch (ClassNotFoundException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (InstantiationException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
-			}
-			catch (SecurityException e)
+			catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SecurityException
+					| NoSuchMethodException | InvocationTargetException e)
 			{
 				throw new WebApplicationFactoryCreationException(appFactoryClassName, e);
 			}

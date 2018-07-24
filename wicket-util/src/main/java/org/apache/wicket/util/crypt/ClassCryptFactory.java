@@ -62,7 +62,7 @@ public class ClassCryptFactory implements ICryptFactory
 	{
 		try
 		{
-			ICrypt crypt = (ICrypt)(cryptClass.get()).newInstance();
+			ICrypt crypt = (ICrypt)(cryptClass.get()).getDeclaredConstructor().newInstance();
 			log.info("using encryption/decryption object {}", crypt);
 			crypt.setKey(encryptionKey);
 			return crypt;

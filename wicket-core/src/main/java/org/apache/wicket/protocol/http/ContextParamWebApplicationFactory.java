@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.wicket.WicketRuntimeException;
 
 /**
@@ -73,7 +75,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 			if (WebApplication.class.isAssignableFrom(applicationClass))
 			{
 				// Construct WebApplication subclass
-				return (WebApplication)applicationClass.newInstance();
+				return (WebApplication)applicationClass.getDeclaredConstructor().newInstance();
 			}
 			else
 			{
@@ -81,22 +83,8 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 					" must be a subclass of WebApplication");
 			}
 		}
-		catch (ClassNotFoundException e)
-		{
-			throw new WicketRuntimeException("Unable to create application of class " +
-				applicationClassName, e);
-		}
-		catch (InstantiationException e)
-		{
-			throw new WicketRuntimeException("Unable to create application of class " +
-				applicationClassName, e);
-		}
-		catch (IllegalAccessException e)
-		{
-			throw new WicketRuntimeException("Unable to create application of class " +
-				applicationClassName, e);
-		}
-		catch (SecurityException e)
+		catch (ClassNotFoundException | InstantiationException | IllegalAccessException | SecurityException
+				| NoSuchMethodException | InvocationTargetException e)
 		{
 			throw new WicketRuntimeException("Unable to create application of class " +
 				applicationClassName, e);

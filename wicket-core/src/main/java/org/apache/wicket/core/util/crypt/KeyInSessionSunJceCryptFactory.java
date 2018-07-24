@@ -71,7 +71,7 @@ public class KeyInSessionSunJceCryptFactory implements ICryptFactory
 				// Initialize and add a security provider required for encryption
 				final Class<?> clazz = Class.forName("com.sun.crypto.provider.SunJCE");
 
-				final Provider provider = (Provider) clazz.newInstance();
+				final Provider provider = (Provider) clazz.getDeclaredConstructor().newInstance();
 				Security.addProvider(provider);
 			}
 			catch (Exception ex)

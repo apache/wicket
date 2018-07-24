@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -68,10 +70,11 @@ public abstract class AbstractHeaderRenderStrategy implements IHeaderRenderStrat
 
 				if (clazz != null)
 				{
-					return (IHeaderRenderStrategy)clazz.newInstance();
+					return (IHeaderRenderStrategy)clazz.getDeclaredConstructor().newInstance();
 				}
 			}
-			catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex)
+			catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+					| NoSuchMethodException | InvocationTargetException ex)
 			{
 				// ignore
 			}
