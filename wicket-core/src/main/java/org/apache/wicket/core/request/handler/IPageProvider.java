@@ -55,6 +55,7 @@ public interface IPageProvider
 	 * @return negates {@link PageProvider#hasPageInstance()}
 	 * @deprecated use {@link PageProvider#hasPageInstance()} negation instead
 	 */
+	@Deprecated(since = "8.0", forRemoval = true)
 	boolean isNewPageInstance();
 
 	/**

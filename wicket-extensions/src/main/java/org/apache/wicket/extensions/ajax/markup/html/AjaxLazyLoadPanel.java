@@ -106,6 +106,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	/**
 	 * @deprecated this method is not called, and will be removed in Wicket 9
 	 */
+	@Deprecated(since = "8.0", forRemoval = true)
 	protected final void updateAjaxAttributes(AjaxRequestAttributes attributes)
 	{
 	}
@@ -113,7 +114,7 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	/**
 	 * @deprecated this method is not called, and will be removed in Wicket 9
 	 */
-	@Deprecated
+	@Deprecated(since = "8.0", forRemoval = true)
 	protected final void handleCallbackScript(final IHeaderResponse response,
 		final CharSequence callbackScript, final Component component)
 	{

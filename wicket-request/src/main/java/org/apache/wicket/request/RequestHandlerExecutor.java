@@ -83,6 +83,7 @@ public abstract class RequestHandlerExecutor
 	 * @return request handler or null} if one cannot be resolved
 	 * @deprecated
 	 */
+	@Deprecated(since = "8.0", forRemoval = true)
 	public final IRequestHandler resolveHandler(RuntimeException exception)
 	{
 		Args.notNull(exception, "exception");
@@ -204,6 +205,7 @@ public abstract class RequestHandlerExecutor
 		/**
 		 * @deprecated use {@link #getRemoveScheduled()} instead
 		 */
+		@Deprecated(since = "8.0", forRemoval = true)
 		public boolean isRemoveAll()
 		{
 			return removeScheduled;

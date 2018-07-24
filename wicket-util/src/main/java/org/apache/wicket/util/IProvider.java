@@ -24,6 +24,7 @@ package org.apache.wicket.util;
  * 
  * @deprecated  Use {@code java.util.function.Supplier<T>} instead
  */
+@Deprecated(since = "8.0", forRemoval = true)
 public interface IProvider<T>
 {
 	/**

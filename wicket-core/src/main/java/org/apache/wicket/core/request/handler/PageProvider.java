@@ -199,6 +199,7 @@ public class PageProvider implements IPageProvider, IClusterable
 	 * @return negates {@link PageProvider#hasPageInstance()}
 	 * @deprecated use {@link PageProvider#hasPageInstance()} negation instead
 	 */
+	@Deprecated(since = "8.0", forRemoval = true)
 	@Override
 	public boolean isNewPageInstance()
 	{
