@@ -177,7 +177,7 @@ public class PropertyResolverTest extends WicketTestCase
 		person.setAddress(new Address());
 		PropertyResolver.setValue("address.number", person, "10", CONVERTER);
 		Integer number = (Integer)PropertyResolver.getValue("address.number", person);
-		assertEquals(number, new Integer(10));
+		assertEquals(number, Integer.valueOf(10));
 
 		try
 		{

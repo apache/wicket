@@ -50,7 +50,7 @@ public class MockHttpServletRequestTest extends WicketTestCase
 		Url url = request.getUrl();
 		assertEquals("https", url.getProtocol());
 		assertEquals("myhost.mydomain.org", url.getHost());
-		assertEquals(new Integer(1234), url.getPort());
+		assertEquals(Integer.valueOf(1234), url.getPort());
 		assertEquals("/foo/bar/baz.html", url.getPath());
 		assertEquals("a=123&b=456", url.getQueryString());
 
@@ -74,7 +74,7 @@ public class MockHttpServletRequestTest extends WicketTestCase
 		Url url = request.getUrl();
 		assertEquals("http", url.getProtocol());
 		assertEquals("localhost", url.getHost());
-		assertEquals(new Integer(80), url.getPort());
+		assertEquals(Integer.valueOf(80), url.getPort());
 		assertEquals("/foo/bar/baz.html", url.getPath());
 		assertEquals("a=123&b=456", url.getQueryString());
 
@@ -98,7 +98,7 @@ public class MockHttpServletRequestTest extends WicketTestCase
 		Url url = request.getUrl();
 		assertEquals("http", url.getProtocol());
 		assertEquals("localhost", url.getHost());
-		assertEquals(new Integer(80), url.getPort());
+		assertEquals(Integer.valueOf(80), url.getPort());
 		assertEquals(request.getContextPath() + request.getServletPath() + "/foo/bar/baz.html", url.getPath());
 		assertEquals("a=123&b=456", url.getQueryString());
 

@@ -107,7 +107,7 @@ public final class ConvertersTest
 	{
 		ByteConverter converter = new ByteConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Byte((byte)10), converter.convertToObject("10", Locale.US));
+		assertEquals(Byte.valueOf((byte)10), converter.convertToObject("10", Locale.US));
 		assertEquals("10", converter.convertToString((byte)10, Locale.US));
 	}
 
@@ -169,8 +169,8 @@ public final class ConvertersTest
 	{
 		FloatConverter converter = new FloatConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Float(1.1), converter.convertToObject("1.1", Locale.US));
-		assertEquals("1.1", converter.convertToString(new Float(1.1), Locale.US));
+		assertEquals(Float.valueOf(1.1F), converter.convertToObject("1.1", Locale.US));
+		assertEquals("1.1", converter.convertToString(1.1F, Locale.US));
 	}
 
 	@Test(expected = ConversionException.class)
@@ -200,7 +200,7 @@ public final class ConvertersTest
 		IntegerConverter converter = new IntegerConverter();
 		assertEquals("7", converter.convertToString(7, Locale.US));
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Integer(10), converter.convertToObject("10", Locale.US));
+		assertEquals(Integer.valueOf(10), converter.convertToObject("10", Locale.US));
 		assertEquals("10", converter.convertToString(10, Locale.US));
 	}
 
@@ -238,8 +238,8 @@ public final class ConvertersTest
 	{
 		LongConverter converter = new LongConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Long(10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString((long)10, Locale.US));
+		assertEquals(Integer.valueOf(10), converter.convertToObject("10", Locale.US));
+		assertEquals("10", converter.convertToString(10L, Locale.US));
 	}
 
 	@Test(expected = ConversionException.class)
@@ -292,8 +292,8 @@ public final class ConvertersTest
 	{
 		ShortConverter converter = new ShortConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(new Short((short)10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString((short)10, Locale.US));
+		assertEquals(Short.valueOf((short)10), converter.convertToObject("10", Locale.US));
+		assertEquals("10", converter.convertToString((short) 10, Locale.US));
 	}
 
 	@Test(expected = ConversionException.class)
@@ -433,7 +433,7 @@ public final class ConvertersTest
 		};
 
 		Integer integer = converter.convertToObject("two", Locale.US);
-		assertEquals(new Integer(2), integer);
+		assertEquals(Integer.valueOf(2), integer);
 	}
 
 	@Test(expected = ConversionException.class)

@@ -67,9 +67,9 @@ public class NumberTextFieldTest extends WicketTestCase
 	{
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
-		testPage.textField.setMinimum(new Double("0.0"));
-		testPage.textField.setMaximum(new Double("2000.0"));
-		testPage.textField.setModelObject(new Double("1000.0"));
+		testPage.textField.setMinimum(Double.valueOf("0.0"));
+		testPage.textField.setMaximum(Double.valueOf("2000.0"));
+		testPage.textField.setModelObject(Double.valueOf("1000.0"));
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
@@ -78,7 +78,7 @@ public class NumberTextFieldTest extends WicketTestCase
 		FormTester formTester = tester.newFormTester(testPage.form.getId());
 		formTester.setValue(testPage.textField.getId(), "2,000.00");
 		formTester.submit();
-		assertEquals(new Double("2000.00"), testPage.textField.getDefaultModelObject());
+		assertEquals(Double.valueOf("2000.00"), testPage.textField.getDefaultModelObject());
 	}
 
 	/**
@@ -89,9 +89,9 @@ public class NumberTextFieldTest extends WicketTestCase
 	{
 		TestPage<Long> testPage = new TestPage<Long>();
 		testPage.textField.setType(Long.class);
-		testPage.textField.setMinimum(new Long("0"));
-		testPage.textField.setMaximum(new Long("100"));
-		testPage.textField.setModelObject(new Long("0"));
+		testPage.textField.setMinimum(Long.valueOf("0"));
+		testPage.textField.setMaximum(Long.valueOf("100"));
+		testPage.textField.setModelObject(Long.valueOf("0"));
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
@@ -100,7 +100,7 @@ public class NumberTextFieldTest extends WicketTestCase
 		FormTester formTester = tester.newFormTester(testPage.form.getId());
 		formTester.setValue(testPage.textField.getId(), "50");
 		formTester.submit();
-		assertEquals(new Long("50"), testPage.textField.getDefaultModelObject());
+		assertEquals(Long.valueOf("50"), testPage.textField.getDefaultModelObject());
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class NumberTextFieldTest extends WicketTestCase
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
 		testPage.textField.setStep(Model.of(NumberTextField.ANY));
-		testPage.textField.setModelObject(new Double("1000.0"));
+		testPage.textField.setModelObject(Double.valueOf("1000.0"));
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();
@@ -128,7 +128,7 @@ public class NumberTextFieldTest extends WicketTestCase
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
 		testPage.textField.setStep(Double.valueOf(0.3d));
-		testPage.textField.setModelObject(new Double("1000.0"));
+		testPage.textField.setModelObject(Double.valueOf("1000.0"));
 		tester.startPage(testPage);
 
 		String response = tester.getLastResponseAsString();

@@ -638,7 +638,7 @@ public class StringValue implements IClusterable
 	{
 		try
 		{
-			return new Integer(text);
+			return Integer.parseInt(text, 10);
 		}
 		catch (NumberFormatException e)
 		{
@@ -705,7 +705,7 @@ public class StringValue implements IClusterable
 	{
 		try
 		{
-			return new Long(text);
+			return Long.parseLong(text, 10);
 		}
 		catch (NumberFormatException e)
 		{

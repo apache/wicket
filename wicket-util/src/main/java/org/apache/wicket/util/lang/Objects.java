@@ -341,7 +341,7 @@ public final class Objects
 				}
 				if ((toType == Float.class) || (toType == Float.TYPE))
 				{
-					result = new Float(doubleValue(value));
+					result = (float) doubleValue(value);
 				}
 				if (toType == BigInteger.class)
 				{
