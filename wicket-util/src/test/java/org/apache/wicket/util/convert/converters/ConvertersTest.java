@@ -238,7 +238,7 @@ public final class ConvertersTest
 	{
 		LongConverter converter = new LongConverter();
 		assertNull(converter.convertToObject("", Locale.US));
-		assertEquals(Integer.valueOf(10), converter.convertToObject("10", Locale.US));
+		assertEquals(Long.valueOf(10), converter.convertToObject("10", Locale.US));
 		assertEquals("10", converter.convertToString(10L, Locale.US));
 	}
 
