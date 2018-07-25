@@ -214,10 +214,6 @@ public class WicketTesterHelper
 					String[] behaviorEventNames = Strings.split(behaviorEvent, ' ');
 					for (String behaviorEventName : behaviorEventNames)
 					{
-						if (behaviorEventName.startsWith("on"))
-						{
-							behaviorEventName = behaviorEventName.substring(2);
-						}
 						if (eventName.equalsIgnoreCase(behaviorEventName))
 						{
 							behaviors.add((AjaxEventBehavior)behavior);
