@@ -63,6 +63,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -480,7 +481,7 @@ public class WicketFilterTest extends Assert
 		when(request.getContextPath()).thenReturn("/contextPath");
 		when(request.getMethod()).thenReturn("POST");
 		HttpServletResponse response = mock(HttpServletResponse.class);
-		when(response.encodeRedirectURL(Matchers.anyString())).thenAnswer(new Answer<String>()
+		when(response.encodeRedirectURL(ArgumentMatchers.anyString())).thenAnswer(new Answer<String>()
 		{
 			@Override
 			public String answer(InvocationOnMock invocation) throws Throwable
@@ -495,18 +496,18 @@ public class WicketFilterTest extends Assert
 		{
 			boolean isProcessed = filter.processRequest(request, response, chain);
 			assertFalse(isProcessed);
-			verify(application, Mockito.never()).newWebRequest(Matchers.eq(request),
-				Matchers.anyString());
-			verify(application, Mockito.never()).newWebResponse(Matchers.any(WebRequest.class),
-				Matchers.eq(response));
+			verify(application, Mockito.never()).newWebRequest(ArgumentMatchers.eq(request),
+				ArgumentMatchers.anyString());
+			verify(application, Mockito.never()).newWebResponse(ArgumentMatchers.any(WebRequest.class),
+				ArgumentMatchers.eq(response));
 			verify(chain, Mockito.times(i + 1)).doFilter(request, response);
 		}
 
 		// execute the request to /something/real
 		boolean isProcessed = filter.processRequest(request, response, chain);
 		assertTrue(isProcessed);
-		verify(application).newWebRequest(Matchers.eq(request), Matchers.anyString());
-		verify(application).newWebResponse(Matchers.any(WebRequest.class), Matchers.eq(response));
+		verify(application).newWebRequest(ArgumentMatchers.eq(request), ArgumentMatchers.anyString());
+		verify(application).newWebResponse(ArgumentMatchers.any(WebRequest.class), ArgumentMatchers.eq(response));
 		// the request is processed so the chain is not executed
 		verify(chain, Mockito.times(3)).doFilter(request, response);
 	}

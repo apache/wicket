@@ -35,6 +35,7 @@ import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Matchers;
 
 /**
@@ -68,7 +69,7 @@ public class ServletWebResponseTest extends Assert
 		when(httpServletRequest.getCharacterEncoding()).thenReturn("UTF-8");
 
 		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
-		when(httpServletResponse.encodeRedirectURL(Matchers.anyString())).thenReturn(url);
+		when(httpServletResponse.encodeRedirectURL(ArgumentMatchers.anyString())).thenReturn(url);
 		StringWriter writer = new StringWriter();
 		when(httpServletResponse.getWriter()).thenReturn(new PrintWriter(writer));
 
@@ -110,7 +111,7 @@ public class ServletWebResponseTest extends Assert
 		when(webRequest.getClientUrl()).thenReturn(baseUrl);
 
 		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
-		when(httpServletResponse.encodeRedirectURL(Matchers.anyString())).thenReturn(url);
+		when(httpServletResponse.encodeRedirectURL(ArgumentMatchers.anyString())).thenReturn(url);
 
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		webResponse.sendRedirect(url);
@@ -180,7 +181,7 @@ public class ServletWebResponseTest extends Assert
 		when(requestCycle.getUrlRenderer()).thenReturn(renderer);
 
 		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
-		when(httpServletResponse.encodeURL(Matchers.eq(url))).thenReturn(url + ";foo");
+		when(httpServletResponse.encodeURL(ArgumentMatchers.eq(url))).thenReturn(url + ";foo");
 
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		assertEquals(url + ";foo", webResponse.encodeURL(url));
@@ -209,7 +210,7 @@ public class ServletWebResponseTest extends Assert
 		when(requestCycle.getUrlRenderer()).thenReturn(renderer);
 
 		HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
-		when(httpServletResponse.encodeRedirectURL(Matchers.eq(url))).thenReturn(url + ";foo");
+		when(httpServletResponse.encodeRedirectURL(ArgumentMatchers.eq(url))).thenReturn(url + ";foo");
 
 		ServletWebResponse webResponse = new ServletWebResponse(webRequest, httpServletResponse);
 		assertEquals(url + ";foo", webResponse.encodeRedirectURL(url));
