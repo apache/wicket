@@ -51,20 +51,6 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 	public static final JQueryResourceReference INSTANCE_2 = new JQueryResourceReference(VERSION_2);
 	public static final JQueryResourceReference INSTANCE_3 = new JQueryResourceReference(VERSION_3);
 
-	/**
-	 * Normally you should not use this method, but use
-	 * {@link org.apache.wicket.settings.JavaScriptLibrarySettings#getJQueryReference()}
-	 * to prevent version conflicts.
-	 * 
-	 * @return the single instance of the resource reference
-	 * @deprecated Use either {@link #getV1()}, {@link #getV2()} or {@link #getV3()} instead
-	 */
-	@Deprecated
-	public static JQueryResourceReference get()
-	{
-		return getV1();
-	}
-
 	public static JQueryResourceReference getV1()
 	{
 		return INSTANCE_1;
