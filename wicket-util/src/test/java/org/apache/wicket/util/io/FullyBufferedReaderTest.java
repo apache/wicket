@@ -17,17 +17,16 @@
 
 package org.apache.wicket.util.io;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.text.ParseException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link FullyBufferedReader}
  */
-
 public class FullyBufferedReaderTest
 {
 
@@ -74,7 +73,6 @@ public class FullyBufferedReaderTest
 		assertEquals(testTag.length(), position + 1);
 	}
 
-
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117
 	 * 
@@ -84,7 +82,7 @@ public class FullyBufferedReaderTest
 	 */
 
 	@Test
-	public void missingClosingQuote() throws ParseException
+	public void missingClosingQuote()
 	{
 		String testTag = "<a href='blabla>";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
@@ -106,7 +104,7 @@ public class FullyBufferedReaderTest
 	 */
 
 	@Test
-	public void missingOpeningQuote() throws ParseException
+	public void missingOpeningQuote()
 	{
 		String testTag = "<a href=blabla'>";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
@@ -127,7 +125,7 @@ public class FullyBufferedReaderTest
 	 */
 
 	@Test
-	public void missingClosingDoubleQuote() throws ParseException
+	public void missingClosingDoubleQuote()
 	{
 		String testTag = "<a href=\"blabla>";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
@@ -149,7 +147,7 @@ public class FullyBufferedReaderTest
 	 */
 
 	@Test
-	public void missingOpeningDoubleQuote() throws ParseException
+	public void missingOpeningDoubleQuote()
 	{
 		String testTag = "<a href=blabla\">";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
