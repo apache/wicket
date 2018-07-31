@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *//*
+
 package org.apache.wicket.util.io;
 
 import java.text.ParseException;
@@ -22,16 +23,20 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+*/
 /**
  * Tests for {@link FullyBufferedReader}
- */
+ *//*
+
 public class FullyBufferedReaderTest
 {
 
-	/**
+	*/
+/**
 	 * 
 	 * @throws ParseException
-	 */
+	 *//*
+
 	@Test
 	public void nestedQuotes() throws ParseException
 	{
@@ -48,10 +53,12 @@ public class FullyBufferedReaderTest
 		assertEquals(testTag.length(), position + 1);
 	}
 
-	/**
+	*/
+/**
 	 * 
 	 * @throws ParseException
-	 */
+	 *//*
+
 	@Test
 	public void quotedEsclamationQuotationMark() throws ParseException
 	{
@@ -68,13 +75,15 @@ public class FullyBufferedReaderTest
 		assertEquals(testTag.length(), position + 1);
 	}
 
-	/**
+	*/
+/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117
 	 * 
 	 * Test exception when we forgot to close quote
 	 * 
 	 * @throws ParseException
-	 */
+	 *//*
+
 	@Test
 	public void missingClosingQuote() throws ParseException
 	{
@@ -87,13 +96,15 @@ public class FullyBufferedReaderTest
 		fullyBufferedReader.findOutOfQuotes('>', 0);
 	}
 
-	/**
+	*/
+/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117
 	 * 
 	 * Test exception when we forgot to close quote
 	 * 
 	 * @throws ParseException
-	 */
+	 *//*
+
 	@Test
 	public void missingOpeningQuote() throws ParseException
 	{
@@ -106,13 +117,15 @@ public class FullyBufferedReaderTest
 		fullyBufferedReader.findOutOfQuotes('>', 0);
 	}
 
-	/**
+	*/
+/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117
 	 * 
 	 * Test exception when we forgot to close quote
 	 * 
 	 * @throws ParseException
-	 */
+	 *//*
+
 	@Test
 	public void missingClosingDoubleQuote() throws ParseException
 	{
@@ -125,13 +138,15 @@ public class FullyBufferedReaderTest
 		fullyBufferedReader.findOutOfQuotes('>', 0);
 	}
 
-	/**
+	*/
+/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117
 	 * 
 	 * Test exception when we forgot to close quote
 	 * 
 	 * @throws ParseException
-	 */
+	 *//*
+
 	@Test
 	public void missingOpeningDoubleQuote() throws ParseException
 	{
@@ -143,4 +158,4 @@ public class FullyBufferedReaderTest
 
 		fullyBufferedReader.findOutOfQuotes('>', 0);
 	}
-}
+}*/

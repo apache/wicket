@@ -16,25 +16,10 @@
  */
 package org.apache.wicket.util.convert.converters;
 
-import java.math.BigDecimal;
-import java.text.ChoiceFormat;
-import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.converter.*;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.fail;
-
 @SuppressWarnings("javadoc")
 public final class ConvertersTest
 {
-	/** Dutch locale for localized testing. */
+/*	*//** Dutch locale for localized testing. *//*
 	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	@Test
@@ -47,9 +32,9 @@ public final class ConvertersTest
 		assertEquals(3000, dc.convertToObject("3 000", Locale.FRENCH), 0.001);
 	}
 
-	/**
+	*//**
 	 * WICKET-4988 nbsp between digits only
-	 */
+	 *//*
 	@Test
 	public void thousandSeperatorWithCurrency() throws Exception
 	{
@@ -391,10 +376,10 @@ public final class ConvertersTest
 		converter.convertToObject("5/1/11whatever", Locale.US);
 	}
 
-	/**
+	*//**
 	 * See WICKET-2878 and
 	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
-	 */
+	 *//*
 	@Test
 	public void bigDecimalConverter()
 	{
@@ -441,5 +426,5 @@ public final class ConvertersTest
 
 		converter.convertToObject("four", Locale.US);
 		fail("Conversion should have thrown an exception");
-	}
+	}*/
 }
