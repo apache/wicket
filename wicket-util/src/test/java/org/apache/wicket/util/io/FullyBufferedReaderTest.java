@@ -18,15 +18,14 @@ package org.apache.wicket.util.io;
 
 import java.text.ParseException;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link FullyBufferedReader}
  */
-public class FullyBufferedReaderTest extends Assert
+public class FullyBufferedReaderTest
 {
 
 	/**
@@ -68,12 +67,6 @@ public class FullyBufferedReaderTest extends Assert
 		// close bracket must be at the end of the string
 		assertEquals(testTag.length(), position + 1);
 	}
-
-	/**
-	 * A rule for expecting ParseExceptions
-	 */
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117

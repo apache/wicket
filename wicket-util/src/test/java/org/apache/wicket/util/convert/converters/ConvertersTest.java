@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.util.convert.converters;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
 import java.math.BigDecimal;
 import java.text.ChoiceFormat;
 import java.text.NumberFormat;
@@ -28,18 +24,12 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.wicket.util.convert.ConversionException;
-import org.apache.wicket.util.convert.converter.BigDecimalConverter;
-import org.apache.wicket.util.convert.converter.BooleanConverter;
-import org.apache.wicket.util.convert.converter.ByteConverter;
-import org.apache.wicket.util.convert.converter.CalendarConverter;
-import org.apache.wicket.util.convert.converter.CharacterConverter;
-import org.apache.wicket.util.convert.converter.DateConverter;
-import org.apache.wicket.util.convert.converter.DoubleConverter;
-import org.apache.wicket.util.convert.converter.FloatConverter;
-import org.apache.wicket.util.convert.converter.IntegerConverter;
-import org.apache.wicket.util.convert.converter.LongConverter;
-import org.apache.wicket.util.convert.converter.ShortConverter;
-import org.junit.Test;
+import org.apache.wicket.util.convert.converter.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("javadoc")
 public final class ConvertersTest
