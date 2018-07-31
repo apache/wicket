@@ -51,6 +51,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
+import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -283,13 +284,15 @@ public class WicketTester extends BaseWicketTester
 	{
 		if (null != getLastResponse().getHeader("Location"))
 		{
-			fail("Location header should *not* be present when using Ajax");
+			throw new AssertionFailedError(
+				"Location header should *not* be present when using Ajax");
 		}
 
 		String ajaxLocation = getLastResponse().getHeader("Ajax-Location");
 		if (null == ajaxLocation)
 		{
-			fail("Ajax-Location header should be present when using Ajax");
+			throw new AssertionFailedError(
+				"Ajax-Location header should be present when using Ajax");
 		}
 
 		int statusCode = getLastResponse().getStatus();
@@ -310,6 +313,18 @@ public class WicketTester extends BaseWicketTester
 	public void assertComponent(String path, Class<? extends Component> expectedComponentClass)
 	{
 		assertResult(isComponent(path, expectedComponentClass));
+	}
+
+	/**
+	 *
+	 * @param result
+	 */
+	private void assertResult(Result result)
+	{
+		if (result.wasFailed())
+		{
+			throw new AssertionFailedError(result.getMessage());
+		}
 	}
 
 	/**
@@ -340,13 +355,13 @@ public class WicketTester extends BaseWicketTester
 	 * tree, using JavaScript. But it shouldn't be needed because you just have to trust that Wicket
 	 * Ajax JavaScript works.
 	 *
-	 * @param component
-	 *            a <code>Component</code> to be tested
+	 * @param componentPath
+	 *            a <code>Component</code> path to test
 	 */
-	public void assertComponentOnAjaxResponse(Component component)
+	public void assertComponentOnAjaxResponse(String componentPath)
 	{
-		Result result = isComponentOnAjaxResponse(component);
-		assertResult(result);
+		Component component = getComponentFromLastRenderedPage(componentPath, false);
+		assertComponentOnAjaxResponse(component);
 	}
 
 	/**
@@ -358,13 +373,13 @@ public class WicketTester extends BaseWicketTester
 	 * tree, using JavaScript. But it shouldn't be needed because you just have to trust that Wicket
 	 * Ajax JavaScript works.
 	 *
-	 * @param componentPath
-	 *            a <code>Component</code> path to test
+	 * @param component
+	 *            a <code>Component</code> to be tested
 	 */
-	public void assertComponentOnAjaxResponse(String componentPath)
+	public void assertComponentOnAjaxResponse(Component component)
 	{
-		Component component = getComponentFromLastRenderedPage(componentPath, false);
-		assertComponentOnAjaxResponse(component);
+		Result result = isComponentOnAjaxResponse(component);
+		assertResult(result);
 	}
 
 	/**
@@ -411,6 +426,28 @@ public class WicketTester extends BaseWicketTester
 		}
 
 		assertResult(result);
+	}
+
+	private IMarkupFragment getMarkupFragment(Component component)
+	{
+		IMarkupFragment markup = null;
+		if (component instanceof MarkupContainer)
+		{
+			markup = ((MarkupContainer)component).getAssociatedMarkup();
+		}
+
+		if (markup == null)
+		{
+			markup = component.getMarkup();
+		}
+
+		if (markup == null)
+		{
+			throw new AssertionFailedError(String.format("Cannot find the markup of component: %s",
+				component.getPageRelativePath()));
+		}
+
+		return markup;
 	}
 
 	/**
@@ -460,28 +497,6 @@ public class WicketTester extends BaseWicketTester
 		}
 
 		assertResult(result);
-	}
-
-	private IMarkupFragment getMarkupFragment(Component component)
-	{
-		IMarkupFragment markup = null;
-		if (component instanceof MarkupContainer)
-		{
-			markup = ((MarkupContainer)component).getAssociatedMarkup();
-		}
-
-		if (markup == null)
-		{
-			markup = component.getMarkup();
-		}
-
-		if (markup == null)
-		{
-			fail(String.format("Cannot find the markup of component: %s",
-				component.getPageRelativePath()));
-		}
-
-		return markup;
 	}
 
 	/**
@@ -683,19 +698,30 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
+	 * Asserts last-rendered <code>Page</code> against an expected HTML document.
+	 * <p>
+	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
+	 * output file.
+	 *
+	 * @param clazz
+	 *            <code>Class</code> used to load the file (relative to <code>clazz</code> package)
+	 * @param filename
+	 *            expected output filename <code>String</code>
+	 * @throws Exception
+	 */
+	@Override
+	public void assertResultPage(final Class<?> clazz, final String filename) throws Exception
+	{
+		String document = getLastResponseAsString();
+		DiffUtil.validatePage(document, clazz, filename, true);
+	}
+
+	/**
 	 * Asserts no error-level feedback messages.
 	 */
 	public void assertNoErrorMessage()
 	{
 		assertNoFeedbackMessage(FeedbackMessage.ERROR);
-	}
-
-	/**
-	 * Asserts no info-level feedback messages.
-	 */
-	public void assertNoInfoMessage()
-	{
-		assertNoFeedbackMessage(FeedbackMessage.INFO);
 	}
 
 	/**
@@ -722,22 +748,11 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Asserts last-rendered <code>Page</code> against an expected HTML document.
-	 * <p>
-	 * Use <code>-Dwicket.replace.expected.results=true</code> to automatically replace the expected
-	 * output file.
-	 *
-	 * @param clazz
-	 *            <code>Class</code> used to load the file (relative to <code>clazz</code> package)
-	 * @param filename
-	 *            expected output filename <code>String</code>
-	 * @throws Exception
+	 * Asserts no info-level feedback messages.
 	 */
-	@Override
-	public void assertResultPage(final Class<?> clazz, final String filename) throws Exception
+	public void assertNoInfoMessage()
 	{
-		String document = getLastResponseAsString();
-		DiffUtil.validatePage(document, clazz, filename, true);
+		assertNoFeedbackMessage(FeedbackMessage.INFO);
 	}
 
 	/**
@@ -807,18 +822,6 @@ public class WicketTester extends BaseWicketTester
 	public void assertNotRequired(String path)
 	{
 		assertResult(isNotRequired(path));
-	}
-
-	/**
-	 *
-	 * @param result
-	 */
-	private void assertResult(Result result)
-	{
-		if (result.wasFailed())
-		{
-			fail(result.getMessage());
-		}
 	}
 
 	/**

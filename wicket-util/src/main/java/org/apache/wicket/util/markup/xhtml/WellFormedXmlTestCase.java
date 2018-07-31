@@ -148,8 +148,7 @@ public class WellFormedXmlTestCase
 		}
 
 		@Override
-		public InputSource resolveEntity(String publicId, String systemId) throws SAXException,
-			IOException
+		public InputSource resolveEntity(String publicId, String systemId)
 		{
 			String uri = systemIdToUri.get(systemId);
 			if (uri != null)

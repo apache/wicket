@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.wicket.util.string.Strings;
+import org.opentest4j.AssertionFailedError;
 
 class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
@@ -63,13 +64,13 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 			}
 			else
 			{
-				throw new AssertionError();
+				throw new AssertionFailedError();
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			throw new AssertionError(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 
 		return added;

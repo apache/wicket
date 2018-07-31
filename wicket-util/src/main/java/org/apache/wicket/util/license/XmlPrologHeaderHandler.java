@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.util.license;
 
-
+import org.opentest4j.AssertionFailedError;
 
 import java.io.File;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ class XmlPrologHeaderHandler extends XmlLicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			throw new AssertionError(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 	}
 

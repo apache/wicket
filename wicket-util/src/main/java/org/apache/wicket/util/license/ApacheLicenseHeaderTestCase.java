@@ -16,6 +16,14 @@
  */
 package org.apache.wicket.util.license;
 
+import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.string.Strings;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -96,7 +104,7 @@ public abstract class ApacheLicenseHeaderTestCase
 	 *
 	 */
 	@BeforeEach
-	final void before()
+	public final void before()
 	{
 		// setup the base directory for when running inside maven (building a release
 		// comes to mind).
@@ -186,7 +194,7 @@ public abstract class ApacheLicenseHeaderTestCase
 			}
 
 			System.out.println(failString);
-			throw new AssertionError(failString.toString());
+			throw new AssertionFailedError(failString.toString());
 		}
 	}
 
