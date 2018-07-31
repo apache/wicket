@@ -16,20 +16,17 @@
  */
 package org.apache.wicket.util.collections;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author almaw
  */
-public class MiniMapTest extends Assert
+public class MiniMapTest
 {
 	private static final Object FOO = new Object();
 	private static final Object BAR = new Object();

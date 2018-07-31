@@ -16,19 +16,20 @@
  */
 package org.apache.wicket.util.io;
 
+import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.time.Time;
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.wicket.util.file.Files;
-import org.apache.wicket.util.time.Time;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author pertl
  */
-public class LastModifiedTest extends Assert
+public class LastModifiedTest
 {
 	private static final String FILE = "/some/folder/file.jar";
 

@@ -16,12 +16,8 @@
  */
 package org.apache.wicket.util.crypt;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.security.AlgorithmParameters;
-import java.security.GeneralSecurityException;
-import java.security.spec.KeySpec;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -29,23 +25,24 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.AlgorithmParameters;
+import java.security.GeneralSecurityException;
+import java.security.spec.KeySpec;
 
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A demo how to create {@link org.apache.wicket.util.crypt.ICrypt} implementation that
  * uses <em>PBKDF2WithHmacSHA1</em> for encryption
  */
 @SuppressWarnings("javadoc")
-public class UnlimitedStrengthJurisdictionPolicyTest extends Assert
+public class UnlimitedStrengthJurisdictionPolicyTest
 {
 	@Test
 	public void unlimitedStrengthJurisdictionEncryption() throws GeneralSecurityException
 	{
 		boolean unlimitedStrengthJurisdictionPolicyInstalled = SunJceCryptTest.isUnlimitedStrengthJurisdictionPolicyInstalled();
-		Assume.assumeThat(unlimitedStrengthJurisdictionPolicyInstalled, is(true));
+		Assumptions.assumeTrue(unlimitedStrengthJurisdictionPolicyInstalled);
 
 		AbstractCrypt crypt = new UnlimitedStrenghtJurisdictionPolicyCrypt();
 
@@ -56,10 +53,10 @@ public class UnlimitedStrengthJurisdictionPolicyTest extends Assert
 		byte[] encrypted2 = crypt.crypt(input2.getBytes(), Cipher.ENCRYPT_MODE);
 
 		byte[] decrypted = crypt.crypt(encrypted, Cipher.DECRYPT_MODE);
-		assertThat(new String(decrypted), is(equalTo(input1)));
+		assertEquals(new String(decrypted), input1);
 
 		byte[] decrypted2 = crypt.crypt(encrypted2, Cipher.DECRYPT_MODE);
-		assertThat(new String(decrypted2), is(equalTo(input2)));
+		assertEquals(new String(decrypted2),input2);
 	}
 
 	/**

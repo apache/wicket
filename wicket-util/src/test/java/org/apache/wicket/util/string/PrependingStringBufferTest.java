@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.util.string;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author jcompagner
  */
-public class PrependingStringBufferTest extends Assert
+public class PrependingStringBufferTest
 {
 
 	/**

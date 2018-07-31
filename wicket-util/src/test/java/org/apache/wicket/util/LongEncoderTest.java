@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.util;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Tests {@link LongEncoder}
@@ -39,9 +41,9 @@ public class LongEncoderTest
 		for (int i = -10000; i < 10000; i++)
 		{
 			String enc = LongEncoder.encode(i);
-			Assert.assertFalse("uniqueness: " + i, encoded.contains(enc));
+			assertFalse(encoded.contains(enc), "uniqueness: " + i);
 			encoded.add(enc);
-			Assert.assertEquals("decoding: " + i, i, LongEncoder.decode(enc));
+			assertEquals(i, LongEncoder.decode(enc), "decoding: " + i);
 		}
 	}
 }

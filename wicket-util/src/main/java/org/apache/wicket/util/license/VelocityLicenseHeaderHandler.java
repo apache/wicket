@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.util.license;
 
+import org.apache.wicket.util.diff.Diff;
+import org.apache.wicket.util.diff.Revision;
+import org.opentest4j.AssertionFailedError;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-
-import org.junit.Assert;
-import org.apache.wicket.util.diff.Diff;
-import org.apache.wicket.util.diff.Revision;
 
 class VelocityLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
@@ -55,7 +55,7 @@ class VelocityLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			Assert.fail(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 
 		return revision.size() == 0;

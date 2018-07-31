@@ -16,33 +16,31 @@
  */
 package org.apache.wicket.util.convert.converter;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import org.apache.wicket.util.convert.ConversionException;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Locale;
 
-import org.apache.wicket.util.convert.ConversionException;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link LocalDateConverter}
  */
-public class LocalDateConverterTest extends Assert
+public class LocalDateConverterTest
 {
 	@Test
 	public void convertToString() {
 		LocalDateConverter converter = new LocalDateConverter();
 		String date = converter.convertToString(LocalDate.of(2016, 7, 11), Locale.ENGLISH);
-		assertThat(date, is(equalTo("7/11/16")));
+		assertEquals(date, "7/11/16");
 	}
 
 	@Test
 	public void convertToObject() {
 		LocalDateConverter converter = new LocalDateConverter();
 		LocalDate date = converter.convertToObject("7/11/16", Locale.ENGLISH);
-		assertThat(date, is(equalTo(LocalDate.of(2016, 7, 11))));
+		assertEquals(date, LocalDate.of(2016, 7, 11));
 	}
 	
 	@Test

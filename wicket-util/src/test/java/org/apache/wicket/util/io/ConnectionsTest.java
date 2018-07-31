@@ -16,21 +16,16 @@
  */
 package org.apache.wicket.util.io;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import org.apache.wicket.util.time.Time;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
-import org.apache.wicket.util.SlowTests;
-import org.apache.wicket.util.time.Time;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SuppressWarnings("javadoc")
-@Category(SlowTests.class)
-public class ConnectionsTest 
+public class ConnectionsTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5838
@@ -40,7 +35,7 @@ public class ConnectionsTest
 	{
 		URL url = new URL("http://wicket.apache.org/learn/books/wia.png");
 		Time lastModified = Connections.getLastModified(url);
-		assertThat(lastModified, is(notNullValue()));
-		assertThat(lastModified.getMilliseconds(), is(not(0L)));
+		assertNotNull(lastModified);
+		assertNotEquals(lastModified.getMilliseconds(), 0L);
 	}
 }

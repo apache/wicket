@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.util.visit;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test for {@link ClassVisitFilter}.
  * 
  * @since 1.5.7
  */
-public class ClassVisitFilterTest extends Assert
+public class ClassVisitFilterTest
 {
 	/**
 	 * @throws Exception

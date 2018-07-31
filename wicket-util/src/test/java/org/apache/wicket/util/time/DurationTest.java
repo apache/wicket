@@ -16,16 +16,15 @@
  */
 package org.apache.wicket.util.time;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.apache.wicket.util.string.StringValueConversionException;
+import org.junit.jupiter.api.Test;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Locale.Category;
 
-import org.apache.wicket.util.string.StringValueConversionException;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test cases for this object
@@ -84,8 +83,8 @@ public final class DurationTest
 		{
 			Locale.setDefault(Locale.US);
 			Locale.setDefault(Category.FORMAT, Locale.GERMANY);
-			assertEquals("should take formatting locale into account", "1,5 minutes", Duration.seconds(90)
-					.toString());
+			assertEquals("1,5 minutes", Duration.seconds(90)
+					.toString(), "should take formatting locale into account");
 		} finally
 		{
 			Locale.setDefault(oldDefaultLocale);

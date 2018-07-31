@@ -16,13 +16,13 @@
  */
 package org.apache.wicket.util.string;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("javadoc")
 public class StringsTest
@@ -187,8 +187,10 @@ public class StringsTest
 
 		// The escaped unicode is ����������"
 		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;",
-			Strings.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
-				false, true).toString());
+			Strings
+				.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb", false,
+					true)
+				.toString());
 
 	}
 
@@ -256,10 +258,13 @@ public class StringsTest
 		assertTrue(Strings.isTrue("1"));
 	}
 
-	@Test(expected = StringValueConversionException.class)
+	@Test
 	public void invalidIsTrue()
 	{
-		Strings.isTrue("foo");
+		assertThrows(StringValueConversionException.class, () -> {
+			Strings.isTrue("foo");
+		});
+
 	}
 
 	@Test
@@ -338,10 +343,12 @@ public class StringsTest
 		assertEquals(Boolean.TRUE, Strings.toBoolean("1"));
 	}
 
-	@Test(expected = StringValueConversionException.class)
+	@Test
 	public void invalidToBoolean()
 	{
-		Strings.toBoolean("waar");
+		assertThrows(StringValueConversionException.class, () -> {
+			Strings.toBoolean("waar");
+		});
 	}
 
 	@Test
@@ -351,22 +358,30 @@ public class StringsTest
 		assertEquals('a', Strings.toChar("a"));
 	}
 
-	@Test(expected = StringValueConversionException.class)
+	@Test
 	public void invalidToChar1()
 	{
-		Strings.toChar("");
+		assertThrows(StringValueConversionException.class, () -> {
+			Strings.toChar("");
+		});
+
 	}
 
-	@Test(expected = StringValueConversionException.class)
+	@Test
 	public void invalidToChar2()
 	{
-		Strings.toChar(null);
+
+		assertThrows(StringValueConversionException.class, () -> {
+			Strings.toChar(null);
+		});
 	}
 
-	@Test(expected = StringValueConversionException.class)
+	@Test
 	public void invalidToChar3()
 	{
-		Strings.toChar("aa");
+		assertThrows(StringValueConversionException.class, () -> {
+			Strings.toChar("aa");
+		});
 	}
 
 	@Test
@@ -386,9 +401,8 @@ public class StringsTest
 		// WICKET-4837
 		assertEquals(
 			"<p><a href=\"mailto:john@doe.com\">john@doe.com</a><br/><a href=\"http://apache.wicket.org\">http://apache.wicket.org</a></p>",
-			Strings
-				.toMultilineMarkup(
-					"<a href=\"mailto:john@doe.com\">john@doe.com</a>\n<a href=\"http://apache.wicket.org\">http://apache.wicket.org</a>")
+			Strings.toMultilineMarkup(
+				"<a href=\"mailto:john@doe.com\">john@doe.com</a>\n<a href=\"http://apache.wicket.org\">http://apache.wicket.org</a>")
 				.toString());
 
 		assertEquals("<p>abc</p><p>def</p><p>ghi</p>",

@@ -16,14 +16,15 @@
  */
 package org.apache.wicket.util.lang;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @since 1.5.5
  */
 @SuppressWarnings("javadoc")
-public class PackagesTest extends Assert
+public class PackagesTest
 {
 	@Test
 	public void absolutePath0() throws Exception

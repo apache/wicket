@@ -16,18 +16,16 @@
  */
 package org.apache.wicket.util.collections;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.*;
+import org.apache.wicket.util.io.ByteArrayOutputStream;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.apache.wicket.util.io.ByteArrayOutputStream;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SuppressWarnings("javadoc")
 public class IntHashMapTest
@@ -48,9 +46,9 @@ public class IntHashMapTest
 		ByteArrayInputStream bais = new ByteArrayInputStream(serialized);
 		ObjectInputStream ois = new ObjectInputStream(bais);
 		IntHashMap<String> deserialized = (IntHashMap<String>) ois.readObject();
-		assertThat(deserialized, is(notNullValue()));
-		assertThat(deserialized.get(1), is(equalTo("one")));
-		assertThat(deserialized.get(2), is(equalTo("two")));
+		assertNotNull(deserialized);
+		assertEquals(deserialized.get(1), "one");
+		assertEquals(deserialized.get(2), "two");
 
 		// WICKET-5584
 		deserialized.put(3, "three");

@@ -16,24 +16,18 @@
  */
 package org.apache.wicket.util.license;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
+import java.io.*;
 import java.util.List;
 
-import org.junit.Assert;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.Strings;
-
+import org.opentest4j.AssertionFailedError;
 
 abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 {
 	protected static final String LINE_ENDING = System.getProperty("line.separator");
-	private String licenseHeader;
 	private final List<String> ignoreFiles;
+	private String licenseHeader;
 
 	/**
 	 * Construct.
@@ -64,48 +58,6 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		return null;
 	}
 
-	protected abstract String getLicenseHeaderFilename();
-
-	protected String getLicenseHeader()
-	{
-		if (Strings.isEmpty(licenseHeader))
-		{
-			LineNumberReader lineNumberReader = null;
-			InputStream inputStream = null;
-			InputStreamReader inputStreamReader = null;
-
-			try
-			{
-				inputStream = ApacheLicenseHeaderTestCase.class.getResourceAsStream(getLicenseHeaderFilename());
-				inputStreamReader = new InputStreamReader(inputStream);
-				lineNumberReader = new LineNumberReader(inputStreamReader);
-
-				StringBuilder header = new StringBuilder();
-				String line = lineNumberReader.readLine();
-				while (line != null)
-				{
-					header.append(line);
-					header.append(LINE_ENDING);
-					line = lineNumberReader.readLine();
-				}
-
-				licenseHeader = header.toString().trim();
-			}
-			catch (Exception e)
-			{
-				Assert.fail(e.getMessage());
-			}
-			finally
-			{
-				IOUtils.closeQuietly(lineNumberReader);
-				IOUtils.closeQuietly(inputStream);
-				IOUtils.closeQuietly(inputStreamReader);
-			}
-		}
-
-		return licenseHeader;
-	}
-
 	protected String extractLicenseHeader(final File file, final int start, final int length)
 	{
 		StringBuilder header = new StringBuilder();
@@ -124,7 +76,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			Assert.fail(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 		finally
 		{
@@ -134,7 +86,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 			}
 			catch (IOException e)
 			{
-				Assert.fail(e.getMessage());
+				throw new AssertionFailedError(e.getMessage());
 			}
 		}
 
@@ -158,7 +110,50 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			Assert.fail(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 	}
+
+	protected String getLicenseHeader()
+	{
+		if (Strings.isEmpty(licenseHeader))
+		{
+			LineNumberReader lineNumberReader = null;
+			InputStream inputStream = null;
+			InputStreamReader inputStreamReader = null;
+
+			try
+			{
+				inputStream = ApacheLicenseHeaderTestCase.class
+					.getResourceAsStream(getLicenseHeaderFilename());
+				inputStreamReader = new InputStreamReader(inputStream);
+				lineNumberReader = new LineNumberReader(inputStreamReader);
+
+				StringBuilder header = new StringBuilder();
+				String line = lineNumberReader.readLine();
+				while (line != null)
+				{
+					header.append(line);
+					header.append(LINE_ENDING);
+					line = lineNumberReader.readLine();
+				}
+
+				licenseHeader = header.toString().trim();
+			}
+			catch (Exception e)
+			{
+				throw new AssertionFailedError(e.getMessage());
+			}
+			finally
+			{
+				IOUtils.closeQuietly(lineNumberReader);
+				IOUtils.closeQuietly(inputStream);
+				IOUtils.closeQuietly(inputStreamReader);
+			}
+		}
+
+		return licenseHeader;
+	}
+
+	protected abstract String getLicenseHeaderFilename();
 }
