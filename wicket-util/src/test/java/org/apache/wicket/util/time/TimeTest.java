@@ -16,15 +16,15 @@
  */
 package org.apache.wicket.util.time;
 
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Calendar;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("javadoc")
-public final class TimeTest extends Assert
+public final class TimeTest
 {
 	@Test
 	public void test() throws ParseException

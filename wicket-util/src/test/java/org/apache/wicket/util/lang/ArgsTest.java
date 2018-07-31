@@ -16,23 +16,19 @@
  */
 package org.apache.wicket.util.lang;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Collection;
 import java.util.Collections;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests for {@link Args}
  */
 public class ArgsTest
 {
-	/**
-	 * A rule for expecting exceptions
-	 */
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
+
 
 	/**
 	 * Test for {@link Args#notEmpty(java.util.Collection, String, Object...)}
@@ -40,10 +36,10 @@ public class ArgsTest
 	@Test
 	public void notNullCollection()
 	{
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Collection 'col' may not be null or empty");
+		assertThrows(IllegalArgumentException.class, () -> {
+			Args.notEmpty((Collection<?>)null, "col");
+		});
 
-		Args.notEmpty((Collection<?>)null, "col");
 	}
 
 	/**
@@ -52,10 +48,9 @@ public class ArgsTest
 	@Test
 	public void notEmptyCollection()
 	{
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Collection 'col' may not be null or empty");
-
-		Args.notEmpty(Collections.emptySet(), "col");
+		assertThrows(IllegalArgumentException.class, () -> {
+			Args.notEmpty(Collections.emptySet(), "col");
+		});
 	}
 
 }

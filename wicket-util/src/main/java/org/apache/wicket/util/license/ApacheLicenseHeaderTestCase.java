@@ -16,6 +16,14 @@
  */
 package org.apache.wicket.util.license;
 
+import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.string.Strings;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -24,167 +32,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.string.Strings;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Testcase used in the different wicket projects for testing for the correct ASL license headers.
  * Doesn't really make sense outside org.apache.wicket.
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public abstract class ApacheLicenseHeaderTestCase extends Assert
+public abstract class ApacheLicenseHeaderTestCase
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(ApacheLicenseHeaderTestCase.class);
 
 	private static final String LINE_ENDING = System.getProperty("line.separator");
-
-	interface FileVisitor
-	{
-		/**
-		 * @param file
-		 */
-		void visitFile(File file);
-	}
-
-	private class SuffixAndIgnoreFileFilter implements FileFilter
-	{
-		private final List<String> suffixes;
-		private final List<String> ignoreFiles;
-
-		private SuffixAndIgnoreFileFilter(final List<String> suffixes,
-			final List<String> ignoreFiles)
-		{
-			this.suffixes = suffixes;
-			this.ignoreFiles = ignoreFiles;
-		}
-
-		@Override
-		public boolean accept(final File pathname)
-		{
-			boolean accept = false;
-
-			if (pathname.isFile())
-			{
-				if (ignoreFile(pathname) == false)
-				{
-					for (String suffix : suffixes)
-					{
-						if (pathname.getName().endsWith("." + suffix))
-						{
-							accept = true;
-							break;
-						}
-						else
-						{
-							log.debug("File ignored: '{}'", pathname);
-						}
-					}
-				}
-				else
-				{
-					log.debug("File ignored: '{}'", pathname);
-				}
-			}
-
-			return accept;
-		}
-
-		private boolean ignoreFile(final File pathname)
-		{
-			boolean ignore = false;
-
-			if (ignoreFiles != null)
-			{
-				String relativePathname = pathname.getAbsolutePath();
-				relativePathname = Strings.replaceAll(relativePathname,
-					baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
-					.toString();
-
-				for (String ignorePath : ignoreFiles)
-				{
-					// Will convert '/'s to '\\'s on Windows
-					ignorePath = Strings.replaceAll(ignorePath, "/",
-						System.getProperty("file.separator")).toString();
-					File ignoreFile = new File(baseDirectory, ignorePath);
-
-					// Directory ignore
-					if (ignoreFile.isDirectory())
-					{
-						if (pathname.getAbsolutePath().startsWith(ignoreFile.getAbsolutePath()))
-						{
-							ignore = true;
-							break;
-						}
-					}
-					// Absolute file
-					else if (ignoreFile.isFile())
-					{
-						if (relativePathname.equals(ignorePath))
-						{
-							ignore = true;
-							break;
-						}
-					}
-					else if (pathname.getName().equals(ignorePath))
-					{
-						ignore = true;
-						break;
-					}
-				}
-			}
-
-			return ignore;
-		}
-	}
-
-	private class DirectoryFileFilter implements FileFilter
-	{
-		private final String[] ignoreDirectory = new String[] { ".git" };
-
-		@Override
-		public boolean accept(final File pathname)
-		{
-			boolean accept = false;
-
-			if (pathname.isDirectory())
-			{
-				String relativePathname = pathname.getAbsolutePath();
-				relativePathname = Strings.replaceAll(relativePathname,
-					baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
-					.toString();
-				if ("target".equals(relativePathname) == false)
-				{
-					boolean found = false;
-					for (String ignore : ignoreDirectory)
-					{
-						if (pathname.getName().equals(ignore))
-						{
-							found = true;
-							break;
-						}
-					}
-					if (found == false)
-					{
-						accept = true;
-					}
-				}
-			}
-
-			return accept;
-		}
-	}
-
-	private ILicenseHeaderHandler[] licenseHeaderHandlers;
-
-	private File baseDirectory = new File("").getAbsoluteFile();
-
 	protected List<String> javaIgnore = Generics.newArrayList();
 	protected List<String> htmlIgnore = Generics.newArrayList();
 	protected List<String> xmlPrologIgnore = Generics.newArrayList();
@@ -194,7 +53,8 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 	protected List<String> velocityIgnore = Generics.newArrayList();
 	protected List<String> javaScriptIgnore = Generics.newArrayList();
 	protected boolean addHeaders = false;
-
+	private ILicenseHeaderHandler[] licenseHeaderHandlers;
+	private File baseDirectory = new File("").getAbsoluteFile();
 	/**
 	 * Construct.
 	 */
@@ -233,9 +93,9 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	@Before
+	@BeforeEach
 	public final void before()
 	{
 		// setup the base directory for when running inside maven (building a release
@@ -334,7 +194,7 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 			}
 
 			System.out.println(failString);
-			fail(failString.toString());
+			throw new AssertionFailedError(failString.toString());
 		}
 	}
 
@@ -366,6 +226,145 @@ public abstract class ApacheLicenseHeaderTestCase extends Assert
 			{
 				visitDirectory(suffixes, ignoreFiles, childDirectory, fileVisitor);
 			}
+		}
+	}
+
+	interface FileVisitor
+	{
+		/**
+		 * @param file
+		 */
+		void visitFile(File file);
+	}
+
+	private class SuffixAndIgnoreFileFilter implements FileFilter
+	{
+		private final List<String> suffixes;
+		private final List<String> ignoreFiles;
+
+		private SuffixAndIgnoreFileFilter(final List<String> suffixes,
+			final List<String> ignoreFiles)
+		{
+			this.suffixes = suffixes;
+			this.ignoreFiles = ignoreFiles;
+		}
+
+		@Override
+		public boolean accept(final File pathname)
+		{
+			boolean accept = false;
+
+			if (pathname.isFile())
+			{
+				if (ignoreFile(pathname) == false)
+				{
+					for (String suffix : suffixes)
+					{
+						if (pathname.getName().endsWith("." + suffix))
+						{
+							accept = true;
+							break;
+						}
+						else
+						{
+							log.debug("File ignored: '{}'", pathname);
+						}
+					}
+				}
+				else
+				{
+					log.debug("File ignored: '{}'", pathname);
+				}
+			}
+
+			return accept;
+		}
+
+		private boolean ignoreFile(final File pathname)
+		{
+			boolean ignore = false;
+
+			if (ignoreFiles != null)
+			{
+				String relativePathname = pathname.getAbsolutePath();
+				relativePathname = Strings
+					.replaceAll(relativePathname,
+						baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
+					.toString();
+
+				for (String ignorePath : ignoreFiles)
+				{
+					// Will convert '/'s to '\\'s on Windows
+					ignorePath = Strings
+						.replaceAll(ignorePath, "/", System.getProperty("file.separator"))
+						.toString();
+					File ignoreFile = new File(baseDirectory, ignorePath);
+
+					// Directory ignore
+					if (ignoreFile.isDirectory())
+					{
+						if (pathname.getAbsolutePath().startsWith(ignoreFile.getAbsolutePath()))
+						{
+							ignore = true;
+							break;
+						}
+					}
+					// Absolute file
+					else if (ignoreFile.isFile())
+					{
+						if (relativePathname.equals(ignorePath))
+						{
+							ignore = true;
+							break;
+						}
+					}
+					else if (pathname.getName().equals(ignorePath))
+					{
+						ignore = true;
+						break;
+					}
+				}
+			}
+
+			return ignore;
+		}
+	}
+
+	private class DirectoryFileFilter implements FileFilter
+	{
+		private final String[] ignoreDirectory = new String[] { ".git" };
+
+		@Override
+		public boolean accept(final File pathname)
+		{
+			boolean accept = false;
+
+			if (pathname.isDirectory())
+			{
+				String relativePathname = pathname.getAbsolutePath();
+				relativePathname = Strings
+					.replaceAll(relativePathname,
+						baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
+					.toString();
+				if ("target".equals(relativePathname) == false)
+				{
+					boolean found = false;
+					for (String ignore : ignoreDirectory)
+					{
+						if (pathname.getName().equals(ignore))
+						{
+							found = true;
+							break;
+						}
+					}
+					if (found == false)
+					{
+						accept = true;
+					}
+				}
+			}
+
+			return accept;
 		}
 	}
 }

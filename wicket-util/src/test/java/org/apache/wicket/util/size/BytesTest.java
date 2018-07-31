@@ -16,22 +16,23 @@
  */
 package org.apache.wicket.util.size;
 
+import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.string.StringValueConversionException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
-import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.string.StringValueConversionException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class BytesTest extends Assert
+public final class BytesTest
 {
 	/**
 	 * Backup of the default locale.
@@ -41,7 +42,7 @@ public final class BytesTest extends Assert
 	/**
 	 * Save the default locale.
 	 */
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		defaultLocale = Locale.getDefault(Locale.Category.FORMAT);
@@ -50,7 +51,7 @@ public final class BytesTest extends Assert
 	/**
 	 * Restore the default locale.
 	 */
-	@After
+	@AfterEach
 	public void after()
 	{
 		Locale.setDefault(Locale.Category.FORMAT, defaultLocale);

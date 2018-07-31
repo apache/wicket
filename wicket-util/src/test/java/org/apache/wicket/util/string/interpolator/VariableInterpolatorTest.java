@@ -16,18 +16,20 @@
  */
 package org.apache.wicket.util.string.interpolator;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests {@link MapVariableInterpolator}
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class VariableInterpolatorTest extends Assert
+public class VariableInterpolatorTest
 {
 	/**
 	 * 

@@ -16,20 +16,21 @@
  */
 package org.apache.wicket.util.time;
 
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class TimeMapTest extends Assert
+public final class TimeMapTest
 {
 	/**
 	 * 

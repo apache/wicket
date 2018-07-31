@@ -16,15 +16,16 @@
  */
 package org.apache.wicket.util.string;
 
-import java.util.Locale;
-
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("javadoc")
-public class StringValueTest extends Assert
+public class StringValueTest
 {
 	/**
 	 * WICKET-5359 equals
@@ -32,12 +33,12 @@ public class StringValueTest extends Assert
 	@Test
 	public void equals()
 	{
-		assertFalse(StringValue.valueOf("bla", Locale.FRANCE).equals(
-			StringValue.valueOf("bla", Locale.CANADA)));
-		assertTrue(StringValue.valueOf("bla", Locale.FRANCE).equals(
-			StringValue.valueOf("bla", Locale.FRANCE)));
-		assertFalse(StringValue.valueOf("bla", Locale.FRANCE).equals(
-			StringValue.valueOf("blo", Locale.FRANCE)));
+		assertFalse(StringValue.valueOf("bla", Locale.FRANCE)
+			.equals(StringValue.valueOf("bla", Locale.CANADA)));
+		assertTrue(StringValue.valueOf("bla", Locale.FRANCE)
+			.equals(StringValue.valueOf("bla", Locale.FRANCE)));
+		assertFalse(StringValue.valueOf("bla", Locale.FRANCE)
+			.equals(StringValue.valueOf("blo", Locale.FRANCE)));
 	}
 
 	/**
@@ -125,12 +126,8 @@ public class StringValueTest extends Assert
 		assertNull(sv.toOptional(String[].class));
 	}
 
-	static enum TestEnum {
-		FOO, BAR, BAZ
-	}
-
 	@Test
-	public void enums() 
+	public void enums()
 	{
 		assertEquals(TestEnum.FOO, new StringValue("FOO").toEnum(TestEnum.class));
 		assertEquals(TestEnum.FOO, new StringValue("FOO").toEnum(TestEnum.BAR));
@@ -143,15 +140,26 @@ public class StringValueTest extends Assert
 		assertNull(new StringValue(null).toOptionalEnum(TestEnum.class));
 	}
 
-	@Test(expected = StringValueConversionException.class)
+	@Test
 	public void failingEnum() throws Exception
 	{
-		new StringValue("camelot").toEnum(TestEnum.class);
+
+		assertThrows(StringValueConversionException.class, () -> {
+			new StringValue("camelot").toEnum(TestEnum.class);
+		});
+
 	}
 
-	@Test(expected = StringValueConversionException.class)
+	@Test
 	public void failingEnum2() throws Exception
 	{
-		new StringValue("camelot").toOptionalEnum(TestEnum.class);
+		assertThrows(StringValueConversionException.class, () -> {
+			new StringValue("camelot").toOptionalEnum(TestEnum.class);
+		});
+
+	}
+
+	static enum TestEnum {
+		FOO, BAR, BAZ
 	}
 }

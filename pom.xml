@@ -127,7 +127,7 @@
 		<jacoco.version>0.7.9</jacoco.version>
 		<jetty.version>9.4.10.v20180503</jetty.version>
 		<joda-time.version>2.9.9</joda-time.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>5.2.0</junit.version>
 		<spring.version>4.3.10.RELEASE</spring.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
 		<maven.javadoc.version>2.10.4</maven.javadoc.version>
@@ -504,16 +504,10 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
 				<version>${junit.version}</version>
 				<scope>test</scope>
-				<exclusions>
-					<exclusion>
-						<groupId>org.hamcrest</groupId>
-						<artifactId>hamcrest-core</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish</groupId>
@@ -526,18 +520,6 @@
 				<artifactId>el-impl</artifactId>
 				<version>2.2.1-b05</version>
 				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hamcrest</groupId>
-				<artifactId>hamcrest-junit</artifactId>
-				<version>${hamcrest.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hamcrest</groupId>
-				<artifactId>java-hamcrest</artifactId>
-				<version>${hamcrest.version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
@@ -590,14 +572,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-junit</artifactId>
-        </dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
