@@ -580,7 +580,8 @@ public class FormTester
 	public FormTester setValue(final String formComponentId, final String value)
 	{
 		Component component = workingForm.get(formComponentId);
-		assertNotNull(component, "Unable to set value. Couldn't find component with name: " + formComponentId);
+		assertNotNull(component, "Unable to set value. Couldn't find component with name: " +
+			formComponentId);
 		return setValue(component, value);
 	}
 
