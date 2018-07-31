@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.util.time;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author v857829
  */
-public class TimeFrameTest extends Assert
+public class TimeFrameTest
 {
 
 	private final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
@@ -38,7 +39,7 @@ public class TimeFrameTest extends Assert
 	public void eachDay()
 	{
 		ITimeFrameSource test = TimeFrame.eachDay(three, five);
-		Assert.assertTrue(test.getTimeFrame().contains(Time.valueOf(four)));
+		assertTrue(test.getTimeFrame().contains(Time.valueOf(four)));
 	}
 
 	/**
@@ -50,8 +51,8 @@ public class TimeFrameTest extends Assert
 	public void valueOfTimeDuration()
 	{
 		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(60));
-		Assert.assertEquals(test.getStart(), Time.valueOf(three));
-		Assert.assertEquals(test.getEnd(), Time.valueOf(four));
+		assertEquals(test.getStart(), Time.valueOf(three));
+		assertEquals(test.getEnd(), Time.valueOf(four));
 	}
 
 	/**
@@ -62,7 +63,7 @@ public class TimeFrameTest extends Assert
 	public void contains()
 	{
 		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(70));
-		Assert.assertTrue(test.contains(Time.valueOf(four)));
+		assertTrue(test.contains(Time.valueOf(four)));
 	}
 
 	/**
@@ -77,10 +78,10 @@ public class TimeFrameTest extends Assert
 		TimeFrame test2 = TimeFrame.valueOf(Time.valueOf(four), Duration.minutes(50));
 		TimeFrame test3 = TimeFrame.valueOf(Time.valueOf(four), Time.valueOf(five));
 		TimeFrame test4 = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(20));
-		Assert.assertTrue(test.overlaps(test2));
-		Assert.assertTrue(test3.overlaps(test2));
-		Assert.assertTrue(test.overlaps(test3));
-		Assert.assertFalse(test4.overlaps(test3));
+		assertTrue(test.overlaps(test2));
+		assertTrue(test3.overlaps(test2));
+		assertTrue(test.overlaps(test3));
+		assertFalse(test4.overlaps(test3));
 	}
 
 	/**
@@ -92,8 +93,8 @@ public class TimeFrameTest extends Assert
 		TimeFrame test = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(60));
 		TimeFrame test2 = TimeFrame.valueOf(Time.valueOf(three), Time.valueOf(four));
 		TimeFrame test3 = TimeFrame.valueOf(Time.valueOf(three), Duration.minutes(59));
-		Assert.assertEquals(test, test2);
-		Assert.assertNotSame(test2, test3);
+		assertEquals(test, test2);
+		assertNotSame(test2, test3);
 	}
 
 }

@@ -16,21 +16,22 @@
  */
 package org.apache.wicket.util.license;
 
+import org.apache.wicket.util.diff.Diff;
+import org.apache.wicket.util.diff.Revision;
+import org.apache.wicket.util.string.Strings;
+import org.opentest4j.AssertionFailedError;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
-import org.apache.wicket.util.diff.Diff;
-import org.apache.wicket.util.diff.Revision;
-import org.apache.wicket.util.string.Strings;
-
 class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
-	private final Pattern xmlHeader = Pattern.compile("^(\\<\\?xml[^" + LINE_ENDING + "]+?)" +
-		LINE_ENDING + "(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
+	private final Pattern xmlHeader = Pattern.compile(
+		"^(\\<\\?xml[^" + LINE_ENDING + "]+?)" + LINE_ENDING + "(.*)$",
+		Pattern.DOTALL | Pattern.MULTILINE);
 
 	/**
 	 * Construct.
@@ -82,7 +83,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			Assert.fail(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 
 		return revision.size() == 0;
@@ -125,7 +126,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			Assert.fail(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 
 		return added;

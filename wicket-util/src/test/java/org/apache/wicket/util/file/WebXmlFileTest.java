@@ -16,20 +16,20 @@
  */
 package org.apache.wicket.util.file;
 
+import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.xml.sax.SAXException;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * 
  */
-public class WebXmlFileTest extends Assert
+public class WebXmlFileTest
 {
 	/**
 	 * 

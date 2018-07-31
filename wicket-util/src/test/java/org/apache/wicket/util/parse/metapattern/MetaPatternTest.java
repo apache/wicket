@@ -16,22 +16,22 @@
  */
 package org.apache.wicket.util.parse.metapattern;
 
-
-import java.util.regex.Matcher;
-
 import org.apache.wicket.util.parse.metapattern.parsers.CommaSeparatedVariableParser;
 import org.apache.wicket.util.parse.metapattern.parsers.IntegerVariableAssignmentParser;
 import org.apache.wicket.util.parse.metapattern.parsers.TagNameParser;
 import org.apache.wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import java.util.regex.Matcher;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test cases for this object
  * 
  * @author Jonathan Locke
  */
-public final class MetaPatternTest extends Assert
+public final class MetaPatternTest
 {
 	/**
 	 * 

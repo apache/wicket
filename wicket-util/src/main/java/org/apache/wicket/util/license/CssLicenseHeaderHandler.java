@@ -20,9 +20,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
 import org.apache.wicket.util.diff.Diff;
 import org.apache.wicket.util.diff.Revision;
+import org.opentest4j.AssertionFailedError;
 
 class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
@@ -55,7 +55,7 @@ class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			Assert.fail(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 
 		return revision.size() == 0;

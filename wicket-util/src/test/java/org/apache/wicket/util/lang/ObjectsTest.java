@@ -16,16 +16,17 @@
  */
 package org.apache.wicket.util.lang;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests the Objects class.
  * 
  * @author Martijn Dashorst
  */
-public class ObjectsTest extends Assert
+public class ObjectsTest
 {
 	/**
 	 * Test method for 'org.apache.wicket.util.lang.Objects.equal(Object, Object)'

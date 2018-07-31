@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.util.license;
 
+import org.apache.wicket.util.string.Strings;
+import org.opentest4j.AssertionFailedError;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.junit.Assert;
-import org.apache.wicket.util.string.Strings;
 
 class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
@@ -64,13 +64,13 @@ class JavaLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 			}
 			else
 			{
-				Assert.fail();
+				throw new AssertionFailedError();
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			Assert.fail(e.getMessage());
+			throw new AssertionFailedError(e.getMessage());
 		}
 
 		return added;

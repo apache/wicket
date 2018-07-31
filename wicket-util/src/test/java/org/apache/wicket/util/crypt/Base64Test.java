@@ -16,18 +16,19 @@
  */
 package org.apache.wicket.util.crypt;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class Base64Test extends Assert
+public class Base64Test
 {
 	/**
 	 * @throws IOException

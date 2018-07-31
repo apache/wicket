@@ -16,21 +16,19 @@
  */
 package org.apache.wicket.util.convert.converter;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import org.apache.wicket.util.convert.ConversionException;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Locale;
 
-import org.apache.wicket.util.convert.ConversionException;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for {@link ZonedDateTimeConverter}
  */
-public class ZonedDateTimeConverterTest extends Assert
+public class ZonedDateTimeConverterTest
 {
 	private ZoneId zone = ZoneId.of("Etc/UCT");
 
@@ -38,14 +36,14 @@ public class ZonedDateTimeConverterTest extends Assert
 	public void convertToString() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
 		String date = converter.convertToString(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone), Locale.ENGLISH);
-		assertThat(date, is(equalTo("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time")));
+		assertEquals(date, "Jul 11, 2016, 1:02:03 AM Coordinated Universal Time");
 	}
 
 	@Test
 	public void convertToObject() {
 		ZonedDateTimeConverter converter = new ZonedDateTimeConverter();
 		ZonedDateTime date = converter.convertToObject("Jul 11, 2016, 1:02:03 AM Coordinated Universal Time", Locale.ENGLISH);
-		assertThat(date, is(equalTo(ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone))));
+		assertEquals(date, ZonedDateTime.of(2016, 7, 11, 1, 2, 3, 0, zone));
 	}
 	
 	@Test
