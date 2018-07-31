@@ -17,7 +17,6 @@
 package org.apache.wicket.util.markup.xhtml;
 
 import org.junit.jupiter.api.Test;
-import org.testng.annotations.Test;
 import org.xml.sax.*;
 
 import javax.xml.parsers.DocumentBuilder;
