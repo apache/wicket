@@ -64,6 +64,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 	/**
 	 * @see org.apache.wicket.markup.html.IPackageResourceGuard#accept(java.lang.String)
 	 */
+	@Override
 	public boolean accept(String path)
 	{
 		int ixExtension = path.lastIndexOf('.');

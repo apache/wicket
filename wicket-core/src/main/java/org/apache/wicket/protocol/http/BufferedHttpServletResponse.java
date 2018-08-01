@@ -603,6 +603,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#setStatus(int)
 	 * @return status
 	 */
+	@Override
 	public int getStatus()
 	{
 		return status;
@@ -613,6 +614,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @param name
 	 * @return the first header with name
 	 */
+	@Override
 	public String getHeader(String name)
 	{
 		Object value = headers.getFirstValue(name);
@@ -628,6 +630,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @param name
 	 * @return all headers with name
 	 */
+	@Override
 	public Collection<String> getHeaders(String name)
 	{
 		List<Object> values = headers.get(name);
@@ -647,6 +650,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletRequest#getHeaderNames()
 	 * @return all header names
 	 */
+	@Override
 	public Collection<String> getHeaderNames()
 	{
 		return Collections.unmodifiableCollection(headers.keySet());

@@ -67,6 +67,7 @@ public class LocalDateTimeField extends AbstractDateTimeField<LocalDateTime>
 		return temporal.toLocalDate();
 	}
 
+	@Override
 	protected LocalTime getLocalTime(LocalDateTime temporal)
 	{
 		return temporal.toLocalTime();

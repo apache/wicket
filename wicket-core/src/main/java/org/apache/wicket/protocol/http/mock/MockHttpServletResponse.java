@@ -337,6 +337,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 *            The header name
 	 * @return The value, or null
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public String getHeader(final String name)
 	{
@@ -356,6 +357,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * 
 	 * @return The header names
 	 */
+	@Override
 	public Set<String> getHeaderNames()
 	{
 		return headers.keySet();
@@ -403,6 +405,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * 
 	 * @return The status code
 	 */
+	@Override
 	public int getStatus()
 	{
 		return status;
@@ -876,6 +879,7 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 * @param name
 	 * @return headers with given name
 	 */
+	@Override
 	public Collection<String> getHeaders(String name)
 	{
 		return Collections.singletonList(headers.get(name).toString());

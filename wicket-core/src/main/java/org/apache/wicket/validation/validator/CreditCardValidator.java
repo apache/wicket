@@ -96,11 +96,11 @@ public class CreditCardValidator implements IValidator<String>
 	/**
 	 * Construct.
 	 * 
-	 * @param failOnUnkown
+	 * @param failOnUnknown
 	 */
-	public CreditCardValidator(final boolean failOnUnkown)
+	public CreditCardValidator(final boolean failOnUnknown)
 	{
-		failOnUnknown = failOnUnkown;
+		this.failOnUnknown = failOnUnknown;
 	}
 
 	/**
