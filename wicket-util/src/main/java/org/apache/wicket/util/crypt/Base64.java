@@ -21,14 +21,15 @@ import java.math.BigInteger;
 /**
  * Provides Base64 encoding and decoding with URL and filename safe alphabet as defined by RFC 3548,
  * section 4.
- * <p/>
- * This Base64 encoder is modified to meet URL requirements. The changes are: '+' => '*', '/' =>
+ * <p>
+ * This Base64 encoder is modified to meet URL requirements. The changes are: '+' =&gt; '*', '/' =&gt;
  * '-', and no padding.
- * <p/>
+ * </p>
+ * <p>
  * This class is taken from the Apache commons-codec, and adjusted to fit the Wicket framework's
  * needs, especially external dependencies have been removed.
  * </p>
- * <p/>
+ * <p>
  * This class implements section <cite>4. Base 64 Encoding with URL and Filename Safe
  * Alphabet</cite> from RFC 3548 <cite>The Base16, Base32, and Base64 Data Encodings</cite> by Simon
  * Josefsson.
@@ -252,7 +253,7 @@ public class Base64
 	 * 
 	 * @param lineLength
 	 *            Each line of encoded data will be at most of the given length (rounded down to
-	 *            nearest multiple of 4). If lineLength <= 0, then the output will not be divided
+	 *            nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
 	 *            into lines (chunks). Ignored when decoding.
 	 * @since 1.4
 	 */
@@ -277,7 +278,7 @@ public class Base64
 	 * 
 	 * @param lineLength
 	 *            Each line of encoded data will be at most of the given length (rounded down to
-	 *            nearest multiple of 4). If lineLength <= 0, then the output will not be divided
+	 *            nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
 	 *            into lines (chunks). Ignored when decoding.
 	 * @param lineSeparator
 	 *            Each line of encoded data will end with this sequence of bytes.
@@ -306,7 +307,7 @@ public class Base64
 	 * 
 	 * @param lineLength
 	 *            Each line of encoded data will be at most of the given length (rounded down to
-	 *            nearest multiple of 4). If lineLength <= 0, then the output will not be divided
+	 *            nearest multiple of 4). If lineLength &lt;= 0, then the output will not be divided
 	 *            into lines (chunks). Ignored when decoding.
 	 * @param lineSeparator
 	 *            Each line of encoded data will end with this sequence of bytes.

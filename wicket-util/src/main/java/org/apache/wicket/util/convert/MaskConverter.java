@@ -27,7 +27,7 @@ import org.apache.wicket.util.lang.Args;
 /**
  * A converter that takes a mask into account. It is specifically meant for overrides on individual
  * components, that provide their own converter by returning it from
- * {@link Component#getConverter(Class)}. It uses an instance of {@link MaskFormatter} to delegate
+ * {@code Component#getConverter(Class)}. It uses an instance of {@link MaskFormatter} to delegate
  * the masking and unmasking to.
  * <p>
  * The following characters can be specified (adopted from the MaskFormatter documentation):
