@@ -77,7 +77,7 @@ public final class FullyBufferedReader
 	/**
 	 * Get the characters from the position marker to toPos.
 	 * <p>
-	 * If toPos < 0, than get all data from the position marker until the end. If toPos less than
+	 * If toPos &lt; 0, than get all data from the position marker until the end. If toPos less than
 	 * the current position marker than return an empty string ""
 	 * 
 	 * @param toPos

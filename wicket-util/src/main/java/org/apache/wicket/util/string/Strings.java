@@ -318,7 +318,7 @@ public final class Strings
 	 * @param escapeSpaces
 	 *            True to replace ' ' with nonbreaking space
 	 * @param convertToHtmlUnicodeEscapes
-	 *            True to convert non-7 bit characters to unicode HTML (&#...)
+	 *            True to convert non-7 bit characters to unicode HTML (&amp;#...)
 	 * @return The escaped string
 	 */
 	public static CharSequence escapeMarkup(final CharSequence s, final boolean escapeSpaces,
@@ -827,7 +827,7 @@ public final class Strings
 	}
 
 	/**
-	 * Replace HTML numbers like &#20540 by the appropriate character.
+	 * Replace HTML numbers like &amp;#20540; by the appropriate character.
 	 * 
 	 * @param str
 	 *            The text to be evaluated
