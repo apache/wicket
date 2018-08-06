@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.examples.datetime;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 import org.apache.wicket.Session;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.examples.forminput.FormInputApplication;
+import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTextField;
 import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTimeField;
 import org.apache.wicket.extensions.markup.html.form.datetime.LocalDateTimeTextField;
 import org.apache.wicket.extensions.markup.html.form.datetime.TimeField;
@@ -66,6 +68,9 @@ public class DateTimePage extends WicketExamplePage
 
 	@SuppressWarnings("unused")
 	private LocalTime time2 = LocalTime.of(22, 15);
+
+	@SuppressWarnings("unused")
+	private LocalDate date = LocalDate.now();
 
 	@SuppressWarnings("unused")
 	private LocalDateTime dateTime0 = LocalDateTime.now();
@@ -126,6 +131,9 @@ public class DateTimePage extends WicketExamplePage
 			}
 		});
 
+		final LocalDateTextField dateField = new LocalDateTextField("date", new PropertyModel<>(this, "date"), "dd-MM-yyyy", "d-M-yyyy");
+		form.add(dateField);
+
 		final LocalDateTimeField datetimeField0 = new LocalDateTimeField("datetime0",
 			new PropertyModel<>(this, "dateTime0"))
 		{
@@ -161,7 +169,7 @@ public class DateTimePage extends WicketExamplePage
 		form.add(new Label("datetime1-label", zonedDateTime1));
 
 		IModel<ZonedDateTime> zonedDateTime2 = new PropertyModel<>(this, "dateTime2");
-		LocalDateTimeTextField datetime2 = new LocalDateTimeTextField("datetime2",
+		LocalDateTimeTextField datetimeField2 = new LocalDateTimeTextField("datetime2",
 			new ZonedToLocalDateTimeModel(zonedDateTime2)
 			{
 				private static final long serialVersionUID = 1L;
@@ -178,7 +186,7 @@ public class DateTimePage extends WicketExamplePage
 					return targetZone;
 				}
 			}, FormatStyle.SHORT, FormatStyle.SHORT);
-		form.add(datetime2);
+		form.add(datetimeField2);
 		form.add(new Label("datetime2-label", zonedDateTime2));
 
 		final ZonedDateTimeField datetimeField3 = new ZonedDateTimeField("datetime3",
