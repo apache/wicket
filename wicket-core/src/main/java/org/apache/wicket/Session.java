@@ -106,7 +106,7 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements IClusterable, IEventSink
+public abstract class Session implements IClusterable, IEventSink, IMetadataContext<Serializable, Session>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -422,6 +422,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
+	@Override
 	public synchronized final <M extends Serializable> M getMetaData(final MetaDataKey<M> key)
 	{
 		return key.get(metaData);
@@ -606,6 +607,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
+	@Override
 	public final synchronized <M extends Serializable> Session setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		metaData = key.set(metaData, object);
