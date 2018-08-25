@@ -21,7 +21,6 @@ import javax.enterprise.inject.spi.BeanManager;
 import org.apache.wicket.Application;
 import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
 import org.apache.wicket.util.lang.Args;
-import org.jboss.seam.conversation.spi.SeamConversationContextFactory;
 
 /**
  * Configures CDI integration
@@ -189,7 +188,6 @@ public class CdiConfiguration
 				autoConversationManagement));
 			application.getComponentPreOnBeforeRenderListeners().add(
 				new ConversationExpiryChecker(container));
-			SeamConversationContextFactory.setDisableNoopInstance(true);
 		}
 
 		// enable detach event
