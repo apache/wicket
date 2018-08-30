@@ -87,6 +87,7 @@ public abstract class AjaxFallbackOrderByBorder<S> extends OrderByBorder<S>
 	/**
 	 * This method is a hook for subclasses to perform an action after sort has changed
 	 */
+	@Override
 	protected void onSortChanged()
 	{
 		// noop

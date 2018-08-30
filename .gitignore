@@ -6,6 +6,8 @@ velocity.log
 **velocity.log*
 *.idea/
 *.iml
+*.ipr
+*.iws
 *~
 release.properties
 **/node/

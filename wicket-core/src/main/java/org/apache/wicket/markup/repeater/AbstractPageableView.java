@@ -172,6 +172,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * 
 	 * @param items
 	 */
+	@Override
 	public final void setItemsPerPage(long items)
 	{
 		if (items < 1)

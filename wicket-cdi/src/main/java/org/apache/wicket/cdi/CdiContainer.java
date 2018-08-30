@@ -24,8 +24,8 @@ import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Page;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
-import org.jboss.seam.conversation.spi.SeamConversationContext;
-import org.jboss.seam.conversation.spi.SeamConversationContextFactory;
+import org.jboss.weld.Container;
+import org.jboss.weld.context.http.HttpConversationContext; 
 
 /**
  * Provides access to CDI features from inside a Wicket request
@@ -41,7 +41,7 @@ public class CdiContainer
 	};
 
 	protected final BeanManager beanManager;
-	private final SeamConversationContext<HttpServletRequest> conversationContext;
+	private final HttpConversationContext conversationContext;
 	private final INonContextualManager nonContextualManager;
 
 	/**
@@ -58,7 +58,7 @@ public class CdiContainer
 		this.beanManager = beanManager;
 		this.nonContextualManager = nonContextualManager;
 
-		conversationContext = SeamConversationContextFactory.getContext(HttpServletRequest.class);
+		conversationContext =  Container.instance().deploymentManager().instance().select(HttpConversationContext.class).get(); 
 		if (conversationContext == null)
 		{
 			throw new IllegalStateException(

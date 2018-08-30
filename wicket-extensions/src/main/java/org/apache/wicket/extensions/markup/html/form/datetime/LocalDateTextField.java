@@ -20,7 +20,9 @@ import java.time.LocalDate;
 import java.time.chrono.IsoChronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.time.format.FormatStyle;
+import java.time.temporal.TemporalAccessor;
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.form.AbstractTextComponent.ITextFormatProvider;
@@ -28,6 +30,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.LocalDateConverter;
+import org.apache.wicket.util.string.Strings;
 
 /**
  * A TextField that is mapped to a <code>java.time.LocalDate</code> object and that uses java.time time to
@@ -51,12 +54,42 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 	 * 
 	 * @param id
 	 *            the component id
+	 * @param pattern
+	 *            the pattern to use
+	 */
+	public LocalDateTextField(String id, String pattern)
+	{
+		this(id, null, pattern);
+	}
+	
+	/**
+	 * Construct with a pattern.
+	 * 
+	 * @param id
+	 *            the component id
 	 * @param model
 	 *            the model
 	 * @param pattern
 	 *            the pattern to use
 	 */
-	public LocalDateTextField(String id, IModel<LocalDate> model, String datePattern)
+	public LocalDateTextField(String id, IModel<LocalDate> model, String pattern)
+	{
+		this(id, model, pattern, pattern);
+	}
+
+	/**
+	 * Construct with pattern for formatting and parsing.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param model
+	 *            the model
+	 * @param formatPattern
+	 *            the pattern to use for formatting
+	 * @param parsePattern
+	 *            the pattern to use for parsing
+	 */
+	public LocalDateTextField(String id, IModel<LocalDate> model, String formatPattern, String parsePattern)
 	{
 		super(id, model, LocalDate.class);
 
@@ -64,30 +97,52 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public DateTimeFormatter getDateTimeFormatter(Locale locale)
+			protected DateTimeFormatter getDateTimeFormatter()
 			{
-				return DateTimeFormatter.ofPattern(datePattern).withLocale(locale);
+				return DateTimeFormatter.ofPattern(formatPattern);
+			}
+
+			/**
+			 * Overwritten to support a custom parse pattern.
+			 */
+			@Override
+			public LocalDate convertToObject(final String value, Locale locale)
+			{
+				if (Strings.isEmpty(value))
+				{
+					return null;
+				}
+
+				DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(parsePattern).withLocale(locale);
+				TemporalAccessor temporalAccessor;
+				try {
+					temporalAccessor = dateTimeFormatter.parse(value);
+				} catch (DateTimeParseException ex) {
+					throw newConversionException("Cannot parse '" + value, value, locale);
+				}
+				
+				return createTemporal(temporalAccessor);
 			}
 
 			@Override
 			public String getTextFormat(Locale locale)
 			{
-				return datePattern;
+				return formatPattern;
 			}
 		};
 	}
 
 	/**
-	 * Construct with a pattern.
+	 * Construct with a style.
 	 * 
 	 * @param id
 	 *            the component id
-	 * @param pattern
-	 *            the pattern to use
+	 * @param dateStyle
+	 *            the style to use
 	 */
-	public LocalDateTextField(String id, String datePattern)
+	public LocalDateTextField(String id, FormatStyle dateStyle)
 	{
-		this(id, null, datePattern);
+		this(id, null, dateStyle);
 	}
 
 	/**
@@ -108,9 +163,9 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public DateTimeFormatter getDateTimeFormatter(Locale locale)
+			protected DateTimeFormatter getDateTimeFormatter()
 			{
-				return DateTimeFormatter.ofLocalizedDate(dateStyle).withLocale(locale);
+				return DateTimeFormatter.ofLocalizedDate(dateStyle);
 			}
 
 			@Override
@@ -119,20 +174,6 @@ public class LocalDateTextField extends TextField<LocalDate> implements ITextFor
 				return DateTimeFormatterBuilder.getLocalizedDateTimePattern(dateStyle, null, IsoChronology.INSTANCE, locale);
 			}
 		};
-	}
-
-
-	/**
-	 * Construct with a style.
-	 * 
-	 * @param id
-	 *            the component id
-	 * @param dateStyle
-	 *            the style to use
-	 */
-	public LocalDateTextField(String id, FormatStyle dateStyle)
-	{
-		this(id, null, dateStyle);
 	}
 
 	/**

@@ -85,6 +85,7 @@ public class RedirectRequestHandler implements IRequestHandler
 		return status;
 	}
 	
+	@Override
 	public void respond(final IRequestCycle requestCycle)
 	{
 		final String location;
