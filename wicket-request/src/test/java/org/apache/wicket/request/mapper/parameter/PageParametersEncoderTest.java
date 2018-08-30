@@ -16,32 +16,29 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.request.Url;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for PageParametersEncoder
  */
-public class PageParametersEncoderTest extends Assert
+class PageParametersEncoderTest
 {
 	/**
 	 * Tests that PageParametersEncoder decodes parameters
-	 * 
-	 * @throws Exception
+	 *
 	 */
 	@Test
-	public void decodeParameters() throws Exception
-	{
+	void decodeParameters() {
 		PageParametersEncoder encoder = new PageParametersEncoder();
 
 		Url url = Url.parse("idx1/idx2?named1=value1&=&named2=value2");
 
 		PageParameters pageParameters = encoder.decodePageParameters(url);
-		assertThat(pageParameters.getIndexedCount(), is(2));
-		assertThat(pageParameters.getNamedKeys().size(), is(2));
+		assertEquals(2, pageParameters.getIndexedCount());
+		assertEquals(2, pageParameters.getNamedKeys().size());
 		assertEquals("idx1", pageParameters.get(0).toOptionalString());
 		assertEquals("idx2", pageParameters.get(1).toOptionalString());
 		assertEquals("value1", pageParameters.get("named1").toOptionalString());

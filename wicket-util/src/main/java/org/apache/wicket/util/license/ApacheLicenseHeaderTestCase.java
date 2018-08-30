@@ -16,14 +16,6 @@
  */
 package org.apache.wicket.util.license;
 
-import org.apache.wicket.util.lang.Generics;
-import org.apache.wicket.util.string.Strings;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.opentest4j.AssertionFailedError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -31,6 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+
+import org.apache.wicket.util.lang.Generics;
+import org.apache.wicket.util.string.Strings;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Testcase used in the different wicket projects for testing for the correct ASL license headers.
@@ -96,7 +97,7 @@ public abstract class ApacheLicenseHeaderTestCase
 	 *
 	 */
 	@BeforeEach
-	public final void before()
+	final void before()
 	{
 		// setup the base directory for when running inside maven (building a release
 		// comes to mind).
@@ -111,7 +112,7 @@ public abstract class ApacheLicenseHeaderTestCase
 	 * Test all the files in the project which has an associated {@link ILicenseHeaderHandler}.
 	 */
 	@Test
-	public void licenseHeaders()
+	void licenseHeaders()
 	{
 		licenseHeaderHandlers = new ILicenseHeaderHandler[] {
 				new JavaLicenseHeaderHandler(javaIgnore),
@@ -180,15 +181,7 @@ public abstract class ApacheLicenseHeaderTestCase
 					// Find the license type
 					String licenseType = licenseHeaderHandler.getLicenseType(file);
 
-					if (licenseType == null)
-					{
-						failString.append("NONE");
-					}
-					else
-					{
-						failString.append(licenseType);
-					}
-
+					failString.append(Objects.requireNonNullElse(licenseType, "NONE"));
 					failString.append(' ').append(filename).append(LINE_ENDING);
 				}
 			}

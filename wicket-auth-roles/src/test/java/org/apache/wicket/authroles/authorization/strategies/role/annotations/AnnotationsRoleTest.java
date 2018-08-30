@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.annotations;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
@@ -26,38 +28,33 @@ import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingSt
 import org.apache.wicket.authroles.authorization.strategies.role.RoleAuthorizationStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the annotations package of the auth-roles project.
  * 
  * @author Eelco Hillenius
  */
-public class AnnotationsRoleTest extends Assert
+class AnnotationsRoleTest
 {
 	WicketTester tester;
 
-	@Before
-	public void setUp() throws Exception
-	{
+	@BeforeEach
+    void setUp() {
 		tester = new WicketTester();
 	}
 
-	@After
-	public void tearDown() throws Exception
-	{
+	@AfterEach
+    void tearDown() {
 		tester.destroy();
 	}
 
 	/**
-	 * @throws Exception
-	 */
+     */
 	@Test
-	public void testClear() throws Exception
-	{
+    void testClear() {
 		tester.getApplication()
 			.getSecuritySettings()
 			.setAuthorizationStrategy(new RoleAuthorizationStrategy(new UserRolesAuthorizer("FOO")));
@@ -66,11 +63,9 @@ public class AnnotationsRoleTest extends Assert
 	}
 
 	/**
-	 * @throws Exception
-	 */
+     */
 	@Test
-	public void testAuthorized() throws Exception
-	{
+    void testAuthorized() {
 		WicketTester tester = new WicketTester();
 		tester.getApplication()
 			.getSecuritySettings()
@@ -81,11 +76,9 @@ public class AnnotationsRoleTest extends Assert
 	}
 
 	/**
-	 * @throws Exception
-	 */
+     */
 	@Test
-	public void testNotAuthorized() throws Exception
-	{
+    void testNotAuthorized() {
 		WicketTester tester = new WicketTester();
 		tester.getApplication()
 			.getSecuritySettings()
@@ -109,8 +102,7 @@ public class AnnotationsRoleTest extends Assert
 		try
 		{
 			tester.startPage(AdminPage.class);
-			assertTrue("an authorization exception event should have been received",
-				listener.eventReceived);
+			assertTrue(listener.eventReceived, "an authorization exception event should have been received");
 		}
 		catch (Exception e)
 		{
@@ -133,7 +125,7 @@ public class AnnotationsRoleTest extends Assert
 		/**
 		 * Construct.
 		 */
-		public UserRolesAuthorizer(String roles)
+        UserRolesAuthorizer(String roles)
 		{
 			this.roles = new Roles(roles);
 		}

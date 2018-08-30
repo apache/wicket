@@ -16,33 +16,35 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.metadata;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
- * Test case for
- * {@link InstantiationPermissions}.
+ * Test case for {@link InstantiationPermissions}.
  * 
  * @author Eelco Hillenius
  */
-public class InstantiationPermissionsTest extends Assert
+class InstantiationPermissionsTest
 {
 	private WicketTester tester;
 
-	@Before
-	public void setUp() throws Exception
+	@BeforeEach
+	void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
-	@After
-	public void tearDown() throws Exception
+	@AfterEach
+	void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
@@ -53,7 +55,7 @@ public class InstantiationPermissionsTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testAdd1() throws Exception
+	void testAdd1() throws Exception
 	{
 		InstantiationPermissions permissions = new InstantiationPermissions();
 		permissions.authorize(Page.class, new Roles("jonathan"));
@@ -64,7 +66,7 @@ public class InstantiationPermissionsTest extends Assert
 		permissions.unauthorize(Page.class, new Roles("maurice"));
 		assertEquals(3, permissions.getRolesForComponentClass().get(Page.class).size());
 		permissions.authorizeAll(Page.class);
-		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
+		assertNull(permissions.getRolesForComponentClass().get(Page.class));
 	}
 
 	/**
@@ -73,10 +75,10 @@ public class InstantiationPermissionsTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testRemove1() throws Exception
+	void testRemove1() throws Exception
 	{
 		InstantiationPermissions permissions = new InstantiationPermissions();
-		assertEquals(null, permissions.getRolesForComponentClass().get(Page.class));
+		assertNull(permissions.getRolesForComponentClass().get(Page.class));
 		permissions.unauthorize(Page.class, new Roles("eelco"));
 		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE),
 			permissions.getRolesForComponentClass().get(Page.class));
@@ -87,7 +89,7 @@ public class InstantiationPermissionsTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testRemove2()
+	void testRemove2()
 	{
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()
@@ -110,7 +112,7 @@ public class InstantiationPermissionsTest extends Assert
 	 * with {@link #testRemove2()}.
 	 */
 	@Test
-	public void testRemove3()
+	void testRemove3()
 	{
 		MetaDataRoleAuthorizationStrategy strategy = new MetaDataRoleAuthorizationStrategy(
 			new IRoleCheckingStrategy()

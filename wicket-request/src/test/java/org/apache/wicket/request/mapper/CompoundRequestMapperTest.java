@@ -16,22 +16,24 @@
  */
 package org.apache.wicket.request.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.request.mapper.CompoundRequestMapper.MapperWithScore;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link CompoundRequestMapper}
  */
-public class CompoundRequestMapperTest extends Assert
+class CompoundRequestMapperTest
 {
 	/**
 	 * Test {@link MapperWithScore#compareTo(MapperWithScore)}.
 	 */
 	@Test
-	public void score()
+	void score()
 	{
-		assertTrue(score(0).compareTo(score(0)) == 0);
+		assertEquals(0, score(0).compareTo(score(0)));
 		assertTrue(score(0).compareTo(score(10)) > 0);
 		assertTrue(score(10).compareTo(score(0)) < 0);
 		assertTrue(score(0).compareTo(score(10)) > 0);
