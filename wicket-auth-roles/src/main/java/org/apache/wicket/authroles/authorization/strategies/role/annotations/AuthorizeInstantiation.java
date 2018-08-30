@@ -25,20 +25,30 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for configuring what roles are allowed for instantiation the annotated component or
- * package. This annotation can be used for classes and packages, and can be used like this:
- * 
+ * package. This annotation can be used for classes and packages. For classes it can be used like this:
+ *
  * <pre>
  *  // only users with role ADMIN are allowed to create instances of this page, whether it is
  *  // either bookmarkable or not
  *  &#064;AuthorizeInstantiation(&quot;ADMIN&quot;)
  *  public class AdminAnnotationsBookmarkablePage extends WebPage
  * </pre>
- * 
+ *
+ * For packages the annotation needs to be specified in the <code>package-info.java</code> file:
+ *
+ * <pre>
+ *  // only users with role ADMIN are allowed to create instances of pages in this package
+ *  &#064;AuthorizeInstantiation(&quot;ADMIN&quot;)
+ *  package package_name;
+ *
+ *  import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+ * </pre>
+ *
  * @see org.apache.wicket.authorization.IAuthorizationStrategy
  * @see AnnotationsRoleAuthorizationStrategy
  * @see AuthorizeActions
  * @see AuthorizeAction
- * 
+ *
  * @author Eelco hillenius
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -49,7 +59,7 @@ public @interface AuthorizeInstantiation {
 
 	/**
 	 * Gets the roles that are allowed to take the action.
-	 * 
+	 *
 	 * @return the roles that are allowed. Returns a zero length array by default
 	 */
 	String[] value() default { };

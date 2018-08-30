@@ -67,6 +67,7 @@ public class TimeField extends FormComponentPanel<LocalTime>
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		protected NumberFormat newNumberFormat(Locale locale)
 		{
 			return new DecimalFormat("00");

@@ -293,6 +293,7 @@ public class CSVDataExporter extends AbstractDataExporter
 			first = true;
 		}
 
+		@Override
 		public void close() throws IOException
 		{
 			writer.close();

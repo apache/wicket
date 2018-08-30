@@ -495,10 +495,11 @@ public abstract class AbstractChoice<T, E> extends FormComponent<T>
 		
 		if (localizeDisplayValues())
 		{
-			displayValue = getLocalizer().getString(getId() + "." + displayValue, this, "");
-			if (Strings.isEmpty(displayValue)) {
-				displayValue = getLocalizer().getString(displayValue, this, displayValue);
+			String localized = getLocalizer().getString(getId() + "." + displayValue, this, "");
+			if (Strings.isEmpty(localized)) {
+				localized = getLocalizer().getString(displayValue, this, displayValue);
 			}
+			displayValue = localized;
 		}
 		
 		if (getEscapeModelStrings())

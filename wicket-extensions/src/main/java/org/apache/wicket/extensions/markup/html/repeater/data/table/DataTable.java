@@ -349,6 +349,7 @@ public class DataTable<T, S> extends Panel implements IPageableItems
 	 *            number of items to display per page
 	 * 
 	 */
+	@Override
 	public void setItemsPerPage(final long items)
 	{
 		datagrid.setItemsPerPage(items);

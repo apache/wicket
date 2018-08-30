@@ -17,15 +17,12 @@
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
 import java.time.LocalDate;
-import java.time.format.FormatStyle;
-import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.util.convert.converter.LocalDateConverter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
@@ -52,12 +49,25 @@ public class LocalDateTextFieldTest extends WicketTestCase
 	@Test
 	public void dateNotNullTest()
 	{
-		LocalDate date = LocalDate.of(2017, 02, 13);
+		LocalDate date = LocalDate.of(2017, 02, 03);
 		TestPage page = new TestPage(null);
 		tester.startPage(page);
 		FormTester formTester = tester.newFormTester("form", false);
-		formTester.setValue("field",
-			new LocalDateConverter().convertToString(date, Locale.forLanguageTag("en-US")));
+		formTester.setValue("field", "03-02-2017");
+		formTester.submit();
+		tester.assertNoErrorMessage();
+		LocalDate d = page.field.getModelObject();
+		assertEquals(date, d);
+	}
+
+	@Test
+	public void dateParsePatternTest()
+	{
+		LocalDate date = LocalDate.of(2017, 02, 03);
+		TestPage page = new TestPage(null);
+		tester.startPage(page);
+		FormTester formTester = tester.newFormTester("form", false);
+		formTester.setValue("field", "3-2-2017");
 		formTester.submit();
 		tester.assertNoErrorMessage();
 		LocalDate d = page.field.getModelObject();
@@ -75,9 +85,9 @@ public class LocalDateTextFieldTest extends WicketTestCase
 			Form<Void> form = new Form<>("form");
 			add(form);
 
-			form.add(field = new LocalDateTextField("field", Model.of(val), FormatStyle.SHORT));
+			form.add(field = new LocalDateTextField("field", Model.of(val), "dd-MM-yyyy", "d-M-yyyy"));
 		}
-
+		
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)

@@ -86,6 +86,7 @@ public class SimpleWebSocketConnectionRegistry implements IWebSocketConnectionRe
 	 *          The application
 	 * @return a collection of currently active websockets
 	 */
+	@Override
 	public Collection<IWebSocketConnection> getConnections(Application application)
 	{
 		Args.notNull(application, "application");
