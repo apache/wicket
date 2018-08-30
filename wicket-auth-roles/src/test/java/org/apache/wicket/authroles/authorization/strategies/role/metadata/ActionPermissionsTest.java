@@ -16,33 +16,36 @@
  */
 package org.apache.wicket.authroles.authorization.strategies.role.metadata;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.authorization.Action;
 import org.apache.wicket.authroles.authorization.strategies.role.IRoleCheckingStrategy;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link ActionPermissions}.
  * 
  * @author Eelco Hillenius
  */
-public class ActionPermissionsTest extends Assert
+class ActionPermissionsTest
 {
 	private WicketTester tester;
 
-	@Before
-	public void setUp() throws Exception
+	@BeforeEach
+	void setUp() throws Exception
 	{
 		tester = new WicketTester();
 	}
 
-	@After
-	public void tearDown() throws Exception
+	@AfterEach
+	void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
@@ -53,7 +56,7 @@ public class ActionPermissionsTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testAdd1() throws Exception
+	void testAdd1() throws Exception
 	{
 		ActionPermissions permissions = new ActionPermissions();
 		Action mambo = new Action("mambo");
@@ -65,7 +68,7 @@ public class ActionPermissionsTest extends Assert
 		permissions.unauthorize(mambo, new Roles("maurice"));
 		assertEquals(3, permissions.rolesFor(mambo).size());
 		permissions.authorizeAll(mambo);
-		assertEquals(null, permissions.rolesFor(mambo));
+		assertNull(permissions.rolesFor(mambo));
 	}
 
 	/**
@@ -74,11 +77,11 @@ public class ActionPermissionsTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testRemove1() throws Exception
+	void testRemove1() throws Exception
 	{
 		ActionPermissions permissions = new ActionPermissions();
 		Action mambo = new Action("mambo");
-		assertEquals(null, permissions.rolesFor(mambo));
+		assertNull(permissions.rolesFor(mambo));
 		permissions.unauthorize(mambo, new Roles("maurice"));
 		assertEquals(new Roles(MetaDataRoleAuthorizationStrategy.NO_ROLE),
 			permissions.rolesFor(mambo));
@@ -88,7 +91,7 @@ public class ActionPermissionsTest extends Assert
 	 * Test for issue <a href="http://issues.apache.org/jira/browse/WICKET-1152">WICKET-1152</a>.
 	 */
 	@Test
-	public void testRemove2()
+	void testRemove2()
 	{
 		Label label = new Label("label", "text");
 		Action mambo = new Action("mambo");
@@ -112,7 +115,7 @@ public class ActionPermissionsTest extends Assert
 	 * it with {@link #testRemove2()}.
 	 */
 	@Test
-	public void testRemove3()
+	void testRemove3()
 	{
 		Label label = new Label("label", "text");
 		Action mambo = new Action("mambo");

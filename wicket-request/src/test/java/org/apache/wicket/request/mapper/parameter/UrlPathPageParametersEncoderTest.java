@@ -16,21 +16,23 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.wicket.request.Url;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link UrlPathPageParametersEncoder}
  */
-public class UrlPathPageParametersEncoderTest extends Assert
+class UrlPathPageParametersEncoderTest
 {
 
 	/**
 	 * Encode named parameters in the segments (so they look like indexed parameters)
 	 */
 	@Test
-	public void encodeNamedParameters()
+	void encodeNamedParameters()
 	{
 		PageParameters params = new PageParameters();
 		params.add("name1", "value1", INamedParameters.Type.MANUAL);
@@ -47,7 +49,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	 * and/or value have non-ASCII characters
 	 */
 	@Test
-	public void encodeNamedParametersWithSpecialChars()
+	void encodeNamedParametersWithSpecialChars()
 	{
 		// the non-ASCII characters are randomly chosen
 		PageParameters params = new PageParameters();
@@ -63,22 +65,24 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	/**
 	 * This encoder doesn't support indexed parameters
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void encodeIndexedParameters()
+	@Test
+	void encodeIndexedParameters()
 	{
-		PageParameters params = new PageParameters();
-		params.set(0, "value1");
-		params.set(1, "value2");
+		assertThrows(IllegalArgumentException.class, () -> {
+			PageParameters params = new PageParameters();
+			params.set(0, "value1");
+			params.set(1, "value2");
 
-		UrlPathPageParametersEncoder encoder = new UrlPathPageParametersEncoder();
-		encoder.encodePageParameters(params);
+			UrlPathPageParametersEncoder encoder = new UrlPathPageParametersEncoder();
+			encoder.encodePageParameters(params);
+		});
 	}
 
 	/**
 	 * Decode properly encoded parameters
 	 */
 	@Test
-	public void decodeUrl()
+	void decodeUrl()
 	{
 		Url url = Url.parse("name1/value1/name2/value2");
 
@@ -95,7 +99,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	 * ignored
 	 */
 	@Test
-	public void decodeUrlWithTrailingSlash()
+	void decodeUrlWithTrailingSlash()
 	{
 		Url url = Url.parse("name1/value1/name2/value2/");
 
@@ -112,7 +116,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	 * ignored
 	 */
 	@Test
-	public void decodeUrlWithTrailingSlashAfterName()
+	void decodeUrlWithTrailingSlashAfterName()
 	{
 		Url url = Url.parse("name1/value1/name2/value2/name3");
 
@@ -128,7 +132,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	 * Decode encoded parameters with a leading slash. The empty name segment should be ignored.
 	 */
 	@Test
-	public void decodeUrlWithLeadingSlash()
+	void decodeUrlWithLeadingSlash()
 	{
 		Url url = Url.parse("/name1/value1/name2/value2");
 
@@ -145,7 +149,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	 * ignored.
 	 */
 	@Test
-	public void decodeUrlWithSlashesInTheMiddle()
+	void decodeUrlWithSlashesInTheMiddle()
 	{
 		Url url = Url.parse("name1/value1////name2/value2");
 
@@ -162,7 +166,7 @@ public class UrlPathPageParametersEncoderTest extends Assert
 	 * ignored.
 	 */
 	@Test
-	public void decodeUrlWithSlashesInTheMiddleAndEmptyValue()
+	void decodeUrlWithSlashesInTheMiddleAndEmptyValue()
 	{
 		Url url = Url.parse("name1/value1////name2//");
 
