@@ -16,19 +16,19 @@
  */
 package org.apache.wicket.request;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.wicket.util.time.Time;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
 public class HttpHeaderCollectionTest
@@ -122,7 +122,8 @@ public class HttpHeaderCollectionTest
 		}
 
 		assertArrayEquals(new String[] { "Thu, 01 Jan 1970 00:16:40 GMT",
-				"Thu, 01 Jan 1970 00:33:20 GMT", "not-a-date" }, headers.getHeaderValues("date"));
+				"Thu, 01 Jan 1970 00:33:20 GMT", "not-a-date" },
+			headers.getHeaderValues("date"));
 
 		headers.setHeader("date", "foobar");
 		try

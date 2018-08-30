@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.request;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,10 +35,10 @@ import java.util.List;
 
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.Url.StringMode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
-public class UrlTest
+class UrlTest
 {
 	private void checkSegments(Url url, String... segments)
 	{
@@ -55,7 +58,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse1()
+	void parse1()
 	{
 		String s = "foo/bar/baz?a=4&b=5#foo2";
 		Url url = Url.parse(s);
@@ -65,7 +68,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse2()
+	void parse2()
 	{
 		String s = "foo/bar//baz?=4&6";
 		Url url = Url.parse(s);
@@ -74,7 +77,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse3()
+	void parse3()
 	{
 		String s = "//foo/bar/";
 		Url url = Url.parse(s);
@@ -86,7 +89,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse4()
+	void parse4()
 	{
 		String s = "/foo/bar//";
 		Url url = Url.parse(s);
@@ -96,7 +99,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse5()
+	void parse5()
 	{
 		String s = "foo/b%3Dr/b%26z/x%3F?a=b&x%3F%264=y%3Dz";
 		Url url = Url.parse(s);
@@ -105,11 +108,10 @@ public class UrlTest
 	}
 
 	/**
-	 * Same as #parse5() but with full url and not encoded '=' char in the query string
-	 * WICKET-5157
+	 * Same as #parse5() but with full url and not encoded '=' char in the query string WICKET-5157
 	 */
 	@Test
-	public void parse5_1()
+	void parse5_1()
 	{
 		String s = "http://host:12345/foo/b%3Dr/b%26z/x%3F?a=b&x%3F%264=y=z";
 		Url url = Url.parse(s);
@@ -118,7 +120,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse6()
+	void parse6()
 	{
 		String s = "";
 		Url url = Url.parse(s);
@@ -127,7 +129,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse7()
+	void parse7()
 	{
 		String s = "?a=b";
 		Url url = Url.parse(s);
@@ -136,7 +138,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse8()
+	void parse8()
 	{
 		String s = "/";
 		Url url = Url.parse(s);
@@ -146,7 +148,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse9()
+	void parse9()
 	{
 		String s = "/?a=b";
 		Url url = Url.parse(s);
@@ -156,7 +158,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse10()
+	void parse10()
 	{
 		String s = "/?a";
 		Url url = Url.parse(s);
@@ -166,7 +168,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse11()
+	void parse11()
 	{
 		String s = "/?a=";
 		Url url = Url.parse(s);
@@ -176,7 +178,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parse12()
+	void parse12()
 	{
 		String s = "/?=b";
 		Url url = Url.parse(s);
@@ -189,7 +191,7 @@ public class UrlTest
 	 * https://issues.apache.org/jira/browse/WICKET-4398
 	 */
 	@Test
-	public void parse13()
+	void parse13()
 	{
 		String s = "/?a=b&";
 		Url url = Url.parse(s);
@@ -202,7 +204,7 @@ public class UrlTest
 	 * https://issues.apache.org/jira/browse/WICKET-4398
 	 */
 	@Test
-	public void parse14()
+	void parse14()
 	{
 		String s = "/?a=b&+";
 		Url url = Url.parse(s);
@@ -215,7 +217,7 @@ public class UrlTest
 	 * https://issues.apache.org/jira/browse/WICKET-4877
 	 */
 	@Test
-	public void testParse15()
+	void testParse15()
 	{
 		String s = "http://localhost:56704;jsessionid=8kxeo3reannw1qjtxgkju8yiu";
 		Url url = Url.parse(s);
@@ -228,7 +230,7 @@ public class UrlTest
 	 * https://issues.apache.org/jira/browse/WICKET-5065
 	 */
 	@Test
-	public void parse16()
+	void parse16()
 	{
 		String s = "//localhost:56704;jsessionid=8kxeo3reannw1qjtxgkju8yiu";
 		Url url = Url.parse(s);
@@ -242,7 +244,7 @@ public class UrlTest
 	 * WICKET-5259
 	 */
 	@Test
-	public void parse17()
+	void parse17()
 	{
 		String s = "http://me:secret@localhost";
 		Url url = Url.parse(s);
@@ -254,7 +256,7 @@ public class UrlTest
 	 * WICKET-5259
 	 */
 	@Test
-	public void parse18()
+	void parse18()
 	{
 		String s = "http://me:secret@localhost:8080";
 		Url url = Url.parse(s);
@@ -267,7 +269,7 @@ public class UrlTest
 	 * https://issues.apache.org/jira/browse/WICKET-5717
 	 */
 	@Test
-	public void parse19()
+	void parse19()
 	{
 		String s = "http://me:secret@localhost:8080/segment/#fragment";
 		Url url = Url.parse(s);
@@ -278,26 +280,26 @@ public class UrlTest
 	 * https://issues.apache.org/jira/browse/WICKET-5717
 	 */
 	@Test
-	public void parse20()
+	void parse20()
 	{
 		String s = "http://me:secret@localhost:8080/segment/#";
 		Url url = Url.parse(s);
-		assertThat(url.getFragment(), is(nullValue()));
+		assertNull(url.getFragment());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5717
 	 */
 	@Test
-	public void parse21()
+	void parse21()
 	{
 		String s = "http://me:secret@localhost:8080/segment#";
 		Url url = Url.parse(s);
-		assertThat(url.getFragment(), is(nullValue()));
+		assertNull(url.getFragment());
 	}
 
 	@Test
-	public void render1()
+	void render1()
 	{
 		Url url = new Url();
 		url.getSegments().add("foo");
@@ -311,7 +313,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void render2()
+	void render2()
 	{
 		String s = "/absolute/url";
 		Url url = Url.parse(s);
@@ -319,7 +321,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void render3()
+	void render3()
 	{
 		String s = "//absolute/url";
 		Url url = Url.parse(s);
@@ -327,7 +329,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void render4()
+	void render4()
 	{
 		String s = "/";
 		Url url = Url.parse(s);
@@ -335,7 +337,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void render5()
+	void render5()
 	{
 		Url url = Url.parse("https://www.domain.com/foo/bar?baz=ban");
 
@@ -350,7 +352,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void render6()
+	void render6()
 	{
 		Url url = Url.parse("https://www.domain.com/foo/bar?baz=ban#bat");
 
@@ -362,7 +364,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void absolute1()
+	void absolute1()
 	{
 		Url url = Url.parse("abc/efg");
 		assertFalse(url.isFull());
@@ -370,7 +372,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void absolute2()
+	void absolute2()
 	{
 		Url url = Url.parse("");
 		assertFalse(url.isFull());
@@ -378,7 +380,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void absolute3()
+	void absolute3()
 	{
 		Url url = Url.parse("/");
 		assertFalse(url.isFull());
@@ -386,7 +388,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void absolute4()
+	void absolute4()
 	{
 		Url url = Url.parse("/abc/efg");
 		assertFalse(url.isFull());
@@ -394,7 +396,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void absolute5()
+	void absolute5()
 	{
 		Url url = Url.parse("http://www.domain.com");
 		assertTrue(url.isFull());
@@ -403,7 +405,7 @@ public class UrlTest
 
 
 	@Test
-	public void concat1()
+	void concat1()
 	{
 		Url url = Url.parse("abc/efg");
 		url.concatSegments(Arrays.asList("xx", "yy"));
@@ -411,7 +413,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void concat2()
+	void concat2()
 	{
 		Url url = Url.parse("abc/efg");
 		url.concatSegments(Arrays.asList(".", "..", "xx", "yy"));
@@ -419,7 +421,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void concat3()
+	void concat3()
 	{
 		Url url = Url.parse("abc/efg");
 		url.concatSegments(Arrays.asList("..", "..", "xx", "yy"));
@@ -427,7 +429,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void concat4()
+	void concat4()
 	{
 		Url url = Url.parse("abc/efg");
 		url.concatSegments(Arrays.asList("..", "..", "..", "xx", "yy"));
@@ -435,7 +437,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void concat5()
+	void concat5()
 	{
 		Url url = Url.parse("abc/efg/");
 		url.concatSegments(Arrays.asList("xx", "yy"));
@@ -443,7 +445,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void concat6()
+	void concat6()
 	{
 		Url url = Url.parse("abc/efg/");
 		url.concatSegments(Arrays.asList(".."));
@@ -451,7 +453,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void concat7()
+	void concat7()
 	{
 		Url url = Url.parse("abc/efg/");
 		url.concatSegments(Arrays.asList("..", ".."));
@@ -459,7 +461,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void concat8()
+	void concat8()
 	{
 		Url url = Url.parse("fff/abc/efg/xxx");
 		url.concatSegments(Arrays.asList(".."));
@@ -467,7 +469,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void concat9()
+	void concat9()
 	{
 		Url url = Url.parse("fff/abc/efg/xxx");
 		url.concatSegments(Arrays.asList("..", ".."));
@@ -478,7 +480,7 @@ public class UrlTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
 	 */
 	@Test
-	public void resolveRelative1()
+	void resolveRelative1()
 	{
 		Url relative = Url.parse("./a/b?p1=v1");
 		Url baseUrl = Url.parse("c/d?p2=v2");
@@ -491,7 +493,7 @@ public class UrlTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
 	 */
 	@Test
-	public void resolveRelative2()
+	void resolveRelative2()
 	{
 		Url relative = Url.parse("a/b?p1=v1");
 		Url baseUrl = Url.parse("c/d?p2=v2");
@@ -504,7 +506,7 @@ public class UrlTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3363">WICKET-3363</a>
 	 */
 	@Test
-	public void resolveRelative3()
+	void resolveRelative3()
 	{
 		Url relative = Url.parse("../a/b?p1=v1");
 		Url baseUrl = Url.parse("c/d");
@@ -517,7 +519,7 @@ public class UrlTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
 	 */
 	@Test
-	public void resolveRelative4()
+	void resolveRelative4()
 	{
 		Url relative = Url.parse("../?p1=v1");
 		Url baseUrl = Url.parse("c/d");
@@ -530,7 +532,7 @@ public class UrlTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4789">WICKET-4789</a>
 	 */
 	@Test
-	public void resolveRelative_EmptyTrailingSegmentInBase()
+	void resolveRelative_EmptyTrailingSegmentInBase()
 	{
 		Url relative = Url.parse("./?0-1.ILinkListener-link");
 		Url baseUrl = Url.parse("Home/");
@@ -543,7 +545,7 @@ public class UrlTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4789">WICKET-4789</a>
 	 */
 	@Test
-	public void resolveRelative_EmptyTrailingSegmentInBase2()
+	void resolveRelative_EmptyTrailingSegmentInBase2()
 	{
 		Url relative = Url.parse("./foo/?0-1.ILinkListener-link");
 		Url baseUrl = Url.parse("Home/");
@@ -556,7 +558,7 @@ public class UrlTest
 	 * Tries to resolve a relative url against a base that has no segments
 	 */
 	@Test
-	public void resolveRelative_NoSegmentsInBase()
+	void resolveRelative_NoSegmentsInBase()
 	{
 		Url relative = Url.parse("?a=b");
 		Url baseUrl = Url.parse("?foo=bar");
@@ -569,7 +571,7 @@ public class UrlTest
 	 * Tries to resolve a relative url against a base that has no segments
 	 */
 	@Test
-	public void resolveRelative_NoSegmentsInBase2()
+	void resolveRelative_NoSegmentsInBase2()
 	{
 		Url relative = Url.parse("bar/baz?a=b");
 		Url baseUrl = Url.parse("?foo=bar");
@@ -584,14 +586,14 @@ public class UrlTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
 	 */
 	@Test
-	public void resolveRelative_DotFollowedByEmptySegment1()
+	void resolveRelative_DotFollowedByEmptySegment1()
 	{
 		Url relative = Url.parse("./?a=b");
 		Url baseUrl = Url.parse("bar");
 		baseUrl.resolveRelative(relative);
 
 		assertEquals("?a=b", baseUrl.toString());
-		assertEquals("no empty segment", 0, baseUrl.getSegments().size());
+		assertEquals(0, baseUrl.getSegments().size(), "no empty segment");
 	}
 
 	/**
@@ -600,7 +602,7 @@ public class UrlTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-4518">WICKET-4518</a>
 	 */
 	@Test
-	public void resolveRelative_DotFollowedByEmptySegment2()
+	void resolveRelative_DotFollowedByEmptySegment2()
 	{
 		Url relative = Url.parse("./?a=b");
 		Url baseUrl = Url.parse("bar/baz");
@@ -613,7 +615,7 @@ public class UrlTest
 	 * Tests that the default charset is UTF-8
 	 */
 	@Test
-	public void charset1()
+	void charset1()
 	{
 		Url url = new Url();
 		assertEquals(Charset.forName("UTF-8"), url.getCharset());
@@ -623,7 +625,7 @@ public class UrlTest
 	 * Tests setting the charset explicitly in the constructor
 	 */
 	@Test
-	public void charset2()
+	void charset2()
 	{
 		Charset expected = Charset.forName("ISO-8859-2");
 		Url url = new Url(expected);
@@ -636,7 +638,7 @@ public class UrlTest
 	 * @throws Exception
 	 */
 	@Test
-	public void charset3() throws Exception
+	void charset3() throws Exception
 	{
 		Charset expected = Charset.forName("ISO-8859-1");
 		Url url = new Url(expected);
@@ -654,7 +656,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parseRelativeUrl()
+	void parseRelativeUrl()
 	{
 		Url url = Url.parse("foo");
 		checkUrl(url, null, null, null, "foo");
@@ -680,7 +682,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void parseAbsoluteUrl()
+	void parseAbsoluteUrl()
 	{
 		Url url = Url.parse("ftp://myhost:8081");
 		checkUrl(url, "ftp", "myhost", 8081, "", "");
@@ -753,7 +755,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void compact()
+	void compact()
 	{
 		assertEquals("", Url.parse("").canonical().getPath());
 		assertEquals("/", Url.parse("/").canonical().getPath());
@@ -773,7 +775,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void copyConstructor()
+	void copyConstructor()
 	{
 		String protocol = "myProtocol";
 		String host = "www.example.com";
@@ -802,7 +804,7 @@ public class UrlTest
 	 * it as absolute only if there are no slashes earlier in the string.
 	 */
 	@Test
-	public void parseHttpSlashSlashColon()
+	void parseHttpSlashSlashColon()
 	{
 		// relative
 		String uri = "/abc/http://host:9090/";
@@ -823,7 +825,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void prependLeadingSegments1()
+	void prependLeadingSegments1()
 	{
 		Url url = Url.parse("a");
 
@@ -833,7 +835,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void prependLeadingSegments2()
+	void prependLeadingSegments2()
 	{
 		Url url = Url.parse("a");
 
@@ -843,7 +845,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void prependLeadingSegments3()
+	void prependLeadingSegments3()
 	{
 		Url url = Url.parse("a");
 
@@ -853,7 +855,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void prependLeadingSegments4()
+	void prependLeadingSegments4()
 	{
 		Url url = new Url();
 
@@ -863,7 +865,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void removeLeadingSegments1()
+	void removeLeadingSegments1()
 	{
 		Url url = Url.parse("a/b");
 
@@ -872,7 +874,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void removeLeadingSegments2()
+	void removeLeadingSegments2()
 	{
 		Url url = Url.parse("a/b");
 
@@ -880,50 +882,54 @@ public class UrlTest
 		assertEquals("", url.toString());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void removeLeadingSegments3()
+	@Test
+	void removeLeadingSegments3()
 	{
-		Url url = Url.parse("a/b");
+		assertThrows(IllegalArgumentException.class, () -> {
+			Url url = Url.parse("a/b");
 
-		url.removeLeadingSegments(3);
+			url.removeLeadingSegments(3);
+		});
 	}
 
 	@Test
-	public void wicket_5114_allowtoStringFullWhenContainingTwoDots()
+	void wicket_5114_allowtoStringFullWhenContainingTwoDots()
 	{
 		Url url = Url.parse("/mountPoint/whatever.../");
 		url.setHost("wicketHost");
 		assertEquals("//wicketHost/mountPoint/whatever.../", url.toString(StringMode.FULL));
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void wicket_5114_throwExceptionWhenToStringFullContainsRelativePathSegment()
+	@Test
+	void wicket_5114_throwExceptionWhenToStringFullContainsRelativePathSegment()
 	{
-		Url url = Url.parse("/mountPoint/../whatever/");
-		url.setHost("wicketHost");
-		url.toString(StringMode.FULL);
+		assertThrows(IllegalStateException.class, () -> {
+			Url url = Url.parse("/mountPoint/../whatever/");
+			url.setHost("wicketHost");
+			url.toString(StringMode.FULL);
+		});
 	}
 
 	@Test
-	public void contextRelativeIsntReadAsContextAbsolute() throws Exception
+	void contextRelativeIsntReadAsContextAbsolute() throws Exception
 	{
 		Url url = Url.parse("/segment");
 		url.setContextRelative(true);
-		assertThat(url.isContextRelative(), is(true));
-		assertThat(url.isContextAbsolute(), is(false));
+		assertTrue(url.isContextRelative());
+		assertFalse(url.isContextAbsolute());
 	}
 
 	@Test
-	public void contextRelativeIsntReadAsFull() throws Exception
+	void contextRelativeIsntReadAsFull() throws Exception
 	{
 		Url url = Url.parse("http://www.example.com/segment");
 		url.setContextRelative(true);
-		assertThat(url.isContextRelative(), is(true));
-		assertThat(url.isFull(), is(false));
+		assertTrue(url.isContextRelative());
+		assertFalse(url.isFull());
 	}
 
 	@Test
-	public void isContextAbsolute()
+	void isContextAbsolute()
 	{
 		Url url = Url.parse("");
 		assertFalse(url.isContextAbsolute());
@@ -942,7 +948,7 @@ public class UrlTest
 	}
 
 	@Test
-	public void isFull()
+	void isFull()
 	{
 		Url url = Url.parse("");
 		assertFalse(url.isFull());
@@ -965,7 +971,7 @@ public class UrlTest
 	 * https://issues.apache.org/jira/browse/WICKET-5157
 	 */
 	@Test
-	public void parseQueryStringWithEqualsSignInParameterValue()
+	void parseQueryStringWithEqualsSignInParameterValue()
 	{
 		String s = "/?a=b=c&d=e=f";
 		Url url = Url.parse(s);
@@ -973,28 +979,28 @@ public class UrlTest
 		checkSegments(url, "", "");
 		checkQueryParams(url, "a", "b=c", "d", "e=f");
 	}
-	
+
 	/**
 	 * Parse IP6 addresses (https://www.ietf.org/rfc/rfc2732.txt)
 	 * 
 	 * https://issues.apache.org/jira/browse/WICKET-5809
 	 */
 	@Test
-	public void parseIp6Address()
+	void parseIp6Address()
 	{
 		String s = "https://[::1]/myapp";
 		Url url = Url.parse(s);
-		
+
 		assertTrue(url.isFull());
 		checkUrl(url, "https", "[::1]", 443, "", "myapp");
-		
-		//now with port in URL
+
+		// now with port in URL
 		s = "http://[::1]:1234/myapp";
-		
+
 		url = Url.parse(s);
-		
+
 		assertTrue(url.isFull());
 		checkUrl(url, "http", "[::1]", 1234, "", "myapp");
-		
+
 	}
 }

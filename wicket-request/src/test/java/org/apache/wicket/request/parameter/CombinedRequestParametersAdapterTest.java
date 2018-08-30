@@ -16,17 +16,18 @@
  */
 package org.apache.wicket.request.parameter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.string.StringValue;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.5
  */
-public class CombinedRequestParametersAdapterTest extends Assert
+public class CombinedRequestParametersAdapterTest
 {
 	/**
 	 * Tests that org.apache.wicket.request.parameter.CombinedRequestParametersAdapter#getParameterValues(java.lang.String)
