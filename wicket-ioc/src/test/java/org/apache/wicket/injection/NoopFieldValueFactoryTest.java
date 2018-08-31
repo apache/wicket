@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.injection;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.Field;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Test {@link NoopFieldValueFactory}
@@ -28,7 +29,7 @@ import org.junit.Test;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class NoopFieldValueFactoryTest extends Assert
+public class NoopFieldValueFactoryTest
 {
 	private Field field;
 
@@ -38,7 +39,7 @@ public class NoopFieldValueFactoryTest extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		NoopFieldValueFactoryTest.class.getDeclaredField("testField");

@@ -17,24 +17,23 @@
 package org.apache.wicket.contrib.markup.html.velocity;
 
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for <code>VelocityPanel</code>
  * 
  * @see org.apache.wicket.velocity.markup.html.VelocityPanel
  */
-public class VelocityPanelTest extends Assert
+public class VelocityPanelTest
 {
 	WicketTester tester;
 
 	/**
 	 * 
 	 */
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		tester = new WicketTester();
@@ -43,7 +42,7 @@ public class VelocityPanelTest extends Assert
 	/**
 	 * 
 	 */
-	@After
+	@AfterEach
 	public void after()
 	{
 		tester.destroy();
