@@ -16,23 +16,25 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class SharedResourceUrlTest extends WicketTestCase
+class SharedResourceUrlTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void resourceReferenceUrl() throws Exception
+	void resourceReferenceUrl() throws Exception
 	{
 		ResourceReference rr = new SharedResourceReference("test");
 		CharSequence url = tester.getRequestCycle().mapUrlFor(rr, null).toString();
@@ -47,7 +49,7 @@ public class SharedResourceUrlTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void resourceReferenceWithParamsUrl() throws Exception
+	void resourceReferenceWithParamsUrl() throws Exception
 	{
 		ResourceReference rr = new SharedResourceReference("test");
 		CharSequence url = tester.getRequestCycle()

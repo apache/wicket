@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.html.header.inheritance;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -25,14 +25,14 @@ import org.junit.Test;
  * 
  * @author Martijn Dashorst
  */
-public class InheritanceHeadTest extends WicketTestCase
+class InheritanceHeadTest extends WicketTestCase
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void test_2() throws Exception
+    void test_2() throws Exception
 	{
 		executeTest(ConcretePage2.class, "ExpectedResult2.html");
 	}
@@ -42,7 +42,7 @@ public class InheritanceHeadTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test_3() throws Exception
+    void test_3() throws Exception
 	{
 		tester.getSession().setStyle("myStyle");
 		executeTest(ConcretePage2.class, "ExpectedResult3.html");

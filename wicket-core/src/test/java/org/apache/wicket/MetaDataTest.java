@@ -16,13 +16,16 @@
  */
 package org.apache.wicket;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Some tests for meta data.
  */
-public class MetaDataTest extends Assert
+class MetaDataTest
 {
 	private static final MetaDataKey<String> KEY1 = new MetaDataKey<String>()
 	{
@@ -48,7 +51,7 @@ public class MetaDataTest extends Assert
 	 * Test bounds and basic operations.
 	 */
 	@Test
-	public void metaDataKey()
+	void metaDataKey()
 	{
 		MetaDataEntry<?>[] md = KEY1.set(null, "1");
 		assertNotNull(md);

@@ -17,21 +17,21 @@
 package org.apache.wicket.markup.parser;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Quite some tests are already with MarkupParser.
  * 
  * @author Juergen Donnerstag
  */
-public class RelativePathPrefixHandlerTest extends WicketTestCase
+class RelativePathPrefixHandlerTest extends WicketTestCase
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void basics() throws Exception
+    void basics() throws Exception
 	{
 		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
@@ -40,7 +40,7 @@ public class RelativePathPrefixHandlerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void anchors() throws Exception
+    void anchors() throws Exception
 	{
 		executeTest(Page_2.class, "PageExpectedResult_2.html");
 	}
@@ -49,7 +49,7 @@ public class RelativePathPrefixHandlerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void transparency() throws Exception
+    void transparency() throws Exception
 	{
 		executeTest(Page_3.class, "PageExpectedResult_3.html");
 	}

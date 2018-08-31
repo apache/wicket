@@ -16,10 +16,14 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.IPageAndComponentProvider;
-import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
+import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -30,22 +34,21 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * See issue <a href="https://issues.apache.org/jira/browse/WICKET-3098">WICKET-3098</a>
  */
-public class BehaviorRequestTest extends WicketTestCase
+class BehaviorRequestTest extends WicketTestCase
 {
 	private TestPage page;
 
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		page = new TestPage();
 		tester.startPage(page);
@@ -55,7 +58,7 @@ public class BehaviorRequestTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void enabledBehaviorRequest()
+	void enabledBehaviorRequest()
 	{
 		tester.executeUrl(urlForBehavior(page.enabledBehavior));
 		assertTrue(page.enabledBehavior.wasCalled());
@@ -65,7 +68,7 @@ public class BehaviorRequestTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void disabledBehaviorRequest()
+	void disabledBehaviorRequest()
 	{
 		try
 		{
@@ -101,7 +104,7 @@ public class BehaviorRequestTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+		TestPage()
 		{
 			enabledBehavior = new TestCallbackBehavior();
 			enabledBehavior.setEnabled(true);
@@ -143,7 +146,7 @@ public class BehaviorRequestTest extends WicketTestCase
 			called = true;
 		}
 
-		public void setEnabled(boolean enabled)
+		void setEnabled(boolean enabled)
 		{
 			this.enabled = enabled;
 		}
@@ -154,7 +157,7 @@ public class BehaviorRequestTest extends WicketTestCase
 			return component.isEnabledInHierarchy() && enabled;
 		}
 
-		public boolean wasCalled()
+		boolean wasCalled()
 		{
 			return called;
 		}

@@ -25,8 +25,8 @@ import org.apache.wicket.page.IPageManagerContext;
 public class DummyPageManagerContext implements IPageManagerContext
 {
 
-	Serializable attribute = null;
-	Object requestData;
+	private Serializable attribute = null;
+	private Object requestData;
 
 	@Override
 	public void setRequestData(Object data)

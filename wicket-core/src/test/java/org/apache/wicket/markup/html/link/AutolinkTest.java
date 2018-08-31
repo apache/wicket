@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -25,13 +25,13 @@ import org.junit.Test;
  * 
  * @author Juergen Donnerstag
  */
-public class AutolinkTest extends WicketTestCase
+class AutolinkTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_1() throws Exception
+    void renderHomePage_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("$up$");
@@ -42,7 +42,7 @@ public class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2() throws Exception
+    void renderHomePage_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
@@ -53,7 +53,7 @@ public class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_3() throws Exception
+    void renderHomePage_3() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(AutolinkPage_3.class, "AutolinkPageExpectedResult_3.html");
@@ -63,21 +63,21 @@ public class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_4() throws Exception
+    void renderHomePage_4() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(AutolinkPage_4.class, "AutolinkPageExpectedResult_4.html");
 	}
 
 	@Test
-	public void imgTagsShouldNotGetOnClick() throws Exception
+    void imgTagsShouldNotGetOnClick() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(AutolinkPage_5.class, "AutolinkPageExpectedResult_5.html");
 	}
 	
 	@Test
-	public void componentInsideAutolink() throws Exception 
+    void componentInsideAutolink() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		tester.startPage(AutolinkPage_6.class);

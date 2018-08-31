@@ -16,23 +16,25 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Map;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for StyleAttributeModifier
  */
-public class StyleAttributeModifierTest extends Assert
+class StyleAttributeModifierTest
 {
 	/**
 	 * Adds two style properties
 	 */
 	@Test
-	public void addCssStyles()
+	void addCssStyles()
 	{
 		StyleAttributeModifier cam = new StyleAttributeModifier()
 		{
@@ -58,7 +60,7 @@ public class StyleAttributeModifierTest extends Assert
 	 * Modifies one style, removes another and adds a new style
 	 */
 	@Test
-	public void addRemoveCssStyles()
+	void addRemoveCssStyles()
 	{
 		StyleAttributeModifier cam = new StyleAttributeModifier()
 		{
@@ -86,7 +88,7 @@ public class StyleAttributeModifierTest extends Assert
 	 * Removes all CSS style values and the attribute itself
 	 */
 	@Test
-	public void removeAllCssStyles()
+	void removeAllCssStyles()
 	{
 		StyleAttributeModifier cam = new StyleAttributeModifier()
 		{

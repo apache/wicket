@@ -34,7 +34,7 @@ public class MarkupInheritanceBase_12 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBase_12()
+    MarkupInheritanceBase_12()
 	{
 		add(new Label("label1", new PropertyModel<Integer>(this, "counter")));
 		add(new Link<Void>("link")

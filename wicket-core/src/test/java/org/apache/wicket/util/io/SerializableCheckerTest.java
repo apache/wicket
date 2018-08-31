@@ -16,28 +16,23 @@
  */
 package org.apache.wicket.util.io;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
 
-import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
-import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.core.util.objects.checker.AbstractObjectChecker;
 import org.apache.wicket.core.util.objects.checker.CheckingObjectOutputStream;
-import org.apache.wicket.core.util.objects.checker.IObjectChecker;
+import org.apache.wicket.core.util.objects.checker.ObjectSerializationChecker;
 import org.apache.wicket.util.value.ValueMap;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class SerializableCheckerTest extends Assert
+class SerializableCheckerTest
 {
 
 	/**
@@ -46,10 +41,11 @@ public class SerializableCheckerTest extends Assert
 	 * @throws IOException
 	 */
 	@Test
-	public void valueMap() throws IOException
+	void valueMap() throws IOException
 	{
-		CheckingObjectOutputStream checker = new CheckingObjectOutputStream(new ByteArrayOutputStream(),
-				new ObjectSerializationChecker(new NotSerializableException()));
+		CheckingObjectOutputStream checker = new CheckingObjectOutputStream(
+			new ByteArrayOutputStream(),
+			new ObjectSerializationChecker(new NotSerializableException()));
 		checker.writeObject(new ValueMap());
 	}
 
@@ -62,15 +58,37 @@ public class SerializableCheckerTest extends Assert
 	 * @throws IOException
 	 */
 	@Test
-	public void checkObjectsByIdentity() throws IOException
+	void checkObjectsByIdentity() throws IOException
 	{
 		CountingChecker countingChecker = new CountingChecker();
-		CheckingObjectOutputStream outputStream = new CheckingObjectOutputStream(new ByteArrayOutputStream(), countingChecker);
+		CheckingObjectOutputStream outputStream = new CheckingObjectOutputStream(
+			new ByteArrayOutputStream(), countingChecker);
 		final IdentityTestType type = new IdentityTestType();
 		type.member = new SerializableTypeWithMember(type);
 		outputStream.writeObject(type);
 
-		assertThat(countingChecker.getCount(), is(2));
+		assertEquals(2, countingChecker.getCount());
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	@Test
+	void nonSerializableTypeDetection() throws IOException
+	{
+		CheckingObjectOutputStream checker = new CheckingObjectOutputStream(
+			new ByteArrayOutputStream(),
+			new ObjectSerializationChecker(new NotSerializableException()));
+		String exceptionMessage = null;
+		try
+		{
+			checker.writeObject(new TestType2());
+		}
+		catch (CheckingObjectOutputStream.ObjectCheckException e)
+		{
+			exceptionMessage = e.getMessage();
+		}
+		assertTrue(exceptionMessage.contains(NonSerializableType.class.getName()));
 	}
 
 	private static class CountingChecker extends AbstractObjectChecker
@@ -98,26 +116,6 @@ public class SerializableCheckerTest extends Assert
 		{
 			this.member = member;
 		}
-	}
-
-	/**
-	 * @throws IOException
-	 */
-	@Test
-	public void nonSerializableTypeDetection() throws IOException
-	{
-		CheckingObjectOutputStream checker = new CheckingObjectOutputStream(new ByteArrayOutputStream(),
-			new ObjectSerializationChecker(new NotSerializableException()));
-		String exceptionMessage = null;
-		try
-		{
-			checker.writeObject(new TestType2());
-		}
-		catch (CheckingObjectOutputStream.ObjectCheckException e)
-		{
-			exceptionMessage = e.getMessage();
-		}
-		assertTrue(exceptionMessage.contains(NonSerializableType.class.getName()));
 	}
 
 	private static class IdentityTestType implements Serializable

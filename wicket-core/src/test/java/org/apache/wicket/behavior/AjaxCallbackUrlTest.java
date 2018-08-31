@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.behavior;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -26,26 +28,23 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-6192
  */
-public class AjaxCallbackUrlTest extends WicketTestCase {
+class AjaxCallbackUrlTest extends WicketTestCase {
 
     @Test
-    public void withoutPathParameters() {
+    void withoutPathParameters() {
         String callbackUrl = getCallbackUrl("/a/b/c");
-        assertThat(callbackUrl, is(equalTo("./a/b/c?0-1.0-link")));
+        assertEquals("./a/b/c?0-1.0-link", callbackUrl);
     }
 
     @Test
-    public void withPathParameters() {
+    void withPathParameters() {
         String callbackUrl = getCallbackUrl("/a/${b}/${c}");
-        assertThat(callbackUrl, is(equalTo("./a/BBB/CCC?0-1.0-link")));
+        assertEquals("./a/BBB/CCC?0-1.0-link", callbackUrl);
     }
 
     private String getCallbackUrl(final String pageMountPath) {

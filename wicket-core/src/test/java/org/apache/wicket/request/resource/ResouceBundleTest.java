@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -24,8 +26,8 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.bundles.ConcatBundleResource;
 import org.apache.wicket.resource.bundles.ResourceBundleReference;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for resource bundles
@@ -34,8 +36,8 @@ import org.junit.Test;
  */
 public class ResouceBundleTest extends WicketTestCase
 {
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 	}
@@ -44,7 +46,7 @@ public class ResouceBundleTest extends WicketTestCase
 	 * Tests the concatenation of 2 javascript files
 	 */
 	@Test
-	public void concatBundle()
+	void concatBundle()
 	{
 		ConcatBundleResource bundle = new ConcatBundleResource(Arrays.asList(
 			JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(
@@ -62,7 +64,7 @@ public class ResouceBundleTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void providedResource() throws Exception
+	void providedResource() throws Exception
 	{
 		tester.getApplication()
 			.getResourceBundles()
@@ -79,7 +81,7 @@ public class ResouceBundleTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void providedResourceWithDefer() throws Exception
+	void providedResourceWithDefer() throws Exception
 	{
 		tester.getApplication()
 		.getResourceBundles()
@@ -96,7 +98,7 @@ public class ResouceBundleTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void externalBundle() throws Exception
+	void externalBundle() throws Exception
 	{
 		ResourceBundleReference bundle = new ResourceBundleReference(
 			new UrlResourceReference(

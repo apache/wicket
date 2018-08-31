@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.page.persistent.disk;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.security.SecureRandom;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -23,19 +28,18 @@ import java.util.concurrent.Executors;
 
 import org.apache.wicket.pageStore.PageWindowManager;
 import org.apache.wicket.pageStore.PageWindowManager.PageWindow;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Matej Knopp
  */
-public class PageWindowManagerTest extends Assert
+public class PageWindowManagerTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4572
 	 */
 	@Test
-	public void removeObsoleteIndices()
+	void removeObsoleteIndices()
 	{
 		int page0id = 0,
 			page1id = 1,
@@ -56,21 +60,21 @@ public class PageWindowManagerTest extends Assert
 		assertWindow(page1Window, page1id, page1Window.getFilePartOffset(), page1Window.getFilePartSize());
 
 		// Try to get a page which has been lost with the adding of page1
-		assertNull("Page0 must be lost when Page1 has been added.", manager.getPageWindow(page0id));
+		assertNull(manager.getPageWindow(page0id), "Page0 must be lost when Page1 has been added.");
 
 		manager.createPageWindow(page2id, maxSize);
 		PageWindow page2Window = manager.getPageWindow(page2id);
 		assertWindow(page2Window, page2id, page2Window.getFilePartOffset(), page2Window.getFilePartSize());
 
 		// Try to get a page which has been lost with the adding of page2
-		assertNull("Page1 must be lost when Page2 has been added.", manager.getPageWindow(page1id));
+		assertNull(manager.getPageWindow(page1id), "Page1 must be lost when Page2 has been added.");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void addRemove()
+	void addRemove()
 	{
 		PageWindowManager manager = new PageWindowManager(300);
 		PageWindow window;
@@ -99,7 +103,7 @@ public class PageWindowManagerTest extends Assert
 	 * 
 	 */
 	@Test
-	public void pageWindowCycle()
+	void pageWindowCycle()
 	{
 		PageWindowManager manager = new PageWindowManager(100);
 		PageWindow window;
@@ -211,7 +215,7 @@ public class PageWindowManagerTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void randomOperations() throws Exception
+	void randomOperations() throws Exception
 	{
 		ExecutorService executorService = Executors.newFixedThreadPool(50);
 
@@ -229,7 +233,7 @@ public class PageWindowManagerTest extends Assert
 		/** the ids for the stored/removed pages */
 		private static final int[] PAGE_IDS = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-		protected final PageWindowManager pageWindowManager;
+		final PageWindowManager pageWindowManager;
 
 		private AbstractTask(PageWindowManager pageWindowManager)
 		{
@@ -251,7 +255,7 @@ public class PageWindowManagerTest extends Assert
 			}
 		}
 
-		protected int getPageId()
+		int getPageId()
 		{
 			return PAGE_IDS[RND.nextInt(PAGE_IDS.length)];
 		}

@@ -21,7 +21,7 @@ import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 /**
  *
  */
-public class HtmlTag extends TransparentWebMarkupContainer
+class HtmlTag extends TransparentWebMarkupContainer
 {
 	/**
 	 * Construct.

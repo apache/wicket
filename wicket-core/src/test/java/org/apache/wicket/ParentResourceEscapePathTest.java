@@ -16,6 +16,9 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.InputStream;
 
 import org.apache.wicket.markup.html.PackageResourceGuard;
@@ -23,13 +26,13 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  */
-public class ParentResourceEscapePathTest extends WicketTestCase
+class ParentResourceEscapePathTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(ParentResourceEscapePathTest.class);
 
@@ -37,7 +40,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void parentEscapeSequenceInRenderedHtmlTest() throws Exception
+	void parentEscapeSequenceInRenderedHtmlTest() throws Exception
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
 		parentEscapeSequenceInRenderedHtml();
@@ -63,15 +66,14 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 
 	private void assertContains(String html, String expected)
 	{
-		assertTrue("Expected to find \"" + expected + "\" in \"" + html + "\"",
-			html.contains(expected));
+		assertTrue(html.contains(expected), "Expected to find \"" + expected + "\" in \"" + html + "\"");
 	}
 
 	/**
 	 * testResourceUrlGeneratedByResourceReference()
 	 */
 	@Test
-	public void resourceUrlGeneratedByResourceReferenceTest()
+	void resourceUrlGeneratedByResourceReferenceTest()
 	{
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("-updir-");
 		resourceUrlGeneratedByResourceReference();
@@ -93,7 +95,7 @@ public class ParentResourceEscapePathTest extends WicketTestCase
 	 * testRequestHandlingOfResourceUrlWithEscapeStringInside()
 	 */
 	@Test
-	public void requestHandlingOfResourceUrlWithEscapeStringInsideTest()
+	void requestHandlingOfResourceUrlWithEscapeStringInsideTest()
 	{
 		((PackageResourceGuard)tester.getApplication()
 			.getResourceSettings()

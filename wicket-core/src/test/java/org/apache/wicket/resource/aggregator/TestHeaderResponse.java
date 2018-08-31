@@ -23,8 +23,8 @@ import java.util.Set;
 
 import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.request.Response;
 import org.apache.wicket.markup.head.NoHeaderItem;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
 
 /**
@@ -32,7 +32,7 @@ import org.apache.wicket.response.StringResponse;
  * 
  * @author papegaaij
  */
-public class TestHeaderResponse implements IHeaderResponse
+class TestHeaderResponse implements IHeaderResponse
 {
 	private StringResponse response = new StringResponse();
 	private Set<Object> rendered = new HashSet<Object>();

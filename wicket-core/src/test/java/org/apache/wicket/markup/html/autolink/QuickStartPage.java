@@ -32,7 +32,7 @@ public abstract class QuickStartPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public QuickStartPage()
+    QuickStartPage()
 	{
 		add(new LinkPanel("linkPanel"));
 	}

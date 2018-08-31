@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Locale;
 
 import org.apache.wicket.MarkupContainer;
@@ -27,18 +30,18 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class AbstractTextComponentConvertEmptyStringsToNullTest extends WicketTestCase
+class AbstractTextComponentConvertEmptyStringsToNullTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void convertEmptyStringsToNull() throws Exception
+	void convertEmptyStringsToNull() throws Exception
 	{
 		StringArrayPage page = tester.startPage(StringArrayPage.class);
 
@@ -55,10 +58,10 @@ public class AbstractTextComponentConvertEmptyStringsToNullTest extends WicketTe
 		private static final long serialVersionUID = 1L;
 
 		/**	 */
-		public String[] array = new String[0];
+		String[] array = new String[0];
 
 		/**	 */
-		public Form<Void> form;
+		Form<Void> form;
 
 		/**
 		 * Construct.

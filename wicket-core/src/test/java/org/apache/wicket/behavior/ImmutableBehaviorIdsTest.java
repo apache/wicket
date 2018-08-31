@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.behavior;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
@@ -30,14 +33,14 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /** IBehavior array management tests */
-public class ImmutableBehaviorIdsTest extends WicketTestCase
+class ImmutableBehaviorIdsTest extends WicketTestCase
 {
 	/** Tests simple behavior */
 	@Test
-	public void simple()
+	void simple()
 	{
 		MyPage page = new MyPage();
 		page.getContainer().add(new AttributeModifier("class", "border"));
@@ -50,7 +53,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 	 * Tests the fact that url-behavior indexes do not change even if behaviors are removed/added
 	 */
 	@Test
-	public void urlIndexRendering()
+	void urlIndexRendering()
 	{
 		Behavior border = new AttributeModifier("class", "border");
 		Behavior border2 = new AttributeModifier("class2", "border");
@@ -96,7 +99,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 	 * Tests that removal of behaviors properly cleans up the data array
 	 */
 	@Test
-	public void behaviorDataArrayCleanup()
+	void behaviorDataArrayCleanup()
 	{
 		Behavior border = new AttributeModifier("class", "border");
 		Behavior border2 = new AttributeModifier("class2", "border");
@@ -157,7 +160,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 
 		private final String attr;
 
-		public LinkBehavior(String attr)
+		LinkBehavior(String attr)
 		{
 			this.attr = attr;
 		}
@@ -180,7 +183,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 		private final WebMarkupContainer container;
 
-		public MyPage()
+		MyPage()
 		{
 			container = new WebMarkupContainer("container");
 			add(container);
@@ -194,7 +197,7 @@ public class ImmutableBehaviorIdsTest extends WicketTestCase
 				"<html><body><a wicket:id='container'></a></body></html>");
 		}
 
-		public WebMarkupContainer getContainer()
+		WebMarkupContainer getContainer()
 		{
 			return container;
 		}

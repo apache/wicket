@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Make sure AutoLabelForInputTagResolver works with nested {@literal <wicket:message>} and nested
@@ -29,7 +29,7 @@ import org.junit.Test;
  * @author Carl-Eric Menzel <cmenzel@wicketbuch.de>
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class AutoLabelWithContentTest extends WicketTestCase
+class AutoLabelWithContentTest extends WicketTestCase
 {
 	public static class LabelWithMessagePage extends WebPage
 	{
@@ -42,7 +42,7 @@ public class AutoLabelWithContentTest extends WicketTestCase
 	}
 
 	@Test
-	public void labelWithMessage() throws Exception
+    void labelWithMessage() throws Exception
 	{
 		tester.startPage(LabelWithMessagePage.class);
 		tester.assertContains("<label wicket:for=\"textfield\" id=\"textfield2-w-lbl\" for=\"textfield2\"><wicket:message key=\"foo\">my test text</wicket:message></label>");
@@ -59,7 +59,7 @@ public class AutoLabelWithContentTest extends WicketTestCase
 	}
 
 	@Test
-	public void labelWithNestedComponent()
+    void labelWithNestedComponent()
 	{
 		tester.startPage(LabelWithNestedComponentsPage.class);
 		tester.assertContains("<label wicket:for=\"textfield\" id=\"textfield2-w-lbl\" for=\"textfield2\"><input type=\"text\" wicket:id=\"textfield\" value=\"\" name=\"textfield\" id=\"textfield2\"/></label>");

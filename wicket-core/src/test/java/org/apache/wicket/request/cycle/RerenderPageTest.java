@@ -17,18 +17,19 @@
 package org.apache.wicket.request.cycle;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.cycle.RerenderPage.Supplier;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for re-rendering pages.
  */
-public class RerenderPageTest extends WicketTestCase
+class RerenderPageTest extends WicketTestCase
 {
 	/**
 	 * A testcase for WICKET-5960.
@@ -38,7 +39,7 @@ public class RerenderPageTest extends WicketTestCase
 	 * because it was already rendered in the first try.
 	 */
 	@Test
-	public void wicket5960()
+	void wicket5960()
 	{
 		// mount the page so we have URL segments
 		tester.getApplication().mount(new MountedMapper("/rerender/${value}", RerenderPage.class));
@@ -80,7 +81,7 @@ public class RerenderPageTest extends WicketTestCase
 	 * <head>} section to be rendered. This test case walks Wicket through this scenario.
 	 */
 	@Test
-	public void nonAjaxRequestAfterAjaxUpdatedComponentShouldHaveHtmlHeadSection()
+	void nonAjaxRequestAfterAjaxUpdatedComponentShouldHaveHtmlHeadSection()
 	{
 		// perform a normal render of the page
 		tester.startPage(RerenderAjaxPage.class);

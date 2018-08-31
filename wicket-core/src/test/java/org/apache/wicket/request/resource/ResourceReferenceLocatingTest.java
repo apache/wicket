@@ -17,6 +17,7 @@
 package org.apache.wicket.request.resource;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,25 +25,23 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 import org.apache.wicket.util.io.Streams;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
 
 /**
  * Test case for WICKET-5967 - Unable to load i18n minified js.
  */
 @SuppressWarnings("javadoc")
-@RunWith(Parameterized.class)
 public class ResourceReferenceLocatingTest extends WicketTestCase
 {
 	/** Loads the test cases from a spread sheet in semi-colon separated format. */
-	@Parameters(name = "{0}")
-	public static List<Object[]> parameters()
+	private static Stream<TestCase> parameters()
 	{
 		try (InputStream is = ResourceReferenceLocatingTest.class
 			.getResourceAsStream("ResourceReferenceLocatingTest.csv"))
@@ -50,20 +49,98 @@ public class ResourceReferenceLocatingTest extends WicketTestCase
 			String csv = Streams.readString(is);
 			StringReader sr = new StringReader(csv);
 			BufferedReader br = new BufferedReader(sr);
-			List<Object[]> result = new ArrayList<>();
+			List<TestCase> result = new ArrayList<>();
 
 			String line = br.readLine(); // read header line
 			while ((line = br.readLine()) != null)
 			{
 				if (!line.isEmpty())
-					result.add(new Object[] { TestCase.fromLine(line) });
+					result.add(TestCase.fromLine(line));
 			}
-			return result;
+
+			return result.stream();
 		}
 		catch (Exception e)
 		{
 			throw new AssertionError(e);
 		}
+	}
+
+	@BeforeEach
+	void before()
+	{
+		tester.getSession().setLocale(Locale.ENGLISH);
+	}
+
+	/**
+	 * Locate a resource without a minification requirement.
+	 */
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void locateNonMinifiedJavaScriptResourceReference(TestCase testCase)
+	{
+		tester.getApplication().getResourceSettings().setUseMinifiedResources(false);
+
+		checkNonStrictUsingJavaScriptResourceReference(testCase, testCase.getNonMinifiedContents());
+	}
+
+	/** */
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void locateNonMinifiedPackageResourceReference(TestCase testCase)
+	{
+		tester.getApplication().getResourceSettings().setUseMinifiedResources(false);
+
+		checkNonStrictUsingPackageResourceReference(testCase, testCase.getNonMinifiedContents());
+	}
+
+	/** */
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void locateMinifiedJavaScriptResourceReference(TestCase testCase)
+	{
+		tester.getApplication().getResourceSettings().setUseMinifiedResources(true);
+
+		checkNonStrictUsingJavaScriptResourceReference(testCase, testCase.getMinifiedContents());
+	}
+
+	/** */
+	@ParameterizedTest
+	@MethodSource("parameters")
+	void locateMinifiedPackageResourceReference(TestCase testCase)
+	{
+		tester.getApplication().getResourceSettings().setUseMinifiedResources(true);
+
+		checkNonStrictUsingPackageResourceReference(testCase, testCase.getMinifiedContents());
+	}
+
+	private void checkNonStrictUsingJavaScriptResourceReference(TestCase test, String expected)
+	{
+		Locale locale = test.getLocale();
+		String style = test.getStyle();
+		String variation = test.getVariation();
+		String extension = test.getExtension();
+
+		JavaScriptResourceReference reference = new JavaScriptResourceReference(
+			ResourceReferenceLocatingTest.class, "b.js", locale, style, variation);
+		tester.startResourceReference(reference);
+
+		assertThat(test.toString(), tester.getLastResponseAsString().trim(),
+			is("// " + expected));
+	}
+
+	private void checkNonStrictUsingPackageResourceReference(TestCase test, String expected)
+	{
+		Locale locale = test.getLocale();
+		String style = test.getStyle();
+		String variation = test.getVariation();
+		String extension = test.getExtension();
+
+		PackageResourceReference reference = new PackageResourceReference(
+			ResourceReferenceLocatingTest.class, "b.js", locale, style, variation);
+		tester.startResourceReference(reference);
+		assertThat(test.toString(), tester.getLastResponseAsString().trim(),
+			is("// " + expected));
 	}
 
 	public static class TestCase
@@ -101,7 +178,7 @@ public class ResourceReferenceLocatingTest extends WicketTestCase
 			return isNull(s) ? null : s;
 		}
 
-		public static TestCase fromLine(String line)
+		static TestCase fromLine(String line)
 		{
 			String splitter;
 			if (line.contains("\t"))
@@ -131,32 +208,32 @@ public class ResourceReferenceLocatingTest extends WicketTestCase
 			return test;
 		}
 
-		public Locale getLocale()
+		Locale getLocale()
 		{
 			return locale;
 		}
 
-		public String getStyle()
+		String getStyle()
 		{
 			return style;
 		}
 
-		public String getVariation()
+		String getVariation()
 		{
 			return variation;
 		}
 
-		public String getExtension()
+		String getExtension()
 		{
 			return extension;
 		}
 
-		public String getNonMinifiedContents()
+		String getNonMinifiedContents()
 		{
 			return nonMinifiedContents;
 		}
 
-		public String getMinifiedContents()
+		String getMinifiedContents()
 		{
 			return minifiedContents;
 		}
@@ -177,84 +254,5 @@ public class ResourceReferenceLocatingTest extends WicketTestCase
 			return "TestCase [locale=" + locale + ", style=" + style + ", variation=" + variation +
 				", extension=" + extension + "]";
 		}
-	}
-
-	private TestCase test;
-
-	public ResourceReferenceLocatingTest(TestCase test)
-	{
-		this.test = test;
-	}
-
-	@Before
-	public void before()
-	{
-		tester.getSession().setLocale(Locale.ENGLISH);
-	}
-
-	/**
-	 * Locate a resource without a minification requirement.
-	 */
-	@Test
-	public void locateNonMinifiedJavaScriptResourceReference()
-	{
-		tester.getApplication().getResourceSettings().setUseMinifiedResources(false);
-
-		checkNonStrictUsingJavaScriptResourceReference(test.getNonMinifiedContents());
-	}
-
-	/** */
-	@Test
-	public void locateNonMinifiedPackageResourceReference()
-	{
-		tester.getApplication().getResourceSettings().setUseMinifiedResources(false);
-
-		checkNonStrictUsingPackageResourceReference(test.getNonMinifiedContents());
-	}
-
-	/** */
-	@Test
-	public void locateMinifiedJavaScriptResourceReference()
-	{
-		tester.getApplication().getResourceSettings().setUseMinifiedResources(true);
-
-		checkNonStrictUsingJavaScriptResourceReference(test.getMinifiedContents());
-	}
-
-	/** */
-	@Test
-	public void locateMinifiedPackageResourceReference()
-	{
-		tester.getApplication().getResourceSettings().setUseMinifiedResources(true);
-
-		checkNonStrictUsingPackageResourceReference(test.getMinifiedContents());
-	}
-
-	private void checkNonStrictUsingJavaScriptResourceReference(String expectedResult)
-	{
-		Locale locale = test.getLocale();
-		String style = test.getStyle();
-		String variation = test.getVariation();
-		String extension = test.getExtension();
-
-		JavaScriptResourceReference reference = new JavaScriptResourceReference(
-			ResourceReferenceLocatingTest.class, "b.js", locale, style, variation);
-		tester.startResourceReference(reference);
-		assertThat(test.toString(), tester.getLastResponseAsString().trim(),
-			is("// " + expectedResult));
-	}
-
-	private void checkNonStrictUsingPackageResourceReference(String expectedResult)
-	{
-		Locale locale = test.getLocale();
-		String style = test.getStyle();
-		String variation = test.getVariation();
-		String extension = test.getExtension();
-
-		PackageResourceReference reference = new PackageResourceReference(
-			ResourceReferenceLocatingTest.class, "b.js", locale, style, variation);
-		tester.startResourceReference(reference);
-		assertThat(test.toString(), tester.getLastResponseAsString().trim(),
-			is("// " + expectedResult));
 	}
 }

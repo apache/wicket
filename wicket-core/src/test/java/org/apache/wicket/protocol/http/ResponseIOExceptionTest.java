@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.protocol.http;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.SocketException;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.protocol.http.servlet.ResponseIOException;
@@ -33,24 +32,22 @@ import org.apache.wicket.request.handler.EmptyRequestHandler;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class ResponseIOExceptionTest extends Assert
+class ResponseIOExceptionTest
 {
 	private WicketTester tester;
 
 	/**
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		tester = new WicketTester()
 		{
@@ -66,8 +63,8 @@ public class ResponseIOExceptionTest extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@After
-	public void after() throws Exception
+	@AfterEach
+	void after() throws Exception
 	{
 		tester.destroy();
 	}
@@ -76,13 +73,12 @@ public class ResponseIOExceptionTest extends Assert
 	 * WICKET-3570
 	 */
 	@Test
-	public void giveUpRespondingOnIOExceptions()
+	void giveUpRespondingOnIOExceptions()
 	{
 		TestRequestCycleListener testRequestCycleListener = new TestRequestCycleListener();
 		tester.getApplication().getRequestCycleListeners().add(testRequestCycleListener);
 		tester.startResource(new ResourceStreamResource(new StringResourceStream("asdf")));
-		assertThat(testRequestCycleListener.lastExceptionRequestHandlerResolved,
-			instanceOf(EmptyRequestHandler.class));
+		assertThat(testRequestCycleListener.lastExceptionRequestHandlerResolved).isInstanceOf(EmptyRequestHandler.class);
 	}
 
 	static class TestRequestCycleListener implements IRequestCycleListener
@@ -100,15 +96,15 @@ public class ResponseIOExceptionTest extends Assert
 	/**
 	 * Mock response simulating connection lost problems.
 	 */
-	public static class ProblematicResponse extends ServletWebResponse
+	static class ProblematicResponse extends ServletWebResponse
 	{
 
 		/**
 		 * @param webRequest
 		 * @param httpServletResponse
 		 */
-		public ProblematicResponse(ServletWebRequest webRequest,
-			HttpServletResponse httpServletResponse)
+		ProblematicResponse(ServletWebRequest webRequest,
+							HttpServletResponse httpServletResponse)
 		{
 			super(webRequest, httpServletResponse);
 		}

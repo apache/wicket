@@ -16,28 +16,30 @@
  */
 package org.apache.wicket.validation.validator;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests a couple of valid and invalid email patterns.
  * 
  * @author Maurice Marrink
  */
-public class EmailValidatorTest extends Assert
+class EmailValidatorTest
 {
 	/**
 	 * Tests a couple of emails that should be valid.
 	 */
 	@Test
-	public void testValidEmails()
+	void testValidEmails()
 	{
 		EmailAddressValidator test = new EmailAddressValidator();
 		String[] emails = new String[] { "b.blaat@topicus.nl", "blaat@hotmail.com",
 				"1.2.3.4@5.6.7.nl", "m@m.nl", "M@M.NL" };
 		for (String email : emails)
 		{
-			assertTrue(email + " should be valid", test.getPattern().matcher(email).matches());
+			assertTrue(test.getPattern().matcher(email).matches(), email + " should be valid");
 		}
 	}
 
@@ -45,14 +47,14 @@ public class EmailValidatorTest extends Assert
 	 * Tests a couple of emails that should not be valid.
 	 */
 	@Test
-	public void testInvalidEmails()
+	void testInvalidEmails()
 	{
 		EmailAddressValidator test = new EmailAddressValidator();
 		String[] emails = new String[] { ".blaat@topicus.nl", "blaat.@hotmail.com", "blaat@nl",
 				"blaat@.nl" };
 		for (String email : emails)
 		{
-			assertFalse(email + " should not be valid", test.getPattern().matcher(email).matches());
+			assertFalse(test.getPattern().matcher(email).matches(), email + " should not be valid");
 		}
 	}
 }

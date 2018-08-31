@@ -34,7 +34,7 @@ public class MockPageWithFormAndUploadField extends WebPage
 	public static final String FORM_ID = "form";
 
 	private final Form<?> form;
-	protected final FileUploadField fileUploadField;
+	final FileUploadField fileUploadField;
 	private FileUpload fileUpload;
 
 	/**
@@ -64,7 +64,7 @@ public class MockPageWithFormAndUploadField extends WebPage
 		add(form);
 	}
 
-	protected void handleFormSubmit() throws Exception
+	void handleFormSubmit() throws Exception
 	{
 		fileUpload = fileUploadField.getFileUpload();
 	}

@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.protocol.http.IRequestLogger.RequestData;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link AbstractRequestLogger}.
  */
-public class AbstractRequestLoggerTest extends WicketTestCase
+class AbstractRequestLoggerTest extends WicketTestCase
 {
 	private int counter;
 	
 	@Test
-	public void foo()
+	void foo()
 	{
 		tester.getApplication().getRequestLoggerSettings().setRequestsWindowSize(4);
 		

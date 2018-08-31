@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Locale;
 import java.util.MissingResourceException;
 
@@ -23,7 +26,7 @@ import org.apache.wicket.properties.MyApplication;
 import org.apache.wicket.properties.TestPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
@@ -33,7 +36,7 @@ import org.junit.Test;
  * 
  * @author Juergen Donnerstag
  */
-public class ValidatorPropertiesTest extends WicketTestCase
+class ValidatorPropertiesTest extends WicketTestCase
 {
 
 	@Override
@@ -46,7 +49,7 @@ public class ValidatorPropertiesTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void test1()
+	void test1()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 
@@ -296,7 +299,7 @@ public class ValidatorPropertiesTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void test2()
+	void test2()
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 
@@ -311,7 +314,7 @@ public class ValidatorPropertiesTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void test3()
+	void test3()
 	{
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(true);
 
@@ -324,6 +327,7 @@ public class ValidatorPropertiesTest extends WicketTestCase
 		{
 			hit = true;
 		}
-		assertEquals("MissingResourceException expected", hit, true);
+
+		assertEquals(true, hit, "MissingResourceException expected");
 	}
 }

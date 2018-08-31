@@ -16,26 +16,28 @@
  */
 package org.apache.wicket.protocol.http.mock;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.util.Enumeration;
 import java.util.Locale;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import static org.hamcrest.Matchers.is;
 
 /**
  * test features of {@link MockHttpServletRequest}
  */
-public class MockHttpServletRequestTest extends WicketTestCase
+class MockHttpServletRequestTest extends WicketTestCase
 {
 	@Test
-	public void setAbsoluteUrlWithHost()
+	void setAbsoluteUrlWithHost()
 	{
 		MockHttpServletRequest request = tester.getRequest();
 		assertEquals("http", request.getScheme());
@@ -59,7 +61,7 @@ public class MockHttpServletRequestTest extends WicketTestCase
 	}
 
 	@Test
-	public void setAbsoluteUrlWithoutHost()
+	void setAbsoluteUrlWithoutHost()
 	{
 		MockHttpServletRequest request = tester.getRequest();
 		assertEquals("http", request.getScheme());
@@ -83,7 +85,7 @@ public class MockHttpServletRequestTest extends WicketTestCase
 	}
 
 	@Test
-	public void setRelativeUrl()
+	void setRelativeUrl()
 	{
 		MockHttpServletRequest request = tester.getRequest();
 		assertEquals("http", request.getScheme());
@@ -110,7 +112,7 @@ public class MockHttpServletRequestTest extends WicketTestCase
      * WICKET-4664 - no query string returns null as per HttpServletRequest
      */
     @Test
-    public void testNoQueryString_returnsNull()
+	void testNoQueryString_returnsNull()
     {
         MockHttpServletRequest request = tester.getRequest();
         request.setURL("my/servlet/without/query/param");
@@ -120,43 +122,43 @@ public class MockHttpServletRequestTest extends WicketTestCase
     }
 	
 	@Test
-	public void getSessionFromNonMockHttpSession()
+	void getSessionFromNonMockHttpSession()
 	{
 		HttpSession httpSession = Mockito.mock(HttpSession.class);
 		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
-		assertNull("MockHttpServletRequest knows how to work only with MockHttpSession", request.getSession(true));
-		assertNull("MockHttpServletRequest knows how to work only with MockHttpSession", request.getSession(false));
+		assertNull(request.getSession(true), "MockHttpServletRequest knows how to work only with MockHttpSession");
+		assertNull(request.getSession(false), "MockHttpServletRequest knows how to work only with MockHttpSession");
 	}
 
 	@Test
-	public void getSessionFalseFromMockHttpSession()
+	void getSessionFalseFromMockHttpSession()
 	{
 		HttpSession httpSession = new MockHttpSession(null);
 		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
-		assertNull("HttpSession should not be created!", request.getSession(false));
+		assertNull(request.getSession(false), "HttpSession should not be created!");
 	}
 
 	@Test
-	public void getSessionDefaultFromMockHttpSession()
+	void getSessionDefaultFromMockHttpSession()
 	{
 		HttpSession httpSession = new MockHttpSession(null);
 		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
-		assertSame("HttpSession should be created!", httpSession, request.getSession());
+		assertSame(httpSession, request.getSession(), "HttpSession should be created!");
 	}
 
 	@Test
-	public void getSessionTrueFromMockHttpSession()
+	void getSessionTrueFromMockHttpSession()
 	{
 		HttpSession httpSession = new MockHttpSession(null);
 		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
-		assertSame("HttpSession should be created!", httpSession, request.getSession(true));
+		assertSame(httpSession, request.getSession(true), "HttpSession should be created!");
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4481
 	 */
 	@Test
-	public void setHeader()
+	void setHeader()
 	{
 		HttpSession httpSession = new MockHttpSession(null);
 		MockHttpServletRequest request = new MockHttpServletRequest(null, httpSession, null);
@@ -177,13 +179,13 @@ public class MockHttpServletRequestTest extends WicketTestCase
 	}
 
 	@Test
-	public void setLocale() {
+	void setLocale() {
 		Session session = tester.getSession();
 		session.setLocale(Locale.US);
 		tester.getRequest().setLocale(Locale.CANADA_FRENCH);
 
 		session.invalidateNow();
 
-		assertThat(tester.getSession().getLocale(), is(Locale.CANADA_FRENCH));
+		assertEquals(Locale.CANADA_FRENCH, tester.getSession().getLocale());
 	}
 }

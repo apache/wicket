@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.pageStore;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,18 +31,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.settings.StoreSettings;
-import org.apache.wicket.util.SlowTests;
+import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.lang.Bytes;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  */
-@Category(SlowTests.class)
-public class DiskDataStoreTest extends Assert
+@Tag(WicketTestTag.SLOW)
+public class DiskDataStoreTest
 {
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(DiskDataStoreTest.class);
@@ -46,7 +49,7 @@ public class DiskDataStoreTest extends Assert
 	/**
 	 * Construct.
 	 */
-	public DiskDataStoreTest()
+	DiskDataStoreTest()
 	{
 	}
 
@@ -69,23 +72,23 @@ public class DiskDataStoreTest extends Assert
 		private byte last;
 		private int length;
 
-		public File(String sessionId, int id)
+		File(String sessionId, int id)
 		{
 			this.sessionId = sessionId;
 			this.id = id;
 		}
 
-		public String getSessionId()
+		String getSessionId()
 		{
 			return sessionId;
 		}
 
-		public int getId()
+		int getId()
 		{
 			return id;
 		}
 
-		public byte[] generateData()
+		byte[] generateData()
 		{
 			length = FILE_SIZE_MIN + random.nextInt(FILE_SIZE_MAX - FILE_SIZE_MIN);
 			byte data[] = new byte[length];
@@ -95,7 +98,7 @@ public class DiskDataStoreTest extends Assert
 			return data;
 		}
 
-		public boolean checkData(byte data[])
+		boolean checkData(byte data[])
 		{
 			if (data == null)
 			{
@@ -364,7 +367,7 @@ public class DiskDataStoreTest extends Assert
 	 * store()
 	 */
 	@Test
-	public void store()
+	void store()
 	{
 		generateFiles();
 
@@ -387,7 +390,7 @@ public class DiskDataStoreTest extends Assert
 	 * it is put in folders which names are automatically calculated on the fly.
 	 */
 	@Test
-	public void sessionFolderName()
+	void sessionFolderName()
 	{
 		StoreSettings storeSettings = new StoreSettings(null);
 		java.io.File fileStoreFolder = storeSettings.getFileStoreFolder();

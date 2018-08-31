@@ -16,6 +16,14 @@
  */
 package org.apache.wicket.util.lang;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -41,9 +49,9 @@ import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.convert.converter.AbstractConverter;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
@@ -60,8 +68,8 @@ public class PropertyResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		person = new Person();
 	}
@@ -69,8 +77,8 @@ public class PropertyResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	@After
-	public void after()
+	@AfterEach
+	void after()
 	{
 		PropertyResolver.destroy(tester.getApplication());
 	}
@@ -79,7 +87,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void simpleExpression() throws Exception
+	void simpleExpression() throws Exception
 	{
 		String name = (String) PropertyResolver.getValue("name", person);
 		assertNull(name);
@@ -92,8 +100,8 @@ public class PropertyResolverTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	@Test(expected = ConversionException.class)
-	public void primitiveValue() throws Exception
+	@Test
+	void primitiveValue() throws Exception
 	{
 		Integer integer = (Integer)PropertyResolver.getValue("age", person);
 		assertTrue(integer == 0);
@@ -102,16 +110,16 @@ public class PropertyResolverTest extends WicketTestCase
 		integer = (Integer)PropertyResolver.getValue("age", person);
 		assertTrue(integer == 10);
 
-		PropertyResolver.setValue("age", person, null, CONVERTER);
-		fail("primitive type can't be set to null");
-
+		assertThrows(ConversionException.class, () -> {
+			PropertyResolver.setValue("age", person, null, CONVERTER);
+		});
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void pathExpression() throws Exception
+	void pathExpression() throws Exception
 	{
 		person.setAddress(new Address());
 		PropertyResolver.setValue("address.street", person, "wicket-street", CONVERTER);
@@ -124,7 +132,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testNull() throws Exception
+	void testNull() throws Exception
 	{
 		String street = (String)PropertyResolver.getValue("address.street", person);
 		assertNull(street);
@@ -134,7 +142,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void nullCreation() throws Exception
+	void nullCreation() throws Exception
 	{
 		PropertyResolver.setValue("address.street", person, "wicket-street", CONVERTER);
 		String street = (String)PropertyResolver.getValue("address.street", person);
@@ -154,7 +162,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void getterOnly() throws Exception
+	void getterOnly() throws Exception
 	{
 		PropertyResolver.setValue("country", person, new Country("US"), CONVERTER);
 		PropertyResolver.getValue("country.name", person);
@@ -172,7 +180,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void pathExpressionWithConversion() throws Exception
+	void pathExpressionWithConversion() throws Exception
 	{
 		person.setAddress(new Address());
 		PropertyResolver.setValue("address.number", person, "10", CONVERTER);
@@ -194,7 +202,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void mapLookup() throws Exception
+	void mapLookup() throws Exception
 	{
 		Address address = new Address();
 		PropertyResolver.setValue("addressMap", person, new HashMap<String, Address>(), CONVERTER);
@@ -208,7 +216,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void mapWithDotLookup() throws Exception
+	void mapWithDotLookup() throws Exception
 	{
 		Address address = new Address();
 		HashMap<String, Address> hm = new HashMap<String, Address>();
@@ -225,7 +233,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void listLookup() throws Exception
+	void listLookup() throws Exception
 	{
 		PropertyResolver.setValue("addressList", person, new ArrayList<Address>(), CONVERTER);
 		PropertyResolver.setValue("addressList.0", person, new Address(), CONVERTER);
@@ -243,7 +251,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void arrayLookup() throws Exception
+	void arrayLookup() throws Exception
 	{
 		PropertyResolver.setValue("addressArray", person, new Address[] { new Address(), null },
 			CONVERTER);
@@ -260,7 +268,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void arrayLookupByBrackets() throws Exception
+	void arrayLookupByBrackets() throws Exception
 	{
 		PropertyResolver.setValue("addressArray", person, new Address[] { new Address(), null },
 			CONVERTER);
@@ -277,7 +285,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void propertyByIndexLookup() throws Exception
+	void propertyByIndexLookup() throws Exception
 	{
 		PropertyResolver.setValue("addressAt.0", person, new Address(), CONVERTER);
 		PropertyResolver.setValue("addressAt.0.street", person, "wicket-street", CONVERTER);
@@ -289,7 +297,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void getPropertyByNotExistingIndexArrayLookup() throws Exception
+	void getPropertyByNotExistingIndexArrayLookup() throws Exception
 	{
 		PropertyResolver.setValue("addressArray", person, new Address[] { }, CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressArray.0.street", person);
@@ -302,7 +310,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void getPropertyByNotExistingIndexListLookup() throws Exception
+	void getPropertyByNotExistingIndexListLookup() throws Exception
 	{
 		PropertyResolver.setValue("addressList", person, new ArrayList<Address>(), CONVERTER);
 		String street = (String)PropertyResolver.getValue("addressList.0.street", person);
@@ -315,7 +323,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void getIndexPropertyDirectly() throws Exception
+	void getIndexPropertyDirectly() throws Exception
 	{
 		Address address = new Address();
 		Address[] addresses = new Address[] { address };
@@ -328,7 +336,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void listSizeLookup() throws Exception
+	void listSizeLookup() throws Exception
 	{
 		List<Address> addresses = new ArrayList<Address>();
 		addresses.add(new Address());
@@ -345,7 +353,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void mapSizeLookup() throws Exception
+	void mapSizeLookup() throws Exception
 	{
 		Map<String, Address> addresses = new HashMap<String, Address>();
 		Address address = new Address();
@@ -362,7 +370,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void arraySizeLookup() throws Exception
+	void arraySizeLookup() throws Exception
 	{
 		person.setAddressArray(new Address[] { new Address(), new Address() });
 		Object size = PropertyResolver.getValue("addressArray.length", person);
@@ -375,7 +383,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void methodLookup() throws Exception
+	void methodLookup() throws Exception
 	{
 		Address[] addresses = new Address[] { new Address(), new Address() };
 		person.setAddressArray(addresses);
@@ -387,7 +395,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void field() throws Exception
+	void field() throws Exception
 	{
 		Address address = new Address();
 		PropertyResolver.setValue("address2", person, address, CONVERTER);
@@ -409,7 +417,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testPrivateField() throws Exception
+	void testPrivateField() throws Exception
 	{
 		Address address = new Address();
 		PropertyResolver.setValue("privateAddress", person, address, CONVERTER);
@@ -421,7 +429,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void privateFieldOfSuperClass() throws Exception
+	void privateFieldOfSuperClass() throws Exception
 	{
 		Person2 person2 = new Person2();
 		Address address = new Address();
@@ -434,7 +442,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void getTargetClass()
+	void getTargetClass()
 	{
 		Address address = new Address();
 
@@ -459,7 +467,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void getTargetField()
+	void getTargetField()
 	{
 		Address address = new Address();
 
@@ -484,7 +492,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void getTargetGetter()
+	void getTargetGetter()
 	{
 		Address address = new Address();
 
@@ -509,7 +517,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void onlyPrimitiveGetter() throws Exception
+	void onlyPrimitiveGetter() throws Exception
 	{
 		Person person = new Person();
 
@@ -524,7 +532,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void onlyStringGetter() throws Exception
+	void onlyStringGetter() throws Exception
 	{
 		Person person = new Person();
 
@@ -539,7 +547,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void getTargetSetter()
+	void getTargetSetter()
 	{
 		Address address = new Address();
 
@@ -561,7 +569,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void overriddenGetter() throws Exception
+	void overriddenGetter() throws Exception
 	{
 		Person2 person = new Person2();
 		person.setName("foo");
@@ -580,7 +588,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void propertyClassWithSubType() throws Exception
+	void propertyClassWithSubType() throws Exception
 	{
 		Person person = new Person();
 		assertEquals(String.class, PropertyResolver.getPropertyClass("country.name", person));
@@ -614,7 +622,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * Tests the PropertyModel with vector.
 	 */
 	@Test
-	public void propertyModel()
+	void propertyModel()
 	{
 		String value = (String)PropertyResolver.getValue("testValue", new InnerVectorPOJO());
 		assertEquals("vector", value);
@@ -624,7 +632,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void directFieldSetWithDifferentTypeThanGetter()
+	void directFieldSetWithDifferentTypeThanGetter()
 	{
 		final DirectFieldSetWithDifferentTypeThanGetter obj = new DirectFieldSetWithDifferentTypeThanGetter();
 		PropertyResolver.setValue("value", obj, 1, null);
@@ -646,7 +654,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1802">WICKET-1802</a>
 	 */
 	@Test
-	public void conversionExceptionMessageContainsTheObjectPropertyBeingSet()
+	void conversionExceptionMessageContainsTheObjectPropertyBeingSet()
 	{
 		try
 		{
@@ -673,7 +681,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * WICKET-3441
 	 */
 	@Test
-	public void dateToStringConverting()
+	void dateToStringConverting()
 	{
 		IConverterLocator converterLocator = new ConverterLocator();
 		Locale locale = Locale.GERMAN;
@@ -694,7 +702,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * WICKET-3441
 	 */
 	@Test
-	public void dateToLongConverting()
+	void dateToLongConverting()
 	{
 		ConverterLocator converterLocator = new ConverterLocator();
 		final IConverter<Date> dateConverter = converterLocator.get(Date.class);
@@ -751,7 +759,7 @@ public class PropertyResolverTest extends WicketTestCase
 	 * WICKET-5623 custom properties
 	 */
 	@Test
-	public void custom() {
+	void custom() {
 		Document document = new Document();
 		document.setType("type");
 		document.setProperty("string", "string");
@@ -766,7 +774,7 @@ public class PropertyResolverTest extends WicketTestCase
 		assertEquals("string", PropertyResolver.getValue("string", document));
 		assertEquals("string2", PropertyResolver.getValue("nested.string", document));
 	}
-	
+
 	class CustomGetAndSetLocator implements IPropertyLocator {
 
 		private IPropertyLocator locator = new DefaultPropertyLocator();
@@ -781,7 +789,7 @@ public class PropertyResolverTest extends WicketTestCase
 			}
 			return getAndSet;
 		}
-		
+
 		public class DocumentPropertyGetAndSet extends AbstractGetAndSet {
 
 			private String name;

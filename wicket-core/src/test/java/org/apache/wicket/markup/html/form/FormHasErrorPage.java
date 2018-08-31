@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -42,7 +42,7 @@ public class FormHasErrorPage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public InvalidPanel(String id)
+		InvalidPanel(String id)
 		{
 			super(id);
 		}
@@ -88,7 +88,7 @@ public class FormHasErrorPage extends WebPage
 			{
 				super.onSubmit();
 				labelModel.setObject("Test FAILED - an error was expected");
-				Assert.fail("A validation error should've been detected by the Form processing");
+				fail("A validation error should've been detected by the Form processing");
 			}
 
 			@Override

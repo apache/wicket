@@ -32,7 +32,7 @@ public class MockResourceLinkPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public MockResourceLinkPage()
+    private MockResourceLinkPage()
 	{
 		add(new ResourceLink<Void>("link", new PackageResourceReference(MockResourceLinkPage.class,
 			"test.html")));

@@ -18,7 +18,7 @@ package org.apache.wicket.markup;
 
 import org.apache.wicket.markup.html.WebPage;
 
-public class MarkupTest_Find_1 extends WebPage
+class MarkupTest_Find_1 extends WebPage
 {
 
 }

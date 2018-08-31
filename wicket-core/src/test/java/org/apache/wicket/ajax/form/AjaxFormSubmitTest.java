@@ -16,17 +16,21 @@
  */
 package org.apache.wicket.ajax.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author marrink
  */
-public class AjaxFormSubmitTest extends WicketTestCase
+class AjaxFormSubmitTest extends WicketTestCase
 {
 	@Test
-	public void submit()
+	void submit()
 	{
 		AjaxFormSubmitTestPage page = new AjaxFormSubmitTestPage(true);
 
@@ -56,7 +60,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1291">WICKET-1291</a>
 	 */
 	@Test
-	public void submitNoDefProcessing()
+	void submitNoDefProcessing()
 	{
 		AjaxFormSubmitTestPage page = new AjaxFormSubmitTestPage(false);
 
@@ -83,7 +87,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-6324">WICKET-6324</a>
 	 */
 	@Test
-	public void submitFallbackErrors()
+	void submitFallbackErrors()
 	{
 		AjaxFormSubmitTestPage page = new AjaxFormSubmitTestPage(true);
 
@@ -110,7 +114,7 @@ public class AjaxFormSubmitTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void eventJavaScriptEscaped() throws Exception
+	void eventJavaScriptEscaped() throws Exception
 	{
 		tester.startPage(new AjaxFormSubmitTestPage(false));
 		tester.assertResultPage(AjaxFormSubmitTestPage.class,

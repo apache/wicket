@@ -17,19 +17,19 @@
 package org.apache.wicket.ajax.form;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author shuraa
  */
-public class AjaxFormValidatingBehaviorTest extends WicketTestCase
+class AjaxFormValidatingBehaviorTest extends WicketTestCase
 {
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5999
 	 */
 	@Test
-	public void ajaxUpdateOrdinaryFeedbackComponents() throws Exception
+    void ajaxUpdateOrdinaryFeedbackComponents() throws Exception
 	{
 		tester.startPage(AjaxFormValidatingBehaviorTestPage.class);
 		tester.assertRenderedPage(AjaxFormValidatingBehaviorTestPage.class);
@@ -42,7 +42,7 @@ public class AjaxFormValidatingBehaviorTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5999
 	 */
 	@Test
-	public void ajaxUpdateInitiallyInvisibleFeedbackComponents() throws Exception
+    void ajaxUpdateInitiallyInvisibleFeedbackComponents() throws Exception
 	{
 		tester.startPage(AjaxFormValidatingBehaviorTestPage.class);
 		tester.assertRenderedPage(AjaxFormValidatingBehaviorTestPage.class);

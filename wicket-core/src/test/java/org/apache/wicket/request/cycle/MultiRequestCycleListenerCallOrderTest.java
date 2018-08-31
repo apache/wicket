@@ -17,28 +17,29 @@
 package org.apache.wicket.request.cycle;
 
 import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Checks whether multiple registered requestcycle listeners are called in the right order:
  * similarly to servlet filters.
  */
-public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
+class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 {
 	private MultiRequestCycleListenerCallOrderApplication application;
 
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		application = (MultiRequestCycleListenerCallOrderApplication)tester.getApplication();
 		application.callSequence.clear();
@@ -53,7 +54,7 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void bookmarkableCallSequenceIsFirstInLastOut()
+	void bookmarkableCallSequenceIsFirstInLastOut()
 	{
 		// start and render the test page
 		tester.startPage(MultiRequestCycleListenerCallOrderPage.class);
@@ -79,7 +80,7 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void sessionRelativePageRequestCallSequenceIsFirstInLastOut()
+	void sessionRelativePageRequestCallSequenceIsFirstInLastOut()
 	{
 		// start and render the test page
 		tester.startPage(new MultiRequestCycleListenerCallOrderPage());
@@ -104,7 +105,7 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void linkListenerCallSequenceIsFirstInLastOut()
+	void linkListenerCallSequenceIsFirstInLastOut()
 	{
 		// start and render the test page
 		tester.startPage(new MultiRequestCycleListenerCallOrderPage());
@@ -137,7 +138,7 @@ public class MultiRequestCycleListenerCallOrderTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void ajaxlinkListenerCallSequenceIsFirstInLastOut()
+	void ajaxlinkListenerCallSequenceIsFirstInLastOut()
 	{
 		// start and render the test page
 		tester.startPage(new MultiRequestCycleListenerCallOrderPage());

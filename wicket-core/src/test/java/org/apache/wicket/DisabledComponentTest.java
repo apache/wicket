@@ -16,21 +16,23 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class DisabledComponentTest extends WicketTestCase
+class DisabledComponentTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void enabled() throws Exception
+	void enabled() throws Exception
 	{
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
 		Link<?> link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
@@ -40,14 +42,15 @@ public class DisabledComponentTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	@Test(expected = ListenerInvocationNotAllowedException.class)
-	public void disabled() throws Exception
+	@Test
+	void disabled() throws Exception
 	{
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
 		Link<?> link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
 		link.setEnabled(false);
-		executeListener(link, "DisabledComponentPage1b_result.html");
-		fail("Executing the listener on disabled component is not allowed.");
 
+		assertThrows(ListenerInvocationNotAllowedException.class, () -> {
+			executeListener(link, "DisabledComponentPage1b_result.html");
+		});
 	}
 }

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.util.Locale;
 
@@ -25,12 +27,12 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for JavaScriptPackageResource
  */
-public class JavaScriptPackageResourceTest extends WicketTestCase
+class JavaScriptPackageResourceTest extends WicketTestCase
 {
 	private static final String APP_COMPRESSED = "APP_COMPRESSED";
 
@@ -63,7 +65,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 	 * {@link IJavaScriptCompressor}
 	 */
 	@Test
-	public void customResourceCompressor()
+	void customResourceCompressor()
 	{
 		JavaScriptPackageResource resource = new JavaScriptPackageResource(
 			PackageResourceTest.class, "packaged1.txt", null, null, null)
@@ -96,7 +98,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 	 * same as the one used for the actual response
 	 */
 	@Test
-	public void cacheableStreamIsCompressed() throws ResourceStreamNotFoundException, IOException
+	void cacheableStreamIsCompressed() throws ResourceStreamNotFoundException, IOException
 	{
 		JavaScriptPackageResource resource = new JavaScriptPackageResource(
 				PackageResourceTest.class, "packaged1.txt", null, null, null)
@@ -127,7 +129,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 	 * {@link IJavaScriptCompressor} when there is no custom
 	 */
 	@Test
-	public void appLevelCompressor()
+	void appLevelCompressor()
 	{
 		JavaScriptPackageResource resource = new JavaScriptPackageResource(
 			PackageResourceTest.class, "packaged1.txt", null, null, null);
@@ -141,7 +143,7 @@ public class JavaScriptPackageResourceTest extends WicketTestCase
 	 * {@link IJavaScriptCompressor}
 	 */
 	@Test
-	public void noCompressor()
+	void noCompressor()
 	{
 		JavaScriptPackageResource resource = new JavaScriptPackageResource(
 			PackageResourceTest.class, "packaged1.txt", null, null, null);

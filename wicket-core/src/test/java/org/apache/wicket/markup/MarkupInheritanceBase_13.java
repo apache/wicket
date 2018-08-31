@@ -27,7 +27,7 @@ public class MarkupInheritanceBase_13 extends MarkupInheritanceBaseBase_13
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBase_13()
+    MarkupInheritanceBase_13()
 	{
 		super();
 	}

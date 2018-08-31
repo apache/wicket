@@ -16,24 +16,26 @@
  */
 package org.apache.wicket.protocol.http;
 
-import org.apache.wicket.mock.MockWebResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.apache.wicket.mock.MockWebResponse;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link HeaderBufferingWebResponse}.
  * 
  * @author svenmeier
  */
-public class HeaderBufferingWebResponseTest extends Assert
+class HeaderBufferingWebResponseTest
 {
 
 	/**
 	 * WICKET-4927
 	 */
 	@Test
-	public void additionalHeaderAfterWrittenContent()
+	void additionalHeaderAfterWrittenContent()
 	{
 		MockWebResponse originalResponse = new MockWebResponse();
 
@@ -55,7 +57,7 @@ public class HeaderBufferingWebResponseTest extends Assert
 	/**
 	 */
 	@Test
-	public void resetAfterWrittenContent()
+	void resetAfterWrittenContent()
 	{
 		MockWebResponse originalResponse = new MockWebResponse();
 

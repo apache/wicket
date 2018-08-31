@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -26,22 +26,22 @@ import org.apache.wicket.ajax.StatelessPage;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class StatelessAjaxFallbackLinkTest
+class StatelessAjaxFallbackLinkTest
 {
-	protected WicketTester tester;
+	private WicketTester tester;
 
-	@Before
-	public void setUp()
+	@BeforeEach
+	void setUp()
 	{
 		tester = new WicketTester(new MockApplication());
 	}
 
-	@After
-	public void teardown()
+	@AfterEach
+	void teardown()
 	{
 		// things must stay stateless
 		assertTrue(Session.get().isTemporary());
@@ -49,7 +49,7 @@ public class StatelessAjaxFallbackLinkTest
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testGetStatelessHint()
+	void testGetStatelessHint()
 	{
 		tester.startPage(StatelessPage.class);
 
@@ -64,7 +64,7 @@ public class StatelessAjaxFallbackLinkTest
 		final AjaxEventBehavior behavior = (AjaxEventBehavior)behaviors.get(0);
 
 		behavior.onRequest();
-		
+
 		assertTrue(link.isStateless());
 	}
 }

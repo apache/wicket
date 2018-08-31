@@ -71,7 +71,7 @@ public class InlinePanelPage_8 extends WebPage
 		 * @param id
 		 * @param number
 		 */
-		public ListNode(String id, int number)
+        ListNode(String id, int number)
 		{
 			super(id, "node", InlinePanelPage_8.this);
 			add(new Label("number", Integer.toString(number)));
@@ -87,7 +87,7 @@ public class InlinePanelPage_8 extends WebPage
 		 * @param number
 		 * @return the added {@link ListNode}
 		 */
-		public ListNode addNext(AjaxRequestTarget target, int number)
+        ListNode addNext(AjaxRequestTarget target, int number)
 		{
 			ListNode next = new ListNode("next", number);
 			nextContainer.add(next);

@@ -24,7 +24,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  * 
  * @see com.mycompany.Start#main(String[])
  */
-public class WicketApplication extends WebApplication
+class WicketApplication extends WebApplication
 {
 	/**
 	 * Constructor

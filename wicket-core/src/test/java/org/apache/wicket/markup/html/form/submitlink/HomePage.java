@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.submitlink;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Form;
@@ -29,10 +29,10 @@ import org.apache.wicket.model.PropertyModel;
  */
 public class HomePage extends WebPage
 {
-	boolean submitted = false;
-	boolean submittedViaLinkBefore = false;
-	boolean submittedViaLinkAfter = false;
-	String text;
+	private boolean submitted = false;
+	private boolean submittedViaLinkBefore = false;
+	private boolean submittedViaLinkAfter = false;
+	private String text;
 	/**
 	 *
 	 */
@@ -70,14 +70,14 @@ public class HomePage extends WebPage
 			public void onSubmit()
 			{
 				submittedViaLinkBefore = true;
-				assertFalse("before must be the first!", submittedViaLinkAfter);
+				assertFalse(submittedViaLinkAfter, "before must be the first!");
 			}
 
 
 			@Override
 			public void onAfterSubmit()
 			{
-				assertTrue("before must have been called!", submittedViaLinkBefore);
+				assertTrue(submittedViaLinkBefore, "before must have been called!");
 				submittedViaLinkAfter = true;
 			}
 

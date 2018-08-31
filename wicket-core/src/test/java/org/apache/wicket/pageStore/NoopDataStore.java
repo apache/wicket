@@ -19,7 +19,7 @@ package org.apache.wicket.pageStore;
 /**
  * An implementation of IDataStore that does nothing
  */
-public class NoopDataStore implements IDataStore
+class NoopDataStore implements IDataStore
 {
 	@Override
 	public byte[] getData(String sessionId, int id)

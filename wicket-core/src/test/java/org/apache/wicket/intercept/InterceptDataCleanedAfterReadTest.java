@@ -19,12 +19,12 @@ package org.apache.wicket.intercept;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-4066
  */
-public class InterceptDataCleanedAfterReadTest extends WicketTestCase
+class InterceptDataCleanedAfterReadTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -38,7 +38,7 @@ public class InterceptDataCleanedAfterReadTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4066
 	 */
 	@Test
-	public void wicket4066()
+    void wicket4066()
 	{
 		// go to a secured page (a redirect to LoginPage with interception will be done)
 		tester.startPage(SecurePage.class);

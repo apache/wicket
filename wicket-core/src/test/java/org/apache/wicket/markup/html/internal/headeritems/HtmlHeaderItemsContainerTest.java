@@ -16,23 +16,25 @@
  */
 package org.apache.wicket.markup.html.internal.headeritems;
 
-import static org.hamcrest.number.OrderingComparison.lessThan;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.apache.wicket.markup.MarkupException;
-import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.Page;
+import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.DummyPanelPage;
+import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for <wicket:header-items/> element
  */
-public class HtmlHeaderItemsContainerTest extends WicketTestCase
+class HtmlHeaderItemsContainerTest extends WicketTestCase
 {
 	@Test
-	public void withHeaderItems()
+	void withHeaderItems()
 	{
 		tester.startPage(PageWithHeaderItems.class);
 		String responseAsString = tester.getLastResponseAsString();
@@ -43,21 +45,21 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 		int idxTitleElement = responseAsString.indexOf("<title>Apache Wicket Quickstart</title>");
 		int idxMetaFromBasePage = responseAsString.indexOf("<meta name='fromBasePage' content='1'");
 
-		assertThat("<meta charset> should be rendered before <meta name=\"panel-wicket-head\"",
-				idxMetaCharset, lessThan(idxMetaPanelWicketHead));
+		assertThat(idxMetaCharset).isLessThan(idxMetaPanelWicketHead).withFailMessage(
+			"<meta charset> should be rendered before <meta name=\"panel-wicket-head\"");
 
-		assertThat("<meta  name=\"panel-wicket-head\"> should be rendered before <script src=wicket-ajax-jquery.js>",
-				idxMetaPanelWicketHead, lessThan(idxWicketAjaxJs));
+		assertThat(idxMetaPanelWicketHead).isLessThan(idxWicketAjaxJs).withFailMessage(
+			"<meta  name=\"panel-wicket-head\"> should be rendered before <script src=wicket-ajax-jquery.js>");
 
-		assertThat("<script src=wicket-ajax-jquery.js> should be rendered before the <title> element",
-				idxWicketAjaxJs, lessThan(idxTitleElement));
+		assertThat(idxWicketAjaxJs).isLessThan(idxTitleElement).withFailMessage(
+			"<script src=wicket-ajax-jquery.js> should be rendered before the <title> element");
 
-		assertThat("<meta name='fromBasePage'> should be rendered before the <title> element",
-				idxMetaFromBasePage, lessThan(idxTitleElement));
+		assertThat(idxMetaFromBasePage).isLessThan(idxTitleElement).withFailMessage(
+			"<meta name='fromBasePage'> should be rendered before the <title> element");
 	}
 
 	@Test
-	public void withoutHeaderItems()
+	void withoutHeaderItems()
 	{
 		tester.startPage(PageWithoutHeaderItems.class);
 		String responseAsString = tester.getLastResponseAsString();
@@ -68,21 +70,21 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 		int idxTitleElement = responseAsString.indexOf("<title>Apache Wicket Quickstart</title>");
 		int idxMetaFromBasePage = responseAsString.indexOf("<meta name='fromBasePage' content='1'");
 
-		assertThat("<meta name=\"panel-wicket-head\"> should be rendered before <script src=wicket-ajax-jquery.js>",
-				idxMetaPanelWicketHead, lessThan(idxWicketAjaxJs));
+		assertThat(idxMetaPanelWicketHead).isLessThan(idxWicketAjaxJs).withFailMessage(
+			"<meta name=\"panel-wicket-head\"> should be rendered before <script src=wicket-ajax-jquery.js>");
 
-		assertThat("<script src=wicket-ajax-jquery.js> should be rendered before <meta charset>",
-				idxWicketAjaxJs, lessThan(idxMetaCharset));
+		assertThat(idxWicketAjaxJs).isLessThan(idxMetaCharset).withFailMessage(
+			"<script src=wicket-ajax-jquery.js> should be rendered before <meta charset>");
 
-		assertThat("<meta charset> should be rendered before the <title> element",
-				idxMetaCharset, lessThan(idxTitleElement));
+		assertThat(idxMetaCharset).isLessThan(idxTitleElement)
+			.withFailMessage("<meta charset> should be rendered before the <title> element");
 
-		assertThat("<title> should be rendered before the <meta name='fromBasePage'> element",
-				idxTitleElement, lessThan(idxMetaFromBasePage));
+		assertThat(idxTitleElement).isLessThan(idxMetaFromBasePage).withFailMessage(
+			"<title> should be rendered before the <meta name='fromBasePage'> element");
 	}
 
 	@Test
-	public void withoutHeaderItemsWithWicketHead()
+	void withoutHeaderItemsWithWicketHead()
 	{
 		tester.startPage(SubPageWithoutHeaderItemsAndWicketHead.class);
 		String responseAsString = tester.getLastResponseAsString();
@@ -92,26 +94,27 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
 		int idxTitleElement = responseAsString.indexOf("<title>Apache Wicket Quickstart</title>");
 		int idxMetaFromBasePage = responseAsString.indexOf("<meta name='fromBasePage' content='1'");
-		int idxMetaFromSubPage = responseAsString.indexOf("<meta name=\"SubPageWithoutHeaderItemsAndWicketHead\"");
+		int idxMetaFromSubPage = responseAsString
+			.indexOf("<meta name=\"SubPageWithoutHeaderItemsAndWicketHead\"");
 
-		assertThat("<meta name=\"panel-wicket-head\"> should be rendered before <script src=wicket-ajax-jquery.js>",
-				idxMetaPanelWicketHead, lessThan(idxWicketAjaxJs));
+		assertThat(idxMetaPanelWicketHead).isLessThan(idxWicketAjaxJs).withFailMessage(
+			"<meta name=\"panel-wicket-head\"> should be rendered before <script src=wicket-ajax-jquery.js>");
 
-		assertThat("<script src=wicket-ajax-jquery.js> should be rendered before <meta charset>",
-				idxWicketAjaxJs, lessThan(idxMetaCharset));
+		assertThat(idxWicketAjaxJs).isLessThan(idxMetaCharset).withFailMessage(
+			"<script src=wicket-ajax-jquery.js> should be rendered before <meta charset>");
 
-		assertThat("<meta charset> should be rendered before the <title> element",
-				idxMetaCharset, lessThan(idxTitleElement));
+		assertThat(idxMetaCharset).isLessThan(idxTitleElement)
+			.withFailMessage("<meta charset> should be rendered before the <title> element");
 
-		assertThat("<title> should be rendered before the <meta name=\"SubPageWithoutHeaderItemsAndWicketHead\" element",
-				idxTitleElement, lessThan(idxMetaFromSubPage));
+		assertThat(idxTitleElement).isLessThan(idxMetaFromSubPage).withFailMessage(
+			"<title> should be rendered before the <meta name=\"SubPageWithoutHeaderItemsAndWicketHead\" element");
 
-		assertThat("<meta name='fromBasePage'> should be rendered before the <meta name=\"SubPageWithoutHeaderItemsAndWicketHead\" element",
-				idxMetaFromSubPage, lessThan(idxMetaFromBasePage));
+		assertThat(idxMetaFromSubPage).isLessThan(idxMetaFromBasePage).withFailMessage(
+			"<meta name='fromBasePage'> should be rendered before the <meta name=\"SubPageWithoutHeaderItemsAndWicketHead\" element");
 	}
 
 	@Test
-	public void withHeaderItemsWithWicketHead()
+	void withHeaderItemsWithWicketHead()
 	{
 		tester.startPage(SubPageWithHeaderItemsAndWicketHead.class);
 		String responseAsString = tester.getLastResponseAsString();
@@ -121,59 +124,68 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 		int idxWicketAjaxJs = responseAsString.indexOf("wicket-ajax-jquery.js");
 		int idxTitleElement = responseAsString.indexOf("<title>Apache Wicket Quickstart</title>");
 		int idxMetaFromBasePage = responseAsString.indexOf("<meta name='fromBasePage' content='1'");
-		int idxMetaFromSubPage = responseAsString.indexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
+		int idxMetaFromSubPage = responseAsString
+			.indexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
 
-		assertThat("<meta charset> should be rendered before <meta name=\"panel-wicket-head\"",
-				idxMetaCharset, lessThan(idxMetaPanelWicketHead));
+		assertThat(idxMetaCharset).isLessThan(idxMetaPanelWicketHead).withFailMessage(
+			"<meta charset> should be rendered before <meta name=\"panel-wicket-head\"");
 
-		assertThat("<meta  name=\"panel-wicket-head\"> should be rendered before <script src=wicket-ajax-jquery.js>",
-				idxMetaPanelWicketHead, lessThan(idxWicketAjaxJs));
+		assertThat(idxMetaPanelWicketHead).isLessThan(idxWicketAjaxJs).withFailMessage(
+			"<meta  name=\"panel-wicket-head\"> should be rendered before <script src=wicket-ajax-jquery.js>");
 
-		assertThat("<script src=wicket-ajax-jquery.js> should be rendered before the <title> element",
-				idxWicketAjaxJs, lessThan(idxTitleElement));
+		assertThat(idxWicketAjaxJs).isLessThan(idxTitleElement).withFailMessage(
+			"<script src=wicket-ajax-jquery.js> should be rendered before the <title> element");
 
-		assertThat("<meta name=\"SubPageWithoutHeaderItemsAndWicketHead\"> should be rendered before the <meta name='fromBasePage'> element",
-				idxMetaFromSubPage, lessThan(idxMetaFromBasePage));
+		assertThat(idxMetaFromSubPage).isLessThan(idxMetaFromBasePage).withFailMessage(
+			"<meta name=\"SubPageWithoutHeaderItemsAndWicketHead\"> should be rendered before the <meta name='fromBasePage'> element");
 
-		assertThat("<meta name='fromBasePage'> should be rendered before the <title> element",
-				idxMetaFromBasePage, lessThan(idxTitleElement));
+		assertThat(idxMetaFromBasePage).isLessThan(idxTitleElement).withFailMessage(
+			"<meta name='fromBasePage'> should be rendered before the <title> element");
 	}
 
 	/**
 	 * Only one <wicket:header-items/> is allowed only in <head>
+	 *
 	 * @see org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler
 	 */
-	@Test(expected = MarkupException.class)
-	public void pageWithTwoHeaderItems()
+	@Test
+	void pageWithTwoHeaderItems()
 	{
-		tester.startPage(PageWithTwoHeaderItems.class);
+		assertThrows(MarkupException.class, () -> {
+			tester.startPage(PageWithTwoHeaderItems.class);
+		});
 	}
 
 	/**
 	 * <wicket:header-items/> is allowed only in <head>
+	 *
 	 * @see org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler
 	 */
-	@Test(expected = MarkupException.class)
-	public void pageWithHeaderItemsOutOfHead()
+	@Test
+	void pageWithHeaderItemsOutOfHead()
 	{
-		tester.startPage(PageWithHeaderItemsOutOfHead.class);
+		assertThrows(MarkupException.class, () -> {
+			tester.startPage(PageWithHeaderItemsOutOfHead.class);
+		});
 	}
 
 	/**
-	 * Verifies that all header contributions from <wicket:head> containers
-	 * and IHeaderResponse are rendered exactly once
+	 * Verifies that all header contributions from <wicket:head> containers and IHeaderResponse are
+	 * rendered exactly once
 	 *
 	 * https://issues.apache.org/jira/browse/WICKET-5531
 	 */
 	@Test
-	public void withHeaderItemsWithWicketHeadNoDuplicates()
+	void withHeaderItemsWithWicketHeadNoDuplicates()
 	{
 		tester.startPage(SubPageWithHeaderItemsAndWicketHead.class);
 		String responseAsString = tester.getLastResponseAsString();
 
 		{
-			int idxMetaPanelWicketHead = responseAsString.indexOf("meta name=\"panel-wicket-head\"");
-			int lastIdxMetaPanelWicketHead = responseAsString.lastIndexOf("meta name=\"panel-wicket-head\"");
+			int idxMetaPanelWicketHead = responseAsString
+				.indexOf("meta name=\"panel-wicket-head\"");
+			int lastIdxMetaPanelWicketHead = responseAsString
+				.lastIndexOf("meta name=\"panel-wicket-head\"");
 			assertEquals(idxMetaPanelWicketHead, lastIdxMetaPanelWicketHead);
 		}
 
@@ -184,20 +196,26 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 		}
 
 		{
-			int idxTitleElement = responseAsString.indexOf("<title>Apache Wicket Quickstart</title>");
-			int lastIdxTitleElement = responseAsString.lastIndexOf("<title>Apache Wicket Quickstart</title>");
+			int idxTitleElement = responseAsString
+				.indexOf("<title>Apache Wicket Quickstart</title>");
+			int lastIdxTitleElement = responseAsString
+				.lastIndexOf("<title>Apache Wicket Quickstart</title>");
 			assertEquals(idxTitleElement, lastIdxTitleElement);
 		}
 
 		{
-			int idxMetaFromBasePage = responseAsString.indexOf("<meta name='fromBasePage' content='1'");
-			int lastIdxMetaFromBasePage = responseAsString.lastIndexOf("<meta name='fromBasePage' content='1'");
+			int idxMetaFromBasePage = responseAsString
+				.indexOf("<meta name='fromBasePage' content='1'");
+			int lastIdxMetaFromBasePage = responseAsString
+				.lastIndexOf("<meta name='fromBasePage' content='1'");
 			assertEquals(idxMetaFromBasePage, lastIdxMetaFromBasePage);
 		}
 
 		{
-			int idxMetaFromSubPage = responseAsString.indexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
-			int lastIdxMetaFromSubPage = responseAsString.lastIndexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
+			int idxMetaFromSubPage = responseAsString
+				.indexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
+			int lastIdxMetaFromSubPage = responseAsString
+				.lastIndexOf("<meta name=\"SubPageWithHeaderItemsAndWicketHead\"");
 			assertEquals(idxMetaFromSubPage, lastIdxMetaFromSubPage);
 		}
 	}
@@ -206,7 +224,8 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5989
 	 */
 	@Test
-	public void pageWithBasePageWithHeaderItems() {
+	void pageWithBasePageWithHeaderItems()
+	{
 		WicketTesterForBasePageWithHeaderItems tester = new WicketTesterForBasePageWithHeaderItems();
 		try
 		{
@@ -221,14 +240,17 @@ public class HtmlHeaderItemsContainerTest extends WicketTestCase
 	private static class WicketTesterForBasePageWithHeaderItems extends WicketTester
 	{
 		@Override
-		protected Page createPage() {
+		protected Page createPage()
+		{
 			return new PageExtendingBasePageWithHeaderItems(new PageParameters());
 		}
 
 
 		@Override
-		protected String createPageMarkup(final String componentId) {
-			return new PageExtendingBasePageWithHeaderItems(new PageParameters()).getMarkup().toString(true);
+		protected String createPageMarkup(final String componentId)
+		{
+			return new PageExtendingBasePageWithHeaderItems(new PageParameters()).getMarkup()
+				.toString(true);
 		}
 
 	}

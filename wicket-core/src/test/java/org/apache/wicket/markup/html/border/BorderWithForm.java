@@ -19,7 +19,7 @@ package org.apache.wicket.markup.html.border;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 
-public class BorderWithForm extends Border
+class BorderWithForm extends Border
 {
 
 	public BorderWithForm(String id)

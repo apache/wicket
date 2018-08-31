@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -27,8 +29,7 @@ import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.io.ByteArrayOutputStream;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for FileSystemResourceReference
@@ -36,7 +37,7 @@ import org.junit.Test;
  * @author Tobias Soloschenko
  *
  */
-public class FileSystemResourceReferenceTest extends WicketTestCase
+class FileSystemResourceReferenceTest extends WicketTestCase
 {
 
 	/**
@@ -48,7 +49,7 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 	 *             if the URI is not readable
 	 */
 	@Test
-	public void testFileSystemResourceReferenceWithZip() throws IOException, URISyntaxException
+	void testFileSystemResourceReferenceWithZip() throws IOException, URISyntaxException
 	{
 		InputStream inputStream = null;
 		try
@@ -69,13 +70,13 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 				}
 			};
 			// Size
-			Assert.assertEquals(fileSystemResource.getSize(), 39);
+			assertEquals(fileSystemResource.getSize(), 39);
 
 			// Content
 			inputStream = fileSystemResource.getInputStream();
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			IOUtils.copy(inputStream, outputStream);
-			Assert.assertEquals("FileSystemResourceReference.zip content", outputStream.toString());
+			assertEquals("FileSystemResourceReference.zip content", outputStream.toString());
 		}
 		finally
 		{
@@ -92,7 +93,7 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 	 *             if the URI is not readable
 	 */
 	@Test
-	public void testFileSystemResourceReferenceWithNormalFile() throws IOException,
+	void testFileSystemResourceReferenceWithNormalFile() throws IOException,
 		URISyntaxException
 	{
 		InputStream inputStream = null;
@@ -113,13 +114,13 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 				}
 			};
 			// Size
-			Assert.assertEquals(fileSystemResource.getSize(), 54);
+			assertEquals(fileSystemResource.getSize(), 54);
 
 			// Content
 			inputStream = fileSystemResource.getInputStream();
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			IOUtils.copy(inputStream, outputStream);
-			Assert.assertEquals("FileSystemResourceReference.zip content in normal file",
+			assertEquals("FileSystemResourceReference.zip content in normal file",
 				outputStream.toString());
 		}
 		finally
@@ -137,7 +138,7 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 	 *             if the URI is not readable
 	 */
 	@Test
-	public void testMimeTypeEqual() throws IOException, URISyntaxException
+	void testMimeTypeEqual() throws IOException, URISyntaxException
 	{
 		URL resource = FileSystemResourceReferenceTest.class.getResource("FileSystemResourceReference.txt");
 		Path path = FileSystemResourceReference.getPath(resource.toURI());
@@ -162,7 +163,7 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 				return fileSystemResource;
 			}
 		};
-		Assert.assertEquals("test/mime1", fileSystemResource.getMimeType());
+		assertEquals("test/mime1", fileSystemResource.getMimeType());
 	}
 
 	/**
@@ -174,7 +175,7 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 	 *             if the
 	 */
 	@Test
-	public void testMimeTypeDetection() throws IOException, URISyntaxException
+	void testMimeTypeDetection() throws IOException, URISyntaxException
 	{
 		// uke > unknown extension :-)
 		URL resource = FileSystemResourceReferenceTest.class.getResource("FileSystemResourceReference.uke");
@@ -192,7 +193,7 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 
 			}
 		};
-		Assert.assertEquals("text/plain_provided_by_detector", fileSystemResource.getMimeType());
+		assertEquals("text/plain_provided_by_detector", fileSystemResource.getMimeType());
 
 		final FileSystemResource fileSystemResourceMime = new FileSystemResource(path)
 		{
@@ -214,14 +215,14 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 				return fileSystemResourceMime;
 			}
 		};
-		Assert.assertEquals("text/plain", fileSystemResourceMime.getMimeType());
+		assertEquals("text/plain", fileSystemResourceMime.getMimeType());
 	}
 
 	/**
 	 * Test serialization of {@link FileSystemResource}
 	 */
 	@Test
-	public void testSerialization() throws IOException, URISyntaxException
+	void testSerialization() throws IOException, URISyntaxException
 	{
 		InputStream inputStream = null;
 		try
@@ -231,13 +232,13 @@ public class FileSystemResourceReferenceTest extends WicketTestCase
 			final FileSystemResource fileSystemResource = new FileSystemResource(path);
 			final FileSystemResource cloned = WicketObjects.cloneObject(fileSystemResource);
 
-			Assert.assertEquals(cloned.getSize(), 54);
+			assertEquals(cloned.getSize(), 54);
 
 			// Content
 			inputStream = cloned.getInputStream();
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			IOUtils.copy(inputStream, outputStream);
-			Assert.assertEquals("FileSystemResourceReference.zip content in normal file",
+			assertEquals("FileSystemResourceReference.zip content in normal file",
 					outputStream.toString());
 		}
 		finally

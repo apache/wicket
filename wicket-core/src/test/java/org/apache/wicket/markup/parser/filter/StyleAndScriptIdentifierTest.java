@@ -16,15 +16,18 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupElement;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 6.0
  */
-public class StyleAndScriptIdentifierTest extends WicketTestCase
+class StyleAndScriptIdentifierTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4425
@@ -36,13 +39,13 @@ public class StyleAndScriptIdentifierTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void doNotWrapScriptTemplates() throws Exception
+	void doNotWrapScriptTemplates() throws Exception
 	{
 		executeTest(PageWithScriptTemplate.class, "PageWithScriptTemplate_expected.html");
 	}
 
 	@Test
-	public void showWrapInCdata()
+	void showWrapInCdata()
 	{
 		StyleAndScriptIdentifier filter = new StyleAndScriptIdentifier();
 
@@ -84,7 +87,7 @@ public class StyleAndScriptIdentifierTest extends WicketTestCase
 	 * The second time it realizes that the element body is already wrapped and skips it.
 	 */
 	@Test
-	public void postProcess()
+	void postProcess()
 	{
 		String rawMarkup = "<script>someJS()</script>";
 		Markup createMarkupElementsMarkup = Markup.of(rawMarkup);

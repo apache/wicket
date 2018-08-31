@@ -21,7 +21,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 /**
  * https://issues.apache.org/jira/browse/WICKET-5989
  */
-public class PageExtendingBasePageWithHeaderItems extends BasePageWithHeaderItems
+class PageExtendingBasePageWithHeaderItems extends BasePageWithHeaderItems
 {
 	public PageExtendingBasePageWithHeaderItems(PageParameters parameters) {
 		super(parameters);

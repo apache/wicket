@@ -79,7 +79,7 @@ public class AjaxFormValidatingBehaviorTestPage extends WebPage
 		 * @param id
 		 * @param markupContainer 
 		 */
-		public HiddenFeedbackPanel(String id, MarkupContainer markupContainer)
+        HiddenFeedbackPanel(String id, MarkupContainer markupContainer)
 		{
 			super(id, new ContainerFeedbackMessageFilter(markupContainer));
 			setOutputMarkupPlaceholderTag(true);

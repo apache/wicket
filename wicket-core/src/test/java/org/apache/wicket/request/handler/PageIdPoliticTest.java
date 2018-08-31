@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.request.handler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.nio.charset.Charset;
 
 import org.apache.wicket.IPageManagerProvider;
@@ -37,15 +40,14 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.versioning.InMemoryPageStore;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class PageIdPoliticTest extends Assert
+class PageIdPoliticTest
 {
 	private WicketTester tester;
 	private InMemoryPageStore dataStore;
@@ -59,7 +61,7 @@ public class PageIdPoliticTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3667">WICKET-3667</a>
 	 */
 	@Test
-	public void testPageGetsTouchedInAjaxRequest()
+	void testPageGetsTouchedInAjaxRequest()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(TestPage.class);
@@ -73,7 +75,7 @@ public class PageIdPoliticTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testPageIdDontGetIncreasedInAjaxRequest()
+	void testPageIdDontGetIncreasedInAjaxRequest()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
@@ -83,8 +85,8 @@ public class PageIdPoliticTest extends Assert
 		assertTrue(testPage.ajaxCallbackExecuted);
 	}
 
-	@Before
-	public void setUp() throws Exception
+	@BeforeEach
+	void setUp() throws Exception
 	{
 		application = new MockApplication();
 		dataStore = new InMemoryPageStore()
@@ -116,8 +118,8 @@ public class PageIdPoliticTest extends Assert
 		};
 	}
 
-	@After
-	public void tearDown() throws Exception
+	@AfterEach
+	void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
@@ -133,7 +135,7 @@ public class PageIdPoliticTest extends Assert
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+        public TestPage()
 		{
 			WebComponent component;
 			component = new WebComponent("component");
@@ -155,7 +157,7 @@ public class PageIdPoliticTest extends Assert
 		 * @param encoding
 		 * @return ajaxUrl
 		 */
-		public Url getAjaxUrl(String encoding)
+		Url getAjaxUrl(String encoding)
 		{
 			return Url.parse(eventBehavior.getCallbackUrl().toString(), Charset.forName(encoding));
 		}

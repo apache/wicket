@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.redirect.abort;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Testcase for WICKET-1418, throwing an abortexception during rendering.
@@ -30,36 +32,36 @@ import org.junit.Test;
  * 
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-1418">WICKET-1418</a>
  */
-public class AbortExceptionTest extends WicketTestCase
+class AbortExceptionTest extends WicketTestCase
 {
 	/**
 	 * Test page without throwing abort.
 	 */
 	@Test
-	public void testNoAbort()
+	void testNoAbort()
 	{
 		tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", false));
-		Assert.assertEquals(1234, tester.getLastResponse().getStatus());
+		assertEquals(1234, tester.getLastResponse().getStatus());
 	}
 
 	/**
 	 * Test page with throwing abort.
 	 */
 	@Test
-	public void testAbort()
+	void testAbort()
 	{
 		try
 		{
 			tester.startPage(AbortExceptionPage.class, new PageParameters().set("trigger", true));
-			Assert.assertEquals(1234, tester.getLastResponse().getStatus()); // this will
+			assertEquals(1234, tester.getLastResponse().getStatus()); // this will
 			// fail
 		}
 		catch (RuntimeException x)
 		{
 			final Throwable reason = x.getCause();
 
-			Assert.assertEquals(reason.getClass(), AbortWithHttpErrorCodeException.class);
-			Assert.fail("this must not happen (we expect a redirect happen here and handled by wicket request processor)");
+			assertEquals(reason.getClass(), AbortWithHttpErrorCodeException.class);
+			fail("this must not happen (we expect a redirect happen here and handled by wicket request processor)");
 		}
 	}
 

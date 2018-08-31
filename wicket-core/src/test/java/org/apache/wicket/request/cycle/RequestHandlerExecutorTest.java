@@ -26,9 +26,9 @@ import org.apache.wicket.request.UrlRenderer;
 /**
  * @author Jeremy Thomerson
  */
-public abstract class RequestHandlerExecutorTest
+abstract class RequestHandlerExecutorTest
 {
-	protected Response newResponse()
+	Response newResponse()
 	{
 		return new Response()
 		{
@@ -70,7 +70,7 @@ public abstract class RequestHandlerExecutorTest
 	{
 		Response response;
 
-		public MockRequestCycle(Response response)
+		MockRequestCycle(Response response)
 		{
 			this.response = response;
 		}

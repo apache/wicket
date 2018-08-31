@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.Optional;
 
 import org.apache.wicket.MarkupContainer;
@@ -26,29 +28,35 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 6.0.0
  */
-public class AjaxFallbackLinkTest extends WicketTestCase
+class AjaxFallbackLinkTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4641
 	 *
 	 * AjaxFallbackLink can be used only with <a>, <area> or <link> markup elements
 	 */
-	@Test(expected = MarkupException.class)
-	public void onlyAnchorAreaAndLink()
+	@Test
+	void onlyAnchorAreaAndLink()
 	{
-		tester.startPage(new OnlyAnchorAreaAndLinkPage());
+		assertThrows(MarkupException.class, () -> {
+			tester.startPage(new OnlyAnchorAreaAndLinkPage());
+
+		});
 	}
 
-	private static class OnlyAnchorAreaAndLinkPage extends WebPage implements IMarkupResourceStreamProvider
+	private static class OnlyAnchorAreaAndLinkPage extends WebPage
+		implements
+			IMarkupResourceStreamProvider
 	{
 		private OnlyAnchorAreaAndLinkPage()
 		{
-			add(new AjaxFallbackLink<Void>("l") {
+			add(new AjaxFallbackLink<Void>("l")
+			{
 
 				@Override
 				public void onClick(Optional<AjaxRequestTarget> optional)
@@ -58,9 +66,11 @@ public class AjaxFallbackLinkTest extends WicketTestCase
 		}
 
 		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body><bla wicket:id='l'>Ajax fallback link</bla></body></html>");
+			return new StringResourceStream(
+				"<html><body><bla wicket:id='l'>Ajax fallback link</bla></body></html>");
 		}
 	}
 

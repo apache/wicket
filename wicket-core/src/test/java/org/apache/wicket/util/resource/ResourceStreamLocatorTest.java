@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -30,8 +33,7 @@ import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.file.IResourceFinder;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * ResourceStreamLocator test. Tests construction of resource names with
@@ -64,8 +66,8 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	 * @param locale
 	 * @param extension
 	 */
-	public void createAndTestResource(IResourceFinder sourcePath, String style, String variation,
-		Locale locale, String extension)
+	private void createAndTestResource(IResourceFinder sourcePath, String style, String variation,
+									   Locale locale, String extension)
 	{
 		IResourceStreamLocator locator = new ResourceStreamLocator(sourcePath);
 		IResourceStream resource = locator.locate(this.getClass(), this.getClass()
@@ -78,7 +80,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	 * 
 	 * @param sourcePath
 	 */
-	public void executeMultiple(IResourceFinder sourcePath)
+	private void executeMultiple(IResourceFinder sourcePath)
 	{
 		createAndTestResource(sourcePath, null, null, null, "");
 		createAndTestResource(sourcePath, "style", null, null, "_style");
@@ -112,7 +114,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	 * Test locating a resource.
 	 */
 	@Test
-	public void locateInClasspath()
+	void locateInClasspath()
 	{
 		// Execute without source path
 		executeMultiple(new ClassPathResourceFinder(""));
@@ -133,7 +135,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	 */
 	private void compareFilename(IResourceStream resource, String name)
 	{
-		assertNotNull("Did not find resource: " + name, resource);
+		assertNotNull(resource, "Did not find resource: " + name);
 
 		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/").toString();
 		filename += name + ".txt";
@@ -143,7 +145,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 		{
 			filename = Strings.afterLast(filename, '/');
 			resourcePath = Strings.afterLast(resourcePath, '/');
-			assertEquals("Did not find resource", filename, resourcePath);
+			assertEquals(filename, resourcePath, "Did not find resource");
 		}
 	}
 
@@ -154,7 +156,7 @@ public class ResourceStreamLocatorTest extends WicketTestCase
 	 *            the resource
 	 * @return the path of the resource as a string
 	 */
-	public static String getPath(IResourceStream resource)
+	private static String getPath(IResourceStream resource)
 	{
 		if (resource instanceof UrlResourceStream)
 		{

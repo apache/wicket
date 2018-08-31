@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.markup.html.internal;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-
 
 /**
  */
@@ -49,11 +49,13 @@ public class TraditionalEnclosureAjaxPage extends WebPage
 				return get(toggleableChildId).isVisible();
 			}
 		}).setOutputMarkupPlaceholderTag(true));
-		Assert.assertEquals("Ajax requires tag to remain in DOM even if not visible", true,
-			traditionalAjaxVisibilityToggleRequiresPlaceholder.getOutputMarkupPlaceholderTag());
+		assertEquals(true,
+			traditionalAjaxVisibilityToggleRequiresPlaceholder.getOutputMarkupPlaceholderTag(),
+			"Ajax requires tag to remain in DOM even if not visible");
 		{
-			traditionalAjaxVisibilityToggleRequiresPlaceholder.add((toggleable = new WebMarkupContainer(
-				toggleableChildId = "toggleable")).setOutputMarkupPlaceholderTag(true));
+			traditionalAjaxVisibilityToggleRequiresPlaceholder
+				.add((toggleable = new WebMarkupContainer(toggleableChildId = "toggleable"))
+					.setOutputMarkupPlaceholderTag(true));
 			add(link = new AjaxLink<Void>("link")
 			{
 				@Override

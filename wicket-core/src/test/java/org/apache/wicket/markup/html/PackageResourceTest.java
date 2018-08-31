@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Locale;
 
 import org.apache.wicket.Application;
@@ -27,8 +32,8 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for package resources.
@@ -38,13 +43,13 @@ import org.junit.Test;
 public class PackageResourceTest extends WicketTestCase
 {
 	/** mock application object */
-	public WebApplication application;
+	private WebApplication application;
 
 	/**
 	 *
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		application = tester.getApplication();
 	}
@@ -55,11 +60,12 @@ public class PackageResourceTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void bindAbsolutePackageResource() throws Exception
+	void bindAbsolutePackageResource() throws Exception
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
-		assertNotNull("resource packaged1.txt should be available as a packaged resource",
-			sharedResources.get(PackageResourceTest.class, "packaged1.txt", null, null, null, true));
+		assertNotNull(
+			sharedResources.get(PackageResourceTest.class, "packaged1.txt", null, null, null, true),
+			"resource packaged1.txt should be available as a packaged resource");
 	}
 
 	/**
@@ -68,7 +74,7 @@ public class PackageResourceTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void packageResourceGuard() throws Exception
+	void packageResourceGuard() throws Exception
 	{
 		PackageResourceGuard guard = new PackageResourceGuard();
 		assertTrue(guard.acceptExtension("txt"));
@@ -91,24 +97,22 @@ public class PackageResourceTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void lenientPackageResourceMatching() throws Exception
+	void lenientPackageResourceMatching() throws Exception
 	{
 		ResourceReference invalidResource = new PackageResourceReference(PackageResourceTest.class,
 			"i_do_not_exist.txt", Locale.ENGLISH, null, null);
-		assertNotNull(
-			"resource i_do_not_exist.txt SHOULD be available as a packaged resource even if it doesn't exist",
-			invalidResource.getResource());
+		assertNotNull(invalidResource.getResource(), "resource i_do_not_exist.txt SHOULD be available as a packaged resource even if it doesn't exist");
 
-		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, null,
-			null));
+		assertTrue(
+			PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", Locale.CHINA,
 			null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", Locale.CHINA,
 			"foo", null));
-		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, "foo",
+		assertTrue(
+			PackageResource.exists(PackageResourceTest.class, "packaged1.txt", null, "foo", null));
+		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en.txt", null, null,
 			null));
-		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en.txt", null,
-			null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en_US.txt", null,
 			null, null));
 		assertTrue(PackageResource.exists(PackageResourceTest.class, "packaged1_en_US.txt", null,
@@ -139,7 +143,7 @@ public class PackageResourceTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4119
 	 */
 	@Test
-	public void contentType()
+	void contentType()
 	{
 		PackageResource textResource = new PackageResource(PackageResourceTest.class,
 			"packaged1.txt", null, null, null)
@@ -161,7 +165,7 @@ public class PackageResourceTest extends WicketTestCase
 	}
 
 	@Test
-	public void textFileWithEncoding()
+	void textFileWithEncoding()
 	{
 		final String encoding = "Klingon-8859-42";
 		final PackageResource resource = new PackageResource(PackageResourceTest.class,
@@ -176,7 +180,7 @@ public class PackageResourceTest extends WicketTestCase
 	}
 
 	@Test
-	public void javascriptFileWithEncoding()
+	void javascriptFileWithEncoding()
 	{
 		final String encoding = "Klingon-8859-42";
 		final JavaScriptPackageResource resource = new JavaScriptPackageResource(

@@ -16,21 +16,24 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class SecuredRemoteAddressRequestWrapperFactoryTest extends WicketTestCase
+class SecuredRemoteAddressRequestWrapperFactoryTest extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void test1()
+	void test1()
 	{
 		SecuredRemoteAddressRequestWrapperFactory factory = new SecuredRemoteAddressRequestWrapperFactory();
 		MockHttpServletRequest request = tester.getRequest();

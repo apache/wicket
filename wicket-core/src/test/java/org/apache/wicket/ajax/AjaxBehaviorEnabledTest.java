@@ -26,13 +26,13 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author marrink
  */
-public class AjaxBehaviorEnabledTest extends WicketTestCase
+class AjaxBehaviorEnabledTest extends WicketTestCase
 {
 	/**
 	 * Custom security strategy to disable all components where the id ends with "disable".
@@ -60,8 +60,8 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+    void before()
 	{
 		final IAuthorizationStrategy strategy = new CustomStrategy();
 		tester = new WicketTester(new MockApplication()
@@ -89,7 +89,7 @@ public class AjaxBehaviorEnabledTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1575">1575</a>
 	 */
 	@Test
-	public void disabledBehavior() throws Exception
+    void disabledBehavior() throws Exception
 	{
 		executeTest(AjaxBehaviorEnabledPage.class, "AjaxBehaviorEnabled_expected.html");
 	}

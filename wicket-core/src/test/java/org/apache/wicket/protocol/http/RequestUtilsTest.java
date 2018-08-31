@@ -16,27 +16,28 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.nio.charset.Charset;
 
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Johan
  */
-public class RequestUtilsTest extends Assert
+class RequestUtilsTest
 {
 
-	public static final Charset UTF_8_CHARSET = Charset.forName("UTF-8");
+	private static final Charset UTF_8_CHARSET = Charset.forName("UTF-8");
 
 	/**
 	 * 
 	 */
 	@Test
-	public void doubleDotsMiddle()
+	void doubleDotsMiddle()
 	{
 		assertEquals("/a/b", RequestUtils.removeDoubleDots("/a/b/../b"));
 		assertEquals("a/b", RequestUtils.removeDoubleDots("a/b/../b"));
@@ -47,7 +48,7 @@ public class RequestUtilsTest extends Assert
 	 * 
 	 */
 	@Test
-	public void doubleDotsEnd()
+	void doubleDotsEnd()
 	{
 		assertEquals("/a/b", RequestUtils.removeDoubleDots("/a/b/c/.."));
 		assertEquals("a/b", RequestUtils.removeDoubleDots("a/b/c/.."));
@@ -57,7 +58,7 @@ public class RequestUtilsTest extends Assert
 	 * 
 	 */
 	@Test
-	public void doubleDotsStart()
+	void doubleDotsStart()
 	{
 		assertEquals("/../a/b", RequestUtils.removeDoubleDots("/../a/b"));
 		assertEquals("../a/b", RequestUtils.removeDoubleDots("../a/b"));
@@ -67,7 +68,7 @@ public class RequestUtilsTest extends Assert
 	 * 
 	 */
 	@Test
-	public void emptyDoubleDots()
+	void emptyDoubleDots()
 	{
 		assertEquals("", RequestUtils.removeDoubleDots(""));
 	}
@@ -76,7 +77,7 @@ public class RequestUtilsTest extends Assert
 	 * 
 	 */
 	@Test
-	public void oneDoubleDots()
+	void oneDoubleDots()
 	{
 		assertEquals("..", RequestUtils.removeDoubleDots(".."));
 		assertEquals("../", RequestUtils.removeDoubleDots("../"));
@@ -87,7 +88,7 @@ public class RequestUtilsTest extends Assert
 	 * 
 	 */
 	@Test
-	public void toAbsolutePath()
+	void toAbsolutePath()
 	{
 		assertEquals(RequestUtils.toAbsolutePath("http://aif.ru/test/test", "../blah/zzz"),
 			"http://aif.ru/blah/zzz");
@@ -109,7 +110,7 @@ public class RequestUtilsTest extends Assert
 	 * WICKET-4664 - remove leading ? if present
 	 */
 	@Test
-	public void removeLeadingQuestionMark_simpleParam()
+	void removeLeadingQuestionMark_simpleParam()
 	{
 		final PageParameters params = new PageParameters();
 		RequestUtils.decodeParameters("?key=value", params, UTF_8_CHARSET);
@@ -120,7 +121,7 @@ public class RequestUtilsTest extends Assert
 	 * WICKET-4664 - remove leading ? if present
 	 */
 	@Test
-	public void removeLeadingQuestionMark_simpleParamWithoutValueAndAnotherParam()
+	void removeLeadingQuestionMark_simpleParamWithoutValueAndAnotherParam()
 	{
 		final PageParameters params = new PageParameters();
 		RequestUtils.decodeParameters("?123&key=value", params, UTF_8_CHARSET);
@@ -132,7 +133,7 @@ public class RequestUtilsTest extends Assert
 	 * WICKET-4664 - remove leading ? if present
 	 */
 	@Test
-	public void removeLeadingQuestionMark_simpleParamWithoutValue()
+	void removeLeadingQuestionMark_simpleParamWithoutValue()
 	{
 		final PageParameters params = new PageParameters();
 		RequestUtils.decodeParameters("?123", params, UTF_8_CHARSET);
@@ -143,7 +144,7 @@ public class RequestUtilsTest extends Assert
 	 *
 	 */
 	@Test
-	public void decodeParam_simpleParam_noQuestionMark()
+	void decodeParam_simpleParam_noQuestionMark()
 	{
 		final PageParameters params = new PageParameters();
 		RequestUtils.decodeParameters("key=value", params, UTF_8_CHARSET);
@@ -154,7 +155,7 @@ public class RequestUtilsTest extends Assert
 	 *
 	 */
 	@Test
-	public void decodeParam_simpleParamWithoutValueAndAnotherParam_NoQuestionMark()
+	void decodeParam_simpleParamWithoutValueAndAnotherParam_NoQuestionMark()
 	{
 		final PageParameters params = new PageParameters();
 		RequestUtils.decodeParameters("123&key=value", params, UTF_8_CHARSET);
@@ -166,7 +167,7 @@ public class RequestUtilsTest extends Assert
 	 *
 	 */
 	@Test
-	public void decodeParam_simpleParamWithoutValue_NoQuestionMark()
+	void decodeParam_simpleParamWithoutValue_NoQuestionMark()
 	{
 		final PageParameters params = new PageParameters();
 		RequestUtils.decodeParameters("123", params, UTF_8_CHARSET);
@@ -175,7 +176,7 @@ public class RequestUtilsTest extends Assert
 
 
 	@Test
-	public void charset() throws Exception
+	void charset() throws Exception
 	{
 		MockHttpServletRequest request = new MockHttpServletRequest(null, null, null);
 

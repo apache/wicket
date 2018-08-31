@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.resource;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Locale;
 
@@ -32,10 +34,10 @@ import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.request.resource.caching.ResourceUrl;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class CssUrlReplacerTest extends WicketTestCase
+class CssUrlReplacerTest extends WicketTestCase
 {
 
 	private static final String DECORATION_SUFFIX = "--decorated";
@@ -71,14 +73,14 @@ public class CssUrlReplacerTest extends WicketTestCase
 		};
 	}
 
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 	}
 
 	@Test
-	public void doNotProcessFullUrls()
+	void doNotProcessFullUrls()
 	{
 		String input = ".class {background-image: url('http://example.com/some.img');}";
 		Class<?> scope = CssUrlReplacerTest.class;
@@ -86,11 +88,11 @@ public class CssUrlReplacerTest extends WicketTestCase
 		CssUrlReplacer replacer = new CssUrlReplacer();
 
 		String processed = replacer.process(input, scope, cssRelativePath);
-		assertThat(processed, is(input));
+		assertEquals(input, processed);
 	}
 
 	@Test
-	public void doNotProcessDataUrls_WICKET_6290()
+	void doNotProcessDataUrls_WICKET_6290()
 	{
 		String input = ".class {background-image: url(data:image/gif;base64,R0lGODlhEAAQAMQAAORHH);}";
 		Class<?> scope = CssUrlReplacerTest.class;
@@ -98,11 +100,11 @@ public class CssUrlReplacerTest extends WicketTestCase
 		CssUrlReplacer replacer = new CssUrlReplacer();
 
 		String processed = replacer.process(input, scope, cssRelativePath);
-		assertThat(processed, is(input));
+		assertEquals(input, processed);
 	}
 
 	@Test
-	public void doNotProcessContextAbsoluteUrls()
+	void doNotProcessContextAbsoluteUrls()
 	{
 		String input = ".class {background-image: url('/some.img');}";
 		Class<?> scope = CssUrlReplacerTest.class;
@@ -110,11 +112,11 @@ public class CssUrlReplacerTest extends WicketTestCase
 		CssUrlReplacer replacer = new CssUrlReplacer();
 
 		String processed = replacer.process(input, scope, cssRelativePath);
-		assertThat(processed, is(input));
+		assertEquals(input, processed);
 	}
 
 	@Test
-	public void sameFolderSingleQuotes()
+	void sameFolderSingleQuotes()
 	{
 		String input = ".class {background-image: url('some.img');}";
 		Class<?> scope = CssUrlReplacerTest.class;
@@ -129,7 +131,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 	}
 
 	@Test
-	public void sameFolderDoubleQuotes()
+	void sameFolderDoubleQuotes()
 	{
 		String input = ".class {background-image: url(\"some.img\");}";
 		Class<?> scope = CssUrlReplacerTest.class;
@@ -144,7 +146,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 	}
 
 	@Test
-	public void parentFolderAppendFolder()
+	void parentFolderAppendFolder()
 	{
 		String input = ".class {background-image: url('../images/some.img');}";
 		Class<?> scope = CssUrlReplacerTest.class;
@@ -159,7 +161,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 	}
 
 	@Test
-	public void sameFolderAppendFolder()
+	void sameFolderAppendFolder()
 	{
 		String input = ".class {background-image: url('./images/some.img');}";
 		Class<?> scope = CssUrlReplacerTest.class;
@@ -174,7 +176,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 	}
 
 	@Test
-	public void base64EncodedImage()
+	void base64EncodedImage()
 	{
 		String input = ".class {background-image: url('Beer.gif?embedBase64');}";
 		Class<?> scope = ImageTest.class;
@@ -187,7 +189,7 @@ public class CssUrlReplacerTest extends WicketTestCase
 	}
 
 	@Test
-	public void severalUrls()
+	void severalUrls()
 	{
 		String input = ".class {\n" + "a: url('../images/a.img');\n" + "b: url('./b.img');\n" + "}";
 		Class<?> scope = CssUrlReplacerTest.class;

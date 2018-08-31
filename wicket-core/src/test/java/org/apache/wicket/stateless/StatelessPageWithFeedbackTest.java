@@ -16,18 +16,18 @@
  */
 package org.apache.wicket.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class StatelessPageWithFeedbackTest extends WicketTestCase
+class StatelessPageWithFeedbackTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -46,13 +46,13 @@ public class StatelessPageWithFeedbackTest extends WicketTestCase
 	 * After submit, both feedbackmessages (from onInitialize and onSubmit) must be visible
 	 */
 	@Test
-	public void wicket6529()
+	void wicket6529()
 	{
 		tester.startPage(StatelessPageWithFeedback.class);
 		tester.assertFeedback("feedback", "error in onInitialize");
 		tester.clickLink("form:submit");
 		String response = tester.getLastResponseAsString();
-		Assert.assertTrue("onInitialize", response.contains("error in onInitialize"));
-		Assert.assertTrue("onSubmit", response.contains("error in onSubmit"));
+		assertTrue(response.contains("error in onInitialize"), "onInitialize");
+		assertTrue(response.contains("error in onSubmit"), "onSubmit");
 	}
 }

@@ -16,19 +16,23 @@
  */
 package org.apache.wicket.markup;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Timo Rantalaiho
  */
-public class MarkupCacheTest extends WicketTestCase
+class MarkupCacheTest extends WicketTestCase
 {
 	private MarkupCache cache;
 	private MarkupCachingAssumingComponent component;
@@ -36,8 +40,8 @@ public class MarkupCacheTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		cache = new MarkupCache();
 
@@ -58,7 +62,7 @@ public class MarkupCacheTest extends WicketTestCase
 	 * testMarkupNotFoundInformationIsCachedInDeploymentMode()
 	 */
 	@Test
-	public void markupNotFoundInformationIsCachedInDeploymentMode()
+	void markupNotFoundInformationIsCachedInDeploymentMode()
 	{
 		IMarkupFragment markup = cache.getMarkup(component, null, false);
 		assertNotNull(markup);
@@ -71,7 +75,7 @@ public class MarkupCacheTest extends WicketTestCase
 	 * testRemoveMarkupWhereBaseMarkupIsNoLongerInTheCache()
 	 */
 	@Test
-	public void removeMarkupWhereBaseMarkupIsNoLongerInTheCache()
+	void removeMarkupWhereBaseMarkupIsNoLongerInTheCache()
 	{
 		tester.startPage(MarkupInheritanceExtension_1.class);
 		tester.assertRenderedPage(MarkupInheritanceExtension_1.class);
@@ -94,7 +98,7 @@ public class MarkupCacheTest extends WicketTestCase
 		private static final long serialVersionUID = -6743937191677599322L;
 		private boolean firstCall = true;
 
-		public MarkupCachingAssumingComponent(final String id)
+		MarkupCachingAssumingComponent(final String id)
 		{
 			super(id);
 		}

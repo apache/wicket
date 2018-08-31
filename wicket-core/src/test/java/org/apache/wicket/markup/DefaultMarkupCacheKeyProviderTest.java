@@ -16,22 +16,24 @@
  */
 package org.apache.wicket.markup;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link DefaultMarkupCacheKeyProvider}.
  */
-public class DefaultMarkupCacheKeyProviderTest extends WicketTestCase
+class DefaultMarkupCacheKeyProviderTest extends WicketTestCase
 {
 
 	/**
        */
 	@Test
-	public void localeLanguageCountryVariant()
+	void localeLanguageCountryVariant()
 	{
 		DefaultMarkupCacheKeyProvider provider = new DefaultMarkupCacheKeyProvider();
 

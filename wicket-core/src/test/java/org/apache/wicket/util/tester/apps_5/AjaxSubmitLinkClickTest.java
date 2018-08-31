@@ -16,29 +16,30 @@
  */
 package org.apache.wicket.util.tester.apps_5;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.apps_5.MockPageWithFormAndLink.MockPojo;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test that the clickLink method works with AjaxSubmitLinks
  * 
  * @author Frank Bille
  */
-public class AjaxSubmitLinkClickTest extends WicketTestCase
+class AjaxSubmitLinkClickTest extends WicketTestCase
 {
 	private boolean linkClicked;
 
 	/**
 	 *
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		linkClicked = false;
 	}
@@ -47,7 +48,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void testClickLinkInsideForm_ajaxSubmitLink()
+	void testClickLinkInsideForm_ajaxSubmitLink()
 	{
 		MockPojo mockPojo = new MockPageWithFormAndLink.MockPojo();
 		mockPojo.setName("Mock name");
@@ -92,7 +93,7 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void testClickLink_ajaxSubmitLink()
+	void testClickLink_ajaxSubmitLink()
 	{
 		MockPojo mockPojo = new MockPageWithFormAndLink.MockPojo();
 		mockPojo.setName("Mock name");

@@ -26,14 +26,14 @@ public class SimpleTestPanelBase extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	protected WebMarkupContainer baseSpan;
+	WebMarkupContainer baseSpan;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param name
 	 */
-	public SimpleTestPanelBase(String name)
+    SimpleTestPanelBase(String name)
 	{
 		super(name);
 

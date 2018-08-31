@@ -16,18 +16,20 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.io.Serializable;
 import java.util.Locale;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for converter locators.
  * 
  * @author Eelco Hillenius
  */
-public final class ConverterLocatorTest extends Assert
+final class ConverterLocatorTest
 {
 	private final ConverterLocator locator = new ConverterLocator();
 
@@ -35,7 +37,7 @@ public final class ConverterLocatorTest extends Assert
 	 * Test generalized conversion
 	 */
 	@Test
-	public void test()
+	void test()
 	{
 		assertNotNull(locator.getConverter(Integer.class));
 		assertNotNull(locator.getConverter(Double.class));
@@ -48,7 +50,7 @@ public final class ConverterLocatorTest extends Assert
 	 * WICKET-4755
 	 */
 	@Test
-	public void isInstance()
+	void isInstance()
 	{
 		assertEquals("test",
 			locator.getConverter(Serializable.class).convertToObject("test", Locale.US));

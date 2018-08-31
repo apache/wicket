@@ -16,22 +16,23 @@
  */
 package org.apache.wicket;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class RequestEncodingTest extends Assert
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.tester.WicketTester;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class RequestEncodingTest
 {
 
 	private RedirectApplication application;
 	private WicketTester tester;
 
-	@Before
-	public void setUp()
+	@BeforeEach
+	void setUp()
 	{
 		application = new RedirectApplication();
 		tester = new WicketTester(application);
@@ -39,14 +40,14 @@ public class RequestEncodingTest extends Assert
 		tester.assertRenderedPage(RedirectHomePage.class);
 	}
 
-	@After
-	public void tearDown()
+	@AfterEach
+	void tearDown()
 	{
 		tester.destroy();
 	}
 
 	@Test
-	public void defaultTest()
+	void defaultTest()
 	{
 		tester.startPage(RedirectA.class,
 			new PageParameters().set("file", "umlaut-\u00E4-\u00F6-\u00FC"));
@@ -66,7 +67,7 @@ public class RequestEncodingTest extends Assert
 	}
 
 	@Test
-	public void umlautsInRequestUri()
+	void umlautsInRequestUri()
 	{
 		application.mountPage("Aparameter", RedirectA.class);
 		defaultTest();

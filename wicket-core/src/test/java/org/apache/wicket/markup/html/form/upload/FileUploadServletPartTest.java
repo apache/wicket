@@ -16,9 +16,12 @@
  */
 package org.apache.wicket.markup.html.form.upload;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,7 +32,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-
 import javax.servlet.http.Part;
 
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -37,13 +39,12 @@ import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test of FileUpload with simulated Servlet 3.0 multipart config
  */
-public class FileUploadServletPartTest extends WicketTestCase
+class FileUploadServletPartTest extends WicketTestCase
 {
 	/**
 	 * Tests support for uploading files with Servlet 3.0 multipart upload
@@ -52,7 +53,7 @@ public class FileUploadServletPartTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void uploadServlet30Multipart() throws Exception
+	void uploadServlet30Multipart() throws Exception
 	{
 		MockPageWithFormAndUploadField page = tester.startPage(MockPageWithFormAndUploadField.class);
 
@@ -69,24 +70,24 @@ public class FileUploadServletPartTest extends WicketTestCase
 		assertEquals(Servlet3Part.CONTENT_TYPE, fileUpload.getContentType());
 		assertArrayEquals(Servlet3Part.DATA, IOUtils.toByteArray(fileUpload.getInputStream()));
 
-		assertThat(part.written.get(), is(nullValue()));
+		assertNull(part.written.get());
 		fileUpload.writeToTempFile();
-		assertThat(part.written.get(), is(notNullValue()));
+		assertNotNull(part.written.get());
 
-		assertThat(part.deleted.get(), is(false));
+		assertFalse(part.deleted.get());
 		fileUpload.delete();
-		assertThat(part.deleted.get(), is(true));
+		assertTrue(part.deleted.get());
 	}
 
 	private static class Servlet3Part implements Part
 	{
 		private static final byte[] DATA = new byte[] {1, 2, 3};
-		public static final String CONTENT_TYPE = "text/plain";
+		static final String CONTENT_TYPE = "text/plain";
 
 		private final AtomicReference<String> written = new AtomicReference<>();
 		private final AtomicBoolean deleted = new AtomicBoolean(false);
 		private final LinkedHashMap<String, List<String>> headers = new LinkedHashMap<>();
-		public final String fieldName;
+		final String fieldName;
 
 		private Servlet3Part(String fieldName) {
 			this.fieldName = fieldName;

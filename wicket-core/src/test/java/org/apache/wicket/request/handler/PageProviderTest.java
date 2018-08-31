@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.request.handler;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -40,19 +43,19 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author pedro
  */
-public class PageProviderTest extends WicketTestCase
+class PageProviderTest extends WicketTestCase
 {
 
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-4046">WICKET-4046</a>
 	 */
 	@Test
-	public void pageProviderDontDeserializeOnePageTwice()
+	void pageProviderDontDeserializeOnePageTwice()
 	{
 		int oldState = 0;
 		int newState = 1;
@@ -72,7 +75,7 @@ public class PageProviderTest extends WicketTestCase
 
 		// simulation an test call to isNewPageInstance
 		boolean isNewPageInstance = pageProvider.isNewPageInstance();
-		assertFalse("test page is already stored", isNewPageInstance);
+		assertFalse(isNewPageInstance, "test page is already stored");
 
 		// changing some sate
 		StatefullMockPage providedPage = (StatefullMockPage)pageProvider.getPageInstance();
@@ -98,7 +101,7 @@ public class PageProviderTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3252">WICKET-3252</a>
 	 * */
 	@Test
- 	public void testStalePageException()
+	void testStalePageException()
 	{
 		tester.startPage(TestPage.class);
 		TestPage testPage = (TestPage)tester.getLastRenderedPage();
@@ -133,7 +136,7 @@ public class PageProviderTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void testStalePageExceptionOnAjaxRequest() throws IOException,
+	void testStalePageExceptionOnAjaxRequest() throws IOException,
 		ResourceStreamNotFoundException, ParseException
 	{
 		tester.startPage(TestPage.class);
@@ -178,7 +181,7 @@ public class PageProviderTest extends WicketTestCase
 	 * href="https://issues.apache.org/jira/browse/WICKET-3339">WICKET-3339</a>
 	 */
 	@Test
-	public void test()
+	void test()
 	{
 		tester.setFollowRedirects(false);
 		tester.startPage(TestPage.class);
@@ -187,7 +190,7 @@ public class PageProviderTest extends WicketTestCase
 	}
 
 	@Test
-	public void testPageProperties_provided()
+	void testPageProperties_provided()
 	{
 		PageProvider provider = new PageProvider(new StatelessPageTest());
 		assertTrue(provider.hasPageInstance());
@@ -195,7 +198,7 @@ public class PageProviderTest extends WicketTestCase
 	}
 
 	@Test
-	public void testPageProperties_bookmarkable()
+	void testPageProperties_bookmarkable()
 	{
 		PageProvider provider = new PageProvider(StatelessPageTest.class);
 		assertTrue(provider.doesProvideNewPage());
@@ -208,7 +211,7 @@ public class PageProviderTest extends WicketTestCase
 	}
 
 	@Test
-	public void testPageProperties_stored()
+	void testPageProperties_stored()
 	{
 		TestMapperContext mapperContext = new TestMapperContext();
 		Page page = new TestPage();
@@ -231,7 +234,7 @@ public class PageProviderTest extends WicketTestCase
 	 * the requested and the found page classes do not match.
 	 */
 	@Test
-	public void ignorePageFoundByIdIfItsClassDoesntMatch()
+	void ignorePageFoundByIdIfItsClassDoesntMatch()
 	{
 		TestMapperContext mapperContext = new TestMapperContext();
 		Page page = new TestPage();
@@ -248,7 +251,7 @@ public class PageProviderTest extends WicketTestCase
 	}
 
 	@Test
-	public void pageProviderIsSerializeble() throws Exception
+	void pageProviderIsSerializeble() throws Exception
 	{
 		TestMapperContext mapperContext = new TestMapperContext();
 		Page page = new TestPage();
@@ -261,7 +264,7 @@ public class PageProviderTest extends WicketTestCase
 		PageProvider deserialized = (PageProvider)javaSerializer.deserialize(serialized);
 		deserialized.setPageSource(mapperContext);
 
-		assertThat(deserialized.getPageInstance(), is(page));
+		assertEquals(page, deserialized.getPageInstance());
 	}
 
 	/** */

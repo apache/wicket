@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class FormMultiPartTest extends WicketTestCase
+class FormMultiPartTest extends WicketTestCase
 {
-	
+
 	@Test
-	public void multipartHard()
+	void multipartHard()
 	{
 		MultiPartFormPage page = new MultiPartFormPage();
-		
+
 		page.form.setMultiPart(true);
 		tester.startPage(page);
 
@@ -38,7 +40,7 @@ public class FormMultiPartTest extends WicketTestCase
 	}
 
 	@Test
-	public void multipartHint()
+	void multipartHint()
 	{
 		MultiPartFormPage page = new MultiPartFormPage();
 
@@ -46,20 +48,20 @@ public class FormMultiPartTest extends WicketTestCase
 		tester.startPage(page);
 		assertEquals(1, page.asked);
 		assertEquals(false, page.form.isMultiPart());
-		
+
 		page.multiPart = true;
 		tester.newFormTester("form").submit(page.button1);
 		assertEquals(2, page.asked);
 		assertEquals(true, page.form.isMultiPart());
-		
+
 		page.multiPart = false;
 		tester.newFormTester("form").submit(page.button1);
 		assertEquals(3, page.asked);
-		assertEquals(false, page.form.isMultiPart());		
+		assertEquals(false, page.form.isMultiPart());
 	}
-	
+
 	@Test
-	public void multipartHintAjax()
+	void multipartHintAjax()
 	{
 		MultiPartFormPage page = new MultiPartFormPage();
 
@@ -67,15 +69,15 @@ public class FormMultiPartTest extends WicketTestCase
 		tester.startPage(page);
 		assertEquals(1, page.asked);
 		assertEquals(false, page.form.isMultiPart());
-		
+
 		page.multiPart = true;
 		tester.executeAjaxEvent(page.button1, "click");
 		assertEquals(2, page.asked);
 		assertEquals(true, page.form.isMultiPart());
-		
+
 		page.multiPart = false;
 		tester.executeAjaxEvent(page.button1, "click");
 		assertEquals(3, page.asked);
-		assertEquals(false, page.form.isMultiPart());		
+		assertEquals(false, page.form.isMultiPart());
 	}
 }

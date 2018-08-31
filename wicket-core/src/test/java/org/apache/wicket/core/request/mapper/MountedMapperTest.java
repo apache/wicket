@@ -16,7 +16,13 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
@@ -36,20 +42,13 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Matej Knopp
  */
-public class MountedMapperTest extends AbstractMapperTest
+class MountedMapperTest extends AbstractMapperTest
 {
-
-	/**
-	 * Construct.
-	 */
-	public MountedMapperTest()
-	{
-	}
 
 	private final MountedMapper encoder = new MountedMapper("/some/mount/path", MockPage.class)
 	{
@@ -65,7 +64,6 @@ public class MountedMapperTest extends AbstractMapperTest
 			return true;
 		}
 	};
-
 	private final MountedMapper placeholderEncoder = new MountedMapper(
 		"/some/${param1}/path/${param2}", MockPage.class)
 	{
@@ -81,7 +79,6 @@ public class MountedMapperTest extends AbstractMapperTest
 			return true;
 		}
 	};
-
 	private final MountedMapper optionPlaceholderEncoder = new MountedMapper(
 		"/some/#{param1}/path/${param2}/#{param3}", MockPage.class)
 	{
@@ -99,15 +96,22 @@ public class MountedMapperTest extends AbstractMapperTest
 	};
 
 	/**
+	 * Construct.
+	 */
+	MountedMapperTest()
+	{
+	}
+
+	/**
 	 *
 	 */
 	@Test
-	public void decode1()
+	void decode1()
 	{
 		Url url = Url.parse("some/mount/path");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -118,12 +122,12 @@ public class MountedMapperTest extends AbstractMapperTest
 	 * https://issues.apache.org/jira/browse/WICKET-4994
 	 */
 	@Test
-	public void decode1CaseInsensitively()
+	void decode1CaseInsensitively()
 	{
 		Url url = Url.parse("somE/moUnt/paTh");
 		IRequestHandler handler = encoder.setCaseSensitiveMatch(false).mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -134,12 +138,12 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode2()
+	void decode2()
 	{
 		Url url = Url.parse("some/mount/path/indexed1?a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		PageParameters p = page.getPageParameters();
@@ -152,46 +156,42 @@ public class MountedMapperTest extends AbstractMapperTest
 	}
 
 	/**
-	 * The tests resolves pages by id as if they were existed in the page store.
-	 * These pages have no page parameters (i.e. page.getPageParameters() == null).
+	 * The tests resolves pages by id as if they were existed in the page store. These pages have no
+	 * page parameters (i.e. page.getPageParameters() == null).
 	 *
-	 * The request that the encoder does also has no parameters (neither in the path
-	 * nor in the query string) so the resolved page is assumed to be valid.
+	 * The request that the encoder does also has no parameters (neither in the path nor in the
+	 * query string) so the resolved page is assumed to be valid.
 	 */
 	@Test
-	public void decode3()
+	void decode3()
 	{
 		Url url = Url.parse("some/mount/path?15");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 	}
 
 	/**
-	 * The tests resolves pages by id as if they were existed in the page store.
-	 * These pages have no page parameters (i.e. page.getPageParameters() == null).
+	 * The tests resolves pages by id as if they were existed in the page store. These pages have no
+	 * page parameters (i.e. page.getPageParameters() == null).
 	 *
-	 * Since Wicket 7.0.0 (WICKET-4441) if a new request to hybrid url
-	 * (a url with both mount path and pageId) has different page parameters
-	 * than the resolved page then a new page instance with the new parameters
-	 * is created.
-	 * This way if a user manipulates manually the product id in url like:
-	 * /products/23?3
-	 * to
-	 * /products/24?3
-	 * then Wicket will create a new page that will show product=24
+	 * Since Wicket 7.0.0 (WICKET-4441) if a new request to hybrid url (a url with both mount path
+	 * and pageId) has different page parameters than the resolved page then a new page instance
+	 * with the new parameters is created. This way if a user manipulates manually the product id in
+	 * url like: /products/23?3 to /products/24?3 then Wicket will create a new page that will show
+	 * product=24
 	 */
 	@Test
-	public void decode4()
+	void decode4()
 	{
 		Url url = Url.parse("some/mount/path/i1/i2?15&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
-		RenderPageRequestHandler h = (RenderPageRequestHandler) handler;
-		((PageProvider) h.getPageProvider()).setPageSource(context);
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
+		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
+		((PageProvider)h.getPageProvider()).setPageSource(context);
 		IRequestablePage page = h.getPage();
 		checkPage(page, 1);
 
@@ -205,12 +205,12 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode5()
+	void decode5()
 	{
 		Url url = Url.parse("some/mount/path?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
@@ -225,12 +225,12 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode6()
+	void decode6()
 	{
 		Url url = Url.parse("some/mount/path/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
@@ -248,12 +248,12 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode7()
+	void decode7()
 	{
 		Url url = Url.parse("some/mount/path?param1=value1&15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
@@ -268,7 +268,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode8()
+	void decode8()
 	{
 		Url url = Url.parse("some/mmount/path?15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -280,25 +280,25 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode9()
+	void decode9()
 	{
 		// capture the home page
 		Url url = Url.parse("");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 	}
 
 	/**
 	 *
 	 */
 	@Test
-	public void decode10()
+	void decode10()
 	{
 		Url url = Url.parse("some/mount/path?15-5.4-foo-bar");
 		context.setNextPageRenderCount(5);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
@@ -309,27 +309,29 @@ public class MountedMapperTest extends AbstractMapperTest
 	/**
 	 *
 	 */
-	@Test(expected = StalePageException.class)
-	public void decode11()
+	@Test
+	void decode11()
 	{
-		Url url = Url.parse("some/mount/path?15-5.4-foo-bar");
-		context.setNextPageRenderCount(7);
+		assertThrows(StalePageException.class, () -> {
+			Url url = Url.parse("some/mount/path?15-5.4-foo-bar");
+			context.setNextPageRenderCount(7);
 
-		IRequestHandler handler = encoder.mapRequest(getRequest(url));
+			IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		((IPageRequestHandler)handler).getPage();
+			((IPageRequestHandler)handler).getPage();
+		});
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void decode12()
+	void decode12()
 	{
 		Url url = Url.parse("some/mount/path/i1/i2?-1.-foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 		IRequestablePage page = h.getPage();
@@ -348,7 +350,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode1()
+	void encode1()
 	{
 		PageProvider provider = new PageProvider(MockPage.class, new PageParameters());
 		provider.setPageSource(context);
@@ -361,7 +363,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode2()
+	void encode2()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -379,7 +381,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode3()
+	void encode3()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -399,7 +401,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode4()
+	void encode4()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -419,7 +421,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode5()
+	void encode5()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -445,7 +447,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode6()
+	void encode6()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -471,11 +473,11 @@ public class MountedMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4014
 	 * 
-	 * The difference with testEncode7 is that here ListenerRequestHandler is used instead
-	 * of BookmarkableListenerRequestHandler
+	 * The difference with testEncode7 is that here ListenerRequestHandler is used instead of
+	 * BookmarkableListenerRequestHandler
 	 */
 	@Test
-	public void encode6_1()
+	void encode6_1()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -484,8 +486,10 @@ public class MountedMapperTest extends AbstractMapperTest
 		page.getPageParameters().set("b", "c", INamedParameters.Type.QUERY_STRING);
 
 		// WICKET-4038
-		page.getPageParameters().add(WebRequest.PARAM_AJAX, "true", INamedParameters.Type.QUERY_STRING);
-		page.getPageParameters().add(WebRequest.PARAM_AJAX_BASE_URL, "some/base/url", INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().add(WebRequest.PARAM_AJAX, "true",
+			INamedParameters.Type.QUERY_STRING);
+		page.getPageParameters().add(WebRequest.PARAM_AJAX_BASE_URL, "some/base/url",
+			INamedParameters.Type.QUERY_STRING);
 
 		page.setRenderCount(4);
 
@@ -507,7 +511,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode7()
+	void encode7()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -533,11 +537,11 @@ public class MountedMapperTest extends AbstractMapperTest
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4014
 	 * 
-	 * The difference with testEncode7 is that here ListenerRequestHandler is used instead
-	 * of BookmarkableListenerRequestHandler
+	 * The difference with testEncode7 is that here ListenerRequestHandler is used instead of
+	 * BookmarkableListenerRequestHandler
 	 */
 	@Test
-	public void encode7_1()
+	void encode7_1()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -564,7 +568,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode8()
+	void encode8()
 	{
 		MockPage page = new MockPage(15);
 		page.setBookmarkable(true);
@@ -582,17 +586,19 @@ public class MountedMapperTest extends AbstractMapperTest
 	/**
 	 *
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void construct1()
+	@Test
+	void construct1()
 	{
-		IRequestMapper e = new MountedMapper("", MockPage.class);
+		assertThrows(IllegalArgumentException.class, () -> {
+			IRequestMapper e = new MountedMapper("", MockPage.class);
+		});
 	}
 
 	/**
 	 * Overriding mounting on '/' (see HomePageMapper) should be possible
 	 */
 	@Test
-	public void construct2()
+	void construct2()
 	{
 		IRequestMapper homePageMapper = new MountedMapper("/", MockPage.class);
 		assertNotNull(homePageMapper);
@@ -602,12 +608,12 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void placeholderDecode1()
+	void placeholderDecode1()
 	{
 		Url url = Url.parse("some/p1/path/p2");
 		IRequestHandler handler = placeholderEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -620,12 +626,12 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void placeholderDecode2()
+	void placeholderDecode2()
 	{
 		Url url = Url.parse("some/p1/path/p2/indexed1?a=b&b=c");
 		IRequestHandler handler = placeholderEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		PageParameters p = page.getPageParameters();
@@ -641,12 +647,12 @@ public class MountedMapperTest extends AbstractMapperTest
 
 	/**	 */
 	@Test
-	public void placeholderDecodeWithIndexedParameters()
+	void placeholderDecodeWithIndexedParameters()
 	{
 		Url url = Url.parse("some/p1/path/p2/p3/p4");
 		IRequestHandler handler = placeholderEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(2, page.getPageParameters().getIndexedCount());
@@ -661,7 +667,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void placeholderEncode2()
+	void placeholderEncode2()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -684,7 +690,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 * new, this way the produced Url has version '1' in the page info parameter
 	 */
 	@Test
-	public void placeholderEncode3()
+	void placeholderEncode3()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -712,7 +718,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 * WICKET-5247 page instantiated without required parameters won't be mapped
 	 */
 	@Test
-	public void placeholderEncode4()
+	void placeholderEncode4()
 	{
 		PageProvider provider = new PageProvider(MockPage.class)
 		{
@@ -730,12 +736,12 @@ public class MountedMapperTest extends AbstractMapperTest
 
 	/** */
 	@Test
-	public void optionPlaceholderDecode1()
+	void optionPlaceholderDecode1()
 	{
 		Url url = Url.parse("some/p1/path/p2/p3");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -747,73 +753,72 @@ public class MountedMapperTest extends AbstractMapperTest
 
 	/** */
 	@Test
-	public void optionPlaceholderDecodeEagerMatchParameters()
+	void optionPlaceholderDecodeEagerMatchParameters()
 	{
 		Url url = Url.parse("some/path/path/path");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
 		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
 		assertEquals("path", page.getPageParameters().get("param1").toString());
 		assertEquals("path", page.getPageParameters().get("param2").toString());
-		assertFalse("param3 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param3"));
+		assertFalse(page.getPageParameters().getNamedKeys().contains("param3"),
+			"param3 should not be set");
 	}
 
 	/** */
 	@Test
-	public void optionPlaceholderDecode2()
+	void optionPlaceholderDecode2()
 	{
 		Url url = Url.parse("some/p1/path/p2");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
 		assertTrue(page.getPageParameters().getNamedKeys().size() == 2);
 		assertEquals("p1", page.getPageParameters().get("param1").toString());
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
-		assertFalse("param3 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param3"));
+		assertFalse(page.getPageParameters().getNamedKeys().contains("param3"));
 	}
 
 	/** */
 	@Test
-	public void optionPlaceholderDecode3()
+	void optionPlaceholderDecode3()
 	{
 		Url url = Url.parse("some/path/p2");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(0, page.getPageParameters().getIndexedCount());
 		assertTrue(page.getPageParameters().getNamedKeys().size() == 1);
-		assertFalse("param1 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param1"));
+		assertFalse(page.getPageParameters().getNamedKeys().contains("param1"),
+			"param1 should not be set");
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
-		assertFalse("param3 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param3"));
+		assertFalse(page.getPageParameters().getNamedKeys().contains("param3"),
+			"param3 should not be set");
 	}
 
 	/** */
 	@Test
-	public void optionPlaceholderDecodeWithIndexParams()
+	void optionPlaceholderDecodeWithIndexParams()
 	{
 		Url url = Url.parse("some/path/p2/p3/p4");
 		IRequestHandler handler = optionPlaceholderEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 
 		assertEquals(1, page.getPageParameters().getIndexedCount());
 		assertEquals(2, page.getPageParameters().getNamedKeys().size());
-		assertFalse("param1 should not be set",
-			page.getPageParameters().getNamedKeys().contains("param1"));
+		assertFalse(page.getPageParameters().getNamedKeys().contains("param1"),
+			"param1 should not be set");
 		assertEquals("p2", page.getPageParameters().get("param2").toString());
 		assertEquals("p3", page.getPageParameters().get("param3").toString());
 		assertEquals("p4", page.getPageParameters().get(0).toString());
@@ -821,7 +826,7 @@ public class MountedMapperTest extends AbstractMapperTest
 
 	/** */
 	@Test
-	public void optionPlaceholderEncode1()
+	void optionPlaceholderEncode1()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -841,7 +846,7 @@ public class MountedMapperTest extends AbstractMapperTest
 
 	/** */
 	@Test
-	public void optionPlaceholderEncode2()
+	void optionPlaceholderEncode2()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -863,9 +868,11 @@ public class MountedMapperTest extends AbstractMapperTest
 	 * WICKET-6461
 	 */
 	@Test
-	public void optionalPlaceholdersBeforeRequiredPlaceholder() throws Exception
+	void optionalPlaceholdersBeforeRequiredPlaceholder() throws Exception
 	{
-		final MountedMapper mapper = new MountedMapper("/params/#{optional1}/#{optional2}/${required}", MockPage.class) {
+		final MountedMapper mapper = new MountedMapper(
+			"/params/#{optional1}/#{optional2}/${required}", MockPage.class)
+		{
 			@Override
 			protected IMapperContext getContext()
 			{
@@ -878,24 +885,24 @@ public class MountedMapperTest extends AbstractMapperTest
 				return true;
 			}
 		};
-		
+
 		IRequestHandler handler = mapper.mapRequest(getRequest(Url.parse("params/required")));
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		PageParameters p = page.getPageParameters();
 		assertEquals(1, p.getNamedKeys().size());
 		assertEquals("required", p.get("required").toString());
-		
+
 		handler = mapper.mapRequest(getRequest(Url.parse("params/optional1/required")));
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		page = ((RenderPageRequestHandler)handler).getPage();
 		p = page.getPageParameters();
 		assertEquals(2, p.getNamedKeys().size());
 		assertEquals("required", p.get("required").toString());
 		assertEquals("optional1", p.get("optional1").toString());
-		
+
 		handler = mapper.mapRequest(getRequest(Url.parse("params/optional1/optional2/required")));
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		page = ((RenderPageRequestHandler)handler).getPage();
 		p = page.getPageParameters();
 		assertEquals(3, p.getNamedKeys().size());
@@ -908,7 +915,7 @@ public class MountedMapperTest extends AbstractMapperTest
 	 * WICKET-5056
 	 */
 	@Test
-	public void optionalParameterGetsLowerScore_ThanExactOne() throws Exception
+	void optionalParameterGetsLowerScore_ThanExactOne() throws Exception
 	{
 		final Url url = Url.parse("all/sindex");
 		final MountedMapper exactMount = new MountedMapper("/all/sindex", MockPage.class);
@@ -916,13 +923,13 @@ public class MountedMapperTest extends AbstractMapperTest
 		Request request = getRequest(url);
 		final int exactCompatScore = exactMount.getCompatibilityScore(request);
 		final int optCompatScore = optionalParameter.getCompatibilityScore(request);
-		assertTrue("exactCompatScore should have greater compatibility score than optional one"
-			+ " got exact = " + exactCompatScore + " and optional = " + optCompatScore,
-			exactCompatScore > optCompatScore);
+		assertTrue(exactCompatScore > optCompatScore,
+			"exactCompatScore should have greater compatibility score than optional one" +
+				" got exact = " + exactCompatScore + " and optional = " + optCompatScore);
 	}
 
 	@Test
-	public void exactMountGetsBetterScore_ThanParameterOne() throws Exception
+	void exactMountGetsBetterScore_ThanParameterOne() throws Exception
 	{
 		final Url url = Url.parse("all/sindex");
 		final MountedMapper exactMount = new MountedMapper("/all/sindex", MockPage.class);
@@ -930,13 +937,13 @@ public class MountedMapperTest extends AbstractMapperTest
 		Request request = getRequest(url);
 		final int exactCompatScore = exactMount.getCompatibilityScore(request);
 		final int requiredParamScore = requiredParam.getCompatibilityScore(request);
-		assertTrue("exactCompatScore should have greater compatibility score than required one"
-			+ " got exact = " + exactCompatScore + " and required= " + requiredParamScore,
-			exactCompatScore > requiredParamScore);
+		assertTrue(exactCompatScore > requiredParamScore,
+			"exactCompatScore should have greater compatibility score than required one" +
+				" got exact = " + exactCompatScore + " and required= " + requiredParamScore);
 	}
 
 	@Test
-	public void exactMountGetsBetterScore_ThanParameterOne_ThenOptionalOne() throws Exception
+	void exactMountGetsBetterScore_ThanParameterOne_ThenOptionalOne() throws Exception
 	{
 		final Url url = Url.parse("all/sindex");
 		final MountedMapper exactMount = new MountedMapper("/all/sindex", MockPage.class);
@@ -950,24 +957,28 @@ public class MountedMapperTest extends AbstractMapperTest
 		final int requiredParamScore = requiredParam.getCompatibilityScore(request);
 		final int optCompatScore = optionalParameter.getCompatibilityScore(request);
 		final int requiredOptCompatScore = requiredOptionalParam.getCompatibilityScore(request);
-		
-		//all the mappers above must be eligible for the give URL (i.e. their score must be > 0)
-		assertTrue("exactMount mapper must be eligible to handle the request", exactCompatScore > 0);
-		assertTrue("requiredParam mapper must be eligible to handle the request", requiredParamScore > 0);
-		assertTrue("optionalParameter mapper must be eligible to handle the request", optCompatScore > 0);
-		assertTrue("requiredOptionalParam mapper must be eligible to handle the request", requiredOptCompatScore > 0);
-		
-		assertTrue("exactCompatScore should have greater compatibility score than required one"
-			+ " got exact = " + exactCompatScore + " and required= " + requiredParamScore,
-			exactCompatScore > requiredParamScore);
 
-		assertTrue(
-			"exactCompatScore should have greater compatibility score than required+optional one"
-				+ " got exact = " + exactCompatScore + " and requiredOptional= "
-				+ requiredOptCompatScore, exactCompatScore > requiredOptCompatScore);
+		// all the mappers above must be eligible for the give URL (i.e. their score must be > 0)
+		assertTrue(exactCompatScore > 0,
+			"exactMount mapper must be eligible to handle the request");
+		assertTrue(requiredParamScore > 0,
+			"requiredParam mapper must be eligible to handle the request");
+		assertTrue(optCompatScore > 0,
+			"optionalParameter mapper must be eligible to handle the request");
+		assertTrue(requiredOptCompatScore > 0,
+			"requiredOptionalParam mapper must be eligible to handle the request");
 
-		assertTrue("exactCompatScore should have greater compatibility score than optional one"
-			+ " got exact = " + exactCompatScore + " and optional = " + optCompatScore,
-			requiredParamScore > optCompatScore);
+		assertTrue(exactCompatScore > requiredParamScore,
+			"exactCompatScore should have greater compatibility score than required one" +
+				" got exact = " + exactCompatScore + " and required= " + requiredParamScore);
+
+		assertTrue(exactCompatScore > requiredOptCompatScore,
+			"exactCompatScore should have greater compatibility score than required+optional one" +
+				" got exact = " + exactCompatScore + " and requiredOptional= " +
+				requiredOptCompatScore);
+
+		assertTrue(requiredParamScore > optCompatScore,
+			"exactCompatScore should have greater compatibility score than optional one" +
+				" got exact = " + exactCompatScore + " and optional = " + optCompatScore);
 	}
 }

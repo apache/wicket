@@ -21,16 +21,16 @@ import org.apache.wicket.request.Url;
 
 public class ShouldRenderPageAndWriteResponseVariations extends AbstractVariations
 {
-	VariationIterator<RenderPageRequestHandler.RedirectPolicy> redirectPolicy = VariationIterator.of(Variation.of(RenderPageRequestHandler.RedirectPolicy.class));
-	VariationIterator<Boolean> ajax = VariationIterator.of(redirectPolicy, Variation.ofBoolean());
-	VariationIterator<Boolean> onePassRender = VariationIterator.of(ajax,Variation.ofBoolean());
-	VariationIterator<Boolean> redirectToRender = VariationIterator.of(onePassRender,Variation.ofBoolean());
-	VariationIterator<Boolean> shouldPreserveClientUrl = VariationIterator.of(redirectToRender,Variation.ofBoolean());
-	VariationIterator<Boolean> targetEqualsCurrentUrl = VariationIterator.of(shouldPreserveClientUrl,Variation.ofBoolean());
-	VariationIterator<Boolean> newPageInstance = VariationIterator.of(targetEqualsCurrentUrl,Variation.ofBoolean());
-	VariationIterator<Boolean> pageStateless = VariationIterator.of(newPageInstance,Variation.ofBoolean());
+	private VariationIterator<RenderPageRequestHandler.RedirectPolicy> redirectPolicy = VariationIterator.of(Variation.of(RenderPageRequestHandler.RedirectPolicy.class));
+	private VariationIterator<Boolean> ajax = VariationIterator.of(redirectPolicy, Variation.ofBoolean());
+	private VariationIterator<Boolean> onePassRender = VariationIterator.of(ajax, Variation.ofBoolean());
+	private VariationIterator<Boolean> redirectToRender = VariationIterator.of(onePassRender, Variation.ofBoolean());
+	private VariationIterator<Boolean> shouldPreserveClientUrl = VariationIterator.of(redirectToRender, Variation.ofBoolean());
+	private VariationIterator<Boolean> targetEqualsCurrentUrl = VariationIterator.of(shouldPreserveClientUrl, Variation.ofBoolean());
+	private VariationIterator<Boolean> newPageInstance = VariationIterator.of(targetEqualsCurrentUrl, Variation.ofBoolean());
+	private VariationIterator<Boolean> pageStateless = VariationIterator.of(newPageInstance, Variation.ofBoolean());
 
-	VariationIterator<Boolean> last = pageStateless;
+	private VariationIterator<Boolean> last = pageStateless;
 
 	@Override
 	protected VariationIterator<?> last()

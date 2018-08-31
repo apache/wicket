@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Locale;
@@ -31,10 +35,10 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ResourceMapperTest extends WicketTestCase
+class ResourceMapperTest extends WicketTestCase
 {
 	private static final Charset CHARSET = Charset.forName("UTF-8");
 	private static final String SHARED_NAME = "test-resource";
@@ -46,8 +50,8 @@ public class ResourceMapperTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		resource = new TestResource();
 		tester.getApplication().getSharedResources().add(SHARED_NAME, resource);
@@ -97,7 +101,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testInvalidPathIsEmpty()
 	 */
 	@Test
-	public void invalidPathIsEmpty()
+	void invalidPathIsEmpty()
 	{
 		IRequestHandler requestHandler = mapper.mapRequest(createRequest(""));
 		assertNull(requestHandler);
@@ -107,7 +111,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testInvalidPathIsMismatch()
 	 */
 	@Test
-	public void invalidPathIsMismatch()
+	void invalidPathIsMismatch()
 	{
 		IRequestHandler requestHandler = mapper.mapRequest(createRequest("test/resourcex"));
 		assertNull(requestHandler);
@@ -117,7 +121,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testInvalidPathIsTooShort()
 	 */
 	@Test
-	public void invalidPathIsTooShort()
+	void invalidPathIsTooShort()
 	{
 		IRequestHandler requestHandler = mapper.mapRequest(createRequest("test"));
 		assertNull(requestHandler);
@@ -127,7 +131,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testValidPathWithParams()
 	 */
 	@Test
-	public void validPathWithParams()
+	void validPathWithParams()
 	{
 		Request request = createRequest("test/resource/1/fred");
 		IRequestHandler requestHandler = mapper.mapRequest(request);
@@ -154,7 +158,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testValidPathWithParamsAndQueryPath()
 	 */
 	@Test
-	public void validPathWithParamsAndQueryPath()
+	void validPathWithParamsAndQueryPath()
 	{
 		Request request = createRequest("test/resource/1/fred?foo=bar&foo=baz&value=12");
 		IRequestHandler requestHandler = mapper.mapRequest(request);
@@ -189,7 +193,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testPlaceholders()
 	 */
 	@Test
-	public void placeholders()
+	void placeholders()
 	{
 		Request request = createRequest("test2/image/resource/foo/bar?a=abc&b=123");
 		IRequestHandler requestHandler = mapperWithPlaceholder.mapRequest(request);
@@ -215,7 +219,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 * testPlaceholdersWithQueryParamDuplicate()
 	 */
 	@Test
-	public void placeholdersWithQueryParamDuplicate()
+	void placeholdersWithQueryParamDuplicate()
 	{
 		// we have one named parameter that exists twice
 		Request request = createRequest("test2/image/resource/foo/bar?name=name-2&val=123");
@@ -251,7 +255,7 @@ public class ResourceMapperTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void requestWithEmptyFilename()
+	void requestWithEmptyFilename()
 	{
 		// request invalid path with empty filename
 		// this must not return a handler
@@ -264,7 +268,7 @@ public class ResourceMapperTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = -3130204487473856574L;
 
-		public PageParameters pageParameters;
+		PageParameters pageParameters;
 
 		@Override
 		public void respond(Attributes attributes)

@@ -16,21 +16,22 @@
  */
 package org.apache.wicket.util.tester;
 
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test of TagTester
  */
-public class TagTesterTest extends Assert
+class TagTesterTest
 {
 	/** Mock markup 1 */
 	private static final String MARKUP_1 = "<p id=\"test\" class=\"class1\"><span class=\"class2\" id=\"test2\">mock</span></p>";
@@ -45,7 +46,7 @@ public class TagTesterTest extends Assert
 	 * WICKET-6278
 	 */
 	@Test
-	public void tagNoRequiredClose() {
+	void tagNoRequiredClose() {
 		TagTester tester = TagTester.createTagByAttribute(NON_CLOSED_INPUT, "wicket:id", "p");
 
 		assertEquals("<input wicket:id=\"wicketId\" type=\"text\">", tester.getValue());
@@ -55,38 +56,38 @@ public class TagTesterTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5874
 	 */
 	@Test
-	public void getTagTesterForNonClosedTag()
+	void getTagTesterForNonClosedTag()
 	{
 		TagTester tester = TagTester.createTagByAttribute(NON_CLOSED_INPUT, "wicket:id", "wicketId");
-		assertThat(tester, is(notNullValue()));
+		assertNotNull(tester);
 
 		String type = tester.getAttribute("type");
-		assertThat(type, is(equalTo("text")));
+		assertEquals("text", type);
 
-		assertThat(tester.getValue(), is(nullValue()));
+		assertNull(tester.getValue());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6172
 	 */
 	@Test
-	public void getTagTestersForNonClosedTag()
+	void getTagTestersForNonClosedTag()
 	{
 		List<TagTester> testers = TagTester.createTagsByAttribute(NON_CLOSED_INPUT, "wicket:id", "wicketId", false);
-		assertThat(testers, is(notNullValue()));
-		assertThat(testers.size(), is(1));
+		assertNotNull(testers);
+		assertEquals(1, testers.size());
 
 		String type = testers.get(0).getAttribute("type");
-		assertThat(type, is(equalTo("text")));
+		assertEquals("text", type);
 
-		assertThat(testers.get(0).getValue(), is(nullValue()));
+		assertNull(testers.get(0).getValue());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5137
 	 */
 	@Test
-	public void getTagInAjaxResponse()
+	void getTagInAjaxResponse()
 	{
 		TagTester tester = TagTester.createTagByAttribute(AJAX_MARKUP_1, "id", "compId");
 		assertNotNull(tester);
@@ -99,7 +100,7 @@ public class TagTesterTest extends Assert
 	 * Test the static factory method
 	 */
 	@Test
-	public void createTagByAttribute()
+	void createTagByAttribute()
 	{
 		TagTester tester = TagTester.createTagByAttribute(null, null, null);
 		assertNull(tester);
@@ -118,7 +119,7 @@ public class TagTesterTest extends Assert
 	 * Test that getName returns the correct tag name.
 	 */
 	@Test
-	public void getName()
+	void getName()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -138,7 +139,7 @@ public class TagTesterTest extends Assert
 	 * It also tests that the order of the attributes doesn't matter.
 	 */
 	@Test
-	public void hasAttribute()
+	void hasAttribute()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -158,7 +159,7 @@ public class TagTesterTest extends Assert
 	 * If the attribute doesn't exist on the tag, the method should return null.
 	 */
 	@Test
-	public void getAttribute()
+	void getAttribute()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -195,7 +196,7 @@ public class TagTesterTest extends Assert
 	 * value. It should not be case in-sensitive and not trim the attribute value.
 	 */
 	@Test
-	public void getAttributeContains()
+	void getAttributeContains()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -217,7 +218,7 @@ public class TagTesterTest extends Assert
 	 * exactly the same as the parameter.
 	 */
 	@Test
-	public void getAttributeIs()
+	void getAttributeIs()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -237,7 +238,7 @@ public class TagTesterTest extends Assert
 	 * be contained must only be at the end.
 	 */
 	@Test
-	public void getAttributeEndsWith()
+	void getAttributeEndsWith()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 		assertNotNull(tester);
@@ -257,7 +258,7 @@ public class TagTesterTest extends Assert
 	 * 
 	 */
 	@Test
-	public void hasChildTag()
+	void hasChildTag()
 	{
 		TagTester tester = TagTester.createTagByAttribute(MARKUP_1, "id", "test");
 
@@ -303,7 +304,7 @@ public class TagTesterTest extends Assert
 	}
 
 	@Test
-	public void getChildByTagName()
+	void getChildByTagName()
 	{
 		TagTester tester = TagTester.createTagByAttribute(
 			"<div id=\"id\">" +
@@ -313,19 +314,19 @@ public class TagTesterTest extends Assert
 					"</label>" +
 				"</div>" +
 			"</div>", "id", "id");
-		assertThat(tester.getChild("DIV"), is(notNullValue())); // case-insensitive
+		assertNotNull(tester.getChild("DIV")); // case-insensitive
 		TagTester divClassRadioTagTester = tester.getChild("div");
-		assertThat(divClassRadioTagTester, is(notNullValue()));
+		assertNotNull(divClassRadioTagTester);
 		TagTester labelTagTester = divClassRadioTagTester.getChild("label");
 		String labelMarkup = labelTagTester.getValue();
-		assertThat(labelMarkup, endsWith(" One"));
+		assertThat(labelMarkup).endsWith(" One");
 	}
 
 	/**
 	 * Test getMarkup returns the open-tag + content + close-tag
 	 */
 	@Test
-	public void getMarkup()
+	void getMarkup()
 	{
 		TagTester tagTester = TagTester.createTagByAttribute(MARKUP_1, "id", "test2");
 
@@ -336,7 +337,7 @@ public class TagTesterTest extends Assert
 	 * Test getValue returns the data between the open and close tag.
 	 */
 	@Test
-	public void getValue()
+	void getValue()
 	{
 		TagTester tagTester = TagTester.createTagByAttribute(MARKUP_1, "id", "test2");
 		assertEquals("mock", tagTester.getValue());
@@ -350,7 +351,7 @@ public class TagTesterTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6173
 	 */
 	@Test
-	public void valueFromTagsByAttribute()
+	void valueFromTagsByAttribute()
 	{
 		TagTester tagTester = TagTester.createTagByAttribute(MARKUP_1, "id", "test2");
 		assertEquals("mock", tagTester.getValue());
@@ -398,7 +399,7 @@ public class TagTesterTest extends Assert
      * WICKET-6220
      */
     @Test
-    public void testOpenAndClose() {
+	void testOpenAndClose() {
         List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "item", false);
         assertEquals(2, tags.size());
         assertEquals("li", tags.get(0).getName());
@@ -413,7 +414,7 @@ public class TagTesterTest extends Assert
      * WICKET-6220
      */
     @Test
-    public void testWrongHtmlStructure() {
+	void testWrongHtmlStructure() {
         List<TagTester> tags = TagTester.createTagsByAttribute(WRONG_MARKUP, "wicket:id", "p", false);
         assertEquals(1, tags.size());
         assertEquals("span", tags.get(0).getName());
@@ -425,7 +426,7 @@ public class TagTesterTest extends Assert
      * WICKET-6220
      */
     @Test
-    public void testOpenOrClose() {
+	void testOpenOrClose() {
         List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "p", false);
         assertEquals(2, tags.size());
         assertEquals("p", tags.get(0).getName());
@@ -440,7 +441,7 @@ public class TagTesterTest extends Assert
      * WICKET-6220
      */
     @Test
-    public void testOpen() {
+	void testOpen() {
         List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "img", false);
         assertEquals(2, tags.size());
         assertEquals("img", tags.get(0).getName());
@@ -455,7 +456,7 @@ public class TagTesterTest extends Assert
      * WICKET-6220
      */
     @Test
-    public void testOpenClose() {
+	void testOpenClose() {
         List<TagTester> tags = TagTester.createTagsByAttribute(MARKUP, "wicket:id", "hr", false);
         assertEquals(2, tags.size());
         assertEquals("hr", tags.get(0).getName());

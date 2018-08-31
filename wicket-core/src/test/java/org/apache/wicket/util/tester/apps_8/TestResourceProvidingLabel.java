@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.basic.Label;
  * A simple Label that renders some Feedback Messages.
  * @author Martin Dilger
  */
-public class TestResourceProvidingLabel extends Label
+class TestResourceProvidingLabel extends Label
 {
 	public TestResourceProvidingLabel(String id)
 	{

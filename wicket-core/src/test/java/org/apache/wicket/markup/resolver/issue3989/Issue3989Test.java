@@ -17,7 +17,7 @@
 package org.apache.wicket.markup.resolver.issue3989;
 
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * When the {@link org.apache.wicket.Component#markup markup of a component} has been reset at the
@@ -26,14 +26,14 @@ import org.junit.Test;
  * The cause is that the {@code PanelMarkupSourcingStrategy} fails to look for markup in
  * {@code IComponentResolver}s like {@code TransparentWebMarkupContainer}.
  */
-public class Issue3989Test
+class Issue3989Test
 {
 	/**
 	 * This will fail unless the markup sourcing strategies look for the label {@code innerpanel} in
 	 * the transparent markup container.
 	 */
 	@Test
-	public void ajaxRenderOfTransparentlyResolvedLabel()
+    void ajaxRenderOfTransparentlyResolvedLabel()
 	{
 		WicketTester tester = new WicketTester();
 		tester.startPage(HomePage.class);

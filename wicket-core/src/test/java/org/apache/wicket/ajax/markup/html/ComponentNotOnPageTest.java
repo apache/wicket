@@ -16,18 +16,20 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for checking whether or not a component is attached to the component hierarchy when
  * updating through AJAX.
  */
-public class ComponentNotOnPageTest extends WicketTestCase
+class ComponentNotOnPageTest extends WicketTestCase
 {
 	private RuntimeConfigurationType configuration = RuntimeConfigurationType.DEVELOPMENT;
 
@@ -52,25 +54,16 @@ public class ComponentNotOnPageTest extends WicketTestCase
 	 * the developers part that a component that is not part of the page is being refreshed in the
 	 * AJAX response, resulting in a no-op (which is not the intended result).
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void responseTargetInDevelopmentModeShouldFail()
+	@Test
+	void responseTargetInDevelopmentModeShouldFail()
 	{
 		configuration = RuntimeConfigurationType.DEVELOPMENT;
 
-		try
-		{
-			// this should not fail
-			ComponentNotOnPage page = tester.startPage(ComponentNotOnPage.class);
-			tester.clickLink("listview:0:link", true);
-			tester.startPage(page);
-		}
-		catch (Exception e)
-		{
-			Assert.fail("Unexpected exception: " + e);
-		}
+		clickLinkFailOnError();
 
-		// this should fail
-		tester.clickLink("refresher:refresh", true);
+		assertThrows(IllegalArgumentException.class, () -> {
+			tester.clickLink("refresher:refresh", true);
+		});
 	}
 
 	/**
@@ -81,10 +74,17 @@ public class ComponentNotOnPageTest extends WicketTestCase
 	 * (which happened in Wicket 7).
 	 */
 	@Test
-	public void responseTargetInDeploymentModeShouldNotFail()
+	void responseTargetInDeploymentModeShouldNotFail()
 	{
 		configuration = RuntimeConfigurationType.DEPLOYMENT;
 
+		clickLinkFailOnError();
+
+		// this shouldn't fail as well
+		tester.clickLink("refresher:refresh", true);
+	}
+
+	private void clickLinkFailOnError() {
 		try
 		{
 			// this should not fail
@@ -94,10 +94,7 @@ public class ComponentNotOnPageTest extends WicketTestCase
 		}
 		catch (Exception e)
 		{
-			Assert.fail("Unexpected exception: " + e);
+			fail("Unexpected exception: " + e);
 		}
-
-		// this shouldn't fail as well
-		tester.clickLink("refresher:refresh", true);
 	}
 }

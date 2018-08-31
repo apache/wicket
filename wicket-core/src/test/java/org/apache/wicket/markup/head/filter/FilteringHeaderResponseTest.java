@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.head.filter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Collections;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -26,18 +28,18 @@ import org.apache.wicket.markup.html.IHeaderResponseDecorator;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.response.StringResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for FilteringHeaderResponse
  * 
  * @since 6.0
  */
-public class FilteringHeaderResponseTest extends WicketTestCase
+class FilteringHeaderResponseTest extends WicketTestCase
 {
 
 	@Test
-	public void footerDependsOnHeadItem() throws Exception
+	void footerDependsOnHeadItem() throws Exception
 	{
 		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()
 		{
@@ -46,7 +48,8 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 			{
 				// use this header resource decorator to load all JavaScript resources in the page
 				// footer (after </body>)
-				return new ResourceAggregator(new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
+				return new ResourceAggregator(
+					new JavaScriptFilteredIntoFooterHeaderResponse(response, "footerJS"));
 			}
 		});
 		executeTest(FilteredHeaderPage.class, "FilteredHeaderPageExpected.html");
@@ -54,23 +57,26 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5057
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void createBucketOnTheFlyForFilteredHeaderItem() throws Exception
+	void createBucketOnTheFlyForFilteredHeaderItem() throws Exception
 	{
-		try (FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(new HeaderResponse()
-		{
-			@Override
-			protected Response getRealResponse()
+		try (FilteringHeaderResponse headerResponse = new FilteringHeaderResponse(
+			new HeaderResponse()
 			{
-				return new StringResponse();
-			}
-		}, "headerBucketName", Collections.emptyList()))
+				@Override
+				protected Response getRealResponse()
+				{
+					return new StringResponse();
+				}
+			}, "headerBucketName", Collections.emptyList()))
 		{
 			String filterName = "filterName";
 			String headerContent = "content";
-			FilteredHeaderItem item = new FilteredHeaderItem(StringHeaderItem.forString(headerContent), filterName);
+			FilteredHeaderItem item = new FilteredHeaderItem(
+				StringHeaderItem.forString(headerContent), filterName);
 			headerResponse.render(item);
 			CharSequence realContent = headerResponse.getContent(filterName);
 			assertEquals(headerContent, realContent.toString());
@@ -82,9 +88,10 @@ public class FilteringHeaderResponseTest extends WicketTestCase
 	 * inside a {@code document.addEventListener('DOMContentLoaded', function() {}; } hook.
 	 */
 	@Test
-	public void deferred() throws Exception
+	void deferred() throws Exception
 	{
-		tester.getApplication().setHeaderResponseDecorator(response -> new ResourceAggregator(new JavaScriptDeferHeaderResponse(response)));
+		tester.getApplication().setHeaderResponseDecorator(
+			response -> new ResourceAggregator(new JavaScriptDeferHeaderResponse(response)));
 		executeTest(DeferredPage.class, "DeferredPageExpected.html");
 	}
 }

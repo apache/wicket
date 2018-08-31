@@ -33,7 +33,7 @@ public class PanelWithHeader extends Panel
 
 	private static class StringHeaderItemWithDependency extends StringHeaderItem
 	{
-		public StringHeaderItemWithDependency(CharSequence string)
+		StringHeaderItemWithDependency(CharSequence string)
 		{
 			super(string);
 		}

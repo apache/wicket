@@ -28,7 +28,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 public class MyBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
-	Form<Void> form;
+	private Form<Void> form;
 
 	boolean hitOnSubmit = false;
 	boolean hitOnError = false;

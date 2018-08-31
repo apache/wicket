@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.markup.html.list;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for simple table behavior.
  */
-public class SimpleTableTest extends WicketTestCase
+class SimpleTableTest extends WicketTestCase
 {
 	/**
 	 * Test simple table behavior.
@@ -32,7 +34,7 @@ public class SimpleTableTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void simpleTable_1() throws Exception
+	void simpleTable_1() throws Exception
 	{
 		executeTest(SimpleTablePage_1.class, "SimpleTablePageExpectedResult_1.html");
 		String document = tester.getLastResponseAsString();
@@ -57,7 +59,7 @@ public class SimpleTableTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void simpleTable_2() throws Exception
+	void simpleTable_2() throws Exception
 	{
 		executeTest(SimpleTablePage_2.class, "SimpleTablePageExpectedResult_2.html");
 		String document = tester.getLastResponseAsString();

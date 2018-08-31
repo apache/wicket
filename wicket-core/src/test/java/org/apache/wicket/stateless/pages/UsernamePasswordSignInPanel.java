@@ -60,7 +60,7 @@ public class UsernamePasswordSignInPanel extends Panel
 	 * @param password
 	 * @return whether signin is successful
 	 */
-	public boolean signIn(String username, String password)
+    private boolean signIn(String username, String password)
 	{
 		return username.equals(password);
 	}
@@ -85,7 +85,7 @@ public class UsernamePasswordSignInPanel extends Panel
 		 *            id of the form component
 		 * @param panel
 		 */
-		public SignInForm(final String id, UsernamePasswordSignInPanel panel)
+        SignInForm(final String id, UsernamePasswordSignInPanel panel)
 		{
 			super(id, new CompoundPropertyModel<IValueMap>(new ValueMap()));
 			this.panel = panel;

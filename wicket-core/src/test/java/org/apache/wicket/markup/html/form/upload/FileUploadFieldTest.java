@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.markup.html.form.upload;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,15 +36,14 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test of FileUploadField
  * 
  * @author Frank Bille (billen)
  */
-public class FileUploadFieldTest extends WicketTestCase
+class FileUploadFieldTest extends WicketTestCase
 {
 	private static final String TEST_FILE_NAME = FileUploadFieldTest.class.getName();
 
@@ -49,7 +54,7 @@ public class FileUploadFieldTest extends WicketTestCase
 	 *             '
 	 */
 	@Test
-	public void internalDetach() throws IOException
+	void internalDetach() throws IOException
 	{
 		tester.startPage(MockPageWithFormAndUploadField.class);
 
@@ -113,7 +118,7 @@ public class FileUploadFieldTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void fileUploadCanBeValidated() throws IOException
+	void fileUploadCanBeValidated() throws IOException
 	{
 		tester.startPage(TestValidationPage.class);
 		// creating the file expected by form validators
@@ -130,7 +135,7 @@ public class FileUploadFieldTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5691
 	 */
 	@Test
-	public void testEmptyField() throws Exception
+	void testEmptyField() throws Exception
 	{
 		tester.startPage(TestValidationPage.class);
 		
@@ -153,7 +158,7 @@ public class FileUploadFieldTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6270
 	 */
 	@Test
-	public void testEmptyFieldAsBrowserSendsIt() throws Exception
+	void testEmptyFieldAsBrowserSendsIt() throws Exception
 	{
 		tester.startPage(TestValidationPage.class);
 

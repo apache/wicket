@@ -16,23 +16,24 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link ResourceReferenceRegistry}
  */
-public class ResourceReferenceRegistryTest extends WicketTestCase
+class ResourceReferenceRegistryTest extends WicketTestCase
 {
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3890
 	 */
 	@Test
-	public void addRemove()
+	void addRemove()
 	{
 		ResourceReferenceRegistry registry = new ResourceReferenceRegistry();
 		assertEquals(0, registry.getSize());
@@ -52,7 +53,7 @@ public class ResourceReferenceRegistryTest extends WicketTestCase
 	 * {@link PackageResource} and register it
 	 */
 	@Test
-	public void addSharedResourceReference()
+	void addSharedResourceReference()
 	{
 		ResourceReferenceRegistry registry = new ResourceReferenceRegistry();
 		assertEquals(0, registry.getSize());
@@ -64,26 +65,26 @@ public class ResourceReferenceRegistryTest extends WicketTestCase
 	}
 
 	@Test
-	public void setNullResourceReferenceFactoryStillUsesTheDefault()
+	void setNullResourceReferenceFactoryStillUsesTheDefault()
 	{
 		ResourceReferenceRegistry registry = new ResourceReferenceRegistry();
 		registry.setResourceReferenceFactory(null);
 		ResourceReference.Key key = new ResourceReference.Key(ResourceReferenceRegistryTest.class.getName(),
 				"a.css", null, null, null);
 		ResourceReference reference = registry.createDefaultResourceReference(key);
-		assertThat(reference, is(instanceOf(ResourceReference.class)));
-		assertThat(reference.getResource(), is(instanceOf(CssPackageResource.class)));
+		assertThat(reference, instanceOf(ResourceReference.class));
+		assertThat(reference.getResource(), instanceOf(CssPackageResource.class));
 	}
 
 	@Test
-	public void createLessResourceReference()
+	void createLessResourceReference()
 	{
 		ResourceReferenceRegistry registry = new ResourceReferenceRegistry();
 		registry.setResourceReferenceFactory(new LessResourceReferenceTest.LessResourceReferenceFactory());
 		ResourceReference.Key key = new ResourceReference.Key(ResourceReferenceRegistryTest.class.getName(),
 				"LessResourceReference.less", null, null, null);
 		ResourceReference reference = registry.createDefaultResourceReference(key);
-		assertThat(reference, is(instanceOf(LessResourceReferenceTest.LessResourceReference.class)));
-		assertThat(reference.getResource(), is(instanceOf(LessResourceReferenceTest.LessPackageResource.class)));
+		assertThat(reference, instanceOf(LessResourceReferenceTest.LessResourceReference.class));
+		assertThat(reference.getResource(), instanceOf(LessResourceReferenceTest.LessPackageResource.class));
 	}
 }

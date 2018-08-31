@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.session;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -23,18 +26,18 @@ import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5165
  */
-public class BindSessionOnRedirectTest extends WicketTestCase
+class BindSessionOnRedirectTest extends WicketTestCase
 {
 
-	public static final String SESSION_FEEDBACK_MESSAGE = "Session message";
+	private static final String SESSION_FEEDBACK_MESSAGE = "Session message";
 
 	@Test
-	public void bindSessionWhenThereAreFeedbackMessages()
+	void bindSessionWhenThereAreFeedbackMessages()
 	{
 		tester.startPage(FirstPage.class);
 		assertTrue(tester.getSession().isTemporary());
@@ -47,9 +50,9 @@ public class BindSessionOnRedirectTest extends WicketTestCase
 		tester.assertInfoMessages(SESSION_FEEDBACK_MESSAGE);
 	}
 
-	public static class FirstPage extends WebPage implements IMarkupResourceStreamProvider
+	static class FirstPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public FirstPage()
+		FirstPage()
 		{
 			add(new StatelessLink<Void>("link") {
 
@@ -69,9 +72,9 @@ public class BindSessionOnRedirectTest extends WicketTestCase
 		}
 	}
 
-	public static class SecondPage extends WebPage implements IMarkupResourceStreamProvider
+	static class SecondPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public SecondPage()
+		SecondPage()
 		{
 		}
 

@@ -16,44 +16,23 @@
  */
 package org.apache.wicket.util.tester;
 
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 
 /**
  * Manages {@link WicketTester} instance
- * 
+ *
  * @author igor
  */
-public class WicketTesterScope implements TestRule
+public class WicketTesterExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback, TestExecutionExceptionHandler
 {
 	private WicketTester tester;
 
-	@Override
-	public Statement apply(final Statement base, Description description)
-	{
-		return new Statement()
-		{
-			@Override
-			public void evaluate() throws Throwable
-			{
-				tester = create();
-				try
-				{
-					base.evaluate();
-				}
-				finally
-				{
-					tester.destroy();
-					tester = null;
-				}
-			}
-		};
-	}
-
 	/**
 	 * Allows setup of the tester instance
-	 * 
+	 *
 	 * @return tester
 	 */
 	protected WicketTester create()
@@ -63,11 +42,30 @@ public class WicketTesterScope implements TestRule
 
 	/**
 	 * Gets the tester instance.
-	 * 
+	 *
 	 * @return tester instance or {@code null} if called outside the rule's scope
 	 */
 	public WicketTester getTester()
 	{
 		return tester;
+	}
+
+	@Override
+	public void beforeTestExecution(ExtensionContext context) {
+		tester = create();
+	}
+
+	@Override
+	public void afterTestExecution(ExtensionContext context) {
+		tester.destroy();
+		tester = null;
+	}
+
+	@Override
+	public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+		tester.destroy();
+		tester = null;
+
+		throw throwable;
 	}
 }

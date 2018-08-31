@@ -16,33 +16,33 @@
  */
 package org.apache.wicket.core.util.string.componentrenderer;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.core.util.string.ComponentRenderer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link ComponentRenderer}
  */
-public class ComponentRendererInstanceTest
+class ComponentRendererInstanceTest
 {
 	private ComponentRenderer renderer;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+    void setup() {
 		renderer = new ComponentRenderer();
 	}
 	
-	@After
-	public void destroy() {
+	@AfterEach
+    void destroy() {
 		renderer.destroy();
 	}
 	
 	@Test
-	public void render()
+    void render()
 	{
 		CharSequence html = renderer.renderComponent(() -> new Label("id", "Hello renderer"));
 		

@@ -16,44 +16,43 @@
  */
 package org.apache.wicket.page;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.mock.MockPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer.PageLock;
-import org.apache.wicket.util.SlowTests;
+import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.rules.Timeout;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  */
-@Category(SlowTests.class)
-public class PageAccessSynchronizerTest extends Assert
+@Tag(WicketTestTag.SLOW)
+class PageAccessSynchronizerTest
 {
 	private static final Logger logger = LoggerFactory.getLogger(PageAccessSynchronizerTest.class);
 
-	/**	 */
-	@Rule
-	public Timeout globalTimeout = new Timeout(30, TimeUnit.SECONDS);
+	// TODO had a 30 second timeout rule, Junit 5 atm does not support timeouts (see discussion at
+	// https://github.com/junit-team/junit5/issues/80)
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testReentrant() throws Exception
+	void testReentrant() throws Exception
 	{
 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(5));
 		sync.lockPage(0);
@@ -64,7 +63,7 @@ public class PageAccessSynchronizerTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testBlocking() throws Exception
+	void testBlocking() throws Exception
 	{
 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(5));
 		final Duration hold = Duration.seconds(1);
@@ -114,7 +113,7 @@ public class PageAccessSynchronizerTest extends Assert
 	 * @param duration
 	 * @throws Exception
 	 */
-	public void runContentionTest(final int pages, final int workers, final Duration duration)
+	private void runContentionTest(final int pages, final int workers, final Duration duration)
 		throws Exception
 	{
 		final PageAccessSynchronizer sync = new PageAccessSynchronizer(Duration.seconds(1));
@@ -251,7 +250,7 @@ public class PageAccessSynchronizerTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testConcurrency() throws Exception
+	void testConcurrency() throws Exception
 	{
 		runContentionTest(20, 10, Duration.seconds(10));
 	}
@@ -260,7 +259,7 @@ public class PageAccessSynchronizerTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testContention() throws Exception
+	void testContention() throws Exception
 	{
 		runContentionTest(10, 20, Duration.seconds(10));
 	}
@@ -269,14 +268,14 @@ public class PageAccessSynchronizerTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void testSerialization() throws Exception
+	void testSerialization() throws Exception
 	{
 		// a simple worker that acquires a lock on page 5
 		class Locker extends Thread
 		{
 			private final PageAccessSynchronizer sync;
 
-			public Locker(PageAccessSynchronizer sync)
+			Locker(PageAccessSynchronizer sync)
 			{
 				this.sync = sync;
 			}
@@ -312,7 +311,7 @@ public class PageAccessSynchronizerTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-4009
 	 */
 	@Test
-	public void unlockIfNoSuchPage()
+	void unlockIfNoSuchPage()
 	{
 		PageAccessSynchronizer synchronizer = new PageAccessSynchronizer(Duration.seconds(2));
 		IPageManager pageManager = new MockPageManager();
@@ -336,15 +335,16 @@ public class PageAccessSynchronizerTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void failToReleaseUnderLoad() throws Exception
+	void failToReleaseUnderLoad() throws Exception
 	{
 		final Duration duration = Duration.seconds(20); /* seconds */
 		final ConcurrentLinkedQueue<Exception> errors = new ConcurrentLinkedQueue<Exception>();
 		final long endTime = System.currentTimeMillis() + duration.getMilliseconds();
 
-		// set the synchronizer timeout one second longer than the test runs to prevent 
+		// set the synchronizer timeout one second longer than the test runs to prevent
 		// starvation to become an issue
-		final PageAccessSynchronizer sync = new PageAccessSynchronizer(duration.add(Duration.ONE_SECOND));
+		final PageAccessSynchronizer sync = new PageAccessSynchronizer(
+			duration.add(Duration.ONE_SECOND));
 
 		final CountDownLatch latch = new CountDownLatch(100);
 		for (int count = 0; count < 100; count++)

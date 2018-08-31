@@ -28,7 +28,7 @@ public class MarkupInheritanceBase_11 extends MarkupInheritanceBaseBase_11
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBase_11()
+    MarkupInheritanceBase_11()
 	{
 		super();
 		add(new Label("label3", "base label 3"));

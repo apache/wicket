@@ -16,33 +16,35 @@
  */
 package org.apache.wicket.pageStore;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.JavaSerializer;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public abstract class AbstractPageStoreTest extends Assert
+abstract class AbstractPageStoreTest
 {
-	protected final String sessionId = "1234567890";
-	protected final int pageId = 123;
-	protected final ISerializer serializer = new JavaSerializer(getClass().getName());
-	protected final IDataStore dataStore = new NoopDataStore();
-	protected int maxEntries = 1;
-	protected IPageStore pageStore = null;
+	final String sessionId = "1234567890";
+	final int pageId = 123;
+	private final ISerializer serializer = new JavaSerializer(getClass().getName());
+	private final IDataStore dataStore = new NoopDataStore();
+	private int maxEntries = 1;
+	IPageStore pageStore = null;
 
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		pageStore = createPageStore(serializer, dataStore, maxEntries);
 	}
 
-	protected abstract IPageStore createPageStore(ISerializer serializer, IDataStore dataStore, int maxEntries);
+	abstract IPageStore createPageStore(ISerializer serializer, IDataStore dataStore, int maxEntries);
 
-	@After
-	public void after()
+	@AfterEach
+	void after()
 	{
 		if (pageStore != null)
 		{
@@ -55,7 +57,7 @@ public abstract class AbstractPageStoreTest extends Assert
 	 * Assert that a stored page is available to be read
 	 */
 	@Test
-	public void storePage()
+	void storePage()
 	{
 		pageStore.storePage(sessionId, new MockPage(pageId));
 
@@ -66,7 +68,7 @@ public abstract class AbstractPageStoreTest extends Assert
 	 * Assert that storing a page twice won't keep two entries
 	 */
 	@Test
-	public void storePage2()
+	void storePage2()
 	{
 		int maxEntries = 10;
 
@@ -83,7 +85,7 @@ public abstract class AbstractPageStoreTest extends Assert
 	}
 
 	@Test
-	public void removePage()
+	void removePage()
 	{
 		pageStore.storePage(sessionId, new MockPage(pageId));
 
@@ -98,7 +100,7 @@ public abstract class AbstractPageStoreTest extends Assert
 	 * Verify that at most {@code maxEntries} per session can be put in the cache
 	 */
 	@Test
-	public void maxSizeSameSession()
+	void maxSizeSameSession()
 	{
 		pageStore.storePage(sessionId, new MockPage(pageId));
 
@@ -115,7 +117,7 @@ public abstract class AbstractPageStoreTest extends Assert
 	 * if they are in different sessions
 	 */
 	@Test
-	public void maxSizeDifferentSessions()
+	void maxSizeDifferentSessions()
 	{
 		String sessionId2 = "0987654321";
 

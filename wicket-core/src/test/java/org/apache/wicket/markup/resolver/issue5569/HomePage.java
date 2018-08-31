@@ -66,7 +66,7 @@ public class HomePage extends WebPage
 	{
 		private final MarkupContainer resolveTarget;
 
-		public ComponentResolvingWebMarkupContainer(String id, MarkupContainer resolveTarget)
+		ComponentResolvingWebMarkupContainer(String id, MarkupContainer resolveTarget)
 		{
 			super(id);
 			this.resolveTarget = resolveTarget;

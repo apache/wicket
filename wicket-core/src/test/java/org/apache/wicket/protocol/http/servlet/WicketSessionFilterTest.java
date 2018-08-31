@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -36,13 +38,12 @@ import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.time.Duration;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link WicketSessionFilter}
  */
-public class WicketSessionFilterTest extends WicketTestCase
+class WicketSessionFilterTest extends WicketTestCase
 {
 
 	@Override
@@ -67,7 +68,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void applicationAndSessionAreExported() throws Exception
+	void applicationAndSessionAreExported() throws Exception
 	{
 		// bind the session so it can be found in TestSessionFilter
 		tester.getSession().bind();
@@ -83,14 +84,14 @@ public class WicketSessionFilterTest extends WicketTestCase
 				{
 					TestSessionFilter sessionFilter = new TestSessionFilter(tester);
 
-					Assert.assertFalse(Application.exists());
-					Assert.assertFalse(Session.exists());
+					assertFalse(Application.exists());
+					assertFalse(Session.exists());
 
 					sessionFilter.doFilter(tester.getRequest(), tester.getResponse(),
 						new TestFilterChain());
 
-					Assert.assertFalse(Application.exists());
-					Assert.assertFalse(Session.exists());
+					assertFalse(Application.exists());
+					assertFalse(Session.exists());
 
 				}
 				catch (Exception e)
@@ -115,7 +116,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 		testThread.start();
 		testThread.join(Duration.seconds(1).getMilliseconds());
 
-		Assert.assertTrue(failMessage.toString(), passed.get());
+		assertTrue(passed.get(), failMessage.toString());
 	}
 
 	/**
@@ -124,7 +125,7 @@ public class WicketSessionFilterTest extends WicketTestCase
 	 */
 	private static class TestSessionFilter extends WicketSessionFilter
 	{
-		public TestSessionFilter(final WicketTester tester) throws ServletException
+		TestSessionFilter(final WicketTester tester) throws ServletException
 		{
 			init(new FilterConfig()
 			{

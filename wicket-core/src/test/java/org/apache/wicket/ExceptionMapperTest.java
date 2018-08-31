@@ -29,12 +29,11 @@ import org.apache.wicket.util.lang.Exceptions;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Ignore;
 
 /**
+ * // TODO can be removed?
  */
-@Ignore
-public class ExceptionMapperTest extends WicketTestCase
+abstract class ExceptionMapperTest extends WicketTestCase
 {
 	/**
 	 * Testing an custom exception mapper provider that return an wrapped exception mapper in order
@@ -57,7 +56,7 @@ public class ExceptionMapperTest extends WicketTestCase
 
 	/**
 	 */
-	public static class WrapperProvider implements Supplier<IExceptionMapper>
+	static class WrapperProvider implements Supplier<IExceptionMapper>
 	{
 		private Supplier<IExceptionMapper> wrapped;
 		WrapperExceptionMapper wrapperExceptionMapper;
@@ -66,7 +65,7 @@ public class ExceptionMapperTest extends WicketTestCase
 		 * @param wrapped
 		 *            exception mapper provider
 		 */
-		public WrapperProvider(Supplier<IExceptionMapper> wrapped)
+		WrapperProvider(Supplier<IExceptionMapper> wrapped)
 		{
 			this.wrapped = wrapped;
 		}
@@ -80,7 +79,7 @@ public class ExceptionMapperTest extends WicketTestCase
 
 	/**
 	 */
-	public static class WrapperExceptionMapper implements IExceptionMapper
+	static class WrapperExceptionMapper implements IExceptionMapper
 	{
 		private IExceptionMapper wrapped;
 
@@ -88,7 +87,7 @@ public class ExceptionMapperTest extends WicketTestCase
 		 * @param wrapped
 		 *            IExceptionMapper
 		 */
-		public WrapperExceptionMapper(IExceptionMapper wrapped)
+		WrapperExceptionMapper(IExceptionMapper wrapped)
 		{
 			this.wrapped = wrapped;
 		}
@@ -135,7 +134,7 @@ public class ExceptionMapperTest extends WicketTestCase
 
 		/**
 		 */
-		public TestPage()
+		TestPage()
 		{
 			add(new Link<Void>(LINK_ID)
 			{

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,13 +30,12 @@ import org.apache.wicket.util.resource.FileResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests resources.
  */
-public class ResourceTest extends WicketTestCase
+class ResourceTest extends WicketTestCase
 {
 	private static final String TEST_STRING = "Hello, World!";
 
@@ -42,7 +43,7 @@ public class ResourceTest extends WicketTestCase
 	 * tests a resource that is not cacheable.
 	 */
 	@Test
-	public void testFileResourceStream()
+	void testFileResourceStream()
 	{
 		final File testFile;
 		try
@@ -67,7 +68,7 @@ public class ResourceTest extends WicketTestCase
 	 * testStringResourceStream()
 	 */
 	@Test
-	public void stringResourceStream()
+	void stringResourceStream()
 	{
 		StringResourceStream resourceStream = new StringResourceStream(TEST_STRING);
 		bindToApplicationAsResourceAndRequestIt(resourceStream);

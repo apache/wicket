@@ -24,13 +24,13 @@ import org.apache.wicket.util.tester.WicketTestCase;
  * 
  * @author Juergen Donnerstag
  */
-public class Test extends WicketTestCase
+class Test extends WicketTestCase
 {
 	/**
 	 * 
 	 */
-	@org.junit.Test
-	public void testRedirect()
+	@org.junit.jupiter.api.Test
+	void testRedirect()
 	{
 		final IAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
 			RedirectPage.class, LoginPage.class)
@@ -42,9 +42,8 @@ public class Test extends WicketTestCase
 			}
 		};
 
-		tester.getApplication()
-			.getSecuritySettings()
-			.setAuthorizationStrategy(authorizationStrategy);
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(
+			authorizationStrategy);
 
 		tester.startPage(RedirectPage.class);
 		tester.assertRenderedPage(LoginPage.class);
