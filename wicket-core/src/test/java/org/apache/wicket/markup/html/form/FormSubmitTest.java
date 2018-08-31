@@ -16,13 +16,16 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.markup.html.form.NestedFormsPage.NestableForm;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Please see <a href="http://cwiki.apache.org/WICKET/nested-forms.html">"Nested Forms"</a> for more
@@ -30,7 +33,7 @@ import org.junit.Test;
  * 
  * @author Gerolf Seitz
  */
-public class FormSubmitTest extends WicketTestCase
+class FormSubmitTest extends WicketTestCase
 {
 	private NestedFormsPage page;
 	private NestableForm outerForm;
@@ -40,8 +43,8 @@ public class FormSubmitTest extends WicketTestCase
 	/**
 	 *
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		tester.startPage(new NestedFormsPage());
 		page = (NestedFormsPage)tester.getLastRenderedPage();
@@ -54,7 +57,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void allFormsEnabledSubmitOuterForm()
+	void allFormsEnabledSubmitOuterForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -68,7 +71,7 @@ public class FormSubmitTest extends WicketTestCase
 
 	private void assertSubmitOrder(NestableForm... forms)
 	{
-		assertEquals("not submitted in expected order!", joinIds(forms), page.submitOrder);
+		assertEquals(joinIds(forms), page.submitOrder, "not submitted in expected order!");
 	}
 
 	private String joinIds(Component[] comps)
@@ -83,14 +86,14 @@ public class FormSubmitTest extends WicketTestCase
 
 	private void assertErrorOrder(NestableForm... forms)
 	{
-		assertEquals("not onError'd in expected order!", joinIds(forms), page.errorOrder);
+		assertEquals(joinIds(forms), page.errorOrder, "not onError'd in expected order!");
 	}
 
 	/**
 	 *
 	 */
 	@Test
-	public void allFormsEnabledSubmitMiddleForm()
+	void allFormsEnabledSubmitMiddleForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -106,7 +109,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void allFormsEnabledSubmitInnerForm()
+	void allFormsEnabledSubmitInnerForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -122,7 +125,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void middleFormDisabledSubmitOuterForm()
+	void middleFormDisabledSubmitOuterForm()
 	{
 		// disable middle form
 		middleForm.setEnabled(false);
@@ -141,7 +144,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void innerFormDisabledSubmitOuterForm()
+	void innerFormDisabledSubmitOuterForm()
 	{
 		// disable middle form
 		innerForm.setEnabled(false);
@@ -160,7 +163,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void submitDisabledOuterForm()
+	void submitDisabledOuterForm()
 	{
 		outerForm.setEnabled(false);
 		assertEnabledState(false, true, true);
@@ -183,7 +186,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void errorOnInnerFormSubmitOuterForm()
+	void errorOnInnerFormSubmitOuterForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -198,7 +201,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void errorOnMiddleFormSubmitOuterForm()
+	void errorOnMiddleFormSubmitOuterForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -213,7 +216,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void errorOnMiddleFormSubmitMiddleForm()
+	void errorOnMiddleFormSubmitMiddleForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -228,7 +231,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void errorOnInnerFormSubmitMiddleForm()
+	void errorOnInnerFormSubmitMiddleForm()
 	{
 		assertEnabledState(true, true, true);
 
@@ -243,7 +246,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void middleFormDisabledErrorOnOuterFormSubmitOuterForm()
+	void middleFormDisabledErrorOnOuterFormSubmitOuterForm()
 	{
 		middleForm.setEnabled(false);
 		assertEnabledState(true, false, true);
@@ -259,7 +262,7 @@ public class FormSubmitTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void errorOnInnerFormDisabledMiddleFormSubmitOuterForm()
+	void errorOnInnerFormDisabledMiddleFormSubmitOuterForm()
 	{
 		middleForm.setEnabled(false);
 		assertEnabledState(true, false, true);

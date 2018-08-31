@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.markup.html.pages.ExceptionErrorPage;
 import org.apache.wicket.markup.html.pages.InternalErrorPage;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
@@ -24,7 +27,7 @@ import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests that for internal errors in Ajax requests Wicket will send the error response immediately
@@ -35,7 +38,7 @@ import org.junit.Test;
  * See WICKET-3143 No Exception page are rendered when using ajax
  * 
  */
-public class InternalErrorCallsAjaxOnFailureTest extends WicketTestCase
+class InternalErrorCallsAjaxOnFailureTest extends WicketTestCase
 {
 
 	/**
@@ -43,7 +46,7 @@ public class InternalErrorCallsAjaxOnFailureTest extends WicketTestCase
 	 * {@link org.apache.wicket.settings.ExceptionSettings.AjaxErrorStrategy#REDIRECT_TO_ERROR_PAGE}
 	 */
 	@Test
-	public void showsInternalErrorPage()
+	void showsInternalErrorPage()
 	{
 
 		tester.setExposeExceptions(false);
@@ -68,7 +71,7 @@ public class InternalErrorCallsAjaxOnFailureTest extends WicketTestCase
 	 * but will preserve the current page and send http status 500 to wicket-ajax.js
 	 */
 	@Test
-	public void callsOnFailure()
+	void callsOnFailure()
 	{
 
 		WicketTester tester = new WicketTester(new DummyApplication()

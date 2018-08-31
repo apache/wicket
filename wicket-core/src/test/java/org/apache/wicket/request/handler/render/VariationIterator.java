@@ -27,11 +27,11 @@ public class VariationIterator<T> implements Iterator<T>
 
 	private int idx = -1;
 
-	public VariationIterator(Variation<T> variation) {
+	private VariationIterator(Variation<T> variation) {
 		this(null, variation);
 	}
 
-	public VariationIterator(VariationIterator<?> prev, Variation<T> variation) {
+	private VariationIterator(VariationIterator<?> prev, Variation<T> variation) {
 		this.prev = prev;
 		this.variation = variation;
 	}

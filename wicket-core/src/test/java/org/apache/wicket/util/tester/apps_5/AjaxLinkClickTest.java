@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.util.tester.apps_5;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Optional;
 
 import org.apache.wicket.Page;
@@ -23,16 +27,15 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test that the clickLink method also works with AjaxLinks
  * 
  * @author Frank Bille
  */
-public class AjaxLinkClickTest extends WicketTestCase
+class AjaxLinkClickTest extends WicketTestCase
 {
 	private boolean linkClicked;
 	private AjaxRequestTarget ajaxRequestTarget;
@@ -40,8 +43,8 @@ public class AjaxLinkClickTest extends WicketTestCase
 	/**
 	 * Make sure that our test flags are reset between every test.
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		linkClicked = false;
 		ajaxRequestTarget = null;
@@ -51,7 +54,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 * Test that an AjaxLink's onClick method is actually invoked.
 	 */
 	@Test
-	public void testBasicAjaxLinkClick()
+	void testBasicAjaxLinkClick()
 	{
 		// Create a link, which we test is actually invoked
 		final AjaxLink<Void> ajaxLink = new AjaxLink<Void>("ajaxLink")
@@ -82,7 +85,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 * AjaxRequestTarget is not null.
 	 */
 	@Test
-	public void testAjaxFallbackLinkClick()
+	void testAjaxFallbackLinkClick()
 	{
 		final Page page = new MockPageWithLink();
 
@@ -110,7 +113,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 * AjaxRequestTarget.
 	 */
 	@Test
-	public void testFallbackLinkWithAjaxDisabled()
+	void testFallbackLinkWithAjaxDisabled()
 	{
 		final Page page = new MockPageWithLink();
 

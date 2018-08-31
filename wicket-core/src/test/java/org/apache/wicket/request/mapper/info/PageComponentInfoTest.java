@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.request.mapper.info;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Matej Knopp
  */
-public class PageComponentInfoTest extends TestCase
+class PageComponentInfoTest
 {
 
 	private void testPageInfoOnly(PageComponentInfo info, Integer pageId)
@@ -49,7 +51,7 @@ public class PageComponentInfoTest extends TestCase
 	 * 
 	 */
 	@Test
-	public void test1()
+	void test1()
 	{
 		String s = "2--foo-bar-baz";
 		PageComponentInfo info = PageComponentInfo.parse(s);
@@ -61,7 +63,7 @@ public class PageComponentInfoTest extends TestCase
 	 * 
 	 */
 	@Test
-	public void test2()
+	void test2()
 	{
 		String s = "2";
 		PageComponentInfo info = PageComponentInfo.parse(s);
@@ -73,9 +75,10 @@ public class PageComponentInfoTest extends TestCase
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3490">WICKET-3490</a>
 	 */
 	@Test
-	public void parsePageInfo()
+	void parsePageInfo()
 	{
-		PageComponentInfo pageComponentInfo = PageComponentInfo.parse("99999999999999999999999999999999999999999999999999999999999999999999999");
+		PageComponentInfo pageComponentInfo = PageComponentInfo
+			.parse("99999999999999999999999999999999999999999999999999999999999999999999999");
 		assertNull(pageComponentInfo);
 	}
 }

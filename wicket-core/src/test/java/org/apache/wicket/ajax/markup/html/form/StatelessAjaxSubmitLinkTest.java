@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.ajax.StatelessPage;
@@ -24,48 +24,48 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.page.XmlPartialPageUpdate;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class StatelessAjaxSubmitLinkTest
+class StatelessAjaxSubmitLinkTest
 {
-	protected WicketTester tester;
+	private WicketTester tester;
 
-	@Before
-	public void setUp()
+	@BeforeEach
+	void setUp()
 	{
 		tester = new WicketTester(new MockApplication());
 	}
 
-	@After
-	public void teardown()
+	@AfterEach
+	void teardown()
 	{
 		// things must stay stateless
 		assertTrue(Session.get().isTemporary());
 	}
-	
+
 	@Test
-	public void testSubmitForm() throws Exception 
+	void testSubmitForm() throws Exception
 	{
-    	tester.startPage(StatelessPage.class);
-    	
-    	FormTester formTester = tester.newFormTester("inputForm");
-    	formTester.setValue("name", "myname");
-    	formTester.setValue("surname", "mysurname");
-    	
-    	tester.executeAjaxEvent("inputForm:submit", "click");
-    	
-    	String response = tester.getLastResponseAsString();
-    	
-    	boolean isAjaxResponse = response.contains(XmlPartialPageUpdate.START_ROOT_ELEMENT)
-    		&& response.contains(XmlPartialPageUpdate.END_ROOT_ELEMENT);
-    	
-    	assertTrue(isAjaxResponse);
-    	
-    	boolean formAjaxSubmit = response.contains(StatelessPage.FORM_SUBMIT) &&
-    		response.contains(StatelessPage.AJAX_SUBMIT);
-    	
-    	assertTrue(formAjaxSubmit);
+		tester.startPage(StatelessPage.class);
+
+		FormTester formTester = tester.newFormTester("inputForm");
+		formTester.setValue("name", "myname");
+		formTester.setValue("surname", "mysurname");
+
+		tester.executeAjaxEvent("inputForm:submit", "click");
+
+		String response = tester.getLastResponseAsString();
+
+		boolean isAjaxResponse = response.contains(XmlPartialPageUpdate.START_ROOT_ELEMENT) &&
+			response.contains(XmlPartialPageUpdate.END_ROOT_ELEMENT);
+
+		assertTrue(isAjaxResponse);
+
+		boolean formAjaxSubmit = response.contains(StatelessPage.FORM_SUBMIT) &&
+			response.contains(StatelessPage.AJAX_SUBMIT);
+
+		assertTrue(formAjaxSubmit);
 	}
 }

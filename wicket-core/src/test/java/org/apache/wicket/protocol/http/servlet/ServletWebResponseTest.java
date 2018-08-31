@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,7 +25,6 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,15 +34,13 @@ import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.UrlRenderer;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Matchers;
 
 /**
  * Tests for {@link ServletWebResponse}
  */
-public class ServletWebResponseTest extends Assert
+class ServletWebResponseTest
 {
 
 	/**
@@ -52,7 +51,7 @@ public class ServletWebResponseTest extends Assert
 	 * @throws IOException
 	 */
 	@Test
-	public void sendRedirectAjax() throws IOException
+	void sendRedirectAjax() throws IOException
 	{
 		final String url = "./relative/path";
 
@@ -98,7 +97,7 @@ public class ServletWebResponseTest extends Assert
 	 * @throws IOException
 	 */
 	@Test
-	public void sendRedirect() throws IOException
+	void sendRedirect() throws IOException
 	{
 		final String url = "./relative/path";
 
@@ -124,7 +123,7 @@ public class ServletWebResponseTest extends Assert
 	 * WICKET-4934 DownloadLink uses wrong encoding for spaces/non-ASCII characters
 	 */
 	@Test
-	public void setDispositionHeader()
+	void setDispositionHeader()
 	{
 		ServletWebRequest webRequest = mock(ServletWebRequest.class);
 		MockHttpServletRequest httpRequest = mock(MockHttpServletRequest.class);
@@ -162,7 +161,7 @@ public class ServletWebResponseTest extends Assert
 	 * WICKET-5582 absolute URLs stay absolute after encoding
 	 */
 	@Test
-	public void encodeAbsoluteUrl()
+	void encodeAbsoluteUrl()
 	{
 		final String url = "http://localhost:8080/path";
 
@@ -191,7 +190,7 @@ public class ServletWebResponseTest extends Assert
 	 * WICKET-5582 absolute URLs stay absolute after encoding
 	 */
 	@Test
-	public void encodeRedirectAbsoluteUrl()
+	void encodeRedirectAbsoluteUrl()
 	{
 		final String url = "http://localhost:8080/path";
 

@@ -18,9 +18,9 @@ package org.apache.wicket.protocol.https;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -35,40 +35,40 @@ import org.apache.wicket.protocol.https.HttpsMapper.RedirectHandler;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.IRequestMapper;
 import org.apache.wicket.request.Url;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class HttpsMapperTest
+class HttpsMapperTest
 {
 	@Test
-	public void getDesiredSchemeOfPageClass()
+	void getDesiredSchemeOfPageClass()
 	{
 		IRequestMapper delegate = mock(IRequestMapper.class);
 		HttpsMapper mapper = new HttpsMapper(delegate, new HttpsConfig());
 
-		assertThat(mapper.getDesiredSchemeFor(SecurePage.class), is(Scheme.HTTPS));
-		assertThat(mapper.getDesiredSchemeFor(SecureDecendantPage.class), is(Scheme.HTTPS));
-		assertThat(mapper.getDesiredSchemeFor(SecureMixinPage.class), is(Scheme.HTTPS));
-		assertThat(mapper.getDesiredSchemeFor(InsecurePage.class), is(Scheme.HTTP));
+		assertEquals(Scheme.HTTPS, mapper.getDesiredSchemeFor(SecurePage.class));
+		assertEquals(Scheme.HTTPS, mapper.getDesiredSchemeFor(SecureDecendantPage.class));
+		assertEquals(Scheme.HTTPS, mapper.getDesiredSchemeFor(SecureMixinPage.class));
+		assertEquals(Scheme.HTTP, mapper.getDesiredSchemeFor(InsecurePage.class));
 	}
 
 	@Test
-	public void getDesiredSchemeOfHandler()
+	void getDesiredSchemeOfHandler()
 	{
 		IRequestMapper delegate = mock(IRequestMapper.class);
 		HttpsMapper mapper = new HttpsMapper(delegate, new HttpsConfig());
 
 		IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(SecurePage.class));
-		assertThat(mapper.getDesiredSchemeFor(handler), is(Scheme.HTTPS));
+		assertEquals(Scheme.HTTPS, mapper.getDesiredSchemeFor(handler));
 
 		handler = new RenderPageRequestHandler(new PageProvider(InsecurePage.class));
-		assertThat(mapper.getDesiredSchemeFor(handler), is(Scheme.HTTP));
+		assertEquals(Scheme.HTTP, mapper.getDesiredSchemeFor(handler));
 
 		handler = mock(IRequestHandler.class);
-		assertThat(mapper.getDesiredSchemeFor(handler), is(Scheme.ANY));
+		assertEquals(Scheme.ANY, mapper.getDesiredSchemeFor(handler));
 	}
 
 	@Test
-	public void getSchemeOfRequest()
+	void getSchemeOfRequest()
 	{
 		IRequestMapper delegate = mock(IRequestMapper.class);
 		HttpsMapper mapper = new HttpsMapper(delegate, new HttpsConfig());
@@ -78,15 +78,15 @@ public class HttpsMapperTest
 		when(request.getContainerRequest()).thenReturn(req);
 
 		when(req.getScheme()).thenReturn("https");
-		assertThat(mapper.getSchemeOf(request), is(Scheme.HTTPS));
+		assertEquals(Scheme.HTTPS, mapper.getSchemeOf(request));
 
 		reset(req);
 		when(req.getScheme()).thenReturn("hTTps");
-		assertThat(mapper.getSchemeOf(request), is(Scheme.HTTPS));
+		assertEquals(Scheme.HTTPS, mapper.getSchemeOf(request));
 
 		reset(req);
 		when(req.getScheme()).thenReturn("http");
-		assertThat(mapper.getSchemeOf(request), is(Scheme.HTTP));
+		assertEquals(Scheme.HTTP, mapper.getSchemeOf(request));
 
 		try
 		{
@@ -102,7 +102,7 @@ public class HttpsMapperTest
 	}
 
 	@Test
-	public void mapHandler()
+	void mapHandler()
 	{
 		IRequestMapper delegate = mock(IRequestMapper.class);
 		HttpsMapper mapper = new HttpsMapper(delegate, new HttpsConfig());
@@ -117,8 +117,8 @@ public class HttpsMapperTest
 		when(delegate.mapHandler(handler)).thenReturn(url);
 		when(req.getScheme()).thenReturn("http");
 		mapper.mapHandler(handler, request);
-		assertThat(url.getProtocol(), is("https"));
-		assertThat(url.getPort(), is(443));
+		assertEquals("https", url.getProtocol());
+		assertEquals(Integer.valueOf(443), url.getPort());
 
 		// render url to http page on http, ignore protocol
 		handler = new RenderPageRequestHandler(new PageProvider(InsecurePage.class));
@@ -127,7 +127,7 @@ public class HttpsMapperTest
 		when(delegate.mapHandler(handler)).thenReturn(url);
 		when(req.getScheme()).thenReturn("http");
 		mapper.mapHandler(handler, request);
-		assertThat(url.getProtocol(), is(nullValue()));
+		assertNull(url.getProtocol());
 
 		// render url to http page on https, set protocol
 		handler = new RenderPageRequestHandler(new PageProvider(InsecurePage.class));
@@ -136,13 +136,13 @@ public class HttpsMapperTest
 		when(delegate.mapHandler(handler)).thenReturn(url);
 		when(req.getScheme()).thenReturn("https");
 		mapper.mapHandler(handler, request);
-		assertThat(url.getProtocol(), is("http"));
-		assertThat(url.getPort(), is(80));
+		assertEquals("http", url.getProtocol());
+		assertEquals(Integer.valueOf(80), url.getPort());
 	}
 
 
 	@Test
-	public void mapRequest()
+	void mapRequest()
 	{
 		IRequestMapper delegate = mock(IRequestMapper.class);
 		HttpsMapper mapper = new HttpsMapper(delegate, new HttpsConfig());
@@ -156,8 +156,8 @@ public class HttpsMapperTest
 		IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(SecurePage.class));
 		when(delegate.mapRequest(request)).thenReturn(handler);
 		IRequestHandler resolved = mapper.mapRequest(request);
-		assertThat(resolved, is(instanceOf(RedirectHandler.class)));
-		assertThat(((RedirectHandler)resolved).getUrl(), is("https://localhost/ctx?foo=bar"));
+		assertThat(resolved, instanceOf(RedirectHandler.class));
+		assertEquals("https://localhost/ctx?foo=bar", ((RedirectHandler)resolved).getUrl());
 
 		// http handler on http request, return the original handler
 		handler = new RenderPageRequestHandler(new PageProvider(InsecurePage.class));
@@ -165,11 +165,11 @@ public class HttpsMapperTest
 		when(delegate.mapRequest(request)).thenReturn(handler);
 		setupRequest(req, "http", "localhost", 80, "/ctx", "foo=bar");
 		resolved = mapper.mapRequest(request);
-		assertThat(resolved, is(sameInstance(handler)));
+		assertSame(handler, resolved);
 	}
 
 	@Test
-	public void mapRequestWithCustomPorts()
+	void mapRequestWithCustomPorts()
 	{
 		IRequestMapper delegate = mock(IRequestMapper.class);
 		HttpsMapper mapper = new HttpsMapper(delegate, new HttpsConfig(10, 20));
@@ -183,8 +183,8 @@ public class HttpsMapperTest
 		IRequestHandler handler = new RenderPageRequestHandler(new PageProvider(SecurePage.class));
 		when(delegate.mapRequest(request)).thenReturn(handler);
 		IRequestHandler resolved = mapper.mapRequest(request);
-		assertThat(resolved, is(instanceOf(RedirectHandler.class)));
-		assertThat(((RedirectHandler)resolved).getUrl(), is("https://localhost:20/ctx?foo=bar"));
+		assertThat(resolved, instanceOf(RedirectHandler.class));
+		assertEquals("https://localhost:20/ctx?foo=bar", ((RedirectHandler)resolved).getUrl());
 
 		// http handler on http request, return the original handler
 		handler = new RenderPageRequestHandler(new PageProvider(InsecurePage.class));
@@ -192,8 +192,8 @@ public class HttpsMapperTest
 		when(delegate.mapRequest(request)).thenReturn(handler);
 		setupRequest(req, "https", "localhost", 20, "/ctx", "foo=bar");
 		resolved = mapper.mapRequest(request);
-		assertThat(resolved, is(instanceOf(RedirectHandler.class)));
-		assertThat(((RedirectHandler)resolved).getUrl(), is("http://localhost:10/ctx?foo=bar"));
+		assertThat(resolved, instanceOf(RedirectHandler.class));
+		assertEquals("http://localhost:10/ctx?foo=bar", ((RedirectHandler)resolved).getUrl());
 	}
 
 	private static void setupRequest(HttpServletRequest mock, String scheme, String host, int port,

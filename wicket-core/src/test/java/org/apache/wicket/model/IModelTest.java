@@ -16,30 +16,29 @@
  */
 package org.apache.wicket.model;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Address;
 import org.apache.wicket.model.lambda.Person;
 import org.danekja.java.util.function.serializable.SerializableBiFunction;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link IModel}'s methods
  */
-public class IModelTest extends Assert
+class IModelTest
 {
 	private Person person;
 	private final String name = "John";
 	private final String street = "Strasse";
 
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		person = new Person();
 		person.setName(name);
@@ -51,114 +50,128 @@ public class IModelTest extends Assert
 	}
 
 	@Test
-	public void filterMatch()
+	void filterMatch()
 	{
 		IModel<Person> johnModel = Model.of(person).filter((p) -> p.getName().equals(name));
 
-		assertThat(johnModel.getObject(), is(person));
+		assertEquals(person, johnModel.getObject());
 	}
 
 	@Test
-	public void filterNoMatch()
+	void filterNoMatch()
 	{
 		IModel<Person> johnModel = Model.of(person).filter((p) -> p.getName().equals("Jane"));
 
-		assertThat(johnModel.getObject(), is(nullValue()));
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void nullFilter()
-	{
-		Model.of(person).filter(null);
+		assertNull(johnModel.getObject());
 	}
 
 	@Test
-	public void map()
+	void nullFilter()
+	{
+		assertThrows(IllegalArgumentException.class, () -> {
+			Model.of(person).filter(null);
+		});
+	}
+
+	@Test
+	void map()
 	{
 		IModel<String> personNameModel = Model.of(person).map(Person::getName);
-		assertThat(personNameModel.getObject(), is(equalTo(name)));
+		assertEquals(name, personNameModel.getObject());
 	}
 
 	@Test
-	public void map2()
+	void map2()
 	{
 		IModel<String> streetModel = Model.of(person)
 			.map(Person::getAddress)
 			.map(Address::getStreet);
-		assertThat(streetModel.getObject(), is(equalTo(street)));
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void nullMapper()
-	{
-		Model.of(person).map(null);
+		assertEquals(street, streetModel.getObject());
 	}
 
 	@Test
-	public void combineWith()
+	void nullMapper()
+	{
+		assertThrows(IllegalArgumentException.class, () -> {
+			Model.of(person).map(null);
+		});
+
+	}
+
+	@Test
+	void combineWith()
 	{
 		IModel<String> janeModel = Model.of("Jane");
 		SerializableBiFunction<Person, String, String> function = (SerializableBiFunction<Person, String, String>)(
 			person1, other) -> person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = Model.of(person).combineWith(janeModel, function);
-		assertThat(relationShipModel.getObject(), is(equalTo("John is in relationship with Jane")));
+		assertEquals("John is in relationship with Jane", relationShipModel.getObject());
 	}
 
 	@Test
-	public void combineWithNullObject()
+	void combineWithNullObject()
 	{
 		IModel<String> janeModel = Model.of((String)null);
 		SerializableBiFunction<Person, String, String> function = (SerializableBiFunction<Person, String, String>)(
 			person1, other) -> person1.getName() + " is in relationship with " + other;
 		IModel<String> relationShipModel = Model.of(person).combineWith(janeModel, function);
-		assertThat(relationShipModel.getObject(), is(nullValue()));
+		assertNull(relationShipModel.getObject());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void combineWithNullModel()
+	@Test
+	void combineWithNullModel()
 	{
 		IModel<String> janeModel = null;
 		SerializableBiFunction<Person, String, String> function = (SerializableBiFunction<Person, String, String>)(
 			person1, other) -> person1.getName() + " is in relationship with " + other;
-		Model.of(person).combineWith(janeModel, function);
-	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void combineWithNullCombiner()
-	{
-		Model.of(person).combineWith(Model.of("Jane"), null);
+		assertThrows(IllegalArgumentException.class, () -> {
+			Model.of(person).combineWith(janeModel, function);
+		});
+
 	}
 
 	@Test
-	public void flatMap()
+	void combineWithNullCombiner()
+	{
+		assertThrows(IllegalArgumentException.class, () -> {
+			Model.of(person).combineWith(Model.of("Jane"), null);
+		});
+
+	}
+
+	@Test
+	void flatMap()
 	{
 		IModel<String> heirModel = Model.of(person)
 			.flatMap(john -> LambdaModel.of(() -> john.getName() + " is my parent", john::setName));
-		assertThat(heirModel.getObject(), is(equalTo("John is my parent")));
+		assertEquals("John is my parent", heirModel.getObject());
 
 		String newValue = "Matthias";
 		heirModel.setObject(newValue);
-		assertThat(heirModel.getObject(), is(equalTo("Matthias is my parent")));
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void nullFlatMapper()
-	{
-		Model.of(person).flatMap(null);
+		assertEquals("Matthias is my parent", heirModel.getObject());
 	}
 
 	@Test
-	public void orElse()
+	void nullFlatMapper()
+	{
+		assertThrows(IllegalArgumentException.class, () -> {
+			Model.of(person).flatMap(null);
+		});
+	}
+
+	@Test
+	void orElse()
 	{
 		person.setName(null);
 		String defaultName = "Default name";
 		IModel<String> defaultNameModel = Model.of(person).map(Person::getName).orElse(defaultName);
 
-		assertThat(defaultNameModel.getObject(), is(equalTo(defaultName)));
+		assertEquals(defaultName, defaultNameModel.getObject());
 	}
 
 	@Test
-	public void orElseGet()
+	void orElseGet()
 	{
 		person.setName(null);
 		String defaultName = "Default name";
@@ -166,33 +179,35 @@ public class IModelTest extends Assert
 			.map(Person::getName)
 			.orElseGet(() -> defaultName);
 
-		assertThat(defaultNameModel.getObject(), is(equalTo(defaultName)));
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void orElseGetNullOther()
-	{
-		Model.of(person).map(Person::getName).orElseGet(null);
+		assertEquals(defaultName, defaultNameModel.getObject());
 	}
 
 	@Test
-	public void isPresent()
+	void orElseGetNullOther()
 	{
-		assertThat(Model.of(person).isPresent().getObject(), is(equalTo(true)));
+		assertThrows(IllegalArgumentException.class, () -> {
+			Model.of(person).map(Person::getName).orElseGet(null);
+		});
 	}
 
 	@Test
-	public void isPresentNot()
+	void isPresent()
 	{
-		assertThat(Model.of((Person)null).isPresent().getObject(), is(equalTo(false)));
+		assertEquals(true, Model.of(person).isPresent().getObject());
 	}
 
 	@Test
-	public void serializableMethodReference()
+	void isPresentNot()
+	{
+		assertEquals(false, Model.of((Person)null).isPresent().getObject());
+	}
+
+	@Test
+	void serializableMethodReference()
 	{
 		Person p = new Person();
 		IModel<String> m = p::getName;
-		assertThat(WicketObjects.cloneObject(m), is(not(nullValue())));
+		assertNotNull(WicketObjects.cloneObject(m));
 	}
 
 	static class Account
@@ -202,21 +217,21 @@ public class IModelTest extends Assert
 			person.setName("Some Name");
 		}
 
-		public Person getPerson()
+		Person getPerson()
 		{
 			return person;
 		}
 	}
 
 	@Test
-	public void serializableMethodChainReference()
+	void serializableMethodChainReference()
 	{
 		IModel<Account> accountModel = LoadableDetachableModel.of(Account::new);
 		IModel<Person> personModel = accountModel.map(Account::getPerson);
 		IModel<String> nameModel = personModel.map(Person::getName);
 
 		IModel<String> clone = WicketObjects.cloneObject(nameModel);
-		assertThat(clone, is(not(nullValue())));
-		assertThat(clone.getObject(), is("Some Name"));
+		assertNotNull(clone);
+		assertEquals("Some Name", clone.getObject());
 	}
 }

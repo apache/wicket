@@ -53,7 +53,7 @@ public class HomePage extends WebPage
 
 		String name;
 
-		public BookingForm(String s)
+		BookingForm(String s)
 		{
 			super(s);
 			setDefaultModel(new CompoundPropertyModel<Booking>(booking));

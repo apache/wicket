@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.resource.loader;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -25,8 +27,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * test hierarchic lookup of properties from component property files
@@ -34,13 +35,13 @@ import org.junit.Test;
  * @author Peter Ertl
  * 
  */
-public class PropertiesResolverTest extends Assert
+class PropertiesResolverTest
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void resolveProperties()
+	void resolveProperties()
 	{
 		WicketTester tester = new WicketTester(new App());
 
@@ -51,7 +52,7 @@ public class PropertiesResolverTest extends Assert
 
 	/**
 	 */
-	public static class App extends WebApplication
+	static class App extends WebApplication
 	{
 		@Override
 		public Class<? extends Page> getHomePage()
@@ -69,7 +70,7 @@ public class PropertiesResolverTest extends Assert
 		/**
 		 * Construct.
 		 */
-		public MyPage()
+        public MyPage()
 		{
 			MyRepeatingView repeater = new MyRepeatingView("repeater");
 			add(repeater);
@@ -125,25 +126,25 @@ public class PropertiesResolverTest extends Assert
 		}
 	}
 
-	public static class MyRepeatingView extends RepeatingView
+	static class MyRepeatingView extends RepeatingView
 	{
-		public MyRepeatingView(String id)
+		MyRepeatingView(String id)
 		{
 			super(id);
 		}
 	}
 
-	public static class MyContainer extends WebMarkupContainer
+	static class MyContainer extends WebMarkupContainer
 	{
-		public MyContainer(String id)
+		MyContainer(String id)
 		{
 			super(id);
 		}
 	}
 
-	public static class MyLabel extends Label
+	static class MyLabel extends Label
 	{
-		public MyLabel(String id)
+		MyLabel(String id)
 		{
 			super(id);
 		}

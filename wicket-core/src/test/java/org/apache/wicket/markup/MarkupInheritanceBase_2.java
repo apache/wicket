@@ -30,7 +30,7 @@ public class MarkupInheritanceBase_2 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBase_2()
+    MarkupInheritanceBase_2()
 	{
 		add(new Label("label1", "base label 1"));
 		add(new Label("label2", "base label 2"));

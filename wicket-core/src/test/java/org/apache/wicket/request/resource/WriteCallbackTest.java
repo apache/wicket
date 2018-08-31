@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,20 +28,18 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.response.ByteArrayResponse;
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Kent Tong
  */
-public class WriteCallbackTest extends Assert
+class WriteCallbackTest
 {
 
 	/**
 	 */
 	@Test
-	public void writeStream() throws IOException
+	void writeStream() throws IOException
 	{
 		WriteCallback callback = new WriteCallback()
 		{
@@ -59,7 +59,7 @@ public class WriteCallbackTest extends Assert
 		}
 		InputStream in = new ByteArrayInputStream(srcData);
 		callback.writeStream(attributes, in);
-		assertTrue("Content not equal", Arrays.equals(response.getBytes(), srcData));
+		assertTrue(Arrays.equals(response.getBytes(), srcData), "Content not equal");
 	}
 
 }

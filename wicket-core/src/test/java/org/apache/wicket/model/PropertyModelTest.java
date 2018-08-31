@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.model;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for exercising the {@link PropertyModel}.
@@ -44,7 +47,7 @@ public class PropertyModelTest extends WicketTestCase
 	public static abstract class AbstractAddress implements IAddress
 	{
 		/** street field for assignment in property expressions. */
-		public String street;
+		String street;
 	}
 
 	/**
@@ -58,16 +61,16 @@ public class PropertyModelTest extends WicketTestCase
 	/**
 	 * Person class for keeping the various different references for use in the test cases.
 	 */
-	public static class Person
+	static class Person
 	{
 		/** tests a <code>null</code> interface property. */
 		public IAddress interfaceAddress;
 		/** tests a <code>null</code> abstract class property. */
 		public AbstractAddress abstractAddress;
 		/** tests a <code>null</code> concrete class property. */
-		public ConcreteAddress concreteAddress;
+		ConcreteAddress concreteAddress;
 		/** tests a <code>null</code> final concrete class property. */
-		public final ConcreteAddress finalAddress = null;
+		final ConcreteAddress finalAddress = null;
 	}
 
 	/**
@@ -76,7 +79,7 @@ public class PropertyModelTest extends WicketTestCase
 	 * instantiate on behalf of the program.
 	 */
 	@Test
-	public void setWithNullPathInterface()
+	void setWithNullPathInterface()
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "interfaceAddress.street");
@@ -96,12 +99,15 @@ public class PropertyModelTest extends WicketTestCase
 	 * abstract class type. This should end in an exception because Wicket can't decide what to
 	 * instantiate on behalf of the program.
 	 */
-	@Test(expected = WicketRuntimeException.class)
-	public void setWithNullPathAbstract()
+	@Test
+	void setWithNullPathAbstract()
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "abstractAddress.street");
-		model.setObject("foo");
+		assertThrows(WicketRuntimeException.class, ()->{
+			model.setObject("foo");
+		});
+
 	}
 
 	/**
@@ -110,13 +116,13 @@ public class PropertyModelTest extends WicketTestCase
 	 * the program: the concrete class.
 	 */
 	@Test
-	public void setWithNullPathConcrete()
+	void setWithNullPathConcrete()
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "concreteAddress.street");
 		model.setObject("foo");
-		assertNotNull("concreteAddress", person.concreteAddress);
-		assertThat(person.concreteAddress, instanceOf(ConcreteAddress.class));
+		assertNotNull(person.concreteAddress, "concreteAddress");
+		assertThat(person.concreteAddress).isInstanceOf(ConcreteAddress.class);
 		assertEquals("foo", person.concreteAddress.street);
 	}
 
@@ -125,13 +131,13 @@ public class PropertyModelTest extends WicketTestCase
 	 * should pass when run using JDK 1.5 or newer.
 	 */
 	@Test
-	public void setWithNullPathFinalJdk15()
+	void setWithNullPathFinalJdk15()
 	{
 		Person person = new Person();
 		PropertyModel<String> model = new PropertyModel<String>(person, "finalAddress.street");
 
 		model.setObject("foo");
-		assertThat(person.finalAddress, instanceOf(ConcreteAddress.class));
+		assertThat(person.finalAddress).isInstanceOf(ConcreteAddress.class);
 		assertEquals("foo", person.finalAddress.street);
 	}
 }

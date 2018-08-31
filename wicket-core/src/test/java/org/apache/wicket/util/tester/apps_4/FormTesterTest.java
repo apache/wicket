@@ -16,25 +16,28 @@
  */
 package org.apache.wicket.util.tester.apps_4;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Ingram Chen
  */
-public class FormTesterTest extends WicketTestCase
+class FormTesterTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
+	void test_1() throws Exception
 	{
 		tester.startPage(EmailPage.class);
 

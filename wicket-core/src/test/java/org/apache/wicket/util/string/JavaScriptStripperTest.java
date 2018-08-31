@@ -16,20 +16,23 @@
  */
 package org.apache.wicket.util.string;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.core.util.string.JavaScriptStripper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link JavaScriptStripper}
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class JavaScriptStripperTest extends Assert
+class JavaScriptStripperTest
 {
 	/**	 */
 	@Test
-	public void unixWICKET501()
+	void unixWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals(" \n if ( !t.indexOf(\"//\") ) {", s);
@@ -37,7 +40,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void dosWICKET501()
+	void dosWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r\n    if ( !t.indexOf(\"//\") ) {");
 		assertEquals(" \r\nif ( !t.indexOf(\"//\") ) {", s);
@@ -45,7 +48,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void macWICKET501()
+	void macWICKET501()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    // Handle the common XPath // expression\r    if ( !t.indexOf(\"//\") ) {");
 		assertEquals(" \r if ( !t.indexOf(\"//\") ) {", s);
@@ -53,7 +56,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void regexp()
+	void regexp()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("    t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );");
 		assertEquals(" t = jQuery.trim(t).replace( /^\\/\\//i, \"\" );", s);
@@ -61,7 +64,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void regexp2()
+	void regexp2()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("foo.replace(/\"//*strip me*/, \"\"); // strip me\rdoFoo();");
 		assertEquals("foo.replace(/\"/, \"\"); \rdoFoo();", s);
@@ -69,7 +72,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void regexp3()
+	void regexp3()
 	{
 		String s = new JavaScriptStripper().stripCommentsAndWhitespace("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r//foo");
 		assertEquals("parseFloat( elem.filter.match(/alpha\\(opacity=(.*)\\)/)[1] ) / 100 : 1;\r",
@@ -78,7 +81,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void regexp4()
+	void regexp4()
 	{
 		String before = " attr: /**/ //xyz\n /\\[((?:[\\w-]*:)?[\\w-]+)\\s*(?:([!^$*~|]?=)\\s*((['\"])([^\\4]*?)\\4|([^'\"][^\\]]*?)))?\\]/    after     regex";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -89,7 +92,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void WICKET1806()
+	void WICKET1806()
 	{
 		String before = "a = [ /^(\\[) *@?([\\w-]+) *([!*$^~=]*) *('?\"?)(.*?)\\4 *\\]/ ];    b()";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -100,7 +103,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void WICKET2060_1()
+	void WICKET2060_1()
 	{
 		String before = "   a   b   c";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -110,7 +113,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void WICKET2060_2()
+	void WICKET2060_2()
 	{
 		String before = "   a \n  b   c\n\n";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -120,7 +123,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void WICKET2060_3()
+	void WICKET2060_3()
 	{
 		String before = "return  this.__unbind__(type, fn);";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -130,7 +133,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**     */
 	@Test
-	public void WICKET4760()
+	void WICKET4760()
 	{
 		String before = "x++ //\nx++";
 		String after = new JavaScriptStripper().stripCommentsAndWhitespace(before);
@@ -140,7 +143,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**     */
 	// @formatter:off
-	public static String TESTSTRING2 =
+	private static String TESTSTRING2 =
          "   var test = function () {\n" +
          "   var c = \"!=\";\n" +
          "    /* from jquery 1.5.1 */\n" +
@@ -158,7 +161,7 @@ public class JavaScriptStripperTest extends Assert
 
 	/**	 */
 	@Test
-	public void regExThatStartsWithExclamationMark()
+	void regExThatStartsWithExclamationMark()
 	{
 		String result = new JavaScriptStripper().stripCommentsAndWhitespace(TESTSTRING2);
 		assertFalse(result.contains("This code will be stripped"));

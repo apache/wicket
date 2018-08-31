@@ -16,43 +16,43 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-
-public class ContextRelativeResourceReferenceTest extends WicketTestCase
+class ContextRelativeResourceReferenceTest extends WicketTestCase
 {
-	static final String RESOURCE_NAME = "/foo/baar/myLibrary";
-	static final String ALREADY_MINIFIED = RESOURCE_NAME + ".min.js";
-	static final String TO_BE_MINIFIED = RESOURCE_NAME + ".js";
-	static final String CUSTOM_SUFFIX = "compress";
+	private static final String RESOURCE_NAME = "/foo/baar/myLibrary";
+	private static final String ALREADY_MINIFIED = RESOURCE_NAME + ".min.js";
+	private static final String TO_BE_MINIFIED = RESOURCE_NAME + ".js";
+	private static final String CUSTOM_SUFFIX = "compress";
 	
 	@Test
-	public void testMinifyResource() throws Exception
+	void testMinifyResource() throws Exception
 	{
 		ContextRelativeResourceReference resourceReference = new ContextRelativeResourceReference(TO_BE_MINIFIED);
-		Assert.assertTrue(testResourceKey(resourceReference, ALREADY_MINIFIED));
+		assertTrue(testResourceKey(resourceReference, ALREADY_MINIFIED));
 	}
 
 	@Test
-	public void testDontMinifyResource() throws Exception
+	void testDontMinifyResource() throws Exception
 	{
 		ContextRelativeResourceReference resourceReference = new ContextRelativeResourceReference(ALREADY_MINIFIED, false);
-		Assert.assertTrue(testResourceKey(resourceReference, ALREADY_MINIFIED));
+		assertTrue(testResourceKey(resourceReference, ALREADY_MINIFIED));
 		
 		resourceReference = new ContextRelativeResourceReference(TO_BE_MINIFIED, false);
-		Assert.assertTrue(testResourceKey(resourceReference, TO_BE_MINIFIED));
+		assertTrue(testResourceKey(resourceReference, TO_BE_MINIFIED));
 		
 	}
 	
 	@Test
-	public void testCustomSuffix() throws Exception
+	void testCustomSuffix() throws Exception
 	{
 		ContextRelativeResourceReference resourceReference = new ContextRelativeResourceReference(TO_BE_MINIFIED, CUSTOM_SUFFIX);
-		Assert.assertTrue(testResourceKey(resourceReference, RESOURCE_NAME + "." + CUSTOM_SUFFIX + ".js"));
+		assertTrue(testResourceKey(resourceReference, RESOURCE_NAME + "." + CUSTOM_SUFFIX + ".js"));
 	}
 	
 	@Override

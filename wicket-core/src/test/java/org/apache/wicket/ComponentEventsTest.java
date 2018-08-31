@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +35,9 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.cycle.RequestCycleContext;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -65,8 +64,8 @@ public class ComponentEventsTest
 	private Object stop;
 
 	/** */
-	@Before
-	public void setup()
+	@BeforeEach
+	void setup()
 	{
 		tester = new WicketTester(new TestApplication());
 
@@ -96,15 +95,15 @@ public class ComponentEventsTest
 	}
 
 	/** */
-	@After
-	public void destroy()
+	@AfterEach
+	void destroy()
 	{
 		tester.destroy();
 	}
 
 	/** */
 	@Test
-	public void testBreadth_Application()
+	void testBreadth_Application()
 	{
 		page.send(tester.getApplication(), Broadcast.BREADTH, new Payload());
 		assertPath(application, session, cycle, page, c1, c12, c13, c134, c135, c6);
@@ -112,7 +111,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Session()
+	void testBreadth_Session()
 	{
 		page.send(tester.getSession(), Broadcast.BREADTH, new Payload());
 		assertPath(session, cycle, page, c1, c12, c13, c134, c135, c6);
@@ -120,7 +119,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Cycle()
+	void testBreadth_Cycle()
 	{
 		page.send(tester.getRequestCycle(), Broadcast.BREADTH, new Payload());
 		assertPath(cycle, page, c1, c12, c13, c134, c135, c6);
@@ -128,7 +127,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Page()
+	void testBreadth_Page()
 	{
 		page.send(page, Broadcast.BREADTH, new Payload());
 		assertPath(page, c1, c12, c13, c134, c135, c6);
@@ -136,7 +135,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Container()
+	void testBreadth_Container()
 	{
 		page.send(c13, Broadcast.BREADTH, new Payload());
 		assertPath(c13, c134, c135);
@@ -144,7 +143,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Component()
+	void testBreadth_Component()
 	{
 		page.send(c6, Broadcast.BREADTH, new Payload());
 		assertPath(c6);
@@ -153,7 +152,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Application_Stop()
+	void testBreadth_Application_Stop()
 	{
 		stop = application;
 		page.send(application, Broadcast.BREADTH, new Payload());
@@ -162,7 +161,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Session_Stop()
+	void testBreadth_Session_Stop()
 	{
 		stop = session;
 		page.send(application, Broadcast.BREADTH, new Payload());
@@ -171,7 +170,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Cycle_Stop()
+	void testBreadth_Cycle_Stop()
 	{
 		stop = cycle;
 		page.send(application, Broadcast.BREADTH, new Payload());
@@ -180,7 +179,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Page_Stop()
+	void testBreadth_Page_Stop()
 	{
 		stop = page;
 		page.send(application, Broadcast.BREADTH, new Payload());
@@ -189,7 +188,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBreadth_Component_Stop()
+	void testBreadth_Component_Stop()
 	{
 		stop = c13;
 		page.send(application, Broadcast.BREADTH, new Payload());
@@ -199,7 +198,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Application()
+	void testDepth_Application()
 	{
 		page.send(application, Broadcast.DEPTH, new Payload());
 		assertPath(c12, c134, c135, c13, c1, c6, page, cycle, session, application);
@@ -207,7 +206,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Session()
+	void testDepth_Session()
 	{
 		page.send(session, Broadcast.DEPTH, new Payload());
 		assertPath(c12, c134, c135, c13, c1, c6, page, cycle, session);
@@ -215,7 +214,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Cycle()
+	void testDepth_Cycle()
 	{
 		page.send(cycle, Broadcast.DEPTH, new Payload());
 		assertPath(c12, c134, c135, c13, c1, c6, page, cycle);
@@ -223,7 +222,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Page()
+	void testDepth_Page()
 	{
 		page.send(page, Broadcast.DEPTH, new Payload());
 		assertPath(c12, c134, c135, c13, c1, c6, page);
@@ -231,7 +230,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Container()
+	void testDepth_Container()
 	{
 		page.send(c1, Broadcast.DEPTH, new Payload());
 		assertPath(c12, c134, c135, c13, c1);
@@ -239,7 +238,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Component()
+	void testDepth_Component()
 	{
 		page.send(c6, Broadcast.DEPTH, new Payload());
 		assertPath(c6);
@@ -248,7 +247,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Session_Stop()
+	void testDepth_Session_Stop()
 	{
 		stop = session;
 		page.send(application, Broadcast.DEPTH, new Payload());
@@ -257,7 +256,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Cycle_Stop()
+	void testDepth_Cycle_Stop()
 	{
 		stop = cycle;
 		page.send(application, Broadcast.DEPTH, new Payload());
@@ -266,7 +265,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Page_Stop()
+	void testDepth_Page_Stop()
 	{
 		stop = page;
 		page.send(application, Broadcast.DEPTH, new Payload());
@@ -275,7 +274,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testDepth_Component_Stop()
+	void testDepth_Component_Stop()
 	{
 		stop = c1;
 		page.send(application, Broadcast.DEPTH, new Payload());
@@ -287,7 +286,7 @@ public class ComponentEventsTest
 	 * 
 	 */
 	@Test
-	public void testBubble_Component()
+	void testBubble_Component()
 	{
 		c6.send(c135, Broadcast.BUBBLE, new Payload());
 		assertPath(c135, c13, c1, page, cycle, session, application);
@@ -295,7 +294,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBubble_Page()
+	void testBubble_Page()
 	{
 		c6.send(page, Broadcast.BUBBLE, new Payload());
 		assertPath(page, cycle, session, application);
@@ -303,7 +302,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBubble_Cycle()
+	void testBubble_Cycle()
 	{
 		c6.send(cycle, Broadcast.BUBBLE, new Payload());
 		assertPath(cycle, session, application);
@@ -311,7 +310,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBubble_Session()
+	void testBubble_Session()
 	{
 		c6.send(session, Broadcast.BUBBLE, new Payload());
 		assertPath(session, application);
@@ -320,7 +319,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBubble_Application()
+	void testBubble_Application()
 	{
 		c6.send(application, Broadcast.BUBBLE, new Payload());
 		assertPath(application);
@@ -328,7 +327,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBubble_Component_Stop()
+	void testBubble_Component_Stop()
 	{
 		stop = c1;
 		c6.send(c135, Broadcast.BUBBLE, new Payload());
@@ -337,7 +336,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBubble_Component_Page()
+	void testBubble_Component_Page()
 	{
 		stop = page;
 		c6.send(c135, Broadcast.BUBBLE, new Payload());
@@ -346,7 +345,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBubble_Cycle_Stop()
+	void testBubble_Cycle_Stop()
 	{
 		stop = cycle;
 		c6.send(c135, Broadcast.BUBBLE, new Payload());
@@ -355,7 +354,7 @@ public class ComponentEventsTest
 
 	/** */
 	@Test
-	public void testBubble_Session_Stop()
+	void testBubble_Session_Stop()
 	{
 		stop = session;
 		c6.send(c135, Broadcast.BUBBLE, new Payload());
@@ -363,7 +362,7 @@ public class ComponentEventsTest
 	}
 
 	@Test
-	public void testBehaviorBreadth()
+	void testBehaviorBreadth()
 	{
 		TestComponent c = new TestComponent("c");
 		TestBehavior b1 = new TestBehavior();
@@ -381,7 +380,7 @@ public class ComponentEventsTest
 	}
 
 	@Test
-	public void testBehaviorExact()
+	void testBehaviorExact()
 	{
 		TestComponent c = new TestComponent("c");
 		TestBehavior b1 = new TestBehavior();
@@ -399,7 +398,7 @@ public class ComponentEventsTest
 	}
 
 	@Test
-	public void testPageExact()
+	void testPageExact()
 	{
 		TestComponent c = new TestComponent("c");
 		TestBehavior b1 = new TestBehavior();
@@ -420,7 +419,7 @@ public class ComponentEventsTest
 	}
 
 	@Test
-	public void testApplicationExact()
+	void testApplicationExact()
 	{
 		TestComponent c = new TestComponent("c");
 		TestBehavior b1 = new TestBehavior();
@@ -438,7 +437,7 @@ public class ComponentEventsTest
 	}
 
 	@Test
-	public void testSessionExact()
+	void testSessionExact()
 	{
 		TestComponent c = new TestComponent("c");
 		TestBehavior b1 = new TestBehavior();
@@ -456,7 +455,7 @@ public class ComponentEventsTest
 	}
 
 	@Test
-	public void testRequestCycleExact()
+	void testRequestCycleExact()
 	{
 		TestComponent c = new TestComponent("c");
 		TestBehavior b1 = new TestBehavior();
@@ -474,7 +473,7 @@ public class ComponentEventsTest
 	}
 
 	@Test
-	public void testBehavior_stop()
+	void testBehavior_stop()
 	{
 		TestComponent c = new TestComponent("c");
 		TestBehavior b1 = new TestBehavior()
@@ -502,7 +501,7 @@ public class ComponentEventsTest
 
 		for (int i = 0; i < testables.length; i++)
 		{
-			Assert.assertEquals("checking path element " + i, i, testables[i].getSequence());
+			assertEquals(i, testables[i].getSequence(), "checking path element " + i);
 			remaining.remove(testables[i]);
 		}
 
@@ -513,8 +512,8 @@ public class ComponentEventsTest
 			{
 				name += "#" + ((Component)testable).getId();
 			}
-			Assert.assertEquals(name + " should not have been visited, but was.", -1,
-				testable.getSequence());
+			assertEquals(-1, testable.getSequence(),
+				name + " should not have been visited, but was.");
 		}
 	}
 
@@ -523,6 +522,15 @@ public class ComponentEventsTest
 		int getSequence();
 	}
 
+	private static class Payload
+	{
+		private int counter;
+
+		int next()
+		{
+			return counter++;
+		}
+	}
 
 	private class TestApplication extends MockApplication implements Testable
 	{
@@ -566,7 +574,7 @@ public class ComponentEventsTest
 
 		int sequence = -1;
 
-		public TestSession(Request request)
+		TestSession(Request request)
 		{
 			super(request);
 		}
@@ -595,7 +603,7 @@ public class ComponentEventsTest
 	{
 		int sequence = -1;
 
-		public TestRequestCycle(RequestCycleContext context)
+		TestRequestCycle(RequestCycleContext context)
 		{
 			super(context);
 		}
@@ -620,14 +628,13 @@ public class ComponentEventsTest
 		}
 	}
 
-
 	private class TestPage extends WebPage implements Testable
 	{
 		private static final long serialVersionUID = 1L;
 
 		int sequence = -1;
 
-		public TestPage()
+		TestPage()
 		{
 		}
 
@@ -653,14 +660,13 @@ public class ComponentEventsTest
 
 	}
 
-
 	private class TestContainer extends WebMarkupContainer implements Testable
 	{
 		private static final long serialVersionUID = 1L;
 
 		int sequence = -1;
 
-		public TestContainer(String id)
+		TestContainer(String id)
 		{
 			super(id);
 		}
@@ -692,7 +698,7 @@ public class ComponentEventsTest
 
 		int sequence = -1;
 
-		public TestComponent(String id)
+		TestComponent(String id)
 		{
 			super(id);
 		}
@@ -717,7 +723,6 @@ public class ComponentEventsTest
 			return sequence;
 		}
 	}
-
 
 	private class TestBehavior extends Behavior implements Testable
 	{
@@ -745,17 +750,6 @@ public class ComponentEventsTest
 		public int getSequence()
 		{
 			return sequence;
-		}
-	}
-
-
-	private static class Payload
-	{
-		private int counter;
-
-		public int next()
-		{
-			return counter++;
 		}
 	}
 

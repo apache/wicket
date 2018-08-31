@@ -23,7 +23,7 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Testcase for bug WICKET-1292.
@@ -31,7 +31,7 @@ import org.junit.Test;
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-1292">WICKET-1292</a>
  * @author marrink
  */
-public class InterceptTest extends WicketTestCase
+class InterceptTest extends WicketTestCase
 {
 
 	@Override
@@ -76,7 +76,7 @@ public class InterceptTest extends WicketTestCase
 	 * Tests a non homepage class.
 	 */
 	@Test
-	public void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination()
+    void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination()
 	{
 		tester.startPage(TargetPage.class);
 		tester.assertRenderedPage(InterceptPage.class);
@@ -89,7 +89,7 @@ public class InterceptTest extends WicketTestCase
 	 * Tests homepage class.
 	 */
 	@Test
-	public void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination2()
+    void testRestartResponseAtInterceptPageAndContinueTorOriginalDestination2()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(InterceptPage.class);

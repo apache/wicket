@@ -39,7 +39,7 @@ public class MultiPartFormPage extends WebPage
 
 	public AjaxFallbackButton button1;
 
-	public AjaxFallbackButton button2;
+	private AjaxFallbackButton button2;
 
 	/**
 	 * Construct.
@@ -54,7 +54,7 @@ public class MultiPartFormPage extends WebPage
 			@Override
 			public boolean isMultiPart() {
 				asked++;
-				
+
 				return multiPart;
 			}
 		};

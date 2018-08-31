@@ -39,7 +39,7 @@ public class HomePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	int rows = 1;
+	private int rows = 1;
 
 	/**
 	 */

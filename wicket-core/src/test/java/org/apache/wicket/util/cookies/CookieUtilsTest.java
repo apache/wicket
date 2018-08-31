@@ -16,31 +16,30 @@
  */
 package org.apache.wicket.util.cookies;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.cookies.CookieValuePersisterTestPage.TestForm;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class CookieUtilsTest extends WicketTestCase
+class CookieUtilsTest extends WicketTestCase
 {
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		tester.startPage(CookieValuePersisterTestPage.class);
 	}
@@ -51,7 +50,7 @@ public class CookieUtilsTest extends WicketTestCase
 	 */
 	@SuppressWarnings({ "unchecked" })
 	@Test
-	public void test1() throws Exception
+	void test1() throws Exception
 	{
 		// How does the test work: Make sure you have a page, form and form component properly set
 		// up (getRelativePath() etc.). See #before().
@@ -127,7 +126,7 @@ public class CookieUtilsTest extends WicketTestCase
 	}
 
 	@Test
-	public void saveLoadValue()
+	void saveLoadValue()
 	{
 		CookieUtils utils = new CookieUtils();
 		String value1 = "value one";
@@ -135,11 +134,11 @@ public class CookieUtilsTest extends WicketTestCase
 		utils.save(key, value1);
 		before(); // execute a request cycle, so the response cookie is send with the next request
 		String result = utils.load(key);
-		assertThat(result, is(equalTo(value1)));
+		assertEquals(value1, result);
 	}
 
 	@Test
-	public void defaults()
+	void defaults()
 	{
 		CookieDefaults defaults = new CookieDefaults();
 		defaults.setComment("A comment");
@@ -153,7 +152,7 @@ public class CookieUtilsTest extends WicketTestCase
 		utils.save(key, value1);
 		before(); // execute a request cycle, so the response cookie is send with the next request
 		Cookie result = utils.getCookie(key);
-		assertThat(result.getComment(), is(equalTo(defaults.getComment())));
+		assertEquals(defaults.getComment(), result.getComment());
 	}
 
 	private void copyCookieFromResponseToRequest()

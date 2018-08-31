@@ -16,23 +16,26 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.TimeZone;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ClientProperties that failed on Mac OS X Java platform.
  * 
  * @author Martijn Dashorst
  */
-public class ClientPropertiesTest extends Assert
+class ClientPropertiesTest
 {
 	/**
 	 * Tests GMT-2:00
 	 */
 	@Test
-	public void timezoneMinus2()
+	void timezoneMinus2()
 	{
 		String utc = "-2.0";
 		ClientProperties props = new ClientProperties();
@@ -45,7 +48,7 @@ public class ClientPropertiesTest extends Assert
 	 * Tests GMT+2:00
 	 */
 	@Test
-	public void timezonePlus2()
+	void timezonePlus2()
 	{
 		String utc = "+2.0";
 		ClientProperties props = new ClientProperties();
@@ -58,7 +61,7 @@ public class ClientPropertiesTest extends Assert
 	 * Tests GMT+11:00
 	 */
 	@Test
-	public void timezonePlus10()
+	void timezonePlus10()
 	{
 		String utc = "+11.0";
 		ClientProperties props = new ClientProperties();
@@ -71,7 +74,7 @@ public class ClientPropertiesTest extends Assert
 	 * Tests GMT+2:30
 	 */
 	@Test
-	public void timezonePlus2andAHalf()
+	void timezonePlus2andAHalf()
 	{
 		String utc = "+2.5";
 		ClientProperties props = new ClientProperties();
@@ -84,7 +87,7 @@ public class ClientPropertiesTest extends Assert
 	 * Tests GMT-2:30
 	 */
 	@Test
-	public void timezoneMinus2andAHalf()
+	void timezoneMinus2andAHalf()
 	{
 		String utc = "-2.5";
 		ClientProperties props = new ClientProperties();
@@ -97,7 +100,7 @@ public class ClientPropertiesTest extends Assert
 	 * Tests GMT+3:00
 	 */
 	@Test
-	public void timezonePlus3()
+	void timezonePlus3()
 	{
 		String utc = "3";
 		ClientProperties props = new ClientProperties();
@@ -110,7 +113,7 @@ public class ClientPropertiesTest extends Assert
 	 * Tests GMT-3:00
 	 */
 	@Test
-	public void timezoneMinus3()
+	void timezoneMinus3()
 	{
 		String utc = "-3";
 		ClientProperties props = new ClientProperties();
@@ -123,7 +126,7 @@ public class ClientPropertiesTest extends Assert
 	 * WICKET-5396.
 	 */
 	@Test
-	public void integerToString()
+	void integerToString()
 	{
 		ClientProperties props = new ClientProperties();
 

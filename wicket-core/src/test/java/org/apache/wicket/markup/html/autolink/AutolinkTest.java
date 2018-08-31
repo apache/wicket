@@ -18,20 +18,20 @@ package org.apache.wicket.markup.html.autolink;
 
 import org.apache.wicket.markup.html.autolink.sub.PageB;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * 
  */
-public class AutolinkTest extends WicketTestCase
+class AutolinkTest extends WicketTestCase
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
+    void test_1() throws Exception
 	{
 		executeTest(MyPage.class, "MyPageExpectedResult.html");
 	}
@@ -41,7 +41,7 @@ public class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test_2() throws Exception
+    void test_2() throws Exception
 	{
 		executeTest(PageA.class, "PageAExpectedResult.html");
 	}
@@ -51,7 +51,7 @@ public class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test_3() throws Exception
+    void test_3() throws Exception
 	{
 		executeTest(PageB.class, "PageBExpectedResult.html");
 	}
@@ -61,7 +61,7 @@ public class AutolinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test_4() throws Exception
+    void test_4() throws Exception
 	{
 		executeTest(Index.class, "Index_ExpectedResult.html");
 	}

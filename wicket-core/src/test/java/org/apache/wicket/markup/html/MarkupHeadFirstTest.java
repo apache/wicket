@@ -25,12 +25,12 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * <a href="https://issues.apache.org/jira/browse/WICKET-3761">WICKET-3761</a>
  */
-public class MarkupHeadFirstTest extends WicketTestCase
+class MarkupHeadFirstTest extends WicketTestCase
 {
 
 	/**
@@ -44,7 +44,7 @@ public class MarkupHeadFirstTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderMyPage() throws Exception
+    void renderMyPage() throws Exception
 	{
 		executeTest(MarkupHeadFirstPage.class, "MarkupHeadFirstPage.html");
 	}
@@ -82,7 +82,7 @@ public class MarkupHeadFirstTest extends WicketTestCase
 
 		private static final long serialVersionUID = 1L;
 
-		public MarkupHeadFirstPanel(String id)
+		MarkupHeadFirstPanel(String id)
 		{
 			super(id);
 		}

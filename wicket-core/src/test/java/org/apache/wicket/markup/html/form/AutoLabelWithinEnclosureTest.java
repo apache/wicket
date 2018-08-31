@@ -19,14 +19,14 @@ package org.apache.wicket.markup.html.form;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({ "rawtypes", "serial", "unchecked" })
-public class AutoLabelWithinEnclosureTest extends WicketTestCase
+class AutoLabelWithinEnclosureTest extends WicketTestCase
 {
-	public static class LabelWithinEnclosurePage extends WebPage
+	static class LabelWithinEnclosurePage extends WebPage
 	{
-		public LabelWithinEnclosurePage(final boolean textFieldVisible)
+		LabelWithinEnclosurePage(final boolean textFieldVisible)
 		{
 			Form form = new Form("form");
 			add(form);
@@ -42,7 +42,7 @@ public class AutoLabelWithinEnclosureTest extends WicketTestCase
 	}
 
 	@Test
-	public void labelWithinEnclosure_Visible() throws Exception
+    void labelWithinEnclosure_Visible() throws Exception
 	{
 		tester.startPage(new LabelWithinEnclosurePage(true));
 		tester.dumpPage();
@@ -50,7 +50,7 @@ public class AutoLabelWithinEnclosureTest extends WicketTestCase
 	}
 
 	@Test
-	public void labelWithinEnclosure_Invisible() throws Exception
+    void labelWithinEnclosure_Invisible() throws Exception
 	{
 		tester.startPage(new LabelWithinEnclosurePage(false));
 		tester.dumpPage();

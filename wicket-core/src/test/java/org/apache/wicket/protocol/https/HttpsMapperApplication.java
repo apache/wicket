@@ -19,7 +19,7 @@ package org.apache.wicket.protocol.https;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 
-public class HttpsMapperApplication extends WebApplication
+class HttpsMapperApplication extends WebApplication
 {
 	private HttpsConfig config;
 

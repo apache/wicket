@@ -16,10 +16,13 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.markup.MarkupException;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple application that demonstrates the mock http application code (and checks that it is
@@ -27,13 +30,13 @@ import org.junit.Test;
  * 
  * @author Chris Turner
  */
-public class HeaderSectionTest extends WicketTestCase
+class HeaderSectionTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_1() throws Exception
+	void renderHomePage_1() throws Exception
 	{
 		executeTest(HeaderSectionPage_1.class, "HeaderSectionPageExpectedResult_1.html");
 	}
@@ -42,7 +45,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2() throws Exception
+	void renderHomePage_2() throws Exception
 	{
 		executeTest(HeaderSectionPage_2.class, "HeaderSectionPageExpectedResult_2.html");
 	}
@@ -51,7 +54,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_3() throws Exception
+	void renderHomePage_3() throws Exception
 	{
 		executeTest(HeaderSectionPage_3.class, "HeaderSectionPageExpectedResult_3.html");
 	}
@@ -60,7 +63,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_4() throws Exception
+	void renderHomePage_4() throws Exception
 	{
 		executeTest(HeaderSectionPage_4.class, "HeaderSectionPageExpectedResult_4.html");
 	}
@@ -69,7 +72,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_5() throws Exception
+	void renderHomePage_5() throws Exception
 	{
 		executeTest(HeaderSectionPage_5.class, "HeaderSectionPageExpectedResult_5.html");
 	}
@@ -78,7 +81,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_6() throws Exception
+	void renderHomePage_6() throws Exception
 	{
 		executeTest(HeaderSectionPage_6.class, "HeaderSectionPageExpectedResult_6.html");
 	}
@@ -87,7 +90,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_7() throws Exception
+	void renderHomePage_7() throws Exception
 	{
 		executeTest(HeaderSectionPage_7.class, "HeaderSectionPageExpectedResult_7.html");
 	}
@@ -96,7 +99,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_8() throws Exception
+	void renderHomePage_8() throws Exception
 	{
 		executeTest(HeaderSectionPage_8.class, "HeaderSectionPageExpectedResult_8.html");
 	}
@@ -105,7 +108,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_9() throws Exception
+	void renderHomePage_9() throws Exception
 	{
 		executeTest(HeaderSectionPage_9.class, "HeaderSectionPageExpectedResult_9.html");
 	}
@@ -114,7 +117,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_9a() throws Exception
+	void renderHomePage_9a() throws Exception
 	{
 		executeTest(HeaderSectionPage_9a.class, "HeaderSectionPageExpectedResult_9a.html");
 	}
@@ -123,7 +126,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_10() throws Exception
+	void renderHomePage_10() throws Exception
 	{
 		executeTest(HeaderSectionPage_10.class, "HeaderSectionPageExpectedResult_10.html");
 	}
@@ -132,7 +135,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_11() throws Exception
+	void renderHomePage_11() throws Exception
 	{
 		executeTest(HeaderSectionPage_11.class, "HeaderSectionPageExpectedResult_11.html");
 	}
@@ -141,7 +144,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_13() throws Exception
+	void renderHomePage_13() throws Exception
 	{
 		boolean hit = false;
 		try
@@ -152,14 +155,14 @@ public class HeaderSectionTest extends WicketTestCase
 		{
 			hit = true;
 		}
-		assertTrue("Expected a MarkupException to be thrown", hit);
+		assertTrue(hit, "Expected a MarkupException to be thrown");
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_14() throws Exception
+	void renderHomePage_14() throws Exception
 	{
 		executeTest(HeaderSectionPage_14.class, "HeaderSectionPageExpectedResult_14.html");
 	}
@@ -168,7 +171,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_15() throws Exception
+	void renderHomePage_15() throws Exception
 	{
 		executeTest(HeaderSectionPage_15.class, "HeaderSectionPageExpectedResult_15.html");
 	}
@@ -177,7 +180,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_16() throws Exception
+	void renderHomePage_16() throws Exception
 	{
 		executeTest(HeaderSectionPage_16.class, "HeaderSectionPageExpectedResult_16.html");
 	}
@@ -186,7 +189,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_17() throws Exception
+	void renderHomePage_17() throws Exception
 	{
 		executeTest(HeaderSectionPage_17.class, "HeaderSectionPageExpectedResult_17.html");
 	}
@@ -195,7 +198,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_18() throws Exception
+	void renderHomePage_18() throws Exception
 	{
 		executeTest(HeaderSectionPage_18.class, "HeaderSectionPageExpectedResult_18.html");
 	}
@@ -204,7 +207,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_19() throws Exception
+	void renderHomePage_19() throws Exception
 	{
 		executeTest(HeaderSectionPage_19.class, "HeaderSectionPageExpectedResult_19.html");
 	}
@@ -213,7 +216,7 @@ public class HeaderSectionTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_20() throws Exception
+	void renderHomePage_20() throws Exception
 	{
 		executeTest(HeaderSectionPage_20.class, "HeaderSectionPageExpectedResult_20.html");
 	}
@@ -221,9 +224,11 @@ public class HeaderSectionTest extends WicketTestCase
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5908
 	 */
-	@Test(expected = MarkupException.class)
-	public void doubleHeadTagPage()
+	@Test
+	void doubleHeadTagPage()
 	{
-		tester.startPage(DoubleHeadTagPage.class);
+		assertThrows(MarkupException.class, () -> {
+			tester.startPage(DoubleHeadTagPage.class);
+		});
 	}
 }

@@ -16,23 +16,25 @@
  */
 package org.apache.wicket.markup.renderStrategy;
 
-import org.apache.wicket.Page;
-import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.util.tester.WicketTestCase;
+import org.apache.wicket.util.tester.WicketTester;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 
  * @author juergen donnerstag
  */
-public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
+class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(ChildFirstHeaderRenderStrategyTest.class);
@@ -41,7 +43,7 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test1() throws Exception
+	void test1() throws Exception
 	{
 		executeCombinedTest(SimplePage1.class, "SimplePage1_ExpectedResult.html");
 	}
@@ -50,7 +52,7 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test2() throws Exception
+	void test2() throws Exception
 	{
 		executeCombinedTest(SimplePage2.class, "SimplePage2_ExpectedResult.html");
 	}
@@ -63,7 +65,7 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void testAjaxAndEnclosures() throws Exception
+	void testAjaxAndEnclosures() throws Exception
 	{
 
 		tester.startPage(EnclosureAjaxRenderPage.class);
@@ -111,8 +113,8 @@ public class ChildFirstHeaderRenderStrategyTest extends WicketTestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	private <T extends Page> void executeCombinedTestPre1_5(final Class<T> pageClass,
-		final String filename) throws Exception
+	<T extends Page> void executeCombinedTestPre1_5(final Class<T> pageClass,
+													final String filename) throws Exception
 	{
 		// Default Config: parent first header render strategy
 		log.error("=== PARENT first header render strategy ===");

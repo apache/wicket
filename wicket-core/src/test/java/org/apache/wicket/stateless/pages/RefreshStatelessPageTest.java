@@ -24,19 +24,19 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-3965
  */
-public class RefreshStatelessPageTest extends WicketTestCase
+class RefreshStatelessPageTest extends WicketTestCase
 {
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3965
 	 */
 	@Test
-	public void refreshStatelessPage()
+    void refreshStatelessPage()
 	{
 		tester.startPage(new StatefulPage());
 		tester.clickLink("link", false);
@@ -73,7 +73,7 @@ public class RefreshStatelessPageTest extends WicketTestCase
 
 	private static class StatelessPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public StatelessPage()
+		StatelessPage()
 		{
 			setStatelessHint(true);
 		}

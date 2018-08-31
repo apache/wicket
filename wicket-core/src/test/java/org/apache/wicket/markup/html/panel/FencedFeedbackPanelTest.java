@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.markup.html.panel;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -31,22 +32,22 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.apache.wicket.util.tester.WicketTesterScope;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.wicket.util.tester.WicketTesterExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests {@link FencedFeedbackPanel}
  * 
  * @author igor
  */
-public class FencedFeedbackPanelTest
+class FencedFeedbackPanelTest
 {
-	@Rule
-	public WicketTesterScope scope = new WicketTesterScope();
+	@RegisterExtension
+	public WicketTesterExtension scope = new WicketTesterExtension();
 
 	@Test
-	public void fencing()
+	void fencing()
 	{
 		TestPage page = scope.getTester().startPage(TestPage.class);
 		page.containerInput.error("error");
@@ -90,7 +91,7 @@ public class FencedFeedbackPanelTest
 	}
 
 	@Test
-	public void filtering()
+	void filtering()
 	{
 		TestPage page = scope.getTester().startPage(TestPage.class);
 
@@ -135,7 +136,7 @@ public class FencedFeedbackPanelTest
 	}
 
 	@Test
-	public void moving()
+	void moving()
 	{
 		TestPage page = scope.getTester().startPage(TestPage.class);
 		page.containerInput.error("error");
@@ -172,7 +173,7 @@ public class FencedFeedbackPanelTest
 	}
 
 	@Test
-	public void reAdding()
+	void reAdding()
 	{
 		TestPage page = scope.getTester().startPage(TestPage.class);
 		MarkupContainer container = page.containerFeedback.getParent();
@@ -188,12 +189,12 @@ public class FencedFeedbackPanelTest
 	}
 
 
-	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+    public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		FencedFeedbackPanel externalFeedback, formFeedback, containerFeedback, containerFeedback2;
 		Component externalLabel, formInput, containerInput;
 
-		public TestPage()
+        public TestPage()
 		{
 			externalFeedback = new FencedFeedbackPanel("feedback");
 			externalLabel = new Label("externalLabel");

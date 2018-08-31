@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.list;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,14 +25,14 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for ListView
  * 
  * @author Juergen Donnerstag
  */
-public class ListViewTest extends WicketTestCase
+class ListViewTest extends WicketTestCase
 {
 	/**
 	 * Create a predefined ListView
@@ -62,7 +64,7 @@ public class ListViewTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void generics()
+	void generics()
 	{
 		// a listView for numbers
 		class NumberListView<N extends Number> extends ListView<N>
@@ -72,7 +74,7 @@ public class ListViewTest extends WicketTestCase
 
 			// since the given list is not changed actually, we can safely
 			// accept lists accepting subtypes of numbers only
-			public NumberListView(String id, IModel<? extends List<N>> model)
+			NumberListView(String id, IModel<? extends List<N>> model)
 			{
 				super(id, model);
 			}
@@ -96,7 +98,7 @@ public class ListViewTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void listView()
+	void listView()
 	{
 		ListView<Integer> lv = createListView(4);
 		assertEquals(4, lv.getList().size());
@@ -133,7 +135,7 @@ public class ListViewTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void emptyListView()
+	void emptyListView()
 	{
 		// Empty tables
 		ListView<?> lv = createListView(0);

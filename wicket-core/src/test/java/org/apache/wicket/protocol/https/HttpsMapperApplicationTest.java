@@ -16,17 +16,17 @@
  */
 package org.apache.wicket.protocol.https;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for proper switching of http and https in {@link WicketTester}
  */
-public class HttpsMapperApplicationTest
+class HttpsMapperApplicationTest
 {
 	@SuppressWarnings({ "unchecked" })
 	private <T extends Page> T requestPage(WicketTester tester, Class<T> pageClass)
@@ -40,7 +40,7 @@ public class HttpsMapperApplicationTest
 	}
 
 	@Test
-	public void switchDefaultToHttpsWithDefaultPorts()
+	void switchDefaultToHttpsWithDefaultPorts()
 	{
 		WicketTester tester = new WicketTester(new HttpsMapperApplication());
 
@@ -50,7 +50,7 @@ public class HttpsMapperApplicationTest
 	}
 
 	@Test
-	public void switchDefaultToHttpsWithCustomPort()
+	void switchDefaultToHttpsWithCustomPort()
 	{
 		WicketTester tester = new WicketTester(new HttpsMapperApplication(123, 456));
 
@@ -61,7 +61,7 @@ public class HttpsMapperApplicationTest
 	}
 
 	@Test
-	public void switchHttpsToHttpWithDefaultPorts()
+	void switchHttpsToHttpWithDefaultPorts()
 	{
 		WicketTester tester = new WicketTester(new HttpsMapperApplication());
 
@@ -74,7 +74,7 @@ public class HttpsMapperApplicationTest
 	}
 
 	@Test
-	public void switchHttpsToHttpWithCustomPorts()
+	void switchHttpsToHttpWithCustomPorts()
 	{
 		WicketTester tester = new WicketTester(new HttpsMapperApplication(123, 456));
 
@@ -88,7 +88,7 @@ public class HttpsMapperApplicationTest
 	}
 
 	@Test
-	public void switchHttpToHttpsWithDefaultPorts()
+	void switchHttpToHttpsWithDefaultPorts()
 	{
 		WicketTester tester = new WicketTester(new HttpsMapperApplication());
 
@@ -100,7 +100,7 @@ public class HttpsMapperApplicationTest
 	}
 
 	@Test
-	public void switchHttpToHttpsWithCustomPorts()
+	void switchHttpToHttpsWithCustomPorts()
 	{
 		WicketTester tester = new WicketTester(new HttpsMapperApplication(123, 456));
 
@@ -114,7 +114,7 @@ public class HttpsMapperApplicationTest
 	}
 
 	@Test
-	public void testProtocolSwitchForNextRequest()
+	void testProtocolSwitchForNextRequest()
 	{
 		WicketTester tester = new WicketTester(new HttpsMapperApplication());
 

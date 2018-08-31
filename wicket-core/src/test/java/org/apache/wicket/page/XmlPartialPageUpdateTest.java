@@ -16,24 +16,27 @@
  */
 package org.apache.wicket.page;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link XmlPartialPageUpdate}.
  */
-public class XmlPartialPageUpdateTest extends WicketTestCase 
+class XmlPartialPageUpdateTest extends WicketTestCase
 {
 
 	/**
 	 * CData start "]]>" has to be encoded in "]]]]><![CDATA[>".
 	 */
 	@Test
-	public void encodeCdataEnd() 
+	void encodeCdataEnd()
 	{
 		PageForPartialUpdate page = new PageForPartialUpdate();
 		
@@ -59,7 +62,7 @@ public class XmlPartialPageUpdateTest extends WicketTestCase
 	 * see https://issues.apache.org/jira/browse/WICKET-6162
 	 */
 	@Test
-	public void keepTheSameHeaderContainer() throws Exception
+	void keepTheSameHeaderContainer() throws Exception
 	{
 		PageForPartialUpdate page = new PageForPartialUpdate();
 		
@@ -82,7 +85,7 @@ public class XmlPartialPageUpdateTest extends WicketTestCase
 	 * WICKET-6503 removed components are not written, but no exception raised either. 
 	 */
 	@Test
-	public void removedComponentAreNotWritten() throws Exception
+	void removedComponentAreNotWritten() throws Exception
 	{
 		PageForPartialUpdate page = new PageForPartialUpdate();
 		
@@ -96,6 +99,6 @@ public class XmlPartialPageUpdateTest extends WicketTestCase
 		
 		update.writeTo(response, "UTF-8");
 		
-		assertFalse("notInPage not written", response.getTextResponse().toString().contains("notInPage"));
+		assertFalse(response.getTextResponse().toString().contains("notInPage"), "notInPage not written");
 	}
 }

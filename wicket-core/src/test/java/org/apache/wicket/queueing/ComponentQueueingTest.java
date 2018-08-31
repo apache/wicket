@@ -17,8 +17,11 @@
 package org.apache.wicket.queueing;
 
 import static org.apache.wicket.queueing.WicketMatchers.hasPath;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 
@@ -49,14 +52,13 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ComponentQueueingTest extends WicketTestCase
+class ComponentQueueingTest extends WicketTestCase
 {
 	/** {@code [a,b,c] -> [a[b[c]]] } */
 	@Test
-	public void dequeue1()
+	void dequeue1()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -71,7 +73,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6361
 	 */
 	@Test
-	public void dequeueComponentsOnInitialization()
+	void dequeueComponentsOnInitialization()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -89,7 +91,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	
 	/** {@code [a[b,c]] -> [a[b[c]]] } */
 	@Test
-	public void dequeue2()
+	void dequeue2()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -105,7 +107,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** {@code [a[b[c]] -> [a[b[c]]] } */
 	@Test
-	public void dequeue3()
+	void dequeue3()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -122,7 +124,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** {@code [a[b],c] -> [a[b[c]]] } */
 	@Test
-	public void dequeue4()
+	void dequeue4()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -138,7 +140,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** {@code [a(b)],c] -> [a[b[c]]] } */
 	@Test
-	public void dequeue5()
+	void dequeue5()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -153,7 +155,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** {@code [a,b,c] -> [a[b,c]] } */
 	@Test
-	public void dequeue6()
+	void dequeue6()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'></p><p wicket:id='c'></p></p>");
@@ -171,7 +173,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * {a[b{e}[d,f{g}]],c} -> [a[b[c,d[e],f[g]]]]
 	 */
 	@Test
-	public void dequeue7()
+	void dequeue7()
 	{
 		TestPage p = new TestPage();
 
@@ -209,7 +211,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** {@code [a,c[b]] ->| [a[b[c]]] } */
 	@Test
-	public void dequeueError1()
+	void dequeueError1()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -221,7 +223,7 @@ public class ComponentQueueingTest extends WicketTestCase
 		try
 		{
 			tester.startPage(p);
-			Assert.fail();
+			fail();
 		}
 		catch (WicketRuntimeException e)
 		{
@@ -231,7 +233,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** {@code [a,q[r,s]] - > [a[q[r[s]]]] } */
 	@Test
-	public void panel1()
+	void panel1()
 	{
 		MarkupContainer a = new A(), r = new R(), s = new S();
 
@@ -251,7 +253,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** panel has leading markup */
 	@Test
-	public void panel2()
+	void panel2()
 	{
 		MarkupContainer r = new R();
 
@@ -270,7 +272,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** panel with a static header section */
 	@Test
-	public void panel3()
+	void panel3()
 	{
 		MarkupContainer r = new R();
 
@@ -293,7 +295,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * test with inner panels
 	 */
 	@Test
-	public void nestedPanels()
+	void nestedPanels()
 	{
 		MarkupContainer r = new R(), s = new S();
 
@@ -317,7 +319,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void repeater1()
+	void repeater1()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='lv'><p wicket:id='b'><p wicket:id='c'></p></p></p>");
@@ -335,7 +337,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		tester.startPage(p);
 
-		assertThat(l.size(), is(3));
+		assertEquals(3, l.size());
 		for (Component item : l)
 		{
 			assertThat(p, hasPath(new Path(l, item, new B(), new C())));
@@ -344,7 +346,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** repeater */
 	@Test
-	public void repeater2()
+	void repeater2()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='lv'><p wicket:id='b'><p wicket:id='c'></p></p></p></p>");
@@ -363,7 +365,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		tester.startPage(p);
 
-		assertThat(l.size(), is(3));
+		assertEquals(3, l.size());
 		for (Component item : l)
 		{
 			assertThat(p, hasPath(new Path(a, l, item, new B(), new C())));
@@ -372,7 +374,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** repeater with a panel inside */
 	@Test
-	public void repeater3()
+	void repeater3()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><p wicket:id='lv'><p wicket:id='b'><p wicket:id='q'></p></p></p></p>");
@@ -395,7 +397,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		tester.startPage(p);
 
-		assertThat(l.size(), is(3));
+		assertEquals(3, l.size());
 		for (Component item : l)
 		{
 			assertThat(p, hasPath(new Path(a, l, item, new B()).add("q").add(new R(), new S())));
@@ -404,7 +406,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	/** dequeue, then rerender the page instance after a callback is executed */
 	@Test
-	public void callback()
+	void callback()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<p wicket:id='a'><a wicket:id='l'><p wicket:id='b'></p></a></p>");
@@ -415,23 +417,22 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(p);
 
 		assertThat(p, hasPath(new Path(a, l, b)));
-		assertThat(l.isClicked(), is(false));
+		assertEquals(false, l.isClicked());
 
 		tester.clickLink(l);
 
-		assertThat(l.isClicked(), is(true));
+		assertEquals(true, l.isClicked());
 	}
 
 
 	/** queuing two components with the same id */
 	@Test
-	public void queueIdCollission()
+	void queueIdCollission()
 	{
 		try
 		{
 			new A().queue(new B(), new B());
-			Assert
-				.fail("Should not be able to queue two components with the same id under the same parent");
+			fail("Should not be able to queue two components with the same id under the same parent");
 		}
 		catch (WicketRuntimeException e)
 		{
@@ -441,7 +442,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 
 	@Test
-	public void autos1()
+	void autos1()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<wicket:enclosure child='a'><div wicket:id='a'></div><div wicket:id='b'></div></wicket:enclosure>");
@@ -467,7 +468,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void autos2()
+	void autos2()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<wicket:enclosure child='a'><div wicket:id='a'></div><div wicket:id='b'></div></wicket:enclosure>");
@@ -493,7 +494,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void autos3()
+	void autos3()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<wicket:enclosure child='a'><div wicket:id='a'></div><div wicket:id='b'></div></wicket:enclosure>");
@@ -520,7 +521,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void autos4()
+	void autos4()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<wicket:enclosure child='a'><div wicket:id='a'></div><div wicket:id='b'></div></wicket:enclosure>");
@@ -547,7 +548,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void autos5()
+	void autos5()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<wicket:enclosure child='a'><div wicket:id='a'></div><div wicket:id='b'></div></wicket:enclosure>");
@@ -578,7 +579,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * Test InlineEnclosure
 	 */
 	@Test
-	public void autos6()
+	void autos6()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<div wicket:enclosure='a'><div wicket:id='a'></div><div wicket:id='b'></div></div>");
@@ -607,7 +608,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * Test empty child attribute
 	 */
 	@Test
-	public void autos7()
+	void autos7()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<wicket:enclosure child=''><div wicket:id='a'></div></wicket:enclosure>");
@@ -636,7 +637,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * Test autocomponent inside not-queue region
 	 */
 	@Test
-	public void autosInsideNotQueueRegion()
+	void autosInsideNotQueueRegion()
 	{
 		TestPage p = new TestPage();
 		p.setPageMarkup("<div wicket:id='outerContainer'><wicket:enclosure><div wicket:id='a'></div></wicket:enclosure></div>");
@@ -651,7 +652,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 	
 	@Test
-	public void border1()
+	void border1()
 	{
 		MarkupContainer a = new A(), b = new B(), r = new R(), s = new S();
 
@@ -671,7 +672,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 	
 	@Test
-	public void queueBorderBody() throws Exception
+	void queueBorderBody() throws Exception
 	{
 
 		TestBorder border = new TestBorder("border");
@@ -687,7 +688,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void border_nested()
+	void border_nested()
 	{
 		MarkupContainer a = new A(), b = new B(), c= new C(), d = new D(), r = new R(), s = new S();
 
@@ -714,7 +715,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void fragment1() {
+	void fragment1() {
 		MarkupContainer a = new A(), b = new B(), r = new R(), s = new S();
 		
 		TestPage page = new TestPage();
@@ -733,7 +734,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void fragment_doesNotDequeueAcrossRegion()
+	void fragment_doesNotDequeueAcrossRegion()
 	{
 		MarkupContainer a = new A();
 
@@ -745,12 +746,12 @@ public class ComponentQueueingTest extends WicketTestCase
 		page.queue(a, fragment);
 
 		assertThat(page, hasPath(new Path(fragment)));
-		assertThat(a.getParent(), is(nullValue()));
+		assertNull(a.getParent());
 	}
 
 	
 	@Test
-	public void containerTag1()
+	void containerTag1()
 	{
 		MarkupContainer a = new A(), b = new B();
 
@@ -763,7 +764,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 	
 	@Test
-	public void queueInsideHeader()
+	void queueInsideHeader()
 	{
 		TestPage page = new TestPage();
 		page.setPageMarkup("<html>"
@@ -781,7 +782,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 	
 	@Test
-	public void queueInsideAutoLink()
+	void queueInsideAutoLink()
 	{
 		TestPage page = new TestPage();
 		page.setPageMarkup("<wicket:link>"
@@ -795,7 +796,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 	
 	@Test
-	public void queueInsideLabelComponent()
+	void queueInsideLabelComponent()
 	{
 		TestPage page = new TestPage();
 		page.setPageMarkup("<label wicket:for='input'>"
@@ -809,7 +810,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 	
 	@Test
-	public void queueInsideTransparentContainer() throws Exception
+	void queueInsideTransparentContainer() throws Exception
 	{
 		TestPage page = new TestPage();
 		page.setPageMarkup("<div wicket:id='transparentContainer'>"
@@ -827,7 +828,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	}
 
 	@Test
-	public void queueNestedEnclosure()
+	void queueNestedEnclosure()
 	{
 		TestPage page = new TestPage();
 		page.setPageMarkup( "<div wicket:enclosure='outer'>" +
@@ -855,7 +856,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6088
 	 */
 	@Test
-	public void queueComponentInsideWcAndEnclosure()
+	void queueComponentInsideWcAndEnclosure()
 	{
 		TestPage page = new TestPage();
 		page.setPageMarkup(" <div wicket:id=\"container\">\n" +
@@ -885,7 +886,7 @@ public class ComponentQueueingTest extends WicketTestCase
 		tester.startPage(page);	
 	}
 	@Test
-	public void queueComponentInsideBorderAndEnclosure()
+	void queueComponentInsideBorderAndEnclosure()
 	{
 		TestPage page = new TestPage();
 		page.setPageMarkup(" <div wicket:id=\"panel\"></div>");
@@ -913,7 +914,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6036
 	 */
 	@Test
-	public void nestedTags()
+	void nestedTags()
 	{
 		IncorrectCloseTagPanel p = new IncorrectCloseTagPanel("test");
 		tester.startComponentInPage(p);
@@ -923,7 +924,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6077
 	 */
 	@Test
-	public void bodyIsAChild() {
+	void bodyIsAChild() {
 		tester.startPage(BodyIsAChildPage.class);
 
 		tester.assertRenderedPage(BodyIsAChildPage.class);
@@ -943,7 +944,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class A extends WebMarkupContainer
 	{
-		public A()
+		A()
 		{
 			super("a");
 		}
@@ -951,7 +952,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class B extends WebMarkupContainer
 	{
-		public B()
+		B()
 		{
 			super("b");
 		}
@@ -959,7 +960,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class C extends WebMarkupContainer
 	{
-		public C()
+		C()
 		{
 			super("c");
 		}
@@ -967,7 +968,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class D extends WebMarkupContainer
 	{
-		public D()
+		D()
 		{
 			super("d");
 		}
@@ -975,7 +976,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class E extends WebMarkupContainer
 	{
-		public E()
+		E()
 		{
 			super("e");
 		}
@@ -983,14 +984,14 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class F extends WebMarkupContainer
 	{
-		public F()
+		F()
 		{
 			super("f");
 		}
 	}
 	private static class G extends WebMarkupContainer
 	{
-		public G()
+		G()
 		{
 			super("g");
 		}
@@ -998,7 +999,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class R extends WebMarkupContainer
 	{
-		public R()
+		R()
 		{
 			super("r");
 		}
@@ -1006,7 +1007,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static class S extends WebMarkupContainer
 	{
-		public S()
+		S()
 		{
 			super("s");
 		}
@@ -1014,7 +1015,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 	private static abstract class LV extends ListView<Integer>
 	{
-		public LV(int size)
+		LV(int size)
 		{
 			super("lv");
 			ArrayList<Integer> values = new ArrayList<>();
@@ -1028,7 +1029,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	{
 		private boolean clicked = false;
 
-		public L()
+		L()
 		{
 			super("l");
 		}
@@ -1039,7 +1040,7 @@ public class ComponentQueueingTest extends WicketTestCase
 			clicked = true;
 		}
 
-		public boolean isClicked()
+		boolean isClicked()
 		{
 			return clicked;
 		}
@@ -1050,7 +1051,7 @@ public class ComponentQueueingTest extends WicketTestCase
 	{
 		private String markup;
 
-		public TestPage()
+		TestPage()
 		{
 		}
 
@@ -1059,12 +1060,12 @@ public class ComponentQueueingTest extends WicketTestCase
 			this.markup = markup;
 		}
 
-		protected String getPageMarkup()
+		String getPageMarkup()
 		{
 			return markup;
 		}
 
-		public void setPageMarkup(String markup)
+		void setPageMarkup(String markup)
 		{
 			this.markup = markup;
 		}
@@ -1082,17 +1083,17 @@ public class ComponentQueueingTest extends WicketTestCase
 	{
 		private String markup;
 
-		public TestPanel(String id)
+		TestPanel(String id)
 		{
 			super(id);
 		}
 
-		protected void setPanelMarkup(String markup)
+		void setPanelMarkup(String markup)
 		{
 			this.markup = markup;
 		}
 
-		protected String getPanelMarkup()
+		String getPanelMarkup()
 		{
 			return markup;
 		}
@@ -1109,17 +1110,17 @@ public class ComponentQueueingTest extends WicketTestCase
 	{
 		private String markup;
 
-		public TestBorder(String id)
+		TestBorder(String id)
 		{
 			super(id);
 		}
 
-		protected void setBorderMarkup(String markup)
+		void setBorderMarkup(String markup)
 		{
 			this.markup = markup;
 		}
 
-		protected String getBorderMarkup()
+		String getBorderMarkup()
 		{
 			return markup;
 		}

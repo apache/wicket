@@ -29,7 +29,7 @@ public abstract class AbstractBasePage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public AbstractBasePage()
+    AbstractBasePage()
 	{
 	}
 }

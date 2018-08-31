@@ -16,9 +16,9 @@
  */
 package org.apache.wicket.pageStore;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -30,18 +30,18 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.Stopwatch;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
-import org.apache.wicket.util.SlowTests;
+import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Bytes;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.common.base.Stopwatch;
 
 
 /**
@@ -49,8 +49,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author manuelbarzi
  */
-@Category(SlowTests.class)
-public class AsynchronousPageStoreTest
+@Tag(WicketTestTag.SLOW)
+class AsynchronousPageStoreTest
 {
 	/** Log for reporting. */
 	private static final Logger log = LoggerFactory.getLogger(AsynchronousPageStoreTest.class);
@@ -153,7 +153,7 @@ public class AsynchronousPageStoreTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void storeReturnsSameInstanceOnClosePageRequest() throws InterruptedException
+	void storeReturnsSameInstanceOnClosePageRequest() throws InterruptedException
 	{
 
 		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
@@ -189,7 +189,7 @@ public class AsynchronousPageStoreTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void storeReturnsRestoredInstanceOnDistantPageRequest() throws InterruptedException
+	void storeReturnsRestoredInstanceOnDistantPageRequest() throws InterruptedException
 	{
 
 		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
@@ -225,7 +225,7 @@ public class AsynchronousPageStoreTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void storeBehavesAsyncWhenNotExceedingStoreCapacity() throws InterruptedException
+	void storeBehavesAsyncWhenNotExceedingStoreCapacity() throws InterruptedException
 	{
 		int sessions = 2;
 		int pages = 5;
@@ -254,7 +254,7 @@ public class AsynchronousPageStoreTest
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void storeBehavesSyncFromWhenExceedingStoreCapacity() throws InterruptedException
+	void storeBehavesSyncFromWhenExceedingStoreCapacity() throws InterruptedException
 	{
 		int sessions = 2;
 		int pages = 5;

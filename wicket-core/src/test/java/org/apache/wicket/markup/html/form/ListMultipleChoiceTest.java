@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,16 +28,16 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ListMultipleChoiceTest extends WicketTestCase
+class ListMultipleChoiceTest extends WicketTestCase
 {
-	public class TestPage extends WebPage
+	class TestPage extends WebPage
 	{
-		public IModel<List<String>> selectedValues = new ListModel<String>(new ArrayList<String>());
-		public List<String> choices = Arrays.asList("a", "b", "c", "d", "e", "f");
+		IModel<List<String>> selectedValues = new ListModel<String>(new ArrayList<String>());
+		List<String> choices = Arrays.asList("a", "b", "c", "d", "e", "f");
 
-		public TestPage()
+		TestPage()
 		{
 			Form<Void> form = new Form<>("form");
 			this.add(form);
@@ -43,7 +46,7 @@ public class ListMultipleChoiceTest extends WicketTestCase
 	}
 
 	@Test
-	public void testSelectionWorks() throws Exception
+	void testSelectionWorks() throws Exception
 	{
 		TestPage page = tester.startPage(new TestPage());
 		FormTester form = tester.newFormTester("form");
@@ -58,7 +61,7 @@ public class ListMultipleChoiceTest extends WicketTestCase
 	}
 
 	@Test
-	public void testSelectionAccumulates() throws Exception
+	void testSelectionAccumulates() throws Exception
 	{
 		final TestPage page = new TestPage();
 		page.selectedValues.getObject().add("a");
@@ -75,8 +78,8 @@ public class ListMultipleChoiceTest extends WicketTestCase
 		assertTrue(page.selectedValues.getObject().contains("f"));
 	}
 
-	protected ListMultipleChoice<String> newListMultipleChoice(String id,
-		IModel<List<String>> selectedValues, List<String> choices)
+	private ListMultipleChoice<String> newListMultipleChoice(String id,
+															 IModel<List<String>> selectedValues, List<String> choices)
 	{
 		return new ListMultipleChoice<>(id, selectedValues, choices);
 	}

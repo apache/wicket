@@ -16,8 +16,13 @@
  */
 package org.apache.wicket;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
@@ -26,8 +31,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the component tag attribute modifer test.
@@ -35,22 +39,24 @@ import org.junit.Test;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class AttributeModifierTest extends Assert
+class AttributeModifierTest
 {
 	/**
 	 * Test constructors.
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void nullAttributeFailsConstruction()
+	@Test
+	void nullAttributeFailsConstruction()
 	{
-		new AttributeModifier(null, new Model<>("model"));
+		assertThrows(IllegalArgumentException.class, () -> {
+			new AttributeModifier(null, new Model<>("model"));
+		});
 	}
 
 	/**
 	 * Test constructors.
 	 */
 	@Test
-	public void nullValueDoesntFailConstruction()
+	void nullValueDoesntFailConstruction()
 	{
 		new AttributeModifier("test", null);
 	}
@@ -59,7 +65,7 @@ public class AttributeModifierTest extends Assert
 	 * Test that a null model does not throw null pointers.
 	 */
 	@Test
-	public void nullModelDoesNotThrowNullPointerExceptions()
+	void nullModelDoesNotThrowNullPointerExceptions()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", null);
 		XmlTag xmlTag = new XmlTag();
@@ -75,7 +81,7 @@ public class AttributeModifierTest extends Assert
 	 * Test overriding newValue (and using a null model).
 	 */
 	@Test
-	public void testNewValue()
+	void testNewValue()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", null)
 		{
@@ -103,7 +109,7 @@ public class AttributeModifierTest extends Assert
 	 * Test simple model replacement.
 	 */
 	@Test
-	public void testModelReplacement()
+	void testModelReplacement()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", Model.of("Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
@@ -122,7 +128,7 @@ public class AttributeModifierTest extends Assert
 	 * Test that the current attribute is overwritten by the one that the model provides.
 	 */
 	@Test
-	public void testModelReplacementOverwritingExistingAttributeValue()
+	void testModelReplacementOverwritingExistingAttributeValue()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", Model.of("Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
@@ -141,7 +147,7 @@ public class AttributeModifierTest extends Assert
 	 * Test that that the attribute modifier does nothing with not enabled.
 	 */
 	@Test
-	public void testNoNewValueWhenNotEnabled()
+	void testNoNewValueWhenNotEnabled()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", Model.of("Ellioth Smith Rocks"))
 		{
@@ -168,7 +174,7 @@ public class AttributeModifierTest extends Assert
 	 * Test using newValue for appending to the model value.
 	 */
 	@Test
-	public void testNewValueForModelValue()
+	void testNewValueForModelValue()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", Model.of("happy"))
 		{
@@ -196,7 +202,7 @@ public class AttributeModifierTest extends Assert
 	 * Test using newValue for appending to the current attribute value.
 	 */
 	@Test
-	public void testNewValueForAttributeValue()
+	void testNewValueForAttributeValue()
 	{
 		AttributeModifier modifier = new AttributeModifier("test", null)
 		{
@@ -224,7 +230,7 @@ public class AttributeModifierTest extends Assert
 	 * Test
 	 */
 	@Test
-	public void testNewValue1Append()
+	void testNewValue1Append()
 	{
 		AttributeModifier appender = AttributeModifier.append("attr", null);
 		assertEquals("oldvalue newvalue", appender.newValue("oldvalue", "newvalue"));
@@ -239,7 +245,7 @@ public class AttributeModifierTest extends Assert
 	 * Test
 	 */
 	@Test
-	public void testNewValue1Prepend()
+	void testNewValue1Prepend()
 	{
 		AttributeModifier prepender = AttributeModifier.prepend("attr", null);
 		assertEquals("newvalue oldvalue", prepender.newValue("oldvalue", "newvalue"));
@@ -254,7 +260,7 @@ public class AttributeModifierTest extends Assert
 	 * Test
 	 */
 	@Test
-	public void testNewValue2Append()
+	void testNewValue2Append()
 	{
 		AttributeModifier appender = AttributeModifier.append("attr", null).setSeparator(";");
 		assertEquals("oldvalue;newvalue", appender.newValue("oldvalue", "newvalue"));
@@ -269,7 +275,7 @@ public class AttributeModifierTest extends Assert
 	 * Test
 	 */
 	@Test
-	public void testNewValue2Prepend()
+	void testNewValue2Prepend()
 	{
 		AttributeModifier appender = AttributeModifier.prepend("attr", null).setSeparator(";");
 		assertEquals("newvalue;oldvalue", appender.newValue("oldvalue", "newvalue"));
@@ -285,7 +291,7 @@ public class AttributeModifierTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-3884
 	 */
 	@Test
-	public void nullModelDoesNotAppendEmptyAttribute()
+	void nullModelDoesNotAppendEmptyAttribute()
 	{
 		AttributeModifier appender = AttributeModifier.append("class", null);
 		XmlTag xmlTag = new XmlTag();
@@ -301,7 +307,7 @@ public class AttributeModifierTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-3934
 	 */
 	@Test
-	public void removeAttribute()
+	void removeAttribute()
 	{
 		AttributeModifier appender = AttributeModifier.remove("class");
 		XmlTag xmlTag = new XmlTag();
@@ -319,7 +325,7 @@ public class AttributeModifierTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-3934
 	 */
 	@Test
-	public void appendSpecialAttribute()
+	void appendSpecialAttribute()
 	{
 		String attrName = "attrName";
 		AttributeModifier appender = AttributeModifier.append(attrName, "VA_REMOVE");
@@ -336,12 +342,12 @@ public class AttributeModifierTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6279
 	 */
 	@Test
-	public void deserializeAdd()
+	void deserializeAdd()
 	{
 		AttributeModifier appender = AttributeModifier.append("class", AttributeModifier.VALUELESS_ATTRIBUTE_ADD);
 		final AttributeModifier copy = WicketObjects.cloneObject(appender);
 		final IModel<?> replaceModel = copy.getReplaceModel();
-		assertThat(replaceModel.getObject(), is(sameInstance(AttributeModifier.VALUELESS_ATTRIBUTE_ADD)));
+		assertThat(replaceModel.getObject()).isEqualToComparingFieldByField(AttributeModifier.VALUELESS_ATTRIBUTE_ADD);
 	}
 
 
@@ -349,11 +355,11 @@ public class AttributeModifierTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6279
 	 */
 	@Test
-	public void deserializeRemove()
+	void deserializeRemove()
 	{
 		AttributeModifier appender = AttributeModifier.append("class", AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE);
 		final AttributeModifier copy = WicketObjects.cloneObject(appender);
 		final IModel<?> replaceModel = copy.getReplaceModel();
-		assertThat(replaceModel.getObject(), is(sameInstance(AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE)));
+		assertThat(replaceModel.getObject()).isEqualToComparingFieldByField(AttributeModifier.VALUELESS_ATTRIBUTE_REMOVE);
 	}
 }

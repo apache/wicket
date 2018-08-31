@@ -16,27 +16,32 @@
  */
 package org.apache.wicket.markup.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 
 import org.apache.wicket.markup.parser.IXmlPullParser.HttpTagType;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Quite some tests are already with MarkupParser.
  * 
  * @author Juergen Donnerstag
  */
-public class XmlPullParserTest extends Assert
+class XmlPullParserTest
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public final void basics() throws Exception
+	final void basics() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("This is a text");
@@ -128,7 +133,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void encoding() throws Exception
+	final void encoding() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse(
@@ -197,7 +202,7 @@ public class XmlPullParserTest extends Assert
 	 * WICKET-5398 parsing from String
 	 */
 	@Test
-	public void encodingOfString() throws Exception
+	void encodingOfString() throws Exception
 	{
 		// use an encoding that is not the system's file encoding
 		final String encoding;
@@ -220,7 +225,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void attributes() throws Exception
+	final void attributes() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<tag>");
@@ -286,7 +291,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void comments() throws Exception
+	final void comments() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!-- test --><tag>");
@@ -320,7 +325,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void compressWhitespace() throws Exception
+	final void compressWhitespace() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
@@ -331,7 +336,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void script() throws Exception
+	final void script() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<html><script language=\"JavaScript\">... <x a> ...</script></html>");
@@ -354,7 +359,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void conditionalComments() throws Exception
+	final void conditionalComments() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
@@ -373,7 +378,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void conditionalComments2() throws Exception
+	final void conditionalComments2() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
@@ -399,7 +404,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void names() throws Exception
+	final void names() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<filter-mapping>");
@@ -423,7 +428,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void doctype() throws Exception
+	final void doctype() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!DOCTYPE html>");
@@ -436,7 +441,7 @@ public class XmlPullParserTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public final void downlevelRevealedConditionalComments() throws Exception
+	final void downlevelRevealedConditionalComments() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
 		parser.parse("<!--[if (gt IE 9)|!(IE)]><!--><html lang=\"en\" class=\"no-js\"><!--<![endif]--> <span>test</span>");

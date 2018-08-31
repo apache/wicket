@@ -20,22 +20,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Page;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-3971
  */
-public class TextTemplateResourceReferenceTest extends WicketTestCase
+class TextTemplateResourceReferenceTest extends WicketTestCase
 {
 
 	private static final String TEMPLATE_NAME = "textTemplateResRef.tmpl";
@@ -48,7 +47,7 @@ public class TextTemplateResourceReferenceTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3971
 	 */
 	@Test
-	public void renderInterpolatedTemplate()
+    void renderInterpolatedTemplate()
 	{
 		// the page will render just <script> element with url to the template
 		// this will register it in the application's ResourceReferenceRegistry

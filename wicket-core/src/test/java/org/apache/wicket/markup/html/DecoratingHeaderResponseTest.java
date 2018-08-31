@@ -16,11 +16,15 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 import java.text.ParseException;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
+import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
@@ -28,17 +32,16 @@ import org.apache.wicket.markup.head.ResourceAggregator;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.markup.head.HeaderItem;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class DecoratingHeaderResponseTest extends WicketTestCase
+class DecoratingHeaderResponseTest extends WicketTestCase
 {
 
 	/**
@@ -49,7 +52,7 @@ public class DecoratingHeaderResponseTest extends WicketTestCase
 	 * @throws ParseException
 	 */
 	@Test
-	public void decoratedStringPrepend() throws IOException, ResourceStreamNotFoundException,
+	void decoratedStringPrepend() throws IOException, ResourceStreamNotFoundException,
 		ParseException
 	{
 		tester.getApplication().setHeaderResponseDecorator(new IHeaderResponseDecorator()

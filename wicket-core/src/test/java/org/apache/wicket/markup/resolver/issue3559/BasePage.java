@@ -28,7 +28,7 @@ public class BasePage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public BasePage()
+    BasePage()
 	{
 		add(new MenuPanel("menu"));
 	}

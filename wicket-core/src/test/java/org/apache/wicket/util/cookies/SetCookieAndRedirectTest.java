@@ -16,21 +16,22 @@
  */
 package org.apache.wicket.util.cookies;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests setting a cookie and calling setResponsePage() in the same request.
  * 
  * @author Bertrand Guay-Paquet
  */
-public class SetCookieAndRedirectTest extends WicketTestCase
+class SetCookieAndRedirectTest extends WicketTestCase
 {
 	private static final String cookieValue = "cookieValue";
 
@@ -38,7 +39,7 @@ public class SetCookieAndRedirectTest extends WicketTestCase
 	 * Validate proper cookie value set with stateful page
 	 */
 	@Test
-	public void statefulPage()
+	void statefulPage()
 	{
 		tester.startPage(SetCookieAndRedirectStatefullTestPage.class);
 		FormTester formTester = tester.newFormTester("form");
@@ -55,7 +56,7 @@ public class SetCookieAndRedirectTest extends WicketTestCase
 	 * Validate proper cookie value set with stateless page
 	 */
 	@Test
-	public void statelessPage()
+	void statelessPage()
 	{
 		tester.startPage(SetCookieAndRedirectStatelessTestPage.class);
 		FormTester formTester = tester.newFormTester("form");

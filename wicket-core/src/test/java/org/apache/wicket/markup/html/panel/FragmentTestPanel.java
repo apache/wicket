@@ -48,7 +48,7 @@ public class FragmentTestPanel extends Panel
 		 * 
 		 * @param id
 		 */
-		public TestFragment(String id)
+        TestFragment(String id)
 		{
 			super(id, "testFrag", FragmentTestPanel.this);
 			add(new Label("label", "Hello!"));

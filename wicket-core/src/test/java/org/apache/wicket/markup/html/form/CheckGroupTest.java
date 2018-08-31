@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
@@ -33,13 +35,13 @@ import org.junit.Test;
  * @author igor
  * 
  */
-public class CheckGroupTest extends WicketTestCase
+class CheckGroupTest extends WicketTestCase
 {
 	/**
 	 * test component form processing
 	 */
 	@Test
-	public void formProcessing()
+	void formProcessing()
 	{
 
 		// test model constructors
@@ -52,42 +54,36 @@ public class CheckGroupTest extends WicketTestCase
 
 		tester.submitForm(page.form);
 
-		assertTrue("running with nothing selected - model must be empty", list.size() == 0);
+		assertTrue(list.size() == 0, "running with nothing selected - model must be empty");
 
-		tester.getRequest()
-			.getPostParameters()
-			.setParameterValue(page.group.getInputName(), page.check1.getValue());
+		tester.getRequest().getPostParameters().setParameterValue(page.group.getInputName(),
+			page.check1.getValue());
 		tester.submitForm(page.form);
 
-		assertTrue("running with choice1 selected - model must only contain value of check1",
-			list.size() == 1 && list.contains("check1"));
+		assertTrue(list.size() == 1 && list.contains("check1"),
+			"running with choice1 selected - model must only contain value of check1");
 
-		tester.getRequest()
-			.getPostParameters()
-			.setParameterValue(page.group.getInputName(), page.check2.getValue());
+		tester.getRequest().getPostParameters().setParameterValue(page.group.getInputName(),
+			page.check2.getValue());
 		tester.submitForm(page.form);
 
-		assertTrue("running with choice2 selected - model must only contain value of check2",
-			list.size() == 1 && list.contains("check2"));
+		assertTrue(list.size() == 1 && list.contains("check2"),
+			"running with choice2 selected - model must only contain value of check2");
 
 		// throw in some nulls into the request param to make sure they are
 		// ignored
 		tester.getRequest().getPostParameters().addParameterValue(page.group.getInputName(), null);
-		tester.getRequest()
-			.getPostParameters()
-			.addParameterValue(page.group.getInputName(), page.check1.getValue());
-		tester.getRequest()
-			.getPostParameters()
-			.addParameterValue(page.group.getInputName(), page.check2.getValue());
+		tester.getRequest().getPostParameters().addParameterValue(page.group.getInputName(),
+			page.check1.getValue());
+		tester.getRequest().getPostParameters().addParameterValue(page.group.getInputName(),
+			page.check2.getValue());
 		tester.submitForm(page.form);
 
-		assertTrue(
-			"running with choice1 and choice2 selected - model must only contain values of check1 and check2",
-			list.size() == 2 && list.contains("check1") && list.contains("check2"));
+		assertTrue(list.size() == 2 && list.contains("check1") && list.contains("check2"),
+			"running with choice1 and choice2 selected - model must only contain values of check1 and check2");
 
-		tester.getRequest()
-			.getPostParameters()
-			.setParameterValue(page.group.getInputName(), "some weird choice uuid to test error");
+		tester.getRequest().getPostParameters().setParameterValue(page.group.getInputName(),
+			"some weird choice uuid to test error");
 		try
 		{
 			tester.submitForm(page.form);
@@ -104,7 +100,7 @@ public class CheckGroupTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void rendering() throws Exception
+	void rendering() throws Exception
 	{
 		executeTest(CheckGroupTestPage1.class, "CheckGroupTestPage1_expected.html");
 		executeTest(CheckGroupTestPage2.class, "CheckGroupTestPage2_expected.html");
@@ -117,8 +113,8 @@ public class CheckGroupTest extends WicketTestCase
 		}
 		catch (WicketRuntimeException e)
 		{
-			if (!e.getMessage().contains(
-				"Check component [4:form:check2] cannot find its parent CheckGroup"))
+			if (!e.getMessage()
+				.contains("Check component [4:form:check2] cannot find its parent CheckGroup"))
 			{
 				fail("failed with wrong exception");
 			}
@@ -130,7 +126,7 @@ public class CheckGroupTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void disabledCheckGroup() throws Exception
+	void disabledCheckGroup() throws Exception
 	{
 		executeTest(CheckGroupDisabledTestPage.class, "CheckGroupDisabledTestPage_expected.html");
 	}

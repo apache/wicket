@@ -16,20 +16,21 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.ResourceUtil;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for AbstractResourceReferenceMapper's own methods
  */
-public class AbstractResourceReferenceMapperOwnTest extends Assert
+class AbstractResourceReferenceMapperOwnTest
 {
 	@Test
-	public void testEscapeAttributesSeparator() throws Exception
+	void testEscapeAttributesSeparator() throws Exception
 	{
 		AbstractResourceReferenceMapper mapper = new Mapper();
 		CharSequence escaped = ResourceUtil.escapeAttributesSeparator("my-style~is~~cool");
@@ -37,7 +38,7 @@ public class AbstractResourceReferenceMapperOwnTest extends Assert
 	}
 
 	@Test
-	public void testUnescapeAttributesSeparator() throws Exception
+	void testUnescapeAttributesSeparator() throws Exception
 	{
 		AbstractResourceReferenceMapper mapper = new Mapper();
 		CharSequence escaped = ResourceUtil.unescapeAttributesSeparator("my~style~~is~~~~cool");

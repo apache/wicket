@@ -16,23 +16,25 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class ComponentInitializationIntegrationTest extends WicketTestCase
+class ComponentInitializationIntegrationTest extends WicketTestCase
 {
 	/**
 	 * initialization()
 	 */
 	@Test
-	public void initialization()
+	void initialization()
 	{
 		TestPage page = new TestPage();
 		TestComponent t1 = new TestComponent("t1");
@@ -66,7 +68,7 @@ public class ComponentInitializationIntegrationTest extends WicketTestCase
 			count++;
 		}
 
-		public int getCount()
+		int getCount()
 		{
 			return count;
 		}
@@ -79,7 +81,7 @@ public class ComponentInitializationIntegrationTest extends WicketTestCase
 
 		private int count = 0;
 
-		public TestComponent(String id)
+		TestComponent(String id)
 		{
 			super(id);
 		}
@@ -91,7 +93,7 @@ public class ComponentInitializationIntegrationTest extends WicketTestCase
 			count++;
 		}
 
-		public int getCount()
+		int getCount()
 		{
 			return count;
 		}

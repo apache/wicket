@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.mock.MockApplication;
@@ -26,14 +28,14 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-4251
  *
  * Tests that an intercepted Ajax request is continued in non-Ajax response
  */
-public class RestartResponseAtInterceptPageExceptionInAjaxTest extends WicketTestCase
+class RestartResponseAtInterceptPageExceptionInAjaxTest extends WicketTestCase
 {
 
 	@Override
@@ -50,7 +52,7 @@ public class RestartResponseAtInterceptPageExceptionInAjaxTest extends WicketTes
 
 	public static class HomePage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public HomePage() 
+		public HomePage()
 		{
 	        // set the intercept data
 			new RestartResponseAtInterceptPageException(DummyHomePage.class);
@@ -70,7 +72,7 @@ public class RestartResponseAtInterceptPageExceptionInAjaxTest extends WicketTes
 	 * in its post parameters
 	 */
 	@Test
-	public void requestAPageInAjaxButReceiveItInNonAjaxResponse()
+	void requestAPageInAjaxButReceiveItInNonAjaxResponse()
 	{
 		// issue ajax request
 		tester.executeAjaxUrl(Url.parse("?"+WebRequest.PARAM_AJAX+"=true&"+WebRequest.PARAM_AJAX_BASE_URL+"=/"));

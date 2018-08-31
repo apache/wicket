@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -26,12 +27,12 @@ import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class WebPageTest extends WicketTestCase
+class WebPageTest extends WicketTestCase
 {
 
 	/**
@@ -40,7 +41,7 @@ public class WebPageTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3892">WICKET-3892</a>
 	 */
 	@Test
-	public void increaseNewlyCreatedPageId()
+	void increaseNewlyCreatedPageId()
 	{
 		tester.startPage(MainPage.class);
 		int mainPageId = tester.getLastRenderedPage().getPageId();
@@ -54,8 +55,8 @@ public class WebPageTest extends WicketTestCase
 		IManageablePage mainPage = tester.getSession().getPageManager().getPage(mainPageId);
 		IManageablePage targetPage = tester.getSession().getPageManager().getPage(targetPageId);
 
-		assertThat(mainPage, instanceOf(MainPage.class));
-		assertThat(targetPage, instanceOf(TargetPage.class));
+		assertThat(mainPage).isInstanceOf(MainPage.class);
+		assertThat(targetPage).isInstanceOf(TargetPage.class);
 	}
 
 	/** */
@@ -86,7 +87,7 @@ public class WebPageTest extends WicketTestCase
 	}
 
 	/** */
-	public static class TargetPage extends WebPage implements IMarkupResourceStreamProvider
+	static class TargetPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,

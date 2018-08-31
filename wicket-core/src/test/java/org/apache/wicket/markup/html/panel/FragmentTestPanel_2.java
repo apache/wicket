@@ -50,7 +50,7 @@ public class FragmentTestPanel_2 extends Panel
 		 * 
 		 * @param id
 		 */
-		public TestFragment(String id)
+        TestFragment(String id)
 		{
 			super(id, "testFrag", FragmentTestPanel_2.this);
 		}

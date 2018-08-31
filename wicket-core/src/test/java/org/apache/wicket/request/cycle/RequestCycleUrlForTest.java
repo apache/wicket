@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.request.cycle;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,9 +36,8 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.response.StringResponse;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 
 /**
@@ -45,17 +45,17 @@ import org.mockito.ArgumentMatcher;
  *
  * https://issues.apache.org/jira/browse/WICKET-4334
  */
-public class RequestCycleUrlForTest extends Assert
+class RequestCycleUrlForTest
 {
 	private static final String JSESSIONID = ";jsessionid=1234567890";
 	private static final String BOOKMARKABLE_PAGE_URL = "bookmarkablePage";
 	private static final String RES_REF_URL = "resRef";
 	private static final String RESOURCE_URL = "res";
 
-	RequestCycle requestCycle;
+	private RequestCycle requestCycle;
 	
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		Request request = mock(Request.class);
 		Url baseUrl = Url.parse("");
@@ -92,7 +92,7 @@ public class RequestCycleUrlForTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void urlForClass() throws Exception
+	void urlForClass() throws Exception
 	{
 		CharSequence url = requestCycle.urlFor(MockHomePage.class, new PageParameters());
 		assertEquals("./bookmarkablePage"+JSESSIONID, url);
@@ -104,7 +104,7 @@ public class RequestCycleUrlForTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void urlForResourceReference() throws Exception
+	void urlForResourceReference() throws Exception
 	{
 		final IStaticCacheableResource resource = mock(IStaticCacheableResource.class);
 		ResourceReference reference = new ResourceReference("dummy")
@@ -126,7 +126,7 @@ public class RequestCycleUrlForTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void urlForResourceReferenceWithNonStaticResource() throws Exception
+	void urlForResourceReferenceWithNonStaticResource() throws Exception
 	{
 		final IResource resource = mock(IResource.class);
 		ResourceReference reference = new ResourceReference("dummy")
@@ -148,7 +148,7 @@ public class RequestCycleUrlForTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void urlForStaticResource() throws Exception
+	void urlForStaticResource() throws Exception
 	{
 		IStaticCacheableResource resource = mock(IStaticCacheableResource.class);
 		ResourceRequestHandler handler = new ResourceRequestHandler(resource, new PageParameters());
@@ -162,7 +162,7 @@ public class RequestCycleUrlForTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void urlForDynamicResource() throws Exception
+	void urlForDynamicResource() throws Exception
 	{
 		ByteArrayResource resource = new ByteArrayResource(null, new byte[] {1, 2}, "test.bin");
 		ResourceRequestHandler handler = new ResourceRequestHandler(resource, new PageParameters());
@@ -180,7 +180,7 @@ public class RequestCycleUrlForTest extends Assert
 	{
 		private final Class<T> targetClass;
 
-		public ExactClassMatcher(Class<T> targetClass)
+		ExactClassMatcher(Class<T> targetClass)
 		{
 			this.targetClass = targetClass;
 		}

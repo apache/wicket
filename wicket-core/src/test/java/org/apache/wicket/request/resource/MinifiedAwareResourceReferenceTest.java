@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Locale;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.Locale;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Testcases for minified aware resources.
@@ -34,10 +36,10 @@ import java.util.Locale;
  * 
  * @author papegaaij
  */
-public class MinifiedAwareResourceReferenceTest extends WicketTestCase
+class MinifiedAwareResourceReferenceTest extends WicketTestCase
 {
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		tester.getSession().setLocale(Locale.US);
 	}
@@ -55,7 +57,7 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 	 * Tests is a pre-minified resource is detected
 	 */
 	@Test
-	public void minifiedResourceAvailable()
+	void minifiedResourceAvailable()
 	{
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
 		ResourceReference reference = new JavaScriptResourceReference(
@@ -69,7 +71,7 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 	 * Tests fallback to normal resource when pre-minified is not available
 	 */
 	@Test
-	public void noMinifiedResourceAvailable()
+	void noMinifiedResourceAvailable()
 	{
 		MinCountingResourceStreamLocator locator = new MinCountingResourceStreamLocator();
 
@@ -88,7 +90,7 @@ public class MinifiedAwareResourceReferenceTest extends WicketTestCase
 
 	private class MinCountingResourceStreamLocator extends ResourceStreamLocator
 	{
-		public int minLocated = 0;
+		int minLocated = 0;
 
 		@Override
 		public IResourceStream locate(Class<?> clazz, String path)

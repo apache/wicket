@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.handler.BookmarkableListenerRequestHandler;
@@ -38,18 +40,19 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.PackageName;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link PackageMapper}
  */
-public class PackageMapperTest extends AbstractMapperTest
+class PackageMapperTest extends AbstractMapperTest
 {
 	private static final String MOUNT_PATH = "mount/path";
 
 	private static final String ALIAS = "alias";
-
-	private final PackageMapper encoder = new PackageMapper(MOUNT_PATH, PackageName.forClass(MockPage.class))
+	private static final String PAGE_CLASS_NAME = MockPage.class.getSimpleName();
+	private final PackageMapper encoder = new PackageMapper(MOUNT_PATH,
+		PackageName.forClass(MockPage.class))
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -63,9 +66,6 @@ public class PackageMapperTest extends AbstractMapperTest
 			return true;
 		}
 	};
-
-	private static final String PAGE_CLASS_NAME = MockPage.class.getSimpleName();
-
 	private final PackageMapper aliasEncoder = new PackageMapper(MOUNT_PATH,
 		PackageName.forClass(MockPage.class))
 	{
@@ -106,7 +106,17 @@ public class PackageMapperTest extends AbstractMapperTest
 		}
 	};
 
-	private final PackageMapper namedParametersEncoder = new PackageMapper(MOUNT_PATH + "/${foo}/${bar}", PackageName.forClass(MockPage.class))
+	private final PackageMapper namedParametersEncoder = new PackageMapper(
+		MOUNT_PATH + "/${foo}/${bar}", PackageName.forClass(MockPage.class))
+	{
+		@Override
+		protected IMapperContext getContext()
+		{
+			return context;
+		}
+	};
+	private final PackageMapper innerClassEncoder = new PackageMapper(MOUNT_PATH,
+		PackageName.forClass(OuterPage.class))
 	{
 		@Override
 		protected IMapperContext getContext()
@@ -119,12 +129,12 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode1()
+	void decode1()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -135,22 +145,23 @@ public class PackageMapperTest extends AbstractMapperTest
 	 * https://issues.apache.org/jira/browse/WICKET-4994
 	 */
 	@Test
-	public void decode1CaseInsensitively()
+	void decode1CaseInsensitively()
 	{
 		Url url = Url.parse(MOUNT_PATH.replace('o', 'O').replace('p', 'P') + '/' + PAGE_CLASS_NAME);
 		IRequestHandler handler = encoder.setCaseSensitiveMatch(false).mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
 		assertEquals(0, page.getPageParameters().getIndexedCount());
 		assertTrue(page.getPageParameters().getNamedKeys().isEmpty());
 	}
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5500
 	 */
 	@Test
-	public void decodePageClassWithPathParameters()
+	void decodePageClassWithPathParameters()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + ";something=else");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
@@ -166,12 +177,12 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode2()
+	void decode2()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/indexed1?a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
 
@@ -185,46 +196,42 @@ public class PackageMapperTest extends AbstractMapperTest
 	}
 
 	/**
-	 * The tests resolves pages by id as if they were existed in the page store.
-	 * These pages have no page parameters (i.e. page.getPageParameters() == null).
+	 * The tests resolves pages by id as if they were existed in the page store. These pages have no
+	 * page parameters (i.e. page.getPageParameters() == null).
 	 *
-	 * The request that the encoder does also has no parameters (neither in the path
-	 * nor in the query string) so the resolved page is assumed to be valid.
+	 * The request that the encoder does also has no parameters (neither in the path nor in the
+	 * query string) so the resolved page is assumed to be valid.
 	 */
 	@Test
-	public void decode3()
+	void decode3()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 	}
 
 	/**
-	 * The tests resolves pages by id as if they were existed in the page store.
-	 * These pages have no page parameters (i.e. page.getPageParameters() == null).
+	 * The tests resolves pages by id as if they were existed in the page store. These pages have no
+	 * page parameters (i.e. page.getPageParameters() == null).
 	 *
-	 * Since Wicket 7.0.0 (WICKET-4441) if a new request to hybrid url
-	 * (a url with both mount path and pageId) has different page parameters
-	 * than the resolved page then a new page instance with the new parameters
-	 * is created.
-	 * This way if a user manipulates manually the product id in url like:
-	 * /mount/path/Products/23?3
-	 * to
-	 * /mount/path/Products/24?3
-	 * then Wicket will create a new page that will show product=24
+	 * Since Wicket 7.0.0 (WICKET-4441) if a new request to hybrid url (a url with both mount path
+	 * and pageId) has different page parameters than the resolved page then a new page instance
+	 * with the new parameters is created. This way if a user manipulates manually the product id in
+	 * url like: /mount/path/Products/23?3 to /mount/path/Products/24?3 then Wicket will create a
+	 * new page that will show product=24
 	 */
 	@Test
-	public void decode4()
+	void decode4()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
-		RenderPageRequestHandler h = (RenderPageRequestHandler) handler;
-		((PageProvider) h.getPageProvider()).setPageSource(context);
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
+		RenderPageRequestHandler h = (RenderPageRequestHandler)handler;
+		((PageProvider)h.getPageProvider()).setPageSource(context);
 		IRequestablePage page = h.getPage();
 		checkPage(page, 1);
 
@@ -238,12 +245,12 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode5()
+	void decode5()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15--foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
@@ -258,12 +265,12 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode6()
+	void decode6()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15--foo-bar&a=b&b=c");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
@@ -281,12 +288,12 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode7()
+	void decode7()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "?15-.4-foo-bar");
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
@@ -301,7 +308,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void decode8()
+	void decode8()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-5.-foo-bar&a=b&b=c");
 
@@ -309,7 +316,7 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(ListenerRequestHandler.class));
+		assertThat(handler).isInstanceOf(ListenerRequestHandler.class);
 		ListenerRequestHandler h = (ListenerRequestHandler)handler;
 
 		IRequestablePage page = h.getPage();
@@ -319,26 +326,27 @@ public class PackageMapperTest extends AbstractMapperTest
 	/**
 	 *
 	 */
-	@Test(expected = StalePageException.class)
-	public void decode9()
+	@Test
+	void decode9()
 	{
-		Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-5.-foo-bar&a=b&b=c");
+		assertThrows(StalePageException.class, () -> {
+			Url url = Url.parse(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-5.-foo-bar&a=b&b=c");
 
-		context.setNextPageRenderCount(6);
+			context.setNextPageRenderCount(6);
 
-		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-
-		((IPageRequestHandler)handler).getPage();
-
+			IRequestHandler handler = encoder.mapRequest(getRequest(url));
+			((IPageRequestHandler)handler).getPage();
+		});
 	}
 
 	/**
 	 *
 	 */
 	@Test
-	public void decodeNamedParameters()
+	void decodeNamedParameters()
 	{
-		Url url = Url.parse(MOUNT_PATH + "/fooValue/barValue/" + PAGE_CLASS_NAME + "/i1/i2?a=b&b=c");
+		Url url = Url
+			.parse(MOUNT_PATH + "/fooValue/barValue/" + PAGE_CLASS_NAME + "/i1/i2?a=b&b=c");
 		IRequestHandler handler = namedParametersEncoder.mapRequest(getRequest(url));
 
 		assertTrue(handler instanceof RenderPageRequestHandler);
@@ -360,44 +368,44 @@ public class PackageMapperTest extends AbstractMapperTest
 	 * WICKET-2993
 	 */
 	@Test
-	public void decode10()
+	void decode10()
 	{
 		// use String.class but any other non-Page will do the job as well
 		Url url = Url.parse(String.class.getSimpleName());
 
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
-		assertNull("A non-page class should not create a request handler!", handler);
+		assertNull(handler, "A non-page class should not create a request handler!");
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5996
 	 */
 	@Test
-	public void decode11()
+	void decode11()
 	{
 		Url url = Url.parse(MOUNT_PATH);
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, is(nullValue()));
+		assertNull(handler);
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5996
 	 */
 	@Test
-	public void decode12()
+	void decode12()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/');
 		IRequestHandler handler = encoder.mapRequest(getRequest(url));
 
-		assertThat(handler, is(nullValue()));
+		assertNull(handler);
 	}
 
 	/**
 	 *
 	 */
 	@Test
-	public void encode1()
+	void encode1()
 	{
 		PageProvider provider = new PageProvider(MockPage.class, new PageParameters());
 		provider.setPageSource(context);
@@ -410,7 +418,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode2()
+	void encode2()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -428,7 +436,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode3()
+	void encode3()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set(0, "i1");
@@ -448,7 +456,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode4()
+	void encode4()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -468,7 +476,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode5()
+	void encode5()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -489,7 +497,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode6()
+	void encode6()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -508,14 +516,15 @@ public class PackageMapperTest extends AbstractMapperTest
 
 		Url url = encoder.mapHandler(handler);
 
-		assertEquals(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-0.-foo-bar&a=b&b=c", url.toString());
+		assertEquals(MOUNT_PATH + '/' + PAGE_CLASS_NAME + "/i1/i2?15-0.-foo-bar&a=b&b=c",
+			url.toString());
 	}
 
 	/**
 	 *
 	 */
 	@Test
-	public void encode7()
+	void encode7()
 	{
 		MockPage page = new MockPage(15);
 		page.getPageParameters().set(0, "i1");
@@ -542,7 +551,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encode8()
+	void encode8()
 	{
 		MockPage page = new MockPage(15);
 		page.setBookmarkable(true);
@@ -561,7 +570,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 *
 	 */
 	@Test
-	public void encodeNamedPageParameters()
+	void encodeNamedPageParameters()
 	{
 		MockPage page = new MockPage(15);
 		page.setBookmarkable(true);
@@ -578,32 +587,11 @@ public class PackageMapperTest extends AbstractMapperTest
 		assertEquals(MOUNT_PATH + "/fooValue/barValue/" + PAGE_CLASS_NAME, url.toString());
 	}
 
-
-	private final PackageMapper innerClassEncoder = new PackageMapper(MOUNT_PATH,
-		PackageName.forClass(OuterPage.class))
-	{
-		@Override
-		protected IMapperContext getContext()
-		{
-			return context;
-		}
-	};
-
-	public static class OuterPage extends MockPage
-	{
-		private static final long serialVersionUID = 1L;
-
-		public static class InnerPage extends MockPage
-		{
-			private static final long serialVersionUID = 1L;
-		}
-	}
-
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3838
 	 */
 	@Test
-	public void encodeInnerClass()
+	void encodeInnerClass()
 	{
 		InnerPage page = new OuterPage.InnerPage();
 		IPageProvider provider = new PageProvider(page);
@@ -618,12 +606,12 @@ public class PackageMapperTest extends AbstractMapperTest
 	 * https://issues.apache.org/jira/browse/WICKET-3838
 	 */
 	@Test
-	public void decodeInnerClass()
+	void decodeInnerClass()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + "PackageMapperTest$OuterPage$InnerPage");
 		IRequestHandler handler = innerClassEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		assertEquals("InnerPage", page.getClass().getSimpleName());
 		assertEquals(0, page.getPageParameters().getIndexedCount());
@@ -634,7 +622,7 @@ public class PackageMapperTest extends AbstractMapperTest
 	 * https://issues.apache.org/jira/browse/WICKET-3941
 	 */
 	@Test
-	public void encodeAlias()
+	void encodeAlias()
 	{
 		MockPage page = new MockPage(15);
 		page.setBookmarkable(true);
@@ -653,33 +641,43 @@ public class PackageMapperTest extends AbstractMapperTest
 	 * https://issues.apache.org/jira/browse/WICKET-3941
 	 */
 	@Test
-	public void decodeAlias()
+	void decodeAlias()
 	{
 		Url url = Url.parse(MOUNT_PATH + '/' + ALIAS + "?15");
 		IRequestHandler handler = aliasEncoder.mapRequest(getRequest(url));
 
-		assertThat(handler, instanceOf(RenderPageRequestHandler.class));
+		assertThat(handler).isInstanceOf(RenderPageRequestHandler.class);
 		IRequestablePage page = ((RenderPageRequestHandler)handler).getPage();
 		checkPage(page, 15);
 		assertEquals(PAGE_CLASS_NAME, page.getClass().getSimpleName());
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5565
 	 */
 	@Test
-	public void testGetCompatibilityScore()
+	void testGetCompatibilityScore()
 	{
-	    Url url = Url.parse(MOUNT_PATH + '/' + "MyPage");
-	    MockWebRequest request = new MockWebRequest(url);
-	    int score = encoder.getCompatibilityScore(request);
-	    
-	    assertEquals(4, score);
-	    
-	    url = Url.parse(MOUNT_PATH + "/foo/bar/" + "MyPage");
-	    request = new MockWebRequest(url);
-	    score = namedParametersEncoder.getCompatibilityScore(request);
-	    
-	    assertEquals(6, score);
+		Url url = Url.parse(MOUNT_PATH + '/' + "MyPage");
+		MockWebRequest request = new MockWebRequest(url);
+		int score = encoder.getCompatibilityScore(request);
+
+		assertEquals(4, score);
+
+		url = Url.parse(MOUNT_PATH + "/foo/bar/" + "MyPage");
+		request = new MockWebRequest(url);
+		score = namedParametersEncoder.getCompatibilityScore(request);
+
+		assertEquals(6, score);
+	}
+
+	public static class OuterPage extends MockPage
+	{
+		private static final long serialVersionUID = 1L;
+
+		public static class InnerPage extends MockPage
+		{
+			private static final long serialVersionUID = 1L;
+		}
 	}
 }

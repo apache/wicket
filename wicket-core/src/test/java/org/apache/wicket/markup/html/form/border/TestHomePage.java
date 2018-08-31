@@ -16,22 +16,24 @@
  */
 package org.apache.wicket.markup.html.form.border;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends WicketTestCase
+class TestHomePage extends WicketTestCase
 {
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		// Start and render the test page
 		tester.startPage(HomePage.class);
@@ -39,7 +41,7 @@ public class TestHomePage extends WicketTestCase
 	}
 
 	@Test
-	public void testWithBorder2()
+	void testWithBorder2()
 	{
 		FormTester formTester = tester.newFormTester("border:form");
 

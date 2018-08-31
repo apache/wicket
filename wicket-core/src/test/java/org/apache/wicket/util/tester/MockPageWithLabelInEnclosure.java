@@ -19,14 +19,13 @@ package org.apache.wicket.util.tester;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 
 /**
  * Mock page which has an ajax link in an enclosure. Clicking the link invokes ajax rendering the link again.
  *
  * @author Domas Poliakas (disblader)
  */
-public class MockPageWithLabelInEnclosure extends WebPage {
+class MockPageWithLabelInEnclosure extends WebPage {
 
     public MockPageWithLabelInEnclosure() {
         // Clicking this link re-renders the link itself

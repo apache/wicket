@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.page;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,13 +33,12 @@ import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.versioning.InMemoryPageStore;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class PersistentPageManagerTest
+class PersistentPageManagerTest
 {
 	private static final String APP_NAME = "test_app";
 
@@ -52,7 +52,7 @@ public class PersistentPageManagerTest
 	 * @throws IOException
 	 */
 	@Test
-	public void serializationOutsideWicketLifecyle() throws IOException, ClassNotFoundException
+	void serializationOutsideWicketLifecyle() throws IOException, ClassNotFoundException
 	{
 		// make sure no leaked threadlocals are present
 		ThreadContext.detach();
@@ -71,26 +71,24 @@ public class PersistentPageManagerTest
 
 		// simulate persisting of the http sessions initiated by the web container
 		byte[] serializedSessionEntry = new JavaSerializer(APP_NAME).serialize(sessionEntry);
-		assertNotNull("Wicket needs to be able to serialize the session entry",
-			serializedSessionEntry);
+		assertNotNull(serializedSessionEntry,
+			"Wicket needs to be able to serialize the session entry");
 
 		// simulate loading of the persisted http session initiated by the web container
 		// when starting an application
-		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
-			serializedSessionEntry));
+		ObjectInputStream in = new ObjectInputStream(
+			new ByteArrayInputStream(serializedSessionEntry));
 
 		// WicketFilter is not initialized so there is no Application available yet
-		Assert.assertFalse("Worker thread should be unaware of Wicket application",
-			Application.exists());
+		assertFalse(Application.exists(), "Worker thread should be unaware of Wicket application");
 
 		assertEquals(APP_NAME, in.readObject());
 
 		// without available IPageStore the read SessionEntry holds
 		// the IManageablePage itself, not SerializedPage
 		Serializable loadedSessionEntry = (Serializable)in.readObject();
-		assertNotNull(
-			"Wicket needs to be able to deserialize the session entry regardless the application availability",
-			loadedSessionEntry);
+		assertNotNull(loadedSessionEntry,
+			"Wicket needs to be able to deserialize the session entry regardless the application availability");
 
 		// provide new IPageStore which will read IManageablePage's or SerializedPage's
 		// from the SessionEntry's

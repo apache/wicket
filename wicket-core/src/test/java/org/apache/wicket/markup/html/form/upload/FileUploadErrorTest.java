@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.markup.html.form.upload;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Locale;
 
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * see WICKET-2015
  */
-public class FileUploadErrorTest extends WicketTestCase
+class FileUploadErrorTest extends WicketTestCase
 {
 	private FormTester formTester;
 	private final String textFieldId = "textField";
@@ -38,8 +40,8 @@ public class FileUploadErrorTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		// Start and render the test page
 		tester.startPage(FileUploadError.class);
@@ -55,7 +57,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	 * FileUpload is empty on submit: Validation fails to see that TextField is also required.
 	 */
 	@Test
-	public void testSubmit_NoInput()
+	void testSubmit_NoInput()
 	{
 		formTester.submit();
 		tester.assertErrorMessages("'textField' is required.");
@@ -65,7 +67,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	 * FileUpload is filled on submit: TexttField is required.
 	 */
 	@Test
-	public void testSubmit_NoInput_FileUploaded()
+	void testSubmit_NoInput_FileUploaded()
 	{
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
 		formTester.submit();
@@ -77,7 +79,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	 * FileUpload is empty on submit: Validation fails to report too short TextField input.
 	 */
 	@Test
-	public void testSubmit_NotValidTextFieldValue()
+	void testSubmit_NotValidTextFieldValue()
 	{
 		formTester.setValue(textFieldId, "te");
 		formTester.submit();
@@ -90,7 +92,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	 * FileUpload is empty on submit: Validation fails to report too short TextField input.
 	 */
 	@Test
-	public void testSubmit_NotValidTextFieldValue2()
+	void testSubmit_NotValidTextFieldValue2()
 	{
 		formTester.setValue(textFieldId, "12345678901");
 		formTester.submit();
@@ -103,7 +105,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	 * FileUpload is filled on submit: Validation reports too short TextField input.
 	 */
 	@Test
-	public void testSubmit_NotValidTextFieldValue_FileUploaded()
+	void testSubmit_NotValidTextFieldValue_FileUploaded()
 	{
 		formTester.setValue(textFieldId, "te");
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
@@ -117,7 +119,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	 * Throwing exception confirms that value is received.
 	 */
 	@Test
-	public void testSubmit_ValidTextField_NoFile()
+	void testSubmit_ValidTextField_NoFile()
 	{
 		formTester.setValue(textFieldId, FileUploadError.THIS_VALUE_SHOULD_THROW_EXCEPTION);
 		try
@@ -133,7 +135,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	}
 
 	@Test
-	public void testSubmit_ValidTextField_WithFile()
+	void testSubmit_ValidTextField_WithFile()
 	{
 		formTester.setValue(textFieldId, "test value");
 		formTester.setFile(fileUploadId, new File(testUploadFilePath), "UTF-8");
@@ -143,7 +145,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	}
 
 	@Test
-	public void testSubmit_RequiredFileUpload_Ok()
+	void testSubmit_RequiredFileUpload_Ok()
 	{
 		((FileUploadField)tester.getLastRenderedPage().get("form:" + fileUploadId)).setRequired(true);
 
@@ -155,7 +157,7 @@ public class FileUploadErrorTest extends WicketTestCase
 	}
 
 	@Test
-	public void testSubmit_RequiredFileUpload_ShouldFailWithValidationError()
+	void testSubmit_RequiredFileUpload_ShouldFailWithValidationError()
 	{
 		((FileUploadField)tester.getLastRenderedPage().get("form:" + fileUploadId)).setRequired(true);
 

@@ -31,7 +31,7 @@ public class HeaderSectionBasePage_12 extends WebPage
 	/**
 	 * 
 	 */
-	public HeaderSectionBasePage_12()
+    HeaderSectionBasePage_12()
 	{
 		// Create border and add it to the page
 		add(new HeaderSectionBorder("border"));

@@ -16,23 +16,25 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class ModifyCookiePageTest extends WicketTestCase
+class ModifyCookiePageTest extends WicketTestCase
 {
 	/**
 	 * testSetCookieWithinLinkListener()
 	 */
 	@Test
-	public void testSetCookieWithinLinkListener()
+	void testSetCookieWithinLinkListener()
 	{
 		// render page
 		tester.startPage(ModifyCookiePage.class);

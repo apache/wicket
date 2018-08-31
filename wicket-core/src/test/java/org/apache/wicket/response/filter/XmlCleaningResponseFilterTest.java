@@ -18,24 +18,26 @@ package org.apache.wicket.response.filter;
 
 import static org.apache.wicket.page.XmlPartialPageUpdate.END_ROOT_ELEMENT;
 import static org.apache.wicket.page.XmlPartialPageUpdate.START_ROOT_ELEMENT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.util.string.AppendingStringBuffer;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 
 /**
  * Tests for XmlCleaningResponseFilter
  */
-public class XmlCleaningResponseFilterTest extends Assert {
+class XmlCleaningResponseFilterTest {
 
 	/**
 	 * Tests that invalid XML characters are removed
 	 * @throws Exception
 	 */
 	@Test
-	public void filterInvalid() throws Exception
+	void filterInvalid() throws Exception
 	{
 		XmlCleaningResponseFilter filter = new XmlCleaningResponseFilter();
 		int[] invalidChars = new int[] {0x0008, 0x0010, 0xD800, 0xDDDD, 0xFFFE};
@@ -45,8 +47,7 @@ public class XmlCleaningResponseFilterTest extends Assert {
 			CharSequence text = createText(invalidChar);
 
 			AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
-			assertEquals(String.format("checking Unicode codepoint 0x%X:", invalidChar),
-					START_ROOT_ELEMENT+END_ROOT_ELEMENT, filtered.toString());
+			assertEquals(START_ROOT_ELEMENT+END_ROOT_ELEMENT, filtered.toString(), String.format("checking Unicode codepoint 0x%X:", invalidChar));
 		}
 	}
 
@@ -55,7 +56,7 @@ public class XmlCleaningResponseFilterTest extends Assert {
 	 * @throws Exception
 	 */
 	@Test
-	public void filterMultipleInvalid() throws Exception
+	void filterMultipleInvalid() throws Exception
 	{
 		XmlCleaningResponseFilter filter = new XmlCleaningResponseFilter();
 		CharSequence text = new StringBuilder()
@@ -76,7 +77,7 @@ public class XmlCleaningResponseFilterTest extends Assert {
 	 * @throws Exception
 	 */
 	@Test
-	public void filterValid() throws Exception
+	void filterValid() throws Exception
 	{
 		XmlCleaningResponseFilter filter = new XmlCleaningResponseFilter();
 		int[] validChars = new int[] {0x9, 0xA, 'a', 0xE000, 0xFFFC, 0x10400};
@@ -86,8 +87,7 @@ public class XmlCleaningResponseFilterTest extends Assert {
 			CharSequence text = createText(validChar);
 
 			AppendingStringBuffer filtered = filter.filter(new AppendingStringBuffer(text));
-			assertEquals(String.format("checking Unicode codepoint 0x%X:", validChar),
-					text.toString(), filtered.toString());
+			assertEquals(text.toString(), filtered.toString(), String.format("checking Unicode codepoint 0x%X:", validChar));
 		}
 	}
 
@@ -107,7 +107,7 @@ public class XmlCleaningResponseFilterTest extends Assert {
 	 * @throws Exception
 	 */
 	@Test
-	public void shouldFilter() throws Exception
+	void shouldFilter() throws Exception
 	{
 		XmlFilter filter = new XmlFilter();
 

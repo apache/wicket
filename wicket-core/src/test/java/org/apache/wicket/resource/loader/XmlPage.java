@@ -30,7 +30,7 @@ public class XmlPage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public XmlPage()
+    XmlPage()
 	{
 	}
 

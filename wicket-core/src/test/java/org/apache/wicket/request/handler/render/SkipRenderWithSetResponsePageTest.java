@@ -16,28 +16,30 @@
  */
 package org.apache.wicket.request.handler.render;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.SimplePage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test if rendering phase is skipped if we invoke setResponsePage inside page constructor
  *
  * https://issues.apache.org/jira/browse/WICKET-4636
  */
-public class SkipRenderWithSetResponsePageTest extends WicketTestCase
+class SkipRenderWithSetResponsePageTest extends WicketTestCase
 {
 	@Test
-	public void setResponsePageInsideConstructor()
+	void setResponsePageInsideConstructor()
 	{
 		tester.startPage(NotToRenderConstructorPage.class);
 		tester.assertRenderedPage(SimplePage.class);
 	}
 
-	public static class NotToRenderConstructorPage extends WebPage
+    public static class NotToRenderConstructorPage extends WebPage
 	{
-		public NotToRenderConstructorPage()
+        public NotToRenderConstructorPage()
 		{
 			setResponsePage(SimplePage.class);
 		}

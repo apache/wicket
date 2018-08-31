@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -27,12 +29,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5426
  */
-public abstract class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
+abstract class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
 {
 	/**
 	 * The page must be stateless because the stateful component
@@ -41,7 +43,7 @@ public abstract class WicketTesterLazyIsPageStatelessBase extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void isStateless() throws Exception
+	void isStateless() throws Exception
 	{
 		tester.startPage(MyPage.class);
 

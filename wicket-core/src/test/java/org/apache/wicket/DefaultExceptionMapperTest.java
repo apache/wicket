@@ -16,6 +16,7 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -32,13 +33,12 @@ import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link DefaultExceptionMapper}
  */
-public class DefaultExceptionMapperTest extends WicketTestCase
+class DefaultExceptionMapperTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -58,7 +58,7 @@ public class DefaultExceptionMapperTest extends WicketTestCase
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-4659">WICKET-4659</a>
 	 */
 	@Test
-	public void shouldDisableCaching()
+	void shouldDisableCaching()
 	{
 		WebResponse response = mock(WebResponse.class);
 		tester.getRequestCycle().setResponse(response);
@@ -71,7 +71,7 @@ public class DefaultExceptionMapperTest extends WicketTestCase
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3520">WICKET-3520</a>
 	 */
 	@Test
-	public void showNoExceptionPage()
+	void showNoExceptionPage()
 	{
 		tester.setExposeExceptions(false);
 
@@ -80,7 +80,7 @@ public class DefaultExceptionMapperTest extends WicketTestCase
 
 		tester.submitForm("form");
 
-		Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, tester.getLastResponse()
+		assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, tester.getLastResponse()
 			.getStatus());
 
 		tester.destroy();
@@ -100,7 +100,7 @@ public class DefaultExceptionMapperTest extends WicketTestCase
 		 * 
 		 * @param parameters
 		 */
-		public ShowNoExceptionPage(final PageParameters parameters)
+		ShowNoExceptionPage(final PageParameters parameters)
 		{
 			super(parameters);
 

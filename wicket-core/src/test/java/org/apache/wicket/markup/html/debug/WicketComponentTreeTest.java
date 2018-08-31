@@ -17,14 +17,14 @@
 package org.apache.wicket.markup.html.debug;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */
-public class WicketComponentTreeTest extends WicketTestCase
+class WicketComponentTreeTest extends WicketTestCase
 {
 
 	/**
@@ -33,7 +33,7 @@ public class WicketComponentTreeTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test1() throws Exception
+    void test1() throws Exception
 	{
 		// disable the component use check, as this consumes extra
 		// memory (label size doubles to 1.1K)

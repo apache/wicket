@@ -18,14 +18,14 @@ package org.apache.wicket.markup.head;
 
 import org.apache.wicket.markup.html.header.response.ConcretePage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * This test verifies the ordering of header items.
  * 
  * @author papegaaij
  */
-public class HeaderResponseTest extends WicketTestCase
+class HeaderResponseTest extends WicketTestCase
 {
 	/**
 	 * Renders items in child-first order and priority items and parent-first order. The expected
@@ -40,7 +40,7 @@ public class HeaderResponseTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testAllMarkup() throws Exception
+    void testAllMarkup() throws Exception
 	{
 		executeTest(ConcretePage.class, "ExpectedResult.html");
 	}
@@ -50,7 +50,7 @@ public class HeaderResponseTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testAllMarkupPageFirst() throws Exception
+    void testAllMarkupPageFirst() throws Exception
 	{
 		tester.getApplication()
 			.getResourceSettings()

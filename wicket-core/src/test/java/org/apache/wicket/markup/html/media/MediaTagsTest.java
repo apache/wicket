@@ -16,12 +16,15 @@
  */
 package org.apache.wicket.markup.html.media;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class MediaTagsTest extends WicketTestCase
+class MediaTagsTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -30,7 +33,7 @@ public class MediaTagsTest extends WicketTestCase
 	}
 
 	@Test
-	public void audioTagIsRenderedRight()
+	void audioTagIsRenderedRight()
 	{
 		tester.startPage(MediaTagsTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
@@ -42,31 +45,27 @@ public class MediaTagsTest extends WicketTestCase
 		assertTrue(createTagByAttribute.hasAttribute("muted"));
 		assertEquals("user-credentials", createTagByAttribute.getAttribute("crossorigin"));
 		String attribute = createTagByAttribute.getAttribute("src");
-		assertTrue("The time period is set right in the src attribute",
-			attribute.contains("#t=5,10"));
-		assertTrue("page parameter is in the url of the src attribute",
-			attribute.contains("test=test"));
+		assertTrue(attribute.contains("#t=5,10"), "The time period is set right in the src attribute");
+		assertTrue(attribute.contains("test=test"), "page parameter is in the url of the src attribute");
 	}
 
 	@Test
-	public void videoTagIsRenderedRight()
+	void videoTagIsRenderedRight()
 	{
 		tester.startPage(MediaTagsTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
 		TagTester createTagByAttribute = TagTester.createTagByAttribute(lastResponseAsString,
 			"video");
 		String attribute = createTagByAttribute.getAttribute("poster");
-		assertTrue("page parameter is in the url of the poster",
-			attribute.contains("test2=test2"));
+		assertTrue(attribute.contains("test2=test2"), "page parameter is in the url of the poster");
 		String attributesrc = createTagByAttribute.getAttribute("src");
-		assertTrue("video url is in the src attribute",
-			attributesrc.contains("dummyVideo.m4a"));
+		assertTrue(attributesrc.contains("dummyVideo.m4a"), "video url is in the src attribute");
 		assertEquals("500", createTagByAttribute.getAttribute("width"));
 		assertEquals("400", createTagByAttribute.getAttribute("height"));
 	}
 
 	@Test
-	public void extendedVideoTagIsRenderedRight()
+	void extendedVideoTagIsRenderedRight()
 	{
 		tester.startPage(MediaTagsExtendedTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();

@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import javax.servlet.http.Cookie;
 
-import org.junit.Assert;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 
@@ -52,7 +53,7 @@ public class CookiePage extends DummyHomePage
 		super.onConfigure();
 
 		Cookie cookie = ((WebRequest) getRequest()).getCookie(cookieName);
-		Assert.assertEquals(cookieValue, cookie.getValue());
+		assertEquals(cookieValue, cookie.getValue());
 
 		WebResponse response = (WebResponse) getResponse();
 		response.addCookie(cookie);

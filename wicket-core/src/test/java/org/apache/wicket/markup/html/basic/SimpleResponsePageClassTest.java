@@ -16,23 +16,23 @@
  */
 package org.apache.wicket.markup.html.basic;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  * 
  */
-public class SimpleResponsePageClassTest extends WicketTestCase
+class SimpleResponsePageClassTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void responsePageClass() throws Exception
+	void responsePageClass() throws Exception
 	{
 		tester.startPage(SimpleResponsePageClass.class);
 		SimpleResponsePageClass manageBook = (SimpleResponsePageClass)tester.getLastRenderedPage();
@@ -42,6 +42,6 @@ public class SimpleResponsePageClassTest extends WicketTestCase
 		tester.submitForm(form);
 
 		// assertion failed, getLastRenderedPage() return null.
-		assertThat(tester.getLastRenderedPage(), instanceOf(SimplePage.class));
+		assertThat(tester.getLastRenderedPage()).isInstanceOf(SimplePage.class);
 	}
 }

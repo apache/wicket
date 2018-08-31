@@ -16,24 +16,28 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class HomePageTest extends WicketTestCase
+class HomePageTest extends WicketTestCase
 {
 
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
@@ -43,11 +47,10 @@ public class HomePageTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void withoutBorder()
+	void withoutBorder()
 	{
 		tester.executeAjaxEvent("form:submit", "click");
-		assertEquals("Expected one error message",
-			tester.getMessages(FeedbackMessage.ERROR).size(), 2);
+		assertEquals(2, tester.getMessages(FeedbackMessage.ERROR).size(), "Expected one error message");
 		assertTrue(((HomePage)tester.getLastRenderedPage()).hitOnError);
 		assertFalse(((HomePage)tester.getLastRenderedPage()).hitOnSubmit);
 	}
@@ -56,7 +59,7 @@ public class HomePageTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void withoutBorder2()
+	void withoutBorder2()
 	{
 		FormTester formTester = tester.newFormTester("form");
 		formTester.setValue("textfield1", "testxxx");
@@ -70,11 +73,10 @@ public class HomePageTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void withBorder()
+	void withBorder()
 	{
 		tester.executeAjaxEvent("border:form2:submit", "click");
-		assertEquals("Expected one error message",
-			tester.getMessages(FeedbackMessage.ERROR).size(), 2);
+		assertEquals(2, tester.getMessages(FeedbackMessage.ERROR).size(), "Expected one error message");
 		assertTrue(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnError);
 		assertFalse(((MyBorder)tester.getLastRenderedPage().get("border")).hitOnSubmit);
 	}
@@ -83,7 +85,7 @@ public class HomePageTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void withBorder2()
+	void withBorder2()
 	{
 		TextField<?> textfield = (TextField<?>)tester.getLastRenderedPage().get(
 			"border:form2:border_body:textfield1");
@@ -100,7 +102,7 @@ public class HomePageTest extends WicketTestCase
 	 * wicket-2202
 	 */
 	@Test
-	public void withPanelAjax()
+	void withPanelAjax()
 	{
 		tester.executeAjaxEvent("form3:submit", "click");
 
@@ -112,7 +114,7 @@ public class HomePageTest extends WicketTestCase
 	 * wicket-2202
 	 */
 	@Test
-	public void withPanelForm()
+	void withPanelForm()
 	{
 		tester.clickLink("form3:submit2");
 		HomePage page = (HomePage)tester.getLastRenderedPage();
@@ -123,7 +125,7 @@ public class HomePageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test_2589() throws Exception
+	void test_2589() throws Exception
 	{
 		tester.startPage(HomePage1.class);
 		tester.assertRenderedPage(HomePage1.class);

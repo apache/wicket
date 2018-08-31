@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.Component;
@@ -30,28 +32,27 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests that {@link Component}, {@link Behavior} and {@link org.apache.wicket.ajax.attributes.IAjaxCallListener} that implements
  * {@link IHeaderContributor} actually contributes to the header
  */
-public class HeaderContributorTest extends WicketTestCase
+class HeaderContributorTest extends WicketTestCase
 {
 
 	/**
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3059">WICKET-3059</a>
 	 */
 	@Test
-	public void testHeaderContribution()
+	void testHeaderContribution()
 	{
 		HeaderContributorTestPage page = new HeaderContributorTestPage();
 		tester.startPage(page);
 
-		Assert.assertTrue("component", page.component.get());
-		Assert.assertTrue("behavior", page.behavior.get());
-		Assert.assertTrue("callDecorator", page.callDecorator.get());
+		assertTrue(page.component.get(), "component");
+		assertTrue(page.behavior.get(), "behavior");
+		assertTrue(page.callDecorator.get(), "callDecorator");
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class HeaderContributorTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public HeaderContributorTestPage()
+		HeaderContributorTestPage()
 		{
 			add(new AjaxEventBehavior("dummy")
 			{
@@ -130,7 +131,7 @@ public class HeaderContributorTest extends WicketTestCase
 		 * 
 		 * @param callDecorator
 		 */
-		public HeaderContributingCallDecorator(AtomicBoolean callDecorator)
+		HeaderContributingCallDecorator(AtomicBoolean callDecorator)
 		{
 			this.callDecorator = callDecorator;
 		}

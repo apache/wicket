@@ -16,18 +16,20 @@
  */
 package org.apache.wicket.markup.html.list;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Locale;
 
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for simple table behavior.
  */
-public class PagedTableNavigatorWithMarginTest extends WicketTestCase
+class PagedTableNavigatorWithMarginTest extends WicketTestCase
 {
 
 	/**
@@ -36,7 +38,7 @@ public class PagedTableNavigatorWithMarginTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void pagedTable() throws Exception
+	void pagedTable() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(PagedTableNavigatorWithMarginPage.class);

@@ -16,25 +16,28 @@
  */
 package org.apache.wicket.model;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.Serializable;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class DetachableTest extends WicketTestCase
+class DetachableTest extends WicketTestCase
 {
 
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-3872">WICKET-3872</a>
 	 */
 	@Test
-	public void testDetachRemovedChildrenTree()
+	void testDetachRemovedChildrenTree()
 	{
 		DetachableComponent a = new DetachableComponent("a");
 		DetachableComponent ab = new DetachableComponent("b");

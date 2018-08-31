@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.queueing.transparentresolvers;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
+class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 {
 	/**
 	 * Test case for:
@@ -33,7 +35,7 @@ public class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 	 *  - https://issues.apache.org/jira/browse/WICKET-5728
 	 */
 	@Test
-	public void startSubPageWithTWMCinTheParentPage() 
+	void startSubPageWithTWMCinTheParentPage()
 	{
 		tester.startPage(SubPage.class);
 		tester.assertRenderedPage(SubPage.class);
@@ -52,7 +54,7 @@ public class DequeueingTransparentWebMarkupContainerTest extends WicketTestCase
 	 * Queuing a component within an enclosure
 	 */
 	@Test
-	public void queuedComponentsInsideTransparentContainer()
+	void queuedComponentsInsideTransparentContainer()
 	{
 		tester.startPage(TransparentContainerQueuePage.class);
 		tester.assertRenderedPage(TransparentContainerQueuePage.class);

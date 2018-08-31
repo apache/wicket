@@ -16,18 +16,22 @@
  */
 package org.apache.wicket.markup.html.border;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class ComponentBorderTest extends WicketTestCase
+class ComponentBorderTest extends WicketTestCase
 {
 	private static final String TEST_TEXT = "Meaning of life? 42!";
 
@@ -37,7 +41,7 @@ public class ComponentBorderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void componentUseCheck() throws Exception
+	void componentUseCheck() throws Exception
 	{
 		/*
 		 * Suppose:
@@ -65,7 +69,7 @@ public class ComponentBorderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void hideableBorder() throws Exception
+	void hideableBorder() throws Exception
 	{
 		executeTest(HideableBorderPage.class, "HideableBorderPage_ExpectedResult.html");
 
@@ -83,72 +87,68 @@ public class ComponentBorderTest extends WicketTestCase
 		ajaxResponse = tester.getLastResponseAsString();
 		tester.assertComponentOnAjaxResponse(wrapper);
 	}
-	
+
 	@Test
-	public void borderWithForm() throws Exception
+	void borderWithForm() throws Exception
 	{
 		/*
 		 * Suppose we have a border like this:
 		 * 
-		 * <div wicket:id="border">
-		 * 	<form>
-		 * 		<body/>
-		 * 	</form>
-		 * </div>
+		 * <div wicket:id="border"> <form> <body/> </form> </div>
 		 * 
-		 * Any form components inside its body must be correctly 
-		 * submitted with the outer form.
+		 * Any form components inside its body must be correctly submitted with the outer form.
 		 */
 		Model<String> model = Model.of("");
 		BorderWithFormPage page = new BorderWithFormPage(model);
-		
+
 		tester.startPage(page);
-		
-		FormTester formTester = tester.
-			newFormTester("borderContainer:formBorder:borderContainer:form");
-		
+
+		FormTester formTester = tester
+			.newFormTester("borderContainer:formBorder:borderContainer:form");
+
 		formTester.setValue("formBorder_body:text", TEST_TEXT);
 		formTester.submit();
-		
+
 		assertEquals(TEST_TEXT, model.getObject());
 	}
-	
+
 	@Test
-	public void borderWithEnclosurePage() throws Exception
+	void borderWithEnclosurePage() throws Exception
 	{
 		tester.startPage(BorderWithEnclosurePage.class);
 		tester.assertRenderedPage(BorderWithEnclosurePage.class);
 	}
-	
+
 	@Test
-	public void borderWithAutoLabel() throws Exception
+	void borderWithAutoLabel() throws Exception
 	{
 		tester.startPage(BorderWithAutoLabelPage.class);
 		tester.assertRenderedPage(BorderWithAutoLabelPage.class);
 	}
-	
+
 	@Test
-	public void borderWithBodyInsideAnotherBody() throws Exception
+	void borderWithBodyInsideAnotherBody() throws Exception
 	{
 		BorderWithNestedBodyPage page = tester.startPage(BorderWithNestedBodyPage.class);
-		
-		Border borderTest = (Border) page.get("outerBorder");
+
+		Border borderTest = (Border)page.get("outerBorder");
 		Border nestedBorder = (Border)borderTest.get("nestedBorder");
-		
+
 		assertNotNull(borderTest.getBodyContainer().getParent());
 		assertNotNull(nestedBorder.getBodyContainer().getParent());
-		
-		//https://issues.apache.org/jira/browse/WICKET-6303
+
+		// https://issues.apache.org/jira/browse/WICKET-6303
 		assertTrue(page.isBehaviorRendered());
 	}
-	
+
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6374
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-    public void borderExtendingMarkup() throws Exception
-    {
-        tester.startComponentInPage(ExtendedBorder.class);
-    }
+	void borderExtendingMarkup() throws Exception
+	{
+		tester.startComponentInPage(ExtendedBorder.class);
+	}
 }

@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.wicket.versioning.InMemoryPageStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link AsynchronousDataStore}
@@ -63,7 +63,7 @@ public class AsynchronousDataStoreTest
 	 * @throws Exception
 	 */
 	@Test
-	public void randomOperations() throws Exception
+    void randomOperations() throws Exception
 	{
 		ExecutorService executorService = Executors.newFixedThreadPool(50);
 
@@ -94,12 +94,12 @@ public class AsynchronousDataStoreTest
 			}
 		}
 
-		protected String getSessionId()
+		String getSessionId()
 		{
 			return SESSIONS[RND.nextInt(SESSIONS.length)];
 		}
 
-		protected int getPageId()
+		int getPageId()
 		{
 			return PAGE_IDS[RND.nextInt(PAGE_IDS.length)];
 		}

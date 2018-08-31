@@ -21,12 +21,12 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.AbstractStringResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the usages of {@link RestartResponseException}
  */
-public class RestartResponseExceptionTest extends WicketTestCase
+class RestartResponseExceptionTest extends WicketTestCase
 {
 	/**
 	 * Tests that following several {@link RestartResponseException}s will actually leave you at the
@@ -35,7 +35,7 @@ public class RestartResponseExceptionTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-2634
 	 */
 	@Test
-	public void doubleRedirect()
+    void doubleRedirect()
 	{
 		tester.startPage(RestartPage1.class);
 		tester.assertRenderedPage(MyDummyPage.class);

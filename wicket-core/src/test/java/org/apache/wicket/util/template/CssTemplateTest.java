@@ -18,13 +18,13 @@ package org.apache.wicket.util.template;
 
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * Test of {@link CssTemplate}
  */
-public class CssTemplateTest
+class CssTemplateTest
 {
 
 	/**
@@ -33,7 +33,7 @@ public class CssTemplateTest
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3187">WICKET-3187</a>
 	 */
 	@Test
-	public void simpleConstructor()
+    void simpleConstructor()
 	{
 		new CssTemplate(new TextTemplate()
 		{

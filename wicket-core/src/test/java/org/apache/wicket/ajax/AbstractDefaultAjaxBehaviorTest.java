@@ -16,14 +16,15 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.attributes.AjaxAttributeName;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
@@ -31,13 +32,13 @@ import org.mockito.Mockito;
  * 
  * @since 6.0
  */
-public class AbstractDefaultAjaxBehaviorTest extends Assert
+class AbstractDefaultAjaxBehaviorTest
 {
 	/**
 	 * Checks the generated JSON for Ajax's attributes
 	 */
 	@Test
-	public void renderAjaxAttributes()
+	void renderAjaxAttributes()
 	{
 		AjaxRequestAttributes attributes = new AjaxRequestAttributes();
 		attributes.getExtraParameters().put("param1", 123);

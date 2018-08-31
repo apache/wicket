@@ -17,14 +17,14 @@
 package org.apache.wicket.resource.aggregator;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the {@link org.apache.wicket.markup.head.ResourceAggregator} class.
  * 
  * @author Hielke Hoeve
  */
-public class ResourceAggregatorRenderTest extends WicketTestCase
+class ResourceAggregatorRenderTest extends WicketTestCase
 {
 	/**
 	 * tests a simple script, including jquery and wicket event js as deps
@@ -32,7 +32,7 @@ public class ResourceAggregatorRenderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testPage1() throws Exception
+    void testPage1() throws Exception
 	{
 		tester.startPage(ResourceAggregatorTest1Page.class);
 		tester.assertResultPage(ResourceAggregatorTest1Page.class,
@@ -45,7 +45,7 @@ public class ResourceAggregatorRenderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testPage2() throws Exception
+    void testPage2() throws Exception
 	{
 		tester.startPage(ResourceAggregatorTest2Page.class);
 		tester.assertResultPage(ResourceAggregatorTest2Page.class,

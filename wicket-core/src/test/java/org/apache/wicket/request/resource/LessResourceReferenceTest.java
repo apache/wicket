@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.MarkupContainer;
@@ -30,8 +33,8 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * <a href"https://issues.apache.org/jira/browse/WICKET-4732">WICKET-4732</a>
@@ -67,8 +70,8 @@ public class LessResourceReferenceTest extends WicketTestCase
 		}
 	}
 
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		PROCESS_RESPONSE_CALLED.set(false);
 	}
@@ -105,7 +108,7 @@ public class LessResourceReferenceTest extends WicketTestCase
 	 * instead of automatically created PackageResourceReference
 	 */
 	@Test
-	public void processLessResources()
+	void processLessResources()
 	{
 		// load the page to register the resource
 		LessResourcePage page = new LessResourcePage();
@@ -122,7 +125,7 @@ public class LessResourceReferenceTest extends WicketTestCase
 	 * Tests that a LessResourceReference is request-able without being registered in ResourceReferenceRegistry
 	 */
 	@Test
-	public void processLessResourcesWithoutStartingAPage()
+	void processLessResourcesWithoutStartingAPage()
 	{
 		// make a request to the resource that is not registered in the ResourceReferenceRegistry
 		CharSequence urlToReference = "./wicket/resource/org.apache.wicket.request.resource.LessResourceReferenceTest/LessResourceReference.less";

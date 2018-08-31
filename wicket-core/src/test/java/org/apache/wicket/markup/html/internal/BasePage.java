@@ -21,7 +21,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class BasePage extends WebPage {
 
-	public BasePage(PageParameters parameters) 
+	BasePage(PageParameters parameters)
 	{
 		super(parameters);
 	}

@@ -17,6 +17,8 @@
 package org.apache.wicket.protocol.http;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,20 +28,20 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for the CsrfPreventionRequestCycleListener. FirstPage has a link that when clicked
  * should render SecondPage.
  */
-public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
+class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 {
 	/**
 	 * Sets up the test cases. Installs the CSRF listener and renders the FirstPage.
 	 */
-	@Before
-	public void startWithFirstPageRender()
+	@BeforeEach
+	void startWithFirstPageRender()
 	{
 		WebApplication application = tester.getApplication();
 
@@ -59,7 +61,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests that disabling the CSRF listener doesn't check Origin headers. */
 	@Test
-	public void disabledListenerDoesntCheckAnything()
+	void disabledListenerDoesntCheckAnything()
 	{
 		csrfEnabled = false;
 		tester.clickLink("link");
@@ -70,7 +72,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests that disabling the CSRF listener doesn't check Origin headers. */
 	@Test
-	public void disabledListenerDoesntCheckMismatchedOrigin()
+	void disabledListenerDoesntCheckMismatchedOrigin()
 	{
 		csrfEnabled = false;
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://malicioussite.com/");
@@ -81,7 +83,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests the default setting of aborting a missing Origin. */
 	@Test
-	public void withoutOriginAllowed()
+	void withoutOriginAllowed()
 	{
 		csrfListener.setNoOriginAction(CsrfAction.ALLOW);
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, null);
@@ -91,7 +93,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests the alternative action of suppressing a request without Origin header */
 	@Test
-	public void withoutOriginSuppressed()
+	void withoutOriginSuppressed()
 	{
 		csrfListener.setNoOriginAction(CsrfAction.SUPPRESS);
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, null);
@@ -102,7 +104,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests the alternative action of aborting a request without Origin header */
 	@Test
-	public void withoutOriginAborted()
+	void withoutOriginAborted()
 	{
 		csrfListener.setNoOriginAction(CsrfAction.ABORT);
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, null);
@@ -112,7 +114,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests when the Origin header matches the request. */
 	@Test
-	public void matchingOriginsAllowed()
+	void matchingOriginsAllowed()
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost/");
@@ -125,7 +127,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests when the default action is changed to ALLOW when origins conflict. */
 	@Test
-	public void conflictingOriginsAllowed()
+	void conflictingOriginsAllowed()
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
@@ -138,7 +140,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests when the default action is changed to SUPPRESS when origins conflict. */
 	@Test
-	public void conflictingOriginsSuppressed()
+	void conflictingOriginsSuppressed()
 	{
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 		csrfListener.setConflictingOriginAction(CsrfAction.SUPPRESS);
@@ -151,7 +153,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests the default action to ABORT when origins conflict. */
 	@Test
-	public void conflictingOriginsAborted()
+	void conflictingOriginsAborted()
 	{
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 
@@ -162,7 +164,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests custom error code/message when the default action is ABORT. */
 	@Test
-	public void conflictingOriginsAbortedWith401Unauhorized()
+	void conflictingOriginsAbortedWith401Unauhorized()
 	{
 		setErrorCode(401);
 		setErrorMessage("NOT AUTHORIZED");
@@ -177,7 +179,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests whitelisting for conflicting origins. */
 	@Test
-	public void conflictingButWhitelistedOriginAllowed()
+	void conflictingButWhitelistedOriginAllowed()
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
 		csrfListener.addAcceptedOrigin("example.com");
@@ -191,7 +193,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests whitelisting with conflicting subdomain origin. */
 	@Test
-	public void conflictingButWhitelistedSubdomainOriginAllowed()
+	void conflictingButWhitelistedSubdomainOriginAllowed()
 	{
 		csrfListener.addAcceptedOrigin("example.com");
 		csrfListener.setConflictingOriginAction(CsrfAction.ALLOW);
@@ -209,7 +211,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	 * {@link CsrfPreventionRequestCycleListener#isChecked(IRequestablePage)})
 	 */
 	@Test
-	public void conflictingOriginPageNotCheckedAllowed()
+	void conflictingOriginPageNotCheckedAllowed()
 	{
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://example.com/");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
@@ -225,7 +227,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests overriding the onSuppressed method for a conflicting origin. */
 	@Test
-	public void conflictingOriginSuppressedCallsCustomHandler()
+	void conflictingOriginSuppressedCallsCustomHandler()
 	{
 		// redirect to third page to ensure we are not suppressed to the first page, nor that the
 		// request was not suppressed and the second page was rendered erroneously
@@ -251,7 +253,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests overriding the onAllowed method for a conflicting origin. */
 	@Test
-	public void conflictingOriginAllowedCallsCustomHandler()
+	void conflictingOriginAllowedCallsCustomHandler()
 	{
 		// redirect to third page to ensure we are not suppressed to the first page, nor that the
 		// request was not allowed and the second page was rendered erroneously
@@ -277,7 +279,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests overriding the onAborted method for a conflicting origin. */
 	@Test
-	public void conflictingOriginAbortedCallsCustomHandler()
+	void conflictingOriginAbortedCallsCustomHandler()
 	{
 		// redirect to third page to ensure we are not suppressed to the first page, nor that the
 		// request was not aborted and the second page was rendered erroneously
@@ -308,7 +310,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests whether a different port, but same scheme and hostname is considered a conflict. */
 	@Test
-	public void differentPortOriginAborted()
+	void differentPortOriginAborted()
 	{
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost:8080");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
@@ -320,7 +322,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests whether a different scheme, but same port and hostname is considered a conflict. */
 	@Test
-	public void differentSchemeOriginAborted()
+	void differentSchemeOriginAborted()
 	{
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "https://localhost");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
@@ -332,7 +334,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests whether only the hostname is considered when matching the Origin header. */
 	@Test
-	public void longerOriginAllowed()
+	void longerOriginAllowed()
 	{
 		tester.addRequestHeader(WebRequest.HEADER_ORIGIN, "http://localhost/supercalifragilisticexpialidocious");
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
@@ -345,7 +347,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests whether AJAX Links are checked through the CSRF listener */
 	@Test
-	public void simulatedCsrfAttackThroughAjaxIsPrevented()
+	void simulatedCsrfAttackThroughAjaxIsPrevented()
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.ABORT);
 
@@ -365,7 +367,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests whether AJAX Links are checked through the CSRF listener */
 	@Test
-	public void simulatedCsrfAttackIsSuppressed()
+	void simulatedCsrfAttackIsSuppressed()
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.SUPPRESS);
 
@@ -386,7 +388,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 
 	/** Tests whether form submits are checked through the CSRF listener */
 	@Test
-	public void simulatedCsrfAttackOnFormIsSuppressed()
+	void simulatedCsrfAttackOnFormIsSuppressed()
 	{
 		csrfListener.setConflictingOriginAction(CsrfAction.SUPPRESS);
 
@@ -445,7 +447,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		csrfListener.setErrorCode(errorCode);
 	}
 
-	private void setCustomRequestHandlerCheck(Predicate<IRequestHandler> check)
+	void setCustomRequestHandlerCheck(Predicate<IRequestHandler> check)
 	{
 		this.customRequestHandlerCheck = check;
 	}
@@ -471,12 +473,12 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		this.suppressHandler = suppressHandler;
 	}
 
-	private void setWhitelistHandler(Runnable whitelistHandler)
+	void setWhitelistHandler(Runnable whitelistHandler)
 	{
 		this.whitelistHandler = whitelistHandler;
 	}
 
-	private void setMatchedHandler(Runnable matchedHandler)
+	void setMatchedHandler(Runnable matchedHandler)
 	{
 		this.matchedHandler = matchedHandler;
 	}
@@ -508,7 +510,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 		if (!aborted)
 			throw new AssertionError("Request was not aborted");
 
-		assertThat("Response error code", tester.getLastResponse().getStatus(), is(errorCode));
+		assertEquals(errorCode, tester.getLastResponse().getStatus(), "Response error code");
 		assertThat("Response error message", tester.getLastResponse().getErrorMessage(),
 			is(errorMessage));
 	}
@@ -534,7 +536,7 @@ public class CsrfPreventionRequestCycleListenerTest extends WicketTestCase
 	/**
 	 * Asserts that the origins were checked and found non-conflicting.
 	 */
-	private void assertOriginsCheckedButNotConflicting()
+	void assertOriginsCheckedButNotConflicting()
 	{
 		if (aborted)
 			throw new AssertionError("Origin was checked and aborted");

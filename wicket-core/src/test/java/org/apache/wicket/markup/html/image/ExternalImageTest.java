@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,8 +26,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases to test the external image components
@@ -32,26 +34,26 @@ import org.junit.Test;
  * @author Tobias Soloschenko
  *
  */
-public class ExternalImageTest extends WicketTestCase
+class ExternalImageTest extends WicketTestCase
 {
 
 	@Test
-	public void testExternalImage()
+	void testExternalImage()
 	{
 		tester.startPage(ExternalImageTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		Assert.assertTrue(lastResponseAsString.contains(
+		assertTrue(lastResponseAsString.contains(
 			"<img wicket:id=\"externalImage1\" src=\"http://wicket.apache.org/img/wicket-7-bg.jpg\"/>"));
-		Assert.assertTrue(lastResponseAsString.contains(
+		assertTrue(lastResponseAsString.contains(
 			"<img id=\"externalImage2\" wicket:id=\"externalImage2\" src=\"http://wicket.apache.org/img/wicket-7-bg.jpg\" srcset=\"http://wicket.apache.org/img/wicket-7-bg-1.jpg x1, http://wicket.apache.org/img/wicket-7-bg-2.jpg x2\" sizes=\"s1,s2\"/>"));
-		Assert.assertTrue(lastResponseAsString.contains(
+		assertTrue(lastResponseAsString.contains(
 			"<source wicket:id=\"externalSource\" srcset=\"http://wicket.apache.org/img/wicket-7-bg-1.jpg , http://wicket.apache.org/img/wicket-7-bg-2.jpg x2\" sizes=\"1\" media=\"(min-width: 650px)\"/>"));
-		Assert.assertTrue(lastResponseAsString.contains(
-			"<img wicket:id=\"url\" src=\"http://www.google.de/test.jpg\"/>"));
+		assertTrue(lastResponseAsString
+			.contains("<img wicket:id=\"url\" src=\"http://www.google.de/test.jpg\"/>"));
 	}
 
 	@Test
-	public void testExternalImageModel()
+	void testExternalImageModel()
 	{
 		tester.startPage(ExternalImageTestPage.class);
 		tester.getLastResponse().getDocument();
@@ -60,14 +62,14 @@ public class ExternalImageTest extends WicketTestCase
 		ExternalImage externalImage2 = (ExternalImage)externalImage2Component;
 
 		TagTester tagById = tester.getTagById("externalImage2");
-		 IModel<List<Serializable>> srcSet = externalImage2.getSrcSetModel();
-		for (Serializable model :srcSet.getObject())
+		IModel<List<Serializable>> srcSet = externalImage2.getSrcSetModel();
+		for (Serializable model : srcSet.getObject())
 		{
 			String attribute = tagById.getAttribute("srcset");
-			Assert.assertTrue(attribute.contains(model.toString()));
+			assertTrue(attribute.contains(model.toString()));
 		}
 
 		String attribute = tagById.getAttribute("src");
-		Assert.assertEquals(externalImage2.getDefaultModelObject(), attribute);
+		assertEquals(externalImage2.getDefaultModelObject(), attribute);
 	}
 }

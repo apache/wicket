@@ -16,21 +16,24 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Juergen Donnerstag
  */
-public class SecurePackageResourceGuardTest extends WicketTestCase
+class SecurePackageResourceGuardTest extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void accept()
+	void accept()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.setAllowAccessToRootResources(false);
@@ -63,14 +66,14 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 		{
 			hit = true;
 		}
-		assertTrue("Expected an IllegalArgumentException", hit);
+		assertTrue(hit, "Expected an IllegalArgumentException");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void acceptAbsolutePath()
+	void acceptAbsolutePath()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.addPattern("+*.gif");
@@ -84,7 +87,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void fileOnly()
+	void fileOnly()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.setAllowAccessToRootResources(true);
@@ -106,7 +109,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	}
 
 	@Test
-	public void fileOnly_relative_allowed()
+	void fileOnly_relative_allowed()
 	{
 		// ".." is allowed as long as we have parent folder placeholder set in resource settings
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder("::");
@@ -116,7 +119,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	}
 
 	@Test
-	public void fileOnly_relative_not_allowed()
+	void fileOnly_relative_not_allowed()
 	{
 		// ".." is allowed as long as we have parent folder placeholder set in resource settings
 		tester.getApplication().getResourceSettings().setParentFolderPlaceholder(null);
@@ -129,7 +132,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void withDirectory()
+	void withDirectory()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.getPattern().clear();
@@ -146,7 +149,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void one()
+	void one()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.getPattern().clear();
@@ -163,7 +166,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void two()
+	void two()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.getPattern().clear();
@@ -183,7 +186,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void three()
+	void three()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.getPattern().clear();
@@ -203,7 +206,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void four()
+	void four()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.getPattern().clear();
@@ -231,7 +234,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void five()
+	void five()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.getPattern().clear();
@@ -249,7 +252,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void six()
+	void six()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.setAllowAccessToRootResources(true);
@@ -267,7 +270,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void seven()
+	void seven()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.getPattern().clear();
@@ -284,7 +287,7 @@ public class SecurePackageResourceGuardTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void eight()
+	void eight()
 	{
 		SecurePackageResourceGuard guard = new SecurePackageResourceGuard();
 		guard.getPattern().clear();

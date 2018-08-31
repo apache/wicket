@@ -16,19 +16,22 @@
  */
 package org.apache.wicket.markup.html.form.submitlink;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class TestHomePage extends WicketTestCase
+class TestHomePage extends WicketTestCase
 {
 	/**
 	 * testSubmitLinkByClickingLink()
 	 */
 	@Test
-	public void testSubmitLinkByClickingLink()
+	void testSubmitLinkByClickingLink()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
@@ -36,11 +39,10 @@ public class TestHomePage extends WicketTestCase
 		tester.getRequest().getPostParameters().setParameterValue("text", "Hello");
 		tester.clickLink("form:link");
 		assertEquals("Hello", home.getText());
-		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());
-		assertTrue("SubmitLink.onSubmit() has not been called!",
-			home.isSubmittedViaLinkBefore());
-		assertTrue("SubmitLink.onAfterSubmit() has not been called!",
-			home.isSubmittedViaLinkAfter());
+		assertTrue(home.isSubmitted(), "Form.onSubmit() has not been called!");
+		assertTrue(home.isSubmittedViaLinkBefore(), "SubmitLink.onSubmit() has not been called!");
+		assertTrue(home.isSubmittedViaLinkAfter(),
+			"SubmitLink.onAfterSubmit() has not been called!");
 
 	}
 
@@ -48,7 +50,7 @@ public class TestHomePage extends WicketTestCase
 	 * testSubmitLinkBySubmittingForm()
 	 */
 	@Test
-	public void testSubmitLinkBySubmittingForm()
+	void testSubmitLinkBySubmittingForm()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
@@ -58,18 +60,17 @@ public class TestHomePage extends WicketTestCase
 		tester.getRequest().getPostParameters().setParameterValue("link", "");
 		tester.submitForm("form");
 		assertEquals("Hello", home.getText());
-		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());
-		assertTrue("SubmitLink.onSubmit() has not been called!",
-			home.isSubmittedViaLinkBefore());
-		assertTrue("SubmitLink.onAfterSubmit() has not been called!",
-			home.isSubmittedViaLinkAfter());
+		assertTrue(home.isSubmitted(), "Form.onSubmit() has not been called!");
+		assertTrue(home.isSubmittedViaLinkBefore(), "SubmitLink.onSubmit() has not been called!");
+		assertTrue(home.isSubmittedViaLinkAfter(),
+			"SubmitLink.onAfterSubmit() has not been called!");
 	}
 
 	/**
 	 * testSubmitLinkByUsingFormTester()
 	 */
 	@Test
-	public void testSubmitLinkByUsingFormTester()
+	void testSubmitLinkByUsingFormTester()
 	{
 		tester.startPage(HomePage.class);
 		tester.assertRenderedPage(HomePage.class);
@@ -78,11 +79,10 @@ public class TestHomePage extends WicketTestCase
 		formTester.setValue("text", "Hello");
 		formTester.submit("link");
 		assertEquals("Hello", home.getText());
-		assertTrue("Form.onSubmit() has not been called!", home.isSubmitted());
-		assertTrue("SubmitLink.onSubmit() has not been called!",
-			home.isSubmittedViaLinkBefore());
-		assertTrue("SubmitLink.onAfterSubmit() has not been called!",
-			home.isSubmittedViaLinkAfter());
+		assertTrue(home.isSubmitted(), "Form.onSubmit() has not been called!");
+		assertTrue(home.isSubmittedViaLinkBefore(), "SubmitLink.onSubmit() has not been called!");
+		assertTrue(home.isSubmittedViaLinkAfter(),
+			"SubmitLink.onAfterSubmit() has not been called!");
 	}
 
 }

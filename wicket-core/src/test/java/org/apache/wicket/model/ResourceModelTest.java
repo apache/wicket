@@ -16,10 +16,12 @@
  */
 package org.apache.wicket.model;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link ResourceModel}.
@@ -36,7 +38,7 @@ public class ResourceModelTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+        public TestPage()
 		{
 			add(new Label("testlabel", new ResourceModel("testlabel")));
 
@@ -58,7 +60,7 @@ public class ResourceModelTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void resourceModel() throws Exception
+	void resourceModel() throws Exception
 	{
 		executeTest(TestPage.class, "ResourceModelTest$TestPage_expected.html");
 	}
@@ -67,7 +69,7 @@ public class ResourceModelTest extends WicketTestCase
 	 * Test forwarding of detach().
 	 */
 	@Test
-	public void detaching()
+	void detaching()
 	{
 
 		final boolean[] detached = { false };
@@ -89,6 +91,6 @@ public class ResourceModelTest extends WicketTestCase
 		wrapped.getObject();
 		wrapped.detach();
 
-		assertTrue(null, detached[0]);
+		assertTrue(detached[0]);
 	}
 }

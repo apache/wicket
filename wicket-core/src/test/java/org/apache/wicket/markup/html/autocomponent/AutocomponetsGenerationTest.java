@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.markup.html.autocomponent;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.core.util.string.ComponentRenderer;
 import org.apache.wicket.markup.IMarkupCache;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class AutocomponetsGenerationTest extends WicketTestCase
+class AutocomponetsGenerationTest extends WicketTestCase
 {
 
 	/*
@@ -30,7 +32,7 @@ public class AutocomponetsGenerationTest extends WicketTestCase
 	 * and for https://issues.apache.org/jira/browse/WICKET-5908
 	 */
 	@Test
-	public void autocomponetsNumberDoesntChange()
+	void autocomponetsNumberDoesntChange()
 	{
 		AutoComponentsPage autoComponentsPage = new AutoComponentsPage();
 		tester.startPage(autoComponentsPage);
@@ -51,7 +53,7 @@ public class AutocomponetsGenerationTest extends WicketTestCase
 	 * Test for https://issues.apache.org/jira/browse/WICKET-6116
 	 */
 	@Test
-	public void borderResolvesAutocomponents() throws Exception
+	void borderResolvesAutocomponents() throws Exception
 	{
 		AutoComponentsBorder border = new AutoComponentsBorder("id");
 		
@@ -71,7 +73,7 @@ public class AutocomponetsGenerationTest extends WicketTestCase
 	 * Test for https://issues.apache.org/jira/browse/WICKET-6256
 	 */
 	@Test
-	public void autoComponentsIdsGeneration() throws Exception 
+	void autoComponentsIdsGeneration() throws Exception
 	{
 		Page page = new UniqueIdTest();
 		

@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.net.URL;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -27,95 +31,62 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.net.URL;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-6094
  */
-public class MoreSpecificResourceMountPathTest
+class MoreSpecificResourceMountPathTest
 {
 	@Test
-	public void can_use_resource_mounted_without_parameter() 
+	void can_use_resource_mounted_without_parameter()
 	{
 		WicketTester browser = new WicketTester(new WicketApplication());
 		browser.executeUrl(WicketApplication.urlFor("howdy"));
-		Assert.assertThat(browser.getLastResponseAsString(), is(equalTo("howdy")));
+		assertEquals("howdy", browser.getLastResponseAsString());
 	}
 
 	@Test
-	public void can_use_resource_mounted_with_parameter() 
+	void can_use_resource_mounted_with_parameter()
 	{
 		WicketTester browser = new WicketTester(new WicketApplication());
 		browser.executeUrl(WicketApplication.urlFor(1L));
-		Assert.assertThat(browser.getLastResponseAsString(), is(equalTo("1")));
+		assertEquals("1", browser.getLastResponseAsString());
 	}
 
-	public static class WicketApplication extends WebApplication 
+	static class WicketApplication extends WebApplication
 	{
+		static final String PARAM_ID = "id";
+		static final String PARAM_NAME = "name";
 		private static final String OWNER_BY_ID_LOADER = "owner-by-id-loader";
 		private static final String OWNERS_LISTER = "owners-lister";
-		public static final String PARAM_ID = "id";
-		public static final String PARAM_NAME = "name";
 
-		@Override
-		public Class<? extends WebPage> getHomePage() 
-		{
-			return DummyHomePage.class;
-		}
-
-		@Override
-		public void init() 
-		{
-			super.init();
-
-			String path = "/ajax/owners"; // shared by both references
-			
-			mountResource(path, new ResourceReference(OWNERS_LISTER) 
-			{
-				@Override
-				public IResource getResource() 
-				{
-					return new DummyResource(PARAM_NAME);
-				}
-			});
-
-			mountResource(path + "/${" + PARAM_ID + "}", new ResourceReference(OWNER_BY_ID_LOADER) 
-			{
-				@Override
-				public IResource getResource() 
-				{
-					return new DummyResource(PARAM_ID);
-				}
-			});
-		}
-
-		public static String urlFor(String name) 
+		static String urlFor(String name)
 		{
 			return urlFor(name, PARAM_NAME, OWNERS_LISTER);
 		}
 
-		public static String urlFor(Long id) 
+		static String urlFor(Long id)
 		{
 			return urlFor(id, PARAM_ID, OWNER_BY_ID_LOADER);
 		}
 
-		/** <Test-Helper>
-		 * Generate an {@link URL} to access the mounted resource reference.
-		 * @param value of dummy attribute used to have some testable response output.
-		 * @param parameterName of dummy attribute
-		 * @param resourceReferenceName used to mount instance
+		/**
+		 * <Test-Helper> Generate an {@link URL} to access the mounted resource reference.
+		 *
+		 * @param value
+		 *            of dummy attribute used to have some testable response output.
+		 * @param parameterName
+		 *            of dummy attribute
+		 * @param resourceReferenceName
+		 *            used to mount instance
 		 * @return {@link CharSequence} url for resource reference
 		 */
-		private static String urlFor(Object value, String parameterName, String resourceReferenceName) 
+		private static String urlFor(Object value, String parameterName,
+			String resourceReferenceName)
 		{
 			PageParameters parameters = new PageParameters();
-			if (value != null) 
+			if (value != null)
 			{
 				parameters.set(parameterName, value);
 			}
@@ -124,46 +95,70 @@ public class MoreSpecificResourceMountPathTest
 			return string;
 		}
 
-		/** <Test-Helper>
-		 * Find resource reference mounted in application.
-		 * @param name of resource reference used to mount instance
+		/**
+		 * <Test-Helper> Find resource reference mounted in application.
+		 *
+		 * @param name
+		 *            of resource reference used to mount instance
 		 * @return {@link ResourceReference} found
 		 */
-		private static ResourceReference findResourceReference(String name) 
+		private static ResourceReference findResourceReference(String name)
 		{
-			return Application.get()
-					.getResourceReferenceRegistry()
-					.getResourceReference(
-							new ResourceReference.Key(
-									Application.class.getName(),
-									name,
-									null,
-									null,
-									null
-							),
-							false,
-							false
-					);
+			return Application.get().getResourceReferenceRegistry().getResourceReference(
+				new ResourceReference.Key(Application.class.getName(), name, null, null, null),
+				false, false);
 		}
 
-		/** <Test-Helper>
-		 * This is only a dummy to be referenced. It is possible to
-		 * exchange this by a mock or whatever.
+		@Override
+		public Class<? extends WebPage> getHomePage()
+		{
+			return DummyHomePage.class;
+		}
+
+		@Override
+		public void init()
+		{
+			super.init();
+
+			String path = "/ajax/owners"; // shared by both references
+
+			mountResource(path, new ResourceReference(OWNERS_LISTER)
+			{
+				@Override
+				public IResource getResource()
+				{
+					return new DummyResource(PARAM_NAME);
+				}
+			});
+
+			mountResource(path + "/${" + PARAM_ID + "}", new ResourceReference(OWNER_BY_ID_LOADER)
+			{
+				@Override
+				public IResource getResource()
+				{
+					return new DummyResource(PARAM_ID);
+				}
+			});
+		}
+
+		/**
+		 * <Test-Helper> This is only a dummy to be referenced. It is possible to exchange this by a
+		 * mock or whatever.
 		 * 
 		 * @author rene.dieckmann@menoto.de
 		 */
-		private static class DummyResource extends ByteArrayResource 
+		private static class DummyResource extends ByteArrayResource
 		{
 			private final String parameterName;
 
-			public DummyResource(String parameterName) 
+			DummyResource(String parameterName)
 			{
 				super("application/text");
 				this.parameterName = parameterName;
 			}
 
 			@Override
-			protected byte[] getData(Attributes attributes) 
+			protected byte[] getData(Attributes attributes)
 			{
 				StringValue value = attributes.getParameters().get(parameterName);
 				return value == null ? new byte[0] : value.toString().getBytes();

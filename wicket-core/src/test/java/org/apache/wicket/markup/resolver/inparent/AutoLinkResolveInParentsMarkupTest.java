@@ -20,13 +20,13 @@ import org.apache.wicket.markup.resolver.inparent.base.BasePage;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test validating that an auto linked resource from the parent's page is properly resolved in the
  * child page
  */
-public class AutoLinkResolveInParentsMarkupTest extends WicketTestCase
+class AutoLinkResolveInParentsMarkupTest extends WicketTestCase
 {
 
 	@Override
@@ -60,7 +60,7 @@ public class AutoLinkResolveInParentsMarkupTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void resolveResourceFromMarkupInParent() throws Exception
+    void resolveResourceFromMarkupInParent() throws Exception
 	{
 		tester.startPage(HomePage.class);
 		tester.assertContains("wicket/resource/org.apache.wicket.markup.resolver.inparent.base.BasePage/theme/logo.png");

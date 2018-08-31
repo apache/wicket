@@ -24,7 +24,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 
-public class UniqueIdTest extends WebPage {
+class UniqueIdTest extends WebPage {
 	
 	@Override
 	protected void onInitialize() {
@@ -44,7 +44,7 @@ public class UniqueIdTest extends WebPage {
 		 */
 		private static final long serialVersionUID = -437057755276096255L;
 
-		public CacheKeyNullPanel(String id) {
+		CacheKeyNullPanel(String id) {
 			super(id);
 		}
 

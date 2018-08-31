@@ -43,10 +43,10 @@ public class TestMapperContext implements IMapperContext
 {
 	private static final String APP_NAME = "test_app";
 	private static int count;
-	IDataStore dataStore;
-	IPageStore pageStore;
-	IPageManagerContext pageManagerContext;
-	PageStoreManager pageManager;
+	private IDataStore dataStore;
+	private IPageStore pageStore;
+	private IPageManagerContext pageManagerContext;
+	private PageStoreManager pageManager;
 	private String appName;
 	private boolean createMockPageIfInstanceNotFound = true;
 
@@ -175,7 +175,7 @@ public class TestMapperContext implements IMapperContext
 
 	}
 
-	int idCounter = 0;
+	private int idCounter = 0;
 
 	@Override
 	public IRequestablePage newPageInstance(Class<? extends IRequestablePage> pageClass,

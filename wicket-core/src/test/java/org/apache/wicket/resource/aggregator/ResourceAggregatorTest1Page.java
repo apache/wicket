@@ -32,7 +32,7 @@ public class ResourceAggregatorTest1Page extends WebPage
 	/**
 	 * 
 	 */
-	public static String javascript = "alert('Hello World!');";
+	private static String javascript = "alert('Hello World!');";
 
 	/**
 	 * Construct.

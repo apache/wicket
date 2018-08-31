@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
@@ -30,21 +34,21 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests validator work as validators and behaviors
  * 
  * @author igor
  */
-public class ValidatorBehaviorTest extends WicketTestCase
+class ValidatorBehaviorTest extends WicketTestCase
 {
 
 	/**
 	 * Tests validators are treated as behaviors
 	 */
 	@Test
-	public void actAsBehavior()
+	void actAsBehavior()
 	{
 		TestPage page = new TestPage();
 
@@ -67,7 +71,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5897
 	 */
 	@Test
-	public void disabledValidator()
+	void disabledValidator()
 	{
 		TestPage page = new TestPage();
 		page.name.add(new DisabledValidator());
@@ -87,7 +91,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 	 * Tests validators are treated as validators
 	 */
 	@Test
-	public void actAsValidator()
+	void actAsValidator()
 	{
 		TestPage page = new TestPage();
 
@@ -205,7 +209,7 @@ public class ValidatorBehaviorTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+		TestPage()
 		{
 			Form<Void> form = new Form<>("form");
 			add(form);

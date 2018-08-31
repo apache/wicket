@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.model;
 
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,19 +28,19 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the states of a LoadableDetachableModel
  */
 @SuppressWarnings("javadoc")
-public class LoadableDetachableModelTest extends WicketTestCase
+class LoadableDetachableModelTest extends WicketTestCase
 {
 	/**
 	 * Checks whether the LDM can escape recursive calls.
 	 */
 	@Test
-	public void recursiveGetObjectDoesntCauseInfiteLoop()
+	void recursiveGetObjectDoesntCauseInfiteLoop()
 	{
 		class RecursiveLoad extends LoadableDetachableModel<Integer>
 		{
@@ -57,13 +59,13 @@ public class LoadableDetachableModelTest extends WicketTestCase
 
 		RecursiveLoad ldm = new RecursiveLoad();
 
-		assertThat(ldm.isAttached(), is(false));
-		assertThat(ldm.getObject(), is(1));
-		assertThat(ldm.isAttached(), is(true));
+		assertEquals(false, ldm.isAttached());
+		assertThat(ldm.getObject()).isEqualTo(1);
+		assertEquals(true, ldm.isAttached());
 	}
 
 	@Test
-	public void onAttachCalled()
+	void onAttachCalled()
 	{
 		class AttachingLoadableModel extends LoadableDetachableModel<Integer>
 		{
@@ -87,15 +89,15 @@ public class LoadableDetachableModelTest extends WicketTestCase
 		AttachingLoadableModel m = new AttachingLoadableModel();
 		m.getObject();
 
-		assertThat(m.isAttached(), is(true));
-		assertThat(m.attachCalled, is(true));
+		assertEquals(true, m.isAttached());
+		assertEquals(true, m.attachCalled);
 	}
 
 	/**
 	 * Checks whether the LDM can escape recursive calls.
 	 */
 	@Test
-	public void exceptionDuringLoadKeepsLDMDetached()
+	void exceptionDuringLoadKeepsLDMDetached()
 	{
 		class ExceptionalLoad extends LoadableDetachableModel<Integer>
 		{
@@ -118,18 +120,18 @@ public class LoadableDetachableModelTest extends WicketTestCase
 
 		ExceptionalLoad ldm = new ExceptionalLoad();
 
-		assertThat(ldm.isAttached(), is(false));
+		assertEquals(false, ldm.isAttached());
 		try
 		{
-			assertThat(ldm.getObject(), is(1));
+			assertThat(ldm.getObject()).isEqualTo(1);
 			fail("shouldn't get here");
 		}
 		catch (RuntimeException e)
 		{
 		}
 		ldm.detach();
-		assertThat(ldm.isAttached(), is(false));
-		assertThat(ldm.detachCalled, is(true));
+		assertEquals(false, ldm.isAttached());
+		assertEquals(true, ldm.detachCalled);
 	}
 
 	private static class SerializedLoad extends LoadableDetachableModel<Integer>
@@ -151,21 +153,21 @@ public class LoadableDetachableModelTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void serializationDeserializationRetainsInternalState() throws Exception
+	void serializationDeserializationRetainsInternalState() throws Exception
 	{
 		SerializedLoad ldm = new SerializedLoad();
-		assertThat(ldm.getObject(), is(1));
+		assertThat(ldm.getObject()).isEqualTo(1);
 		ldm.detach();
 
 		byte[] serialized = serialize(ldm);
 
 		LoadableDetachableModel<Integer> deserialized = deserialize(serialized);
 
-		assertThat(deserialized.isAttached(), is(false));
-		assertThat(deserialized.getObject(), is(2));
-		assertThat(deserialized.isAttached(), is(true));
+		assertEquals(false, deserialized.isAttached());
+		assertThat(deserialized.getObject()).isEqualTo(2);
+		assertEquals(true, deserialized.isAttached());
 		deserialized.detach();
-		assertThat(deserialized.isAttached(), is(false));
+		assertEquals(false, deserialized.isAttached());
 	}
 
 	/** Serialization helper */

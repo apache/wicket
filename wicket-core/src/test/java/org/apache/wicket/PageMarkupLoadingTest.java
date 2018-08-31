@@ -20,12 +20,12 @@ import java.util.Locale;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests markup loading.
  */
-public class PageMarkupLoadingTest extends WicketTestCase
+class PageMarkupLoadingTest extends WicketTestCase
 {
 	/**
 	 * Test default locale loaded page.
@@ -33,7 +33,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void english() throws Exception
+    void english() throws Exception
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(Page1.class);
@@ -47,7 +47,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void dutch() throws Exception
+    void dutch() throws Exception
 	{
 		tester.getSession().setLocale(new Locale("nl"));
 		tester.startPage(Page1.class);
@@ -61,7 +61,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testDutchMyStyle() throws Exception
+    void testDutchMyStyle() throws Exception
 	{
 		tester.getSession().setLocale(new Locale("nl"));
 		tester.getSession().setStyle("mystyle");
@@ -76,7 +76,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void dutchMyStyleMyVar() throws Exception
+    void dutchMyStyleMyVar() throws Exception
 	{
 		tester.getSession().setLocale(new Locale("nl"));
 		tester.getSession().setStyle("mystyle");
@@ -92,7 +92,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
-		public Page1()
+        public Page1()
 		{
 		}
 	}
@@ -103,7 +103,7 @@ public class PageMarkupLoadingTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/** Construct. */
-		public Page2()
+        public Page2()
 		{
 		}
 

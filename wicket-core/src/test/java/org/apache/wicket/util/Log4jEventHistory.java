@@ -26,7 +26,7 @@ import org.apache.log4j.spi.LoggingEvent;
 /**
  * Log the log4j messages for further assertions
  * */
-public class Log4jEventHistory extends AppenderSkeleton
+class Log4jEventHistory extends AppenderSkeleton
 {
 	private List<LoggingEvent> history = new ArrayList<LoggingEvent>();
 

@@ -17,19 +17,19 @@
 package org.apache.wicket.markup.resolver;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class WicketContainerResolverTest extends WicketTestCase
+class WicketContainerResolverTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
+    void test_1() throws Exception
 	{
 		executeTest(SimpleContainerPage_1.class, "SimpleContainerPageExpectedResult_1.html");
 	}

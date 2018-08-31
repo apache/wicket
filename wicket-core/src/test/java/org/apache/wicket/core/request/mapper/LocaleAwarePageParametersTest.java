@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.core.request.mapper;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Locale;
 
@@ -33,26 +33,26 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-6419
  */
-public class LocaleAwarePageParametersTest extends WicketTestCase
+class LocaleAwarePageParametersTest extends WicketTestCase
 {
 	private Locale defaultLocale = null;
 
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		defaultLocale = Locale.getDefault(Locale.Category.DISPLAY);
 		Locale.setDefault(Locale.Category.DISPLAY, Locale.ENGLISH);
 	}
 
-	@After
-	public void after()
+	@AfterEach
+	void after()
 	{
 		if (defaultLocale != null)
 		{
@@ -93,26 +93,26 @@ public class LocaleAwarePageParametersTest extends WicketTestCase
 	}
 
 	@Test
-	public void localeUnaware()
+	void localeUnaware()
 	{
 		tester.executeUrl("unaware?number=1.234,0");
 		final Page page = tester.getLastRenderedPage();
 
-		assertThat(page.getPageParameters().get("number").toDouble(), is(1.234));
+		assertEquals(1.234, page.getPageParameters().get("number").toDouble());
 	}
 
 	@Test
-	public void localeAware()
+	void localeAware()
 	{
 		tester.executeUrl("aware?number=1.234,0");
 		final Page page = tester.getLastRenderedPage();
 
-		assertThat(page.getPageParameters().get("number").toDouble(), is(1234d));
+		assertEquals(1234d, page.getPageParameters().get("number").toDouble());
 	}
 
 	private static class BasePage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		protected BasePage(PageParameters parameters)
+		BasePage(PageParameters parameters)
 		{
 			super(parameters);
 		}
@@ -124,17 +124,17 @@ public class LocaleAwarePageParametersTest extends WicketTestCase
 		}
 	}
 
-	public static class LocaleUnawarePageParametersPage extends BasePage
+    public static class LocaleUnawarePageParametersPage extends BasePage
 	{
-		public LocaleUnawarePageParametersPage(PageParameters parameters)
+        public LocaleUnawarePageParametersPage(PageParameters parameters)
 		{
 			super(parameters);
 		}
 	}
 
-	public static class LocaleAwarePageParametersPage extends BasePage
+    public static class LocaleAwarePageParametersPage extends BasePage
 	{
-		public LocaleAwarePageParametersPage(PageParameters parameters)
+        public LocaleAwarePageParametersPage(PageParameters parameters)
 		{
 			super(parameters);
 		}

@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -31,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -132,10 +134,9 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
+import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import junit.framework.AssertionFailedError;
 
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
@@ -724,7 +725,7 @@ public class BaseWicketTester
 			{
 				if (redirectCount++ >= 100)
 				{
-					fail("Possible infinite redirect detected. Bailing out.");
+					throw new AssertionFailedError("Possible infinite redirect detected. Bailing out.");
 				}
 
 				Url newUrl = Url.parse(lastResponse.getRedirectLocation(),
@@ -1085,7 +1086,6 @@ public class BaseWicketTester
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
 	 *
 	 * @param component
-	 * @param listener
 	 */
 	public void executeListener(final Component component)
 	{
@@ -1122,7 +1122,6 @@ public class BaseWicketTester
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
 	 *
 	 * @param component
-	 * @param listener
 	 */
 	public void invokeListener(final Component component)
 	{
@@ -1144,7 +1143,7 @@ public class BaseWicketTester
 	 * (with an optional redirect - depending on {@link RenderStrategy}).
 	 *
 	 * @param component
-	 * @param listener
+	 * @param behavior
 	 */
 	public void invokeListener(Component component, final Behavior behavior)
 	{
@@ -2510,7 +2509,7 @@ public class BaseWicketTester
 	{
 		// The form that needs to be "submitted".
 		Form<?> form = behavior.getForm();
-		assertNotNull("No form attached to the submitlink.", form);
+		assertNotNull(form, "No form attached to the submitlink.");
 
 		checkUsability(form, true);
 		serializeFormToRequest(form);

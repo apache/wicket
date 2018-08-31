@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.markup;
 
-public class MarkupTest_Find_3 extends MarkupTest_Find_2
+class MarkupTest_Find_3 extends MarkupTest_Find_2
 {
 
 }

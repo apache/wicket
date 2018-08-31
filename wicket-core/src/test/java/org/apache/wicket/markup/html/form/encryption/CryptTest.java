@@ -16,20 +16,22 @@
  */
 package org.apache.wicket.markup.html.form.encryption;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.NoCrypt;
 import org.apache.wicket.util.crypt.SunJceCrypt;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Juergen Donnerstag
  */
-public class CryptTest extends WicketTestCase
+class CryptTest extends WicketTestCase
 {
 	@Test
-	public void crypt()
+	void crypt()
 	{
 		final ICrypt crypt = new SunJceCrypt();
 		crypt.setKey("someStableKey");
@@ -58,7 +60,7 @@ public class CryptTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void noCrypt()
+	void noCrypt()
 	{
 		// The NoCrypt implementation does not modify the string at all
 		final ICrypt crypt = new NoCrypt();

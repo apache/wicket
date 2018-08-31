@@ -18,15 +18,15 @@ package org.apache.wicket.util.tester;
 
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-5840
  */
-public class WicketTesterClickExternalLinkTest extends WicketTestCase
+class WicketTesterClickExternalLinkTest extends WicketTestCase
 {
 	@Test
-	public void clickExternalLink()
+    void clickExternalLink()
 	{
 		MockPageWithLink page = new MockPageWithLink();
 		String href = "http://wicket.apache.org";

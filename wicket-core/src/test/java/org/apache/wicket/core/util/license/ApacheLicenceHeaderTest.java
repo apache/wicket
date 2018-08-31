@@ -25,12 +25,12 @@ import org.apache.wicket.util.license.ApacheLicenseHeaderTestCase;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
 	 * Construct.
 	 */
-	public ApacheLicenceHeaderTest()
+    ApacheLicenceHeaderTest()
 	{
 // addHeaders = true;
 
