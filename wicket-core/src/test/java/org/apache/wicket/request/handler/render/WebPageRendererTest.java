@@ -43,7 +43,6 @@ import org.apache.wicket.request.http.WebResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 /**
  * Tests for the calculation whether or not to redirect or directly render a page
  */
