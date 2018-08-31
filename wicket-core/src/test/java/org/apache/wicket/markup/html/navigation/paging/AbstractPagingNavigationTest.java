@@ -16,15 +16,16 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
-import org.apache.wicket.util.tester.WicketTestCase;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.apache.wicket.util.tester.WicketTestCase;
 
 /**
  * Base class for testing the navigation links, supplies a mock object for exercizing the links.
  * 
  * @author Martijn Dashorst
  */
-public abstract class AbstractPagingNavigationTest extends WicketTestCase
+abstract class AbstractPagingNavigationTest extends WicketTestCase
 {
 	/**
 	 * Mock object for testing the increment link.
@@ -46,12 +47,12 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 		}
 
 		/**
-		 * @see IPageable#setCurrentPage(int)
+		 * @see IPageable#setCurrentPage(long)
 		 */
 		@Override
 		public void setCurrentPage(long page)
 		{
-			assertEquals("setCurrentPage", expectedPage, page);
+			assertEquals(expectedPage, page, "setCurrentPage");
 		}
 
 		/**
@@ -75,8 +76,8 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 	}
 
 	/** mock page count. */
-	protected long pagecount = 0;
+	long pagecount = 0;
 
 	/** mock current page. */
-	protected long currentpage = 0;
+	long currentpage = 0;
 }

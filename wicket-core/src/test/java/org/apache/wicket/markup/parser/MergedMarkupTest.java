@@ -16,24 +16,26 @@
  */
 package org.apache.wicket.markup.parser;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupResourceStream;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class MergedMarkupTest extends WicketTestCase
+class MergedMarkupTest extends WicketTestCase
 {
 	/**
 	 * test1()
 	 */
 	@Test
-	public void test1()
+	void test1()
 	{
 		Page page = new SubPageWithoutMarkup();
 		Markup markup = page.getAssociatedMarkup();
@@ -46,7 +48,7 @@ public class MergedMarkupTest extends WicketTestCase
 	 * test2()
 	 */
 	@Test
-	public void test2()
+	void test2()
 	{
 		Page page = new SubPageWithMarkup();
 		MarkupStream markup = page.getAssociatedMarkupStream(true);

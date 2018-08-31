@@ -16,22 +16,25 @@
  */
 package org.apache.wicket.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.parameter.INamedParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class StatelessComponentTest extends WicketTestCase
+class StatelessComponentTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void statelessComponentPage() throws Exception
+	void statelessComponentPage() throws Exception
 	{
 		executeTest(StatelessComponentPage.class, "StatelessComponentPage_result.html");
 
@@ -54,7 +57,7 @@ public class StatelessComponentTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void statelessComponentPageWithMount() throws Exception
+	void statelessComponentPageWithMount() throws Exception
 	{
 		tester.getApplication().mountPage("/stateless", StatelessComponentPage.class);
 		// test is always the home page. it doesn't work then
@@ -77,7 +80,7 @@ public class StatelessComponentTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void statelessComponentPageWithParams() throws Exception
+	void statelessComponentPageWithParams() throws Exception
 	{
 		PageParameters params = new PageParameters();
 		params.set("testParam1", "testValue1", INamedParameters.Type.QUERY_STRING);
@@ -105,7 +108,7 @@ public class StatelessComponentTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void statelessComponentPageWithParamsWithMount() throws Exception
+	void statelessComponentPageWithParamsWithMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
 		params.set("testParam1", "testValue1", INamedParameters.Type.QUERY_STRING);
@@ -132,7 +135,7 @@ public class StatelessComponentTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void statelessComponentPageWithParamsWithIndexMount() throws Exception
+	void statelessComponentPageWithParamsWithIndexMount() throws Exception
 	{
 		PageParameters params = new PageParameters();
 		params.set(0, "testValue1");

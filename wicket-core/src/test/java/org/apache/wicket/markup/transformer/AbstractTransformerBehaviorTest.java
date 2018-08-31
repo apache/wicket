@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.transformer;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -26,16 +28,16 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class AbstractTransformerBehaviorTest extends WicketTestCase
+class AbstractTransformerBehaviorTest extends WicketTestCase
 {
 	/** */
 	@Test
-	public void responseTransformation()
+	void responseTransformation()
 	{
 		TestPage testPage = new TestPage();
 		testPage.add(new AbstractTransformerBehavior()
@@ -58,7 +60,7 @@ public class AbstractTransformerBehaviorTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4105
 	 */
 	@Test
-	public void transformationInAjaxRequest()
+	void transformationInAjaxRequest()
 	{
 		tester.startPage(new AjaxTestPage());
 		tester.assertRenderedPage(AjaxTestPage.class);

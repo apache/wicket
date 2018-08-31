@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -30,12 +32,12 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class StatelessFormUrlTest extends WicketTestCase
+class StatelessFormUrlTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -53,7 +55,7 @@ public class StatelessFormUrlTest extends WicketTestCase
 	 * Preventing WICKET-3438
 	 */
 	@Test
-	public void submitLinkInputNameNotEncodedIntoFormAction()
+	void submitLinkInputNameNotEncodedIntoFormAction()
 	{
 		tester.executeUrl("?0-1.IFormSubmitListener-form&text=newValue&submitLink=x");
 		assertFalse(tester.getLastResponseAsString().contains("submitLink=x"));
@@ -63,7 +65,7 @@ public class StatelessFormUrlTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4365
 	 */
 	@Test
-	public void formComponentNameNotEncodedIntoFormAction()
+	void formComponentNameNotEncodedIntoFormAction()
 	{
 		tester.executeUrl("?0-1.IFormSubmitListener-form&text=newValue");
 		assertFalse(tester.getLastResponseAsString().contains("text=newValue"));
@@ -78,7 +80,7 @@ public class StatelessFormUrlTest extends WicketTestCase
 		/**
 		 * @param pageParameters
 		 */
-		public TestPage(PageParameters pageParameters)
+        public TestPage(PageParameters pageParameters)
 		{
 			super(pageParameters);
 			StatelessForm<Void> form = new StatelessForm<>("form");

@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class FormSubmitOrderTest extends WicketTestCase
+class FormSubmitOrderTest extends WicketTestCase
 {
-	public static class TestPage extends WebPage
+    public static class TestPage extends WebPage
 	{
 		String result = "";
 
-		public TestPage()
+        public TestPage()
 		{
-			Form form = new Form("form")
+			Form form = new Form<>("form")
 			{
 				@Override
 				protected void onSubmit()
@@ -58,7 +60,7 @@ public class FormSubmitOrderTest extends WicketTestCase
 	}
 
 	@Test
-	public void submitOrder() throws Exception
+	void submitOrder() throws Exception
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		tester.newFormTester("form").submit("button");

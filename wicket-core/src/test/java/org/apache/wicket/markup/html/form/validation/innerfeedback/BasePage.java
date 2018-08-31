@@ -30,7 +30,7 @@ public class BasePage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public BasePage()
+    BasePage()
 	{
 	}
 

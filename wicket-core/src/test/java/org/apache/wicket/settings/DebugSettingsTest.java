@@ -16,23 +16,25 @@
  */
 package org.apache.wicket.settings;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for DebugSettings
  */
-public class DebugSettingsTest extends WicketTestCase
+class DebugSettingsTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5498
 	 */
 	@Test
-	public void setComponentPathAttributeName()
+	void setComponentPathAttributeName()
 	{
 		String attributeName = "data-wicket-path";
 		tester.getApplication().getDebugSettings().setComponentPathAttributeName(attributeName);

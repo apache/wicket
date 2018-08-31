@@ -16,27 +16,27 @@
  */
 package org.apache.wicket;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.util.tester.WicketTesterScope;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.wicket.util.tester.WicketTesterExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-public class OnReAddTest
+class OnReAddTest
 {
-	@Rule
-	public WicketTesterScope scope = new WicketTesterScope();
+	@RegisterExtension
+	WicketTesterExtension scope = new WicketTesterExtension();
 
 	private boolean onReAddCalled = false;
 	private boolean onInitializeCalled = false;
 
 	@Test
-	public void onFirstAddInitializeIsCalled()
+	void onFirstAddInitializeIsCalled()
 	{
 		Page page = createPage();
 		page.internalInitialize();
@@ -46,7 +46,7 @@ public class OnReAddTest
 	}
 
 	@Test
-	public void nothingIsCalledWithoutConnectionToPage()
+	void nothingIsCalledWithoutConnectionToPage()
 	{
 		MarkupContainer container = createContainer();
 		container.internalInitialize();
@@ -56,7 +56,7 @@ public class OnReAddTest
 	}
 
 	@Test
-	public void uninitializedComponentIsInitializedOnConnectionToPage()
+	void uninitializedComponentIsInitializedOnConnectionToPage()
 	{
 		// "old", initialized container + "new" uninitialized component:
 		// oninitialize should be called on the component when the container
@@ -74,7 +74,7 @@ public class OnReAddTest
 	}
 
 	@Test
-	public void onReAddIsOnlyCalledAfterRemove()
+	void onReAddIsOnlyCalledAfterRemove()
 	{
 		Page page = createPage();
 		page.internalInitialize();
@@ -93,9 +93,9 @@ public class OnReAddTest
 		assertTrue(onReAddCalled);
 		assertFalse(onInitializeCalled);
 	}
-	
+
 	@Test
-	public void initializeIsCalledOnFirstAdd_OnReAddIsCalledAfterEachRemoveAndAdd()
+	void initializeIsCalledOnFirstAdd_OnReAddIsCalledAfterEachRemoveAndAdd()
 	{
 		Page page = createPage();
 		page.internalInitialize();
@@ -115,7 +115,8 @@ public class OnReAddTest
 		assertFalse(onInitializeCalled);
 		onReAddCalled = false;
 		page.internalInitialize();
-		// just another initialize run shouldn't call onReAdd nor onInitialize. onReAdd should only be called
+		// just another initialize run shouldn't call onReAdd nor onInitialize. onReAdd should only
+		// be called
 		// after remove and add
 		assertFalse(onReAddCalled);
 		assertFalse(onInitializeCalled);
@@ -126,7 +127,7 @@ public class OnReAddTest
 	}
 
 	@Test
-	public void onReAddRecursesToChildrenLikeOnInitialize()
+	void onReAddRecursesToChildrenLikeOnInitialize()
 	{
 		Page page = createPage();
 		page.internalInitialize();
@@ -144,7 +145,7 @@ public class OnReAddTest
 	}
 
 	@Test
-	public void onReAddEnforcesSuperCall()
+	void onReAddEnforcesSuperCall()
 	{
 		Page page = createPage();
 		page.internalInitialize();
@@ -163,7 +164,8 @@ public class OnReAddTest
 		{
 			page.add(brokenProbe);
 			fail("should have thrown exception");
-		} catch (IllegalStateException e)
+		}
+		catch (IllegalStateException e)
 		{
 			assertTrue(e.getMessage().contains("super.onReAdd"));
 		}
@@ -189,7 +191,7 @@ public class OnReAddTest
 		};
 	}
 
-	private Component createInitializedProbe()
+	Component createInitializedProbe()
 	{
 		Component probe = createUninitializedProbe();
 		probe.internalInitialize();

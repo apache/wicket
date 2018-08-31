@@ -16,21 +16,22 @@
  */
 package org.apache.wicket.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-3929
  * 
  * @author Carl-Eric Menzel
  */
-public class PropertyModelWithListTest extends Assert
+class PropertyModelWithListTest
 {
 	/** */
-	public static class BeansContainer
+	static class BeansContainer
 	{
 		private List<Bean> beans = new ArrayList<Bean>();
 
@@ -38,7 +39,7 @@ public class PropertyModelWithListTest extends Assert
 		 * @return the beans
 		 * 
 		 */
-		public List<Bean> getBeans()
+		List<Bean> getBeans()
 		{
 			return beans;
 		}
@@ -54,7 +55,7 @@ public class PropertyModelWithListTest extends Assert
 	}
 
 	/** */
-	public static class Bean
+	static class Bean
 	{
 		private String text;
 
@@ -70,7 +71,7 @@ public class PropertyModelWithListTest extends Assert
 		 * @param text
 		 *            the bean's text
 		 */
-		public void setText(String text)
+		void setText(String text)
 		{
 			this.text = text;
 		}
@@ -81,7 +82,7 @@ public class PropertyModelWithListTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void listPropertyModel() throws Exception
+	void listPropertyModel() throws Exception
 	{
 		List<Bean> beans = new ArrayList<PropertyModelWithListTest.Bean>();
 		Bean bean = new Bean();
@@ -95,7 +96,7 @@ public class PropertyModelWithListTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void containerPropertyModel() throws Exception
+	void containerPropertyModel() throws Exception
 	{
 		BeansContainer container = new BeansContainer();
 		Bean bean = new Bean();
@@ -109,7 +110,7 @@ public class PropertyModelWithListTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void nestedListPropertyModel() throws Exception
+	void nestedListPropertyModel() throws Exception
 	{
 		List<List<Bean>> outer = new ArrayList<List<Bean>>();
 		List<Bean> inner = new ArrayList<Bean>();

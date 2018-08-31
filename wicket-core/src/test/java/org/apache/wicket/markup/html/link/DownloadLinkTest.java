@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -25,17 +29,16 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.IWrapModel;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Tests DownloadLink
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class DownloadLinkTest extends WicketTestCase
+class DownloadLinkTest extends WicketTestCase
 {
 	private static final String APPLICATION_X_CUSTOM = "application/x-custom";
 	private static final Logger log = LoggerFactory.getLogger(DownloadLinkTest.class);
@@ -44,7 +47,7 @@ public class DownloadLinkTest extends WicketTestCase
 	 * Tests custom type download.
 	 */
 	@Test
-	public void customTypeDownloadLink()
+	void customTypeDownloadLink()
 	{
 		tester.startPage(DownloadPage.class);
 		((MockServletContext)tester.getApplication().getServletContext()).addMimeType("custom",
@@ -58,7 +61,7 @@ public class DownloadLinkTest extends WicketTestCase
 	 * Tests pdf download.
 	 */
 	@Test
-	public void pdfDownloadLink()
+	void pdfDownloadLink()
 	{
 		tester.startPage(DownloadPage.class);
 		tester.clickLink(DownloadPage.PDF_DOWNLOAD_LINK);
@@ -70,7 +73,7 @@ public class DownloadLinkTest extends WicketTestCase
 	 * Tests text download.
 	 */
 	@Test
-	public void textDownloadLink()
+	void textDownloadLink()
 	{
 		tester.startPage(DownloadPage.class);
 		tester.clickLink(DownloadPage.TEXT_DOWNLOAD_LINK);
@@ -84,7 +87,7 @@ public class DownloadLinkTest extends WicketTestCase
 	 * Tests file removal after download
 	 */
 	@Test
-	public void deleteAfterLink()
+	void deleteAfterLink()
 	{
 		DownloadPage page;
 
@@ -107,7 +110,7 @@ public class DownloadLinkTest extends WicketTestCase
 	 * WICKET-4738 wrapOnAssigment and detach on fileName
 	 */
 	@Test
-	public void fileNameModel()
+	void fileNameModel()
 	{
 
 		FileNameModel fileNameModel = new FileNameModel();

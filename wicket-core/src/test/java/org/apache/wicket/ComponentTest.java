@@ -16,6 +16,10 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -25,14 +29,14 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for ajax handler.
  * 
  * @author Juergen Donnerstag
  */
-public class ComponentTest extends WicketTestCase
+class ComponentTest extends WicketTestCase
 {
 
 	/**
@@ -42,7 +46,7 @@ public class ComponentTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void detachPage() throws Exception
+	void detachPage() throws Exception
 	{
 		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
 		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
@@ -63,7 +67,7 @@ public class ComponentTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void detachPageAjaxRequest() throws Exception
+	void detachPageAjaxRequest() throws Exception
 	{
 		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
 		TestDetachPage page = (TestDetachPage)tester.getLastRenderedPage();
@@ -93,7 +97,7 @@ public class ComponentTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_1() throws Exception
+	void renderHomePage_1() throws Exception
 	{
 		executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
 	}
@@ -109,7 +113,7 @@ public class ComponentTest extends WicketTestCase
 	 * </ol>
 	 */
 	@Test
-	public void isStateless()
+	void isStateless()
 	{
 		Behavior statefulBehavior = new Behavior()
 		{
@@ -200,7 +204,7 @@ public class ComponentTest extends WicketTestCase
 	 * is different that the old one. The same as setDefaultModelObject().
 	 */
 	@Test
-	public void modelChange()
+	void modelChange()
 	{
 		final AtomicBoolean modelChanging = new AtomicBoolean(false);
 		final AtomicBoolean modelChanged = new AtomicBoolean(false);
@@ -237,7 +241,7 @@ public class ComponentTest extends WicketTestCase
 	}
 
 	@Test
-	public void pageIsInitiallyStateless()
+	void pageIsInitiallyStateless()
 	{
 		FlagReserved5Component component = new FlagReserved5Component("test");
 		assertTrue(component.getFlagReserved5());
@@ -249,7 +253,7 @@ public class ComponentTest extends WicketTestCase
 	private static class FlagReserved5Component extends Component
 	{
 
-		public FlagReserved5Component(final String id) {
+		FlagReserved5Component(final String id) {
 			super(id);
 		}
 

@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for RadioGroup and Radio components
@@ -28,13 +31,13 @@ import org.junit.Test;
  * @author igor
  * 
  */
-public class RadioGroupTest extends WicketTestCase
+class RadioGroupTest extends WicketTestCase
 {
 	/**
 	 * test component form processing
 	 */
 	@Test
-	public void formProcessing()
+	void formProcessing()
 	{
 		// object used to test regular model
 		Model<String> model = new Model<String>();
@@ -46,24 +49,21 @@ public class RadioGroupTest extends WicketTestCase
 		tester.startPage(page);
 
 		tester.submitForm(page.form);
-		assertTrue("group: running with nothing selected - model must be set to null",
-			model.getObject() == null);
+		assertTrue(model.getObject() == null, "group: running with nothing selected - model must be set to null");
 
 		tester.getRequest()
 			.getPostParameters()
 			.setParameterValue(page.group.getInputName(), page.radio1.getValue());
 		tester.submitForm(page.form);
 
-		assertEquals("group: running with choice1 selected - model must be set to value of radio1",
-			model.getObject(), "radio1");
+		assertEquals("radio1", model.getObject(), "group: running with choice1 selected - model must be set to value of radio1");
 
 		tester.getRequest()
 			.getPostParameters()
 			.setParameterValue(page.group.getInputName(), page.radio2.getValue());
 		tester.submitForm(page.form);
 
-		assertEquals("group: running with choice2 selected - model must be set to value of radio2",
-			model.getObject(), "radio2");
+		assertEquals("radio2", model.getObject(), "group: running with choice2 selected - model must be set to value of radio2");
 
 		tester.getRequest()
 			.getPostParameters()
@@ -86,7 +86,7 @@ public class RadioGroupTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void rendering() throws Exception
+	void rendering() throws Exception
 	{
 		executeTest(RadioGroupTestPage1.class, "RadioGroupTestPage1_expected.html");
 		try
@@ -110,7 +110,7 @@ public class RadioGroupTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void radioGroupTestPage3() throws Exception
+	void radioGroupTestPage3() throws Exception
 	{
 		// this test fails. You can make the test pass by closing the input tags
 		// this was not the case in beta1
@@ -121,7 +121,7 @@ public class RadioGroupTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void disabledRadioGroup() throws Exception
+	void disabledRadioGroup() throws Exception
 	{
 		executeTest(RadioGroupDisabledTestPage.class, "RadioGroupDisabledTestPage_expected.html");
 	}

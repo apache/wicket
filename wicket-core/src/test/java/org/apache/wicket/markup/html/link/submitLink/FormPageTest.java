@@ -16,77 +16,79 @@
  */
 package org.apache.wicket.markup.html.link.submitLink;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class FormPageTest extends WicketTestCase
+class FormPageTest extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void submitlinkIsSubmitted()
+	void submitlinkIsSubmitted()
 	{
 		tester.startPage(FormPage.class);
 
 		FormPage page = (FormPage)tester.getLastRenderedPage();
 
-		Assert.assertFalse(page.isSubmitLinkSubmitted());
-		Assert.assertFalse(page.isFormSubmitted());
+		assertFalse(page.isSubmitLinkSubmitted());
+		assertFalse(page.isFormSubmitted());
 
 		tester.clickLink("link", false);
 		page = (FormPage)tester.getLastRenderedPage();
 
-		Assert.assertTrue(page.isSubmitLinkSubmitted());
-		Assert.assertTrue(page.isFormSubmitted());
+		assertTrue(page.isSubmitLinkSubmitted());
+		assertTrue(page.isFormSubmitted());
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void formIsSubmitted()
+	void formIsSubmitted()
 	{
 		tester.startPage(FormPage.class);
 
 		FormPage page = (FormPage)tester.getLastRenderedPage();
 
-		Assert.assertFalse(page.isSubmitLinkSubmitted());
-		Assert.assertFalse(page.isFormSubmitted());
+		assertFalse(page.isSubmitLinkSubmitted());
+		assertFalse(page.isFormSubmitted());
 
 		FormTester formTester = tester.newFormTester("form");
 		formTester.submit();
 
 		page = (FormPage)tester.getLastRenderedPage();
 
-		Assert.assertTrue(page.isFormSubmitted());
-		Assert.assertFalse(page.isSubmitLinkSubmitted());
+		assertTrue(page.isFormSubmitted());
+		assertFalse(page.isSubmitLinkSubmitted());
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void formAndLinkAreSubmitted()
+	void formAndLinkAreSubmitted()
 	{
 		tester.startPage(FormPage.class);
 
 		FormPage page = (FormPage)tester.getLastRenderedPage();
 
-		Assert.assertFalse(page.isSubmitLinkSubmitted());
-		Assert.assertFalse(page.isFormSubmitted());
+		assertFalse(page.isSubmitLinkSubmitted());
+		assertFalse(page.isFormSubmitted());
 
 		FormTester formTester = tester.newFormTester("form");
 		formTester.submitLink("link", true);
 
 		page = (FormPage)tester.getLastRenderedPage();
 
-		Assert.assertTrue(page.isFormSubmitted());
-		Assert.assertTrue(page.isSubmitLinkSubmitted());
+		assertTrue(page.isFormSubmitted());
+		assertTrue(page.isSubmitLinkSubmitted());
 	}
 }

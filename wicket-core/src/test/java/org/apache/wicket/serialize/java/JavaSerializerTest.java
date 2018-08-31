@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.serialize.java;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,12 +38,12 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  */
-public class JavaSerializerTest extends WicketTestCase
+class JavaSerializerTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4812
@@ -51,7 +53,7 @@ public class JavaSerializerTest extends WicketTestCase
 	 * in the object tree.
 	 */
 	@Test
-	public void notDetachedModel()
+	void notDetachedModel()
 	{
 		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest")
 		{
@@ -67,7 +69,7 @@ public class JavaSerializerTest extends WicketTestCase
 		model.getObject();
 		WebComponent component = new WebComponent("id", model);
 		byte[] serialized = serializer.serialize(component);
-		assertNull("The produced byte[] must be null if there was an error", serialized);
+		assertNull(serialized, "The produced byte[] must be null if there was an error");
 	}
 
 	/**
@@ -89,19 +91,19 @@ public class JavaSerializerTest extends WicketTestCase
 	 * JavaSerializer and some object in the tree is not Serializable
 	 */
 	@Test
-	public void notSerializable()
+	void notSerializable()
 	{
 		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest");
 		WebComponent component = new NotSerializableComponent("id");
 		byte[] serialized = serializer.serialize(component);
-		assertNull("The produced byte[] must be null if there was an error", serialized);
+		assertNull(serialized, "The produced byte[] must be null if there was an error");
 	}
 
 	private static class NotSerializableComponent extends WebComponent
 	{
 		private final NotSerializableObject member = new NotSerializableObject();
 
-		public NotSerializableComponent(final String id)
+		NotSerializableComponent(final String id)
 		{
 			super(id);
 		}
@@ -110,7 +112,7 @@ public class JavaSerializerTest extends WicketTestCase
 	private static class NotSerializableObject {}
 
 	@Test
-	public void normal()
+	void normal()
 	{
 		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest-normal") {
 			@Override
@@ -127,7 +129,7 @@ public class JavaSerializerTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5667
 	 */
 	@Test
-	public void preserveTheOriginalException()
+	void preserveTheOriginalException()
 	{
 		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest-aa")
 		{
@@ -173,15 +175,15 @@ public class JavaSerializerTest extends WicketTestCase
 		catch (Exception x)
 		{
 			Throwable cause0 = x.getCause();
-			assertThat(cause0, is(instanceOf(WicketRuntimeException.class)));
+			assertThat(cause0, instanceOf(WicketRuntimeException.class));
 			WicketRuntimeException wrx = (WicketRuntimeException) cause0;
 
 			Throwable cause1 = wrx.getCause();
-			assertThat(cause1, is(instanceOf(IllegalStateException.class)));
-			assertThat(cause1.getMessage(), is(equalTo("Cannot serialize me twice!")));
+			assertThat(cause1, instanceOf(IllegalStateException.class));
+			assertEquals("Cannot serialize me twice!", cause1.getMessage());
 
 			Throwable cause2 = cause1.getCause();
-			assertThat(cause2, is(instanceOf(NotSerializableException.class)));
+			assertThat(cause2, instanceOf(NotSerializableException.class));
 		}
 	}
 

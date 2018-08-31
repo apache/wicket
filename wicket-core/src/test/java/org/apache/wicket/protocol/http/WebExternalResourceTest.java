@@ -16,35 +16,36 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.request.handler.resource.ResourceStreamRequestHandler;
 import org.apache.wicket.request.handler.resource.WebExternalResourceRequestHandler;
 import org.apache.wicket.util.io.Streams;
-import org.apache.wicket.core.util.resource.WebExternalResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test WebExternalResourceRequestTarget and WebExternalResourceStream
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class WebExternalResourceTest extends Assert
+class WebExternalResourceTest
 {
 	private WicketTester tester;
 
 	/**
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		File tempDir = new File("target/webapp");
 		tempDir.mkdir();
@@ -62,8 +63,8 @@ public class WebExternalResourceTest extends Assert
 
 	}
 
-	@After
-	public void after() throws Exception
+	@AfterEach
+	void after() throws Exception
 	{
 		tester.destroy();
 	}
@@ -73,7 +74,7 @@ public class WebExternalResourceTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void webExternalResourceRequestTarget() throws Exception
+	void webExternalResourceRequestTarget() throws Exception
 	{
 		WebExternalResourceRequestHandler rt = new WebExternalResourceRequestHandler("/index.html");
 		tester.processRequest(rt);
@@ -87,7 +88,7 @@ public class WebExternalResourceTest extends Assert
 	 */
 	// FIXME WebExternalResourceStream does not implement length()
 	@Test
-	public void webExternalResource() throws Exception
+	void webExternalResource() throws Exception
 	{
 		WebExternalResourceStream resource = new WebExternalResourceStream("/index.html");
 		ResourceStreamRequestHandler rt = new ResourceStreamRequestHandler(resource);

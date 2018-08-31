@@ -16,20 +16,22 @@
  */
 package org.apache.wicket.markup.resolver.issue3559;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * issue-3559
  */
-public class MyTest extends WicketTestCase
+class MyTest extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void test1()
+	void test1()
 	{
 		tester.startPage(HomePage.class);
 		Page page = tester.getLastRenderedPage();

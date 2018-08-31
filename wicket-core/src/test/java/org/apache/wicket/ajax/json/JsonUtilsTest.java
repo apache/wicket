@@ -16,22 +16,23 @@
  */
 package org.apache.wicket.ajax.json;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 6.0.0
  */
-public class JsonUtilsTest extends Assert
+class JsonUtilsTest
 {
 	@Test
-	public void asArray() throws Exception
+    void asArray() throws Exception
 	{
 		Map<String, Object> map = new HashMap<String, Object>();
 

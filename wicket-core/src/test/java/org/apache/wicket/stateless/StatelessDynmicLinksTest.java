@@ -16,20 +16,22 @@
  */
 package org.apache.wicket.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.request.Url;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author svenmeier
  */
-public class StatelessDynmicLinksTest extends WicketTestCase
+class StatelessDynmicLinksTest extends WicketTestCase
 {
 	/**
 	 * WICKET-5460
 	 */
 	@Test
-	public void foo() throws Exception
+	void foo() throws Exception
 	{
 		tester.getApplication().mountPage("/stateless", StatelessPageWithDynamicLinks.class);
 

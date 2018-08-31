@@ -19,12 +19,12 @@ package org.apache.wicket.markup.html.form;
 import java.util.Arrays;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class RadioChoiceTest extends WicketTestCase
+class RadioChoiceTest extends WicketTestCase
 {
 	@Test
-	public void defaultLabelPositionIsAfter() throws Exception
+    void defaultLabelPositionIsAfter() throws Exception
 	{
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		tester.startComponentInPage(radioChoice);
@@ -33,7 +33,7 @@ public class RadioChoiceTest extends WicketTestCase
 	}
 
 	@Test
-	public void labelPositionBefore() throws Exception
+    void labelPositionBefore() throws Exception
 	{
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.BEFORE);
@@ -43,7 +43,7 @@ public class RadioChoiceTest extends WicketTestCase
 	}
 
 	@Test
-	public void labelPositionWrapBefore() throws Exception
+    void labelPositionWrapBefore() throws Exception
 	{
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_BEFORE);
@@ -53,7 +53,7 @@ public class RadioChoiceTest extends WicketTestCase
 	}
 
 	@Test
-	public void labelPositionWrapAfter() throws Exception
+    void labelPositionWrapAfter() throws Exception
 	{
 		RadioChoice<Integer> radioChoice = new RadioChoice<Integer>("testid", Arrays.asList(1));
 		radioChoice.setLabelPosition(AbstractChoice.LabelPosition.WRAP_AFTER);

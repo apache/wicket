@@ -16,16 +16,16 @@
  */
 package org.apache.wicket.markup.head;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.model.Model;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
-public class MetaDataHeaderItemTest
+class MetaDataHeaderItemTest
 {
 	@Test
-	public void testMetaTag() throws Exception
+    void testMetaTag() throws Exception
 	{
 		String expectedString = "<meta name=\"robots\" content=\"index,nofollow\" />\n";
 		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forMetaTag("robots", "index,nofollow");
@@ -34,7 +34,7 @@ public class MetaDataHeaderItemTest
 	}
 	
 	@Test
-	public void testLinkTag() throws Exception
+    void testLinkTag() throws Exception
 	{
 		String expectedString = "<link rel=\"shortcut icon\" href=\"http://www.mysite.com/favicon.ico\" type=\"image/x-icon\" />\n";
 		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("shortcut icon", "http://www.mysite.com/favicon.ico");
@@ -44,7 +44,7 @@ public class MetaDataHeaderItemTest
 	}
 	
 	@Test
-	public void testEscapeOnlyDoubleQuotes() throws Exception
+    void testEscapeOnlyDoubleQuotes() throws Exception
 	{
 		String expectedString = "<link rel=\"single quote \' double quotes\\\"\" href=\"\" />\n";
 		MetaDataHeaderItem metaTag = MetaDataHeaderItem.forLinkTag("single quote \' double quotes\"", "");

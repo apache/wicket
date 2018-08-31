@@ -16,25 +16,26 @@
  */
 package org.apache.wicket.ajax.markup.html.ajaxLink;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class AjaxLinkTest extends WicketTestCase
+class AjaxLinkTest extends WicketTestCase
 {
 	/**
 	 * If the AjaxLink is attached to an "a" tag the href value should be replaced with "#" because
 	 * we use the onclick to execute the javascript.
 	 */
 	@Test
-	public void anchorGetsHrefReplaced()
+	void anchorGetsHrefReplaced()
 	{
 		tester.startPage(AjaxLinkPage.class);
 
@@ -48,7 +49,7 @@ public class AjaxLinkTest extends WicketTestCase
 	 * Tests setting the request target to a normal page request from an ajax request.
 	 */
 	@Test
-	public void fromAjaxRequestToNormalPage()
+	void fromAjaxRequestToNormalPage()
 	{
 		tester.startPage(AjaxLinkPageToNormalPage.class);
 		tester.assertRenderedPage(AjaxLinkPageToNormalPage.class);
@@ -64,7 +65,7 @@ public class AjaxLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void page_2() throws Exception
+	void page_2() throws Exception
 	{
 		executeTest(AjaxPage2.class, "AjaxPage2_ExpectedResult.html");
 
@@ -80,7 +81,7 @@ public class AjaxLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_1() throws Exception
+	void renderHomePage_1() throws Exception
 	{
 		executeTest(AjaxLinkPage.class, "AjaxLinkPageExpectedResult.html");
 	}
@@ -90,7 +91,7 @@ public class AjaxLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2() throws Exception
+	void renderHomePage_2() throws Exception
 	{
 		executeTest(AjaxLinkWithBorderPage.class, "AjaxLinkWithBorderPageExpectedResult.html");
 

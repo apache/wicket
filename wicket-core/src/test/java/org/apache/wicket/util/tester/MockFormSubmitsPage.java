@@ -69,11 +69,11 @@ public class MockFormSubmitsPage extends WebPage
 		});
 	}
 
-	protected void onAjaxSubmitLinkSubmit(AjaxRequestTarget target)
+	void onAjaxSubmitLinkSubmit(AjaxRequestTarget target)
 	{
 	}
 
-	protected void onAjaxButtonSubmit(AjaxRequestTarget target)
+	void onAjaxButtonSubmit(AjaxRequestTarget target)
 	{
 	}
 }

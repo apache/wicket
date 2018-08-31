@@ -16,14 +16,15 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author oli
  */
-public class FeedbackMessagesTest extends WicketTestCase
+class FeedbackMessagesTest extends WicketTestCase
 {
 
 	/**
@@ -32,13 +33,13 @@ public class FeedbackMessagesTest extends WicketTestCase
 	 * .
 	 */
 	@Test
-	public void hasMessageForComponentInt()
+	void hasMessageForComponentInt()
 	{
 		final Page page = new TestPage_1();
 		tester.startPage(page);
 		page.debug("debug message");
 		page.info("info message");
 		page.error("error message");
-		Assert.assertTrue(tester.getLastRenderedPage().hasErrorMessage());
+		assertTrue(tester.getLastRenderedPage().hasErrorMessage());
 	}
 }

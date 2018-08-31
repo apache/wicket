@@ -64,7 +64,7 @@ public class MockLoginPage extends WebPage
 	 * @param username
 	 * @return boolean
 	 */
-	public boolean login(String username)
+    private boolean login(String username)
 	{
 		((MySession)Session.get()).setUsername(username);
 		continueToOriginalDestination();

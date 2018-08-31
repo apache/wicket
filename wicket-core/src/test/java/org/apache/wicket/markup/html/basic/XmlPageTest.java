@@ -22,7 +22,7 @@ import org.apache.wicket.resource.IsoPropertiesFilePropertiesLoader;
 import org.apache.wicket.resource.PropertiesFactory;
 import org.apache.wicket.resource.XmlFilePropertiesLoader;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Juergen Donnerstag
  */
-public class XmlPageTest extends WicketTestCase
+class XmlPageTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(XmlPageTest.class);
 
@@ -39,7 +39,7 @@ public class XmlPageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_1() throws Exception
+    void renderHomePage_1() throws Exception
 	{
 		executeTest(XmlPage_1.class, "XmlPageExpectedResult_1.xml");
 	}
@@ -48,7 +48,7 @@ public class XmlPageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2() throws Exception
+    void renderHomePage_2() throws Exception
 	{
 		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
@@ -60,7 +60,7 @@ public class XmlPageTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_3() throws Exception
+    void renderHomePage_3() throws Exception
 	{
 		IPropertiesFactory myFac = new MyPropertiesFactory(tester.getApplication());
 		tester.getApplication().getResourceSettings().setPropertiesFactory(myFac);
@@ -75,7 +75,7 @@ public class XmlPageTest extends WicketTestCase
 		 * 
 		 * @param application
 		 */
-		public MyPropertiesFactory(Application application)
+        MyPropertiesFactory(Application application)
 		{
 			super(application.getResourceSettings());
 

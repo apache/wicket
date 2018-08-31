@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.application.IComponentOnConfigureListener;
@@ -26,12 +28,12 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link Component#onConfigure()}
  */
-public class ComponentOnConfigureTest extends WicketTestCase
+class ComponentOnConfigureTest extends WicketTestCase
 {
 	private static final AtomicInteger COUNTER = new AtomicInteger(0);
 	private static final AtomicInteger PAGE = new AtomicInteger(0);
@@ -43,20 +45,21 @@ public class ComponentOnConfigureTest extends WicketTestCase
 	 * testOrder()
 	 */
 	@Test
-	public void order()
+	void order()
 	{
 		tester.getApplication().getComponentOnConfigureListeners().add(new TestInitListener());
 
 		tester.startPage(new TestPage());
 
-		assertEquals("Page must be configured first!", 0, PAGE.get());
-//		assertEquals("Application listener for page must be configured second!", 1, APPLICATION_LISTENER.get());
-		assertEquals("Component must be configured third!", 2, COMPONENT.get());
-		assertEquals("The behavior must be configured fourth!", 3, BEHAVIOR.get());
-//		assertEquals("Application listener for HtmlHeaderContainer must be configured second!",
-//          4, APPLICATION_LISTENER.get());
-		assertEquals("The application listener for the component must be configured fifth!",
-				5, APPLICATION_LISTENER.get());
+		assertEquals(0, PAGE.get(), "Page must be configured first!");
+// assertEquals("Application listener for page must be configured second!", 1,
+// APPLICATION_LISTENER.get());
+		assertEquals(2, COMPONENT.get(), "Component must be configured third!");
+		assertEquals(3, BEHAVIOR.get(), "The behavior must be configured fourth!");
+// assertEquals("Application listener for HtmlHeaderContainer must be configured second!",
+// 4, APPLICATION_LISTENER.get());
+		assertEquals(5, APPLICATION_LISTENER.get(),
+			"The application listener for the component must be configured fifth!");
 	}
 
 	private static class TestPage extends WebPage implements IMarkupResourceStreamProvider
@@ -70,7 +73,8 @@ public class ComponentOnConfigureTest extends WicketTestCase
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body><span wicket:id='c'></span></body></html>");
+			return new StringResourceStream(
+				"<html><body><span wicket:id='c'></span></body></html>");
 		}
 
 		@Override
@@ -83,7 +87,7 @@ public class ComponentOnConfigureTest extends WicketTestCase
 
 	private static class TestComponent extends WebMarkupContainer
 	{
-		public TestComponent(String id)
+		TestComponent(String id)
 		{
 			super(id);
 			add(new TestBehavior());

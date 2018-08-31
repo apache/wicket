@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.pageStore;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.serialize.ISerializer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for PerSessionPageStore
@@ -26,7 +28,7 @@ import org.junit.Test;
 public class PerSessionPageStoreTest extends AbstractPageStoreTest
 {
 	@Override
-	protected IPageStore createPageStore(ISerializer serializer, IDataStore dataStore, int maxEntries)
+	IPageStore createPageStore(ISerializer serializer, IDataStore dataStore, int maxEntries)
 	{
 		return new PerSessionPageStore(serializer, dataStore, maxEntries);
 	}
@@ -37,7 +39,7 @@ public class PerSessionPageStoreTest extends AbstractPageStoreTest
 	 */
 	@Test
 	@Override
-	public void maxSizeDifferentSessions()
+	void maxSizeDifferentSessions()
 	{
 		String sessionId2 = "0987654321";
 

@@ -47,7 +47,7 @@ public class HomePage extends WebPage
 	public String textfield2;
 
 	/** */
-	public int formSubmitted = 0;
+    private int formSubmitted = 0;
 
 	/** */
 	public static int AJAX = 2;

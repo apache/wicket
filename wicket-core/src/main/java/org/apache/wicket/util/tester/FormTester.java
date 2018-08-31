@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,12 +34,12 @@ import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -48,8 +49,6 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * A helper class for testing validation and submission of <code>FormComponent</code>s.
@@ -581,8 +580,7 @@ public class FormTester
 	public FormTester setValue(final String formComponentId, final String value)
 	{
 		Component component = workingForm.get(formComponentId);
-		assertNotNull("Unable to set value. Couldn't find component with name: " +
-			formComponentId, component);
+		assertNotNull(component, "Unable to set value. Couldn't find component with name: " + formComponentId);
 		return setValue(component, value);
 	}
 

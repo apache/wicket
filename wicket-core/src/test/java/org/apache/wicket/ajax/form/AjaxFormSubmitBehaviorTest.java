@@ -16,16 +16,17 @@
  */
 package org.apache.wicket.ajax.form;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.NestedFormPage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class AjaxFormSubmitBehaviorTest extends WicketTestCase
+class AjaxFormSubmitBehaviorTest extends WicketTestCase
 {
 	/**
 	 * Test case for WICKET-1743
@@ -33,7 +34,7 @@ public class AjaxFormSubmitBehaviorTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1743">WICKET-1743</a>
 	 */
 	@Test
-	public void ajaxFormSubmitBehavior()
+	void ajaxFormSubmitBehavior()
 	{
 		// start and render the test page
 		tester.startPage(AjaxFormSubmitBehaviorTestPage.class);
@@ -50,7 +51,7 @@ public class AjaxFormSubmitBehaviorTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6455
 	 */
 	@Test
-	public void innerFormSubmit()
+	void innerFormSubmit()
 	{
 		tester.startPage(NestedFormTestPage.class);
 		
@@ -69,7 +70,7 @@ public class AjaxFormSubmitBehaviorTest extends WicketTestCase
 	 * onSubmit must be called once.
 	 */
 	@Test
-	public void formReplacement() 
+	void formReplacement()
 	{
 		PanelEdit panelEdit = tester.startComponentInPage(PanelEdit.class);
 		FormTester formTester = tester.newFormTester(panelEdit.getId() + ":form");
@@ -86,14 +87,14 @@ public class AjaxFormSubmitBehaviorTest extends WicketTestCase
 		private static final long serialVersionUID = -515262294201762225L;
 		
 		
-		public NestedFormTestPage() 
+		public NestedFormTestPage()
 		{
-			Form<?> inner = new Form("inner") {
+			Form<Void> inner = new Form<>("inner") {
 				@Override
 				protected boolean wantSubmitOnParentFormSubmit() {
 					return false;
 				}
-				
+
 				@Override
 				protected void onSubmit() {
 					super.onSubmit();

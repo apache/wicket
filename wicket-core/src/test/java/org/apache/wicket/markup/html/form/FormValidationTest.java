@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -25,19 +26,19 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
-import org.apache.wicket.util.tester.WicketTesterScope;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.wicket.util.tester.WicketTesterExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Form validation related tests
  * 
  * @author igor
  */
-public class FormValidationTest
+class FormValidationTest
 {
-	@Rule
-	public WicketTesterScope scope = new WicketTesterScope();
+	@RegisterExtension
+	public WicketTesterExtension scope = new WicketTesterExtension();
 
 	/**
 	 * Tests validation of form components when all errors are rendered using a feedback panel.
@@ -47,7 +48,7 @@ public class FormValidationTest
 	 * end of the request.
 	 */
 	@Test
-	public void renderedFeedbackMessages()
+	void renderedFeedbackMessages()
 	{
 		// start the page
 
@@ -90,7 +91,7 @@ public class FormValidationTest
 	 * they should not block the component from re-validating.
 	 */
 	@Test
-	public void unrenderedFeedbackMessages()
+	void unrenderedFeedbackMessages()
 	{
 		// start the page
 
@@ -122,12 +123,12 @@ public class FormValidationTest
 	}
 
 
-	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+    public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public final TextField field1;
-		public final Form form;
+		final TextField field1;
+		final Form form;
 
-		public TestPage()
+        public TestPage()
 		{
 			form = new Form("form");
 			add(form);

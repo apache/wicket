@@ -22,15 +22,15 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-6021
  */
-public class AddChildToParentInOnInitializeTest extends WicketTestCase
+class AddChildToParentInOnInitializeTest extends WicketTestCase
 {
 	@Test
-	public void addChildToParentInOnInitialize()
+    void addChildToParentInOnInitialize()
 	{
 		tester.startPage(TestPage.class);
 		tester.assertRenderedPage(TestPage.class);
@@ -40,10 +40,10 @@ public class AddChildToParentInOnInitializeTest extends WicketTestCase
 
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public static final String FIRST_CHILD_ID = "firstChild";
-		public static final String PARENT_ID = "parentContainer";
-		public static final String SECOND_CHILD_ID = "thirdChild";
-		public static final String THIRD_CHILD_ID = "fourthChild";
+		static final String FIRST_CHILD_ID = "firstChild";
+		static final String PARENT_ID = "parentContainer";
+		static final String SECOND_CHILD_ID = "thirdChild";
+		static final String THIRD_CHILD_ID = "fourthChild";
 
 		@Override
 		protected void onInitialize()
@@ -71,7 +71,7 @@ public class AddChildToParentInOnInitializeTest extends WicketTestCase
 
 	private static class Parent extends WebMarkupContainer
 	{
-		public Parent()
+		Parent()
 		{
 			super(TestPage.PARENT_ID);
 
@@ -82,7 +82,7 @@ public class AddChildToParentInOnInitializeTest extends WicketTestCase
 
 	private static class SecondChild extends WebMarkupContainer
 	{
-		public SecondChild()
+		SecondChild()
 		{
 			super(TestPage.SECOND_CHILD_ID);
 		}

@@ -16,20 +16,23 @@
  */
 package org.apache.wicket.request.handler.render;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestVariations
+import org.junit.jupiter.api.Test;
+
+class TestVariations
 {
 	@Test
-	public void testSingle()
+	void testSingle()
 	{
 		VariationIterator<Boolean> single = VariationIterator.of(Variation.ofBoolean());
-		Assert.assertTrue(single.hasNext());
+		assertTrue(single.hasNext());
 		single.next();
-		Assert.assertTrue(single.hasNext());
+		assertTrue(single.hasNext());
 		single.next();
-		Assert.assertFalse(single.hasNext());
+		assertFalse(single.hasNext());
 
 		Exception ex = null;
 		try
@@ -40,29 +43,29 @@ public class TestVariations
 		{
 			ex = e;
 		}
-		Assert.assertNotNull(ex);
+		assertNotNull(ex);
 	}
 
 	@Test
-	public void testDouble()
+	void testDouble()
 	{
 		VariationIterator<Integer> numbers = VariationIterator.of(new Variation<>(1,2,3));
 		VariationIterator<Boolean> flag = VariationIterator.of(numbers,Variation.ofBoolean());
 		VariationIterator<?> last=flag;
 
-		Assert.assertTrue(last.hasNext());
+		assertTrue(last.hasNext());
 		last.next();
-		Assert.assertTrue(last.hasNext());
+		assertTrue(last.hasNext());
 		last.next();
-		Assert.assertTrue(last.hasNext());
+		assertTrue(last.hasNext());
 		last.next();
-		Assert.assertTrue(last.hasNext());
+		assertTrue(last.hasNext());
 		last.next();
-		Assert.assertTrue(last.hasNext());
+		assertTrue(last.hasNext());
 		last.next();
-		Assert.assertTrue(last.hasNext());
+		assertTrue(last.hasNext());
 		last.next();
-		Assert.assertFalse(last.hasNext());
+		assertFalse(last.hasNext());
 
 		Exception ex = null;
 		try
@@ -73,6 +76,6 @@ public class TestVariations
 		{
 			ex = e;
 		}
-		Assert.assertNotNull(ex);
+		assertNotNull(ex);
 	}
 }

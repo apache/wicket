@@ -27,19 +27,19 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests that changing component's variation will use the correct markup
  */
-public class MarkupVariationTest extends WicketTestCase
+class MarkupVariationTest extends WicketTestCase
 {
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3931
 	 */
 	@Test
-	public void changeVariation()
+    void changeVariation()
 	{
 		tester.startPage(new VariationPage());
 		tester.assertContainsNot("Two");
@@ -67,7 +67,7 @@ public class MarkupVariationTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6231
 	 */
 	@Test
-	public void changeVariationBeforeRendering() throws Exception
+    void changeVariationBeforeRendering() throws Exception
 	{
 		tester.startPage(new VariationPage());
 		FormTester formTester = tester.newFormTester("p:a_form");
@@ -97,7 +97,7 @@ public class MarkupVariationTest extends WicketTestCase
 	{
 		private String variation;
 
-		public VariationPanel(String id)
+		VariationPanel(String id)
 		{
 			super(id);
 

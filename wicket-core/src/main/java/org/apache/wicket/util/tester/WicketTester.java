@@ -16,6 +16,18 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import javax.servlet.ServletContext;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -41,18 +53,6 @@ import org.apache.wicket.util.lang.Objects;
 import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.ServletContext;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A helper class to ease unit testing of Wicket applications without the need for a servlet
@@ -147,16 +147,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * Cookie handling:
  *
- * There are some expectations about wicket tester cookie handling which should match as best as
- * it can be with a real client server request response cycle:
- * - all valid cookies set before a request is made (tester.getRequest().addCookie()) should
- *   appear in the page request
- * - all cookies set in the response should appear in the last response (tester.getLastResponse())
- *   after the request is made (expired cookies and others)
- * - all cookies set in the response should appear even after a redirect response is made
- *   until the final response (tester.getLastResponse()) is written to the client (wicket tester)
- * - all valid cookies (maxAge!=0) from the last response should be added to
- *   the next request cookies (tester.getRequest().getCookies())
+ * There are some expectations about wicket tester cookie handling which should match as best as it
+ * can be with a real client server request response cycle: - all valid cookies set before a request
+ * is made (tester.getRequest().addCookie()) should appear in the page request - all cookies set in
+ * the response should appear in the last response (tester.getLastResponse()) after the request is
+ * made (expired cookies and others) - all cookies set in the response should appear even after a
+ * redirect response is made until the final response (tester.getLastResponse()) is written to the
+ * client (wicket tester) - all valid cookies (maxAge!=0) from the last response should be added to
+ * the next request cookies (tester.getRequest().getCookies())
  *
  *
  * TODO General: Example usage of FormTester
@@ -259,19 +257,41 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
+	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or
+	 * null if not set
+	 *
+	 * @return path with a trailing slash
+	 */
+	public static String getBasedir()
+	{
+		String basedir = System.getProperty("basedir");
+		if (basedir != null)
+		{
+			basedir = basedir + "/";
+		}
+		else
+		{
+			basedir = "";
+		}
+		return basedir;
+	}
+
+	/**
 	 * Asserts that the Ajax location header is present.
 	 */
 	public void assertAjaxLocation()
 	{
 		if (null != getLastResponse().getHeader("Location"))
 		{
-			throw new AssertionFailedError("Location header should *not* be present when using Ajax");
+			throw new AssertionFailedError(
+				"Location header should *not* be present when using Ajax");
 		}
 
 		String ajaxLocation = getLastResponse().getHeader("Ajax-Location");
 		if (null == ajaxLocation)
 		{
-			throw new AssertionFailedError("Ajax-Location header should be present when using Ajax");
+			throw new AssertionFailedError(
+				"Ajax-Location header should be present when using Ajax");
 		}
 
 		int statusCode = getLastResponse().getStatus();
@@ -295,8 +315,7 @@ public class WicketTester extends BaseWicketTester
 	}
 
 	/**
-	 * Asserts that the <code>Component</code> a the given path has a behavior
-	 * of the given type.
+	 * Asserts that the <code>Component</code> a the given path has a behavior of the given type.
 	 *
 	 * @param path
 	 *            path to <code>Component</code>
@@ -310,14 +329,14 @@ public class WicketTester extends BaseWicketTester
 		Component component = assertExists(path);
 		List<? extends Behavior> behaviors = component.getBehaviors(expectedBehaviorClass);
 		final String message = String.format("Component '%s' has no behaviors of type '%s'",
-				component.getPageRelativePath(), expectedBehaviorClass);
+			component.getPageRelativePath(), expectedBehaviorClass);
 		assertResult(new Result(CollectionUtils.isEmpty(behaviors), message));
 	}
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually tests that a
-	 * <code>Component</code> is on the Ajax response sent back to the client.
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually
+	 * tests that a <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript. But it shouldn't be needed because you just have to trust that Wicket
@@ -334,8 +353,8 @@ public class WicketTester extends BaseWicketTester
 
 	/**
 	 * Tests that a <code>Component</code> has been added to a <code>AjaxRequestTarget</code>, using
-	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually tests that a
-	 * <code>Component</code> is on the Ajax response sent back to the client.
+	 * {@link org.apache.wicket.ajax.AjaxRequestTarget#add(Component...)}. This method actually
+	 * tests that a <code>Component</code> is on the Ajax response sent back to the client.
 	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the <code>Component</code> in the client DOM
 	 * tree, using JavaScript. But it shouldn't be needed because you just have to trust that Wicket
@@ -376,9 +395,9 @@ public class WicketTester extends BaseWicketTester
 	 * Asserts that a component's markup has loaded with the given variation
 	 *
 	 * @param component
-	 *              The component which markup to check
+	 *            The component which markup to check
 	 * @param expectedVariation
-	 *              The expected variation of the component's markup
+	 *            The expected variation of the component's markup
 	 */
 	public void assertMarkupVariation(Component component, String expectedVariation)
 	{
@@ -388,7 +407,8 @@ public class WicketTester extends BaseWicketTester
 		String actualVariation = markup.getMarkupResourceStream().getVariation();
 		if (Objects.equal(expectedVariation, actualVariation) == false)
 		{
-			result = Result.fail(String.format("Wrong variation for component '%s'. Actual: '%s', expected: '%s'",
+			result = Result.fail(
+				String.format("Wrong variation for component '%s'. Actual: '%s', expected: '%s'",
 					component.getPageRelativePath(), actualVariation, expectedVariation));
 		}
 
@@ -399,10 +419,10 @@ public class WicketTester extends BaseWicketTester
 	 * Asserts that a component's markup has loaded with the given style.
 	 *
 	 * @param component
-	 *              The component which markup to check
+	 *            The component which markup to check
 	 * @param expectedStyle
-	 *              The expected style of the component's markup.
-	 *              For example: <em>green</em> in <code>MyPanel_green.html</code>
+	 *            The expected style of the component's markup. For example: <em>green</em> in
+	 *            <code>MyPanel_green.html</code>
 	 */
 	public void assertMarkupStyle(Component component, String expectedStyle)
 	{
@@ -412,7 +432,8 @@ public class WicketTester extends BaseWicketTester
 		String actualStyle = markup.getMarkupResourceStream().getStyle();
 		if (Objects.equal(expectedStyle, actualStyle) == false)
 		{
-			result = Result.fail(String.format("Wrong style for component '%s'. Actual: '%s', expected: '%s'",
+			result = Result
+				.fail(String.format("Wrong style for component '%s'. Actual: '%s', expected: '%s'",
 					component.getPageRelativePath(), actualStyle, expectedStyle));
 		}
 
@@ -423,9 +444,9 @@ public class WicketTester extends BaseWicketTester
 	 * Asserts that a component's markup has loaded with the given locale
 	 *
 	 * @param component
-	 *              The component which markup to check
+	 *            The component which markup to check
 	 * @param expectedLocale
-	 *              The expected locale of the component's markup
+	 *            The expected locale of the component's markup
 	 */
 	public void assertMarkupLocale(Component component, Locale expectedLocale)
 	{
@@ -435,7 +456,8 @@ public class WicketTester extends BaseWicketTester
 		Locale actualLocale = markup.getMarkupResourceStream().getLocale();
 		if (Objects.equal(expectedLocale, actualLocale) == false)
 		{
-			result = Result.fail(String.format("Wrong locale for component '%s'. Actual: '%s', expected: '%s'",
+			result = Result
+				.fail(String.format("Wrong locale for component '%s'. Actual: '%s', expected: '%s'",
 					component.getPageRelativePath(), actualLocale, expectedLocale));
 		}
 
@@ -447,7 +469,7 @@ public class WicketTester extends BaseWicketTester
 		IMarkupFragment markup = null;
 		if (component instanceof MarkupContainer)
 		{
-			markup = ((MarkupContainer) component).getAssociatedMarkup();
+			markup = ((MarkupContainer)component).getAssociatedMarkup();
 		}
 
 		if (markup == null)
@@ -457,7 +479,8 @@ public class WicketTester extends BaseWicketTester
 
 		if (markup == null)
 		{
-			throw new AssertionFailedError(String.format("Cannot find the markup of component: %s", component.getPageRelativePath()));
+			throw new AssertionFailedError(String.format("Cannot find the markup of component: %s",
+				component.getPageRelativePath()));
 		}
 
 		return markup;
@@ -471,7 +494,8 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertErrorMessages(Serializable... expectedErrorMessages)
 	{
-		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR), expectedErrorMessages);
+		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.ERROR),
+			expectedErrorMessages);
 	}
 
 	/**
@@ -482,7 +506,8 @@ public class WicketTester extends BaseWicketTester
 	 */
 	public void assertInfoMessages(Serializable... expectedInfoMessages)
 	{
-		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO), expectedInfoMessages);
+		assertFeedbackMessages(new ExactLevelFeedbackMessageFilter(FeedbackMessage.INFO),
+			expectedInfoMessages);
 	}
 
 	/**
@@ -493,7 +518,8 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedMessages
 	 *            expected feedback messages
 	 */
-	public void assertFeedbackMessages(IFeedbackMessageFilter filter, Serializable... expectedMessages)
+	public void assertFeedbackMessages(IFeedbackMessageFilter filter,
+		Serializable... expectedMessages)
 	{
 		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
 		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
@@ -504,31 +530,33 @@ public class WicketTester extends BaseWicketTester
 	 * Asserts that there is a feedback message provided by a given component
 	 *
 	 * @param component
-	 *          the component that provided the expected feedback message. Optional.
+	 *            the component that provided the expected feedback message. Optional.
 	 * @param key
-	 *          the resource key for the feedback message. Mandatory.
+	 *            the resource key for the feedback message. Mandatory.
 	 * @param model
-	 *          the model used for interpolating the feedback message. Optional.
+	 *            the model used for interpolating the feedback message. Optional.
 	 * @param filter
-	 *          the filter that decides in which messages to look in. E.g. with a specific
-	 *          level, rendered or not, etc.
+	 *            the filter that decides in which messages to look in. E.g. with a specific level,
+	 *            rendered or not, etc.
 	 */
-	public void assertComponentFeedbackMessage(Component component, String key, IModel<?> model, IFeedbackMessageFilter filter)
+	public void assertComponentFeedbackMessage(Component component, String key, IModel<?> model,
+		IFeedbackMessageFilter filter)
 	{
 		Args.notNull(key, "key");
 
-		String expectedMessage = getApplication().getResourceSettings().getLocalizer().getString(key, component, model);
+		String expectedMessage = getApplication().getResourceSettings().getLocalizer().getString(
+			key, component, model);
 
 		List<FeedbackMessage> feedbackMessages = getFeedbackMessages(filter);
 		List<Serializable> actualMessages = getActualFeedbackMessages(feedbackMessages);
 
-		assertTrue(actualMessages.contains(expectedMessage),
-				   String.format("Feedback message with key '%s' cannot be found in %s", key, actualMessages));
+		assertTrue(actualMessages.contains(expectedMessage), String
+			.format("Feedback message with key '%s' cannot be found in %s", key, actualMessages));
 	}
 
 	/**
-	 * Extracts the actual messages from the passed feedback messages.
-	 * Specially handles ValidationErrorFeedback messages by extracting their String message
+	 * Extracts the actual messages from the passed feedback messages. Specially handles
+	 * ValidationErrorFeedback messages by extracting their String message
 	 *
 	 * @param feedbackMessages
 	 *            the feedback messages
@@ -571,12 +599,14 @@ public class WicketTester extends BaseWicketTester
 		final List<FeedbackMessage> renderedMessages = model.getObject();
 		if (renderedMessages == null)
 		{
-			throw new AssertionFailedError(String.format("feedback panel at path [%s] returned null messages", path));
+			throw new AssertionFailedError(
+				String.format("feedback panel at path [%s] returned null messages", path));
 		}
 		if (messages.length != renderedMessages.size())
 		{
-			throw new AssertionFailedError(String.format("you expected '%d' messages for the feedback panel [%s], but there were actually '%d'",
-					messages.length, path, renderedMessages.size()));
+			throw new AssertionFailedError(String.format(
+				"you expected '%d' messages for the feedback panel [%s], but there were actually '%d'",
+				messages.length, path, renderedMessages.size()));
 		}
 		for (int i = 0; i < messages.length && i < renderedMessages.size(); i++)
 		{
@@ -832,15 +862,16 @@ public class WicketTester extends BaseWicketTester
 		}
 		catch (ClassCastException e)
 		{
-			throw new IllegalArgumentException("Component with id:" + id +
-				" is not a BookmarkablePageLink");
+			throw new IllegalArgumentException(
+				"Component with id:" + id + " is not a BookmarkablePageLink");
 		}
 
-		assertEquals(pageClass,
-			pageLink.getPageClass(), "BookmarkablePageLink: " + id + " is pointing to the wrong page");
+		assertEquals(pageClass, pageLink.getPageClass(),
+			"BookmarkablePageLink: " + id + " is pointing to the wrong page");
 
-		assertEquals(parameters, pageLink.getPageParameters(), "One or more of the parameters associated with the BookmarkablePageLink: " +
-				id + " do not match");
+		assertEquals(parameters, pageLink.getPageParameters(),
+			"One or more of the parameters associated with the BookmarkablePageLink: " + id +
+				" do not match");
 	}
 
 	/**
@@ -967,25 +998,5 @@ public class WicketTester extends BaseWicketTester
 	{
 		String actualRedirectUrl = getLastResponse().getRedirectLocation();
 		assertEquals(expectedRedirectUrl, actualRedirectUrl);
-	}
-
-	/**
-	 * Returns the current Maven build directory taken from the <tt>basedir</tt> system property, or
-	 * null if not set
-	 *
-	 * @return path with a trailing slash
-	 */
-	public static String getBasedir()
-	{
-		String basedir = System.getProperty("basedir");
-		if (basedir != null)
-		{
-			basedir = basedir + "/";
-		}
-		else
-		{
-			basedir = "";
-		}
-		return basedir;
 	}
 }

@@ -19,7 +19,7 @@ package org.apache.wicket.ajax.markup.html.componentMap;
 import org.apache.wicket.Page;
 import org.apache.wicket.util.tester.DiffUtil;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -27,13 +27,13 @@ import org.junit.Test;
  * 
  * @author Juergen Donnerstag
  */
-public class SimpleTestPanelTest extends WicketTestCase
+class SimpleTestPanelTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderHomePage_2() throws Exception
+    void renderHomePage_2() throws Exception
 	{
 		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 

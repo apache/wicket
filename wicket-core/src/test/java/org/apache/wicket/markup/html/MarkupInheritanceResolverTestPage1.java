@@ -24,7 +24,7 @@ public class MarkupInheritanceResolverTestPage1 extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/** */
-	public MarkupInheritanceResolverTestPage1()
+    MarkupInheritanceResolverTestPage1()
 	{
 		add(new Label("test1", "test1"));
 	}

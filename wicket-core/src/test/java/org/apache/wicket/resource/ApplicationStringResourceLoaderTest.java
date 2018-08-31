@@ -16,11 +16,13 @@
  */
 package org.apache.wicket.resource;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Locale;
 
 import org.apache.wicket.resource.loader.ClassStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.
@@ -48,8 +50,8 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	public void loaderUnknownResources()
 	{
 		assertNull(
-			"Unknown resource should return null",
 			createLoader().loadStringResource(component.getClass(),
-				"test.string.that.does.not.exist", Locale.getDefault(), null, null));
+				"test.string.that.does.not.exist", Locale.getDefault(), null, null),
+			"Unknown resource should return null");
 	}
 }

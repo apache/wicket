@@ -16,20 +16,24 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link PasswordTextField}.
  *
  * @author svenmeier
  */
-public class PasswordTextFieldTest extends WicketTestCase
+class PasswordTextFieldTest extends WicketTestCase
 {
 
 	@Test
-	public void nullifyPassword()
+	void nullifyPassword()
 	{
 		TestModel model = new TestModel();
 
@@ -42,7 +46,7 @@ public class PasswordTextFieldTest extends WicketTestCase
 	}
 
 	@Test
-	public void nullifyPasswordOnNullModel()
+	void nullifyPasswordOnNullModel()
 	{
 		PasswordTextField field = new PasswordTextField("password");
 		field.setVisible(false);
@@ -53,7 +57,7 @@ public class PasswordTextFieldTest extends WicketTestCase
 
 
 	@Test
-	public void nullifyNoReset()
+	void nullifyNoReset()
 	{
 		TestModel model = new TestModel();
 
@@ -68,9 +72,9 @@ public class PasswordTextFieldTest extends WicketTestCase
 
 	private class TestModel implements IModel<String>
 	{
-		public boolean detached;
+		boolean detached;
 
-		public String password = "test";
+		String password = "test";
 
 		@Override
 		public String getObject()

@@ -16,22 +16,22 @@
  */
 package org.apache.wicket.request.handler.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.authorization.IAuthorizationStrategy;
-import org.apache.wicket.authorization.IUnauthorizedResourceRequestListener;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests authorization of IResources
  */
-public class ResourceAuthorizationTest extends WicketTestCase
+class ResourceAuthorizationTest extends WicketTestCase
 {
 	private static class RejectingAuthorizationStrategy extends IAuthorizationStrategy.AllowAllAuthorizationStrategy
 	{
@@ -61,7 +61,7 @@ public class ResourceAuthorizationTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5012
 	 */
 	@Test
-	public void rejectWith403()
+	void rejectWith403()
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new RejectingAuthorizationStrategy());
 
@@ -72,30 +72,23 @@ public class ResourceAuthorizationTest extends WicketTestCase
 				tester.getLastResponse().getErrorMessage());
 	}
 
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
-
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5012
 	 */
 	@Test
-	public void rejectWithException()
+	void rejectWithException()
 	{
 		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(new RejectingAuthorizationStrategy());
-		tester.getApplication().getSecuritySettings().setUnauthorizedResourceRequestListener(new IUnauthorizedResourceRequestListener()
-		{
-			@Override
-			public void onUnauthorizedRequest(IResource resource, PageParameters parameters)
-			{
-				throw new RuntimeException("Not authorized to request: " + resource);
-			}
+		tester.getApplication().getSecuritySettings().setUnauthorizedResourceRequestListener((resource, parameters) -> {
+			throw new RuntimeException("Not authorized to request: " + resource);
 		});
 
 		TestResource resource = new TestResource();
 
-		expectedException.expect(RuntimeException.class);
-		expectedException.expectMessage("Not authorized to request: " + resource);
+		Exception e = assertThrows(RuntimeException.class, () -> {
+			tester.startResource(resource);
+		});
 
-		tester.startResource(resource);
+		assertEquals("Not authorized to request: " + resource, e.getMessage());
 	}
 }

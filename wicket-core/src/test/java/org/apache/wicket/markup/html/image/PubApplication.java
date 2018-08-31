@@ -24,7 +24,7 @@ import org.apache.wicket.protocol.http.WebApplication;
  * 
  * @author Jonathan Locke
  */
-public class PubApplication extends WebApplication
+class PubApplication extends WebApplication
 {
 	/**
 	 * Constructor

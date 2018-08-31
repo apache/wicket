@@ -17,14 +17,14 @@
 package org.apache.wicket.markup.html.basic;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for Label components
  * 
  * @author Eelco Hillenius
  */
-public class LabelTest extends WicketTestCase
+class LabelTest extends WicketTestCase
 {
 	/**
 	 * Test escaping markup.
@@ -32,7 +32,7 @@ public class LabelTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void labelWithEscapeMarkup() throws Exception
+    void labelWithEscapeMarkup() throws Exception
 	{
 		executeTest(LabelWithEscapeMarkupPage.class, "LabelWithEscapeMarkupPageExpectedResult.html");
 	}
@@ -43,7 +43,7 @@ public class LabelTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void labelWithoutEscapeMarkup() throws Exception
+    void labelWithoutEscapeMarkup() throws Exception
 	{
 		executeTest(LabelWithoutEscapeMarkupPage.class,
 			"LabelWithoutEscapeMarkupPageExpectedResult.html");

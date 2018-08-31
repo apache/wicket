@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.versioning;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.wicket.IPageManagerProvider;
 import org.apache.wicket.Page;
@@ -30,22 +30,22 @@ import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test for page versioning
  */
-public class PageVersioningTest
+class PageVersioningTest
 {
-	WicketTester wicketTester;
+	private WicketTester wicketTester;
 
 	/**
 	 * setup()
 	 */
-	@Before
-	public void setup()
+	@BeforeEach
+	void setup()
 	{
 		final PageVersioningApplication application = new PageVersioningApplication();
 
@@ -81,8 +81,8 @@ public class PageVersioningTest
 
 	/**
 	 */
-	@After
-	public void after()
+	@AfterEach
+	void after()
 	{
 		wicketTester.destroy();
 	}
@@ -91,7 +91,7 @@ public class PageVersioningTest
 	 * versionPage()
 	 */
 	@Test
-	public void versionPage()
+	void versionPage()
 	{
 		Page versioningPage = wicketTester.startPage(VersioningTestPage.class);
 

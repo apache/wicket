@@ -16,6 +16,12 @@
  */
 package org.apache.wicket.markup.html.form.upload;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -30,8 +36,7 @@ import org.apache.wicket.util.file.FileCleanerTrackerAdapter;
 import org.apache.wicket.util.file.IFileCleaner;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test of FileUpload
@@ -49,7 +54,7 @@ public class FileUploadTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void getInputStream() throws Exception
+	void getInputStream() throws Exception
 	{
 		final IFileCleaner fileUploadCleaner = new FileCleaner();
 
@@ -110,7 +115,7 @@ public class FileUploadTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void writeToTempFile() throws IOException
+	void writeToTempFile() throws IOException
 	{
 		tester.startPage(TestPage.class);
 

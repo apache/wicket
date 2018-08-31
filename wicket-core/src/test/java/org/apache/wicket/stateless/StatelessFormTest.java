@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -24,13 +27,13 @@ import org.apache.wicket.stateless.pages.HomePage;
 import org.apache.wicket.stateless.pages.LoginPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author marrink
  */
-public class StatelessFormTest extends WicketTestCase
+class StatelessFormTest extends WicketTestCase
 {
 	private final Class<? extends Page> HOME = HomePage.class;
 	private final Class<? extends Page> LOGIN = LoginPage.class;
@@ -52,7 +55,7 @@ public class StatelessFormTest extends WicketTestCase
 	 * Login through the login page.
 	 */
 	@Test
-	public void login()
+	void login()
 	{
 		tester.startPage(LOGIN);
 		tester.assertRenderedPage(LOGIN);
@@ -67,7 +70,7 @@ public class StatelessFormTest extends WicketTestCase
 	 * test initialization of component on stateless components
 	 */
 	@Test
-	public void onInitializationForStatelessComponents()
+	void onInitializationForStatelessComponents()
 	{
 		LoginPage page = new LoginPage();
 		assertFalse(page.isPageInitialized());
@@ -96,7 +99,7 @@ public class StatelessFormTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void pageWithParameters() throws Exception
+	void pageWithParameters() throws Exception
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.add("first", "foo");
@@ -109,7 +112,7 @@ public class StatelessFormTest extends WicketTestCase
 	 * stateless form
 	 */
 	@Test
-	public void submitStatelessFormDoesntBindSession()
+	void submitStatelessFormDoesntBindSession()
 	{
 		StatelessPageWithForm.FORM_SUBMITTED.set(false);
 		try

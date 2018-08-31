@@ -31,7 +31,7 @@ public class MarkupInheritanceBasePanel_6 extends Panel
 	 * 
 	 * @param id
 	 */
-	public MarkupInheritanceBasePanel_6(final String id)
+    MarkupInheritanceBasePanel_6(final String id)
 	{
 		super(id);
 

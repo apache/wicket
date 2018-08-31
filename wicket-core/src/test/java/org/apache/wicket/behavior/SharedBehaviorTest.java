@@ -26,12 +26,12 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.8
  */
-public class SharedBehaviorTest extends WicketTestCase
+class SharedBehaviorTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4570
@@ -45,7 +45,7 @@ public class SharedBehaviorTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void sharedBehaviorRenderHead() throws Exception
+    void sharedBehaviorRenderHead() throws Exception
 	{
 		TestPage page = new TestPage();
 		executeTest(page, "SharedBehaviorTest_renderHead_expected.html");

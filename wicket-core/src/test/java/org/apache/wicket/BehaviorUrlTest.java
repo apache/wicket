@@ -16,6 +16,9 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.Behavior;
@@ -30,18 +33,17 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class BehaviorUrlTest extends WicketTestCase
+class BehaviorUrlTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3097
 	 */
 	@Test
-	public void urlRemainsStable()
+	void urlRemainsStable()
 	{
 		TestPage page = new TestPage();
 
@@ -52,8 +54,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		page = (TestPage)tester.getLastRenderedPage();
 		int indexAfterRender = page.container.getBehaviorId(page.callbackBehavior);
 
-		assertEquals("index of behavior in the raw list should not have changed",
-			indexBeforeRender, indexAfterRender);
+		assertEquals(indexBeforeRender, indexAfterRender, "index of behavior in the raw list should not have changed");
 
 	}
 
@@ -63,7 +64,7 @@ public class BehaviorUrlTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3142
 	 */
 	@Test
-	public void urlRemainsStableAfterComponentReceiveAnModel()
+	void urlRemainsStableAfterComponentReceiveAnModel()
 	{
 		TestPage page = new TestPage();
 
@@ -73,8 +74,7 @@ public class BehaviorUrlTest extends WicketTestCase
 
 		int indexAfterRender = page.container.getBehaviorId(page.callbackBehavior);
 
-		assertEquals("index of behavior in the raw list should not have changed",
-			indexBeforeRender, indexAfterRender);
+		assertEquals(indexBeforeRender, indexAfterRender, "index of behavior in the raw list should not have changed");
 
 	}
 
@@ -90,7 +90,7 @@ public class BehaviorUrlTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+		TestPage()
 		{
 			callbackBehavior = new TestCallbackBehavior();
 
@@ -144,7 +144,7 @@ public class BehaviorUrlTest extends WicketTestCase
 
 
 	@Test
-	public void testBehaviorUrlNotDoubleEscaped()
+	void testBehaviorUrlNotDoubleEscaped()
 	{
 		tester.startPage(EscapeTestPage.class);
 
@@ -164,7 +164,7 @@ public class BehaviorUrlTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 		/** */
-		public static final String TEST_QUERY_STRING = "&query_p_1=value_1";
+		static final String TEST_QUERY_STRING = "&query_p_1=value_1";
 
 		/** */
 		public EscapeTestPage()

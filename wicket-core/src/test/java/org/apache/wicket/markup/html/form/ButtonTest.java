@@ -16,10 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -31,19 +30,19 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author svenmeier
  */
-public class ButtonTest extends WicketTestCase
+class ButtonTest extends WicketTestCase
 {
 
 	/**
 	 * WICKET-4734 Asserting that the value attribute on tag input is escaped once by default
 	 */
 	@Test
-	public void whenInputElement_thenModelObjectIsUsedForValueAttribute()
+	void whenInputElement_thenModelObjectIsUsedForValueAttribute()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
@@ -51,16 +50,16 @@ public class ButtonTest extends WicketTestCase
 		tester.startPage(testPage);
 
 		TagTester buttonTagTester = tester.getTagByWicketId("button");
-		assertThat(buttonTagTester, is(notNullValue()));
-		assertThat(buttonTagTester.getAttribute("value"), is(equalTo(text)));
-		assertThat(buttonTagTester.getValue(), is(nullValue()));
+		assertNotNull(buttonTagTester);
+		assertEquals(text, buttonTagTester.getAttribute("value"));
+		assertNull(buttonTagTester.getValue());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6225
 	 */
 	@Test
-	public void whenButtonElement_thenModelObjectIsUsedAsTextContent()
+	void whenButtonElement_thenModelObjectIsUsedAsTextContent()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
@@ -75,16 +74,16 @@ public class ButtonTest extends WicketTestCase
 		tester.startPage(testPage);
 
 		TagTester buttonTagTester = tester.getTagByWicketId("button");
-		assertThat(buttonTagTester, is(notNullValue()));
-		assertThat(buttonTagTester.getAttribute("value"), is(nullValue()));
-		assertThat(buttonTagTester.getValue(), is(equalTo(text)));
+		assertNotNull(buttonTagTester);
+		assertNull(buttonTagTester.getAttribute("value"));
+		assertEquals(text, buttonTagTester.getValue());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-6225
 	 */
 	@Test
-	public void whenButtonElementWithoutModelObject_thenUseTextContentFromHtml()
+	void whenButtonElementWithoutModelObject_thenUseTextContentFromHtml()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
 		String text = "some text & another text";
@@ -102,16 +101,16 @@ public class ButtonTest extends WicketTestCase
 		tester.startPage(testPage);
 
 		TagTester buttonTagTester = tester.getTagByWicketId("button");
-		assertThat(buttonTagTester, is(notNullValue()));
-		assertThat(buttonTagTester.getAttribute("value"), is(nullValue()));
-		assertThat(buttonTagTester.getValue(), is(equalTo(textInHtml)));
+		assertNotNull(buttonTagTester);
+		assertNull(buttonTagTester.getAttribute("value"));
+		assertEquals(textInHtml, buttonTagTester.getValue());
 	}
 
 	/**
 	 * WICKET-5235 button does not use an inherited model
 	 */
 	@Test
-	public void buttonDoesNotInheritModel()
+	void buttonDoesNotInheritModel()
 	{
 		TestPage testPage = new TestPage(null);
 		tester.startPage(testPage);
@@ -125,7 +124,7 @@ public class ButtonTest extends WicketTestCase
 		Button button;
 
 		/** */
-		public TestPage(IModel<String> buttonModel)
+		TestPage(IModel<String> buttonModel)
 		{
 			add(form = new Form<Object>("form", new CompoundPropertyModel<>(new Object())));
 			form.add(button = new Button("button", buttonModel));

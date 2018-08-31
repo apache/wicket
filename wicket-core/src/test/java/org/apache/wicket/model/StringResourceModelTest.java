@@ -16,6 +16,13 @@
  */
 package org.apache.wicket.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.Calendar;
@@ -25,8 +32,8 @@ import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for the {@link StringResourceModel}.
@@ -44,8 +51,8 @@ public class StringResourceModelTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		page = new TestPage();
 		ws = new WeatherStation();
@@ -55,84 +62,81 @@ public class StringResourceModelTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void getSimpleResource()
+	void getSimpleResource()
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page);
-		assertEquals("Text should be as expected", "Simple text", model.getString());
-		assertEquals("Text should be as expected", "Simple text", model.getObject());
+		assertEquals("Simple text", model.getString(), "Text should be as expected");
+		assertEquals("Simple text", model.getObject(), "Text should be as expected");
 	}
 
 	/** */
 	@Test
-	public void getWrappedOnAssignmentResource()
+	void getWrappedOnAssignmentResource()
 	{
-		Label label1 = new Label("resourceModelWithComponent", new StringResourceModel(
-			"wrappedOnAssignment.text", page));
+		Label label1 = new Label("resourceModelWithComponent",
+			new StringResourceModel("wrappedOnAssignment.text", page));
 		page.add(label1);
-		assertEquals("Text should be as expected", "Non-wrapped text",
-			label1.getDefaultModelObject());
+		assertEquals("Non-wrapped text", label1.getDefaultModelObject(),
+			"Text should be as expected");
 
-		Label label2 = new Label("resourceModelWithoutComponent", new StringResourceModel(
-			"wrappedOnAssignment.text"));
+		Label label2 = new Label("resourceModelWithoutComponent",
+			new StringResourceModel("wrappedOnAssignment.text"));
 		page.add(label2);
-		assertEquals("Text should be as expected", "Wrapped text",
-			label2.getDefaultModelObject());
-	}
-
-	/** */
-	@Test(expected = IllegalArgumentException.class)
-	public void nullResourceKey()
-	{
-		new StringResourceModel(null, page);
+		assertEquals("Wrapped text", label2.getDefaultModelObject(), "Text should be as expected");
 	}
 
 	/** */
 	@Test
-	public void getSimpleResourceWithKeySubstitution()
+	void nullResourceKey()
 	{
-		StringResourceModel model = new StringResourceModel("weather.${currentStatus}", page, wsModel);
-		assertEquals("Text should be as expected", "It's sunny, wear sunscreen",
-			model.getString());
+		assertThrows(IllegalArgumentException.class, () -> {
+			new StringResourceModel(null, page);
+
+		});
+	}
+
+	/** */
+	@Test
+	void getSimpleResourceWithKeySubstitution()
+	{
+		StringResourceModel model = new StringResourceModel("weather.${currentStatus}", page,
+			wsModel);
+		assertEquals("It's sunny, wear sunscreen", model.getString(), "Text should be as expected");
 		ws.setCurrentStatus("raining");
-		assertEquals("Text should be as expected", "It's raining, take an umbrella",
-			model.getString());
+		assertEquals("It's raining, take an umbrella",
+			model.getString(), "Text should be as expected");
 		ws.setCurrentStatus(null);
-		assertEquals("Text should be as expected", "It's ... i don't know",
-			model.getString());
+		assertEquals("It's ... i don't know", model.getString(), "Text should be as expected");
 	}
 
 	/** */
 	@Test
-	public void getSimpleResourceWithKeySubstitutionForNonString()
+	void getSimpleResourceWithKeySubstitutionForNonString()
 	{
 		// German uses comma (,) as decimal separator
 		Session.get().setLocale(Locale.GERMAN);
 
-		StringResourceModel model = new StringResourceModel("weather.${currentTemperature}", page, wsModel);
-		assertEquals("Text should be as expected", "Twenty-five dot seven",
-			model.getString());
+		StringResourceModel model = new StringResourceModel("weather.${currentTemperature}", page,
+			wsModel);
+		assertEquals("Twenty-five dot seven", model.getString(), "Text should be as expected");
 	}
 
 	/** */
 	@Test
-	public void getPropertySubstitutedResource()
+	void getPropertySubstitutedResource()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		StringResourceModel model = new StringResourceModel("weather.message", page, wsModel);
-		assertEquals(
-			"Text should be as expected",
-			"Weather station \"Europe's main weather station\" reports that the temperature is 25.7 \u00B0C",
-			model.getString());
+		assertEquals("Weather station \"Europe's main weather station\" reports that the temperature is 25.7 \u00B0C",
+			model.getString(), "Text should be as expected");
 		ws.setCurrentTemperature(11.5);
-		assertEquals(
-			"Text should be as expected",
-			"Weather station \"Europe's main weather station\" reports that the temperature is 11.5 \u00B0C",
-			model.getString());
+		assertEquals("Weather station \"Europe's main weather station\" reports that the temperature is 11.5 \u00B0C",
+			model.getString(), "Text should be as expected");
 	}
 
 	/** */
 	@Test
-	public void substitutedPropertyAndParameterResource()
+	void substitutedPropertyAndParameterResource()
 	{
 		StringResourceModel model = new StringResourceModel("weather.mixed", page).setModel(wsModel)
 			.setParameters(new PropertyModel<Double>(wsModel, "currentTemperature"),
@@ -143,68 +147,71 @@ public class StringResourceModelTest extends WicketTestCase
 
 		ws.setCurrentTemperature(25.7);
 		String expected = format.format(new Object[] { 25.7, "\u00B0C" });
-		assertEquals("Text should be as expected", expected, model.getString());
+		assertEquals(expected, model.getString(), "Text should be as expected");
 
 		ws.setCurrentTemperature(11.5);
 		expected = format.format(new Object[] { 11.5, "\u00B0C" });
-		assertEquals("Text should be as expected", expected, model.getString());
+		assertEquals(expected, model.getString(), "Text should be as expected");
 	}
 
 	/** */
 	@Test
-	public void substitutionParametersResource()
+	void substitutionParametersResource()
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.set(2004, Calendar.OCTOBER, 15, 13, 21);
 		MessageFormat format = new MessageFormat(
 			"The report for {0,date,medium}, shows the temperature as {2,number,###.##} {3} and the weather to be {1}",
 			page.getLocale());
-		StringResourceModel model = new StringResourceModel("weather.detail", page).setModel(wsModel)
+		StringResourceModel model = new StringResourceModel("weather.detail", page)
+			.setModel(wsModel)
 			.setParameters(cal.getTime(), "${currentStatus}",
 				new PropertyModel<Double>(wsModel, "currentTemperature"),
 				new PropertyModel<String>(wsModel, "units"));
 		String expected = format.format(new Object[] { cal.getTime(), "sunny", 25.7, "\u00B0C" });
-		assertEquals("Text should be as expected", expected, model.getString());
+		assertEquals(expected, model.getString(), "Text should be as expected");
 		ws.setCurrentStatus("raining");
 		ws.setCurrentTemperature(11.568);
 		expected = format.format(new Object[] { cal.getTime(), "raining", 11.568, "\u00B0C" });
-		assertEquals("Text should be as expected", expected, model.getString());
+		assertEquals(expected, model.getString(), "Text should be as expected");
 	}
 
 	/** */
 	@Test
-	public void substitutionParametersResourceWithSingleQuote()
+	void substitutionParametersResourceWithSingleQuote()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
-		StringResourceModel model = new StringResourceModel("with.quote", page).setParameters(10, 20);
+		StringResourceModel model = new StringResourceModel("with.quote", page).setParameters(10,
+			20);
 		assertEquals("2010.00", model.getString());
 	}
 
 	/** */
 	@Test
-	public void textResourceWithSubstitutionAndSingleQuote()
+	void textResourceWithSubstitutionAndSingleQuote()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 
 		StringResourceModel model = new StringResourceModel("with.quote.and.no.substitution", page);
 		assertEquals("Let's play in the rain!", model.getString());
 
-		model = new StringResourceModel("with.quote.substitution", page)
-			.setParameters("rain!");
+		model = new StringResourceModel("with.quote.substitution", page).setParameters("rain!");
 		assertEquals("Let's play in the rain!", model.getString());
 	}
 
 	/** */
-	@Test(expected = UnsupportedOperationException.class)
-	public void setObject()
+	@Test
+	void setObject()
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page);
-		model.setObject("Some value");
+		assertThrows(UnsupportedOperationException.class, () -> {
+			model.setObject("Some value");
+		});
 	}
 
 	/** */
 	@Test
-	public void detachAttachDetachableModel()
+	void detachAttachDetachableModel()
 	{
 		IModel<WeatherStation> wsDetachModel = new LoadableDetachableModel<WeatherStation>()
 		{
@@ -227,7 +234,7 @@ public class StringResourceModelTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4323
 	 */
 	@Test
-	public void detachSubstituteModelFromAssignmentWrapper()
+	void detachSubstituteModelFromAssignmentWrapper()
 	{
 		IModel<WeatherStation> nullOnDetachModel = new Model<WeatherStation>()
 		{
@@ -241,16 +248,16 @@ public class StringResourceModelTest extends WicketTestCase
 		};
 
 		nullOnDetachModel.setObject(ws);
-		Label label1 = new Label("resourceModelWithComponent", new StringResourceModel(
-			"wrappedOnAssignment.text", page, nullOnDetachModel));
+		Label label1 = new Label("resourceModelWithComponent",
+			new StringResourceModel("wrappedOnAssignment.text", page, nullOnDetachModel));
 		page.add(label1);
 		label1.getDefaultModelObject();
 		label1.detach();
 		assertNull(nullOnDetachModel.getObject());
 
 		nullOnDetachModel.setObject(ws);
-		Label label2 = new Label("resourceModelWithoutComponent", new StringResourceModel(
-			"wrappedOnAssignment.text").setModel(nullOnDetachModel));
+		Label label2 = new Label("resourceModelWithoutComponent",
+			new StringResourceModel("wrappedOnAssignment.text").setModel(nullOnDetachModel));
 		page.add(label2);
 		label2.getDefaultModelObject();
 		label2.detach();
@@ -261,33 +268,40 @@ public class StringResourceModelTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-5176
 	 */
 	@Test
-	public void detachEvenNotAttached() {
+	void detachEvenNotAttached()
+	{
 		Wicket5176Model wrappedModel = new Wicket5176Model();
-		StringResourceModel stringResourceModel = new StringResourceModel("test").setModel(wrappedModel);
+		StringResourceModel stringResourceModel = new StringResourceModel("test")
+			.setModel(wrappedModel);
 		assertFalse(stringResourceModel.isAttached());
 		assertTrue(wrappedModel.isAttached());
 		stringResourceModel.detach();
 		assertFalse(wrappedModel.isAttached());
 	}
 
-	private static class Wicket5176Model implements IModel {
+	private static class Wicket5176Model implements IModel
+	{
 		private boolean attached = true;
 
 		@Override
-		public Object getObject() {
+		public Object getObject()
+		{
 			return null;
 		}
 
 		@Override
-		public void setObject(Object object) {
+		public void setObject(Object object)
+		{
 		}
 
 		@Override
-		public void detach() {
+		public void detach()
+		{
 			attached = false;
 		}
 
-		private boolean isAttached() {
+		private boolean isAttached()
+		{
 			return attached;
 		}
 	}
@@ -316,7 +330,7 @@ public class StringResourceModelTest extends WicketTestCase
 		/**
 		 * @param currentStatus
 		 */
-		public void setCurrentStatus(String currentStatus)
+		void setCurrentStatus(String currentStatus)
 		{
 			this.currentStatus = currentStatus;
 		}
@@ -332,7 +346,7 @@ public class StringResourceModelTest extends WicketTestCase
 		/**
 		 * @param currentTemperature
 		 */
-		public void setCurrentTemperature(double currentTemperature)
+		void setCurrentTemperature(double currentTemperature)
 		{
 			this.currentTemperature = currentTemperature;
 		}
@@ -364,7 +378,7 @@ public class StringResourceModelTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+		TestPage()
 		{
 		}
 	}

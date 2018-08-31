@@ -29,7 +29,7 @@ public class TestBasePanel extends Panel
 	/**
 	 * Construct.
 	 */
-	public TestBasePanel()
+    TestBasePanel()
 	{
 		super("panel");
 	}

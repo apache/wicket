@@ -16,22 +16,23 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class BookmarkablePageLinkTest extends WicketTestCase
+class BookmarkablePageLinkTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void bookmarkableRequest() throws Exception
+	void bookmarkableRequest() throws Exception
 	{
 		tester.startPage(BookmarkableHomePageLinksPage.class);
 		assertEquals(tester.getLastRenderedPage().getClass(), BookmarkableHomePageLinksPage.class);
@@ -41,7 +42,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void bookmarkableRequestWithIntercept() throws Exception
+	void bookmarkableRequestWithIntercept() throws Exception
 	{
 		tester.startPage(BookmarkableThrowsInterceptPage.class);
 
@@ -55,7 +56,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void bookmarkableRequestWithInterceptWithParams() throws Exception
+	void bookmarkableRequestWithInterceptWithParams() throws Exception
 	{
 		PageParameters pp = new PageParameters();
 		pp.set("test", "test");
@@ -72,7 +73,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3721">WICKET-3721</a>
 	 */
 	@Test
-	public void customParametersWithSpecialCharacters()
+	void customParametersWithSpecialCharacters()
 	{
 		BookmarkablePageLink<MockPageWithLink> link = new BookmarkablePageLink<MockPageWithLink>(
 			"link", MockPageWithLink.class);
@@ -80,7 +81,7 @@ public class BookmarkablePageLinkTest extends WicketTestCase
 
 		tester.startComponentInPage(link, null);
 		String response = tester.getLastResponse().getDocument();
-		Assert.assertEquals(
+		assertEquals(
 			"<html><body><span wicket:id=\"link\" onclick=\"var win = this.ownerDocument.defaultView || this.ownerDocument.parentWindow; if (win == window) { window.location.href=&#039;./bookmarkable/org.apache.wicket.MockPageWithLink?urlEscapeNeeded=someone%27s+%5Eb%25a%26d+pa%22rameter&#039;; } ;return false\"></span></body></html>",
 			response);
 	}

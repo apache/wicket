@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.request.cycle;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
@@ -32,14 +32,14 @@ import org.apache.wicket.request.RequestHandlerExecutor.ReplaceHandlerException;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.resource.DummyApplication;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Jeremy Thomerson
  */
-public class RequestCycleListenerTest extends RequestHandlerExecutorTest
+class RequestCycleListenerTest extends RequestHandlerExecutorTest
 {
 	private IRequestHandler handler;
 
@@ -52,8 +52,8 @@ public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 	private int exceptionsMapped;
 
 	/** */
-	@Before
-	public void setUp()
+	@BeforeEach
+	void setUp()
 	{
 		DummyApplication application = new DummyApplication();
 		application.setName("dummyTestApplication");
@@ -64,8 +64,8 @@ public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 	}
 
 	/** */
-	@After
-	public void tearDown()
+	@AfterEach
+	void tearDown()
 	{
 		ThreadContext.getApplication().internalDestroy();
 		ThreadContext.detach();
@@ -140,7 +140,7 @@ public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 	 * @throws Exception
 	 */
 	@Test
-	public void basicOperations() throws Exception
+	void basicOperations() throws Exception
 	{
 		IncrementingListener incrementingListener = new IncrementingListener();
 		Application.get().getRequestCycleListeners().add(incrementingListener);
@@ -237,7 +237,7 @@ public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 
 	/** */
 	@Test
-	public void exceptionIsHandledByRegisteredHandler()
+	void exceptionIsHandledByRegisteredHandler()
 	{
 		IncrementingListener incrementingListener = new IncrementingListener();
 		Application.get().getRequestCycleListeners().add(incrementingListener);
@@ -255,7 +255,7 @@ public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 
 	/** */
 	@Test
-	public void exceptionIsHandledByFirstAvailableHandler()
+	void exceptionIsHandledByFirstAvailableHandler()
 	{
 		// when two listeners return a handler
 		Application.get().getRequestCycleListeners().add(new ErrorCodeListener(401));
@@ -272,7 +272,7 @@ public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 	 * @throws Exception
 	 */
 	@Test
-	public void exceptionHandlingInOnDetach() throws Exception
+	void exceptionHandlingInOnDetach() throws Exception
 	{
 		// this test is a little flaky because it depends on the ordering of listeners which is not
 		// guaranteed
@@ -310,7 +310,7 @@ public class RequestCycleListenerTest extends RequestHandlerExecutorTest
 	{
 		private final int code;
 
-		public ErrorCodeListener(int code)
+		ErrorCodeListener(int code)
 		{
 			this.code = code;
 		}

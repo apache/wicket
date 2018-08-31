@@ -16,25 +16,27 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.session.DefaultPageFactory;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the Pagefactory
  */
-public class PageFactoryTest extends WicketTestCase
+class PageFactoryTest extends WicketTestCase
 {
 	private DefaultPageFactory factory;
 
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		factory = new DefaultPageFactory();
 	}
@@ -43,7 +45,7 @@ public class PageFactoryTest extends WicketTestCase
 	 * Test creating a new page using a class.
 	 */
 	@Test
-	public void newPageClass()
+	void newPageClass()
 	{
 		// MyPage0: no constructor at all
 		assertEquals(MyPage0.class, factory.newPage(MyPage0.class).getClass());
@@ -65,9 +67,7 @@ public class PageFactoryTest extends WicketTestCase
 		{
 			e = ex;
 		}
-		assertNotNull(
-			"MyPage3 should have thrown an exception as it does not have a default or no constructor",
-			e);
+		assertNotNull(e, "MyPage3 should have thrown an exception as it does not have a default or no constructor");
 
 		// MyPage4: Illegal String parameter constructor only
 		e = null;
@@ -79,9 +79,7 @@ public class PageFactoryTest extends WicketTestCase
 		{
 			e = ex;
 		}
-		assertNotNull(
-			"MyPage4 should have thrown an exception as it does not have a default or no constructor",
-			e);
+		assertNotNull(e, "MyPage4 should have thrown an exception as it does not have a default or no constructor");
 
 		// MyPage5: PageParameter and default constructor
 		assertEquals(MyPage5.class, factory.newPage(MyPage5.class).getClass());
@@ -93,7 +91,7 @@ public class PageFactoryTest extends WicketTestCase
 	 * Test a new page using a class and page parameters.
 	 */
 	@Test
-	public void newPageClassPageParameters()
+	void newPageClassPageParameters()
 	{
 		assertEquals(MyPage0.class, factory.newPage(MyPage0.class, null).getClass());
 
@@ -116,9 +114,7 @@ public class PageFactoryTest extends WicketTestCase
 		{
 			e = ex;
 		}
-		assertNotNull(
-			"MyPage4 should have thrown an exception as it does not have a default or no constructor",
-			e);
+		assertNotNull(e, "MyPage4 should have thrown an exception as it does not have a default or no constructor");
 
 		// MyPage4: Illegal String parameter constructor only
 		e = null;
@@ -130,9 +126,7 @@ public class PageFactoryTest extends WicketTestCase
 		{
 			e = ex;
 		}
-		assertNotNull(
-			"MyPage4 should have thrown an exception as it does not have a default or no constructor",
-			e);
+		assertNotNull(e, "MyPage4 should have thrown an exception as it does not have a default or no constructor");
 
 		// MyPage5: PageParameter and default constructor
 		assertEquals(MyPage5.class, factory.newPage(MyPage5.class, new PageParameters()).getClass());

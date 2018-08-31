@@ -16,23 +16,24 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
 
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.request.Url;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Timo Rantalaiho
  */
-public class WebSessionTest extends Assert
+class WebSessionTest
 {
 	/**
 	 * testReadsLocaleFromRequestOnConstruction()
 	 */
 	@Test
-	public void readsLocaleFromRequestOnConstruction()
+	void readsLocaleFromRequestOnConstruction()
 	{
 		final Locale locale = Locale.TRADITIONAL_CHINESE;
 		MockWebRequest request = new MockWebRequest(Url.parse("/"))

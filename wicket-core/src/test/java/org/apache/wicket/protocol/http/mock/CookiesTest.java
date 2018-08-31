@@ -16,18 +16,20 @@
  */
 package org.apache.wicket.protocol.http.mock;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javax.servlet.http.Cookie;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for Cookies helper class
  */
-public class CookiesTest extends Assert
+class CookiesTest
 {
 	@Test
-	public void testIsEqual() throws Exception
+	void testIsEqual() throws Exception
 	{
 		Cookie c1 = new Cookie("Name", "Value");
 		Cookie c2 = new Cookie("Name", "Value");

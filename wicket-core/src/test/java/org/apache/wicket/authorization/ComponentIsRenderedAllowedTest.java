@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.authorization;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -26,14 +28,14 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Checks whether or not authorization strategy blocks rendering of components
  * 
  * @author igor
  */
-public class ComponentIsRenderedAllowedTest extends WicketTestCase
+class ComponentIsRenderedAllowedTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -43,7 +45,7 @@ public class ComponentIsRenderedAllowedTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void onBeforeRenderNotCalledOnVetoedComponents()
+	void onBeforeRenderNotCalledOnVetoedComponents()
 	{
 		TestPage page = new TestPage();
 		tester.startPage(page);
@@ -52,7 +54,7 @@ public class ComponentIsRenderedAllowedTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void vetoedComponentNotRendered()
+	void vetoedComponentNotRendered()
 	{
 		TestPage page = new TestPage();
 		tester.startPage(page);
@@ -60,12 +62,12 @@ public class ComponentIsRenderedAllowedTest extends WicketTestCase
 	}
 
 	/** */
-	public class TestPage extends WebPage implements IMarkupResourceStreamProvider
+	class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		private final NormalContainer normal;
 
 		/** */
-		public TestPage()
+		TestPage()
 		{
 			ForbiddenContainer forbidden = new ForbiddenContainer("forbidden");
 			normal = new NormalContainer("normal");
@@ -89,7 +91,7 @@ public class ComponentIsRenderedAllowedTest extends WicketTestCase
 		private boolean onBeforeRenderCalled = false;
 		private boolean onAfterRenderCalled = false;
 
-		public NormalContainer(String id)
+		NormalContainer(String id)
 		{
 			super(id);
 		}
@@ -112,7 +114,7 @@ public class ComponentIsRenderedAllowedTest extends WicketTestCase
 
 	private static class ForbiddenContainer extends WebMarkupContainer implements Forbidden
 	{
-		public ForbiddenContainer(String id)
+		ForbiddenContainer(String id)
 		{
 			super(id);
 		}

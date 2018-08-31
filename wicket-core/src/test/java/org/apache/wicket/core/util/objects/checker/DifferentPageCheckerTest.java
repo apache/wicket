@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -27,9 +29,9 @@ import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.form.login.MockHomePage;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DifferentPageCheckerTest extends WicketTestCase
+class DifferentPageCheckerTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5634
@@ -39,7 +41,7 @@ public class DifferentPageCheckerTest extends WicketTestCase
 	 * keeps a reference to a page which is not component.getPage()..
 	 */
 	@Test
-	public void serializingAnotherPage()
+	void serializingAnotherPage()
 	{
 		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest")
 		{
@@ -55,7 +57,7 @@ public class DifferentPageCheckerTest extends WicketTestCase
 		MockPageWithLink rootPage = new MockPageWithLink();
 		rootPage.add(component);
 		byte[] serialized = serializer.serialize(rootPage);
-		assertNull("The produced byte[] must be null if there was an error", serialized);
+		assertNull(serialized, "The produced byte[] must be null if there was an error");
 	}
 
 	private static class ComponentThatKeepsAReferenceToAnotherPage extends WebComponent
@@ -64,7 +66,7 @@ public class DifferentPageCheckerTest extends WicketTestCase
 			private final Page anotherPage = new MockHomePage();
 		};
 
-		public ComponentThatKeepsAReferenceToAnotherPage(final String id)
+		ComponentThatKeepsAReferenceToAnotherPage(final String id)
 		{
 			super(id);
 		}

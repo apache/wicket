@@ -56,7 +56,7 @@ public class TestPage extends WebPage
 	/**
 	 * 
 	 */
-	public void replacePanel()
+    private void replacePanel()
 	{
 		current = (current == panel1 ? panel2 : panel1);
 		replace(current);

@@ -16,25 +16,25 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+class FormMethodMismatchTest {
 
-public class FormMethodMismatchTest {
-
-    public static class PlainFormPage extends WebPage {
-        public PlainFormPage(Form<Void> underTest) {
+    static class PlainFormPage extends WebPage {
+        PlainFormPage(Form<Void> underTest) {
             add(underTest);
         }
     }
 
     @Test
-    public void formSubmittedContinuesWithCorrectMethod() {
+    void formSubmittedContinuesWithCorrectMethod() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -50,7 +50,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void formSubmittedContinuesByDefaultWithMismatchingMethod() {
+    void formSubmittedContinuesByDefaultWithMismatchingMethod() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -67,7 +67,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void formSubmittedAbortsByWithMismatchingMethodWhenDesired() {
+    void formSubmittedAbortsByWithMismatchingMethodWhenDesired() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -89,7 +89,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void formSubmittedContinuesByWithCorrectMethodWhenDesired() {
+    void formSubmittedContinuesByWithCorrectMethodWhenDesired() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -109,15 +109,15 @@ public class FormMethodMismatchTest {
         assertTrue(onSubmitCalled[0]);
     }
 
-    public static class FormWithButtonPage extends WebPage {
-        public FormWithButtonPage(Form<Void> underTest) {
+    static class FormWithButtonPage extends WebPage {
+        FormWithButtonPage(Form<Void> underTest) {
             add(underTest);
             underTest.add(new Button("button"));
         }
     }
 
     @Test
-    public void withButtonFormSubmittedContinuesWithCorrectMethod() {
+    void withButtonFormSubmittedContinuesWithCorrectMethod() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -133,7 +133,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void withButtonFormSubmittedContinuesByDefaultWithMismatchingMethod() {
+    void withButtonFormSubmittedContinuesByDefaultWithMismatchingMethod() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -150,7 +150,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void withButtonFormSubmittedAbortsByWithMismatchingMethodWhenDesired() {
+    void withButtonFormSubmittedAbortsByWithMismatchingMethodWhenDesired() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -172,7 +172,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void withButtonFormSubmittedContinuesByWithCorrectMethodWhenDesired() {
+    void withButtonFormSubmittedContinuesByWithCorrectMethodWhenDesired() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -192,8 +192,8 @@ public class FormMethodMismatchTest {
         assertTrue(onSubmitCalled[0]);
     }
 
-    public static class FormWithAjaxButtonPage extends WebPage {
-        public FormWithAjaxButtonPage(Form<Void> underTest) {
+    static class FormWithAjaxButtonPage extends WebPage {
+        FormWithAjaxButtonPage(Form<Void> underTest) {
             add(underTest);
             underTest.add(new AjaxButton("button") {
 
@@ -201,7 +201,7 @@ public class FormMethodMismatchTest {
         }
     }
     @Test
-    public void withAjaxButtonFormSubmittedContinuesWithCorrectMethod() {
+    void withAjaxButtonFormSubmittedContinuesWithCorrectMethod() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -217,7 +217,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void withAjaxButtonFormSubmittedContinuesByDefaultWithMismatchingMethod() {
+    void withAjaxButtonFormSubmittedContinuesByDefaultWithMismatchingMethod() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -234,7 +234,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void withAjaxButtonFormSubmittedAbortsByWithMismatchingMethodWhenDesired() {
+    void withAjaxButtonFormSubmittedAbortsByWithMismatchingMethodWhenDesired() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {
@@ -256,7 +256,7 @@ public class FormMethodMismatchTest {
     }
 
     @Test
-    public void withAjaxButtonFormSubmittedContinuesByWithCorrectMethodWhenDesired() {
+    void withAjaxButtonFormSubmittedContinuesByWithCorrectMethodWhenDesired() {
         final WicketTester tester = new WicketTester();
         final boolean[] onSubmitCalled = new boolean[1];
         final Form<Void> underTest = new Form<Void>("underTest") {

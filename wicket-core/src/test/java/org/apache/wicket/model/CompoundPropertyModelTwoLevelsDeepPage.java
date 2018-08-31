@@ -41,12 +41,12 @@ public class CompoundPropertyModelTwoLevelsDeepPage extends WebPage
 		addressContainer.add(new Label("address.street1"));
 	}
 
-	public static class Person implements Serializable
+	static class Person implements Serializable
 	{
 		private String name;
 		private Address address;
 
-		public Person(String name, Address address)
+		Person(String name, Address address)
 		{
 			this.name = name;
 			this.address = address;
@@ -67,7 +67,7 @@ public class CompoundPropertyModelTwoLevelsDeepPage extends WebPage
 	{
 		private String street1;
 
-		public Address(String street1)
+		Address(String street1)
 		{
 			this.street1 = street1;
 		}

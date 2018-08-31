@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.request.HomePage;
@@ -24,38 +26,44 @@ import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCac
 import org.apache.wicket.request.resource.caching.version.CachingResourceVersion;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class ResourceMapperWithDecoratedResourcesTest extends WicketTestCase {
+class ResourceMapperWithDecoratedResourcesTest extends WicketTestCase
+{
 
 	@Override
-	protected WebApplication newApplication() {
-		return new MockApplication() {
+	protected WebApplication newApplication()
+	{
+		return new MockApplication()
+		{
 			@Override
-			public void init() {
+			public void init()
+			{
 				super.init();
-				getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy(
+				getResourceSettings()
+					.setCachingStrategy(new FilenameWithVersionResourceCachingStrategy(
 						new CachingResourceVersion(new MessageDigestResourceVersion())));
-				mountResource("stylesheet.css", new CssResourceReference(ResourceMapperWithDecoratedResourcesTest.class, "decorated-resource.css"));
+				mountResource("stylesheet.css", new CssResourceReference(
+					ResourceMapperWithDecoratedResourcesTest.class, "decorated-resource.css"));
 				mountPage("/", HomePage.class);
 			}
 		};
 	}
 
 	@Test
-	public void resourceNoCacheDecorationSuccessfully() {
+	void resourceNoCacheDecorationSuccessfully()
+	{
 		tester.executeUrl("stylesheet.css");
-		Assert.assertEquals("body { background-color: lightblue; }", tester.getLastResponseAsString());
+		assertEquals("body { background-color: lightblue; }", tester.getLastResponseAsString());
 	}
-	
+
 	@Test
-	public void resourceWithCacheDecorationSuccessfully() {
+	void resourceWithCacheDecorationSuccessfully()
+	{
 		tester.executeUrl("stylesheet-ver-9876543210.css");
-		Assert.assertEquals("body { background-color: lightblue; }", tester.getLastResponseAsString());
+		assertEquals("body { background-color: lightblue; }", tester.getLastResponseAsString());
 	}
 }

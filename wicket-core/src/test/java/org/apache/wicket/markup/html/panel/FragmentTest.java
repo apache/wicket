@@ -16,18 +16,19 @@
  */
 package org.apache.wicket.markup.html.panel;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class FragmentTest extends WicketTestCase
+class FragmentTest extends WicketTestCase
 {
 	@Test
-	public void testFragments()
+	void testFragments()
 	{
 		tester.startComponentInPage(FragmentTestPanel.class);
 	}
@@ -36,7 +37,7 @@ public class FragmentTest extends WicketTestCase
 	 * WICKET-5060
 	 */
 	@Test
-	public void testComponentAndFragmentWithSameId()
+	void testComponentAndFragmentWithSameId()
 	{
 		tester.startComponentInPage(FragmentTestPanel_2.class);
 		assertThat(tester.getLastResponseAsString(), containsString("fragment body"));

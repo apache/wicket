@@ -27,17 +27,17 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link FeedbackPanel}
  * 
  * @author cgatay
  */
-public class FeedbackPanelTest extends WicketTestCase
+class FeedbackPanelTest extends WicketTestCase
 {
     @Test
-    public void testCssClassesOnFeedbackPanel() throws Exception 
+    void testCssClassesOnFeedbackPanel() throws Exception
     {
         TestPage testPage = new TestPage();
         testPage.label.error("Error message");
@@ -47,7 +47,7 @@ public class FeedbackPanelTest extends WicketTestCase
     }
     
     @Test
-	public void collectSessionMessages() throws Exception
+    void collectSessionMessages() throws Exception
 	{
     	TestPage testPage = new TestPage();
     	
@@ -66,7 +66,7 @@ public class FeedbackPanelTest extends WicketTestCase
         FeedbackPanel feedbackPanel;
         Component label;
 
-        public TestPage()
+        TestPage()
         {
             feedbackPanel = new FeedbackPanel("feedback") 
             {

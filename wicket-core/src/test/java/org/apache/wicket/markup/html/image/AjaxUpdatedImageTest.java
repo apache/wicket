@@ -16,37 +16,38 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for WICKET-1382
  */
-public class AjaxUpdatedImageTest extends WicketTestCase
+class AjaxUpdatedImageTest extends WicketTestCase
 {
 	/**
 	 * Tests that Image re-rendered in Ajax request have 'wicket:antiCache' parameter in its 'src'
 	 * attribute value
 	 */
 	@Test
-	public void wicket1382()
+	void wicket1382()
 	{
 		AjaxyImagesPage page = tester.startPage(AjaxyImagesPage.class);
 
 		TagTester tagTester = tester.getTagById(page.image.getMarkupId());
 		final String srcAttr = tagTester.getAttribute("src");
-		assertFalse(
-			"Image has not be rendered in Ajax request so it has no wicket:antiCache' parameter",
-			srcAttr.contains("antiCache"));
+		assertFalse(srcAttr.contains("antiCache"),
+			"Image has not be rendered in Ajax request so it has no wicket:antiCache' parameter");
 
 		// make an ajax call
 		tester.clickLink("link", true);
 		page = (AjaxyImagesPage)tester.getLastRenderedPage();
 		tagTester = tester.getTagById(page.image.getMarkupId());
 		final String srcAttr1 = tagTester.getAttribute("src");
-		assertTrue(
-			"Image has not be rendered in Ajax request so it has no wicket:antiCache' parameter",
-				srcAttr1.contains("antiCache"));
+		assertTrue(srcAttr1.contains("antiCache"),
+			"Image has not be rendered in Ajax request so it has no wicket:antiCache' parameter");
 	}
 }

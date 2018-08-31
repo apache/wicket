@@ -16,24 +16,25 @@
  */
 package org.apache.wicket.validation.validator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.Validatable;
 import org.apache.wicket.validation.validator.CreditCardValidator.CreditCard;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests a few valid and invalid credit card numbers.
  * 
  * @author Joachim F. Rohde
  */
-public class CreditCardValidatorTest extends Assert
+class CreditCardValidatorTest
 {
 	/**
 	 * Tests a couple of credit card numbers that shouldn't be valid.
 	 */
 	@Test
-	public void invalidCreditCardNumbers()
+	void invalidCreditCardNumbers()
 	{
 		// null value
 		CreditCardValidator test = new CreditCardValidator();
@@ -67,7 +68,7 @@ public class CreditCardValidatorTest extends Assert
 	 * https://www.paypal.com/en_US/vhelp/paypalmanager_help/credit_card_numbers.htm
 	 */
 	@Test
-	public void validCreditCardNumbers()
+	void validCreditCardNumbers()
 	{
 		// American Express
 		CreditCardValidator test = new CreditCardValidator();
@@ -151,7 +152,7 @@ public class CreditCardValidatorTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-3998
 	 */
 	@Test
-	public void isVisa()
+	void isVisa()
 	{
 		CreditCardValidator validator = new CreditCardValidator();
 		assertEquals(CreditCard.VISA, validator.determineCardId("4111111111111111"));
@@ -161,7 +162,7 @@ public class CreditCardValidatorTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5891
 	 */
 	@Test
-	public void isChinaUnionPay()
+	void isChinaUnionPay()
 	{
 		CreditCardValidator validator = new CreditCardValidator();
 		CreditCard creditCard = validator.determineCardId("6222601010012578692");

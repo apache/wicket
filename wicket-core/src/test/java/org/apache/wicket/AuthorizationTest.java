@@ -16,6 +16,11 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.io.Serializable;
 
 import org.apache.wicket.authorization.Action;
@@ -29,8 +34,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Authorization tests.
@@ -45,7 +49,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void createAllowedComponent() throws Exception
+	void createAllowedComponent() throws Exception
 	{
 		new WebComponent("component");
 	}
@@ -56,7 +60,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testCreateDisallowedComponent() throws Exception
+	void testCreateDisallowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
@@ -87,7 +91,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderAllowedComponent() throws Exception
+	void testRenderAllowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
@@ -104,7 +108,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderDisallowedComponent() throws Exception
+	void testRenderDisallowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
@@ -135,7 +139,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testEnabledAllowedComponent() throws Exception
+	void testEnabledAllowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
@@ -159,7 +163,7 @@ public class AuthorizationTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testEnabledDisallowedComponent() throws Exception
+	void testEnabledDisallowedComponent() throws Exception
 	{
 		tester.getApplication()
 			.getSecuritySettings()
@@ -221,7 +225,7 @@ public class AuthorizationTest extends WicketTestCase
 		 * 
 		 * @return the test model
 		 */
-		public Input getTestModel()
+		Input getTestModel()
 		{
 			return input;
 		}
@@ -231,7 +235,7 @@ public class AuthorizationTest extends WicketTestCase
 		 * 
 		 * @return whether the form was submitted
 		 */
-		public boolean isSubmitted()
+		boolean isSubmitted()
 		{
 			return submitted;
 		}
@@ -246,7 +250,7 @@ public class AuthorizationTest extends WicketTestCase
 			 * 
 			 * @param id
 			 */
-			public TestForm(String id)
+			TestForm(String id)
 			{
 				super(id);
 				setDefaultModel(new CompoundPropertyModel<Input>(input = new Input()));
@@ -276,7 +280,7 @@ public class AuthorizationTest extends WicketTestCase
 		 * 
 		 * @return stringInput
 		 */
-		public String getStringInput()
+		String getStringInput()
 		{
 			return stringInput;
 		}

@@ -16,24 +16,25 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.core.request.mapper.AbstractBookmarkableMapper.UrlInfo;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link UrlInfo}
  */
-public class UrlInfoTest extends Assert
+class UrlInfoTest
 {
 
 	/**
 	 * WICKET-4038 & WICKET-4054
 	 */
 	@Test
-	public void wicket4038()
+	void wicket4038()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.add(WebRequest.PARAM_AJAX, "true");

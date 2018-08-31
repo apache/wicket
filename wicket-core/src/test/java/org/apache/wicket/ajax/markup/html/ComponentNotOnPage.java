@@ -69,7 +69,7 @@ public class ComponentNotOnPage extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
-		public LastSelectedPanel(String id, WebMarkupContainer refresher)
+		LastSelectedPanel(String id, WebMarkupContainer refresher)
 		{
 			super(id);
 

@@ -17,23 +17,24 @@
 package org.apache.wicket.markup.resolver;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Locale;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class AutoLinkResolverTest extends WicketTestCase
+class AutoLinkResolverTest extends WicketTestCase
 {
 	private static final Locale DEFAULT_LOCALE = Locale.US;
 	private static final Locale EXISTENT_RESOURCE_LOCALE = Locale.CANADA;
 	private static final Locale NON_EXISTENT_RESOURCE_LOCALE = Locale.FRANCE;
 
 	@Test
-	public void shouldAutoLinkLocalizedResources()
+	void shouldAutoLinkLocalizedResources()
 	{
 		PageWithAutoLinkedLocalResource instance = new PageWithAutoLinkedLocalResource();
 
@@ -50,7 +51,7 @@ public class AutoLinkResolverTest extends WicketTestCase
 	}
 
 	@Test
-	public void shouldAutoLinkExistentLocalizedResources()
+	void shouldAutoLinkExistentLocalizedResources()
 	{
 		tester.getSession().setLocale(NON_EXISTENT_RESOURCE_LOCALE);
 

@@ -25,7 +25,7 @@ import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests that behaviors added to a Component has precedence
@@ -35,7 +35,7 @@ import org.junit.Test;
  *
  * @since 1.5.5
  */
-public class ComponentBehaviorOverComponentTagBehaviorTest extends WicketTestCase
+class ComponentBehaviorOverComponentTagBehaviorTest extends WicketTestCase
 {
 	/**
 	 * Verifies that the Label's title attribute comes from the
@@ -43,7 +43,7 @@ public class ComponentBehaviorOverComponentTagBehaviorTest extends WicketTestCas
 	 * WicketMessageTagHandler)
 	 */
 	@Test
-	public void runtimeBehaviorOverMarkupBehavior()
+    void runtimeBehaviorOverMarkupBehavior()
 	{
 		tester.getApplication().getResourceSettings().getStringResourceLoaders().add(new TestStringResourceLoader());
 		WicketMessage page = new WicketMessage();

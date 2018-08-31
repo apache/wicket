@@ -16,14 +16,15 @@
  */
 package org.apache.wicket.core.util.string;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.response.StringResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.7
  */
-public class CssUtilsTest extends Assert
+class CssUtilsTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4546
@@ -31,7 +32,7 @@ public class CssUtilsTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void writeLinkUrl() throws Exception
+	void writeLinkUrl() throws Exception
 	{
 		StringResponse response = new StringResponse();
 		String url = "some/url;jsessionid=1234?with=parameters&p1=v1";

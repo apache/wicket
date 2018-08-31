@@ -34,14 +34,14 @@ import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.ValidationError;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ValidatorStringResourceLoader
  *
  * @since 1.5.5
  */
-public class ValidatorStringResourceLoaderTest extends WicketTestCase
+class ValidatorStringResourceLoaderTest extends WicketTestCase
 {
 	/**
 	 * Tests that resource bundle is properly loaded for implementations of
@@ -50,7 +50,7 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4379
 	 */
 	@Test
-	public void interfaceValidator()
+    void interfaceValidator()
 	{
 		tester.startPage(new ValidatorLoaderPage(new InterfaceValidator()));
 		FormTester formTester = tester.newFormTester("form");
@@ -67,7 +67,7 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4379
 	 */
 	@Test
-	public void classValidator()
+    void classValidator()
 	{
 		tester.startPage(new ValidatorLoaderPage(new ClassValidator()));
 		FormTester formTester = tester.newFormTester("form");
@@ -78,7 +78,7 @@ public class ValidatorStringResourceLoaderTest extends WicketTestCase
 	}
 	
 	@Test
-	public void formValidator()
+    void formValidator()
 	{
 		tester.startPage(new FormValidatorPage());
 		FormTester formTester = tester.newFormTester("form");

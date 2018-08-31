@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.resource.loader;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Arrays;
 
 import org.apache.wicket.IInitializer;

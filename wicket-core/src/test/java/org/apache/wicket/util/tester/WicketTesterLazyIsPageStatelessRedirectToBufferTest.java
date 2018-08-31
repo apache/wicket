@@ -25,7 +25,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5426
@@ -54,7 +54,7 @@ public class WicketTesterLazyIsPageStatelessRedirectToBufferTest extends WicketT
 	 * @throws Exception
 	 */
 	@Test
-	public void statelessListenerInvoked() throws Exception
+    void statelessListenerInvoked() throws Exception
 	{
 	    tester.startPage(StatelessListenerPage.class);
 	    tester.assertRenderedPage(StatelessListenerPage.class);
@@ -67,7 +67,7 @@ public class WicketTesterLazyIsPageStatelessRedirectToBufferTest extends WicketT
 	
 	public static class StatelessListenerPage extends MyPage
 	{
-	    public StatelessListenerPage()
+		public StatelessListenerPage()
 	    {
 		super();
 		add(new StatelessForm("statelessForm")

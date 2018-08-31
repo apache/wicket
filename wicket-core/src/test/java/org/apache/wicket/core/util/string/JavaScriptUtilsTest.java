@@ -16,14 +16,15 @@
  */
 package org.apache.wicket.core.util.string;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.response.StringResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.7
  */
-public class JavaScriptUtilsTest extends Assert
+class JavaScriptUtilsTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4546
@@ -31,7 +32,7 @@ public class JavaScriptUtilsTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void writeJavaScriptUrl() throws Exception
+	void writeJavaScriptUrl() throws Exception
 	{
 		StringResponse response = new StringResponse();
 		String url = "some/url;jsessionid=1234?p1=v1&p2=v2";
@@ -49,7 +50,7 @@ public class JavaScriptUtilsTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5715
 	 */
 	@Test
-	public void writeJavaScriptUrlAsync()
+	void writeJavaScriptUrlAsync()
 	{
 		StringResponse response = new StringResponse();
 		String url = "some/url;jsessionid=1234?p1=v1&p2=v2";
@@ -67,7 +68,7 @@ public class JavaScriptUtilsTest extends Assert
 	/**
 	 */
 	@Test
-	public void writeJavaScript()
+	void writeJavaScript()
 	{
 		StringResponse response = new StringResponse();
 		JavaScriptUtils.writeJavaScript(response,
@@ -83,7 +84,7 @@ public class JavaScriptUtilsTest extends Assert
 	/**
 	 */
 	@Test
-	public void scriptTag()
+	void scriptTag()
 	{
 		assertEquals("<script type=\"text/javascript\">\n/*<![CDATA[*/\n",
 			JavaScriptUtils.SCRIPT_OPEN_TAG);

@@ -42,7 +42,7 @@ public class ListViewInContainerPage extends BasePage
 		add(new ListView<Integer>("liste", values)
 		{
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -51,7 +51,7 @@ public class ListViewInContainerPage extends BasePage
 			{
 				final Label testenc = new Label("testenc", Model.of("enclosure " + item.getModelObject()));
 				item.queue(testenc);
-				
+
 				final Label testlib = new Label("testlib", Model.of("no enclosure " + item.getModelObject()));
 				item.queue(testlib);
 			}

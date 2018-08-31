@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,19 +33,19 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class FormWithMultipleButtonsTest extends WicketTestCase
+class FormWithMultipleButtonsTest extends WicketTestCase
 {
 	/**
 	 * Testing if the correct submit button is invoked in an form with multiple submit buttons. The
 	 * browser set the clicked button input name as parameter on the HTTP request.
 	 */
 	@Test
-	public void findSubmittingButton()
+	void findSubmittingButton()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
@@ -57,7 +61,7 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-1894">WICKET-1894</a>
 	 */
 	@Test
-	public void ajaxFallbackButtonInvokedFirst()
+	void ajaxFallbackButtonInvokedFirst()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
@@ -70,7 +74,7 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 	 *
 	 */
 	@Test
-	public void buttonInvokedFirst()
+	void buttonInvokedFirst()
 	{
 		TestPage testPage = new TestPage();
 		tester.startPage(testPage);
@@ -93,7 +97,7 @@ public class FormWithMultipleButtonsTest extends WicketTestCase
 		Button button;
 		AjaxFallbackButton ajaxFallbackButton;
 
-		public TestPage()
+		TestPage()
 		{
 			add(form = new Form<Void>("form")
 			{

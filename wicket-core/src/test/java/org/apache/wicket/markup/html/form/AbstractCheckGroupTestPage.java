@@ -49,7 +49,7 @@ public abstract class AbstractCheckGroupTestPage extends WebPage
 	 * 
 	 * @param list
 	 */
-	public AbstractCheckGroupTestPage(List<String> list)
+    AbstractCheckGroupTestPage(List<String> list)
 	{
 
 		form = new Form<Void>("form");

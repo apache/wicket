@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.request.cycle;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -41,7 +41,7 @@ import org.junit.Test;
 public class RequestCycleListenerDetachOrderTest
 {
 	@Test
-	public void pageDetachedBeforeListener()
+    void pageDetachedBeforeListener()
 	{
 		List<Event> events = new ArrayList<Event>();
 
@@ -57,7 +57,7 @@ public class RequestCycleListenerDetachOrderTest
 	{
 		private final List<Event> events;
 
-		public TestListener(List<Event> events)
+		TestListener(List<Event> events)
 		{
 			this.events = events;
 		}
@@ -73,7 +73,7 @@ public class RequestCycleListenerDetachOrderTest
 	{
 		private final List<Event> events;
 
-		public TestPage(List<Event> events)
+		TestPage(List<Event> events)
 		{
 			this.events = events;
 		}

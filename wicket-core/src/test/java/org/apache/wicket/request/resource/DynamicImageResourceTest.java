@@ -16,23 +16,25 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link DynamicImageResource}
  */
-public class DynamicImageResourceTest extends WicketTestCase
+class DynamicImageResourceTest extends WicketTestCase
 {
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3935
 	 */
 	@Test
-	public void emptyImageDataIs404()
+	void emptyImageDataIs404()
 	{
 		DynamicImageResource resource = new DynamicImageResource()
 		{
@@ -53,7 +55,7 @@ public class DynamicImageResourceTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-3935
 	 */
 	@Test
-	public void nonEmptyImageDataIs200()
+	void nonEmptyImageDataIs200()
 	{
 		final byte[] expected = new byte[] { 1, 2, 3 };
 
@@ -68,6 +70,6 @@ public class DynamicImageResourceTest extends WicketTestCase
 
 		tester.startResource(resource);
 		assertEquals(HttpServletResponse.SC_OK, tester.getLastResponse().getStatus());
-		Assert.assertArrayEquals(expected, tester.getLastResponse().getBinaryContent());
+		assertArrayEquals(expected, tester.getLastResponse().getBinaryContent());
 	}
 }

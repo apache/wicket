@@ -16,23 +16,25 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link NonCachingImage}.
  * 
  * @author svenmeier
  */
-public class NonCachingImageTest extends WicketTestCase
+class NonCachingImageTest extends WicketTestCase
 {
 
 	/**
 	 * {@link NonCachingImage} always adds anticache.
 	 */
 	@Test
-	public void test()
+	void test()
 	{
 		NonCachingImagePage page = tester.startPage(NonCachingImagePage.class);
 

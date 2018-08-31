@@ -16,6 +16,9 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.core.request.handler.ListenerRequestHandler;
 import org.apache.wicket.core.request.handler.PageAndComponentProvider;
@@ -29,12 +32,12 @@ import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @see <a href="https://issues.apache.org/jira/browse/WICKET3142">WICKET3142</a>
  */
-public class ComponentWithLazyModelCreationTest extends WicketTestCase
+class ComponentWithLazyModelCreationTest extends WicketTestCase
 {
 	private static final String LABEL_VALUE = "some value";
 	/** just an property to be reached by the CompoundPropertyModel */
@@ -45,7 +48,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 	 * data has its position incremented after its ULR get encoded.
 	 */
 	@Test
-	public void urlReferingSomeBehavior()
+	void urlReferingSomeBehavior()
 	{
 		TestPage page = new TestPage(new CompoundPropertyModel<ComponentWithLazyModelCreationTest>(
 			this));
@@ -54,7 +57,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 		tester.executeUrl(page.mainCallbackBehavior.statefullUrl);
 
 		tester.assertLabel("label", LABEL_VALUE);
-		assertTrue("mainCallbackBehavior was called", page.mainCallbackBehavior.requested);
+		assertTrue(page.mainCallbackBehavior.requested, "mainCallbackBehavior was called");
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 	 * URL invoking the wrong component behavior
 	 */
 	@Test
-	public void urlDontCallOtherBehavior()
+	void urlDontCallOtherBehavior()
 	{
 		TestPage page = new TestPage(new CompoundPropertyModel<ComponentWithLazyModelCreationTest>(
 			this));
@@ -71,8 +74,8 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 		tester.executeUrl(page.brotherCallbackBehavior.statefullUrl);
 
 		tester.assertLabel("label", LABEL_VALUE);
-		assertTrue("brotherCallbackBehavior was requested", page.brotherCallbackBehavior.requested);
-		assertFalse("mainCallbackBehavior was not requested", page.mainCallbackBehavior.requested);
+		assertTrue(page.brotherCallbackBehavior.requested, "brotherCallbackBehavior was requested");
+		assertFalse(page.mainCallbackBehavior.requested, "mainCallbackBehavior was not requested");
 	}
 
 	/**
@@ -88,7 +91,7 @@ public class ComponentWithLazyModelCreationTest extends WicketTestCase
 		 * 
 		 * @param model
 		 */
-		public TestPage(IModel<ComponentWithLazyModelCreationTest> model)
+		TestPage(IModel<ComponentWithLazyModelCreationTest> model)
 		{
 			super(model);
 			mainCallbackBehavior = new TestCallbackBehavior();

@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.markup.html.link;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.junit.Assert;
 
 public class PageWithLink extends WebPage
 {
@@ -35,7 +36,7 @@ public class PageWithLink extends WebPage
 			@Override
 			public void onClick()
 			{
-				Assert.assertEquals("value", getPageParameters().get("param").toString());
+				assertEquals("value", getPageParameters().get("param").toString());
 			}
 		});
 	}

@@ -17,7 +17,7 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
@@ -28,11 +28,11 @@ import org.junit.Test;
  * @author Rüdiger Schulz <rue@darkprophet.de>
  * @version $Revision$
  */
-public class AjaxBehaviorAndMetaDataTest extends WicketTestCase
+class AjaxBehaviorAndMetaDataTest extends WicketTestCase
 {
 	/**	 */
 	@Test
-	public void render()
+    void render()
 	{
 		tester.startPage(AjaxBehaviorAndMetaDataPage.class);
 		tester.assertRenderedPage(AjaxBehaviorAndMetaDataPage.class);

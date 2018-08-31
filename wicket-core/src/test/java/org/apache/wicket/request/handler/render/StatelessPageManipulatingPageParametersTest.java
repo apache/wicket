@@ -26,17 +26,17 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-5666
  * https://issues.apache.org/jira/browse/WICKET-5643
  */
-public class StatelessPageManipulatingPageParametersTest extends WicketTestCase {
+class StatelessPageManipulatingPageParametersTest extends WicketTestCase {
 
-	@Before
-	public void before()
+	@BeforeEach
+    void before()
 	{
 		WebApplication application = tester.getApplication();
 		application.mountPage("first", FirstPage.class);
@@ -44,7 +44,7 @@ public class StatelessPageManipulatingPageParametersTest extends WicketTestCase 
 	}
 
 	@Test
-	public void submitAndRedirect() {
+    void submitAndRedirect() {
 		tester.startPage(FirstPage.class);
 		FormTester failingFormTester = tester.newFormTester("form");
 		failingFormTester.submit();
@@ -82,7 +82,7 @@ public class StatelessPageManipulatingPageParametersTest extends WicketTestCase 
 			return new StringResourceStream(markup);
 		}
 	}
-	
+
 	public static class SecondPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		public SecondPage(PageParameters parameters)

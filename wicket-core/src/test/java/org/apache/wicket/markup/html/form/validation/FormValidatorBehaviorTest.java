@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
@@ -31,17 +34,17 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class FormValidatorBehaviorTest extends WicketTestCase
+class FormValidatorBehaviorTest extends WicketTestCase
 {
 	/**
 	 * Tests validators are treated as behaviors
 	 */
 	@Test
-	public void actAsBehavior()
+	void actAsBehavior()
 	{
 		TestPage page = new TestPage();
 
@@ -64,7 +67,7 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 	 * Tests validators are treated as validators
 	 */
 	@Test
-	public void actAsValidator()
+	void actAsValidator()
 	{
 		TestPage page = new TestPage();
 
@@ -138,7 +141,7 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 		 * 
 		 * @param field
 		 */
-		public MaxLenValidator(TextField<String> field)
+		MaxLenValidator(TextField<String> field)
 		{
 			this.field = field;
 		}
@@ -179,7 +182,7 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 		 * 
 		 * @param field
 		 */
-		public MinLenValidator(TextField<String> field)
+		MinLenValidator(TextField<String> field)
 		{
 			this.field = field;
 		}
@@ -207,14 +210,14 @@ public class FormValidatorBehaviorTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 		/**	 */
-		public TextField<String> name;
+		TextField<String> name;
 		/**	 */
-		public Form<Void> form;
+		Form<Void> form;
 
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+		TestPage()
 		{
 			form = new Form<Void>("form");
 			add(form);

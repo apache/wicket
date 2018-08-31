@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 
 /**
@@ -31,8 +31,8 @@ public class CachingDisabledLocalizerTest extends LocalizerTest
 	 * @throws Exception
 	 */
 	@Override
-	@Before
-	public void setUp() throws Exception
+	@BeforeEach
+    void setUp() throws Exception
 	{
 		super.setUp();
 		localizer.setEnableCache(false);

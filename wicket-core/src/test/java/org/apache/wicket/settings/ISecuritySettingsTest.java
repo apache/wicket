@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.settings;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.MockPageWithLink;
 import org.apache.wicket.core.request.handler.BookmarkablePageRequestHandler;
 import org.apache.wicket.core.request.handler.PageProvider;
@@ -30,20 +34,19 @@ import org.apache.wicket.protocol.https.HttpsMapper;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link SecuritySettings}
  */
-public class ISecuritySettingsTest extends WicketTestCase
+class ISecuritySettingsTest extends WicketTestCase
 {
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-3849
 	 */
 	@Test
-	public void enforceMounts()
+	void enforceMounts()
 	{
 		MockPageWithLink pageWithLink = new MockPageWithLink();
 		pageWithLink.add(new Link<Void>(MockPageWithLink.LINK_ID)
@@ -53,8 +56,8 @@ public class ISecuritySettingsTest extends WicketTestCase
 			@Override
 			public void onClick()
 			{
-				throw new RedirectToUrlException("/wicket/bookmarkable/" +
-					UnknownPage.class.getName());
+				throw new RedirectToUrlException(
+					"/wicket/bookmarkable/" + UnknownPage.class.getName());
 			}
 		});
 
@@ -68,32 +71,37 @@ public class ISecuritySettingsTest extends WicketTestCase
 		tester.startPage(pageWithLink);
 		tester.assertRenderedPage(MockPageWithLink.class);
 		tester.clickLink(MockPageWithLink.LINK_ID);
-		Assert.assertNull(tester.getLastRenderedPage());
+		assertNull(tester.getLastRenderedPage());
 
 		/*
-		 * Test that mounts are enforced when the root compound mapper does not directly contain the mounted mapper.
+		 * Test that mounts are enforced when the root compound mapper does not directly contain the
+		 * mounted mapper.
 		 */
-		tester.getApplication().setRootRequestMapper(new HttpsMapper(tester.getApplication().getRootRequestMapper(), new HttpsConfig()));
+		tester.getApplication().setRootRequestMapper(
+			new HttpsMapper(tester.getApplication().getRootRequestMapper(), new HttpsConfig()));
 
 		tester.startPage(pageWithLink);
 		tester.assertRenderedPage(MockPageWithLink.class);
 		tester.clickLink(MockPageWithLink.LINK_ID);
-		Assert.assertNull(tester.getLastRenderedPage());
+		assertNull(tester.getLastRenderedPage());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5560
 	 */
 	@Test
-	public void enforceMountsWithCryptoMapper()
+	void enforceMountsWithCryptoMapper()
 	{
 		WebApplication app = tester.getApplication();
 
-		IRequestHandler handler = new BookmarkablePageRequestHandler(new PageProvider(UnknownPage.class));
+		IRequestHandler handler = new BookmarkablePageRequestHandler(
+			new PageProvider(UnknownPage.class));
 
 		String plainTextNonMountedUrl = tester.urlFor(handler).toString();
 
-		assertTrue("Plain text non mounted url should start with wicket/bookmarkable/: " + plainTextNonMountedUrl, plainTextNonMountedUrl.startsWith("wicket/bookmarkable/"));
+		assertTrue(plainTextNonMountedUrl.startsWith("wicket/bookmarkable/"),
+			"Plain text non mounted url should start with wicket/bookmarkable/: " +
+				plainTextNonMountedUrl);
 
 		tester.executeUrl(plainTextNonMountedUrl);
 		tester.assertRenderedPage(UnknownPage.class);
@@ -107,7 +115,8 @@ public class ISecuritySettingsTest extends WicketTestCase
 
 		String encryptedNonMountedUrl = tester.urlFor(handler).toString();
 
-		assertFalse("Encrypted URL should not start with wicket/bookmarkable/" + encryptedNonMountedUrl, encryptedNonMountedUrl.startsWith("wicket/bookmarkable/"));
+		assertFalse(encryptedNonMountedUrl.startsWith("wicket/bookmarkable/"),
+			"Encrypted URL should not start with wicket/bookmarkable/" + encryptedNonMountedUrl);
 
 		tester.executeUrl(plainTextNonMountedUrl);
 		assertNull(tester.getLastRenderedPage());
@@ -128,7 +137,7 @@ public class ISecuritySettingsTest extends WicketTestCase
 		tester.executeUrl(encryptedNonMountedUrl);
 		assertNull(tester.getLastRenderedPage());
 	}
-	
+
 	/**
 	 * Dummy page for testing BookmarkableMapper
 	 */

@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.util.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,25 +29,12 @@ import java.util.Arrays;
 
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class PathTest extends WicketTestCase
+class PathTest extends WicketTestCase
 {
 
-	@Test
-	public void loadFromRootUsingSubpathInFilename() throws Exception
-	{
-		final String contents = PathTest.class.getName() + ": loaded from root";
-		final File file = createTempFile(contents);
-		final File root = findRoot(file);
-		final Path path = new Path(root.getCanonicalPath());
-		String relative = root.toURI().relativize(file.toURI()).getPath();
-		IResourceStream rs = path.find(PathTest.class, relative);
-		assertNotNull(rs);
-		assertContents(contents, rs);
-	}
-
-	public static void assertContents(String expectedContents, IResourceStream rs)
+	private static void assertContents(String expectedContents, IResourceStream rs)
 		throws ResourceStreamNotFoundException, IOException
 	{
 		InputStream in = rs.getInputStream();
@@ -53,10 +44,10 @@ public class PathTest extends WicketTestCase
 			final int expectedLength = expectedBytes.length;
 			byte[] buf = new byte[expectedLength * 2];
 			int read = in.read(buf, 0, buf.length);
-			assertEquals("contents do not match", expectedLength, read);
+			assertEquals(expectedLength, read, "contents do not match");
 			byte[] buf2 = new byte[expectedLength];
 			System.arraycopy(buf, 0, buf2, 0, expectedLength);
-			assertTrue("contents do not match", Arrays.equals(expectedBytes, buf2));
+			assertTrue(Arrays.equals(expectedBytes, buf2), "contents do not match");
 		}
 		finally
 		{
@@ -64,19 +55,7 @@ public class PathTest extends WicketTestCase
 		}
 	}
 
-	@Test
-	public void loadFilenameFromPath() throws Exception
-	{
-		final String contents = PathTest.class.getName() + ": loaded from prefix";
-		final File file = createTempFile(contents);
-		final File parent = file.getParentFile();
-		final Path path = new Path(parent.getCanonicalPath());
-		IResourceStream rs = path.find(PathTest.class, file.getName());
-		assertNotNull(rs);
-		assertContents(contents, rs);
-	}
-
-	public static File createTempFile(String contents) throws IOException
+	private static File createTempFile(String contents) throws IOException
 	{
 		FileOutputStream out = null;
 		try
@@ -96,7 +75,7 @@ public class PathTest extends WicketTestCase
 		}
 	}
 
-	public static File findRoot(File file)
+	private static File findRoot(File file)
 	{
 		final File parent = file.getParentFile();
 		if (parent == null)
@@ -107,5 +86,30 @@ public class PathTest extends WicketTestCase
 		{
 			return findRoot(parent);
 		}
+	}
+
+	@Test
+	void loadFromRootUsingSubpathInFilename() throws Exception
+	{
+		final String contents = PathTest.class.getName() + ": loaded from root";
+		final File file = createTempFile(contents);
+		final File root = findRoot(file);
+		final Path path = new Path(root.getCanonicalPath());
+		String relative = root.toURI().relativize(file.toURI()).getPath();
+		IResourceStream rs = path.find(PathTest.class, relative);
+		assertNotNull(rs);
+		assertContents(contents, rs);
+	}
+
+	@Test
+	void loadFilenameFromPath() throws Exception
+	{
+		final String contents = PathTest.class.getName() + ": loaded from prefix";
+		final File file = createTempFile(contents);
+		final File parent = file.getParentFile();
+		final Path path = new Path(parent.getCanonicalPath());
+		IResourceStream rs = path.find(PathTest.class, file.getName());
+		assertNotNull(rs);
+		assertContents(contents, rs);
 	}
 }

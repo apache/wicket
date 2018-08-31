@@ -97,7 +97,7 @@ public class ExternalImageTestPage extends WebPage
 		 * @param url
 		 *            the url to be used
 		 */
-		public void setUrl(String url)
+        void setUrl(String url)
 		{
 			this.url = url;
 		}

@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.form.Button;
@@ -23,35 +25,36 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class ComponentTagAttributeEscapingTest extends WicketTestCase
+class ComponentTagAttributeEscapingTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void componentAttributesNotDoubleEscaped() throws Exception
+	void componentAttributesNotDoubleEscaped() throws Exception
 	{
 		tester.startPage(ButtonValuePage.class);
 		String response = tester.getLastResponseAsString();
-//		System.out.println(response);
-		assertTrue("One of the pound entity representations is missing: &pound; or &#163;",
-			response.contains("\u00a3\u00a3"));
-		assertTrue("must not be double escaped", response.contains("Watch escaped value: &gt;&gt;"));
-		assertTrue("following the last assert logic, this one would true",
-			response.contains("alerting: &amp;"));
-		assertTrue("escape manually added attributes",
-			response.contains("some_attribute=\"a &amp; b\""));
+// System.out.println(response);
+		assertTrue(response.contains("\u00a3\u00a3"),
+			"One of the pound entity representations is missing: &pound; or &#163;");
+		assertTrue(response.contains("Watch escaped value: &gt;&gt;"),
+			"must not be double escaped");
+		assertTrue(response.contains("alerting: &amp;"),
+			"following the last assert logic, this one would true");
+		assertTrue(response.contains("some_attribute=\"a &amp; b\""),
+			"escape manually added attributes");
 	}
 
 	/**
 	 * Just two distinct components with escaped characters in markup attribute.
-	 * */
+	 */
 	public static class ButtonValuePage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		/** */
@@ -60,7 +63,7 @@ public class ComponentTagAttributeEscapingTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public ButtonValuePage()
+        public ButtonValuePage()
 		{
 			add(new Button("button"));
 			add(new Link<Void>("link")
@@ -86,13 +89,14 @@ public class ComponentTagAttributeEscapingTest extends WicketTestCase
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass)
 		{
-			return new StringResourceStream(
-				"<html>"//
-					+ "<body>"//
-					+ "<a wicket:id=\"link\" onclick=\"alert('alerting: &amp; &pound;&#163; ')\">link</a>"//
-					+ "<input type=\"submit\" wicket:id=\"button\" value=\"Watch escaped value: &gt;&gt;\"/>"//
-					+ "</body>" + //
-					"</html>");
+			return new StringResourceStream("<html>"//
+				+ "<body>"//
+				+
+				"<a wicket:id=\"link\" onclick=\"alert('alerting: &amp; &pound;&#163; ')\">link</a>"//
+				+
+				"<input type=\"submit\" wicket:id=\"button\" value=\"Watch escaped value: &gt;&gt;\"/>"//
+				+ "</body>" + //
+				"</html>");
 		}
 	}
 }

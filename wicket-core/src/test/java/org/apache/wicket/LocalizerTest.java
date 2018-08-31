@@ -16,6 +16,11 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
@@ -34,126 +39,100 @@ import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.value.ValueMap;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for the <code>Localizer</code> class.
  * 
  * @author Chris Turner
  */
-public class LocalizerTest extends Assert
+class LocalizerTest
 {
 
-	private static class MyMockPage extends WebPage
-	{
-		private static final long serialVersionUID = 1L;
-
-		DropDownChoice<String> drop1;
-		DropDownChoice<String> drop2;
-
-		/**
-		 * Construct.
-		 */
-		public MyMockPage()
-		{
-			final Form<Void> form = new Form<Void>("form");
-			add(form);
-
-			String[] choices = { "choice1", "choice2" };
-			drop1 = new DropDownChoice<String>("drop1", Arrays.asList(choices));
-			drop2 = new DropDownChoice<String>("drop2", Arrays.asList(choices));
-
-			form.add(drop1);
-			form.add(drop2);
-		}
-	}
-
+	Localizer localizer;
 	private WicketTester tester;
 	private ResourceSettings settings;
 
-	protected Localizer localizer;
-
 	/**
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	@Before
-	public void setUp() throws Exception
+	@BeforeEach
+	void setUp() throws Exception
 	{
 		tester = new WicketTester(new DummyApplication());
 		settings = tester.getApplication().getResourceSettings();
 		localizer = tester.getApplication().getResourceSettings().getLocalizer();
 	}
 
-	@After
-	public void tearDown() throws Exception
+	@AfterEach
+	void tearDown() throws Exception
 	{
 		tester.destroy();
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	public void testGetStringValidString()
+	void testGetStringValidString()
 	{
-		Assert.assertEquals("Expected string should be returned", "This is a test",
-			localizer.getString("test.string", null, null, "DEFAULT"));
+		assertEquals("This is a test", localizer.getString("test.string", null, null, "DEFAULT"),
+			"Expected string should be returned");
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	public void testGetStringMissingStringReturnDefault()
+	void testGetStringMissingStringReturnDefault()
 	{
 		settings.setUseDefaultOnMissingResource(true);
-		Assert.assertEquals("Default string should be returned", "DEFAULT",
-			localizer.getString("unknown.string", null, null, "DEFAULT"));
+		assertEquals("DEFAULT", localizer.getString("unknown.string", null, null, "DEFAULT"),
+			"Default string should be returned");
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	public void testGetStringMissingStringNoDefault()
+	void testGetStringMissingStringNoDefault()
 	{
 		settings.setUseDefaultOnMissingResource(true);
 		settings.setThrowExceptionOnMissingResource(false);
 
-		Assert.assertEquals("Wrapped key should be returned on no default",
-			"[Warning: Property for 'unknown.string' not found]",
-			localizer.getString("unknown.string", null, null, null));
+		assertEquals("[Warning: Property for 'unknown.string' not found]",
+			localizer.getString("unknown.string", null, null, null),
+			"Wrapped key should be returned on no default");
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	public void testGetStringMissingStringDoNotUseDefault()
+	void testGetStringMissingStringDoNotUseDefault()
 	{
 		settings.setUseDefaultOnMissingResource(false);
 		settings.setThrowExceptionOnMissingResource(false);
-		Assert.assertEquals("Wrapped key should be returned on not using default and no exception",
-			"[Warning: Property for 'unknown.string' not found]",
-			localizer.getString("unknown.string", null, null, "DEFAULT"));
+		assertEquals("[Warning: Property for 'unknown.string' not found]",
+			localizer.getString("unknown.string", null, null, "DEFAULT"),
+			"Wrapped key should be returned on not using default and no exception");
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	public void testGetStringMissingStringExceptionThrown()
+	void testGetStringMissingStringExceptionThrown()
 	{
 		settings.setUseDefaultOnMissingResource(false);
 		settings.setThrowExceptionOnMissingResource(true);
 		try
 		{
 			localizer.getString("unknown.string", null, null, "DEFAULT");
-			Assert.fail("MissingResourceException expected");
+			fail("MissingResourceException expected");
 		}
 		catch (MissingResourceException e)
 		{
@@ -162,10 +141,10 @@ public class LocalizerTest extends Assert
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	public void testGetStringPropertySubstitution()
+	void testGetStringPropertySubstitution()
 	{
 		Session.get().setLocale(Locale.GERMAN);
 
@@ -173,15 +152,16 @@ public class LocalizerTest extends Assert
 		vm.put("user", "John Doe");
 		vm.put("rating", 4.5);
 		IModel<ValueMap> model = new Model<ValueMap>(vm);
-		Assert.assertEquals("Property substitution should occur", "John Doe gives 4,5 stars",
-			localizer.getString("test.substitute", null, model, null));
+		assertEquals("John Doe gives 4,5 stars",
+			localizer.getString("test.substitute", null, model, null),
+			"Property substitution should occur");
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	public void testInComponentConstructor()
+	void testInComponentConstructor()
 	{
 		new MyLabel("myLabel");
 	}
@@ -190,14 +170,12 @@ public class LocalizerTest extends Assert
 	 * Unit test for bug number [1416582] Resource loading caches wrong.
 	 */
 	@Test
-	public void testTwoComponents()
+	void testTwoComponents()
 	{
 		Session.get().setLocale(Locale.ENGLISH);
 		MyMockPage page = new MyMockPage();
-		Application.get()
-			.getResourceSettings()
-			.getStringResourceLoaders()
-			.add(new ComponentStringResourceLoader());
+		Application.get().getResourceSettings().getStringResourceLoaders().add(
+			new ComponentStringResourceLoader());
 
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 		assertEquals("value 1", localizer.getString("null", page.drop1));
@@ -206,14 +184,13 @@ public class LocalizerTest extends Assert
 		Session.get().setLocale(new Locale("nl"));
 		assertEquals("waarde 1", localizer.getString("null", page.drop1));
 		assertEquals("waarde 2", localizer.getString("null", page.drop2));
-
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Test
-	public void testGetStringUseModel()
+	void testGetStringUseModel()
 	{
 		Session.get().setLocale(Locale.GERMAN);
 
@@ -221,27 +198,30 @@ public class LocalizerTest extends Assert
 		model.put("user", "juergen");
 		model.put("rating", 4.5);
 
-		Assert.assertEquals("Expected string should be returned", "juergen gives 4,5 stars",
-			localizer.getString("test.substitute", null, new PropertyModel<String>(model, null),
-				"DEFAULT {user}"));
+		assertEquals(
+			"juergen gives 4,5 stars", localizer.getString("test.substitute", null,
+				new PropertyModel<String>(model, null), "DEFAULT {user}"),
+			"Expected string should be returned");
 
-		Assert.assertEquals("Expected string should be returned", "DEFAULT juergen",
+		assertEquals("DEFAULT juergen",
 			localizer.getString("test.substituteDoesNotExist", null,
-				new PropertyModel<HashMap<String, Object>>(model, null), "DEFAULT ${user}"));
+				new PropertyModel<HashMap<String, Object>>(model, null), "DEFAULT ${user}"),
+			"Expected string should be returned");
 	}
 
 	/**
 	 * See https://issues.apache.org/jira/browse/WICKET-1851
 	 */
 	@Test
-	public void test_1851_1()
+	void test_1851_1()
 	{
 		MyMockPage page = new MyMockPage();
 
 		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		tester.getApplication().getResourceSettings().setUseDefaultOnMissingResource(false);
 
-		String option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, "default");
+		String option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null,
+			"default");
 		assertEquals("default", option);
 
 		option = localizer.getStringIgnoreSettings("dummy.null", page.drop1, null, null);
@@ -267,13 +247,37 @@ public class LocalizerTest extends Assert
 		try
 		{
 			localizer.getString("dummy.null", page.drop1, null, null);
-			assertTrue("Expected an exception to happen", false);
+			assertTrue(false, "Expected an exception to happen");
 		}
 		catch (MissingResourceException ex)
 		{
 			assertEquals(
 				"Unable to find property: 'dummy.null' for component: form:drop1 [class=org.apache.wicket.markup.html.form.DropDownChoice]. Locale: null, style: null",
 				ex.getMessage());
+		}
+	}
+
+	public static class MyMockPage extends WebPage
+	{
+		private static final long serialVersionUID = 1L;
+
+		DropDownChoice<String> drop1;
+		DropDownChoice<String> drop2;
+
+		/**
+		 * Construct.
+		 */
+		MyMockPage()
+		{
+			final Form<Void> form = new Form<Void>("form");
+			add(form);
+
+			String[] choices = { "choice1", "choice2" };
+			drop1 = new DropDownChoice<String>("drop1", Arrays.asList(choices));
+			drop2 = new DropDownChoice<String>("drop2", Arrays.asList(choices));
+
+			form.add(drop1);
+			form.add(drop2);
 		}
 	}
 
@@ -289,7 +293,7 @@ public class LocalizerTest extends Assert
 		 * 
 		 * @param id
 		 */
-		public MyLabel(final String id)
+		MyLabel(final String id)
 		{
 			super(id);
 
@@ -297,8 +301,8 @@ public class LocalizerTest extends Assert
 
 			// should work properly in a component constructor (without parent)
 			// as well
-			Assert.assertEquals("Expected string should be returned", "This is a test",
-				localizer.getString("test.string", this, "DEFAULT"));
+			assertEquals("This is a test",
+				localizer.getString("test.string", this, "DEFAULT"), "Expected string should be returned");
 
 		}
 	}

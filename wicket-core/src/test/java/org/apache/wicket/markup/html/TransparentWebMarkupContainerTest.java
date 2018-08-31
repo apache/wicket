@@ -16,7 +16,11 @@
  */
 package org.apache.wicket.markup.html;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.IPageManagerProvider;
@@ -40,7 +44,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
@@ -53,7 +57,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void markupInheritanceResolver() throws Exception
+	void markupInheritanceResolver() throws Exception
 	{
 		executeTest(MarkupInheritanceResolverTestPage3.class,
 			"MarkupInheritanceResolverTestPage_expected.html");
@@ -63,7 +67,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void unableToFindComponents()
+	void unableToFindComponents()
 	{
 		try
 		{
@@ -72,8 +76,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 		}
 		catch (MarkupException e)
 		{
-			assertTrue(e.getMessage(),
-				e.getMessage().contains("Unable to find component with id 'c1'"));
+			assertTrue(e.getMessage().contains("Unable to find component with id 'c1'"), e.getMessage());
 		}
 	}
 
@@ -82,7 +85,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * WicketTagIdentifier is generation for internal components.
 	 */
 	@Test
-	public void usingGeneratedWicketIdAreSafe1()
+	void usingGeneratedWicketIdAreSafe1()
 	{
 		tester.startPage(TestPage2.class);
 		assertTrue(tester.getLastResponseAsString().contains("test_message"));
@@ -93,7 +96,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * Same test in different scenario
 	 */
 	@Test
-	public void usingGeneratedWicketIdAreSafe2()
+	void usingGeneratedWicketIdAreSafe2()
 	{
 		tester.startPage(TestPage3.class);
 		String expected = tester.getApplication()
@@ -107,7 +110,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * Test case for <a href="https://issues.apache.org/jira/browse/WICKET-3719">WICKET-3719</a>
 	 */
 	@Test
-	public void ajaxUpdate()
+	void ajaxUpdate()
 	{
 		WicketTester wicketTester = new WicketTester()
 		{
@@ -147,7 +150,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * that might need rewriting.
 	 */
 	@Test
-	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow()
+	void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow()
 	{
 		tester.startPage(SingleNestedTransparentContainerPage.class);
 
@@ -166,7 +169,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * outer TWMC.
 	 */
 	@Test
-	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow2()
+	void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow2()
 	{
 		tester.startPage(DoubleNestedTransparentContainerPage.class);
 
@@ -185,7 +188,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * container and trying to update a label that was added to the outer TWMC.
 	 */
 	@Test
-	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow3()
+	void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow3()
 	{
 		tester.startPage(DoubleNestedTransparentContainerWithSiblingTransparentContainerPage.class);
 
@@ -205,7 +208,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * the outer TWMC.
 	 */
 	@Test
-	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow4()
+	void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow4()
 	{
 		tester.startPage(TransparentContainerWithAutoTransparentContainerPage.class);
 
@@ -224,7 +227,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * label that was added to the outer TWMC.
 	 */
 	@Test
-	public void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow5()
+	void ajaxRequestForComponentInTransparentWebMarkupContainerShouldntCauseStackOverflow5()
 	{
 		tester.startPage(TransparentContainerWithManualTransparentContainerPage.class);
 
@@ -242,7 +245,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	 * Headers not rendered for components inside TransparentWebMarkupContainer on ajax update
 	 */
 	@Test
-	public void updateAjaxUpdateOfTransparentContainer() throws Exception
+	void updateAjaxUpdateOfTransparentContainer() throws Exception
 	{
 		TestEmbeddedAjaxComponet page = new TestEmbeddedAjaxComponet();
 		tester.startPage(page);
@@ -253,7 +256,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	}
 	
 	@Test
-	public void updateAjaxUpdateOfContainerWithTransparentContainer() throws Exception
+	void updateAjaxUpdateOfContainerWithTransparentContainer() throws Exception
 	{
 		TestEmbeddedAjaxComponet page = new TestEmbeddedAjaxComponet();
 		tester.startPage(page);
@@ -264,7 +267,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	}
 	
 	@Test
-	public void nestedTransparentContainer() throws Exception
+	void nestedTransparentContainer() throws Exception
 	{
 		tester.startPage(TestEmbeddedTransparentMarkupContainer.class);
 		tester.assertRenderedPage(TestEmbeddedTransparentMarkupContainer.class);
@@ -280,7 +283,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
      * https://issues.apache.org/jira/browse/WICKET-6219
      */
     @Test
-    public void shouldAllowAFragmentIdConflictingToASibilingTagWicketId() throws Exception
+	void shouldAllowAFragmentIdConflictingToASibilingTagWicketId() throws Exception
     {
             tester.startPage(SubPageWithAFragment.class);
             assertThat(tester.getLastResponseAsString(), containsString("content"));
@@ -387,10 +390,10 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public int renderHeadCount = 0;
+		int renderHeadCount = 0;
 
 		/** */
-		public TestEmbeddedAjaxComponet()
+		TestEmbeddedAjaxComponet()
 		{
 			final WebMarkupContainer container = new WebMarkupContainer("container");
 			container.setOutputMarkupId(true);
@@ -456,10 +459,10 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public static final String LABEL_MARKUP = "<span wicket:id=\"label\"></span>";
+		static final String LABEL_MARKUP = "<span wicket:id=\"label\"></span>";
 		
 		/** */
-		public TestEmbeddedTransparentMarkupContainer()
+        public TestEmbeddedTransparentMarkupContainer()
 		{
 			add(new TransparentWebMarkupContainer("outer"));
 			add(new TransparentWebMarkupContainer("inner"));
@@ -486,7 +489,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public PageWithAChildInsideATransparentContainer(PageParameters parameters)
+        public PageWithAChildInsideATransparentContainer(PageParameters parameters)
 		{
 			super(parameters);
 			add(new TransparentWebMarkupContainer("wrapper"));
@@ -508,7 +511,7 @@ public class TransparentWebMarkupContainerTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public SubPageWithAFragment(PageParameters parameters)
+        public SubPageWithAFragment(PageParameters parameters)
 		{
 			super(parameters);
 			Fragment fragment = new Fragment("header", "header", this);

@@ -16,17 +16,19 @@
  */
 package org.apache.wicket.properties;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class PropertiesTest extends WicketTestCase
+class PropertiesTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -37,7 +39,7 @@ public class PropertiesTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void test_1()
+	void test_1()
 	{
 		tester.getSession().setLocale(Locale.GERMANY);
 		tester.getSession().setStyle("mystyle");
@@ -58,7 +60,7 @@ public class PropertiesTest extends WicketTestCase
 	/**
 	 */
 	@Test
-	public void test_2()
+	void test_2()
 	{
 		tester.getSession().setLocale(Locale.GERMANY);
 		TestPage page = new TestPage()

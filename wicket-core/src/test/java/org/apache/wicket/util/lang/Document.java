@@ -19,7 +19,7 @@ package org.apache.wicket.util.lang;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Document {
+class Document {
 	
 	private Map<String, Object> values = new HashMap<>();
 	

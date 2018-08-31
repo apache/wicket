@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.util.tester.apps_3;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,14 +28,13 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.apps_1.Book;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Ingram Chen
  */
-public class FormTesterTest extends WicketTestCase
+class FormTesterTest extends WicketTestCase
 {
 	private Book[] books;
 
@@ -41,8 +45,8 @@ public class FormTesterTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		books = new Book[] { new Book("1", "book1"), new Book("2", "book2"),
 				new Book("3", "book3"), new Book("4", "book4") };
@@ -55,7 +59,7 @@ public class FormTesterTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void singleChoice() throws Exception
+	void singleChoice() throws Exception
 	{
 		assertSame(books[1], choicePage.dropDownChoice);
 		assertSame(books[3], choicePage.listChoice);
@@ -76,7 +80,7 @@ public class FormTesterTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void singleChoice_toggle() throws Exception
+	void singleChoice_toggle() throws Exception
 	{
 		assertSame(books[1], choicePage.dropDownChoice);
 		assertSame(null, choicePage.radioGroup);
@@ -93,7 +97,7 @@ public class FormTesterTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void singleChoiceComponentNotAllowSelectMuliple() throws Exception
+	void singleChoiceComponentNotAllowSelectMuliple() throws Exception
 	{
 		try
 		{
@@ -118,7 +122,7 @@ public class FormTesterTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void selectMultiple() throws Exception
+	void selectMultiple() throws Exception
 	{
 		assertBooksEquals(new Book[0], choicePage.listMultipleChoice);
 		assertBooksEquals(new Book[0], choicePage.checkBoxMultipleChoice);
@@ -138,7 +142,7 @@ public class FormTesterTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void multipleChoiceComponent_cumulate() throws Exception
+	void multipleChoiceComponent_cumulate() throws Exception
 	{
 		assertBooksEquals(new Book[0], choicePage.listMultipleChoice);
 		assertBooksEquals(new Book[0], choicePage.checkGroup);
@@ -166,7 +170,7 @@ public class FormTesterTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void multipleButtonSubmit() throws Exception
+	void multipleButtonSubmit() throws Exception
 	{
 		formTester.submit();
 
@@ -184,7 +188,7 @@ public class FormTesterTest extends WicketTestCase
 	 * Tests proper initialization.
 	 */
 	@Test
-	public void initialValues()
+	void initialValues()
 	{
 		assertInitialValues();
 		formTester.submit();

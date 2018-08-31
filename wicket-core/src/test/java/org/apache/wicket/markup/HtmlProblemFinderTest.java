@@ -16,31 +16,31 @@
  */
 package org.apache.wicket.markup;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.wicket.markup.parser.filter.HtmlProblemFinder;
 import org.apache.wicket.markup.parser.filter.RelativePathPrefixHandler;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Juergen Donnerstag
  */
-public class HtmlProblemFinderTest extends WicketTestCase
+class HtmlProblemFinderTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
-	@Test(expected = MarkupException.class)
-	public void problemFinder() throws Exception
+	@Test
+	void problemFinder() throws Exception
 	{
 		final MarkupParser parser = new MarkupParser("<img src=\"\"/>");
 		parser.add(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION),
 			RelativePathPrefixHandler.class);
 
-		parser.parse();
-		assertTrue("Should have thrown an exception", false);
-
+		assertThrows(MarkupException.class, () -> {
+			parser.parse();
+		});
 	}
 }

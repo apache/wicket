@@ -19,7 +19,7 @@ package org.apache.wicket.util.lang;
 /**
  * @author jcompagner
  */
-public class Country2 extends Country
+class Country2 extends Country
 {
 
 	private final Country country;

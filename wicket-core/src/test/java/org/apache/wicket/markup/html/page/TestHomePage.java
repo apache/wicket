@@ -17,18 +17,18 @@
 package org.apache.wicket.markup.html.page;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends WicketTestCase
+class TestHomePage extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void testRenderMyPage()
+    void testRenderMyPage()
 	{
 		// no exception should occur
 		tester.startPage(HomePage.class);

@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class AjaxButtonTest extends WicketTestCase
+class AjaxButtonTest extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void ajaxButtonWhenCancelButtonHasAModelValue()
+	void ajaxButtonWhenCancelButtonHasAModelValue()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

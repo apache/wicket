@@ -16,23 +16,25 @@
  */
 package org.apache.wicket.resource.loader;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.validation.IValidatable;
 import org.apache.wicket.validation.IValidator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class ClassStringResourceLoaderTest extends WicketTestCase
+class ClassStringResourceLoaderTest extends WicketTestCase
 {
 
 	/**
 	 * 
 	 */
 	@Test
-	public void validator1()
+	void validator1()
 	{
 		ClassStringResourceLoader loader = new ClassStringResourceLoader(MyValidator.class);
 		tester.getApplication().getResourceSettings().getStringResourceLoaders().add(loader);

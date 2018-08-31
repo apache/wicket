@@ -19,13 +19,13 @@ package org.apache.wicket.markup.html.list;
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
  * Test for simple table behavior.
  */
-public class IncrementalTableNavigationTest extends WicketTestCase
+class IncrementalTableNavigationTest extends WicketTestCase
 {
 	/**
 	 * Test simple table behavior.
@@ -33,7 +33,7 @@ public class IncrementalTableNavigationTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void pagedTable() throws Exception
+    void pagedTable() throws Exception
 	{
 		executeTest(IncrementalTableNavigationPage.class,
 			"IncrementalTableNavigationPage_ExpectedResult_1.html");

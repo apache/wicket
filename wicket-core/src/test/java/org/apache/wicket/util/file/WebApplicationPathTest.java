@@ -16,25 +16,25 @@
  */
 package org.apache.wicket.util.file;
 
-import java.net.URL;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.net.URL;
 import javax.servlet.ServletContext;
 
 import org.apache.wicket.core.util.file.WebApplicationPath;
 import org.apache.wicket.util.resource.IResourceStream;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 /**
  * @since 1.5.5
  */
-public class WebApplicationPathTest extends Assert
+class WebApplicationPathTest
 {
 	@Test
-	public void doNotServeResourcesFromWebInf() throws Exception
+	void doNotServeResourcesFromWebInf() throws Exception
 	{
 		URL webUrl = new URL("file://dummyFile");
 

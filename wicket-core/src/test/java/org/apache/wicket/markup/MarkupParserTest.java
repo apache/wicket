@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.markup;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Locale;
@@ -31,18 +36,16 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.StringValueConversionException;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Test cases for markup parser.
  * 
  * @author Jonathan Locke
  */
-public final class MarkupParserTest extends WicketTestCase
+final class MarkupParserTest extends WicketTestCase
 {
 	private static final Logger log = LoggerFactory.getLogger(MarkupParserTest.class);
 
@@ -52,7 +55,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void tagParsing() throws Exception
+	void tagParsing() throws Exception
 	{
 		final MarkupParser parser = new MarkupParser(
 			"This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
@@ -64,51 +67,51 @@ public final class MarkupParserTest extends WicketTestCase
 		final ComponentTag aOpen = (ComponentTag)markupStream.next();
 
 		log.info("", aOpen);
-		Assert.assertTrue(aOpen.getName().equals("a"));
-		Assert.assertEquals("foo.html", aOpen.getAttributes().getString("href"));
+		assertTrue(aOpen.getName().equals("a"));
+		assertEquals("foo.html", aOpen.getAttributes().getString("href"));
 
 		markupStream.next();
 
 		final ComponentTag boldOpen = (ComponentTag)markupStream.next();
 
 		log.info("", boldOpen);
-		Assert.assertTrue(boldOpen.getName().equals("b"));
-		Assert.assertEquals(TagType.OPEN, boldOpen.getType());
+		assertTrue(boldOpen.getName().equals("b"));
+		assertEquals(TagType.OPEN, boldOpen.getType());
 
 		markupStream.next();
 
 		final ComponentTag boldClose = (ComponentTag)markupStream.next();
 
 		log.info("", boldClose);
-		Assert.assertTrue(boldClose.getName().equals("b"));
-		Assert.assertEquals(TagType.CLOSE, boldClose.getType());
+		assertTrue(boldClose.getName().equals("b"));
+		assertEquals(TagType.CLOSE, boldClose.getType());
 
 		markupStream.next();
 
 		final ComponentTag img = (ComponentTag)markupStream.next();
 
 		log.info("", img);
-		Assert.assertTrue(img.getName().equals("img"));
-		Assert.assertEquals(9, img.getAttributes().getInt("width"));
-		Assert.assertEquals(10, img.getAttributes().getInt("height"));
-		Assert.assertEquals(TagType.OPEN, img.getType());
+		assertTrue(img.getName().equals("img"));
+		assertEquals(9, img.getAttributes().getInt("width"));
+		assertEquals(10, img.getAttributes().getInt("height"));
+		assertEquals(TagType.OPEN, img.getType());
 
 		markupStream.next();
 
 		final ComponentTag marker = (ComponentTag)markupStream.next();
 
 		log.info("", marker);
-		Assert.assertTrue(marker.getName().equals("marker"));
-		Assert.assertEquals(TagType.OPEN_CLOSE, marker.getType());
+		assertTrue(marker.getName().equals("marker"));
+		assertEquals(TagType.OPEN_CLOSE, marker.getType());
 
 		markupStream.next();
 
 		final ComponentTag aClose = (ComponentTag)markupStream.next();
 
 		log.info("", aClose);
-		Assert.assertTrue(aClose.getName().equals("a"));
+		assertTrue(aClose.getName().equals("a"));
 
-		Assert.assertNull(markupStream.next());
+		assertNull(markupStream.next());
 	}
 
 	/**
@@ -116,7 +119,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public final void test1() throws Exception
+	final void test1() throws Exception
 	{
 		final MarkupParser parser = new MarkupParser(
 			"This is a test <a componentName:id=9> <b>bold</b> <b componentName:id=10></b></a> of the emergency broadcasting system");
@@ -130,21 +133,21 @@ public final class MarkupParserTest extends WicketTestCase
 		log.info("tok(4)=" + tokens.get(4));
 		log.info("tok(5)=" + tokens.get(5));
 
-		Assert.assertTrue(tokens.get(0).equals("This is a test "));
+		assertTrue(tokens.get(0).equals("This is a test "));
 
 		final ComponentTag a = (ComponentTag)tokens.get(1);
 
-		Assert.assertEquals(9, a.getAttributes().getInt("componentName:id"));
-		Assert.assertTrue(tokens.get(2).equals(" <b>bold</b> "));
+		assertEquals(9, a.getAttributes().getInt("componentName:id"));
+		assertTrue(tokens.get(2).equals(" <b>bold</b> "));
 
 		final ComponentTag b = (ComponentTag)tokens.get(3);
 
-		Assert.assertEquals(10, b.getAttributes().getInt("componentName:id"));
+		assertEquals(10, b.getAttributes().getInt("componentName:id"));
 
 		final ComponentTag closeA = (ComponentTag)tokens.get(5);
 
-		Assert.assertEquals("a", closeA.getName());
-		Assert.assertTrue(tokens.get(6).equals(" of the emergency broadcasting system"));
+		assertEquals("a", closeA.getName());
+		assertTrue(tokens.get(6).equals(" of the emergency broadcasting system"));
 	}
 
 	/**
@@ -152,7 +155,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void xhtmlDocument() throws Exception
+	void xhtmlDocument() throws Exception
 	{
 		final String docText = ""
 			+ "<?xml version='1.0' encoding='iso-8859-1' ?>"
@@ -166,9 +169,9 @@ public final class MarkupParserTest extends WicketTestCase
 		log.info("tok(0)=" + tokens.get(0));
 
 		// without HtmlHeaderSectionHandler
-		Assert.assertEquals(docText.substring(44), tokens.get(0).toString());
+		assertEquals(docText.substring(44), tokens.get(0).toString());
 		// with HtmlHeaderSectionHandler
-		// Assert.assertEquals(docText.substring(44, 147),
+		// assertEquals(docText.substring(44, 147),
 		// tokens.get(0).toString());
 	}
 
@@ -190,7 +193,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void fileDocument() throws ParseException, ResourceStreamNotFoundException, IOException
+	void fileDocument() throws ParseException, ResourceStreamNotFoundException, IOException
 	{
 		IResourceStreamLocator locator = new ResourceStreamLocator();
 		MarkupResourceStream resource = newMarkupResourceStream(locator, getClass(), "1", null,
@@ -201,28 +204,28 @@ public final class MarkupParserTest extends WicketTestCase
 
 		IMarkupFragment tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, getClass(), "2", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, getClass(), "3", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, getClass(), "4", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		// File from jar (URL resource)
 		resource = newMarkupResourceStream(locator, PageExpiredErrorPage.class, null, null, null,
@@ -231,42 +234,42 @@ public final class MarkupParserTest extends WicketTestCase
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, getClass(), "5", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, getClass(), "6", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, getClass(), "7", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, getClass(), "8", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, getClass(), "9", null, null, "html");
 		parser = new MarkupParser(resource);
 		parser.setWicketNamespace("wcn");
 		tokens = parser.parse();
 		log.info("tok(0)=" + tokens.get(0));
-		// Assert.assertEquals(docText, tokens.get(0).toString());
+		// assertEquals(docText, tokens.get(0).toString());
 	}
 
 	/**
@@ -277,7 +280,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void wicketTag() throws ParseException, ResourceStreamNotFoundException, IOException
+	void wicketTag() throws ParseException, ResourceStreamNotFoundException, IOException
 	{
 		new MarkupParser("<span wicket:id=\"test\"/>").parse();
 		new MarkupParser("<span wicket:id=\"test\">Body</span>").parse();
@@ -292,7 +295,7 @@ public final class MarkupParserTest extends WicketTestCase
 		try
 		{
 			new MarkupParser("<wicket:remove/>").parse();
-			assertTrue("Should have thrown an exception", false);
+			assertTrue(false, "Should have thrown an exception");
 		}
 		catch (MarkupException ex)
 		{
@@ -315,9 +318,7 @@ public final class MarkupParserTest extends WicketTestCase
 		try
 		{
 			new MarkupParser("<wicket:remove> <wicket:remove> </wicket:remove> </wicket:remove>").parse();
-			assertTrue(
-				"Should have thrown an exception: remove regions must not contain wicket-components",
-				false);
+			assertTrue(false, "Should have thrown an exception: remove regions must not contain wicket-components");
 		}
 		catch (MarkupException ex)
 		{
@@ -338,7 +339,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void defaultWicketTag() throws ParseException, ResourceStreamNotFoundException,
+	void defaultWicketTag() throws ParseException, ResourceStreamNotFoundException,
 		IOException
 	{
 		MarkupParser parser = new MarkupParser("<image wcn:id=\"test\"/>");
@@ -365,7 +366,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void script() throws ParseException, ResourceStreamNotFoundException, IOException
+	void script() throws ParseException, ResourceStreamNotFoundException, IOException
 	{
 		final MarkupParser parser = new MarkupParser(
 			"<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
@@ -386,7 +387,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void scriptWithTemplate() throws ParseException, ResourceStreamNotFoundException, IOException
+	void scriptWithTemplate() throws ParseException, ResourceStreamNotFoundException, IOException
 	{
 		final MarkupParser parser = new MarkupParser(
 				"<html wicket:id=\"test\"><script type=\"text/x-jquery-tmpl\" language=\"JavaScript\">... <x a/> ...</script></html>");
@@ -407,7 +408,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void scriptWithTemplateSingleQuotes() throws ParseException, ResourceStreamNotFoundException, IOException
+	void scriptWithTemplateSingleQuotes() throws ParseException, ResourceStreamNotFoundException, IOException
 	{
 		final MarkupParser parser = new MarkupParser(
 				"<html wicket:id=\"test\"><script type='text/x-jquery-tmpl' language=\"JavaScript\">... <x a/> ...</script></html>");
@@ -425,7 +426,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	public void balancing() throws IOException, ResourceStreamNotFoundException
+	void balancing() throws IOException, ResourceStreamNotFoundException
 	{
 		final MarkupParser parser = new MarkupParser(
 			"<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
@@ -449,7 +450,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	public void comments() throws IOException, ResourceStreamNotFoundException
+	void comments() throws IOException, ResourceStreamNotFoundException
 	{
 		tester.getApplication().getMarkupSettings().setStripComments(true);
 		final MarkupParser parser = new MarkupParser(
@@ -467,7 +468,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	public void commentsWithNestedElements() throws IOException, ResourceStreamNotFoundException
+	void commentsWithNestedElements() throws IOException, ResourceStreamNotFoundException
 	{
 		tester.getApplication().getMarkupSettings().setStripComments(true);
 		final MarkupParser parser = new MarkupParser(
@@ -490,7 +491,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	public void script1() throws IOException, ResourceStreamNotFoundException
+	void script1() throws IOException, ResourceStreamNotFoundException
 	{
 		IMarkupFragment markup = new MarkupParser("<script/>").parse();
 		assertEquals(1, markup.size());
@@ -566,7 +567,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws ParseException
 	 */
 	@Test
-	public void parseConditionalComment() throws IOException, ResourceStreamNotFoundException,
+	void parseConditionalComment() throws IOException, ResourceStreamNotFoundException,
 		ParseException
 	{
 		String x = "  <!--[if IE]>\r\n" + //
@@ -582,7 +583,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	public void parseTagToBeExpanded() throws IOException, ResourceStreamNotFoundException
+	void parseTagToBeExpanded() throws IOException, ResourceStreamNotFoundException
 	{
 		String x = "<html xmlns:wicket>\r\n<body>\r\n <span wicket:id=\"myPanel\"/>\r\n</body>\r\n</html>\r\n";
 		MarkupParser parser = new MarkupParser(x);
@@ -597,7 +598,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	public void parseBorderSintax() throws IOException, ResourceStreamNotFoundException
+	void parseBorderSintax() throws IOException, ResourceStreamNotFoundException
 	{
 		tester.getApplication().getPageSettings().addComponentResolver(new Border("test_resolver")
 		{
@@ -619,7 +620,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws ResourceStreamNotFoundException
 	 */
 	@Test
-	public void rawMakupParsingWithStripCommentsSetTrue() throws IOException,
+	void rawMakupParsingWithStripCommentsSetTrue() throws IOException,
 		ResourceStreamNotFoundException
 	{
 		tester.getApplication().getMarkupSettings().setStripComments(true);
@@ -633,7 +634,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3500">WICKET-3500</a>
 	 */
 	@Test
-	public void ppenConditionalCommentPattern()
+	void ppenConditionalCommentPattern()
 	{
 		assertFalse(AbstractMarkupParser.CONDITIONAL_COMMENT_OPENING.matcher(
 			"<!--x--> <!--[if IE]>").find());
@@ -673,7 +674,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void IEConditionalComments() throws Exception
+	void IEConditionalComments() throws Exception
 	{
 		boolean stripComments = tester.getApplication().getMarkupSettings().getStripComments();
 		try

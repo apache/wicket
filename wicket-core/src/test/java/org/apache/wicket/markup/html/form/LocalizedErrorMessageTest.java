@@ -19,19 +19,19 @@ package org.apache.wicket.markup.html.form;
 import java.util.Locale;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for checking localized error messages.
  */
-public class LocalizedErrorMessageTest extends WicketTestCase
+class LocalizedErrorMessageTest extends WicketTestCase
 {
 	/**
 	 * Test for checking if changing the session's locale to another language actually causes the
 	 * feedback messages to be altered as well. Testcase for WICKET-891.
 	 */
 	@Test
-	public void wicket891()
+    void wicket891()
 	{
 		tester.getSession().setLocale(new Locale("nl"));
 
@@ -60,7 +60,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 	 * WICKET-4608 vars should be properly converted
 	 */
 	@Test
-	public void testConvertedVars()
+    void testConvertedVars()
 	{
 		tester.getSession().setLocale(new Locale("de"));
 
@@ -81,7 +81,7 @@ public class LocalizedErrorMessageTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void wicket_1927()
+    void wicket_1927()
 	{
 		tester.getApplication().getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 		tester.getSession().setLocale(new Locale("de"));

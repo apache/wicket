@@ -16,38 +16,37 @@
  */
 package org.apache.wicket.request.resource;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.Charset;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link CharSequenceResource}
  */
-public class CharSequenceResourceTest extends Assert
+class CharSequenceResourceTest
 {
 	@Test
-	public void getLength_whenNoUnicodeSymbols_thenReturnTheStringLength() throws Exception
+	void getLength_whenNoUnicodeSymbols_thenReturnTheStringLength() throws Exception
 	{
 		CharSequenceResource resource = new CharSequenceResource("plain/text");
-		assertThat(resource.getLength("abcd"), is(4L));
+		assertEquals(Long.valueOf(4L), resource.getLength("abcd"));
 	}
 
 	@Test
-	public void getLength_UTF8_whenUnicodeSymbols_thenReturnTheBytesLength() throws Exception
+	void getLength_UTF8_whenUnicodeSymbols_thenReturnTheBytesLength() throws Exception
 	{
 		CharSequenceResource resource = new CharSequenceResource("plain/text");
 		resource.setCharset(Charset.forName("UTF-8"));
-		assertThat(resource.getLength("a\u1234d"), is(5L));
+		assertEquals(Long.valueOf(5L), resource.getLength("a\u1234d"));
 	}
 
 	@Test
-	public void getLength_UTF16_whenUnicodeSymbols_thenReturnTheBytesLength() throws Exception
+	void getLength_UTF16_whenUnicodeSymbols_thenReturnTheBytesLength() throws Exception
 	{
 		CharSequenceResource resource = new CharSequenceResource("plain/text");
 		resource.setCharset(Charset.forName("UTF-16"));
-		assertThat(resource.getLength("a\u1234d"), is(8L));
+		assertEquals(Long.valueOf(8L), resource.getLength("a\u1234d"));
 	}
 }

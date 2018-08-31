@@ -33,7 +33,7 @@ public class BasePage extends WebPage
 	/**
 	 * Construct.
 	 */
-	public BasePage()
+    BasePage()
 	{
 		super();
 	}
@@ -43,7 +43,7 @@ public class BasePage extends WebPage
 	 * @param child
 	 * @return child
 	 */
-	public final MarkupContainer add(final Component child)
+	final MarkupContainer add(final Component child)
 	{
 		if (borderMustBeInitialized())
 		{

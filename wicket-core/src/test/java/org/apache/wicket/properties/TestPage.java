@@ -223,7 +223,7 @@ public class TestPage extends WebPage
 		 * @param id
 		 * @param input
 		 */
-		public MyTextField(final String id, final String input)
+        MyTextField(final String id, final String input)
 		{
 			super(id);
 			this.input = input;

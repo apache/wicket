@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -25,37 +27,37 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class ImageStatelessTest extends WicketTestCase
+class ImageStatelessTest extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void resourceReference()
+	void resourceReference()
 	{
 		ImageStatelessPage page = new ImageStatelessPage();
 		final Image i = new Image("test", new PackageResourceReference("test"));
 		page.add(i);
 		tester.startPage(page);
-		assertTrue("image with resource reference should be stateless", i.isStateless());
+		assertTrue(i.isStateless(), "image with resource reference should be stateless");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void resource()
+	void resource()
 	{
 		ImageStatelessPage page = new ImageStatelessPage();
 		final Image i = new Image("test", new ByteArrayResource("text/text", new byte[0]));
 		page.add(i);
 		tester.startPage(page);
-		assertTrue("image with resource should be stateful", !i.isStateless());
+		assertTrue(!i.isStateless(), "image with resource should be stateful");
 	}
 
 	private static class ImageStatelessPage extends WebPage implements IMarkupResourceStreamProvider

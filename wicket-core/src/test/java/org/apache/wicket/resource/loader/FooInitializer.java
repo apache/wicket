@@ -22,7 +22,7 @@ import org.apache.wicket.IInitializer;
 /**
  * 
  */
-public class FooInitializer implements IInitializer
+class FooInitializer implements IInitializer
 {
 	@Override
 	public void init(Application application)

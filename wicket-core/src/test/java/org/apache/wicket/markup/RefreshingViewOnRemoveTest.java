@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -33,14 +35,14 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests child's {@link Component#onRemove} is on refresh
  * 
  * @author igor
  */
-public class RefreshingViewOnRemoveTest extends WicketTestCase
+class RefreshingViewOnRemoveTest extends WicketTestCase
 {
 	private final List<TestComponent> components = new ArrayList<TestComponent>();
 	private int round = 1;
@@ -49,14 +51,14 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 	 * test()
 	 */
 	@Test
-	public void test()
+	void test()
 	{
 		tester.startPage(new TestPage());
 
 		// check everything was detached
 		for (TestComponent c : components)
 		{
-			assertTrue("Component " + c + " is not detached.", c.detached);
+			assertTrue(c.detached, "Component " + c + " is not detached.");
 		}
 
 		round++;
@@ -90,7 +92,7 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 
 	}
 
-	protected Component newComponent(String id)
+	private Component newComponent(String id)
 	{
 		TestComponent c = new TestComponent(id, round);
 		components.add(c);
@@ -100,11 +102,11 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 	static class TestComponent extends Label
 	{
 		private static final long serialVersionUID = 1L;
-		public boolean detached = false;
-		public boolean removed = false;
-		public final int round;
+		boolean detached = false;
+		boolean removed = false;
+		final int round;
 
-		public TestComponent(String id, int round)
+		TestComponent(String id, int round)
 		{
 			super(id, id);
 			this.round = round;
@@ -129,7 +131,7 @@ public class RefreshingViewOnRemoveTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public TestPage()
+		TestPage()
 		{
 			add(new RefreshingView<Integer>("repeater")
 			{

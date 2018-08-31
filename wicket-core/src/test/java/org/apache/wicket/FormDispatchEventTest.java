@@ -16,21 +16,23 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author jcompagner
  */
-public class FormDispatchEventTest extends WicketTestCase
+class FormDispatchEventTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void dropDownEvent() throws Exception
+	void dropDownEvent() throws Exception
 	{
 		tester.startPage(MockPageWithForm.class);
 
@@ -41,7 +43,7 @@ public class FormDispatchEventTest extends WicketTestCase
 
 		MockPageWithForm page = (MockPageWithForm)tester.getLastRenderedPage();
 
-		assertTrue("Form.onSubmit() should have been called", page.isSubmitted());
-		assertTrue("DropDownChoice.onSelectionChanged() should have been called", page.isSelected());
+		assertTrue(page.isSubmitted(), "Form.onSubmit() should have been called");
+		assertTrue(page.isSelected(), "DropDownChoice.onSelectionChanged() should have been called");
 	}
 }

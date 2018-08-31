@@ -516,6 +516,24 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>3.11.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>java-hamcrest</artifactId>
+				<version>2.0.0.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-jmx</artifactId>
 				<version>${jetty.version}</version>
@@ -1212,7 +1230,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<inherited>true</inherited>
 						<configuration>
-							<excludedGroups>org.apache.wicket.util.SlowTests</excludedGroups>
+							<excludedGroups>org.apache.wicket.util.WicketTestTag</excludedGroups>
 						</configuration>
 					</plugin>
 					<plugin>

@@ -16,9 +16,11 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for IMarkupIdGenerator
@@ -26,10 +28,10 @@ import org.junit.Test;
  * @since 6.16.0
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-5577">Generation of wicket ids with prefix / suffix</a>
  */
-public class MarkupIdGeneratorTest extends WicketTestCase
+class MarkupIdGeneratorTest extends WicketTestCase
 {
 	@Test
-	public void defaultMarkupIdGenerator()
+	void defaultMarkupIdGenerator()
 	{
 		MockPageWithLink page = new MockPageWithLink();
 		Link link = new Link<Void>(MockPageWithLink.LINK_ID)
@@ -46,7 +48,7 @@ public class MarkupIdGeneratorTest extends WicketTestCase
 	}
 
 	@Test
-	public void customMarkupIdGenerator()
+	void customMarkupIdGenerator()
 	{
 		final String customMarkupId = "custom";
 		IMarkupIdGenerator generator = new IMarkupIdGenerator()

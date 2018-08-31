@@ -16,8 +16,7 @@
  */
 package org.apache.wicket.settings.def;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,20 +24,19 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.util.time.Duration;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-5625
  */
-public class SetCustomResourceSettingsTest extends WicketTestCase
+class SetCustomResourceSettingsTest extends WicketTestCase
 {
-	final String expected = "~!@";
-	ResourceSettings resSettings;
+	private final String expected = "~!@";
+	private ResourceSettings resSettings;
 
 	@Override
-	@Before
+	@BeforeEach
 	public void commonBefore() {
 		resSettings = mock(ResourceSettings.class);
 		when(resSettings.getParentFolderPlaceholder()).thenReturn(expected);
@@ -47,9 +45,9 @@ public class SetCustomResourceSettingsTest extends WicketTestCase
 	}
 
 	@Test
-	public void check() {
+	void check() {
 		ResourceSettings settings = tester.getApplication().getResourceSettings();
-		assertThat(settings.getParentFolderPlaceholder(), is(equalTo(expected)));
+		assertEquals(expected, settings.getParentFolderPlaceholder());
 	}
 
 	@Override
