@@ -16,127 +16,112 @@
  */
 package org.apache.wicket.bean.validation;
 
-import static org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation.CUSTOM_BUNDLE_KEY;
-import static org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation.DEFAULT_BUNDLE_KEY;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-import java.util.Set;
+import org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.util.tester.WicketTesterExtension;
+import org.apache.wicket.validation.ValidationError;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.List;
+import java.util.Set;
 
-import org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.tester.WicketTesterScope;
-import org.apache.wicket.validation.ValidationError;
-import org.junit.Rule;
-import org.junit.Test;
+import static org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation.CUSTOM_BUNDLE_KEY;
+import static org.apache.wicket.bean.validation.customconstraint.PasswordConstraintAnnotation.DEFAULT_BUNDLE_KEY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DefaultPropertyResolverTest
 {
-	@Rule
-	public WicketTesterScope scope = new WicketTesterScope();
-
-	public static class Bean1
-	{
-		private String foo;
-
-		public String getFoo()
-		{
-			return foo;
-		}
-	}
+	@RegisterExtension
+	public WicketTesterExtension scope = new WicketTesterExtension();
 
 	@Test
-	public void hasFieldAndGetter()
+	void hasFieldAndGetter()
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean1>(new Bean1(), "foo"));
+		TextField<?> component = new TextField<>("id",
+			new PropertyModel<Bean1>(new Bean1(), "foo"));
 		Property property = resolver.resolveProperty(component);
-		assertThat(property, not(nullValue()));
-		assertThat(property.getName(), is("foo"));
-		assertThat(property.getOwner().getName(), is(Bean1.class.getName()));
+		assertNotNull(property);
+		assertEquals("foo", property.getName());
+		assertEquals(Bean1.class.getName(), property.getOwner().getName());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5505
 	 */
 	@Test
-	public void booleanHasFieldAndGetter()
+	void booleanHasFieldAndGetter()
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<BooleanBean>(
-			new BooleanBean(), "foo"));
+		TextField<?> component = new TextField<>("id",
+			new PropertyModel<BooleanBean>(new BooleanBean(), "foo"));
 		Property property = resolver.resolveProperty(component);
-		assertThat(property, not(nullValue()));
-		assertThat(property.getName(), is("foo"));
-		assertThat(property.getOwner().getName(), is(BooleanBean.class.getName()));
+		assertNotNull(property);
+		assertEquals("foo", property.getName());
+		assertEquals(BooleanBean.class.getName(), property.getOwner().getName());
 	}
 
 	@Test
-	public void hasOnlyField()
+	void hasOnlyField()
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean2>(new Bean2(), "foo"));
+		TextField<?> component = new TextField<>("id",
+			new PropertyModel<Bean2>(new Bean2(), "foo"));
 		Property property = resolver.resolveProperty(component);
-		assertThat(property, not(nullValue()));
-		assertThat(property.getName(), is("foo"));
-		assertThat(property.getOwner().getName(), is(Bean2.class.getName()));
-	}
-
-	public static class Bean2
-	{
-		private String foo;
+		assertNotNull(property);
+		assertEquals("foo", property.getName());
+		assertEquals(Bean2.class.getName(), property.getOwner().getName());
 	}
 
 	@Test
-	public void hasOnlyGetter()
+	void hasOnlyGetter()
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean3>(new Bean3(), "foo"));
+		TextField<?> component = new TextField<>("id",
+			new PropertyModel<Bean3>(new Bean3(), "foo"));
 		Property property = resolver.resolveProperty(component);
-		assertThat(property, not(nullValue()));
-		assertThat(property.getName(), is("foo"));
-		assertThat(property.getOwner().getName(), is(Bean3.class.getName()));
+		assertNotNull(property);
+		assertEquals("foo", property.getName());
+		assertEquals(Bean3.class.getName(), property.getOwner().getName());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5506
 	 */
 	@Test
-	public void getterHasPriorityOverField()
+	void getterHasPriorityOverField()
 	{
 		DefaultPropertyResolver resolver = new DefaultPropertyResolver();
 
-		TextField<?> component = new TextField<>("id", new PropertyModel<Bean4>(new Bean4(), "foo"));
+		TextField<?> component = new TextField<>("id",
+			new PropertyModel<Bean4>(new Bean4(), "foo"));
 		Property property = resolver.resolveProperty(component);
-		assertThat(property, not(nullValue()));
-		assertThat(property.getName(), is("foo"));
-		assertThat(property.getOwner().getName(), is(Bean4.class.getName()));
+		assertNotNull(property);
+		assertEquals("foo", property.getName());
+		assertEquals(Bean4.class.getName(), property.getOwner().getName());
 	}
 
 	/**
 	 * Test custom bundle mechanism of jsr 303
-	 * 
+	 *
 	 * https://issues.apache.org/jira/browse/WICKET-5654
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
-	public void testBundleKeysResolution() throws Exception
+	void testBundleKeysResolution() throws Exception
 	{
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
@@ -163,7 +148,8 @@ public class DefaultPropertyResolverTest
 		assertEquals(1, constraintViolations.size());
 
 		@SuppressWarnings("unchecked")
-		ConstraintViolation<BeanWithPassword> nonWordviolation = (ConstraintViolation<BeanWithPassword>)constraintViolations.toArray()[0];
+		ConstraintViolation<BeanWithPassword> nonWordviolation = (ConstraintViolation<BeanWithPassword>)constraintViolations
+			.toArray()[0];
 
 		error = translator.convert(nonWordviolation);
 
@@ -180,7 +166,7 @@ public class DefaultPropertyResolverTest
 	/**
 	 * Checks that validation error has the expected keys as bundle keys, in the order they are
 	 * specified in {@code expectedKeys}.
-	 * 
+	 *
 	 * @param error
 	 * @param expectedKeys
 	 */
@@ -188,8 +174,8 @@ public class DefaultPropertyResolverTest
 	{
 		List<String> keys = error.getKeys();
 
-		assertEquals("The expected number for bundle keys is '" + expectedKeys.length
-			+ "' but we have '" + keys.size() + "'", expectedKeys.length, keys.size());
+		assertEquals(expectedKeys.length, keys.size(), "The expected number for bundle keys is '" +
+			expectedKeys.length + "' but we have '" + keys.size() + "'");
 
 		for (int i = 0; i < expectedKeys.length; i++)
 		{
@@ -197,6 +183,21 @@ public class DefaultPropertyResolverTest
 
 			assertTrue(keys.get(i).equals(expectedKey));
 		}
+	}
+
+	public static class Bean1
+	{
+		private String foo;
+
+		public String getFoo()
+		{
+			return foo;
+		}
+	}
+
+	public static class Bean2
+	{
+		private String foo;
 	}
 
 	public static class Bean3
@@ -225,25 +226,25 @@ public class DefaultPropertyResolverTest
 			return "foo4";
 		}
 	}
-	
+
 	public static class BeanWithPassword
-	 {
-	     @PasswordConstraintAnnotation
-	     private String password;
+	{
+		@PasswordConstraintAnnotation
+		private String password;
 
-	 	public BeanWithPassword(String password)
-	 	{
-	 		this.password = password;
-	 	}
+		public BeanWithPassword(String password)
+		{
+			this.password = password;
+		}
 
-	 	public String getPassword()
-	 	{
-	 		return password;
-	 	}
+		public String getPassword()
+		{
+			return password;
+		}
 
-	 	public void setPassword(String password)
-	 	{
-	 		this.password = password;
-	 	}
-	 }
+		public void setPassword(String password)
+		{
+			this.password = password;
+		}
+	}
 }

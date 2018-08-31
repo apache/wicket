@@ -16,18 +16,18 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
-import static org.hamcrest.CoreMatchers.is;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for WebSocketTester.
@@ -35,7 +35,7 @@ import org.junit.Test;
  *
  * @since 6.18.0
  */
-public class WebSocketTesterRequestCycleListenerTest extends Assert
+public class WebSocketTesterRequestCycleListenerTest
 {
 	private final AtomicBoolean beginRequestCalled = new AtomicBoolean(false);
 	private final AtomicBoolean endRequestCalled = new AtomicBoolean(false);
@@ -43,7 +43,7 @@ public class WebSocketTesterRequestCycleListenerTest extends Assert
 
 	private WicketTester tester;
 
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		tester = new WicketTester();
@@ -69,7 +69,7 @@ public class WebSocketTesterRequestCycleListenerTest extends Assert
 		});
 	}
 
-	@After
+	@AfterEach
 	public void after()
 	{
 		tester.destroy();
@@ -103,16 +103,16 @@ public class WebSocketTesterRequestCycleListenerTest extends Assert
 		};
 
 		// assert and reset
-		assertThat(beginRequestCalled.compareAndSet(true, false), is(true));
-		assertThat(endRequestCalled.compareAndSet(true, false), is(true));
-		assertThat(detachCalled.compareAndSet(true, false), is(true));
+		assertTrue(beginRequestCalled.compareAndSet(true, false));
+		assertTrue(endRequestCalled.compareAndSet(true, false));
+		assertTrue(detachCalled.compareAndSet(true, false));
 
 		// broadcasts WebSocket.TextMessage and notifies the listeners
 		webSocketTester.sendMessage(expectedMessage);
 
-		assertThat(beginRequestCalled.get(), is(true));
-		assertThat(endRequestCalled.get(), is(true));
-		assertThat(detachCalled.get(), is(true));
+		assertTrue(beginRequestCalled.get());
+		assertTrue(endRequestCalled.get());
+		assertTrue(detachCalled.get());
 
 		webSocketTester.destroy();
 	}

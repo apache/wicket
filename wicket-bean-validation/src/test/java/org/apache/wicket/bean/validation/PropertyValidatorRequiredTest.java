@@ -1,14 +1,5 @@
 package org.apache.wicket.bean.validation;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -20,14 +11,22 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.apache.wicket.util.tester.WicketTesterScope;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.wicket.util.tester.WicketTesterExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PropertyValidatorRequiredTest
 {
-	@Rule
-	public WicketTesterScope scope = new WicketTesterScope()
+	@RegisterExtension
+	public WicketTesterExtension scope = new WicketTesterExtension()
 	{
 		protected WicketTester create()
 		{

@@ -16,10 +16,14 @@
  */
 package org.apache.wicket.spring.injection.annot;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import org.apache.wicket.spring.BeanWithGeneric;
+import org.apache.wicket.util.tester.DummyHomePage;
+import org.apache.wicket.util.tester.WicketTester;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,21 +31,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.wicket.spring.BeanWithGeneric;
-import org.apache.wicket.util.tester.DummyHomePage;
-import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Andrea Del Bene
  *
  */
-public class SpringBeanWithGenericsTest extends Assert
+public class SpringBeanWithGenericsTest
 {
 	private WicketTester tester;
 	private AnnotationConfigApplicationContext ctx;
@@ -49,7 +47,7 @@ public class SpringBeanWithGenericsTest extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		tester = new WicketTester();
@@ -96,11 +94,11 @@ public class SpringBeanWithGenericsTest extends Assert
 
 		List<BeanWithGeneric<String>> beans = page.getBeans();
 
-		assertThat(beans, is(notNullValue()));
-		assertThat(beans.size(), is(1));
+		assertNotNull(beans);
+		assertEquals(1, beans.size());
 
 		BeanWithGeneric<String> stringBean = (BeanWithGeneric<String>) ctx.getBean("stringBean");
-		assertThat(beans, hasItem(stringBean));
+		assertTrue(beans.contains(stringBean));
 	}
 	
 	@Test
@@ -142,28 +140,28 @@ public class SpringBeanWithGenericsTest extends Assert
 		List<String> stringsList = page.getStringsList();
 		assertNotNull(stringsList);
 		assertEquals(3, stringsList.size());
-		assertThat(stringsList.get(0), is(equalTo("foo")));
-		assertThat(stringsList.get(1), is(equalTo("bar")));
-		assertThat(stringsList.get(2), is(equalTo("baz")));
+		assertEquals("foo", stringsList.get(0));
+		assertEquals("bar", stringsList.get(1));
+		assertEquals("baz", stringsList.get(2));
 		
 		ArrayList<String> arrayListStrings = page.getArrayListStrings();
-		assertThat(arrayListStrings, is(notNullValue()));
-		assertThat(arrayListStrings.size(), is(3));
-		assertThat(arrayListStrings.get(0), is(equalTo("one")));
-		assertThat(arrayListStrings.get(1), is(equalTo("two")));
-		assertThat(arrayListStrings.get(2), is(equalTo("three")));
+		assertNotNull(arrayListStrings);
+		assertEquals(3, arrayListStrings.size());
+		assertEquals("one", arrayListStrings.get(0));
+		assertEquals("two", arrayListStrings.get(1));
+		assertEquals("three", arrayListStrings.get(2));
 
 		ArrayList<Integer> arrayListIntegers = page.getArrayListIntegers();
-		assertThat(arrayListIntegers, is(notNullValue()));
-		assertThat(arrayListIntegers.size(), is(3));
-		assertThat(arrayListIntegers.get(0), is(1));
-		assertThat(arrayListIntegers.get(1), is(2));
-		assertThat(arrayListIntegers.get(2), is(3));
+		assertNotNull(arrayListIntegers);
+		assertEquals(3, arrayListIntegers.size());
+		assertEquals(Integer.valueOf(1), arrayListIntegers.get(0));
+		assertEquals(Integer.valueOf(2), arrayListIntegers.get(1));
+		assertEquals(Integer.valueOf(3), arrayListIntegers.get(2));
 
 		MyList<String> myList = page.getMyList();
-		assertThat(myList, is(notNullValue()));
-		assertThat(myList.size(), is(1));
-		assertThat(myList.get(0), is("one"));
+		assertNotNull(myList);
+		assertEquals(1, myList.size());
+		assertEquals("one", myList.get(0));
 	}
 
 	@Test

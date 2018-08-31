@@ -16,16 +16,20 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for WebSocketTester.
@@ -33,7 +37,7 @@ import org.junit.Test;
  *
  * @since 6.0
  */
-public class WebSocketTesterResourceTest extends Assert
+public class WebSocketTesterResourceTest
 {
 	private static final String EXPECTED_TEXT = "expected text";
 	private static final byte[] EXPECTED_BINARY = new byte[] {1, 2, 3};
@@ -45,7 +49,7 @@ public class WebSocketTesterResourceTest extends Assert
 
 	WicketTester tester;
 
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		TestWebSocketResource.ON_CONNECT_CALLED.set(false);
@@ -70,7 +74,7 @@ public class WebSocketTesterResourceTest extends Assert
 		tester = new WicketTester(application);
 	}
 
-	@After
+	@AfterEach
 	public void after()
 	{
 		tester.destroy();
@@ -123,9 +127,9 @@ public class WebSocketTesterResourceTest extends Assert
 			protected void onOutMessage(byte[] message, int offset, int length)
 			{
 				ON_OUT_BINARY_CALLED.set(true);
-				Assert.assertArrayEquals(EXPECTED_BINARY, message);
-				Assert.assertEquals(offset, offset);
-				Assert.assertEquals(length, length);
+				assertArrayEquals(EXPECTED_BINARY, message);
+				assertEquals(offset, offset);
+				assertEquals(length, length);
 			}
 		};
 

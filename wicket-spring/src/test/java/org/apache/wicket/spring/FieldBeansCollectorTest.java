@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.spring;
 
-import static org.junit.Assert.assertTrue;
+import org.apache.wicket.spring.FieldBeansCollector.FieldType;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.ResolvableType;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.apache.wicket.spring.FieldBeansCollector.FieldType;
-import org.junit.Test;
-import org.springframework.core.ResolvableType;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class FieldBeansCollectorTest

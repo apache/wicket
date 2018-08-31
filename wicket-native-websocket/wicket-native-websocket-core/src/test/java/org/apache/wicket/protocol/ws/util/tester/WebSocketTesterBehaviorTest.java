@@ -16,17 +16,20 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
-import java.io.UnsupportedEncodingException;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.registry.PageIdKey;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.UnsupportedEncodingException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for WebSocketTester.
@@ -34,17 +37,17 @@ import org.junit.Test;
  *
  * @since 6.0
  */
-public class WebSocketTesterBehaviorTest extends Assert
+public class WebSocketTesterBehaviorTest
 {
 	WicketTester tester;
 
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		tester = new WicketTester();
 	}
 
-	@After
+	@AfterEach
 	public void after()
 	{
 		tester.destroy();

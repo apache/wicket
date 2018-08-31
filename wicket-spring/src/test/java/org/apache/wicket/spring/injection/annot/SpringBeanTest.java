@@ -24,16 +24,20 @@ import org.apache.wicket.spring.SpringBeanLocator;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test for SpringBean.
  *
  * @author Andrea Del Bene
  */
-public class SpringBeanTest extends Assert
+public class SpringBeanTest
 {
 	private WicketTester tester;
 	private ApplicationContextMock ctx;
@@ -41,7 +45,7 @@ public class SpringBeanTest extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		tester = new WicketTester();
