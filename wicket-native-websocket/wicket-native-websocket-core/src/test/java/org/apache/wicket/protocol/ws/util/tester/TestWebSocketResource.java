@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.protocol.ws.util.tester;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.wicket.util.string.Strings;
-import org.junit.Assert;
 import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.WebSocketResource;
 import org.apache.wicket.protocol.ws.api.message.AbortedMessage;
@@ -27,6 +23,11 @@ import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.ClosedMessage;
 import org.apache.wicket.protocol.ws.api.message.ConnectedMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
+import org.apache.wicket.util.string.Strings;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -90,7 +91,7 @@ public class TestWebSocketResource extends WebSocketResource
 		super.onMessage(handler, message);
 
 		String text = message.getText();
-		Assert.assertEquals(expectedMessage, text);
+		assertEquals(expectedMessage, text);
 		handler.push(Strings.capitalize(text));
 	}
 
@@ -103,9 +104,9 @@ public class TestWebSocketResource extends WebSocketResource
 		int offset = binaryMessage.getOffset();
 		int length = binaryMessage.getLength();
 
-		Assert.assertEquals(expectedBinaryMessage, data);
-		Assert.assertEquals(expectedOffset, offset);
-		Assert.assertEquals(expectedLength, length);
+		assertEquals(expectedBinaryMessage, data);
+		assertEquals(expectedOffset, offset);
+		assertEquals(expectedLength, length);
 
 		handler.push(data, offset, length);
 	}

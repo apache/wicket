@@ -16,12 +16,13 @@
  */
 package org.apache.wicket.injection;
 
-import java.lang.reflect.Field;
-
 import org.apache.wicket.injection.util.MockDependency;
 import org.apache.wicket.injection.util.TestObject;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Field;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests {@link Injector}
@@ -29,7 +30,7 @@ import org.junit.Test;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class InjectorTest extends Assert
+public class InjectorTest
 {
 	private static MockDependency dependency = new MockDependency("inject");
 
@@ -70,10 +71,10 @@ public class InjectorTest extends Assert
 
 		new TestInjector().inject(testObject, factory);
 
-		assertEquals(testObject.getDependency1().getMessage(), "inject");
-		assertEquals(testObject.getDependency2().getMessage(), "dont-inject");
-		assertEquals(testObject.getDependency3().getMessage(), "dont-inject");
-		assertEquals(testObject.getDependency4().getMessage(), "inject");
+		assertEquals("inject", testObject.getDependency1().getMessage());
+		assertEquals("dont-inject", testObject.getDependency2().getMessage());
+		assertEquals("dont-inject", testObject.getDependency3().getMessage());
+		assertEquals("inject", testObject.getDependency4().getMessage());
 	}
 
 

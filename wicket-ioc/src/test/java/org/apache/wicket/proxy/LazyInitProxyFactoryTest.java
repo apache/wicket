@@ -16,10 +16,6 @@
  */
 package org.apache.wicket.proxy;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
-import java.lang.reflect.Proxy;
-
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import org.apache.wicket.proxy.util.ConcreteObject;
@@ -27,8 +23,15 @@ import org.apache.wicket.proxy.util.IInterface;
 import org.apache.wicket.proxy.util.IObjectMethodTester;
 import org.apache.wicket.proxy.util.InterfaceObject;
 import org.apache.wicket.proxy.util.ObjectMethodTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Proxy;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests lazy init proxy factory
@@ -36,7 +39,7 @@ import org.junit.Test;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class LazyInitProxyFactoryTest extends Assert
+public class LazyInitProxyFactoryTest
 {
 	private static InterfaceObject interfaceObject = new InterfaceObject("interface");
 
@@ -102,7 +105,7 @@ public class LazyInitProxyFactoryTest extends Assert
 		assertTrue(Proxy.isProxyClass(proxy.getClass()));
 
 		// test proxy implements ILazyInitProxy
-		assertThat(proxy, instanceOf(ILazyInitProxy.class));
+		assertTrue(proxy instanceof ILazyInitProxy);
 		assertTrue(((ILazyInitProxy)proxy).getObjectLocator() == interfaceObjectLocator);
 
 		// test method invocation
@@ -146,8 +149,8 @@ public class LazyInitProxyFactoryTest extends Assert
 			ConcreteObject.class, concreteObjectLocator);
 
 		// test proxy implements ILazyInitProxy
-		assertThat(proxy, instanceOf(ILazyInitProxy.class));
-		assertTrue(((ILazyInitProxy)proxy).getObjectLocator() == concreteObjectLocator);
+		assertTrue(proxy instanceof ILazyInitProxy);
+		assertSame(((ILazyInitProxy) proxy).getObjectLocator(), concreteObjectLocator);
 
 		// test we do not have a jdk dynamic proxy
 		assertFalse(Proxy.isProxyClass(proxy.getClass()));
@@ -157,7 +160,7 @@ public class LazyInitProxyFactoryTest extends Assert
 
 		// test serialization
 		ConcreteObject proxy2 = WicketObjects.cloneObject(proxy);
-		assertTrue(proxy != proxy2);
+		assertNotSame(proxy, proxy2);
 		assertEquals(proxy2.getMessage(), "concrete");
 
 		// test equals/hashcode method interception
@@ -200,7 +203,7 @@ public class LazyInitProxyFactoryTest extends Assert
 				PackagePrivateConcreteObject.class, PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
 
 		// test proxy implements ILazyInitProxy
-		assertThat(proxy, instanceOf(ILazyInitProxy.class));
+		assertTrue(proxy instanceof ILazyInitProxy);
 		assertTrue(((ILazyInitProxy)proxy).getObjectLocator() == PACKAGE_PRIVATE_CONCRETE_OBJECT_LOCATOR);
 
 		// test we do not have a jdk dynamic proxy

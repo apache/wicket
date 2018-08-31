@@ -16,26 +16,28 @@
  */
 package org.apache.wicket.spring;
 
-import java.util.Enumeration;
-
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.lang.Packages;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import java.util.Enumeration;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test for {@link SpringWebApplicationFactory}.
  * 
  * @author svenmeier
  */
-public class SpringWebApplicationFactoryTest extends Assert
+public class SpringWebApplicationFactoryTest
 {
 
 	/**
@@ -52,7 +54,7 @@ public class SpringWebApplicationFactoryTest extends Assert
 
 		filter.destroy();
 
-		assertTrue("is not destroyed", Destroyable.instance.destroyed);
+		assertTrue(Destroyable.instance.destroyed, "is not destroyed");
 	}
 
 	private class FilterConfigImpl implements FilterConfig
