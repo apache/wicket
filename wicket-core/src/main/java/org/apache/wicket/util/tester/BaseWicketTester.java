@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -133,7 +134,6 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -723,7 +723,7 @@ public class BaseWicketTester
 			{
 				if (redirectCount++ >= 100)
 				{
-					throw new AssertionFailedError("Possible infinite redirect detected. Bailing out.");
+					throw new AssertionError("Possible infinite redirect detected. Bailing out.");
 				}
 
 				Url newUrl = Url.parse(lastResponse.getRedirectLocation(),

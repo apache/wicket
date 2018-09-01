@@ -51,7 +51,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -284,15 +283,13 @@ public class WicketTester extends BaseWicketTester
 	{
 		if (null != getLastResponse().getHeader("Location"))
 		{
-			throw new AssertionFailedError(
-				"Location header should *not* be present when using Ajax");
+			fail("Location header should *not* be present when using Ajax");
 		}
 
 		String ajaxLocation = getLastResponse().getHeader("Ajax-Location");
 		if (null == ajaxLocation)
 		{
-			throw new AssertionFailedError(
-				"Ajax-Location header should be present when using Ajax");
+			fail("Ajax-Location header should be present when using Ajax");
 		}
 
 		int statusCode = getLastResponse().getStatus();
@@ -480,7 +477,7 @@ public class WicketTester extends BaseWicketTester
 
 		if (markup == null)
 		{
-			throw new AssertionFailedError(String.format("Cannot find the markup of component: %s",
+			fail(String.format("Cannot find the markup of component: %s",
 				component.getPageRelativePath()));
 		}
 
@@ -600,13 +597,13 @@ public class WicketTester extends BaseWicketTester
 		final List<FeedbackMessage> renderedMessages = model.getObject();
 		if (renderedMessages == null)
 		{
-			throw new AssertionFailedError(
+			fail(
 				String.format("feedback panel at path [%s] returned null messages", path));
 		}
 
 		if (messages.length != renderedMessages.size())
 		{
-			throw new AssertionFailedError(String.format(
+			fail(String.format(
 				"you expected '%d' messages for the feedback panel [%s], but there were actually '%d'",
 				messages.length, path, renderedMessages.size()));
 		}
@@ -822,7 +819,7 @@ public class WicketTester extends BaseWicketTester
 	{
 		if (result.wasFailed())
 		{
-			throw new AssertionFailedError(result.getMessage());
+			fail(result.getMessage());
 		}
 	}
 
