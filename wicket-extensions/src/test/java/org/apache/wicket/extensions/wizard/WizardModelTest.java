@@ -16,11 +16,18 @@
  */
 package org.apache.wicket.extensions.wizard;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Iterator;
 
 import org.apache.wicket.extensions.wizard.WizardModel.ICondition;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link WizardModel}.
@@ -69,7 +76,7 @@ public class WizardModelTest extends WicketTestCase
 				return false;
 			}
 			
-		};
+		}
 		WizardStep step3 = new ConditionWizadStep();
 		model.add(step3);
 		

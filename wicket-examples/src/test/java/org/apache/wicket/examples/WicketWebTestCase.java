@@ -16,10 +16,11 @@
  */
 package org.apache.wicket.examples;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebResponse;
-import org.junit.After;
-import org.junit.Before;
 
 /**
  * WebTestCase for tests that need to run inside Jetty to test for example the wicket filter using
@@ -48,7 +49,7 @@ public abstract class WicketWebTestCase extends JettyTestCaseDecorator
 	 * @throws Exception
 	 */
 	@Override
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		super.before();
@@ -57,7 +58,7 @@ public abstract class WicketWebTestCase extends JettyTestCaseDecorator
 	}
 
 	@Override
-	@After
+	@AfterEach
 	public void after() throws Exception
 	{
 		baseUrl = null;

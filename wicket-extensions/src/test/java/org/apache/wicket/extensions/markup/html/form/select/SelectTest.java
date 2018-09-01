@@ -16,8 +16,11 @@
  */
 package org.apache.wicket.extensions.markup.html.form.select;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link Select}.
@@ -27,12 +30,10 @@ public class SelectTest extends WicketTestCase
 
 	/**
 	 * WICKET-4276
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void rawInputKeepsSelectionOnError() throws Exception
-	{
+	public void rawInputKeepsSelectionOnError() {
 		SelectTestPage page = new SelectTestPage();
 
 		tester.startPage(page);

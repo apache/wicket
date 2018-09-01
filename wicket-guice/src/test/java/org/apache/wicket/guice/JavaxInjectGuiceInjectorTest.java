@@ -16,16 +16,16 @@
  */
 package org.apache.wicket.guice;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import javax.inject.Inject;
 
 import org.apache.wicket.ajax.attributes.IAjaxCallListener;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.inject.ConfigurationException;
 import com.google.inject.spi.Message;
-
-import javax.inject.Inject;
 
 /**
  */
@@ -62,20 +62,25 @@ public class JavaxInjectGuiceInjectorTest extends AbstractInjectorTest
 		catch (ConfigurationException cx)
 		{
 			Message message = cx.getErrorMessages().iterator().next();
-			assertThat(message.getMessage(), is(equalTo("No implementation for org.apache.wicket.ajax.attributes.IAjaxCallListener was bound.")));
+			assertEquals(
+				"No implementation for org.apache.wicket.ajax.attributes.IAjaxCallListener was bound.",
+				message.getMessage());
 		}
 	}
 
-	private static class MyJavaxInjectWithNonExistingTestComponent extends JavaxInjectTestComponent {
+	private static class MyJavaxInjectWithNonExistingTestComponent extends JavaxInjectTestComponent
+	{
 		@Inject
 		private IAjaxCallListener nonExisting;
 
-		public MyJavaxInjectWithNonExistingTestComponent() {
+		public MyJavaxInjectWithNonExistingTestComponent()
+		{
 			super("id");
 		}
 
 
-		public IAjaxCallListener getNonExisting() {
+		public IAjaxCallListener getNonExisting()
+		{
 			return nonExisting;
 		}
 	}

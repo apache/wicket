@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.extensions.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.Date;
 
 import org.apache.wicket.MarkupContainer;
@@ -28,17 +31,13 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  */
 public class DateTextFieldTest extends WicketTestCase
 {
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5286
@@ -46,7 +45,8 @@ public class DateTextFieldTest extends WicketTestCase
 	@Test
 	public void validInputType()
 	{
-		String[] validInputTypes = { "text", "date", "datetime", "datetime-local", "month", "time", "week"};
+		String[] validInputTypes = { "text", "date", "datetime", "datetime-local", "month", "time",
+				"week" };
 
 		for (String validType : validInputTypes)
 		{
@@ -63,11 +63,13 @@ public class DateTextFieldTest extends WicketTestCase
 	{
 		TestPage testPage = new TestPage("unsupportedType");
 
-		expectedException.expect(MarkupException.class);
-		expectedException.expectMessage("Component [text] (path = [0:form:text]) must be applied to a tag" +
-				" with [type] attribute matching any of [text, date, datetime, datetime-local, month, time, week], " +
-				"not [unsupportedType]");
-		tester.startPage(testPage);
+		Exception e = assertThrows(MarkupException.class, () -> {
+			tester.startPage(testPage);
+		});
+
+		assertEquals("Component [text] (path = [0:form:text]) must be applied to a tag" +
+			" with [type] attribute matching any of [text, date, datetime, datetime-local, month, time, week], " +
+			"not [unsupportedType]", e.getMessage());
 	}
 
 	/** */
@@ -88,10 +90,11 @@ public class DateTextFieldTest extends WicketTestCase
 
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
-		                                               Class<?> containerClass)
+			Class<?> containerClass)
 		{
-			return new StringResourceStream(String.format("<html><body>"
-					+ "<form wicket:id=\"form\"><input wicket:id=\"text\" type=\"%s\"/></form></body></html>", inputType));
+			return new StringResourceStream(String.format("<html><body>" +
+				"<form wicket:id=\"form\"><input wicket:id=\"text\" type=\"%s\"/></form></body></html>",
+				inputType));
 		}
 	}
 }

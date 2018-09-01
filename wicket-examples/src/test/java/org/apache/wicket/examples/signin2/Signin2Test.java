@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.examples.signin2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Collection;
 
 import javax.servlet.http.Cookie;
@@ -26,14 +28,12 @@ import org.apache.wicket.examples.authentication2.SignIn2Application;
 import org.apache.wicket.examples.authentication2.SignOut;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class Signin2Test extends Assert
+public class Signin2Test
 {
 	/**
 	 * Test page.

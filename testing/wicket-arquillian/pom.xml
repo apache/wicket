@@ -108,6 +108,12 @@
 			<artifactId>jboss-javaee-7.0</artifactId>
 			<type>pom</type>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- Wicket CDI integration. -->
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

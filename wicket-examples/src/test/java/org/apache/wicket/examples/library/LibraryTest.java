@@ -18,22 +18,19 @@ package org.apache.wicket.examples.library;
 
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class LibraryTest extends Assert
+public class LibraryTest
 {
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void test_1() throws Exception
-	{
+	public void test_1() {
 		WicketTester tester = new WicketTester(new LibraryApplication());
 		try
 		{

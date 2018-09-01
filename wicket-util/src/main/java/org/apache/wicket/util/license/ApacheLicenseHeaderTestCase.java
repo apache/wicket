@@ -29,7 +29,6 @@ import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,7 +186,7 @@ public abstract class ApacheLicenseHeaderTestCase
 			}
 
 			System.out.println(failString);
-			throw new AssertionFailedError(failString.toString());
+			throw new AssertionError(failString.toString());
 		}
 	}
 

@@ -24,12 +24,15 @@ import org.apache.wicket.arquillian.testing.util.ResourceWebApplicationPath;
  * @author felipecalmeida
  * @since 06/20/2015
  */
-public class TestWicketJavaEEApplication extends WicketJavaEEApplication {
-  
+public class TestWicketJavaEEApplication extends WicketJavaEEApplication
+{
+
 	// Has some security ignores during the test (example: accept all roles).
-    
-    @Override
-    protected void initResourceFinder() {
-    	getResourceSettings().getResourceFinders().add(new ResourceWebApplicationPath(TestWicketJavaEEApplication.class.getPackage().getName(), getServletContext()));
-    }
+
+	@Override
+	protected void initResourceFinder()
+	{
+		getResourceSettings().getResourceFinders().add(new ResourceWebApplicationPath(
+			TestWicketJavaEEApplication.class.getPackage().getName(), getServletContext()));
+	}
 }

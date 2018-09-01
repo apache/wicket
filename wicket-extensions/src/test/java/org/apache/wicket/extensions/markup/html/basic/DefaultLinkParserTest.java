@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.extensions.markup.html.basic;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link DefaultLinkParser}.
  * 
  * @author Juergen Donnerstag
  */
-public class DefaultLinkParserTest extends Assert
+public class DefaultLinkParserTest
 {
 	/**
 	 * 
@@ -61,7 +63,8 @@ public class DefaultLinkParserTest extends Assert
 
 		assertEquals(
 			"line 1 <a href=\"http://www.test.com/test/murx.jsp\">http://www.test.com/test/murx.jsp</a> \nline2 <a href=\"mailto:murx@email.de\">murx@email.de</a> \r\nline3",
-			parser.parse("line 1 http://www.test.com/test/murx.jsp \nline2 murx@email.de \r\nline3"));
+			parser
+				.parse("line 1 http://www.test.com/test/murx.jsp \nline2 murx@email.de \r\nline3"));
 	}
 
 	/**
@@ -88,8 +91,8 @@ public class DefaultLinkParserTest extends Assert
 
 		ILinkParser parser = new DefaultLinkParser();
 		final String result = parser.parse(testEmailAddress);
-		assertEquals("Expected chars to left of + to be included in the link.", testExpectedLink,
-			result);
+		assertEquals(testExpectedLink, result,
+			"Expected chars to left of + to be included in the link.");
 	}
 
 	/**
@@ -103,7 +106,7 @@ public class DefaultLinkParserTest extends Assert
 
 		ILinkParser parser = new DefaultLinkParser();
 		final String result = parser.parse(testEmailAddress);
-		assertEquals("Expected chars to left of - to be included in the link.", testExpectedLink,
-			result);
+		assertEquals(testExpectedLink, result,
+			"Expected chars to left of - to be included in the link.");
 	}
 }

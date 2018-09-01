@@ -16,22 +16,22 @@
  */
 package org.apache.wicket.examples;
 
-import com.meterware.httpunit.HttpUnitOptions;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
+import com.meterware.httpunit.HttpUnitOptions;
 
 /**
  * Test decorator that starts a jetty instance
  * 
  * @author ivaynberg
  */
-public class JettyTestCaseDecorator extends Assert
+public class JettyTestCaseDecorator
 {
 	private Server server;
 	private String contextPath;
@@ -41,7 +41,7 @@ public class JettyTestCaseDecorator extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
@@ -87,7 +87,7 @@ public class JettyTestCaseDecorator extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@After
+	@AfterEach
 	public void after() throws Exception
 	{
 		contextPath = null;

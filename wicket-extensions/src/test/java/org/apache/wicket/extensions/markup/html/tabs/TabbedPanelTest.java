@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.tabs;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link TabbedPanel}.
@@ -95,12 +97,10 @@ public class TabbedPanelTest extends WicketTestCase
 
 	/**
 	 * No tabs thus no tab component rendered.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void renderNoTabs() throws Exception
-	{
+	public void renderNoTabs() {
 		TestPage page = new TestPage();
 		page.tabbedPanel.getTabs().clear();
 		tester.startPage(page);
@@ -116,12 +116,10 @@ public class TabbedPanelTest extends WicketTestCase
 
 	/**
 	 * Switching between tabsS.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void renderDefaultTabsOnly() throws Exception
-	{
+	public void renderDefaultTabsOnly() {
 		TestPage page = tester.startPage(new TestPage());
 		tester.assertContains("<span wicket:id=\"title\">default 1</span></a>");
 		tester.assertContains("<span wicket:id=\"label\">default 1</span>");
@@ -137,12 +135,10 @@ public class TabbedPanelTest extends WicketTestCase
 
 	/**
 	 * Additional tabs are rendered.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void renderAdditionalTabs() throws Exception
-	{
+	public void renderAdditionalTabs() {
 		TestPage page = tester.startPage(new TestPage());
 		page.tabbedPanel.getTabs().add(new AbstractTab(Model.of("added 1"))
 		{
@@ -177,12 +173,10 @@ public class TabbedPanelTest extends WicketTestCase
 
 	/**
 	 * Changing model switches tab.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void renderModelChange() throws Exception
-	{
+	public void renderModelChange() {
 		TestPage page = new TestPage();
 
 		tester.startPage(page);
@@ -196,12 +190,10 @@ public class TabbedPanelTest extends WicketTestCase
 
 	/**
 	 * Tab's component is aquired once only.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void tabComponentAquiredOnChangeOnly() throws Exception
-	{
+	public void tabComponentAquiredOnChangeOnly() {
 
 		final int[] count = new int[1];
 
@@ -235,12 +227,10 @@ public class TabbedPanelTest extends WicketTestCase
 
 	/**
 	 * An invisible tab gets replaced by another one.
-	 * 
-	 * @throws Exception
+	 *
 	 */
 	@Test
-	public void invisibleTabGetsReplaced() throws Exception
-	{
+	public void invisibleTabGetsReplaced() {
 		final boolean[] visible = { true, true };
 
 		TestPage page = new TestPage();

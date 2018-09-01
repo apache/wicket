@@ -16,10 +16,13 @@
  */
 package org.apache.wicket.filtertest;
 
-import com.meterware.httpunit.WebResponse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.examples.WicketWebTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.meterware.httpunit.WebResponse;
 
 /**
  * jWebUnit test for Hello World.
@@ -30,7 +33,7 @@ public class WithoutCPWithoutFPTest extends WicketWebTestCase
 	 * @throws Exception
 	 */
 	@Override
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		if (getContextPath() == null)

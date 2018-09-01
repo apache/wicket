@@ -17,13 +17,12 @@
 package org.apache.wicket.examples.template;
 
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for Template application
  */
-public class TemplateTest extends Assert
+public class TemplateTest
 {
 	/**
 	 * Test page.
