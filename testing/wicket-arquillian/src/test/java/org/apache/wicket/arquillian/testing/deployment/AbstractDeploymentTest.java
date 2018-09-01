@@ -16,17 +16,9 @@
  */
 package org.apache.wicket.arquillian.testing.deployment;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-import java.util.Locale;
-
-import javax.servlet.ServletContext;
-
 import org.apache.wicket.arquillian.testing.TestWicketJavaEEApplication;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.util.SlowTests;
+import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.tester.WicketTester;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.Filters;
@@ -36,9 +28,16 @@ import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.util.Locale;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * <b>WARNING: If this error occurs - org.jboss.arquillian.container.spi.client.container.LifecycleException: The server is already running! Managed containers do not support connecting to running server instances due to the possible harmful effect of connecting to the wrong server. Please stop server before running or change to another type of container.
@@ -52,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @since 06/23/2015
  *
  */
-@Category(SlowTests.class)
+@Tag(WicketTestTag.SLOW)
 public abstract class AbstractDeploymentTest {
 	
 	private static final Logger log = LoggerFactory.getLogger(AbstractDeploymentTest.class);

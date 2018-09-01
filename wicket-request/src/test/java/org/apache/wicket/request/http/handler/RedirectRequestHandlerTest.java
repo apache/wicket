@@ -16,12 +16,12 @@
  */
 package org.apache.wicket.request.http.handler;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.wicket.request.IRequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * RedirectRequestHandlerTest

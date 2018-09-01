@@ -990,14 +990,6 @@
 						</includes>
 						
 					</configuration>
-					<dependencies>
-						<dependency>
-							<!-- force 4.7 runner to enable excludedGroups on Categories (& parallel) -->
-							<groupId>org.apache.maven.surefire</groupId>
-							<artifactId>surefire-junit47</artifactId>
-							<version>${maven.surefire.version}</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
