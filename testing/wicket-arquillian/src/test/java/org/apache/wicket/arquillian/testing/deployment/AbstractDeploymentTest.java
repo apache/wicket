@@ -58,9 +58,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 @Tag(WicketTestTag.SLOW)
-public abstract class AbstractDeploymentTest
-{
-
+public abstract class AbstractDeploymentTest {
+	
 	private static final Logger log = LoggerFactory.getLogger(AbstractDeploymentTest.class);
 
 	private static final String WEBAPP_SRC = "src/main/webapp";
