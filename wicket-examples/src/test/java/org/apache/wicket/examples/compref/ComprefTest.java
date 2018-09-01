@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.compref;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -27,12 +27,10 @@ public class ComprefTest extends WicketTestCase
 {
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void test_1() throws Exception
-	{
+	public void test_1() {
 		tester.startPage(Index.class);
 
 		tester.assertContains("Wicket Examples - component reference");

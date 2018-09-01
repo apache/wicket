@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.cdi;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.wicket.cdi.testapp.TestConversationPage;
 import org.apache.wicket.cdi.testapp.TestPage;
 import org.apache.wicket.util.tester.WicketTester;
@@ -46,11 +49,15 @@ public class CdiConfigurationTest extends WicketCdiTestCase
 		}
 	}
 
-	@Test(expected = Exception.class)
+	@Test
 	public void testConfigureTwice()
 	{
 		configure(new CdiConfiguration());
-		new CdiConfiguration().configure(tester.getApplication());
+
+		assertThrows(Exception.class, () -> {
+			new CdiConfiguration().configure(tester.getApplication());
+		});
+
 	}
 
 	@Test

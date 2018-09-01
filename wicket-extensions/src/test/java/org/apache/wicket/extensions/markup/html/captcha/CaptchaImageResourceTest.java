@@ -16,14 +16,14 @@
  */
 package org.apache.wicket.extensions.markup.html.captcha;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the {@link org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource}.
@@ -37,8 +37,8 @@ public class CaptchaImageResourceTest
 	{
 		CaptchaImageResource image1 = new CaptchaImageResource("wicket");
 
-		assertThat(image1.getChallengeId(), is("wicket"));
-		assertThat(image1.getChallengeIdModel().getObject(), is("wicket"));
+		assertEquals("wicket", image1.getChallengeId());
+		assertEquals("wicket", image1.getChallengeIdModel().getObject());
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class CaptchaImageResourceTest
 		CaptchaImageResource image1 = new CaptchaImageResource("wicket");
 		CaptchaImageResource image2 = new CaptchaImageResource("wicket");
 
-		assertThat(image1.getImageData(null), is(not(image2.getImageData(null))));
+		assertNotEquals(image1.getImageData(null), image2.getImageData(null));
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class CaptchaImageResourceTest
 	{
 		CaptchaImageResource image1 = new CaptchaImageResource("wicket");
 
-		assertThat(image1.getImageData(null), is(image1.getImageData(null)));
+		assertSame(image1.getImageData(null), image1.getImageData(null));
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class CaptchaImageResourceTest
 		byte[] originalImageData = image1.getImageData(null);
 		image1.invalidate();
 
-		assertThat(originalImageData, is(not(image1.getImageData(null))));
+		assertNotEquals(originalImageData, image1.getImageData(null));
 	}
 
 	@Test
@@ -79,6 +79,6 @@ public class CaptchaImageResourceTest
 			challengeIds.add(new CaptchaImageResource().getChallengeId());
 		}
 
-		assertThat(challengeIds.size(), is(idsNumber));
+		assertEquals(idsNumber, challengeIds.size());
 	}
 }

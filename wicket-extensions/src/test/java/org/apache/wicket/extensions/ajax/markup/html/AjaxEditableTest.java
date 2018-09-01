@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.extensions.ajax.markup.html;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
@@ -30,8 +31,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.IWritableRequestParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link AjaxEditableLabel}
@@ -44,7 +45,7 @@ public class AjaxEditableTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
+	@BeforeEach
 	public void setUp()
 	{
 		tester.getApplication().getMarkupSettings().setStripWicketTags(false);
@@ -168,9 +169,9 @@ public class AjaxEditableTest extends WicketTestCase
 		IWritableRequestParameters postParameters = (IWritableRequestParameters)tester
 			.getRequestCycle().getRequest().getPostParameters();
 		postParameters.setParameterValues(editableLabel.getEditor().getInputName(),
-			Arrays.asList(new StringValue[] { StringValue.valueOf("5") }));
+			Arrays.asList(StringValue.valueOf("5")));
 		editableLabel.getEditor().processInput();
 
-		assertThat(integerModel.getObject(), instanceOf(Integer.class));
+		assertTrue(integerModel.getObject() instanceof Integer);
 	}
 }

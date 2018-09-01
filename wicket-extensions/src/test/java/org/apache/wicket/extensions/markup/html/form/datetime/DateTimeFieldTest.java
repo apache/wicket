@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,17 +34,13 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link LocalDateTimeField}.
  */
 public class DateTimeFieldTest extends WicketTestCase
 {
-	@Rule
-	public ExpectedException expectedException = ExpectedException.none();
 
 	@Test
 	public void dateTimeNull()

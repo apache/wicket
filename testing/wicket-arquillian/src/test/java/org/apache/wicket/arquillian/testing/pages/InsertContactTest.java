@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.arquillian.testing.pages;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 import java.util.Locale;
@@ -35,12 +36,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <b>WARNING: If this error occurs - org.jboss.arquillian.container.spi.client.container.LifecycleException: The server is already running! Managed containers do not support connecting to running server instances due to the possible harmful effect of connecting to the wrong server. Please stop server before running or change to another type of container.
- *	To disable this check and allow Arquillian to connect to a running server, set allowConnectingToRunningServer to true in the container configuration.</b>
- *	
- *	<b>SOLUTION: Search and kill wildfly or jboss proccess instance that are using port 8080.</b>
+ * <b>WARNING: If this error occurs -
+ * org.jboss.arquillian.container.spi.client.container.LifecycleException: The server is already
+ * running! Managed containers do not support connecting to running server instances due to the
+ * possible harmful effect of connecting to the wrong server. Please stop server before running or
+ * change to another type of container. To disable this check and allow Arquillian to connect to a
+ * running server, set allowConnectingToRunningServer to true in the container configuration.</b>
  * 
- * <b> If you can't run inside eclipse, add as source the folder src/test/resources and try again. </b>
+ * <b>SOLUTION: Search and kill wildfly or jboss proccess instance that are using port 8080.</b>
+ * 
+ * <b> If you can't run inside eclipse, add as source the folder src/test/resources and try again.
+ * </b>
  * 
  * Just a class test to show that everything is working.
  * 
@@ -49,8 +55,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 @RunWith(Arquillian.class)
-public class InsertContactTest extends AbstractDeploymentTest {
-	
+public class InsertContactTest extends AbstractDeploymentTest
+{
+
 	private static final String EMAIL_IS_REQUIRED = "'email' is required.";
 
 	private static final String NAME_IS_REQUIRED = "'name' is required.";
@@ -68,8 +75,8 @@ public class InsertContactTest extends AbstractDeploymentTest {
 	private static final Logger log = LoggerFactory.getLogger(InsertContactTest.class);
 
 	@Inject
-    private ContactDao contactDao;
-	
+	private ContactDao contactDao;
+
 	@Before
 	public void before()
 	{
@@ -77,45 +84,48 @@ public class InsertContactTest extends AbstractDeploymentTest {
 	}
 
 	@Test
-	public void testErrorMessagesInsertContact() {
+	public void testErrorMessagesInsertContact()
+	{
 		Class<InsertContact> pageClass = InsertContact.class;
 		getWicketTester().startPage(pageClass);
 		getWicketTester().assertRenderedPage(pageClass);
-		
+
 		FormTester formTester = getWicketTester().newFormTester(INSERT_FORM);
 		formTester.submit();
 		getWicketTester().assertErrorMessages(NAME_IS_REQUIRED, EMAIL_IS_REQUIRED);
 		log.info("Required Messages: " + NAME_IS_REQUIRED + " and " + EMAIL_IS_REQUIRED);
-		
+
 		getWicketTester().assertRenderedPage(pageClass);
 	}
-	
+
 	@Test
-	public void testInsertContact() {
+	public void testInsertContact()
+	{
 		Class<InsertContact> pageClass = InsertContact.class;
 		getWicketTester().startPage(pageClass);
 		getWicketTester().assertRenderedPage(pageClass);
-		
+
 		FormTester formTester = getWicketTester().newFormTester(INSERT_FORM);
 		formTester.setValue(NAME, WICKET_ARQUILLIAN_TEST);
 		formTester.setValue(EMAIL, WICKET_ARQUILLIAN_TEST_APACHE_ORG);
 		formTester.submit();
-		
+
 		getWicketTester().assertNoErrorMessage();
 		getWicketTester().assertRenderedPage(ListContacts.class);
-		
+
 		log.info("Retrieving contacts to assert:");
 		List<Contact> contacts = contactDao.getContacts();
 		int contactsSize = contacts.size();
 		assertEquals(1, contactsSize);
-		
+
 		Contact contact = contacts.get(0);
 		assertNotNull(contact.getId());
-		assertEquals(WICKET_ARQUILLIAN_TEST,contact.getName());
-		assertEquals(WICKET_ARQUILLIAN_TEST_APACHE_ORG,contact.getEmail());
-		
+		assertEquals(WICKET_ARQUILLIAN_TEST, contact.getName());
+		assertEquals(WICKET_ARQUILLIAN_TEST_APACHE_ORG, contact.getEmail());
+
 		log.info("Contacts size: " + contactsSize);
-		for (Contact infoContact : contacts) {
+		for (Contact infoContact : contacts)
+		{
 			log.info("Contacts info: " + infoContact);
 		}
 	}

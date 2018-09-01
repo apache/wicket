@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
-import org.opentest4j.AssertionFailedError;
+
 
 /**
  * @author jcompagner
@@ -42,7 +42,7 @@ class TesterTest extends WicketTestCase
 			tester.assertVisible("label");
 			fail("Should fail, because label is invisible");
 		}
-		catch (AssertionFailedError e)
+		catch (AssertionError e)
 		{
 		}
 		catch (NullPointerException e)

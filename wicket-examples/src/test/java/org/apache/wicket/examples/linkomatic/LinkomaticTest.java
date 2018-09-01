@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.linkomatic;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * jWebUnit test for Hello World.

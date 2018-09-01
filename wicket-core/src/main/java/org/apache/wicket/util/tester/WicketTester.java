@@ -18,14 +18,15 @@ package org.apache.wicket.util.tester;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
 import javax.servlet.ServletContext;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -50,7 +51,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.opentest4j.AssertionFailedError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -283,21 +283,19 @@ public class WicketTester extends BaseWicketTester
 	{
 		if (null != getLastResponse().getHeader("Location"))
 		{
-			throw new AssertionFailedError(
-				"Location header should *not* be present when using Ajax");
+			fail("Location header should *not* be present when using Ajax");
 		}
 
 		String ajaxLocation = getLastResponse().getHeader("Ajax-Location");
 		if (null == ajaxLocation)
 		{
-			throw new AssertionFailedError(
-				"Ajax-Location header should be present when using Ajax");
+			fail("Ajax-Location header should be present when using Ajax");
 		}
 
 		int statusCode = getLastResponse().getStatus();
 		if (statusCode != 200)
 		{
-			throw new AssertionFailedError("Expected HTTP status code to be 200 (OK)");
+			fail("Expected HTTP status code to be 200 (OK)");
 		}
 	}
 
@@ -479,7 +477,7 @@ public class WicketTester extends BaseWicketTester
 
 		if (markup == null)
 		{
-			throw new AssertionFailedError(String.format("Cannot find the markup of component: %s",
+			fail(String.format("Cannot find the markup of component: %s",
 				component.getPageRelativePath()));
 		}
 
@@ -599,12 +597,12 @@ public class WicketTester extends BaseWicketTester
 		final List<FeedbackMessage> renderedMessages = model.getObject();
 		if (renderedMessages == null)
 		{
-			throw new AssertionFailedError(
+			fail(
 				String.format("feedback panel at path [%s] returned null messages", path));
 		}
 		if (messages.length != renderedMessages.size())
 		{
-			throw new AssertionFailedError(String.format(
+			fail(String.format(
 				"you expected '%d' messages for the feedback panel [%s], but there were actually '%d'",
 				messages.length, path, renderedMessages.size()));
 		}
@@ -748,10 +746,8 @@ public class WicketTester extends BaseWicketTester
 	 *
 	 * @param expectedDocument
 	 *            expected output <code>String</code>
-	 * @throws Exception
 	 */
-	public void assertResultPage(final String expectedDocument) throws Exception
-	{
+	public void assertResultPage(final String expectedDocument) {
 		// Validate the document
 		String document = getLastResponseAsString();
 		assertEquals(expectedDocument, document);
@@ -821,7 +817,7 @@ public class WicketTester extends BaseWicketTester
 	{
 		if (result.wasFailed())
 		{
-			throw new AssertionFailedError(result.getMessage());
+			fail(result.getMessage());
 		}
 	}
 
@@ -962,7 +958,7 @@ public class WicketTester extends BaseWicketTester
 	public void executeListener(final Class<?> testClass, final Component component,
 		final String filename) throws Exception
 	{
-		assertNotNull(component);
+		assert(component != null);
 
 		log.info("=== " + testClass.getName() + " : " + component.getPageRelativePath() + " ===");
 
@@ -980,7 +976,7 @@ public class WicketTester extends BaseWicketTester
 	public void executeBehavior(final Class<?> testClass, final AbstractAjaxBehavior behavior,
 		final String filename) throws Exception
 	{
-		assertNotNull(behavior);
+		assert(behavior != null);
 
 		log.info("=== " + testClass.getName() + " : " + behavior.toString() + " ===");
 

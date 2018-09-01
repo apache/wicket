@@ -20,7 +20,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Testcase for the <code>Game</code> class.
@@ -28,16 +28,14 @@ import org.junit.Test;
  * @author Chris Turner
  * @version 1.0
  */
-public class HangManTest extends Assert
+public class HangManTest
 {
 	/**
 	 * Tests the hangman class directly for a winning game.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void test_1() throws Exception
-	{
+	public void test_1() {
 		Game hangman = new Game();
 		hangman.newGame(5, new WordGenerator(new String[] { "testing" }));
 
@@ -105,12 +103,10 @@ public class HangManTest extends Assert
 
 	/**
 	 * Tests the hangman class directly for a lost game.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void testHangmanLoseGame() throws Exception
-	{
+	public void testHangmanLoseGame() {
 		Game hangman = new Game();
 		hangman.newGame(2, new WordGenerator(new String[] { "foo" }));
 

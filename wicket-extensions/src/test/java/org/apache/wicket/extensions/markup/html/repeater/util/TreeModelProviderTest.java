@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Iterator;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -24,15 +28,14 @@ import javax.swing.tree.MutableTreeNode;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link TreeModelProvider}.
  * 
  * @author svenmeier
  */
-public class TreeModelProviderTest extends Assert
+public class TreeModelProviderTest
 {
 	private DefaultMutableTreeNode root;
 

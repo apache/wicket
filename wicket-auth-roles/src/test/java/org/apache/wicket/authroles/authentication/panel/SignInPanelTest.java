@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.authroles.authentication.panel;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MarkupContainer;
@@ -29,13 +31,12 @@ import org.apache.wicket.request.Request;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link SignInPanel}
  */
-public class SignInPanelTest extends Assert
+public class SignInPanelTest
 {
 
 	/**

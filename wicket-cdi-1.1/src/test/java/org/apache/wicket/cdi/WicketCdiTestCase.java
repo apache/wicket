@@ -32,20 +32,19 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.jglue.cdiunit.AdditionalClasses;
 import org.jglue.cdiunit.CdiRunner;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
  * @author jsarman
  */
-@RunWith(CdiRunner.class)
+@RunWith(CdiRunner.class) // TODO upgrade to junit 5 ExtendWith when Cdi project has Junit 5 support
 @AdditionalClasses({ CdiWicketTester.class, BehaviorInjector.class, CdiConfiguration.class,
 		CdiShutdownCleaner.class, ComponentInjector.class, ConversationExpiryChecker.class,
 		ConversationPropagator.class, DetachEventEmitter.class, SessionInjector.class,
 		TestAppScope.class, TestConversationBean.class, TestCdiApplication.class,
 		AutoConversation.class })
-public abstract class WicketCdiTestCase extends Assert
+public abstract class WicketCdiTestCase
 {
 	@Inject
 	private ContextManager contextManager;
@@ -72,9 +71,6 @@ public abstract class WicketCdiTestCase extends Assert
 		}
 	}
 
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Before
 	public void commonBefore()
 	{

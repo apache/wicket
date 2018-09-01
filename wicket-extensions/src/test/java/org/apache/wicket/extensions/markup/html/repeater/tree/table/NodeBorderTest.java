@@ -18,7 +18,7 @@ package org.apache.wicket.extensions.markup.html.repeater.tree.table;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link NodeBorder}.
