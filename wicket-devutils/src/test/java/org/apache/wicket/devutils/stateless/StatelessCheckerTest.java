@@ -16,21 +16,23 @@
  */
 package org.apache.wicket.devutils.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Marat Radchenko
  */
-public class StatelessCheckerTest extends Assert
+public class StatelessCheckerTest
 {
 	@StatelessComponent
 	public static class StatelessPage extends DummyHomePage
@@ -97,7 +99,7 @@ public class StatelessCheckerTest extends Assert
 
 	private WicketTester tester;
 
-	@Before
+	@BeforeEach
 	public void setUp()
 	{
 		tester = new WicketTester();
@@ -105,7 +107,7 @@ public class StatelessCheckerTest extends Assert
 		checkerQuietly = new StatelessCheckerQuietly();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown()
 	{
 		tester.destroy();

@@ -17,22 +17,19 @@
 package org.apache.wicket.examples.images;
 
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class ImagesTest extends Assert
+public class ImagesTest
 {
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void testImages() throws Exception
-	{
+	public void testImages() {
 		WicketTester tester = new WicketTester(new ImagesApplication());
 		try
 		{

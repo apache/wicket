@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.tree.table;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -24,13 +27,12 @@ import java.util.List;
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link TreeDataProvider}.
  */
-public class TreeDataProviderTest extends Assert
+public class TreeDataProviderTest
 {
 
 	/**

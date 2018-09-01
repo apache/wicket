@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -23,15 +28,14 @@ import java.util.List;
 
 import org.apache.wicket.extensions.markup.html.repeater.tree.ITreeProvider;
 import org.apache.wicket.model.IModel;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link ProviderSubset}.
  * 
  * @author svenmeier
  */
-public class ProviderSubsetTest extends Assert
+public class ProviderSubsetTest
 {
 	private ITreeProvider<String> provider = new EmptyProvider();
 

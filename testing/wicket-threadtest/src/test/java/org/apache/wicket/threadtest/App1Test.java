@@ -23,7 +23,7 @@ import java.util.List;
 import org.apache.wicket.threadtest.apps.app1.ResourceTestPage;
 import org.apache.wicket.threadtest.tester.SimpleGetCommand;
 import org.apache.wicket.threadtest.tester.Tester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author eelcohillenius

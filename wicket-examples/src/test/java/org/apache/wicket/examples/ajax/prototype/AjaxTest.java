@@ -16,8 +16,10 @@
  */
 package org.apache.wicket.examples.ajax.prototype;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * jWebUnit test for Hello World.

@@ -14,16 +14,16 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.apache.wicket.util.string.Strings;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
- * A test that verifies that there are no non-empty packages with the same name in
- * two or more wicket modules.
+ * A test that verifies that there are no non-empty packages with the same name in two or more
+ * wicket modules.
  *
  * Based on https://gist.github.com/1977817, contributed by Andreas Pieber
  */
-public class OsgiClashingPackagesTest extends Assert
+public class OsgiClashingPackagesTest
 {
 
 	@Test
@@ -47,26 +47,33 @@ public class OsgiClashingPackagesTest extends Assert
 					String projectName = Strings.afterLast(dependency, '/');
 					Project project = new Project(projectName, jarFile);
 					project.addTo(projectBuckets);
-				} finally {
+				}
+				finally
+				{
 					jarFile.close();
 				}
 			}
 		}
 
 		Set<Entry<String, List<Project>>> entrySet = projectBuckets.entrySet();
-		for (Entry<String, List<Project>> entry : entrySet) {
+		for (Entry<String, List<Project>> entry : entrySet)
+		{
 			List<Project> projects = entry.getValue();
-			if (projects.size() > 1) {
+			if (projects.size() > 1)
+			{
 				fail(entry);
 			}
 		}
 	}
 
-	private void fail(Entry<String, List<Project>> entry) {
+	private void fail(Entry<String, List<Project>> entry)
+	{
 		StringBuilder builder = new StringBuilder();
 		String packageName = entry.getKey();
-		builder.append("Package '").append(packageName).append("' has files in two or more modules: ");
-		for (Project conflict : entry.getValue()) {
+		builder.append("Package '").append(packageName).append(
+			"' has files in two or more modules: ");
+		for (Project conflict : entry.getValue())
+		{
 			builder.append(conflict.getName()).append(", ");
 		}
 		try
@@ -78,33 +85,41 @@ public class OsgiClashingPackagesTest extends Assert
 				URL resource = resources.nextElement();
 				builder.append("\n\t").append(resource.toExternalForm());
 			}
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
-		fail(builder.toString());
+		Assertions.fail(builder.toString());
 	}
 
-	private static class Project {
+	private static class Project
+	{
 		// a set with all package names in a dependency
 		private final Set<String> packagesWithContent = new TreeSet<>();
 
 		// the name of the dependency
 		private final String name;
 
-		public Project(String name, JarFile jarFile) {
+		public Project(String name, JarFile jarFile)
+		{
 			this.name = name;
 			collectPackageNames(jarFile);
 		}
 
 		/**
-		 * Adds this project to as a value in the global map that contains 'packageName -> List[Project]'
+		 * Adds this project to as a value in the global map that contains 'packageName ->
+		 * List[Project]'
+		 *
 		 * @param projectBuckets
-		 *      the global map
+		 *            the global map
 		 */
-		public void addTo(Map<String, List<Project>> projectBuckets) {
-			for (String packageWithContent : packagesWithContent) {
-				if (!projectBuckets.containsKey(packageWithContent)) {
+		public void addTo(Map<String, List<Project>> projectBuckets)
+		{
+			for (String packageWithContent : packagesWithContent)
+			{
+				if (!projectBuckets.containsKey(packageWithContent))
+				{
 					projectBuckets.put(packageWithContent, new ArrayList<Project>());
 				}
 				projectBuckets.get(packageWithContent).add(this);
@@ -113,8 +128,9 @@ public class OsgiClashingPackagesTest extends Assert
 
 		/**
 		 * Collects the names of all packages in this JarFile
+		 *
 		 * @param jarFile
-		 *      the jar file to analyze
+		 *            the jar file to analyze
 		 */
 		private void collectPackageNames(final JarFile jarFile)
 		{
@@ -131,36 +147,27 @@ public class OsgiClashingPackagesTest extends Assert
 			}
 		}
 
-		public String getName() {
+		public String getName()
+		{
 			return name;
 		}
 
 		@Override
 		public String toString()
 		{
-			return "Project{" +
-					"name='" + name + '\'' +
-					'}';
+			return "Project{" + "name='" + name + '\'' + '}';
 		}
 
 		private boolean shouldCollect(final String entryName)
 		{
-			if (
-				// ignore folder names. count just files/resources
-				entryName.endsWith("/") ||
+            return !entryName.endsWith("/") &&
 
-				// all modules have META-INF {MANIFEST.MF, Maven stuff, ..}
-				entryName.startsWith("META-INF/") ||
+                    // all modules have META-INF {MANIFEST.MF, Maven stuff, ..}
+                    !entryName.startsWith("META-INF/") &&
 
-				// ignore Wicket's IInitializer conf files
-				(entryName.startsWith("META-INF/wicket") && entryName.endsWith(".properties"))
-			)
-			{
-				return false;
-			}
-
-			return true;
-		}
+                    // ignore Wicket's IInitializer conf files
+                    (!entryName.startsWith("META-INF/wicket") || !entryName.endsWith(".properties"));
+        }
 	}
 
 }

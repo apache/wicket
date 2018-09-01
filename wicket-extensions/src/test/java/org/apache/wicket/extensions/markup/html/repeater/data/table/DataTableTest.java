@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,9 +37,8 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
@@ -46,34 +48,32 @@ public class DataTableTest extends WicketTestCase
 	/**
 	 * 
 	 */
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		tester = new WicketTester(new RepeaterApplication());
 	}
 
 	/**
-	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
-	{
+	public void test_1() {
 		tester.startPage(DataTablePage.class);
 		tester.assertRenderedPage(DataTablePage.class);
 
 		String document = tester.getLastResponseAsString();
 		int index = document.indexOf("<thead");
-		assertTrue("Expected at least on <thead>", index != -1);
+		assertTrue(index != -1, "Expected at least on <thead>");
 		index = document.indexOf("<thead", index + 1);
-		assertTrue("There must be only one <thead>", index == -1);
+		assertTrue(index == -1, "There must be only one <thead>");
 
 		index = document.indexOf("<tbody");
-		assertTrue("Expected at least on <tbody>", index != -1);
+		assertTrue(index != -1, "Expected at least on <tbody>");
 		index = document.indexOf("<tbody", index + 1);
-		assertTrue("There must be only one <tbody>", index == -1);
+		assertTrue(index == -1, "There must be only one <tbody>");
 
 		index = document.indexOf("<caption", index + 1);
-		assertTrue("There must be not be <caption>", index == -1);
+		assertTrue(index == -1, "There must be not be <caption>");
 	}
 
 	/**
@@ -87,14 +87,14 @@ public class DataTableTest extends WicketTestCase
 		parameters.add("empty", Boolean.TRUE);
 		tester.startPage(Wicket3603Page.class, parameters);
 // System.err.println(tester.getLastResponseAsString());
-		Assert.assertTrue(tester.getLastResponseAsString().contains("thead"));
-		Assert.assertTrue(tester.getLastResponseAsString().contains("tfoot"));
+		assertTrue(tester.getLastResponseAsString().contains("thead"));
+		assertTrue(tester.getLastResponseAsString().contains("tfoot"));
 
 		parameters.set("empty", Boolean.FALSE);
 		tester.startPage(Wicket3603Page.class);
 // System.err.println(tester.getLastResponseAsString());
-		Assert.assertFalse(tester.getLastResponseAsString().contains("thead"));
-		Assert.assertFalse(tester.getLastResponseAsString().contains("tfoot"));
+		assertFalse(tester.getLastResponseAsString().contains("thead"));
+		assertFalse(tester.getLastResponseAsString().contains("tfoot"));
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class DataTableTest extends WicketTestCase
 
 		String document = tester.getLastResponseAsString();
 		int index = document.indexOf("<caption wicket:id=\"caption\">Caption</caption>");
-		assertTrue("Caption must be rendered!", index > -1);
+		assertTrue(index > -1, "Caption must be rendered!");
 
 	}
 

@@ -16,12 +16,17 @@
  */
 package org.apache.wicket.util.license;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.util.List;
 
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.Strings;
-import org.opentest4j.AssertionFailedError;
+
 
 abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 {
@@ -76,7 +81,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			throw new AssertionFailedError(e.getMessage());
+			throw new AssertionError(e.getMessage());
 		}
 		finally
 		{
@@ -86,7 +91,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 			}
 			catch (IOException e)
 			{
-				throw new AssertionFailedError(e.getMessage());
+				throw new AssertionError(e.getMessage());
 			}
 		}
 
@@ -110,7 +115,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
-			throw new AssertionFailedError(e.getMessage());
+			throw new AssertionError(e.getMessage());
 		}
 	}
 
@@ -142,7 +147,7 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 			}
 			catch (Exception e)
 			{
-				throw new AssertionFailedError(e.getMessage());
+				throw new AssertionError(e.getMessage());
 			}
 			finally
 			{

@@ -989,7 +989,10 @@
 						<includes>
 							<include>**/*Test.java</include>
 						</includes>
-						
+						<properties>
+							<excludeTags>SLOW</excludeTags>
+						</properties>
+						<argLine>--add-opens java.base/jdk.internal.loader=ALL-UNNAMED --add-modules=ALL-SYSTEM</argLine>
 					</configuration>
 				</plugin>
 				<plugin>

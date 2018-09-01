@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.encodings;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * jWebUnit test for Hello World.
@@ -26,12 +26,10 @@ public class EncodingTest extends WicketTestCase
 {
 	/**
 	 * Test page.
-	 * 
-	 * @throws Exception
-	 */
+	 *
+     */
 	@Test
-	public void test_1() throws Exception
-	{
+	public void test_1() {
 		tester.startPage(Home.class);
 		tester.assertContains("Wicket Examples - encodings");
 		// the non-printable characters are: &#65533;&#65533;&#65533;
