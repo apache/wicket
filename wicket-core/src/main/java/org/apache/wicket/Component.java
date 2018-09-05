@@ -2350,22 +2350,14 @@ public abstract class Component
 	 */
 	protected void renderPlaceholderTag(final ComponentTag tag, final Response response)
 	{
-		String ns = Strings.isEmpty(tag.getNamespace()) ? null : tag.getNamespace() + ':';
+		String name = Strings.isEmpty(tag.getNamespace()) ? tag.getName() : tag.getNamespace() + ':' + tag.getName();
 
 		response.write("<");
-		if (ns != null)
-		{
-			response.write(ns);
-		}
-		response.write(tag.getName());
+		response.write(name);
 		response.write(" id=\"");
 		response.write(getAjaxRegionMarkupId());
-		response.write("\" style=\"display:none\"></");
-		if (ns != null)
-		{
-			response.write(ns);
-		}
-		response.write(tag.getName());
+		response.write("\" style=\"display:none\" data-wicket-placeholder></");
+		response.write(name);
 		response.write(">");
 	}
 

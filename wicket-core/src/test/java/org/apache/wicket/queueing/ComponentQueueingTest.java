@@ -600,7 +600,7 @@ public class ComponentQueueingTest extends WicketTestCase
 
 		a.setVisible(false);
 		tester.startPage(p);
-		assertEquals("<div id=\"wicket__InlineEnclosure_20793898271\" style=\"display:none\"></div>", tester.getLastResponseAsString());
+		assertEquals("<div id=\"wicket__InlineEnclosure_20793898271\" style=\"display:none\" data-wicket-placeholder></div>", tester.getLastResponseAsString());
 	}
 	
 	/**
