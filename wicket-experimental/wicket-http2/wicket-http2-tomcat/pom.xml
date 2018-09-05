@@ -32,16 +32,26 @@
 		is the Apache Tomcat 8.5+ implementation to resolve the PushBuilder API and
 		provide the IInitializer.
 	</description>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.tomcat</groupId>
+				<artifactId>tomcat-catalina</artifactId>
+				<version>8.5.33</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
-		<dependency>
-			<groupId>org.apache.wicket.experimental.wicket8</groupId>
-			<artifactId>wicket-http2-core</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-catalina</artifactId>
-			<version>8.5.19</version>
-			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket8</groupId>
+			<artifactId>wicket-http2-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>

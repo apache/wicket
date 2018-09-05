@@ -50,6 +50,20 @@
 				<version>2.4</version>
 			</extension>
 		</extensions>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<configuration>
+						<useDefaultDelimiters>false</useDefaultDelimiters>
+						<delimiters>
+							<delimiter>@</delimiter>
+						</delimiters>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -58,12 +72,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<configuration>
-					<useDefaultDelimiters>false</useDefaultDelimiters>
-					<delimiters>
-						<delimiter>@</delimiter>
-					</delimiters>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
