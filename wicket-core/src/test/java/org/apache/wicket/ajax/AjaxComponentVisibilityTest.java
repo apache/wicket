@@ -60,5 +60,6 @@ public class AjaxComponentVisibilityTest extends WicketTestCase
 		assertTrue(tester.isComponentOnAjaxResponse(test2).wasFailed());
 		// test3 is in the ajax response because it renders a placeholder tag
 		assertFalse(tester.isComponentOnAjaxResponse(test3).wasFailed());
+		assertTrue(tester.getTagById(test3.getMarkupId()).hasAttribute("data-wicket-placeholder"));
 	}
 }

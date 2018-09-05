@@ -557,6 +557,25 @@
 		},
 
 		/**
+		 * Is an element still present for Ajax requests. 
+		 */
+		_isPresent: function(id) {
+			if (isUndef(id)) {
+				// no id so no check whether present
+				return true;
+			}
+			
+			var element = Wicket.$(id);
+			if (isUndef(element)) {
+				// not present
+				return false;
+			}
+			
+			// present if no attributes at all or not a placeholder
+			return (!element.hasAttribute || !element.hasAttribute('data-wicket-placeholder'));
+		},
+
+		/**
 		 * Handles execution of Ajax calls.
 		 *
 		 * @param {Object} attrs - the Ajax request attributes configured at the server side
@@ -579,14 +598,7 @@
 
 				// the precondition to use if there are no explicit ones
 				defaultPrecondition = [ function (attributes) {
-					if (attributes.c) {
-						if (attributes.f) {
-							return Wicket.$$(attributes.c) && Wicket.$$(attributes.f);
-						} else {
-							return Wicket.$$(attributes.c);
-						}
-					}
-					return true;
+					return self._isPresent(attributes.c) && self._isPresent(attributes.f); 
 				}],
 
 				// a context that brings the common data for the success/fialure/complete handlers

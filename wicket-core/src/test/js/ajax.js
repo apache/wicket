@@ -1466,5 +1466,27 @@ jQuery(document).ready(function() {
 
 			execute(attrs);
 		});
+		
+		asyncTest('no ajax send on component placeholder', function() {
+
+			expect(1);
+
+			var attrs = {
+				u: 'data/ajax/componentPlaceholderId.xml',
+				c: 'componentPlaceholderId',
+				bsh: [
+					function() {
+						ok(false, 'should not be sent');
+					}
+				],
+				dh: [
+					function() {
+						start();
+						ok('Done handler should be called');
+					}
+				]
+			};
+			execute(attrs);
+		});
 	}
 });
