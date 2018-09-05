@@ -125,7 +125,7 @@
 		<!-- Project Versions -->
 		<cglib.version>3.2.6</cglib.version>
 		<jacoco.version>0.7.9</jacoco.version>
-		<jetty.version>9.4.10.v20180503</jetty.version>
+		<jetty.version>9.4.12.v20180830</jetty.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>5.0.8.RELEASE</spring.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
@@ -147,11 +147,6 @@
 				<artifactId>jsr305</artifactId>
 				<version>3.0.2</version>
 				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>23.0</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.el</groupId>
@@ -184,28 +179,16 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-webapp</artifactId>
-				<version>${jetty.version}</version>
-				<scope>test</scope>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-junit</artifactId>
+				<version>${hamcrest.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-server</artifactId>
-				<version>${jetty.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty.websocket</groupId>
-				<artifactId>javax-websocket-server-impl</artifactId>
-				<version>${jetty.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-jmx</artifactId>
-				<version>${jetty.version}</version>
-				<scope>test</scope>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>java-hamcrest</artifactId>
+				<version>${hamcrest.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>cglib</groupId>
@@ -226,9 +209,20 @@
 				<optional>true</optional>
 			</dependency>
 			<dependency>
+				<groupId>com.github.openjson</groupId>
+				<artifactId>openjson</artifactId>
+				<version>1.0.10</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>26.0-jre</version>
+			</dependency>
+			<dependency>
 				<groupId>com.google.inject</groupId>
 				<artifactId>guice</artifactId>
-				<version>4.1.0</version>
+				<version>4.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-fileupload</groupId>
@@ -239,6 +233,11 @@
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>io.dropwizard.metrics</groupId>
+				<artifactId>metrics-core</artifactId>
+				<version>${metrics.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.inject</groupId>
@@ -378,12 +377,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket8</groupId>
-				<artifactId>wicket-metrics</artifactId>
-				<version>0.7-SNAPSHOT</version>
-				<type>jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.wicket.experimental.wicket8</groupId>
 				<artifactId>wicket-http2-core</artifactId>
 				<version>0.6-SNAPSHOT</version>
 				<type>jar</type>
@@ -407,54 +400,52 @@
 				<type>jar</type>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.wicket.experimental.wicket8</groupId>
+				<artifactId>wicket-metrics</artifactId>
+				<version>0.7-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>${aspectj.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.danekja</groupId>
 				<artifactId>jdk-serializable-functional</artifactId>
 				<version>1.8.3</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
-				<groupId>com.github.openjson</groupId>
-				<artifactId>openjson</artifactId>
-				<version>1.0.8</version>
-				<type>jar</type>
+				<groupId>org.jboss.weld</groupId>
+				<artifactId>weld-api</artifactId>
+				<version>3.0.SP4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.weld</groupId>
+				<artifactId>weld-core</artifactId>
+				<version>2.4.7.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.weld</groupId>
+				<artifactId>weld-core-impl</artifactId>
+				<version>3.0.5.Final</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.weld</groupId>
+				<artifactId>weld-spi</artifactId>
+				<version>3.0.SP4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.weld.module</groupId>
+				<artifactId>weld-web</artifactId>
+				<version>3.0.4.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.weld.servlet</groupId>
 				<artifactId>weld-servlet</artifactId>
 				<version>2.4.2.SP1</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.jboss.weld</groupId>
-			    <artifactId>weld-api</artifactId>
-			    <version>3.0.SP4</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.jboss.weld</groupId>
-			    <artifactId>weld-spi</artifactId>
-			    <version>3.0.SP4</version>
-			</dependency>
-                        <dependency>
-			    <groupId>org.jboss.weld</groupId>
-			    <artifactId>weld-core-impl</artifactId>
-			    <version>3.0.5.Final</version>
-			</dependency>
-
-			<dependency>
-			    <groupId>org.jboss.weld.module</groupId>
-			    <artifactId>weld-web</artifactId>
-			    <version>3.0.4.Final</version>
-			</dependency>
-
-			<dependency>
-			    <groupId>org.jboss.weld</groupId>
-			    <artifactId>weld-core</artifactId>
-			    <version>2.4.7.Final</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.jboss.weld.se</groupId>
-			    <artifactId>weld-se</artifactId>
-			    <version>2.4.7.Final</version>
-			    <scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.objenesis</groupId>
@@ -487,6 +478,16 @@
 				<version>${slf4j.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
 				<version>${spring.version}</version>
@@ -496,11 +497,6 @@
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency>
-			<dependency>
-			    <groupId>org.springframework</groupId>
-			    <artifactId>spring-context</artifactId>
-			    <version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -526,6 +522,30 @@
 				</exclusions>
 			</dependency>
 			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-jmx</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-server</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-webapp</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty.websocket</groupId>
+				<artifactId>javax-websocket-server-impl</artifactId>
+				<version>${jetty.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.glassfish</groupId>
 				<artifactId>javax.el</artifactId>
 				<version>3.0.1-b08</version>
@@ -538,18 +558,6 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.hamcrest</groupId>
-				<artifactId>hamcrest-junit</artifactId>
-				<version>${hamcrest.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.hamcrest</groupId>
-				<artifactId>java-hamcrest</artifactId>
-				<version>${hamcrest.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-validator</artifactId>
 				<version>5.4.2.Final</version>
@@ -559,6 +567,12 @@
 				<groupId>org.httpunit</groupId>
 				<artifactId>httpunit</artifactId>
 				<version>1.7.2</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.weld.se</groupId>
+				<artifactId>weld-se</artifactId>
+				<version>2.4.7.Final</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -579,22 +593,16 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjrt</artifactId>
-				<version>${aspectj.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.dropwizard.metrics</groupId>
-				<artifactId>metrics-core</artifactId>
-				<version>${metrics.version}</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-junit</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -604,10 +612,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-junit</artifactId>
-        </dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -803,13 +807,13 @@
 							</file>
 						</additionalConfig>
 					</configuration>
-				    <dependencies>
-				        <dependency>
-				            <groupId>org.apache.wicket</groupId>
-				            <artifactId>wicket-eclipse-settings</artifactId>
-				            <version>4</version>
-				        </dependency>
-				    </dependencies>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.wicket</groupId>
+							<artifactId>wicket-eclipse-settings</artifactId>
+							<version>4</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -847,6 +851,26 @@
 						<dependency>
 							<groupId>com.github.ferstl</groupId>
 							<artifactId>pedantic-pom-enforcers</artifactId>
+							<version>1.3.1</version>
+						</dependency>
+						<dependency>
+							<groupId>javax.xml.bind</groupId>
+							<artifactId>jaxb-api</artifactId>
+							<version>2.3.0</version>
+						</dependency>
+						<dependency>
+							<groupId>com.sun.xml.bind</groupId>
+							<artifactId>jaxb-core</artifactId>
+							<version>2.3.0.1</version>
+						</dependency>
+						<dependency>
+							<groupId>com.sun.xml.bind</groupId>
+							<artifactId>jaxb-impl</artifactId>
+							<version>2.3.0.1</version>
+						</dependency>
+						<dependency>
+							<groupId>javax.activation</groupId>
+							<artifactId>javax.activation-api</artifactId>
 							<version>1.2.0</version>
 						</dependency>
 					</dependencies>
@@ -1044,6 +1068,15 @@
 					</executions>
 				</plugin>
 				<plugin>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<version>${jetty.version}</version>
+					<configuration>
+						<scanIntervalSeconds>60</scanIntervalSeconds>
+						<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
+					</configuration>
+				</plugin>
+				<plugin>
 					<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -1119,15 +1152,6 @@
 								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.jetty</groupId>
-					<artifactId>jetty-maven-plugin</artifactId>
-					<version>${jetty.version}</version>
-					<configuration>
-						<scanIntervalSeconds>60</scanIntervalSeconds>
-						<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
 					</configuration>
 				</plugin>
 			</plugins>

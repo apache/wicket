@@ -40,7 +40,7 @@ public class UndertowPushBuilder implements PushBuilder
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
 		io.undertow.servlet.spec.HttpServletRequestImpl undertowRequest = (io.undertow.servlet.spec.HttpServletRequestImpl) httpRequest;
 		// Added explicit cast here to ensure this is the implementation of undertow
-		io.undertow.servlet.spec.PushBuilderImpl pushBuilder = (io.undertow.servlet.spec.PushBuilderImpl)undertowRequest.getPushBuilder();
+		io.undertow.servlet.spec.PushBuilderImpl pushBuilder = (io.undertow.servlet.spec.PushBuilderImpl)undertowRequest.newPushBuilder();
 		if (pushBuilder != null)
 		{
 			for (PushItem pushItem : pushItems)
