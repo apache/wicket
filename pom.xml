@@ -240,6 +240,11 @@
 				<version>0.5.4</version>
 			</dependency>
 			<dependency>
+				<groupId>io.dropwizard.metrics</groupId>
+				<artifactId>metrics-core</artifactId>
+				<version>${metrics.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.inject</groupId>
 				<artifactId>javax.inject</artifactId>
 				<version>1</version>
@@ -401,14 +406,20 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket7</groupId>
+				<artifactId>wicket-atmosphere</artifactId>
+				<version>0.34-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket.experimental.wicket7</groupId>
 				<artifactId>wicket-metrics</artifactId>
 				<version>0.9-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.wicket.experimental.wicket7</groupId>
-				<artifactId>wicket-atmosphere</artifactId>
-				<version>0.34-SNAPSHOT</version>
+				<groupId>org.aspectj</groupId>
+				<artifactId>aspectjrt</artifactId>
+				<version>${aspectj.version}</version>
 				<type>jar</type>
 			</dependency>
 			<dependency>
@@ -538,16 +549,6 @@
                         <artifactId>hamcrest-core</artifactId>
                     </exclusion>
                 </exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.aspectj</groupId>
-				<artifactId>aspectjrt</artifactId>
-				<version>${aspectj.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.dropwizard.metrics</groupId>
-				<artifactId>metrics-core</artifactId>
-				<version>${metrics.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

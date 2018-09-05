@@ -27,12 +27,12 @@
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket-util</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-collections4</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket-util</artifactId>
     </dependency>
   </dependencies>
 </project>

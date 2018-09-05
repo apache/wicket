@@ -54,6 +54,23 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-7.0</artifactId>
+				<version>${jee.spec.version}</version>
+				<type>pom</type>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.wildfly</groupId>
+				<artifactId>wildfly-arquillian-container-embedded</artifactId>
+				<version>${wildfly.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wildfly</groupId>
+				<artifactId>wildfly-embedded</artifactId>
+				<version>${wildfly.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
 				<version>${arquillian.version}</version>
@@ -67,29 +84,7 @@
 		<dependency>
 			<groupId>org.jboss.spec</groupId>
 			<artifactId>jboss-javaee-7.0</artifactId>
-			<version>${jee.spec.version}</version>
 			<type>pom</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-arquillian-container-embedded</artifactId>
-			<version>${wildfly.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-embedded</artifactId>
-			<version>${wildfly.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.junit</groupId>
-			<artifactId>arquillian-junit-container</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<!-- Wicket CDI integration. -->
 		<dependency>
@@ -111,7 +106,26 @@
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>
 			<artifactId>shrinkwrap-resolver-spi</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.wildfly</groupId>
+			<artifactId>wildfly-arquillian-container-embedded</artifactId>
+		</dependency>
 
+		<dependency>
+			<groupId>org.wildfly</groupId>
+			<artifactId>wildfly-embedded</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -123,6 +137,13 @@
 		</resources>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
