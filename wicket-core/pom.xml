@@ -41,6 +41,7 @@
 			<artifactId>junit</artifactId>
 			<!-- provided because of WicketTester -->
 			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
