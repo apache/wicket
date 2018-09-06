@@ -766,8 +766,8 @@
 								<instructions>
 									<Export-Package>*</Export-Package>
 									<Import-Package>org.apache.wicket*,
-										org.junit*;resolution:=optional,
-										junit.framework*;resolution:=optional</Import-Package>
+										org.junit*,
+										junit.framework*</Import-Package>
 									<DynamicImport-Package>*</DynamicImport-Package>
 									<_nouses>true</_nouses>
 								</instructions>
