@@ -598,8 +598,7 @@ public class WicketTester extends BaseWicketTester
 		final List<FeedbackMessage> renderedMessages = model.getObject();
 		if (renderedMessages == null)
 		{
-			fail(
-				String.format("feedback panel at path [%s] returned null messages", path));
+			fail(String.format("feedback panel at path [%s] returned null messages", path));
 		}
 
 		if (messages.length != renderedMessages.size())
@@ -750,7 +749,8 @@ public class WicketTester extends BaseWicketTester
 	 * @param expectedDocument
 	 *            expected output <code>String</code>
 	 */
-	public void assertResultPage(final String expectedDocument) {
+	public void assertResultPage(final String expectedDocument)
+	{
 		// Validate the document
 		String document = getLastResponseAsString();
 		assertEquals(expectedDocument, document);

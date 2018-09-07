@@ -17,6 +17,10 @@
 
 package org.apache.wicket.util.convert.converters;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.math.BigDecimal;
 import java.text.ChoiceFormat;
 import java.text.NumberFormat;
@@ -28,20 +32,27 @@ import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.converter.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.apache.wicket.util.convert.converter.BigDecimalConverter;
+import org.apache.wicket.util.convert.converter.BooleanConverter;
+import org.apache.wicket.util.convert.converter.ByteConverter;
+import org.apache.wicket.util.convert.converter.CalendarConverter;
+import org.apache.wicket.util.convert.converter.CharacterConverter;
+import org.apache.wicket.util.convert.converter.DateConverter;
+import org.apache.wicket.util.convert.converter.DoubleConverter;
+import org.apache.wicket.util.convert.converter.FloatConverter;
+import org.apache.wicket.util.convert.converter.IntegerConverter;
+import org.apache.wicket.util.convert.converter.LongConverter;
+import org.apache.wicket.util.convert.converter.ShortConverter;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
-public final class ConvertersTest
+final class ConvertersTest
 {
-	/** Dutch locale for localized testing. **/
+	/** Dutch locale for localized testing. */
 	private static final Locale DUTCH_LOCALE = new Locale("nl", "NL");
 
 	@Test
-	public void thousandSeperator()
-	{
+	void thousandSeperator() {
 		BigDecimalConverter bdc = new BigDecimalConverter();
 		assertEquals(new BigDecimal(3000), bdc.convertToObject("3 000", Locale.FRENCH));
 
@@ -75,14 +86,18 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void validBooleanConversions()
+	void validBooleanConversions()
 	{
 		BooleanConverter converter = new BooleanConverter();
 		assertEquals(Boolean.FALSE, converter.convertToObject("", Locale.US));
-		assertEquals("true", converter.convertToString(Boolean.TRUE, Locale.getDefault(Locale.Category.FORMAT)));
-		assertEquals("false", converter.convertToString(Boolean.FALSE, Locale.getDefault(Locale.Category.FORMAT)));
-		assertEquals(Boolean.TRUE, converter.convertToObject("true", Locale.getDefault(Locale.Category.FORMAT)));
-		assertEquals(Boolean.FALSE, converter.convertToObject("false", Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals("true",
+			converter.convertToString(Boolean.TRUE, Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals("false",
+			converter.convertToString(Boolean.FALSE, Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals(Boolean.TRUE,
+			converter.convertToObject("true", Locale.getDefault(Locale.Category.FORMAT)));
+		assertEquals(Boolean.FALSE,
+			converter.convertToObject("false", Locale.getDefault(Locale.Category.FORMAT)));
 	}
 
 	@Test
@@ -96,7 +111,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void validByteConversions()
+	void validByteConversions()
 	{
 		ByteConverter converter = new ByteConverter();
 		assertNull(converter.convertToObject("", Locale.US));
@@ -132,7 +147,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void validDoubleConversions()
+	void validDoubleConversions()
 	{
 		DoubleConverter converter = new DoubleConverter();
 		assertEquals("7.1", converter.convertToString(7.1, Locale.US));
@@ -170,7 +185,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void validFloatConversions()
+	void validFloatConversions()
 	{
 		FloatConverter converter = new FloatConverter();
 		assertNull(converter.convertToObject("", Locale.US));
@@ -206,7 +221,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void validIntegerConversions()
+	void validIntegerConversions()
 	{
 		IntegerConverter converter = new IntegerConverter();
 		assertEquals("7", converter.convertToString(7, Locale.US));
@@ -252,7 +267,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void validLongConversions()
+	void validLongConversions()
 	{
 		LongConverter converter = new LongConverter();
 		assertNull(converter.convertToObject("", Locale.US));
@@ -316,12 +331,12 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void shortConversions()
+	void shortConversions()
 	{
 		ShortConverter converter = new ShortConverter();
 		assertNull(converter.convertToObject("", Locale.US));
 		assertEquals(Short.valueOf((short)10), converter.convertToObject("10", Locale.US));
-		assertEquals("10", converter.convertToString((short) 10, Locale.US));
+		assertEquals("10", converter.convertToString((short)10, Locale.US));
 	}
 
 	@Test
@@ -352,7 +367,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void validCharacterConverter()
+	void validCharacterConverter()
 	{
 		CharacterConverter converter = new CharacterConverter();
 
@@ -371,7 +386,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void validDateConverters()
+	void validDateConverters()
 	{
 		DateConverter converter = new DateConverter();
 
@@ -408,7 +423,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void calendarConverter()
+	void calendarConverter()
 	{
 		CalendarConverter converter = new CalendarConverter();
 
@@ -449,7 +464,7 @@ public final class ConvertersTest
 	 * http://java.sun.com/j2se/1.4.2/docs/api/java/math/BigDecimal.html#BigDecimal%28double%29
 	 */
 	@Test
-	public void bigDecimalConverter()
+	void bigDecimalConverter()
 	{
 		BigDecimal bd = new BigDecimalConverter().convertToObject("0.1", Locale.US);
 		assertEquals(new BigDecimal("0.1"), bd);
@@ -463,7 +478,7 @@ public final class ConvertersTest
 	}
 
 	@Test
-	public void customFormat()
+	void customFormat()
 	{
 		@SuppressWarnings("serial")
 		IntegerConverter converter = new IntegerConverter()
