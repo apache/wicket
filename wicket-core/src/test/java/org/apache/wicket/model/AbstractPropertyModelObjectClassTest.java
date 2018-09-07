@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.Serializable;
 
-import junit.framework.TestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * <p>
@@ -31,14 +32,14 @@ import org.junit.Test;
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-2937">WICKET-2937</a>
  * @author Pedro Santos
  */
-public class AbstractPropertyModelObjectClassTest extends Assert
+public class AbstractPropertyModelObjectClassTest
 {
 
 	/**
 	 * 
 	 */
 	@Test
-	public void testCompoundPropertyModel()
+	void testCompoundPropertyModel()
 	{
 		assertPropertyModelTargetTypeIsInteger(new CompoundPropertyModel<CustomType>(
 			new CustomType()));
@@ -48,7 +49,7 @@ public class AbstractPropertyModelObjectClassTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testCompoundPropertyModelBind()
+	void testCompoundPropertyModelBind()
 	{
 		CompoundPropertyModel<CustomBean> compoundPropertyModel = new CompoundPropertyModel<CustomBean>(
 			new CustomBean());
@@ -60,7 +61,7 @@ public class AbstractPropertyModelObjectClassTest extends Assert
 	 * 
 	 */
 	@Test
-	public void testModel()
+	void testModel()
 	{
 		assertPropertyModelTargetTypeIsInteger(new Model<CustomType>(new CustomType()));
 	}
@@ -84,7 +85,7 @@ public class AbstractPropertyModelObjectClassTest extends Assert
 	 * @see <a href="https://issues.apache.org/jira/browse/WICKET-3253">WICKET-3253</a>
 	 */
 	@Test
-	public void testLazyClassResolution()
+	void testLazyClassResolution()
 	{
 		Model<CustomBean> modelCustomBean = new Model<CustomBean>(null);
 		PropertyModel<CustomType> customTypeModel = new PropertyModel<CustomType>(modelCustomBean,

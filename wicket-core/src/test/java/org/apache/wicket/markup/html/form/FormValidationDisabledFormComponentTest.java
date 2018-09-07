@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.MarkupContainer;
@@ -30,12 +33,12 @@ import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for https://issues.apache.org/jira/browse/WICKET-5883
  */
-public class FormValidationDisabledFormComponentTest extends WicketTestCase
+class FormValidationDisabledFormComponentTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -68,7 +71,7 @@ public class FormValidationDisabledFormComponentTest extends WicketTestCase
 	}
 
 	@Test
-	public void formSubmitsEvenWithInvalidButInvisibleFormComponent()
+	void formSubmitsEvenWithInvalidButInvisibleFormComponent()
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		assertFalse(page.onSubmitCalled.get());
@@ -90,7 +93,7 @@ public class FormValidationDisabledFormComponentTest extends WicketTestCase
 	}
 
 	@Test
-	public void formSubmitsEvenWithInvalidButDisabledFormComponent()
+	void formSubmitsEvenWithInvalidButDisabledFormComponent()
 	{
 		TestPage page = tester.startPage(TestPage.class);
 		assertFalse(page.onSubmitCalled.get());
@@ -113,14 +116,14 @@ public class FormValidationDisabledFormComponentTest extends WicketTestCase
 
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public final AtomicBoolean onSubmitCalled = new AtomicBoolean(false);
-		public final AtomicBoolean onErrorCalled = new AtomicBoolean(false);
-		public final TextField field1;
-		public final Form form;
+		final AtomicBoolean onSubmitCalled = new AtomicBoolean(false);
+		final AtomicBoolean onErrorCalled = new AtomicBoolean(false);
+		final TextField field1;
+		final Form form;
 
 		public TestPage()
 		{
-			form = new Form("form")
+			form = new Form<>("form")
 			{
 				@Override
 				protected void onSubmit()

@@ -16,23 +16,24 @@
  */
 package org.apache.wicket.markup.html;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test to ensure that calling {@link Component#getMarkupId()} still works as advertised in
  * Wicket 1.4.
  */
-public class ComponentMarkupIdTest extends WicketTestCase
+class ComponentMarkupIdTest extends WicketTestCase
 {
 	/** */
 	@Test
-	public void idGeneratedWhenComponentNotAddedToPage()
+	void idGeneratedWhenComponentNotAddedToPage()
 	{
 		// In wicket 1.4 the following sequence would not cause an exception
 		Label label = new Label("bla", "Hello, World!");
@@ -41,12 +42,12 @@ public class ComponentMarkupIdTest extends WicketTestCase
 		String markupId = label.getMarkupId();
 
 		// instead 1.4 would just generate the missing markup identifier
-		Assert.assertEquals("bla1", markupId);
+		assertEquals("bla1", markupId);
 	}
 
 	/** */
 	@Test
-	public void idGeneratedWhenPanelNotAddedToPage()
+	void idGeneratedWhenPanelNotAddedToPage()
 	{
 		// In wicket 1.4 the following sequence would not cause an exception
 		Panel panel = new EmptyPanel("bla");
@@ -56,7 +57,7 @@ public class ComponentMarkupIdTest extends WicketTestCase
 		String markupId = panel.getMarkupId();
 
 		// instead 1.4 would just generate the missing markup identifier
-		Assert.assertEquals("bla1", markupId);
+		assertEquals("bla1", markupId);
 	}
 
 	/**
@@ -64,13 +65,13 @@ public class ComponentMarkupIdTest extends WicketTestCase
 	 * markup file, when the component has been added to the page.
 	 */
 	@Test
-	public void idFromMarkupRetrievedWhenPanelAddedToPage()
+	void idFromMarkupRetrievedWhenPanelAddedToPage()
 	{
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
 
-		Assert.assertEquals("markupPanel", page.markupPanel.getMarkupId());
+		assertEquals("markupPanel", page.markupPanel.getMarkupId());
 	}
 
 	/**
@@ -78,41 +79,41 @@ public class ComponentMarkupIdTest extends WicketTestCase
 	 * markup file, when the component has been added to the page.
 	 */
 	@Test
-	public void idFromMarkupRetrievedWhenLabelAddedToPage()
+	void idFromMarkupRetrievedWhenLabelAddedToPage()
 	{
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
 
-		Assert.assertEquals("markupLabel", page.markupLabel.getMarkupId());
+		assertEquals("markupLabel", page.markupLabel.getMarkupId());
 	}
 
 	/**
 	 * Tests that a generated ID is kept, even if an identifier in the markup was set.
 	 */
 	@Test
-	public void generatedIdOverridesIdFromMarkupWhenLabelAddedToPage()
+	void generatedIdOverridesIdFromMarkupWhenLabelAddedToPage()
 	{
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
 
-		Assert.assertEquals("generatedLabel1", page.generatedLabelMarkupId);
-		Assert.assertEquals("generatedLabel1", page.generatedLabel.getMarkupId());
+		assertEquals("generatedLabel1", page.generatedLabelMarkupId);
+		assertEquals("generatedLabel1", page.generatedLabel.getMarkupId());
 	}
 
 	/**
 	 * Tests that a generated ID is kept, even if an identifier in the markup was set.
 	 */
 	@Test
-	public void generatedIdOverridesIdFromMarkup()
+	void generatedIdOverridesIdFromMarkup()
 	{
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
 
-		Assert.assertEquals("generatedPanel2", page.generatedPanelMarkupId);
-		Assert.assertEquals("generatedPanel2", page.generatedPanel.getMarkupId());
+		assertEquals("generatedPanel2", page.generatedPanelMarkupId);
+		assertEquals("generatedPanel2", page.generatedPanel.getMarkupId());
 	}
 
 	/**
@@ -120,13 +121,13 @@ public class ComponentMarkupIdTest extends WicketTestCase
 	 * kept, even if an identifier in the markup was set.
 	 */
 	@Test
-	public void fixedIdFromJavaForLabelOverridesIdFromMarkup()
+	void fixedIdFromJavaForLabelOverridesIdFromMarkup()
 	{
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
 
-		Assert.assertEquals("javaLabel", page.fixedLabel.getMarkupId());
+		assertEquals("javaLabel", page.fixedLabel.getMarkupId());
 	}
 
 	/**
@@ -134,12 +135,12 @@ public class ComponentMarkupIdTest extends WicketTestCase
 	 * kept, even if an identifier in the markup was set.
 	 */
 	@Test
-	public void fixedIdFromJavaForPanelOverridesIdFromMarkup()
+	void fixedIdFromJavaForPanelOverridesIdFromMarkup()
 	{
 		ComponentMarkupIdTestPage page = new ComponentMarkupIdTestPage();
 		tester.startPage(page);
 		tester.assertRenderedPage(ComponentMarkupIdTestPage.class);
 
-		Assert.assertEquals("javaPanel", page.fixedPanel.getMarkupId());
+		assertEquals("javaPanel", page.fixedPanel.getMarkupId());
 	}
 }

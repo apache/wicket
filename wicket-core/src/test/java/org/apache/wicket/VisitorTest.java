@@ -16,7 +16,8 @@
  */
 package org.apache.wicket;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.util.tester.WicketTestCase;
@@ -24,7 +25,7 @@ import org.apache.wicket.util.visit.ClassVisitFilter;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.apache.wicket.util.visit.Visits;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * <code>
@@ -40,13 +41,13 @@ import org.junit.Test;
  * 
  * @author igor.vaynberg
  */
-public class VisitorTest extends WicketTestCase
+class VisitorTest extends WicketTestCase
 {
 	/**
 	 * testVisit()
 	 */
 	@Test
-	public void visit()
+	void visit()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -61,7 +62,7 @@ public class VisitorTest extends WicketTestCase
 			}
 		});
 
-		Assert.assertEquals("ABCDEFGH", path.toString());
+		assertEquals("ABCDEFGH", path.toString());
 	}
 
 
@@ -69,7 +70,7 @@ public class VisitorTest extends WicketTestCase
 	 * testContinueTraversal()
 	 */
 	@Test
-	public void continueTraversal()
+	void continueTraversal()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -84,14 +85,14 @@ public class VisitorTest extends WicketTestCase
 			}
 		});
 
-		Assert.assertEquals("BCDEFGH", path.toString());
+		assertEquals("BCDEFGH", path.toString());
 	}
 
 	/**
 	 * testContinuePostOrder()
 	 */
 	@Test
-	public void continuePostOrder()
+	void continuePostOrder()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -105,14 +106,14 @@ public class VisitorTest extends WicketTestCase
 			}
 		});
 
-		Assert.assertEquals("BDFECHGA", path.toString());
+		assertEquals("BDFECHGA", path.toString());
 	}
 
 	/**
 	 * testStop()
 	 */
 	@Test
-	public void stop()
+	void stop()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -129,15 +130,15 @@ public class VisitorTest extends WicketTestCase
 				}
 			}
 		});
-		Assert.assertEquals("BCD", path.toString());
-		Assert.assertEquals("RESULT", result);
+		assertEquals("BCD", path.toString());
+		assertEquals("RESULT", result);
 	}
 
 	/**
 	 * testDoNotGoDeeper1()
 	 */
 	@Test
-	public void doNotGoDeeper1()
+	void doNotGoDeeper1()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -154,14 +155,14 @@ public class VisitorTest extends WicketTestCase
 				}
 			}
 		});
-		Assert.assertEquals("BCGH", path.toString());
+		assertEquals("BCGH", path.toString());
 	}
 
 	/**
 	 * testDoNotGoDeeper2()
 	 */
 	@Test
-	public void doNotGoDeeper2()
+	void doNotGoDeeper2()
 	{
 		final StringBuilder path = new StringBuilder();
 
@@ -178,7 +179,7 @@ public class VisitorTest extends WicketTestCase
 				}
 			}
 		});
-		Assert.assertEquals("BCDEGH", path.toString());
+		assertEquals("BCDEGH", path.toString());
 	}
 
 	/**
@@ -187,7 +188,7 @@ public class VisitorTest extends WicketTestCase
 	 * Visit parents with arbitrary type
 	 */
 	@Test
-	public void testVisitParents()
+	void testVisitParents()
 	{
 		TestContainer testContainer = new TestContainer();
 		IVisitor<MarkupContainer, MarkerInterface> visitor = new IVisitor<MarkupContainer, MarkerInterface>()
@@ -214,7 +215,7 @@ public class VisitorTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public MarkedWebMarkupContainer(String id)
+		MarkedWebMarkupContainer(String id)
 		{
 			super(id);
 		}
@@ -224,7 +225,7 @@ public class VisitorTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public TestContainer()
+		TestContainer()
 		{
 			super("A");
 			WebMarkupContainer b = new WebMarkupContainer("B");

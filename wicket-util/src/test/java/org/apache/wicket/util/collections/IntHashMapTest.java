@@ -16,10 +16,8 @@
  */
 package org.apache.wicket.util.collections;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,14 +25,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.apache.wicket.util.io.ByteArrayOutputStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
-public class IntHashMapTest
+class IntHashMapTest
 {
 	@SuppressWarnings({ "resource", "unchecked" })
 	@Test
-	public void serialize() throws IOException, ClassNotFoundException
+	void serialize() throws IOException, ClassNotFoundException
 	{
 		IntHashMap<String> map = new IntHashMap<>();
 		map.put(1, "one");
@@ -47,10 +45,10 @@ public class IntHashMapTest
 		byte[] serialized = baos.toByteArray();
 		ByteArrayInputStream bais = new ByteArrayInputStream(serialized);
 		ObjectInputStream ois = new ObjectInputStream(bais);
-		IntHashMap<String> deserialized = (IntHashMap<String>) ois.readObject();
-		assertThat(deserialized, is(notNullValue()));
-		assertThat(deserialized.get(1), is(equalTo("one")));
-		assertThat(deserialized.get(2), is(equalTo("two")));
+		IntHashMap<String> deserialized = (IntHashMap<String>)ois.readObject();
+		assertNotNull(deserialized);
+		assertEquals("one", deserialized.get(1));
+		assertEquals("two", deserialized.get(2));
 
 		// WICKET-5584
 		deserialized.put(3, "three");

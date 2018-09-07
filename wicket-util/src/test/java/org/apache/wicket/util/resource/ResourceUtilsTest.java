@@ -16,17 +16,15 @@
  */
 package org.apache.wicket.util.resource;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /** */
-public class ResourceUtilsTest extends Assert
+public class ResourceUtilsTest
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5706
@@ -37,27 +35,27 @@ public class ResourceUtilsTest extends Assert
 		ResourceUtils.PathLocale pathLocale;
 
 		pathLocale = ResourceUtils.getLocaleFromFilename("some.ext");
-		assertThat(pathLocale.path, is(equalTo("some.ext")));
-		assertThat(pathLocale.locale, is(nullValue()));
+		assertEquals(pathLocale.path, "some.ext");
+		assertNull(pathLocale.locale);
 
 		pathLocale = ResourceUtils.getLocaleFromFilename("some.min.ext");
-		assertThat(pathLocale.path, is(equalTo("some.min.ext")));
-		assertThat(pathLocale.locale, is(nullValue()));
+		assertEquals(pathLocale.path, "some.min.ext");
+		assertNull(pathLocale.locale);
 
 		pathLocale = ResourceUtils.getLocaleFromFilename("some.min_en.ext");
-		assertThat(pathLocale.path, is(equalTo("some.min.ext")));
-		assertThat(pathLocale.locale, is(Locale.ENGLISH));
+		assertEquals(pathLocale.path, "some.min.ext");
+		assertEquals(pathLocale.locale, Locale.ENGLISH);
 
 		pathLocale = ResourceUtils.getLocaleFromFilename("some_fr_CA.min.ext");
-		assertThat(pathLocale.path, is(equalTo("some.min.ext")));
-		assertThat(pathLocale.locale, is(Locale.CANADA_FRENCH));
+		assertEquals(pathLocale.path, "some.min.ext");
+		assertEquals(pathLocale.locale, Locale.CANADA_FRENCH);
 
 		String localeVariant = "blah";
 		pathLocale = ResourceUtils
 			.getLocaleFromFilename("some_fr_CA_" + localeVariant + ".min.ext");
-		assertThat(pathLocale.path, is(equalTo("some.min.ext")));
-		assertThat(pathLocale.locale.getLanguage(), is("fr"));
-		assertThat(pathLocale.locale.getCountry(), is("CA"));
-		assertThat(pathLocale.locale.getVariant(), is(localeVariant));
+		assertEquals(pathLocale.path, "some.min.ext");
+		assertEquals(pathLocale.locale.getLanguage(), "fr");
+		assertEquals(pathLocale.locale.getCountry(), "CA");
+		assertEquals(pathLocale.locale.getVariant(), localeVariant);
 	}
 }

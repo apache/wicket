@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
@@ -28,15 +31,14 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  * 
  * @author Joonas Hamalainen
  */
-public class AjaxEnclosureTest extends WicketTestCase
+class AjaxEnclosureTest extends WicketTestCase
 {
 	private final String inlineEnclosureIdPrefix = "wicket__InlineEnclosure_";
 	private final String inlineEnclosureHiddenPattern = "<div id=\"" + inlineEnclosureIdPrefix +
@@ -63,7 +65,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	 * Test toggling the controlling child inside the inline enclosure
 	 */
 	@Test
-	public void ajaxTogglingControllingChildShouldToggleInlineEnclosure()
+	void ajaxTogglingControllingChildShouldToggleInlineEnclosure()
 	{
 		{
 			// enclosure On
@@ -106,7 +108,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	 * Test toggling a non-controlling child inside the inline enclosure
 	 */
 	@Test
-	public void ajaxTogglingNonControllingChildShouldNotToggleEnclosure()
+	void ajaxTogglingNonControllingChildShouldNotToggleEnclosure()
 	{
 		{
 			// label 2 On
@@ -146,7 +148,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void nestedInlineEnclosuresShouldToggleNormally()
+	void nestedInlineEnclosuresShouldToggleNormally()
 	{
 		{
 			// 1. test that enclosure1, enclosure2, label1, label2 are visible, click link1,
@@ -234,7 +236,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void controllingChildShouldDefaultToTheSingleComponentInsideEnclosure()
+	void controllingChildShouldDefaultToTheSingleComponentInsideEnclosure()
 	{
 		{
 			// enclosure On
@@ -272,7 +274,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 	private void ensureEnclosureIsVisible(Page ajaxPage, AtomicInteger n)
 	{
 		InlineEnclosure enclosure = findNthComponent(InlineEnclosure.class, ajaxPage, n);
-		assertTrue("Is not visible", enclosure.determineVisibility());
+		assertTrue(enclosure.determineVisibility(), "Is not visible");
 	}
 
 	private void ensureEnclosureIsInvisible(Page ajaxPage, AtomicInteger n)
@@ -280,7 +282,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		InlineEnclosure enclosure = findNthComponent(InlineEnclosure.class, ajaxPage, n);
 		if (enclosure != null)
 		{
-			assertFalse("Is visible", enclosure.determineVisibility());
+			assertFalse(enclosure.determineVisibility(), "Is not visible");
 		}
 	}
 
@@ -301,7 +303,7 @@ public class AjaxEnclosureTest extends WicketTestCase
 		return type.cast(instance);
 	}
 
-	protected void assertVisible(Label label, boolean checkAlsoMarkup)
+	private void assertVisible(Label label, boolean checkAlsoMarkup)
 	{
 		tester.assertVisible(label.getPageRelativePath());
 		if (checkAlsoMarkup)
@@ -310,15 +312,14 @@ public class AjaxEnclosureTest extends WicketTestCase
 		}
 	}
 
-	protected void assertInvisible(Label label)
+	private void assertInvisible(Label label)
 	{
 		// tester.assertInvisible(label.getPageRelativePath());
 		assertDoesNotContain(Pattern.quote(label.getInnermostModel().getObject().toString()));
 	}
 
-	protected void assertDoesNotContain(String string)
+	private void assertDoesNotContain(String string)
 	{
-		assertFalse("Should not contain: " + string,
-			tester.getLastResponseAsString().contains(string));
+		assertFalse(tester.getLastResponseAsString().contains(string), "Should not contain: " + string);
 	}
 }

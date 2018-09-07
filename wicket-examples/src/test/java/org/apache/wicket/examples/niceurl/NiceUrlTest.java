@@ -17,22 +17,21 @@
 package org.apache.wicket.examples.niceurl;
 
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * jWebUnit test for Hello World.
  */
-public class NiceUrlTest extends Assert
+public class NiceUrlTest
 {
 	private WicketTester tester;
 
 	/**
 	 * 
 	 */
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		tester = new WicketTester(new NiceUrlApplication());
@@ -42,7 +41,7 @@ public class NiceUrlTest extends Assert
 	/**
 	 * 
 	 */
-	@After
+	@AfterEach
 	public void tearDown()
 	{
 		tester.destroy();

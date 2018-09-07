@@ -16,22 +16,21 @@
  */
 package org.apache.wicket.markup.html.image;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-
-public class InlineImageTest extends WicketTestCase
+class InlineImageTest extends WicketTestCase
 {
 
 	@Test
-	public void inlineImageTest()
+	void inlineImageTest()
 	{
 		tester.startPage(InlineImageTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		Assert.assertTrue(
-			"inline image is in html",
-			lastResponseAsString.contains("<img wicket:id=\"inlineimage\" src=\"data:image/gif;base64,R0lGODlhQAHwAPf8AAAAAAwMDAsNABUZABUXBRIS"));
+		assertTrue(lastResponseAsString.contains(
+			"<img wicket:id=\"inlineimage\" src=\"data:image/gif;base64,R0lGODlhQAHwAPf8AAAAAAwMDAsNABUZABUXBRIS"),
+			"inline image is in html");
 	}
 }

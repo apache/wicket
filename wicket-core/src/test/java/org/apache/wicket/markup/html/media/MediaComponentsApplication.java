@@ -22,7 +22,7 @@ import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.caching.NoOpResourceCachingStrategy;
 
-public class MediaComponentsApplication extends WebApplication
+class MediaComponentsApplication extends WebApplication
 {
 	@Override
 	public Class<? extends Page> getHomePage()

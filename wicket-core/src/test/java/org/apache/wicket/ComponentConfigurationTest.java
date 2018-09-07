@@ -16,6 +16,9 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -23,20 +26,20 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link Component#onInitialize()} contract
  * 
  * @author igor
  */
-public class ComponentConfigurationTest extends WicketTestCase
+class ComponentConfigurationTest extends WicketTestCase
 {
 	/**
 	 * testOnlyOncePerRequest()
 	 */
 	@Test
-	public void onlyOncePerRequest()
+	void onlyOncePerRequest()
 	{
 		TestComponent t1 = new TestComponent("t1");
 		assertEquals(0, t1.getTotalCount());
@@ -59,7 +62,7 @@ public class ComponentConfigurationTest extends WicketTestCase
 	 * testConfiguration()
 	 */
 	@Test
-	public void configuration()
+	void configuration()
 	{
 		tester.startPage(TestPage.class);
 		TestPage page = (TestPage)tester.getLastRenderedPage();
@@ -144,7 +147,7 @@ public class ComponentConfigurationTest extends WicketTestCase
 		private int totalCount = 0;
 		private int beforeRenderCount = 0;
 
-		public TestComponent(String id)
+		TestComponent(String id)
 		{
 			super(id);
 		}
@@ -165,18 +168,18 @@ public class ComponentConfigurationTest extends WicketTestCase
 			super.onBeforeRender();
 		}
 
-		public int getBeforeRenderCount()
+		int getBeforeRenderCount()
 		{
 			return beforeRenderCount;
 		}
 
-		public int getRequestCount()
+		int getRequestCount()
 		{
 			return requestCount;
 		}
 
 
-		public int getTotalCount()
+		int getTotalCount()
 		{
 			return totalCount;
 		}

@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,12 +34,12 @@ import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.IFormSubmittingComponent;
 import org.apache.wicket.markup.html.form.ListMultipleChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.FormComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.form.upload.FileUploadField;
 import org.apache.wicket.markup.html.form.upload.MultiFileUploadField;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
@@ -48,7 +49,6 @@ import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.junit.Assert;
 
 /**
  * A helper class for testing validation and submission of <code>FormComponent</code>s.
@@ -108,7 +108,7 @@ public class FormTester
 
 		/**
 		 * Constructor.
-		 * 
+		 *
 		 * @param formComponent
 		 *            a <code>FormComponent</code>
 		 */
@@ -119,7 +119,7 @@ public class FormTester
 
 		/**
 		 * Implements whether toggle or accumulate the selection.
-		 * 
+		 *
 		 * @param formComponent
 		 *            a <code>FormComponent</code>
 		 * @param value
@@ -171,7 +171,7 @@ public class FormTester
 
 		/**
 		 * Selects a given index in a selectable <code>FormComponent</code>.
-		 * 
+		 *
 		 * @param index
 		 */
 		protected final void doSelect(final int index)
@@ -182,7 +182,7 @@ public class FormTester
 
 		/**
 		 * Selects a given index in a selectable <code>FormComponent</code>.
-		 * 
+		 *
 		 * @param formComponent
 		 *            a <code>FormComponent</code>
 		 * @param index
@@ -242,7 +242,7 @@ public class FormTester
 		{
 			/**
 			 * Constructor.
-			 * 
+			 *
 			 * @param formComponent
 			 *            a <code>FormComponent</code>
 			 */
@@ -271,7 +271,7 @@ public class FormTester
 		{
 			/**
 			 * Constructor.
-			 * 
+			 *
 			 * @param formComponent
 			 *            a <code>FormComponent</code>
 			 */
@@ -290,7 +290,7 @@ public class FormTester
 
 		/**
 		 * Creates a <code>ChoiceSelector</code>.
-		 * 
+		 *
 		 * @param formComponent
 		 *            a <code>FormComponent</code>
 		 * @return ChoiceSelector a <code>ChoiceSelector</code>
@@ -321,7 +321,7 @@ public class FormTester
 
 		/**
 		 * Creates a <code>MultipleChoiceSelector</code>.
-		 * 
+		 *
 		 * @param formComponent
 		 *            a <code>FormComponent</code>
 		 * @return ChoiceSelector a <code>ChoiceSelector</code>
@@ -333,7 +333,7 @@ public class FormTester
 
 		/**
 		 * Tests if a given <code>FormComponent</code> allows multiple choice.
-		 * 
+		 *
 		 * @param formComponent
 		 *            a <code>FormComponent</code>
 		 * @return <code>true</code> if the given FormComponent allows multiple choice
@@ -366,7 +366,7 @@ public class FormTester
 
 	/**
 	 * @see WicketTester#newFormTester(String)
-	 * 
+	 *
 	 * @param path
 	 *            path to <code>FormComponent</code>
 	 * @param workingForm
@@ -416,7 +416,7 @@ public class FormTester
 
 	/**
 	 * Gets request parameter values for the form component that represents its current model value
-	 * 
+	 *
 	 * @param formComponent
 	 * @return array containing parameter values
 	 */
@@ -458,7 +458,7 @@ public class FormTester
 
 	/**
 	 * Retrieves the current <code>Form</code> object.
-	 * 
+	 *
 	 * @return the working <code>Form</code>
 	 */
 	public Form<?> getForm()
@@ -468,7 +468,7 @@ public class FormTester
 
 	/**
 	 * Gets the value for an <code>AbstractTextComponent</code> with the provided id.
-	 * 
+	 *
 	 * @param id
 	 *            <code>Component</code> id
 	 * @return the value of the text component
@@ -490,7 +490,7 @@ public class FormTester
 	 * as <code>Radio</code> or <code>DropDownList</code>, the selection will toggle each other. For
 	 * multiple choice, such as <code>Checkbox</code> or <code>ListMultipleChoice</code>, the
 	 * selection will accumulate.
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
 	 *            <code>FormComponent</code>
@@ -516,9 +516,9 @@ public class FormTester
 	/**
 	 * A convenience method to select multiple options for the <code>FormComponent</code>. The
 	 * method only support multiple selectable <code>FormComponent</code>s.
-	 * 
+	 *
 	 * @see #select(String, int)
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
 	 *            <code>FormComponent</code>
@@ -534,9 +534,9 @@ public class FormTester
 	/**
 	 * A convenience method to select multiple options for the <code>FormComponent</code>. The
 	 * method only support multiple selectable <code>FormComponent</code>s.
-	 * 
+	 *
 	 * @see #select(String, int)
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
 	 *            <code>FormComponent</code>
@@ -569,7 +569,7 @@ public class FormTester
 
 	/**
 	 * Simulates filling in a field on a <code>Form</code>.
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
 	 *            <code>FormComponent</code> or <code>IFormSubmittingComponent</code>
@@ -580,14 +580,13 @@ public class FormTester
 	public FormTester setValue(final String formComponentId, final String value)
 	{
 		Component component = workingForm.get(formComponentId);
-		Assert.assertNotNull("Unable to set value. Couldn't find component with name: " +
-			formComponentId, component);
+		assertNotNull(component, "Unable to set value. Couldn't find component with name: " + formComponentId);
 		return setValue(component, value);
 	}
 
 	/**
 	 * Simulates filling in a field on a <code>Form</code>.
-	 * 
+	 *
 	 * @param formComponent
 	 *            relative path (from <code>Form</code>) to the selectable
 	 *            <code>FormComponent</code> or <code>IFormSubmittingComponent</code>
@@ -629,7 +628,7 @@ public class FormTester
 
 	/**
 	 * Sets the <code>File</code> on a {@link FileUploadField}.
-	 * 
+	 *
 	 * @param formComponentId
 	 *            relative path (from <code>Form</code>) to the selectable
 	 *            <code>FormComponent</code>. The <code>FormComponent</code> must be of a type
@@ -670,7 +669,7 @@ public class FormTester
 
 	/**
 	 * Submits the <code>Form</code>. Note that <code>submit</code> can be executed only once.
-	 * 
+	 *
 	 * @return This
 	 */
 	public FormTester submit()
@@ -709,12 +708,12 @@ public class FormTester
 	 * <p>
 	 * Note that if the button is associated with a model, it's better to use the
 	 * <code>setValue</code> method instead:
-	 * 
+	 *
 	 * <pre>
 	 * formTester.setValue(&quot;to:my:button&quot;, &quot;value on the button&quot;);
 	 * formTester.submit();
 	 * </pre>
-	 * 
+	 *
 	 * @param buttonComponentId
 	 *            relative path (from <code>Form</code>) to the button
 	 * @return This
@@ -735,12 +734,12 @@ public class FormTester
 	 * <p>
 	 * Note that if the button is associated with a model, it's better to use the
 	 * <code>setValue</code> method instead:
-	 * 
+	 *
 	 * <pre>
 	 * formTester.setValue(myButton, &quot;value on the button&quot;);
 	 * formTester.submit();
 	 * </pre>
-	 * 
+	 *
 	 * @param buttonComponent
 	 *            relative path (from <code>Form</code>) to the button
 	 * @return This
@@ -770,7 +769,7 @@ public class FormTester
 	/**
 	 * A convenience method to submit the Form via a SubmitLink which may inside or outside of the
 	 * Form.
-	 * 
+	 *
 	 * @param path
 	 *            The path to the SubmitLink
 	 * @param pageRelative
@@ -796,7 +795,7 @@ public class FormTester
 	/**
 	 * Adds an additional <code>FormComponent</code>'s value into request parameter -- this method
 	 * retains existing parameters but removes any duplicate parameters.
-	 * 
+	 *
 	 * @param formComponent
 	 *            a <code>FormComponent</code>
 	 * @param value
@@ -851,7 +850,7 @@ public class FormTester
 
 	/**
 	 * Returns <code>true</code> if the parameter exists in the <code>FormComponent</code>.
-	 * 
+	 *
 	 * @param formComponent
 	 *            a <code>FormComponent</code>
 	 * @return <code>true</code> if the parameter exists in the <code>FormComponent</code>
@@ -868,7 +867,7 @@ public class FormTester
 
 	/**
 	 * Set formComponent's value into request parameter, this method overwrites existing parameters.
-	 * 
+	 *
 	 * @param formComponent
 	 *            a <code>FormComponent</code>
 	 * @param value
@@ -883,7 +882,7 @@ public class FormTester
 
 	/**
 	 * Set component's value into request parameter, this method overwrites existing parameters.
-	 * 
+	 *
 	 * @param component
 	 *            an {@link IFormSubmittingComponent}
 	 * @param value
@@ -895,7 +894,7 @@ public class FormTester
 	}
 
 	/**
-	 * 
+	 *
 	 * @param message
 	 */
 	private void fail(String message)

@@ -16,20 +16,17 @@
  */
 package org.apache.wicket.util.crypt;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
 
+import javax.crypto.Cipher;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 
-import javax.crypto.Cipher;
-
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("javadoc")
-public class SunJceCryptTest extends Assert
+public class SunJceCryptTest
 {
 	/**
 	 * Default encryption uses {@value org.apache.wicket.util.crypt.SunJceCrypt#DEFAULT_CRYPT_METHOD}
@@ -42,7 +39,7 @@ public class SunJceCryptTest extends Assert
 		byte[] encrypted = crypt.crypt(input.getBytes(), Cipher.ENCRYPT_MODE);
 
 		byte[] decrypted = crypt.crypt(encrypted, Cipher.DECRYPT_MODE);
-		assertThat(new String(decrypted), is(equalTo(input)));
+		assertEquals(new String(decrypted), input);
 	}
 
 	/**
@@ -52,14 +49,14 @@ public class SunJceCryptTest extends Assert
 	public void customPBEEncryption() throws GeneralSecurityException
 	{
 		boolean unlimitedStrengthJurisdictionPolicyInstalled = isUnlimitedStrengthJurisdictionPolicyInstalled();
-		Assume.assumeThat(unlimitedStrengthJurisdictionPolicyInstalled, is(true));
+		Assumptions.assumeTrue(unlimitedStrengthJurisdictionPolicyInstalled);
 
 		SunJceCrypt crypt = new SunJceCrypt("PBEWithMD5AndTripleDES");
 		String input = "input";
 		byte[] encrypted = crypt.crypt(input.getBytes(), Cipher.ENCRYPT_MODE);
 
 		byte[] decrypted = crypt.crypt(encrypted, Cipher.DECRYPT_MODE);
-		assertThat(new String(decrypted), is(equalTo(input)));
+		assertEquals(new String(decrypted), input);
 	}
 
 	/**

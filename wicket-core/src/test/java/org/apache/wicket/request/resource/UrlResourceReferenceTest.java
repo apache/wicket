@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -25,15 +29,15 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 6.0
  */
-public class UrlResourceReferenceTest extends WicketTestCase
+class UrlResourceReferenceTest extends WicketTestCase
 {
 	@Test
-	public void relativeUrl()
+	void relativeUrl()
 	{
 		Url url = Url.parse("some/relative/url");
 		UrlResourceReference reference = new UrlResourceReference(url);
@@ -45,7 +49,7 @@ public class UrlResourceReferenceTest extends WicketTestCase
 	}
 
 	@Test
-	public void absoluteUrl()
+	void absoluteUrl()
 	{
 		Url url = Url.parse("http://www.example.com/some/path.ext");
 		UrlResourceReference reference = new UrlResourceReference(url);
@@ -58,7 +62,7 @@ public class UrlResourceReferenceTest extends WicketTestCase
 	}
 
 	@Test
-	public void contextAbsoluteUrl()
+	void contextAbsoluteUrl()
 	{
 		Url url = Url.parse("/some/path.ext");
 		UrlResourceReference reference = new UrlResourceReference(url);
@@ -70,16 +74,19 @@ public class UrlResourceReferenceTest extends WicketTestCase
 		assertNull(reference.getResource());
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void cannotMakeAnAbsoluteUrlContextRelative()
+	@Test
+	void cannotMakeAnAbsoluteUrlContextRelative()
 	{
 		Url url = Url.parse("http://www.example.com/some/path.ext");
 		UrlResourceReference reference = new UrlResourceReference(url);
-		reference.setContextRelative(true);
+
+		assertThrows(IllegalStateException.class, () -> {
+			reference.setContextRelative(true);
+		});
 	}
 
 	@Test
-	public void contextRelativeUrl()
+	void contextRelativeUrl()
 	{
 		tester.getApplication().mountPage("/some/mount/path", TestPage.class);
 		tester.startPage(new TestPage());
@@ -90,7 +97,7 @@ public class UrlResourceReferenceTest extends WicketTestCase
 	/**
 	 * A test page for #contextRelativeUrl()
 	 */
-	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
+    public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		@Override
 		public void renderHead(IHeaderResponse response)

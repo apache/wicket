@@ -18,20 +18,20 @@ package org.apache.wicket.validation;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.validation.validator.RangeValidator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 /**
  * Test for {@link CompoundValidator}.
  */
-public class CompoundValidatorTest
+class CompoundValidatorTest
 {
 	/**
 	 * WICKET-6482 delegate to nested behaviors
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void delegate() {
+    void delegate() {
 		CompoundValidator<String> compound = new CompoundValidator<>();
 		
 		compound.add(new IValidator<String>()

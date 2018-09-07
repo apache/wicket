@@ -31,7 +31,7 @@ public class BasePanel extends Panel
 	 * 
 	 * @param id
 	 */
-	public BasePanel(String id)
+    BasePanel(String id)
 	{
 		super(id);
 	}

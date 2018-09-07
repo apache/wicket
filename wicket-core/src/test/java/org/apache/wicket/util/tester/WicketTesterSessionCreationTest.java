@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * WICKET-1215
  */
-public class WicketTesterSessionCreationTest extends WicketTestCase
+class WicketTesterSessionCreationTest extends WicketTestCase
 {
 
 	private static Locale EXPECTED = Locale.FRENCH;
@@ -32,7 +34,7 @@ public class WicketTesterSessionCreationTest extends WicketTestCase
 	 * WicketTester recreates session after setting attributes on it
 	 */
 	@Test
-	public void wicket1215()
+	void wicket1215()
 	{
 		tester.getSession().setLocale(EXPECTED);
 		tester.startPage(LocalePage.class);
@@ -45,7 +47,7 @@ public class WicketTesterSessionCreationTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/***/
-		public LocalePage()
+        public LocalePage()
 		{
 			assertEquals(EXPECTED, getSession().getLocale());
 		}

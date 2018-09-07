@@ -16,27 +16,29 @@
  */
 package org.apache.wicket.markup.html.internal;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for the {@link org.apache.wicket.markup.html.internal.HtmlHeaderContainer}.
  * 
  * @author svenmeier
  */
-public class HtmlHeaderContainerTest extends WicketTestCase
+class HtmlHeaderContainerTest extends WicketTestCase
 {
 	/**
 	 * Test clean-up of auto added components after removal of the HtmlHeaderContainer.
 	 */
 	@Test
-	public void cleanUpOfAutoAddedComponents()
+	void cleanUpOfAutoAddedComponents()
 	{
 		tester.startPage(ComponentResolvingPage.class);
 
 		// onEndRequest() of auto added component was not called in
 		// MarkupContainer#internalEndRequest() using an iterator
 		ComponentResolvingPage page = (ComponentResolvingPage)tester.getLastRenderedPage();
-		assertTrue("onDetach() should have been called", page.onDetachWasCalledOnAutoAddedComponent);
+		assertTrue(page.onDetachWasCalledOnAutoAddedComponent, "onDetach() should have been called");
 	}
 }

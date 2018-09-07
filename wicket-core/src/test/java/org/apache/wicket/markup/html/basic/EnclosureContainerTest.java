@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.markup.html.basic;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link EnclosureContainer}.
  * 
  * @author svenmeier
  */
-public class EnclosureContainerTest extends WicketTestCase
+class EnclosureContainerTest extends WicketTestCase
 {
 
 	@Test
-	public void test() {
+	void test() {
 		EnclosureContainerPage page = new EnclosureContainerPage();
 			
 		tester.startPage(page);

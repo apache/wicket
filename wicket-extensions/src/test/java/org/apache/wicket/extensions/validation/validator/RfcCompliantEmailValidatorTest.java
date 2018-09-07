@@ -16,17 +16,19 @@
  */
 package org.apache.wicket.extensions.validation.validator;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.validation.IValidator;
 import org.apache.wicket.validation.Validatable;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test that it really validates RFC valid email addresses.
  * 
  * @author Frank Bille
  */
-public class RfcCompliantEmailValidatorTest extends Assert
+public class RfcCompliantEmailValidatorTest
 {
 	/**
 	 * Test a couple of valid email addresses.
@@ -45,7 +47,7 @@ public class RfcCompliantEmailValidatorTest extends Assert
 		{
 			Validatable<String> validatable = new Validatable<>(emailAddress);
 			validator.validate(validatable);
-			assertTrue(emailAddress + " wasn't valid but should be", validatable.isValid());
+			assertTrue(validatable.isValid(), emailAddress + " wasn't valid but should be");
 		}
 	}
 
@@ -66,7 +68,7 @@ public class RfcCompliantEmailValidatorTest extends Assert
 		{
 			Validatable<String> validatable = new Validatable<>(emailAddress);
 			validator.validate(validatable);
-			assertFalse(emailAddress + " was valid but shouldn't be", validatable.isValid());
+			assertFalse(validatable.isValid(), emailAddress + " was valid but shouldn't be");
 		}
 	}
 }

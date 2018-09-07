@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.http.servlet;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.markup.html.basic.SimplePage;
@@ -24,23 +27,23 @@ import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class XForwardedRequestWrapperTest extends WicketTestCase
+class XForwardedRequestWrapperTest extends WicketTestCase
 {
-	MockHttpServletRequest request;
-	XForwardedRequestWrapperFactory filter;
+	private MockHttpServletRequest request;
+	private XForwardedRequestWrapperFactory filter;
 
 	/**
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		filter = new XForwardedRequestWrapperFactory();
 		request = tester.getRequest();
@@ -48,7 +51,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void test1()
+	void test1()
 	{
 		HttpServletRequest resp = filter.getWrapper(request);
 		assertEquals("127.0.0.1", resp.getRemoteAddr());
@@ -62,7 +65,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void test2()
+	void test2()
 	{
 		filter.getConfig().setProtocolHeader("x-forwarded-proto");
 
@@ -80,7 +83,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	 * Sample with internal proxies
 	 */
 	@Test
-	public void test3()
+	void test3()
 	{
 		filter.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
 		filter.getConfig().setRemoteIPHeader("x-forwarded-for");
@@ -109,7 +112,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	 * Sample with trusted proxies
 	 */
 	@Test
-	public void test4()
+	void test4()
 	{
 		filter.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
 		filter.getConfig().setRemoteIPHeader("x-forwarded-for");
@@ -129,7 +132,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	 * Sample with internal and trusted proxies
 	 */
 	@Test
-	public void test5()
+	void test5()
 	{
 		filter.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
 		filter.getConfig().setRemoteIPHeader("x-forwarded-for");
@@ -149,7 +152,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	 * Sample with an untrusted proxy
 	 */
 	@Test
-	public void test6()
+	void test6()
 	{
 		filter.getConfig().setAllowedInternalProxies("192\\.168\\.0\\.10, 192\\.168\\.0\\.11");
 		filter.getConfig().setRemoteIPHeader("x-forwarded-for");
@@ -189,7 +192,7 @@ public class XForwardedRequestWrapperTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void test7() throws Exception
+	void test7() throws Exception
 	{
 		MyApplication app = new MyApplication();
 		tester = new WicketTester(app);

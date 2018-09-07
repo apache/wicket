@@ -16,31 +16,33 @@
  */
 package org.apache.wicket.pageStore.memory;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class HttpSessionDataStoreTest extends WicketTestCase
+class HttpSessionDataStoreTest extends WicketTestCase
 {
-	final String sessionId = "anything";
+	private final String sessionId = "anything";
 
-	final int pageId = 1;
+	private final int pageId = 1;
 
-	final byte[] PAGE1 = new byte[] { 1 };
+	private final byte[] PAGE1 = new byte[] { 1 };
 	final byte[] PAGE2 = new byte[] { 2 };
 
-	HttpSessionDataStore store;
+	private HttpSessionDataStore store;
 
 	/**
 	 * before()
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+    void before()
 	{
 		store = new HttpSessionDataStore(new DummyPageManagerContext(), new NoopEvictionStrategy());
 	}
@@ -48,8 +50,8 @@ public class HttpSessionDataStoreTest extends WicketTestCase
 	/**
 	 * after()
 	 */
-	@After
-	public void after()
+	@AfterEach
+    void after()
 	{
 		store.destroy();
 	}
@@ -58,7 +60,7 @@ public class HttpSessionDataStoreTest extends WicketTestCase
 	 * storePage()
 	 */
 	@Test
-	public void storePage()
+    void storePage()
 	{
 		assertNull(store.getData(sessionId, pageId));
 
@@ -70,7 +72,7 @@ public class HttpSessionDataStoreTest extends WicketTestCase
 	 * removePage1()
 	 */
 	@Test
-	public void removePage1()
+    void removePage1()
 	{
 		assertNull(store.getData(sessionId, pageId));
 
@@ -87,7 +89,7 @@ public class HttpSessionDataStoreTest extends WicketTestCase
 	 * removePage2()
 	 */
 	@Test
-	public void removePage2()
+    void removePage2()
 	{
 		assertNull(store.getData(sessionId, pageId));
 

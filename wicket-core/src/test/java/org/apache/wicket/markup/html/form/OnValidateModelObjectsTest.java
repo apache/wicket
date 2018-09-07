@@ -16,26 +16,26 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.markup.html.form.onFormValidateModelObjects.AddressFormPanel;
 import org.apache.wicket.markup.html.form.onFormValidateModelObjects.OnFormValidateModelObjectsPage;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for https://issues.apache.org/jira/browse/WICKET-4344
  */
-public class OnValidateModelObjectsTest extends WicketTestCase
+class OnValidateModelObjectsTest extends WicketTestCase
 {
 	/**
 	 * Asserts that submitting the outer form will call {@link Form#onValidateModelObjects()}
 	 * for both the outer form and the inner form(s)
 	 */
 	@Test
-	public void onValidateModelObjects()
+	void onValidateModelObjects()
 	{
 		tester.startPage(OnFormValidateModelObjectsPage.class);
 		FormTester formTester = tester.newFormTester("parentForm");
@@ -43,9 +43,9 @@ public class OnValidateModelObjectsTest extends WicketTestCase
 
 		Page page = tester.getLastRenderedPage();
 		OnFormValidateModelObjectsPage.ParentModel parentModel = (OnFormValidateModelObjectsPage.ParentModel) page.getDefaultModelObject();
-		assertThat(parentModel.isParentValidated(), is(true));
+		assertEquals(true, parentModel.isParentValidated());
 
 		AddressFormPanel.ChildModel childPanel = (AddressFormPanel.ChildModel) page.get("parentForm:addressInfo").getDefaultModelObject();
-		assertThat(childPanel.isChildValidated(), is(true));
+		assertEquals(true, childPanel.isChildValidated());
 	}
 }

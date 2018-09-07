@@ -16,16 +16,19 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Testcase for the navigation increment link.
  * 
  * @author Martijn Dashorst
  */
-public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationTest
+class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationTest
 {
 
 	/** the mock pageable driver. */
@@ -36,8 +39,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 * 
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		mock = new MockPageable();
 	}
@@ -46,7 +49,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 * Performs the forward navigation by incrementing one page.
 	 */
 	@Test
-	public void getPageNumberPositive()
+	void getPageNumberPositive()
 	{
 		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
 			mock, 1);
@@ -63,7 +66,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 * Performs the backward navigation by decrementing one page.
 	 */
 	@Test
-	public void getPageNumberNegative()
+	void getPageNumberNegative()
 	{
 		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
 			mock, -1);
@@ -83,7 +86,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 * Performs the forward navigation by incrementing two pages.
 	 */
 	@Test
-	public void getPageNumberTwo()
+	void getPageNumberTwo()
 	{
 		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
 			mock, 2);
@@ -106,7 +109,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 * Checks the logic behind the isFirst and isLast page methods.
 	 */
 	@Test
-	public void isFirstLastPage()
+	void isFirstLastPage()
 	{
 		PagingNavigationIncrementLink<Void> link = new PagingNavigationIncrementLink<Void>("xx",
 			mock, 0);

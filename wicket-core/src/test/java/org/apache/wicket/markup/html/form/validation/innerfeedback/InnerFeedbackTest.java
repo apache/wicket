@@ -22,12 +22,12 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for Wicket-2974
  */
-public class InnerFeedbackTest extends WicketTestCase
+class InnerFeedbackTest extends WicketTestCase
 {
 
 	@Override
@@ -60,7 +60,7 @@ public class InnerFeedbackTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void innerFeedback()
+    void innerFeedback()
 	{
 		tester.getSession().setLocale(Locale.ENGLISH);
 		tester.startPage(HomePage.class);

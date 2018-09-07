@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.filtertest;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * jWebUnit test for Hello World.
@@ -28,7 +28,7 @@ public class WithCPWithoutFPTest extends WithoutCPWithoutFPTest
 	 * 
 	 */
 	@Override
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		setContextPath("/somecontext");

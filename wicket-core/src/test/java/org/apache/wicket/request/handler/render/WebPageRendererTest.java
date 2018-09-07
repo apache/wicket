@@ -16,18 +16,19 @@
  */
 package org.apache.wicket.request.handler.render;
 
-import static org.mockito.ArgumentMatchers.isNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import junit.framework.AssertionFailedError;
 
 import org.apache.wicket.core.request.handler.IPageProvider;
 import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
@@ -39,14 +40,14 @@ import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * Tests for the calculation whether or not to redirect or directly render a page
  */
-public class WebPageRendererTest extends Assert
+class WebPageRendererTest
 {
 
 	private RenderPageRequestHandler handler;
@@ -60,8 +61,8 @@ public class WebPageRendererTest extends Assert
 	/**
 	 * Common setup
 	 */
-	@Before
-	public void before()
+	@BeforeEach
+	void before()
 	{
 		provider = mock(IPageProvider.class);
 
@@ -87,7 +88,7 @@ public class WebPageRendererTest extends Assert
 	 * is configured there wont be a redirect issued
 	 */
 	@Test
-	public void testOnePassRender()
+	void testOnePassRender()
 	{
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
@@ -113,7 +114,7 @@ public class WebPageRendererTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5522
 	 */
 	@Test
-	public void testOnePassRenderDifferentProtocols()
+	void testOnePassRenderDifferentProtocols()
 	{
 		final AtomicBoolean responseBuffered = new AtomicBoolean(false);
 
@@ -151,7 +152,7 @@ public class WebPageRendererTest extends Assert
 	 * is configured but the {@link RedirectPolicy} says that it needs to redirect it will redirect.
 	 */
 	@Test
-	public void testOnePassRenderWithAlwaysRedirect()
+	void testOnePassRenderWithAlwaysRedirect()
 	{
 
 		PageRenderer renderer = new TestPageRenderer(handler)
@@ -186,7 +187,7 @@ public class WebPageRendererTest extends Assert
 	 * is configured but the current request is Ajax then a redirect should be issued
 	 */
 	@Test
-	public void testOnePassRenderAndAjaxRequest()
+	void testOnePassRenderAndAjaxRequest()
 	{
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
@@ -212,7 +213,7 @@ public class WebPageRendererTest extends Assert
 	 * {@link RedirectPolicy#NEVER_REDIRECT} there wont be a redirect issued
 	 */
 	@Test
-	public void testRedirectPolicyNever()
+	void testRedirectPolicyNever()
 	{
 
 		PageRenderer renderer = new TestPageRenderer(handler)
@@ -243,7 +244,7 @@ public class WebPageRendererTest extends Assert
 	 * is configured there wont be a redirect issued
 	 */
 	@Test
-	public void testSameUrlsAndRedirectToRender()
+	void testSameUrlsAndRedirectToRender()
 	{
 
 		PageRenderer renderer = new TestPageRenderer(handler)
@@ -275,7 +276,7 @@ public class WebPageRendererTest extends Assert
 	 * be a redirect issued
 	 */
 	@Test
-	public void testSameUrlsAndStatefulPage()
+	void testSameUrlsAndStatefulPage()
 	{
 		when(provider.isNewPageInstance()).thenReturn(false);
 		when(page.isPageStateless()).thenReturn(false);
@@ -301,7 +302,7 @@ public class WebPageRendererTest extends Assert
 	 * should occur
 	 */
 	@Test
-	public void testShouldPreserveClientUrl()
+	void testShouldPreserveClientUrl()
 	{
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
@@ -325,7 +326,7 @@ public class WebPageRendererTest extends Assert
      * https://issues.apache.org/jira/browse/WICKET-5486
      */
     @Test
-    public void testShouldPreserveClientUrlOverruledByRedirectPolicyAlwaysRedirect()
+	void testShouldPreserveClientUrlOverruledByRedirectPolicyAlwaysRedirect()
     {
         TestPageRenderer renderer = new TestPageRenderer(handler);
         renderer.shouldPreserveClientUrl = true;
@@ -346,7 +347,7 @@ public class WebPageRendererTest extends Assert
 	 * {@link RedirectPolicy#ALWAYS_REDIRECT} there a redirect must be issued
 	 */
 	@Test
-	public void testRedirectPolicyAlways()
+	void testRedirectPolicyAlways()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.redirectPolicy = RedirectPolicy.ALWAYS_REDIRECT;
@@ -367,7 +368,7 @@ public class WebPageRendererTest extends Assert
 	 * Tests that when the current request is Ajax then a redirect should happen
 	 */
 	@Test
-	public void testSameUrlsAndAjaxRequest()
+	void testSameUrlsAndAjaxRequest()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.ajax = true;
@@ -389,14 +390,14 @@ public class WebPageRendererTest extends Assert
 	 * is configured then no matter what are the fromUrl and toUrl a redirect will happen
 	 */
 	@Test
-	public void testRedirectToRender()
+	void testRedirectToRender()
 	{
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.redirectToRender = true;
 
 		when(provider.getPageInstance()).thenThrow(
-			new AssertionFailedError("no page instance should be created"));
+			new AssertionError("no page instance should be created"));
 
 		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("a"));
 
@@ -414,7 +415,7 @@ public class WebPageRendererTest extends Assert
 	 * buffer
 	 */
 	@Test
-	public void testDifferentUrlsTemporarySessionAndStatelessPage()
+	void testDifferentUrlsTemporarySessionAndStatelessPage()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.redirectToBuffer = true;
@@ -436,7 +437,7 @@ public class WebPageRendererTest extends Assert
 	 * redirect to the url which will instantiate the instance of us
 	 */
 	@Test
-	public void testDifferentUrlsAndNewPageInstance()
+	void testDifferentUrlsAndNewPageInstance()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.redirectToBuffer = true;
@@ -457,7 +458,7 @@ public class WebPageRendererTest extends Assert
 	 * want to overwrite the response, so we need to let it
 	 */
 	@Test
-	public void testRedirectToBufferNoPageToRender()
+	void testRedirectToBufferNoPageToRender()
 	{
 		final AtomicBoolean stored = new AtomicBoolean(false);
 
@@ -486,7 +487,7 @@ public class WebPageRendererTest extends Assert
 		verify(response, never()).write(any(byte[].class));
 		verify(response, never()).write(any(CharSequence.class));
 		verify(response, never()).sendRedirect(anyString());
-		Assert.assertFalse(stored.get());
+		assertFalse(stored.get());
 	}
 
 	/**
@@ -494,7 +495,7 @@ public class WebPageRendererTest extends Assert
 	 * page should be written without redirect
 	 */
 	@Test
-	public void testRedirectToBufferStatelessPageAndRedirectIsDisabled()
+	void testRedirectToBufferStatelessPageAndRedirectIsDisabled()
 	{
 		final AtomicBoolean stored = new AtomicBoolean(false);
 
@@ -523,7 +524,7 @@ public class WebPageRendererTest extends Assert
 
 		verify(response).write(any(byte[].class));
 		verify(response, never()).sendRedirect(anyString());
-		Assert.assertFalse(stored.get());
+		assertFalse(stored.get());
 	}
 
 	/**
@@ -531,7 +532,7 @@ public class WebPageRendererTest extends Assert
 	 * should be a redirect
 	 */
 	@Test
-	public void testRedirectToBufferStatelessPageAndRedirectIsEsabled()
+	void testRedirectToBufferStatelessPageAndRedirectIsEsabled()
 	{
 		final AtomicBoolean stored = new AtomicBoolean(false);
 
@@ -560,7 +561,7 @@ public class WebPageRendererTest extends Assert
 
 		verify(response, never()).write(any(byte[].class));
 		verify(response).sendRedirect(isNull());
-		Assert.assertTrue(stored.get());
+		assertTrue(stored.get());
 	}
 
 	/**
@@ -568,7 +569,7 @@ public class WebPageRendererTest extends Assert
 	 * redirect
 	 */
 	@Test
-	public void testRedirectToBufferStatefulPage()
+	void testRedirectToBufferStatefulPage()
 	{
 		final AtomicBoolean stored = new AtomicBoolean(false);
 
@@ -595,11 +596,11 @@ public class WebPageRendererTest extends Assert
 
 		verify(response, never()).write(any(byte[].class));
 		verify(response).sendRedirect(isNull());
-		Assert.assertTrue(stored.get());
+		assertTrue(stored.get());
 	}
 
 	@Test
-	public void testShouldRenderPageAndWriteResponseCondition() {
+	void testShouldRenderPageAndWriteResponseCondition() {
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		// if
@@ -612,7 +613,7 @@ public class WebPageRendererTest extends Assert
 		renderer.newPageInstance = true;
 		renderer.pageStateless = true;
 
-		Assert.assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test"), Url.parse("test")));
 
 		renderer.ajax = false;
@@ -622,7 +623,7 @@ public class WebPageRendererTest extends Assert
 		renderer.newPageInstance = false;
 		renderer.pageStateless = false;
 
-		Assert.assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test1"), Url.parse("test2")));
 
 		// 	or
@@ -634,7 +635,7 @@ public class WebPageRendererTest extends Assert
 		renderer.ajax = false;
 		renderer.onePassRender = true;
 
-		Assert.assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test1"), Url.parse("test2")));
 
 		renderer.redirectPolicy = RedirectPolicy.ALWAYS_REDIRECT;
@@ -643,21 +644,21 @@ public class WebPageRendererTest extends Assert
 		renderer.newPageInstance = false;
 		renderer.pageStateless = false;
 
-		Assert.assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test"), Url.parse("test")));
 
 		//	or
 		//		the targetUrl matches current url and it's redirect-to-render
 		renderer.redirectToRender = true;
 
-		Assert.assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test"), Url.parse("test")));
 
 		renderer.pageStateless = true;
 		renderer.newPageInstance = true;
 		renderer.redirectToRender = true;
 
-		Assert.assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test"), Url.parse("test")));
 
 		//	or
@@ -672,13 +673,13 @@ public class WebPageRendererTest extends Assert
 		renderer.newPageInstance = true;
 		renderer.pageStateless = true;
 
-		Assert.assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertTrue(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test1"), Url.parse("test2")));
 
 	}
 
 	@Test
-	public void testShouldNOTRenderPageAndWriteResponseCondition() {
+	void testShouldNOTRenderPageAndWriteResponseCondition() {
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 
@@ -704,25 +705,25 @@ public class WebPageRendererTest extends Assert
 		renderer.newPageInstance = true;
 		renderer.pageStateless = true;
 
-		Assert.assertFalse(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertFalse(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test1"), Url.parse("test2")));
 
 		renderer.redirectToRender = false;
 		renderer.newPageInstance = false;
 		renderer.pageStateless = false;
 
-		Assert.assertFalse(renderer.shouldRenderPageAndWriteResponse(requestCycle,
+		assertFalse(renderer.shouldRenderPageAndWriteResponse(requestCycle,
 			Url.parse("test"), Url.parse("test")));
 	}
 
 	@Test
-	public void testShouldRenderPageAndWriteResponseVariationIntegrity() {
+	void testShouldRenderPageAndWriteResponseVariationIntegrity() {
 		int count = countVariations(new ShouldRenderPageAndWriteResponseVariations());
-		Assert.assertEquals(2 * 2 * 2 * 2 * 2 * 2 * 2 * 3, count);
+		assertEquals(2 * 2 * 2 * 2 * 2 * 2 * 2 * 3, count);
 	}
 
 	@Test
-	public void shouldRenderPageAndWriteResponseVariation() {
+	void shouldRenderPageAndWriteResponseVariation() {
 
 		String match =
 						"    X       X   " +
@@ -754,13 +755,13 @@ public class WebPageRendererTest extends Assert
 	}
 
 	@Test
-	public void testShouldRedirectToTargetUrlIntegrity() {
+	void testShouldRedirectToTargetUrlIntegrity() {
 		int count = countVariations(new ShouldRedirectToTargetUrl());
-		Assert.assertEquals(2 * 3 * 2 * 2 * 2 * 2 * 2, count);
+		assertEquals(2 * 3 * 2 * 2 * 2 * 2 * 2, count);
 	}
 
 	@Test
-	public void testShouldRedirectToTargetUrl() {
+	void testShouldRedirectToTargetUrl() {
 
 		String match =
 						"XXXXXXXXXXXXXXXX" +
@@ -780,7 +781,7 @@ public class WebPageRendererTest extends Assert
 	}
 
 	@Test
-	public void shouldRedirectToTargetUrlCondition() {
+	void shouldRedirectToTargetUrlCondition() {
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 
@@ -794,7 +795,7 @@ public class WebPageRendererTest extends Assert
 		renderer.pageStateless = false;
 		renderer.sessionTemporary = false;
 
-		Assert.assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
+		assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
 			Url.parse("test2")));
 
 		// 	or
@@ -802,7 +803,7 @@ public class WebPageRendererTest extends Assert
 		renderer.redirectPolicy = RedirectPolicy.AUTO_REDIRECT;
 		renderer.redirectToRender = true;
 
-		Assert.assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
+		assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
 			Url.parse("test2")));
 
 		//	or
@@ -810,7 +811,7 @@ public class WebPageRendererTest extends Assert
 		renderer.redirectToRender = false;
 		renderer.ajax = true;
 
-		Assert.assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test"),
+		assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test"),
 			Url.parse("test")));
 
 		// 	or
@@ -821,20 +822,20 @@ public class WebPageRendererTest extends Assert
 		renderer.ajax = false;
 		renderer.newPageInstance = true;
 
-		Assert.assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
+		assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
 			Url.parse("test2")));
 
 		renderer.newPageInstance = false;
 		renderer.sessionTemporary = true;
 		renderer.pageStateless = true;
 
-		Assert.assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
+		assertTrue(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
 			Url.parse("test2")));
 		// just redirect
 	}
 
 	@Test
-	public void shouldNOTRedirectToTargetUrlCondition() {
+	void shouldNOTRedirectToTargetUrlCondition() {
 
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		
@@ -857,7 +858,7 @@ public class WebPageRendererTest extends Assert
 		renderer.pageStateless=false;
 		renderer.sessionTemporary=false;
 
-		Assert.assertFalse(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
+		assertFalse(renderer.shouldRedirectToTargetUrl(requestCycle, Url.parse("test1"),
 				Url.parse("test2")));
 	}
 
@@ -874,12 +875,12 @@ public class WebPageRendererTest extends Assert
 		int idx=0;
 		while (variations.hasNextVariation()) {
 			variations.nextVariation();
-			Assert.assertEquals(variations.toString(), match.charAt(idx) == 'X', variations.getResult());
+			assertEquals(match.charAt(idx) == 'X', variations.getResult(), variations.toString());
 			idx++;
 		}
 	}
 
-	private void printVariations(AbstractVariations variations) {
+	void printVariations(AbstractVariations variations) {
 		int idx=0;
 		System.out.print("\"");
 		while (variations.hasNextVariation()) {
@@ -899,7 +900,7 @@ public class WebPageRendererTest extends Assert
 			 * directly
 			 */
 	@Test
-	public void testRedirectToBufferStatefulPageAndSameUrls()
+	void testRedirectToBufferStatefulPageAndSameUrls()
 	{
 		final AtomicBoolean stored = new AtomicBoolean(false);
 
@@ -930,14 +931,14 @@ public class WebPageRendererTest extends Assert
 
 		verify(response).write(any(byte[].class));
 		verify(response, never()).sendRedirect(anyString());
-		Assert.assertFalse(stored.get());
+		assertFalse(stored.get());
 	}
 
 	/**
 	 * Tests that when all the conditions fail the redirect_to_buffer should be used as a fallback
 	 */
 	@Test
-	public void testRedirectToBufferIsFallback()
+	void testRedirectToBufferIsFallback()
 	{
 		final AtomicBoolean stored = new AtomicBoolean(false);
 
@@ -985,7 +986,7 @@ public class WebPageRendererTest extends Assert
 
 		verify(response, never()).write(any(byte[].class));
 		verify(response).sendRedirect(isNull());
-		Assert.assertTrue(stored.get());
+		assertTrue(stored.get());
 	}
 
 	/**
@@ -993,7 +994,7 @@ public class WebPageRendererTest extends Assert
 	 * current request is Ajax then a redirect should be issued
 	 */
 	@Test
-	public void testShouldPreserveClientUrlAndAjaxRequest()
+	void testShouldPreserveClientUrlAndAjaxRequest()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.ajax = true;
@@ -1017,7 +1018,7 @@ public class WebPageRendererTest extends Assert
 	 * is Ajax then a redirect should still be issued
 	 */
 	@Test
-	public void testNeverRedirectButAjaxRequest()
+	void testNeverRedirectButAjaxRequest()
 	{
 		TestPageRenderer renderer = new TestPageRenderer(handler);
 		renderer.redirectPolicy = RedirectPolicy.NEVER_REDIRECT;

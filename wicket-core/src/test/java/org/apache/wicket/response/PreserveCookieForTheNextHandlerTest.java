@@ -16,8 +16,9 @@
  */
 package org.apache.wicket.response;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.MarkupContainer;
@@ -28,12 +29,12 @@ import org.apache.wicket.util.cookies.CookieUtils;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5.8
  */
-public class PreserveCookieForTheNextHandlerTest extends WicketTestCase
+class PreserveCookieForTheNextHandlerTest extends WicketTestCase
 {
 	/**
 	 * Verifies that any meta data actions set to a BufferedWebResponse during page rendering
@@ -42,7 +43,7 @@ public class PreserveCookieForTheNextHandlerTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4358
 	 */
 	@Test
-	public void preserveCookie()
+	void preserveCookie()
 	{
 		tester.startPage(StartPage.class);
 		tester.assertRenderedPage(StartPage.class);
@@ -55,9 +56,9 @@ public class PreserveCookieForTheNextHandlerTest extends WicketTestCase
 		assertEquals("value", cookies.get(0).getValue());
 	}
 
-	public static final class StartPage extends WebPage implements IMarkupResourceStreamProvider
+    public static final class StartPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public StartPage()
+        public StartPage()
 		{
 			add(new BookmarkablePageLink<Void>("link", SetCookiePage.class));
 		}
@@ -69,7 +70,7 @@ public class PreserveCookieForTheNextHandlerTest extends WicketTestCase
 		}
 	}
 
-	public static final class SetCookiePage extends WebPage implements IMarkupResourceStreamProvider
+    public static final class SetCookiePage extends WebPage implements IMarkupResourceStreamProvider
 	{
 		@Override
 		protected void onBeforeRender()

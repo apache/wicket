@@ -16,7 +16,10 @@
  */
 package org.apache.wicket;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -31,23 +34,22 @@ import org.apache.wicket.resource.loader.PackageStringResourceLoader;
 import org.apache.wicket.resource.loader.ValidatorStringResourceLoader;
 import org.apache.wicket.settings.FrameworkSettings;
 import org.apache.wicket.settings.ResourceSettings;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test cases for the <code>ApplicationSettings</code> class.
  * 
  * @author Chris Turner
  */
-public class ApplicationSettingsTest
+class ApplicationSettingsTest
 {
 
 	/**
 	 * detaches thread context
 	 */
-	@After
-	public void detachThreadContext()
+	@AfterEach
+	void detachThreadContext()
 	{
 		ThreadContext.detach();
 	}
@@ -56,7 +58,7 @@ public class ApplicationSettingsTest
 	 * 
 	 */
 	@Test
-	public void testFrameworkVersion()
+	void testFrameworkVersion()
 	{
 		FrameworkSettings settings = new FrameworkSettings(new MockApplication());
 		assertEquals("n/a", settings.getVersion());
@@ -66,93 +68,93 @@ public class ApplicationSettingsTest
 	 * @throws Exception
 	 */
 	@Test
-	public void testExceptionOnMissingResourceDefaultValue() throws Exception
+	void testExceptionOnMissingResourceDefaultValue() throws Exception
 	{
 		ResourceSettings settings = new ResourceSettings(new MockApplication());
-		Assert.assertTrue("exceptionOnMissingResource should default to true",
-			settings.getThrowExceptionOnMissingResource());
+		assertTrue(settings.getThrowExceptionOnMissingResource(),
+			"exceptionOnMissingResource should default to true");
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testExceptionOnMissingResourceSetsCorrectly() throws Exception
+	void testExceptionOnMissingResourceSetsCorrectly() throws Exception
 	{
 		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		settings.setThrowExceptionOnMissingResource(false);
-		Assert.assertFalse("exceptionOnMissingResource should have been set to false",
-			settings.getThrowExceptionOnMissingResource());
+		assertFalse(settings.getThrowExceptionOnMissingResource(),
+			"exceptionOnMissingResource should have been set to false");
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testUseDefaultOnMissingResourceDefaultValue() throws Exception
+	void testUseDefaultOnMissingResourceDefaultValue() throws Exception
 	{
 		ResourceSettings settings = new ResourceSettings(new MockApplication());
-		Assert.assertTrue("useDefaultOnMissingResource should default to true",
-			settings.getUseDefaultOnMissingResource());
+		assertTrue(settings.getUseDefaultOnMissingResource(),
+			"useDefaultOnMissingResource should default to true");
 	}
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testUseDefaultOnMissingResourceSetsCorrectly() throws Exception
+	void testUseDefaultOnMissingResourceSetsCorrectly() throws Exception
 	{
 		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		settings.setUseDefaultOnMissingResource(false);
-		Assert.assertFalse("useDefaultOnMissingResource should have been set to false",
-			settings.getUseDefaultOnMissingResource());
+		assertFalse(settings.getUseDefaultOnMissingResource(),
+			"useDefaultOnMissingResource should have been set to false");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void testDefaultStringResourceLoaderSetup()
+	void testDefaultStringResourceLoaderSetup()
 	{
 		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
-		Assert.assertEquals("There should be 5 default loaders", 5, loaders.size());
-		Assert.assertTrue("First loader one should be the component one",
-			loaders.get(0) instanceof ComponentStringResourceLoader);
-		Assert.assertTrue("Second loader should be the package one",
-			loaders.get(1) instanceof PackageStringResourceLoader);
-		Assert.assertTrue("Third loader should be the application one",
-			loaders.get(2) instanceof ClassStringResourceLoader);
-		Assert.assertTrue("Fourth loader should be the validator one",
-			loaders.get(3) instanceof ValidatorStringResourceLoader);
-		Assert.assertTrue("Fifth should be the initializer one",
-			loaders.get(4) instanceof InitializerStringResourceLoader);
+		assertEquals(5, loaders.size(), "There should be 5 default loaders");
+		assertTrue(loaders.get(0) instanceof ComponentStringResourceLoader,
+			"First loader one should be the component one");
+		assertTrue(loaders.get(1) instanceof PackageStringResourceLoader,
+			"Second loader should be the package one");
+		assertTrue(loaders.get(2) instanceof ClassStringResourceLoader,
+			"Third loader should be the application one");
+		assertTrue(loaders.get(3) instanceof ValidatorStringResourceLoader,
+			"Fourth loader should be the validator one");
+		assertTrue(loaders.get(4) instanceof InitializerStringResourceLoader,
+			"Fifth should be the initializer one");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void testOverrideStringResourceLoaderSetup()
+	void testOverrideStringResourceLoaderSetup()
 	{
 		ResourceSettings settings = new ResourceSettings(new MockApplication());
 		settings.getStringResourceLoaders().clear();
-		settings.getStringResourceLoaders().add(
-			new BundleStringResourceLoader("org.apache.wicket.resource.DummyResources"));
+		settings.getStringResourceLoaders()
+			.add(new BundleStringResourceLoader("org.apache.wicket.resource.DummyResources"));
 		settings.getStringResourceLoaders().add(new ComponentStringResourceLoader());
 		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
-		Assert.assertEquals("There should be 2 overridden loaders", 2, loaders.size());
-		Assert.assertTrue("First loader one should be the bundle one",
-			loaders.get(0) instanceof BundleStringResourceLoader);
-		Assert.assertTrue("Second loader should be the component one",
-			loaders.get(1) instanceof ComponentStringResourceLoader);
+		assertEquals(2, loaders.size(), "There should be 2 overridden loaders");
+		assertTrue(loaders.get(0) instanceof BundleStringResourceLoader,
+			"First loader one should be the bundle one");
+		assertTrue(loaders.get(1) instanceof ComponentStringResourceLoader,
+			"Second loader should be the component one");
 	}
 
 	/**
 	 * 
 	 */
 	@Test
-	public void testLocalizer()
+	void testLocalizer()
 	{
 		MockApplication dummy = new MockApplication();
 		dummy.setName("test-app");
@@ -160,7 +162,7 @@ public class ApplicationSettingsTest
 		ThreadContext.setApplication(dummy);
 		dummy.initApplication();
 		Localizer localizer = dummy.getResourceSettings().getLocalizer();
-		Assert.assertNotNull("Localizer should be available", localizer);
+		assertNotNull(localizer, "Localizer should be available");
 		dummy.internalDestroy();
 	}
 }

@@ -16,27 +16,29 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.pages.PageExpiredErrorPage;
 import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.settings.RequestCycleSettings;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test exceptions thrown during request
  * 
  * @author <a href="mailto:jbq@apache.org">Jean-Baptiste Quenot</a>
  */
-public class WebResponseExceptionsTest extends WicketTestCase
+class WebResponseExceptionsTest extends WicketTestCase
 {
 	/**
 	 * Tests buffered exception error page.
 	 */
 	@Test
-	public void bufferedExceptionErrorPage()
+	void bufferedExceptionErrorPage()
 	{
 		tester.getApplication()
 			.getRequestCycleSettings()
@@ -51,7 +53,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	 * Tests exception error page.
 	 */
 	@Test
-	public void exceptionErrorPage()
+	void exceptionErrorPage()
 	{
 		tester.getApplication()
 			.getExceptionSettings()
@@ -63,7 +65,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	 * Tests page expired.
 	 */
 	@Test
-	public void expirePage()
+	void expirePage()
 	{
 		tester.startPage(TestExpirePage.class);
 		String document = tester.getLastResponseAsString();
@@ -85,7 +87,7 @@ public class WebResponseExceptionsTest extends WicketTestCase
 	 * Tests internal error page.
 	 */
 	@Test
-	public void internalErrorPage()
+	void internalErrorPage()
 	{
 		tester.startPage(TestErrorPage.class);
 		tester.setExposeExceptions(false);

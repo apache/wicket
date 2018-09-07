@@ -16,20 +16,21 @@
  */
 package org.apache.wicket.markup.html.list;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for tables.
  * 
  * @author Juergen Donnerstag
  */
-public class TableTest extends WicketTestCase
+class TableTest extends WicketTestCase
 {
 
 	/**
@@ -64,7 +65,7 @@ public class TableTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void table()
+	void table()
 	{
 		PageableListView<?> table = createTable(20, 4);
 		assertEquals(4, table.getItemsPerPage());
@@ -97,7 +98,7 @@ public class TableTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void emptyTable()
+	void emptyTable()
 	{
 		PageableListView<?> table = createTable(0, 4);
 		assertEquals(4, table.getItemsPerPage());

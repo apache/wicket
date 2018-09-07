@@ -16,9 +16,11 @@
  */
 package org.apache.wicket.guice;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.lang.reflect.Field;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for GuiceFieldValueFactory

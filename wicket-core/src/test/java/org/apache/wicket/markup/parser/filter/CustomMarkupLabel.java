@@ -35,7 +35,7 @@ import org.apache.wicket.util.resource.StringResourceStream;
  * https://issues.apache.org/jira/browse/WICKET-4494
  * @see HtmlHandlerTest
  */
-public class CustomMarkupLabel
+class CustomMarkupLabel
 		extends MarkupContainer
 		implements IMarkupCacheKeyProvider, IMarkupResourceStreamProvider
 {
@@ -75,7 +75,7 @@ public class CustomMarkupLabel
 	{
 		private final CustomMarkupLabel markupProvider;
 
-		public MyMarkupSourcingStrategy(final CustomMarkupLabel markupProvider)
+		MyMarkupSourcingStrategy(final CustomMarkupLabel markupProvider)
 		{
 			this.markupProvider = markupProvider;
 		}

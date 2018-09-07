@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.guice;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,10 +32,9 @@ import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.request.Url;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -43,7 +44,7 @@ import com.google.inject.name.Names;
 
 /**
  */
-public abstract class AbstractInjectorTest extends Assert
+public abstract class AbstractInjectorTest
 {
 
 	protected abstract TestNoComponentInterface newTestNoComponent();
@@ -52,7 +53,7 @@ public abstract class AbstractInjectorTest extends Assert
 
 	private final MockApplication app = new MockApplication();
 
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		app.setServletContext(new MockServletContext(app, null));
@@ -72,12 +73,8 @@ public abstract class AbstractInjectorTest extends Assert
 			public void configure(final Binder binder)
 			{
 				binder.bind(ITestService.class).to(TestService.class);
-				binder.bind(ITestService.class)
-						.annotatedWith(Red.class)
-						.to(TestServiceRed.class);
-				binder.bind(ITestService.class)
-						.annotatedWith(Blue.class)
-						.to(TestServiceBlue.class);
+				binder.bind(ITestService.class).annotatedWith(Red.class).to(TestServiceRed.class);
+				binder.bind(ITestService.class).annotatedWith(Blue.class).to(TestServiceBlue.class);
 				binder.bind(new TypeLiteral<Map<String, String>>()
 				{
 				}).toProvider(new Provider<Map<String, String>>()
@@ -93,19 +90,23 @@ public abstract class AbstractInjectorTest extends Assert
 					}
 				});
 
-				binder.bind(String.class).annotatedWith(Names.named("named1")).toInstance("NAMED_1");
-				binder.bind(String.class).annotatedWith(Names.named("named2")).toInstance("NAMED_2");
+				binder.bind(String.class).annotatedWith(Names.named("named1")).toInstance(
+					"NAMED_1");
+				binder.bind(String.class).annotatedWith(Names.named("named2")).toInstance(
+					"NAMED_2");
 
-				binder.bind(String.class).annotatedWith(new Jsr330Named("named1")).toInstance("NAMED_1");
-				binder.bind(String.class).annotatedWith(new Jsr330Named("named2")).toInstance("NAMED_2");
+				binder.bind(String.class).annotatedWith(new Jsr330Named("named1")).toInstance(
+					"NAMED_1");
+				binder.bind(String.class).annotatedWith(new Jsr330Named("named2")).toInstance(
+					"NAMED_2");
 				binder.bind(EvilTestService.class).toInstance(new EvilTestService("evil123", 5));
-		   }
+			}
 
 		});
 		app.getComponentInstantiationListeners().add(injector);
 	}
 
-	@After
+	@AfterEach
 	public void after()
 	{
 		app.internalDestroy();
@@ -124,7 +125,8 @@ public abstract class AbstractInjectorTest extends Assert
 		doChecksForComponent(testComponent);
 
 		// Serialize and deserialize the object, and check it still works.
-		TestComponentInterface clonedComponent = (TestComponentInterface)WicketObjects.cloneObject(testComponent);
+		TestComponentInterface clonedComponent = WicketObjects
+			.cloneObject(testComponent);
 		doChecksForComponent(clonedComponent);
 
 		// Test injection of a class that does not extend Component

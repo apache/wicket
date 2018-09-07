@@ -20,7 +20,7 @@ import org.apache.wicket.mock.MockApplication;
 
 /**
  */
-public class MyTesterApplication extends MockApplication
+class MyTesterApplication extends MockApplication
 {
 
 }

@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 public class NestedFormsPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	static Logger logger = LoggerFactory.getLogger(NestedFormsPage.class);
+	private static Logger logger = LoggerFactory.getLogger(NestedFormsPage.class);
 
 	private final FeedbackPanel feedback;
 
@@ -83,7 +83,7 @@ public class NestedFormsPage extends WebPage
 		 * @param id
 		 *            the form's id
 		 */
-		public NestableForm(String id)
+        NestableForm(String id)
 		{
 			super(id);
 			setDefaultModel(new CompoundPropertyModel<NestableForm>(this));
@@ -139,7 +139,7 @@ public class NestedFormsPage extends WebPage
 
 		private final Form<?> form;
 
-		public ToggleLink(String id, Form<?> form)
+		ToggleLink(String id, Form<?> form)
 		{
 			super(id);
 			this.form = form;

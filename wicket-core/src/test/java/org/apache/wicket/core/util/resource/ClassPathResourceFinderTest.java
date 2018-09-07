@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.core.util.resource;
 
-import static org.apache.wicket.util.resource.ResourceStreamLocatorTest.*;
+import static org.apache.wicket.util.resource.ResourceStreamLocatorTest.getFilename;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class ClassPathResourceFinderTest extends WicketTestCase
+class ClassPathResourceFinderTest extends WicketTestCase
 {
 	@Test
-	public void loadStartingFromClasspathRoot() throws Exception
+	void loadStartingFromClasspathRoot() throws Exception
 	{
 		ClassPathResourceFinder finder = new ClassPathResourceFinder("");
 		String filename = ClassPathResourceFinderTest.class.getName().replace('.',
@@ -40,7 +42,7 @@ public class ClassPathResourceFinderTest extends WicketTestCase
 	}
 
 	@Test
-	public void loadStartingFromPrefix() throws Exception
+	void loadStartingFromPrefix() throws Exception
 	{
 		ClassPathResourceFinder finder = new ClassPathResourceFinder(
 			ClassPathResourceFinderTest.class.getPackage()

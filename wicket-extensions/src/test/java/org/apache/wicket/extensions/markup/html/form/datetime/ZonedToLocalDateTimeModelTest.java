@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.extensions.markup.html.form.datetime;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -24,7 +24,7 @@ import java.time.ZonedDateTime;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link ZonedToLocalDateTimeModel}.

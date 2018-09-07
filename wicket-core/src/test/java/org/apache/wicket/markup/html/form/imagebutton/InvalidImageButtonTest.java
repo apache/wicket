@@ -17,17 +17,17 @@
 package org.apache.wicket.markup.html.form.imagebutton;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class InvalidImageButtonTest extends WicketTestCase
+class InvalidImageButtonTest extends WicketTestCase
 {
 	/**
 	 * testInvalidImage()
 	 */
 	@Test
-	public void invalidImage()
+    void invalidImage()
 	{
 		tester.startPage(InvalidImageButtonPage.class);
 		tester.assertRenderedPage(InvalidImageButtonPage.class);

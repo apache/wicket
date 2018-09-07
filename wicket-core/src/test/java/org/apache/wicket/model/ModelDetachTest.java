@@ -16,33 +16,21 @@
  */
 package org.apache.wicket.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the detach behavior for compatibility with IDetachable nested objects, ensuring that the
  * detach method is called for those nested objects.
  */
-public class ModelDetachTest extends Assert
+class ModelDetachTest
 {
-	static class Detachable implements IDetachable
-	{
-		private static final long serialVersionUID = 1L;
-
-		private boolean detached = false;
-
-		@Override
-		public void detach()
-		{
-			detached = true;
-		}
-	}
-
 	/**
 	 * Performs the nested test for CompoundPropertyModel.
 	 */
 	@Test
-	public void compoundPropertyModelDetach()
+	void compoundPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
 		IModel<Detachable> model = new CompoundPropertyModel<Detachable>(detachable);
@@ -54,7 +42,7 @@ public class ModelDetachTest extends Assert
 	 * Performs the nested test for BoundCompoundPropertyModel.
 	 */
 	@Test
-	public void boundCompoundPropertyModelDetach()
+	void boundCompoundPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
 		IModel<Detachable> model = new CompoundPropertyModel<Detachable>(detachable);
@@ -66,7 +54,7 @@ public class ModelDetachTest extends Assert
 	 * Performs the nested test for AbstractPropertyModel.
 	 */
 	@Test
-	public void abstractPropertyModelDetach()
+	void abstractPropertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
 		IModel<?> model = new AbstractPropertyModel<Void>(detachable)
@@ -87,11 +75,24 @@ public class ModelDetachTest extends Assert
 	 * Performs the nested test for PropertyModel.
 	 */
 	@Test
-	public void propertyModelDetach()
+	void propertyModelDetach()
 	{
 		Detachable detachable = new Detachable();
 		IModel<?> model = new PropertyModel<Void>(detachable, "foo");
 		model.detach();
 		assertTrue(detachable.detached);
+	}
+
+	static class Detachable implements IDetachable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private boolean detached = false;
+
+		@Override
+		public void detach()
+		{
+			detached = true;
+		}
 	}
 }

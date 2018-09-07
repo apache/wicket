@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.util.cookies;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import javax.servlet.http.Cookie;
 
 import org.apache.wicket.MarkupContainer;
@@ -25,15 +27,15 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for https://issues.apache.org/jira/browse/WICKET-5425
  */
-public class PreserveRequestCookieAfterLinkClickTest extends WicketTestCase
+class PreserveRequestCookieAfterLinkClickTest extends WicketTestCase
 {
 	@Test
-	public void cookiesTransferAfterClickingLink()
+	void cookiesTransferAfterClickingLink()
 	{
 		Cookie testCookie = new Cookie("lostCookie", "lostValue");
 		testCookie.setMaxAge(1);
@@ -48,9 +50,9 @@ public class PreserveRequestCookieAfterLinkClickTest extends WicketTestCase
 		assertEquals("lostValue", firstCookie.getValue());
 	}
 
-	public static class Page1 extends WebPage implements IMarkupResourceStreamProvider
+    public static class Page1 extends WebPage implements IMarkupResourceStreamProvider
 	{
-		public Page1()
+        public Page1()
 		{
 			add(new Link<Void>("testCookieTransfer")
 			{
@@ -68,7 +70,7 @@ public class PreserveRequestCookieAfterLinkClickTest extends WicketTestCase
 		}
 	}
 
-	public static class Page2 extends WebPage implements IMarkupResourceStreamProvider
+    public static class Page2 extends WebPage implements IMarkupResourceStreamProvider
 	{
 		@Override
 		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)

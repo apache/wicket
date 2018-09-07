@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,8 +33,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Testing updating model collections through
@@ -38,10 +41,10 @@ import org.junit.Test;
  * 
  * @author svenmeier
  */
-public class CollectionFormComponentTest extends WicketTestCase
+class CollectionFormComponentTest extends WicketTestCase
 {
 	@Test
-	public void getSetNullList()
+	void getSetNullList()
 	{
 		final AtomicBoolean setCalled = new AtomicBoolean();
 
@@ -71,7 +74,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 	}
 
 	@Test
-	public void getSetNullSet()
+	void getSetNullSet()
 	{
 		final AtomicBoolean setCalled = new AtomicBoolean();
 
@@ -100,8 +103,8 @@ public class CollectionFormComponentTest extends WicketTestCase
 		assertEquals("[A, B]", choice.getDefaultModelObjectAsString());
 	}
 
-	@Test(expected = WicketRuntimeException.class)
-	public void getNullCollectionFails()
+	@Test
+	void getNullCollectionFails()
 	{
 		Object object = new Object()
 		{
@@ -115,11 +118,14 @@ public class CollectionFormComponentTest extends WicketTestCase
 
 		Choice choice = new Choice(object);
 		choice.setConvertedInput(Arrays.asList("A", "B"));
-		FormComponent.updateCollectionModel(choice);
+
+		assertThrows(WicketRuntimeException.class, () -> {
+			FormComponent.updateCollectionModel(choice);
+		});
 	}
 
 	@Test
-	public void getSetModifiableCollection()
+	void getSetModifiableCollection()
 	{
 		final AtomicBoolean setCalled = new AtomicBoolean();
 
@@ -149,7 +155,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 	}
 
 	@Test
-	public void getModifiableCollection()
+	void getModifiableCollection()
 	{
 		Object object = new Object()
 		{
@@ -172,7 +178,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 	 * WICKET-5518
 	 */
 	@Test
-	public void getSetUnmodifiableList()
+	void getSetUnmodifiableList()
 	{
 		final AtomicBoolean setCalled = new AtomicBoolean();
 
@@ -202,7 +208,7 @@ public class CollectionFormComponentTest extends WicketTestCase
 	}
 
 	@Test
-	public void getSetUnmodifiableSet()
+	void getSetUnmodifiableSet()
 	{
 		final AtomicBoolean setCalled = new AtomicBoolean();
 
@@ -231,8 +237,8 @@ public class CollectionFormComponentTest extends WicketTestCase
 		assertEquals("[A, B]", choice.getDefaultModelObjectAsString());
 	}
 
-	@Test(expected = WicketRuntimeException.class)
-	public void getUnmodifiableFails()
+	@Test
+	void getUnmodifiableFails()
 	{
 		Object object = new Object()
 		{
@@ -246,11 +252,14 @@ public class CollectionFormComponentTest extends WicketTestCase
 
 		Choice choice = new Choice(object);
 		choice.setConvertedInput(Arrays.asList("A", "B"));
-		FormComponent.updateCollectionModel(choice);
+
+		assertThrows(WicketRuntimeException.class, () -> {
+			FormComponent.updateCollectionModel(choice);
+		});
 	}
 
 	@Test
-	public void getUnmodifiableInCaseOfNoConvertedInput()
+	void getUnmodifiableInCaseOfNoConvertedInput()
 	{
 		LoadableDetachableModel<Collection<String>> model = new LoadableDetachableModel<Collection<String>>()
 		{
@@ -269,11 +278,11 @@ public class CollectionFormComponentTest extends WicketTestCase
 		};
 		formComponent.setConvertedInput(null);
 		FormComponent.updateCollectionModel(formComponent);
-		Assert.assertTrue(formComponent.getModelObject().isEmpty());
+		assertTrue(formComponent.getModelObject().isEmpty());
 	}
 
 	@Test
-	public void getModelCollectionIsNullInCaseOfNoConvertedInput()
+	void getModelCollectionIsNullInCaseOfNoConvertedInput()
 	{
 		LoadableDetachableModel<Collection<String>> model = new LoadableDetachableModel<Collection<String>>()
 		{
@@ -292,13 +301,13 @@ public class CollectionFormComponentTest extends WicketTestCase
 		};
 		formComponent.setConvertedInput(null);
 		FormComponent.updateCollectionModel(formComponent);
-		Assert.assertTrue(formComponent.getModelObject().isEmpty());
+		assertTrue(formComponent.getModelObject().isEmpty());
 	}
 
 	private class Choice extends FormComponent<Collection<String>>
 	{
 
-		public Choice(Object object)
+		Choice(Object object)
 		{
 			super("choice", new PropertyModel(object, "strings"));
 		}

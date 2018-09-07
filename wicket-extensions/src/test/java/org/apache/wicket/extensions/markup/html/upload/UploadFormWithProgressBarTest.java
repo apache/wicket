@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.upload;
 
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
@@ -26,7 +28,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */

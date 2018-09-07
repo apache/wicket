@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.html.form.login;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
@@ -29,14 +31,13 @@ import org.apache.wicket.request.component.IRequestableComponent;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * @author marrink
  * 
  */
-public class InterceptTest extends WicketTestCase
+class InterceptTest extends WicketTestCase
 {
 	@Override
 	protected WebApplication newApplication()
@@ -48,7 +49,7 @@ public class InterceptTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void formSubmit()
+	void formSubmit()
 	{
 		// same as above but uses different technique to login
 		tester.startPage(tester.getApplication().getHomePage());
@@ -65,7 +66,7 @@ public class InterceptTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void clickLink()
+	void clickLink()
 	{
 		tester.startPage(tester.getApplication().getHomePage());
 		MockLoginPage loginPage = (MockLoginPage)tester.getLastRenderedPage();
@@ -86,7 +87,7 @@ public class InterceptTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void clickLink2()
+	void clickLink2()
 	{
 		// same as above but uses different technique to login
 		tester.startPage(tester.getApplication().getHomePage());
@@ -129,7 +130,7 @@ public class InterceptTest extends WicketTestCase
 		 * 
 		 * @return Class
 		 */
-		public Class<? extends Page> getLoginPage()
+		Class<? extends Page> getLoginPage()
 		{
 			return MockLoginPage.class;
 		}
@@ -154,7 +155,7 @@ public class InterceptTest extends WicketTestCase
 		/**
 		 * @param request
 		 */
-		protected MySession(Request request)
+		MySession(Request request)
 		{
 			super(request);
 		}
@@ -164,7 +165,7 @@ public class InterceptTest extends WicketTestCase
 			return username;
 		}
 
-		protected final void setUsername(String username)
+		final void setUsername(String username)
 		{
 			this.username = username;
 		}
@@ -173,7 +174,7 @@ public class InterceptTest extends WicketTestCase
 		 * 
 		 * @return boolean
 		 */
-		public boolean isLoggedIn()
+		boolean isLoggedIn()
 		{
 			return !Strings.isEmpty(username);
 		}

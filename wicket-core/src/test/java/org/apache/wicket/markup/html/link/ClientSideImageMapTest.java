@@ -19,18 +19,18 @@ package org.apache.wicket.markup.html.link;
 import java.util.Locale;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 1.5
  */
-public class ClientSideImageMapTest extends WicketTestCase
+class ClientSideImageMapTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void testRenderClientSideImageMapPage_1() throws Exception
+    void testRenderClientSideImageMapPage_1() throws Exception
 	{
 		tester.getSession().setLocale(Locale.US);
 		executeTest(ClientSideImageMapPage_1.class, "ClientSideImageMapPageExpectedResult_1.html");

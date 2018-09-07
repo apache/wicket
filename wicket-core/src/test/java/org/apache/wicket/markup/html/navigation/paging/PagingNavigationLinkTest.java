@@ -16,16 +16,19 @@
  */
 package org.apache.wicket.markup.html.navigation.paging;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the PagingNavigationLink.
  * 
  * @author Martijn Dashorst
  */
-public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
+class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 {
 	/** the mock pageable driver. */
 	private MockPageable mock;
@@ -35,8 +38,8 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 * 
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		mock = new MockPageable();
 	}
@@ -45,25 +48,25 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 * Tests the get page number and is first and last methods.
 	 */
 	@Test
-	public void getPageNumber_1()
+	void getPageNumber_1()
 	{
 		PagingNavigationLink<Void> link = new PagingNavigationLink<Void>("id", mock, 0);
 
 		currentpage = 0;
 		pagecount = 0;
 
-		assertTrue("is first", link.isFirst());
-		assertFalse("is last", link.isLast());
+		assertTrue(link.isFirst(), "is first");
+		assertFalse(link.isLast(), "is last");
 		assertEquals(0, link.getPageNumber());
 
 		pagecount = 1;
-		assertTrue("is first", link.isFirst());
-		assertTrue("is last", link.isLast());
+		assertTrue(link.isFirst(), "is first");
+		assertTrue(link.isLast(), "is last");
 		assertEquals(0, link.getPageNumber());
 
 		pagecount = 2;
-		assertTrue("is first", link.isFirst());
-		assertFalse("is last", link.isLast());
+		assertTrue(link.isFirst(), "is first");
+		assertFalse(link.isLast(), "is last");
 		assertEquals(0, link.getPageNumber());
 	}
 
@@ -71,25 +74,25 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 * Tests the get page number and is first and last methods.
 	 */
 	@Test
-	public void getPageNumber_2()
+	void getPageNumber_2()
 	{
 		PagingNavigationLink<Void> link = new PagingNavigationLink<Void>("id", mock, 2);
 
 		currentpage = 0;
 		pagecount = 0;
 
-		assertTrue("is first", link.isFirst());
-		assertFalse("is last", link.isLast());
+		assertTrue(link.isFirst(), "is first");
+		assertFalse(link.isLast(), "is last");
 		assertEquals(0, link.getPageNumber());
 
 		pagecount = 2;
-		assertFalse("is first", link.isFirst());
-		assertTrue("is last", link.isLast());
+		assertFalse(link.isFirst(), "is first");
+		assertTrue(link.isLast(), "is last");
 		assertEquals(1, link.getPageNumber());
 
 		pagecount = 3;
-		assertFalse("is first", link.isFirst());
-		assertTrue("is last", link.isLast());
+		assertFalse(link.isFirst(), "is first");
+		assertTrue(link.isLast(), "is last");
 		assertEquals(2, link.getPageNumber());
 	}
 
@@ -97,25 +100,25 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 * Tests the get page number and is first and last methods.
 	 */
 	@Test
-	public void getPageNumber_3()
+	void getPageNumber_3()
 	{
 		PagingNavigationLink<Void> link = new PagingNavigationLink<Void>("id", mock, -1);
 
 		currentpage = 0;
 		pagecount = 0;
 
-		assertTrue("is first", link.isFirst());
-		assertFalse("is last", link.isLast());
+		assertTrue(link.isFirst(), "is first");
+		assertFalse(link.isLast(), "is last");
 		assertEquals(0, link.getPageNumber());
 
 		pagecount = 2;
-		assertFalse("is first", link.isFirst());
-		assertTrue("is last", link.isLast());
+		assertFalse(link.isFirst(), "is first");
+		assertTrue(link.isLast(), "is last");
 		assertEquals(1, link.getPageNumber());
 
 		pagecount = 3;
-		assertFalse("is first", link.isFirst());
-		assertTrue("is last", link.isLast());
+		assertFalse(link.isFirst(), "is first");
+		assertTrue(link.isLast(), "is last");
 		assertEquals(2, link.getPageNumber());
 	}
 
@@ -123,28 +126,28 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 * Tests the linksTo method.
 	 */
 	@Test
-	public void linksTo()
+	void linksTo()
 	{
 		PagingNavigationLink<Void> link = new PagingNavigationLink<Void>("id", mock, -1);
 
 		currentpage = 0;
 		pagecount = 0;
 
-		assertTrue("links to", link.linksTo(null));
+		assertTrue(link.linksTo(null), "links to");
 
 		currentpage = 0;
 		pagecount = 1;
 
-		assertTrue("links to", link.linksTo(null));
+		assertTrue(link.linksTo(null), "links to");
 
 		currentpage = 0;
 		pagecount = 3;
 
-		assertFalse("links to", link.linksTo(null));
+		assertFalse(link.linksTo(null), "links to");
 
 		currentpage = 2;
 		pagecount = 3;
 
-		assertTrue("links to", link.linksTo(null));
+		assertTrue(link.linksTo(null), "links to");
 	}
 }

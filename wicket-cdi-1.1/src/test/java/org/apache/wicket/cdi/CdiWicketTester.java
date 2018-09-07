@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.cdi;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,10 +53,9 @@ public class CdiWicketTester extends WicketTester
 	}
 
 	/**
-	 * Process the request by first activating the contexts on initial call.
-	 * This call is called recursively in the super class so keep track of the
-	 * topmost call and only activate and deactivate the contexts during that
-	 * time.
+	 * Process the request by first activating the contexts on initial call. This call is called
+	 * recursively in the super class so keep track of the topmost call and only activate and
+	 * deactivate the contexts during that time.
 	 * 
 	 * @param forcedRequest
 	 * @param forcedRequestHandler
@@ -65,7 +64,7 @@ public class CdiWicketTester extends WicketTester
 	 */
 	@Override
 	protected boolean processRequest(final MockHttpServletRequest forcedRequest,
-			final IRequestHandler forcedRequestHandler, final boolean redirect)
+		final IRequestHandler forcedRequestHandler, final boolean redirect)
 	{
 		if (getLastRequest() != null)
 		{
@@ -111,17 +110,16 @@ public class CdiWicketTester extends WicketTester
 	}
 
 	/**
-	 * Asserts that the response contains the right count. This can only be done
-	 * by parsing the markup because models only contain valid values during a
-	 * request, not after.
+	 * Asserts that the response contains the right count. This can only be done by parsing the
+	 * markup because models only contain valid values during a request, not after.
 	 * 
 	 * @param count
 	 *            TODO
 	 */
 	public void assertCount(int count)
 	{
-		assertTrue("Response does not contain a count",
-				getLastResponseAsString().contains("COUNT=x"));
+		assertTrue(getLastResponseAsString().contains("COUNT=x"),
+			"Response does not contain a count");
 		Matcher matcher = COUNT_PATTERN.matcher(getLastResponseAsString());
 		assertTrue(matcher.find());
 		assertEquals(Integer.toString(count), matcher.group(1));

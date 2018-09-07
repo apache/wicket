@@ -16,24 +16,24 @@
  */
 package org.apache.wicket.behavior;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.util.tester.TagTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link Behavior}
  */
-public class BehaviorTest extends WicketTestCase
+class BehaviorTest extends WicketTestCase
 {
 	@Test
-	public void onTagTest()
+	void onTagTest()
 	{
-		WebMarkupContainer component = new WebMarkupContainer(MockPageWithOneComponent.COMPONENT_ID);
+		WebMarkupContainer component = new WebMarkupContainer(
+			MockPageWithOneComponent.COMPONENT_ID);
 		MockPageWithOneComponent page = new MockPageWithOneComponent();
 		page.add(component);
 		String value = "value";
@@ -44,14 +44,15 @@ public class BehaviorTest extends WicketTestCase
 		tester.startPage(page);
 
 		TagTester tagTester = tester.getTagByWicketId(MockPageWithOneComponent.COMPONENT_ID);
-		assertThat(tagTester.getAttribute(key), is(equalTo(value)));
-		assertThat(tagTester.getAttribute("class"), is(equalTo("zzz")));
+		assertEquals(value, tagTester.getAttribute(key));
+		assertEquals("zzz", tagTester.getAttribute("class"));
 	}
-	
+
 	@Test
-	public void onAttributeTest()
+	void onAttributeTest()
 	{
-		WebMarkupContainer component = new WebMarkupContainer(MockPageWithOneComponent.COMPONENT_ID);
+		WebMarkupContainer component = new WebMarkupContainer(
+			MockPageWithOneComponent.COMPONENT_ID);
 		MockPageWithOneComponent page = new MockPageWithOneComponent();
 		page.add(component);
 		String value = "value";
@@ -61,6 +62,6 @@ public class BehaviorTest extends WicketTestCase
 		tester.startPage(page);
 
 		TagTester tagTester = tester.getTagByWicketId(MockPageWithOneComponent.COMPONENT_ID);
-		assertThat(tagTester.getAttribute(key), is(equalTo(value)));
+		assertEquals(value, tagTester.getAttribute(key));
 	}
 }

@@ -16,20 +16,19 @@
  */
 package org.apache.wicket.request.mapper.parameter;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
 import org.apache.wicket.util.string.StringValue;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link PageParameters}
  */
-public class PageParametersTest extends Assert
+class PageParametersTest
 {
 
 	/**
@@ -37,7 +36,7 @@ public class PageParametersTest extends Assert
 	 * StringValue's for that key
 	 */
 	@Test
-	public void addStringArrayValue()
+	void addStringArrayValue()
 	{
 		PageParameters parameters = new PageParameters();
 
@@ -70,36 +69,34 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-3906
 	 */
 	@Test
-	public void getPosition()
+	void getPosition()
 	{
 		PageParameters parameters = new PageParameters();
 		parameters.set("named1", "value1", 3, INamedParameters.Type.MANUAL);
-		assertEquals(
-			"Adding a parameter at position out of the size of the list will just append it", 0,
-			parameters.getPosition("named1"));
+		assertEquals(0, parameters.getPosition("named1"),
+			"Adding a parameter at position out of the size of the list will just append it");
 
 		parameters.set("named2", "value2", 0, INamedParameters.Type.MANUAL);
 		assertEquals(0, parameters.getPosition("named2"));
-		assertEquals("'named1' should be moved back", 1, parameters.getPosition("named1"));
+		assertEquals(1, parameters.getPosition("named1"), "'named1' should be moved back");
 
 
 		parameters.set("named3", "value3", -100, INamedParameters.Type.MANUAL);
 		assertEquals(0, parameters.getPosition("named2"));
 		assertEquals(1, parameters.getPosition("named1"));
-		assertEquals("Adding a parameter with negative position will just append it.", 2,
-			parameters.getPosition("named3"));
+		assertEquals(2, parameters.getPosition("named3"),
+			"Adding a parameter with negative position will just append it.");
 	}
 
 	/**
 	 * Tests that overwriting (via #set()) a named parameter will preserve its position
 	 */
 	@Test
-	public void set()
+	void set()
 	{
 		PageParameters parameters = new PageParameters();
-		parameters
-				.add("named1", "value1", INamedParameters.Type.MANUAL)
-				.add("named2", "value2", INamedParameters.Type.MANUAL);
+		parameters.add("named1", "value1", INamedParameters.Type.MANUAL).add("named2", "value2",
+			INamedParameters.Type.MANUAL);
 
 		assertEquals(0, parameters.getPosition("named1"));
 		assertEquals(1, parameters.getPosition("named2"));
@@ -119,11 +116,11 @@ public class PageParametersTest extends Assert
 	 * Remove the parameter by its name
 	 */
 	@Test
-	public void removeParameters()
+	void removeParameters()
 	{
 		PageParameters parameters = new PageParameters()
-				.add("named1", "value1", INamedParameters.Type.MANUAL)
-				.add("named2", "value2", INamedParameters.Type.MANUAL);
+			.add("named1", "value1", INamedParameters.Type.MANUAL)
+			.add("named2", "value2", INamedParameters.Type.MANUAL);
 
 		assertEquals("value1", parameters.get("named1").toString());
 		assertEquals("value2", parameters.get("named2").toString());
@@ -139,11 +136,11 @@ public class PageParametersTest extends Assert
 	 * Remove the parameter by its name only if its value is equal to the criteria
 	 */
 	@Test
-	public void removeParametersByValue()
+	void removeParametersByValue()
 	{
 		PageParameters parameters = new PageParameters()
-				.add("named1", "value1", INamedParameters.Type.MANUAL)
-				.add("named1", "value2", INamedParameters.Type.MANUAL);
+			.add("named1", "value1", INamedParameters.Type.MANUAL)
+			.add("named1", "value2", INamedParameters.Type.MANUAL);
 
 		assertEquals(2, parameters.getAllNamed().size());
 
@@ -157,10 +154,9 @@ public class PageParametersTest extends Assert
 	 * Merge PageParameters, also when other has multiple values for the same name
 	 */
 	@Test
-	public void mergeParameters()
+	void mergeParameters()
 	{
-		PageParameters left = new PageParameters()
-			.add("left", "left", INamedParameters.Type.MANUAL)
+		PageParameters left = new PageParameters().add("left", "left", INamedParameters.Type.MANUAL)
 			.add("both", "both1", INamedParameters.Type.MANUAL)
 			.add("both", "both2", INamedParameters.Type.MANUAL)
 			.set(0, "val0")
@@ -187,59 +183,59 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5669
 	 */
 	@Test
-	public void parameterTypes()
+	void parameterTypes()
 	{
 		PageParameters p = new PageParameters()
-				.add("pathName1", "pathValue1", INamedParameters.Type.PATH)
-				.add("pathName1", "pathValue1.1", INamedParameters.Type.PATH)
-				.add("pathName2", "pathValue2", INamedParameters.Type.PATH)
-				.add("queryName1", "queryValue1", INamedParameters.Type.QUERY_STRING)
-				.add("queryName1", "queryValue1.1", INamedParameters.Type.QUERY_STRING)
-				.add("queryName2", "queryValue2", INamedParameters.Type.QUERY_STRING)
-				.add("manualName1", "manualValue1", INamedParameters.Type.MANUAL)
-				.add("manualName1", "manualValue1.1", INamedParameters.Type.MANUAL)
-				.add("manualName2", "manualValue2", INamedParameters.Type.MANUAL);
+			.add("pathName1", "pathValue1", INamedParameters.Type.PATH)
+			.add("pathName1", "pathValue1.1", INamedParameters.Type.PATH)
+			.add("pathName2", "pathValue2", INamedParameters.Type.PATH)
+			.add("queryName1", "queryValue1", INamedParameters.Type.QUERY_STRING)
+			.add("queryName1", "queryValue1.1", INamedParameters.Type.QUERY_STRING)
+			.add("queryName2", "queryValue2", INamedParameters.Type.QUERY_STRING)
+			.add("manualName1", "manualValue1", INamedParameters.Type.MANUAL)
+			.add("manualName1", "manualValue1.1", INamedParameters.Type.MANUAL)
+			.add("manualName2", "manualValue2", INamedParameters.Type.MANUAL);
 
 		{
 			// PATH
-			assertThat(p.getAllNamedByType(INamedParameters.Type.PATH).size(), is(3));
+			assertEquals(3, p.getAllNamedByType(INamedParameters.Type.PATH).size());
 
 			List<StringValue> pathName1Values = p.getValues("pathName1");
-			assertThat(pathName1Values.size(), is(2));
-			assertThat(pathName1Values.get(0).toString(), is("pathValue1"));
-			assertThat(pathName1Values.get(1).toString(), is("pathValue1.1"));
+			assertEquals(2, pathName1Values.size());
+			assertEquals("pathValue1", pathName1Values.get(0).toString());
+			assertEquals("pathValue1.1", pathName1Values.get(1).toString());
 
 			List<StringValue> pathName2Values = p.getValues("pathName2");
-			assertThat(pathName2Values.size(), is(1));
-			assertThat(pathName2Values.get(0).toString(), is("pathValue2"));
+			assertEquals(1, pathName2Values.size());
+			assertEquals("pathValue2", pathName2Values.get(0).toString());
 		}
 
 		{
 			// QUERY STRING
-			assertThat(p.getAllNamedByType(INamedParameters.Type.QUERY_STRING).size(), is(3));
+			assertEquals(3, p.getAllNamedByType(INamedParameters.Type.QUERY_STRING).size());
 
 			List<StringValue> queryName1Values = p.getValues("queryName1");
-			assertThat(queryName1Values.size(), is(2));
-			assertThat(queryName1Values.get(0).toString(), is("queryValue1"));
-			assertThat(queryName1Values.get(1).toString(), is("queryValue1.1"));
+			assertEquals(2, queryName1Values.size());
+			assertEquals("queryValue1", queryName1Values.get(0).toString());
+			assertEquals("queryValue1.1", queryName1Values.get(1).toString());
 
 			List<StringValue> queryName2Values = p.getValues("queryName2");
-			assertThat(queryName2Values.size(), is(1));
-			assertThat(queryName2Values.get(0).toString(), is("queryValue2"));
+			assertEquals(1, queryName2Values.size());
+			assertEquals("queryValue2", queryName2Values.get(0).toString());
 		}
 
 		{
 			// MANUAL
-			assertThat(p.getAllNamedByType(INamedParameters.Type.MANUAL).size(), is(3));
+			assertEquals(3, p.getAllNamedByType(INamedParameters.Type.MANUAL).size());
 
 			List<StringValue> manualName1Values = p.getValues("manualName1");
-			assertThat(manualName1Values.size(), is(2));
-			assertThat(manualName1Values.get(0).toString(), is("manualValue1"));
-			assertThat(manualName1Values.get(1).toString(), is("manualValue1.1"));
+			assertEquals(2, manualName1Values.size());
+			assertEquals("manualValue1", manualName1Values.get(0).toString());
+			assertEquals("manualValue1.1", manualName1Values.get(1).toString());
 
 			List<StringValue> manualName2Values = p.getValues("manualName2");
-			assertThat(manualName2Values.size(), is(1));
-			assertThat(manualName2Values.get(0).toString(), is("manualValue2"));
+			assertEquals(1, manualName2Values.size());
+			assertEquals("manualValue2", manualName2Values.get(0).toString());
 		}
 	}
 
@@ -247,33 +243,33 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5669
 	 */
 	@Test
-	public void addWithoutTypeIsManual()
+	void addWithoutTypeIsManual()
 	{
 		PageParameters p = new PageParameters();
 		p.add("name", "value");
-		assertThat(p.getAllNamed().get(0).getType(), is(INamedParameters.Type.MANUAL));
+		assertEquals(INamedParameters.Type.MANUAL, p.getAllNamed().get(0).getType());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5669
 	 */
 	@Test
-	public void setWithoutTypeIsManual()
+	void setWithoutTypeIsManual()
 	{
 		PageParameters p = new PageParameters();
 		p.set("name", "value");
-		assertThat(p.getAllNamed().get(0).getType(), is(INamedParameters.Type.MANUAL));
+		assertEquals(INamedParameters.Type.MANUAL, p.getAllNamed().get(0).getType());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5669
 	 */
 	@Test
-	public void setWithIndexWithoutTypeIsManual()
+	void setWithIndexWithoutTypeIsManual()
 	{
 		PageParameters p = new PageParameters();
 		p.set("name", "value", 3);
-		assertThat(p.getAllNamed().get(0).getType(), is(INamedParameters.Type.MANUAL));
+		assertEquals(INamedParameters.Type.MANUAL, p.getAllNamed().get(0).getType());
 	}
 
 	/**
@@ -282,17 +278,15 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5669
 	 */
 	@Test
-	public void equality()
+	void equality()
 	{
-		PageParameters p1 = new PageParameters()
-				.add("a", "b", INamedParameters.Type.MANUAL)
-				.set("c", "d", INamedParameters.Type.MANUAL);
+		PageParameters p1 = new PageParameters().add("a", "b", INamedParameters.Type.MANUAL)
+			.set("c", "d", INamedParameters.Type.MANUAL);
 
-		PageParameters p2 = new PageParameters()
-				.set("a", "b", INamedParameters.Type.QUERY_STRING)
-				.add("c", "d", INamedParameters.Type.PATH);
+		PageParameters p2 = new PageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING)
+			.add("c", "d", INamedParameters.Type.PATH);
 
-		assertThat(p1, is(equalTo(p2)));
+		assertEquals(p2, p1);
 	}
 
 	/**
@@ -301,17 +295,12 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6283
 	 */
 	@Test
-	public void equalityOfDifferentNamedParametersOrder()
+	void equalityOfDifferentNamedParametersOrder()
 	{
-		PageParameters p1 = new PageParameters()
-				.add("a", "b")
-				.add("c", "d");
+		PageParameters p1 = new PageParameters().add("a", "b").add("c", "d");
+		PageParameters p2 = new PageParameters().add("c", "d").add("a", "b");
 
-		PageParameters p2 = new PageParameters()
-				.add("c", "d")
-				.add("a", "b");
-
-		assertThat(p1, is(equalTo(p2)));
+		assertEquals(p2, p1);
 	}
 
 	/**
@@ -320,14 +309,11 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6332
 	 */
 	@Test
-	public void equalityWithEmptyNamedParameters()
+	void equalityWithEmptyNamedParameters()
 	{
-		PageParameters p1 = new PageParameters()
-				.add("a", "b");
+		PageParameters p1 = new PageParameters().add("a", "b");
 
-		PageParameters p2 = new PageParameters();
-
-		assertThat(p1, is(not(equalTo(p2))));
+		assertNotEquals(new PageParameters(), p1);
 	}
 
 	/**
@@ -336,14 +322,11 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-6332
 	 */
 	@Test
-	public void equalityWithEmptyIndexedParameters()
+	void equalityWithEmptyIndexedParameters()
 	{
-		PageParameters p1 = new PageParameters()
-				.set(0, "b");
+		PageParameters p1 = new PageParameters().set(0, "b");
 
-		PageParameters p2 = new PageParameters();
-
-		assertThat(p1, is(not(equalTo(p2))));
+		assertNotEquals(new PageParameters(), p1);
 	}
 
 	/**
@@ -352,16 +335,14 @@ public class PageParametersTest extends Assert
 	 * https://issues.apache.org/jira/browse/WICKET-5669
 	 */
 	@Test
-	public void hashcode()
+	void hashcode()
 	{
-		PageParameters p1 = new PageParameters()
-				.add("a", "b", INamedParameters.Type.MANUAL)
-				.set("c", "d", INamedParameters.Type.MANUAL);
+		PageParameters p1 = new PageParameters().add("a", "b", INamedParameters.Type.MANUAL)
+			.set("c", "d", INamedParameters.Type.MANUAL);
 
-		PageParameters p2 = new PageParameters()
-				.set("a", "b", INamedParameters.Type.QUERY_STRING)
-				.add("c", "d", INamedParameters.Type.PATH);
+		PageParameters p2 = new PageParameters().set("a", "b", INamedParameters.Type.QUERY_STRING)
+			.add("c", "d", INamedParameters.Type.PATH);
 
-		assertThat(p1.hashCode(), is(equalTo(p2.hashCode())));
+		assertEquals(p2.hashCode(), p1.hashCode());
 	}
 }

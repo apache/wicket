@@ -18,12 +18,12 @@ package org.apache.wicket.markup.html.markupId;
 
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends WicketTestCase
+class TestHomePage extends WicketTestCase
 {
 
 	@Override
@@ -36,7 +36,7 @@ public class TestHomePage extends WicketTestCase
 	 * testRenderMyPage()
 	 */
 	@Test
-	public void testRenderMyPage()
+    void testRenderMyPage()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

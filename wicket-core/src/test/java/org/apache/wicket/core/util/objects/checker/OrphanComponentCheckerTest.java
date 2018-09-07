@@ -16,19 +16,21 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.TestPage_1;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for OrphanComponentChecker
  */
-public class OrphanComponentCheckerTest extends WicketTestCase
+class OrphanComponentCheckerTest extends WicketTestCase
 {
 	@Test
-	public void checkOrphanComponent()
+	void checkOrphanComponent()
 	{
 		WebComponent component = new WebComponent("a");
 		IObjectChecker checker = new OrphanComponentChecker();

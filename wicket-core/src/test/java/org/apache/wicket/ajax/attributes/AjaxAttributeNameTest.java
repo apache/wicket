@@ -16,29 +16,31 @@
  */
 package org.apache.wicket.ajax.attributes;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * provide some refactoring safety
  * 
  * @author mosmann
  */
-public class AjaxAttributeNameTest extends Assert
+class AjaxAttributeNameTest
 {
 	/**
 	 * do not let json parameter names collide
 	 */
 	@Test
-	public void jsonNamesDoNotCollide()
+	void jsonNamesDoNotCollide()
 	{
 		Set<String> jsonNames = new HashSet<>();
 		for (AjaxAttributeName name : AjaxAttributeName.values())
 		{
-			assertTrue("Attribute: " + name, jsonNames.add(name.jsonName()));
+			assertTrue(jsonNames.add(name.jsonName()), "Attribute: " + name);
 		}
 	}
 
@@ -47,7 +49,7 @@ public class AjaxAttributeNameTest extends Assert
 	 * names
 	 */
 	@Test
-	public void nobodyDidChangeAnyAjaxAttributeName()
+	void nobodyDidChangeAnyAjaxAttributeName()
 	{
 		StringBuilder sb = new StringBuilder();
 		for (AjaxAttributeName name : AjaxAttributeName.values())
@@ -56,8 +58,8 @@ public class AjaxAttributeNameTest extends Assert
 			sb.append('|');
 		}
 
-		assertEquals("all known json parameter names",
+		assertEquals(
 			"tr|p|d|id|dt|wr|rt|pd|sp|ch|e|async|dep|ep|pre|coh|fh|sh|ah|bsh|bh|ih|dh|i|sc|mp|f|c|m|u|sel|sr|",
-			sb.toString());
+			sb.toString(), "all known json parameter names");
 	}
 }

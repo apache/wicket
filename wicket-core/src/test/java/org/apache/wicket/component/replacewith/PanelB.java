@@ -18,7 +18,7 @@ package org.apache.wicket.component.replacewith;
 
 import org.apache.wicket.markup.html.panel.Panel;
 
-public class PanelB extends Panel
+class PanelB extends Panel
 {
     public PanelB(String id)
     {

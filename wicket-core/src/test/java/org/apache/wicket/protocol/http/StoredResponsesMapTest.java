@@ -16,24 +16,28 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.wicket.util.SlowTests;
+import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 /**
  * @see <a href="https://issues.apache.org/jira/browse/WICKET-3209">WICKET-3209</a>
  */
-@Category(SlowTests.class)
-public class StoredResponsesMapTest extends Assert
+@Tag(WicketTestTag.SLOW)
+class StoredResponsesMapTest
 {
 	/**
 	 * Verifies that {@link StoredResponsesMap} will expire the oldest entry if it is older than 2
@@ -42,7 +46,7 @@ public class StoredResponsesMapTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void entriesLife2Seconds() throws Exception
+	void entriesLife2Seconds() throws Exception
 	{
 		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.seconds(2));
 		assertEquals(0, map.size());
@@ -60,7 +64,7 @@ public class StoredResponsesMapTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void getExpiredValue() throws Exception
+	void getExpiredValue() throws Exception
 	{
 		Time start = Time.now();
 		Duration timeout = Duration.milliseconds(50);
@@ -69,7 +73,7 @@ public class StoredResponsesMapTest extends Assert
 		map.put("1", new BufferedWebResponse(null));
 		assertEquals(1, map.size());
 		TimeUnit.MILLISECONDS.sleep(timeout.getMilliseconds() * 2); // sleep for twice longer than the timeout
-		assertTrue("The timeout has passed.", Time.now().subtract(start).compareTo(timeout) == 1);
+		assertTrue(Time.now().subtract(start).compareTo(timeout) == 1, "The timeout has passed.");
 		Object value = map.get("1");
 		assertNull(value);
 	}
@@ -77,11 +81,14 @@ public class StoredResponsesMapTest extends Assert
 	/**
 	 * Verifies that {@link StoredResponsesMap} can have only {@link BufferedWebResponse} values
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void cannotPutArbitraryValue()
+	@Test
+	void cannotPutArbitraryValue()
 	{
 		StoredResponsesMap map = new StoredResponsesMap(1000, Duration.days(1));
-		map.put("1", new Object());
+		assertThrows(IllegalArgumentException.class, () -> {
+			map.put("1", new Object());
+		});
+
 	}
 
 	/**
@@ -89,14 +96,11 @@ public class StoredResponsesMapTest extends Assert
 	 * 
 	 * Tries to simulate heavy load on the {@link StoredResponsesMap} by putting many entries and
 	 * removing randomly them.
-	 * 
-	 * The test is disabled by default because it is slow (~ 30secs). Enable it when we have
-	 * categorized tests ({@link Category}) and run slow ones only at Apache CI servers
-	 * 
+	 *
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void heavyLoad() throws InterruptedException
+	void heavyLoad() throws InterruptedException
 	{
 		final int numberOfThreads = 100;
 		final int iterations = 1000;

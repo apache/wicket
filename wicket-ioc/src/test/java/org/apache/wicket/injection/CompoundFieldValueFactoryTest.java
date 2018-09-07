@@ -16,19 +16,19 @@
  */
 package org.apache.wicket.injection;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Test {@link CompoundFieldValueFactory}
@@ -36,7 +36,7 @@ import org.junit.Test;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class CompoundFieldValueFactoryTest extends Assert
+public class CompoundFieldValueFactoryTest
 {
 	private Integer testField;
 
@@ -48,7 +48,7 @@ public class CompoundFieldValueFactoryTest extends Assert
 	 * 
 	 * @throws Exception
 	 */
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		CompoundFieldValueFactoryTest.class.getDeclaredField("testField");

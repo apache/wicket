@@ -16,7 +16,10 @@
  */
 package org.apache.wicket.core.request.handler;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -32,7 +35,6 @@ import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.Markup;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.StatelessLink;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -41,7 +43,7 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@link ListenerRequestHandler}
@@ -53,20 +55,18 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 	 * WICKET-5466
 	 */
 	@Test
-	public void removedComponent()
+	void removedComponent()
 	{
 		// non-existing component on fresh page is ignored
 		PageAndComponentProvider freshPage = new PageAndComponentProvider(DummyPage.class, null,
 			"foo");
-		new ListenerRequestHandler(freshPage).respond(tester
-			.getRequestCycle());
+		new ListenerRequestHandler(freshPage).respond(tester.getRequestCycle());
 
 		// non-existing component on old page fails
 		PageAndComponentProvider oldPage = new PageAndComponentProvider(new DummyPage(), "foo");
 		try
 		{
-			new ListenerRequestHandler(oldPage)
-				.respond(tester.getRequestCycle());
+			new ListenerRequestHandler(oldPage).respond(tester.getRequestCycle());
 			fail();
 		}
 		catch (WicketRuntimeException ex)
@@ -81,7 +81,7 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void recreateThePageWhenListenereInterfaceIsExecutedOnExpiredPage() throws Exception
+	void recreateThePageWhenListenereInterfaceIsExecutedOnExpiredPage() throws Exception
 	{
 		tester.getApplication().mountPage("ajaxLink", AjaxLinkExpirePage.class);
 		AjaxLinkExpirePage page = tester.startPage(AjaxLinkExpirePage.class);
@@ -97,17 +97,54 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 
 		Page lastRenderedPage = tester.getLastRenderedPage();
 		int lastRenderedPageId = lastRenderedPage.getPageId();
-		assertTrue("A new page must be create ", lastRenderedPageId > initialPageId);
+		assertTrue(lastRenderedPageId > initialPageId, "A new page must be create ");
 	}
 
-	private void executeAjaxUrlWithLastBaseUrl(Url url) throws IOException,
-		ResourceStreamNotFoundException, ParseException
+	private void executeAjaxUrlWithLastBaseUrl(Url url)
+		throws IOException, ResourceStreamNotFoundException, ParseException
 	{
 		tester.getRequest().setUrl(url);
 		tester.getRequest().addHeader("Wicket-Ajax-BaseURL",
 			tester.getWicketAjaxBaseUrlEncodedInLastResponse());
 		tester.getRequest().addHeader("Wicket-Ajax", "true");
 		tester.processRequest();
+	}
+
+	/**
+	 * Testcase for WICKET-4185
+	 */
+	@Test
+	void isPageInstanceCreatedOnClassLinks()
+	{
+		PageAndComponentProvider provider = new PageAndComponentProvider(Page.class, "link");
+		ListenerRequestHandler handler = new ListenerRequestHandler(provider);
+		assertFalse(handler.isPageInstanceCreated(), "A new page must be create ");
+	}
+
+	@Test
+	void executeStatelessLinkInAFreshPage()
+	{
+		tester.startPage(StatelessPage.class);
+
+		tester.clickLink("statelessLink");
+
+		StatelessPage page = (StatelessPage)tester.getLastRenderedPage();
+		assertTrue(page.invoked);
+		assertTrue(page.executedInAnFreshPage);
+	}
+
+	@Test
+	void executeStatelessLinkInAFreshPageAtASegment()
+	{
+		tester.getApplication().getRootRequestMapperAsCompound().add(
+			new MountedMapper("/segment", TemporarilyStateful.class));
+		tester.startPage(TemporarilyStateful.class);
+
+		tester.clickLink("statelessLink");
+
+		TemporarilyStateful page = (TemporarilyStateful)tester.getLastRenderedPage();
+		assertTrue(page.invoked);
+		assertTrue(page.executedInAnFreshPage);
 	}
 
 	/**
@@ -147,47 +184,10 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 
 	}
 
-	/**
-	 * Testcase for WICKET-4185
-	 */
-	@Test
-	public void isPageInstanceCreatedOnClassLinks()
-	{
-		PageAndComponentProvider provider = new PageAndComponentProvider(Page.class, "link");
-		ListenerRequestHandler handler = new ListenerRequestHandler(provider);
-		assertFalse("Handler should not report a page instance is available ",
-			handler.isPageInstanceCreated());
-	}
-
-	@Test
-	public void executeStatelessLinkInAFreshPage()
-	{
-		tester.startPage(StatelessPage.class);
-
-		tester.clickLink("statelessLink");
-
-		StatelessPage page = (StatelessPage)tester.getLastRenderedPage();
-		assertThat(page.invoked, is(true));
-		assertThat(page.executedInAnFreshPage, is(true));
-	}
-
-	@Test
-	public void executeStatelessLinkInAFreshPageAtASegment()
-	{
-		tester.getApplication().getRootRequestMapperAsCompound() .add(new MountedMapper("/segment", TemporarilyStateful.class));
-		tester.startPage(TemporarilyStateful.class);
-
-		tester.clickLink("statelessLink");
-
-		TemporarilyStateful page = (TemporarilyStateful)tester.getLastRenderedPage();
-		assertThat(page.invoked, is(true));
-		assertThat(page.executedInAnFreshPage, is(true));
-	}
-
 	public static class StatelessPage extends WebPage
 	{
-		public boolean invoked;
-		public boolean executedInAnFreshPage;
+		boolean invoked;
+		boolean executedInAnFreshPage;
 		private boolean initialState = true;
 
 		public StatelessPage(PageParameters pageParameters)
@@ -206,8 +206,7 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 		@Override
 		public IMarkupFragment getMarkup()
 		{
-			return Markup.of(
-				"<html><body><a wicket:id=\"statelessLink\"></a></body></html>");
+			return Markup.of("<html><body><a wicket:id=\"statelessLink\"></a></body></html>");
 		}
 
 		@Override

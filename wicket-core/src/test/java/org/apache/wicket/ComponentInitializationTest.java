@@ -16,6 +16,9 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,20 +30,20 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link Component#onInitialize()} contract
  * 
  * @author igor
  */
-public class ComponentInitializationTest extends WicketTestCase
+class ComponentInitializationTest extends WicketTestCase
 {
 	/**
 	 * testPropagation()
 	 */
 	@Test
-	public void propagation()
+	void propagation()
 	{
 		TestPage page = new TestPage();
 
@@ -85,7 +88,7 @@ public class ComponentInitializationTest extends WicketTestCase
 	 * testAtomicity()
 	 */
 	@Test
-	public void atomicity()
+	void atomicity()
 	{
 		TestPage page = new TestPage();
 
@@ -119,7 +122,7 @@ public class ComponentInitializationTest extends WicketTestCase
 	 * testOnInitializeSuperVerified()
 	 */
 	@Test
-	public void onInitializeSuperVerified()
+	void onInitializeSuperVerified()
 	{
 		TestPage page = new TestPage();
 		page.internalInitialize();
@@ -140,7 +143,7 @@ public class ComponentInitializationTest extends WicketTestCase
 	 * testInitListeners()
 	 */
 	@Test
-	public void initListeners()
+	void initListeners()
 	{
 		TestInitListener listener1 = new TestInitListener();
 		TestInitListener listener2 = new TestInitListener();
@@ -171,7 +174,7 @@ public class ComponentInitializationTest extends WicketTestCase
 	 * testInitializationOrder()
 	 */
 	@Test
-	public void initializationOrder()
+	void initializationOrder()
 	{
 		TestInitListener listener1 = new TestInitListener();
 		tester.getApplication().getComponentInitializationListeners().add(listener1);
@@ -221,7 +224,7 @@ public class ComponentInitializationTest extends WicketTestCase
 			count++;
 		}
 
-		public int getCount()
+		int getCount()
 		{
 			return count;
 		}
@@ -233,7 +236,7 @@ public class ComponentInitializationTest extends WicketTestCase
 
 		private int count = 0;
 
-		public TestComponent(String id)
+		TestComponent(String id)
 		{
 			super(id);
 		}
@@ -245,7 +248,7 @@ public class ComponentInitializationTest extends WicketTestCase
 			count++;
 		}
 
-		public int getCount()
+		int getCount()
 		{
 			return count;
 		}
@@ -258,7 +261,7 @@ public class ComponentInitializationTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 		private final boolean initialized = false;
 
-		public InvalidComponent(String id)
+		InvalidComponent(String id)
 		{
 			super(id);
 		}
@@ -281,7 +284,7 @@ public class ComponentInitializationTest extends WicketTestCase
 			components.add(component);
 		}
 
-		public List<Component> getComponents()
+		List<Component> getComponents()
 		{
 			return components;
 		}

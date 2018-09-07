@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.request.mapper;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.apache.wicket.MockPage;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
@@ -28,13 +30,12 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.mapper.info.PageInfo;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTesterLazyIsPageStatelessRedirectToBufferTest.EmptyPage;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author pedrosans
  */
-public class AbstractBookmarkableMapperTest extends WicketTestCase
+class AbstractBookmarkableMapperTest extends WicketTestCase
 {
 
 	private static final int NOT_RENDERED_COUNT = 2;
@@ -51,8 +52,8 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 			{
 				super.init();
 
-				getSecuritySettings().setAuthorizationStrategy(
-					new AbstractPageAuthorizationStrategy()
+				getSecuritySettings()
+					.setAuthorizationStrategy(new AbstractPageAuthorizationStrategy()
 					{
 						@Override
 						protected <T extends Page> boolean isPageAuthorized(Class<T> pageClass)
@@ -67,31 +68,34 @@ public class AbstractBookmarkableMapperTest extends WicketTestCase
 			}
 		};
 	}
-	
+
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-4932">WICKET-4932</a>
 	 */
-	@Test(expected = PageExpiredException.class)
-	public void itFailsToProcessAnExpiredPageIfShouldNotRecreateMountedPagesAfterExpiry()
+	@Test
+	void itFailsToProcessAnExpiredPageIfShouldNotRecreateMountedPagesAfterExpiry()
 	{
-		tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(false);
-		AbstractBookmarkableMapperStub mapper = new AbstractBookmarkableMapperStub();
-		mapper.processHybrid(new PageInfo(EXPIRED_ID), MockPage.class, null, NOT_RENDERED_COUNT);
-		Assert.fail("it shouldn't process expired pages if the app was flagged to not recreated mounted pages after expiry");
+		assertThrows(PageExpiredException.class, () -> {
+			tester.getApplication().getPageSettings().setRecreateBookmarkablePagesAfterExpiry(
+				false);
+			AbstractBookmarkableMapperStub mapper = new AbstractBookmarkableMapperStub();
+			mapper.processHybrid(new PageInfo(EXPIRED_ID), MockPage.class, null,
+				NOT_RENDERED_COUNT);
+		});
 	}
-	
+
 	/**
 	 * <a href="https://issues.apache.org/jira/browse/WICKET-5734">WICKET-5734</a>
 	 */
 	@Test
-	public void testProcessHybridWithAuthorizationException() throws Exception
+	void testProcessHybridWithAuthorizationException() throws Exception
 	{
 		AbstractBookmarkableMapperStub mapper = new AbstractBookmarkableMapperStub();
 		mapper.processHybrid(new PageInfo(), EmptyPage.class, null, 0);
 	}
-	
+
 	/** */
-	public class AbstractBookmarkableMapperStub extends AbstractBookmarkableMapper
+	class AbstractBookmarkableMapperStub extends AbstractBookmarkableMapper
 	{
 
 		@Override

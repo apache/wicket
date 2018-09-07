@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -29,9 +31,9 @@ import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SessionCheckerTest extends WicketTestCase
+class SessionCheckerTest extends WicketTestCase
 {
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5634
@@ -41,7 +43,7 @@ public class SessionCheckerTest extends WicketTestCase
 	 * keeps a reference to the Wicket Session.
 	 */
 	@Test
-	public void serializingTheSession()
+	void serializingTheSession()
 	{
 		JavaSerializer serializer = new JavaSerializer("JavaSerializerTest")
 		{
@@ -59,14 +61,14 @@ public class SessionCheckerTest extends WicketTestCase
 		container.add(new ComponentWithAReferenceToTheSession("id2"));
 		
 		byte[] serialized = serializer.serialize(container);
-		assertNull("The produced byte[] must be null if there was an error", serialized);
+		assertNull(serialized, "The produced byte[] must be null if there was an error");
 	}
 
 	private static class ComponentWithAReferenceToTheSession extends WebComponent
 	{
 		private final Session member = new WebSession(new MockWebRequest(Url.parse("")));
 
-		public ComponentWithAReferenceToTheSession(final String id)
+		ComponentWithAReferenceToTheSession(final String id)
 		{
 			super(id);
 		}

@@ -17,15 +17,15 @@
 package org.apache.wicket.model;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for CompoundPropertyModel
  */
-public class CompoundPropertyModelTest extends WicketTestCase
+class CompoundPropertyModelTest extends WicketTestCase
 {
 	@Test
-	public void twoLevelsDeepHierarchy()
+    void twoLevelsDeepHierarchy()
 	{
 		tester.startPage(CompoundPropertyModelTwoLevelsDeepPage.class);
 		tester.assertRenderedPage(CompoundPropertyModelTwoLevelsDeepPage.class);

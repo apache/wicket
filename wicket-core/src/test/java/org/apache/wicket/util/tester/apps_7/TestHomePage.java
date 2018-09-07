@@ -17,16 +17,16 @@
 package org.apache.wicket.util.tester.apps_7;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class TestHomePage extends WicketTestCase
+class TestHomePage extends WicketTestCase
 {
 	/**	 */
 	@Test
-	public void testAjaxSubmitWhileAnotherButtonIsNotVisible()
+    void testAjaxSubmitWhileAnotherButtonIsNotVisible()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

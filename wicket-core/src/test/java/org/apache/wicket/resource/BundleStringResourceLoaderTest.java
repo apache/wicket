@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.util.Locale;
 
 import org.apache.wicket.resource.loader.BundleStringResourceLoader;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the <code>BundleStringResourceLoader</code> class.
@@ -36,7 +39,7 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	 * @return The loader instance to test
 	 */
 	@Override
-	protected IStringResourceLoader createLoader()
+    protected IStringResourceLoader createLoader()
 	{
 		return new BundleStringResourceLoader("org.apache.wicket.resource.DummyResources");
 	}
@@ -46,10 +49,11 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	 */
 	@Override
 	@Test
-	public void loaderValidKeyStyleNoLocale()
+	void loaderValidKeyStyleNoLocale()
 	{
-		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt", null);
-		assertEquals("Resource should be loaded", "This is a test", s);
+		String s = loader.loadStringResource(component.getClass(), "test.string", null, "alt",
+			null);
+		assertEquals("This is a test", s, "Resource should be loaded");
 	}
 
 	/**
@@ -57,11 +61,11 @@ public class BundleStringResourceLoaderTest extends StringResourceLoaderTestBase
 	 */
 	@Override
 	@Test
-	public void loaderUnknownResources()
+    public void loaderUnknownResources()
 	{
 		IStringResourceLoader loader = new BundleStringResourceLoader("unknown.resource");
-		assertNull("Unknown resource should return null", loader.loadStringResource(
-			component.getClass(), "test.string", Locale.getDefault(), null, null));
+		assertNull(loader.loadStringResource(component.getClass(), "test.string",
+			Locale.getDefault(), null, null), "Unknown resource should return null");
 	}
 
 }

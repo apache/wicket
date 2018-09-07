@@ -24,7 +24,7 @@ import org.apache.wicket.mock.MockApplication;
  * 
  * @see wicket.myproject.Start#main(String[])
  */
-public class RedirectApplication extends MockApplication
+class RedirectApplication extends MockApplication
 {
 	private boolean showIntercept = false;
 

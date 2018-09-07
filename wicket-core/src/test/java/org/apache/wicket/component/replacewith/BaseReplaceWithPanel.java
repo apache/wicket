@@ -25,9 +25,9 @@ import org.apache.wicket.util.resource.StringResourceStream;
 /**
  * A base panel for all replaceWith panels
  */
-public class BaseReplaceWithPanel extends Panel implements IMarkupResourceStreamProvider
+class BaseReplaceWithPanel extends Panel implements IMarkupResourceStreamProvider
 {
-	public BaseReplaceWithPanel(String id)
+	BaseReplaceWithPanel(String id)
 	{
 		super(id);
 	}

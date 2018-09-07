@@ -16,17 +16,21 @@
  */
 package org.apache.wicket.ajax.form;
 
-import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class AjaxFormChoiceComponentUpdatingBehaviorTest extends WicketTestCase
+import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.jupiter.api.Test;
+
+class AjaxFormChoiceComponentUpdatingBehaviorTest extends WicketTestCase
 {
 
 	/**
 	 * WICKET-5230 nested FormComponent with error message makes group invalid
 	 */
 	@Test
-	public void nestedInvalidFormComponent()
+	void nestedInvalidFormComponent()
 	{
 		ChoiceComponentPage page = tester.startPage(ChoiceComponentPage.class);
 

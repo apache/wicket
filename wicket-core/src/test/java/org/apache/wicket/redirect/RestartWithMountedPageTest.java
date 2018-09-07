@@ -17,18 +17,18 @@
 package org.apache.wicket.redirect;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class RestartWithMountedPageTest extends WicketTestCase
+class RestartWithMountedPageTest extends WicketTestCase
 {
 
 	/**
 	 * Tests that a protected page can redirect to a login page from mounted pages.
 	 */
 	@Test
-	public void testWithMountedLoginPage()
+    void testWithMountedLoginPage()
 	{
 		tester.getApplication().mountPage("/login", LoginPage.class);
 		tester.startPage(ProtectedPage.class);

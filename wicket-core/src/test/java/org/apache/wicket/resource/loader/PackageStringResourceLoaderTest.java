@@ -16,21 +16,24 @@
  */
 package org.apache.wicket.resource.loader;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.resource.loader.pages.Test1;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  */
-public class PackageStringResourceLoaderTest extends WicketTestCase
+class PackageStringResourceLoaderTest extends WicketTestCase
 {
 	/**
 	 * 
 	 */
 	@Test
-	public void packageFileInComponentPackage()
+	void packageFileInComponentPackage()
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
@@ -42,7 +45,7 @@ public class PackageStringResourceLoaderTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void packageFileInParentPackage()
+	void packageFileInParentPackage()
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
@@ -54,7 +57,7 @@ public class PackageStringResourceLoaderTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void notFound()
+	void notFound()
 	{
 		Page page = new Test1();
 		PackageStringResourceLoader loader = new PackageStringResourceLoader();
@@ -65,7 +68,7 @@ public class PackageStringResourceLoaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
+	void test_1() throws Exception
 	{
 		executeTest(Test1.class, "PackageTestPageExpectedResult_1.html");
 	}

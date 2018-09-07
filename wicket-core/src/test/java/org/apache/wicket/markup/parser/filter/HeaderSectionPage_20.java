@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.markup.parser.filter;
 
-import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.StringHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 
@@ -48,7 +48,7 @@ public class HeaderSectionPage_20 extends WebPage
 		 * 
 		 * @param id
 		 */
-		public MyLabel(final String id)
+        MyLabel(final String id)
 		{
 			super(id);
 		}

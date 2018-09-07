@@ -29,7 +29,7 @@ public class MarkupInheritanceBase_8 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public MarkupInheritanceBase_8()
+    MarkupInheritanceBase_8()
 	{
 	}
 }

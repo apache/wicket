@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.tree.table;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import org.apache.wicket.model.IModel;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link NodeModel}.
  * 
  * @author svenmeier
  */
-public class NodeModelTest extends Assert
+public class NodeModelTest
 {
 	/**
 	 * Test equality.
@@ -33,17 +35,15 @@ public class NodeModelTest extends Assert
 	@Test
 	public void equality()
 	{
-		NodeModel<String> model = new NodeModel<String>(new StringModel("A"), new boolean[] { true,
-				false });
+		NodeModel<String> model = new NodeModel<>(new StringModel("A"),
+			new boolean[] { true, false });
 
-		assertTrue(model.equals(new NodeModel<String>(new StringModel("A"), new boolean[] { true,
-				false })));
+		assertEquals(model, new NodeModel<>(new StringModel("A"), new boolean[] { true, false }));
 
-		assertFalse(model.equals(new NodeModel<String>(new StringModel("A"), new boolean[] { true,
-				true })));
+		assertNotEquals(model, new NodeModel<>(new StringModel("A"), new boolean[] { true, true }));
 
-		assertFalse(model.equals(new NodeModel<String>(new StringModel("B"), new boolean[] { true,
-				false })));
+		assertNotEquals(model,
+			new NodeModel<>(new StringModel("B"), new boolean[] { true, false }));
 	}
 
 	private class StringModel implements IModel<String>

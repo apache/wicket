@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * @author Matej Knopp
@@ -30,11 +30,11 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 	/**
 	 * Construct.
 	 */
-	public AbstractResourceReferenceMapperTest()
+	AbstractResourceReferenceMapperTest()
 	{
 	}
 
-	protected final IResource resource1 = new IResource()
+	final IResource resource1 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -44,7 +44,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected final IResource resource2 = new IResource()
+	final IResource resource2 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -54,7 +54,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected final IResource resource3 = new IResource()
+	final IResource resource3 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -64,7 +64,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected final IResource resource4 = new IResource()
+	final IResource resource4 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -74,7 +74,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected final IResource resource5 = new IResource()
+	final IResource resource5 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -84,7 +84,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected final IResource resource6 = new IResource()
+	final IResource resource6 = new IResource()
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -94,9 +94,9 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected String CLASS_NAME = AbstractResourceReferenceMapperTest.class.getName();
+	String CLASS_NAME = AbstractResourceReferenceMapperTest.class.getName();
 
-	protected ResourceReference reference1 = new ResourceReference(
+	ResourceReference reference1 = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference1", null, null, null)
 	{
 		private static final long serialVersionUID = 1L;
@@ -108,7 +108,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected ResourceReference reference1_a = new ResourceReference(
+	private ResourceReference reference1_a = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference1", Locale.ENGLISH, null, null)
 	{
 		private static final long serialVersionUID = 1L;
@@ -120,7 +120,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected ResourceReference reference1_b = new ResourceReference(
+	private ResourceReference reference1_b = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference1", null, "style", null)
 	{
 		private static final long serialVersionUID = 1L;
@@ -132,7 +132,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected ResourceReference reference2 = new ResourceReference(
+	ResourceReference reference2 = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference2/name2", new Locale("en", "en"),
 		null, null)
 	{
@@ -145,7 +145,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected ResourceReference reference2_a = new ResourceReference(
+	private ResourceReference reference2_a = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference2/name2", new Locale("en", "en"),
 		"style", null)
 	{
@@ -158,7 +158,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected ResourceReference reference3 = new ResourceReference(
+	ResourceReference reference3 = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference3", null, "style", null)
 	{
 		private static final long serialVersionUID = 1L;
@@ -170,7 +170,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected ResourceReference reference4 = new ResourceReference(
+	ResourceReference reference4 = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference4", Locale.ENGLISH, "style", null)
 	{
 		private static final long serialVersionUID = 1L;
@@ -182,7 +182,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected ResourceReference reference5 = new ResourceReference(
+	ResourceReference reference5 = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference5", Locale.ENGLISH, null, "variation")
 	{
 		private static final long serialVersionUID = 1L;
@@ -194,7 +194,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	protected ResourceReference reference6 = new ResourceReference(
+	private ResourceReference reference6 = new ResourceReference(
 		AbstractResourceReferenceMapperTest.class, "reference6", Locale.ENGLISH, "style",
 		"variation")
 	{
@@ -207,7 +207,7 @@ public abstract class AbstractResourceReferenceMapperTest extends AbstractMapper
 		}
 	};
 
-	@Before
+	@BeforeEach
 	public void before() throws Exception
 	{
 		context.getResourceReferenceRegistry().registerResourceReference(reference1);

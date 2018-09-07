@@ -16,19 +16,20 @@
  */
 package org.apache.wicket.core.util.objects.checker;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for AbstractObjectChecker
  */
-public class AbstractObjectCheckerTest extends Assert
+class AbstractObjectCheckerTest
 {
 	@Test
-	public void doCheckIsNotCalledForExcludedTypes()
+	void doCheckIsNotCalledForExcludedTypes()
 	{
 		List<Class<?>> exclusions = Collections.singletonList(CharSequence.class);
 

@@ -16,21 +16,23 @@
  */
 package org.apache.wicket.feedback;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test calling of {@link Component#beforeRender()} for {@link IFeedback} components.
  */
-public class FeedbackRenderTest extends WicketTestCase
+class FeedbackRenderTest extends WicketTestCase
 {
 
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void test() throws Exception
+	void test() throws Exception
 	{
 		final FeedbacksPage page = new FeedbacksPage();
 
@@ -44,7 +46,7 @@ public class FeedbackRenderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void testAjax() throws Exception
+	void testAjax() throws Exception
 	{
 		final FeedbacksPage page = new FeedbacksPage();
 

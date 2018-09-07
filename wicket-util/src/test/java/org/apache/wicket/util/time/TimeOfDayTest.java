@@ -16,15 +16,17 @@
  */
 package org.apache.wicket.util.time;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test cases for {@link TimeOfDay}.
  * 
  * @author Jonathan Locke
  */
-public final class TimeOfDayTest extends Assert
+public final class TimeOfDayTest
 {
 	/**
 	 * 

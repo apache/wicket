@@ -16,30 +16,21 @@
  */
 package org.apache.wicket.model;
 
-import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.StringWriter;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.WriterAppender;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link ChainingModel}.
  * 
  * @author svenmeier
  */
-public class ChainingModelTest
+class ChainingModelTest
 {
 	@Test
-	public void testNonModel() {
+	void testNonModel() {
 		ChainingModel<Integer> model = new ChainingModel<>(1);
 		
 		assertEquals(Integer.valueOf(1), model.getObject());
@@ -48,12 +39,12 @@ public class ChainingModelTest
 	}
 	
 	@Test
-	public void testNonSerializable() {
+	void testNonSerializable() {
 		new ChainingModel<>(Thread.currentThread());
 	}
 	
 	@Test
-	public void testDetachable() {
+	void testDetachable() {
 		class TestDetachable implements IDetachable
 		{
 			boolean detached = false;
@@ -78,7 +69,7 @@ public class ChainingModelTest
 	}
 
 	@Test
-	public void testModel() {
+	void testModel() {
 		class TestModel implements IModel<Integer>
 		{
 			boolean detached = false;

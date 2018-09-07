@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.noheadnobody;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -25,7 +26,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.mock.MockHomePage;
 import org.apache.wicket.resource.CoreLibrariesContributor;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests that if a page has neither &lt;head&gt; nor &lt;body&gt;
@@ -34,10 +35,10 @@ import org.junit.Test;
  *
  * https://issues.apache.org/jira/browse/WICKET-5895
  */
-public class NoHeadNoBodyTest extends WicketTestCase
+class NoHeadNoBodyTest extends WicketTestCase
 {
 	@Test
-	public void noHeadNoBody()
+	void noHeadNoBody()
 	{
 		final AtomicBoolean reported = new AtomicBoolean(false);
 
@@ -51,14 +52,14 @@ public class NoHeadNoBodyTest extends WicketTestCase
 		};
 
 		tester.startPage(page);
-		assertThat(reported.get(), is(true));
+		assertEquals(true, reported.get());
 	}
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-5955
 	 */
 	@Test
-	public void interceptedRenderDoesNotReportMissingHeader()
+	void interceptedRenderDoesNotReportMissingHeader()
 	{
 		tester.startPage(new MockHomePage()
 		{

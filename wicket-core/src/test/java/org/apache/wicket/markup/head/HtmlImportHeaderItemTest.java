@@ -16,44 +16,45 @@
  */
 package org.apache.wicket.markup.head;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.markup.html.basic.SimplePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.tester.WicketTester;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
-public class HtmlImportHeaderItemTest
+class HtmlImportHeaderItemTest
 {
 	@Test
-	public void basicUsage() throws Exception
+	void basicUsage() throws Exception
 	{
 		String url = "/path/to/page.html";
-		
+
 		MetaDataHeaderItem result = HtmlImportHeaderItem.forImportLinkTag(url);
-		
+
 		assertEquals("<link rel=\"import\" href=\"" + url + "\" />\n", result.generateString());
-		
+
 		result = HtmlImportHeaderItem.forImportLinkTag(url, true);
-		
-		assertEquals("<link rel=\"import\" href=\"" + url + "\" async />\n", result.generateString());		
+
+		assertEquals("<link rel=\"import\" href=\"" + url + "\" async />\n",
+			result.generateString());
 	}
-	
+
 	@Test
-	public void wicketPageUrl() throws Exception
+	void wicketPageUrl() throws Exception
 	{
-		WicketTester tester = new WicketTester();	
+		WicketTester tester = new WicketTester();
 		PageParameters parameters = new PageParameters();
 		parameters.add("foo", "foo");
 		parameters.add("bar", "bar");
-		
+
 		CharSequence pageUrl = tester.getRequestCycle().urlFor(SimplePage.class, parameters);
-		
-		MetaDataHeaderItem importLink = HtmlImportHeaderItem
-			.forImportLinkTag(SimplePage.class, parameters, "monitor", true);
-		
-		assertEquals("<link rel=\"import\" href=\"" + pageUrl + "\" media=\"monitor\" async />\n", 
+
+		MetaDataHeaderItem importLink = HtmlImportHeaderItem.forImportLinkTag(SimplePage.class,
+			parameters, "monitor", true);
+
+		assertEquals("<link rel=\"import\" href=\"" + pageUrl + "\" media=\"monitor\" async />\n",
 			importLink.generateString());
 	}
 }

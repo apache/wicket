@@ -17,20 +17,20 @@
 package org.apache.wicket.markup.html.link;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test ExternalLink (href="...")
  * 
  * <a href="https://issues.apache.org/jira/browse/WICKET-1016"></<a>
  */
-public class ExternalLinkTest extends WicketTestCase
+class ExternalLinkTest extends WicketTestCase
 {
 	/**
 	 * @throws Exception
 	 */
 	@Test
-	public void renderExternalLink_1() throws Exception
+    void renderExternalLink_1() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(ExternalLinkPage_1.class, "ExternalLinkPageExpectedResult_1.html");
@@ -40,7 +40,7 @@ public class ExternalLinkTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void renderExternalLink_2() throws Exception
+    void renderExternalLink_2() throws Exception
 	{
 		tester.getApplication().getMarkupSettings().setAutomaticLinking(true);
 		executeTest(ExternalLinkPage_2.class, "ExternalLinkPageExpectedResult_2.html");

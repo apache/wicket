@@ -16,6 +16,10 @@
  */
 package org.apache.wicket.queueing.bodyisachild;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.feedback.FeedbackMessage;
@@ -31,14 +35,10 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Simplified copy from Wicket-Bootstrap
  */
-public class FormGroup extends Border
+class FormGroup extends Border
 {
     private Component label;
     private Component help;
@@ -63,7 +63,7 @@ public class FormGroup extends Border
      *
      * @param id the wicket component id
      */
-    public FormGroup(final String id, final IModel<String> label, final IModel<String> help)
+    private FormGroup(final String id, final IModel<String> label, final IModel<String> help)
     {
         super(id, Model.of(""));
 
@@ -79,7 +79,7 @@ public class FormGroup extends Border
      * @param model the content model for this component
      * @return new label
      */
-    protected Component newLabel(final String id, final IModel<String> model)
+    private Component newLabel(final String id, final IModel<String> model)
     {
         return new Label(id, model);
     }
@@ -90,7 +90,7 @@ public class FormGroup extends Border
      * @param id the component id
      * @return new feedback message container
      */
-    protected Component newFeedbackMessageContainer(final String id)
+    private Component newFeedbackMessageContainer(final String id)
     {
         return new Label(id, new Model<String>());
     }
@@ -103,7 +103,7 @@ public class FormGroup extends Border
      * @param model the content model for this component
      * @return new help label
      */
-    protected Component newHelpLabel(final String id, final IModel<String> model)
+    private Component newHelpLabel(final String id, final IModel<String> model)
     {
         return new Label(id, model);
     }
@@ -174,7 +174,7 @@ public class FormGroup extends Border
      *
      * @param formComponents the form components to add the output markup id
      */
-    protected void addOutputMarkupId(List<FormComponent<?>> formComponents)
+    private void addOutputMarkupId(List<FormComponent<?>> formComponents)
     {
         for (final FormComponent<?> fc : formComponents)
         {
@@ -216,7 +216,7 @@ public class FormGroup extends Border
     /**
      * @return all form components that are assigned to this {@link FormGroup}
      */
-    List<FormComponent<?>> findFormComponents()
+    private List<FormComponent<?>> findFormComponents()
     {
         final List<FormComponent<?>> components = new ArrayList<>();
         getBodyContainer().visitChildren(FormComponent.class, new IVisitor<FormComponent, Void>()

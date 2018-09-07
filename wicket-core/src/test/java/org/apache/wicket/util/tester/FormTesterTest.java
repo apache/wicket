@@ -16,6 +16,13 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -37,22 +44,21 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.MockFormFileUploadPage.MockDomainObjectFileUpload;
 import org.apache.wicket.util.tester.MockFormPage.MockDomainObject;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Test of FormTester.
  * 
  * @author frankbille
  */
-public class FormTesterTest extends WicketTestCase
+class FormTesterTest extends WicketTestCase
 {
 
 	/**
 	 * Test that normal use of the formtester (no file uploads) works.
 	 */
 	@Test
-	public void formTester()
+	void formTester()
 	{
 		tester.startPage(MockFormPage.class);
 		MockFormPage page = (MockFormPage)tester.getLastRenderedPage();
@@ -77,7 +83,7 @@ public class FormTesterTest extends WicketTestCase
 
 	/**	 */
 	@Test
-	public void checkboxValuesCanBeSelectedWithBoolean()
+	void checkboxValuesCanBeSelectedWithBoolean()
 	{
 		tester.startPage(MockFormPage.class);
 		MockFormPage page = (MockFormPage)tester.getLastRenderedPage();
@@ -102,7 +108,7 @@ public class FormTesterTest extends WicketTestCase
 	 * upload to a FileUploadField works.
 	 */
 	@Test
-	public void addFile()
+	void addFile()
 	{
 		tester.startPage(MockFormFileUploadPage.class);
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
@@ -126,7 +132,7 @@ public class FormTesterTest extends WicketTestCase
 		FileUpload fileUpload = page.getFileUpload();
 		assertNotNull(fileUpload);
 
-		assertTrue("setFile failed, no upload content detected.", fileUpload.getBytes().length > 0);
+		assertTrue(fileUpload.getBytes().length > 0, "setFile failed, no upload content detected.");
 		assertEquals("pom.xml", fileUpload.getClientFileName());
 		assertEquals("text/xml", fileUpload.getContentType());
 	}
@@ -137,7 +143,7 @@ public class FormTesterTest extends WicketTestCase
 	 * upload to a FileUploadField works.
 	 */
 	@Test
-	public void addBinaryFile()
+	void addBinaryFile()
 	{
 		tester.startPage(MockFormFileUploadPage.class);
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
@@ -149,8 +155,9 @@ public class FormTesterTest extends WicketTestCase
 
 
 		FormTester formTester = tester.newFormTester("form");
-		formTester.setFile("file", new File(getBasedir() +
-			"src/test/java/org/apache/wicket/util/tester/bg.jpg"), "image/jpeg");
+		formTester.setFile("file",
+			new File(getBasedir() + "src/test/java/org/apache/wicket/util/tester/bg.jpg"),
+			"image/jpeg");
 		formTester.setValue("text", "Mock value");
 		formTester.submit();
 
@@ -162,9 +169,9 @@ public class FormTesterTest extends WicketTestCase
 		FileUpload fileUpload = page.getFileUpload();
 		assertNotNull(fileUpload);
 
-		assertTrue(
+		assertTrue(fileUpload.getBytes().length == 428,
 			"uploaded content does not have the right size, expected 428, got " +
-				fileUpload.getBytes().length, fileUpload.getBytes().length == 428);
+				fileUpload.getBytes().length);
 		assertEquals("bg.jpg", fileUpload.getClientFileName());
 		assertEquals("image/jpeg", fileUpload.getContentType());
 	}
@@ -173,7 +180,7 @@ public class FormTesterTest extends WicketTestCase
 	 * Test that formTester deal with Multipart form correctly when no actual upload
 	 */
 	@Test
-	public void submitWithoutUploadFile()
+	void submitWithoutUploadFile()
 	{
 		// tester.startPage(MockFormFileUploadPage.class, new PageParameters("required=true"));
 		tester.startPage(MockFormFileUploadPage.class);
@@ -195,7 +202,7 @@ public class FormTesterTest extends WicketTestCase
 	 * Test that formTester deal with Multipart form correctly when no actual upload
 	 */
 	@Test
-	public void submitMultipartForm()
+	void submitMultipartForm()
 	{
 		tester.startPage(MockFormFileUploadPage.class, new PageParameters().set("required", false));
 		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
@@ -218,7 +225,7 @@ public class FormTesterTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void noParametersCreatedForDisabledComponents() throws Exception
+	void noParametersCreatedForDisabledComponents() throws Exception
 	{
 		tester.startPage(new MockFormPage()
 		{
@@ -254,24 +261,26 @@ public class FormTesterTest extends WicketTestCase
 	}
 
 	@Test
-	public void wantOnChangeSelectionNotification()
+	void wantOnChangeSelectionNotification()
 	{
 		class TestPage extends WebPage implements IMarkupResourceStreamProvider
 		{
 			private String selection;
 
-			public TestPage()
+			TestPage()
 			{
 				Form<Object> form = new Form<>("form");
 				add(form);
 				List<String> choices = Arrays.asList("opt 1", "opt 2");
-				form.add(new DropDownChoice<String>("selector", Model.of(""), choices).add(new FormComponentUpdatingBehavior() {
-					@Override
-					protected void onUpdate()
+				form.add(new DropDownChoice<String>("selector", Model.of(""), choices)
+					.add(new FormComponentUpdatingBehavior()
 					{
-						selection = (String)getFormComponent().getDefaultModelObject();
-					}
-				}));
+						@Override
+						protected void onUpdate()
+						{
+							selection = (String)getFormComponent().getDefaultModelObject();
+						}
+					}));
 			}
 
 			@Override
@@ -293,39 +302,39 @@ public class FormTesterTest extends WicketTestCase
 	}
 
 	@Test
-	public void testNestedFormHandlingOnInnerSubmit() throws Exception
+	void testNestedFormHandlingOnInnerSubmit() throws Exception
 	{
 		NestedFormPage page = tester.startPage(NestedFormPage.class);
 		FormTester form = tester.newFormTester("outer:inner");
 		form.submit("submit");
-		assertFalse("should not directly submit inner form - browsers submit the outer form!",
-			page.url.contains("inner"));
-		assertFalse("outer form should not be processed", page.outerSubmitted);
-		assertTrue("inner form should be processed", page.innerSubmitted);
+		assertFalse(page.url.contains("inner"),
+			"should not directly submit inner form - browsers submit the outer form!");
+		assertFalse(page.outerSubmitted, "outer form should not be processed");
+		assertTrue(page.innerSubmitted, "inner form should be processed");
 	}
 
 	@Test
-	public void testNestedFormHandlingOnInnerSubmitWithOuterForm() throws Exception
+	void testNestedFormHandlingOnInnerSubmitWithOuterForm() throws Exception
 	{
 		NestedFormPage page = tester.startPage(NestedFormPage.class);
 		FormTester form = tester.newFormTester("outer");
 		form.submit("inner:submit");
-		assertFalse("should not directly submit inner form - browsers submit the outer form!",
-			page.url.contains("inner"));
-		assertFalse("outer form should not be processed", page.outerSubmitted);
-		assertTrue("inner form should be processed", page.innerSubmitted);
+		assertFalse(page.url.contains("inner"),
+			"should not directly submit inner form - browsers submit the outer form!");
+		assertFalse(page.outerSubmitted, "outer form should not be processed");
+		assertTrue(page.innerSubmitted, "inner form should be processed");
 	}
 
 	@Test
-	public void testNestedFormHandlingOnOuterSubmit() throws Exception
+	void testNestedFormHandlingOnOuterSubmit() throws Exception
 	{
 		NestedFormPage page = tester.startPage(NestedFormPage.class);
 		FormTester form = tester.newFormTester("outer");
 		form.submit();
-		assertFalse("should not directly submit inner form - browsers submit the outer form!",
-			page.url.contains("inner"));
-		assertTrue("outer form should be processed", page.outerSubmitted);
-		assertTrue("inner form should be processed", page.innerSubmitted);
+		assertFalse(page.url.contains("inner"),
+			"should not directly submit inner form - browsers submit the outer form!");
+		assertTrue(page.outerSubmitted, "outer form should be processed");
+		assertTrue(page.innerSubmitted, "inner form should be processed");
 	}
 
 }

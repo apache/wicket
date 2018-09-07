@@ -53,7 +53,7 @@ public class CreateBook extends WebPage
 		 * 
 		 * @param id
 		 */
-		public CreateForm(String id)
+        CreateForm(String id)
 		{
 			super(id);
 

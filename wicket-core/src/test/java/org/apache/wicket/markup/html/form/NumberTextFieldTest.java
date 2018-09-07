@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.math.BigDecimal;
 import java.util.Locale;
 
@@ -27,21 +30,21 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link NumberTextField}.
  * 
  * @author svenmeier
  */
-public class NumberTextFieldTest extends WicketTestCase
+class NumberTextFieldTest extends WicketTestCase
 {
 
 	/**
 	 * WICKET-4884, WICKET-3591
 	 */
 	@Test
-	public void convertBigDecimal()
+	void convertBigDecimal()
 	{
 		TestPage<BigDecimal> testPage = new TestPage<>();
 		testPage.textField.setType(BigDecimal.class);
@@ -63,7 +66,7 @@ public class NumberTextFieldTest extends WicketTestCase
 	 * WICKET-4884, WICKET-3591
 	 */
 	@Test
-	public void convertDouble()
+	void convertDouble()
 	{
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
@@ -85,7 +88,7 @@ public class NumberTextFieldTest extends WicketTestCase
 	 * WICKET-4884, WICKET-3591
 	 */
 	@Test
-	public void convertLong()
+	void convertLong()
 	{
 		TestPage<Long> testPage = new TestPage<Long>();
 		testPage.textField.setType(Long.class);
@@ -107,7 +110,7 @@ public class NumberTextFieldTest extends WicketTestCase
 	 * WICKET-5467
 	 */
 	@Test
-	public void respectStepAny()
+	void respectStepAny()
 	{
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
@@ -123,7 +126,7 @@ public class NumberTextFieldTest extends WicketTestCase
 	 * WICKET-5467
 	 */
 	@Test
-	public void respectStepWithNumberValue()
+	void respectStepWithNumberValue()
 	{
 		TestPage<Double> testPage = new TestPage<Double>();
 		testPage.textField.setType(Double.class);
@@ -149,7 +152,7 @@ public class NumberTextFieldTest extends WicketTestCase
 		NumberTextField<N> textField;
 
 		/** */
-		public TestPage()
+		TestPage()
 		{
 			add(form = new Form<Void>("form")
 			{

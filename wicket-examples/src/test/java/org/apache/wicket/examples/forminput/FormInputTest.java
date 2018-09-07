@@ -17,7 +17,7 @@
 package org.apache.wicket.examples.forminput;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 /**

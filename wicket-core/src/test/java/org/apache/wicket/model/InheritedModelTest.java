@@ -16,22 +16,24 @@
  */
 package org.apache.wicket.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.value.ValueMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the inheritance of models.
  */
-public class InheritedModelTest extends WicketTestCase
+class InheritedModelTest extends WicketTestCase
 {
 	/**
 	 * Tests the CPM inheritance by setting a different root model using a rendered scenario.
 	 */
 	@Test
-	public void testCompoundPropertyModelRendered()
+	void testCompoundPropertyModelRendered()
 	{
 		ValueMap data1 = new ValueMap();
 		data1.put("label", "foo");
@@ -55,7 +57,7 @@ public class InheritedModelTest extends WicketTestCase
 	 * Tests the CPM by setting a different root model using a direct scenario.
 	 */
 	@Test
-	public void testCompoundPropertyModelDirect()
+	void testCompoundPropertyModelDirect()
 	{
 		ValueMap data1 = new ValueMap();
 		data1.put("label", "foo");
@@ -81,7 +83,7 @@ public class InheritedModelTest extends WicketTestCase
 	 * Tests if Component#FLAG_INHERITABLE_MODEL reset after model change (WICKET-3413).
 	 */
 	@Test
-	public void testResetInheritedModelFlag()
+	void testResetInheritedModelFlag()
 	{
 		ValueMap data1 = new ValueMap();
 		data1.put("label", "foo");
@@ -109,7 +111,7 @@ public class InheritedModelTest extends WicketTestCase
 	 * Tests if Component#FLAG_INHERITABLE_MODEL reset after model change (WICKET-5655).
 	 */
 	@Test
-	public void testResetInheritedModelFlag2()
+	void testResetInheritedModelFlag2()
 	{
 		ValueMap data1 = new ValueMap();
 		data1.put("label", "foo");

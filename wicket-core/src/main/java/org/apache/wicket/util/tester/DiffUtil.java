@@ -16,13 +16,14 @@
  */
 package org.apache.wicket.util.tester;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 
-import org.junit.Assert;
 import org.apache.wicket.markup.MarkupParser;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.util.diff.Diff;
@@ -157,7 +158,7 @@ public final class DiffUtil
 
 			if (failWithAssert)
 			{
-				Assert.assertEquals(filename, reference, document);
+				assertEquals(reference, document, filename);
 			}
 		}
 

@@ -19,7 +19,7 @@ package org.apache.wicket.component.replacewith;
 /**
  * A panel that uses #replaceWith in #onBeforeRender
  */
-public class ReplaceInOnBeforeRenderPanel extends BaseReplaceWithPanel
+class ReplaceInOnBeforeRenderPanel extends BaseReplaceWithPanel
 {
     public ReplaceInOnBeforeRenderPanel(String id)
     {

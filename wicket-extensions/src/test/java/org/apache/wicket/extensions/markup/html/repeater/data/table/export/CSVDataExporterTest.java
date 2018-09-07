@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.extensions.markup.html.repeater.data.table.export;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,8 +30,8 @@ import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test for {@link CSVDataExporter}.
@@ -39,7 +41,7 @@ public class CSVDataExporterTest extends WicketTestCase
 
 	private List<Contact> contacts;
 
-	@Before
+	@BeforeEach
 	public void before() {
 		contacts = Arrays.asList(new Contact(), new Contact());
 		contacts.get(0).setFirstName("first0");

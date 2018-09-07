@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.ajax;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.wicket.MarkupContainer;
@@ -25,19 +28,19 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @since 6.0.1
  */
-public class AjaxEventBehaviorTest extends WicketTestCase
+class AjaxEventBehaviorTest extends WicketTestCase
 {
 	/**
 	 * Tests execution of the second configured event
 	 * https://issues.apache.org/jira/browse/WICKET-4748
 	 */
 	@Test
-	public void executeSecondEvent()
+	void executeSecondEvent()
 	{
 		AtomicInteger counter = new AtomicInteger(0);
 		SecondEventTestPage page = new SecondEventTestPage(counter);
@@ -54,28 +57,37 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 		assertEquals(2, counter.get());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void nullName()
+	@Test
+	void nullName()
 	{
-		new EventNamesBehavior(null);
+		assertThrows(IllegalArgumentException.class, () -> {
+			new EventNamesBehavior(null);
+
+		});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void emptyName()
+	@Test
+	void emptyName()
 	{
-		new EventNamesBehavior("");
+		assertThrows(IllegalArgumentException.class, () -> {
+			new EventNamesBehavior("");
+		});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void spacesName()
+	@Test
+	void spacesName()
 	{
-		new EventNamesBehavior("  ");
+		assertThrows(IllegalArgumentException.class, () -> {
+			new EventNamesBehavior("  ");
+		});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void tabName()
+	@Test
+	void tabName()
 	{
-		new EventNamesBehavior("\t");
+		assertThrows(IllegalArgumentException.class, () -> {
+			new EventNamesBehavior("\t");
+		});
 	}
 
 	private static class EventNamesBehavior extends AjaxEventBehavior
@@ -83,9 +95,10 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 		/**
 		 * Construct.
 		 *
-		 * @param event the event this behavior will be attached to
+		 * @param event
+		 *            the event this behavior will be attached to
 		 */
-		public EventNamesBehavior(String event)
+		EventNamesBehavior(String event)
 		{
 			super(event);
 		}
@@ -99,7 +112,9 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 	/**
 	 * Test page for #executeSecondEvent()
 	 */
-	private static class SecondEventTestPage extends WebPage implements IMarkupResourceStreamProvider
+	private static class SecondEventTestPage extends WebPage
+		implements
+			IMarkupResourceStreamProvider
 	{
 		private SecondEventTestPage(final AtomicInteger counter)
 		{
@@ -118,9 +133,11 @@ public class AjaxEventBehaviorTest extends WicketTestCase
 		}
 
 		@Override
-		public IResourceStream getMarkupResourceStream(MarkupContainer container, Class<?> containerClass)
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+			Class<?> containerClass)
 		{
-			return new StringResourceStream("<html><body><span wicket:id='comp'></span></body></html>");
+			return new StringResourceStream(
+				"<html><body><span wicket:id='comp'></span></body></html>");
 		}
 	}
 }

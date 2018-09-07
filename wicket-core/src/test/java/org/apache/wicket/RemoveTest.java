@@ -16,45 +16,47 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test the {@link Component#onRemove()}. Test if it gets called and propagated to the Components
  * children.
  */
-public class RemoveTest extends WicketTestCase
+class RemoveTest extends WicketTestCase
 {
 
-	static final String PATH = RemoveTestPage.COMPONENT + Component.PATH_SEPARATOR +
+	private static final String PATH = RemoveTestPage.COMPONENT + Component.PATH_SEPARATOR +
 		RemoveTestPage.LINK;
 
 	/**
 	 * The test
 	 */
 	@Test
-	public void onRemovalFromHierarchy()
+	void onRemovalFromHierarchy()
 	{
 		final RemoveTestPage page = new RemoveTestPage();
 		tester.startPage(page);
 		// on initial load of the page no calls should have occurred.
-		assertEquals("componentOnRemovalFromHierarchy was called.", 0,
-			page.getComponentOnRemovalFromHierarchyCalls());
-		assertEquals("linkOnRemovalFromHierarchy was called.", 0,
-			page.getLinkOnRemovalFromHierarchyCalls());
-		assertEquals("behaviorOnRemovalFromHierarchy was called.", 0,
-			page.getBehaviorOnRemovalCalls());
+		assertEquals(0, page.getComponentOnRemovalFromHierarchyCalls(),
+			"componentOnRemovalFromHierarchy was called.");
+		assertEquals(0, page.getLinkOnRemovalFromHierarchyCalls(),
+			"linkOnRemovalFromHierarchy was called.");
+		assertEquals(0, page.getBehaviorOnRemovalCalls(),
+			"behaviorOnRemovalFromHierarchy was called.");
 
 		tester.clickLink(PATH);
 		// first click provoked a remove, so one call.
-		assertEquals("componentOnRemovalFromHierarchy wasn't called.", 1,
-			page.getComponentOnRemovalFromHierarchyCalls());
+		assertEquals(1, page.getComponentOnRemovalFromHierarchyCalls(),
+			"componentOnRemovalFromHierarchy wasn't called.");
 		// test if it got propagated to the children.
-		assertEquals("linkOnRemovalFromHierarchy wasn't called.", 1,
-			page.getLinkOnRemovalFromHierarchyCalls());
-		assertEquals("behaviorOnRemovalFromHierarchy wasn't called.", 1,
-			page.getBehaviorOnRemovalCalls());
+		assertEquals(1, page.getLinkOnRemovalFromHierarchyCalls(),
+			"linkOnRemovalFromHierarchy wasn't called.");
+		assertEquals(1, page.getBehaviorOnRemovalCalls(),
+			"behaviorOnRemovalFromHierarchy wasn't called.");
 
 		try
 		{

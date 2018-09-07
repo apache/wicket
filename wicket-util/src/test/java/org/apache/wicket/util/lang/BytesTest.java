@@ -16,18 +16,19 @@
  */
 package org.apache.wicket.util.lang;
 
+import org.apache.wicket.util.string.StringValueConversionException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.util.Locale;
 
-import org.apache.wicket.util.string.StringValueConversionException;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests the <code>Bytes</code> class.
  */
-public class BytesTest extends Assert
+public class BytesTest
 {
 	/**
 	 * Backup of the default locale.
@@ -38,13 +39,14 @@ public class BytesTest extends Assert
 	/**
 	 * Save the default locale.
 	 */
-	@Before
+	@BeforeEach
 	public void before()
 	{
 		originalFormatLocale = Locale.getDefault(Locale.Category.FORMAT);
 		originalDefaultLocale = Locale.getDefault();
 
-		// these tests run in US locale for formatting and German default locale - they should still work with split
+		// these tests run in US locale for formatting and German default locale - they should still
+		// work with split
 		// locale.
 		Locale.setDefault(Locale.GERMANY);
 		Locale.setDefault(Locale.Category.FORMAT, Locale.US);
@@ -53,7 +55,7 @@ public class BytesTest extends Assert
 	/**
 	 * Restore the default locale.
 	 */
-	@After
+	@AfterEach
 	public void after()
 	{
 		Locale.setDefault(originalDefaultLocale);
@@ -76,21 +78,21 @@ public class BytesTest extends Assert
 		assertEquals(1024L * 1024 * 1024, Bytes.gigabytes(1).bytes());
 		assertEquals(1024L * 1024 * 1024 * 1024, Bytes.terabytes(1).bytes());
 
-		assertEquals(1.5, Bytes.bytes(1536).kilobytes(), 0);
-		assertEquals(1.0, Bytes.kilobytes(1).kilobytes(), 0);
-		assertEquals(0.5, Bytes.bytes(512).kilobytes(), 0);
+		assertEquals(1.5, Bytes.bytes(1536).kilobytes());
+		assertEquals(1.0, Bytes.kilobytes(1).kilobytes());
+		assertEquals(0.5, Bytes.bytes(512).kilobytes());
 
-		assertEquals(1.5, Bytes.kilobytes(1536).megabytes(), 0);
-		assertEquals(1.0, Bytes.megabytes(1).megabytes(), 0);
-		assertEquals(0.5, Bytes.kilobytes(512).megabytes(), 0);
+		assertEquals(1.5, Bytes.kilobytes(1536).megabytes());
+		assertEquals(1.0, Bytes.megabytes(1).megabytes());
+		assertEquals(0.5, Bytes.kilobytes(512).megabytes());
 
-		assertEquals(1.5, Bytes.megabytes(1536).gigabytes(), 0);
-		assertEquals(1.0, Bytes.gigabytes(1).gigabytes(), 0);
-		assertEquals(0.5, Bytes.megabytes(512).gigabytes(), 0);
+		assertEquals(1.5, Bytes.megabytes(1536).gigabytes());
+		assertEquals(1.0, Bytes.gigabytes(1).gigabytes());
+		assertEquals(0.5, Bytes.megabytes(512).gigabytes());
 
-		assertEquals(1.5, Bytes.gigabytes(1536).terabytes(), 0);
-		assertEquals(1.0, Bytes.terabytes(1).terabytes(), 0);
-		assertEquals(0.5, Bytes.gigabytes(512).terabytes(), 0);
+		assertEquals(1.5, Bytes.gigabytes(1536).terabytes());
+		assertEquals(1.0, Bytes.terabytes(1).terabytes());
+		assertEquals(0.5, Bytes.gigabytes(512).terabytes());
 	}
 
 	/**
@@ -160,10 +162,13 @@ public class BytesTest extends Assert
 	/**
 	 * Negative values are not supported
 	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void negative()
 	{
-		Bytes.bytes(-1);
-		fail("Bytes should not support negative values!");
+		assertThrows(IllegalArgumentException.class, () -> {
+			Bytes.bytes(-1);
+			fail("Bytes should not support negative values!");
+		});
+
 	}
 }

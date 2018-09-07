@@ -56,7 +56,7 @@ public class CookieValuePersisterTestPage extends WebPage
 		 * @param id
 		 *            Name of form
 		 */
-		public TestForm(final String id)
+        TestForm(final String id)
 		{
 			super(id);
 			add(new TextField<String>("input", new Model<String>("test")));

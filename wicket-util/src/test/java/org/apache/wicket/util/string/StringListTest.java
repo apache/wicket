@@ -16,17 +16,18 @@
  */
 package org.apache.wicket.util.string;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests the <code>StringList</code> class.
  */
-public class StringListTest extends Assert
+public class StringListTest
 {
 
 	/**

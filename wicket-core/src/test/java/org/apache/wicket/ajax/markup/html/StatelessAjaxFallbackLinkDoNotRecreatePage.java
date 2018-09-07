@@ -83,7 +83,7 @@ public class StatelessAjaxFallbackLinkDoNotRecreatePage extends WebPage
     return value.toString();
   }
 
-  protected final void updateParams(final PageParameters pageParameters, final int counter)
+  private void updateParams(final PageParameters pageParameters, final int counter)
   {
     pageParameters.set(COUNTER_PARAM, Integer.toString(counter + 1));
   }

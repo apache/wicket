@@ -16,27 +16,26 @@
  */
 package org.apache.wicket.markup;
 
-import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import org.apache.wicket.util.tester.WicketTestCase;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tests for {@link MarkupFragment}
  */
-public class MarkupFragmentTest extends WicketTestCase
+class MarkupFragmentTest extends WicketTestCase
 {
 	private static final Logger LOG = LoggerFactory.getLogger(MarkupFragmentTest.class);
 
 	/** */
 	@Test
-	public void iteratorSameAsSizeForMarkup()
+	void iteratorSameAsSizeForMarkup()
 	{
 		Markup markup = Markup.of("<body wicket:id='body'><div wicket:id='label'> text </div></body>");
 
@@ -65,7 +64,7 @@ public class MarkupFragmentTest extends WicketTestCase
 
 	/** */
 	@Test
-	public void iteratorSameAsSizeForMarkupFragment()
+	void iteratorSameAsSizeForMarkupFragment()
 	{
 		Markup markup = Markup.of("<body wicket:id='body'><div wicket:id='label'> text </div></body>");
 		MarkupFragment fragment = new MarkupFragment(markup, 1);
@@ -97,7 +96,7 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-4136
 	 */
 	@Test
-	public void createMarkupFragmentOnOpenTag()
+	void createMarkupFragmentOnOpenTag()
 	{
 		Markup markup = Markup.of("<body><img wicket:id='photo'><span wicket:id='label'/></body>");
 		MarkupFragment fragment = new MarkupFragment(markup, 1);
@@ -109,7 +108,7 @@ public class MarkupFragmentTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6339
 	 */
 	@Test
-	public void iteratorMustBeSameAsGetByIndex() {
+	void iteratorMustBeSameAsGetByIndex() {
 		// test markup
 		Markup markup = Markup.of("<html><body><wicket:panel><wicket:container wicket:id='content'><a wicket:id='link' href='https://www.google.de'>Test</a></wicket:container></wicket:panel></body></html>");
 
@@ -130,6 +129,6 @@ public class MarkupFragmentTest extends WicketTestCase
 		}
 
 		// elements from iterator should match the ones from the get(i) method
-		assertThat(getElements, is(equalTo(iteratorElements)));
+		assertEquals(iteratorElements, getElements);
 	}
 }

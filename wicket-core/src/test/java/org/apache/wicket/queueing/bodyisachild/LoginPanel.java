@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.queueing.bodyisachild;
 
+import java.io.Serializable;
+
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.StatelessForm;
@@ -23,8 +25,6 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
-
-import java.io.Serializable;
 
 public class LoginPanel extends Panel
 {
@@ -44,7 +44,7 @@ public class LoginPanel extends Panel
 
     class LoginForm extends StatelessForm {
 
-        public LoginForm(String id) {
+        LoginForm(String id) {
             super(id);
             setModel(new CompoundPropertyModel<>(pojo));
             add(createValidatingFormField(new TextField("username").setRequired(true), "yourUsernameHeadline"));

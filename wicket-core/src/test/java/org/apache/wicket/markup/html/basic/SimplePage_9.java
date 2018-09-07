@@ -49,7 +49,7 @@ public class SimplePage_9 extends WebPage
 		 * 
 		 * @param id
 		 */
-		public TestContainer(String id)
+        TestContainer(String id)
 		{
 			super(id);
 			add(new Label("test", "myTest"));

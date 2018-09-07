@@ -16,6 +16,11 @@
  */
 package org.apache.wicket.request.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
@@ -32,15 +37,13 @@ import org.apache.wicket.request.resource.ResourceReference.UrlAttributes;
 import org.apache.wicket.response.ByteArrayResponse;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class PackageResourceReferenceTest extends WicketTestCase
+class PackageResourceReferenceTest extends WicketTestCase
 {
 	private static Class<PackageResourceReferenceTest> scope = PackageResourceReferenceTest.class;
 	private static Locale[] locales = { null, new Locale("en"), new Locale("en", "US") };
@@ -50,8 +53,8 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	/**
 	 * @throws Exception
 	 */
-	@Before
-	public void before() throws Exception
+	@BeforeEach
+	void before() throws Exception
 	{
 		// some locale outside those in locales array
 		tester.getSession().setLocale(Locale.CHINA);
@@ -61,7 +64,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void resourceResolution()
+	void resourceResolution()
 	{
 		for (Locale locale : locales)
 		{
@@ -106,7 +109,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void resourceResponse()
+	void resourceResponse()
 	{
 		for (Locale locale : locales)
 		{
@@ -147,7 +150,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * Asserting if user did not set any locale or style, those from session get used if any
 	 */
 	@Test
-	public void sessionAttributesRelevance()
+	void sessionAttributesRelevance()
 	{
 		for (Locale locale : new Locale[] { new Locale("en"), new Locale("en", "US") })
 		{
@@ -172,7 +175,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * Assert preference for specified locale and style over session ones
 	 */
 	@Test
-	public void userAttributesPreference()
+	void userAttributesPreference()
 	{
 		tester.getSession().setLocale(new Locale("en"));
 		tester.getSession().setStyle("style");
@@ -199,19 +202,19 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * see WICKET-5251 : Proper detection of already minified resources
 	 */
 	@Test
-	public void testMinifiedNameDetectMinInName()
+	void testMinifiedNameDetectMinInName()
 	{
 		final PackageResourceReference html5minjs = new PackageResourceReference("html5.min.js");
-		Assert.assertEquals("html5.min.js", html5minjs.getMinifiedName());
+		assertEquals("html5.min.js", html5minjs.getMinifiedName());
 
 		final PackageResourceReference html5notminjs = new PackageResourceReference("html5.notmin.js");
-		Assert.assertEquals("html5.notmin.min.js", html5notminjs.getMinifiedName());
+		assertEquals("html5.notmin.min.js", html5notminjs.getMinifiedName());
 
 		final PackageResourceReference html5notmin = new PackageResourceReference("html5notmin");
-		Assert.assertEquals("html5notmin.min", html5notmin.getMinifiedName());
+		assertEquals("html5notmin.min", html5notmin.getMinifiedName());
 
 		final PackageResourceReference html5min = new PackageResourceReference("html5.min");
-		Assert.assertEquals("html5.min", html5min.getMinifiedName());
+		assertEquals("html5.min", html5min.getMinifiedName());
 
 	}
 
@@ -219,47 +222,47 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * see WICKET-5250 - for JavaScriptResourceReference
 	 */
 	@Test
-	public void testJavaScriptResourceReferenceRespectsMinifiedResourcesDetection()
+	void testJavaScriptResourceReferenceRespectsMinifiedResourcesDetection()
 	{
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
 		final JavaScriptResourceReference notMinified = new JavaScriptResourceReference(PackageResourceReferenceTest.class, "a.js");
 		final JavaScriptPackageResource notMinifiedResource = notMinified.getResource();
-		Assert.assertTrue("Not minified resource should got its compress flag set to true", notMinifiedResource.getCompress());
+		assertTrue(notMinifiedResource.getCompress(), "Not minified resource should got its compress flag set to true");
 
 		final JavaScriptResourceReference alreadyMinified = new JavaScriptResourceReference(PackageResourceReferenceTest.class, "b.min.js");
 		final JavaScriptPackageResource alreadyMinifiedResource = alreadyMinified.getResource();
-		Assert.assertFalse("Already minified resource should got its compress flag set to false", alreadyMinifiedResource.getCompress());
+		assertFalse(alreadyMinifiedResource.getCompress(), "Already minified resource should got its compress flag set to false");
 	}
 
 	/**
 	 * see WICKET-5250 - for CSSResourceReference
 	 */
 	@Test
-	public void testCSSResourceReferenceRespectsMinifiedResourcesDetection()
+	void testCSSResourceReferenceRespectsMinifiedResourcesDetection()
 	{
 		Application.get().getResourceSettings().setUseMinifiedResources(true);
 		final CssResourceReference notMinified = new CssResourceReference(PackageResourceReferenceTest.class, "a.css");
 		final CssPackageResource notMinifiedResource = notMinified.getResource();
-		Assert.assertTrue("Not minified resource should got its compress flag set to true", notMinifiedResource.getCompress());
+		assertTrue(notMinifiedResource.getCompress(), "Not minified resource should got its compress flag set to true");
 
 		final CssResourceReference alreadyMinified = new CssResourceReference(PackageResourceReferenceTest.class, "b.min.css");
 		final CssPackageResource alreadyMinifiedResource = alreadyMinified.getResource();
-		Assert.assertFalse("Already minified resource should got its compress flag set to false", alreadyMinifiedResource.getCompress());
+		assertFalse(alreadyMinifiedResource.getCompress(), "Already minified resource should got its compress flag set to false");
 	}
 
 	/**
 	 * See WICKET-5819 - Media tags
 	 */
 	@Test
-	public void testContentRange()
+	void testContentRange()
 	{
 		// Test range
-		Assert.assertEquals("resource", makeRangeRequest("bytes=0-7"));
-		Assert.assertEquals("ource", makeRangeRequest("bytes=3-7"));
-		Assert.assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=0-"));
-		Assert.assertEquals("var_style_en.txt", makeRangeRequest("bytes=9-"));
-		Assert.assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-"));
-		Assert.assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-25"));
+		assertEquals("resource", makeRangeRequest("bytes=0-7"));
+		assertEquals("ource", makeRangeRequest("bytes=3-7"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=0-"));
+		assertEquals("var_style_en.txt", makeRangeRequest("bytes=9-"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-"));
+		assertEquals("resource_var_style_en.txt", makeRangeRequest("bytes=-25"));
 	}
 
 	private String makeRangeRequest(String range)
@@ -283,7 +286,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * @throws IOException
 	 */
 	@Test
-	public void testContentRangeLarge() throws IOException
+	void testContentRangeLarge() throws IOException
 	{
 		InputStream resourceAsStream = null;
 		try
@@ -334,7 +337,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * See WICKET-5819 - Media tags
 	 */
 	@Test
-	public void testContentRangeHeaders()
+	void testContentRangeHeaders()
 	{
 		// Test header fields
 		ResourceReference reference = new PackageResourceReference(scope, "resource.txt",
@@ -344,7 +347,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 		MockHttpServletResponse mockHttpServletResponse = (MockHttpServletResponse)response.getContainerResponse();
 		Attributes mockAttributes = new Attributes(request, response);
 		reference.getResource().respond(mockAttributes);
-		Assert.assertEquals(ContentRangeType.BYTES.getTypeName(),
+		assertEquals(ContentRangeType.BYTES.getTypeName(),
 			mockHttpServletResponse.getHeader("Accept-Range"));
 		// For normal: If a resource supports content range no content is delivered
 		// if no "Range" header is given, but we have to deliver it, because
@@ -352,7 +355,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 		// detecting media requests and automatically add the "Range" header for
 		// partial content and they don't make an initial request to detect if a media
 		// resource supports Content-Range (by the Accept-Range header)
-		Assert.assertEquals("resource_var_style_en.txt",
+		assertEquals("resource_var_style_en.txt",
 			new String(mockHttpServletResponse.getBinaryContent()));
 	}
 
@@ -360,7 +363,7 @@ public class PackageResourceReferenceTest extends WicketTestCase
 	 * https://issues.apache.org/jira/browse/WICKET-6031
 	 */
 	@Test
-	public void noRequestCycle()
+	void noRequestCycle()
 	{
 		ThreadContext.setRequestCycle(null);
 

@@ -16,8 +16,16 @@
  */
 package org.apache.wicket.protocol.http;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +42,6 @@ import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -55,16 +62,14 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.AbstractResource;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.util.SlowTests;
+import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.file.WebXmlFile;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.DummyHomePage;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -72,7 +77,7 @@ import org.xml.sax.SAXException;
 
 /**
  */
-public class WicketFilterTest extends Assert
+public class WicketFilterTest
 {
 	private static WebApplication application;
 	private final DateFormat headerDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z",
@@ -81,8 +86,8 @@ public class WicketFilterTest extends Assert
 	/**
 	 * @throws Exception
 	 */
-	@After
-	public void after() throws Exception
+	@AfterEach
+	void after() throws Exception
 	{
 		if (application != null)
 		{
@@ -108,7 +113,7 @@ public class WicketFilterTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void parsingOfAnnotatedServlet3FiltersWorks() throws Exception
+	void parsingOfAnnotatedServlet3FiltersWorks() throws Exception
 	{
 		FilterTestingConfig config = new FilterTestingConfig();
 		config.initParameters.clear();
@@ -118,19 +123,19 @@ public class WicketFilterTest extends Assert
 		// creates an Application
 		filter.init(config);
 
-		// get a reference to the application, so that @After is able to clean it up
+		// get a reference to the application, so that @AfterEach is able to clean it up
 		application = filter.getApplication();
 
 		// assert that the filter path is not /web/*/
-		assertThat(filter.getFilterPath(), is("web/"));
+		assertEquals("web/", filter.getFilterPath());
 	}
 
 	/**
 	 * testFilterPath1()
 	 */
 	@Test
-	@Category(SlowTests.class)
-	public void filterPath1()
+	@Tag(WicketTestTag.SLOW)
+	void filterPath1()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web1.xml");
 		String filterPath = getFilterPath("FilterTestApplication", in);
@@ -141,8 +146,8 @@ public class WicketFilterTest extends Assert
 	 * testFilterPath2()
 	 */
 	@Test
-	@Category(SlowTests.class)
-	public void filterPath2()
+	@Tag(WicketTestTag.SLOW)
+	void filterPath2()
 	{
 		InputStream in = WicketFilterTest.class.getResourceAsStream("web2.xml");
 		String filterPath = getFilterPath("FilterTestApplication", in);
@@ -155,7 +160,7 @@ public class WicketFilterTest extends Assert
 	 * @throws ParseException
 	 */
 	@Test
-	public void notModifiedResponseIncludesExpiresHeader() throws IOException, ServletException,
+	void notModifiedResponseIncludesExpiresHeader() throws IOException, ServletException,
 		ParseException
 	{
 		try
@@ -198,12 +203,10 @@ public class WicketFilterTest extends Assert
 			});
 			assertEquals(HttpServletResponse.SC_NOT_MODIFIED, response.getStatus());
 			String responseExpiresHeader = response.getHeader("Expires");
-			assertNotNull("Expires header must be set on not modified response",
-				responseExpiresHeader);
+			assertNotNull(responseExpiresHeader, "Expires header must be set on not modified response");
 
 			Date responseExpires = headerDateFormat.parse(responseExpiresHeader);
-			assertTrue("Expected later than current date but was " + responseExpires,
-				responseExpires.after(new Date()));
+			assertTrue(responseExpires.after(new Date()), "Expected later than current date but was " + responseExpires);
 		}
 		finally
 		{
@@ -212,7 +215,7 @@ public class WicketFilterTest extends Assert
 	}
 
 	@Test
-	public void options() throws IOException, ServletException, ParseException
+	void options() throws IOException, ServletException, ParseException
 	{
 		try
 		{
@@ -305,11 +308,11 @@ public class WicketFilterTest extends Assert
 		}
 	}
 
-	private static class FilterTestingConfig implements FilterConfig
+    public static class FilterTestingConfig implements FilterConfig
 	{
 		private final Map<String, String> initParameters = new HashMap<>();
 
-		public FilterTestingConfig()
+        public FilterTestingConfig()
 		{
 			initParameters.put(WicketFilter.APP_FACT_PARAM,
 				FilterTestingApplicationFactory.class.getName());
@@ -346,7 +349,7 @@ public class WicketFilterTest extends Assert
 
 	/**
 	 */
-	public static class FilterTestingApplicationFactory implements IWebApplicationFactory
+    public static class FilterTestingApplicationFactory implements IWebApplicationFactory
 	{
 		@Override
 		public WebApplication createApplication(WicketFilter filter)
@@ -365,13 +368,13 @@ public class WicketFilterTest extends Assert
 	 * testCheckRedirect_1()
 	 */
 	@Test
-	public void checkRedirect_1()
+	void checkRedirect_1()
 	{
 		WicketFilter filter = new WicketFilter();
 
 		// Simulate url-pattern = "/*" and request = http://localhost:8080 => null == no redirect
 		filter.setFilterPath("");
-		assertNull("", filter.checkIfRedirectRequired("/", ""));
+		assertNull(filter.checkIfRedirectRequired("/", ""));
 	}
 
 	private static class CheckRedirectWorker implements Runnable
@@ -381,8 +384,8 @@ public class WicketFilterTest extends Assert
 		private final CountDownLatch finishLatch;
 		private final AtomicInteger successCount;
 
-		public CheckRedirectWorker(WicketFilter filter, CountDownLatch startLatch,
-			CountDownLatch finishLatch, AtomicInteger successCount)
+		CheckRedirectWorker(WicketFilter filter, CountDownLatch startLatch,
+							CountDownLatch finishLatch, AtomicInteger successCount)
 		{
 			this.filter = filter;
 			this.startLatch = startLatch;
@@ -440,8 +443,8 @@ public class WicketFilterTest extends Assert
 		{
 			fail();
 		}
-		assertEquals("all threads finished", 0, finishLatch.getCount());
-		assertEquals("all redirects correct", threadCount, successCount.get());
+		assertEquals(0, finishLatch.getCount(), "all threads finished");
+		assertEquals(threadCount, successCount.get(), "all threads finished");
 	}
 
 	/**
@@ -450,7 +453,7 @@ public class WicketFilterTest extends Assert
 	 * Runs 1000 times 8 simultaneous threads which try to initialize WicketFilter#filterPathLength
 	 */
 	@Test
-	public void repeatedParallelCheckRedirect()
+	void repeatedParallelCheckRedirect()
 	{
 		int threadCount = 8;
 		int repeatCount = 1000;
@@ -466,7 +469,7 @@ public class WicketFilterTest extends Assert
 	 * @throws Exception
 	 */
 	@Test
-	public void ignorePaths() throws Exception
+	void ignorePaths() throws Exception
 	{
 		application = spy(new MockApplication());
 		WicketFilter filter = new WicketFilter();
@@ -519,7 +522,7 @@ public class WicketFilterTest extends Assert
 	 * </p>
 	 */
 	@Test
-	public void canonicaliseFilterPath()
+	void canonicaliseFilterPath()
 	{
 		String s;
 

@@ -18,14 +18,17 @@ package org.apache.wicket.util.value;
 
 import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.time.Time;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author jcompagner
  * @author Doug Donohoe
  */
-public class ValueMapTest extends Assert
+public class ValueMapTest
 {
 	/**
 	 * @throws Exception

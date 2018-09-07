@@ -31,7 +31,7 @@ public class MarkupInheritanceBaseBase_11 extends WebPage
 	/**
 	 * Construct.
 	 */
-	public MarkupInheritanceBaseBase_11()
+    MarkupInheritanceBaseBase_11()
 	{
 		WebMarkupContainer css = new WebMarkupContainer("css");
 		css.add(AttributeModifier.replace("src", Model.of("myStyle.css")));

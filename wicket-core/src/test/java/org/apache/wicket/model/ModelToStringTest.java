@@ -16,16 +16,18 @@
  */
 package org.apache.wicket.model;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Properties;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the toString() method on the models in the org.apache.wicket.model package.
  */
-public class ModelToStringTest extends WicketTestCase
+class ModelToStringTest extends WicketTestCase
 {
 	/**
 	 * Used for models in testing.
@@ -54,7 +56,7 @@ public class ModelToStringTest extends WicketTestCase
 	 * Tests the BoundCompoundPropertyModel.toString() method.
 	 */
 	@Test
-	public void boundCompoundPropertyModel()
+	void boundCompoundPropertyModel()
 	{
 		CompoundPropertyModel<String> emptyModel = new CompoundPropertyModel<String>("");
 		String expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[]";
@@ -85,7 +87,7 @@ public class ModelToStringTest extends WicketTestCase
 	 * Tests the CompoundPropertyModel.toString() method.
 	 */
 	@Test
-	public void compoundPropertyModel()
+	void compoundPropertyModel()
 	{
 		CompoundPropertyModel<?> emptyModel = new CompoundPropertyModel<String>("");
 		String expected = "Model:classname=[org.apache.wicket.model.CompoundPropertyModel]:nestedModel=[]";
@@ -116,7 +118,7 @@ public class ModelToStringTest extends WicketTestCase
 	 * Tests LoadableDetachableModel.toString()
 	 */
 	@Test
-	public void loadableDetachableModel()
+	void loadableDetachableModel()
 	{
 		LoadableDetachableModel<String> model = new MyLoadableDetachableModel();
 		assertTrue(model.toString().contains(":attached=false"));
@@ -136,7 +138,7 @@ public class ModelToStringTest extends WicketTestCase
 	 * Tests the Model.toString() method.
 	 */
 	@Test
-	public void model()
+	void model()
 	{
 		Model<?> emptyModel = new Model<String>();
 		String expected = "Model:classname=[org.apache.wicket.model.Model]:object=[null]";
@@ -151,7 +153,7 @@ public class ModelToStringTest extends WicketTestCase
 	 * Tests the PropertyModel.toString() method.
 	 */
 	@Test
-	public void propertyModel()
+	void propertyModel()
 	{
 		PropertyModel<Void> emptyModel = new PropertyModel<Void>("", null);
 		String expected = "Model:classname=[org.apache.wicket.model.PropertyModel]:nestedModel=[]:expression=[null]";

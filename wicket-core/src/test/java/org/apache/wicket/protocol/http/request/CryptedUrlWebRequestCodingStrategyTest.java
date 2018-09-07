@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.http.request;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Base64;
 
 import org.apache.wicket.core.request.mapper.CryptoMapper;
@@ -27,12 +29,12 @@ import org.apache.wicket.request.mapper.CompoundRequestMapper;
 import org.apache.wicket.util.crypt.ICrypt;
 import org.apache.wicket.util.crypt.ICryptFactory;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Simple test using the WicketTester
  */
-public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
+class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 {
 
 	@Override
@@ -57,7 +59,7 @@ public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 	 * 
 	 */
 	@Test
-	public void clientBidListPage()
+	void clientBidListPage()
 	{
 		WebPage page = new SimplePage();
 		WebPage p = (WebPage)tester.startPage(page);
@@ -68,7 +70,7 @@ public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 	 * testRenderMyPagePost()
 	 */
 	@Test
-	public void renderMyPagePost()
+	void renderMyPagePost()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);
@@ -83,7 +85,7 @@ public class CryptedUrlWebRequestCodingStrategyTest extends WicketTestCase
 	 * testRenderMyPageGet()
 	 */
 	@Test
-	public void renderMyPageGet()
+	void renderMyPageGet()
 	{
 		// start and render the test page
 		tester.startPage(HomePage.class);

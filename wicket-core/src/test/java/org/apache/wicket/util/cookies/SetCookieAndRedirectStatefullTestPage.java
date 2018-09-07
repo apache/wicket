@@ -33,7 +33,7 @@ public class SetCookieAndRedirectStatefullTestPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/**	 */
-	public static final String cookieName = "CookieValuePersisterStatelessTestPage";
+	private static final String cookieName = "CookieValuePersisterStatelessTestPage";
 
 	private IModel<String> inputModel;
 

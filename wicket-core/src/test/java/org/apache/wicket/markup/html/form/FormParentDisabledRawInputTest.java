@@ -16,17 +16,21 @@
  */
 package org.apache.wicket.markup.html.form;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.apache.wicket.Component;
+import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.apache.wicket.core.request.handler.ListenerInvocationNotAllowedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  */
-public class FormParentDisabledRawInputTest extends WicketTestCase
+class FormParentDisabledRawInputTest extends WicketTestCase
 {
 	/**
 	 */
@@ -39,7 +43,7 @@ public class FormParentDisabledRawInputTest extends WicketTestCase
 		/**
 		 * Construct.
 		 */
-		public TestPage()
+		TestPage()
 		{
 			setStatelessHint(false);
 
@@ -61,11 +65,9 @@ public class FormParentDisabledRawInputTest extends WicketTestCase
 	}
 
 	/**
-	 * @throws Exception
 	 */
-	@Test(expected = ListenerInvocationNotAllowedException.class)
-	public void disabledParent() throws Exception
-	{
+	@Test
+	void disabledParent() {
 		TestPage page = new TestPage();
 		page.enabled = false;
 		tester.startPage(page);
@@ -76,6 +78,9 @@ public class FormParentDisabledRawInputTest extends WicketTestCase
 		assertFalse(check.isEnabledInHierarchy());
 
 		// nothing should change with a submit that changes no values
-		tester.newFormTester("container:form").submit();
+
+		assertThrows(ListenerInvocationNotAllowedException.class, () -> {
+			tester.newFormTester("container:form").submit();
+		});
 	}
 }

@@ -14,25 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.wicket.util.io;
+
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests for {@link FullyBufferedReader}
  */
-public class FullyBufferedReaderTest extends Assert
+
+public class FullyBufferedReaderTest
 {
 
 	/**
 	 * 
 	 * @throws ParseException
 	 */
+
 	@Test
 	public void nestedQuotes() throws ParseException
 	{
@@ -49,10 +52,12 @@ public class FullyBufferedReaderTest extends Assert
 		assertEquals(testTag.length(), position + 1);
 	}
 
+
 	/**
 	 * 
 	 * @throws ParseException
 	 */
+
 	@Test
 	public void quotedEsclamationQuotationMark() throws ParseException
 	{
@@ -69,11 +74,6 @@ public class FullyBufferedReaderTest extends Assert
 		assertEquals(testTag.length(), position + 1);
 	}
 
-	/**
-	 * A rule for expecting ParseExceptions
-	 */
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117
@@ -82,17 +82,20 @@ public class FullyBufferedReaderTest extends Assert
 	 * 
 	 * @throws ParseException
 	 */
+
 	@Test
 	public void missingClosingQuote() throws ParseException
 	{
-		thrown.expect(ParseException.class);
-		thrown.expectMessage("Opening/closing quote not found for quote at (line 1, column 9)");
-
 		String testTag = "<a href='blabla>";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
 
-		fullyBufferedReader.findOutOfQuotes('>', 0);
+		final ParseException e = assertThrows(ParseException.class, () -> {
+			fullyBufferedReader.findOutOfQuotes('>', 0);
+		});
+
+		assertEquals("Opening/closing quote not found for quote at (line 1, column 9)", e.getMessage());
 	}
+
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117
@@ -101,16 +104,18 @@ public class FullyBufferedReaderTest extends Assert
 	 * 
 	 * @throws ParseException
 	 */
+
 	@Test
 	public void missingOpeningQuote() throws ParseException
 	{
-		thrown.expect(ParseException.class);
-		thrown.expectMessage("Opening/closing quote not found for quote at (line 1, column 15)");
-
 		String testTag = "<a href=blabla'>";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
 
-		fullyBufferedReader.findOutOfQuotes('>', 0);
+		final ParseException e = assertThrows(ParseException.class, () -> {
+			fullyBufferedReader.findOutOfQuotes('>', 0);
+		});
+
+		assertEquals("Opening/closing quote not found for quote at (line 1, column 15)", e.getMessage());
 	}
 
 	/**
@@ -120,17 +125,20 @@ public class FullyBufferedReaderTest extends Assert
 	 * 
 	 * @throws ParseException
 	 */
+
 	@Test
 	public void missingClosingDoubleQuote() throws ParseException
 	{
-		thrown.expect(ParseException.class);
-		thrown.expectMessage("Opening/closing quote not found for quote at (line 1, column 9)");
-
 		String testTag = "<a href=\"blabla>";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
 
-		fullyBufferedReader.findOutOfQuotes('>', 0);
+		final ParseException e = assertThrows(ParseException.class, () -> {
+			fullyBufferedReader.findOutOfQuotes('>', 0);
+		});
+
+		assertEquals("Opening/closing quote not found for quote at (line 1, column 9)", e.getMessage());
 	}
+
 
 	/**
 	 * https://issues.apache.org/jira/browse/WICKET-4117
@@ -139,15 +147,17 @@ public class FullyBufferedReaderTest extends Assert
 	 * 
 	 * @throws ParseException
 	 */
+
 	@Test
 	public void missingOpeningDoubleQuote() throws ParseException
 	{
-		thrown.expect(ParseException.class);
-		thrown.expectMessage("Opening/closing quote not found for quote at (line 1, column 15)");
-
 		String testTag = "<a href=blabla\">";
 		FullyBufferedReader fullyBufferedReader = new FullyBufferedReader(testTag);
 
-		fullyBufferedReader.findOutOfQuotes('>', 0);
+		final ParseException e = assertThrows(ParseException.class, () -> {
+			fullyBufferedReader.findOutOfQuotes('>', 0);
+		});
+
+		assertEquals("Opening/closing quote not found for quote at (line 1, column 15)", e.getMessage());
 	}
 }

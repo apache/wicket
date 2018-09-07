@@ -16,14 +16,16 @@
  */
 package org.apache.wicket.core.util.string.componentrenderer;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.wicket.core.util.string.ComponentRenderer;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for ComponentRenderer
  */
-public class ComponentRendererTest extends WicketTestCase
+class ComponentRendererTest extends WicketTestCase
 {
 
 	/**
@@ -33,7 +35,7 @@ public class ComponentRendererTest extends WicketTestCase
 	 * Enclosure won't know its child component without being initialized
 	 */
 	@Test
-	public void componentsAreInitialized()
+	void componentsAreInitialized()
 	{
 		ComponentRenderer.renderComponent(new EnclosurePanel("anyId"));
 	}
@@ -45,7 +47,7 @@ public class ComponentRendererTest extends WicketTestCase
 	 * markup if available
 	 */
 	@Test
-	public void renderListViewItems()
+	void renderListViewItems()
 	{
 		PageWithRepeater page = new PageWithRepeater();
 		CharSequence listViewOutput = ComponentRenderer.renderComponent(page.get("listView"));

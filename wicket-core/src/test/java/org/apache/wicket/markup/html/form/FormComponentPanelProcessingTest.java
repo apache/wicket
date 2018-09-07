@@ -16,7 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Serializable;
 
@@ -29,14 +30,14 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test form component panel related form processing
  * 
  * @author ivaynberg
  */
-public class FormComponentPanelProcessingTest extends WicketTestCase
+class FormComponentPanelProcessingTest extends WicketTestCase
 {
 
 	/**
@@ -44,7 +45,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 	 * should be processed first.
 	 */
 	@Test
-	public void processingOrder()
+	void processingOrder()
 	{
 		tester.startPage(new TestPage());
 		tester.assertRenderedPage(TestPage.class);
@@ -53,16 +54,16 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 	}
 
 	@Test
-	public void clearInput()
+	void clearInput()
 	{
 		tester.startPage(new TestPage());
 		tester.assertRenderedPage(TestPage.class);
 
 		TestFormComponentPanel fcp = (TestFormComponentPanel) tester.getComponentFromLastRenderedPage("form:panel");
-		assertThat(fcp.isChildClearInputCalled(), is(false));
+		assertEquals(false, fcp.isChildClearInputCalled());
 
 		fcp.clearInput();
-		assertThat(fcp.isChildClearInputCalled(), is(true));
+		assertEquals(true, fcp.isChildClearInputCalled());
 	}
 
 	private static class TestFormComponentPanel extends FormComponentPanel<Serializable>
@@ -152,7 +153,7 @@ public class FormComponentPanelProcessingTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		public TestPage()
+		TestPage()
 		{
 			Form<Void> form = new Form<>("form");
 			add(form);

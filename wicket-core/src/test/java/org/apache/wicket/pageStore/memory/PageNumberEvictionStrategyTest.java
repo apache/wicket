@@ -16,22 +16,23 @@
  */
 package org.apache.wicket.pageStore.memory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /***/
-public class PageNumberEvictionStrategyTest
+class PageNumberEvictionStrategyTest
 {
 
-	final byte[] PAGE1 = new byte[] { 1 };
-	final byte[] PAGE2 = new byte[] { 2, 3 };
+	private final byte[] PAGE1 = new byte[] { 1 };
+	private final byte[] PAGE2 = new byte[] { 2, 3 };
 
 	/***/
 	@Test
-	public void evict()
+	void evict()
 	{
 		// evict to page table with one page only
 		PageNumberEvictionStrategy strategy = new PageNumberEvictionStrategy(1);
@@ -55,9 +56,11 @@ public class PageNumberEvictionStrategyTest
 	/**
 	 * The number of pages must be at least '1'
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void greaterThanZero()
+	@Test
+	void greaterThanZero()
 	{
-		new PageNumberEvictionStrategy(0);
+		assertThrows(IllegalArgumentException.class, () -> {
+			new PageNumberEvictionStrategy(0);
+		});
 	}
 }

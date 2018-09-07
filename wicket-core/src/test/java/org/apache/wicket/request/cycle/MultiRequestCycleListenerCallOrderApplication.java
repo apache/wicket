@@ -48,7 +48,7 @@ class MultiRequestCycleListenerCallOrderApplication extends WebApplication
 	{
 		private String name;
 
-		public CallRecordingListener(String name)
+		CallRecordingListener(String name)
 		{
 			this.name = name;
 		}

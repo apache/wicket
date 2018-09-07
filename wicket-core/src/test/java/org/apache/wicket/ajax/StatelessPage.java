@@ -47,11 +47,11 @@ public class StatelessPage extends WebPage
 
 	public static final String FORM_SUBMIT = "form submit";
 
-	static int itemCount = 0;
+	private static int itemCount = 0;
 
 	private static final long serialVersionUID = 1L;
 
-	static List<String> getList()
+	private static List<String> getList()
 	{
 		final ArrayList<String> list = new ArrayList<String>(itemCount);
 		final int count = ++itemCount;
@@ -100,10 +100,10 @@ public class StatelessPage extends WebPage
 				System.out.println(_data);
 
 				listView.setModelObject(_data);
-				
+
 				target.ifPresent(ajaxTarget -> ajaxTarget.add(list, "new"));
 			}
-			
+
 			@Override
 			protected boolean getStatelessHint()
 			{
@@ -124,7 +124,7 @@ public class StatelessPage extends WebPage
 		Form<String> form = new StatelessForm<String>("inputForm")
 		{
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = -6554405700693024016L;
 

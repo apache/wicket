@@ -33,7 +33,7 @@ public class EnclosurePage_9 extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	/** */
-	public boolean formValidate;
+    private boolean formValidate;
 
 	/** */
 	public boolean inputOnBeforeRender;

@@ -17,21 +17,21 @@
 package org.apache.wicket.markup.html.header.threelayers;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the inclusion of the wicket:head section from a panel in a subclassed page.
  * 
  * @author Martijn Dashorst
  */
-public class InheritanceHeadTest extends WicketTestCase
+class InheritanceHeadTest extends WicketTestCase
 {
 	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
+    void test_1() throws Exception
 	{
 		executeTest(MeldingPage.class, "ExpectedResult.html");
 	}

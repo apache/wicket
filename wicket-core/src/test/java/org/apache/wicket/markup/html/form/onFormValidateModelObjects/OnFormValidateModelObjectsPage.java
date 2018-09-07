@@ -129,7 +129,7 @@ public class OnFormValidateModelObjectsPage extends WebPage
 
 		boolean parentValidated;
 
-		public ParentModel()
+		ParentModel()
 		{
 			super();
 		}
@@ -159,7 +159,7 @@ public class OnFormValidateModelObjectsPage extends WebPage
 			return parentValidated;
 		}
 
-		public void setParentValidated(boolean parentValid)
+		void setParentValidated(boolean parentValid)
 		{
 			this.parentValidated = parentValid;
 		}

@@ -16,6 +16,9 @@
  */
 package org.apache.wicket;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,12 +30,12 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Pedro Santos
  */
-public class EventDispatcherTest extends WicketTestCase
+class EventDispatcherTest extends WicketTestCase
 {
 
 	/**
@@ -40,7 +43,7 @@ public class EventDispatcherTest extends WicketTestCase
 	 * invoke the methods annotated with @EvenCallback
 	 * */
 	@Test
-	public void dispatchToAnnotatedMethod()
+	void dispatchToAnnotatedMethod()
 	{
 		tester.getApplication().getFrameworkSettings().add(new DispatchToAnnotatedMethod());
 		MockPageWithOneComponent page = new MockPageWithOneComponent();
@@ -53,12 +56,12 @@ public class EventDispatcherTest extends WicketTestCase
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
-	@interface EventCallback {
+	private @interface EventCallback {
 
 	}
 
 	/** */
-	public static class DispatchToAnnotatedMethod implements IEventDispatcher
+	static class DispatchToAnnotatedMethod implements IEventDispatcher
 	{
 		@Override
 		public void dispatchEvent(Object sink, IEvent<?> event, Component component)
@@ -90,7 +93,7 @@ public class EventDispatcherTest extends WicketTestCase
 		/**
 		 * @param id
 		 */
-		public TestComponent(String id)
+		TestComponent(String id)
 		{
 			super(id);
 

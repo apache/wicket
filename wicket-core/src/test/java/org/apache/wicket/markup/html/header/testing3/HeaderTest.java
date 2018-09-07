@@ -17,13 +17,13 @@
 package org.apache.wicket.markup.html.header.testing3;
 
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class HeaderTest extends WicketTestCase
+class HeaderTest extends WicketTestCase
 {
 	/**
 	 * Replace a Panel which has a body onLoad modifier
@@ -31,7 +31,7 @@ public class HeaderTest extends WicketTestCase
 	 * @throws Exception
 	 */
 	@Test
-	public void test_1() throws Exception
+    void test_1() throws Exception
 	{
 		executeTest(TestPage.class, "TestPage_ExpectedResult-1.html");
 		TestPage page = (TestPage)tester.getLastRenderedPage();
