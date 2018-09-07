@@ -18,6 +18,7 @@ package org.apache.wicket.util.tester;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -958,7 +959,7 @@ public class WicketTester extends BaseWicketTester
 	public void executeListener(final Class<?> testClass, final Component component,
 		final String filename) throws Exception
 	{
-		assert(component != null);
+		assertNotNull(component);
 
 		log.info("=== " + testClass.getName() + " : " + component.getPageRelativePath() + " ===");
 
@@ -976,7 +977,7 @@ public class WicketTester extends BaseWicketTester
 	public void executeBehavior(final Class<?> testClass, final AbstractAjaxBehavior behavior,
 		final String filename) throws Exception
 	{
-		assert(behavior != null);
+		assertNotNull(behavior);
 
 		log.info("=== " + testClass.getName() + " : " + behavior.toString() + " ===");
 
