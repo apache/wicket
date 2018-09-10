@@ -281,7 +281,7 @@ git add wicket-$version-released.md
 
 # the branch on which the code base lives for this version (master is
 # always current development version)
-GIT_BRANCH=master
+GIT_BRANCH=wicket-8.x
 
 JAVA_VERSION=$(getJavaVersionFromPom)
 
