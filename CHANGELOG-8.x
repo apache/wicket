@@ -2,6 +2,34 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.1.0
+
+** Bug
+
+    * [WICKET-6551] - LazyInitProxyFactory doesn't work correctly at Weblogic
+    * [WICKET-6552] - Spring proxy creation fails with IAE inside ASM ClassReader on JDK10
+    * [WICKET-6553] - SelectOptions doesn't html-encode option values
+    * [WICKET-6564] - PageStoreManager#clear() does not completely clear
+    * [WICKET-6568] - Wicket fails / does not encode request header values in AjaxCalls
+    * [WICKET-6571] - BaseWebSocketBehavior should check sessionId cookie name dynamically
+    * [WICKET-6573] - WicketTesterHelper ignores invalid Ajax-Event names starting with "on"
+    * [WICKET-6574] - JQueryResourceReference#get() (still) return V1
+    * [WICKET-6584] - Import Junit Package as optional
+
+** New Feature
+
+    * [WICKET-6577] - Introduce class GenericWebMarkupContainer
+
+** Improvement
+
+    * [WICKET-6560] - Improve serialization warnings in ChainingModel
+    * [WICKET-6565] - ResponseIOException logged as an error in DefaultExceptionMapper
+    * [WICKET-6575] - Ajax requests are still firing even when placeholder tag is written only
+    * [WICKET-6576] - Support multiple dateFormats for LocalDateTextfield
+    * [WICKET-6580] - org.apache.wicket.util.lang.Bytes - toString()
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.0.0
 
 ** Bug
