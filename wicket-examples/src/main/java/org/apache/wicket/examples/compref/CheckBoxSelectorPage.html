@@ -34,8 +34,18 @@
              <input type="checkbox" wicket:id="looseCheck3"/> 3
              <input type="checkbox" wicket:id="looseCheck4"/> 4
              <input type="checkbox" wicket:id="looseSelector"/> select all
+
+             <hr/>
+             Extensible Selector:
+             <ul>
+                 <li wicket:id="list">
+                     <input type="checkbox" wicket:id="check"/><wicket:label for="check"/>
+                 </li>
+             </ul>
+             <input type="checkbox" wicket:id="extensibleSelector"/> select all
+             <input type="submit" value="add a choice" wicket:id="addChoice"/>
          </form>
-       </p>  
+       </p>
     </wicket:extend>
 </body>
 </html>
