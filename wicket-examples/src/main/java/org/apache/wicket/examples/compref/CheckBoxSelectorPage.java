@@ -18,8 +18,12 @@ package org.apache.wicket.examples.compref;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.wicket.examples.WicketExamplePage;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Check;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.CheckBoxMultipleChoice;
@@ -28,6 +32,10 @@ import org.apache.wicket.markup.html.form.CheckGroup;
 import org.apache.wicket.markup.html.form.CheckGroupSelector;
 import org.apache.wicket.markup.html.form.CheckboxMultipleChoiceSelector;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.FormComponentLabel;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
@@ -84,6 +92,46 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 								// backwards compatibility.
 			}
 		});
+		form.add(new CheckGroupSelector("groupSelectorOutside", checkgroup));
+
+		// and one which will get more choices later
+		final List<Integer> extensibleChoices = new ArrayList<>(Arrays.asList(1, 2, 3));
+		final Set<Integer> selected = new HashSet<>();
+		final CheckBoxSelector extensibleSelector = new CheckBoxSelector("extensibleSelector");
+		form.add(extensibleSelector);
+		final ListView<Integer> listView = new ListView<Integer>("list", extensibleChoices) {
+			@Override
+			protected void populateItem(final ListItem<Integer> item) {
+				final CheckBox check = new CheckBox("check", new Model<Boolean>() {
+					@Override
+					public Boolean getObject() {
+						return selected.contains(item.getModelObject());
+					}
+
+					@Override
+					public void setObject(Boolean object) {
+						if (object) {
+							selected.add(item.getModelObject());
+						} else {
+							selected.remove(item.getModelObject());
+						}
+					}
+				});
+				extensibleSelector.addCheckbox(check);
+				check.setLabel(Model.of(item.getModelObject().toString()));
+				item.add(check);
+			}
+		};
+		listView.setReuseItems(true);
+		form.add(listView);
+		form.add(new Button("addChoice") {
+			@Override
+			public void onSubmit() {
+				extensibleChoices.add(extensibleChoices.size() + 1);
+				listView.removeAll();
+			}
+		});
+
 		final CheckBoxMultipleChoice<Integer> choice = new CheckBoxMultipleChoice<>(
 			"choice", Model.ofList(new ArrayList<Integer>()), Arrays.asList(1, 2, 3, 4));
 		form.add(choice);
@@ -94,5 +142,6 @@ public class CheckBoxSelectorPage extends WicketExamplePage
 		final CheckBox loose4 = new CheckBox("looseCheck4", Model.of(Boolean.FALSE));
 		form.add(loose1, loose2, loose3, loose4);
 		form.add(new CheckBoxSelector("looseSelector", loose1, loose2, loose3, loose4));
+
 	}
 }
