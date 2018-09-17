@@ -833,6 +833,22 @@ public class WebClientInfoTest
 	}
 
 	/**
+	 * WICKET-6589
+	 */
+	@Test
+	public void firefoxIntegerExceeded()
+	{
+		String userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:50.0) Gecko/20100101 Firefox/50.01537112190982";
+		WebClientInfo webClientInfo = new WebClientInfo(requestCycleMock, userAgent);
+		
+		assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMajor(),
+				is(equalTo(50)));
+			assertThat(userAgent, webClientInfo.getProperties().getBrowserVersionMinor(),
+				is(equalTo(-1)));
+	}
+
+
+	/**
 	 * Test Microsoft Edge user-agent strings
 	 */
 	@Test
