@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.ClientProperties;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -350,8 +351,8 @@ public class WebClientInfo extends ClientInfo
 
 		if (matcher.find())
 		{
-			properties.setBrowserVersionMajor(Integer.parseInt(matcher.group(1)));
-			properties.setBrowserVersionMinor(Integer.parseInt(matcher.group(2)));
+			properties.setBrowserVersionMajor(StringValue.valueOf(matcher.group(1)).toInt(-1));
+			properties.setBrowserVersionMinor(StringValue.valueOf(matcher.group(2)).toInt(-1));
 		}
 	}
 }
