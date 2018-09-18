@@ -237,10 +237,9 @@ update any other dependencies on Wicket projects to the same version):
 </dependency>
 
 Or download and build the distribution yourself, or use our
-convenience binary package
+convenience binary package you can find here:
 
- * Source: http://www.apache.org/dyn/closer.cgi/wicket/$version
- * Binary: http://www.apache.org/dyn/closer.cgi/wicket/$version/binaries
+ * Download: http://wicket.apache.org/start/wicket-$major_version.x.html#manually
 
 Upgrading from earlier versions
 -------------------------------
