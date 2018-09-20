@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Helper class to simplify Cookie handling.
- * 
+ *
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
@@ -40,7 +40,7 @@ public class CookieUtils
 {
 	private final static Logger log = LoggerFactory.getLogger(CookieUtils.class);
 
-    private static final String DEFAULT_SESSIONID_COOKIE_NAME = "JSESSIONID";
+	public static final String DEFAULT_SESSIONID_COOKIE_NAME = "JSESSIONID";
 
 	private final CookieDefaults settings;
 
@@ -54,7 +54,7 @@ public class CookieUtils
 
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param settings
 	 *          the default settings for the saved cookies
 	 */
@@ -73,7 +73,7 @@ public class CookieUtils
 
 	/**
 	 * Remove the cookie identified by the key
-	 * 
+	 *
 	 * @param key
 	 *          The cookie name
 	 */
@@ -88,7 +88,7 @@ public class CookieUtils
 
 	/**
 	 * Remove the cookie identified by the form component
-	 * 
+	 *
 	 * @param formComponent
 	 */
 	public final void remove(final FormComponent<?> formComponent)
@@ -99,7 +99,7 @@ public class CookieUtils
 	/**
 	 * This method gets used when a cookie key needs to be derived from a form component. By default
 	 * the component's page relative path is used.
-	 * 
+	 *
 	 * @param component
 	 * @return cookie key
 	 */
@@ -128,7 +128,7 @@ public class CookieUtils
 	/**
 	 * Retrieve the cookie value associated with the formComponent and load the model object with
 	 * the cookie value.
-	 * 
+	 *
 	 * @param formComponent
 	 * @return The Cookie value which has also been used to set the component's model value
 	 */
@@ -145,7 +145,7 @@ public class CookieUtils
 
 	/**
 	 * Create a Cookie with key and value and save it in the browser with the next response
-	 * 
+	 *
 	 * @param key
 	 *          The cookie name
 	 * @param value
@@ -168,7 +168,7 @@ public class CookieUtils
 
 	/**
 	 * Save the form components model value in a cookie
-	 * 
+	 *
 	 * @param formComponent
 	 */
 	public final void save(final FormComponent<?> formComponent)
@@ -178,7 +178,7 @@ public class CookieUtils
 
 	/**
 	 * Make sure the 'key' does not contain any illegal chars. E.g. for cookies ':' is not allowed.
-	 * 
+	 *
 	 * @param key
 	 *            The key to be validated
 	 * @return The save key
@@ -200,7 +200,7 @@ public class CookieUtils
 	/**
 	 * Convenience method for deleting a cookie by name. Delete the cookie by setting its maximum
 	 * age to zero.
-	 * 
+	 *
 	 * @param cookie
 	 *            The cookie to delete
 	 */
@@ -223,10 +223,10 @@ public class CookieUtils
 
 	/**
 	 * Gets the cookie with 'name' attached to the latest WebRequest.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the cookie to be looked up
-	 * 
+	 *
 	 * @return Any cookies for this request
 	 */
 	public Cookie getCookie(final String name)
@@ -260,26 +260,26 @@ public class CookieUtils
 
 		return null;
 	}
-	
-	
+
+
 	/**
-     * Gets the name of the cookie where the session id is stored.
-     * 
-     * @param application
-     *            The current we application holding the {@link javax.servlet.ServletContext}.
-     * 
-     * @return The name set in {@link javax.servlet.SessionCookieConfig} or the default value 'JSESSIONID' if not set
-     */
-	public String getSessionIdCookieName(WebApplication application) 
+	 * Gets the name of the cookie where the session id is stored.
+	 *
+	 * @param application
+	 *            The current we application holding the {@link javax.servlet.ServletContext}.
+	 *
+	 * @return The name set in {@link javax.servlet.SessionCookieConfig} or the default value 'JSESSIONID' if not set
+	 */
+	public String getSessionIdCookieName(WebApplication application)
 	{
-	  String jsessionCookieName = application.getServletContext().getSessionCookieConfig().getName();
-	  
-	  return jsessionCookieName == null ? DEFAULT_SESSIONID_COOKIE_NAME : jsessionCookieName;
-    }
+		String jsessionCookieName = application.getServletContext().getSessionCookieConfig().getName();
+
+		return jsessionCookieName == null ? DEFAULT_SESSIONID_COOKIE_NAME : jsessionCookieName;
+	}
 
 	/**
 	 * Persist/save the data using Cookies.
-	 * 
+	 *
 	 * @param cookie
 	 *            The Cookie to be persisted.
 	 * @return The cookie provided
@@ -307,7 +307,7 @@ public class CookieUtils
 	/**
 	 * Is called before the Cookie is saved. May be subclassed for different (dynamic) Cookie
 	 * parameters. Static parameters can also be changed via {@link CookieDefaults}.
-	 * 
+	 *
 	 * @param cookie
 	 */
 	protected void initializeCookie(final Cookie cookie)
@@ -337,7 +337,7 @@ public class CookieUtils
 
 	/**
 	 * Convenience method to get the http request.
-	 * 
+	 *
 	 * @return WebRequest related to the RequestCycle
 	 */
 	private WebRequest getWebRequest()
@@ -347,7 +347,7 @@ public class CookieUtils
 
 	/**
 	 * Convenience method to get the http response.
-	 * 
+	 *
 	 * @return WebResponse related to the RequestCycle
 	 */
 	private WebResponse getWebResponse()
@@ -363,7 +363,7 @@ public class CookieUtils
 
 	/**
 	 * Gets debug info as a string for the given cookie.
-	 * 
+	 *
 	 * @param cookie
 	 *            the cookie to debug.
 	 * @return a string that represents the internals of the cookie.
