@@ -17,8 +17,8 @@
 package org.apache.wicket.util.cookies;
 
 import javax.servlet.http.Cookie;
-
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
 public class CookieUtils
 {
 	private final static Logger log = LoggerFactory.getLogger(CookieUtils.class);
+
+    private static final String DEFAULT_SESSIONID_COOKIE_NAME = "JSESSIONID";
 
 	private final CookieDefaults settings;
 
@@ -258,6 +260,22 @@ public class CookieUtils
 
 		return null;
 	}
+	
+	
+	/**
+     * Gets the name of the cookie where the session id is stored.
+     * 
+     * @param application
+     *            The current we application holding the {@link javax.servlet.ServletContext}.
+     * 
+     * @return The name set in {@link javax.servlet.SessionCookieConfig} or the default value 'JSESSIONID' if not set
+     */
+	public String getSessionIdCookieName(WebApplication application) 
+	{
+	  String jsessionCookieName = application.getServletContext().getSessionCookieConfig().getName();
+	  
+	  return jsessionCookieName == null ? DEFAULT_SESSIONID_COOKIE_NAME : jsessionCookieName;
+    }
 
 	/**
 	 * Persist/save the data using Cookies.
