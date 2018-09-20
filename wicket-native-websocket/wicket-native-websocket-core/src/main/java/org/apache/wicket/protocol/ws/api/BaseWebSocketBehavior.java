@@ -16,7 +16,11 @@
  */
 package org.apache.wicket.protocol.ws.api;
 
-import org.apache.wicket.Application;
+import java.util.Map;
+import java.util.Set;
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -29,13 +33,6 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.template.PackageTextTemplate;
-
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.SessionTrackingMode;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * A behavior that contributes {@link WicketWebSocketJQueryResourceReference}
@@ -173,7 +170,7 @@ public class BaseWebSocketBehavior extends Behavior
 		else if (containerRequest instanceof HttpServletRequest)
 		{
 			CookieUtils cookieUtils = new CookieUtils();
-			final String jsessionCookieName = application.getServletContext().getSessionCookieConfig().getName();
+			final String jsessionCookieName = cookieUtils.getSessionIdCookieName(application);
 			final Cookie jsessionid = cookieUtils.getCookie(jsessionCookieName);
 			HttpServletRequest httpServletRequest = (HttpServletRequest) containerRequest;
 			if (jsessionid == null || httpServletRequest.isRequestedSessionIdValid() == false)
