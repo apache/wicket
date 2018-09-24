@@ -105,7 +105,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-cdi-1.1</artifactId>
+			<artifactId>wicket-cdi</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
@@ -150,7 +150,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.weld.servlet</groupId>
-			<artifactId>weld-servlet</artifactId>
+			<artifactId>weld-servlet-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

@@ -32,45 +32,29 @@ public enum ConversationPropagation implements IConversationPropagation {
 	/** No conversational propagation takes place */
 	NONE {
 		@Override
-		public boolean propagatesViaPage(Page page, IRequestHandler handler)
-		{
-			return false;
-		}
-
-		@Override
-		public boolean propagatesViaParameters(IRequestHandler handler)
+		public boolean propagatesVia(IRequestHandler handler, Page page)
 		{
 			return false;
 		}
 	},
 	/**
-	 * Pesistent conversations are propagated between non-bookmarkable pages only
+	 * Pesistent conversations are propagated between non-bookmarkable pages
+	 * only
 	 */
 	NONBOOKMARKABLE {
 		@Override
-		public boolean propagatesViaPage(Page page, IRequestHandler handler)
+		public boolean propagatesVia(IRequestHandler handler, Page page)
 		{
-			return true;
-		}
-
-		@Override
-		public boolean propagatesViaParameters(IRequestHandler handler)
-		{
-			return false;
+			return page != null;
 		}
 	},
 	/**
-	 * Persistent conversations are propagated between bookmarkable and non-bookmarkable pages
+	 * Persistent conversations are propagated between bookmarkable and
+	 * non-bookmarkable pages
 	 */
 	ALL {
 		@Override
-		public boolean propagatesViaPage(Page page, IRequestHandler handler)
-		{
-			return true;
-		}
-
-		@Override
-		public boolean propagatesViaParameters(IRequestHandler handler)
+		public boolean propagatesVia(IRequestHandler handler, Page page)
 		{
 			return true;
 		}

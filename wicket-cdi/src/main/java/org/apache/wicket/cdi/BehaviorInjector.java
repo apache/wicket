@@ -25,16 +25,13 @@ import org.apache.wicket.behavior.Behavior;
  * @author igor
  * 
  */
-class BehaviorInjector extends AbstractInjector implements IBehaviorInstantiationListener
+public class BehaviorInjector extends AbstractInjector implements IBehaviorInstantiationListener
 {
 	/**
 	 * Constructor
-	 * 
-	 * @param container
 	 */
-	public BehaviorInjector(CdiContainer container)
+	public BehaviorInjector()
 	{
-		super(container);
 	}
 
 	@Override

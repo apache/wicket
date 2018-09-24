@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.jboss.weld.bean.builtin.BeanManagerProxy;
-import org.jboss.weld.servlet.HttpContextLifecycle;
+import org.jboss.weld.module.web.servlet.HttpContextLifecycle;
 import org.jboss.weld.servlet.spi.helpers.AcceptingHttpContextActivationFilter;
 import org.jglue.cdiunit.internal.CdiUnitInitialListenerImpl;
 import org.jglue.cdiunit.internal.servlet.LifecycleAwareRequest;

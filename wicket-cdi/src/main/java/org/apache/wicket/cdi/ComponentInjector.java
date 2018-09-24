@@ -29,12 +29,9 @@ class ComponentInjector extends AbstractInjector implements IComponentInstantiat
 {
 	/**
 	 * Constructor
-	 * 
-	 * @param container
 	 */
-	public ComponentInjector(CdiContainer container)
+	public ComponentInjector()
 	{
-		super(container);
 	}
 
 	@Override
