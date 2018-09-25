@@ -137,6 +137,7 @@
 		<objenesis.version>2.6</objenesis.version>
 		<aspectj.version>1.8.10</aspectj.version>
 		<metrics.version>3.2.3</metrics.version>
+		<weld.version>3.0.4.Final</weld.version>
 	</properties>
 
 	<dependencyManagement>
@@ -413,17 +414,17 @@
 			<dependency>
 				<groupId>org.jboss.weld.module</groupId>
 				<artifactId>weld-web</artifactId>
-				<version>3.0.4.Final</version>
+				<version>${weld.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.jboss.weld.se</groupId>
-			    <artifactId>weld-se-core</artifactId>
-			    <version>3.0.4.Final</version>
+			    	<groupId>org.jboss.weld.se</groupId>
+			    	<artifactId>weld-se-core</artifactId>
+			    	<version>${weld.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.jboss.weld.servlet</groupId>
-			    <artifactId>weld-servlet-core</artifactId>
-			    <version>3.0.4.Final</version>
+			    	<groupId>org.jboss.weld.servlet</groupId>
+			    	<artifactId>weld-servlet-core</artifactId>
+			    	<version>${weld.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.objenesis</groupId>
@@ -545,12 +546,6 @@
 				<groupId>org.httpunit</groupId>
 				<artifactId>httpunit</artifactId>
 				<version>1.7.2</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.weld.se</groupId>
-				<artifactId>weld-se</artifactId>
-				<version>2.4.7.Final</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
