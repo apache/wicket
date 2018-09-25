@@ -105,7 +105,7 @@ public class CookieUtils
 	 */
 	protected String getKey(final FormComponent<?> component)
 	{
-		return component.getPageRelativePath();
+		return getSaveKey(component.getPageRelativePath());
 	}
 
 	/**
@@ -146,18 +146,17 @@ public class CookieUtils
 	/**
 	 * Create a Cookie with key and value and save it in the browser with the next response
 	 *
-	 * @param key
+	 * @param name
 	 *          The cookie name
 	 * @param value
 	 *          The cookie value
 	 */
-	public final void save(String key, final String value)
+	public final void save(String name, final String value)
 	{
-		key = getSaveKey(key);
-		Cookie cookie = getCookie(key);
+		Cookie cookie = getCookie(name);
 		if (cookie == null)
 		{
-			cookie = new Cookie(key, value);
+			cookie = new Cookie(name, value);
 		}
 		else
 		{
@@ -231,22 +230,20 @@ public class CookieUtils
 	 */
 	public Cookie getCookie(final String name)
 	{
-		String key = getSaveKey(name);
-
 		try
 		{
 			WebRequest webRequest = getWebRequest();
-			Cookie cookie = webRequest.getCookie(key);
+			Cookie cookie = webRequest.getCookie(name);
 			if (log.isDebugEnabled())
 			{
 				if (cookie != null)
 				{
-					log.debug("Found Cookie with name=" + key + " and request URI=" +
+					log.debug("Found Cookie with name=" + name + " and request URI=" +
 							webRequest.getUrl().toString());
 				}
 				else
 				{
-					log.debug("Unable to find Cookie with name=" + key + " and request URI=" +
+					log.debug("Unable to find Cookie with name=" + name + " and request URI=" +
 							webRequest.getUrl().toString());
 				}
 			}
