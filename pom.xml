@@ -118,8 +118,8 @@
 		<maven.compiler.optimize>true</maven.compiler.optimize>
 		<maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
 		<maven.compiler.showWarnings>true</maven.compiler.showWarnings>
-		<maven.compiler.source>10</maven.compiler.source>
-		<maven.compiler.target>10</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- Project Versions -->
 		<cglib.version>3.2.6</cglib.version>
@@ -128,7 +128,7 @@
 		<junit.version>4.12</junit.version>
 		<spring.version>5.0.8.RELEASE</spring.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
-		<maven.javadoc.version>2.10.4</maven.javadoc.version>
+		<maven.javadoc.version>3.0.1</maven.javadoc.version>
 		<maven.surefire.version>2.20</maven.surefire.version>
 		<mockito.version>2.18.3</mockito.version>
 		<slf4j.version>1.7.25</slf4j.version>
