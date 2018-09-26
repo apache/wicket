@@ -1015,6 +1015,7 @@
 						<toolchains>
 							<jdk>
 								<version>${maven.compiler.source}</version>
+                <vendor>oracle</vendor>
 							</jdk>
 						</toolchains>
 					</configuration>
