@@ -2285,9 +2285,10 @@
 			 * @param {Element} element - element clicking on which the drag should begin
 			 * @param {Function} onDragBegin - handler called at the begin on dragging - passed element as first parameter
 			 * @param {Function} onDragEnd - handler called at the end of dragging - passed element as first parameter
-			 * @param {Function} onDrag - handler called during dragging - passed element and mouse deltas
+			 * @param {Object} settings - extra settings:
+			 * 				stopDragOnCssSelector - css selector to ignore mouseDownHandler event handler
 			 */
-			init: function(element, onDragBegin, onDragEnd, onDrag) {
+			init: function(element, onDragBegin, onDragEnd, onDrag, settings) {
 
 				if (typeof(onDragBegin) === "undefined") {
 					onDragBegin = jQuery.noop;
@@ -2299,6 +2300,10 @@
 
 				if (typeof(onDrag) === "undefined") {
 					onDrag = jQuery.noop;
+				}
+
+				if (typeof(settings) === "object" && settings.stopDragOnCssSelector) {
+					element.wicketStopDragOnSelector = settings.stopDragOnCssSelector;
 				}
 
 				element.wicketOnDragBegin = onDragBegin;
@@ -2314,6 +2319,14 @@
 				e = Wicket.Event.fix(e);
 
 				var element = this;
+
+				if (element.wicketStopDragOnSelector) {
+					var target = $(e.target);
+					if (target.is(element.wicketStopDragOnSelector) || target.closest(element.wicketStopDragOnSelector).size()) {
+						/* ignore the event instead of swallowing everything else */
+						return true;
+					}
+				}
 
 				Wicket.Event.stop(e);
 

@@ -284,6 +284,10 @@
 				width: 600,  /* initial width */
 				height: 300, /* may be null for non-iframe, non-resizable window (automatic height) */
 
+				headerHeight: 40,
+
+				overflow: "Auto",
+
 				resizable: true,
 
 				widthUnit: "px", /* valid only if not resizable */
@@ -308,6 +312,8 @@
 					this.close();
 					return false;
 				}, this), /* called when close button is clicked */
+
+				afterInit: function() { },
 
 				onClose: function() { }, /* called when window is closed */
 
@@ -405,7 +411,7 @@
 		 * Binds the handler to the drag event on given element.
 		 */
 		bind: function(element, handler) {
-			Wicket.Drag.init(element, Wicket.bind(this.onBegin, this), Wicket.bind(this.onEnd, this), Wicket.bind(handler, this));
+			Wicket.Drag.init(element, Wicket.bind(this.onBegin, this), Wicket.bind(this.onEnd, this), Wicket.bind(handler, this), {"stopDragOnCssSelector": ".wicket-ignore-drag"});
 		},
 
 		/**
@@ -494,8 +500,8 @@
 				this.window.style.width = (width - 10) + "px";
 				modalWidth = this.window.offsetWidth;
 			}
-			if (modalHeight > height - 40) {
-				this.content.style.height = (height - 40) + "px";
+			if (modalHeight > height - this.settings.headerHeight) {
+				this.content.style.height = (height - this.settings.headerHeight) + "px";
 				modalHeight = this.window.offsetHeight;
 			}
 
@@ -665,7 +671,7 @@
 				this.content.appendChild(this.settings.element);
 
 				// set the overflow style so that scrollbars are shown when the element is bigger than window
-				this.content.style.overflow="auto";
+				this.content.style.overflow = this.settings.overflow;
 			}
 
 			// bind the events
@@ -737,6 +743,8 @@
 
 			// create the mask that covers the background
 			this.createMask();
+
+			this.settings.afterInit(this);
 		},
 
 		onbeforeunload: function() {
@@ -1150,7 +1158,7 @@
 
 			targetWindow.style.width = newWidth;
 
-			targetContent.style.overflow = 'auto';
+			targetContent.style.overflow = this.settings.overflow;
 		}
 	};
 
@@ -1183,13 +1191,13 @@
 					"<div class=\"w_left\" id='"+idLeft+"'>"+
 						"<div class=\"w_right_1\">"+
 							"<div class=\"w_right\" id='"+idRight+"'>"+
-								"<div class=\"w_content_1\" onmousedown=\"Wicket.Event.stop(event);\">"+
+								"<div class=\"w_content_1\">"+
 									"<div class=\"w_caption\"  id=\""+idCaption+"\">"+
 										"<a class=\"w_close\" style=\"z-index:1\" href=\"#\"></a>"+
 										"<h3 id=\""+idCaptionText+"\" class=\"w_captionText\"></h3>"+
 									"</div>"+
 
-									"<div class=\"w_content_2\">"+
+									"<div class=\"w_content_2 wicket-ignore-drag\">"+
 									"<div class=\"w_content_3\">"+
 			                            "<div class=\"w_content\">";
 					if (isFrame) {
