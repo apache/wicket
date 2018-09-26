@@ -21,5 +21,6 @@ package org.apache.wicket.util;
  * Used to mark slow running tests which are not executed with Maven profile 'fast'
  */
 public interface WicketTestTag {
-    public static final String SLOW = "SLOW";
+
+	String SLOW = "SLOW";
 }
