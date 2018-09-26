@@ -30,6 +30,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -159,6 +160,18 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	public <T> T getBean(Class<T> requiredType, Object... objects) throws BeansException
 	{
 		return getBean(requiredType);
+	}
+
+	@Override
+	public <T> ObjectProvider<T> getBeanProvider(Class<T> aClass)
+	{
+		return null;
+	}
+
+	@Override
+	public <T> ObjectProvider<T> getBeanProvider(ResolvableType resolvableType)
+	{
+		return null;
 	}
 
 	@Override
