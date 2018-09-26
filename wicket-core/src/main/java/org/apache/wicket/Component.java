@@ -1024,7 +1024,7 @@ public abstract class Component
 	}
 
 	/**
-	 * Redirects to any intercept page previously specified by a call to redirectToInterceptPage.
+	 * Redirects to any intercept page previously specified by a call to {@link #redirectToInterceptPage(Page)}.
 	 * The redirect is done by throwing an exception. If there is no intercept page no exception
 	 * will be thrown and the program flow will continue uninterrupted.
 	 * 
@@ -2145,14 +2145,16 @@ public abstract class Component
 	}
 
 	/**
-	 * Redirects browser to an intermediate page such as a sign-in page. The current request's url
-	 * is saved for future use by method continueToOriginalDestination(); Only use this method when
-	 * you plan to continue to the current url at some later time; otherwise just use
-	 * setResponsePage or - when you are in a constructor or checkAccessMethod, call redirectTo.
+	 * Redirects browser to an intermediate page such as a sign-in page. The current request's URL
+	 * is saved for future use by method {@link #continueToOriginalDestination()}; only use this method when
+	 * you plan to continue to the current URL at some later time; otherwise just set a new response page.
 	 * 
 	 * @param page
 	 *            The sign in page
-	 * 
+	 *
+	 * @see #setResponsePage(Class)
+	 * @see #setResponsePage(IRequestablePage)
+	 * @see #setResponsePage(Class, PageParameters)
 	 * @see Component#continueToOriginalDestination()
 	 */
 	public final void redirectToInterceptPage(final Page page)
