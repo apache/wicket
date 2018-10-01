@@ -57,7 +57,7 @@ public class WicketAjaxJQueryResourceReference extends JavaScriptResourceReferen
 		}
 		else
 		{
-			jqueryReference = JQueryResourceReference.getV2();
+			jqueryReference = JQueryResourceReference.getV3();
 		}
 		List<HeaderItem> dependencies = super.getDependencies();
 		dependencies.add(JavaScriptHeaderItem.forReference(jqueryReference));
