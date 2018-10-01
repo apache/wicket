@@ -117,7 +117,6 @@
 		<dependency>
 			<groupId>org.wildfly</groupId>
 			<artifactId>wildfly-weld</artifactId>
-			<version>${wildfly.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>sun.jdk</groupId>
@@ -128,8 +127,6 @@
 		<dependency>
 			<groupId>org.wildfly.arquillian</groupId>
 			<artifactId>wildfly-arquillian-container-embedded</artifactId>
-			<version>2.1.0.Final</version>
-			<scope>test</scope>
 		</dependency>
 		
 
@@ -141,14 +138,6 @@
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.vintage</groupId>
-			<artifactId>junit-vintage-engine</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<!-- Wicket CDI integration. -->
 		<dependency>
@@ -166,29 +155,12 @@
 			<groupId>org.opentest4j</groupId>
 			<artifactId>opentest4j</artifactId>
 			<version>1.1.0</version>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.shrinkwrap.resolver</groupId>
 			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly</groupId>
-			<artifactId>wildfly-weld</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-		<dependency>
-			<groupId>org.jboss.arquillian.junit</groupId>
-			<artifactId>arquillian-junit-container</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly.arquillian</groupId>
-			<artifactId>wildfly-arquillian-container-embedded</artifactId>
 		</dependency>
 	</dependencies>
 
