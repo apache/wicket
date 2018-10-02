@@ -1253,9 +1253,9 @@
 			</build>
 		</profile>
 		<profile>
-			<id>Java 8</id>
+			<id>Java 11</id>
 			<activation>
-				<jdk>1.8</jdk>
+				<jdk>11</jdk>
 			</activation>
 			<properties>
 				<!-- Disable javadoc linter when building with Java 8
