@@ -34,6 +34,9 @@ import org.apache.wicket.request.cycle.RequestCycle;
  * </code>
  *
  * @since 6.9.0
+ * @deprecated Internet Explorer older than version 11 is not maintained by Microsoft.
+ *             Use JQuery 3.x (or 2.x) instead with:
+ *             app.getJavaScriptLibrarySettings().setJQueryReference(JQueryResourceReference.getV3())
  */
 @Deprecated
 public class DynamicJQueryResourceReference extends JQueryResourceReference
