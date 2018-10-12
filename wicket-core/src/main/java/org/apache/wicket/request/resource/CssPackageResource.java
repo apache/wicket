@@ -22,9 +22,6 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.css.ICssCompressor;
-import org.apache.wicket.resource.IScopeAwareTextResourceProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Package resource for css files. It strips comments and whitespace from css.
@@ -32,10 +29,6 @@ import org.slf4j.LoggerFactory;
 public class CssPackageResource extends PackageResource
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger log = LoggerFactory.getLogger(CssPackageResource.class);
-
-	private final String name;
 
 	/**
 	 * Construct.
@@ -57,54 +50,14 @@ public class CssPackageResource extends PackageResource
 	{
 		super(scope, name, locale, style, variation);
 
-		this.name = name;
-
 		// CSS resources can be compressed if there is configured ICssCompressor, and the
 		// resource isn't already minified (the file already has .min. in its name).
 		setCompress(!name.contains(MIN_POSTFIX_DEFAULT_AS_EXTENSION));
 	}
 
-	@Override
-	protected byte[] processResponse(final Attributes attributes, final byte[] bytes)
-	{
-		final byte[] processedResponse = super.processResponse(attributes, bytes);
-
-		ICssCompressor compressor = getCompressor();
-
-		if (compressor != null && getCompress())
-		{
-			try
-			{
-				String charsetName = "UTF-8";
-				String nonCompressed = new String(processedResponse, charsetName);
-				String output;
-				if (compressor instanceof IScopeAwareTextResourceProcessor)
-				{
-					IScopeAwareTextResourceProcessor scopeAwareProcessor = (IScopeAwareTextResourceProcessor) compressor;
-					output = scopeAwareProcessor.process(nonCompressed, getScope(), name);
-				}
-				else
-				{
-					output = compressor.compress(nonCompressed);
-				}
-				return output.getBytes(charsetName);
-			}
-			catch (Exception e)
-			{
-				log.error("Error while filtering content", e);
-				return processedResponse;
-			}
-		}
-		else
-		{
-			// don't strip the comments
-			return processedResponse;
-		}
-	}
-
 	/**
 	 * Gets the {@link ICssCompressor} to be used. By default returns the configured compressor on
-	 * application level, but can be overriden by the user application to provide compressor
+	 * application level, but can be overridden by the user application to provide compressor
 	 * specific to the resource.
 	 * 
 	 * @return the configured application level Css compressor. May be {@code null}.
