@@ -56,142 +56,6 @@
 	}
 
 	/**
-	 * Supporting code for getting mouse move and mouse up events from iframes.
-	 * The problem when dragging a div with an iframe is that when the mouse cursor
-	 * gets over an iframe, all mouse events are received by the iframe's document. (IE and FF)
-	 *
-	 * This code can recursively traverse all iframes in document and temporarily forward
-	 * events from their documents to parent document.
-	 */
-	Wicket.Iframe = {
-
-		/**
-		 * Returns the horizontal position of given element (in pixels).
-		 */
-		findPosX: function(e) {
-			if (e.offsetParent) {
-				var c = 0;
-				while (e) {
-					c += e.offsetLeft;
-					e = e.offsetParent;
-				}
-				return c;
-			} else if (e.x) {
-				return e.x;
-			} else {
-				return 0;
-			}
-		},
-
-		/**
-		 * Returns the vertical position of given element (in pixels).
-		 */
-		findPosY: function(e) {
-			if (e.offsetParent) {
-				var c = 0;
-				while (e) {
-					c += e.offsetTop;
-					e = e.offsetParent;
-				}
-				return c;
-			} else if (e.y) {
-				return e.y;
-			} else {
-				return 0;
-			}
-		},
-
-		/**
-		 * Forwards the events from iframe to the parent document (works recursively).
-		 * @param {Document} doc - document to which the events will be forwarded
-		 * @param {HTMLElement} iframe - source iframe
-		 * @param {Array} revertList - list to which altered iframes will be added
-		 */
-		forwardEvents: function(doc, iframe, revertList) {
-			try {
-				var idoc = iframe.contentWindow.document;
-				idoc.old_onmousemove = idoc.onmousemove;
-				idoc.onmousemove = function(evt) {
-					if (!evt) {
-						evt = iframe.contentWindow.event;
-					}
-					var e = {};
-
-					var dx = 0;
-					var dy = 0;
-					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
-						dx = Wicket.Window.getScrollX();
-						dy = Wicket.Window.getScrollY();
-					}
-
-					e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - dx;
-					e.clientY = evt.clientY + Wicket.Iframe.findPosY(iframe) - dy;
-					doc.onmousemove(e);
-				};
-				idoc.old_onmouseup = idoc.old_onmousemove;
-				idoc.onmouseup = function(evt) {
-					if (!evt) {
-						evt = iframe.contentWindow.event;
-					}
-					var e = {};
-
-					var dx = 0;
-					var dy = 0;
-					if (Wicket.Browser.isIELessThan11() || Wicket.Browser.isGecko()) {
-						dx = Wicket.Window.getScrollX();
-						dy = Wicket.Window.getScrollY();
-					}
-
-					e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - dx;
-					e.clientY = evt.clientY + Wicket.Iframe.findPosY(iframe) - dy;
-					doc.onmouseup(e);
-				};
-				revertList.push(iframe);
-				Wicket.Iframe.documentFix(idoc, revertList);
-			} catch (ignore) {
-			}
-		},
-
-		/**
-		 * Reverts the changes made to the given iframe.
-		 * @param {HTMLElement} iframe
-		 */
-		revertForward: function(iframe) {
-			var idoc = iframe.contentWindow.document;
-			idoc.onmousemove = idoc.old_onmousemove;
-			idoc.onmouseup = idoc.old_onmouseup;
-			idoc.old_onmousemove = null;
-			idoc.old_onmouseup = null;
-		},
-
-		/**
-		 * Forward events from all iframes of the given document (recursive)
-		 * @param {Document} doc - document to be fixed
-		 * @param {Array} revertList - all affected iframes will be stored here
-		 */
-		documentFix: function(doc, revertList) {
-			var iframes = doc.getElementsByTagName("iframe");
-			for (var i = 0; i < iframes.length; ++i) {
-				var iframe = iframes[i];
-				if (iframe.tagName) {
-					Wicket.Iframe.forwardEvents(doc, iframe, revertList);
-				}
-			}
-		},
-
-		/**
-		 * Reverts the changes made to each iframe in the given array.
-		 * @param {Array} revertList
-		 */
-		documentRevert: function(revertList) {
-			for (var i = 0; i < revertList.length; ++i) {
-				var iframe = revertList[i];
-				Wicket.Iframe.revertForward(iframe);
-			}
-		}
-	};
-
-	/**
 	 * Draggable (and optionally resizable) window that can either hold a div
 	 * or an iframe.
 	 */
@@ -907,10 +771,7 @@
 				return false;
 			}
 
-			if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIELessThan11() || Wicket.Browser.isSafari())) {
-				this.revertList = [];
-				Wicket.Iframe.documentFix(document, this.revertList);
-			}
+			jQuery(this.window).find('iframe').css('pointer-events', 'none');
 			
 			return true;
 		},
@@ -919,14 +780,11 @@
 		 * Called when dragging has ended.
 		 */
 		onEnd: function(object) {
-			if (this.revertList) {
-				Wicket.Iframe.documentRevert(this.revertList);
-				this.revertList = null;
-				if (Wicket.Browser.isKHTML() || this.content.style.visibility==='hidden') {
-					this.content.style.visibility='hidden';
-					window.setTimeout(Wicket.bind(function() { this.content.style.visibility='visible'; }, this),  0 );
-				}
-				this.revertList = null;
+			jQuery(this.window).find('iframe').css('pointer-events', 'auto');
+
+			if (Wicket.Browser.isKHTML() || this.content.style.visibility==='hidden') {
+				this.content.style.visibility='hidden';
+				window.setTimeout(Wicket.bind(function() { this.content.style.visibility='visible'; }, this),  0 );
 			}
 
 			this.savePosition();
