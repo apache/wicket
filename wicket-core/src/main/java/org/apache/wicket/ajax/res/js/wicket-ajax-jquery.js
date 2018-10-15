@@ -2257,13 +2257,18 @@
 		Drag: {
 
 			/**
-			 * Initializes the dragging on the specified element.
-			 * Element's onmousedown will be replaced by generated handler.
-			 *
-			 * @param {Element} element - element clicking on which the drag should begin
-			 * @param {Function} onDragBegin - handler called at the begin on dragging - passed element as first parameter
-			 * @param {Function} onDragEnd - handler called at the end of dragging - passed element as first parameter
-			 * @param {Function} onDrag - handler called during dragging - passed element and mouse deltas
+			 * Initializes dragging on the specified element.
+			 * 
+			 * @param element {Element}
+			 *            element clicking on which
+			 *            the drag should begin
+			 * @param onDragBegin {Function}
+			 *            called at the begin of dragging - passed element and event as parameters,
+			 *            may return false to prevent the start
+			 * @param onDragEnd {Function}
+			 *            handler called at the end of dragging - passed element as parameter
+			 * @param onDrag {Function}
+			 *            handler called during dragging - passed element and mouse deltas as parameters
 			 */
 			init: function(element, onDragBegin, onDragEnd, onDrag) {
 
@@ -2293,13 +2298,15 @@
 
 				var element = this;
 
+				if (element.wicketOnDragBegin(element, e) === false) {
+					return;
+				}
+
 				Wicket.Event.stop(e);
 
 				if (e.preventDefault) {
 					e.preventDefault();
 				}
-
-				element.wicketOnDragBegin(element);
 
 				element.lastMouseX = e.clientX;
 				element.lastMouseY = e.clientY;
