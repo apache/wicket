@@ -901,11 +901,18 @@
 		/**
 		 * Called when dragging has started.
 		 */
-		onBegin: function(object) {
+		onBegin: function(element, event) {
+			// ignore anything inside the content
+			if (jQuery(event.target).closest('.w_content').size()) {
+				return false;
+			}
+
 			if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIELessThan11() || Wicket.Browser.isSafari())) {
 				this.revertList = [];
 				Wicket.Iframe.documentFix(document, this.revertList);
 			}
+			
+			return true;
 		},
 
 		/**
@@ -1183,7 +1190,7 @@
 					"<div class=\"w_left\" id='"+idLeft+"'>"+
 						"<div class=\"w_right_1\">"+
 							"<div class=\"w_right\" id='"+idRight+"'>"+
-								"<div class=\"w_content_1\" onmousedown=\"Wicket.Event.stop(event);\">"+
+								"<div class=\"w_content_1\">"+
 									"<div class=\"w_caption\"  id=\""+idCaption+"\">"+
 										"<a class=\"w_close\" style=\"z-index:1\" href=\"#\"></a>"+
 										"<h3 id=\""+idCaptionText+"\" class=\"w_captionText\"></h3>"+
