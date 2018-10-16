@@ -1697,15 +1697,15 @@ public class BaseWicketTester
 		return component;
 	}
 
-	private FormComponent assertFormComponent(final String path)
+	private FormComponent<?> assertFormComponent(final String path)
 	{
 		Component component = assertExists(path);
 
-		if (component instanceof FormComponent == false)
+		if (component instanceof FormComponent<?> == false)
 		{
 			fail("path: '" + path + "' is not a form component");
 		}
-		return (FormComponent)component;
+		return (FormComponent<?>)component;
 	}
 
 	/**
@@ -1717,7 +1717,7 @@ public class BaseWicketTester
 	 */
 	public Result isRequired(String path)
 	{
-		FormComponent formComponent = assertFormComponent(path);
+		FormComponent<?> formComponent = assertFormComponent(path);
 
 		return isRequired(formComponent);
 	}
@@ -1743,7 +1743,7 @@ public class BaseWicketTester
 	 */
 	public Result isNotRequired(String path)
 	{
-		FormComponent formComponent = assertFormComponent(path);
+		FormComponent<?> formComponent = assertFormComponent(path);
 
 		return isNotRequired(formComponent);
 	}
