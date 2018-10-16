@@ -101,12 +101,15 @@ public class LazyLoadingPage extends BasePage
 				private int seconds = r.nextInt(10);
 
 				@Override
-				protected boolean isContentReady()
+				protected State contentState()
 				{
-					return Duration.milliseconds(System.currentTimeMillis() - startTime)
-						.seconds() > seconds;
+					boolean ready = Duration.milliseconds(System.currentTimeMillis() - startTime)
+							.seconds() > seconds;
+					return ready
+							? State.READY
+							: State.LOADING;
 				}
-				
+
 				@Override
 				protected Duration getUpdateInterval()
 				{
