@@ -22,10 +22,6 @@ import java.util.Locale;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.javascript.IJavaScriptCompressor;
-import org.apache.wicket.resource.IScopeAwareTextResourceProcessor;
-import org.apache.wicket.util.resource.ResourceUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Package resource for javascript files.
@@ -33,10 +29,6 @@ import org.slf4j.LoggerFactory;
 public class JavaScriptPackageResource extends PackageResource
 {
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger log = LoggerFactory.getLogger(JavaScriptPackageResource.class);
-
-	private final String name;
 
 	/**
 	 * Construct.
@@ -58,49 +50,9 @@ public class JavaScriptPackageResource extends PackageResource
 	{
 		super(scope, name, locale, style, variation);
 
-		this.name = name;
-
 		// JS resources can be compressed if there is configured IJavaScriptCompressor, and the
 		// resource isn't already minified (the file already has .min. in its name).
 		setCompress(!name.contains(MIN_POSTFIX_DEFAULT_AS_EXTENSION));
-	}
-
-	@Override
-	protected byte[] processResponse(final Attributes attributes, byte[] bytes)
-	{
-		final byte[] processedResponse = super.processResponse(attributes, bytes);
-
-		IJavaScriptCompressor compressor = getCompressor();
-
-		if (compressor != null && getCompress())
-		{
-			try
-			{
-				String charsetName = "UTF-8";
-				String nonCompressed = new String(processedResponse, charsetName);
-				String output;
-				if (compressor instanceof IScopeAwareTextResourceProcessor)
-				{
-					IScopeAwareTextResourceProcessor scopeAwareProcessor = (IScopeAwareTextResourceProcessor)compressor;
-					output = scopeAwareProcessor.process(nonCompressed, getScope(), name);
-				}
-				else
-				{
-					output = compressor.compress(nonCompressed);
-				}
-				return output.getBytes(charsetName);
-			}
-			catch (Exception e)
-			{
-				log.error("Error while filtering content", e);
-				return processedResponse;
-			}
-		}
-		else
-		{
-			// don't strip the comments
-			return processedResponse;
-		}
 	}
 
 	/**
@@ -110,6 +62,7 @@ public class JavaScriptPackageResource extends PackageResource
 	 * 
 	 * @return the configured application level JavaScript compressor. May be {@code null}.
 	 */
+	@Override
 	protected IJavaScriptCompressor getCompressor()
 	{
 		IJavaScriptCompressor compressor = null;
