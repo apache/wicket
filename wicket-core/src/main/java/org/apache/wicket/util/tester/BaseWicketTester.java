@@ -1519,6 +1519,12 @@ public class BaseWicketTester
 		return new StartComponentInPage();
 	}
 
+	public Component getComponentFromLastRenderedPage(String path,
+			boolean wantVisibleInHierarchy)
+	{
+		return getComponentFromLastRenderedPage(path, wantVisibleInHierarchy, true);
+	}
+
 	/**
 	 * A page that is used as the automatically created page for
 	 * {@link BaseWicketTester#startComponentInPage(Class)} and the other variations.
@@ -1582,7 +1588,7 @@ public class BaseWicketTester
 	 * @see org.apache.wicket.MarkupContainer#get(String)
 	 */
 	public Component getComponentFromLastRenderedPage(String path,
-		final boolean wantVisibleInHierarchy)
+		boolean wantVisibleInHierarchy, boolean failOnAbsent)
 	{
 		if (componentInPage != null && componentInPage.isInstantiated)
 		{
@@ -1596,8 +1602,11 @@ public class BaseWicketTester
 		Component component = getLastRenderedPage().get(path);
 		if (component == null)
 		{
-			fail("path: '" + path + "' does not exist for page: " +
-				Classes.simpleName(getLastRenderedPage().getClass()));
+			if (failOnAbsent)
+			{
+				fail("path: '" + path + "' does not exist for page: " +
+						Classes.simpleName(getLastRenderedPage().getClass()));
+			}
 			return null;
 		}
 
@@ -1744,18 +1753,31 @@ public class BaseWicketTester
 		Component component = getComponentFromLastRenderedPage(path);
 		if (component == null)
 		{
-			fail("path: '" + path + "' does no exist for page: " +
-			     Classes.simpleName(getLastRenderedPage().getClass()));
+			fail("path: '" + path + "' does not exist for page: " +
+				Classes.simpleName(getLastRenderedPage().getClass()));
+			return null;
 		}
 		return component;
 	}
 
-	private FormComponent assertFormComponent(final String path) {
+	protected void assertAbsent(final String path)
+	{
+		Component component = getComponentFromLastRenderedPage(path, true, false);
+		if (component != null)
+		{
+			fail("path: '" + path + "' does exists for page: " +
+					Classes.simpleName(getLastRenderedPage().getClass()));
+		}
+	}
+
+	private FormComponent assertFormComponent(final String path)
+	{
 		Component component = assertExists(path);
 
 		if (component instanceof FormComponent == false)
 		{
 			fail("path: '" + path + "' is not a form component");
+			return null;
 		}
 		return (FormComponent) component;
 	}
