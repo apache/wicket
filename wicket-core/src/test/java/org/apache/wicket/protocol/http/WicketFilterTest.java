@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
@@ -58,10 +59,15 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
+import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.AbstractResource;
+import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.AbstractResource.ResourceResponse;
+import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
+import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.file.WebXmlFile;
 import org.apache.wicket.util.string.Strings;
@@ -207,6 +213,63 @@ public class WicketFilterTest
 
 			Date responseExpires = headerDateFormat.parse(responseExpiresHeader);
 			assertTrue(responseExpires.after(new Date()), "Expected later than current date but was " + responseExpires);
+		}
+		finally
+		{
+			ThreadContext.detach();
+		}
+	}
+
+	/**
+	 * @throws IOException
+	 * @throws ServletException
+	 * @throws ParseException
+	 */
+	@Test
+	public void ioExceptionNotWrapped() throws IOException, ServletException, ParseException
+	{
+		assertThrows(IOException.class, this::doIOExceptionNotWrapped);
+	}
+
+	private void doIOExceptionNotWrapped() throws IOException, ServletException, ParseException
+	{
+		try
+		{
+			application = new MockApplication();
+			WicketFilter filter = new WicketFilter();
+			filter.init(new FilterTestingConfig());
+			ThreadContext.setApplication(application);
+			IResource resource = new AbstractResource()
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected ResourceResponse newResourceResponse(Attributes attributes)
+				{
+					return new ResourceResponse();
+				}
+			};
+			application.getSharedResources().add("foo.txt", resource);
+			MockHttpServletRequest request = new MockHttpServletRequest(application, null, null);
+			request.setURL(request.getContextPath() + request.getServletPath() +
+				"/wicket/resource/" + Application.class.getName() + "/foo.txt");
+			setIfModifiedSinceToNextWeek(request);
+			MockHttpServletResponse response = new MockHttpServletResponse(request)
+			{
+				@Override
+				public void flushBuffer() throws IOException
+				{
+					throw new IOException("caused by test");
+				}
+			};
+			filter.doFilter(request, response, new FilterChain()
+			{
+				@Override
+				public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse)
+					throws IOException, ServletException
+				{
+				}
+			});
 		}
 		finally
 		{

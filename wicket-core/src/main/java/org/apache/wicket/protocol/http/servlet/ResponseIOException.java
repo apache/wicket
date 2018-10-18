@@ -41,4 +41,9 @@ public class ResponseIOException extends WicketRuntimeException implements IWick
 		super(cause);
 	}
 
+	@Override
+	public synchronized IOException getCause()
+	{
+		return (IOException)super.getCause();
+	}
 }

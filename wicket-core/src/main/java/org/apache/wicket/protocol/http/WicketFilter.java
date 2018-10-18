@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
@@ -152,6 +153,7 @@ public class WicketFilter implements Filter
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
+		boolean ioExceptionOccurred = false;
 		try
 		{
 			if (previousClassLoader != newClassLoader)
@@ -212,17 +214,20 @@ public class WicketFilter implements Filter
 					redirectURL += "?" + httpServletRequest.getQueryString();
 				}
 
-				try
-				{
-					// send redirect - this will discard POST parameters if the request is POST
-					// - still better than getting an error because of lacking trailing slash
-					httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(redirectURL));
-				}
-				catch (IOException e)
-				{
-					throw new RuntimeException(e);
-				}
+				// send redirect - this will discard POST parameters if the request is POST
+				// - still better than getting an error because of lacking trailing slash
+				httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(redirectURL));
 			}
+		}
+		catch (IOException e)
+		{
+			ioExceptionOccurred = true;
+			throw e;
+		}
+		catch (ResponseIOException e)
+		{
+			ioExceptionOccurred = true;
+			throw e.getCause();
 		}
 		finally
 		{
@@ -233,9 +238,17 @@ public class WicketFilter implements Filter
 				Thread.currentThread().setContextClassLoader(previousClassLoader);
 			}
 
-			if (response.isCommitted() && httpServletRequest.isAsyncStarted() == false)
+			if (!ioExceptionOccurred && response.isCommitted() &&
+				!httpServletRequest.isAsyncStarted())
 			{
-				response.flushBuffer();
+				try
+				{
+					response.flushBuffer();
+				}
+				catch (ResponseIOException e)
+				{
+					throw e.getCause();
+				}
 			}
 		}
 		return res;
