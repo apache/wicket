@@ -99,6 +99,8 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * @return The major version number of the browser.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public int getBrowserVersionMajor()
@@ -108,6 +110,8 @@ public class ClientProperties implements IClusterable
 
 	/**
 	 * @return The minor version number of the browser.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public int getBrowserVersionMinor()
@@ -371,6 +375,8 @@ public class ClientProperties implements IClusterable
 	 * platform.
 	 * 
 	 * @return True if a derivative of the Microsoft Internet Explorer browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public boolean isBrowserInternetExplorer()
@@ -382,6 +388,8 @@ public class ClientProperties implements IClusterable
 	 * Flag indicating that the browser is a derivative of the KDE Konqueror browser platform.
 	 * 
 	 * @return True if a derivative of the KDE Konqueror browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public boolean isBrowserKonqueror()
@@ -393,6 +401,8 @@ public class ClientProperties implements IClusterable
 	 * Flag indicating that the browser is a derivative of the Mozilla 1.0-1.8+ browser platform.
 	 * 
 	 * @return True if a derivative of the Mozilla 1.0-1.8+ browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public boolean isBrowserMozilla()
@@ -405,6 +415,8 @@ public class ClientProperties implements IClusterable
 	 * platform.
 	 * 
 	 * @return True if a derivative of the Mozilla Firefox 1.0+ browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public boolean isBrowserMozillaFirefox()
@@ -416,6 +428,8 @@ public class ClientProperties implements IClusterable
 	 * Flag indicating that the browser is a derivative of the Opera browser platform.
 	 * 
 	 * @return True if a derivative of the Opera browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public boolean isBrowserOpera()
@@ -427,6 +441,8 @@ public class ClientProperties implements IClusterable
 	 * Flag indicating that the browser is a derivative of the Apple Safari browser platform.
 	 * 
 	 * @return True if a derivative of the Apple Safari browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public boolean isBrowserSafari()
@@ -438,6 +454,8 @@ public class ClientProperties implements IClusterable
 	 * Flag indicating that the browser is a derivative of the Chrome browser platform.
 	 * 
 	 * @return True if a derivative of the Chrome browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public boolean isBrowserChrome()
@@ -448,6 +466,8 @@ public class ClientProperties implements IClusterable
 	 * Flag indicating that the browser is a derivative of the Microsoft Edge browser platform.
 	 *
 	 * @return True if a derivative of the Microsoft Edge browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public boolean isBrowserEdge()
@@ -493,6 +513,8 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @param browserInternetExplorer
 	 *            True if a derivative of the Microsoft Internet Explorer browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserInternetExplorer(boolean browserInternetExplorer)
@@ -505,6 +527,8 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @param browserKonqueror
 	 *            True if a derivative of the KDE Konqueror browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserKonqueror(boolean browserKonqueror)
@@ -517,6 +541,8 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @param browserMozilla
 	 *            True if a derivative of the Mozilla 1.0-1.8+ browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserMozilla(boolean browserMozilla)
@@ -530,6 +556,8 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @param browserMozillaFirefox
 	 *            True if a derivative of the Mozilla Firefox 1.0+ browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserMozillaFirefox(boolean browserMozillaFirefox)
@@ -542,6 +570,8 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @param browserOpera
 	 *            True if a derivative of the Opera browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserOpera(boolean browserOpera)
@@ -554,6 +584,8 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @param browserSafari
 	 *            True if a derivative of the Apple Safari browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserSafari(boolean browserSafari)
@@ -566,6 +598,8 @@ public class ClientProperties implements IClusterable
 	 * 
 	 * @param browserChrome
 	 *            True if a derivative of the Chrome browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserChrome(boolean browserChrome)
@@ -577,6 +611,8 @@ public class ClientProperties implements IClusterable
 	 *
 	 * @param browserEdge
 	 *            True if a derivative of the Microsoft Edge browser platform.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserEdge(boolean browserEdge)
@@ -587,6 +623,8 @@ public class ClientProperties implements IClusterable
 	/**
 	 * @param browserVersionMajor
 	 *            The major version number of the browser.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserVersionMajor(int browserVersionMajor)
@@ -597,6 +635,8 @@ public class ClientProperties implements IClusterable
 	/**
 	 * @param browserVersionMinor
 	 *            The minor version number of the browser.
+	 * @deprecated Users are recommended to use third party library for parsing the user agent string.
+	 * @see <a href="https://cwiki.apache.org/confluence/display/WICKET/Migration+to+Wicket+8.0#MigrationtoWicket8.0-Useragentdetection">Wicket 8 migration entry</a>
 	 */
 	@Deprecated
 	public void setBrowserVersionMinor(int browserVersionMinor)
