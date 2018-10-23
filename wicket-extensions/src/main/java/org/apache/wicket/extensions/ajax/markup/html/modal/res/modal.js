@@ -766,8 +766,8 @@
 		 * Called when dragging has started.
 		 */
 		onBegin: function(element, event) {
-			// ignore anything inside the content
-			if (jQuery(event.target).closest('.w_content').size()) {
+			// all resize elements must be clicked directly
+			if (jQuery(element).is('.w_caption') === false && element !== event.target) {
 				return false;
 			}
 
