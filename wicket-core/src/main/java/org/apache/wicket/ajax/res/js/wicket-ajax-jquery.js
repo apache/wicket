@@ -2344,8 +2344,6 @@
 				document.onmouseout = Wicket.Drag.mouseOut;
 
 				Wicket.Drag.current = element;
-
-				return false;
 			},
 
 			/**
