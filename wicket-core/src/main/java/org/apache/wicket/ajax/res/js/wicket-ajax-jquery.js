@@ -2302,8 +2302,6 @@
 					return;
 				}
 
-				Wicket.Event.stop(e);
-
 				if (e.preventDefault) {
 					e.preventDefault();
 				}
