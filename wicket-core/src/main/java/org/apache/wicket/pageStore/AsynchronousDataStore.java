@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * It starts only one instance of {@link PageSavingRunnable} because all we need is to make the page
  * storing asynchronous. We don't want to write concurrently in the wrapped {@link IDataStore},
  * though it may happen in the extreme case when the queue is full. These cases should be avoided.
- * 
+ *
  * @author Matej Knopp
  */
 public class AsynchronousDataStore implements IDataStore
@@ -77,9 +78,11 @@ public class AsynchronousDataStore implements IDataStore
 	 */
 	private final ConcurrentMap<String, Entry> entryMap;
 
+	private AtomicBoolean operates = new AtomicBoolean(true);
+
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param dataStore
 	 *            the wrapped {@link IDataStore} that actually saved the data
 	 * @param capacity
@@ -91,8 +94,7 @@ public class AsynchronousDataStore implements IDataStore
 		entries = new LinkedBlockingQueue<>(capacity);
 		entryMap = new ConcurrentHashMap<>();
 
-		PageSavingRunnable savingRunnable = new PageSavingRunnable(dataStore, entries, entryMap);
-		pageSavingThread = new Thread(savingRunnable, "Wicket-AsyncDataStore-PageSavingThread");
+		pageSavingThread = new Thread(new PageSavingRunnable(), "Wicket-AsyncDataStore-PageSavingThread");
 		pageSavingThread.setDaemon(true);
 		pageSavingThread.start();
 	}
@@ -100,9 +102,9 @@ public class AsynchronousDataStore implements IDataStore
 	@Override
 	public void destroy()
 	{
+		operates.compareAndSet(true, false);
 		if (pageSavingThread.isAlive())
 		{
-			pageSavingThread.interrupt();
 			try
 			{
 				pageSavingThread.join();
@@ -117,7 +119,7 @@ public class AsynchronousDataStore implements IDataStore
 
 	/**
 	 * Little helper
-	 * 
+	 *
 	 * @param sessionId
 	 * @param id
 	 * @return Entry
@@ -192,12 +194,16 @@ public class AsynchronousDataStore implements IDataStore
 	/**
 	 * Save the entry in the queue if there is a room or directly pass it to the wrapped
 	 * {@link IDataStore} if there is no such
-	 * 
+	 *
 	 * @see org.apache.wicket.pageStore.IDataStore#storeData(java.lang.String, int, byte[])
 	 */
 	@Override
 	public void storeData(final String sessionId, final int id, final byte[] data)
 	{
+		if (!operates.get())
+		{
+			return;
+		}
 		Entry entry = new Entry(sessionId, id, data);
 		String key = getKey(entry);
 		entryMap.put(key, entry);
@@ -216,13 +222,16 @@ public class AsynchronousDataStore implements IDataStore
 		catch (InterruptedException e)
 		{
 			log.error(e.getMessage(), e);
-			entryMap.remove(key);
-			dataStore.storeData(sessionId, id, data);
+			if (operates.get())
+			{
+				entryMap.remove(key);
+				dataStore.storeData(sessionId, id, data);
+			}
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pageId
 	 * @param sessionId
 	 * @return generated key
@@ -233,7 +242,7 @@ public class AsynchronousDataStore implements IDataStore
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entry
 	 * @return generated key
 	 */
@@ -301,28 +310,12 @@ public class AsynchronousDataStore implements IDataStore
 	/**
 	 * The thread that acts as consumer of {@link Entry}ies
 	 */
-	private static class PageSavingRunnable implements Runnable
+	private class PageSavingRunnable implements Runnable
 	{
-		private static final Logger log = LoggerFactory.getLogger(PageSavingRunnable.class);
-
-		private final BlockingQueue<Entry> entries;
-
-		private final ConcurrentMap<String, Entry> entryMap;
-
-		private final IDataStore dataStore;
-
-		private PageSavingRunnable(IDataStore dataStore, BlockingQueue<Entry> entries,
-			ConcurrentMap<String, Entry> entryMap)
-		{
-			this.dataStore = dataStore;
-			this.entries = entries;
-			this.entryMap = entryMap;
-		}
-
 		@Override
 		public void run()
 		{
-			while (!Thread.interrupted())
+			while (operates.get())
 			{
 				Entry entry = null;
 				try
@@ -331,12 +324,12 @@ public class AsynchronousDataStore implements IDataStore
 				}
 				catch (InterruptedException e)
 				{
-					Thread.currentThread().interrupt();
+					log.debug("PageSavingRunnable:: Interrupted...");
 				}
 
-				if (entry != null)
+				if (entry != null && operates.get())
 				{
-					log.debug("Saving asynchronously: {}...", entry);
+					log.debug("PageSavingRunnable:: Saving asynchronously: {}...", entry);
 					dataStore.storeData(entry.sessionId, entry.pageId, entry.data);
 					entryMap.remove(getKey(entry));
 				}

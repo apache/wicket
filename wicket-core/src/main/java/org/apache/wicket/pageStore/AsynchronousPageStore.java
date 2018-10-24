@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
@@ -39,9 +40,9 @@ import org.slf4j.LoggerFactory;
  * It starts only one instance of {@link PageSavingRunnable} because all we need is to make the page
  * storing asynchronous. We don't want to write concurrently in the wrapped {@link IPageStore},
  * though it may happen in the extreme case when the queue is full. These cases should be avoided.
- * 
+ *
  * Based on AsynchronousDataStore (@author Matej Knopp).
- * 
+ *
  * @author manuelbarzi
  */
 public class AsynchronousPageStore implements IPageStore
@@ -81,9 +82,11 @@ public class AsynchronousPageStore implements IPageStore
 	 */
 	private final ConcurrentMap<String, Entry> entryMap;
 
+	private AtomicBoolean operates = new AtomicBoolean(true);
+
 	/**
 	 * Construct.
-	 * 
+	 *
 	 * @param delegate
 	 *            the wrapped {@link IPageStore} that actually saved the page
 	 * @param capacity
@@ -95,15 +98,14 @@ public class AsynchronousPageStore implements IPageStore
 		entries = new LinkedBlockingQueue<>(capacity);
 		entryMap = new ConcurrentHashMap<>();
 
-		PageSavingRunnable savingRunnable = new PageSavingRunnable(delegate, entries, entryMap);
-		pageSavingThread = new Thread(savingRunnable, "Wicket-AsyncPageStore-PageSavingThread");
+		pageSavingThread = new Thread(new PageSavingRunnable(), "Wicket-AsyncPageStore-PageSavingThread");
 		pageSavingThread.setDaemon(true);
 		pageSavingThread.start();
 	}
 
 	/**
 	 * Little helper
-	 * 
+	 *
 	 * @param sessionId
 	 * @param pageId
 	 * @return Entry
@@ -114,7 +116,7 @@ public class AsynchronousPageStore implements IPageStore
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pageId
 	 * @param sessionId
 	 * @return generated key
@@ -125,7 +127,7 @@ public class AsynchronousPageStore implements IPageStore
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entry
 	 * @return generated key
 	 */
@@ -186,28 +188,12 @@ public class AsynchronousPageStore implements IPageStore
 	/**
 	 * The thread that acts as consumer of {@link Entry}ies
 	 */
-	private static class PageSavingRunnable implements Runnable
+	private class PageSavingRunnable implements Runnable
 	{
-		private static final Logger log = LoggerFactory.getLogger(PageSavingRunnable.class);
-
-		private final BlockingQueue<Entry> entries;
-
-		private final ConcurrentMap<String, Entry> entryMap;
-
-		private final IPageStore delegate;
-
-		private PageSavingRunnable(IPageStore delegate, BlockingQueue<Entry> entries,
-		                           ConcurrentMap<String, Entry> entryMap)
-		{
-			this.delegate = delegate;
-			this.entries = entries;
-			this.entryMap = entryMap;
-		}
-
 		@Override
 		public void run()
 		{
-			while (!Thread.interrupted())
+			while (operates.get())
 			{
 				Entry entry = null;
 				try
@@ -216,12 +202,12 @@ public class AsynchronousPageStore implements IPageStore
 				}
 				catch (InterruptedException e)
 				{
-					Thread.currentThread().interrupt();
+					log.debug("PageSavingRunnable:: Interrupted...");
 				}
 
-				if (entry != null)
+				if (entry != null && operates.get())
 				{
-					log.debug("Saving asynchronously: {}...", entry);
+					log.debug("PageSavingRunnable:: Saving asynchronously: {}...", entry);
 					delegate.storePage(entry.sessionId, entry.page);
 					entryMap.remove(getKey(entry));
 				}
@@ -232,9 +218,9 @@ public class AsynchronousPageStore implements IPageStore
 	@Override
 	public void destroy()
 	{
+		operates.compareAndSet(true, false);
 		if (pageSavingThread.isAlive())
 		{
-			pageSavingThread.interrupt();
 			try
 			{
 				pageSavingThread.join();
@@ -244,7 +230,6 @@ public class AsynchronousPageStore implements IPageStore
 				log.error(e.getMessage(), e);
 			}
 		}
-
 		delegate.destroy();
 	}
 
@@ -286,6 +271,10 @@ public class AsynchronousPageStore implements IPageStore
 	@Override
 	public void storePage(String sessionId, IManageablePage page)
 	{
+		if (!operates.get())
+		{
+			return;
+		}
 		Entry entry = new Entry(sessionId, page);
 		String key = getKey(entry);
 		entryMap.put(key, entry);
@@ -308,8 +297,11 @@ public class AsynchronousPageStore implements IPageStore
 		catch (InterruptedException e)
 		{
 			log.error(e.getMessage(), e);
-			entryMap.remove(key);
-			delegate.storePage(sessionId, page);
+			if (operates.get())
+			{
+				entryMap.remove(key);
+				delegate.storePage(sessionId, page);
+			}
 		}
 	}
 
