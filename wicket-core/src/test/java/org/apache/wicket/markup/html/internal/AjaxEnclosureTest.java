@@ -269,6 +269,14 @@ public class AjaxEnclosureTest extends WicketTestCase
 		}
 	}
 
+	@Test
+	public void controllingComponentOutsideEnclosureShouldBeRepainted() {
+		AjaxEnclosurePage_4 page = tester.startPage(AjaxEnclosurePage_4.class);
+		tester.clickLink(page.submit);
+		// assert the input tag is part of the ajax response
+		assert (tester.getLastResponseAsString().contains("<component id=\"" + page.nameField.getMarkupId() + "\""));
+	}
+
 	private void ensureEnclosureIsVisible(Page ajaxPage, AtomicInteger n)
 	{
 		InlineEnclosure enclosure = findNthComponent(InlineEnclosure.class, ajaxPage, n);
