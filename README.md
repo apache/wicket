@@ -68,7 +68,6 @@ You will find the source code here:
 	    |-- wicket-auth-roles
 	    |-- wicket-bean-validation
 	    |-- wicket-cdi
-	    |-- wicket-cdi-1.1
 	    |-- wicket-core
 	    |-- wicket-devutils
 	    |-- wicket-eclipse-settings
@@ -114,8 +113,6 @@ Here is a list of projects in this distribution and what they do.
  - wicket-bean-validation: validates beans with annotation based on 
    javax.validation;
  - wicket-cdi: the context and dependency injection of the jee standard for wicket;
- - wicket-cdi-1.1: the context and dependency injection of the jee standard 1.1
-   for wicket;
  - wicket-devutils: some utils to help debugging wicket;
  - wicket-experimental: experimental implementations for wicket;
  - wicket-native-websocket: wicket's native web sockets integration 
@@ -173,11 +170,9 @@ the src/ folder.
 
     Google Guice (http://code.google.com/p/google-guice/)
 
- - wicket-cdi / wicket-cdi-1.1:
-	Component Dependency Injection 
-	(http://www.oracle.com/technetwork/articles/java/cdi-javaee-bien-225152.html 
-	and 
-	http://download.oracle.com/otndocs/jcp/cdi-1_1-pr-spec/index.html)
+ - wicket-cdi:
+	Component Dependency Injection 2.0
+	(http://cdi-spec.org/)
 
  - wicket-examples:
 
