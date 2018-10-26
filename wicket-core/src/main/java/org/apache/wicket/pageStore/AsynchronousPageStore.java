@@ -22,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
@@ -64,7 +63,7 @@ public class AsynchronousPageStore implements IPageStore
 	/**
 	 * The page saving thread.
 	 */
-	private final Thread pageSavingThread;
+	private Thread pageSavingThread;
 
 	/**
 	 * The wrapped {@link IPageStore} that actually stores that pages
@@ -81,8 +80,6 @@ public class AsynchronousPageStore implements IPageStore
 	 * are not yet stored by the wrapped {@link IPageStore}
 	 */
 	private final ConcurrentMap<String, Entry> entryMap;
-
-	private AtomicBoolean operates = new AtomicBoolean(true);
 
 	/**
 	 * Construct.
@@ -193,7 +190,7 @@ public class AsynchronousPageStore implements IPageStore
 		@Override
 		public void run()
 		{
-			while (operates.get())
+			while (pageSavingThread != null)
 			{
 				Entry entry = null;
 				try
@@ -205,7 +202,7 @@ public class AsynchronousPageStore implements IPageStore
 					log.debug("PageSavingRunnable:: Interrupted...");
 				}
 
-				if (entry != null && operates.get())
+				if (entry != null && pageSavingThread != null)
 				{
 					log.debug("PageSavingRunnable:: Saving asynchronously: {}...", entry);
 					delegate.storePage(entry.sessionId, entry.page);
@@ -218,12 +215,13 @@ public class AsynchronousPageStore implements IPageStore
 	@Override
 	public void destroy()
 	{
-		operates.compareAndSet(true, false);
-		if (pageSavingThread.isAlive())
+		final Thread thread = pageSavingThread;
+		pageSavingThread = null;
+		if (thread != null && thread.isAlive())
 		{
 			try
 			{
-				pageSavingThread.join();
+				thread.join();
 			}
 			catch (InterruptedException e)
 			{
@@ -271,7 +269,7 @@ public class AsynchronousPageStore implements IPageStore
 	@Override
 	public void storePage(String sessionId, IManageablePage page)
 	{
-		if (!operates.get())
+		if (pageSavingThread == null)
 		{
 			return;
 		}
@@ -297,7 +295,7 @@ public class AsynchronousPageStore implements IPageStore
 		catch (InterruptedException e)
 		{
 			log.error(e.getMessage(), e);
-			if (operates.get())
+			if (pageSavingThread != null)
 			{
 				entryMap.remove(key);
 				delegate.storePage(sessionId, page);

@@ -22,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.util.lang.Args;
 import org.slf4j.Logger;
@@ -60,7 +59,7 @@ public class AsynchronousDataStore implements IDataStore
 	/**
 	 * The page saving thread.
 	 */
-	private final Thread pageSavingThread;
+	private Thread pageSavingThread;
 
 	/**
 	 * The wrapped {@link IDataStore} that actually stores that pages
@@ -77,8 +76,6 @@ public class AsynchronousDataStore implements IDataStore
 	 * are not yet stored by the wrapped {@link IDataStore}
 	 */
 	private final ConcurrentMap<String, Entry> entryMap;
-
-	private AtomicBoolean operates = new AtomicBoolean(true);
 
 	/**
 	 * Construct.
@@ -102,12 +99,13 @@ public class AsynchronousDataStore implements IDataStore
 	@Override
 	public void destroy()
 	{
-		operates.compareAndSet(true, false);
-		if (pageSavingThread.isAlive())
+		final Thread thread = pageSavingThread;
+		pageSavingThread = null;
+		if (thread != null && thread.isAlive())
 		{
 			try
 			{
-				pageSavingThread.join();
+				thread.join();
 			} catch (InterruptedException e)
 			{
 				log.error(e.getMessage(), e);
@@ -200,7 +198,7 @@ public class AsynchronousDataStore implements IDataStore
 	@Override
 	public void storeData(final String sessionId, final int id, final byte[] data)
 	{
-		if (!operates.get())
+		if (pageSavingThread == null)
 		{
 			return;
 		}
@@ -222,7 +220,7 @@ public class AsynchronousDataStore implements IDataStore
 		catch (InterruptedException e)
 		{
 			log.error(e.getMessage(), e);
-			if (operates.get())
+			if (pageSavingThread != null)
 			{
 				entryMap.remove(key);
 				dataStore.storeData(sessionId, id, data);
@@ -315,7 +313,7 @@ public class AsynchronousDataStore implements IDataStore
 		@Override
 		public void run()
 		{
-			while (operates.get())
+			while (pageSavingThread != null)
 			{
 				Entry entry = null;
 				try
@@ -327,7 +325,7 @@ public class AsynchronousDataStore implements IDataStore
 					log.debug("PageSavingRunnable:: Interrupted...");
 				}
 
-				if (entry != null && operates.get())
+				if (entry != null && pageSavingThread != null)
 				{
 					log.debug("PageSavingRunnable:: Saving asynchronously: {}...", entry);
 					dataStore.storeData(entry.sessionId, entry.pageId, entry.data);
