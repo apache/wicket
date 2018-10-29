@@ -122,7 +122,7 @@
 		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<cglib.version>3.2.8</cglib.version>
+		<cglib.version>3.2.9</cglib.version>
 		<jacoco.version>0.8.2</jacoco.version>
 		<jetty.version>9.4.12.v20180830</jetty.version>
 		<junit.version>5.3.1</junit.version>
@@ -188,13 +188,6 @@
 				<groupId>cglib</groupId>
 				<artifactId>cglib</artifactId>
 				<version>${cglib.version}</version>
-				<exclusions>
-					<!-- excluded due to conflict with asm 5 in wicket-ioc -->
-					<exclusion>
-						<groupId>org.ow2.asm</groupId>
-						<artifactId>asm</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
@@ -433,7 +426,7 @@
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm-util</artifactId>
-				<version>6.2</version>
+				<version>7.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
