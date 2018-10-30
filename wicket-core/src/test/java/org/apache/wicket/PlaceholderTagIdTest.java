@@ -42,7 +42,7 @@ public class PlaceholderTagIdTest extends WicketTestCase
 	{
 		tester.startPage(TestPage.class);
 
-		tester.assertContains("<form id=\"form1_region\" style=\"display:none\" data-wicket-placeholder>");
+		tester.assertContains("<form id=\"form1_region\" style=\"display:none\" data-wicket-placeholder=\"\">");
 	}
 
 	/**
