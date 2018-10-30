@@ -49,6 +49,8 @@ public class StoreSettings
 
 	private boolean asynchronous = true;
 	
+	private boolean encrypted = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -178,5 +180,27 @@ public class StoreSettings
 	public boolean isAsynchronous()
 	{
 		return asynchronous;
+	}
+	
+	/**
+	 * Sets a flag whether to wrap the configured {@link org.apache.wicket.pageStore.IPageStore} with
+	 * {@link org.apache.wicket.pageStore.CryptingPageStore}.
+	 *
+	 * @param encrypted
+	 *            {@code true} to encrypt, {@code false} - otherwise
+	 * @return {@code this} object for chaining
+	 */
+	public StoreSettings setEncrypted(boolean encrypted)
+	{
+		this.encrypted = encrypted;
+		return this;
+	}
+	
+	/**
+	 * @return {@code true} if the storing of page is encrypted
+	 */
+	public boolean isEncrypted()
+	{
+		return encrypted;
 	}
 }

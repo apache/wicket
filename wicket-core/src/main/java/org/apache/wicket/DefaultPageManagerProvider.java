@@ -21,6 +21,7 @@ import java.io.File;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageManager;
 import org.apache.wicket.pageStore.AsynchronousPageStore;
+import org.apache.wicket.pageStore.CryptingPageStore;
 import org.apache.wicket.pageStore.DiskPageStore;
 import org.apache.wicket.pageStore.FilePageStore;
 import org.apache.wicket.pageStore.GroupingPageStore;
@@ -44,6 +45,7 @@ import org.apache.wicket.util.lang.Bytes;
  * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
  * <li>{@link AsynchronousPageStore} moving storage of pages to an asynchronous worker thread (enabled by default with {@link StoreSettings#isAsynchronous()})</li>
  * <li>{@link SerializingPageStore} serializing all pages (so they are available for back-button)</li>
+ * <li>{@link CryptingPageStore} encrypting all pages (disabled by default in {@link StoreSettings#isEncrypted()})</li>
  * <li>{@link DiskPageStore} persisting all pages, configured according to {@link StoreSettings}</li>
  * </ol>
  * An alternative chain with all pages held in-memory could be:
@@ -95,6 +97,8 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	{
 		IPageStore store = newPersistentStore();
 		
+		store = newCryptingStore(store);
+
 		store = newSerializingStore(store);
 		
 		store = newAsynchronousStore(store);
@@ -166,6 +170,23 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	protected IPageStore newSerializingStore(IPageStore pageStore)
 	{
 		return new SerializingPageStore(pageStore, getSerializer());
+	}
+
+	/**
+	 * Crypt all pages, if enabled in {@link StoreSettings#isEncrypted()}.
+	 * 
+	 * @see CryptingPageStore
+	 */
+	protected IPageStore newCryptingStore(IPageStore pageStore)
+	{
+		StoreSettings storeSettings = application.getStoreSettings();
+		
+		if (storeSettings.isEncrypted())
+		{
+			pageStore = new CryptingPageStore(pageStore);
+		}
+
+		return pageStore;
 	}
 
 	/**
