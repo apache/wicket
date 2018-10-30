@@ -49,6 +49,8 @@ public class StoreSettings
 
 	private boolean asynchronous = true;
 	
+	private boolean encrypted = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -178,5 +180,18 @@ public class StoreSettings
 	public boolean isAsynchronous()
 	{
 		return asynchronous;
+	}
+	
+	public void setEncrypted(boolean encrypted)
+	{
+		this.encrypted = encrypted;
+	}
+	
+	/**
+	 * @return {@code true} if the storing of page is encrypted
+	 */
+	public boolean isEncrypted()
+	{
+		return encrypted;
 	}
 }
