@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.ajax.markup.html.form;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -64,7 +65,12 @@ public abstract class AjaxFallbackButton extends Button
 		super(id, model);
 		mForm = form;
 
-		add(new AjaxFormSubmitBehavior(form, "click")
+		add(newAjaxEventBehavior(form, "click"));
+	}
+
+	protected AjaxFormSubmitBehavior newAjaxEventBehavior(Form<?> form, String event)
+	{
+		return new AjaxFormSubmitBehavior(form, event)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -103,7 +109,12 @@ public abstract class AjaxFallbackButton extends Button
 				AjaxFallbackButton.this.updateAjaxAttributes(attributes);
 			}
 
-		});
+			@Override
+			public boolean getStatelessHint(Component component)
+			{
+				return AjaxFallbackButton.this.getStatelessHint();
+			}
+		};
 	}
 
 	protected void updateAjaxAttributes(AjaxRequestAttributes attributes)
