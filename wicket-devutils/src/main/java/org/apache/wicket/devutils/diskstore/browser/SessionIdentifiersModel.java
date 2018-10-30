@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.wicket.Session;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.pageStore.DefaultPageContext;
@@ -51,7 +50,7 @@ public class SessionIdentifiersModel extends LoadableDetachableModel<List<String
 
 		ArrayList<String> identifiers = new ArrayList<>(store.getContextIdentifiers());
 
-		IPageContext context = new DefaultPageContext(Session.get());
+		IPageContext context = new DefaultPageContext();
 		String current = store.getContextIdentifier(context);
 		if (identifiers.contains(current) == false)
 		{

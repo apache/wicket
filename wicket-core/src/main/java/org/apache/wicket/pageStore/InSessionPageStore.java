@@ -146,8 +146,6 @@ public class InSessionPageStore extends DelegatingPageStore
 		SessionData data = context.getSessionData(KEY);
 		if (data == null && create)
 		{
-			context.bind();
-
 			data = context.setSessionData(KEY, new SessionData());
 		}
 

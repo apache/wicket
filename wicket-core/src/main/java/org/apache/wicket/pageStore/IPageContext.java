@@ -50,7 +50,7 @@ public interface IPageContext
 	<T> T getRequestData(MetaDataKey<T> key);
 
 	/**
-	 * Set an attribute in the session.
+	 * Set an attribute in the session. Binds the session.
 	 * 
 	 * @param key
 	 *            key
@@ -70,7 +70,7 @@ public interface IPageContext
 	<T extends Serializable> T getSessionAttribute(String key);
 
 	/**
-	 * Set data into the session - only if it is not set already.
+	 * Set data into the session - only if it is not set already. Binds the session.
 	 * <p>
 	 * Recommended usage:
 	 * <pre>
@@ -101,12 +101,7 @@ public interface IPageContext
 	<T extends Serializable> T getSessionData(MetaDataKey<T> key);
 
 	/**
-	 * Bind the current session. This make a temporary session become persistent across requests.
-	 */
-	void bind();
-
-	/**
-	 * Get the identifier of the session.
+	 * Get the identifier of the session. Binds the session.
 	 * 
 	 * @return session id
 	 */

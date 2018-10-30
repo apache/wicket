@@ -343,8 +343,6 @@ public class FilePageStore implements IPersistentPageStore
 
 	protected SessionAttribute getSessionAttribute(IPageContext context, boolean create)
 	{
-		context.bind();
-
 		SessionAttribute attribute = context.getSessionAttribute(KEY);
 		if (attribute == null && create)
 		{

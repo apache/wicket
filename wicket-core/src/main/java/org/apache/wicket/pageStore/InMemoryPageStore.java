@@ -100,8 +100,6 @@ public class InMemoryPageStore implements IPersistentPageStore
 		SessionAttribute attribute = context.getSessionAttribute(KEY);
 		if (attribute == null && create)
 		{
-			context.bind();
-			
 			attribute = new SessionAttribute(applicationName, context.getSessionId());
 			context.setSessionAttribute(KEY, attribute);
 		}

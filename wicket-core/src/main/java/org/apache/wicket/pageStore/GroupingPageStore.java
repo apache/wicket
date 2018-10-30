@@ -132,8 +132,6 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 		SessionData data = context.getSessionData(KEY);
 		if (data == null)
 		{
-			context.bind();
-
 			data = context.setSessionData(KEY, new SessionData());
 		}
 
@@ -276,13 +274,6 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 		public <T> T getRequestData(MetaDataKey<T> key)
 		{
 			throw new WicketRuntimeException("no request available for group");
-		}
-
-
-		@Override
-		public void bind()
-		{
-			context.bind();
 		}
 	}
 }

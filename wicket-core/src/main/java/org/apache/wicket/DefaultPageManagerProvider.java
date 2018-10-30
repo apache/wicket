@@ -21,6 +21,7 @@ import java.io.File;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageManager;
 import org.apache.wicket.pageStore.AsynchronousPageStore;
+import org.apache.wicket.pageStore.CryptingPageStore;
 import org.apache.wicket.pageStore.DiskPageStore;
 import org.apache.wicket.pageStore.FilePageStore;
 import org.apache.wicket.pageStore.GroupingPageStore;
@@ -41,8 +42,8 @@ import org.apache.wicket.util.lang.Bytes;
  * <ol>
  * <li>{@link RequestPageStore} caching pages until end of the request</li>
  * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
- * <li>{@link AsynchronousPageStore} moving storage of pages to a worker thread (if enabled in
- * {@link StoreSettings#isAsynchronous()})</li>
+ * <li>{@link AsynchronousPageStore} moving storage of pages to a worker thread (if enabled in {@link StoreSettings#isAsynchronous()})</li>
+ * <li>{@link CryptingPageStore} encrypting all pages (if enabled in {@link StoreSettings#isEncrypted()})</li>
  * <li>{@link DiskPageStore} keeping all pages, configured according to {@link StoreSettings}</li>
  * </ol>
  * An alternative chain with all pages held in-memory could be:
@@ -167,6 +168,10 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		Bytes maxSizePerSession = storeSettings.getMaxSizePerSession();
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 
-		return new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession, getSerializer());
+		if (storeSettings.isEncrypted()) {
+			return new SerializingPageStore(new CryptingPageStore(new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession)), getSerializer());
+		} else {
+			return new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession, getSerializer());
+		}
 	}
 }

@@ -23,7 +23,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * Default page context using a {@link Session}.
+ * Default page context using {@link RequestCycle#getRequest()} and {@link Session#get()}. 
  * 
  * @author Juergen Donnerstag
  * @author svenmeier
@@ -32,25 +32,18 @@ public class DefaultPageContext implements IPageContext
 {
 	private Session session;
 
-	public DefaultPageContext(Session session) {
+	public DefaultPageContext() {
 		this.session = Session.get();
 	}
 	
-	/**
-	 * @see org.apache.wicket.pageStore.IPageContext#bind()
-	 */
-	@Override
-	public void bind()
-	{
-		session.bind();
-	}
-
 	/**
 	 * @see org.apache.wicket.pageStore.IPageContext#getSessionId()
 	 */
 	@Override
 	public String getSessionId()
 	{
+		session.bind();
+		
 		return session.getId();
 	}
 
@@ -64,6 +57,7 @@ public class DefaultPageContext implements IPageContext
 	@Override
 	public <T extends Serializable> void setSessionAttribute(String key, T value)
 	{
+		session.bind();
 		session.setAttribute(key, value);
 	}
 	
@@ -83,6 +77,7 @@ public class DefaultPageContext implements IPageContext
 				return oldValue;
 			}
 			
+			session.bind();
 			session.setMetaData(key, value);
 			return value;
 		}

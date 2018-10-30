@@ -355,8 +355,7 @@ public class AsynchronousPageStoreTest
 			@Override
 			public boolean canBeAsynchronous(IPageContext context)
 			{
-				// can bind and get session id
-				context.bind();
+				// can get session id
 				context.getSessionId();
 				
 				// can access request data
@@ -377,8 +376,7 @@ public class AsynchronousPageStoreTest
 			@Override
 			public synchronized void addPage(IPageContext context, IManageablePage page)
 			{
-				// can bind and get session id
-				context.bind();
+				// can get session id
 				context.getSessionId();
 				
 				// cannot access request

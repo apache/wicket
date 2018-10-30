@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.page;
 
-import org.apache.wicket.Session;
 import org.apache.wicket.pageStore.DefaultPageContext;
 import org.apache.wicket.pageStore.IPageContext;
 import org.apache.wicket.pageStore.IPageStore;
@@ -87,7 +86,7 @@ public class PageManager implements IPageManager
 	 */
 	protected IPageContext createPageContext()
 	{
-		return new DefaultPageContext(Session.get());
+		return new DefaultPageContext();
 	}
 
 	@Override

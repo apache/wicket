@@ -20,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.Serializable;
+
+import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.JavaSerializer;
@@ -106,9 +109,13 @@ public abstract class AbstractPageStoreTest
 	{
 		IPageContext context = new DummyPageContext(sessionId) {
 			@Override
-			public void bind()
-			{
+			public <T extends Serializable> void setSessionAttribute(String key, T value) {
 				fail();
+			}
+			
+			@Override
+			public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value) {
+				return fail();
 			}
 		};
 		
@@ -120,9 +127,13 @@ public abstract class AbstractPageStoreTest
 	{
 		IPageContext context = new DummyPageContext(sessionId) {
 			@Override
-			public void bind()
-			{
+			public <T extends Serializable> void setSessionAttribute(String key, T value) {
 				fail();
+			}
+			
+			@Override
+			public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value) {
+				return fail();
 			}
 		};
 		

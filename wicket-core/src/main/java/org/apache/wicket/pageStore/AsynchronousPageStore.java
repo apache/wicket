@@ -140,7 +140,6 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			this.context = Args.notNull(context, "context");
 			this.page = Args.notNull(page, "page");
 			
-			context.bind();
 			this.sessionId = context.getSessionId();
 		}
 
@@ -253,14 +252,6 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		public <T extends Serializable> T getSessionData(MetaDataKey<T> key)
 		{
 			return context.getSessionData(key);
-		}
-
-		/**
-		 * Has no effect if already bound.
-		 */
-		@Override
-		public void bind()
-		{
 		}
 
 		/**

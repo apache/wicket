@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.wicket.PageReference;
-import org.apache.wicket.Session;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -149,7 +148,7 @@ public class PersistedPanel extends GenericPanel<IPersistentPageStore>
 			return null;
 		}
 
-		IPageContext context = new DefaultPageContext(Session.get());
+		IPageContext context = new DefaultPageContext();
 		
 		return store.getContextIdentifier(context);
 	}

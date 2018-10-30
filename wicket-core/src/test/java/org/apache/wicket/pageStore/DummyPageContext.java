@@ -88,11 +88,6 @@ public class DummyPageContext implements IPageContext
 	}
 
 	@Override
-	public void bind()
-	{
-	}
-
-	@Override
 	public String getSessionId()
 	{
 		return sessionId;
