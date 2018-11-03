@@ -167,13 +167,12 @@ public class LazyInitProxyFactory
 			}
 
 		}
+		else if (IS_OBJENESIS_AVAILABLE && !hasNoArgConstructor(type))
+		{
+			return ObjenesisProxyFactory.createProxy(type, locator, WicketNamingPolicy.INSTANCE);
+		}
 		else
 		{
-			if (IS_OBJENESIS_AVAILABLE && !hasNoArgConstructor(type))
-			{
-				return ObjenesisProxyFactory.createProxy(type, locator, WicketNamingPolicy.INSTANCE);
-			}
-
 			CGLibInterceptor handler = new CGLibInterceptor(type, locator);
 
 			Callback[] callbacks = new Callback[2];
