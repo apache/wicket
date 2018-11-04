@@ -73,7 +73,7 @@ import org.slf4j.LoggerFactory;
  *        form1.properties =&gt; input1.Required
  *        form1.properties =&gt; Required
  *        input1.properties =&gt; Required
- *        myApplication.properties =&gt; page1.form1.input1.Required
+ *        myApplication.properties =&gt; form1.input1.Required
  *        myApplication.properties =&gt; Required
  * </pre>
  * 
