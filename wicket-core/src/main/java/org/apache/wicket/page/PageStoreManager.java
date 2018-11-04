@@ -360,7 +360,8 @@ public class PageStoreManager extends AbstractPageManager
 			return false;
 		}
 
-		public void clear() {
+		public void clear() 
+		{
 			sessionCache.clear();
 			
 			// WICKET-5164 use the original sessionId
