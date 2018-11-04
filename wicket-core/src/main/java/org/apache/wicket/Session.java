@@ -953,7 +953,10 @@ public abstract class Session implements IClusterable, IEventSink
 	 * 
 	 * @return the new session id value.
 	 */
-	protected abstract String generateNewSessionId();
+	protected String generateNewSessionId()
+	{
+		throw new UnsupportedOperationException("This function must be implemented in the subclass.");
+	}
 
 	/**
 	 * Factory method for PageAccessSynchronizer instances
