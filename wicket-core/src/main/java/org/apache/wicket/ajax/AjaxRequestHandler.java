@@ -234,27 +234,8 @@ public class AjaxRequestHandler implements AjaxRequestTarget
 					"Cannot update component that does not have setOutputMarkupId property set to true. Component: " +
 						component.toString());
 			}
-			Page pageOfComponent = component.findParent(Page.class);
-			if (component == getPage() || pageOfComponent == getPage())
-			{
-				add(component, component.getMarkupId());
-			}
-			else
-			{
-				String msg = "Cannot update component because its page is not the same as " +
-					"the one this handler has been created for. Component: " + component.toString();
-				IllegalArgumentException error = new IllegalArgumentException(msg);
-				if (Application.get().usesDevelopmentConfig())
-				{
-					throw error;
-				}
-				else
-				{
-					// log the error to the application log, but don't block the user of the
-					// application (which was the behavior in Wicket <= 7.
-					log.error(msg, error);
-				}
-			}
+
+			add(component, component.getMarkupId());
 		}
 	}
 

@@ -16,15 +16,9 @@
  */
 package org.apache.wicket.ajax.markup.html;
 
-import java.util.Arrays;
-
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.EmptyPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 
 /**
  * Test page for triggering the component is not on page error from AjaxRequestHandler.
@@ -32,58 +26,25 @@ import org.apache.wicket.markup.html.panel.Panel;
 public class ComponentNotOnPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+	
+	private Component notOnPage;
+	
+	public ComponentNotOnPage(Component notOnPage) {
+		this.notOnPage = notOnPage;
+		
+		notOnPage.setOutputMarkupId(true);
+	}
 
 	@Override
 	protected void onInitialize()
 	{
 		super.onInitialize();
 
-		add(new EmptyPanel("refresher"));
-
-		add(new ListView<Integer>("listview", Arrays.asList(1, 2, 3, 4, 5))
-		{
-			private static final long serialVersionUID = 1L;
-
+		add(new AjaxLink<Void>("refresher") {
 			@Override
-			protected void populateItem(ListItem<Integer> item)
-			{
-				item.setOutputMarkupId(true);
-
-				item.add(new AjaxLink<Void>("link")
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public void onClick(AjaxRequestTarget target)
-					{
-						LastSelectedPanel lastSelected = new LastSelectedPanel("refresher", item);
-						ComponentNotOnPage.this.replace(lastSelected);
-						target.add(lastSelected);
-					}
-				});
+			public void onClick(AjaxRequestTarget target) {
+				target.add(notOnPage);
 			}
 		});
-	}
-
-	public static class LastSelectedPanel extends Panel
-	{
-		private static final long serialVersionUID = 1L;
-
-		public LastSelectedPanel(String id, WebMarkupContainer refresher)
-		{
-			super(id);
-
-			setOutputMarkupId(true);
-			add(new AjaxLink<Void>("refresh")
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void onClick(AjaxRequestTarget target)
-				{
-					target.add(refresher);
-				}
-			});
-		}
 	}
 }

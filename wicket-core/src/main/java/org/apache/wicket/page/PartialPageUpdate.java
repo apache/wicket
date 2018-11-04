@@ -433,16 +433,38 @@ public abstract class PartialPageUpdate
 		{
 			if (component != page)
 			{
-				throw new IllegalArgumentException("component cannot be a page");
+				throw new IllegalArgumentException("Cannot add another page");
 			}
 		}
-		else if (component instanceof AbstractRepeater)
+		else
 		{
-			throw new IllegalArgumentException(
-					"Component " +
-							component.getClass().getName() +
-							" has been added to a partial page update. This component is a repeater and cannot be repainted directly. " +
-							"Instead add its parent or another markup container higher in the hierarchy.");
+			Page pageOfComponent = component.findParent(Page.class);
+			if (pageOfComponent != page)
+			{
+				String msg = "Cannot update component because its page is not the same as this partial update. Component: " + component.toString();
+				IllegalArgumentException error = new IllegalArgumentException(msg);
+
+				if (pageOfComponent == null) {
+					// no longer on page - log the error but don't block the user of the application
+					// (which was the behavior in Wicket <= 7).
+					LOG.error(msg, error);
+					return;
+				}
+				else 
+				{
+					// on another page
+					throw error;
+				}
+			}
+
+			if (component instanceof AbstractRepeater)
+			{
+				throw new IllegalArgumentException(
+						"Component " +
+								component.getClass().getName() +
+								" has been added to a partial page update. This component is a repeater and cannot be repainted directly. " +
+								"Instead add its parent or another markup container higher in the hierarchy.");
+			}
 		}
 
 		assertComponentsNotFrozen();
