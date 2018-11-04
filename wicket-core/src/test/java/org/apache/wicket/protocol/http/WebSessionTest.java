@@ -16,12 +16,18 @@
  */
 package org.apache.wicket.protocol.http;
 
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Locale;
 
+import org.apache.wicket.Session;
+import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.mock.MockWebRequest;
+import org.apache.wicket.protocol.http.mock.MockHttpSession;
 import org.apache.wicket.request.Url;
+import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -47,5 +53,24 @@ class WebSessionTest
 
 		WebSession session = new WebSession(request);
 		assertEquals(locale, session.getLocale());
+	}
+	
+	@Test
+	public void changeSessionId() throws Exception
+	{
+		WicketTester tester = new WicketTester(new MockApplication());
+		MockHttpSession httpSession = (MockHttpSession)tester.getRequest().getSession();
+		Session session = tester.getSession();
+		
+		httpSession.setTemporary(false);
+		session.bind();
+		
+		String oldId = session.getId();
+		assertNotNull(oldId);
+		
+		session.changeSessionId();
+		String newId = session.getId();
+		
+		assertNotEquals(oldId, newId);
 	}
 }

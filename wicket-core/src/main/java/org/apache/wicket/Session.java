@@ -189,12 +189,12 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	private final FeedbackMessages feedbackMessages = new FeedbackMessages();
 
 	/** cached id because you can't access the id after session unbound */
-	private String id = null;
+	private volatile String id = null;
 
 	/** The locale to use when loading resources for this session. */
 	private final AtomicReference<Locale> locale;
 
-	/** Application level meta data. */
+	/** Session level meta data. */
 	private MetaDataEntry<?>[] metaData;
 
 	/**
@@ -510,9 +510,11 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	 */
 	public void invalidateNow()
 	{
-		if (isSessionInvalidated() == false) {
+		if (isSessionInvalidated() == false) 
+		{
 			invalidate();
 		}
+		
 		destroy();
 		feedbackMessages.clear();
 		setStyle(null);
@@ -524,10 +526,8 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	/**
 	 * Replaces the underlying (Web)Session, invalidating the current one and creating a new one. By
 	 * calling {@link ISessionStore#invalidate(Request)} and {@link #bind()}
-	 * <p>
-	 * Call upon login to protect against session fixation.
 	 * 
-	 * @see "http://www.owasp.org/index.php/Session_Fixation"
+	 * If you are looking for a mean against session fixation attack, consider to use {@link #changeSessionId()}.
 	 */
 	public void replaceSession()
 	{
@@ -668,7 +668,7 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 		{
 			invalidateNow();
 		}
-		else
+		else if (!isTemporary())
 		{
 			// WICKET-5103 container might have changed id
 			updateId();
@@ -932,6 +932,30 @@ public abstract class Session implements IClusterable, IEventSink, IMetadataCont
 	public void onInvalidate()
 	{
 	}
+	
+	/**
+	 * Change the id of the underlying (Web)Session if this last one is permanent.
+	 * <p>
+	 * Call upon login to protect against session fixation.
+	 * 
+	 * @see "http://www.owasp.org/index.php/Session_Fixation"
+	 */
+	public void changeSessionId()
+	{
+		if (isTemporary())
+		{
+			return;
+		}
+		
+		id = generateNewSessionId();
+	}
+
+	/**
+	 * Change the id of the underlying (Web)Session.
+	 * 
+	 * @return the new session id value.
+	 */
+	protected abstract String generateNewSessionId();
 
 	/**
 	 * Factory method for PageAccessSynchronizer instances

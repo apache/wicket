@@ -16,11 +16,14 @@
  */
 package org.apache.wicket.protocol.http;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.pages.BrowserInfoPage;
 import org.apache.wicket.protocol.http.request.WebClientInfo;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
 
@@ -106,5 +109,14 @@ public class WebSession extends Session
 	protected WebPage newBrowserInfoPage()
 	{
 		return new BrowserInfoPage();
+	}
+	
+	@Override
+	protected String generateNewSessionId() 
+	{
+		ServletWebRequest servletRequest = (ServletWebRequest)RequestCycle.get().getRequest();
+		HttpServletRequest httpRequest = servletRequest.getContainerRequest();
+		
+		return httpRequest.changeSessionId();
 	}
 }
