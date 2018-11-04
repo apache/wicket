@@ -17,11 +17,8 @@
 package org.apache.wicket.ajax.markup.html;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import org.apache.wicket.RuntimeConfigurationType;
-import org.apache.wicket.mock.MockApplication;
-import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -31,70 +28,42 @@ import org.junit.jupiter.api.Test;
  */
 class ComponentNotOnPageTest extends WicketTestCase
 {
-	private RuntimeConfigurationType configuration = RuntimeConfigurationType.DEVELOPMENT;
-
 	/**
-	 * Overrides the application factory to enable changing the configuration type of Wicket.
-	 */
-	@Override
-	protected WebApplication newApplication()
-	{
-		return new MockApplication()
-		{
-			@Override
-			public RuntimeConfigurationType getConfigurationType()
-			{
-				return configuration;
-			}
-		};
-	}
-
-	/**
-	 * When running in development mode Wicket should trigger an exception signaling the error on
-	 * the developers part that a component that is not part of the page is being refreshed in the
-	 * AJAX response, resulting in a no-op (which is not the intended result).
-	 */
-	@Test
-	void responseTargetInDevelopmentModeShouldFail()
-	{
-		configuration = RuntimeConfigurationType.DEVELOPMENT;
-
-		clickLinkFailOnError();
-
-		assertThrows(IllegalArgumentException.class, () -> {
-			tester.clickLink("refresher:refresh", true);
-		});
-	}
-
-	/**
-	 * When running in deployment mode Wicket should <b>not</b> trigger an exception signaling the
+	 * Wicket should <b>not</b> trigger an exception signaling the
 	 * error on the developers part that a component that is not part of the page is being refreshed
 	 * in the AJAX response, resulting in a no-op (which is not the intended result). Instead Wicket
 	 * should signal the error in the log, but not prevent the user of the application to continue
 	 * (which happened in Wicket 7).
 	 */
 	@Test
-	void responseTargetInDeploymentModeShouldNotFail()
+	public void componentNotInPageShouldNotFail()
 	{
-		configuration = RuntimeConfigurationType.DEPLOYMENT;
+		ComponentNotOnPage page = tester.startPage(new ComponentNotOnPage(new Label("label")));
+		tester.startPage(page);
 
-		clickLinkFailOnError();
-
-		// this shouldn't fail as well
-		tester.clickLink("refresher:refresh", true);
+		// this should not fail
+		tester.clickLink("refresher", true);
 	}
+	
+	/**
+	 * Wicket should trigger an exception signaling the
+	 * error on the developers part that a component that is part of another page is being refreshed
+	 * in the AJAX response.
+	 */
+	@Test
+	public void componentOnOtherPageShouldFail()
+	{
+		Label notOnPage = new Label("label");
 
-	private void clickLinkFailOnError() {
-		try
-		{
-			// this should not fail
-			ComponentNotOnPage page = tester.startPage(ComponentNotOnPage.class);
-			tester.clickLink("listview:0:link", true);
-			tester.startPage(page);
-		}
-		catch (Exception e)
-		{
-			fail("Unexpected exception: " + e);
-		}
+		ComponentNotOnPage otherPage = new ComponentNotOnPage(notOnPage);
+		otherPage.add(notOnPage);
+		
+		ComponentNotOnPage page = tester.startPage(new ComponentNotOnPage(notOnPage));
+		tester.startPage(page);
+
+                assertThrows(IllegalArgumentException.class, () -> {
+                        tester.clickLink("refresher", true);
+                });
 	}
 }
+
