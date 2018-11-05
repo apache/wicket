@@ -439,22 +439,17 @@ public abstract class PartialPageUpdate
 		else
 		{
 			Page pageOfComponent = component.findParent(Page.class);
-			if (pageOfComponent != page)
+			if (pageOfComponent == null) 
 			{
-				String msg = "Cannot update component because its page is not the same as this partial update. Component: " + component.toString();
-				IllegalArgumentException error = new IllegalArgumentException(msg);
-
-				if (pageOfComponent == null) {
-					// no longer on page - log the error but don't block the user of the application
-					// (which was the behavior in Wicket <= 7).
-					LOG.error(msg, error);
-					return;
-				}
-				else 
-				{
-					// on another page
-					throw error;
-				}
+				// no longer on page - log the error but don't block the user of the application
+				// (which was the behavior in Wicket <= 7).
+				LOG.warn("Component '{}' not cannot be updated because it was already removed from page", component);
+				return;
+			}
+			else if (pageOfComponent != page) 
+			{
+				// on another page
+				throw new IllegalArgumentException("Component " + component.toString() + " cannot be updated because it is on another page.");
 			}
 
 			if (component instanceof AbstractRepeater)
@@ -462,7 +457,7 @@ public abstract class PartialPageUpdate
 				throw new IllegalArgumentException(
 						"Component " +
 								component.getClass().getName() +
-								" has been added to a partial page update. This component is a repeater and cannot be repainted directly. " +
+								" is a repeater and cannot be added to a partial page update directly. " +
 								"Instead add its parent or another markup container higher in the hierarchy.");
 			}
 		}
