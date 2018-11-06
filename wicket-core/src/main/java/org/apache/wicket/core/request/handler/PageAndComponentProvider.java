@@ -158,27 +158,10 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 			component = page != null ? page.get(componentPath) : null;
 			if (component == null)
 			{
-
-				/*
-				 * on stateless pages it is possible that the component may not yet exist because it
-				 * couldve been created in one of the lifecycle callbacks of this page. Lets invoke
-				 * the callbacks to give the page a chance to create the missing component.
-				 */
-
 				// make sure this page instance was just created so the page can be stateless
 				if (page.isPageStateless())
 				{
-					Page p = (Page)page;
-					p.internalInitialize();
-					
-					// preparation of feedbacks is delayed into the render phase
-					try (FeedbackDelay delay = new FeedbackDelay(p.getRequestCycle())) {
-						p.beforeRender();
-						p.markRendering(false);
-						
-						// note: no invocation of delay.onBeforeRender() 
-					}
-					component = page.get(componentPath);
+					component = resolveStatelessPageComponent((Page)page);
 				}
 			}
 		}
@@ -188,6 +171,37 @@ public class PageAndComponentProvider extends PageProvider implements IPageAndCo
 				"' on page '" + getPageClass());
 		}
 		return component;
+	}
+
+	/**
+	 * On stateless pages it is possible that the component may not yet exist because it
+	 * could have been created in one of the lifecycle callbacks of this page. Lets invoke
+	 * the callbacks to give the page a chance to create the missing component.
+	 **/
+	private IRequestableComponent resolveStatelessPageComponent(Page page)
+	{
+		//1-first let's try initializing the page
+		page.internalInitialize();
+		
+		IRequestableComponent component = page.get(componentPath);
+
+		if (component != null)
+		{
+			return component;
+		}
+		
+		//2-if component has not been found let's try rendering the page
+		
+		// preparation of feedbacks is delayed into the render phase
+		try (FeedbackDelay delay = new FeedbackDelay(page.getRequestCycle())) 
+		{
+			page.beforeRender();
+			page.markRendering(false);
+			
+			// note: no invocation of delay.onBeforeRender() 
+		}
+		
+		return page.get(componentPath);
 	}
 
 	/**
