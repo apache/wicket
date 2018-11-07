@@ -6,10 +6,10 @@ In the following table these methods are grouped according to the stage in which
 
 |===
 |*Cycle stage* | *Involved methods*
-|Initialization | constructor, onInitialize()
-|Rendering | onConfigure(), onBeforeRender(), renderHead(), onRender(), onComponentTag(), onComponentTagBody(), onAfterRender()
-|Removed | onRemove()
-|Detached | onDetach()
+|Initialization | constructor, _onInitialize()_
+|Rendering | _onConfigure()_, _onBeforeRender()_, _renderHead()_, _onRender()_, _onComponentTag()_, _onComponentTagBody()_, _onAfterRender()_
+|Removed | _onRemove()_
+|Detached | _onDetach()_
 |===
 
 Now let's take a closer look at each stage and its hook methods.

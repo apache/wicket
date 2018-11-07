@@ -1,23 +1,23 @@
 
 
 
-Wicket makes it very easy to build stateful pages, but sometimes we might want to use an “old school” stateless page that doesn't keep memory of its state in the user session. For example consider the public area of a site or a login page: in those cases a stateful page would be a waste of resources or even a security threat, as we will see in paragraph <<forms2.adoc#_stateless_form,paragraph 12.10>>. 
+Wicket makes it very easy to build stateful pages, but sometimes we might want to use an “old school” stateless page that doesn't keep memory of its state in the user session. For example consider the public area of a site or a login page: in those cases a stateful page would be a waste of resources or even a security threat, as we will see in paragraph <<forms2.adoc#_stateless_form,paragraph 12.10>>.
 
 In Wicket a page can be stateless only if it satisfies the following requirements:
 
 1. it has been instantiated by Wicket (i.e. we don't create it with operator new) using a constructor with no argument or a constructor that takes as input a single PageParameters argument (class PageParameters will be covered in <<urls.adoc#_pageparameters,chapter 10.1>>).
-2. All its children components (and behaviors) are in turn stateless, which means that their method isStateless must return true.
+2. All its children components (and behaviors) are in turn stateless, which means that their method _isStateless_ must return _true_.
 
-The first requirement implies that, rather than creating a page by hand, we should rely on Wicket's capability of resolving page instances, like we do when we use method setResponsePage(Class page).
+The first requirement implies that, rather than creating a page by hand, we should rely on Wicket's capability of resolving page instances, like we do when we use method _setResponsePage(Class page)_.
 
-In order to comply with the second requirement it could be helpful to check if all children components of a page are stateless. To do this we can leverage method visitChildren and the visitor pattern to iterate over components and test if their method isStateless actually returns true:
+In order to comply with the second requirement it could be helpful to check if all children components of a page are stateless. To do this we can leverage method _visitChildren_ and the visitor pattern to iterate over components and test if their method _isStateless_ actually returns _true_:
 
 [source,java]
 ----
 @Override
 protected void onInitialize() {
 	super.onInitialize();
-	
+
 	visitChildren((component, visit) -> {
 		if(!component.isStateless()) {
 	  	   System.out.println("Component " + component.getId() + " is not stateless");
@@ -40,7 +40,6 @@ public void init()
 
 NOTE: Most of the Wicket's built-in components are stateful, hence they can not be used with a stateless page. However some of them have also a stateless version which can be adopted when we need to keep a page stateless. In the rest of the guide we will point out when a built-in component comes also with a stateless version.
 
-A page can be also explicitly declared as stateless setting the appropriate flag to true with the setStatelessHint(true) method. This method will not prevent us from violating the requirements for a stateless page, but if we do so we will get the following warning log message:
+A page can be also explicitly declared as stateless setting the appropriate flag to true with the _setStatelessHint(true)_ method. This method will not prevent us from violating the requirements for a stateless page, but if we do so we will get the following warning log message:
 
 WARNING: Page '<page class>' is not stateless because of component with path '<component path>'
-

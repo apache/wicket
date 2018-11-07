@@ -1,6 +1,6 @@
 
 
 
-Beside configuring and initializing our application, the Application class is responsible for creating the internal entities used by Wicket to process a request. These entities are instances of the following classes: RequestCycle, Request, Response and Session. 
+Beside configuring and initializing our application, the _Application_ class is responsible for creating the internal entities used by Wicket to process a request. These entities are instances of the following classes: _RequestCycle_, _Request_, _Response_ and _Session_. 
 
 The next paragraphs will illustrate each of these classes, explaining how they are involved into request processing.
