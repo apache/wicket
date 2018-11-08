@@ -18,7 +18,8 @@ package org.apache.wicket.core.request.handler;
 
 import org.apache.wicket.core.request.handler.StatelessPageWithQueuedComponents.CustomLabel;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PageAndComponentProviderTest extends WicketTestCase
 {
