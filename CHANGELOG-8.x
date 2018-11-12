@@ -2,6 +2,38 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.2.0
+
+** Bug
+
+    * [WICKET-4423] - Modal Window dragging failes with iframe
+    * [WICKET-5552] - Events to close pop-up on Modal Window are not propagated
+    * [WICKET-6586] - Broken JavaScript due to fix charsetName in JavaScriptPackageResource
+    * [WICKET-6588] - Under Tomcat (ver. >= 8.5) BaseWebSocketBehavior can't find session id cookie 
+    * [WICKET-6589] - ClientInfo fails with NumberFormatException for unusual browser versions
+    * [WICKET-6599] - ResponseIOException should never escape from WicketFilter
+    * [WICKET-6602] - AuthenticatedWebApplication login Workflow broken with replaceSession
+    * [WICKET-6603] - WicketTester.destroy sometimes hangs
+    * [WICKET-6604] - Ajax repaint is not correctly handled when component being repainted has an enclosure associated with it and is not a child of the enclosure
+    * [WICKET-6606] - data-wicket-placeholder is invalid XHTML
+    * [WICKET-6607] - NoSuchMethodError when using Spring-Beans with constructor injection in an AjaxLink#onClick
+    * [WICKET-6608] - Stateless page, mix of queue and add can cause unforseen consequences
+    * [WICKET-6610] - Incorrect Javadoc: Refering to specific page in Application properties file is not possible
+
+** Improvement
+
+    * [WICKET-6435] - WicketTester should provide assertExists and assertNotExists methods
+    * [WICKET-6600] - Error logging in AjaxRequestHandler is too strict
+    * [WICKET-6601] - Events to close pop-up on Modal Window are not propagated from caption bar
+    * [WICKET-6605] - Allow AjaxFallbackButton to be stateless 
+
+** Task
+
+    * [WICKET-6594] - JavaDoc of redirectToInterceptPage in Component urges to use redirectTo method when in a constructor
+    * [WICKET-6609] - Update Guice from 4.1.0 to 4.2.2
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.1.0
 
 ** Bug
