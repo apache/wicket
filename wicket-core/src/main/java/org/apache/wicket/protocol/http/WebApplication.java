@@ -830,7 +830,7 @@ public abstract class WebApplication extends Application
 			{
 				try
 				{
-					configurationType = RuntimeConfigurationType.valueOf(result.toUpperCase());
+					configurationType = RuntimeConfigurationType.valueOf(result.toUpperCase(Locale.ROOT));
 				}
 				catch (IllegalArgumentException e)
 				{

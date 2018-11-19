@@ -100,7 +100,7 @@ abstract class AbstractTime extends AbstractTimeValue
 			synchronized (calendar)
 			{
 				timeFormat.setCalendar(calendar);
-				return timeFormat.format(new Date(getMilliseconds())).toLowerCase();
+				return timeFormat.format(new Date(getMilliseconds())).toLowerCase(Locale.ROOT);
 			}
 		}
 	}

@@ -689,10 +689,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 			return null;
 		}
 
-		final String language = bits[0].toLowerCase();
+		final String language = bits[0].toLowerCase(Locale.ROOT);
 		if (bits.length > 1)
 		{
-			final String country = bits[1].toUpperCase();
+			final String country = bits[1].toUpperCase(Locale.ROOT);
 			return new Locale(language, country);
 		}
 		else
@@ -1524,8 +1524,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		addHeader("Accept", "text/xml,application/xml,application/xhtml+xml,"
 			+ "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
 		addHeader("Accept-Charset", "ISO-8859-1,utf-8;q=0.7,*;q=0.7");
-		addHeader("Accept-Language", l.getLanguage().toLowerCase() + "-"
-			+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
+		addHeader("Accept-Language", l.getLanguage().toLowerCase(Locale.ROOT) + "-"
+			+ l.getCountry().toLowerCase(Locale.ROOT) + "," + l.getLanguage().toLowerCase(Locale.ROOT) + ";q=0.5");
 		addHeader("User-Agent",
 			"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:41.0) Gecko/20100101 Firefox/41.0");
 	}

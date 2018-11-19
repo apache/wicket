@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
@@ -103,7 +104,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	 */
 	private boolean needId(final ComponentTag tag)
 	{
-		final String name = tag.getName().toLowerCase();
+		final String name = tag.getName().toLowerCase(Locale.ROOT);
 		if (name.equals("script") && tag.getAttributes().containsKey("src") == false)
 		{
 			return true;

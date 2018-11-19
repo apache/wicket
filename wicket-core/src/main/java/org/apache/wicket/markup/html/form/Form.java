@@ -1542,7 +1542,7 @@ public class Form<T> extends WebMarkupContainer
 
 		if (isRootForm())
 		{
-			String method = getMethod().toLowerCase(Locale.ENGLISH);
+			String method = getMethod().toLowerCase(Locale.ROOT);
 			tag.put("method", method);
 			String url = getActionUrl().toString();
 			if (encodeUrlInHiddenFields())
@@ -1566,7 +1566,7 @@ public class Form<T> extends WebMarkupContainer
 				{
 					log.warn("Form with id '{}' is multipart. It should use method 'POST'!",
 						getId());
-					tag.put("method", METHOD_POST.toLowerCase(Locale.ENGLISH));
+					tag.put("method", METHOD_POST.toLowerCase(Locale.ROOT));
 				}
 
 				tag.put("enctype", ENCTYPE_MULTIPART_FORM_DATA);

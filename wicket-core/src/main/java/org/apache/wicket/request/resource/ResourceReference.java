@@ -152,7 +152,7 @@ public abstract class ResourceReference implements IClusterable
 		}
 
 		// return extension
-		return name.substring(extPos + 1).toLowerCase();
+		return name.substring(extPos + 1).toLowerCase(Locale.ROOT);
 	}
 
 	/**

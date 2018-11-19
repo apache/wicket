@@ -7,6 +7,7 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 /**
  * Default property resolver. This resolver supports common Wicket models like the
@@ -34,12 +35,12 @@ public class DefaultPropertyResolver implements IPropertyResolver
 			String methodName = getter.getName();
 			if (methodName.startsWith("get"))
 			{
-				name = methodName.substring(3, 4).toLowerCase() +
+				name = methodName.substring(3, 4).toLowerCase(Locale.ROOT) +
 					methodName.substring(4);
 			}
 			else if (methodName.startsWith("is"))
 			{
-				name = methodName.substring(2, 3).toLowerCase() +
+				name = methodName.substring(2, 3).toLowerCase(Locale.ROOT) +
 						methodName.substring(3);
 			}
 			else

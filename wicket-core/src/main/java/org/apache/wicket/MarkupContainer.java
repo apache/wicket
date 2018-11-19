@@ -25,6 +25,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Spliterators;
 import java.util.stream.Stream;
@@ -1559,8 +1560,8 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 				@Override
 				public void component(Component component, IVisit<Void> visit)
 				{
-					if (Strings.getLevenshteinDistance(id.toLowerCase(), component.getId()
-						.toLowerCase()) < 3)
+					if (Strings.getLevenshteinDistance(id.toLowerCase(Locale.ROOT), component.getId()
+						.toLowerCase(Locale.ROOT)) < 3)
 					{
 						names.add(component.getPageRelativePath());
 					}

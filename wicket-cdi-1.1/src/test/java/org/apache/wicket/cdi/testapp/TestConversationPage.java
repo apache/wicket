@@ -19,6 +19,7 @@ package org.apache.wicket.cdi.testapp;
 import javax.enterprise.context.Conversation;
 import javax.inject.Inject;
 
+import java.util.Locale;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
@@ -71,9 +72,9 @@ public class TestConversationPage extends WebPage
 			public void onClick()
 			{
 				String pageType = parameters.get("pageType").toString("nonbookmarkable");
-				if ("bookmarkable".equals(pageType.toLowerCase()))
+				if ("bookmarkable".equals(pageType.toLowerCase(Locale.ROOT)))
 					setResponsePage(TestNonConversationalPage.class);
-				else if ("hybrid".equals(pageType.toLowerCase()))
+				else if ("hybrid".equals(pageType.toLowerCase(Locale.ROOT)))
 					setResponsePage(TestConversationPage.this);
 				else
 					setResponsePage(new TestNonConversationalPage());

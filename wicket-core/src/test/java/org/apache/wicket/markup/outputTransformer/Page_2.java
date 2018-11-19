@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.markup.outputTransformer;
 
+import java.util.Locale;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -74,7 +76,7 @@ public class Page_2 extends WebPage
 			public CharSequence transform(Component component, CharSequence output)
 			{
 				// Convert all text to uppercase
-				return output.toString().toUpperCase();
+				return output.toString().toUpperCase(Locale.ROOT);
 			}
 		};
 

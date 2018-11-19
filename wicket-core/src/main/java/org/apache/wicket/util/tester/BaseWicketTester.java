@@ -2208,7 +2208,7 @@ public class BaseWicketTester
 		List<Serializable> messages = getMessages(level);
 		return isTrue(
 				String.format("expected no %s message, but contains\n%s",
-						new FeedbackMessage(null, "", level).getLevelAsString().toLowerCase(Locale.ENGLISH), WicketTesterHelper.asLined(messages)),
+						new FeedbackMessage(null, "", level).getLevelAsString().toLowerCase(Locale.ROOT), WicketTesterHelper.asLined(messages)),
 				messages.isEmpty());
 	}
 

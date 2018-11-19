@@ -139,6 +139,7 @@
 		<objenesis.version>2.6</objenesis.version>
 		<aspectj.version>1.8.10</aspectj.version>
 		<metrics.version>3.2.3</metrics.version>
+		<forbiddenapis.version>2.6</forbiddenapis.version>
 	</properties>
 
 	<dependencyManagement>
@@ -698,8 +699,25 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
+			<plugin>
+				<groupId>de.thetaphi</groupId>
+				<artifactId>forbiddenapis</artifactId>
+			</plugin>
 		</plugins>
 		<pluginManagement>
+			<plugin>
+				<groupId>de.thetaphi</groupId>
+				<artifactId>forbiddenapis</artifactId>
+				<version>${forbiddenapis.version}</version>
+				<configuration>
+					<failOnUnsupportedJava>false</failOnUnsupportedJava>
+					<signatures><![CDATA[
+						@defaultMessage Specify Locale.ROOT to ensure locale insensitive conversion
+						java.lang.String#toLowerCase() 
+						java.lang.String#toUpperCase()
+					]]></signatures>
+				</configuration>
+			</plugin>
 			<plugins>
 				<plugin>
 					<groupId>net.alchim31.maven</groupId>

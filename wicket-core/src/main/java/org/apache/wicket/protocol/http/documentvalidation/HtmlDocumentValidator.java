@@ -19,6 +19,7 @@ package org.apache.wicket.protocol.http.documentvalidation;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -187,7 +188,7 @@ public class HtmlDocumentValidator
 	 */
 	private boolean isNonClosedTag(String tag)
 	{
-		tag = workingTag.getTag().toLowerCase();
+		tag = workingTag.getTag().toLowerCase(Locale.ROOT);
 		if (tag.equals("area"))
 		{
 			return true;

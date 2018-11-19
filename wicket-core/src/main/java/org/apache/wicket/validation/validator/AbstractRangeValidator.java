@@ -17,6 +17,7 @@
 package org.apache.wicket.validation.validator;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.validation.IValidatable;
@@ -206,7 +207,7 @@ public abstract class AbstractRangeValidator<R extends Comparable<? super R> & S
 
 		public String getVariation()
 		{
-			return name().toLowerCase();
+			return name().toLowerCase(Locale.ROOT);
 		}
 	}
 

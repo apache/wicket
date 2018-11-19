@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.protocol.https;
 
+import java.util.Locale;
+
 /**
  * Url scheme
  * 
@@ -83,7 +85,7 @@ public enum Scheme {
 	 */
 	public String urlName()
 	{
-		return name().toLowerCase();
+		return name().toLowerCase(Locale.ROOT);
 	}
 
 	/**

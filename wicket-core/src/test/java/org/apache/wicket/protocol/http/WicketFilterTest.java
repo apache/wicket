@@ -309,8 +309,8 @@ public class WicketFilterTest extends Assert
 			assertEquals(HttpServletResponse.SC_OK, response.getStatus());
 			assertEquals("0", response.getHeader("Content-Length"));
 			assertFalse(Strings.isEmpty(response.getHeader("Allow")));
-			assertTrue(response.getHeader("Allow").toUpperCase().contains("GET"));
-			assertTrue(response.getHeader("Allow").toUpperCase().contains("POST"));
+			assertTrue(response.getHeader("Allow").toUpperCase(Locale.ROOT).contains("GET"));
+			assertTrue(response.getHeader("Allow").toUpperCase(Locale.ROOT).contains("POST"));
 
 			// try with a GET request to make sure we fail correctly
 

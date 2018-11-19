@@ -19,11 +19,13 @@ package org.apache.wicket.protocol.ws.util.tester;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
+import java.util.Locale;
+
 import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.ws.api.WebSocketBehavior;
+import org.apache.wicket.protocol.ws.api.WebSocketRequestHandler;
 import org.apache.wicket.protocol.ws.api.message.BinaryMessage;
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 import org.apache.wicket.protocol.ws.api.message.TextMessage;
@@ -91,7 +93,7 @@ class WebSocketBehaviorTestPage extends WebPage implements IMarkupResourceStream
 				WebSocketTesterBehaviorTest.BroadcastMessage broadcastMessage = (WebSocketTesterBehaviorTest.BroadcastMessage) message;
 				Assert.assertSame(expectedMessage, broadcastMessage);
 
-				String pushedMessage = broadcastMessage.getText().toUpperCase();
+				String pushedMessage = broadcastMessage.getText().toUpperCase(Locale.ROOT);
 
 				handler.push(pushedMessage);
 			}

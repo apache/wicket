@@ -19,6 +19,7 @@ package org.apache.wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -200,7 +201,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	 */
 	public static boolean requiresCloseTag(final String name)
 	{
-		return doesNotRequireCloseTag.get(name.toLowerCase()) == null;
+		return doesNotRequireCloseTag.get(name.toLowerCase(Locale.ROOT)) == null;
 	}
 
 	/**

@@ -18,6 +18,7 @@ package org.apache.wicket.protocol.http.request;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -140,7 +141,7 @@ public class WebClientInfo extends ClientInfo
 	 */
 	private String getUserAgentStringLc()
 	{
-		return (getUserAgent() != null) ? getUserAgent().toLowerCase() : "";
+		return (getUserAgent() != null) ? getUserAgent().toLowerCase(Locale.ROOT) : "";
 	}
 
 	/**
