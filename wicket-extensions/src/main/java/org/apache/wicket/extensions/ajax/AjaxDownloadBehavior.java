@@ -238,7 +238,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		settings.put("attributes", new JSONFunction(renderAjaxAttributes(getComponent())));
 		settings.put("name", getName());
 		settings.put("downloadUrl", url);
-		settings.put("method", getLocation().name().toLowerCase(Locale.ENGLISH));
+		settings.put("method", getLocation().name().toLowerCase(Locale.ROOT));
 
 		target.appendJavaScript(String.format("Wicket.AjaxDownload.initiate(%s);", settings));
 

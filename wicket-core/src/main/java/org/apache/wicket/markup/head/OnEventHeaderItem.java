@@ -84,7 +84,7 @@ public class OnEventHeaderItem extends HeaderItem
 		this.target = Args.notEmpty(target, "target");
 
 		Args.notEmpty(event, "event");
-		event = event.toLowerCase(Locale.ENGLISH);
+		event = event.toLowerCase(Locale.ROOT);
 		this.event = event;
 		this.javaScript = javaScript;
 	}

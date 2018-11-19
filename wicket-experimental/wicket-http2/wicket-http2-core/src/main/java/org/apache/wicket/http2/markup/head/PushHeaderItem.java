@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -419,7 +420,7 @@ public class PushHeaderItem extends HeaderItem
 	public boolean isHttp2(HttpServletRequest request)
 	{
 		// detects http/2 and http/2.0
-		return request.getProtocol().toLowerCase().contains(HTTP2_PROTOCOL);
+		return request.getProtocol().toLowerCase(Locale.ROOT).contains(HTTP2_PROTOCOL);
 	}
 
 	/**

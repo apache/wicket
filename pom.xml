@@ -138,6 +138,7 @@
 		<aspectj.version>1.9.1</aspectj.version>
 		<metrics.version>4.0.3</metrics.version>
 		<weld.version>3.0.4.Final</weld.version>
+		<forbiddenapis.version>2.6</forbiddenapis.version>
 	</properties>
 
 	<dependencyManagement>
@@ -695,9 +696,26 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<inherited>true</inherited>
 			</plugin>
+			<plugin>
+				<groupId>de.thetaphi</groupId>
+				<artifactId>forbiddenapis</artifactId>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>de.thetaphi</groupId>
+					<artifactId>forbiddenapis</artifactId>
+					<version>${forbiddenapis.version}</version>
+					<configuration>
+						<failOnUnsupportedJava>false</failOnUnsupportedJava>
+						<signatures><![CDATA[
+							@defaultMessage Specify Locale.ROOT to ensure locale insensitive conversion
+							java.lang.String#toLowerCase() 
+							java.lang.String#toUpperCase()
+						]]></signatures>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>net.alchim31.maven</groupId>
 					<artifactId>yuicompressor-maven-plugin</artifactId>

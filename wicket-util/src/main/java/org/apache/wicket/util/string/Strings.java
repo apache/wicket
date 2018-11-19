@@ -946,7 +946,7 @@ public final class Strings
 		}
 
 		// http://.../abc;jsessionid=...?param=...
-		int ixSemiColon = url.toLowerCase(Locale.ENGLISH).indexOf(SESSION_ID_PARAM);
+		int ixSemiColon = url.toLowerCase(Locale.ROOT).indexOf(SESSION_ID_PARAM);
 		if (ixSemiColon == -1)
 		{
 			return url;
@@ -1371,7 +1371,7 @@ public final class Strings
 		}
 		else
 		{
-			return str.toLowerCase().startsWith(prefix.toLowerCase());
+			return str.toLowerCase(Locale.ROOT).startsWith(prefix.toLowerCase(Locale.ROOT));
 		}
 	}
 

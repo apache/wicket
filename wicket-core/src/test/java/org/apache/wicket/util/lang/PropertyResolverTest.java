@@ -673,7 +673,7 @@ public class PropertyResolverTest extends WicketTestCase
 		}
 		catch (ConversionException e)
 		{
-			assertTrue(e.getMessage().toLowerCase().contains("name"));
+			assertTrue(e.getMessage().toLowerCase(Locale.ROOT).contains("name"));
 		}
 	}
 

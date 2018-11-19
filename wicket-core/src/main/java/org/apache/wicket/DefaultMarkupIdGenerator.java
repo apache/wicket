@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import java.util.Locale;
+
 import org.apache.wicket.util.string.Strings;
 
 /**
@@ -63,7 +65,7 @@ public class DefaultMarkupIdGenerator implements IMarkupIdGenerator
 			markupIdPrefix = component.getId();
 		}
 
-		String markupIdPostfix = Integer.toHexString(generatedMarkupId).toLowerCase();
+		String markupIdPostfix = Integer.toHexString(generatedMarkupId).toLowerCase(Locale.ROOT);
 
 		String markupId = markupIdPrefix + markupIdPostfix;
 

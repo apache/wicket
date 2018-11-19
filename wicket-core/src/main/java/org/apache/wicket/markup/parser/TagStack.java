@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -201,7 +202,7 @@ public class TagStack
 	 */
 	public static boolean requiresCloseTag(final String name)
 	{
-		return doesNotRequireCloseTag.get(name.toLowerCase()) == null;
+		return doesNotRequireCloseTag.get(name.toLowerCase(Locale.ROOT)) == null;
 	}
 
 	/**

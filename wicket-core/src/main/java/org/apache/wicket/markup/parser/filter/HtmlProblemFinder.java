@@ -17,6 +17,7 @@
 package org.apache.wicket.markup.parser.filter;
 
 import java.text.ParseException;
+import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
@@ -99,7 +100,7 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 		{
 			if (key != null)
 			{
-				key = key.toLowerCase();
+				key = key.toLowerCase(Locale.ROOT);
 				String namespaceDot = getWicketNamespace() + '.';
 				if (key.startsWith(namespaceDot))
 				{

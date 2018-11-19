@@ -419,7 +419,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			}
 			return;
 		}
-		sourceUri = sourceUri.toLowerCase();
+		sourceUri = sourceUri.toLowerCase(Locale.ROOT);
 
 		// if the origin is a know and trusted origin, don't check any further but allow the request
 		if (isWhitelistedHost(sourceUri))
@@ -539,7 +539,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 			}
 			else
 			{
-				scheme = scheme.toLowerCase(Locale.ENGLISH);
+				scheme = scheme.toLowerCase(Locale.ROOT);
 			}
 
 			target.append(scheme);
@@ -590,7 +590,7 @@ public class CsrfPreventionRequestCycleListener implements IRequestCycleListener
 		}
 		else
 		{
-			scheme = scheme.toLowerCase(Locale.ENGLISH);
+			scheme = scheme.toLowerCase(Locale.ROOT);
 		}
 		target.append(scheme);
 		target.append("://");

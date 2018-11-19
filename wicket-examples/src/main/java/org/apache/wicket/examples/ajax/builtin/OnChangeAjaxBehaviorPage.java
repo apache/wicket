@@ -47,7 +47,7 @@ public class OnChangeAjaxBehaviorPage extends BasePage
 		{
 			final String country = locale.getDisplayCountry();
 
-			if (country.toUpperCase().startsWith(input.toUpperCase()))
+			if (country.toUpperCase(Locale.ROOT).startsWith(input.toUpperCase(Locale.ROOT)))
 			{
 				buffer.append(country);
 				buffer.append(' ');
