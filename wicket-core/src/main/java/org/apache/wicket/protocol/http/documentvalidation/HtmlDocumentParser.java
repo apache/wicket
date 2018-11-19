@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.http.documentvalidation;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.util.string.Strings;
@@ -165,7 +166,7 @@ public class HtmlDocumentParser
 			String[] bits = Strings.split(attributeElement, '=');
 			if (bits.length == 1)
 			{
-				m.put(bits[0].trim().toLowerCase(), "");
+				m.put(bits[0].trim().toLowerCase(Locale.ROOT), "");
 			}
 			else
 			{
@@ -188,7 +189,7 @@ public class HtmlDocumentParser
 				{
 					bits[1] = bits[1].substring(0, bits[1].length() - 1);
 				}
-				m.put(bits[0].toLowerCase(), bits[1]);
+				m.put(bits[0].toLowerCase(Locale.ROOT), bits[1]);
 			}
 		}
 		return m;
@@ -212,7 +213,7 @@ public class HtmlDocumentParser
 		else if (part.matches("</.*>.*"))
 		{
 			// This is a closing tag
-			tag = part.substring(2, part.indexOf('>')).trim().toLowerCase();
+			tag = part.substring(2, part.indexOf('>')).trim().toLowerCase(Locale.ROOT);
 			pos += part.indexOf(">") + 1;
 			return CLOSE_TAG;
 		}
@@ -222,13 +223,13 @@ public class HtmlDocumentParser
 			if (part.matches("<([a-zA-Z]+:)?[a-zA-Z]+/>.*"))
 			{
 				// No attributes
-				tag = part.substring(1, part.indexOf("/>")).toLowerCase();
+				tag = part.substring(1, part.indexOf("/>")).toLowerCase(Locale.ROOT);
 				attributes = new HashMap<String, String>();
 			}
 			else
 			{
 				// Attributes
-				tag = part.substring(1, part.indexOf(' ')).toLowerCase();
+				tag = part.substring(1, part.indexOf(' ')).toLowerCase(Locale.ROOT);
 				String attributeString = part.substring(part.indexOf(' '), part.indexOf("/>"));
 				attributes = extractAttributes(attributeString);
 			}
@@ -241,13 +242,13 @@ public class HtmlDocumentParser
 			if (part.matches("<([a-zA-Z]+:)?[a-zA-Z0-9]*>.*"))
 			{
 				// No attributes
-				tag = part.substring(1, part.indexOf('>')).toLowerCase();
+				tag = part.substring(1, part.indexOf('>')).toLowerCase(Locale.ROOT);
 				attributes = new HashMap<String, String>();
 			}
 			else
 			{
 				// Attributes
-				tag = part.substring(1, part.indexOf(' ')).toLowerCase();
+				tag = part.substring(1, part.indexOf(' ')).toLowerCase(Locale.ROOT);
 				String attributeString = part.substring(part.indexOf(' '), part.indexOf('>'));
 				attributes = extractAttributes(attributeString);
 			}

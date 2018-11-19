@@ -505,7 +505,7 @@ public final class Time extends AbstractTime
 			{
 				dateFormat.setCalendar(calendar);
 
-				return dateFormat.format(new Date(getMilliseconds())).toLowerCase();
+				return dateFormat.format(new Date(getMilliseconds())).toLowerCase(Locale.ROOT);
 			}
 		}
 	}

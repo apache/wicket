@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.text.ParseException;
+import java.util.Locale;
 
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.parser.XmlTag.TextSegment;
@@ -256,7 +257,7 @@ public final class XmlPullParser implements IXmlPullParser
 			if ((tagText.length() > STYLE.length()) &&
 				((tagText.charAt(0) == 's') || (tagText.charAt(0) == 'S')))
 			{
-				final String lowerCase = tagText.toLowerCase();
+				final String lowerCase = tagText.toLowerCase(Locale.ROOT);
 				if (lowerCase.startsWith(SCRIPT))
 				{
 					String typeAttr = "type=";
@@ -400,7 +401,7 @@ public final class XmlPullParser implements IXmlPullParser
 		if (tagText.startsWith("!["))
 		{
 			final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
-			if (startText.toUpperCase().equals("![CDATA["))
+			if (startText.toUpperCase(Locale.ROOT).equals("![CDATA["))
 			{
 				int pos1 = openBracketIndex;
 				do

@@ -18,6 +18,7 @@ package org.apache.wicket.markup.parser;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.markup.ComponentTag;
@@ -199,7 +200,7 @@ public class TagStack
 	 */
 	public static boolean requiresCloseTag(final String name)
 	{
-		return doesNotRequireCloseTag.get(name.toLowerCase()) == null;
+		return doesNotRequireCloseTag.get(name.toLowerCase(Locale.ROOT)) == null;
 	}
 
 	/**

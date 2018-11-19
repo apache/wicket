@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.util.tester;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
@@ -130,7 +131,7 @@ public class WebSocketTesterBehaviorTest extends Assert
 			@Override
 			protected void onOutMessage(String message)
 			{
-				assertEquals(expectedMessage.toUpperCase(), message);
+				assertEquals(expectedMessage.toUpperCase(Locale.ROOT), message);
 				messageReceived.set(true);
 			}
 		};

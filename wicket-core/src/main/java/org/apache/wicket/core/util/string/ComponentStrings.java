@@ -16,6 +16,8 @@
  */
 package org.apache.wicket.core.util.string;
 
+import java.util.Locale;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 
@@ -60,7 +62,7 @@ public class ComponentStrings
 		// create a user friendly message, using the location's message as a
 		// differentiator for the message (e.g. "component foo was ***added***"
 		// or "component foo was ***created***")
-		AppendingStringBuffer sb = new AppendingStringBuffer("The " + componentType.toLowerCase() +
+		AppendingStringBuffer sb = new AppendingStringBuffer("The " + componentType.toLowerCase(Locale.ROOT) +
 			" with id '" + component.getId() + "' that failed to render was " +
 			location.getMessage() + "\n");
 

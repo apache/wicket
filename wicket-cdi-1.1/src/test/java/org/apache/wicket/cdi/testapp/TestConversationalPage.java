@@ -18,6 +18,7 @@ package org.apache.wicket.cdi.testapp;
 
 import javax.inject.Inject;
 
+import java.util.Locale;
 import org.apache.wicket.cdi.ConversationalComponent;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -68,7 +69,7 @@ public class TestConversationalPage extends WebPage implements ConversationalCom
 			public void onClick()
 			{
 				String pageType = pp.get("pageType").toString("nonbookmarkable");
-				if ("bookmarkable".equals(pageType.toLowerCase()))
+				if ("bookmarkable".equals(pageType.toLowerCase(Locale.ROOT)))
 					setResponsePage(TestNonConversationalPage.class);
 				else
 					setResponsePage(new TestNonConversationalPage());

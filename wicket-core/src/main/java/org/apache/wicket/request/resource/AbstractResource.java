@@ -19,6 +19,7 @@ package org.apache.wicket.request.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -691,7 +692,7 @@ public abstract class AbstractResource implements IResource
 	 */
 	private void checkHeaderAccess(String name)
 	{
-		name = Args.notEmpty(name.trim().toLowerCase(), "name");
+		name = Args.notEmpty(name.trim().toLowerCase(Locale.ROOT), "name");
 
 		if (INTERNAL_HEADERS.contains(name))
 		{

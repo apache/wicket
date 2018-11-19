@@ -94,7 +94,7 @@ public class AutoCompletePage extends BasePage
 				{
 					final String country = locale.getDisplayCountry();
 
-					if (country.toUpperCase().startsWith(input.toUpperCase()))
+					if (country.toUpperCase(Locale.ROOT).startsWith(input.toUpperCase(Locale.ROOT)))
 					{
 						choices.add(country);
 						if (choices.size() == 10)

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ public class Tag implements DocumentElement
 	 */
 	public Tag(final String tag)
 	{
-		this.tag = tag.toLowerCase();
+		this.tag = tag.toLowerCase(Locale.ROOT);
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class Tag implements DocumentElement
 	 */
 	public void addExpectedAttribute(final String name, final String pattern)
 	{
-		expectedAttributes.put(name.toLowerCase(), pattern);
+		expectedAttributes.put(name.toLowerCase(Locale.ROOT), pattern);
 	}
 
 	/**
@@ -85,7 +86,7 @@ public class Tag implements DocumentElement
 	 */
 	public void addIllegalAttribute(final String name)
 	{
-		illegalAttributes.add(name.toLowerCase());
+		illegalAttributes.add(name.toLowerCase(Locale.ROOT));
 	}
 
 	/**

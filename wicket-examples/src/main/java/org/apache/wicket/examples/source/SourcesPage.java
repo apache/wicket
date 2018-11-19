@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Locale;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -215,7 +216,7 @@ public class SourcesPage extends WebPage
 							String jarZipPart = uri.getSchemeSpecificPart();
 							// lowercased for testing if jar/zip, but leave the
 							// real filespec unchanged
-							String lowerJarZipPart = jarZipPart.toLowerCase();
+							String lowerJarZipPart = jarZipPart.toLowerCase(Locale.ROOT);
 							int index = lowerJarZipPart.indexOf(".zip");
 							if (index == -1)
 								index = lowerJarZipPart.indexOf(".jar");

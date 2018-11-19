@@ -19,6 +19,7 @@ package org.apache.wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupElement;
@@ -130,6 +131,6 @@ public class OpenCloseTagExpander extends AbstractMarkupFilter
 	 */
 	protected boolean contains(final String name)
 	{
-		return REPLACE_FOR_TAGS.contains(name.toLowerCase());
+		return REPLACE_FOR_TAGS.contains(name.toLowerCase(Locale.ROOT));
 	}
 }
