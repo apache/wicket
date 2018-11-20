@@ -682,7 +682,6 @@
 			<plugin>
 				<groupId>de.thetaphi</groupId>
 				<artifactId>forbiddenapis</artifactId>
-				<version>${forbiddenapis.version}</version>
 				<configuration>
 					<failOnUnsupportedJava>false</failOnUnsupportedJava>
 					<signatures><![CDATA[
@@ -1073,6 +1072,11 @@
 						<scanIntervalSeconds>60</scanIntervalSeconds>
 						<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>de.thetaphi</groupId>
+					<artifactId>forbiddenapis</artifactId>
+					<version>${forbiddenapis.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
