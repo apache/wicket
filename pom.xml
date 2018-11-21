@@ -687,6 +687,19 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>de.thetaphi</groupId>
+					<artifactId>forbiddenapis</artifactId>
+					<version>${forbiddenapis.version}</version>
+					<configuration>
+						<failOnUnsupportedJava>false</failOnUnsupportedJava>
+						<signatures><![CDATA[
+							@defaultMessage Specify Locale.ROOT to ensure locale insensitive conversion
+							java.lang.String#toLowerCase() 
+							java.lang.String#toUpperCase()
+						]]></signatures>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>net.alchim31.maven</groupId>
 					<artifactId>yuicompressor-maven-plugin</artifactId>
 					<version>1.5.1</version>
@@ -1063,19 +1076,6 @@
 					<configuration>
 						<scanIntervalSeconds>60</scanIntervalSeconds>
 						<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>de.thetaphi</groupId>
-					<artifactId>forbiddenapis</artifactId>
-					<version>${forbiddenapis.version}</version>
-					<configuration>
-						<failOnUnsupportedJava>false</failOnUnsupportedJava>
-						<signatures><![CDATA[
-							@defaultMessage Specify Locale.ROOT to ensure locale insensitive conversion
-							java.lang.String#toLowerCase() 
-							java.lang.String#toUpperCase()
-						]]></signatures>
 					</configuration>
 				</plugin>
 			</plugins>
