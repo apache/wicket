@@ -15,38 +15,38 @@ The following is the resulting markup of the example page:
 ----
 ...
 <body>
-	List of persons <select wicket:id="persons"></select> <br/>
-	<br/>
-	<form wicket:id="form">		
-		<div style="display: table;">
-			<div style="display: table-row;">
-				<div style="display: table-cell;">Name: </div>
-				<div style="display: table-cell;">
-					<input type="text" wicket:id="name"/> 
-				</div>	
-			</div>
-			<div style="display: table-row;">
-				<div style="display: table-cell;">Surname: </div>
-				<div style="display: table-cell;">
-									<input type="text" wicket:id="surname"/>
-								</div>	
-							</div>
-							<div style="display: table-row;">
-								<div style="display: table-cell;">Address: </div>
-								<div style="display: table-cell;">
-									<input type="text" wicket:id="address"/>
-								</div>	
-							</div>
-							<div style="display: table-row;">
-								<div style="display: table-cell;">Email: </div>
-								<div style="display: table-cell;">
-									<input type="text" wicket:id="email"/>
-								</div>
-							</div>
-						</div>	
-						<input type="submit" value="Save"/>
-					</form>
-				</body>				
+  List of persons <select wicket:id="persons"></select> <br/>
+  <br/>
+  <form wicket:id="form">
+    <div style="display: table;">
+      <div style="display: table-row;">
+        <div style="display: table-cell;">Name: </div>
+        <div style="display: table-cell;">
+          <input type="text" wicket:id="name"/>
+        </div>
+      </div>
+      <div style="display: table-row;">
+        <div style="display: table-cell;">Surname: </div>
+        <div style="display: table-cell;">
+          <input type="text" wicket:id="surname"/>
+        </div>
+      </div>
+        <div style="display: table-row;">
+        <div style="display: table-cell;">Address: </div>
+        <div style="display: table-cell;">
+          <input type="text" wicket:id="address"/>
+        </div>
+      </div>
+      <div style="display: table-row;">
+        <div style="display: table-cell;">Email: </div>
+        <div style="display: table-cell;">
+          <input type="text" wicket:id="email"/>
+        </div>
+      </div>
+    </div>
+    <input type="submit" value="Save"/>
+  </form>
+</body>
 ----
 
 The initialization code for DropDownChoice is the following:
