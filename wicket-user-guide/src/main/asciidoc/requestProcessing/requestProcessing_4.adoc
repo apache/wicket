@@ -36,7 +36,7 @@ The Session class handles session attributes in much the same way as the standar
 
 By default class WebSession will use the underlying HTTP session to store attributes. Wicket will automatically add a prefix to the name of the attributes. This prefix is returned by the WebApplication's method getSessionAttributePrefix().
 
-=== Accessing to the HTTP session
+=== Accessing the HTTP session
 
 If for any reason we need to directly access to the underlying _HttpSession_ object, we can retrieve it from the current request with the following code:
 

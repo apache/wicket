@@ -6,7 +6,7 @@ Like many people new to Wicket, you may need a little time to fully understand t
 [source,java]
 ----
 /**
- * 
+ *
  * NOT TO DO: passing raw objects to components instead of using models!
  *
  */
@@ -21,4 +21,4 @@ public class CustomComponent extends Component{
 }
 ----
 
-That's a bad practice and you must avoid it. By using models we do not only decouple our components from the data source, but we can also relay on them (if they are dynamic) to work with the most up-to-date version of our model object. If we decide to bypass models we lose all these advantages and we force model objects to be serialized.
+That's a bad practice and you must avoid it. By using models we do not only decouple our components from the data source, but we can also rely on them (if they are dynamic) to work with the most up-to-date version of our model object. If we decide to bypass models we lose all these advantages and we force model objects to be serialized.
