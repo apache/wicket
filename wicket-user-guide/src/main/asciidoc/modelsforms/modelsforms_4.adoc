@@ -26,7 +26,7 @@ Form<Void> form = new Form<Void>("form"){
 add(form);
 ----
 
-Method onSubmit is called whenever a form has been submitted and it can be overridden to perform custom actions. Please note that a Wicket form can be submitted using a standard HTML submit button which is not mapped to any component (i.e. it does not have a wicket:id attribute). 
+Method onSubmit is called whenever a form has been submitted and it can be overridden to perform custom actions. Please note that a Wicket form can be submitted using a standard HTML submit button which is not mapped to any component (i.e. it does not have a wicket:id attribute).
 In the next chapter we will continue to explore Wicket forms and we will see how to submit forms using special components which implement interface _org.apache.wicket.markup.html.form.IFormSubmitter_.
 
 === Form and models
@@ -51,18 +51,18 @@ The following is a possible implementation of our form:
 [source,java]
 ----
 public class LoginForm extends Form {
-	
+
 	private TextField usernameField;
 	private PasswordTextField passwordField;
 	private Label loginStatus;
-		
+
 	public LoginForm(String id) {
 		super(id);
-			
+
 		usernameField = new TextField("username", Model.of(""));
-		passwordField = new PasswordTextField("password", Model.of(""));			
+		passwordField = new PasswordTextField("password", Model.of(""));
 		loginStatus = new Label("loginStatus", Model.of(""));
-			
+
 		add(usernameField);
 		add(passwordField);
 		add(loginStatus);
@@ -75,7 +75,7 @@ public class LoginForm extends Form {
 		if(username.equals("test") && password.equals("test"))
 			loginStatus.setDefaultModelObject("Congratulations!");
 		else
-			loginStatus.setDefaultModelObject("Wrong username or password!");			
+			loginStatus.setDefaultModelObject("Wrong username or password!");
 	}
 }
 ----
@@ -85,7 +85,7 @@ Inside form's constructor we build the three components used in the form and we 
 [source,java]
 ----
 usernameField = new TextField("username", Model.of(""));
-passwordField = new PasswordTextField("password", Model.of(""));			
+passwordField = new PasswordTextField("password", Model.of(""));
 loginStatus = new Label("loginStatus", Model.of(""));
 ----
 
@@ -93,10 +93,10 @@ If we don't provide a model to a form component, we will get the following excep
 
 [source,java]
 ----
-java.lang.IllegalStateException: Attempt to set model object on null model of component: 
+java.lang.IllegalStateException: Attempt to set model object on null model of component:
 ----
 
-Component TextField corresponds to the standard text field, without any particular behavior or restriction on the allowed values. We must bind this component to the <input> tag with the attribute type set to "text" PasswordTextField is a subtype of TextFiled and it must be used with an <input> tag with the attribute type set to "password". For security reasons component PasswordTextField cleans its value at each request, so it will be always empty after the form has been rendered. By default PasswordTextField fields are required, meaning that if we left them empty, the form won't be submitted (i.e. _onSubmit_ won't be called). Class FormComponent provides method _setRequired(boolean required)_ to change this behavior. Inside _onSubmit_, to get/set model objects we have used shortcut methods _setDefaultModelObject_ and _getDefaultModelObject_. Both methods are defined in class Component (see class diagram from Illustration 9.1).
+Component TextField corresponds to the standard text field, without any particular behavior or restriction on the allowed values. We must bind this component to the <input> tag with the attribute type set to "text" PasswordTextField is a subtype of TextFiled and it must be used with an <input> tag with the attribute type set to "password". For security reasons component PasswordTextField cleans its value at each request, so it will be always empty after the form has been rendered. By default PasswordTextField fields are required, meaning that if we left them empty, the form won't be submitted (i.e. _onSubmit_ won't be called). Class FormComponent provides method _setRequired(boolean required)_ to change this behavior. Inside _onSubmit_, to get/set model objects we have used shortcut methods _setDefaultModelObject_ and _getDefaultModelObject_. Both methods are defined in class Component (see class diagram from illustration 9.1).
 
 The following are the possible markup and code for the login page:
 
@@ -129,9 +129,9 @@ Java code:
 [source,java]
 ----
 public class HomePage extends WebPage {
- 
+
    public HomePage(final PageParameters parameters) {
-		
+
 		super(parameters);
     	add(new LoginForm("loginForm"));
 
@@ -144,25 +144,25 @@ The example shows how Wicket form components can be used to store user input ins
 [source,java]
 ----
 public class LoginForm extends Form{
-		
+
 		private String username;
 		private String password;
 		private String loginStatus;
-		
+
 		public LoginForm(String id) {
-			super(id);			
+			super(id);
 			setDefaultModel(new CompoundPropertyModel(this));
-			
+
 			add(new TextField("username"));
 			add(new PasswordTextField("password"));
 			add(new Label("loginStatus"));
 		}
 
-		public final void onSubmit() {			
+		public final void onSubmit() {
 			if(username.equals("test") && password.equals("test"))
 				loginStatus = "Congratulations!";
 			else
-				loginStatus = "Wrong username or password !";			
+				loginStatus = "Wrong username or password !";
 		}
 	}
 ----
@@ -189,4 +189,3 @@ add(spouseContainer);
 ----
 
 The value displayed by label "name" will be "John" and not the spouse's name "Jill" as you may expect. In this example the label doesn't own a model, so it must search up its container hierarchy for an inheritable model. However, its container (WebMarkup Container with id 'spouse') doesn't own a model, hence the request for a model is forwarded to the parent container, which in this case is the page. In the end the label inherits CompoundPropertyModel from page but only its own id is used for the property expression. The containers in between are never taken into account for the final property expression.
-

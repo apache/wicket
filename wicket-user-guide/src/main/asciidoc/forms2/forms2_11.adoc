@@ -10,13 +10,13 @@ A check box can be used as single component to set a boolean property. For this 
 [source,java]
 ----
 public class RegistrationInfo implements Serializable {
-	
+
 	private String name;
 	private String surname;
 	private String address;
 	private String email;
 	private boolean subscribeList;
-	
+
 	/*Getters and setters*/
 }
 ----
@@ -27,25 +27,25 @@ The markup and the code for this example are the following:
 
 [source,html]
 ----
-<form wicket:id="form">		
+<form wicket:id="form">
 		<div style="display: table;">
 			<div style="display: table-row;">
 				<div style="display: table-cell;">Name: </div>
 				<div style="display: table-cell;">
-					<input type="text" wicket:id="name"/> 
-				</div>	
+					<input type="text" wicket:id="name"/>
+				</div>
 			</div>
 			<div style="display: table-row;">
 				<div style="display: table-cell;">Surname: </div>
 				<div style="display: table-cell;">
 					<input type="text" wicket:id="surname"/>
-				</div>	
+				</div>
 			</div>
 			<div style="display: table-row;">
 				<div style="display: table-cell;">Address: </div>
 				<div style="display: table-cell;">
 					<input type="text" wicket:id="address"/>
-				</div>	
+				</div>
 			</div>
 			<div style="display: table-row;">
 				<div style="display: table-cell;">Email: </div>
@@ -59,7 +59,7 @@ The markup and the code for this example are the following:
 					<input type="checkbox" wicket:id="subscribeList"/>
 				</div>
 			</div>
-		</div>	
+		</div>
 	<input type="submit" value="Save"/>
 </form>
 ----
@@ -71,16 +71,16 @@ The markup and the code for this example are the following:
 public HomePage(final PageParameters parameters) {
     RegistrationInfo registrtionInfo = new RegistrationInfo();
     registrtionInfo.setSubscribeList(true);
-    	
-    Form<Void> form = new Form<>("form", 
-    			new CompoundPropertyModel<RegistrationInfo>(registrtionInfo));		
-		
+
+    Form<Void> form = new Form<>("form",
+    			new CompoundPropertyModel<RegistrationInfo>(registrtionInfo));
+
     form.add(new TextField("name"));
 	form.add(new TextField("surname"));
 	form.add(new TextField("address"));
 	form.add(new TextField("email"));
 	form.add(new CheckBox("subscribeList"));
-		
+
 	add(form);
 }
 ----
@@ -91,7 +91,7 @@ image::../img/subscribe-checkbox-set.png[]
 
 === Working with grouped checkboxes
 
-When we need to display a given number of options with checkboxes, we can use the _org.apache.wicket.markup.html.form.CheckBoxMultipleChoice_ component. For example, If our options are a list of strings, we can display them in this way:
+When we need to display a given number of options with checkboxes, we can use the _org.apache.wicket.markup.html.form.CheckBoxMultipleChoice_ component. For example, if our options are a list of strings, we can display them in this way:
 
 *HTML:*
 
@@ -106,8 +106,8 @@ When we need to display a given number of options with checkboxes, we can use th
 
 [source,java]
 ----
-List<String> fruits = Arrays.asList("apple", "strawberry", "watermelon"); 
-form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new  
+List<String> fruits = Arrays.asList("apple", "strawberry", "watermelon");
+form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new
 								 ArrayList<String>()), fruits));
 ----
 
@@ -137,9 +137,9 @@ When our options are more complex objects than simple strings, we can render the
 Person john = new Person("John", "Smith");
 Person bob = new Person("Bob", "Smith");
 Person jill = new Person("Jill", "Smith");
-List<Person> theSmiths = Arrays.asList(john, bob, jill); 
+List<Person> theSmiths = Arrays.asList(john, bob, jill);
 ChoiceRenderer render = new ChoiceRenderer("name");
-form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new ArrayList<String>()),   
+form.add(new CheckBoxMultipleChoice("checkGroup", new ListModel<String>(new ArrayList<String>()),
                                     theSmiths, render));
 ----
 
@@ -187,7 +187,7 @@ For groups of radio buttons we can use the _org.apache.wicket.markup.html.form.R
 
 [source,java]
 ----
-List<String> fruits = Arrays.asList("apple", "strawberry", "watermelon"); 
+List<String> fruits = Arrays.asList("apple", "strawberry", "watermelon");
 form.add(new RadioChoice("radioGroup", Model.of(""), fruits));
 ----
 
@@ -196,4 +196,3 @@ form.add(new RadioChoice("radioGroup", Model.of(""), fruits));
 image::../img/grouped-radiobutton.png[]
 
 Just like CheckBoxMultipleChoice, this component provides the setPrefix and setSuffix methods to configure the prefix and suffix for our options and it supports IChoiceRender as well.
-

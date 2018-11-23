@@ -5,17 +5,17 @@ One of the main goals of Wicket is to use JavaBeans and POJO as data model, over
 
 [source,java]
 ----
-public class Person implements Serializable {	
-	
+public class Person implements Serializable {
+
 	private String name;
 	private String surname;
 	private String address;
 	private String email;
 	private String passportCode;
-	
+
 	private Person spouse;
 	private List<Person> children;
-       
+
 	public Person(String name, String surname) {
 		this.name = name;
 		this.surname = surname;
@@ -23,9 +23,9 @@ public class Person implements Serializable {
 
 	public String getFullName(){
    		return name + " " + surname;
-	} 
+	}
 
-	/* 	 
+	/*
 	 * Getters and setters for private fields
      */
 }
@@ -37,9 +37,9 @@ Let's say we want to display the name field of a Person instance with a label. W
 
 [source,java]
 ----
-Person person = new Person();		
+Person person = new Person();
 //load person's data...
-		
+
 Label label = new Label("name", new Model(person.getName()));
 ----
 
@@ -47,9 +47,9 @@ However this solution has a huge drawback: the text displayed by the label will 
 
 [source,java]
 ----
-Person person = new Person();		
+Person person = new Person();
 //load person's data...
-		
+
 Label label = new Label("name", new PropertyModel(person, "name"));
 ----
 
@@ -71,7 +71,7 @@ If property is an array or a List, we can specify an index after its name. For e
 Label label = new Label("firstChildName", new PropertyModel(person, "children.0.name"));
 ----
 
-Indexes and map keys can be also specified using squared brackets: 
+Indexes and map keys can be also specified using squared brackets:
 
 [source,java]
 ----
@@ -81,7 +81,7 @@ mapField[key].subfield ...
 
 === LambdaModel
 
-_PropertyModel_ uses textual expressions to resolve object properties. That's nice but it comes with some drawbacks. For example the expression can not be checked at compile time and is not refactory-friendly. To overcome these problems with Wicket 8 a new kind of lambda-based model has been introduced: _org.apache.wicket.model.LambdaModel_. This model uses lambda expressions to get/set model object. Here is the signature of its constructor:
+_PropertyModel_ uses textual expressions to resolve object properties. That's nice but it comes with some drawbacks. For example the expression can not be checked at compile time and is not refactoring-friendly. To overcome these problems with Wicket 8 a new kind of lambda-based model has been introduced: _org.apache.wicket.model.LambdaModel_. This model uses lambda expressions to get/set model object. Here is the signature of its constructor:
 
 [source,java]
 ----
@@ -116,7 +116,7 @@ For example if we use CompoundPropertyModel with the previous example (display s
 //set CompoundPropertyModel as model for the container of the label
 setDefaultModel(new CompoundPropertyModel(person));
 
-Label label = new Label("spouse.name");	
+Label label = new Label("spouse.name");
 
 add(label);
 ----
@@ -148,7 +148,6 @@ setDefaultModel(compoundModel = new CompoundPropertyModel(person));
 add(new Label("xyz", compoundModel.bind("spouse.name")));
 ----
 
-CompoundPropertyModel are particularly useful when used in combination with Wicket forms, as we will see in the next paragraph.
+CompoundPropertyModel is particularly useful when used in combination with Wicket forms, as we will see in the next paragraph.
 
 NOTE: Model is referred to as static model because the result of its method getObject is fixed and it is not dynamically evaluated each time the method is called. In contrast, models like PropertyModel and CompoundProperty Model are called dynamic models.
-
