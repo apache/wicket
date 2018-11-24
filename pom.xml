@@ -135,7 +135,7 @@
 		<spring.version>4.1.7.RELEASE</spring.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
 		<maven.javadoc.version>2.10.4</maven.javadoc.version>
-		<maven.surefire.version>2.19.1</maven.surefire.version>
+		<maven.surefire.version>3.0.0-M1</maven.surefire.version>
 		<mockito.version>1.10.19</mockito.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<hamcrest.version>2.0.0.0</hamcrest.version>
@@ -856,6 +856,7 @@
 						<links>
 							<link>http://docs.oracle.com/javase/7/docs/api/</link>
 						</links>
+						<additionalparam>--allow-script-in-comments</additionalparam>
 					</configuration>
 					<executions>
 						<execution>
@@ -930,6 +931,7 @@
 						<includes>
 							<include>**/*Test.java</include>
 						</includes>
+						<useSystemClassLoader>false</useSystemClassLoader>
 					</configuration>
 					<dependencies>
 						<dependency>
