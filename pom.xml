@@ -1224,10 +1224,7 @@
 			</build>
 		</profile>
 		<profile>
-			<id>doclint-java8-disable</id>
-			<activation>
-				<jdk>1.8</jdk>
-			</activation>
+			<id>java8</id>
 			<build>
 				<pluginManagement>
 					<plugins>
