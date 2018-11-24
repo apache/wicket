@@ -856,7 +856,6 @@
 						<links>
 							<link>http://docs.oracle.com/javase/7/docs/api/</link>
 						</links>
-						<additionalparam>--allow-script-in-comments</additionalparam>
 					</configuration>
 					<executions>
 						<execution>
@@ -1222,6 +1221,25 @@
 						</configuration>
 					</plugin>
 				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>doclint-java8-disable</id>
+			<activation>
+				<jdk>1.8</jdk>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<configuration>
+								<additionalparam>--allow-script-in-comments</additionalparam>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
 			</build>
 		</profile>
 	</profiles>
