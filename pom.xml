@@ -714,7 +714,7 @@
 						<failOnUnsupportedJava>false</failOnUnsupportedJava>
 						<signatures><![CDATA[
 							@defaultMessage Specify Locale.ROOT to ensure locale insensitive conversion
-							java.lang.String#toLowerCase() 
+							java.lang.String#toLowerCase()
 							java.lang.String#toUpperCase()
 						]]></signatures>
 					</configuration>
@@ -1206,7 +1206,6 @@
 				</plugins>
 			</build>
 		</profile>
-		
 		<profile>
 			<id>coverage</id>
 			<build>
@@ -1215,7 +1214,6 @@
 						<groupId>org.jacoco</groupId>
 						<artifactId>jacoco-maven-plugin</artifactId>
 						<version>${jacoco.version}</version>
-						
 						<executions>
 							<execution>
 								<id>jacoco-initialize</id>
