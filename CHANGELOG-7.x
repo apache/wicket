@@ -2,6 +2,33 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.11.0
+
+** Bug
+
+    * [WICKET-6473] - Double slash break 404page
+    * [WICKET-6533] - Error while parsing xml using AjaxButton
+    * [WICKET-6546] - CssContentHeaderItem comments CSS code with HTML comments
+    * [WICKET-6551] - LazyInitProxyFactory doesn't work correctly at Weblogic
+    * [WICKET-6553] - SelectOptions doesn't html-encode option values
+    * [WICKET-6564] - PageStoreManager#clear() does not completely clear
+    * [WICKET-6568] - Wicket fails / does not encode request header values in AjaxCalls
+    * [WICKET-6586] - Broken JavaScript due to fix charsetName in JavaScriptPackageResource
+    * [WICKET-6589] - ClientInfo fails with NumberFormatException for unusual browser versions
+    * [WICKET-6604] - Ajax repaint is not correctly handled when component being repainted has an enclosure associated with it and is not a child of the enclosure
+    * [WICKET-6614] - AbstractRangeValidator looks up string with the wrong key if locale is Turkish
+
+** Improvement
+
+    * [WICKET-6527] - no possibility to override fixed html appended directly to response by FilterForm
+    * [WICKET-6605] - Allow AjaxFallbackButton to be stateless 
+
+** Task
+
+    * [WICKET-6594] - JavaDoc of redirectToInterceptPage in Component urges to use redirectTo method when in a constructor
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.10.0
 
 ** Bug
