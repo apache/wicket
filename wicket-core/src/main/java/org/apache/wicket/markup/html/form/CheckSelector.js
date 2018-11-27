@@ -145,7 +145,9 @@
 	
 				for (var i = 0; i < checkBoxIDs.length; i++) {
 					var checkBox = document.getElementById(checkBoxIDs[i]);
-					result.push(checkBox);
+					if (checkBox) {
+						result.push(checkBox);
+					}
 				}
 				return result;
 			};
