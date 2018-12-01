@@ -168,7 +168,7 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 
 		StatelessPage page = (StatelessPage)tester.getLastRenderedPage();
 		assertThat(page.invoked, is(true));
-		assertThat(page.executedInAnFreshPage, is(true));
+		assertThat(page.executedRendered, is(true));
 	}
 
 	@Test
@@ -181,14 +181,14 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 
 		TemporarilyStateful page = (TemporarilyStateful)tester.getLastRenderedPage();
 		assertThat(page.invoked, is(true));
-		assertThat(page.executedInAnFreshPage, is(true));
+		assertThat(page.executedRendered, is(true));
 	}
 
 	public static class StatelessPage extends WebPage
 	{
 		public boolean invoked;
-		public boolean executedInAnFreshPage;
-		private boolean initialState = true;
+		public boolean executedRendered;
+		private boolean rendered = false;
 
 		public StatelessPage(PageParameters pageParameters)
 		{
@@ -198,7 +198,7 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 				public void onClick()
 				{
 					invoked = true;
-					executedInAnFreshPage = initialState;
+					executedRendered = rendered;
 				}
 			});
 		}
@@ -213,7 +213,7 @@ public class ListenerRequestHandlerTest extends WicketTestCase
 		@Override
 		protected void onBeforeRender()
 		{
-			initialState = false;
+			rendered = true;
 			super.onBeforeRender();
 		}
 	}
