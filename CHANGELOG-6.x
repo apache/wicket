@@ -2,6 +2,15 @@ This file contains all changes done in releases for Apache Wicket 6.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 6.30.0
+
+** Bug
+
+    * [WICKET-6551] - LazyInitProxyFactory doesn't work correctly at Weblogic
+    * [WICKET-6553] - SelectOptions doesn't html-encode option values
+
+=======================================================================
+
 Release Notes - Wicket - Version 6.29.0
 
 ** Bug
