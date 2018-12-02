@@ -206,6 +206,11 @@ public class ListenerRequestHandler
 		}
 
 		invokeListener(requestCycle, policy, isAjax);
+		
+		if (isAjax && page.isPageStateless())
+		{			
+			pageComponentProvider.detach();
+		}
 	}
 
 	private void invokeListener(IRequestCycle requestCycle, RedirectPolicy policy, boolean ajax)
