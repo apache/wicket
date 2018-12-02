@@ -66,7 +66,7 @@ import org.apache.wicket.response.StringResponse;
  * <li>&lt;wicket:head&gt; and it's content is copied to the output. Components contained in
  * &lt;wicket:head&gt; are rendered as usual</li>
  * </ul>
- * 
+ *
  * @author Juergen Donnerstag
  */
 public class HtmlHeaderContainer extends TransparentWebMarkupContainer
@@ -89,7 +89,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	/**
 	 * Combines the {@link MarkupStream} with the open tag, together representing the header section
 	 * in the markup.
-	 * 
+	 *
 	 * @author papegaaij
 	 */
 	public static class HeaderStreamState
@@ -122,7 +122,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 
 	/**
 	 * Construct
-	 * 
+	 *
 	 * @see Component#Component(String)
 	 */
 	public HtmlHeaderContainer(final String id)
@@ -161,19 +161,19 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 			final StringResponse response = new StringResponse();
 			getRequestCycle().setResponse(response);
 
-			IHeaderResponse headerResponse = getHeaderResponse();
-			if (!response.equals(headerResponse.getResponse()))
-			{
-				getRequestCycle().setResponse(headerResponse.getResponse());
-			}
+			try (IHeaderResponse headerResponse = getHeaderResponse()) {
+				if (!response.equals(headerResponse.getResponse()))
+				{
+					getRequestCycle().setResponse(headerResponse.getResponse());
+				}
 
-			// Render the header sections of all components on the page
-			AbstractHeaderRenderStrategy.get().renderHeader(this,
-				new HeaderStreamState(markupStream, openTag), getPage());
+				// Render the header sections of all components on the page
+				AbstractHeaderRenderStrategy.get().renderHeader(this,
+					new HeaderStreamState(markupStream, openTag), getPage());
 
-			// Close the header response before rendering the header container itself
-			// See https://issues.apache.org/jira/browse/WICKET-3728
-			headerResponse.close();
+				// Close the header response before rendering the header container itself
+				// See https://issues.apache.org/jira/browse/WICKET-3728
+			};
 
 			// Cleanup extraneous CR and LF from the response
 			CharSequence output = getCleanResponse(response);
@@ -205,7 +205,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	 * Renders the content of the &lt;head&gt; section of the page, including &lt;wicket:head&gt;
 	 * sections in subclasses of the page. For every child-component, the content is rendered to a
 	 * string and passed to {@link IHeaderResponse}.
-	 * 
+	 *
 	 * @param headerStreamState
 	 */
 	public void renderHeaderTagBody(HeaderStreamState headerStreamState)
@@ -236,11 +236,11 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	}
 
 	/**
-	 * 
+	 *
 	 * @param response
 	 * @return Cleaned up response
 	 */
-	private CharSequence getCleanResponse(final StringResponse response)
+	private static CharSequence getCleanResponse(final StringResponse response)
 	{
 		CharSequence output = response.getBuffer();
 		if (output.length() > 0)
@@ -274,7 +274,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	}
 
 	/**
-	 * 
+	 *
 	 * @return True if open and close tag are to be rendered.
 	 */
 	protected boolean renderOpenAndCloseTags()
@@ -284,7 +284,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 
 	/**
 	 * Check if the header component is ok to render within the scope given.
-	 * 
+	 *
 	 * @param scope
 	 *            The scope of the header component
 	 * @param id
@@ -295,13 +295,13 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 	{
 		if (renderedComponentsPerScope == null)
 		{
-			renderedComponentsPerScope = new HashMap<String, List<String>>();
+			renderedComponentsPerScope = new HashMap<>();
 		}
 
 		List<String> componentScope = renderedComponentsPerScope.get(scope);
 		if (componentScope == null)
 		{
-			componentScope = new ArrayList<String>();
+			componentScope = new ArrayList<>();
 			renderedComponentsPerScope.put(scope, componentScope);
 		}
 
@@ -323,7 +323,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 
 	/**
 	 * Factory method for creating header response
-	 * 
+	 *
 	 * @return new header response
 	 */
 	protected IHeaderResponse newHeaderResponse()
@@ -340,7 +340,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 
 	/**
 	 * Returns the header response.
-	 * 
+	 *
 	 * @return header response
 	 */
 	public IHeaderResponse getHeaderResponse()
