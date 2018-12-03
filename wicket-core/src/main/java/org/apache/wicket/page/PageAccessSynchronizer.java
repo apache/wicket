@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.ExceptionSettings.ThreadDumpStrategy;
 import org.apache.wicket.util.LazyInitializer;
 import org.apache.wicket.util.lang.Threads;
@@ -93,8 +94,8 @@ public class PageAccessSynchronizer implements Serializable
 	 */
 	public void lockPage(int pageId) throws CouldNotLockPageException
 	{
-		final Thread thread = Thread.currentThread();
-		final PageLock lock = new PageLock(pageId, thread);
+		final RequestCycle cycle = RequestCycle.get();
+		final PageLock lock = new PageLock(pageId, cycle);
 		final Time start = Time.now();
 
 		boolean locked = false;
@@ -110,12 +111,12 @@ public class PageAccessSynchronizer implements Serializable
 			if (isDebugEnabled)
 			{
 				logger.debug("'{}' attempting to acquire lock to page with id '{}'",
-					thread.getName(), pageId);
+					cycle.getStartTime(), pageId);
 			}
 
 			previous = locks.get().putIfAbsent(pageId, lock);
 
-			if (previous == null || previous.thread == thread)
+			if (previous == null || previous.cycle == cycle)
 			{
 				// first thread to acquire lock or lock is already owned by this thread
 				locked = true;
@@ -134,7 +135,7 @@ public class PageAccessSynchronizer implements Serializable
 		{
 			if (isDebugEnabled)
 			{
-				logger.debug("{} acquired lock to page {}", thread.getName(), pageId);
+				logger.debug("{} acquired lock to page {}", cycle.getStartTime(), pageId);
 			}
 		}
 		else
@@ -144,8 +145,8 @@ public class PageAccessSynchronizer implements Serializable
 				logger.warn(
 					"Thread '{}' failed to acquire lock to page with id '{}', attempted for {} out of allowed {}." +
 							" The thread that holds the lock has name '{}'.",
-					thread.getName(), pageId, start.elapsedSince(), timeout,
-							previous.thread.getName());
+					cycle.getStartTime(), pageId, start.elapsedSince(), timeout,
+							previous.cycle.getStartTime());
 				if (Application.exists())
 				{
 					ThreadDumpStrategy strategy = Application.get()
@@ -157,7 +158,7 @@ public class PageAccessSynchronizer implements Serializable
 							Threads.dumpAllThreads(logger);
 							break;
 						case THREAD_HOLDING_LOCK :
-							Threads.dumpSingleThread(logger, previous.thread);
+//							Threads.dumpSingleThread(logger, previous.thread);
 							break;
 						case NO_THREADS :
 						default :
@@ -165,7 +166,7 @@ public class PageAccessSynchronizer implements Serializable
 					}
 				}
 			}
-			throw new CouldNotLockPageException(pageId, thread.getName(), timeout);
+			throw new CouldNotLockPageException(pageId, "" + cycle.getStartTime(), timeout);
 		}
 	}
 
@@ -190,7 +191,7 @@ public class PageAccessSynchronizer implements Serializable
 
 	private void internalUnlockPages(final Integer pageId)
 	{
-		final Thread thread = Thread.currentThread();
+		final RequestCycle cycle = RequestCycle.get();
 		final Iterator<PageLock> locks = this.locks.get().values().iterator();
 
 		final boolean isDebugEnabled = logger.isDebugEnabled();
@@ -200,12 +201,12 @@ public class PageAccessSynchronizer implements Serializable
 			// remove all locks held by this thread if 'pageId' is not specified
 			// otherwise just the lock for this 'pageId'
 			final PageLock lock = locks.next();
-			if ((pageId == null || pageId == lock.pageId) && lock.thread == thread)
+			if ((pageId == null || pageId == lock.pageId) && lock.cycle == cycle)
 			{
 				locks.remove();
 				if (isDebugEnabled)
 				{
-					logger.debug("'{}' released lock to page with id '{}'", thread.getName(),
+					logger.debug("'{}' released lock to page with id '{}'", cycle.getStartTime(),
 						lock.pageId);
 				}
 				// if any locks were removed notify threads waiting for a lock
@@ -304,8 +305,8 @@ public class PageAccessSynchronizer implements Serializable
 		/** page id */
 		private final int pageId;
 
-		/** thread that owns the lock */
-		private final Thread thread;
+		/** cycle that owns the lock */
+		private final RequestCycle cycle;
 
 		private volatile boolean released = false;
 
@@ -313,12 +314,12 @@ public class PageAccessSynchronizer implements Serializable
 		 * Constructor
 		 * 
 		 * @param pageId
-		 * @param thread
+		 * @param cycle
 		 */
-		public PageLock(int pageId, Thread thread)
+		public PageLock(int pageId, RequestCycle cycle)
 		{
 			this.pageId = pageId;
-			this.thread = thread;
+			this.cycle = cycle;
 		}
 
 		/**
@@ -332,9 +333,9 @@ public class PageAccessSynchronizer implements Serializable
 		/**
 		 * @return thread that owns the lock
 		 */
-		public Thread getThread()
+		public RequestCycle getCycle()
 		{
-			return thread;
+			return cycle;
 		}
 
 		final synchronized void waitForRelease(long remaining, boolean isDebugEnabled)
@@ -347,7 +348,7 @@ public class PageAccessSynchronizer implements Serializable
 				{
 					logger.debug(
 						"lock for page with id {} no longer locked by {}, falling through", pageId,
-						thread.getName());
+						cycle.getStartTime());
 				}
 				return;
 			}
@@ -355,7 +356,7 @@ public class PageAccessSynchronizer implements Serializable
 			if (isDebugEnabled)
 			{
 				logger.debug("{} waiting for lock to page {} for {}",
-					thread.getName(), pageId, Duration.milliseconds(remaining));
+					cycle.getStartTime(), pageId, Duration.milliseconds(remaining));
 			}
 			try
 			{
@@ -371,7 +372,7 @@ public class PageAccessSynchronizer implements Serializable
 		{
 			if (isDebugEnabled)
 			{
-				logger.debug("'{}' notifying blocked threads", thread.getName());
+				logger.debug("'{}' notifying blocked threads", cycle.getStartTime());
 			}
 			released = true;
 			notifyAll();

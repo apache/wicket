@@ -21,6 +21,7 @@ import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.cycle.RequestCycle.Suspension;
 
 /**
  * Page with examples on {@link org.apache.wicket.markup.html.link.Link}.
@@ -119,6 +120,20 @@ public class LinkPage extends WicketExamplePage
 			public void onClick()
 			{
 				count3.increment();
+				
+				Suspension suspension = getRequestCycle().suspend(0);
+				
+				new Thread(() -> {
+					try
+					{
+						Thread.sleep(5000);
+					}
+					catch (InterruptedException interrupted)
+					{
+					}
+					
+					suspension.resume();
+				}).start();
 			}
 		}
 		add(new ButtonLink("link3"));
