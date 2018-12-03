@@ -171,7 +171,7 @@ public class HtmlHeaderContainer extends TransparentWebMarkupContainer
 				AbstractHeaderRenderStrategy.get().renderHeader(this,
 					new HeaderStreamState(markupStream, openTag), getPage());
 
-				// Close the header response before rendering the header container itself
+				// Header response will be auto-closed before rendering the header container itself
 				// See https://issues.apache.org/jira/browse/WICKET-3728
 			};
 
