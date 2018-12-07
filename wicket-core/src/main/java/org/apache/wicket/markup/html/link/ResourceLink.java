@@ -106,15 +106,20 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 		return false;
 	}
 	
+	/**
+	 * For {@link ResourceReference}s this link is stateless.
+	 * 
+	 * @return <code>true</code> if a resourceReference was provided to the
+	 *         constructor
+	 * 
+	 * @see ResourceLink#ResourceLink(String, ResourceReference)
+	 * @see ResourceLink#ResourceLink(String, ResourceReference, PageParameters)
+	 */
 	@Override
-	public final void onRequest()
+	protected boolean getStatelessHint()
 	{
-		Attributes a = new Attributes(RequestCycle.get().getRequest(), RequestCycle.get()
-			.getResponse(), null);
-		resource.respond(a);
-		
-		super.onRequest();
-	}
+		return resourceReference != null;
+	}   
 
 	@Override
 	protected final CharSequence getURL()
@@ -140,4 +145,14 @@ public class ResourceLink<T> extends Link<T> implements IRequestListener
 		}
 		return urlForListener(resourceParameters);
 	}
+	
+	@Override
+	public final void onRequest()
+	{
+		Attributes a = new Attributes(RequestCycle.get().getRequest(), RequestCycle.get()
+			.getResponse(), null);
+		resource.respond(a);
+		
+		super.onRequest();
+	}	
 }
