@@ -66,15 +66,6 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 		return INSTANCE_3;
 	}
 
-	/**
-	 * @deprecated Use {@link #JQueryResourceReference(String)} instead
-	 */
-	@Deprecated
-	protected JQueryResourceReference()
-	{
-		super(JQueryResourceReference.class, VERSION_1);
-	}
-
 	protected JQueryResourceReference(final String version)
 	{
 		super(JQueryResourceReference.class, version);

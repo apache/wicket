@@ -50,7 +50,6 @@ import org.apache.wicket.util.convert.ConversionException;
 import org.apache.wicket.util.convert.IConverter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Classes;
-import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.string.StringList;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
@@ -1387,11 +1386,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 			onDisabled(tag);
 		}
 
-		if (isRequired())
-		{
-			onRequired(tag);
-		}
-
 		super.onComponentTag(tag);
 	}
 
@@ -1418,17 +1412,6 @@ public abstract class FormComponent<T> extends LabeledWebMarkupContainer impleme
 	protected void onDisabled(final ComponentTag tag)
 	{
 		tag.put("disabled", "disabled");
-	}
-
-	/**
-	 * Called by {@link #onComponentTag(ComponentTag)} when the component is required.
-	 * 
-	 * @param tag
-	 *            the tag that is being rendered
-	 */
-	@Deprecated
-	protected void onRequired(final ComponentTag tag)
-	{
 	}
 
 	/**

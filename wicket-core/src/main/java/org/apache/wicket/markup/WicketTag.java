@@ -64,19 +64,6 @@ public class WicketTag extends ComponentTag
 		tag.copyPropertiesTo(this);
 	}
 
-
-	/**
-	 * Get the tag's name attribute: e.g. &lt;wicket:region name=panel&gt;
-	 * 
-	 * @return The tag's name attribute
-	 * @deprecated This method is obsolete since a long time
-	 */
-	@Deprecated
-	public final String getNameAttribute()
-	{
-		return getAttributes().getString("name");
-	}
-
 	/**
 	 * @return True, if tag name equals 'wicket:container'
 	 */

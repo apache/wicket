@@ -81,8 +81,6 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 
 	private StringWriter stringWriter;
 
-	private final MockHttpServletRequest servletRequest;
-
 	/**
 	 * Create the response object.
 	 * 
@@ -90,7 +88,6 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	 */
 	public MockHttpServletResponse(MockHttpServletRequest servletRequest)
 	{
-		this.servletRequest = servletRequest;
 		initialize();
 	}
 
@@ -566,47 +563,6 @@ public class MockHttpServletResponse implements HttpServletResponse, IMetaDataBu
 	{
 		status = code;
 		errorMessage = msg;
-	}
-
-	/**
-	 * @return url
-	 * @see org.apache.wicket.request.Request#getUrl()
-	 */
-	private String getURL()
-	{
-		/*
-		 * Servlet 2.3 specification :
-		 * 
-		 * Servlet Path: The path section that directly corresponds to the mapping which activated
-		 * this request. This path starts with a "/" character except in the case where the request
-		 * is matched with the "/*" pattern, in which case it is the empty string.
-		 * 
-		 * PathInfo: The part of the request path that is not part of the Context Path or the
-		 * Servlet Path. It is either null if there is no extra path, or is a string with a leading
-		 * "/".
-		 */
-		String url = servletRequest.getServletPath();
-		final String pathInfo = servletRequest.getPathInfo();
-
-		if (pathInfo != null)
-		{
-			url += pathInfo;
-		}
-
-		final String queryString = servletRequest.getQueryString();
-
-		if (queryString != null)
-		{
-			url += ("?" + queryString);
-		}
-
-		// If url is non-empty it will start with '/', which we should lose
-		if (url.length() > 0 && url.charAt(0) == '/')
-		{
-			// Remove leading '/'
-			url = url.substring(1);
-		}
-		return url;
 	}
 
 	/**

@@ -196,17 +196,6 @@ public class PageProvider implements IPageProvider, IClusterable
 	}
 
 	/**
-	 * @return negates {@link PageProvider#hasPageInstance()}
-	 * @deprecated use {@link PageProvider#hasPageInstance()} negation instead
-	 */
-	@Deprecated(since = "8.0", forRemoval = true)
-	@Override
-	public boolean isNewPageInstance()
-	{
-		return !hasPageInstance();
-	}
-
-	/**
 	 * If this provider returns existing page, regardless if it was already created by PageProvider
 	 * itself or is or can be found in the data store. The only guarantee is that by calling
 	 * {@link PageProvider#getPageInstance()} this provider will return an existing instance and no

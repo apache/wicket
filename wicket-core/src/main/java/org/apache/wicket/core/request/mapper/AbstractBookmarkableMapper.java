@@ -402,7 +402,7 @@ public abstract class AbstractBookmarkableMapper extends AbstractComponentMapper
 				return null;
 			}
 
-			if (handler.getPageProvider().isNewPageInstance())
+			if (!handler.getPageProvider().hasPageInstance())
 			{
 				// no existing page instance available, don't bother creating new page instance
 				PageInfo info = new PageInfo();

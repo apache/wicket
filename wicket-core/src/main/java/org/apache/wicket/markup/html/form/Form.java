@@ -506,14 +506,6 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * @deprecated use {@link #getJsForListenerUrl(CharSequence)} instead.
-	 */
-	@Deprecated(since = "8.0", forRemoval = true)
-	public final CharSequence getJsForInterfaceUrl(CharSequence url) {
-		return getJsForListenerUrl(url);
-	}
-
-	/**
 	 * Generate a piece of JavaScript that submits the form to the given URL.
 	 * 
 	 * Warning: This code should only be called in the rendering phase for form components inside

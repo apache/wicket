@@ -23,8 +23,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -58,12 +56,6 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * The component id which will be used to load the lazily loaded component.
 	 */
 	private static final String CONTENT_ID = "content";
-	
-	/**
-	 * @deprecated will be removed in Wicket 9
-	 */
-	@Deprecated
-	public static final String LAZY_LOAD_COMPONENT_ID = CONTENT_ID;
 
 	private boolean loaded;
 
@@ -104,24 +96,6 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	}
 
 	/**
-	 * @deprecated this method is not called, and will be removed in Wicket 9
-	 */
-	@Deprecated(since = "8.0", forRemoval = true)
-	protected final void updateAjaxAttributes(AjaxRequestAttributes attributes)
-	{
-	}
-
-	/**
-	 * @deprecated this method is not called, and will be removed in Wicket 9
-	 */
-	@Deprecated(since = "8.0", forRemoval = true)
-	protected final void handleCallbackScript(final IHeaderResponse response,
-		final CharSequence callbackScript, final Component component)
-	{
-		
-	}
-
-	/**
 	 * Create a loading component shown instead of the actual content until it is {@link #isContentReady()}.
 	 * 
 	 * @param id
@@ -147,14 +121,6 @@ public abstract class AjaxLazyLoadPanel<T extends Component> extends Panel
 	 * @return the content to show after {@link #isContentReady()}
 	 */
 	public abstract T getLazyLoadComponent(String markupId);
-
-	/**
-	 * @deprecated override {@link #onContentLoaded(Component, Optional)} instead - will be removed in Wicket 9
-	 */
-	@Deprecated
-	protected final void onComponentLoaded(Component component, AjaxRequestTarget target)
-	{
-	}
 
 	/**
 	 * Called after the loading component was replaced with the lazy loaded content.

@@ -38,7 +38,7 @@ class ResponsiveImageTest extends WicketTestCase
 	{
 		tester.startPage(ImageResourceReferenceTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester createTagByAttribute = TagTester.createTagByAttribute(lastResponseAsString, "img");
+		TagTester createTagByAttribute = TagTester.createTagByName(lastResponseAsString, "img");
 		assertFalse(createTagByAttribute.hasAttribute("srcset"));
 		assertEquals(Image.Cors.ANONYMOUS.getRealName(), createTagByAttribute.getAttribute("crossorigin"));
 	}
@@ -48,10 +48,10 @@ class ResponsiveImageTest extends WicketTestCase
 	{
 		tester.startPage(ImagePictureTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester pictureTagTester = TagTester.createTagByAttribute(lastResponseAsString, "picture");
+		TagTester pictureTagTester = TagTester.createTagByName(lastResponseAsString, "picture");
 		assertTrue(pictureTagTester.hasChildTag("img"));
 		assertTrue(pictureTagTester.hasChildTag("source"));
-		TagTester sourceTagTester = TagTester.createTagByAttribute(lastResponseAsString, "source");
+		TagTester sourceTagTester = TagTester.createTagByName(lastResponseAsString, "source");
 		assertTrue(sourceTagTester.hasAttribute("media"));
 		assertEquals("(min-width: 650px)", sourceTagTester.getAttribute("media"));
 		assertEquals("(min-width: 50em) 33vw", sourceTagTester.getAttribute("sizes"));
@@ -62,7 +62,7 @@ class ResponsiveImageTest extends WicketTestCase
 	{
 		tester.startPage(ImageSrcSetTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester imgTagTester = TagTester.createTagByAttribute(lastResponseAsString, "img");
+		TagTester imgTagTester = TagTester.createTagByName(lastResponseAsString, "img");
 		assertTrue(imgTagTester.hasAttribute("src"));
 		assertTrue(imgTagTester.hasAttribute("srcset"));
 		String attribute = imgTagTester.getAttribute("srcset");

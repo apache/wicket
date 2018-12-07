@@ -70,8 +70,6 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.ValueMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -89,7 +87,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	private static class UploadedFile
 	{
-		private String fieldName;
 		private File file;
 		private String contentType;
 
@@ -102,7 +99,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 		 */
 		public UploadedFile(String fieldName, File file, String contentType)
 		{
-			this.fieldName = fieldName;
 			this.file = file;
 			this.contentType = contentType;
 		}
@@ -116,52 +112,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 		}
 
 		/**
-		 * @param contentType
-		 *            The content type.
-		 */
-		public void setContentType(String contentType)
-		{
-			this.contentType = contentType;
-		}
-
-		/**
-		 * @return The field name.
-		 */
-		public String getFieldName()
-		{
-			return fieldName;
-		}
-
-		/**
-		 * @param fieldName
-		 */
-		public void setFieldName(String fieldName)
-		{
-			this.fieldName = fieldName;
-		}
-
-		/**
 		 * @return The uploaded file.
 		 */
 		public File getFile()
 		{
 			return file;
 		}
-
-		/**
-		 * @param file
-		 */
-		public void setFile(File file)
-		{
-			this.file = file;
-		}
 	}
-
-	/** Logging object */
-	private static final Logger log = LoggerFactory.getLogger(MockHttpServletRequest.class);
-
-	/** The application */
-	private final Application application;
 
 	private final ValueMap attributes = new ValueMap();
 
@@ -217,7 +174,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public MockHttpServletRequest(final Application application, final HttpSession session,
 		final ServletContext context, Locale locale)
 	{
-		this.application = application;
 		this.session = session;
 		this.context = context;
 		initialize(locale);

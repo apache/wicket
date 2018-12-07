@@ -147,19 +147,6 @@ public class HtmlHeaderResolver implements IComponentResolver
 	 *
 	 * @param id
 	 * @return HtmlHeaderContainer
-	 * @deprecated Use #newHtmlHeaderContainer(String, ComponentTag) instead
-	 */
-	@Deprecated
-	protected HtmlHeaderContainer newHtmlHeaderContainer(String id)
-	{
-		return new HtmlHeaderContainer(id);
-	}
-
-	/**
-	 * Return a new HtmlHeaderContainer
-	 *
-	 * @param id
-	 * @return HtmlHeaderContainer
 	 */
 	protected HtmlHeaderContainer newHtmlHeaderContainer(String id, ComponentTag tag)
 	{
@@ -170,7 +157,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 		}
 		else
 		{
-			htmlHeaderContainer = newHtmlHeaderContainer(id);
+			htmlHeaderContainer = new HtmlHeaderContainer(id);
 		}
 
 		return htmlHeaderContainer;
@@ -181,6 +168,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 	 */
 	private static class WicketHeadContainer extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Constructor.
 		 */
