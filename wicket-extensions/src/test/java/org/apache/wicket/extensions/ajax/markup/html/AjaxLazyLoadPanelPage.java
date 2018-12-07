@@ -42,9 +42,10 @@ public class AjaxLazyLoadPanelPage extends WebPage
 		panel = new AjaxLazyLoadPanel<Component>("panel")
 		{
 			@Override
-			protected boolean isContentReady()
-			{
-				return contentReady;
+			protected State contentState() {
+				return contentReady
+						? State.READY
+						: State.LOADING;
 			}
 			
 			@Override
