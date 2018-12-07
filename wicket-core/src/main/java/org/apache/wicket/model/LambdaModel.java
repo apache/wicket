@@ -112,62 +112,6 @@ public abstract class LambdaModel<T> implements IModel<T>
 		};
 	}
 
-
-	/**
-	 * Create a {@link LambdaModel} for a given target. Usage:
-	 * 
-	 * <pre>
-	 * {@code
-	 * 	LambdaModel.of(personModel, Person::getName)
-	 * }
-	 * </pre>
-	 * 
-	 * The target model will be detached automatically.
-	 *
-	 * @param target
-	 *            target for getter and setter
-	 * @param getter
-	 *            used to get a value
-	 * @param <X>
-	 *            target model object type
-	 * @param <R>
-	 *            model object type
-	 * 
-	 * @return model
-	 */
-	public static <X, R> IModel<R> of(IModel<X> target, SerializableFunction<X, R> getter)
-	{
-		Args.notNull(target, "target");
-		Args.notNull(getter, "getter");
-
-		return new LambdaModel<R>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public R getObject()
-			{
-				X x = target.getObject();
-				if (x == null)
-				{
-					return null;
-				}
-				return getter.apply(x);
-			}
-
-			@Override
-			public void setObject(R r) {
-				throw new UnsupportedOperationException("setObject(Object) on " + target + " is not supported");
-			}
-
-			@Override
-			public void detach()
-			{
-				target.detach();
-			}
-		};
-	}
-
 	/**
 	 * Create a {@link LambdaModel} for a given target. Usage:
 	 * 

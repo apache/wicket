@@ -19,7 +19,6 @@ package org.apache.wicket.model;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.model.lambda.Person;
@@ -67,18 +66,6 @@ class LambdaModelTest
 
 		personNameModel.setObject("new name");
 		assertNull(personNameModel.getObject());
-	}
-
-	@Test
-	void targetReadOnly()
-	{
-		IModel<Person> target = Model.of(new Person());
-
-		IModel<String> personNameModel = LambdaModel.of(target, Person::getName);
-
-		assertThrows(UnsupportedOperationException.class, () -> {
-			check(personNameModel);
-		});
 	}
 
 	private void check(IModel<String> personNameModel)
