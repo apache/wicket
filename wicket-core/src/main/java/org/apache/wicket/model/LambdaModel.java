@@ -134,7 +134,10 @@ public abstract class LambdaModel<T> implements IModel<T>
 	 *            model object type
 	 * 
 	 * @return model
+	 * 
+	 * @deprecated this method will be remove in Wicket 9.x, use {@link IModel#map(SerializableFunction)} instead.
 	 */
+	@Deprecated
 	public static <X, R> IModel<R> of(IModel<X> target, SerializableFunction<X, R> getter)
 	{
 		Args.notNull(target, "target");
