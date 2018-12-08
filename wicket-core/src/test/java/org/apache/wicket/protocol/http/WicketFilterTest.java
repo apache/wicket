@@ -17,7 +17,10 @@
 package org.apache.wicket.protocol.http;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,20 +54,14 @@ import org.apache.wicket.mock.MockApplication;
 import org.apache.wicket.protocol.http.mock.MockHttpServletRequest;
 import org.apache.wicket.protocol.http.mock.MockHttpServletResponse;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
-import org.apache.wicket.protocol.http.servlet.ResponseIOException;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.resource.AbstractResource;
-import org.apache.wicket.request.resource.ContentDisposition;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.AbstractResource.ResourceResponse;
-import org.apache.wicket.request.resource.AbstractResource.WriteCallback;
-import org.apache.wicket.request.resource.IResource.Attributes;
 import org.apache.wicket.util.SlowTests;
 import org.apache.wicket.util.file.WebXmlFile;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.tester.DummyHomePage;
-import org.apache.wicket.util.time.Time;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -539,6 +536,14 @@ public class WicketFilterTest extends Assert
 		when(request.getMethod()).thenReturn("POST");
 		HttpServletResponse response = mock(HttpServletResponse.class);
 		when(response.encodeRedirectURL(Matchers.anyString())).thenAnswer(new Answer<String>()
+		{
+			@Override
+			public String answer(InvocationOnMock invocation) throws Throwable
+			{
+				return (String)invocation.getArguments()[0];
+			}
+		});
+		when(response.encodeURL(Matchers.anyString())).thenAnswer(new Answer<String>()
 		{
 			@Override
 			public String answer(InvocationOnMock invocation) throws Throwable
