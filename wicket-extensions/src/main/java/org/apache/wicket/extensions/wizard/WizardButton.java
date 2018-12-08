@@ -18,7 +18,6 @@ package org.apache.wicket.extensions.wizard;
 
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.ResourceModel;
 
 /**
  * Base class for buttons that work with {@link IWizard the wizard component}. It uses resource
@@ -38,22 +37,6 @@ public abstract class WizardButton extends Button
 	 * The enclosing wizard.
 	 */
 	private final IWizard wizard;
-
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 *            The component id
-	 * @param wizard
-	 *            The wizard
-	 * @param labelResourceKey
-	 *            The resource key of the button's label
-	 */
-	@Deprecated
-	public WizardButton(final String id, final IWizard wizard, final String labelResourceKey)
-	{
-		this(id, wizard, new ResourceModel(labelResourceKey));
-	}
 
 	/**
 	 * Construct.

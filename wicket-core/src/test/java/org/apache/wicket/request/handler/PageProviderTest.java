@@ -74,7 +74,7 @@ class PageProviderTest extends WicketTestCase
 		PageProvider pageProvider = mapperContext.new TestPageProvider(testPage.getPageId(), 0);
 
 		// simulation an test call to isNewPageInstance
-		boolean isNewPageInstance = pageProvider.isNewPageInstance();
+		boolean isNewPageInstance = !pageProvider.hasPageInstance();
 		assertFalse(isNewPageInstance, "test page is already stored");
 
 		// changing some sate
@@ -94,6 +94,7 @@ class PageProviderTest extends WicketTestCase
 
 	private static class StatefullMockPage extends MockPage
 	{
+		private static final long serialVersionUID = 1L;
 		int state = 0;
 	}
 

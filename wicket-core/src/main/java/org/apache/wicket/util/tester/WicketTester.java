@@ -45,7 +45,6 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ValidationErrorFeedback;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -664,24 +663,6 @@ public class WicketTester extends BaseWicketTester
 	{
 		Component component = getComponentFromLastRenderedPage(path);
 		assertEquals(expectedValue, component.getDefaultModelObject());
-	}
-
-	/**
-	 * Asserts the model of a {@link ListView}.
-	 *
-	 * @param path
-	 *            path to a {@link ListView} <code>Component</code>
-	 * @param expectedList
-	 *            expected <code>List</code> in the model of the given {@link ListView}
-	 * @Deprecated use {@link #assertComponent(String, Class) combined with
-	 *             {@link #assertModelValue(String, Object)} instead
-	 */
-	@Deprecated
-	@Override
-	public void assertListView(String path, List<?> expectedList)
-	{
-		ListView<?> listView = (ListView<?>)getComponentFromLastRenderedPage(path);
-		WicketTesterHelper.assertEquals(expectedList, listView.getList());
 	}
 
 	/**

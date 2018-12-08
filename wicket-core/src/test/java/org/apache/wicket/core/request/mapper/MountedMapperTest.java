@@ -590,7 +590,7 @@ class MountedMapperTest extends AbstractMapperTest
 	void construct1()
 	{
 		assertThrows(IllegalArgumentException.class, () -> {
-			IRequestMapper e = new MountedMapper("", MockPage.class);
+			new MountedMapper("", MockPage.class);
 		});
 	}
 
@@ -700,14 +700,7 @@ class MountedMapperTest extends AbstractMapperTest
 		parameters.set("param1", "p1", INamedParameters.Type.PATH);
 		parameters.set("param2", "p2", INamedParameters.Type.PATH);
 
-		PageProvider provider = new PageProvider(MockPage.class, parameters)
-		{
-			@Override
-			public boolean isNewPageInstance()
-			{
-				return false;
-			}
-		};
+		PageProvider provider = new PageProvider(1, MockPage.class, parameters, null);
 		provider.setPageSource(context);
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = placeholderEncoder.mapHandler(handler);
@@ -720,14 +713,7 @@ class MountedMapperTest extends AbstractMapperTest
 	@Test
 	void placeholderEncode4()
 	{
-		PageProvider provider = new PageProvider(MockPage.class)
-		{
-			@Override
-			public boolean isNewPageInstance()
-			{
-				return false;
-			}
-		};
+		PageProvider provider = new PageProvider(MockPage.class);
 		provider.setPageSource(context);
 		IRequestHandler handler = new RenderPageRequestHandler(provider);
 		Url url = placeholderEncoder.mapHandler(handler);

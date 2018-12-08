@@ -277,7 +277,7 @@ class WebPageRendererTest
 	@Test
 	void testSameUrlsAndStatefulPage()
 	{
-		when(provider.isNewPageInstance()).thenReturn(false);
+		when(!provider.hasPageInstance()).thenReturn(false);
 		when(page.isPageStateless()).thenReturn(false);
 
 		PageRenderer renderer = new TestPageRenderer(handler);
@@ -918,7 +918,7 @@ class WebPageRendererTest
 			}
 		};
 
-		when(provider.isNewPageInstance()).thenReturn(true);
+		when(!provider.hasPageInstance()).thenReturn(true);
 
 		Url sameUrl = Url.parse("same");
 
@@ -975,7 +975,7 @@ class WebPageRendererTest
 		};
 
 		when(page.isPageStateless()).thenReturn(false);
-		when(provider.isNewPageInstance()).thenReturn(false);
+		when(!provider.hasPageInstance()).thenReturn(false);
 
 		// needed for earlier checks
 		when(urlRenderer.getBaseUrl()).thenReturn(Url.parse("url1"));

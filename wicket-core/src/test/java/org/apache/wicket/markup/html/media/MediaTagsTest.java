@@ -37,8 +37,7 @@ class MediaTagsTest extends WicketTestCase
 	{
 		tester.startPage(MediaTagsTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester createTagByAttribute = TagTester.createTagByAttribute(lastResponseAsString,
-			"audio");
+		TagTester createTagByAttribute = TagTester.createTagByName(lastResponseAsString, "audio");
 		assertTrue(createTagByAttribute.hasAttribute("autoplay"));
 		assertTrue(createTagByAttribute.hasAttribute("controls"));
 		assertTrue(createTagByAttribute.hasAttribute("loop"));
@@ -54,8 +53,7 @@ class MediaTagsTest extends WicketTestCase
 	{
 		tester.startPage(MediaTagsTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester createTagByAttribute = TagTester.createTagByAttribute(lastResponseAsString,
-			"video");
+		TagTester createTagByAttribute = TagTester.createTagByName(lastResponseAsString, "video");
 		String attribute = createTagByAttribute.getAttribute("poster");
 		assertTrue(attribute.contains("test2=test2"), "page parameter is in the url of the poster");
 		String attributesrc = createTagByAttribute.getAttribute("src");
@@ -69,18 +67,17 @@ class MediaTagsTest extends WicketTestCase
 	{
 		tester.startPage(MediaTagsExtendedTestPage.class);
 		String lastResponseAsString = tester.getLastResponse().getDocument();
-		TagTester createTagByAttribute = TagTester.createTagByAttribute(lastResponseAsString,
-			"video");
+		TagTester createTagByAttribute = TagTester.createTagByName(lastResponseAsString, "video");
 		assertTrue(createTagByAttribute.hasChildTag("source"));
 		assertTrue(createTagByAttribute.hasChildTag("track"));
 
 
-		TagTester sourceTag = TagTester.createTagByAttribute(lastResponseAsString, "source");
+		TagTester sourceTag = TagTester.createTagByName(lastResponseAsString, "source");
 		assertEquals("video/mp4", sourceTag.getAttribute("type"));
 		assertEquals("screen and (device-width:500px)", sourceTag.getAttribute("media"));
 		assertEquals("http://www.mytestpage.xc/video.m4a", sourceTag.getAttribute("src"));
 
-		TagTester trackTag = TagTester.createTagByAttribute(lastResponseAsString, "track");
+		TagTester trackTag = TagTester.createTagByName(lastResponseAsString, "track");
 
 		assertTrue(trackTag.getAttribute("src").contains("dummySubtitles"));
 		assertEquals("subtitles", trackTag.getAttribute("kind"));

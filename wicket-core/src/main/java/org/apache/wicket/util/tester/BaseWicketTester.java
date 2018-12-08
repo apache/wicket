@@ -88,7 +88,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.link.ResourceLink;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.parser.XmlPullParser;
 import org.apache.wicket.markup.parser.XmlTag;
 import org.apache.wicket.mock.MockApplication;
@@ -1717,7 +1716,7 @@ public class BaseWicketTester
 		}
 	}
 
-	private FormComponent assertFormComponent(final String path)
+	private FormComponent<?> assertFormComponent(final String path)
 	{
 		Component component = assertExists(path);
 
@@ -1805,23 +1804,6 @@ public class BaseWicketTester
 	{
 		return isFalse("pattern '" + pattern + "' found",
 			getLastResponseAsString().matches("(?s).*" + pattern + ".*"));
-	}
-
-	/**
-	 * assert the model of {@link ListView} use expectedList
-	 *
-	 * @param path
-	 *            path to {@link ListView} component
-	 * @param expectedList
-	 *            expected list in the model of {@link ListView}
-	 * @deprecated use {@link WicketTester#assertComponent(String, Class) combined with
-	 *             {@link WicketTester#assertModelValue(String, Object)} instead
-	 */
-	@Deprecated
-	public void assertListView(String path, List<?> expectedList)
-	{
-		ListView<?> listView = (ListView<?>)getComponentFromLastRenderedPage(path);
-		WicketTesterHelper.assertEquals(expectedList, listView.getList());
 	}
 
 	/**
@@ -2643,21 +2625,6 @@ public class BaseWicketTester
 		{
 			fail(message);
 		}
-	}
-
-	/**
-	 *
-	 * @param message
-	 * @param object
-	 * @return fail with message if not null
-	 */
-	private Result isNull(String message, Object object)
-	{
-		if (object != null)
-		{
-			return Result.fail(message);
-		}
-		return Result.pass();
 	}
 
 	/**

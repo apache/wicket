@@ -19,6 +19,7 @@ package org.apache.wicket.examples.guestbook;
 import java.util.ArrayList;
 
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +50,8 @@ public class GuestbookTest extends WicketTestCase
 		tester.assertContains("Wicket Examples - guestbook");
 
 		// check if the list of comments is empty
-		tester.assertListView("comments", new ArrayList<>());
+		tester.assertComponent("comments", ListView.class);
+		tester.assertModelValue("comments", new ArrayList<>());
 		tester.assertComponent("commentForm", Form.class);
 		FormTester formTester = tester.newFormTester("commentForm");
 		formTester.setValue("text", "test-1");

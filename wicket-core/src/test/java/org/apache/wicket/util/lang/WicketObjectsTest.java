@@ -18,7 +18,6 @@ package org.apache.wicket.util.lang;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -44,7 +43,7 @@ class WicketObjectsTest extends WicketTestCase
 	@Test
 	void cloneModelNull()
 	{
-		Object clone = WicketObjects.cloneModel(null);
+		Object clone = WicketObjects.cloneObject(null);
 		assertEquals(null, clone);
 	}
 
@@ -66,7 +65,7 @@ class WicketObjectsTest extends WicketTestCase
 	{
 		String cloneMe = "Mini-me";
 
-		Object clone = WicketObjects.cloneModel(cloneMe);
+		Object clone = WicketObjects.cloneObject(cloneMe);
 		assertEquals(cloneMe, clone);
 		assertNotSame(cloneMe, clone);
 	}
@@ -94,7 +93,7 @@ class WicketObjectsTest extends WicketTestCase
 
 		try
 		{
-			WicketObjects.cloneModel(cloneMe);
+			WicketObjects.cloneObject(cloneMe);
 			fail("Exception expected");
 		}
 		catch (RuntimeException e)
@@ -125,14 +124,12 @@ class WicketObjectsTest extends WicketTestCase
 	/**
 	 * Test method for component cloning
 	 */
-	@SuppressWarnings({ "unchecked" })
 	@Test
 	void componentClone()
 	{
-		PropertyModel<String> pm = new PropertyModel<>(new TextField<>("test",
-			Model.of("test")), "modelObject");
-		PropertyModel<String> pm2 = WicketObjects.cloneModel(pm);
-		assertSame(pm.getObject(), pm2.getObject());
+		PropertyModel<String> pm = new PropertyModel<>(new TextField<>("test", Model.of("test")), "modelObject");
+		PropertyModel<String> pm2 = WicketObjects.cloneObject(pm);
+		assertEquals(pm.getObject(), pm2.getObject());
 	}
 
 	/**
@@ -144,7 +141,7 @@ class WicketObjectsTest extends WicketTestCase
 		CloneObject cloneMe = new CloneObject();
 		cloneMe.nr = 1;
 
-		Object clone = WicketObjects.cloneModel(cloneMe);
+		Object clone = WicketObjects.cloneObject(cloneMe);
 		assertEquals(cloneMe, clone);
 		assertNotSame(cloneMe, clone);
 	}
