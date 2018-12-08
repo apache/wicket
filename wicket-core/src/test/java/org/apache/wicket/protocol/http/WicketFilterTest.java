@@ -53,6 +53,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.filefilter.AgeFileFilter;
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.mock.MockApplication;
@@ -547,6 +548,14 @@ public class WicketFilterTest
 		when(request.getContextPath()).thenReturn("/contextPath");
 		when(request.getMethod()).thenReturn("POST");
 		HttpServletResponse response = mock(HttpServletResponse.class);
+		when(response.encodeURL(ArgumentMatchers.anyString())).thenAnswer(new Answer<String>()
+		{
+			@Override
+			public String answer(InvocationOnMock invocation) throws Throwable
+			{
+				return (String)invocation.getArguments()[0];
+			}
+		});
 		when(response.encodeRedirectURL(ArgumentMatchers.anyString())).thenAnswer(new Answer<String>()
 		{
 			@Override

@@ -257,8 +257,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 		}
 		catch (Exception exception)
 		{
-			executeExceptionRequestHandler(exception, getExceptionRetryCount());
-			return true;
+			return executeExceptionRequestHandler(exception, getExceptionRetryCount());
 		}
 		finally
 		{
@@ -306,12 +305,12 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 	}
 
 	/**
-	 * Execute a requestHandler for the given exception.
+	 * Process the given exception.
 	 * 
 	 * @param exception
 	 * @param retryCount
 	 */
-	private void executeExceptionRequestHandler(Exception exception, int retryCount)
+	private boolean executeExceptionRequestHandler(Exception exception, int retryCount)
 	{
 		scheduleRequestHandlerAfterCurrent(null);
 
@@ -319,7 +318,7 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 		if (handler == null)
 		{
 			log.error("Error during request processing. URL=" + request.getUrl(), exception);
-			return;
+			return false;
 		}
 
 		try
@@ -327,16 +326,19 @@ public class RequestCycle implements IRequestCycle, IEventSink, IMetadataContext
 			listeners.onExceptionRequestHandlerResolved(this, handler, exception);
 
 			execute(handler);
+			
+			return true;
 		}
 		catch (Exception e)
 		{
 			if (retryCount > 0)
 			{
-				executeExceptionRequestHandler(exception, retryCount - 1);
+				return executeExceptionRequestHandler(exception, retryCount - 1);
 			}
 			else
 			{
 				log.error("Exception retry count exceeded", e);
+				return false;
 			}
 		}
 	}

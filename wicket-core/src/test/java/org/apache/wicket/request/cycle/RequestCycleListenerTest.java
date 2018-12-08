@@ -17,7 +17,9 @@
 package org.apache.wicket.request.cycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
@@ -149,7 +151,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 
 		incrementingListener.assertValues(0, 0, 0, 0, 0, 0);
 		assertValues(0, 0, 0);
-		cycle.processRequestAndDetach();
+		assertTrue(cycle.processRequestAndDetach());
 		// 0 exceptions mapped
 		incrementingListener.assertValues(1, 1, 1, 1, 0, 1);
 		// 0 exceptions mapped
@@ -158,7 +160,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		// TEST WITH TWO LISTENERS
 		cycle = newRequestCycle((RuntimeException)null);
 		cycle.getListeners().add(incrementingListener);
-		cycle.processRequestAndDetach();
+		assertTrue(cycle.processRequestAndDetach());
 		// 0 exceptions mapped, all other 2 due to two listeners
 		incrementingListener.assertValues(2, 2, 2, 2, 0, 2);
 		// 0 exceptions mapped
@@ -168,7 +170,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		// TEST WITH TWO LISTENERS AND AN EXCEPTION DURING RESPONSE
 		cycle = newRequestCycle(new RuntimeException("testing purposes only"));
 		cycle.getListeners().add(incrementingListener);
-		cycle.processRequestAndDetach();
+		assertFalse(cycle.processRequestAndDetach());
 		// 0 executed
 		incrementingListener.assertValues(2, 2, 2, 0, 2, 2);
 		// 1 exception mapped, 0 responded
@@ -205,7 +207,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 				throw new UnsupportedOperationException();
 			}
 		});
-		cycle.processRequestAndDetach();
+		assertTrue(cycle.processRequestAndDetach());
 		// 2 resolved, 1 executed, 0 exception mapped
 		incrementingListener.assertValues(1, 1, 2, 1, 0, 1);
 		// 0 exception mapped, 1 responded, 2 detached 
@@ -228,7 +230,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 				detaches++;
 			}
 		});
-		cycle.processRequestAndDetach();
+		assertTrue(cycle.processRequestAndDetach());
 		// 2 resolved, 2 executed, 0 exception mapped
 		incrementingListener.assertValues(1, 1, 3, 2, 0, 1);
 		// 0 exception mapped, 2 responded, 3 detached 
@@ -244,7 +246,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		Application.get().getRequestCycleListeners().add(new ErrorCodeListener(401));
 
 		RequestCycle cycle = newRequestCycle(new RuntimeException("testing purposes only"));
-		cycle.processRequestAndDetach();
+		assertTrue(cycle.processRequestAndDetach());
 
 		assertEquals(401, errorCode);
 		assertEquals(2, incrementingListener.resolved);
@@ -262,10 +264,20 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		Application.get().getRequestCycleListeners().add(new ErrorCodeListener(402));
 
 		RequestCycle cycle = newRequestCycle(new RuntimeException("testing purposes only"));
-		cycle.processRequestAndDetach();
+		assertTrue(cycle.processRequestAndDetach());
 
 		// the first handler returned is used to handle the exception
 		assertEquals(401, errorCode);
+	}
+
+	/** */
+	@Test
+	void exceptionExceeded()
+	{
+		Application.get().getRequestCycleListeners().add(new RepeatListener());
+
+		RequestCycle cycle = newRequestCycle(new RuntimeException("testing purposes only"));
+		assertFalse(cycle.processRequestAndDetach());
 	}
 
 	/**
@@ -289,7 +301,7 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		cycle.getListeners().add(incrementingListener);
 		cycle.getListeners().add(incrementingListener);
 		cycle.getListeners().add(incrementingListener);
-		cycle.processRequestAndDetach();
+		assertTrue(cycle.processRequestAndDetach());
 
 		incrementingListener.assertValues(3, 3, 3, 3, 0, 3);
 		assertValues(0, 1, 1);
@@ -304,6 +316,15 @@ class RequestCycleListenerTest extends RequestHandlerExecutorTest
 		this.exceptionsMapped = 0;
 		this.responses = 0;
 		this.detaches = 0;
+	}
+
+	private class RepeatListener implements IRequestCycleListener
+	{
+		@Override
+		public IRequestHandler onException(final RequestCycle cycle, Exception ex)
+		{
+			return cycle.getActiveRequestHandler();
+		}
 	}
 
 	private class ErrorCodeListener implements IRequestCycleListener
