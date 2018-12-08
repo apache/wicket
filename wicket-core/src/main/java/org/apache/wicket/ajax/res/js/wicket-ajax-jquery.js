@@ -2138,10 +2138,15 @@
 
 			// Adds the element to page head
 			addElement: function (element) {
-				var head = document.getElementsByTagName("head");
+				var headItems = document.querySelector('head meta[name="wicket.header.items"]');
+				if (headItems) {
+					headItems.parentNode.insertBefore(element, headItems);
+				} else {
+					var head = document.querySelector("head");
 
-				if (head[0]) {
-					head[0].appendChild(element);
+					if (head) {
+						head.appendChild(element);
+					}
 				}
 			},
 
