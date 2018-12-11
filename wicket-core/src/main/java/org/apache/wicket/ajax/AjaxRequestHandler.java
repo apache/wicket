@@ -52,8 +52,6 @@ import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A request target that produces ajax response envelopes used on the client side to update
@@ -84,8 +82,6 @@ import org.slf4j.LoggerFactory;
  */
 public class AjaxRequestHandler implements AjaxRequestTarget
 {
-	private static final Logger log = LoggerFactory.getLogger(AjaxRequestHandler.class);
-
 	/**
 	 * Collector of page updates.
 	 */
