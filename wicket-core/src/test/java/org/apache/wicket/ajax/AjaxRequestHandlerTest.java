@@ -227,6 +227,14 @@ public class AjaxRequestHandlerTest extends WicketTestCase
 		}
 	}
 
+	@Test(expected=IllegalStateException.class)
+	public void addDuringRender()
+	{
+		tester.startPage(AddDuringRenderPage.class);
+
+		tester.clickLink("link");
+	}
+
 	/**
 	 * Testing the default event raised whenever Wicket begins to create an AJAX response
 	 */

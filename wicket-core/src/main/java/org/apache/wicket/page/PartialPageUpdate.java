@@ -47,7 +47,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
-import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
 import org.apache.wicket.util.time.Time;
@@ -462,7 +461,10 @@ public abstract class PartialPageUpdate
 			}
 		}
 
-		assertComponentsNotFrozen();
+		if (componentsFrozen)
+		{
+			throw new IllegalStateException("A partial update of the page is being rendered, component " + component.toString() + " can no longer be added");
+		}
 
 		component.setMarkupId(markupId);
 		markupIdToComponent.put(markupId, component);
@@ -860,20 +862,6 @@ public abstract class PartialPageUpdate
 		public void flush()
 		{
 			originalResponse.flush();
-		}
-	}
-
-	private void assertComponentsNotFrozen()
-	{
-		assertNotFrozen(componentsFrozen, Component.class);
-	}
-
-	private void assertNotFrozen(boolean frozen, Class<?> clazz)
-	{
-		if (frozen)
-		{
-			throw new IllegalStateException(Classes.simpleName(clazz) + "s can no " +
-					" longer be added");
 		}
 	}
 }
