@@ -18,6 +18,7 @@ package org.apache.wicket.ajax;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -235,12 +236,14 @@ class AjaxRequestHandlerTest extends WicketTestCase
 		}
 	}
 
-	@Test(expected=IllegalStateException.class)
+	@Test
 	public void addDuringRender()
 	{
 		tester.startPage(AddDuringRenderPage.class);
 
-		tester.clickLink("link");
+		assertThrows(IllegalStateException.class, () -> {
+			tester.clickLink("link");
+	    });
 	}
 
 	/**
