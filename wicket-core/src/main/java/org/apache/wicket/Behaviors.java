@@ -126,7 +126,7 @@ final class Behaviors implements IDetachable
 	@Override
 	public final void detach()
 	{
-		final int len = component.data_length();
+		int len = component.data_length();
 		for (int i = component.data_start(); i < len; i++)
 		{
 			Object obj = component.data_get(i);
@@ -139,6 +139,8 @@ final class Behaviors implements IDetachable
 				if (behavior.isTemporary(component))
 				{
 					internalRemove(behavior);
+					i--;
+					len--;
 				}
 			}
 		}
