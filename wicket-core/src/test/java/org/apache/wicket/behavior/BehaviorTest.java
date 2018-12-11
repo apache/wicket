@@ -18,6 +18,7 @@ package org.apache.wicket.behavior;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithOneComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.util.tester.TagTester;
@@ -64,4 +65,37 @@ class BehaviorTest extends WicketTestCase
 		TagTester tagTester = tester.getTagByWicketId(MockPageWithOneComponent.COMPONENT_ID);
 		assertEquals(value, tagTester.getAttribute(key));
 	}
+
+	@Test
+	public void temporaryBehaviorsAreRemoved() {
+		WebMarkupContainer container = new WebMarkupContainer("test");
+		TestTemporaryBehavior temp = new TestTemporaryBehavior();
+		container.add(temp);
+		assertTrue(container.getBehaviors().contains(temp));
+		container.detach();
+		assertFalse(container.getBehaviors().contains(temp));
+	}
+
+	@Test
+	public void consecutiveTemporaryBehaviorsAreRemoved() {
+		WebMarkupContainer container = new WebMarkupContainer("test");
+		TestTemporaryBehavior temp1 = new TestTemporaryBehavior();
+		TestTemporaryBehavior temp2 = new TestTemporaryBehavior();
+		container.add(temp1, temp2);
+		assertTrue(container.getBehaviors().contains(temp1));
+		assertTrue(container.getBehaviors().contains(temp2));
+		container.detach();
+		assertFalse(container.getBehaviors().contains(temp1));
+		assertFalse(container.getBehaviors().contains(temp2));
+	}
+
+	private static class TestTemporaryBehavior extends Behavior {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public boolean isTemporary(Component c) {
+			return true;
+		}
+	}
+
 }
