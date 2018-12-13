@@ -16,7 +16,7 @@
  */
 package org.apache.wicket.behavior;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MockPageWithOneComponent;
