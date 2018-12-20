@@ -36,10 +36,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.pageStore.disk.NestedFolders;
@@ -66,23 +62,14 @@ import org.slf4j.LoggerFactory;
  * This leads to pages with identical id superfluously kept in the file, while older pages are prematurely expelled.
  * Any following request to these older pages will then fail with {@link PageExpiredException}.   
  */
-public class DiskPageStore implements IPersistentPageStore
+public class DiskPageStore extends AbstractPersistentPageStore
 {
 	private static final Logger log = LoggerFactory.getLogger(DiskPageStore.class);
-
-	private static final String KEY = "wicket:DiskPageStore";
 
 	/**
 	 * Name of the file where the page index is stored.
 	 */
 	private static final String INDEX_FILE_NAME = "DiskPageStoreIndex";
-
-	/**
-	 * A cache that holds all page stores.
-	 */
-	private static final ConcurrentMap<String, DiskPageStore> DISK_STORES = new ConcurrentHashMap<>();
-
-	private final String applicationName;
 
 	private final ISerializer serializer;
 
@@ -124,7 +111,8 @@ public class DiskPageStore implements IPersistentPageStore
 	public DiskPageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession,
 		ISerializer serializer)
 	{
-		this.applicationName = Args.notNull(applicationName, "applicationName");
+		super(applicationName);
+		
 		this.folders = new NestedFolders(new File(fileStoreFolder, applicationName + "-filestore"));
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 		this.serializer = serializer; // optional
@@ -149,13 +137,6 @@ public class DiskPageStore implements IPersistentPageStore
 					+ "See org.apache.wicket.Application.setPageManagerProvider(IPageManagerProvider)",
 				e);
 		}
-
-		if (DISK_STORES.containsKey(applicationName))
-		{
-			throw new IllegalStateException(
-				"Store for application with key '" + applicationName + "' already exists.");
-		}
-		DISK_STORES.put(applicationName, this);
 	}
 
 	/**
@@ -173,8 +154,7 @@ public class DiskPageStore implements IPersistentPageStore
 		log.debug("Destroying...");
 		saveIndex();
 
-		DISK_STORES.remove(applicationName);
-
+		super.destroy();
 		log.debug("Destroyed.");
 	}
 
@@ -183,7 +163,7 @@ public class DiskPageStore implements IPersistentPageStore
 	{
 		// session attribute must be added here *before* any asynchronous calls
 		// when session is no longer available
-		getSessionAttribute(context, true);
+		getSessionIdentifier(context, true);
 
 		return true;
 	}
@@ -236,15 +216,18 @@ public class DiskPageStore implements IPersistentPageStore
 	@Override
 	public void removeAllPages(IPageContext context)
 	{
-		DiskData diskData = getDiskData(context, false);
-		if (diskData != null)
+		String identifier = getSessionIdentifier(context, false);
+		if (identifier != null)
 		{
-			removeDiskData(diskData);
+			removePersistent(identifier);
 		}
 	}
 
-	protected void removeDiskData(DiskData diskData)
+	@Override
+	protected void removePersistent(String identifier)
 	{
+		DiskData diskData = getDiskData(identifier, false);
+
 		synchronized (diskDatas)
 		{
 			diskDatas.remove(diskData.sessionIdentifier);
@@ -295,14 +278,14 @@ public class DiskPageStore implements IPersistentPageStore
 	 */
 	protected DiskData getDiskData(final IPageContext context, final boolean create)
 	{
-		SessionAttribute attribute = getSessionAttribute(context, create);
+		String identifier = getSessionIdentifier(context, create);
 
-		if (!create && attribute == null)
+		if (!create && identifier == null)
 		{
 			return null;
 		}
 
-		return getDiskData(attribute.identifier, create);
+		return getDiskData(identifier, create);
 	}
 
 	protected DiskData getDiskData(String sessionIdentifier, boolean create)
@@ -315,17 +298,6 @@ public class DiskPageStore implements IPersistentPageStore
 		DiskData data = new DiskData(this, sessionIdentifier);
 		DiskData existing = diskDatas.putIfAbsent(sessionIdentifier, data);
 		return existing != null ? existing : data;
-	}
-
-	protected SessionAttribute getSessionAttribute(IPageContext context, boolean create)
-	{
-		SessionAttribute attribute = context.getSessionAttribute(KEY);
-		if (attribute == null && create)
-		{
-			attribute = new SessionAttribute(applicationName, context.getSessionId());
-			context.setSessionAttribute(KEY, attribute);
-		}
-		return attribute;
 	}
 
 	/**
@@ -412,14 +384,6 @@ public class DiskPageStore implements IPersistentPageStore
 			pages.addAll(windowManager.getFileWindows());
 		}
 		return pages;
-	}
-
-	@Override
-	public String getContextIdentifier(IPageContext context)
-	{
-		SessionAttribute sessionAttribute = getSessionAttribute(context, true);
-
-		return sessionAttribute.identifier;
 	}
 
 	@Override
@@ -650,52 +614,5 @@ public class DiskPageStore implements IPersistentPageStore
 	{
 		File sessionFolder = folders.get(sessionIdentifier, true);
 		return new File(sessionFolder, "data").getAbsolutePath();
-	}
-
-	/**
-	 * Attribute held in session.
-	 */
-	static class SessionAttribute implements Serializable, HttpSessionBindingListener
-	{
-
-		private final String applicationName;
-
-		/**
-		 * The identifier of the session, must not be equal to {@link Session#getId()}, e.g. when
-		 * the container changes the id after authorization.
-		 */
-		public final String identifier;
-
-		public SessionAttribute(String applicationName, String sessionIdentifier)
-		{
-			this.applicationName = Args.notNull(applicationName, "applicationName");
-			this.identifier = Args.notNull(sessionIdentifier, "sessionIdentifier");
-		}
-
-
-		@Override
-		public void valueBound(HttpSessionBindingEvent event)
-		{
-		}
-
-		@Override
-		public void valueUnbound(HttpSessionBindingEvent event)
-		{
-			DiskPageStore store = DISK_STORES.get(applicationName);
-			if (store == null)
-			{
-				log.warn(
-					"Cannot remove data '{}' because disk store for application '{}' is no longer present.",
-					identifier, applicationName);
-			}
-			else
-			{
-				DiskData diskData = store.getDiskData(identifier, false);
-				if (diskData != null)
-				{
-					store.removeDiskData(diskData);
-				}
-			}
-		}
 	}
 }

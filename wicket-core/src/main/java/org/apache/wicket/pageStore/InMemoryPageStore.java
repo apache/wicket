@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.pageStore;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -24,37 +23,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-
 import org.apache.wicket.Application;
-import org.apache.wicket.Session;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Classes;
 
 /**
  * A storage of pages in memory.
  */
-public class InMemoryPageStore implements IPersistentPageStore
+public class InMemoryPageStore extends AbstractPersistentPageStore
 {
 
-	/**
-	 * A registry of all page instances.
-	 */
-	private static final ConcurrentMap<String, InMemoryPageStore> IN_MEMORY_STORES = new ConcurrentHashMap<>();
-
-	private static final String KEY = "wicket:InMemoryPageStore";
-
 	private final Map<String, MemoryData> datas = new ConcurrentHashMap<>();
-
-	private String applicationName;
 
 	private int maxPages;
 
@@ -66,10 +49,8 @@ public class InMemoryPageStore implements IPersistentPageStore
 	 */
 	public InMemoryPageStore(String applicationName, int maxPages)
 	{
-		this.applicationName = Args.notNull(applicationName, "applicationName");
+		super(applicationName);
 		this.maxPages = maxPages;
-
-		IN_MEMORY_STORES.put(applicationName, this);
 	}
 
 	/**
@@ -91,28 +72,9 @@ public class InMemoryPageStore implements IPersistentPageStore
 	{
 		// session attribute must be added here *before* any asynchronous calls
 		// when session is no longer available
-		getSessionAttribute(context, true);
+		getSessionIdentifier(context, true);
 
 		return true;
-	}
-
-	protected SessionAttribute getSessionAttribute(IPageContext context, boolean create)
-	{
-		SessionAttribute attribute = context.getSessionAttribute(KEY);
-		if (attribute == null && create)
-		{
-			attribute = new SessionAttribute(applicationName, context.getSessionId());
-			context.setSessionAttribute(KEY, attribute);
-		}
-		return attribute;
-	}
-
-	@Override
-	public void destroy()
-	{
-		datas.clear();
-
-		IN_MEMORY_STORES.remove(applicationName);
 	}
 
 	@Override
@@ -164,12 +126,6 @@ public class InMemoryPageStore implements IPersistentPageStore
 	}
 
 	@Override
-	public String getContextIdentifier(IPageContext context)
-	{
-		return context.getSessionId();
-	}
-
-	@Override
 	public Set<String> getContextIdentifiers()
 	{
 		return datas.keySet();
@@ -187,7 +143,7 @@ public class InMemoryPageStore implements IPersistentPageStore
 		synchronized (data)
 		{
 			return StreamSupport.stream(data.spliterator(), false)
-				.map(page -> new PersistedPage(page, getSize(page)))
+				.map(page -> new PersistedPage(page.getPageId(), page instanceof SerializedPage ? ((SerializedPage)page).getPageType() : page.getClass().getName(), getSize(page)))
 				.collect(Collectors.toList());
 		}
 	}
@@ -225,23 +181,24 @@ public class InMemoryPageStore implements IPersistentPageStore
 
 	private MemoryData getMemoryData(IPageContext context, boolean create)
 	{
-		SessionAttribute attribute = getSessionAttribute(context, create);
+		String identifier = getSessionIdentifier(context, create);
 
 		if (!create)
 		{
-			if (attribute == null) {
+			if (identifier == null) {
 				return null;
 			} else {
-				return datas.get(attribute.identifier);
+				return datas.get(identifier);
 			}
 		}
 
 		MemoryData data = new MemoryData();
-		MemoryData existing = datas.putIfAbsent(attribute.identifier, data);
+		MemoryData existing = datas.putIfAbsent(identifier, data);
 		return existing != null ? existing : data;
 	}
 
-	private void removeMemoryData(String identifier)
+	@Override
+	protected void removePersistent(String identifier)
 	{
 		datas.remove(identifier);
 	}
@@ -290,78 +247,6 @@ public class InMemoryPageStore implements IPersistentPageStore
 			IManageablePage page = pages.get(id);
 
 			return page;
-		}
-	}
-
-	/**
-	 * Attribute held in session.
-	 */
-	static class SessionAttribute implements Serializable, HttpSessionBindingListener
-	{
-
-		private final String applicationName;
-
-		/**
-		 * The identifier of the session, must not be equal to {@link Session#getId()}, e.g. when
-		 * the container changes the id after authorization.
-		 */
-		public final String identifier;
-
-		public SessionAttribute(String applicationName, String sessionIdentifier)
-		{
-			this.applicationName = Args.notNull(applicationName, "applicationName");
-			this.identifier = Args.notNull(sessionIdentifier, "sessionIdentifier");
-		}
-
-
-		@Override
-		public void valueBound(HttpSessionBindingEvent event)
-		{
-		}
-
-		@Override
-		public void valueUnbound(HttpSessionBindingEvent event)
-		{
-			InMemoryPageStore store = IN_MEMORY_STORES.get(applicationName);
-			if (store != null)
-			{
-				store.removeMemoryData(identifier);
-			}
-		}
-	}
-	
-	private static class PersistedPage implements IPersistedPage
-	{
-
-		private final int id;
-
-		private final String type;
-
-		private final long size;
-
-		public PersistedPage(IManageablePage page, long size)
-		{
-			this.id = page.getPageId();
-			this.type = page instanceof SerializedPage ? ((SerializedPage)page).getPageType() : Classes.name(page.getClass());;
-			this.size = size;
-		}
-
-		@Override
-		public int getPageId()
-		{
-			return id;
-		}
-
-		@Override
-		public String getPageType()
-		{
-			return type;
-		}
-
-		@Override
-		public Bytes getPageSize()
-		{
-			return Bytes.bytes(size);
 		}
 	}
 }

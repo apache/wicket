@@ -75,6 +75,8 @@ public abstract class AbstractPageStoreTest
 	@Test
 	void storePage2()
 	{
+		pageStore.destroy();
+		
 		IPageContext context = new DummyPageContext(sessionId);
 		int maxEntries = 10;
 

@@ -18,7 +18,6 @@ package org.apache.wicket.pageStore;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -32,13 +31,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionBindingListener;
-
-import org.apache.wicket.Session;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.pageStore.disk.NestedFolders;
@@ -58,22 +51,13 @@ import org.slf4j.LoggerFactory;
  * in its own file. This improves on a {@link DiskPageStore disadvantage of DiskPageStore} surfacing
  * with alternating Ajax requests from different browser tabs.  
  */
-public class FilePageStore implements IPersistentPageStore
+public class FilePageStore extends AbstractPersistentPageStore
 {
 	private static final String ATTRIBUTE_PAGE_TYPE = "user.wicket_page_type";
 
 	private static final String FILE_SUFFIX = ".data";
 
 	private static final Logger log = LoggerFactory.getLogger(FilePageStore.class);
-
-	private static final String KEY = "wicket:FilePageStore";
-
-	/**
-	 * A cache that holds all page stores.
-	 */
-	private static final ConcurrentMap<String, FilePageStore> FILE_STORES = new ConcurrentHashMap<>();
-
-	private final String applicationName;
 
 	private final ISerializer serializer;
 
@@ -110,20 +94,13 @@ public class FilePageStore implements IPersistentPageStore
 	 * @param serializer
 	 *            for serialization of pages
 	 */
-	public FilePageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession,
-		ISerializer serializer)
+	public FilePageStore(String applicationName, File fileStoreFolder, Bytes maxSizePerSession, ISerializer serializer)
 	{
-		this.applicationName = Args.notNull(applicationName, "applicationName");
+		super(applicationName);
+		
 		this.folders = new NestedFolders(new File(fileStoreFolder, applicationName + "-filestore"));
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
 		this.serializer = serializer; // optional
-
-		if (FILE_STORES.containsKey(applicationName))
-		{
-			throw new IllegalStateException(
-				"Store for application with key '" + applicationName + "' already exists.");
-		}
-		FILE_STORES.put(applicationName, this);
 	}
 
 	/**
@@ -133,16 +110,6 @@ public class FilePageStore implements IPersistentPageStore
 	public boolean supportsVersioning()
 	{
 		return serializer != null;
-	}
-
-	@Override
-	public void destroy()
-	{
-		log.debug("Destroying...");
-
-		FILE_STORES.remove(applicationName);
-
-		log.debug("Destroyed.");
 	}
 
 	private File getPageFile(String sessionId, int id, boolean create)
@@ -157,7 +124,7 @@ public class FilePageStore implements IPersistentPageStore
 	{
 		// session attribute must be added here *before* any asynchronous calls
 		// when session is no longer available
-		getSessionAttribute(context, true);
+		getSessionIdentifier(context, true);
 
 		return true;
 	}
@@ -165,13 +132,13 @@ public class FilePageStore implements IPersistentPageStore
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
-		SessionAttribute attribute = getSessionAttribute(context, false);
-		if (attribute == null)
+		String identifier = getSessionIdentifier(context, false);
+		if (identifier == null)
 		{
 			return null;
 		}
 
-		byte[] data = readFile(attribute.identifier, id);
+		byte[] data = readFile(identifier, id);
 		if (data == null) {
 			return null;
 		}
@@ -225,19 +192,18 @@ public class FilePageStore implements IPersistentPageStore
 	@Override
 	public void removePage(IPageContext context, IManageablePage page)
 	{
-		SessionAttribute attribute = getSessionAttribute(context, false);
-		if (attribute == null)
+		String identifier = getSessionIdentifier(context, false);
+		if (identifier == null)
 		{
 			return;
 		}
 
-		File file = getPageFile(attribute.identifier, page.getPageId(), false);
+		File file = getPageFile(identifier, page.getPageId(), false);
 		if (file.exists())
 		{
 			if (!file.delete())
 			{
-				log.warn("cannot remove page data for session {} page {}", attribute.identifier,
-					page.getPageId());
+				log.warn("cannot remove page data for session {} page {}", identifier, page.getPageId());
 			}
 		}
 	}
@@ -245,16 +211,17 @@ public class FilePageStore implements IPersistentPageStore
 	@Override
 	public void removeAllPages(IPageContext context)
 	{
-		SessionAttribute attribute = getSessionAttribute(context, false);
-		if (attribute == null)
+		String identifier = getSessionIdentifier(context, false);
+		if (identifier == null)
 		{
 			return;
 		}
 
-		removeFolder(attribute.identifier);
+		removePersistent(identifier);
 	}
 
-	private void removeFolder(String identifier)
+	@Override
+	protected void removePersistent(String identifier)
 	{
 		folders.remove(identifier);
 	}
@@ -266,8 +233,8 @@ public class FilePageStore implements IPersistentPageStore
 	@Override
 	public void addPage(IPageContext context, IManageablePage page)
 	{
-		SessionAttribute attribute = getSessionAttribute(context, false);
-		if (attribute == null)
+		String identifier = getSessionIdentifier(context, false);
+		if (identifier == null)
 		{
 			return;
 		}
@@ -289,9 +256,9 @@ public class FilePageStore implements IPersistentPageStore
 			data = serializer.serialize(page);
 		}
 
-		writeFile(attribute.identifier, page.getPageId(), type, data);
+		writeFile(identifier, page.getPageId(), type, data);
 
-		checkMaxSize(attribute.identifier);
+		checkMaxSize(identifier);
 	}
 
 	private void writeFile(String identifier, int pageId, String pageType, byte[] data)
@@ -342,60 +309,6 @@ public class FilePageStore implements IPersistentPageStore
 		}
 	}
 
-	protected SessionAttribute getSessionAttribute(IPageContext context, boolean create)
-	{
-		SessionAttribute attribute = context.getSessionAttribute(KEY);
-		if (attribute == null && create)
-		{
-			attribute = new SessionAttribute(applicationName, context.getSessionId());
-			context.setSessionAttribute(KEY, attribute);
-		}
-		return attribute;
-	}
-
-	/**
-	 * Attribute held in session.
-	 */
-	static class SessionAttribute implements Serializable, HttpSessionBindingListener
-	{
-
-		private final String applicationName;
-
-		/**
-		 * The identifier of the session, must not be equal to {@link Session#getId()}, e.g. when
-		 * the container changes the id after authorization.
-		 */
-		public final String identifier;
-
-		public SessionAttribute(String applicationName, String sessionIdentifier)
-		{
-			this.applicationName = Args.notNull(applicationName, "applicationName");
-			this.identifier = Args.notNull(sessionIdentifier, "sessionIdentifier");
-		}
-
-
-		@Override
-		public void valueBound(HttpSessionBindingEvent event)
-		{
-		}
-
-		@Override
-		public void valueUnbound(HttpSessionBindingEvent event)
-		{
-			FilePageStore store = FILE_STORES.get(applicationName);
-			if (store == null)
-			{
-				log.warn(
-					"Cannot remove data '{}' because disk store for application '{}' is no longer present.",
-					identifier, applicationName);
-			}
-			else
-			{
-				store.removeFolder(identifier);
-			}
-		}
-	}
-
 	public class LastModifiedComparator implements Comparator<File>
 	{
 
@@ -405,12 +318,6 @@ public class FilePageStore implements IPersistentPageStore
 			return Long.compare(f2.lastModified(), f1.lastModified());
 		}
 
-	}
-
-	@Override
-	public String getContextIdentifier(IPageContext context)
-	{
-		return getSessionAttribute(context, true).identifier;
 	}
 
 	@Override
@@ -531,40 +438,5 @@ public class FilePageStore implements IPersistentPageStore
 		}
 
 		return Bytes.bytes(total);
-	}
-
-	private static class PersistedPage implements IPersistedPage
-	{
-		private int pageId;
-
-		private String pageType;
-
-		private long pageSize;
-
-		public PersistedPage(int pageId, String pageType, long pageSize)
-		{
-			this.pageId = pageId;
-			this.pageType = pageType;
-			this.pageSize = pageSize;
-		}
-
-		@Override
-		public int getPageId()
-		{
-			return pageId;
-		}
-
-		@Override
-		public Bytes getPageSize()
-		{
-			return Bytes.bytes(pageSize);
-		}
-
-		@Override
-		public String getPageType()
-		{
-			return pageType;
-		}
-
 	}
 }

@@ -31,7 +31,7 @@ import org.apache.wicket.util.lang.Args;
  * 
  * @see SerializingPageStore
  */
-class SerializedPage implements IManageablePage
+public class SerializedPage implements IManageablePage
 {
 
 	private final int pageId;
