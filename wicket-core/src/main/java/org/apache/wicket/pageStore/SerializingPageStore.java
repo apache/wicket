@@ -19,6 +19,7 @@ package org.apache.wicket.pageStore;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * A store that serializes all pages before delegating and vice versa.
@@ -62,7 +63,7 @@ public class SerializingPageStore extends DelegatingPageStore
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
-		IManageablePage page = super.getPage(context, id);
+		IManageablePage page = getDelegate().getPage(context, id);
 
 		if (page instanceof SerializedPage) {
 			page = (IManageablePage)serializer.deserialize(((SerializedPage)page).getData());
@@ -74,8 +75,8 @@ public class SerializingPageStore extends DelegatingPageStore
 	public void addPage(IPageContext context, IManageablePage page)
 	{
 		if (page instanceof SerializedPage == false) {
-			page = new SerializedPage(page.getPageId(), page.getClass().getName(), serializer.serialize(page));
+			page = new SerializedPage(page.getPageId(), Classes.name(page.getClass()), serializer.serialize(page));
 		}
-		super.addPage(context, page);
+		getDelegate().addPage(context, page);
 	}
 }

@@ -52,7 +52,7 @@ public class RequestPageStore extends DelegatingPageStore
 			return page;
 		}
 
-		return super.getPage(context, id);
+		return getDelegate().getPage(context, id);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class RequestPageStore extends DelegatingPageStore
 	{
 		getRequestData(context).remove(page);
 
-		super.removePage(context, page);
+		getDelegate().removePage(context, page);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class RequestPageStore extends DelegatingPageStore
 	{
 		getRequestData(context).removeAll();
 
-		super.removeAllPages(context);
+		getDelegate().removeAllPages(context);
 	}
 
 	@Override
@@ -96,12 +96,12 @@ public class RequestPageStore extends DelegatingPageStore
 
 			if (isPageStateless == false)
 			{
-				super.addPage(context, page);
+				getDelegate().addPage(context, page);
 			}
 		}
 		requestData.removeAll();
 
-		super.detach(context);
+		getDelegate().detach(context);
 	}
 
 	private RequestData getRequestData(IPageContext context)

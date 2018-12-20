@@ -37,6 +37,7 @@ import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * A storage of pages in memory.
@@ -341,7 +342,7 @@ public class InMemoryPageStore implements IPersistentPageStore
 		public PersistedPage(IManageablePage page, long size)
 		{
 			this.id = page.getPageId();
-			this.type = page instanceof SerializedPage ? ((SerializedPage)page).getPageType() : page.getClass().getName();
+			this.type = page instanceof SerializedPage ? ((SerializedPage)page).getPageType() : Classes.name(page.getClass());;
 			this.size = size;
 		}
 

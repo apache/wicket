@@ -24,6 +24,7 @@ import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.pageStore.crypt.DefaultCrypter;
 import org.apache.wicket.pageStore.crypt.ICrypter;
 import org.apache.wicket.serialize.ISerializer;
+import org.apache.wicket.util.lang.Args;
 
 /**
  * A store that encrypts all pages before delegating and vice versa.
@@ -68,6 +69,8 @@ public class CryptingPageStore extends DelegatingPageStore
 	@Override
 	public boolean canBeAsynchronous(IPageContext context)
 	{
+		// session data must be added here *before* any asynchronous calls
+		// when session is no longer available
 		getSessionData(context);
 
 		return getDelegate().canBeAsynchronous(context);
@@ -93,7 +96,7 @@ public class CryptingPageStore extends DelegatingPageStore
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
-		IManageablePage page = super.getPage(context, id);
+		IManageablePage page = getDelegate().getPage(context, id);
 
 		if (page != null)
 		{
@@ -127,16 +130,18 @@ public class CryptingPageStore extends DelegatingPageStore
 
 		page = new SerializedPage(page.getPageId(), serializedPage.getPageType(), encrypted);
 
-		super.addPage(context, page);
+		getDelegate().addPage(context, page);
 	}
 
 	private static class SessionData implements Serializable
 	{
 
-		private ICrypter cypter;
+		private final ICrypter cypter;
 
 		public SessionData(ICrypter crypter)
 		{
+			Args.notNull(crypter, "crypter");
+			
 			this.cypter= crypter;
 		}
 

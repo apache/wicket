@@ -339,7 +339,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			log.debug("Returning the page of a non-stored entry with page id '{}'", pageId);
 			return entry.page;
 		}
-		IManageablePage page = super.getPage(context, pageId);
+		IManageablePage page = getDelegate().getPage(context, pageId);
 
 		log.debug("Returning the page of a stored entry with page id '{}'", pageId);
 
@@ -359,7 +359,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			}
 		}
 
-		super.removePage(context, page);
+		getDelegate().removePage(context, page);
 	}
 
 	@Override
@@ -391,7 +391,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			log.warn("Delegated page store '{}' can not be asynchronous", getDelegate().getClass().getName());
 		}
 		
-		super.addPage(context, page);
+		getDelegate().addPage(context, page);
 	}
 
 	@Override
@@ -406,6 +406,6 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			}
 		}
 		
-		super.removeAllPages(context);
+		getDelegate().removeAllPages(context);
 	}
 }

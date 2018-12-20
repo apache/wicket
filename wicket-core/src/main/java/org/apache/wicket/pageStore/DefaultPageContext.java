@@ -30,11 +30,6 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class DefaultPageContext implements IPageContext
 {
-	private Session session;
-
-	public DefaultPageContext() {
-		this.session = Session.get();
-	}
 	
 	/**
 	 * @see org.apache.wicket.pageStore.IPageContext#getSessionId()
@@ -42,6 +37,8 @@ public class DefaultPageContext implements IPageContext
 	@Override
 	public String getSessionId()
 	{
+		Session session = Session.get();
+		
 		session.bind();
 		
 		return session.getId();
@@ -51,12 +48,13 @@ public class DefaultPageContext implements IPageContext
 	@Override
 	public <T extends Serializable> T getSessionAttribute(String key)
 	{
-		return (T)session.getAttribute(key);
+		return (T)Session.get().getAttribute(key);
 	}
 	
 	@Override
 	public <T extends Serializable> void setSessionAttribute(String key, T value)
 	{
+		Session session = Session.get();
 		session.bind();
 		session.setAttribute(key, value);
 	}
@@ -64,12 +62,14 @@ public class DefaultPageContext implements IPageContext
 	@Override
 	public <T extends Serializable> T getSessionData(MetaDataKey<T> key)
 	{
-		return session.getMetaData(key);
+		return Session.get().getMetaData(key);
 	}
 
 	@Override
 	public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value)
 	{
+		Session session = Session.get();
+
 		synchronized (session)
 		{
 			T oldValue = session.getMetaData(key);

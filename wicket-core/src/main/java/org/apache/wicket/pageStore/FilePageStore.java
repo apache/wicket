@@ -47,6 +47,7 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +99,7 @@ public class FilePageStore implements IPersistentPageStore
 	}
 
 	/**
-	 * Create a store to disk.
+	 * Create a store to files.
 	 * 
 	 * @param applicationName
 	 *            name of application
@@ -282,9 +283,9 @@ public class FilePageStore implements IPersistentPageStore
 		{
 			if (serializer == null)
 			{
-				throw new WicketRuntimeException("DiskPageStore not configured for serialization");
+				throw new WicketRuntimeException("FilePageStore not configured for serialization");
 			}
-			type = page.getClass().getName();
+			type = Classes.name(page.getClass());
 			data = serializer.serialize(page);
 		}
 
@@ -401,7 +402,7 @@ public class FilePageStore implements IPersistentPageStore
 		@Override
 		public int compare(File f1, File f2)
 		{
-			return (int)(f2.lastModified() - f1.lastModified());
+			return Long.compare(f2.lastModified(), f1.lastModified());
 		}
 
 	}

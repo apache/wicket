@@ -32,6 +32,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * A store keeping a configurable maximum of pages in the session.
@@ -106,7 +107,7 @@ public class InSessionPageStore extends DelegatingPageStore
 			}
 		}
 
-		return super.getPage(context, id);
+		return getDelegate().getPage(context, id);
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class InSessionPageStore extends DelegatingPageStore
 
 		data.add(context, page, maxPages);
 		
-		super.addPage(context, page);
+		getDelegate().addPage(context, page);
 	}
 
 	@Override
@@ -127,7 +128,7 @@ public class InSessionPageStore extends DelegatingPageStore
 			data.remove(page);
 		}
 
-		super.removePage(context, page);
+		getDelegate().removePage(context, page);
 	}
 
 	@Override
@@ -138,7 +139,7 @@ public class InSessionPageStore extends DelegatingPageStore
 			data.removeAll();
 		}
 
-		super.removeAllPages(context);
+		getDelegate().removeAllPages(context);
 	}
 
 	private SessionData getSessionData(IPageContext context, boolean create)
@@ -255,7 +256,7 @@ public class InSessionPageStore extends DelegatingPageStore
 					{
 						throw new IllegalStateException("SessionData#init() was not called");
 					}
-					pages.set(p,  new SerializedPage(page.getPageId(), page.getClass().getName(), serializer.serialize(page)));
+					pages.set(p,  new SerializedPage(page.getPageId(), Classes.name(page.getClass()), serializer.serialize(page)));
 				}
 			}
 

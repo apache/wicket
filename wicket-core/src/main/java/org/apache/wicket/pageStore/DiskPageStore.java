@@ -51,6 +51,7 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,7 @@ import org.slf4j.LoggerFactory;
  * However this does not help in case of alternating requests between multiple browser windows: In this case requests are processed for
  * different page ids and the oldests pages are constantly overwritten (this can easily happen with Ajax timers on one or more pages).
  * This leads to pages with identical id superfluously kept in the file, while older pages are prematurely expelled.
- * Any following request to these older pages will then fail {@link PageExpiredException}.   
+ * Any following request to these older pages will then fail with {@link PageExpiredException}.   
  */
 public class DiskPageStore implements IPersistentPageStore
 {
@@ -71,6 +72,9 @@ public class DiskPageStore implements IPersistentPageStore
 
 	private static final String KEY = "wicket:DiskPageStore";
 
+	/**
+	 * Name of the file where the page index is stored.
+	 */
 	private static final String INDEX_FILE_NAME = "DiskPageStoreIndex";
 
 	/**
@@ -276,7 +280,7 @@ public class DiskPageStore implements IPersistentPageStore
 						"DiskPageStore not configured for serialization");
 				}
 				data = serializer.serialize(page);
-				type = page.getClass().getName();
+				type = Classes.name(page.getClass());
 			}
 
 			diskData.savePage(page.getPageId(), type, data);
@@ -335,24 +339,16 @@ public class DiskPageStore implements IPersistentPageStore
 		File index = new File(storeFolder, INDEX_FILE_NAME);
 		if (index.exists() && index.length() > 0)
 		{
-			try
+			try (InputStream stream = new FileInputStream(index))
 			{
-				InputStream stream = new FileInputStream(index);
 				ObjectInputStream ois = new ObjectInputStream(stream);
-				try
-				{
-					diskDatas.clear();
 
-					for (DiskData diskData : (List<DiskData>)ois.readObject())
-					{
-						diskData.pageStore = this;
-						diskDatas.put(diskData.sessionIdentifier, diskData);
-					}
-				}
-				finally
+				diskDatas.clear();
+
+				for (DiskData diskData : (List<DiskData>)ois.readObject())
 				{
-					stream.close();
-					ois.close();
+					diskData.pageStore = this;
+					diskDatas.put(diskData.sessionIdentifier, diskData);
 				}
 			}
 			catch (Exception e)
@@ -363,9 +359,6 @@ public class DiskPageStore implements IPersistentPageStore
 		Files.remove(index);
 	}
 
-	/**
-	 * 
-	 */
 	private void saveIndex()
 	{
 		File storeFolder = folders.getBase();
@@ -373,27 +366,19 @@ public class DiskPageStore implements IPersistentPageStore
 		{
 			File index = new File(storeFolder, INDEX_FILE_NAME);
 			Files.remove(index);
-			try
+			try (OutputStream stream = new FileOutputStream(index))
 			{
-				OutputStream stream = new FileOutputStream(index);
 				ObjectOutputStream oos = new ObjectOutputStream(stream);
-				try
+				
+				List<DiskData> list = new ArrayList<>(diskDatas.size());
+				for (DiskData diskData : diskDatas.values())
 				{
-					List<DiskData> list = new ArrayList<>(diskDatas.size());
-					for (DiskData diskData : diskDatas.values())
+					if (diskData.sessionIdentifier != null)
 					{
-						if (diskData.sessionIdentifier != null)
-						{
-							list.add(diskData);
-						}
+						list.add(diskData);
 					}
-					oos.writeObject(list);
 				}
-				finally
-				{
-					stream.close();
-					oos.close();
-				}
+				oos.writeObject(list);
 			}
 			catch (Exception e)
 			{
@@ -493,7 +478,7 @@ public class DiskPageStore implements IPersistentPageStore
 		{
 			if (fileName == null)
 			{
-				fileName = pageStore.getSessionFileName(sessionIdentifier, true);
+				fileName = pageStore.getSessionFileName(sessionIdentifier);
 			}
 			return fileName;
 		}
@@ -553,7 +538,7 @@ public class DiskPageStore implements IPersistentPageStore
 		}
 
 		/**
-		 * Removes the page from pagemap file.
+		 * Removes the page from disk.
 		 * 
 		 * @param pageId
 		 */
@@ -656,15 +641,14 @@ public class DiskPageStore implements IPersistentPageStore
 
 	/**
 	 * Returns the file name for specified session. If the session folder (folder that contains the
-	 * file) does not exist and createSessionFolder is true, the folder will be created.
+	 * file) does not exist, the folder will be created.
 	 * 
 	 * @param sessionIdentifier
-	 * @param createSessionFolder
 	 * @return file name for pagemap
 	 */
-	private String getSessionFileName(String sessionIdentifier, boolean createSessionFolder)
+	private String getSessionFileName(String sessionIdentifier)
 	{
-		File sessionFolder = folders.get(sessionIdentifier, createSessionFolder);
+		File sessionFolder = folders.get(sessionIdentifier, true);
 		return new File(sessionFolder, "data").getAbsolutePath();
 	}
 

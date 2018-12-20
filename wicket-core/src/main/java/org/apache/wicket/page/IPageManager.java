@@ -57,7 +57,7 @@ public interface IPageManager
 	 *            page to add
 	 */
 	void addPage(IManageablePage page);
-
+	
 	/**
 	 * Remove all pages.
 	 */
@@ -79,4 +79,18 @@ public interface IPageManager
 	 * @return store or <code>null</code>
 	 */
 	IPageStore getPageStore();
+
+	/**
+	 * @deprecated will be removed in Wicket 10
+	 */
+	default void touchPage(IManageablePage page) {
+		addPage(page);
+	}
+
+	/**
+	 * @deprecated will be removed in Wicket 10
+	 */
+	default void clear() {
+		removeAllPages();
+	}
 }
