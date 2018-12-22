@@ -19,6 +19,7 @@ package org.apache.wicket.pageStore;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,7 +29,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.wicket.page.IManageablePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,78 +60,18 @@ public abstract class AbstractConcurrentPageStoreTest
 		return existing != null ? existing : context;
 	}
 
-	private static class TaskPage implements IManageablePage
-	{
-		private final String sessionId;
-
-		private int id;
-
-		private byte[] data;
-
-		public TaskPage(String sessionId, int id)
-		{
-			this.sessionId = sessionId;
-
-			this.id = id;
-
-			int length = FILE_SIZE_MIN + random.nextInt(FILE_SIZE_MAX - FILE_SIZE_MIN);
-			data = new byte[length];
-			random.nextBytes(data);
-		}
-
-		public String getSessionId()
-		{
-			return sessionId;
-		}
-
-		public boolean check(TaskPage other)
-		{
-			if (other.data.length != other.data.length)
-			{
-				log.error("data.length != length");
-				return false;
-			}
-			if (other.id != other.id)
-			{
-				log.error("data.id != id");
-				return false;
-			}
-			if (other.sessionId != other.sessionId)
-			{
-				log.error("data.sessionId != sessionId");
-				return false;
-			}
-			return true;
-		}
-
-		@Override
-		public boolean isPageStateless()
-		{
-			return false;
-		}
-
-		@Override
-		public int getPageId()
-		{
-			return id;
-		}
-
-		@Override
-		public void detach()
-		{
-		}
-
-		@Override
-		public boolean setFreezePageId(boolean freeze)
-		{
-			return false;
-		}
+	private static SerializedPage createPage(String sessionId, int id) {
+		int length = FILE_SIZE_MIN + random.nextInt(FILE_SIZE_MAX - FILE_SIZE_MIN);
+		byte[] data = new byte[length];
+		random.nextBytes(data);
+		
+		return new SerializedPage(id, sessionId, data);
 	}
-
+	
 	private final Map<String, AtomicInteger> sessionCounter = new ConcurrentHashMap<String, AtomicInteger>();
-	private final ConcurrentLinkedQueue<TaskPage> pagesToSave = new ConcurrentLinkedQueue<TaskPage>();
-	private final ConcurrentLinkedQueue<TaskPage> filesToRead1 = new ConcurrentLinkedQueue<TaskPage>();
-	private final ConcurrentLinkedQueue<TaskPage> filesToRead2 = new ConcurrentLinkedQueue<TaskPage>();
+	private final ConcurrentLinkedQueue<SerializedPage> pagesToSave = new ConcurrentLinkedQueue<SerializedPage>();
+	private final ConcurrentLinkedQueue<SerializedPage> filesToRead1 = new ConcurrentLinkedQueue<SerializedPage>();
+	private final ConcurrentLinkedQueue<SerializedPage> filesToRead2 = new ConcurrentLinkedQueue<SerializedPage>();
 
 	private final AtomicInteger read1Count = new AtomicInteger(0);
 	private final AtomicInteger read2Count = new AtomicInteger(0);
@@ -171,9 +111,9 @@ public abstract class AbstractConcurrentPageStoreTest
 		for (int i = 0; i < FILES_COUNT; ++i)
 		{
 			String session = randomSessionId();
-			TaskPage file = new TaskPage(session, nextSessionId(session));
+			SerializedPage page = createPage(session, nextSessionId(session));
 			long now = System.nanoTime();
-			pagesToSave.add(file);
+			pagesToSave.add(page);
 			long duration = System.nanoTime() - now;
 			saveTime.addAndGet((int)duration);
 		}
@@ -212,20 +152,20 @@ public abstract class AbstractConcurrentPageStoreTest
 		@Override
 		protected void doRun()
 		{
-			TaskPage page;
+			SerializedPage page;
 
 			while ((page = pagesToSave.poll()) != null || saveCount.get() < FILES_COUNT)
 			{
 				if (page != null)
 				{
-					pageStore.addPage(getContext(page.getSessionId()), page);
+					pageStore.addPage(getContext(page.getPageType()), page);
 
 					if (saveCount.get() % READ_MODULO == 0)
 					{
 						filesToRead1.add(page);
 					}
 					saveCount.incrementAndGet();
-					bytesWritten.addAndGet(page.data.length);
+					bytesWritten.addAndGet(page.getData().length);
 				}
 
 				try
@@ -248,21 +188,20 @@ public abstract class AbstractConcurrentPageStoreTest
 		@Override
 		protected void doRun()
 		{
-			TaskPage page;
+			SerializedPage page;
 			while ((page = filesToRead1.poll()) != null || !saveDone.get())
 			{
 				if (page != null)
 				{
-					TaskPage other = (TaskPage)pageStore.getPage(getContext(page.getSessionId()),
-						page.getPageId());
-					if (page.check(other) == false)
+					SerializedPage other = (SerializedPage)pageStore.getPage(getContext(page.getPageType()), page.getPageId());
+					if (Arrays.compare(page.getData(), other.getData()) != 0)
 					{
 						failures.incrementAndGet();
 						log.error("Detected error number: " + failures.get());
 					}
 					filesToRead2.add(page);
 					read1Count.incrementAndGet();
-					bytesRead.addAndGet(other.data.length);
+					bytesRead.addAndGet(other.getData().length);
 				}
 
 				try
@@ -284,20 +223,19 @@ public abstract class AbstractConcurrentPageStoreTest
 		@Override
 		protected void doRun()
 		{
-			TaskPage page;
+			SerializedPage page;
 			while ((page = filesToRead2.poll()) != null || !read1Done.get())
 			{
 				if (page != null)
 				{
-					TaskPage other = (TaskPage)pageStore.getPage(getContext(page.getSessionId()),
-						page.getPageId());
-					if (page.check(other) == false)
+					SerializedPage other = (SerializedPage)pageStore.getPage(getContext(page.getPageType()), page.getPageId());
+					if (Arrays.compare(page.getData(), other.getData()) != 0)
 					{
 						failures.incrementAndGet();
 						log.error("Detected error number: " + failures.get());
 					}
 					read2Count.incrementAndGet();
-					bytesRead.addAndGet(other.data.length);
+					bytesRead.addAndGet(other.getData().length);
 				}
 
 				try

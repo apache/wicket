@@ -30,17 +30,17 @@ public interface IPersistentPageStore extends IPageStore
 	/**
 	 * Get the identifier for pages stored for the given context.
 	 */
-	String getContextIdentifier(IPageContext context);
+	String getSessionIdentifier(IPageContext context);
 
 	/**
 	 * Get the identifiers for all pages stored in all contexts.
 	 */
-	Set<String> getContextIdentifiers();
+	Set<String> getSessionIdentifiers();
 
 	/**
-	 * Get information about all persisted pages with the given context identifier.
+	 * Get information about all persisted pages with the given session identifier.
 	 */
-	List<IPersistedPage> getPersistentPages(String contextIdentifier);
+	List<IPersistedPage> getPersistedPages(String sessionIdentifier);
 
 	/**
 	 * Get total size of all pages stored in all contexts. 

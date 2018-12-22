@@ -47,12 +47,13 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * A storage of pages on disk.
+ * <p>
+ * All pages passed into this store are restricted to be {@link SerializedPage}s.
  * <p>
  * Implementation note: {@link DiskPageStore} writes pages into a single file, appending new pages while overwriting the oldest pages.
  * Since Ajax requests do not change the id of a page, {@link DiskPageStore} offers an optimization to overwrite the most recently written
@@ -70,8 +71,6 @@ public class DiskPageStore extends AbstractPersistentPageStore
 	 * Name of the file where the page index is stored.
 	 */
 	private static final String INDEX_FILE_NAME = "DiskPageStoreIndex";
-
-	private final ISerializer serializer;
 
 	private final Bytes maxSizePerSession;
 
@@ -115,7 +114,6 @@ public class DiskPageStore extends AbstractPersistentPageStore
 		
 		this.folders = new NestedFolders(new File(fileStoreFolder, applicationName + "-filestore"));
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
-		this.serializer = serializer; // optional
 
 		this.diskDatas = new ConcurrentHashMap<>();
 
@@ -140,14 +138,13 @@ public class DiskPageStore extends AbstractPersistentPageStore
 	}
 
 	/**
-	 * Versioning is supported if a serializer was provided to the constructor.
+	 * Pages are already serialized.
 	 */
 	@Override
-	public boolean supportsVersioning()
-	{
-		return serializer != null;
+	public boolean supportsVersioning() {
+		return true;
 	}
-
+	
 	@Override
 	public void destroy()
 	{
@@ -159,135 +156,79 @@ public class DiskPageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	public boolean canBeAsynchronous(IPageContext context)
+	protected IManageablePage getPersistedPage(String identifier, int id)
 	{
-		// session attribute must be added here *before* any asynchronous calls
-		// when session is no longer available
-		getSessionIdentifier(context, true);
-
-		return true;
-	}
-
-	@Override
-	public IManageablePage getPage(IPageContext context, int id)
-	{
-		IManageablePage page = null;
-
-		DiskData diskData = getDiskData(context, false);
+		DiskData diskData = getDiskData(identifier, false);
 		if (diskData != null)
 		{
 			byte[] data = diskData.loadPage(id);
 			if (data != null)
 			{
-				if (serializer == null)
-				{
-					page = new SerializedPage(id, "unknown", data);
-				}
-				else
-				{
-					page = (IManageablePage)serializer.deserialize(data);
-				}
-
 				if (log.isDebugEnabled())
 				{
-					log.debug("Returning page with id '{}' in session with id '{}'", id, context.getSessionId());
+					log.debug("Returning page with id '{}' in session with id '{}'", id, identifier);
 				}
+				
+				return new SerializedPage(id, "unknown", data);
 			}
 		}
-
-		return page;
+		
+		return null;
 	}
 
 	@Override
-	public void removePage(IPageContext context, IManageablePage page)
+	protected void removePersistedPage(String identifier, IManageablePage page)
 	{
-		DiskData diskData = getDiskData(context, false);
+		DiskData diskData = getDiskData(identifier, false);
 		if (diskData != null)
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("Removing page with id '{}' in session with id '{}'", page.getPageId(),
-					context.getSessionId());
+				log.debug("Removing page with id '{}' in session with id '{}'", page.getPageId(), identifier);
 			}
+			
 			diskData.removeData(page.getPageId());
 		}
 	}
 
 	@Override
-	public void removeAllPages(IPageContext context)
-	{
-		String identifier = getSessionIdentifier(context, false);
-		if (identifier != null)
-		{
-			removePersistent(identifier);
-		}
-	}
-
-	@Override
-	protected void removePersistent(String identifier)
+	protected void removeAllPersistedPages(String identifier)
 	{
 		DiskData diskData = getDiskData(identifier, false);
-
-		synchronized (diskDatas)
-		{
-			diskDatas.remove(diskData.sessionIdentifier);
-			diskData.unbind();
+		if (diskData != null) {
+			synchronized (diskDatas)
+			{
+				diskDatas.remove(diskData.sessionIdentifier);
+				diskData.unbind();
+			}
 		}
 	}
 
-	/**
-	 * Supports {@link SerializedPage}s too - for this to work the delegating {@link IPageStore}
-	 * must use the same {@link ISerializer} as this one.
-	 */
 	@Override
-	public void addPage(IPageContext context, IManageablePage page)
+	protected void addPersistedPage(String identifier, IManageablePage page)
 	{
-		DiskData diskData = getDiskData(context, true);
-		if (diskData != null)
+		if (page instanceof SerializedPage == false)
 		{
-			log.debug("Storing data for page with id '{}' in session with id '{}'",
-				page.getPageId(), context.getSessionId());
-
-			byte[] data;
-			String type;
-			if (page instanceof SerializedPage)
-			{
-				data = ((SerializedPage)page).getData();
-				type = ((SerializedPage)page).getPageType();
-			}
-			else
-			{
-				if (serializer == null)
-				{
-					throw new WicketRuntimeException(
-						"DiskPageStore not configured for serialization");
-				}
-				data = serializer.serialize(page);
-				type = Classes.name(page.getClass());
-			}
-
-			diskData.savePage(page.getPageId(), type, data);
+			throw new WicketRuntimeException("works with serialized pages only");
 		}
+		SerializedPage serializedPage = (SerializedPage) page;
+
+		DiskData diskData = getDiskData(identifier, true);
+
+		log.debug("Storing data for page with id '{}' in session with id '{}'", serializedPage.getPageId(), identifier);
+
+		byte[] data = serializedPage.getData();
+		String type = serializedPage.getPageType();
+
+		diskData.savePage(serializedPage.getPageId(), type, data);
 	}
 
 	/**
+	 * Get the data on disk for the given identifier.
 	 * 
-	 * @param context
-	 * @param create
-	 * @return the session entry
+	 * @param identifier identifier
+	 * @return matching data
 	 */
-	protected DiskData getDiskData(final IPageContext context, final boolean create)
-	{
-		String identifier = getSessionIdentifier(context, create);
-
-		if (!create && identifier == null)
-		{
-			return null;
-		}
-
-		return getDiskData(identifier, create);
-	}
-
 	protected DiskData getDiskData(String sessionIdentifier, boolean create)
 	{
 		if (!create)
@@ -360,7 +301,7 @@ public class DiskPageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	public Set<String> getContextIdentifiers()
+	public Set<String> getSessionIdentifiers()
 	{
 		return Collections.unmodifiableSet(diskDatas.keySet());
 	}
@@ -372,7 +313,7 @@ public class DiskPageStore extends AbstractPersistentPageStore
 	 * @return a list of the last N page windows
 	 */
 	@Override
-	public List<IPersistedPage> getPersistentPages(String sessionIdentifier)
+	public List<IPersistedPage> getPersistedPages(String sessionIdentifier)
 	{
 		List<IPersistedPage> pages = new ArrayList<>();
 

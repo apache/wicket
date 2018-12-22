@@ -150,7 +150,7 @@ public class PersistedPanel extends GenericPanel<IPersistentPageStore>
 
 		IPageContext context = new DefaultPageContext();
 		
-		return store.getContextIdentifier(context);
+		return store.getSessionIdentifier(context);
 	}
 
 	private DataTable<IPersistedPage, String> createTable(String id, IModel<String> sessionId)

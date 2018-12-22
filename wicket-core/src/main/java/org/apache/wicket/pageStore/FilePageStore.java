@@ -40,12 +40,13 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * A storage of pages in files.
+ * <p>
+ * All pages passed into this store are restricted to be {@link SerializedPage}s.
  * <p>
  * While {@link DiskPageStore} uses a single file per session, this implementation stores each page
  * in its own file. This improves on a {@link DiskPageStore disadvantage of DiskPageStore} surfacing
@@ -58,8 +59,6 @@ public class FilePageStore extends AbstractPersistentPageStore
 	private static final String FILE_SUFFIX = ".data";
 
 	private static final Logger log = LoggerFactory.getLogger(FilePageStore.class);
-
-	private final ISerializer serializer;
 
 	private final Bytes maxSizePerSession;
 
@@ -100,16 +99,15 @@ public class FilePageStore extends AbstractPersistentPageStore
 		
 		this.folders = new NestedFolders(new File(fileStoreFolder, applicationName + "-filestore"));
 		this.maxSizePerSession = Args.notNull(maxSizePerSession, "maxSizePerSession");
-		this.serializer = serializer; // optional
 	}
 
 	/**
-	 * Versioning is supported if a serializer was provided to the constructor.
+	 * Pages are always serialized, so versioning is supported.
 	 */
 	@Override
 	public boolean supportsVersioning()
 	{
-		return serializer != null;
+		return true;
 	}
 
 	private File getPageFile(String sessionId, int id, boolean create)
@@ -120,40 +118,13 @@ public class FilePageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	public boolean canBeAsynchronous(IPageContext context)
-	{
-		// session attribute must be added here *before* any asynchronous calls
-		// when session is no longer available
-		getSessionIdentifier(context, true);
-
-		return true;
-	}
-
-	@Override
-	public IManageablePage getPage(IPageContext context, int id)
-	{
-		String identifier = getSessionIdentifier(context, false);
-		if (identifier == null)
-		{
-			return null;
-		}
-
+	protected IManageablePage getPersistedPage(String identifier, int id) {
 		byte[] data = readFile(identifier, id);
 		if (data == null) {
 			return null;
 		}
 		
-		IManageablePage page;
-		if (serializer == null)
-		{
-			page = new SerializedPage(id, "unknown", data);
-		}
-		else
-		{
-			page = (IManageablePage)serializer.deserialize(data);
-		}
-
-		return page;
+		return new SerializedPage(id, "unknown", data);
 	}
 
 	private byte[] readFile(String identifier, int id)
@@ -190,14 +161,7 @@ public class FilePageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	public void removePage(IPageContext context, IManageablePage page)
-	{
-		String identifier = getSessionIdentifier(context, false);
-		if (identifier == null)
-		{
-			return;
-		}
-
+	protected void removePersistedPage(String identifier, IManageablePage page) {
 		File file = getPageFile(identifier, page.getPageId(), false);
 		if (file.exists())
 		{
@@ -209,54 +173,22 @@ public class FilePageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	public void removeAllPages(IPageContext context)
-	{
-		String identifier = getSessionIdentifier(context, false);
-		if (identifier == null)
-		{
-			return;
-		}
-
-		removePersistent(identifier);
-	}
-
-	@Override
-	protected void removePersistent(String identifier)
-	{
+	protected void removeAllPersistedPages(String identifier) {
 		folders.remove(identifier);
 	}
 
-	/**
-	 * Supports {@link SerializedPage}s too - for this to work the delegating {@link IPageStore}
-	 * must use the same {@link ISerializer} as this one.
-	 */
 	@Override
-	public void addPage(IPageContext context, IManageablePage page)
-	{
-		String identifier = getSessionIdentifier(context, false);
-		if (identifier == null)
+	protected void addPersistedPage(String identifier, IManageablePage page) {
+		if (page instanceof SerializedPage == false)
 		{
-			return;
+			throw new WicketRuntimeException("works with serialized pages only");
 		}
+		SerializedPage serializedPage = (SerializedPage) page;
 
-		String type;
-		byte[] data;
-		if (page instanceof SerializedPage)
-		{
-			type = ((SerializedPage)page).getPageType();
-			data = ((SerializedPage)page).getData();
-		}
-		else
-		{
-			if (serializer == null)
-			{
-				throw new WicketRuntimeException("FilePageStore not configured for serialization");
-			}
-			type = Classes.name(page.getClass());
-			data = serializer.serialize(page);
-		}
+		String type = serializedPage.getPageType();
+		byte[] data = serializedPage.getData();
 
-		writeFile(identifier, page.getPageId(), type, data);
+		writeFile(identifier, serializedPage.getPageId(), type, data);
 
 		checkMaxSize(identifier);
 	}
@@ -321,7 +253,7 @@ public class FilePageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	public Set<String> getContextIdentifiers()
+	public Set<String> getSessionIdentifiers()
 	{
 		Set<String> identifiers = new HashSet<>();
 
@@ -334,11 +266,11 @@ public class FilePageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	public List<IPersistedPage> getPersistentPages(String identifier)
+	public List<IPersistedPage> getPersistedPages(String sessionIdentifier)
 	{
 		List<IPersistedPage> pages = new ArrayList<>();
 
-		File folder = folders.get(identifier, false);
+		File folder = folders.get(sessionIdentifier, false);
 		if (folder.exists())
 		{
 			File[] files = folder.listFiles();

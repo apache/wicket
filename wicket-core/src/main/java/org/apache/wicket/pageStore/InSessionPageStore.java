@@ -28,7 +28,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
-import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
@@ -53,7 +52,8 @@ public class InSessionPageStore extends DelegatingPageStore
 	private int maxPages;
 	
 	/**
-	 * Use this constructor, if sessions are never persisted by the container.
+	 * Use this constructor if pages should not be persisted along with their session, e.g. because a delegated peristent page store
+	 * keeps them anyway for backup. 
 	 * 
 	 * @param delegate
 	 *            store to delegate to
@@ -62,35 +62,24 @@ public class InSessionPageStore extends DelegatingPageStore
 	 */
 	public InSessionPageStore(IPageStore delegate, int maxPages)
 	{
-		this(delegate, maxPages,  new ISerializer()
-		{
-			@Override
-			public byte[] serialize(Object object)
-			{
-				throw new WicketRuntimeException("InSessionPageStore not configured for serialization");
-			}
-			
-			@Override
-			public Object deserialize(byte[] data)
-			{
-				throw new WicketRuntimeException("InSessionPageStore not configured for serialization");
-			}
-		});
+		this(delegate, maxPages, null);
 	}
 	
 	/**
+	 * Use this constructor if pages should be serialized along with their session.
+	 * 
 	 * @param delegate
 	 *            store to delegate to
 	 * @param maxPages
 	 *            maximum pages to keep in session
 	 * @param serializer
-	 *            for serialization of pages if session gets persisted
+	 *            optional serializer of pages in the session
 	 */
 	public InSessionPageStore(IPageStore delegate, int maxPages, ISerializer serializer)
 	{
 		super(delegate);
 
-		this.serializer = Args.notNull(serializer, "serializer");
+		this.serializer = serializer;
 
 		this.maxPages = maxPages;
 	}
@@ -150,7 +139,7 @@ public class InSessionPageStore extends DelegatingPageStore
 			data = context.setSessionData(KEY, new SessionData());
 		}
 
-		if (data != null) {
+		if (data != null && serializer != null) {
 			// data might be deserialized so initialize again
 			data.init(serializer);
 		}
@@ -221,12 +210,8 @@ public class InSessionPageStore extends DelegatingPageStore
 				IManageablePage candidate = pages.get(p);
 
 				if (candidate.getPageId() == id) {
-					if (candidate instanceof SerializedPage)
+					if (candidate instanceof SerializedPage && serializer != null)
 					{
-						if (serializer == null)
-						{
-							throw new IllegalStateException("SessionData#init() was not called");
-						}
 						candidate = (IManageablePage)serializer.deserialize(((SerializedPage)candidate).getData());
 		
 						pages.set(p, candidate);
@@ -245,18 +230,22 @@ public class InSessionPageStore extends DelegatingPageStore
 		 */
 		private void writeObject(final ObjectOutputStream output) throws IOException
 		{
-			// serialize pages if not already
-			for (int p = 0; p < pages.size(); p++)
-			{
-				IManageablePage page = pages.get(p);
-				
-				if ((page instanceof SerializedPage) == false)
+			if (serializer == null) {
+				pages.clear();
+			} else {
+				// serialize pages if not already
+				for (int p = 0; p < pages.size(); p++)
 				{
-					if (serializer == null)
+					IManageablePage page = pages.get(p);
+					
+					if ((page instanceof SerializedPage) == false)
 					{
-						throw new IllegalStateException("SessionData#init() was not called");
+						if (serializer == null)
+						{
+							throw new IllegalStateException("SessionData#init() was not called");
+						}
+						pages.set(p,  new SerializedPage(page.getPageId(), Classes.name(page.getClass()), serializer.serialize(page)));
 					}
-					pages.set(p,  new SerializedPage(page.getPageId(), Classes.name(page.getClass()), serializer.serialize(page)));
 				}
 			}
 

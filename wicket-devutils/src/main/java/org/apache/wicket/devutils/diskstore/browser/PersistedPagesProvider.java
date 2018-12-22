@@ -77,7 +77,7 @@ class PersistedPagesProvider extends SortableDataProvider<IPersistedPage, String
 
 				if (persistentPagesStore != null)
 				{
-					pages.addAll(persistentPagesStore.getPersistentPages(sessId));
+					pages.addAll(persistentPagesStore.getPersistedPages(sessId));
 				}
 			}
 		}

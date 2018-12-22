@@ -38,11 +38,12 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * A provider of a {@link PageManager} with a default chain of page {@link IPageStore}s:
+ * A provider of a {@link PageManager} managing @link IManageablePage}s with a default chain of {@link IPageStore}s:
  * <ol>
  * <li>{@link RequestPageStore} caching pages until end of the request</li>
  * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
  * <li>{@link AsynchronousPageStore} moving storage of pages to a worker thread (if enabled in {@link StoreSettings#isAsynchronous()})</li>
+ * <li>{@link SerializingPageStore} serializing all pages (so they are available for back-button)</li>
  * <li>{@link CryptingPageStore} encrypting all pages (if enabled in {@link StoreSettings#isEncrypted()})</li>
  * <li>{@link DiskPageStore} keeping all pages, configured according to {@link StoreSettings}</li>
  * </ol>
@@ -71,6 +72,7 @@ import org.apache.wicket.util.lang.Bytes;
  * <ul>
  * <li>{@link GroupingPageStore} groups pages with their own maximum page limit</li>
  * <li>{@link FilePageStore} as alternative to the trusted {@link DiskPageStore}</li>
+ * <li>other implementations from <a href="https://github.com/wicketstuff/core/tree/master/datastores-parent">wicketstuff-datastores</a></li>
  * </ul>
  */
 public class DefaultPageManagerProvider implements IPageManagerProvider
@@ -168,10 +170,11 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		Bytes maxSizePerSession = storeSettings.getMaxSizePerSession();
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 
+		IPageStore store = new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession);
 		if (storeSettings.isEncrypted()) {
-			return new SerializingPageStore(new CryptingPageStore(new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession)), getSerializer());
-		} else {
-			return new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession, getSerializer());
+			store = new CryptingPageStore(store);
 		}
+		
+		return new SerializingPageStore(store, getSerializer());		
 	}
 }

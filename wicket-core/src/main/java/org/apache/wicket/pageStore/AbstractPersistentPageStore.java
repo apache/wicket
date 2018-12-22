@@ -26,6 +26,7 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import org.apache.wicket.Session;
+import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
 import org.slf4j.Logger;
@@ -78,18 +79,70 @@ public abstract class AbstractPersistentPageStore implements IPersistentPageStor
 		return true;
 	}
 
+	@Override
+	public IManageablePage getPage(IPageContext context, int id)
+	{
+		String identifier = getSessionIdentifier(context, false);
+		if (identifier == null)
+		{
+			return null;
+		}
+
+		return getPersistedPage(identifier, id);
+	}
+
+	protected abstract IManageablePage getPersistedPage(String identifier, int id);
+	
+	@Override
+	public void removePage(IPageContext context, IManageablePage page)
+	{
+		String identifier = getSessionIdentifier(context, false);
+		if (identifier == null)
+		{
+			return;
+		}
+		
+		removePersistedPage(identifier, page);
+	}
+
+	protected abstract void removePersistedPage(String identifier, IManageablePage page);
+
+	@Override
+	public void removeAllPages(IPageContext context)
+	{
+		String identifier = getSessionIdentifier(context, false);
+		if (identifier == null)
+		{
+			return;
+		}
+		
+		removeAllPersistedPages(identifier);
+	}
+
+	protected abstract void removeAllPersistedPages(String identifier);
+
+	@Override
+	public void addPage(IPageContext context, IManageablePage page)
+	{
+		String identifier = getSessionIdentifier(context, true);
+		
+		addPersistedPage(identifier, page);
+	}
+
+	protected abstract void addPersistedPage(String identifier, IManageablePage page);
+
 	/**
 	 * Get the distinct and stable identifier for the given context.
 	 * 
 	 * @param context the context to identify
 	 * @param create should a new identifier be created if not there already
 	 */
-	protected String getSessionIdentifier(IPageContext context, boolean create)
+	private String getSessionIdentifier(IPageContext context, boolean create)
 	{
 		SessionAttribute attribute = context.getSessionAttribute(KEY);
 		if (attribute == null && create)
 		{
-			attribute = new SessionAttribute(storeKey, context.getSessionId());
+			attribute = new SessionAttribute(storeKey, createSessionIdentifier(context));
 			context.setSessionAttribute(KEY, attribute);
 		}
 		
@@ -97,6 +150,18 @@ public abstract class AbstractPersistentPageStore implements IPersistentPageStor
 			return null;
 		}
 		return attribute.identifier;
+	}
+
+	/**
+	 * Create an identifier for the given context.
+	 * <p>
+	 * Default implementation uses {@link IPageContext#getSessionId()}.
+	 * 
+	 * @param context context
+	 * @return identifier for the sseion
+	 */
+	protected String createSessionIdentifier(IPageContext context) {
+		return context.getSessionId();
 	}
 
 	/**
@@ -136,7 +201,7 @@ public abstract class AbstractPersistentPageStore implements IPersistentPageStor
 			}
 			else
 			{
-				store.removePersistent(identifier);
+				store.removeAllPersistedPages(identifier);
 			}
 		}
 	}
@@ -153,12 +218,10 @@ public abstract class AbstractPersistentPageStore implements IPersistentPageStor
 	}
 
 	@Override
-	public String getContextIdentifier(IPageContext context)
+	public String getSessionIdentifier(IPageContext context)
 	{
 		return getSessionIdentifier(context, true);
 	}
-
-	protected abstract void removePersistent(String identifier);
 
 	protected static class PersistedPage implements IPersistedPage
 	{

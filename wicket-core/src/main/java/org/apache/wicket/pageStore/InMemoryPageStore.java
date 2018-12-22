@@ -65,38 +65,22 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 		return false;
 	}
 	
-	/**
-	 * 
-	 * 
-	 * @return <code>true</code> always
-	 */
 	@Override
-	public boolean canBeAsynchronous(IPageContext context)
+	protected IManageablePage getPersistedPage(String identifier, int id)
 	{
-		// session attribute must be added here *before* any asynchronous calls
-		// when session is no longer available
-		getSessionIdentifier(context, true);
-
-		return true;
-	}
-
-	@Override
-	public IManageablePage getPage(IPageContext context, int id)
-	{
-		MemoryData data = getMemoryData(context, false);
-		if (data == null)
+		MemoryData data = getMemoryData(identifier, false);
+		if (data != null)
 		{
-			return null;
+			return data.get(id);
 		}
 
-		return data.get(id);
+		return null;
 	}
 
 	@Override
-	public void removePage(IPageContext context, final IManageablePage page)
+	protected void removePersistedPage(String identifier, IManageablePage page)
 	{
-		MemoryData data = getMemoryData(context, false);
-
+		MemoryData data = getMemoryData(identifier, false);
 		if (data != null)
 		{
 			synchronized (data)
@@ -107,35 +91,27 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	public void removeAllPages(IPageContext context)
+	protected void removeAllPersistedPages(String identifier)
 	{
-		MemoryData data = getMemoryData(context, false);
-
-		if (data != null)
-		{
-			synchronized (data)
-			{
-				data.removeAll();
-			}
-		}
+		datas.remove(identifier);
 	}
 
 	@Override
-	public void addPage(IPageContext context, IManageablePage page)
+	protected void addPersistedPage(String identifier, IManageablePage page)
 	{
-		MemoryData data = getMemoryData(context, true);
+		MemoryData data = getMemoryData(identifier, true);
 
 		data.add(page, maxPages);
 	}
 
 	@Override
-	public Set<String> getContextIdentifiers()
+	public Set<String> getSessionIdentifiers()
 	{
 		return datas.keySet();
 	}
 
 	@Override
-	public List<IPersistedPage> getPersistentPages(String sessionIdentifier)
+	public List<IPersistedPage> getPersistedPages(String sessionIdentifier)
 	{
 		MemoryData data = datas.get(sessionIdentifier);
 		if (data == null)
@@ -186,17 +162,11 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 		}
 	}
 
-	private MemoryData getMemoryData(IPageContext context, boolean create)
+	private MemoryData getMemoryData(String identifier, boolean create)
 	{
-		String identifier = getSessionIdentifier(context, create);
-
 		if (!create)
 		{
-			if (identifier == null) {
-				return null;
-			} else {
-				return datas.get(identifier);
-			}
+			return datas.get(identifier);
 		}
 
 		MemoryData data = new MemoryData();
@@ -204,12 +174,6 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 		return existing != null ? existing : data;
 	}
 
-	@Override
-	protected void removePersistent(String identifier)
-	{
-		datas.remove(identifier);
-	}
-	
 	/**
 	 * Data kept in memory.
 	 */

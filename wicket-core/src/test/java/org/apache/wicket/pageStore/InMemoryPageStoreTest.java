@@ -16,15 +16,13 @@
  */
 package org.apache.wicket.pageStore;
 
-import org.apache.wicket.serialize.ISerializer;
-
 /**
  * Tests for {@link InMemoryPageStore}
  */
 public class InMemoryPageStoreTest extends AbstractPageStoreTest
 {
 	@Override
-	protected IPageStore createPageStore(ISerializer serializer, int maxEntries)
+	protected IPageStore createPageStore(int maxEntries)
 	{
 		return new InMemoryPageStore("test", maxEntries);
 	}

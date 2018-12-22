@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +34,9 @@ import org.apache.wicket.MockPage;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.util.WicketTestTag;
-import org.apache.wicket.util.file.File;
-import org.apache.wicket.util.lang.Bytes;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
 
@@ -56,11 +49,8 @@ import com.google.common.base.Stopwatch;
 @Tag(WicketTestTag.SLOW)
 public class AsynchronousPageStoreTest
 {
-	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(AsynchronousPageStoreTest.class);
-
 	@SuppressWarnings("serial")
-	private static class DummyPage implements IManageablePage
+	private static class DummyPage implements IManageablePage, Cloneable
 	{
 
 		private int pageId;
@@ -99,49 +89,19 @@ public class AsynchronousPageStoreTest
 			return false;
 		}
 
-		/**
-		 * @param s
-		 * @throws IOException
-		 */
-		private void writeObject(java.io.ObjectOutputStream s) throws IOException
+		@Override
+		protected DummyPage clone()
 		{
-			log.debug("serializing page {} for {}ms (session {})", getPageId(), writeMillis,
-					sessionId);
 			try
 			{
-				Thread.sleep(writeMillis);
+				return (DummyPage) super.clone();
 			}
-			catch (InterruptedException e)
+			catch (CloneNotSupportedException e)
 			{
-				throw new RuntimeException(e);
+				throw new Error(e);
 			}
-
-			s.writeInt(pageId);
-			s.writeLong(writeMillis);
-			s.writeLong(readMillis);
-			s.writeObject(sessionId);
 		}
-
-		private void readObject(java.io.ObjectInputStream s)
-				throws IOException, ClassNotFoundException
-		{
-			log.debug("deserializing page {} for {}ms (session {})", getPageId(), writeMillis,
-					sessionId);
-			try
-			{
-				Thread.sleep(readMillis);
-			}
-			catch (InterruptedException e)
-			{
-				throw new RuntimeException(e);
-			}
-
-			pageId = s.readInt();
-			writeMillis = s.readLong();
-			readMillis = s.readLong();
-			sessionId = (String)s.readObject();
-		}
-
+		
 		public String toString()
 		{
 			return "DummyPage[pageId = " + pageId + ", writeMillis = " + writeMillis +
@@ -194,7 +154,7 @@ public class AsynchronousPageStoreTest
 		
 		IPageContext context = new DummyPageContext(sessionId);
 
-		DummyPage page = new DummyPage(pageId, 1000, 1000, sessionId);
+		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
 		asyncPageStore.addPage(context, page);
 
 		IManageablePage pageBack = asyncPageStore.getPage(context, pageId);
@@ -232,8 +192,6 @@ public class AsynchronousPageStoreTest
 			@Override
 			public IManageablePage getPage(IPageContext context, int id)
 			{
-				got.set(true);
-				
 				return super.getPage(context, id);
 			}
 		};
@@ -246,7 +204,7 @@ public class AsynchronousPageStoreTest
 		
 		IPageContext context = new DummyPageContext(sessionId);
 
-		DummyPage page = new DummyPage(pageId, 1000, 1000, sessionId);
+		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
 		asyncPageStore.addPage(context, page);
 
 		try
@@ -473,18 +431,40 @@ public class AsynchronousPageStoreTest
 
 		final CountDownLatch lock = new CountDownLatch(pages * sessions);
 
-		// ISerializer serializer = new DummySerializer();
-		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
-
-		IPageStore pageStore = new DiskPageStore("applicationName", new File("./target"),
-				Bytes.bytes(10000l), serializer) {
+		IPageStore pageStore = new InMemoryPageStore("test", Integer.MAX_VALUE) {
 			@Override
 			public void addPage(IPageContext context, IManageablePage page)
 			{
+				DummyPage dummyPage = (DummyPage) page;
 
-				super.addPage(context, page);
-
+				super.addPage(context, dummyPage.clone());
+				
+				try
+				{
+					Thread.sleep(dummyPage.writeMillis);
+				}
+				catch (InterruptedException e)
+				{
+					throw new RuntimeException(e);
+				}
+				
 				lock.countDown();
+			}
+			
+			@Override
+			public IManageablePage getPage(IPageContext context, int id) {
+				DummyPage dummyPage = (DummyPage) super.getPage(context, id);
+				
+				try
+				{
+					Thread.sleep(dummyPage.readMillis);
+				}
+				catch (InterruptedException e)
+				{
+					throw new RuntimeException(e);
+				}
+				
+				return dummyPage;
 			}
 		};
 
@@ -501,8 +481,7 @@ public class AsynchronousPageStoreTest
 				Metrics metrics = new Metrics();
 
 				stopwatch.reset();
-				DummyPage page = new DummyPage(pageId, around(writeMillis), around(readMillis),
-						sessionId);
+				DummyPage page = new DummyPage(pageId, around(writeMillis), around(readMillis), sessionId);
 				stopwatch.start();
 				asyncPageStore.addPage(context, page);
 				metrics.storedPage = page;
