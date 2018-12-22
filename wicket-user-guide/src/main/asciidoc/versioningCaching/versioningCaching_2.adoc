@@ -89,7 +89,7 @@ A serializer based on Kryo library and another one based on Fast are provided by
 
 === Page caching
 
-By default Wicket persists versions of pages into a session-relative file on disk, but it uses a two-levels cache to speed up this process. The first level of the cache uses a http session attribute called “wicket:persistentPageManagerData-<APPLICATION_NAME>” to store pages. The second level cache stores pages into application-scoped variables which are identified by a session id and a page id.
+By default Wicket persists versions of pages into a session-relative file on disk, but it uses a two-level cache to speed up this process. The first level of the cache uses a http session attribute called “wicket:persistentPageManagerData-<APPLICATION_NAME>” to store pages. The second level cache stores pages into application-scoped variables which are identified by a session id and a page id.
 
 The following picture is an overview of these two caching levels:
 
