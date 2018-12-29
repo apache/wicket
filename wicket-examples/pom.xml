@@ -61,7 +61,6 @@
 			<dependency>
 				<groupId>org.hibernate.validator</groupId>
 				<artifactId>hibernate-validator</artifactId>
-				<version>6.0.7.Final</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -144,8 +143,9 @@
 			<artifactId>jhighlight</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
+			<version>6.0.13.Final</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
