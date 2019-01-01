@@ -31,7 +31,12 @@
 		users to work with Velocity and Wicket. Particularly useful for
 		simple CMS like applications.
 	</description>
+
 	<dependencies>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
