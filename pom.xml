@@ -127,22 +127,22 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 
 		<!-- Project Versions -->
-		<jacoco.version>0.7.4.201502262128</jacoco.version>
-		<jetty.version>8.1.16.v20140903</jetty.version>
+		<jacoco.version>0.8.2</jacoco.version>
+		<jetty.version>8.1.22.v20160922</jetty.version>
 		<jetty9.version>9.0.7.v20131107</jetty9.version>
-		<joda-time.version>2.9.4</joda-time.version>
+		<joda-time.version>2.10.1</joda-time.version>
 		<junit.version>4.12</junit.version>
-		<spring.version>4.1.7.RELEASE</spring.version>
+		<spring.version>4.1.9.RELEASE</spring.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
 		<maven.javadoc.version>2.10.4</maven.javadoc.version>
 		<maven.surefire.version>3.0.0-M1</maven.surefire.version>
 		<mockito.version>1.10.19</mockito.version>
-		<slf4j.version>1.7.21</slf4j.version>
+		<slf4j.version>1.7.25</slf4j.version>
 		<hamcrest.version>2.0.0.0</hamcrest.version>
 		<objenesis.version>2.1</objenesis.version>
 		<!-- do not increase the version - wicket-user-guide requires 2.2.4 -->
 		<grails.version>2.2.4</grails.version>
-		<aspectj.version>1.8.9</aspectj.version>
+		<aspectj.version>1.8.13</aspectj.version>
 		<metrics.version>3.1.2</metrics.version>
 		<forbiddenapis.version>2.6</forbiddenapis.version>
 	</properties>
@@ -264,7 +264,7 @@
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
-				<version>4.1</version>
+				<version>4.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.velocity</groupId>
