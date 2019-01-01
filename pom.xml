@@ -78,6 +78,16 @@
 		<system>jira</system>
 		<url>http://issues.apache.org/jira/browse/WICKET</url>
 	</issueManagement>
+	<developers>
+		<developer>
+			<id>team</id>
+			<name>Apache Wicket PMC</name>
+			<email>private@wicket.apache.org</email>
+			<roles>
+				<role>security</role>
+			</roles>
+		</developer>
+	</developers>
 	<scm>
 		<connection>scm:git:http://git-wip-us.apache.org/repos/asf/wicket.git</connection>
 		<developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/wicket.git</developerConnection>
