@@ -33,6 +33,7 @@ import org.apache.wicket.application.ComponentOnConfigureListenerCollection;
 import org.apache.wicket.application.HeaderContributorListenerCollection;
 import org.apache.wicket.application.IComponentInitializationListener;
 import org.apache.wicket.application.IComponentInstantiationListener;
+import org.apache.wicket.application.OnComponentTagListenerCollection;
 import org.apache.wicket.core.request.mapper.IMapperContext;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.WicketObjects;
@@ -887,6 +888,8 @@ public abstract class Application implements UnboundListener, IEventSink
 
 	private final BehaviorInstantiationListenerCollection behaviorInstantiationListeners = new BehaviorInstantiationListenerCollection();
 
+	private final OnComponentTagListenerCollection onComponentTagListeners = new OnComponentTagListenerCollection();
+
 	/**
 	 * @return Gets the application's {@link HeaderContributorListenerCollection}
 	 */
@@ -927,6 +930,12 @@ public abstract class Application implements UnboundListener, IEventSink
 		return behaviorInstantiationListeners;
 	}
 
+	/**
+	 * @return collection of application's on-component-tag listeners
+	 */
+	public final OnComponentTagListenerCollection getOnComponentTagListeners() {
+		return onComponentTagListeners;
+	}
 
 	/**
 	 * @return Gets the application's ComponentInstantiationListenerCollection
