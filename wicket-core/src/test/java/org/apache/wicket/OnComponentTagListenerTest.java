@@ -16,6 +16,8 @@
  */
 package org.apache.wicket;
 
+import static org.junit.Assert.*;
+
 import org.apache.commons.collections4.MultiSet;
 import org.apache.commons.collections4.multiset.HashMultiSet;
 import org.apache.wicket.application.IOnComponentTagListener;
