@@ -25,9 +25,10 @@ import org.apache.wicket.markup.ComponentTag;
  *
  * @author Igor Vaynberg (ivaynberg)
  */
+@FunctionalInterface
 public interface IOnComponentTagListener {
 	/**
-	 * Called before {@link Component#onComponentTag(ComponentTag)}
+	 * Called before Component#onComponentTag(ComponentTag)
 	 *
 	 * @param component
 	 * 	the component whose tag is being modified
