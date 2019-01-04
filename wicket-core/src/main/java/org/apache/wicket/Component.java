@@ -2420,6 +2420,9 @@ public abstract class Component
 		final ComponentTag openTag = markupStream.getTag();
 		final ComponentTag tag = openTag.mutable();
 
+		// call application-wide tag listeners
+		getApplication().getOnComponentTagListeners().onComponentTag(this, tag);
+
 		// Call any tag handler
 		onComponentTag(tag);
 
