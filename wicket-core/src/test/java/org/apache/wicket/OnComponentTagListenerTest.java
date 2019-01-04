@@ -16,7 +16,7 @@
  */
 package org.apache.wicket;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.commons.collections4.MultiSet;
 import org.apache.commons.collections4.multiset.HashMultiSet;
@@ -28,18 +28,18 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.apache.wicket.util.tester.WicketTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link IOnComponentTagListener}
  *
  * @author Igor Vaynberg (ivaynberg)
  */
-public class OnComponentTagListenerTest extends WicketTestCase {
+class OnComponentTagListenerTest extends WicketTestCase {
 
 
 	@Test
-	public void multipleListeners() {
+	void multipleListeners() {
 		TestListener listener1 = new TestListener();
 		TestListener listener2 = new TestListener();
 		tester.getApplication().getOnComponentTagListeners().add(listener1);
@@ -58,7 +58,7 @@ public class OnComponentTagListenerTest extends WicketTestCase {
 	}
 
 	@Test
-	public void visibility() {
+	void visibility() {
 		TestListener listener = new TestListener();
 		tester.getApplication().getOnComponentTagListeners().add(listener);
 
@@ -72,10 +72,10 @@ public class OnComponentTagListenerTest extends WicketTestCase {
 	}
 
 	@Test
-	public void calledEvenIfNoSuper() {
+	void calledEvenIfNoSuper() {
 
 		class DoesntCallSuper extends WebMarkupContainer {
-			public DoesntCallSuper(String id) {
+			private DoesntCallSuper(String id) {
 				super(id);
 			}
 
