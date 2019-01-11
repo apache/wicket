@@ -46,7 +46,7 @@ import org.junit.jupiter.api.Test;
 /**
  * @author Pedro Santos
  */
-public class PageIdPoliticTest
+public class PageIdPolicyTest
 {
 	private WicketTester tester;
 	private InMemoryPageStore pageStore;

@@ -40,6 +40,24 @@ public class SerializedPage implements IManageablePage
 
 	private final byte[] data;
 
+	/**
+	 * Create a serialized page.
+	 * 
+	 * @param pageId id of page
+	 * @param data
+	 */
+	public SerializedPage(int pageId, byte[] data)
+	{
+		this(pageId, null, data);
+	}
+
+	/**
+	 * Create a serialized page.
+	 * 
+	 * @param pageId id of page
+	 * @param pageType type of page, might be {@code null}
+	 * @param data
+	 */
 	public SerializedPage(int pageId, String pageType, byte[] data)
 	{
 		this.pageId = pageId;

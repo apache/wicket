@@ -29,7 +29,9 @@ import java.util.stream.StreamSupport;
 import org.apache.wicket.Application;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Classes;
 
 /**
  * A storage of pages in memory.
@@ -50,7 +52,8 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	public InMemoryPageStore(String applicationName, int maxPages)
 	{
 		super(applicationName);
-		this.maxPages = maxPages;
+		
+		this.maxPages = Args.withinRange(1, Integer.MAX_VALUE, maxPages, "maxPages");
 	}
 
 	/**
@@ -143,7 +146,11 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 		synchronized (data)
 		{
 			return StreamSupport.stream(data.spliterator(), false)
-				.map(page -> new PersistedPage(page.getPageId(), page instanceof SerializedPage ? ((SerializedPage)page).getPageType() : page.getClass().getName(), getSize(page)))
+				.map(page -> {
+					String pageType = page instanceof SerializedPage ? ((SerializedPage)page).getPageType() : Classes.name(page.getClass());
+					
+					return new PersistedPage(page.getPageId(), pageType, getSize(page));
+				})
 				.collect(Collectors.toList());
 		}
 	}

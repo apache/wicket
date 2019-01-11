@@ -24,7 +24,7 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.lang.Args;
 
 /**
- * Helps creating nested folders.
+ * Keep files in a nested filed structure to minimize amount of directory entries (inodes) in a single directory. 
  * 
  * @author svenmeier
  */
@@ -104,6 +104,11 @@ public class NestedFolders
 		}
 	}
 
+	/**
+	 * Get all files inside.
+	 * 
+	 * @return files
+	 */
 	public Set<File> getAll()
 	{
 		Set<File> files = new HashSet<>();

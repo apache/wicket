@@ -20,14 +20,13 @@ import org.apache.wicket.MockPage;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.markup.MarkupParser;
-import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageManager;
 import org.apache.wicket.pageStore.DummyPageContext;
 import org.apache.wicket.pageStore.IPageContext;
 import org.apache.wicket.pageStore.InMemoryPageStore;
-import org.apache.wicket.pageStore.RequestPageStore;
 import org.apache.wicket.pageStore.InSessionPageStore;
+import org.apache.wicket.pageStore.RequestPageStore;
 import org.apache.wicket.request.component.IRequestablePage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -193,7 +192,7 @@ public class TestMapperContext implements IMapperContext
 		try
 		{
 			MockPage page;
-			page = (MockPage)pageClass.newInstance();
+			page = (MockPage)pageClass.getDeclaredConstructor().newInstance();
 			page.setPageId(++idCounter);
 			page.setBookmarkable(true);
 			page.setCreatedBookmarkable(true);
