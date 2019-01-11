@@ -306,6 +306,7 @@ public class AsynchronousPageStore implements IPageStore
 	@Override
 	public void unbind(String sessionId)
 	{
+		entries.removeIf(entry -> entry.sessionId.equals(sessionId));
 		delegate.unbind(sessionId);
 	}
 
