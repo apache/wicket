@@ -1,9 +1,10 @@
-package org.apache.wicket.pageStore;
+package org.apache.wicket.page;
 
-import org.apache.wicket.page.IManageablePage;
-import org.apache.wicket.page.IPageManager;
-import org.apache.wicket.page.IPageManagerContext;
-import org.apache.wicket.page.PageStoreManager;
+import org.apache.wicket.pageStore.AsynchronousPageStore;
+import org.apache.wicket.pageStore.DefaultPageStore;
+import org.apache.wicket.pageStore.DiskDataStore;
+import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
