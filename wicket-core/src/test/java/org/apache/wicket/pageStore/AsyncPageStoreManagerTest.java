@@ -7,20 +7,17 @@ import org.apache.wicket.page.PageStoreManager;
 import org.apache.wicket.pageStore.memory.DummyPageManagerContext;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
-import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Bytes;
 import org.junit.Assert;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.internal.util.reflection.FieldReader;
 import org.mockito.internal.util.reflection.FieldSetter;
 
 /**
  * https://issues.apache.org/jira/browse/WICKET-6629
  */
-@Tag(WicketTestTag.SLOW)
-class AsyncPageStoreManagerTest
+public class AsyncPageStoreManagerTest
 {
 	private static final String APP_NAME = "test_app";
 
@@ -39,7 +36,7 @@ class AsyncPageStoreManagerTest
 	 * this session anymore.
 	 */
 	@Test
-	void invalidateSessionBeforeSave() throws InterruptedException
+	public void invalidateSessionBeforeSave() throws InterruptedException
 	{
 		ISerializer serializer = new DeflatedJavaSerializer("applicationKey");
 		IDataStore dataStore = new DiskDataStore("applicationName", new File("target"),
