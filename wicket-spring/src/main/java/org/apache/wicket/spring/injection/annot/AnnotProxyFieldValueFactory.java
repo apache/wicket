@@ -190,19 +190,15 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		if (Strings.isEmpty(name))
 		{
 			Class<?> fieldType = field.getType();
-			SimpleEntry<Class<?>, Class<?>> keyPair =
-				new SimpleEntry<Class<?>, Class<?>>(fieldType, generic);
-
-			name = beanNameCache.get(fieldType);
+			
+			SimpleEntry<Class<?>, Class<?>> key = new SimpleEntry<Class<?>, Class<?>>(fieldType, generic);
+			name = beanNameCache.get(key);
 			if (name == null)
 			{
-				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, 
-					generic, field.getName());
-
+				name = getBeanNameOfClass(contextLocator.getSpringContext(), fieldType, generic, field.getName());
 				if (name != null)
 				{
-					
-					String tmpName = beanNameCache.putIfAbsent(keyPair, name);
+					String tmpName = beanNameCache.putIfAbsent(key, name);
 					if (tmpName != null)
 					{
 						name = tmpName;
