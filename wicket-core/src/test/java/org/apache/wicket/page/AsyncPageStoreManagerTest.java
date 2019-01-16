@@ -126,6 +126,9 @@ public class AsyncPageStoreManagerTest
 		// (OOM) and not on disk (slowly filling disk as this even survives application restarts.
 		Assert.assertNull(dataStore.getData("dummy_id", 0));
 		Assert.assertNull(dataStore.getData("dummy_id", 1));
+		
+		//destroy page manager to clean static variables 
+		newPageManager.destroy();
 	}
 
 	private static class TestPage implements IManageablePage
