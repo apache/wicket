@@ -17,17 +17,20 @@
 package org.apache.wicket.devutils.diskstore;
 
 import org.apache.wicket.Session;
+import org.apache.wicket.devutils.DevUtilsPage;
 import org.apache.wicket.devutils.diskstore.browser.PersistedPanel;
-import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.devutils.inspector.InspectorPage;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.pageStore.DelegatingPageStore;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.IPersistentPageStore;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 /**
  * A page that shows the attributes (id, name, size) of the pages stored in the data stores.
  */
-public class PageStorePage extends WebPage
+public class PageStorePage extends DevUtilsPage
 {
 
 	/**
@@ -39,6 +42,8 @@ public class PageStorePage extends WebPage
 	public PageStorePage(final PageParameters parameters)
 	{
 		super(parameters);
+
+		add(new Image("bug", new PackageResourceReference(InspectorPage.class, "bug.png")));
 
 		add(new PersistedPanel("persisted", PageStorePage::getPersistentPageStore));
 	}

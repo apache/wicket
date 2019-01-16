@@ -23,9 +23,11 @@
 	</head>
 	
 	<body>
-
-        <div wicket:id="persisted"></div>	
- 
+		<wicket:extend>
+			<h1><img border="0" wicket:id="bug" src="bug.png"/> Wicket Persisted pages Inspector</h1>
+			<a href="javascript:history.go(-1)">Go Back</a>
+		
+			<div wicket:id="persisted"></div>	
+		</wicket:extend>
 	</body>
-	
 </html>

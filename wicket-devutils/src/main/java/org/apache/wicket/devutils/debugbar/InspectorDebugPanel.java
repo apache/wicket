@@ -18,13 +18,12 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.devutils.inspector.InspectorPage;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.util.lang.Bytes;
 
 /**
  * A panel that adds a link to the inspector to the debug bar.
@@ -74,22 +73,7 @@ public class InspectorDebugPanel extends StandardDebugPanel
 	@Override
 	protected IModel<String> getDataModel()
 	{
-		return new IModel<String>()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getObject()
-			{
-				Page enclosingPage = getPage();
-				long pageSize = WicketObjects.sizeof(enclosingPage);
-				Bytes pageSizeInBytes = (pageSize > -1 ? Bytes.bytes(pageSize) : null);
-				String pageSizeAsString = pageSizeInBytes != null ? pageSizeInBytes.toString()
-					: "unknown";
-
-				return "Page: " + pageSizeAsString;
-			}
-		};
+		return new Model<>("Inspector");
 	}
 
 	@Override

@@ -114,9 +114,9 @@ public class NestedFolders
 		Set<File> files = new HashSet<>();
 		
 		if (base.exists()) {
-			for (File low : base.listFiles()) {
-				for (File high: low.listFiles()) {
-					for (File file : high.listFiles()) {
+			for (File low : Files.list(base)) {
+				for (File high: Files.list(low)) {
+					for (File file : Files.list(high)) {
 						files.add(file);
 					}
 				}
