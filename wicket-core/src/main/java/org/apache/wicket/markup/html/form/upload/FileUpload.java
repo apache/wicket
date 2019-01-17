@@ -231,10 +231,7 @@ public class FileUpload implements IClusterable
 	 */
 	public void writeTo(final File file) throws Exception
 	{
-		if (file.isFile() && file.exists())
-		{			
-			file.delete();
-		}
+		Files.remove(file);
 		item.write(file);
 	}
 
