@@ -23,10 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
@@ -41,7 +43,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 
 	private final Map<String, MemoryData> datas = new ConcurrentHashMap<>();
 
-	private int maxPages;
+	private final Supplier<MemoryData> dataCreator;
 
 	/**
 	 * @param applicationName
@@ -51,9 +53,25 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	 */
 	public InMemoryPageStore(String applicationName, int maxPages)
 	{
+		this(applicationName, () -> new CountLimitedData(maxPages));
+	}
+
+	/**
+	 * @param applicationName
+	 *            {@link Application#getName()}
+	 * @param maxPages
+	 *            max pages per session
+	 */
+	public InMemoryPageStore(String applicationName, Bytes maxBytes)
+	{
+		this(applicationName, () -> new SizeLimitedData(maxBytes));
+	}
+
+	InMemoryPageStore(String applicationName, Supplier<MemoryData> dataCreator)
+	{
 		super(applicationName);
 		
-		this.maxPages = Args.withinRange(1, Integer.MAX_VALUE, maxPages, "maxPages");
+		this.dataCreator = dataCreator;
 	}
 
 	/**
@@ -85,7 +103,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 		{
 			synchronized (data)
 			{
-				data.remove(page);
+				data.remove(page.getPageId());
 			}
 		}
 	}
@@ -101,7 +119,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	{
 		MemoryData data = getMemoryData(identifier, true);
 
-		data.add(page, maxPages);
+		data.add(page);
 	}
 
 	@Override
@@ -155,9 +173,12 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	 */
 	protected long getSize(IManageablePage page)
 	{
-		if (page instanceof SerializedPage) {
+		if (page instanceof SerializedPage)
+		{
 			return ((SerializedPage)page).getData().length;
-		} else {
+		}
+		else
+		{
 			return WicketObjects.sizeof(page);
 		}
 	}
@@ -169,7 +190,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 			return datas.get(identifier);
 		}
 
-		MemoryData data = new MemoryData();
+		MemoryData data = dataCreator.get();
 		MemoryData existing = datas.putIfAbsent(identifier, data);
 		return existing != null ? existing : data;
 	}
@@ -177,9 +198,9 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	/**
 	 * Data kept in memory.
 	 */
-	static class MemoryData implements Iterable<IManageablePage>
+	static abstract class MemoryData implements Iterable<IManageablePage>
 	{
-		private LinkedHashMap<Integer, IManageablePage> pages = new LinkedHashMap<>();
+		LinkedHashMap<Integer, IManageablePage> pages = new LinkedHashMap<>();
 
 		@Override
 		public Iterator<IManageablePage> iterator()
@@ -187,25 +208,15 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 			return pages.values().iterator();
 		}
 
-		public synchronized void add(IManageablePage page, int maxPages)
+		public synchronized void add(IManageablePage page)
 		{
 			pages.remove(page.getPageId());
 			pages.put(page.getPageId(), page);
-
-			Iterator<IManageablePage> iterator = pages.values().iterator();
-			int size = pages.size();
-			while (size > maxPages)
-			{
-				iterator.next();
-
-				iterator.remove();
-				size--;
-			}
 		}
 
-		public void remove(IManageablePage page)
+		public IManageablePage remove(int pageId)
 		{
-			pages.remove(page.getPageId());
+			return pages.remove(pageId);
 		}
 
 		public void removeAll()
@@ -218,6 +229,91 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 			IManageablePage page = pages.get(id);
 
 			return page;
+		}
+		
+		protected void removeFirst() {
+			Iterator<IManageablePage> iterator = pages.values().iterator();
+			iterator.next();
+			iterator.remove();
+		}
+	}
+	
+	/**
+	 * Limit pages by count.
+	 */
+	static class CountLimitedData extends MemoryData
+	{
+
+		private int maxPages;
+
+		public CountLimitedData(int maxPages)
+		{
+			this.maxPages = Args.withinRange(1, Integer.MAX_VALUE, maxPages, "maxPages");
+		}
+	
+		@Override
+		public synchronized void add(IManageablePage page)
+		{
+			super.add(page);
+			
+			while (pages.size() > maxPages)
+			{
+				removeFirst();
+			}
+		}
+	}
+	
+	/**
+	 * Limit pages by size.
+	 */
+	static class SizeLimitedData extends MemoryData
+	{
+		
+		private Bytes maxBytes;
+		
+		private long size;
+
+		public SizeLimitedData(Bytes maxBytes)
+		{
+			Args.notNull(maxBytes, "maxBytes");
+			
+			this.maxBytes = Args.withinRange(Bytes.bytes(1), Bytes.MAX, maxBytes, "maxBytes");
+		}
+		
+		@Override
+		public synchronized void add(IManageablePage page)
+		{
+			if (page instanceof SerializedPage == false)
+			{
+				throw new WicketRuntimeException("InMemoryPageStore limited by size works with serialized pages only");
+			}
+			
+			super.add(page);
+			
+			size += ((SerializedPage) page).getData().length;
+
+			while (size > maxBytes.bytes())
+			{
+				removeFirst();
+			}
+		}
+		
+		@Override
+		public synchronized IManageablePage remove(int pageId)
+		{
+			SerializedPage page = (SerializedPage) super.remove(pageId);
+			
+			size -= ((SerializedPage) page).getData().length;
+			
+			return page;
+		}
+		
+		@Override
+		public synchronized void removeAll()
+		{
+			super.removeAll();
+			
+			size = 0;
 		}
 	}
 }

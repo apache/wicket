@@ -135,9 +135,12 @@ public class RequestPageStore extends DelegatingPageStore
 			return pages;
 		}
 
-		public IManageablePage get(int id) {
-			for (IManageablePage page : pages) {
-				if (page.getPageId() == id) {
+		public IManageablePage get(int id)
+		{
+			for (IManageablePage page : pages)
+			{
+				if (page.getPageId() == id)
+				{
 					return page;
 				}
 			}

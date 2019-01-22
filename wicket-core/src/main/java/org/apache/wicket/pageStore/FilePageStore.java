@@ -118,9 +118,11 @@ public class FilePageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	protected IManageablePage getPersistedPage(String identifier, int id) {
+	protected IManageablePage getPersistedPage(String identifier, int id)
+	{
 		byte[] data = readFile(identifier, id);
-		if (data == null) {
+		if (data == null)
+		{
 			return null;
 		}
 		
@@ -161,7 +163,8 @@ public class FilePageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	protected void removePersistedPage(String identifier, IManageablePage page) {
+	protected void removePersistedPage(String identifier, IManageablePage page)
+	{
 		File file = getPageFile(identifier, page.getPageId(), false);
 		if (file.exists())
 		{
@@ -173,15 +176,17 @@ public class FilePageStore extends AbstractPersistentPageStore
 	}
 
 	@Override
-	protected void removeAllPersistedPages(String identifier) {
+	protected void removeAllPersistedPages(String identifier)
+	{
 		folders.remove(identifier);
 	}
 
 	@Override
-	protected void addPersistedPage(String identifier, IManageablePage page) {
+	protected void addPersistedPage(String identifier, IManageablePage page)
+	{
 		if (page instanceof SerializedPage == false)
 		{
-			throw new WicketRuntimeException("works with serialized pages only");
+			throw new WicketRuntimeException("FilePageStore works with serialized pages only");
 		}
 		SerializedPage serializedPage = (SerializedPage) page;
 

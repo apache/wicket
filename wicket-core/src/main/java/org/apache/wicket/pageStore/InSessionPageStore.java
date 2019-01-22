@@ -22,15 +22,18 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
+import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Classes;
 
 /**
@@ -49,11 +52,13 @@ public class InSessionPageStore extends DelegatingPageStore
 
 	private final ISerializer serializer;
 
-	private int maxPages;
+	private final Supplier<SessionData> dataCreator;
 	
 	/**
-	 * Use this constructor if pages should not be persisted along with their session, e.g. because a delegated peristent page store
-	 * keeps them anyway for backup. 
+	 * Keep {@code maxPages} in each session.
+	 * <p>
+	 * If the container serializes sessions to disk, any non-{@code SerializedPage} added to this store
+	 * will be dropped.   
 	 * 
 	 * @param delegate
 	 *            store to delegate to
@@ -66,7 +71,10 @@ public class InSessionPageStore extends DelegatingPageStore
 	}
 	
 	/**
-	 * Use this constructor if pages should be serialized along with their session.
+	 * Keep {@code maxPages} in each session.
+	 * <p>
+	 * If the container serializes sessions to disk, any non-{@code SerializedPage} added to this store
+	 * will be automatically serialized.   
 	 * 
 	 * @param delegate
 	 *            store to delegate to
@@ -77,18 +85,40 @@ public class InSessionPageStore extends DelegatingPageStore
 	 */
 	public InSessionPageStore(IPageStore delegate, int maxPages, ISerializer serializer)
 	{
+		this(delegate, serializer, () -> new CountLimitedData(maxPages));
+	}
+
+	/**
+	 * Keep page up to {@code maxBytes} in each session.
+	 * <p>
+	 * All pages added to this store must be {@code SerializedPage}s. You can achieve this by letting
+	 * a {@link SerializingPageStore} delegate to this store.
+	 * 
+	 * @param delegate
+	 *            store to delegate to
+	 * @param maxBytes
+	 *            maximum bytes to keep in session
+	 */
+	public InSessionPageStore(IPageStore delegate, Bytes maxBytes)
+	{
+		this(delegate, null, () -> new SizeLimitedData(maxBytes));
+	}
+
+	private InSessionPageStore(IPageStore delegate, ISerializer serializer, Supplier<SessionData> dataCreator)
+	{
 		super(delegate);
 
 		this.serializer = serializer;
-
-		this.maxPages = maxPages;
+		
+		this.dataCreator = dataCreator;
 	}
 
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
 		SessionData data = getSessionData(context, false);
-		if (data != null) {
+		if (data != null)
+		{
 			IManageablePage page = data.get(id);
 			if (page != null)
 			{
@@ -104,7 +134,7 @@ public class InSessionPageStore extends DelegatingPageStore
 	{
 		SessionData data = getSessionData(context, true);
 
-		data.add(context, page, maxPages);
+		data.add(page);
 		
 		getDelegate().addPage(context, page);
 	}
@@ -113,8 +143,9 @@ public class InSessionPageStore extends DelegatingPageStore
 	public void removePage(IPageContext context, IManageablePage page)
 	{
 		SessionData data = getSessionData(context, false);
-		if (data != null) {
-			data.remove(page);
+		if (data != null)
+		{
+			data.remove(page.getPageId());
 		}
 
 		getDelegate().removePage(context, page);
@@ -124,7 +155,8 @@ public class InSessionPageStore extends DelegatingPageStore
 	public void removeAllPages(IPageContext context)
 	{
 		SessionData data = getSessionData(context, false);
-		if (data != null) {
+		if (data != null)
+		{
 			data.removeAll();
 		}
 
@@ -136,12 +168,13 @@ public class InSessionPageStore extends DelegatingPageStore
 		SessionData data = context.getSessionData(KEY);
 		if (data == null && create)
 		{
-			data = context.setSessionData(KEY, new SessionData());
+			data = context.setSessionData(KEY, dataCreator.get());
 		}
 
-		if (data != null && serializer != null) {
+		if (data != null && serializer != null)
+		{
 			// data might be deserialized so initialize again
-			data.init(serializer);
+			data.supportSessionSerialization(serializer);
 		}
 
 		return data;
@@ -151,7 +184,7 @@ public class InSessionPageStore extends DelegatingPageStore
 	 * Data kept in the {@link Session}, might get serialized along with its containing
 	 * {@link HttpSession}.
 	 */
-	static class SessionData implements Serializable
+	static abstract class SessionData implements Serializable
 	{
 
 		transient ISerializer serializer;
@@ -161,39 +194,47 @@ public class InSessionPageStore extends DelegatingPageStore
 		 * <p>
 		 * Kept in list instead of map, since life pages might change their id during a request.
 		 */
-		private List<IManageablePage> pages = new LinkedList<>();
+		List<IManageablePage> pages = new LinkedList<>();
 
 		/**
-		 * This method <em>must</em> be called each time it is retrieved from the session: <br/>
-		 * After deserializing from persisted session the serializer is no longer referenced and all
-		 * contained pages are in a serialized state.
+		 * Call this method if session serialization should be supported, i.e. all pages get serialized along with the session.
 		 */
-		public void init(ISerializer serializer)
+		public void supportSessionSerialization(ISerializer serializer)
 		{
 			this.serializer = Args.notNull(serializer, "serializer");
 		}
 
-		public synchronized void add(IPageContext context, IManageablePage page, int maxPages)
+		public synchronized void add(IManageablePage page)
 		{
 			// move to end
-			remove(page);
+			remove(page.getPageId());
+			
 			pages.add(page);
-
-			while (pages.size() > maxPages)
-			{
-				pages.remove(0);
-			}
 		}
 
-		public synchronized void remove(IManageablePage page)
+		public synchronized IManageablePage removeFirst()
+		{
+			IManageablePage page = pages.get(0);
+			
+			remove(page.getPageId());
+			
+			return page;
+		}
+		
+		public synchronized IManageablePage remove(int pageId)
 		{
 			Iterator<IManageablePage> iterator = pages.iterator();
-			while (iterator.hasNext()) {
-				if (iterator.next().getPageId() == page.getPageId()) {
+			while (iterator.hasNext())
+			{
+				IManageablePage page = iterator.next();
+				
+				if (page.getPageId() == pageId)
+				{
 					iterator.remove();
-					break;
+					return page;
 				}
 			}
+			return null;
 		}
 
 		public synchronized void removeAll()
@@ -203,13 +244,12 @@ public class InSessionPageStore extends DelegatingPageStore
 
 		public synchronized IManageablePage get(int id)
 		{
-			IManageablePage page = null;
-			
 			for (int p = 0; p < pages.size(); p++)
 			{
 				IManageablePage candidate = pages.get(p);
 
-				if (candidate.getPageId() == id) {
+				if (candidate.getPageId() == id)
+				{
 					if (candidate instanceof SerializedPage && serializer != null)
 					{
 						candidate = (IManageablePage)serializer.deserialize(((SerializedPage)candidate).getData());
@@ -217,12 +257,11 @@ public class InSessionPageStore extends DelegatingPageStore
 						pages.set(p, candidate);
 					}
 					
-					page = candidate;
-					break;
+					return candidate;
 				}
 			}
 
-			return page;
+			return null;
 		}
 
 		/**
@@ -230,26 +269,104 @@ public class InSessionPageStore extends DelegatingPageStore
 		 */
 		private void writeObject(final ObjectOutputStream output) throws IOException
 		{
-			if (serializer == null) {
-				pages.clear();
-			} else {
-				// serialize pages if not already
-				for (int p = 0; p < pages.size(); p++)
+			// handle non-serialized pages
+			for (int p = 0; p < pages.size(); p++)
+			{
+				IManageablePage page = pages.get(p);
+				
+				if ((page instanceof SerializedPage) == false)
 				{
-					IManageablePage page = pages.get(p);
-					
-					if ((page instanceof SerializedPage) == false)
+					if (serializer == null)
 					{
-						if (serializer == null)
-						{
-							throw new IllegalStateException("SessionData#init() was not called");
-						}
-						pages.set(p,  new SerializedPage(page.getPageId(), Classes.name(page.getClass()), serializer.serialize(page)));
+						pages.remove(p);
+						p--;
+					}
+					else
+					{
+						pages.set(p, new SerializedPage(page.getPageId(), Classes.name(page.getClass()), serializer.serialize(page)));
 					}
 				}
 			}
 
 			output.defaultWriteObject();
+		}
+	}
+	
+	/**
+	 * Limit pages by count.
+	 */
+	static class CountLimitedData extends SessionData
+	{
+		
+		private int maxPages;
+
+		public CountLimitedData(int maxPages)
+		{
+			this.maxPages = Args.withinRange(1, Integer.MAX_VALUE, maxPages, "maxPages");
+		}
+		
+		public synchronized void add(IManageablePage page)
+		{
+			super.add(page);
+			
+			while (pages.size() > maxPages)
+			{
+				removeFirst();
+			}
+		}
+	}
+	
+	/**
+	 * Limit pages by size.
+	 */
+	static class SizeLimitedData extends SessionData
+	{
+
+		private Bytes maxBytes;
+		
+		private long size;
+
+		public SizeLimitedData(Bytes maxBytes)
+		{
+			Args.notNull(maxBytes, "maxBytes");
+			
+			this.maxBytes = Args.withinRange(Bytes.bytes(1), Bytes.MAX, maxBytes, "maxBytes");
+		}
+		
+		@Override
+		public synchronized void add(IManageablePage page)
+		{
+			if (page instanceof SerializedPage == false)
+			{
+				throw new WicketRuntimeException("InSessionPageStore limited by size works with serialized pages only");
+			}
+			
+			super.add(page);
+			
+			size += ((SerializedPage) page).getData().length;
+
+			while (size > maxBytes.bytes())
+			{
+				removeFirst();
+			}
+		}
+		
+		@Override
+		public synchronized IManageablePage remove(int pageId)
+		{
+			SerializedPage page = (SerializedPage) super.remove(pageId);
+			
+			size -= ((SerializedPage) page).getData().length;
+			
+			return page;
+		}
+		
+		@Override
+		public synchronized void removeAll()
+		{
+			super.removeAll();
+			
+			size = 0;
 		}
 	}
 }

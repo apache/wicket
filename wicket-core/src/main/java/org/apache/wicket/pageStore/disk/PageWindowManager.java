@@ -64,7 +64,8 @@ public class PageWindowManager implements Serializable
 		}
 
 		@Override
-		public String getPageType() {
+		public String getPageType()
+		{
 			return type;
 		}
 		

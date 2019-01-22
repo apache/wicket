@@ -47,6 +47,7 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,7 +142,8 @@ public class DiskPageStore extends AbstractPersistentPageStore
 	 * Pages are already serialized.
 	 */
 	@Override
-	public boolean supportsVersioning() {
+	public boolean supportsVersioning()
+	{
 		return true;
 	}
 	
@@ -195,7 +197,8 @@ public class DiskPageStore extends AbstractPersistentPageStore
 	protected void removeAllPersistedPages(String identifier)
 	{
 		DiskData diskData = getDiskData(identifier, false);
-		if (diskData != null) {
+		if (diskData != null)
+		{
 			synchronized (diskDatas)
 			{
 				diskDatas.remove(diskData.sessionIdentifier);
@@ -209,7 +212,7 @@ public class DiskPageStore extends AbstractPersistentPageStore
 	{
 		if (page instanceof SerializedPage == false)
 		{
-			throw new WicketRuntimeException("works with serialized pages only");
+			throw new WicketRuntimeException("DiskPageStore works with serialized pages only");
 		}
 		SerializedPage serializedPage = (SerializedPage) page;
 

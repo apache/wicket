@@ -165,7 +165,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		@Override
 		public <T> void setRequestData(MetaDataKey<T> key, T value)
 		{
-			if (asynchronous) {
+			if (asynchronous)
+			{
 				throw new WicketRuntimeException("no request available asynchronuously");
 			}
 			
@@ -178,7 +179,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		@Override
 		public <T> T getRequestData(MetaDataKey<T> key)
 		{
-			if (asynchronous) {
+			if (asynchronous)
+			{
 				throw new WicketRuntimeException("no request available asynchronuously");
 			}
 			
@@ -194,11 +196,13 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		@Override
 		public <T extends Serializable> void setSessionAttribute(String key, T value)
 		{
-			if (asynchronous) {
+			if (asynchronous)
+			{
 				throw new WicketRuntimeException("no session available asynchronuously");
 			}
 			
-			if (value != null) {
+			if (value != null)
+			{
 				attributeCache.put(key, value);
 			}
 
@@ -215,9 +219,11 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		@Override
 		public <T extends Serializable> T getSessionAttribute(String key)
 		{
-			if (asynchronous) {
+			if (asynchronous)
+			{
 				T value = (T)attributeCache.get(key);
-				if (value != null) {
+				if (value != null)
+				{
 					return value;
 				}
 				
@@ -225,7 +231,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			}
 			
 			T value = context.getSessionAttribute(key);
-			if (value != null) {
+			if (value != null)
+			{
 				attributeCache.put(key, value);
 			}
 			
@@ -238,7 +245,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		@Override
 		public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value)
 		{
-			if (asynchronous) {
+			if (asynchronous)
+			{
 				throw new WicketRuntimeException("no session available asynchronuously");
 			}
 			
@@ -366,7 +374,8 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	public void addPage(IPageContext context, IManageablePage page)
 	{
 		PendingAdd add = new PendingAdd(context, page);
-		if (getDelegate().canBeAsynchronous(add)) {
+		if (getDelegate().canBeAsynchronous(add))
+		{
 			String key = add.getKey();
 			queueMap.put(key, add);
 			try
@@ -387,7 +396,9 @@ public class AsynchronousPageStore extends DelegatingPageStore
 				log.error(e.getMessage(), e);
 				queueMap.remove(key);
 			}
-		} else {
+		}
+		else
+		{
 			log.warn("Delegated page store '{}' can not be asynchronous", getDelegate().getClass().getName());
 		}
 		
@@ -398,10 +409,12 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	public void removeAllPages(IPageContext context)
 	{
 		Iterator<PendingAdd> iterator = queue.iterator();
-		while (iterator.hasNext()) {
+		while (iterator.hasNext())
+		{
 			PendingAdd add = iterator.next(); 
 		
-			if (add.sessionId.equals(context.getSessionId())) {
+			if (add.sessionId.equals(context.getSessionId()))
+			{
 				iterator.remove();
 			}
 		}

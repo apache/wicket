@@ -65,7 +65,8 @@ public class SerializingPageStore extends DelegatingPageStore
 	{
 		IManageablePage page = getDelegate().getPage(context, id);
 
-		if (page instanceof SerializedPage) {
+		if (page instanceof SerializedPage)
+		{
 			page = (IManageablePage)serializer.deserialize(((SerializedPage)page).getData());
 		}
 		return page;
@@ -74,7 +75,8 @@ public class SerializingPageStore extends DelegatingPageStore
 	@Override
 	public void addPage(IPageContext context, IManageablePage page)
 	{
-		if (page instanceof SerializedPage == false) {
+		if (page instanceof SerializedPage == false)
+		{
 			page = new SerializedPage(page.getPageId(), Classes.name(page.getClass()), serializer.serialize(page));
 		}
 		getDelegate().addPage(context, page);

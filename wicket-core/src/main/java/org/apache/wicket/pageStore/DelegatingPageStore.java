@@ -26,7 +26,8 @@ public abstract class DelegatingPageStore implements IPageStore
 {
 	private final IPageStore delegate;
 	
-	protected DelegatingPageStore(IPageStore delegate) {
+	protected DelegatingPageStore(IPageStore delegate)
+	{
 		this.delegate = Args.notNull(delegate, "delegate");
 	}
 
@@ -45,32 +46,38 @@ public abstract class DelegatingPageStore implements IPageStore
 	}
 	
 	@Override
-	public void addPage(IPageContext context, IManageablePage page) {
+	public void addPage(IPageContext context, IManageablePage page)
+	{
 		delegate.addPage(context, page);
 	}
 
 	@Override
-	public void removePage(IPageContext context, IManageablePage page) {
+	public void removePage(IPageContext context, IManageablePage page)
+	{
 		delegate.removePage(context, page);
 	}
 
 	@Override
-	public void removeAllPages(IPageContext context) {
+	public void removeAllPages(IPageContext context)
+	{
 		delegate.removeAllPages(context);
 	}
 	
 	@Override
-	public IManageablePage getPage(IPageContext context, int id) {
+	public IManageablePage getPage(IPageContext context, int id)
+	{
 		return delegate.getPage(context, id);
 	}
 
 	@Override
-	public void detach(IPageContext context) {
+	public void detach(IPageContext context)
+	{
 		delegate.detach(context);
 	}
 
 	@Override
-	public void destroy() {
+	public void destroy()
+	{
 		delegate.destroy();
 	}
 }

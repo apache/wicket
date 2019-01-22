@@ -146,7 +146,8 @@ public abstract class AbstractPersistentPageStore implements IPersistentPageStor
 			context.setSessionAttribute(KEY, attribute);
 		}
 		
-		if (attribute == null) {
+		if (attribute == null)
+		{
 			return null;
 		}
 		return attribute.identifier;
@@ -160,7 +161,8 @@ public abstract class AbstractPersistentPageStore implements IPersistentPageStor
 	 * @param context context
 	 * @return identifier for the sseion
 	 */
-	protected String createSessionIdentifier(IPageContext context) {
+	protected String createSessionIdentifier(IPageContext context)
+	{
 		return context.getSessionId();
 	}
 

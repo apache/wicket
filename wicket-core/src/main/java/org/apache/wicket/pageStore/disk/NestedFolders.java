@@ -37,7 +37,8 @@ public class NestedFolders
 	 * 
 	 * @param base base has to be a folder
 	 */
-	public NestedFolders(File base) {
+	public NestedFolders(File base)
+	{
 		this.base = Args.notNull(base, "base");
 	}
 	
@@ -53,7 +54,8 @@ public class NestedFolders
 	 * @param create
 	 * @return
 	 */
-	public File get(String name, final boolean create) {
+	public File get(String name, final boolean create)
+	{
 		name = name.replace('*', '_');
 		name = name.replace('/', '_');
 		name = name.replace(':', '_');
@@ -61,13 +63,15 @@ public class NestedFolders
 		String path = createPathFrom(name);
 
 		File folder = new File(base, path);
-		if (create && folder.exists() == false) {
+		if (create && folder.exists() == false)
+		{
 			Files.mkdirs(folder);
 		}
 		return folder;
 	}
 
-	private String createPathFrom(final String name) {
+	private String createPathFrom(final String name)
+	{
 		int hash = Math.abs(name.hashCode());
 		String low = String.valueOf(hash % 9973);
 		String high = String.valueOf((hash / 9973) % 9973);
@@ -89,14 +93,18 @@ public class NestedFolders
 	public void remove(String name)
 	{
 		File folder = get(name, false);
-		if (folder.exists()) {
+		if (folder.exists())
+		{
 			Files.removeFolder(folder);
 			
 			File high = folder.getParentFile();
-			if (high.list().length == 0) {
-				if (Files.removeFolder(high)) {
+			if (high.list().length == 0)
+			{
+				if (Files.removeFolder(high))
+				{
 					File low = high.getParentFile();
-					if (low.list().length == 0) {
+					if (low.list().length == 0)
+					{
 						Files.removeFolder(low);
 					}
 				}
@@ -113,10 +121,14 @@ public class NestedFolders
 	{
 		Set<File> files = new HashSet<>();
 		
-		if (base.exists()) {
-			for (File low : Files.list(base)) {
-				for (File high: Files.list(low)) {
-					for (File file : Files.list(high)) {
+		if (base.exists())
+		{
+			for (File low : Files.list(base))
+			{
+				for (File high: Files.list(low))
+				{
+					for (File file : Files.list(high))
+					{
 						files.add(file);
 					}
 				}
