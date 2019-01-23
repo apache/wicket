@@ -31,7 +31,17 @@ public abstract class AbstractPageStoreTest
 {
 	protected final String sessionId = "1234567890";
 	protected final int pageId = 123;
+	
+	/**
+	 * Maximum entries in store.
+	 */
 	protected int maxEntries = 1;
+	
+	/**
+	 * Data for stored pages.
+	 */
+	protected byte[] pageData = new byte[1];
+	
 	protected IPageStore pageStore = null;
 
 	@BeforeEach
@@ -60,7 +70,7 @@ public abstract class AbstractPageStoreTest
 	{
 		IPageContext context = new DummyPageContext(sessionId);
 		
-		pageStore.addPage(context, new SerializedPage(pageId, new byte[0]));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
 		assertNotNull(pageStore.getPage(context, pageId));
 	}
@@ -78,12 +88,12 @@ public abstract class AbstractPageStoreTest
 
 		pageStore = createPageStore(maxEntries);
 
-		pageStore.addPage(context, new SerializedPage(pageId, new byte[0]));
-		pageStore.addPage(context, new SerializedPage(pageId, new byte[0]));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
 		assertNotNull(pageStore.getPage(context, pageId));
 
-		pageStore.removePage(context, new SerializedPage(pageId, new byte[0]));
+		pageStore.removePage(context, new SerializedPage(pageId, pageData));
 
 		assertNull(pageStore.getPage(context, pageId));
 	}
@@ -93,13 +103,16 @@ public abstract class AbstractPageStoreTest
 	{
 		IPageContext context = new DummyPageContext(sessionId);
 		
-		pageStore.addPage(context, new SerializedPage(pageId, new byte[0]));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
 		assertNotNull(pageStore.getPage(context, pageId));
 
-		pageStore.removePage(context, new SerializedPage(pageId, new byte[0]));
+		pageStore.removePage(context, new SerializedPage(pageId, pageData));
 
 		assertNull(pageStore.getPage(context, pageId));
+		
+		int pageId2 = 234;
+		pageStore.removePage(context, new SerializedPage(pageId2, pageData));
 	}
 
 	@Test
@@ -135,7 +148,7 @@ public abstract class AbstractPageStoreTest
 			}
 		};
 		
-		pageStore.removePage(context, new SerializedPage(0, new byte[0]));
+		pageStore.removePage(context, new SerializedPage(0, pageData));
 	}
 
 	@Test
@@ -143,7 +156,7 @@ public abstract class AbstractPageStoreTest
 	{
 		IPageContext context = new DummyPageContext(sessionId);
 		
-		pageStore.addPage(context, new SerializedPage(pageId, new byte[0]));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
 		assertNotNull(pageStore.getPage(context, pageId));
 
@@ -160,12 +173,12 @@ public abstract class AbstractPageStoreTest
 	{
 		IPageContext context = new DummyPageContext(sessionId);
 		
-		pageStore.addPage(context, new SerializedPage(pageId, new byte[0]));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
 		assertNotNull(pageStore.getPage(context, pageId));
 
 		int pageId2 = 234;
-		pageStore.addPage(context, new SerializedPage(pageId2, new byte[0]));
+		pageStore.addPage(context, new SerializedPage(pageId2, pageData));
 		assertNull(pageStore.getPage(context, pageId));
 		assertNotNull(pageStore.getPage(context, pageId2));
 	}
@@ -180,11 +193,11 @@ public abstract class AbstractPageStoreTest
 		IPageContext context = new DummyPageContext(sessionId);
 		IPageContext context2 = new DummyPageContext("0987654321");
 
-		pageStore.addPage(context, new SerializedPage(pageId, new byte[0]));
+		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
 		assertNotNull(pageStore.getPage(context, pageId));
 
-		pageStore.addPage(context2, new SerializedPage(pageId, new byte[0]));
+		pageStore.addPage(context2, new SerializedPage(pageId, pageData));
 
 		assertNotNull(pageStore.getPage(context, pageId));
 		assertNotNull(pageStore.getPage(context2, pageId));

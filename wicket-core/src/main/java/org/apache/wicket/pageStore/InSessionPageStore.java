@@ -212,13 +212,11 @@ public class InSessionPageStore extends DelegatingPageStore
 			pages.add(page);
 		}
 
-		public synchronized IManageablePage removeFirst()
+		protected synchronized void removeOldest()
 		{
 			IManageablePage page = pages.get(0);
 			
 			remove(page.getPageId());
-			
-			return page;
 		}
 		
 		public synchronized IManageablePage remove(int pageId)
@@ -311,7 +309,7 @@ public class InSessionPageStore extends DelegatingPageStore
 			
 			while (pages.size() > maxPages)
 			{
-				removeFirst();
+				removeOldest();
 			}
 		}
 	}
@@ -347,7 +345,7 @@ public class InSessionPageStore extends DelegatingPageStore
 
 			while (size > maxBytes.bytes())
 			{
-				removeFirst();
+				removeOldest();
 			}
 		}
 		
@@ -355,8 +353,10 @@ public class InSessionPageStore extends DelegatingPageStore
 		public synchronized IManageablePage remove(int pageId)
 		{
 			SerializedPage page = (SerializedPage) super.remove(pageId);
-			
-			size -= ((SerializedPage) page).getData().length;
+			if (page != null)
+			{
+				size -= ((SerializedPage) page).getData().length;
+			}
 			
 			return page;
 		}

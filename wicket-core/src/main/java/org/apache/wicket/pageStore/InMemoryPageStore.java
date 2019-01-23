@@ -231,10 +231,10 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 			return page;
 		}
 		
-		protected void removeFirst() {
-			Iterator<IManageablePage> iterator = pages.values().iterator();
-			iterator.next();
-			iterator.remove();
+		protected void removeOldest() {
+			IManageablePage page = pages.values().iterator().next();
+			
+			remove(page.getPageId());
 		}
 	}
 	
@@ -258,7 +258,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 			
 			while (pages.size() > maxPages)
 			{
-				removeFirst();
+				removeOldest();
 			}
 		}
 	}
@@ -294,7 +294,7 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 
 			while (size > maxBytes.bytes())
 			{
-				removeFirst();
+				removeOldest();
 			}
 		}
 		
@@ -302,9 +302,10 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 		public synchronized IManageablePage remove(int pageId)
 		{
 			SerializedPage page = (SerializedPage) super.remove(pageId);
-			
-			size -= ((SerializedPage) page).getData().length;
-			
+			if (page != null)
+			{
+				size -= ((SerializedPage) page).getData().length;
+			}
 			return page;
 		}
 		
