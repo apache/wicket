@@ -18,7 +18,7 @@ package org.apache.wicket.pageStore;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +46,8 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	private final Supplier<MemoryData> dataCreator;
 
 	/**
+	 * Keep {@code maxPages} for each session.
+	 *    
 	 * @param applicationName
 	 *            {@link Application#getName()}
 	 * @param maxPages
@@ -57,10 +59,15 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	}
 
 	/**
+	 * Keep page up to {@code maxBytes} for each session.
+	 * <p>
+	 * All pages added to this store <em>must</em> be {@code SerializedPage}s. You can achieve this by letting
+	 * a {@link SerializingPageStore} delegate to this store.
+	 * 
 	 * @param applicationName
 	 *            {@link Application#getName()}
-	 * @param maxPages
-	 *            max pages per session
+	 * @param maxBytes
+	 *            maximum bytes to keep in session
 	 */
 	public InMemoryPageStore(String applicationName, Bytes maxBytes)
 	{
@@ -200,39 +207,58 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 	 */
 	static abstract class MemoryData implements Iterable<IManageablePage>
 	{
-		LinkedHashMap<Integer, IManageablePage> pages = new LinkedHashMap<>();
+		/**
+		 * Kept in list instead of map, since non-serialized pages might change their id during a request.
+		 */
+		List<IManageablePage> pages = new LinkedList<>();
 
 		@Override
 		public Iterator<IManageablePage> iterator()
 		{
-			return pages.values().iterator();
+			return pages.iterator();
 		}
 
 		public synchronized void add(IManageablePage page)
 		{
-			pages.remove(page.getPageId());
-			pages.put(page.getPageId(), page);
+			remove(page.getPageId());
+			
+			pages.add(page);
 		}
 
-		public IManageablePage remove(int pageId)
+		public synchronized IManageablePage remove(int pageId)
 		{
-			return pages.remove(pageId);
+			Iterator<IManageablePage> iterator = pages.iterator();
+			while (iterator.hasNext())
+			{
+				IManageablePage page = iterator.next();
+				
+				if (page.getPageId() == pageId)
+				{
+					iterator.remove();
+					return page;
+				}
+			}
+			return null;
 		}
 
-		public void removeAll()
+		public synchronized IManageablePage get(int pageId)
 		{
-			pages.clear();
-		}
-
-		public IManageablePage get(int id)
-		{
-			IManageablePage page = pages.get(id);
-
-			return page;
+			Iterator<IManageablePage> iterator = pages.iterator();
+			while (iterator.hasNext())
+			{
+				IManageablePage page = iterator.next();
+				
+				if (page.getPageId() == pageId)
+				{
+					return page;
+				}
+			}
+			
+			return null;
 		}
 		
 		protected void removeOldest() {
-			IManageablePage page = pages.values().iterator().next();
+			IManageablePage page = pages.iterator().next();
 			
 			remove(page.getPageId());
 		}
@@ -307,14 +333,6 @@ public class InMemoryPageStore extends AbstractPersistentPageStore
 				size -= ((SerializedPage) page).getData().length;
 			}
 			return page;
-		}
-		
-		@Override
-		public synchronized void removeAll()
-		{
-			super.removeAll();
-			
-			size = 0;
 		}
 	}
 }

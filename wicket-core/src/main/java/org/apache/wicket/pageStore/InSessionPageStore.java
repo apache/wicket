@@ -91,7 +91,7 @@ public class InSessionPageStore extends DelegatingPageStore
 	/**
 	 * Keep page up to {@code maxBytes} in each session.
 	 * <p>
-	 * All pages added to this store must be {@code SerializedPage}s. You can achieve this by letting
+	 * All pages added to this store <em>must</em> be {@code SerializedPage}s. You can achieve this by letting
 	 * a {@link SerializingPageStore} delegate to this store.
 	 * 
 	 * @param delegate
@@ -192,7 +192,7 @@ public class InSessionPageStore extends DelegatingPageStore
 		/**
 		 * Pages, may partly be serialized.
 		 * <p>
-		 * Kept in list instead of map, since life pages might change their id during a request.
+		 * Kept in list instead of map, since non-serialized pages might change their id during a request.
 		 */
 		List<IManageablePage> pages = new LinkedList<>();
 
