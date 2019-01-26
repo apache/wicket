@@ -2,6 +2,39 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.3.0
+
+** Bug
+
+    * [WICKET-6616] - Stateless pages are not rendered anymore before executing a behavior
+    * [WICKET-6617] - Header contribution ignore <wicket:header-items/>
+    * [WICKET-6623] - Consecutive Temporary Behaviors are not properly removed
+    * [WICKET-6628] - wicket-ioc needs to use ASM 7 and CGLIB 3.2.10 to be compatible with JDK11
+    * [WICKET-6629] - OOM (and disk) in AsynchronousPageStore
+    * [WICKET-6630] - FileUpload.writeToTempFile() fails with commons-fileupload 1.4
+    * [WICKET-6631] - AnnotProxyFieldValueFactory does not cache beanNames
+
+** New Feature
+
+    * [WICKET-6578] - StatelessResourceLink
+    * [WICKET-6626] - Introduce application-wide Component#onComponentTag listeners
+
+** Improvement
+
+    * [WICKET-6587] - CheckBoxSelector should accept more CheckBoxes to be added later
+    * [WICKET-6615] - maven-surefire-plugin need to be updated to work with latest OpenJdk8
+    * [WICKET-6621] - Exceeding exception retries should return control back to server
+
+** Wish
+
+    * [WICKET-6569] - LambdaModel.of overload is ambiguous
+
+** Task
+
+    * [WICKET-6624] - Upgrade to commons-filupload 1.4
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.2.0
 
 ** Bug
