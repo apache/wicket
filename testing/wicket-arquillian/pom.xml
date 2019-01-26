@@ -79,11 +79,23 @@
 			<groupId>org.wildfly</groupId>
 			<artifactId>wildfly-arquillian-container-embedded</artifactId>
 			<version>${wildfly.version}</version>
+			<exclusions>
+				<exclusion>
+				    <groupId>sun.jdk</groupId>
+				    <artifactId>jconsole</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly</groupId>
 			<artifactId>wildfly-embedded</artifactId>
 			<version>${wildfly.version}</version>
+			<exclusions>
+				<exclusion>
+				    <groupId>sun.jdk</groupId>
+				    <artifactId>jconsole</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
