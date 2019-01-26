@@ -33,6 +33,40 @@ xpath /pom:project/pom:properties/pom:maven.compiler.source/text()
 EOF
 }
 
+function jdk_version() {
+  local result
+  local java_cmd
+  if [[ -n $(type -p java) ]]
+  then
+    java_cmd=java
+  elif [[ (-n "$JAVA_HOME") && (-x "$JAVA_HOME/bin/java") ]]
+  then
+    java_cmd="$JAVA_HOME/bin/java"
+  fi
+  local IFS=$'\n'
+  # remove \r for Cygwin
+  local lines=$("$java_cmd" -Xms32M -Xmx32M -version 2>&1 | tr '\r' '\n')
+  if [[ -z $java_cmd ]]
+  then
+    result=no_java
+  else
+    for line in $lines; do
+      if [[ (-z $result) && ($line = *"version \""*) ]]
+      then
+        local ver=$(echo $line | sed -e 's/.*version "\(.*\)"\(.*\)/\1/; 1q')
+        # on macOS, sed doesn't support '?'
+        if [[ $ver = "1."* ]]
+        then
+          result=$(echo $ver | sed -e 's/1\.\([0-9]*\)\(.*\)/\1/; 1q')
+        else
+          result=$(echo $ver | sed -e 's/\([0-9]*\)\(.*\)/\1/; 1q')
+        fi
+      fi
+    done
+  fi
+  echo "$result"
+}
+
 function getProjectVersionFromPom {
     cat << EOF | xmllint --noent --shell pom.xml | grep content | cut -f2 -d=
 setns pom=http://maven.apache.org/POM/4.0.0
@@ -500,8 +534,16 @@ echo "Clean all projects"
 mvn -q clean -Pall
 
 # package and assemble the release
+## if we are using a JDK greater than 10, we add jdk11 profile
+JDK11_PROFILE=""
+
+if [ "$(jdk_version)" -gt 10 ] ; then
+    JDK11_PROFILE=",jdk11"
+	fail $JDK11_PROFILE
+fi
+
 echo "Prepare the release"
-mvn --batch-mode release:prepare -X -l $log -DpreparationGoals="clean" -Dtag=$tag -Papache-release,release
+mvn --batch-mode release:prepare -X -l $log -DpreparationGoals="clean" -Dtag=$tag -Papache-release,release$JDK11_PROFILE
 if [ $? -ne 0 ] ; then
     fail "ERROR: mvn release:prepare was not successful"
 fi
