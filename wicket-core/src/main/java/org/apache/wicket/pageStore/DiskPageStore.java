@@ -47,7 +47,6 @@ import org.apache.wicket.util.file.Files;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
-import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +63,7 @@ import org.slf4j.LoggerFactory;
  * This leads to pages with identical id superfluously kept in the file, while older pages are prematurely expelled.
  * Any following request to these older pages will then fail with {@link PageExpiredException}.   
  */
-public class DiskPageStore extends AbstractPersistentPageStore
+public class DiskPageStore extends AbstractPersistentPageStore implements IPersistentPageStore
 {
 	private static final Logger log = LoggerFactory.getLogger(DiskPageStore.class);
 

@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @see #getSessionIdentifier(IPageContext, boolean)
  */
-public abstract class AbstractPersistentPageStore implements IPersistentPageStore
+public abstract class AbstractPersistentPageStore implements IPageStore
 {
 	private static final String KEY = "wicket:persistentPageStore";
 
@@ -219,7 +219,6 @@ public abstract class AbstractPersistentPageStore implements IPersistentPageStor
 
 	}
 
-	@Override
 	public String getSessionIdentifier(IPageContext context)
 	{
 		return getSessionIdentifier(context, true);

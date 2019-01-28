@@ -38,7 +38,7 @@ import org.apache.wicket.util.lang.Classes;
 /**
  * A storage of pages in memory.
  */
-public class InMemoryPageStore extends AbstractPersistentPageStore
+public class InMemoryPageStore extends AbstractPersistentPageStore implements IPersistentPageStore
 {
 
 	private final Map<String, MemoryData> datas = new ConcurrentHashMap<>();

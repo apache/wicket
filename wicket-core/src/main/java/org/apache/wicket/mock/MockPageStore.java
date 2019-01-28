@@ -49,7 +49,7 @@ public class MockPageStore implements IPageStore
 	public IManageablePage getPage(IPageContext context, int id)
 	{
 		for (IManageablePage page : pages) {
-			if (page .getPageId() == id) {
+			if (page.getPageId() == id) {
 				return page;
 			}
 		}
@@ -59,7 +59,12 @@ public class MockPageStore implements IPageStore
 	@Override
 	public void removePage(IPageContext context, final IManageablePage page)
 	{
-		pages.remove(page);
+		for (IManageablePage candidate : pages) {
+			if (candidate.getPageId() == page.getPageId()) {
+				pages.remove(candidate);
+				return;
+			}
+		}
 	}
 
 	@Override
@@ -77,6 +82,8 @@ public class MockPageStore implements IPageStore
 	@Override
 	public void addPage(IPageContext context, IManageablePage page)
 	{
+		removePage(context, page);
+		
 		pages.addLast(page);
 	}
 }

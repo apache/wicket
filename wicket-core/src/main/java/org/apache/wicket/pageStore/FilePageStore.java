@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
  * in its own file. This improves on a {@link DiskPageStore disadvantage of DiskPageStore} surfacing
  * with alternating Ajax requests from different browser tabs.  
  */
-public class FilePageStore extends AbstractPersistentPageStore
+public class FilePageStore extends AbstractPersistentPageStore implements IPersistentPageStore
 {
 	private static final String ATTRIBUTE_PAGE_TYPE = "user.wicket_page_type";
 
