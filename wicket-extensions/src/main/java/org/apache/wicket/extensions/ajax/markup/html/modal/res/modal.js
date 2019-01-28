@@ -148,6 +148,11 @@
 				width: 600,  /* initial width */
 				height: 300, /* may be null for non-iframe, non-resizable window (automatic height) */
 
+				modalSpacing: 10, /* spacing between the modal and viewport border when modal is wider than viewport */
+				headerHeight: 40,
+
+				overflow: "auto",
+
 				resizable: true,
 
 				widthUnit: "px", /* valid only if not resizable */
@@ -172,6 +177,8 @@
 					this.close();
 					return false;
 				}, this), /* called when close button is clicked */
+
+				afterInit: function() { },
 
 				onClose: function() { }, /* called when window is closed */
 
@@ -354,12 +361,12 @@
 			var modalWidth = this.window.offsetWidth;
 			var modalHeight = this.window.offsetHeight;
 
-			if (modalWidth > width - 10) {
-				this.window.style.width = (width - 10) + "px";
+			if (modalWidth > width - this.settings.modalSpacing) {
+				this.window.style.width = (width - this.settings.modalSpacing) + "px";
 				modalWidth = this.window.offsetWidth;
 			}
-			if (modalHeight > height - 40) {
-				this.content.style.height = (height - 40) + "px";
+			if (modalHeight > height - this.settings.headerHeight) {
+				this.content.style.height = (height - this.settings.headerHeight) + "px";
 				modalHeight = this.window.offsetHeight;
 			}
 
@@ -529,7 +536,7 @@
 				this.content.appendChild(this.settings.element);
 
 				// set the overflow style so that scrollbars are shown when the element is bigger than window
-				this.content.style.overflow="auto";
+				this.content.style.overflow = this.settings.overflow;
 			}
 
 			// bind the events
@@ -601,6 +608,8 @@
 
 			// create the mask that covers the background
 			this.createMask();
+
+			this.settings.afterInit(this);
 		},
 
 		onbeforeunload: function() {
@@ -1015,7 +1024,7 @@
 
 			targetWindow.style.width = newWidth;
 
-			targetContent.style.overflow = 'auto';
+			targetContent.style.overflow = this.settings.overflow;
 		}
 	};
 
