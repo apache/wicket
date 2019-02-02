@@ -2,6 +2,27 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.12.0
+
+** Bug
+
+    * [WICKET-6630] - FileUpload.writeToTempFile() fails with commons-fileupload 1.4
+    * [WICKET-6631] - AnnotProxyFieldValueFactory does not cache beanNames
+
+** New Feature
+
+    * [WICKET-6626] - Introduce application-wide Component#onComponentTag listeners
+
+** Improvement
+
+    * [WICKET-6615] - maven-surefire-plugin need to be updated to work with latest OpenJdk8
+
+** Task
+
+    * [WICKET-6624] - Upgrade to commons-filupload 1.4
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.11.0
 
 ** Bug
