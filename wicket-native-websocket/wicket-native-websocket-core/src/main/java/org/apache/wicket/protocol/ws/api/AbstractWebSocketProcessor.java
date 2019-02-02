@@ -185,7 +185,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	public void onClose(int closeCode, String message)
 	{
 		IKey key = getRegistryKey();
-		broadcastMessage(new ClosedMessage(getApplication(), getSessionId(), key));
+		broadcastMessage(new ClosedMessage(getApplication(), getSessionId(), key, closeCode, message));
 		connectionRegistry.removeConnection(getApplication(), getSessionId(), key);
 	}
 

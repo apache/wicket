@@ -27,14 +27,37 @@ import org.apache.wicket.protocol.ws.api.registry.IKey;
  */
 public class ClosedMessage extends AbstractClientMessage
 {
+	private final int closeCode;
+
+	private final String message;
+
+	/**
+	 * @deprecated This constructor is no more used by Wicket and will be removed in Wicket 9.0
+	 */
+	@Deprecated
 	public ClosedMessage(Application application, String sessionId, IKey key)
 	{
+		this(application, sessionId, key, -1, "unknown");
+	}
+
+	public ClosedMessage(Application application, String sessionId, IKey key, int closeCode, String message)
+	{
 		super(application, sessionId, key);
+		this.closeCode = closeCode;
+		this.message = message;
+	}
+
+	public int getCloseCode() {
+		return closeCode;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 
 	@Override
 	public final String toString()
 	{
-		return "The client closed its connection";
+		return "The client closed its connection with code '" + closeCode + "' and message: '" + message + "'";
 	}
 }
