@@ -123,4 +123,22 @@ public class ChainingModel<T> implements IModel<T>
 		sb.append(":nestedModel=[").append(target).append(']');
 		return sb.toString();
 	}
+
+	/**
+	 * @return The innermost model or the object if the target is not a model
+	 */
+	public final Object getInnermostModelOrObject()
+	{
+		Object object = getTarget();
+		while (object instanceof IModel)
+		{
+			Object tmp = ((IModel<?>)object).getObject();
+			if (tmp == object)
+			{
+				break;
+			}
+			object = tmp;
+		}
+		return object;
+	}
 }
