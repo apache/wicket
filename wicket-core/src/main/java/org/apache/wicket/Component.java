@@ -2002,7 +2002,7 @@ public abstract class Component
 	 * Checks the security strategy if the {@link Component#RENDER} action is allowed on this
 	 * component
 	 * 
-	 * @return ture if {@link Component#RENDER} action is allowed, false otherwise
+	 * @return true if {@link Component#RENDER} action is allowed, false otherwise
 	 */
 	public final boolean isRenderAllowed()
 	{
