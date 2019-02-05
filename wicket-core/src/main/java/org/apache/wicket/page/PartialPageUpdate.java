@@ -355,7 +355,7 @@ public abstract class PartialPageUpdate
 	protected abstract void writeHeader(Response response, String encoding);
 
 	/**
-	 * Writes header contribution (<link/> or <script/>) to the response.
+	 * Writes header contribution (&lt;link/&gt; or &lt;script/&gt;) to the response.
 	 *
 	 * @param response
 	 *      the response to write to
