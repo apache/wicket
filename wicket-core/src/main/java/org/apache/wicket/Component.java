@@ -132,7 +132,7 @@ import org.slf4j.LoggerFactory;
  * unlikely for a web application and even the need to implement a listener interface directly is
  * highly discouraged. Instead, calls to listeners are routed through logic specific to the event,
  * resulting in calls to user code through other overridable methods. See {@link Form} for an
- * example of a component which listens for events via {@link IFormSubmitListener}.</li>
+ * example of a component which listens for events via {@link IRequestListener}.</li>
  * <li><b>Rendering </b>- Before a page or part of a page (in case of Ajax updates) is rendered, all
  * containing components are able to prepare for rendering via two hook methods:
  * {@link #onConfigure()} (regardless whether they are visible or not) and {@link #onBeforeRender()}
@@ -960,7 +960,7 @@ public abstract class Component
 	 * <pre>
 	 * final WebMarkupContainer source=new WebMarkupContainer("a") {
 	 * 	protected void onConfigure() {
-	 *    setVisible(Math.rand()>0.5f);
+	 *    setVisible(Math.rand()&gt;0.5f);
 	 *  }
 	 * };
 	 * 
