@@ -216,19 +216,28 @@ The Wicket distribution contains the final Wicket jar. You can use this
 directly in your applications. The Wicket project also uploads the source 
 and JavaDoc jars as well as the final jar to the Maven repository used by
 the Maven build tool. So there is actually no specific need to build Wicket
-yourself from the distribution.
+yourself from the distribution. Nontheless, if you wish to build Wicket from 
+source you can follow these instructions:
 
-Building using Maven 2 or 3, change the working directory to src and either
-do:
+##### With a JDK 8 as default Java distribution
+With Maven either do:
 
- - mvn package
+ - `mvn package`
 
     creates wicket-x.y.z.jar in target/ subdirectory.
 
- - mvn install
+ - `mvn install`
 
     creates wicket-x.y.z.jar in target/ subdirectory and installs the file
     into your local Maven repository for use in other projects.
+
+##### With a JDK 11 (or newer) as default Java distribution
+Due to the changes introduced after Java 8 the building process must uses
+Maven Toolchains plugin (https://maven.apache.org/guides/mini/guide-using-toolchains.html)
+so you must have Maven properly configured to find a JDK 8 distribution on your machine.
+Then you have to run Maven commands activating profiles `buildbot` and `jdk11`
+
+    `mvn clean install -Pbuildbot,jdk11`
 
 Migrating from 6.x
 ------------------
