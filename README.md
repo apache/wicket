@@ -214,7 +214,7 @@ Maven Toolchains plugin (https://maven.apache.org/guides/mini/guide-using-toolch
 so you must have Maven properly configured to find a JDK 8 distribution on your machine.
 Then you have to run Maven commands activating profiles `buildbot` and `jdk11`
 
-    `mvn install -Pbuildbot,jdk11`
+    `mvn clean install -Pbuildbot,jdk11`
 
 Migrating from 7.x
 ------------------
