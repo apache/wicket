@@ -157,9 +157,9 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 	}
 
 	@Override
-	protected IManageablePage getPersistedPage(String identifier, int id)
+	protected IManageablePage getPersistedPage(String sessionIdentifier, int id)
 	{
-		DiskData diskData = getDiskData(identifier, false);
+		DiskData diskData = getDiskData(sessionIdentifier, false);
 		if (diskData != null)
 		{
 			byte[] data = diskData.loadPage(id);
@@ -167,7 +167,7 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 			{
 				if (log.isDebugEnabled())
 				{
-					log.debug("Returning page with id '{}' in session with id '{}'", id, identifier);
+					log.debug("Returning page with id '{}' in session with id '{}'", id, sessionIdentifier);
 				}
 				
 				return new SerializedPage(id, "unknown", data);
@@ -178,14 +178,14 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 	}
 
 	@Override
-	protected void removePersistedPage(String identifier, IManageablePage page)
+	protected void removePersistedPage(String sessionIdentifier, IManageablePage page)
 	{
-		DiskData diskData = getDiskData(identifier, false);
+		DiskData diskData = getDiskData(sessionIdentifier, false);
 		if (diskData != null)
 		{
 			if (log.isDebugEnabled())
 			{
-				log.debug("Removing page with id '{}' in session with id '{}'", page.getPageId(), identifier);
+				log.debug("Removing page with id '{}' in session with id '{}'", page.getPageId(), sessionIdentifier);
 			}
 			
 			diskData.removeData(page.getPageId());
@@ -193,9 +193,9 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 	}
 
 	@Override
-	protected void removeAllPersistedPages(String identifier)
+	protected void removeAllPersistedPages(String sessionIdentifier)
 	{
-		DiskData diskData = getDiskData(identifier, false);
+		DiskData diskData = getDiskData(sessionIdentifier, false);
 		if (diskData != null)
 		{
 			synchronized (diskDatas)
@@ -207,7 +207,7 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 	}
 
 	@Override
-	protected void addPersistedPage(String identifier, IManageablePage page)
+	protected void addPersistedPage(String sessionIdentifier, IManageablePage page)
 	{
 		if (page instanceof SerializedPage == false)
 		{
@@ -215,9 +215,9 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 		}
 		SerializedPage serializedPage = (SerializedPage) page;
 
-		DiskData diskData = getDiskData(identifier, true);
+		DiskData diskData = getDiskData(sessionIdentifier, true);
 
-		log.debug("Storing data for page with id '{}' in session with id '{}'", serializedPage.getPageId(), identifier);
+		log.debug("Storing data for page with id '{}' in session with id '{}'", serializedPage.getPageId(), sessionIdentifier);
 
 		byte[] data = serializedPage.getData();
 		String type = serializedPage.getPageType();
@@ -226,9 +226,9 @@ public class DiskPageStore extends AbstractPersistentPageStore implements IPersi
 	}
 
 	/**
-	 * Get the data on disk for the given identifier.
+	 * Get the data on disk for the given session identifier.
 	 * 
-	 * @param identifier identifier
+	 * @param sessionIdentifier identifier of session
 	 * @return matching data
 	 */
 	protected DiskData getDiskData(String sessionIdentifier, boolean create)

@@ -21,9 +21,11 @@ import java.io.Serializable;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * Information about a persisted page in an {@link IPersistentPageStore}.
+ * Information about a page persisted in an {@link IPersistentPageStore}.
+ * <p>
+ * Note: This is not an actual page but a representation with essential information only.
  * 
- * @see IPersistentPageStore#getPersistentPages(String, int)
+ * @see IPersistentPageStore#getPersistedPages(String)
  */
 public interface IPersistedPage extends Serializable
 {

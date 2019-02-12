@@ -30,8 +30,9 @@ import org.apache.wicket.util.string.Strings;
 
 /**
  * An {@link IPageStore} that groups pages.
- * 
- * @see #getGroup(IManageablePage)
+ * <p>
+ * By default all pages are stored in a single group, you'll have to override {@link #getGroup(IManageablePage)} to provide the actual group
+ * for a stored page, e.g. using a single group for all pages inside a single browser tab.
  */
 public abstract class GroupingPageStore extends DelegatingPageStore
 {

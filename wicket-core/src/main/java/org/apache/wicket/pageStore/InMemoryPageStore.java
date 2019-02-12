@@ -91,9 +91,9 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	}
 	
 	@Override
-	protected IManageablePage getPersistedPage(String identifier, int id)
+	protected IManageablePage getPersistedPage(String sessionIdentifier, int id)
 	{
-		MemoryData data = getMemoryData(identifier, false);
+		MemoryData data = getMemoryData(sessionIdentifier, false);
 		if (data != null)
 		{
 			return data.get(id);
@@ -103,9 +103,9 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	}
 
 	@Override
-	protected void removePersistedPage(String identifier, IManageablePage page)
+	protected void removePersistedPage(String sessionIdentifier, IManageablePage page)
 	{
-		MemoryData data = getMemoryData(identifier, false);
+		MemoryData data = getMemoryData(sessionIdentifier, false);
 		if (data != null)
 		{
 			synchronized (data)
@@ -116,15 +116,15 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 	}
 
 	@Override
-	protected void removeAllPersistedPages(String identifier)
+	protected void removeAllPersistedPages(String sessionIdentifier)
 	{
-		datas.remove(identifier);
+		datas.remove(sessionIdentifier);
 	}
 
 	@Override
-	protected void addPersistedPage(String identifier, IManageablePage page)
+	protected void addPersistedPage(String sessionIdentifier, IManageablePage page)
 	{
-		MemoryData data = getMemoryData(identifier, true);
+		MemoryData data = getMemoryData(sessionIdentifier, true);
 
 		data.add(page);
 	}
@@ -190,15 +190,15 @@ public class InMemoryPageStore extends AbstractPersistentPageStore implements IP
 		}
 	}
 
-	private MemoryData getMemoryData(String identifier, boolean create)
+	private MemoryData getMemoryData(String sessionIdentifier, boolean create)
 	{
 		if (!create)
 		{
-			return datas.get(identifier);
+			return datas.get(sessionIdentifier);
 		}
 
 		MemoryData data = dataCreator.get();
-		MemoryData existing = datas.putIfAbsent(identifier, data);
+		MemoryData existing = datas.putIfAbsent(sessionIdentifier, data);
 		return existing != null ? existing : data;
 	}
 

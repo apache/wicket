@@ -18,7 +18,7 @@ package org.apache.wicket.devutils.debugbar;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
-import org.apache.wicket.devutils.diskstore.PageStorePage;
+import org.apache.wicket.devutils.pagestore.PageStorePage;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.pageStore.IPersistentPageStore;
 import org.apache.wicket.request.resource.PackageResourceReference;

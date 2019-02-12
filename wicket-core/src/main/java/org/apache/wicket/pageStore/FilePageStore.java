@@ -118,9 +118,9 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 	}
 
 	@Override
-	protected IManageablePage getPersistedPage(String identifier, int id)
+	protected IManageablePage getPersistedPage(String sessionIdentifier, int id)
 	{
-		byte[] data = readFile(identifier, id);
+		byte[] data = readFile(sessionIdentifier, id);
 		if (data == null)
 		{
 			return null;
@@ -129,9 +129,9 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		return new SerializedPage(id, "unknown", data);
 	}
 
-	private byte[] readFile(String identifier, int id)
+	private byte[] readFile(String sessionIdentifier, int id)
 	{
-		File file = getPageFile(identifier, id, false);
+		File file = getPageFile(sessionIdentifier, id, false);
 		if (file.exists() == false)
 		{
 			return null;
@@ -156,33 +156,33 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		}
 		catch (IOException ex)
 		{
-			log.warn("cannot read page data for session {} page {}", identifier, id, ex);
+			log.warn("cannot read page data for session {} page {}", sessionIdentifier, id, ex);
 		}
 
 		return data;
 	}
 
 	@Override
-	protected void removePersistedPage(String identifier, IManageablePage page)
+	protected void removePersistedPage(String sessionIdentifier, IManageablePage page)
 	{
-		File file = getPageFile(identifier, page.getPageId(), false);
+		File file = getPageFile(sessionIdentifier, page.getPageId(), false);
 		if (file.exists())
 		{
 			if (!file.delete())
 			{
-				log.warn("cannot remove page data for session {} page {}", identifier, page.getPageId());
+				log.warn("cannot remove page data for session {} page {}", sessionIdentifier, page.getPageId());
 			}
 		}
 	}
 
 	@Override
-	protected void removeAllPersistedPages(String identifier)
+	protected void removeAllPersistedPages(String sessionIdentifier)
 	{
-		folders.remove(identifier);
+		folders.remove(sessionIdentifier);
 	}
 
 	@Override
-	protected void addPersistedPage(String identifier, IManageablePage page)
+	protected void addPersistedPage(String sessionIdentifier, IManageablePage page)
 	{
 		if (page instanceof SerializedPage == false)
 		{
@@ -193,14 +193,14 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		String type = serializedPage.getPageType();
 		byte[] data = serializedPage.getData();
 
-		writeFile(identifier, serializedPage.getPageId(), type, data);
+		writeFile(sessionIdentifier, serializedPage.getPageId(), type, data);
 
-		checkMaxSize(identifier);
+		checkMaxSize(sessionIdentifier);
 	}
 
-	private void writeFile(String identifier, int pageId, String pageType, byte[] data)
+	private void writeFile(String sessionIdentifier, int pageId, String pageType, byte[] data)
 	{
-		File file = getPageFile(identifier, pageId, true);
+		File file = getPageFile(sessionIdentifier, pageId, true);
 		try
 		{
 			FileChannel channel = FileChannel.open(file.toPath(), StandardOpenOption.CREATE,
@@ -217,15 +217,15 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 		}
 		catch (IOException ex)
 		{
-			log.warn("cannot store page data for session {} page {}", identifier, pageId, ex);
+			log.warn("cannot store page data for session {} page {}", sessionIdentifier, pageId, ex);
 		}
 
 		setPageType(file, pageType);
 	}
 
-	private void checkMaxSize(String identifier)
+	private void checkMaxSize(String sessionIdentifier)
 	{
-		File[] files = folders.get(identifier, true).listFiles();
+		File[] files = folders.get(sessionIdentifier, true).listFiles();
 		Arrays.sort(files, new LastModifiedComparator());
 
 		long total = 0;
@@ -239,7 +239,7 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 			{
 				if (!Files.remove(candidate))
 				{
-					log.warn("cannot remove page data for session {} page {}", identifier,
+					log.warn("cannot remove page data for session {} page {}", sessionIdentifier,
 						candidate.getName());
 				}
 			}
@@ -260,14 +260,14 @@ public class FilePageStore extends AbstractPersistentPageStore implements IPersi
 	@Override
 	public Set<String> getSessionIdentifiers()
 	{
-		Set<String> identifiers = new HashSet<>();
+		Set<String> sessionIdentifiers = new HashSet<>();
 
 		for (File folder : folders.getAll())
 		{
-			identifiers.add(folder.getName());
+			sessionIdentifiers.add(folder.getName());
 		}
 
-		return identifiers;
+		return sessionIdentifiers;
 	}
 
 	@Override

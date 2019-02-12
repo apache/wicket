@@ -16,9 +16,7 @@
  */
 package org.apache.wicket.pageStore;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -29,6 +27,7 @@ import org.apache.wicket.Session;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.lang.Classes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,12 +39,12 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractPersistentPageStore implements IPageStore
 {
-	private static final String KEY = "wicket:persistentPageStore";
+	private static final String KEY_PREFIX = "wicket:";
 
 	private static final Logger log = LoggerFactory.getLogger(AbstractPersistentPageStore.class);
 
 	/**
-	 * A cache that holds all persistent page stores, the key is the application name suffixed with the page store implementation class.
+	 * A cache holding all store, the key is the application name suffixed with the page store implementation class.
 	 */
 	private static final ConcurrentMap<String, AbstractPersistentPageStore> STORES = new ConcurrentHashMap<>();
 
@@ -82,54 +81,60 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
-		String identifier = getSessionIdentifier(context, false);
-		if (identifier == null)
+		String sessionIdentifier = getSessionIdentifier(context, false);
+		if (sessionIdentifier == null)
 		{
 			return null;
 		}
 
-		return getPersistedPage(identifier, id);
+		return getPersistedPage(sessionIdentifier, id);
 	}
 
-	protected abstract IManageablePage getPersistedPage(String identifier, int id);
+	protected abstract IManageablePage getPersistedPage(String sessionIdentifier, int id);
 	
 	@Override
 	public void removePage(IPageContext context, IManageablePage page)
 	{
-		String identifier = getSessionIdentifier(context, false);
-		if (identifier == null)
+		String sessionIdentifier = getSessionIdentifier(context, false);
+		if (sessionIdentifier == null)
 		{
 			return;
 		}
 		
-		removePersistedPage(identifier, page);
+		removePersistedPage(sessionIdentifier, page);
 	}
 
-	protected abstract void removePersistedPage(String identifier, IManageablePage page);
+	protected abstract void removePersistedPage(String sessionIdentifier, IManageablePage page);
 
 	@Override
 	public void removeAllPages(IPageContext context)
 	{
-		String identifier = getSessionIdentifier(context, false);
-		if (identifier == null)
+		String sessionIdentifier = getSessionIdentifier(context, false);
+		if (sessionIdentifier == null)
 		{
 			return;
 		}
 		
-		removeAllPersistedPages(identifier);
+		removeAllPersistedPages(sessionIdentifier);
 	}
 
-	protected abstract void removeAllPersistedPages(String identifier);
+	protected abstract void removeAllPersistedPages(String sessionIdentifier);
 
 	@Override
 	public void addPage(IPageContext context, IManageablePage page)
 	{
-		String identifier = getSessionIdentifier(context, true);
+		String sessionIdentifier = getSessionIdentifier(context, true);
 		
-		addPersistedPage(identifier, page);
+		addPersistedPage(sessionIdentifier, page);
 	}
 
-	protected abstract void addPersistedPage(String identifier, IManageablePage page);
+	/**
+	 * Add a page.
+	 * 
+	 * @param sessionIdentifier identifier of session
+	 * @param page page to add
+	 */
+	protected abstract void addPersistedPage(String sessionIdentifier, IManageablePage page);
 
 	/**
 	 * Get the distinct and stable identifier for the given context.
@@ -139,18 +144,20 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	 */
 	private String getSessionIdentifier(IPageContext context, boolean create)
 	{
-		SessionAttribute attribute = context.getSessionAttribute(KEY);
+		String key = KEY_PREFIX + Classes.simpleName(getClass());
+		
+		SessionAttribute attribute = context.getSessionAttribute(key);
 		if (attribute == null && create)
 		{
 			attribute = new SessionAttribute(storeKey, createSessionIdentifier(context));
-			context.setSessionAttribute(KEY, attribute);
+			context.setSessionAttribute(key, attribute);
 		}
 		
 		if (attribute == null)
 		{
 			return null;
 		}
-		return attribute.identifier;
+		return attribute.sessionIdentifier;
 	}
 
 	/**
@@ -159,7 +166,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	 * Default implementation uses {@link IPageContext#getSessionId()}.
 	 * 
 	 * @param context context
-	 * @return identifier for the sseion
+	 * @return identifier for the session
 	 */
 	protected String createSessionIdentifier(IPageContext context)
 	{
@@ -178,12 +185,12 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 		 * The identifier of the session, must not be equal to {@link Session#getId()}, e.g. when
 		 * the container changes the id after authorization.
 		 */
-		public final String identifier;
+		public final String sessionIdentifier;
 
 		public SessionAttribute(String storeKey, String sessionIdentifier)
 		{
 			this.storeKey = Args.notNull(storeKey, "storeKey");
-			this.identifier = Args.notNull(sessionIdentifier, "sessionIdentifier");
+			this.sessionIdentifier = Args.notNull(sessionIdentifier, "sessionIdentifier");
 		}
 
 
@@ -199,24 +206,13 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 			if (store == null)
 			{
 				log.warn(
-					"Cannot remove data '{}' because disk store '{}' is no longer present.", identifier, storeKey);
+					"Cannot remove data '{}' because disk store '{}' is no longer present.", sessionIdentifier, storeKey);
 			}
 			else
 			{
-				store.removeAllPersistedPages(identifier);
+				store.removeAllPersistedPages(sessionIdentifier);
 			}
 		}
-	}
-
-	public class LastModifiedComparator implements Comparator<File>
-	{
-
-		@Override
-		public int compare(File f1, File f2)
-		{
-			return (int)(f2.lastModified() - f1.lastModified());
-		}
-
 	}
 
 	public String getSessionIdentifier(IPageContext context)

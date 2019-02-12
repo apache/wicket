@@ -30,6 +30,7 @@ import org.apache.wicket.pageStore.InMemoryPageStore;
 import org.apache.wicket.pageStore.InSessionPageStore;
 import org.apache.wicket.pageStore.NoopPageStore;
 import org.apache.wicket.pageStore.RequestPageStore;
+import org.apache.wicket.pageStore.SerializedPage;
 import org.apache.wicket.pageStore.SerializingPageStore;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.settings.FrameworkSettings;
@@ -42,10 +43,10 @@ import org.apache.wicket.util.lang.Bytes;
  * <ol>
  * <li>{@link RequestPageStore} caching pages until end of the request</li>
  * <li>{@link InSessionPageStore} keeping the last accessed page in the session</li>
- * <li>{@link AsynchronousPageStore} moving storage of pages to a worker thread (if enabled in {@link StoreSettings#isAsynchronous()})</li>
+ * <li>{@link AsynchronousPageStore} moving storage of pages to an asynchronous worker thread (enabled by default with {@link StoreSettings#isAsynchronous()})</li>
  * <li>{@link SerializingPageStore} serializing all pages (so they are available for back-button)</li>
- * <li>{@link CryptingPageStore} encrypting all pages (if enabled in {@link StoreSettings#isEncrypted()})</li>
- * <li>{@link DiskPageStore} keeping all pages, configured according to {@link StoreSettings}</li>
+ * <li>{@link CryptingPageStore} encrypting all pages (disabled by default in {@link StoreSettings#isEncrypted()})</li>
+ * <li>{@link DiskPageStore} persisting all pages, configured according to {@link StoreSettings}</li>
  * </ol>
  * An alternative chain with all pages held in-memory could be:
  * <ol>
@@ -63,6 +64,7 @@ import org.apache.wicket.util.lang.Bytes;
  * <li>{@link NoopPageStore} discarding all exceeding pages</li>
  * </ul>
  * The chain's initial store should always be a {@link RequestPageStore}, buffering all adding of pages until the end of the request.
+ * Several stores accept {@link SerializedPage} only, these have to be preceded by a {@link SerializingPageStore}.
  * <p> 
  * For back-button support <em>at least one</em> store in the chain must create copies of stored
  * pages (usually through serialization), otherwise any following request will work on an identical
@@ -70,8 +72,8 @@ import org.apache.wicket.util.lang.Bytes;
  * <p>
  * Other stores be may inserted ad libitum, e.g.
  * <ul>
- * <li>{@link GroupingPageStore} groups pages with their own maximum page limit</li>
- * <li>{@link FilePageStore} as alternative to the trusted {@link DiskPageStore}</li>
+ * <li>{@link GroupingPageStore} groups pages, e.g. to limit storage size on a per-group basis</li>
+ * <li>{@link FilePageStore} as an alternative to the trusted {@link DiskPageStore}</li>
  * <li>other implementations from <a href="https://github.com/wicketstuff/core/tree/master/datastores-parent">wicketstuff-datastores</a></li>
  * </ul>
  */
@@ -94,7 +96,11 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	public IPageManager get()
 	{
 		IPageStore store = newPersistentStore();
+		
+		store = newCryptingStore(store);
 
+		store = newSerializingStore(store);
+		
 		store = newAsynchronousStore(store);
 
 		store = newSessionStore(store);
@@ -139,10 +145,9 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	}
 
 	/**
-	 * Store pages asynchronously into the persistent store.
+	 * Store pages asynchronously into the persistent store, if enabled in {@link StoreSettings#isAsynchronous()}.
 	 * 
 	 * @see AsynchronousPageStore
-	 * @see StoreSettings#isAsynchronous()
 	 */
 	protected IPageStore newAsynchronousStore(IPageStore pageStore)
 	{
@@ -158,7 +163,34 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 	}
 
 	/**
-	 * Keep persistent copies of all pages, by default on disk.
+	 * Serialize pages.
+	 * 
+	 * @see SerializingPageStore
+	 */
+	protected IPageStore newSerializingStore(IPageStore pageStore)
+	{
+		return new SerializingPageStore(pageStore, getSerializer());
+	}
+
+	/**
+	 * Crypt all pages, if enabled in {@link StoreSettings#isEncrypted()}.
+	 * 
+	 * @see CryptingPageStore
+	 */
+	protected IPageStore newCryptingStore(IPageStore pageStore)
+	{
+		StoreSettings storeSettings = application.getStoreSettings();
+		
+		if (storeSettings.isEncrypted())
+		{
+			pageStore = new CryptingPageStore(pageStore);
+		}
+
+		return pageStore;
+	}
+
+	/**
+	 * Keep persistent copies of all pages on disk.
 	 * 
 	 * @see DiskPageStore
 	 * @see StoreSettings#getMaxSizePerSession()
@@ -170,11 +202,6 @@ public class DefaultPageManagerProvider implements IPageManagerProvider
 		Bytes maxSizePerSession = storeSettings.getMaxSizePerSession();
 		File fileStoreFolder = storeSettings.getFileStoreFolder();
 
-		IPageStore store = new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession);
-		if (storeSettings.isEncrypted()) {
-			store = new CryptingPageStore(store);
-		}
-		
-		return new SerializingPageStore(store, getSerializer());		
+		return new DiskPageStore(application.getName(), fileStoreFolder, maxSizePerSession);
 	}
 }

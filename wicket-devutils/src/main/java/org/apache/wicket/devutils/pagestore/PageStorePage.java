@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.devutils.diskstore;
+package org.apache.wicket.devutils.pagestore;
 
 import org.apache.wicket.Session;
 import org.apache.wicket.devutils.DevUtilsPage;
-import org.apache.wicket.devutils.diskstore.browser.PersistedPanel;
 import org.apache.wicket.devutils.inspector.InspectorPage;
+import org.apache.wicket.devutils.pagestore.browser.PersistedPanel;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.pageStore.DelegatingPageStore;
 import org.apache.wicket.pageStore.IPageStore;

@@ -22,30 +22,47 @@ import java.util.Set;
 import org.apache.wicket.util.lang.Bytes;
 
 /**
- * A store that can provide information about stored pages.  
+ * A store that can provide information about stored pages.
+ * <p>
+ * This is an optional interface to a store that is not involved during normal page processing.
+ * Rather, it is used for analysis of application memory footprint.
  */
 public interface IPersistentPageStore extends IPageStore
 {
 
 	/**
-	 * Get the identifier for pages stored for the given context.
+	 * Get the session identifier for pages stored for the given context.
+	 * 
+	 * @param context
+	 *            a context of pages
+	 * @return the identifier of the session.
+	 * 
+	 * @see #getPersistedPages(String)
 	 */
 	String getSessionIdentifier(IPageContext context);
 
 	/**
-	 * Get the identifiers for all pages stored in all contexts.
+	 * Get the identifiers for all stored sessions.
+	 * 
+	 * @return the identifiers of all session.
 	 */
 	Set<String> getSessionIdentifiers();
 
 	/**
 	 * Get information about all persisted pages with the given session identifier.
+	 * 
+	 * @param the
+	 *            identifier of the session.
+	 * @return all persisted pages
 	 */
 	List<IPersistedPage> getPersistedPages(String sessionIdentifier);
 
 	/**
-	 * Get total size of all pages stored in all contexts. 
-	 *  
-	 * @return
+	 * Get total size of all pages stored in all contexts.
+	 * <p>
+	 * Optional operation, may return <code>null</code>.
+	 * 
+	 * @return total size or <code>null</code>
 	 */
 	Bytes getTotalSize();
 }
