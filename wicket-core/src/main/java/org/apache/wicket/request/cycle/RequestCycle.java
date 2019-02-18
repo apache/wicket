@@ -311,14 +311,14 @@ public class RequestCycle implements IRequestCycle, IEventSink
 	 */
 	private boolean executeExceptionRequestHandler(Exception exception, int retryCount)
 	{
-		scheduleRequestHandlerAfterCurrent(null);
-
 		IRequestHandler handler = handleException(exception);
 		if (handler == null)
 		{
 			log.error("Error during request processing. URL=" + request.getUrl(), exception);
 			return false;
 		}
+
+		scheduleRequestHandlerAfterCurrent(null);
 
 		try
 		{
