@@ -20,7 +20,6 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -93,7 +92,6 @@ import org.apache.wicket.settings.RequestLoggerSettings;
 import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.settings.SecuritySettings;
 import org.apache.wicket.settings.StoreSettings;
-import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.time.Duration;
@@ -153,13 +151,6 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
-
-	private static final String PROPERTIES_FILE_EXTENSION = ".properties";
-
-	/**
-	 * The path to look for Wicket specific properties file(s)
-	 */
-	private static final String META_INF_WICKET_PATH = File.separatorChar+ "META-INF" + File.separatorChar + "wicket" + File.separatorChar;
 
 	/** root mapper */
 	private IRequestMapper rootRequestMapper;
@@ -572,16 +563,6 @@ public abstract class Application implements UnboundListener, IEventSink, IMetad
 			serviceLoaderInitializer.init(this);
 			initializers.add(serviceLoaderInitializer);
 		}
-	}
-
-	/**
-	 * @param properties
-	 *            Properties map with names of any library initializers in it
-	 */
-	private void load(final Properties properties)
-	{
-		addInitializer(properties.getProperty("initializer"));
-		addInitializer(properties.getProperty(getName() + "-initializer"));
 	}
 
 	/**
