@@ -58,39 +58,10 @@
 			<groupId>org.jboss.weld.module</groupId>
 			<artifactId>weld-web</artifactId>
 		</dependency>
-		<!-- TODO: Remove the explicit dependencies on
-		jboss-classfilewriter and weld-core-impl once
-		a new release of weld-web is released that uses
-		jboss-classfilewriter:1.2.5.Final or newer.
-		Also remove the exclusion of jboss-classfilewriter
-		for weld-se-core
-		-->
-		<dependency>
-			<groupId>org.jboss.classfilewriter</groupId>
-			<artifactId>jboss-classfilewriter</artifactId>
-			<version>1.2.5.Final-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.weld</groupId>
-			<artifactId>weld-core-impl</artifactId>
-			<version>${weld.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.jboss.classfilewriter</groupId>
-					<artifactId>jboss-classfilewriter</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se-core</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.jboss.classfilewriter</groupId>
-					<artifactId>jboss-classfilewriter</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
