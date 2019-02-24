@@ -34,6 +34,11 @@
 		Also enables propagation of conversations between wicket artifacts such as pages
 		and resources.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.cdi</automatic-module-name>
+	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 			<!-- local management because we can only define one GAV in the parent -->

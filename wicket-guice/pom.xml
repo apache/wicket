@@ -30,6 +30,11 @@
 		Google Guice integration in your Wicket web applications. See the
 		examples project for usecases.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.guice</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.google.inject</groupId>

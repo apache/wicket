@@ -33,6 +33,10 @@
 		provide the IInitializer.
 	</description>
 
+	<properties>
+		<automatic-module-name>org.apache.wicket.http2.undertow</automatic-module-name>
+	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

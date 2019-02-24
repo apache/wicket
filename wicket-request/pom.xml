@@ -26,7 +26,12 @@
   <packaging>bundle</packaging>
   <name>Wicket Request</name>
   <url>http://maven.apache.org</url>
-  <dependencies>
+
+    <properties>
+        <automatic-module-name>org.apache.wicket.request</automatic-module-name>
+    </properties>
+
+    <dependencies>
     <dependency>
       <groupId>org.apache.wicket</groupId>
       <artifactId>wicket-util</artifactId>

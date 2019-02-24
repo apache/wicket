@@ -33,8 +33,13 @@
 		standard WYSIWYG HTML design tools. Dynamic content processing and 
 		form handling is all handled in Java code using a first-class 
 		component model backed by POJO data beans that can easily be 
-		persisted using your favorite technology. 
+		persisted using your favorite technology.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.core</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.hamcrest</groupId>

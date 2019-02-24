@@ -26,6 +26,11 @@
 	<artifactId>wicket-util</artifactId>
 	<packaging>bundle</packaging>
 	<name>Wicket Util</name>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.util</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>commons-fileupload</groupId>

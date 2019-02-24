@@ -32,6 +32,11 @@
 		is the core implementation which provides the header item
 		that uses the API.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.http2.core</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>

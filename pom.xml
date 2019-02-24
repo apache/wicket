@@ -156,6 +156,8 @@
 		<weld.version>3.0.4.Final</weld.version>
 		<forbiddenapis.version>2.6</forbiddenapis.version>
 		<velocity.version>1.7</velocity.version>
+
+		<automatic-module-name>MUST-BE-OVERRIDDEN-BY-MODULES</automatic-module-name>
 	</properties>
 
 	<dependencyManagement>
@@ -919,6 +921,7 @@
 								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							</manifest>
 							<manifestEntries>
+								<Automatic-Module-Name>${automatic-module-name}</Automatic-Module-Name>
 							</manifestEntries>
 						</archive>
 					</configuration>

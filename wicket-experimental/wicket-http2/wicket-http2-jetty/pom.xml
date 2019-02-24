@@ -32,6 +32,11 @@
 		is the jetty implementation to resolve the PushBuilder API and
 		provide the IInitializer.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.http2.jetty</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>

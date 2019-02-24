@@ -32,6 +32,11 @@
 		Wicket IoC common dependencies for injection and proxying. Used by
 		Spring, Guice, etc.
 	</description>
+
+	<properties>
+		<automatic-module-name>org.apache.wicket.ioc</automatic-module-name>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>cglib</groupId>
