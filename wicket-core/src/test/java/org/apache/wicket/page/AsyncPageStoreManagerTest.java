@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.page;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.apache.wicket.pageStore.AsynchronousPageStore;
 import org.apache.wicket.pageStore.DefaultPageStore;
 import org.apache.wicket.pageStore.DiskDataStore;
@@ -27,7 +30,6 @@ import org.apache.wicket.serialize.java.DeflatedJavaSerializer;
 import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Bytes;
-import org.junit.Assert;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.reflection.FieldReader;
@@ -76,7 +78,7 @@ class AsyncPageStoreManagerTest
 		Thread.sleep(1000);
 
 		// Page should be stored on disk
-		Assert.assertNotNull(dataStore.getData("dummy_id", 0));
+		assertNotNull(dataStore.getData("dummy_id", 0));
 
 		// "Stop" the PageSavingRunnable, so we can simulate a pending page
 		Thread t = null;
@@ -109,14 +111,14 @@ class AsyncPageStoreManagerTest
 		Thread.sleep(1000);
 
 		// PageSavingRunnable is not running so page should not be in the datastore
-		Assert.assertNull(dataStore.getData("dummy_id", 1));
+		assertNull(dataStore.getData("dummy_id", 1));
 
 		// Session is invalidated and a clear on the PageStoreManager is called
 		newPageManager.clear();
 
 		// Datastore is indeed empty after the clear
-		Assert.assertNull(dataStore.getData("dummy_id", 0));
-		Assert.assertNull(dataStore.getData("dummy_id", 1));
+		assertNull(dataStore.getData("dummy_id", 0));
+		assertNull(dataStore.getData("dummy_id", 1));
 
 		// "Restart" the PageSavingRunnable
 		t.start();
@@ -127,8 +129,8 @@ class AsyncPageStoreManagerTest
 		// Session has been invalidated. The datastore should not contain any pages for this
 		// session, because they will never be cleaned! Not in the DiskDataStore.sessionEntryMap
 		// (OOM) and not on disk (slowly filling disk as this even survives application restarts.
-		Assert.assertNull(dataStore.getData("dummy_id", 0));
-		Assert.assertNull(dataStore.getData("dummy_id", 1));
+		assertNull(dataStore.getData("dummy_id", 0));
+		assertNull(dataStore.getData("dummy_id", 1));
 		
 		//destroy page manager to clean static variables 
 		newPageManager.destroy();

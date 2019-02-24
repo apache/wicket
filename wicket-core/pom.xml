@@ -43,7 +43,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-junit</artifactId>
+			<artifactId>hamcrest</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
