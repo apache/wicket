@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2;
+package org.apache.wicket.http2.markup.head.undertow;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
-import org.apache.wicket.http2.markup.head.UndertowPushBuilder;
+import org.apache.wicket.http2.Http2Settings;
 
 /**
  * Initializes the undertow specific push builder API and makes it available through the http2

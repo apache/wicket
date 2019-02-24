@@ -14,26 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2;
+package org.apache.wicket.http2.markup.head.servlet4;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
-import org.apache.wicket.http2.markup.head.Tomcat85PushBuilder;
+import org.apache.wicket.http2.Http2Settings;
 
 /**
- * Initializes the tomcat specific push builder API and makes it available through the HTTP2
+ * Initializes the servlet 4 specific push builder API and makes it available through the HTTP2
  * settings
  */
 public class Initializer implements IInitializer
 {
 	/**
-	 * Initializes the push builder API of tomcat
+	 * Initializes the push builder API of Servlet 4
 	 */
 	@Override
 	public void init(Application application)
 	{
 		Http2Settings http2Settings = Http2Settings.Holder.get(application);
-		http2Settings.setPushBuilder(new Tomcat85PushBuilder());
+		http2Settings.setPushBuilder(new Servlet4PushBuilder());
 	}
 
 	@Override

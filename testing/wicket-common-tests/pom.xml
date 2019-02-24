@@ -105,6 +105,31 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-jetty</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-servlet4</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-tomcat</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.wicket.experimental.wicket9</groupId>
+			<artifactId>wicket-http2-undertow</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<artifactId>junit-jupiter-engine</artifactId>
 			<groupId>org.junit.jupiter</groupId>
 			<scope>test</scope>

@@ -14,10 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2.markup.head;
+package org.apache.wicket.http2.markup.head.undertow;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.http2.markup.head.PushBuilder;
+import org.apache.wicket.http2.markup.head.PushItem;
+import org.apache.wicket.http2.markup.head.PushItemHeaderValue;
 import org.apache.wicket.http2.markup.head.PushItemHeaderValue.HeaderOperation;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;

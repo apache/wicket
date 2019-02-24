@@ -141,13 +141,13 @@
 		<jacoco.version>0.8.2</jacoco.version>
 		<jackson.version>2.9.8</jackson.version>
 		<jetty.version>9.4.14.v20181114</jetty.version>
-		<junit.version>5.3.2</junit.version>
+		<junit.version>5.4.0</junit.version>
 		<spring.version>5.1.4.RELEASE</spring.version>
 		<servlet-api.version>3.1.0</servlet-api.version>
 		<maven.javadoc.version>3.0.1</maven.javadoc.version>
 		<maven.surefire.version>2.22.1</maven.surefire.version>
 		<mockito.version>2.24.5</mockito.version>
-		<slf4j.version>1.7.25</slf4j.version>
+		<slf4j.version>1.7.26</slf4j.version>
 		<logback.version>1.2.3</logback.version>
 		<hamcrest.version>2.0.0.0</hamcrest.version>
 		<objenesis.version>3.0.1</objenesis.version>
@@ -401,6 +401,12 @@
 			<dependency>
 				<groupId>org.apache.wicket.experimental.wicket9</groupId>
 				<artifactId>wicket-http2-jetty</artifactId>
+				<version>0.6-SNAPSHOT</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket.experimental.wicket9</groupId>
+				<artifactId>wicket-http2-servlet4</artifactId>
 				<version>0.6-SNAPSHOT</version>
 				<type>jar</type>
 			</dependency>

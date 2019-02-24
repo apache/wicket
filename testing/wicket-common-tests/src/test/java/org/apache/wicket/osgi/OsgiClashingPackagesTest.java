@@ -120,7 +120,7 @@ public class OsgiClashingPackagesTest
 			{
 				if (!projectBuckets.containsKey(packageWithContent))
 				{
-					projectBuckets.put(packageWithContent, new ArrayList<Project>());
+					projectBuckets.put(packageWithContent, new ArrayList<>());
 				}
 				projectBuckets.get(packageWithContent).add(this);
 			}

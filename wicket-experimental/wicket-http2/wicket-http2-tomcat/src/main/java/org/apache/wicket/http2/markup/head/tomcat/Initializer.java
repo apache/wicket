@@ -14,26 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2;
+package org.apache.wicket.http2.markup.head.tomcat;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IInitializer;
-import org.apache.wicket.http2.markup.head.Jetty9PushBuilder;
+import org.apache.wicket.http2.Http2Settings;
 
 /**
- * Initializes the jetty specific push builder API and makes it available through the HTTP2
+ * Initializes the tomcat specific push builder API and makes it available through the HTTP2
  * settings
  */
 public class Initializer implements IInitializer
 {
 	/**
-	 * Initializes the push builder API of Jetty 9.3+
+	 * Initializes the push builder API of tomcat
 	 */
 	@Override
 	public void init(Application application)
 	{
 		Http2Settings http2Settings = Http2Settings.Holder.get(application);
-		http2Settings.setPushBuilder(new Jetty9PushBuilder());
+		http2Settings.setPushBuilder(new Tomcat85PushBuilder());
 	}
 
 	@Override

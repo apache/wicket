@@ -14,10 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.http2.markup.head;
+package org.apache.wicket.http2.markup.head.jetty;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.http2.markup.head.PushBuilder;
+import org.apache.wicket.http2.markup.head.PushItem;
+import org.apache.wicket.http2.markup.head.PushItemHeaderValue;
 import org.apache.wicket.http2.markup.head.PushItemHeaderValue.HeaderOperation;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -25,20 +28,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Allows to push resources with the Servlet 4 specific push builder API
+ * Allows to push resources with the Jetty 9.3+ specific push builder API
  * 
  * @author Tobias Soloschenko
  */
-public class Servlet4PushBuilder implements PushBuilder
+public class Jetty9PushBuilder implements PushBuilder
 {
-	private static final Logger LOG = LoggerFactory.getLogger(Servlet4PushBuilder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Jetty9PushBuilder.class);
 
 	@Override
 	public void push(HttpServletRequest httpServletRequest, PushItem... pushItems)
 	{
 		Request request = RequestCycle.get().getRequest();
 		HttpServletRequest httpRequest = (HttpServletRequest) request.getContainerRequest();
-		javax.servlet.http.PushBuilder pushBuilder = httpRequest.newPushBuilder();
+		final org.eclipse.jetty.server.PushBuilder pushBuilder = org.eclipse.jetty.server.Request.getBaseRequest(httpRequest).getPushBuilder();
 		if (pushBuilder != null)
 		{
 			for (PushItem pushItem : pushItems)
@@ -53,7 +56,7 @@ public class Servlet4PushBuilder implements PushBuilder
 						pushBuilder.setHeader(key, value.getValue());
 					}
 				});
-				pushBuilder.push();	
+				pushBuilder.push();
 			}
 		}
 		else
