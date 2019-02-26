@@ -27,11 +27,13 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.MockPage;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.util.WicketTestTag;
@@ -152,7 +154,7 @@ public class AsynchronousPageStoreTest
 		
 		String sessionId = "sessionId";
 		
-		IPageContext context = new DummyPageContext(sessionId);
+		IPageContext context = new MockPageContext(sessionId);
 
 		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
 		asyncPageStore.addPage(context, page);
@@ -202,7 +204,7 @@ public class AsynchronousPageStoreTest
 		
 		String sessionId = "sessionId";
 		
-		IPageContext context = new DummyPageContext(sessionId);
+		IPageContext context = new MockPageContext(sessionId);
 
 		SerializedPage page = new SerializedPage(pageId, "", new byte[0]);
 		asyncPageStore.addPage(context, page);
@@ -306,27 +308,26 @@ public class AsynchronousPageStoreTest
 	 * Store does not allow modifications when pages are added asynchronously.
 	 */
 	@Test
-	public void storeAsynchronousContextClosed() throws InterruptedException
+	public void storeAsynchronousContextClosed() throws Throwable
 	{
+		final AtomicReference<Throwable> asyncFail = new AtomicReference<>();
+		
 		IPageStore store = new MockPageStore() {
 			
 			@Override
 			public boolean canBeAsynchronous(IPageContext context)
 			{
 				// can get session id
-				context.getSessionId();
+				context.getSessionId(true);
 				
 				// can access request data
-				context.getRequestData(KEY1);
-				context.setRequestData(KEY1, "value1");
+				assertEquals("value1", context.getRequestData(KEY1, () -> "value1"));
 
 				// can access session data
-				context.getSessionData(KEY1);
-				context.setSessionData(KEY1, "value1");
+				assertEquals("value1", context.getSessionData(KEY1, () -> "value1"));
 
 				// can access session
-				context.getSessionAttribute("key1");
-				context.setSessionAttribute("key1", "value1");
+				context.getSessionAttribute("key1", () -> "value1");
 
 				return true;
 			}
@@ -335,62 +336,36 @@ public class AsynchronousPageStoreTest
 			public synchronized void addPage(IPageContext context, IManageablePage page)
 			{
 				// can get session id
-				context.getSessionId();
+				context.getSessionId(true);
 				
 				// cannot access request
 				try {
-					context.getRequestData(KEY1);
-					fail();
+					context.getRequestData(KEY1, () -> null);
+					asyncFail.set(new Exception().fillInStackTrace());
 				} catch (WicketRuntimeException expected) {
 				}
 				try {
-					context.setRequestData(KEY1, "value1");
-					fail();
-				} catch (WicketRuntimeException expected) {
-				}
-				try {
-					context.getRequestData(KEY2);
-					fail();
-				} catch (WicketRuntimeException expected) {
-				}
-				try {
-					context.setRequestData(KEY2, "value2");
-					fail();
+					context.getRequestData(KEY2, () -> null);
+					asyncFail.set(new Exception().fillInStackTrace());
 				} catch (WicketRuntimeException expected) {
 				}
 
 				// can read session data 
-				context.getSessionData(KEY1);
-				context.getSessionData(KEY2);
+				assertEquals("value1", context.getSessionData(KEY1, () -> "value2"));
+				assertEquals(null, context.getSessionData(KEY2, () -> null));
 				// .. but cannot set
 				try {
-					context.setSessionData(KEY1, "value1");
-					fail();
-				} catch (WicketRuntimeException expected) {
-				}
-				try {
-					context.setSessionData(KEY2, "value2");
-					fail();
+					context.getSessionData(KEY2, () -> "value2");
+					asyncFail.set(new Exception().fillInStackTrace());
 				} catch (WicketRuntimeException expected) {
 				}
 				
-				// can read session already read
-				context.getSessionAttribute("key1");
+				// can read session attribute already read
+				assertEquals("value1", context.getSessionAttribute("key1", () -> null));
 				// .. but nothing new
 				try {
-					context.getSessionAttribute("key2");
-					fail();
-				} catch (WicketRuntimeException expected) {
-				}
-				// .. but cannot set
-				try {
-					context.setSessionAttribute("key1", "value1");
-					fail();
-				} catch (WicketRuntimeException expected) {
-				}
-				try {
-					context.setSessionAttribute("key2", "value2");
-					fail();
+					context.getSessionAttribute("key2", () -> null);
+					asyncFail.set(new Exception().fillInStackTrace());
 				} catch (WicketRuntimeException expected) {
 				}
 			}
@@ -400,11 +375,15 @@ public class AsynchronousPageStoreTest
 
 		MockPage page = new MockPage();
 		
-		IPageContext context = new DummyPageContext();
+		IPageContext context = new MockPageContext();
 		
 		asyncPageStore.addPage(context , page);
 		
 		store.destroy();
+		
+		if (asyncFail.get() != null) {
+			throw asyncFail.get();
+		}
 	}
 	
 	// test run
@@ -477,7 +456,7 @@ public class AsynchronousPageStoreTest
 			for (int i = 1; i <= sessions; i++)
 			{
 				String sessionId = String.valueOf(i);
-				IPageContext context = new DummyPageContext(sessionId);
+				IPageContext context = new MockPageContext(sessionId);
 				Metrics metrics = new Metrics();
 
 				stopwatch.reset();

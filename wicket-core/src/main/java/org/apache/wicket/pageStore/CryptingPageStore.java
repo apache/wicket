@@ -76,12 +76,7 @@ public class CryptingPageStore extends DelegatingPageStore
 
 	private SessionData getSessionData(IPageContext context)
 	{
-		SessionData data = context.getSessionData(KEY);
-		if (data == null)
-		{
-			data = context.setSessionData(KEY, new SessionData(newCrypter(context)));
-		}
-		return data;
+		return context.getSessionData(KEY, () -> new SessionData(newCrypter(context))); 
 	}
 
 	/**

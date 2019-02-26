@@ -21,9 +21,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.MockPage;
+import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.page.IManageablePage;
 import org.junit.jupiter.api.Test;
@@ -53,10 +55,10 @@ public class GroupingPageStoreTest
 			
 			public void addPage(IPageContext context, IManageablePage page) {
 
-				context.setSessionAttribute("attribute", "value");
-				context.setSessionData(KEY, VALUE);
+				context.getSessionAttribute("attribute", () -> "value");
+				context.getSessionData(KEY, () -> VALUE);
 
-				assertEquals(sessionId + "_" + group(page), context.getSessionId());
+				assertEquals(sessionId + "_" + group(page), context.getSessionId(true));
 				
 				super.addPage(context, page);
 			}
@@ -64,7 +66,7 @@ public class GroupingPageStoreTest
 			@Override
 			public void removeAllPages(IPageContext context)
 			{
-				assertEquals(sessionId + "_group1", context.getSessionId());
+				assertEquals(sessionId + "_group1", context.getSessionId(true));
 				
 				super.removeAllPages(context);
 			}
@@ -78,21 +80,21 @@ public class GroupingPageStoreTest
 			}
 		};
 		
-		DummyPageContext context = new DummyPageContext(sessionId) {
+		MockPageContext context = new MockPageContext(sessionId) {
 			@Override
-			public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value)
+			public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 			{
-				assertFalse(value == VALUE, "group session data not set directly in session");
+				assertFalse(defaultValue.get() == VALUE, "group session data not set directly in session");
 				
-				return super.setSessionData(key, value);
+				return super.getSessionData(key, defaultValue);
 			}
 			
 			@Override
-			public <T extends Serializable> void setSessionAttribute(String key, T value)
+			public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> value)
 			{
 				assertTrue(key.startsWith("attribute_group"), "group session attribute starts with group");
 				
-				super.setSessionAttribute(key, value);
+				return super.getSessionAttribute(key, value);
 			}
 		};
 		

@@ -165,11 +165,16 @@ public class InSessionPageStore extends DelegatingPageStore
 
 	private SessionData getSessionData(IPageContext context, boolean create)
 	{
-		SessionData data = context.getSessionData(KEY);
-		if (data == null && create)
-		{
-			data = context.setSessionData(KEY, dataCreator.get());
-		}
+		SessionData data = context.getSessionData(KEY, () -> {
+			if (create)
+			{
+				return dataCreator.get();
+			}
+			else
+			{
+				return null;
+			}
+		});
 
 		if (data != null && serializer != null)
 		{

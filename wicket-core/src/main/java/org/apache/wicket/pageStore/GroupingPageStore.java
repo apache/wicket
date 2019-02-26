@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
@@ -99,7 +100,7 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	@Override
 	public void addPage(IPageContext context, IManageablePage page)
 	{
-		SessionData sessionData = getSessionData(context);
+		SessionData sessionData = getSessionData(context, true);
 
 		sessionData.addPage(context, page, getGroupInternal(page), maxGroups, stableGroups, getDelegate());
 	}
@@ -107,7 +108,10 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	@Override
 	public void removePage(IPageContext context, IManageablePage page)
 	{
-		SessionData sessionData = getSessionData(context);
+		SessionData sessionData = getSessionData(context, false);
+		if (sessionData == null) {
+			return;
+		}
 		
 		sessionData.removePage(context, page, getDelegate());
 	}
@@ -115,7 +119,10 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	@Override
 	public void removeAllPages(IPageContext context)
 	{
-		SessionData sessionData = getSessionData(context);
+		SessionData sessionData = getSessionData(context, false);
+		if (sessionData == null) {
+			return;
+		}
 
 		sessionData.removeAllPages(context, getDelegate());
 	}
@@ -123,20 +130,26 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 	@Override
 	public IManageablePage getPage(IPageContext context, int id)
 	{
-		SessionData sessionData = getSessionData(context);
+		SessionData sessionData = getSessionData(context, false);
+		if (sessionData == null) {
+			return null;
+		}
 		
 		return sessionData.getPage(context, id, getDelegate());
 	}
 
-	private SessionData getSessionData(IPageContext context)
+	private SessionData getSessionData(IPageContext context, boolean create)
 	{
-		SessionData data = context.getSessionData(KEY);
-		if (data == null)
-		{
-			data = context.setSessionData(KEY, new SessionData());
-		}
-
-		return data;
+		return context.getSessionData(KEY, () -> {
+			if (create)
+			{
+				return new SessionData();
+			}
+			else
+			{
+				return null;
+			}
+		});
 	}
 
 	/**
@@ -234,45 +247,37 @@ public abstract class GroupingPageStore extends DelegatingPageStore
 		}
 
 		@Override
-		public String getSessionId()
+		public String getSessionId(boolean bind)
 		{
-			return context.getSessionId() + "_" + group;
+			return context.getSessionId(true) + "_" + group;
 		}
 
 		@Override
-		public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value)
+		public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 		{
-			sessionData.setMetaData(group, key, value);
-			
-			return value;
+			synchronized (sessionData)
+			{
+				T data = sessionData.getMetaData(group, key);
+				if (data == null) {
+					data = defaultValue.get();
+					
+					if (data != null) {
+						sessionData.setMetaData(group, key, data);
+					}
+				}
+				
+				return data;
+			}
 		}
 
 		@Override
-		public <T extends Serializable> T getSessionData(MetaDataKey<T> key)
+		public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> defaultValue)
 		{
-			return sessionData.getMetaData(group, key);
+			return context.getSessionAttribute(key + "_" + group, defaultValue);
 		}
 
 		@Override
-		public <T extends Serializable> void setSessionAttribute(String key, T value)
-		{
-			context.setSessionAttribute(key + "_" + group, value);
-		}
-
-		@Override
-		public <T extends Serializable> T getSessionAttribute(String key)
-		{
-			return context.getSessionAttribute(key + "_" + group);
-		}
-
-		@Override
-		public <T> void setRequestData(MetaDataKey<T> key, T data)
-		{
-			throw new WicketRuntimeException("no request available for group");
-		}
-
-		@Override
-		public <T> T getRequestData(MetaDataKey<T> key)
+		public <T> T getRequestData(MetaDataKey<T> key, Supplier<T> defaultValue)
 		{
 			throw new WicketRuntimeException("no request available for group");
 		}

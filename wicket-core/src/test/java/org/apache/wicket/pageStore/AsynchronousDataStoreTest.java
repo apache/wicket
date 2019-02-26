@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.wicket.MockPage;
+import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.page.IManageablePage;
 import org.junit.jupiter.api.Test;
 
@@ -76,7 +77,7 @@ public class AsynchronousDataStoreTest
 
 	private static IPageContext createContext(String sessionId)
 	{
-		return new DummyPageContext(sessionId);
+		return new MockPageContext(sessionId);
 	}
 
 	private static abstract class AbstractTask implements Runnable

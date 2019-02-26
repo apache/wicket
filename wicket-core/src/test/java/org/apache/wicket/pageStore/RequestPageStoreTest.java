@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.wicket.MockPage;
+import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +38,7 @@ public class RequestPageStoreTest
 	{
 		MockPageStore mockStore = new MockPageStore();
 		
-		DummyPageContext context = new DummyPageContext();
+		MockPageContext context = new MockPageContext();
 
 		RequestPageStore store = new RequestPageStore(mockStore);
 		

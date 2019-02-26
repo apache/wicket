@@ -20,9 +20,9 @@ import org.apache.wicket.MockPage;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.request.handler.PageProvider;
 import org.apache.wicket.markup.MarkupParser;
+import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageManager;
-import org.apache.wicket.pageStore.DummyPageContext;
 import org.apache.wicket.pageStore.IPageContext;
 import org.apache.wicket.pageStore.InMemoryPageStore;
 import org.apache.wicket.pageStore.InSessionPageStore;
@@ -45,7 +45,7 @@ public class TestMapperContext implements IMapperContext
 	private static int count;
 
 	InSessionPageStore pageStore;
-	DummyPageContext pageContext;
+	MockPageContext pageContext;
 	IPageManager pageManager;
 	private String appName;
 	private boolean createMockPageIfInstanceNotFound = true;
@@ -57,7 +57,7 @@ public class TestMapperContext implements IMapperContext
 	{
 		appName = APP_NAME + count++;
 		
-		pageContext = new DummyPageContext();
+		pageContext = new MockPageContext();
 		
 		InMemoryPageStore inMemoryPageStore = new InMemoryPageStore(appName, Integer.MAX_VALUE);
 		pageStore = new InSessionPageStore(inMemoryPageStore, 4, new JavaSerializer(appName));

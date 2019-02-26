@@ -21,8 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.mock.MockPageContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +70,7 @@ public abstract class AbstractPageStoreTest
 	@Test
 	void storePage()
 	{
-		IPageContext context = new DummyPageContext(sessionId);
+		IPageContext context = new MockPageContext(sessionId);
 		
 		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
@@ -83,7 +85,7 @@ public abstract class AbstractPageStoreTest
 	{
 		pageStore.destroy();
 		
-		IPageContext context = new DummyPageContext(sessionId);
+		IPageContext context = new MockPageContext(sessionId);
 		int maxEntries = 10;
 
 		pageStore = createPageStore(maxEntries);
@@ -101,7 +103,7 @@ public abstract class AbstractPageStoreTest
 	@Test
 	void removePage()
 	{
-		IPageContext context = new DummyPageContext(sessionId);
+		IPageContext context = new MockPageContext(sessionId);
 		
 		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
@@ -118,15 +120,23 @@ public abstract class AbstractPageStoreTest
 	@Test
 	void removeAllPagesDoesNotBindSession()
 	{
-		IPageContext context = new DummyPageContext(sessionId) {
+		IPageContext context = new MockPageContext(sessionId) {
 			@Override
-			public <T extends Serializable> void setSessionAttribute(String key, T value) {
-				fail();
+			public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> value) {
+				if (value.get() != null) {
+					fail();
+				}
+				
+				return null;
 			}
 			
 			@Override
-			public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value) {
-				return fail();
+			public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> value) {
+				if (value.get() != null) {
+					return fail();
+				}
+				
+				return null;
 			}
 		};
 		
@@ -136,15 +146,23 @@ public abstract class AbstractPageStoreTest
 	@Test
 	void removePageDoesNotBindSession()
 	{
-		IPageContext context = new DummyPageContext(sessionId) {
+		IPageContext context = new MockPageContext(sessionId) {
 			@Override
-			public <T extends Serializable> void setSessionAttribute(String key, T value) {
-				fail();
+			public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> value) {
+				if (value.get() != null) {
+					fail();
+				}
+				
+				return null;
 			}
 			
 			@Override
-			public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value) {
-				return fail();
+			public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> value) {
+				if (value.get() != null) {
+					return fail();
+				}
+				
+				return null;
 			}
 		};
 		
@@ -154,7 +172,7 @@ public abstract class AbstractPageStoreTest
 	@Test
 	void removeAllPages()
 	{
-		IPageContext context = new DummyPageContext(sessionId);
+		IPageContext context = new MockPageContext(sessionId);
 		
 		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
@@ -171,7 +189,7 @@ public abstract class AbstractPageStoreTest
 	@Test
 	void maxSizeSameSession()
 	{
-		IPageContext context = new DummyPageContext(sessionId);
+		IPageContext context = new MockPageContext(sessionId);
 		
 		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 
@@ -190,8 +208,8 @@ public abstract class AbstractPageStoreTest
 	@Test
 	void maxSizeDifferentSessions()
 	{
-		IPageContext context = new DummyPageContext(sessionId);
-		IPageContext context2 = new DummyPageContext("0987654321");
+		IPageContext context = new MockPageContext(sessionId);
+		IPageContext context2 = new MockPageContext("0987654321");
 
 		pageStore.addPage(context, new SerializedPage(pageId, pageData));
 

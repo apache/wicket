@@ -146,12 +146,14 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	{
 		String key = KEY_PREFIX + Classes.simpleName(getClass());
 		
-		SessionAttribute attribute = context.getSessionAttribute(key);
-		if (attribute == null && create)
-		{
-			attribute = new SessionAttribute(storeKey, createSessionIdentifier(context));
-			context.setSessionAttribute(key, attribute);
-		}
+		SessionAttribute attribute = context.getSessionAttribute(key, () -> {
+			if (create)
+			{
+				return new SessionAttribute(storeKey, createSessionIdentifier(context));
+			}
+			
+			return null;
+		});
 		
 		if (attribute == null)
 		{
@@ -170,7 +172,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 	 */
 	protected String createSessionIdentifier(IPageContext context)
 	{
-		return context.getSessionId();
+		return context.getSessionId(true);
 	}
 
 	/**
@@ -182,7 +184,7 @@ public abstract class AbstractPersistentPageStore implements IPageStore
 		private final String storeKey;
 
 		/**
-		 * The identifier of the session, must not be equal to {@link Session#getId()}, e.g. when
+		 * The identifier of the session, may not be equal to {@link Session#getId()}, e.g. when
 		 * the container changes the id after authorization.
 		 */
 		public final String sessionIdentifier;

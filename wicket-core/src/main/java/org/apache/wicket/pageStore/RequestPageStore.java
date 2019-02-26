@@ -106,14 +106,7 @@ public class RequestPageStore extends DelegatingPageStore
 
 	private RequestData getRequestData(IPageContext context)
 	{
-		RequestData requestData = context.getRequestData(KEY);
-		if (requestData == null)
-		{
-			requestData = new RequestData();
-
-			context.setRequestData(KEY, requestData);
-		}
-		return requestData;
+		return context.getRequestData(KEY, () -> new RequestData());
 	}
 	
 	/**

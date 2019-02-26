@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.WicketRuntimeException;
@@ -140,7 +141,7 @@ public class AsynchronousPageStore extends DelegatingPageStore
 			this.context = Args.notNull(context, "context");
 			this.page = Args.notNull(page, "page");
 			
-			this.sessionId = context.getSessionId();
+			this.sessionId = context.getSessionId(true);
 		}
 
 		/**
@@ -163,110 +164,81 @@ public class AsynchronousPageStore extends DelegatingPageStore
 		 * Prevents access to request when called asynchronously.
 		 */
 		@Override
-		public <T> void setRequestData(MetaDataKey<T> key, T value)
+		public <T> T getRequestData(MetaDataKey<T> key, Supplier<T> value)
 		{
 			if (asynchronous)
 			{
-				throw new WicketRuntimeException("no request available asynchronuously");
+				throw new WicketRuntimeException("request data not available asynchronuously");
 			}
 			
-			context.setRequestData(key, value);
+			return context.getRequestData(key, value);
 		}
 
 		/**
-		 * Prevents access to request when called asynchronously.
-		 */
-		@Override
-		public <T> T getRequestData(MetaDataKey<T> key)
-		{
-			if (asynchronous)
-			{
-				throw new WicketRuntimeException("no request available asynchronuously");
-			}
-			
-			return context.getRequestData(key);
-		}
-
-		/**
-		 * Prevents access to the session when called asynchronously.
+		 * Prevents changing of session attributes when called asynchronously.
 		 * <p>
-		 * All values set from {@link IPageStore#canBeAsynchronous(IPageContext)} are kept
-		 * for later retrieval.
-		 */
-		@Override
-		public <T extends Serializable> void setSessionAttribute(String key, T value)
-		{
-			if (asynchronous)
-			{
-				throw new WicketRuntimeException("no session available asynchronuously");
-			}
-			
-			if (value != null)
-			{
-				attributeCache.put(key, value);
-			}
-
-			context.setSessionAttribute(key, value);
-		}
-		
-		/**
-		 * Prevents access to the session when called asynchronously.
-		 * <p>
-		 * All values set from {@link IPageStore#canBeAsynchronous(IPageContext)} are still
+		 * All values accessed from {@link IPageStore#canBeAsynchronous(IPageContext)} are still
 		 * available.
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T extends Serializable> T getSessionAttribute(String key)
+		public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> defaultValue)
 		{
+			T value;
+			
 			if (asynchronous)
 			{
-				T value = (T)attributeCache.get(key);
+				value = (T)attributeCache.get(key);
+				if (value == null )
+				{
+					if (defaultValue.get() != null)
+					{
+						throw new WicketRuntimeException("session attribute can not be changed asynchronuously");
+					}
+				}
+			} else {
+				value = context.getSessionAttribute(key, defaultValue);
 				if (value != null)
 				{
-					return value;
+					attributeCache.put(key, value);
 				}
-				
-				throw new WicketRuntimeException("no session available asynchronuously");
-			}
-			
-			T value = context.getSessionAttribute(key);
-			if (value != null)
-			{
-				attributeCache.put(key, value);
 			}
 			
 			return value;
 		}
 		
 		/**
-		 * Prevents access to the session when called asynchronously.
+		 * Prevents changing of session data when called asynchronously.
 		 */
 		@Override
-		public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value)
+		public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 		{
+			T value;
+			
 			if (asynchronous)
 			{
-				throw new WicketRuntimeException("no session available asynchronuously");
+				value = context.getSessionData(key, () -> null);
+				if (value == null )
+				{
+					if (defaultValue.get() != null)
+					{
+						throw new WicketRuntimeException("session data can not be changed asynchronuously");
+					}
+				}
+			}
+			else
+			{
+				value = context.getSessionData(key, defaultValue);
 			}
 			
-			return context.setSessionData(key, value);
-		}
-
-		/**
-		 * Gets data from the session.
-		 */
-		@Override
-		public <T extends Serializable> T getSessionData(MetaDataKey<T> key)
-		{
-			return context.getSessionData(key);
+			return value;
 		}
 
 		/**
 		 * Returns id of session.
 		 */
 		@Override
-		public String getSessionId()
+		public String getSessionId(boolean bind)
 		{
 			return sessionId;
 		}
@@ -341,7 +313,12 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	@Override
 	public IManageablePage getPage(IPageContext context, int pageId)
 	{
-		PendingAdd entry = queueMap.get(getKey(context.getSessionId(), pageId));
+		String sessionId = context.getSessionId(false);
+		if (sessionId == null) {
+			return null;
+		}
+		
+		PendingAdd entry = queueMap.get(getKey(sessionId, pageId));
 		if (entry != null)
 		{
 			log.debug("Returning the page of a non-stored entry with page id '{}'", pageId);
@@ -357,7 +334,12 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	@Override
 	public void removePage(IPageContext context, IManageablePage page)
 	{
-		String key = getKey(context.getSessionId(), page.getPageId());
+		String sessionId = context.getSessionId(false);
+		if (sessionId == null) {
+			return;
+		}
+
+		String key = getKey(sessionId, page.getPageId());
 		if (key != null)
 		{
 			PendingAdd entry = queueMap.remove(key);
@@ -408,12 +390,17 @@ public class AsynchronousPageStore extends DelegatingPageStore
 	@Override
 	public void removeAllPages(IPageContext context)
 	{
+		String sessionId = context.getSessionId(false);
+		if (sessionId == null) {
+			return;
+		}
+		
 		Iterator<PendingAdd> iterator = queue.iterator();
 		while (iterator.hasNext())
 		{
 			PendingAdd add = iterator.next(); 
 		
-			if (add.sessionId.equals(context.getSessionId()))
+			if (add.sessionId.equals(sessionId))
 			{
 				iterator.remove();
 			}

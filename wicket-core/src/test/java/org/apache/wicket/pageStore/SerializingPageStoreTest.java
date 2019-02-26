@@ -19,6 +19,7 @@ package org.apache.wicket.pageStore;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.wicket.MockPage;
+import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.serialize.java.JavaSerializer;
@@ -33,7 +34,7 @@ public class SerializingPageStoreTest
 	@Test
 	void test()
 	{
-		DummyPageContext context = new DummyPageContext();
+		MockPageContext context = new MockPageContext();
 		
 		MockPageStore mockStore = new MockPageStore();
 		

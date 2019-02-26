@@ -23,6 +23,7 @@ import java.security.GeneralSecurityException;
 
 import org.apache.wicket.MockPage;
 import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.mock.MockPageStore;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ public class CryptingPageStoreTest
 		CryptingPageStore store = new CryptingPageStore(new MockPageStore());
 		JavaSerializer serializer = new JavaSerializer("test");
 
-		IPageContext context = new DummyPageContext();
+		IPageContext context = new MockPageContext();
 
 		for (int p = 0; p < 10; p++)
 		{
@@ -61,7 +62,7 @@ public class CryptingPageStoreTest
 		CryptingPageStore store = new CryptingPageStore(new MockPageStore());
 		JavaSerializer serializer = new JavaSerializer("test");
 
-		DummyPageContext context = new DummyPageContext();
+		MockPageContext context = new MockPageContext();
 
 		int p = 42;
 

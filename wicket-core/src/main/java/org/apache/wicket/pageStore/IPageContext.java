@@ -17,13 +17,16 @@
 package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 import org.apache.wicket.MetaDataKey;
+import org.apache.wicket.Session;
 import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 /**
- * Context of a {@link IManageablePage} when it is store in a {@link IPageStore}, decoupling it from
- * request cycle and session.
+ * Context of a {@link IManageablePage} when it is stored in an {@link IPageStore}, decoupling it
+ * from request cycle and session.
  * 
  * @author Matej Knopp
  * @author svenmeier
@@ -31,79 +34,51 @@ import org.apache.wicket.page.IManageablePage;
 public interface IPageContext
 {
 	/**
-	 * Set data into the current request.
+	 * Get data from the current request cycle.
 	 * 
 	 * @param key
 	 *            key
-	 * @param value
-	 *            value
+	 * @param defaultValue
+	 *            default value to use if not present
+	 * 
+	 * @see RequestCycle#getMetaData(MetaDataKey)
 	 */
-	<T> void setRequestData(MetaDataKey<T> key, T value);
+	<T> T getRequestData(MetaDataKey<T> key, Supplier<T> defaultValue);
 
 	/**
-	 * Get data from the current request.
+	 * Get an attribute from the session. <br>
+	 * Binds the session if not already set and supplied default value is not <code>null</code>.
 	 * 
 	 * @param key
 	 *            key
+	 * @param defaultValue
+	 *            default value to use if not present
 	 * @return value
-	 */
-	<T> T getRequestData(MetaDataKey<T> key);
-
-	/**
-	 * Set an attribute in the session. Binds the session.
 	 * 
-	 * @param key
-	 *            key
-	 * @param value
-	 *            value
+	 * @see Session#getAttribute(String)
 	 */
-	<T extends Serializable> void setSessionAttribute(String key, T value);
+	<T extends Serializable> T getSessionAttribute(String key, Supplier<T> defaultValue);
 
 	/**
-	 * Get an attribute from the session.
-	 * 
-	 * @param key
-	 *            key
-	 * @param value
-	 *            value
-	 */
-	<T extends Serializable> T getSessionAttribute(String key);
-
-	/**
-	 * Set data into the session - only if it is not set already. Binds the session.
-	 * <p>
-	 * Recommended usage:
-	 * <pre>
-	 * <code>
-	 * SessionData data = context.getSessionData(KEY);
-	 * if (data == null)
-	 * {
-	 *     data = context.setSessionData(KEY, new SessionData());
-	 * }
-	 * </code>
-	 * </pre>
+	 * Get metadata from the session. <br>
+	 * Binds the session if not already set and supplied default value is not <code>null</code>.
 	 *
 	 * @param key
 	 *            key
-	 * @param value
-	 *            value
-	 * @return the old value if already present, or the new value
-	 */
-	<T extends Serializable> T setSessionData(MetaDataKey<T> key, T value);
-
-	/**
-	 * Get data from the session.
-	 * 
-	 * @param key
-	 *            key
+	 * @param defaultValue
+	 *            default value to use if not present
 	 * @return value
+	 * 
+	 * @see Session#getMetaData(MetaDataKey)
 	 */
-	<T extends Serializable> T getSessionData(MetaDataKey<T> key);
+	<T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue);
 
 	/**
-	 * Get the identifier of the session. Binds the session.
+	 * Get the identifier of the session.
 	 * 
-	 * @return session id
+	 * @param bind
+	 *            should the session be bound
+	 * @return session id, might be <code>null</code> if not bound yet
 	 */
-	String getSessionId();
+	String getSessionId(boolean bind);
 }

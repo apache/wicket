@@ -17,6 +17,7 @@
 package org.apache.wicket.pageStore;
 
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
@@ -35,73 +36,74 @@ public class DefaultPageContext implements IPageContext
 	 * @see org.apache.wicket.pageStore.IPageContext#getSessionId()
 	 */
 	@Override
-	public String getSessionId()
+	public String getSessionId(boolean bind)
 	{
 		Session session = Session.get();
-		
-		session.bind();
+
+		if (bind) {
+			session.bind();
+		}
 		
 		return session.getId();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends Serializable> T getSessionAttribute(String key)
-	{
-		return (T)Session.get().getAttribute(key);
-	}
-	
-	@Override
-	public <T extends Serializable> void setSessionAttribute(String key, T value)
-	{
-		Session session = Session.get();
-		session.bind();
-		session.setAttribute(key, value);
-	}
-	
-	@Override
-	public <T extends Serializable> T getSessionData(MetaDataKey<T> key)
-	{
-		return Session.get().getMetaData(key);
-	}
-
-	@Override
-	public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value)
+	public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> defaultValue)
 	{
 		Session session = Session.get();
 
 		synchronized (session)
 		{
-			T oldValue = session.getMetaData(key);
-			if (oldValue != null) {
-				return oldValue;
+			T value = (T)session.getAttribute(key);
+			if (value == null) {
+				value = defaultValue.get();
+				if (value != null) {
+					session.bind();
+					session.setAttribute(key, value);
+				}
 			}
 			
-			session.bind();
-			session.setMetaData(key, value);
+			return value;
+		}
+	}
+	
+	@Override
+	public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
+	{
+		Session session = Session.get();
+
+		synchronized (session)
+		{
+			T value = session.getMetaData(key);
+			if (value != null) {
+				return value;
+			}
+			
+			value = defaultValue.get();
+			if (value != null) {
+				session.bind();
+				session.setMetaData(key, value);
+			}
 			return value;
 		}
 	}
 
 	@Override
-	public <T> T getRequestData(MetaDataKey<T> key)
+	public <T> T getRequestData(MetaDataKey<T> key, Supplier<T> defaultValue)
 	{
 		RequestCycle requestCycle = RequestCycle.get();
 		if (requestCycle == null)
 		{
 			throw new IllegalStateException("Not a request thread.");
 		}
-		return requestCycle.getMetaData(key);
-	}
-
-	@Override
-	public <T> void setRequestData(MetaDataKey<T> key, T value)
-	{
-		RequestCycle requestCycle = RequestCycle.get();
-		if (requestCycle == null)
-		{
-			throw new IllegalStateException("Not a request thread.");
+		T value = requestCycle.getMetaData(key);
+		if (value == null) {
+			value = defaultValue.get();
+			if (value != null) {
+				requestCycle.setMetaData(key, value);
+			}
 		}
-		requestCycle.setMetaData(key, value);
+		return value;
 	}
 }

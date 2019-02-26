@@ -14,20 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.wicket.pageStore;
+package org.apache.wicket.mock;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.apache.wicket.MetaDataEntry;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.pageStore.IPageContext;
 
 /**
- * Dummy implementation of a page context - suitable for a single session only.
+ * Mock implementation of a page context - suitable for a single session only.
  */
-public class DummyPageContext implements IPageContext
+public class MockPageContext implements IPageContext
 {
 
 	final String sessionId;
@@ -38,57 +39,61 @@ public class DummyPageContext implements IPageContext
 
 	Map<String, Object> sessionAttributes = new HashMap<>();
 
-	public DummyPageContext()
+	public MockPageContext()
 	{
 		this("dummy_id");
 	}
 
-	public DummyPageContext(String sessionId)
+	public MockPageContext(String sessionId)
 	{
 		this.sessionId = sessionId;
 	}
 
 	@Override
-	public <T> void setRequestData(MetaDataKey<T> key, T value)
+	public <T> T getRequestData(MetaDataKey<T> key, Supplier<T> defaultValue)
 	{
-		requestData = key.set(requestData, value);
+		T value = key.get(requestData);
+		if (value == null) {
+			value = defaultValue.get();
+			if (value != null) {
+				requestData = key.set(requestData, value);
+			}
+		}
+
+		return value;
 	}
 
 	@Override
-	public <T> T getRequestData(MetaDataKey<T> key)
+	public <T extends Serializable> T getSessionAttribute(String key, Supplier<T> defaultValue)
 	{
-		return key.get(requestData);
-	}
-
-	@Override
-	public <T extends Serializable> void setSessionAttribute(String key, T value)
-	{
-		sessionAttributes.put(key, value);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends Serializable> T getSessionAttribute(String key)
-	{
-		return (T)sessionAttributes.get(key);
+		@SuppressWarnings("unchecked")
+		T value = (T)sessionAttributes.get(key);
+		if (value == null) {
+			value = defaultValue.get();
+			if (value != null) {
+				sessionAttributes.put(key, value);
+			}
+		}
+		
+		return value;
 	}
 	
 	@Override
-	public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value)
+	public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 	{
-		sessionData = key.set(sessionData, value);
+		T value = key.get(sessionData);
+		if (value == null) {
+			value = defaultValue.get();
+			if (value != null) {
+				sessionData = key.set(sessionData, value);
+			}
+		}
 		
 		return value;
 	}
 
 	@Override
-	public <T extends Serializable> T getSessionData(MetaDataKey<T> key)
-	{
-		return key.get(sessionData);
-	}
-
-	@Override
-	public String getSessionId()
+	public String getSessionId(boolean bind)
 	{
 		return sessionId;
 	}

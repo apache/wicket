@@ -23,11 +23,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.ThreadContext;
-import org.apache.wicket.pageStore.DummyPageContext;
+import org.apache.wicket.mock.MockPageContext;
 import org.apache.wicket.pageStore.IPageContext;
 import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.InSessionPageStore;
@@ -110,21 +111,18 @@ class PersistentPageManagerTest
 			@Override
 			protected IPageContext createPageContext()
 			{
-				return new DummyPageContext() {
+				return new MockPageContext() {
 					@Override
-					public <T extends Serializable> T setSessionData(MetaDataKey<T> key, T value)
+					public <T extends Serializable> T getSessionData(MetaDataKey<T> key, Supplier<T> defaultValue)
 					{
-						super.setSessionData(key, value);
-						
-						sessionData.set(value);
-						
+						T value = (T)sessionData.get();
+						if (value == null) {
+							value = defaultValue.get();
+							if (value != null) {
+								sessionData.set(value);
+							}
+						}
 						return value;
-					}
-					
-					@Override
-					public <T extends Serializable> T getSessionData(MetaDataKey<T> key)
-					{
-						return (T)sessionData.get();
 					}
 				};
 			}
