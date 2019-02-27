@@ -121,7 +121,7 @@ public class ResourceSettings implements IPropertiesFactoryContext
 	private org.apache.wicket.resource.IPropertiesFactory propertiesFactory;
 
 	/** Filesystem Path to search for resources */
-	private List<IResourceFinder> resourceFinders = new ArrayList<IResourceFinder>();
+	private List<IResourceFinder> resourceFinders = new ArrayList<>();
 
 	/** Frequency at which files should be polled */
 	private Duration resourcePollFrequency = null;
