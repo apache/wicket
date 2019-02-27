@@ -16,10 +16,15 @@
  */
 package org.apache.wicket.request.http.handler;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.wicket.request.IRequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -31,6 +36,16 @@ public class RedirectRequestHandlerTest
 
 	private static final String REDIRECT_URL = "redirectUrl";
 
+	private final IRequestCycle requestCycle = mock(IRequestCycle.class);
+	private final WebResponse webResponse = mock(WebResponse.class);
+	private final WebRequest webRequest = mock(WebRequest.class);
+
+	@Before
+	public void before() {
+		when(requestCycle.getResponse()).thenReturn(webResponse);
+		when(requestCycle.getRequest()).thenReturn(webRequest);
+	}
+
 	/**
 	 * permenanentlyMovedShouldSetLocationHeader()
 	 */
@@ -39,11 +54,6 @@ public class RedirectRequestHandlerTest
 	{
 		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
 			HttpServletResponse.SC_MOVED_PERMANENTLY);
-
-		IRequestCycle requestCycle = Mockito.mock(IRequestCycle.class);
-		WebResponse webResponse = Mockito.mock(WebResponse.class);
-
-		Mockito.when(requestCycle.getResponse()).thenReturn(webResponse);
 
 		handler.respond(requestCycle);
 
@@ -60,10 +70,10 @@ public class RedirectRequestHandlerTest
 		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
 			HttpServletResponse.SC_MOVED_TEMPORARILY);
 
-		IRequestCycle requestCycle = Mockito.mock(IRequestCycle.class);
-		WebResponse webResponse = Mockito.mock(WebResponse.class);
+		IRequestCycle requestCycle = mock(IRequestCycle.class);
+		WebResponse webResponse = mock(WebResponse.class);
 
-		Mockito.when(requestCycle.getResponse()).thenReturn(webResponse);
+		when(requestCycle.getResponse()).thenReturn(webResponse);
 
 		handler.respond(requestCycle);
 
@@ -79,14 +89,26 @@ public class RedirectRequestHandlerTest
 		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
 				HttpServletResponse.SC_SEE_OTHER);
 
-		IRequestCycle requestCycle = Mockito.mock(IRequestCycle.class);
-		WebResponse webResponse = Mockito.mock(WebResponse.class);
-
-		Mockito.when(requestCycle.getResponse()).thenReturn(webResponse);
-
 		handler.respond(requestCycle);
 
 		Mockito.verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
 		Mockito.verify(webResponse).setHeader("Location", REDIRECT_URL);
+	}
+
+	/**
+	 * https://issues.apache.org/jira/browse/WICKET-6638
+	 */
+	@Test
+	public void seeOtherShouldSetAjaxLocationHeaderForAjaxRequests()
+	{
+		RedirectRequestHandler handler = new RedirectRequestHandler(REDIRECT_URL,
+				HttpServletResponse.SC_SEE_OTHER);
+
+		when(webRequest.isAjax()).thenReturn(true);
+
+		handler.respond(requestCycle);
+
+		Mockito.verify(webResponse).setStatus(HttpServletResponse.SC_SEE_OTHER);
+		Mockito.verify(webResponse).setHeader("Ajax-Location", REDIRECT_URL);
 	}
 }
