@@ -68,7 +68,7 @@ public class DebugBar extends DevUtilsPanel
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final MetaDataKey<List<IDebugBarContributor>> CONTRIBS_META_KEY = new MetaDataKey<List<IDebugBarContributor>>()
+	private static final MetaDataKey<List<IDebugBarContributor>> CONTRIBS_META_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

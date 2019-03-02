@@ -57,13 +57,13 @@ public abstract class AbstractResource implements IResource
 	public static final Set<String> INTERNAL_HEADERS;
 
 	/** The meta data key of the content range start byte **/
-	public static final MetaDataKey<Long> CONTENT_RANGE_STARTBYTE = new MetaDataKey<Long>()
+	public static final MetaDataKey<Long> CONTENT_RANGE_STARTBYTE = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
 	/** The meta data key of the content range end byte **/
-	public static final MetaDataKey<Long> CONTENT_RANGE_ENDBYTE = new MetaDataKey<Long>()
+	public static final MetaDataKey<Long> CONTENT_RANGE_ENDBYTE = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

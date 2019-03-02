@@ -129,7 +129,7 @@ public abstract class MarkupContainer extends Component implements Iterable<Comp
 	 * This is stored in meta data because it only is necessary when a child is removed, and this
 	 * saves the memory necessary for a field on a widely used class.
 	 */
-	private static final MetaDataKey<LinkedList<RemovedChild>> REMOVALS_KEY = new MetaDataKey<LinkedList<RemovedChild>>()
+	private static final MetaDataKey<LinkedList<RemovedChild>> REMOVALS_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

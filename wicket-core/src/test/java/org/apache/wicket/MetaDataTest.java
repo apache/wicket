@@ -27,22 +27,22 @@ import org.junit.jupiter.api.Test;
  */
 class MetaDataTest
 {
-	private static final MetaDataKey<String> KEY1 = new MetaDataKey<String>()
+	private static final MetaDataKey<String> KEY1 = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private static final MetaDataKey<String> KEY2 = new MetaDataKey<String>()
+	private static final MetaDataKey<String> KEY2 = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private static final MetaDataKey<String> KEY3 = new MetaDataKey<String>()
+	private static final MetaDataKey<String> KEY3 = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private static final MetaDataKey<String> KEY4 = new MetaDataKey<String>()
+	private static final MetaDataKey<String> KEY4 = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

@@ -35,7 +35,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
  */
 public class FeedbackDelay implements Serializable, AutoCloseable
 {
-	private static final MetaDataKey<FeedbackDelay> KEY = new MetaDataKey<FeedbackDelay>()
+	private static final MetaDataKey<FeedbackDelay> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

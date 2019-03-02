@@ -185,7 +185,7 @@ public class RestartResponseAtInterceptPageException extends ResetResponseExcept
 			}
 		}
 
-		private static final MetaDataKey<InterceptData> key = new MetaDataKey<InterceptData>()
+		private static final MetaDataKey<InterceptData> key = new MetaDataKey<>()
 		{
 			private static final long serialVersionUID = 1L;
 		};

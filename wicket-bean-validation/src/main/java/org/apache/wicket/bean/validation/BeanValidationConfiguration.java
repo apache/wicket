@@ -23,7 +23,7 @@ import org.apache.wicket.util.lang.Args;
  */
 public class BeanValidationConfiguration implements BeanValidationContext
 {
-	private static final MetaDataKey<BeanValidationConfiguration> KEY = new MetaDataKey<BeanValidationConfiguration>()
+	private static final MetaDataKey<BeanValidationConfiguration> KEY = new MetaDataKey<>()
 	{
 	};
 

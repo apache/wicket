@@ -36,7 +36,7 @@ public class DetachEventEmitter implements IRequestCycleListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(DetachEventEmitter.class);
 
-	private static final MetaDataKey<Boolean> DETACH_SCHEDULED_KEY = new MetaDataKey<Boolean>()
+	private static final MetaDataKey<Boolean> DETACH_SCHEDULED_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

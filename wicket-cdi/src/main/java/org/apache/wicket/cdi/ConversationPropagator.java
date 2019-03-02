@@ -52,12 +52,12 @@ public class ConversationPropagator implements IRequestCycleListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(ConversationPropagator.class);
 
-	private static final MetaDataKey<Boolean> CONVERSATION_STARTED_KEY = new MetaDataKey<Boolean>()
+	private static final MetaDataKey<Boolean> CONVERSATION_STARTED_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	private static final MetaDataKey<String> CONVERSATION_ID_KEY = new MetaDataKey<String>()
+	private static final MetaDataKey<String> CONVERSATION_ID_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

@@ -133,7 +133,7 @@ public static MetaDataApp extends WebApplication{
 	/**
 	* Metadata key definition
 	*/
-	public static MetaDataKey<Connection> connectionKey = new MetaDataKey<Connection> (){};
+	public static MetaDataKey<Connection> connectionKey = new MetaDataKey<> (){};
 
 	/**
 	 * Application's initialization

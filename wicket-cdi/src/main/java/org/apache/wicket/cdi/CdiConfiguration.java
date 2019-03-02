@@ -30,7 +30,7 @@ import org.apache.wicket.request.cycle.RequestCycleListenerCollection;
  */
 public class CdiConfiguration
 {
-	private static final MetaDataKey<CdiConfiguration> CDI_CONFIGURATION_KEY = new MetaDataKey<CdiConfiguration>()
+	private static final MetaDataKey<CdiConfiguration> CDI_CONFIGURATION_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

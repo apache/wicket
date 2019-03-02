@@ -43,12 +43,12 @@ public class PageRequestHandlerTracker implements IRequestCycleListener
 	/**
 	 * The key for the first handler
 	 */
-	public static final  MetaDataKey<IPageRequestHandler> FIRST_HANDLER_KEY = new MetaDataKey<IPageRequestHandler>() {};
+	public static final  MetaDataKey<IPageRequestHandler> FIRST_HANDLER_KEY = new MetaDataKey<>() {};
 
 	/**
 	 * The key for the last handler
 	 */
-	public static final MetaDataKey<IPageRequestHandler> LAST_HANDLER_KEY = new MetaDataKey<IPageRequestHandler>() {};
+	public static final MetaDataKey<IPageRequestHandler> LAST_HANDLER_KEY = new MetaDataKey<>() {};
 
 	@Override
 	public void onRequestHandlerResolved(RequestCycle cycle, IRequestHandler handler)

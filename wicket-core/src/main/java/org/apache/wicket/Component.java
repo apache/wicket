@@ -280,13 +280,13 @@ public abstract class Component
 	public static final Action RENDER = new Action(Action.RENDER);
 
 	/** meta data for user specified markup id */
-	private static final MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<String>()
+	private static final MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
 	/** meta data for user specified markup id */
-	private static final MetaDataKey<FeedbackMessages> FEEDBACK_KEY = new MetaDataKey<FeedbackMessages>()
+	private static final MetaDataKey<FeedbackMessages> FEEDBACK_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -401,7 +401,7 @@ public abstract class Component
 	 * Meta data key for line precise error logging for the moment of addition. Made package private
 	 * for access in {@link MarkupContainer} and {@link Page}
 	 */
-	static final MetaDataKey<String> ADDED_AT_KEY = new MetaDataKey<String>()
+	static final MetaDataKey<String> ADDED_AT_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -410,7 +410,7 @@ public abstract class Component
 	 * meta data key for line precise error logging for the moment of construction. Made package
 	 * private for access in {@link Page}
 	 */
-	static final MetaDataKey<String> CONSTRUCTED_AT_KEY = new MetaDataKey<String>()
+	static final MetaDataKey<String> CONSTRUCTED_AT_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

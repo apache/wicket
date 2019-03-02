@@ -34,7 +34,7 @@ import org.apache.wicket.util.collections.ClassMetaCache;
  */
 public abstract class Injector
 {
-	private static final MetaDataKey<Injector> KEY = new MetaDataKey<Injector>()
+	private static final MetaDataKey<Injector> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

@@ -52,7 +52,7 @@ public class WebSocketSettings
 
 	private static final Logger LOG = LoggerFactory.getLogger(WebSocketSettings.class);
 
-	private static final MetaDataKey<WebSocketSettings> KEY = new MetaDataKey<WebSocketSettings>()
+	private static final MetaDataKey<WebSocketSettings> KEY = new MetaDataKey<>()
 	{
 	};
 

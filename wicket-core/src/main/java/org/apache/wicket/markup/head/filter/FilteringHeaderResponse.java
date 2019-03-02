@@ -92,7 +92,7 @@ public class FilteringHeaderResponse extends DecoratingHeaderResponse
 	 * we store this FilteringHeaderResponse in the RequestCycle so that the containers can access
 	 * it to render their bucket of stuff
 	 */
-	private static final MetaDataKey<FilteringHeaderResponse> RESPONSE_KEY = new MetaDataKey<FilteringHeaderResponse>()
+	private static final MetaDataKey<FilteringHeaderResponse> RESPONSE_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

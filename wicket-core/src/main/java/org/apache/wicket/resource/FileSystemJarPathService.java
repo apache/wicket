@@ -39,7 +39,7 @@ public class FileSystemJarPathService implements FileSystemPathService
 {
 
 	/** The key for the file system meta data **/
-	public static final MetaDataKey<Map<String, FileSystem>> FILE_SYSTEM_META_DATA_KEY = new MetaDataKey<Map<String, FileSystem>>()
+	public static final MetaDataKey<Map<String, FileSystem>> FILE_SYSTEM_META_DATA_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

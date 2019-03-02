@@ -54,7 +54,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 *  meaning that each container has its own counter. 
 	 *  The counters are used by {@link #getRequestUniqueId()} to get unique ids for markup tags.
 	 * **/
-	protected final static MetaDataKey<Map<String, AtomicInteger>> REQUEST_COUNTER_KEY = new MetaDataKey<Map<String, AtomicInteger>>()
+	protected final static MetaDataKey<Map<String, AtomicInteger>> REQUEST_COUNTER_KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

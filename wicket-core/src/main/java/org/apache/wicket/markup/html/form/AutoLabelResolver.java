@@ -191,7 +191,7 @@ public class AutoLabelResolver implements IComponentResolver
 		return component.getMarkupId() + "-w-lbl";
 	}
 
-	public static final MetaDataKey<AutoLabelMarker> MARKER_KEY = new MetaDataKey<AutoLabelMarker>()
+	public static final MetaDataKey<AutoLabelMarker> MARKER_KEY = new MetaDataKey<>()
 	{
 	};
 

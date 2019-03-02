@@ -32,7 +32,7 @@ public class Http2Settings
 	/**
 	 * The meta data key of the http2 settings
 	 */
-	private static final MetaDataKey<Http2Settings> KEY = new MetaDataKey<Http2Settings>()
+	private static final MetaDataKey<Http2Settings> KEY = new MetaDataKey<>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
