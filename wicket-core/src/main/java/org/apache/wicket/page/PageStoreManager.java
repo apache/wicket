@@ -49,10 +49,10 @@ public class PageStoreManager extends AbstractPageManager
 	 * Web containers intercept
 	 * {@link javax.servlet.http.HttpSession#setAttribute(String, Object)} to detect changes and
 	 * replicate the session. If the attribute has been already bound in the session then
-	 * {@link #valueUnbound(HttpSessionBindingEvent)} might get called - this flag
+	 * {@link SessionEntry#valueUnbound(HttpSessionBindingEvent)} might get called - this flag
 	 * helps us to ignore the invocation in that case.
 	 * 
-	 * @see #valueUnbound(HttpSessionBindingEvent)
+	 * @see SessionEntry#valueUnbound(HttpSessionBindingEvent)
 	 */
 	private static final ThreadLocal<Boolean> STORING_TOUCHED_PAGES = new ThreadLocal<Boolean>()
 	{
@@ -148,11 +148,14 @@ public class PageStoreManager extends AbstractPageManager
 		 */
 		private IManageablePage findPage(int id)
 		{
-			for (IManageablePage p : sessionCache)
+			if (sessionCache != null)
 			{
-				if (p.getPageId() == id)
+				for (IManageablePage p : sessionCache)
 				{
-					return p;
+					if (p.getPageId() == id)
+					{
+						return p;
+					}
 				}
 			}
 			return null;
@@ -172,6 +175,10 @@ public class PageStoreManager extends AbstractPageManager
 					return;
 				}
 
+				if (sessionCache == null)
+				{
+					sessionCache = new ArrayList<>();
+				}
 				sessionCache.add(page);
 			}
 		}
@@ -180,7 +187,11 @@ public class PageStoreManager extends AbstractPageManager
 		{
 			if (page != null)
 			{
-				sessionCache.remove(page);
+				if (sessionCache != null)
+				{
+					sessionCache.remove(page);
+				}
+
 				final IPageStore pageStore = getPageStore();
 				if (pageStore != null)
 				{
@@ -362,8 +373,11 @@ public class PageStoreManager extends AbstractPageManager
 
 		public void clear() 
 		{
-			sessionCache.clear();
-			
+			if (sessionCache != null)
+			{
+				sessionCache.clear();
+			}
+
 			// WICKET-5164 use the original sessionId
 			IPageStore store = getPageStore();
 			// store might be null if destroyed already
