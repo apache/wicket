@@ -35,6 +35,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.event.IEventSink;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
+import org.apache.wicket.feedback.IFeedbackProvider;
 import org.apache.wicket.page.IPageManager;
 import org.apache.wicket.page.PageAccessSynchronizer;
 import org.apache.wicket.request.Request;
@@ -106,7 +107,7 @@ import org.slf4j.LoggerFactory;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements IClusterable, IEventSink
+public abstract class Session implements IClusterable, IEventSink, IFeedbackProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -300,6 +301,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void error(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.ERROR);
@@ -311,6 +313,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void fatal(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.FATAL);
@@ -322,6 +325,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void debug(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.DEBUG);
@@ -459,6 +463,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void info(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.INFO);
@@ -470,6 +475,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void success(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.SUCCESS);
@@ -636,6 +642,7 @@ public abstract class Session implements IClusterable, IEventSink
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void warn(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.WARNING);

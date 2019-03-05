@@ -16,17 +16,22 @@
  */
 package org.apache.wicket.feedback;
 
+import java.io.Serializable;
+
 /**
- * Interface for components that present some kind of feedback to the user, normally based on the
- * feedback messages attached to various components on a given page.
- * 
- * This is tells Wicket that a component's {@link org.apache.wicket.Component#beforeRender()} must be called after all non
- * feedback components have been initialized.
- * 
- * @author Jonathan Locke
- * @author Eelco Hillenius
+ * Implementations of this interface can contribute {@link FeedbackMessage feedback messages}
  */
-public interface IFeedback
+public interface IFeedbackProvider
 {
-	void beforeRender();
+    void success(final Serializable message);
+
+    void info(final Serializable message);
+
+    void warn(final Serializable message);
+
+    void error(final Serializable message);
+
+    void fatal(final Serializable message);
+
+    void debug(final Serializable message);
 }
