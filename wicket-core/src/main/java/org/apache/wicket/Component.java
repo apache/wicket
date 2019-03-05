@@ -44,6 +44,7 @@ import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedback;
+import org.apache.wicket.feedback.IFeedbackProvider;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
@@ -222,7 +223,8 @@ public abstract class Component
 		IHierarchical<Component>,
 		IEventSink,
 		IEventSource,
-		IMetadataContext<Serializable, Component>
+		IMetadataContext<Serializable, Component>,
+		IFeedbackProvider
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
@@ -1066,6 +1068,7 @@ public abstract class Component
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void debug(final Serializable message)
 	{
 		getFeedbackMessages().debug(this, message);
@@ -1198,6 +1201,7 @@ public abstract class Component
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void error(final Serializable message)
 	{
 		getFeedbackMessages().error(this, message);
@@ -1210,6 +1214,7 @@ public abstract class Component
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void fatal(final Serializable message)
 	{
 		getFeedbackMessages().fatal(this, message);
@@ -1941,6 +1946,7 @@ public abstract class Component
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void info(final Serializable message)
 	{
 		getFeedbackMessages().info(this, message);
@@ -1953,6 +1959,7 @@ public abstract class Component
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void success(final Serializable message)
 	{
 		getFeedbackMessages().success(this, message);
@@ -3408,6 +3415,7 @@ public abstract class Component
 	 * @param message
 	 *            The feedback message
 	 */
+	@Override
 	public final void warn(final Serializable message)
 	{
 		getFeedbackMessages().warn(this, message);
