@@ -214,7 +214,7 @@ public class SubmitLink extends AbstractSubmitLink implements IRequestListener
 				script.append("if (typeof ff.onsubmit === 'function' && ff.onsubmit() == false) return false;");
 			}
 			
-			CharSequence url = urlForListener(new PageParameters());
+			CharSequence url = urlForListener(new PageParameters().add(getId(), ""));
 			script.append(root.getJsForListenerUrl(url));
 			script.append("return false;");
 			
