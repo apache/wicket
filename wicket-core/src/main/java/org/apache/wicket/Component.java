@@ -44,7 +44,7 @@ import org.apache.wicket.feedback.FeedbackDelay;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.feedback.FeedbackMessages;
 import org.apache.wicket.feedback.IFeedback;
-import org.apache.wicket.feedback.IFeedbackProvider;
+import org.apache.wicket.feedback.IFeedbackContributor;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.IMarkupFragment;
 import org.apache.wicket.markup.Markup;
@@ -223,7 +223,7 @@ public abstract class Component
 		IHierarchical<Component>,
 		IEventSink,
 		IEventSource,
-		IFeedbackProvider
+		IFeedbackContributor
 {
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
