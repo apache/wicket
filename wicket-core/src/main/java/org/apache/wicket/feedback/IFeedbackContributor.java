@@ -21,7 +21,7 @@ import java.io.Serializable;
 /**
  * Implementations of this interface can contribute {@link FeedbackMessage feedback messages}
  */
-public interface IFeedbackProvider
+public interface IFeedbackContributor
 {
     void success(final Serializable message);
 
