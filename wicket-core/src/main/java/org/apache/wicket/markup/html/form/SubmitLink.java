@@ -16,10 +16,8 @@
  */
 package org.apache.wicket.markup.html.form;
 
-import org.apache.wicket.IRequestListener;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 /**
  * A link which can be used exactly like a Button to submit a Form. The onclick of the link will use
@@ -73,7 +71,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
  * @author Eelco Hillenius
  * 
  */
-public class SubmitLink extends AbstractSubmitLink implements IRequestListener
+public class SubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -214,8 +212,7 @@ public class SubmitLink extends AbstractSubmitLink implements IRequestListener
 				script.append("if (typeof ff.onsubmit === 'function' && ff.onsubmit() == false) return false;");
 			}
 			
-			CharSequence url = urlForListener(new PageParameters());
-			script.append(root.getJsForListenerUrl(url));
+			script.append(root.getJsForSubmitter(this));
 			script.append("return false;");
 			
 			return script;
@@ -224,12 +221,6 @@ public class SubmitLink extends AbstractSubmitLink implements IRequestListener
 		{
 			return null;
 		}
-	}
-
-	@Override
-	public void onRequest()
-	{
-		getForm().onFormSubmitted(this);
 	}
 
 	/**

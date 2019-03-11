@@ -16,6 +16,7 @@
  */
 package org.apache.wicket.stateless;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.apache.wicket.MarkupContainer;
@@ -58,7 +59,7 @@ class StatelessFormUrlTest extends WicketTestCase
 	void submitLinkInputNameNotEncodedIntoFormAction()
 	{
 		tester.executeUrl("?0-1.IFormSubmitListener-form&text=newValue&submitLink=x");
-		assertFalse(tester.getLastResponseAsString().contains("submitLink=x"));
+		assertEquals("./?-1.-form", tester.getTagById("form1").getAttribute("action"));
 	}
 
 	/**

@@ -423,12 +423,14 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 * <p>
 	 * Gets the IFormSubmittingComponent which submitted this form.
 	 * 
 	 * @return The component which submitted this form, or null if the processing was not triggered
 	 *         by a registered IFormSubmittingComponent
 	 */
-	public final IFormSubmitter findSubmittingButton()
+	public final IFormSubmittingComponent findSubmitter()
 	{
 		IFormSubmittingComponent submittingComponent = getPage().visitChildren(
 			IFormSubmittingComponent.class, new IVisitor<Component, IFormSubmittingComponent>()
@@ -506,7 +508,7 @@ public class Form<T> extends WebMarkupContainer
 	}
 
 	/**
-	 * Generate a piece of JavaScript that submits the form to the given URL.
+	 * Generate a piece of JavaScript that submits the form to the given URL of an {@link IRequestListener}.
 	 * 
 	 * Warning: This code should only be called in the rendering phase for form components inside
 	 * the form because it uses the css/javascript id of the form which can be stored in the markup.
@@ -527,7 +529,8 @@ public class Form<T> extends WebMarkupContainer
 			
 			// parameter must be sent as hidden field, as it would be ignored in the action URL
 			int i = action.indexOf('?');
-			if (i != -1) {
+			if (i != -1)
+			{
 				writeParamsAsHiddenFields(Strings.split(action.substring(i + 1), '&'), buffer);
 				
 				action = action.substring(0, i);
@@ -537,6 +540,40 @@ public class Form<T> extends WebMarkupContainer
 		}
 		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
 		buffer.append(String.format("f.action='%s';", action));
+		buffer.append("f.submit();");
+		return buffer;
+	}
+
+	/**
+	 * Generate a piece of JavaScript that submits the form with the given {@link IFormSubmittingComponent}.
+	 * 
+	 * @param submitter
+	 *            the submitter
+	 * @return the javascript code that submits the form.
+	 * 
+	 * @see #findSubmitter()
+	 */
+	public final CharSequence getJsForSubmitter(IFormSubmittingComponent submitter)
+	{
+		Form<?> root = getRootForm();
+
+		String param = submitter.getInputName() + "=x";
+
+		AppendingStringBuffer buffer = new AppendingStringBuffer();
+		buffer.append(String.format("var f = document.getElementById('%s');", root.getMarkupId()));
+		if (root.encodeUrlInHiddenFields())
+		{
+			buffer.append(String.format("document.getElementById('%s').innerHTML += '", root.getHiddenFieldsId()));
+			
+			writeParamsAsHiddenFields(new String[] {param}, buffer);
+			
+			buffer.append("';");
+		}
+		else
+		{
+			String action = root.getActionUrl().toString();
+			buffer.append("f.action += '" + (action.indexOf('?') > -1 ? '&' : '?') + param + "';");
+		}
 		buffer.append("f.submit();");
 		return buffer;
 	}
@@ -736,10 +773,10 @@ public class Form<T> extends WebMarkupContainer
 			// Tells FormComponents that a new user input has come
 			inputChanged();
 
-			// First, see if the processing was triggered by a Wicket IFormSubmittingComponent
+			// First, see if the processing was triggered by a IFormSubmittingComponent
 			if (submitter == null)
 			{
-				submitter = findSubmittingButton();
+				submitter = findSubmitter();
 
 				if (submitter instanceof IFormSubmittingComponent)
 				{
