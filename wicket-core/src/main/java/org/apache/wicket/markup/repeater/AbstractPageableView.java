@@ -64,7 +64,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	 * for the duration of the request because that call can potentially be expensive ( a select
 	 * count query ) and so we do not want to execute it multiple times.
 	 */
-	private transient long cachedItemCount;
+	private transient Long cachedItemCount;
 
 	/**
 	 * Constructor
@@ -76,14 +76,12 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	public AbstractPageableView(String id, IModel<? extends Collection<? extends T>> model)
 	{
 		super(id, model);
-		clearCachedItemCount();
 	}
 
 	/** @see org.apache.wicket.Component#Component(String) */
 	public AbstractPageableView(String id)
 	{
 		super(id);
-		clearCachedItemCount();
 	}
 
 	/**
@@ -132,26 +130,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 
 	private void clearCachedItemCount()
 	{
-		cachedItemCount = -1;
-	}
-
-	private void setCachedItemCount(long itemCount)
-	{
-		cachedItemCount = itemCount;
-	}
-
-	private long getCachedItemCount()
-	{
-		if (cachedItemCount < 0)
-		{
-			throw new IllegalStateException("getItemCountCache() called when cache was not set");
-		}
-		return cachedItemCount;
-	}
-
-	private boolean isItemCountCached()
-	{
-		return cachedItemCount >= 0;
+		cachedItemCount = null;
 	}
 
 	// /////////////////////////////////////////////////////////////////////////
@@ -227,14 +206,14 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	@Override
 	public final long getItemCount()
 	{
-		if (isItemCountCached())
+		if (cachedItemCount != null)
 		{
-			return getCachedItemCount();
+			return cachedItemCount;
 		}
 
 		long count = internalGetItemCount();
 
-		setCachedItemCount(count);
+		cachedItemCount = count;
 		return count;
 	}
 
@@ -387,13 +366,5 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 	{
 		clearCachedItemCount();
 		super.onDetach();
-	}
-
-	private void readObject(java.io.ObjectInputStream s) throws java.io.IOException,
-		ClassNotFoundException
-	{
-		// Read in all fields
-		s.defaultReadObject();
-		clearCachedItemCount();
 	}
 }
