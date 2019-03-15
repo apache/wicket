@@ -38,6 +38,8 @@
 
 	Wicket.WebSocket = Wicket.Class.create();
 
+	Wicket.WebSocket.MESSAGE_CHANNEL = 'websocketMessage|s';
+
 	Wicket.WebSocket.prototype = {
 
 		ws: null,
@@ -84,10 +86,21 @@
 
 					var message = event.data;
 					if (typeof(message) === 'string' && message.indexOf('<ajax-response>') > -1) {
-						var call = new Wicket.Ajax.Call();
-						call.process(message);
-					}
-					else {
+						Wicket.channelManager.schedule(Wicket.WebSocket.MESSAGE_CHANNEL, Wicket.bind(function () {
+							var context = {
+								attrs: {},
+								steps: []
+							};
+							var xmlDocument = Wicket.Xml.parse(message);
+							this.loadedCallback(xmlDocument, context);
+							context.steps.push(function () {
+								Wicket.channelManager.done(Wicket.WebSocket.MESSAGE_CHANNEL);
+								return Wicket.ChannelManager.FunctionsExecuter.DONE;
+							});
+							var executer = new Wicket.ChannelManager.FunctionsExecuter(context.steps);
+							executer.start();
+						}, new Wicket.Ajax.Call()));
+					} else {
 						Wicket.Event.publish(topics.Message, message);
 					}
 				};

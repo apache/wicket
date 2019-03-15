@@ -142,7 +142,7 @@
 		 * asynchronous notification that a function execution has finished.
 		 * Should be reset to 0 when at some point to avoid problems like
 		 * "too much recursion". The reset may break the atomicity by allowing
-		 * another instance of FunctionExecuter to run its functions
+		 * another instance of FunctionsExecuter to run its functions
 		 * @type {number}
 		 */
 		this.depth = 0; // we need to limit call stack depth
@@ -372,6 +372,8 @@
 			}
 		}
 	};
+
+	Wicket.ChannelManager.FunctionsExecuter = FunctionsExecuter;
 
 	/**
 	 * The Ajax.Request class encapsulates a XmlHttpRequest.
