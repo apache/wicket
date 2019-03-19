@@ -16,7 +16,9 @@
  */
 package org.apache.wicket.util.io;
 
+import org.apache.wicket.util.WicketTestTag;
 import org.apache.wicket.util.time.Time;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
@@ -24,7 +26,10 @@ import java.net.URL;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SuppressWarnings("javadoc")
+/**
+ * Tests for {@link Connections}
+ */
+@Tag(WicketTestTag.SLOW)
 public class ConnectionsTest
 {
 	/**
