@@ -153,7 +153,7 @@
 		<objenesis.version>3.0.1</objenesis.version>
 		<aspectj.version>1.9.2</aspectj.version>
 		<metrics.version>4.0.5</metrics.version>
-		<weld.version>3.0.4.Final</weld.version>
+		<weld.version>3.1.0.Final</weld.version>
 		<forbiddenapis.version>2.6</forbiddenapis.version>
 		<velocity.version>1.7</velocity.version>
 

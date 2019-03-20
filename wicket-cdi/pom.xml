@@ -63,6 +63,24 @@
 			<groupId>org.jboss.weld.module</groupId>
 			<artifactId>weld-web</artifactId>
 		</dependency>
+		<!-- SUPPORT FOR JAVA 12 BUILD START -->
+		<dependency>
+			<groupId>org.jboss.weld</groupId>
+			<artifactId>weld-core-impl</artifactId>
+			<version>${weld.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jboss.classfilewriter</groupId>
+					<artifactId>jboss-classfilewriter</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.classfilewriter</groupId>
+			<artifactId>jboss-classfilewriter</artifactId>
+			<version>1.2.4.Final</version>
+		</dependency>
+		<!-- SUPPORT FOR JAVA 12 BUILD END -->
 		<dependency>
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se-core</artifactId>
