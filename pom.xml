@@ -570,6 +570,17 @@
 				<artifactId>httpunit</artifactId>
 				<version>1.7.3</version>
 				<scope>test</scope>
+				<exclusions>
+					<!--
+						A dependency on xerces:xmlParserAPIs pulls classes (e.g. org.xml.sax.SAXException) into this
+						module, that are already defined in module JRA "java.xml". This violation of "unique visibility"
+						causes compile errors in Eclipse (see bug 536928) and (in the future, see JDK-8215739) javac. 
+					-->
+					<exclusion>
+						<groupId>xerces</groupId>
+						<artifactId>xmlParserAPIs</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.jglue.cdi-unit</groupId>
