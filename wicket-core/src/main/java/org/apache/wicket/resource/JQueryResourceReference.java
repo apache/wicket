@@ -24,7 +24,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
  * resource reference to a component, do not use this reference, but use
  * {@link org.apache.wicket.settings.JavaScriptLibrarySettings#getJQueryReference()}
  * to prevent version conflicts.
- * 
+ *
  * @author papegaaij
  */
 public class JQueryResourceReference extends JavaScriptResourceReference
@@ -45,7 +45,7 @@ public class JQueryResourceReference extends JavaScriptResourceReference
 	 * JQuery ver. 3.x - improves on ver. 2
 	 * <strong>Note</strong>: Might not work with old jQuery plugins!
 	 */
-	public static final String VERSION_3 = "jquery/jquery-3.2.1.js";
+	public static final String VERSION_3 = "jquery/jquery-3.3.1.js";
 
 	public static final JQueryResourceReference INSTANCE_1 = new JQueryResourceReference(VERSION_1);
 	public static final JQueryResourceReference INSTANCE_2 = new JQueryResourceReference(VERSION_2);
