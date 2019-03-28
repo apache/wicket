@@ -40,7 +40,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
+			<artifactId>cglib-nodep</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.inject</groupId>
