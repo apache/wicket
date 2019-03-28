@@ -200,7 +200,7 @@
 			</dependency>
 			<dependency>
 				<groupId>cglib</groupId>
-				<artifactId>cglib</artifactId>
+				<artifactId>cglib-nodep</artifactId>
 				<version>${cglib.version}</version>
 				<exclusions>
 					<!-- excluded due to conflict with asm 5 in wicket-ioc -->
@@ -453,7 +453,7 @@
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm-util</artifactId>
-				<version>7.0</version>
+				<version>7.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
