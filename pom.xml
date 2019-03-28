@@ -123,6 +123,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- Project Versions -->
+    <asm.version>7.1</asm.version>
 		<cglib.version>3.2.10</cglib.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-collections4.version>4.2</commons-collections4.version>
@@ -130,7 +131,7 @@
 		<commons-lang3.version>3.6</commons-lang3.version>
 		<jacoco.version>0.8.2</jacoco.version>
 		<jackson.version>2.9.8</jackson.version>
-		<jetty.version>9.4.14.v20181114</jetty.version>
+		<jetty.version>9.4.15.v20190215</jetty.version>
 		<joda-time.version>2.10.1</joda-time.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>4.3.22.RELEASE</spring.version>
@@ -450,10 +451,20 @@
 				<artifactId>objenesis</artifactId>
 				<version>${objenesis.version}</version>
 			</dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm</artifactId>
+				<version>${asm.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm-commons</artifactId>
+				<version>${asm.version}</version>
+      </dependency>
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
 				<artifactId>asm-util</artifactId>
-				<version>7.1</version>
+				<version>${asm.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
