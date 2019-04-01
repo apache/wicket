@@ -2,6 +2,36 @@ This file contains all changes done in releases for Apache Wicket 8.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 8.4.0
+
+** Bug
+
+    * [WICKET-6637] - Handling exception Wicket 8
+    * [WICKET-6639] - PageStoreManager$SessionEntry.clear produces NullPointerException
+    * [WICKET-6642] - Form.findSubmittingComponent returns null instead of SubmitLink
+    * [WICKET-6645] - Concurrent web socket response message processing on the client
+
+** New Feature
+
+    * [WICKET-6641] - Extract an interface for classes allowing to register feedback messages
+
+** Improvement
+
+    * [WICKET-6634] - Save the closeCode and message in WebSocket's ClosedMessage
+    * [WICKET-6638] - RedirectRequestHandler does not support Ajax
+    * [WICKET-6640] - Add settings for customizing the ModalWindow's spacing, header height and overflow
+    * [WICKET-6644] - AbstractPageableView can only be serialized with Java built-in serialization
+
+** Wish
+
+    * [WICKET-6646] - Upgrade jquery to 3.3.x
+
+** Task
+
+    * [WICKET-6647] - Upgrade asm to 7.1
+
+=======================================================================
+
 Release Notes - Wicket - Version 8.3.0
 
 ** Bug
