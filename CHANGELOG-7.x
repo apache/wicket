@@ -2,6 +2,22 @@ This file contains all changes done in releases for Apache Wicket 7.x.
 
 =======================================================================
 
+Release Notes - Wicket - Version 7.13.0
+
+** Bug
+
+    * [WICKET-6645] - Concurrent web socket response message processing on the client
+
+** Improvement
+
+    * [WICKET-6638] - RedirectRequestHandler does not support Ajax
+
+** Wish
+
+    * [WICKET-6646] - Upgrade jquery to 3.3.x
+
+=======================================================================
+
 Release Notes - Wicket - Version 7.12.0
 
 ** Bug
