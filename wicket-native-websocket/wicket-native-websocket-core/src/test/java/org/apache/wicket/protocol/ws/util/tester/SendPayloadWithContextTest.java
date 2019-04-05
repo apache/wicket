@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -95,8 +96,13 @@ public class SendPayloadWithContextTest
 			add(new WebSocketBehavior()
 			{
 				@Override
-				protected void onMessage(WebSocketRequestHandler handler, TextMessage ignored)
+				protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 				{
+					assertNotNull(message.getApplication(), "The application must be available");
+					assertNotNull(message.getSessionId(), "The session id must be available");
+					assertNotNull(message.getKey(), "The key must be available");
+					assertNotNull(message.getText(), "The text must be set");
+
 					// send an outbound message with the current context encoded as String
 					handler.push(String.valueOf(context.get()));
 				}

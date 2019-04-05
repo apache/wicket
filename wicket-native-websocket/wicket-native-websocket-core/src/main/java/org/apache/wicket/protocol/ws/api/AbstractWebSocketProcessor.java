@@ -145,13 +145,13 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 	@Override
 	public void onMessage(final String message)
 	{
-		broadcastMessage(new TextMessage(message));
+		broadcastMessage(new TextMessage(getApplication(), getSessionId(), getRegistryKey(), message));
 	}
 
 	@Override
 	public void onMessage(byte[] data, int offset, int length)
 	{
-		BinaryMessage binaryMessage = new BinaryMessage(data, offset, length);
+		BinaryMessage binaryMessage = new BinaryMessage(getApplication(), getSessionId(), getRegistryKey(), data, offset, length);
 		broadcastMessage(binaryMessage);
 	}
 
@@ -375,7 +375,7 @@ public abstract class AbstractWebSocketProcessor implements IWebSocketProcessor
 		return payload;
 	}
 
-	private IKey getRegistryKey()
+	protected IKey getRegistryKey()
 	{
 		IKey key;
 		if (Strings.isEmpty(resourceName))
