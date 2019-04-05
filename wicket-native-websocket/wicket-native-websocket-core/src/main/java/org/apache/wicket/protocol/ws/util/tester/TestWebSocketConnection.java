@@ -18,7 +18,10 @@ package org.apache.wicket.protocol.ws.util.tester;
 
 import java.io.IOException;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 
 /**
  * A WebSocketConnection used for the testing.
@@ -27,7 +30,17 @@ import org.apache.wicket.protocol.ws.api.IWebSocketConnection;
  */
 abstract class TestWebSocketConnection implements IWebSocketConnection
 {
+	private final WebApplication application;
+	private final String sessionId;
+	private final IKey registryKey;
 	private boolean isOpen = true;
+
+	public TestWebSocketConnection(WebApplication application, String sessionId, IKey registryKey)
+	{
+		this.application = application;
+		this.sessionId = sessionId;
+		this.registryKey = registryKey;
+	}
 
 	@Override
 	public boolean isOpen()
@@ -85,5 +98,18 @@ abstract class TestWebSocketConnection implements IWebSocketConnection
 		}
 	}
 
+	public Application getApplication()
+	{
+		return application;
+	}
 
+	public String getSessionId()
+	{
+		return sessionId;
+	}
+
+	public IKey getKey()
+	{
+		return registryKey;
+	}
 }

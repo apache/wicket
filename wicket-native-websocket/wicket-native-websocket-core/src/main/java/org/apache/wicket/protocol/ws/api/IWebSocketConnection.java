@@ -17,6 +17,7 @@
 package org.apache.wicket.protocol.ws.api;
 
 import java.io.IOException;
+
 import org.apache.wicket.protocol.ws.api.message.IWebSocketPushMessage;
 
 /**

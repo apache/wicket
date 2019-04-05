@@ -16,6 +16,9 @@
  */
 package org.apache.wicket.protocol.ws.api.message;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.mock.MockApplication;
+import org.apache.wicket.protocol.ws.api.registry.IKey;
 import org.apache.wicket.util.lang.Args;
 
 /**
@@ -23,12 +26,36 @@ import org.apache.wicket.util.lang.Args;
  *
  * @since 6.0
  */
-public class TextMessage implements IWebSocketMessage
+public class TextMessage extends AbstractClientMessage
 {
 	private final CharSequence text;
 
-	public TextMessage(final CharSequence text)
+	/**
+	 * Not used by Wicket since 8.5.0!
+	 *
+	 * @param text
+	 * 		the message sent from the client
+	 */
+	@Deprecated
+	public TextMessage(CharSequence text)
 	{
+		this(new MockApplication(), "", new IKey() {}, text);
+	}
+
+	/**
+	 *
+	 * @param application
+	 *      the Wicket application
+	 * @param sessionId
+	 *      the id of the http session
+	 * @param key
+	 *      the page id or resource name
+	 * @param text
+	 *      the message sent from the client
+	 */
+	public TextMessage(Application application, String sessionId, IKey key, CharSequence text)
+	{
+		super(application, sessionId, key);
 		this.text = Args.notEmpty(text, "text");
 	}
 

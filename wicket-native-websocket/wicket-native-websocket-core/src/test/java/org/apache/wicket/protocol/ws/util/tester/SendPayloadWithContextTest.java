@@ -96,8 +96,13 @@ public class SendPayloadWithContextTest extends Assert
 			add(new WebSocketBehavior()
 			{
 				@Override
-				protected void onMessage(WebSocketRequestHandler handler, TextMessage ignored)
+				protected void onMessage(WebSocketRequestHandler handler, TextMessage message)
 				{
+					assertNotNull("The application must be available", message.getApplication());
+					assertNotNull("The session id must be available", message.getSessionId());
+					assertNotNull("The key must be available", message.getKey());
+					assertNotNull("The text must be set", message.getText());
+
 					// send an outbound message with the current context encoded as String
 					handler.push(String.valueOf(context.get()));
 				}
