@@ -215,8 +215,6 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 			throw new WicketRuntimeException("not bound to a component");
 		}
 
-		((WebResponse)RequestCycle.get().getResponse()).clearCookie(cookie(getName()));
-
 		CharSequence url;
 		if (resourceBehavior == null)
 		{

@@ -23,8 +23,9 @@
 	</head>
 	<body>
 		<wicket:extend>
-
-		  <div wicket:id="chartPanel"></div>
+			<div wicket:id="chartPanel"></div>
+			<button onclick="Wicket.WebSocket.send('start');">Initiate download with Web Socket message</button>
+			<div wicket:id="downloading" class="download-veil"><span>Preparing download ...</span></div>
 		</wicket:extend>
 	</body>
 </html>
