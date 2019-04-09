@@ -1402,8 +1402,8 @@ jQuery(document).ready(function() {
 
 			expect(2);
 
-			const redirectUrl = 'http://www.example.com/ajax/location';
-			const componentUrl = 'data/ajax/componentId.xml';
+			var redirectUrl = 'http://www.example.com/ajax/location';
+			var componentUrl = 'data/ajax/componentId.xml';
 
 			$.mockjax({
 				url: componentUrl,
@@ -1413,7 +1413,7 @@ jQuery(document).ready(function() {
 				}
 			});
 
-			const originalRedirect = Wicket.Ajax.redirect;
+			var originalRedirect = Wicket.Ajax.redirect;
 
 			Wicket.Ajax.redirect = function(location) {
 				Wicket.Ajax.redirect = originalRedirect;
@@ -1421,7 +1421,7 @@ jQuery(document).ready(function() {
 				equal(location, redirectUrl, 'Ajax redirect in 301 response is properly handled');
 			};
 
-			const attrs = {
+			var attrs = {
 				u: componentUrl,
 				c: 'componentId'
 			};
