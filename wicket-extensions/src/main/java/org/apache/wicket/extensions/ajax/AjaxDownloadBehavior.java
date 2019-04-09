@@ -196,12 +196,6 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 		}
 	}
 
-	@Deprecated
-	public void initiate(AjaxRequestTarget target)
-	{
-		initiate((IPartialPageRequestHandler)target);
-	}
-
 	/**
 	 * Call this method to initiate the download.
 	 *
@@ -247,20 +241,7 @@ public class AjaxDownloadBehavior extends AbstractDefaultAjaxBehavior
 
 		handler.appendJavaScript(String.format("Wicket.AjaxDownload.initiate(%s);", settings));
 
-		if (handler instanceof AjaxRequestTarget) {
-			onBeforeDownload((AjaxRequestTarget)handler);
-		}
 		onBeforeDownload(handler);
-	}
-
-	/**
-	 * Please use {@link #onBeforeDownload(IPartialPageRequestHandler)} instead
-	 *
-	 * @param target
-	 */
-	@Deprecated
-	protected void onBeforeDownload(AjaxRequestTarget target)
-	{
 	}
 
 	protected void onBeforeDownload(IPartialPageRequestHandler handler)
