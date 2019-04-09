@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior;
 import org.apache.wicket.extensions.ajax.AjaxDownloadBehavior.Location;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -34,11 +35,12 @@ import org.apache.wicket.util.time.Duration;
 
 /**
  * Ajax download.
- * 
+ *
  * @author svenmeier
  */
 public class AjaxDownloadPage extends BasePage
 {
+	private static final long serialVersionUID = 1L;
 	private WebMarkupContainer downloadingContainer;
 
 	/**
@@ -50,9 +52,9 @@ public class AjaxDownloadPage extends BasePage
 		downloadingContainer.setOutputMarkupPlaceholderTag(true);
 		downloadingContainer.setVisible(false);
 		add(downloadingContainer);
-		
+
 		initDownload();
-		
+
 		initDownloadInIframe();
 
 		initDownloadInNewWindow();
@@ -75,14 +77,15 @@ public class AjaxDownloadPage extends BasePage
 	{
 		IResource resource = new ExampleResource("downloaded via ajax")
 			.setContentDisposition(ContentDisposition.ATTACHMENT);
-		
+
 		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
-			
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			protected void onBeforeDownload(AjaxRequestTarget target)
+			protected void onBeforeDownload(IPartialPageRequestHandler handler)
 			{
 				downloadingContainer.setVisible(true);
-				target.add(downloadingContainer);
+				handler.add(downloadingContainer);
 			}
 
 			@Override
@@ -91,20 +94,22 @@ public class AjaxDownloadPage extends BasePage
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
 			}
-			
+
 			@Override
 			protected void onDownloadFailed(AjaxRequestTarget target)
 			{
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
-				
+
 				target.appendJavaScript("alert('Download failed');");
 			}
 		};
 		add(download);
-		
+
 		add(new AjaxLink<Void>("download")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -117,14 +122,16 @@ public class AjaxDownloadPage extends BasePage
 	{
 		IResource resource = new ExampleResource("downloaded via ajax in iframe")
 			.setContentDisposition(ContentDisposition.ATTACHMENT);
-		
-		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
-			
+
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource)
+		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			protected void onBeforeDownload(AjaxRequestTarget target)
+			protected void onBeforeDownload(IPartialPageRequestHandler handler)
 			{
 				downloadingContainer.setVisible(true);
-				target.add(downloadingContainer);
+				handler.add(downloadingContainer);
 			}
 
 			@Override
@@ -133,21 +140,23 @@ public class AjaxDownloadPage extends BasePage
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
 			}
-			
+
 			@Override
 			protected void onDownloadFailed(AjaxRequestTarget target)
 			{
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
-				
+
 				target.appendJavaScript("alert('Download failed');");
 			}
 		};
 		download.setLocation(Location.IFrame);
 		add(download);
-		
+
 		add(new AjaxLink<Void>("downloadIframe")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -155,24 +164,29 @@ public class AjaxDownloadPage extends BasePage
 			}
 		});
 	}
-	
+
 	private void initDownloadReference()
 	{
-		ResourceReference reference = new ResourceReference("referenceToResource") {
+		ResourceReference reference = new ResourceReference("referenceToResource")
+		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public IResource getResource()
 			{
 				return new StaticResource();
 			}
 		};
-		
-		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(reference) {
-			
+
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(reference)
+		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			protected void onBeforeDownload(AjaxRequestTarget target)
+			protected void onBeforeDownload(IPartialPageRequestHandler handler)
 			{
 				downloadingContainer.setVisible(true);
-				target.add(downloadingContainer);
+				handler.add(downloadingContainer);
 			}
 
 			@Override
@@ -181,20 +195,22 @@ public class AjaxDownloadPage extends BasePage
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
 			}
-			
+
 			@Override
 			protected void onDownloadFailed(AjaxRequestTarget target)
 			{
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
-				
+
 				target.appendJavaScript("alert('Download failed');");
 			}
 		};
 		add(download);
-		
+
 		add(new AjaxLink<Void>("downloadReference")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -208,13 +224,15 @@ public class AjaxDownloadPage extends BasePage
 		IResource resource = new ExampleResource("downloaded via ajax in a new browser window")
 			.setContentDisposition(ContentDisposition.INLINE);
 
-		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource)
+		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onBeforeDownload(AjaxRequestTarget target)
+			protected void onBeforeDownload(IPartialPageRequestHandler handler)
 			{
 				downloadingContainer.setVisible(true);
-				target.add(downloadingContainer);
+				handler.add(downloadingContainer);
 			}
 
 			@Override
@@ -229,7 +247,7 @@ public class AjaxDownloadPage extends BasePage
 			{
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
-				
+
 				target.appendJavaScript("alert('Download failed');");
 			}
 
@@ -245,6 +263,8 @@ public class AjaxDownloadPage extends BasePage
 
 		add(new AjaxLink<Void>("downloadInNewWindow")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -258,13 +278,15 @@ public class AjaxDownloadPage extends BasePage
 		IResource resource = new ExampleResource("downloaded via ajax in same browser window")
 			.setContentDisposition(ContentDisposition.ATTACHMENT);
 
-		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource) {
+		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource)
+		{
+			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onBeforeDownload(AjaxRequestTarget target)
+			protected void onBeforeDownload(IPartialPageRequestHandler handler)
 			{
 				downloadingContainer.setVisible(true);
-				target.add(downloadingContainer);
+				handler.add(downloadingContainer);
 			}
 
 			@Override
@@ -279,7 +301,7 @@ public class AjaxDownloadPage extends BasePage
 			{
 				downloadingContainer.setVisible(false);
 				target.add(downloadingContainer);
-				
+
 				target.appendJavaScript("alert('Download failed');");
 			}
 
@@ -295,6 +317,8 @@ public class AjaxDownloadPage extends BasePage
 
 		add(new AjaxLink<Void>("downloadInSameWindow")
 		{
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -303,22 +327,24 @@ public class AjaxDownloadPage extends BasePage
 		});
 	}
 
-	public static class StaticResource extends ResourceStreamResource {
+	public static class StaticResource extends ResourceStreamResource
+	{
+		private static final long serialVersionUID = 1L;
 
 		StaticResource() {
 			setFileName("File-from-ResourceReference");
 			setContentDisposition(ContentDisposition.ATTACHMENT);
 			setCacheDuration(Duration.NONE);
 		}
-		
+
 		@Override
 		public void respond(Attributes attributes)
 		{
 			AjaxDownloadBehavior.markCompleted(attributes);
-			
+
 			super.respond(attributes);
 		}
-		
+
 		@Override
 		protected IResourceStream getResourceStream(Attributes attributes)
 		{
@@ -330,15 +356,17 @@ public class AjaxDownloadPage extends BasePage
 			catch (InterruptedException e)
 			{
 			}
-			
+
 			return new StringResourceStream("downloaded via ajax with resource reference");
 		}
 	}
-	
-	private class ExampleResource extends ResourceStreamResource {
-		
+
+	private class ExampleResource extends ResourceStreamResource
+	{
+		private static final long serialVersionUID = 1L;
+
 		private String content;
-		
+
 		private int count = 0;
 
 		public ExampleResource(String content)
@@ -348,7 +376,7 @@ public class AjaxDownloadPage extends BasePage
 			setFileName("File-from-IResource.txt");
 			setCacheDuration(Duration.NONE);
 		}
-		
+
 		@Override
 		protected IResourceStream getResourceStream(Attributes attributes) {
 			// simulate delay
@@ -359,7 +387,7 @@ public class AjaxDownloadPage extends BasePage
 			catch (InterruptedException e)
 			{
 			}
-			
+
 			count++;
 			if (count == 3) {
 				count = 0;
