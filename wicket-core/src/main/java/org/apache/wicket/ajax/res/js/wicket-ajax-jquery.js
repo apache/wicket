@@ -720,7 +720,11 @@
 					}
 				},
 				error: function(jqXHR, textStatus, errorMessage) {
-					self.failure(context, jqXHR, errorMessage, textStatus);
+					if (jqXHR.status === 301 && jqXHR.getResponseHeader('Ajax-Location')) {
+						self.processAjaxResponse(data, textStatus, jqXHR, context);
+					} else {
+						self.failure(context, jqXHR, errorMessage, textStatus);
+					}
 				},
 				complete: function (jqXHR, textStatus) {
 

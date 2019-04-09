@@ -1292,6 +1292,7 @@ jQuery(document).ready(function() {
 			expect(1);
 
 			var attrs = {
+				u: 'data/ajax/componentId.xml',
 				e: 'event1',
 				ep: [null, {name: "name", value: "value"}, null, null],
 				bsh: [function(attributes) {
@@ -1391,6 +1392,37 @@ jQuery(document).ready(function() {
 
 			var attrs = {
 				u: 'data/ajax/componentId.xml',
+				c: 'componentId'
+			};
+
+			execute(attrs);
+		});
+
+		asyncTest('Ajax 301 with Ajax-Location response header.', function () {
+
+			expect(2);
+
+			const redirectUrl = 'http://www.example.com/ajax/location';
+			const componentUrl = 'data/ajax/componentId.xml';
+
+			$.mockjax({
+				url: componentUrl,
+				status: 301,
+				headers: {
+					'Ajax-Location': redirectUrl
+				}
+			});
+
+			const originalRedirect = Wicket.Ajax.redirect;
+
+			Wicket.Ajax.redirect = function(location) {
+				Wicket.Ajax.redirect = originalRedirect;
+				start();
+				equal(location, redirectUrl, 'Ajax redirect in 301 response is properly handled');
+			};
+
+			const attrs = {
+				u: componentUrl,
 				c: 'componentId'
 			};
 
