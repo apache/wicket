@@ -378,8 +378,8 @@ then
 fi
 
 if [ ! -z "$milestone_version" ] ; then
-    next_version="$major_version.0.0-SNAPSHOT"
-    previous_version="$major_version.0.0-SNAPSHOT"
+    next_version="$major_version.0.0-M$(expr $milestone_version + 1)-SNAPSHOT"
+    previous_version="$major_version.0.0-M$milestone_version-SNAPSHOT"
 else
     next_version="$major_version.$(expr $minor_version + 1).0-SNAPSHOT"
     previous_minor_version=$(expr $minor_version - 1)
