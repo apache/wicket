@@ -155,7 +155,7 @@
 		<metrics.version>4.0.5</metrics.version>
 		<weld.version>3.1.0.Final</weld.version>
 		<forbiddenapis.version>2.6</forbiddenapis.version>
-		<velocity.version>1.7</velocity.version>
+		<velocity.version>2.1</velocity.version>
 
 		<automatic-module-name>MUST-BE-OVERRIDDEN-BY-MODULES</automatic-module-name>
 	</properties>
@@ -279,14 +279,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.velocity</groupId>
-				<artifactId>velocity</artifactId>
+				<artifactId>velocity-engine-core</artifactId>
 				<version>${velocity.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>commons-collections</groupId>
-						<artifactId>commons-collections</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -56,7 +55,7 @@ public final class GuestBook extends WicketExamplePage
 		add(new CommentForm("commentForm"));
 
 		// Add commentListView of existing comments
-		add(new PropertyListView<Comment>("comments", commentList)
+		add(new PropertyListView<>("comments", commentList)
 		{
 			@Override
 			public void populateItem(final ListItem<Comment> listItem)
@@ -104,7 +103,8 @@ public final class GuestBook extends WicketExamplePage
 			ValueMap values = getModelObject();
 
 			// check if the honey pot is filled
-			if (StringUtils.isNotBlank((String)values.get("comment")))
+			final String _comment = (String) values.get("comment");
+			if (_comment != null && !_comment.isBlank())
 			{
 				error("Caught a spammer!!!");
 				return;

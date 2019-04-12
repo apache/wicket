@@ -45,7 +45,7 @@ public class VelocityJavaScriptContributor extends VelocityContributor
 	 * @param id
 	 */
 	public VelocityJavaScriptContributor(final Class<?> clazz, final String templatePath,
-		final IModel<? extends Map<?, ?>> model, final String id)
+		final IModel<? extends Map<String, Object>> model, final String id)
 	{
 		super(Packages.absolutePath(clazz, templatePath), model);
 		this.id = id;
@@ -60,7 +60,7 @@ public class VelocityJavaScriptContributor extends VelocityContributor
 	 * @param id
 	 */
 	public VelocityJavaScriptContributor(final String templatePath,
-		final IModel<? extends Map<?, ?>> model, final String id)
+		final IModel<? extends Map<String, Object>> model, final String id)
 	{
 		super(templatePath, model);
 		this.id = id;
