@@ -1,5 +1,15 @@
 package org.apache.wicket.bean.validation;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.WebPage;
@@ -14,14 +24,6 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.apache.wicket.util.tester.WicketTesterExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PropertyValidatorRequiredTest
 {
@@ -84,9 +86,8 @@ public class PropertyValidatorRequiredTest
 	public void testResolveComposedConstraints() throws Exception
 	{
 		Property property = new Property(DefaultPropertyResolverTest.BeanWithPassword.class, "password");
-		PropertyValidator<DefaultPropertyResolverTest.BeanWithPassword> propertyValidator = new PropertyValidator<>(property);
 
-		assertTrue(propertyValidator.isRequired());
+		assertEquals(1, new BeanValidationConfiguration().getRequiredConstraints(property).size());
 	}
 
 	public static class TestApplication extends MockApplication

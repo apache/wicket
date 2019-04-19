@@ -16,8 +16,14 @@
  */
 package org.apache.wicket.examples.bean.validation;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.validation.metadata.ConstraintDescriptor;
+
 import org.apache.wicket.Page;
 import org.apache.wicket.bean.validation.BeanValidationConfiguration;
+import org.apache.wicket.bean.validation.Property;
 import org.apache.wicket.examples.WicketExampleApplication;
 
 public class BeanValidationApplication extends WicketExampleApplication
@@ -31,6 +37,15 @@ public class BeanValidationApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
-		new BeanValidationConfiguration().configure(this);
+		new BeanValidationConfiguration()
+		{
+			/**
+			 * Let bean-validation handle required constraints.
+			 */
+			@Override
+			public List<ConstraintDescriptor<?>> getRequiredConstraints(Property property) {
+				return Collections.emptyList();
+			}
+		}.configure(this);
 	}
 }
