@@ -37,4 +37,25 @@
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>clirr-maven-plugin</artifactId>
+					<configuration>
+						<ignored>
+							<difference>
+								<!-- WICKET-6656 ignore added default method -->
+							    <differenceType>7012</differenceType>
+							    <className>org/apache/wicket/bean/validation/BeanValidationContext</className>
+							    <method>boolean isRequiredConstraint(javax.validation.metadata.ConstraintDescriptor)</method>
+							</difference>
+						</ignored>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

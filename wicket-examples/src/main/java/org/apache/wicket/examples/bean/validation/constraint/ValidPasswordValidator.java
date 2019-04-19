@@ -38,7 +38,11 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
 	{
 		boolean validationResult = true;
 
-		if (!CONTENT.matcher(value).matches())
+		if (value == null)
+		{
+			validationResult = false; 
+		}
+		else if (!CONTENT.matcher(value).matches())
 		{
 			validationResult = false;
 		}

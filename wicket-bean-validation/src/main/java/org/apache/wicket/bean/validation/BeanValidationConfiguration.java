@@ -1,6 +1,8 @@
 package org.apache.wicket.bean.validation;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,7 +10,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
@@ -26,6 +30,28 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	private static final MetaDataKey<BeanValidationConfiguration> KEY = new MetaDataKey<BeanValidationConfiguration>()
 	{
 	};
+
+	/**
+	 * Default list of annotations that make a component required.
+	 */
+	static final List<Class<? extends Annotation>> REQUIRED_ANNOTATIONS;
+	static
+	{
+		List<Class<? extends Annotation>> tmp = new ArrayList<>();
+		tmp.add(NotNull.class);
+		try
+		{
+			tmp.add(Class.forName("javax.validation.constraints.NotBlank")
+				.asSubclass(Annotation.class));
+			tmp.add(Class.forName("javax.validation.constraints.NotEmpty")
+				.asSubclass(Annotation.class));
+		}
+		catch (ClassNotFoundException e)
+		{
+			// ignore exception, we are using bean validation 1.1
+		}
+		REQUIRED_ANNOTATIONS = Collections.unmodifiableList(tmp);
+	}
 
 	private Supplier<Validator> validatorProvider = new DefaultValidatorProvider();
 
@@ -61,7 +87,7 @@ public class BeanValidationConfiguration implements BeanValidationContext
 		return this;
 	}
 
-
+	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends Annotation> ITagModifier<T> getTagModifier(Class<T> annotationType)
 	{
@@ -130,8 +156,8 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	 * Registers a violation translator
 	 *
 	 * @param violationTranslator
-	 *          A violation translator that will convert {@link javax.validation.ConstraintViolation}s
-	 *          into Wicket's {@link org.apache.wicket.validation.ValidationError}s
+	 *            A violation translator that will convert {@link javax.validation.ConstraintViolation}s into Wicket's
+	 *            {@link org.apache.wicket.validation.ValidationError}s
 	 */
 	public void setViolationTranslator(IViolationTranslator violationTranslator)
 	{
@@ -169,5 +195,17 @@ public class BeanValidationConfiguration implements BeanValidationContext
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * By default {@link NotNull} and {@link NotEmpty} constraints make a component required.
+	 * 
+	 * @param constraint
+	 *            constraint 
+	 */
+	@Override
+	public boolean isRequiredConstraint(ConstraintDescriptor<?> constraint)
+	{
+		return REQUIRED_ANNOTATIONS.contains(constraint.getAnnotation().annotationType());
 	}
 }
