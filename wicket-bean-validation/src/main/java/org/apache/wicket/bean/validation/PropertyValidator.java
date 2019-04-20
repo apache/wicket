@@ -3,11 +3,11 @@ package org.apache.wicket.bean.validation;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.validation.groups.Default;
 import javax.validation.metadata.ConstraintDescriptor;
 
 import org.apache.wicket.Component;
@@ -185,35 +185,50 @@ public class PropertyValidator<T> extends Behavior implements INullAcceptingVali
 		}
 	}
 
+	/**
+	 * Should this property make the owning component required.
+	 * 
+	 * @return <code>true</code> if required
+	 * 
+	 * @see BeanValidationContext#isRequiredConstraint(ConstraintDescriptor)
+	 */
 	protected boolean isRequired()
 	{
 		BeanValidationContext config = BeanValidationConfiguration.get();
 
-		List<ConstraintDescriptor<?>> constraints = config.getRequiredConstraints(getProperty());
-		if (constraints.isEmpty())
-		{
-			return false;
-		}
-
 		HashSet<Class<?>> groups = new HashSet<Class<?>>(Arrays.asList(getGroups()));
 
-		for (ConstraintDescriptor<?> constraint : constraints)
+		Iterator<ConstraintDescriptor<?>> it = new ConstraintIterator(config.getValidator(), getProperty());
+		while (it.hasNext())
 		{
-			if (AnnotationUtils.canApplyToDefaultGroup(constraint) && groups.size() == 0)
+			ConstraintDescriptor<?> constraint = it.next();
+			
+			if (config.isRequiredConstraint(constraint))
 			{
-				return true;
-			}
-
-			for (Class<?> constraintGroup : constraint.getGroups())
-			{
-				if (groups.contains(constraintGroup))
+				if (canApplyToDefaultGroup(constraint) && groups.size() == 0)
 				{
 					return true;
+				}
+		
+				for (Class<?> constraintGroup : constraint.getGroups())
+				{
+					if (groups.contains(constraintGroup))
+					{
+						return true;
+					}
 				}
 			}
 		}
 
 		return false;
+	}
+
+	private boolean canApplyToDefaultGroup(ConstraintDescriptor<?> constraint)
+	{
+		Set<Class<?>> groups = constraint.getGroups();
+		//the constraint can be applied to default group either if its group array is empty
+		//or if it contains javax.validation.groups.Default
+		return groups.size() == 0 || groups.contains(Default.class);
 	}
 
 	@Override

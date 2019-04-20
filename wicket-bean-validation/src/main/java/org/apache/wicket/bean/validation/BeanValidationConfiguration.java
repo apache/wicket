@@ -199,16 +199,14 @@ public class BeanValidationConfiguration implements BeanValidationContext
 	}
 
 	/**
-	 * By default {@link NotNull} and {@link NotEmpty} make a component required.
+	 * By default {@link NotNull} and {@link NotEmpty} constraints make a component required.
 	 * 
-	 * @param property
-	 *            property
-	 * @param groups
-	 *            groups
+	 * @param constraint
+	 *            constraint 
 	 */
 	@Override
-	public List<ConstraintDescriptor<?>> getRequiredConstraints(Property property)
+	public boolean isRequiredConstraint(ConstraintDescriptor<?> constraint)
 	{
-		return AnnotationUtils.findConstraints(property, REQUIRED_ANNOTATIONS);
+		return REQUIRED_ANNOTATIONS.contains(constraint.getAnnotation().annotationType());
 	}
 }

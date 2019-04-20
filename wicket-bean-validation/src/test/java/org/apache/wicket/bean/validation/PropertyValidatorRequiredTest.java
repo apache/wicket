@@ -1,6 +1,5 @@
 package org.apache.wicket.bean.validation;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -87,7 +86,7 @@ public class PropertyValidatorRequiredTest
 	{
 		Property property = new Property(DefaultPropertyResolverTest.BeanWithPassword.class, "password");
 
-		assertEquals(1, new BeanValidationConfiguration().getRequiredConstraints(property).size());
+		assertTrue(new PropertyValidator<>(property).isRequired());
 	}
 
 	public static class TestApplication extends MockApplication
