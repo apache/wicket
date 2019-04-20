@@ -170,7 +170,7 @@ public class Args
 	 */
 	static String format(String msg, final Object... params)
 	{
-		msg = msg.replaceAll("\\{\\}", "%s");
+		msg = msg.replace("\\{\\}", "%s");
 		return String.format(msg, params);
 	}
 }
