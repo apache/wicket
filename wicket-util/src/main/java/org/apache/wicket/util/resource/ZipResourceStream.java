@@ -22,12 +22,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import org.apache.wicket.util.file.File;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -213,7 +214,7 @@ public class ZipResourceStream extends AbstractResourceStream
 	 * @see org.apache.wicket.util.resource.AbstractResourceStream#lastModifiedTime()
 	 */
 	@Override
-	public Instant lastModifiedTime()
+	public Time lastModifiedTime()
 	{
 		return null;
 	}

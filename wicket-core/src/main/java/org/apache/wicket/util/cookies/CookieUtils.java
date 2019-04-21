@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.util.cookies;
 
-import java.time.Instant;
 import javax.servlet.http.Cookie;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -26,7 +25,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.string.Strings;
-import org.apache.wicket.util.time.Instants;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -370,7 +369,6 @@ public class CookieUtils
 	{
 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue() +
 			", domain = " + cookie.getDomain() + ", path = " + cookie.getPath() + ", maxAge = " +
-			Instants.localDateFormatter.format(Instant.ofEpochMilli(cookie.getMaxAge())) + 
-			"(" + cookie.getMaxAge() + ")" + "]";
+			Time.millis(cookie.getMaxAge()).toDateString() + "(" + cookie.getMaxAge() + ")" + "]";
 	}
 }

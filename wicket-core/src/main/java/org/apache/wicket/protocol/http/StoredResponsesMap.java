@@ -16,10 +16,11 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Map;
+
 import org.apache.wicket.util.collections.MostRecentlyUsedMap;
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 
 /**
  * A map that contains the buffered responses. It has a constraint on the maximum entries that it
@@ -39,7 +40,7 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 		private BufferedWebResponse response;
 
 		/** the time when this response is stored */
-		private Instant creationTime;
+		private Time creationTime;
 	}
 
 	/**
@@ -71,8 +72,8 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 			Value value = (Value)eldest.getValue();
 			if (value != null)
 			{
-				Duration elapsedTime = Duration.between(value.creationTime, Instant.now());
-				if (lifetime.compareTo(elapsedTime) <= 0)
+				Duration elapsedTime = Time.now().subtract(value.creationTime);
+				if (lifetime.lessThanOrEqual(elapsedTime))
 				{
 					removedValue = value.response;
 					removed = true;
@@ -92,7 +93,7 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 		}
 
 		Value value = new Value();
-		value.creationTime = Instant.now();
+		value.creationTime = Time.now();
 		value.response = (BufferedWebResponse)bufferedResponse;
 
 		Value oldValue;
@@ -115,8 +116,8 @@ class StoredResponsesMap extends MostRecentlyUsedMap<String, Object>
 		}
 		if (value != null)
 		{
-			Duration elapsedTime =  Duration.between(value.creationTime, Instant.now());
-			if (lifetime.compareTo(elapsedTime) > 0)
+			Duration elapsedTime = Time.now().subtract(value.creationTime);
+			if (lifetime.greaterThan(elapsedTime))
 			{
 				result = value.response;
 			}

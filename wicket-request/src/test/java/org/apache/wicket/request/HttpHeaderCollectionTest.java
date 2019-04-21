@@ -22,10 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import java.time.Instant;
+
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
+
+import org.apache.wicket.util.time.Time;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("javadoc")
@@ -87,8 +89,8 @@ public class HttpHeaderCollectionTest
 	{
 		final HttpHeaderCollection headers = new HttpHeaderCollection();
 
-		final Instant time1 = Instant.ofEpochMilli(1000000);
-		final Instant time2 = Instant.ofEpochMilli(2000000);
+		final Time time1 = Time.millis(1000000);
+		final Time time2 = Time.millis(2000000);
 
 		headers.setDateHeader("date", time1);
 		headers.addDateHeader("date", time2);
@@ -126,7 +128,7 @@ public class HttpHeaderCollectionTest
 		headers.setHeader("date", "foobar");
 		try
 		{
-		    Instant date = headers.getDateHeader("date");
+			Time date = headers.getDateHeader("date");
 			fail();
 		}
 		catch (IllegalStateException e)

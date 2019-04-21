@@ -29,8 +29,9 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URI;
-import java.time.Instant;
+
 import org.apache.wicket.util.io.Streams;
+import org.apache.wicket.util.time.Time;
 import org.apache.wicket.util.watch.IModifiable;
 
 
@@ -166,7 +167,7 @@ public class File extends java.io.File implements IModifiable
 	 * that information is not available
 	 */
 	@Override
-	public Instant lastModifiedTime()
+	public Time lastModifiedTime()
 	{
 		final long time = lastModified();
 		
@@ -174,7 +175,7 @@ public class File extends java.io.File implements IModifiable
 		{
 			return null;
 		}
-		return Instant.ofEpochMilli(time);
+		return Time.millis(time);
 	}
 
 	/**

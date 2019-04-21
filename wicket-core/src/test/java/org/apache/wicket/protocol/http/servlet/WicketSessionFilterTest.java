@@ -18,9 +18,9 @@ package org.apache.wicket.protocol.http.servlet;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.time.Duration;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.FilterChain;
@@ -29,6 +29,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Session;
 import org.apache.wicket.mock.MockApplication;
@@ -36,6 +37,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.session.HttpSessionStore;
 import org.apache.wicket.util.tester.WicketTestCase;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.time.Duration;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -112,7 +114,7 @@ class WicketSessionFilterTest extends WicketTestCase
 			}
 		});
 		testThread.start();
-		testThread.join(Duration.ofSeconds(1).toMillis());
+		testThread.join(Duration.seconds(1).getMilliseconds());
 
 		assertTrue(passed.get(), failMessage.toString());
 	}

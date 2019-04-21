@@ -17,20 +17,22 @@
 package org.apache.wicket.protocol.http;
 
 import static java.lang.System.arraycopy;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.MetaDataKey;
 import org.apache.wicket.Session;
 import org.apache.wicket.request.IRequestHandler;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -494,7 +496,7 @@ public abstract class AbstractRequestLogger implements IRequestLogger
 	{
 		Args.notNull(date, "date");
 
-		final Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		final Calendar cal = Calendar.getInstance(Time.GMT);
 		final StringBuilder buf = new StringBuilder(32);
 
 		cal.setTimeInMillis(date.getTime());

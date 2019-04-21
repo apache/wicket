@@ -18,9 +18,9 @@ package org.apache.wicket.extensions.markup.html.repeater.data.table.export;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
@@ -39,6 +39,7 @@ import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IResourceStreamWriter;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * A toolbar that provides links to download the data represented by all {@link IExportableColumn}s in the table
@@ -229,7 +230,7 @@ public class ExportToolbar extends AbstractToolbar
 	 * @return default is {@link Duration#NONE}
 	 */
 	protected Duration getCacheDuration() {
-		return Duration.ZERO;
+		return Duration.NONE;
 	}
 
 	@Override

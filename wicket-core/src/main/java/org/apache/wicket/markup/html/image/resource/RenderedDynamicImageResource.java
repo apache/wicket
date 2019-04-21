@@ -19,8 +19,9 @@ package org.apache.wicket.markup.html.image.resource;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.ref.SoftReference;
-import java.time.Instant;
+
 import org.apache.wicket.request.resource.DynamicImageResource;
+import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -162,7 +163,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 		{
 			data = render(attributes);
 			imageData = new SoftReference<byte[]>(data);
-			setLastModifiedTime(Instant.now());
+			setLastModifiedTime(Time.now());
 		}
 		return data;
 	}

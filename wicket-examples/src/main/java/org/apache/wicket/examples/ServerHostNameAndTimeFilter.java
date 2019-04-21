@@ -18,13 +18,14 @@ package org.apache.wicket.examples;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.time.Duration;
-import org.apache.wicket.core.util.string.JavaScriptUtils;
+
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.core.util.string.JavaScriptUtils;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Duration;
 
 
 /**
@@ -88,7 +89,7 @@ public class ServerHostNameAndTimeFilter implements IResponseFilter
 			script.append("Host: ");
 			script.append(host);
 			script.append(", handled in: ");
-			script.append(Duration.ofMillis(timeTaken));
+			script.append(Duration.milliseconds(timeTaken));
 			script.append("';\n");
 			script.append(JavaScriptUtils.SCRIPT_CLOSE_TAG);
 			script.append('\n');

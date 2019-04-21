@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.protocol.http;
 
-import java.time.Instant;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Response that keeps headers in buffers until the first content is written.
@@ -129,7 +130,7 @@ class HeaderBufferingWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
-	public void setDateHeader(String name, Instant date)
+	public void setDateHeader(String name, Time date)
 	{
 		Args.notNull(date, "date");
 		getMetaResponse().setDateHeader(name, date);

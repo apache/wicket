@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import java.time.Duration;
 import java.util.Random;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel;
@@ -25,6 +25,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.util.time.Duration;
 
 @SuppressWarnings({ "javadoc", "serial" })
 public class LazyLoadingPage extends BasePage
@@ -102,14 +103,14 @@ public class LazyLoadingPage extends BasePage
 				@Override
 				protected boolean isContentReady()
 				{
-					return Duration.ofMillis(System.currentTimeMillis() - startTime)
-						.toSeconds() > seconds;
+					return Duration.milliseconds(System.currentTimeMillis() - startTime)
+						.seconds() > seconds;
 				}
 				
 				@Override
 				protected Duration getUpdateInterval()
 				{
-					return Duration.ofMillis(seconds * 1000 / 10);
+					return Duration.milliseconds(seconds * 1000 / 10);
 				}
 
 				@Override

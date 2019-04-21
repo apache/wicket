@@ -16,10 +16,10 @@
  */
 package org.apache.wicket.devutils.pagestore.browser;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.apache.wicket.PageReference;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -45,6 +45,7 @@ import org.apache.wicket.pageStore.DefaultPageContext;
 import org.apache.wicket.pageStore.IPageContext;
 import org.apache.wicket.pageStore.IPersistedPage;
 import org.apache.wicket.pageStore.IPersistentPageStore;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * A panel that shows data about {@link IPersistedPage}s in an {@link IPersistentPageStore}.
@@ -121,7 +122,7 @@ public class PersistedPanel extends GenericPanel<IPersistentPageStore>
 			}
 		});
 
-		add(new AbstractAjaxTimerBehavior(Duration.ofSeconds(5)) {
+		add(new AbstractAjaxTimerBehavior(Duration.seconds(5)) {
 
 			@Override
 			protected void onTimer(AjaxRequestTarget target)

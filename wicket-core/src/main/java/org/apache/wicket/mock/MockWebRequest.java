@@ -17,20 +17,21 @@
 package org.apache.wicket.mock;
 
 import java.nio.charset.Charset;
-import java.sql.Time;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.servlet.http.Cookie;
+
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Url;
 import org.apache.wicket.request.Url.QueryParameter;
 import org.apache.wicket.request.UrlUtils;
 import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Mutable mock {@link WebRequest}.
@@ -137,7 +138,7 @@ public class MockWebRequest extends WebRequest
 
 
 	@Override
-	public Instant getDateHeader(String name)
+	public Time getDateHeader(String name)
 	{
 		List<Object> dates = headers.get(name);
 		if (dates == null || dates.isEmpty())
@@ -147,12 +148,12 @@ public class MockWebRequest extends WebRequest
 
 		Object date = dates.get(0);
 
-		if (date instanceof Instant == false)
+		if (date instanceof Time == false)
 		{
 			throw new WicketRuntimeException("Date header with name '" + name +
 				"' is not a valid Time.");
 		}
-		return (Instant)date;
+		return (Time)date;
 	}
 
 	private void addHeaderObject(String name, Object value)

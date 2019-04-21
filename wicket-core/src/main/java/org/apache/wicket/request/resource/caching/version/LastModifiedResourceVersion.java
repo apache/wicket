@@ -16,10 +16,11 @@
  */
 package org.apache.wicket.request.resource.caching.version;
 
-import java.time.Instant;
 import java.util.regex.Pattern;
+
 import org.apache.wicket.request.resource.caching.IStaticCacheableResource;
 import org.apache.wicket.util.resource.IResourceStream;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Uses the last modified timestamp of a {@link org.apache.wicket.request.resource.caching.IStaticCacheableResource} 
@@ -48,7 +49,7 @@ public class LastModifiedResourceVersion implements IResourceVersion
 			return null;
 		}
 
-		final Instant lastModified = stream.lastModifiedTime();
+		final Time lastModified = stream.lastModifiedTime();
 
 		// if no timestamp is available we can not provide a version
 		if (lastModified == null)
@@ -56,7 +57,7 @@ public class LastModifiedResourceVersion implements IResourceVersion
 			return null;
 		}
 		// version string = last modified timestamp converted to milliseconds
-		return String.valueOf(lastModified.toEpochMilli()).intern();
+		return String.valueOf(lastModified.getMilliseconds()).intern();
 	}
 
 	@Override

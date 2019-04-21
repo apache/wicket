@@ -18,8 +18,8 @@ package org.apache.wicket.core.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
 import java.util.Locale;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.resource.locator.IResourceStreamLocator;
@@ -28,6 +28,7 @@ import org.apache.wicket.util.lang.Packages;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -116,7 +117,7 @@ public class PackageResourceStream extends AbstractResourceStream
 	}
 
 	@Override
-	public Instant lastModifiedTime()
+	public Time lastModifiedTime()
 	{
 		return resourceStream.lastModifiedTime();
 	}

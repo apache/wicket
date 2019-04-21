@@ -21,7 +21,7 @@ import java.util.List;
 import org.apache.wicket.Page;
 import org.apache.wicket.extensions.ajax.markup.html.AjaxLazyLoadPanel.AjaxLazyLoadTimer;
 import org.apache.wicket.util.tester.BaseWicketTester;
-import java.time.Duration;
+import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

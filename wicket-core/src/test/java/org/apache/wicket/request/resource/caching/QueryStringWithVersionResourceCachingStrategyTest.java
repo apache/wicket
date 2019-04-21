@@ -18,7 +18,7 @@ package org.apache.wicket.request.resource.caching;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import java.time.Duration;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.request.cycle.RequestCycle;
@@ -30,6 +30,7 @@ import org.apache.wicket.request.resource.caching.version.IResourceVersion;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
 import org.apache.wicket.util.tester.BaseWicketTester;
 import org.apache.wicket.util.tester.WicketTester;
+import org.apache.wicket.util.time.Duration;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -69,7 +70,7 @@ class QueryStringWithVersionResourceCachingStrategyTest
 	@Test
 	void testDecorateResponse() throws Exception
 	{
-		Duration defaultDuration = Duration.ofMinutes(60);
+		Duration defaultDuration = Duration.minutes(60);
 
 		// setup RequestCycle
 		BaseWicketTester tester = new BaseWicketTester();

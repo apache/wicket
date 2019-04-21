@@ -16,13 +16,15 @@
  */
 package org.apache.wicket.util.io;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import java.net.URL;
-import java.time.Instant;
 import org.apache.wicket.util.WicketTestTag;
+import org.apache.wicket.util.time.Time;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import java.net.URL;
+
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Tests for {@link Connections}
@@ -37,8 +39,8 @@ public class ConnectionsTest
 	public void getLastModified() throws Exception
 	{
 		URL url = new URL("http://wicket.apache.org/learn/books/wia.png");
-		Instant lastModified = Connections.getLastModified(url);
+		Time lastModified = Connections.getLastModified(url);
 		assertNotNull(lastModified);
-		assertNotEquals(lastModified.toEpochMilli(), 0L);
+		assertNotEquals(lastModified.getMilliseconds(), 0L);
 	}
 }

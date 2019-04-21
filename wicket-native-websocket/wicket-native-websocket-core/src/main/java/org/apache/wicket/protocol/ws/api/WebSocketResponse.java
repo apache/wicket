@@ -18,10 +18,12 @@ package org.apache.wicket.protocol.ws.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.Instant;
+
 import javax.servlet.http.Cookie;
+
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -162,7 +164,7 @@ public class WebSocketResponse extends WebResponse
 	}
 
 	@Override
-	public void setDateHeader(String name, Instant date)
+	public void setDateHeader(String name, Time date)
 	{
 		throw new UnsupportedOperationException();
 	}

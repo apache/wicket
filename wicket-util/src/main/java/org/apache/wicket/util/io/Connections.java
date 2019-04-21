@@ -22,8 +22,9 @@ import java.net.HttpURLConnection;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.time.Instant;
+
 import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.time.Time;
 
 /**
  * {@link URLConnection} related utilities
@@ -43,7 +44,7 @@ public class Connections
 	 * @return last modified timestamp or <code>null</code> if not available
 	 * @throws IOException
 	 */
-	public static Instant getLastModified(final URL url) throws IOException
+	public static Time getLastModified(final URL url) throws IOException
 	{
 		// check if url points to a local file
 		final File file = Files.getLocalFileFromUrl(url);
@@ -83,7 +84,7 @@ public class Connections
 			}
 
 			// return UNIX timestamp
-			return Instant.ofEpochMilli(milliseconds);
+			return Time.millis(milliseconds);
 
 		}
 		finally

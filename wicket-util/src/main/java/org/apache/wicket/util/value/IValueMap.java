@@ -16,11 +16,12 @@
  */
 package org.apache.wicket.util.value;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Map;
+
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.StringValueConversionException;
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -179,7 +180,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return the <code>Time</code> object
 	 * @throws StringValueConversionException
 	 */
-	Instant getTime(final String key) throws StringValueConversionException;
+	Time getTime(final String key) throws StringValueConversionException;
 
 	/**
 	 * Returns whether or not this <code>IValueMap</code> is immutable.
@@ -358,7 +359,7 @@ public interface IValueMap extends Map<String, Object>
 	 *         <code>IValueMap</code>
 	 * 
 	 */
-	Instant getAsTime(String key);
+	Time getAsTime(String key);
 
 	/**
 	 * Retrieves a <code>Time</code> value by key.
@@ -373,7 +374,7 @@ public interface IValueMap extends Map<String, Object>
 	 *         <code>IValueMap</code>
 	 * 
 	 */
-	Instant getAsTime(String key, Instant defaultValue);
+	Time getAsTime(String key, Time defaultValue);
 
 	/**
 	 * Retrieves an <code>Enum</code> value by key.

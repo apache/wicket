@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.page;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -24,7 +23,9 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.Cookie;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.feedback.FeedbackDelay;
@@ -48,6 +49,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -809,7 +811,7 @@ public abstract class PartialPageUpdate
 		}
 
 		@Override
-		public void setDateHeader(String name, Instant date)
+		public void setDateHeader(String name, Time date)
 		{
 			originalResponse.setDateHeader(name, date);
 		}

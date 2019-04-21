@@ -20,15 +20,13 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.format.DateTimeParseException;
 import java.util.Locale;
+
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.time.Durations;
-import org.apache.wicket.util.time.Instants;
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -348,7 +346,7 @@ public class StringValue implements IClusterable
 			return (T)toCharacter();
 		}
 
-		if (type == Instant.class)
+		if (type == Time.class)
 		{
 			return (T)toTime();
 		}
@@ -550,7 +548,7 @@ public class StringValue implements IClusterable
 	 */
 	public final Duration toDuration() throws StringValueConversionException
 	{
-		return Durations.valueOf(text, locale);
+		return Duration.valueOf(text, locale);
 	}
 
 	/**
@@ -798,7 +796,7 @@ public class StringValue implements IClusterable
 	 * @return converted
 	 * @throws StringValueConversionException
 	 */
-	public final Instant toOptionalTime() throws StringValueConversionException
+	public final Time toOptionalTime() throws StringValueConversionException
 	{
 		return Strings.isEmpty(text) ? null : toTime();
 	}
@@ -830,13 +828,13 @@ public class StringValue implements IClusterable
 	 * @return Converted text
 	 * @throws StringValueConversionException
 	 */
-	public final Instant toTime() throws StringValueConversionException
+	public final Time toTime() throws StringValueConversionException
 	{
 		try
 		{
-			return Instants.valueOf(text);
+			return Time.valueOf(text);
 		}
-		catch (DateTimeParseException e)
+		catch (ParseException e)
 		{
 			throw new StringValueConversionException("Unable to convert '" + text
 				+ "' to a Time value", e);
@@ -850,7 +848,7 @@ public class StringValue implements IClusterable
 	 *            the default value
 	 * @return the converted text as a time or the default value if text is inconvertible.
 	 */
-	public final Instant toTime(final Instant defaultValue)
+	public final Time toTime(final Time defaultValue)
 	{
 		if (text != null)
 		{

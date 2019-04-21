@@ -17,6 +17,7 @@
 package org.apache.wicket.jmx;
 
 import org.apache.wicket.markup.html.PackageResourceGuard;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * Resource settings.

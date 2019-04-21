@@ -41,7 +41,7 @@ import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.thread.ICode;
 import org.apache.wicket.util.thread.Task;
-import java.time.Duration;
+import org.apache.wicket.util.time.Duration;
 import org.apache.wicket.util.watch.ModificationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

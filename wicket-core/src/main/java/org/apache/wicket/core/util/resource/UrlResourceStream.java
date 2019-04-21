@@ -20,9 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.util.io.Connections;
 import org.apache.wicket.util.io.IOUtils;
@@ -32,6 +32,7 @@ import org.apache.wicket.util.lang.Objects;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	private final URL url;
 
 	/** Last known time the stream was last modified. */
-	private Instant lastModified;
+	private Time lastModified;
 
 	/**
 	 * Meta data class for the stream attributes
@@ -201,12 +202,12 @@ public class UrlResourceStream extends AbstractResourceStream
 	 * @return The last time this resource was modified
 	 */
 	@Override
-	public Instant lastModifiedTime()
+	public Time lastModifiedTime()
 	{
 		try
 		{
 			// get url modification timestamp
-			final Instant time = Connections.getLastModified(url);
+			final Time time = Connections.getLastModified(url);
 
 			// if timestamp changed: update content length and last modified date
 			if (Objects.equal(time, lastModified) == false)

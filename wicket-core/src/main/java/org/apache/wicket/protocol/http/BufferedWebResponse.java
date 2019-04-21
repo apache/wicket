@@ -19,12 +19,13 @@ package org.apache.wicket.protocol.http;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+
 import javax.servlet.http.Cookie;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.request.Response;
@@ -32,6 +33,7 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.response.filter.IResponseFilter;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.AppendingStringBuffer;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Subclass of {@link WebResponse} that buffers the actions and performs those on another response.
@@ -186,7 +188,7 @@ public class BufferedWebResponse extends WebResponse implements IMetaDataBufferi
 	}
 
 	@Override
-	public void setDateHeader(String name, Instant date)
+	public void setDateHeader(String name, Time date)
 	{
 		Args.notNull(date, "date");
 		actions.add(ActionType.HEADER.action(res -> res.setDateHeader(name, date)));

@@ -16,15 +16,16 @@
  */
 package org.apache.wicket.util.watch;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.wicket.util.lang.Generics;
 import org.apache.wicket.util.listener.ChangeListenerSet;
 import org.apache.wicket.util.listener.IChangeListener;
 import org.apache.wicket.util.thread.ICode;
 import org.apache.wicket.util.thread.Task;
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +54,7 @@ public class ModificationWatcher implements IModificationWatcher
 	protected static final class Entry
 	{
 		// The most recent lastModificationTime polled on the object
-		public Instant lastModifiedTime;
+		public Time lastModifiedTime;
 
 		// The set of listeners to call when the modifiable changes
 		public final ChangeListenerSet<IModifiable> listeners = new ChangeListenerSet<>();
@@ -89,7 +90,7 @@ public class ModificationWatcher implements IModificationWatcher
 		// Found it?
 		if (entry == null)
 		{
-		    Instant lastModifiedTime = modifiable.lastModifiedTime();
+			Time lastModifiedTime = modifiable.lastModifiedTime();
 			if (lastModifiedTime != null)
 			{
 				// Construct new entry
@@ -153,9 +154,9 @@ public class ModificationWatcher implements IModificationWatcher
 		{
 			// If the modifiable has been modified after the last known
 			// modification time
-			final Instant modifiableLastModified = entry.modifiable.lastModifiedTime();
+			final Time modifiableLastModified = entry.modifiable.lastModifiedTime();
 			if ((modifiableLastModified != null) &&
-					modifiableLastModified.isAfter(entry.lastModifiedTime))
+					modifiableLastModified.after(entry.lastModifiedTime))
 			{
 				// Notify all listeners that the modifiable was modified
 				entry.listeners.notifyListeners(entry.modifiable);

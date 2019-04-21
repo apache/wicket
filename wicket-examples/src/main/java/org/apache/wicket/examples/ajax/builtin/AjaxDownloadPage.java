@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
@@ -31,6 +31,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * Ajax download.
@@ -333,7 +334,7 @@ public class AjaxDownloadPage extends BasePage
 		StaticResource() {
 			setFileName("File-from-ResourceReference");
 			setContentDisposition(ContentDisposition.ATTACHMENT);
-			setCacheDuration(Duration.ZERO);
+			setCacheDuration(Duration.NONE);
 		}
 
 		@Override
@@ -373,7 +374,7 @@ public class AjaxDownloadPage extends BasePage
 			this.content = content;
 
 			setFileName("File-from-IResource.txt");
-			setCacheDuration(Duration.ZERO);
+			setCacheDuration(Duration.NONE);
 		}
 
 		@Override

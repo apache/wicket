@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.util.resource;
 
-import java.time.Instant;
 import java.util.Locale;
+
 import org.apache.wicket.util.lang.Bytes;
+import org.apache.wicket.util.time.Time;
 
 
 /**
@@ -83,7 +84,7 @@ public abstract class AbstractResourceStream implements IResourceStream
 	}
 
 	@Override
-	public Instant lastModifiedTime()
+	public Time lastModifiedTime()
 	{
 		return null;
 	}

@@ -20,11 +20,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.markup.head.IReferenceHeaderItem;
 import org.apache.wicket.request.resource.AbstractResource;
@@ -40,6 +41,7 @@ import org.apache.wicket.util.lang.Classes;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +95,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 				resourceResponse.setContentType(findContentType(resources));
 
 				// add Last-Modified header (to support HEAD requests and If-Modified-Since)
-				final Instant lastModified = findLastModified(resources);
+				final Time lastModified = findLastModified(resources);
 
 				if (lastModified != null)
 					resourceResponse.setLastModified(lastModified);
@@ -155,13 +157,13 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		return null;
 	}
 
-	protected Instant findLastModified(List<IResourceStream> resources)
+	protected Time findLastModified(List<IResourceStream> resources)
 	{
-	    Instant ret = null;
+		Time ret = null;
 		for (IResourceStream curStream : resources)
 		{
-		    Instant curLastModified = curStream.lastModifiedTime();
-			if (ret == null || curLastModified.isAfter(ret))
+			Time curLastModified = curStream.lastModifiedTime();
+			if (ret == null || curLastModified.after(ret))
 				ret = curLastModified;
 		}
 		return ret;
@@ -276,7 +278,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 		}
 
 		final String contentType = findContentType(resources);
-		final Instant lastModified = findLastModified(resources);
+		final Time lastModified = findLastModified(resources);
 		final ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 		final long length = bytes.length;
 		AbstractResourceStream ret = new AbstractResourceStream()
@@ -302,7 +304,7 @@ public class ConcatBundleResource extends AbstractResource implements IStaticCac
 			}
 
 			@Override
-			public Instant lastModifiedTime()
+			public Time lastModifiedTime()
 			{
 				return lastModified;
 			}

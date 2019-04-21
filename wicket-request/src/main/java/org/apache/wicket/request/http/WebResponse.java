@@ -17,13 +17,15 @@
 package org.apache.wicket.request.http;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
+
 import javax.servlet.http.Cookie;
+
 import org.apache.wicket.request.Response;
 import org.apache.wicket.util.encoding.UrlEncoder;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 
 /**
  * Base class for web-related responses.
@@ -34,7 +36,7 @@ public abstract class WebResponse extends Response
 {
 	/** Recommended value for cache duration */
 	// one year, maximum recommended cache duration in RFC-2616
-	public static final Duration MAX_CACHE_DURATION = Duration.ofDays(365);
+	public static final Duration MAX_CACHE_DURATION = Duration.days(365);
 
 	/**
 	 * Add a cookie to the web response
@@ -74,7 +76,7 @@ public abstract class WebResponse extends Response
 	 * @param name
 	 * @param date
 	 */
-	public abstract void setDateHeader(String name, Instant date);
+	public abstract void setDateHeader(String name, Time date);
 
 	/**
 	 * Set the content length on the response, if appropriate in the subclass. This default
@@ -126,7 +128,7 @@ public abstract class WebResponse extends Response
 	 * @param time
 	 *            The last modified time
 	 */
-	public void setLastModifiedTime(final Instant time)
+	public void setLastModifiedTime(final Time time)
 	{
 		setDateHeader("Last-Modified", time);
 	}
@@ -228,8 +230,8 @@ public abstract class WebResponse extends Response
 	 */
 	public void disableCaching()
 	{
-		setDateHeader("Date", Instant.now());
-		setDateHeader("Expires", Instant.EPOCH);
+		setDateHeader("Date", Time.now());
+		setDateHeader("Expires", Time.START_OF_UNIX_TIME);
 		setHeader("Pragma", "no-cache");
 		setHeader("Cache-Control", "no-cache, no-store");
 	}
@@ -261,19 +263,19 @@ public abstract class WebResponse extends Response
 		}
 
 		// Get current time
-		Instant now = Instant.now();
+		Time now = Time.now();
 
 		// Time of message generation
 		setDateHeader("Date", now);
 
 		// Time for cache expiry = now + duration
-		setDateHeader("Expires", now.plus(duration));
+		setDateHeader("Expires", now.add(duration));
 
 		// Set cache scope
 		setHeader("Cache-Control", scope.cacheControl);
 
 		// Set maximum age for caching in seconds (rounded)
-		addHeader("Cache-Control", "max-age=" + Math.round(duration.getSeconds()));
+		addHeader("Cache-Control", "max-age=" + Math.round(duration.seconds()));
 
 		// Though 'cache' is not an official value it will eliminate an eventual 'no-cache' header
 		setHeader("Pragma", "cache");

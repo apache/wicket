@@ -18,15 +18,17 @@ package org.apache.wicket.request.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
-import java.time.Instant;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.lang.Checks;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.IResourceStreamWriter;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.apache.wicket.util.time.Duration;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,7 +141,7 @@ public class ResourceStreamResource extends AbstractResource
 	{
 		final IResourceStream resourceStream = internalGetResourceStream(attributes);
 		ResourceResponse data = new ResourceResponse();
-		Instant lastModifiedTime = resourceStream.lastModifiedTime();
+		Time lastModifiedTime = resourceStream.lastModifiedTime();
 		if (lastModifiedTime != null)
 		{
 			data.setLastModified(lastModifiedTime);

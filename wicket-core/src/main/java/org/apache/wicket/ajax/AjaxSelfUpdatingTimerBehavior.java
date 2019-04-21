@@ -17,7 +17,7 @@
 package org.apache.wicket.ajax;
 
 import org.apache.wicket.util.lang.Args;
-import java.time.Duration;
+import org.apache.wicket.util.time.Duration;
 import org.danekja.java.util.function.serializable.SerializableConsumer;
 
 /**

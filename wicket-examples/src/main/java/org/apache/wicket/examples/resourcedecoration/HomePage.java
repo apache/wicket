@@ -16,7 +16,6 @@
  */
 package org.apache.wicket.examples.resourcedecoration;
 
-import java.time.Duration;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -35,6 +34,7 @@ import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.resource.JQueryPluginResourceReference;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * A demo page showing how to render grouped resources
@@ -70,7 +70,7 @@ public class HomePage extends WicketExamplePage
 		add(jsPlaceholder);
 
 		add(new AjaxProofContainer("ajaxProofPlaceholder"));
-		add(new AbstractAjaxTimerBehavior(Duration.ofSeconds(4))
+		add(new AbstractAjaxTimerBehavior(Duration.seconds(4))
 		{
 			private static final long serialVersionUID = 1L;
 

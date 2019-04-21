@@ -18,10 +18,10 @@ package org.apache.wicket.markup;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.core.util.lang.WicketObjects;
 import org.apache.wicket.util.lang.Args;
@@ -30,6 +30,7 @@ import org.apache.wicket.util.resource.IFixedLocationResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,7 +143,7 @@ public class MarkupResourceStream implements IResourceStream, IFixedLocationReso
 	}
 
 	@Override
-	public Instant lastModifiedTime()
+	public Time lastModifiedTime()
 	{
 		return resourceStream.lastModifiedTime();
 	}

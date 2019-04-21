@@ -20,7 +20,7 @@ import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.PropertyModel;
-import java.time.Duration;
+import org.apache.wicket.util.time.Duration;
 
 /**
  * 
@@ -43,7 +43,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 		super(name);
 
 		Label ajaxLabel = new Label("linja1", new PropertyModel<Integer>(this, "count"));
-		timer = new AjaxSelfUpdatingTimerBehavior(Duration.ofSeconds(2));
+		timer = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(2));
 
 		ajaxLabel.add(timer);
 		baseSpan.add(ajaxLabel);

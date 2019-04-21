@@ -20,7 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.examples.WicketExamplePage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -44,6 +44,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.SharedResourceReference;
 import org.apache.wicket.util.file.Files;
+import org.apache.wicket.util.time.Duration;
 
 
 /**
@@ -170,7 +171,7 @@ public class Home extends WicketExamplePage
 
 				return tempFile;
 			}
-		}, "Downlöad\"here now.tmp").setCacheDuration(Duration.ZERO).setDeleteAfterDownload(true));
+		}, "Downlöad\"here now.tmp").setCacheDuration(Duration.NONE).setDeleteAfterDownload(true));
 
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");

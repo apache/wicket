@@ -16,9 +16,10 @@
  */
 package org.apache.wicket.examples.ajax.builtin;
 
-import java.time.Duration;
 import java.time.ZoneId;
+
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
+import org.apache.wicket.util.time.Duration;
 
 
 /**
@@ -39,6 +40,6 @@ public class ClockPage extends BasePage
 
 		// add the ajax behavior which will keep updating the component every 5
 		// seconds
-		clock.add(new AjaxSelfUpdatingTimerBehavior(Duration.ofSeconds(5)));
+		clock.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(5)));
 	}
 }

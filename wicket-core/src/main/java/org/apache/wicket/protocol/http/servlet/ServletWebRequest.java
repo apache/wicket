@@ -17,7 +17,6 @@
 package org.apache.wicket.protocol.http.servlet;
 
 import java.nio.charset.Charset;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,9 +26,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.wicket.protocol.http.RequestUtils;
@@ -44,6 +45,7 @@ import org.apache.wicket.util.lang.Bytes;
 import org.apache.wicket.util.string.PrependingStringBuffer;
 import org.apache.wicket.util.string.StringValue;
 import org.apache.wicket.util.string.Strings;
+import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -234,7 +236,7 @@ public class ServletWebRequest extends WebRequest
 	}
 
 	@Override
-	public Instant getDateHeader(String name)
+	public Time getDateHeader(String name)
 	{
 		try
 		{
@@ -245,7 +247,7 @@ public class ServletWebRequest extends WebRequest
 				return null;
 			}
 
-			return Instant.ofEpochMilli(value);
+			return Time.millis(value);
 		}
 		catch (IllegalArgumentException e)
 		{

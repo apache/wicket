@@ -16,8 +16,8 @@
  */
 package org.apache.wicket.examples.websocket;
 
-import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.core.request.handler.IPartialPageRequestHandler;
 import org.apache.wicket.examples.WicketExamplePage;
@@ -35,6 +35,7 @@ import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceStreamResource;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
+import org.apache.wicket.util.time.Duration;
 
 @RequireHttps
 public class WebSocketBehaviorDemoPage extends WicketExamplePage
@@ -58,7 +59,7 @@ public class WebSocketBehaviorDemoPage extends WicketExamplePage
 			}
 		}.setContentDisposition(ContentDisposition.ATTACHMENT)
 			.setFileName("File-from-IResource.txt")
-			.setCacheDuration(Duration.ZERO);
+			.setCacheDuration(Duration.NONE);
 
 		final AjaxDownloadBehavior download = new AjaxDownloadBehavior(resource)
 		{
