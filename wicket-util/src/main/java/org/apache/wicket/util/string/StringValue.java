@@ -24,11 +24,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
+
 import org.apache.wicket.util.io.IClusterable;
 import org.apache.wicket.util.lang.Args;
 import org.apache.wicket.util.lang.Objects;
-import org.apache.wicket.util.time.Durations;
-import org.apache.wicket.util.time.Instants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -222,7 +221,7 @@ public class StringValue implements IClusterable
 	 */
 	protected StringValue(final String text)
 	{
-		this(text , Locale.getDefault());
+		this(text, Locale.getDefault());
 	}
 
 	/**
@@ -363,8 +362,8 @@ public class StringValue implements IClusterable
 			return (T)toEnum((Class)type);
 		}
 
-		throw new StringValueConversionException("Cannot convert '" + toString() + "'to type "
-			+ type);
+		throw new StringValueConversionException(
+			"Cannot convert '" + toString() + "'to type " + type);
 	}
 
 	/**
@@ -412,9 +411,10 @@ public class StringValue implements IClusterable
 			{
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a boolean: %s", text,
-						x.getMessage()), x);
+					LOG.debug(
+						String.format("An error occurred while converting '%s' to a boolean: %s",
+							text, x.getMessage()),
+						x);
 				}
 			}
 		}
@@ -463,9 +463,10 @@ public class StringValue implements IClusterable
 			{
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a character: %s", text,
-						x.getMessage()), x);
+					LOG.debug(
+						String.format("An error occurred while converting '%s' to a character: %s",
+							text, x.getMessage()),
+						x);
 				}
 			}
 		}
@@ -497,8 +498,8 @@ public class StringValue implements IClusterable
 		}
 		catch (ParseException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-				+ "' to a double value", e);
+			throw new StringValueConversionException(
+				"Unable to convert '" + text + "' to a double value", e);
 		}
 	}
 
@@ -521,9 +522,10 @@ public class StringValue implements IClusterable
 			{
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a double: %s", text,
-						x.getMessage()), x);
+					LOG.debug(
+						String.format("An error occurred while converting '%s' to a double: %s",
+							text, x.getMessage()),
+						x);
 				}
 			}
 		}
@@ -550,7 +552,14 @@ public class StringValue implements IClusterable
 	 */
 	public final Duration toDuration() throws StringValueConversionException
 	{
-		return Durations.valueOf(text, locale);
+		try
+		{
+			return Duration.parse(text);
+		}
+		catch (Exception e)
+		{
+			throw new StringValueConversionException("xxx", e);
+		}
 	}
 
 	/**
@@ -574,9 +583,10 @@ public class StringValue implements IClusterable
 			{
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a Duration: %s", text,
-						x.getMessage()), x);
+					LOG.debug(
+						String.format("An error occurred while converting '%s' to a Duration: %s",
+							text, x.getMessage()),
+						x);
 				}
 			}
 		}
@@ -597,8 +607,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-				+ "' to an int value", e);
+			throw new StringValueConversionException(
+				"Unable to convert '" + text + "' to an int value", e);
 		}
 	}
 
@@ -621,9 +631,10 @@ public class StringValue implements IClusterable
 			{
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug(String.format(
-						"An error occurred while converting '%s' to an integer: %s", text,
-						x.getMessage()), x);
+					LOG.debug(
+						String.format("An error occurred while converting '%s' to an integer: %s",
+							text, x.getMessage()),
+						x);
 				}
 			}
 		}
@@ -644,8 +655,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-				+ "' to an Integer value", e);
+			throw new StringValueConversionException(
+				"Unable to convert '" + text + "' to an Integer value", e);
 		}
 	}
 
@@ -663,8 +674,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-				+ "' to a long value", e);
+			throw new StringValueConversionException(
+				"Unable to convert '" + text + "' to a long value", e);
 		}
 	}
 
@@ -688,9 +699,8 @@ public class StringValue implements IClusterable
 			{
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a long: %s", text,
-						x.getMessage()), x);
+					LOG.debug(String.format("An error occurred while converting '%s' to a long: %s",
+						text, x.getMessage()), x);
 				}
 			}
 		}
@@ -711,8 +721,8 @@ public class StringValue implements IClusterable
 		}
 		catch (NumberFormatException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-				+ "' to a Long value", e);
+			throw new StringValueConversionException(
+				"Unable to convert '" + text + "' to a Long value", e);
 		}
 	}
 
@@ -834,12 +844,12 @@ public class StringValue implements IClusterable
 	{
 		try
 		{
-			return Instants.valueOf(text);
+			return Instant.parse(text);
 		}
 		catch (DateTimeParseException e)
 		{
-			throw new StringValueConversionException("Unable to convert '" + text
-				+ "' to a Time value", e);
+			throw new StringValueConversionException(
+				"Unable to convert '" + text + "' to a Time value", e);
 		}
 	}
 
@@ -862,9 +872,8 @@ public class StringValue implements IClusterable
 			{
 				if (LOG.isDebugEnabled())
 				{
-					LOG.debug(String.format(
-						"An error occurred while converting '%s' to a Time: %s", text,
-						x.getMessage()), x);
+					LOG.debug(String.format("An error occurred while converting '%s' to a Time: %s",
+						text, x.getMessage()), x);
 				}
 			}
 		}
@@ -879,8 +888,7 @@ public class StringValue implements IClusterable
 	 * @return The value as an enum
 	 * @throws StringValueConversionException
 	 */
-	public final <T extends Enum<T>> T toEnum(Class<T> eClass)
-		throws StringValueConversionException
+	public final <T extends Enum<T>> T toEnum(Class<T> eClass) throws StringValueConversionException
 	{
 		return Strings.toEnum(text, eClass);
 	}

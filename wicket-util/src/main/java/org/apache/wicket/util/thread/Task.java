@@ -97,6 +97,8 @@ public final class Task
 					// Sleep until start time
 				    Duration untilStart = Duration.between(startTime, Instant.now());
 					
+				    final Logger log = getLog();
+
 				    if (!untilStart.isNegative()) 
 				    {                      
 				      try 
@@ -104,11 +106,9 @@ public final class Task
                         Thread.sleep(untilStart.toMillis());
                       } catch (InterruptedException e) 
 				      {
-                        e.printStackTrace();
+                        log.error("An error occurred during sleeping phase.", e);
                       }
                     }
-					
-					final Logger log = getLog();
 
 					try
 					{

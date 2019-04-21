@@ -21,10 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Locale;
-import org.apache.wicket.util.time.Durations;
-import org.apache.wicket.util.time.Instants;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -196,9 +192,9 @@ public class ValueMapTest
 
 		vm.put("num", integerValue.toString());
 		vm.put("num.bad", "xxx");
-		vm.put("time", Instants.toString(timeValue));
+		vm.put("time", timeValue.toString());
 		vm.put("time.bad", "xxx");
-		vm.put("duration", Durations.toString(durationValue, Locale.ENGLISH));
+		vm.put("duration", durationValue.toString());
 		vm.put("duration.bad", "xxx");
 		vm.put("boolean", booleanValue.toString());
 		vm.put("boolean.bad", "xxx");
@@ -233,7 +229,7 @@ public class ValueMapTest
 		assertEquals(defDouble, vm.getAsDouble("num.missing", defDouble), 0.001);
 
 		// time
-		assertEquals(timeValue.truncatedTo(ChronoUnit.MINUTES).toString(), vm.getAsTime("time").toString()); // use toSTring since
+		assertEquals(timeValue.toString(), vm.getAsTime("time").toString()); // use toSTring since
 		// equals seems
 		// broken
 		assertNull(vm.getAsTime("time.bad"));
